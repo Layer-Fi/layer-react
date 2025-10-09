@@ -77,9 +77,8 @@
 .Layer__service-offering-options__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-md);
+  gap: var(--spacing-2xl);
   justify-items: center;
-  width: fit-content;
   margin: 0 auto;
 
   @media (width <= 720px) {
@@ -92,13 +91,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
-  max-width: 420px;
-  padding: var(--spacing-md);
   border-radius: 16px;
-  border: none;
+  border: 1px solid var(--color-base-100);
   box-shadow: 0 5px 10px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
   margin: 0;
   background: white;
+  overflow-wrap: break-word;
 }
 
 // Layout configurations for different offer positions
@@ -109,16 +107,10 @@
 }
 
 .Layer__service-offering__offers {
-  flex-shrink: 0;
-  min-width: 0;
   background-color: transparent;
-
-  @media (width <= 1440px) {
-    padding: 0 var(--spacing-lg);
-  }
+  width: 100%;
 }
 
-// Responsive layout for main service offering content
 .Layer__service-offering__responsive-layout {
   display: flex;
   flex-direction: row;
@@ -126,7 +118,6 @@
 
   @media (width <= 1440px) {
     flex-direction: column;
-    gap: var(--spacing-xl);
   }
 }
 
@@ -134,18 +125,18 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2xl);
-  padding: var(--spacing-3xl);
-  padding-bottom: var(--spacing-3xl);
-
+  max-width: 420px;
   @media (width <= 1440px) {
-    padding: var(--spacing-xl);
+    max-width: 100%;
   }
+
 }
 
 .Layer__service-offering__responsive-image {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: margin-top 0.3s ease-in-out, opacity 0.3s ease-in-out;
 
   @media (width <= 1440px) {
     margin-top: var(--spacing-lg);
@@ -154,23 +145,20 @@
   img {
     height: auto;
     max-width: 100%;
+    max-height: 480px;
+    object-fit: cover;
+    opacity: 0;
+    animation: fadeInImage 0.4s ease-in forwards;
+    animation-delay: 0.1s;
   }
 }
 
-// Responsive value props layout
-.Layer__service-offering__value-props-responsive {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-5xl);
-  justify-items: center;
-
-  @media (width <= 1440px) {
-    grid-template-columns: repeat(2, 1fr);
+@keyframes fadeInImage {
+  from {
+    opacity: 0;
   }
-
-  @media (width <= 768px) {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-xl);
+  to {
+    opacity: 1;
   }
 }
 

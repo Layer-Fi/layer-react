@@ -1,5 +1,5 @@
 import { imagePartnerAccountingImage } from '../../assets/images'
-import { HeroContentConfigOverridesResolved, ServiceOfferingConfig, ServiceOfferingConfigOverridesResolved } from './types'
+import { HeroContentConfig, ServiceOfferingCardConfig, ServiceOfferingConfig } from './types'
 
 import { ReactNode } from 'react'
 
@@ -105,14 +105,14 @@ export const serviceOfferingDefaultContentConfig: Omit<ContentConfig, 'config'> 
   ],
 }
 
-export const DefaultHeroContentConfig: HeroContentConfigOverridesResolved = {
+export const DefaultHeroContentConfig: HeroContentConfig = {
   stringOverrides: {
     title: '{platformName} Accounting',
     subtitle: 'Track your business finances, right within {platformName}',
     heading1: 'All your finances in one place',
     heading1Desc: 'Directly integrate with your {platformName} data, so you can see your business performance and profit in real-time.',
     heading2: 'Built for {industry}',
-    heading2Desc: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
+    heading2Desc: 'Track your expenses and get easy to understand reports designed specifically for {industry}.',
   },
   mediaUrls: {
     topOfFoldImage: imagePartnerAccountingImage,
@@ -127,9 +127,10 @@ export const DefaultHeroContentConfig: HeroContentConfigOverridesResolved = {
       url: 'https://www.google.com',
     },
   },
+  styleOverrides: {},
 }
 
-export const DefaultAccountingOfferingContentConfig: ServiceOfferingConfigOverridesResolved = {
+export const DefaultAccountingOfferingConfig: ServiceOfferingCardConfig = {
   offerType: 'accounting',
   stringOverrides: {
     badge: 'Easy to use software',
@@ -147,9 +148,13 @@ export const DefaultAccountingOfferingContentConfig: ServiceOfferingConfigOverri
       url: '',
     },
   },
+  styleOverrides: {
+    buttonVariant: 'outlined',
+  },
+  showStartingAtLabel: false,
 }
 
-export const DefaultBookkeepingOfferingContentConfig: ServiceOfferingConfigOverridesResolved = {
+export const DefaultBookkeepingOfferingConfig: ServiceOfferingCardConfig = {
   offerType: 'bookkeeping',
   stringOverrides: {
     badge: 'A complete bookkeeping service',
@@ -159,7 +164,7 @@ export const DefaultBookkeepingOfferingContentConfig: ServiceOfferingConfigOverr
     priceUnit: '',
   },
   mediaUrls: {
-    offerImage: '  ',
+    offerImage: '',
   },
   cta: {
     primary: {
@@ -167,4 +172,8 @@ export const DefaultBookkeepingOfferingContentConfig: ServiceOfferingConfigOverr
       url: '',
     },
   },
+  styleOverrides: {
+    buttonVariant: 'outlined',
+  },
+  showStartingAtLabel: false,
 }

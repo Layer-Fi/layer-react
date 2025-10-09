@@ -4,17 +4,18 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
 import { Badge } from '../Badge'
 import { BadgeSize, BadgeVariant } from '../Badge/Badge'
-import { ServiceOfferingPlatformConfig, ServiceOfferingConfigOverridesResolved } from './types'
+import { ServiceOfferingCardConfig, ServiceOfferingPlatformConfig } from './types'
 import { isCalendlyLink } from '../../hooks/useCalendly/useCalendly'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { Check } from 'lucide-react'
 import classNames from 'classnames'
 import { useCallback, useMemo } from 'react'
-
+import { Separator } from '../Separator/Separator'
+import { ButtonVariant as UIButtonVariant } from '../ui/Button/Button'
 export interface ServiceOfferingOptionsProps {
   type: 'accounting' | 'bookkeeping'
   platformConfig: ServiceOfferingPlatformConfig
-  config: ServiceOfferingConfigOverridesResolved
+  config: ServiceOfferingCardConfig
   openCalendly: (link: string) => void
   className: string
 }
@@ -50,9 +51,11 @@ export const ServiceOfferingOffer = ({
   const baseClassName = classNames(className)
   const badgeVariant = type === 'bookkeeping' ? BadgeVariant.SUCCESS : BadgeVariant.INFO
 
+  const buttonVariant: UIButtonVariant = config.styleOverrides.buttonVariant
+
   return (
     <div className={baseClassName}>
-      <VStack pb='lg' pi='lg' gap='2xl' className='Layer__service-offering-options__card'>
+      <VStack pb='lg' pi='lg' gap='md' className='Layer__service-offering-options__card'>
         <VStack gap='md'>
           <HStack>
             <Badge size={BadgeSize.SMALL} variant={badgeVariant}>
@@ -66,14 +69,13 @@ export const ServiceOfferingOffer = ({
             {ServiceOfferingHelper.bindTextValues(config.stringOverrides.subtitle, platformConfig)}
           </P>
         </VStack>
-
+        <Separator />
         <VStack className='Layer__service-offering-options__features' gap='sm'>
-          <Heading size='xs' weight='normal' variant='subtle'>Features</Heading>
-          <VStack className='Layer__service-offering-options__features-list'>
+          <VStack className='Layer__service-offering-options__features-list' gap='sm'>
             {features.map((f, i) => {
               return (
                 <HStack key={i} gap='xs'>
-                  <Check size={14} />
+                  <Check size={14} color='var(--color-base-500)' />
                   <Span size='sm' variant='subtle'>
                     {ServiceOfferingHelper.bindTextValues(f, platformConfig)}
                   </Span>
@@ -83,9 +85,9 @@ export const ServiceOfferingOffer = ({
           </VStack>
         </VStack>
 
-        <HStack justify='space-between' align='center'>
+        <HStack justify='space-between' align='end'>
           <VStack gap='2xs'>
-            {config.stringOverrides.priceAmount != '' && <Span size='sm' variant='subtle'>Starting at</Span>}
+            {config.showStartingAtLabel && <Span size='sm' variant='subtle'>Starting at</Span>}
             <HStack align='baseline'>
               <Span size='xl' weight='bold'>{config.stringOverrides.priceAmount}</Span>
               {config.stringOverrides.priceAmount != '' && (
@@ -97,7 +99,7 @@ export const ServiceOfferingOffer = ({
           </VStack>
 
           <Button
-            variant='outlined'
+            variant={buttonVariant}
             onClick={handleCtaClick}
           >
             {config.cta.primary.label}
