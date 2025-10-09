@@ -21,17 +21,17 @@ function toToggleOptions(allowedModes: ReadonlyArray<UnifiedPickerMode>) {
   }))
 }
 
-export type DatePickerModeSelectorProps = {
+export type DeprecatedDatePickerModeSelectorProps = {
   mode: UnifiedPickerMode
   allowedModes: ReadonlyArray<UnifiedPickerMode>
   onChangeMode: (mode: UnifiedPickerMode) => void
 }
 
-export function DatePickerModeSelector({
+export function DeprecatedDatePickerModeSelector({
   mode,
   allowedModes,
   onChangeMode,
-}: DatePickerModeSelectorProps) {
+}: DeprecatedDatePickerModeSelectorProps) {
   if (allowedModes.length <= 1) {
     return null
   }

@@ -17,7 +17,7 @@ export type CustomDateRange = {
   endDate: Date
 }
 
-export const DatePickerOptions = ({
+export const DeprecatedDatePickerOptions = ({
   customDateRanges = [
     {
       label: 'This month',
