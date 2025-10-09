@@ -8,12 +8,12 @@ import { Heading } from '../ui/Typography/Heading'
 import { getLocalTimeZone, fromDate } from '@internationalized/date'
 
 type DateCalendarProps = {
-  minDate?: Date
-  maxDate?: Date
+  minDate?: Date | null
+  maxDate?: Date | null
 }
 export const DateCalendar = ({ minDate, maxDate = startOfToday() }: DateCalendarProps) => {
   const minZonedDateTime = minDate ? fromDate(minDate, getLocalTimeZone()) : null
-  const maxZonedDateTime = fromDate(maxDate, getLocalTimeZone())
+  const maxZonedDateTime = maxDate ? fromDate(maxDate, getLocalTimeZone()) : null
 
   return (
     <Calendar minValue={minZonedDateTime} maxValue={maxZonedDateTime}>
