@@ -318,6 +318,7 @@ export const BankTransactionRow = ({
                         classNamePrefix={className}
                         bankTransaction={bankTransaction}
                         dateFormat={dateFormat}
+                        text={bankTransaction.match.details.type === 'Transfer_Match' ? 'Transfer' : 'Match'}
                       />
                       <span className={`${className}__category-text__text`}>
                         {`${formatTime(

@@ -115,7 +115,7 @@ export const MatchForm = ({
                       classNamePrefix={classNamePrefix}
                       bankTransaction={bankTransaction}
                       dateFormat={DATE_FORMAT}
-                      text='Matched'
+                      text={bankTransaction.match.details.type === 'Transfer_Match' ? 'Transfer' : 'Matched'}
                     />
                   )}
                 </div>

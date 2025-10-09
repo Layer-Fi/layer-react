@@ -18,13 +18,14 @@ export const Assignment = ({ bankTransaction }: AssignmentProps) => {
     bankTransaction.match
     && bankTransaction.categorization_status === CategorizationStatus.MATCHED
   ) {
+    const isTransfer = bankTransaction.match.details.type === 'Transfer_Match'
     return (
       <>
         <MatchBadge
           classNamePrefix='Layer__bank-transaction-list-item'
           bankTransaction={bankTransaction}
           dateFormat={DATE_FORMAT}
-          text='Matched'
+          text={isTransfer ? 'Transfer' : 'Matched'}
         />
         <Text className='Layer__bank-transaction-list-item__category-text__text'>
           {`${formatTime(
