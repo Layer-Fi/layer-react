@@ -92,6 +92,7 @@ export const AffectedTransactionsTable = ({
         data={transactions}
         isLoading={isLoading}
         isError={isError}
+        height={500}
         shrinkHeightToFitRows
         slots={{
           EmptyState,

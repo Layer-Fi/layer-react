@@ -13,6 +13,9 @@
 }
 
 .Layer__AffectedTransactionsTable {
+  max-height: 500px;
+  container-type: inline-size;
+
   --affected-transactions-table-cols:
     minmax(10rem, 25%)
     minmax(20rem, 50%)
@@ -40,14 +43,14 @@
   }
 
   @container (width <= 840px) {
-    --affected-transactions-table-cols:
-      minmax(4rem, 25%)     /* date */
-      minmax(8rem, 50%)     /* description */
-      minmax(4rem, 25%);    /* amount */
+    max-height: 300px;
 
-    .Layer__UI__VirtualizedTable__row,
-    .Layer__UI__VirtualizedTable__header > tr {
-      grid-template-columns: var(--affected-transactions-table-cols);
+    .Layer__UI__Table__AffectedTransactionsTable .Layer__UI__VirtualizedTable__row,
+    .Layer__UI__Table__AffectedTransactionsTable .Layer__UI__VirtualizedTable__header > tr {
+      grid-template-columns:
+        minmax(4rem, 25%)     /* date */
+        minmax(8rem, 50%)     /* description */
+        minmax(4rem, 25%) !important; /* amount */
     }
   }
 }

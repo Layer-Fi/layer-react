@@ -15,7 +15,7 @@ export const SuggestedCategorizationRuleUpdatesDrawer = ({
   ruleSuggestion,
 }: SuggestedCategorizationRuleUpdatesDrawerProps) => {
   return (
-    <Drawer isOpen={isOpen} onOpenChange={onOpenChange} variant='mobile-drawer' isDismissable>
+    <Drawer flexBlock isOpen={isOpen} onOpenChange={onOpenChange} variant='mobile-drawer' isDismissable>
       {({ close }) => (
         <VStack className='Layer__suggested-categorization-rule-updates-drawer'>
           {getHeaderForRule(ruleSuggestion)}

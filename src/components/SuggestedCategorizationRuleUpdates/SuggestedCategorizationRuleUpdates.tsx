@@ -1,5 +1,4 @@
 import { Wizard } from '../Wizard/Wizard'
-import type { Awaitable } from '../../types/utility/promises'
 import { Heading } from '../ui/Typography/Heading'
 import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
@@ -7,7 +6,7 @@ import { RuleUpdatesPromptStep } from './RuleUpdatesPromptStep'
 import { RuleUpdatesReviewStep } from './RuleUpdatesReviewStep'
 
 type SuggestedCategorizationRuleUpdatesProps = {
-  close: () => Awaitable<void>
+  close: () => void
   ruleSuggestion: UpdateCategorizationRulesSuggestion
 }
 
