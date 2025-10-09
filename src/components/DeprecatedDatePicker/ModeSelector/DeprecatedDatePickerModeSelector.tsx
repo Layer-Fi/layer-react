@@ -27,6 +27,9 @@ export type DeprecatedDatePickerModeSelectorProps = {
   onChangeMode: (mode: UnifiedPickerMode) => void
 }
 
+/**
+ * @deprecated This is part of the `DeprecatedDatePicker` component.
+ */
 export function DeprecatedDatePickerModeSelector({
   mode,
   allowedModes,

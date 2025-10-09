@@ -17,6 +17,9 @@ export type CustomDateRange = {
   endDate: Date
 }
 
+/**
+ * @deprecated This is part of the `DeprecatedDatePicker` component.
+ */
 export const DeprecatedDatePickerOptions = ({
   customDateRanges = [
     {

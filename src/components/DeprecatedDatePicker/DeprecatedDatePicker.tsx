@@ -130,6 +130,10 @@ const getDateFormat = (mode: UnifiedPickerMode | 'timePicker') => {
       })
   }
 }
+
+/**
+ * @deprecated This will be replaced with the new `DatePicker` and `DateSelection` components.
+ */
 export const DeprecatedDatePicker = ({
   selected,
   onChange,
