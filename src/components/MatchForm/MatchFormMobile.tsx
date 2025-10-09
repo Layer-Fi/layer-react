@@ -37,10 +37,6 @@ export const MatchFormMobile = ({
                 return
               }
 
-              if (selectedMatchId === match.id) {
-                setSelectedMatchId(undefined)
-                return
-              }
               setSelectedMatchId(match.id)
             }}
           >

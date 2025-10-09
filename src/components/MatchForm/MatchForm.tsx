@@ -73,10 +73,6 @@ export const MatchForm = ({
               if (readOnly === true) {
                 return
               }
-              if (selectedMatchId === suggestedMatch.id) {
-                setSelectedMatchId(undefined)
-                return
-              }
               setSelectedMatchId(suggestedMatch.id)
             }}
           >
