@@ -5,9 +5,6 @@ import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
-import { useBankTransactionsInvalidator } from './useBankTransactions'
-import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
-import { useProfitAndLossGlobalInvalidator } from '../useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 
 const BULK_MATCH_BANK_TRANSACTIONS_TAG_KEY = '#bulk-match-bank-transactions'
 
@@ -90,6 +87,7 @@ class BulkMatchBankTransactionsSWRResponse {
 export const useBulkMatchBankTransactions = () => {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
+  // const { mutate } = useSWRConfig()
 
   const rawMutationResponse = useSWRMutation(
     () => buildKey({
@@ -118,9 +116,9 @@ export const useBulkMatchBankTransactions = () => {
 
   const mutationResponse = new BulkMatchBankTransactionsSWRResponse(rawMutationResponse)
 
-  const { debouncedInvalidateBankTransactions } = useBankTransactionsInvalidator()
-  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
-  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
+  // const { debouncedInvalidateBankTransactions } = useBankTransactionsInvalidator()
+  // const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+  // const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const originalTrigger = mutationResponse.trigger
 
@@ -128,13 +126,19 @@ export const useBulkMatchBankTransactions = () => {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void debouncedInvalidateBankTransactions()
-      void invalidatePnlDetailLines()
-      void debouncedInvalidateProfitAndLoss()
+      // void mutate(key => withSWRKeyTags(
+      //   key,
+      //   tags => tags.includes(BANK_ACCOUNTS_TAG_KEY)
+      //     || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
+      // ))
+      // void debouncedInvalidateBankTransactions()
+      // void invalidatePnlDetailLines()
+      // void debouncedInvalidateProfitAndLoss()
 
       return triggerResult
     },
-    [originalTrigger, debouncedInvalidateBankTransactions, invalidatePnlDetailLines, debouncedInvalidateProfitAndLoss],
+    // [originalTrigger, mutate, debouncedInvalidateBankTransactions, invalidatePnlDetailLines, debouncedInvalidateProfitAndLoss],
+    [originalTrigger],
   )
 
   return new Proxy(mutationResponse, {
