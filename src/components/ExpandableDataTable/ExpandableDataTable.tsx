@@ -16,6 +16,12 @@ type ExpandableDataTableProps<TData, TColumns extends string> = Omit<DataTablePr
   getSubRows: (row: TData) => TData[] | undefined
 }
 
+const getRowIndentStyle = (
+  { depth, canExpand }: { depth: number, canExpand: boolean },
+) => ({
+  paddingInlineStart: depth * 20 + (canExpand ? 0 : 4),
+})
+
 const EMPTY_ARRAY: never[] = []
 export function ExpandableDataTable<TData extends { id: string }, TColumns extends string>({
   data,
@@ -64,10 +70,12 @@ export function ExpandableDataTable<TData extends { id: string }, TColumns exten
       ...first,
       cell: (row: Row<TData>) => {
         const canExpand = row.getCanExpand()
-        if (!canExpand) return <div style={{ paddingInlineStart: `${row.depth * 20 + 4}px` }}>{originalFirstCell(row)}</div>
+        const rowIndentStyle = getRowIndentStyle({ canExpand, depth: row.depth })
+
+        if (!canExpand) return <div style={rowIndentStyle}>{originalFirstCell(row)}</div>
 
         return (
-          <div style={{ paddingInlineStart: `${row.depth * 20}px` }}>
+          <div style={rowIndentStyle}>
             <HStack align='center' gap='xs'>
               <ExpandButton isExpanded={row.getIsExpanded()} onClick={row.getToggleExpandedHandler()} />
               {originalFirstCell(row)}
