@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import type { ColumnConfig } from '../DataTable/DataTable'
 import { Span } from '../ui/Typography/Text'
 import { DataState, DataStateStatus } from '../DataState/DataState'
@@ -42,7 +42,7 @@ type UnifiedReportProps = { report: ReportEnum }
 
 export const UnifiedReport = ({ report }: UnifiedReportProps) => {
   const { data, isLoading, isError, refetch } = useUnifiedReport({ report })
-  const mutableData = useMemo(() => data?.lineItems ? [...data.lineItems] : undefined, [data])
+  const mutableData = data ? asMutable(data?.lineItems) : undefined
 
   const UnifiedReportEmptyState = useCallback(() => {
     return (

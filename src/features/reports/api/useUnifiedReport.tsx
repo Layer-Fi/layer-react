@@ -52,8 +52,6 @@ const addIdToLineItem = (li: LineItemDecoded): LineItemWithId => ({
   lineItems: li.lineItems.map(addIdToLineItem),
 })
 
-/** ----------------------------------------------------------------- */
-
 class UnifiedReportSWRResponse {
   private swrResponse: SWRResponse<UnifiedReportWithId>
 
