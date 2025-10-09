@@ -28,8 +28,8 @@ enum TableComponent {
 }
 const CSS_PREFIX = 'Layer__UI__Table'
 
-const getClassName = (component: TableComponent, additionalClassNames?: Argument) =>
-  classNames(`${CSS_PREFIX}-${component}`, additionalClassNames)
+const getClassName = (component: TableComponent, additionalClassNames?: Argument, withHidden?: boolean) =>
+  classNames(`${CSS_PREFIX}-${component}`, withHidden && `${CSS_PREFIX}-${component}--hidden`, additionalClassNames)
 
 // TABLE
 const Table = forwardRef<HTMLTableElement, TableProps>(
@@ -49,13 +49,17 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
 Table.displayName = TableComponent.Table
 
 // TABLE HEADER
+type TableHeaderRenderProps = {
+  hideHeader?: boolean
+}
+
 const TableHeaderInner = <T extends object>(
-  { children, className, ...restProps }: TableHeaderProps<T>,
+  { children, className, hideHeader, ...restProps }: TableHeaderProps<T> & TableHeaderRenderProps,
   ref: React.Ref<HTMLTableSectionElement>,
 ) => {
   return (
     <ReactAriaTableHeader
-      className={getClassName(TableComponent.TableHeader, className)}
+      className={getClassName(TableComponent.TableHeader, className, hideHeader)}
       {...restProps}
       ref={ref}
     >
@@ -65,7 +69,7 @@ const TableHeaderInner = <T extends object>(
 }
 
 const TableHeader = forwardRef(TableHeaderInner) as (<T>(
-  props: TableHeaderProps<T> & { ref?: React.Ref<HTMLTableSectionElement> }
+  props: TableHeaderProps<T> & TableHeaderRenderProps & { ref?: React.Ref<HTMLTableSectionElement> }
 ) => React.ReactElement) & { displayName?: string }
 
 TableHeader.displayName = TableComponent.TableHeader
@@ -93,14 +97,21 @@ const TableBody = forwardRef(TableBodyInner) as (<T>(
 TableBody.displayName = TableComponent.TableBody
 
 // TABLE ROW
+type RowStyleProps = {
+  depth?: number
+}
+
 const RowInner = <T extends object>(
-  { children, className, ...restProps }: RowProps<T>,
+  { children, className, depth = 0, ...restProps }: RowProps<T> & RowStyleProps,
   ref: React.Ref<HTMLTableRowElement>,
 ) => {
+  const dataProperties = toDataProperties({ depth })
+
   return (
     <ReactAriaTableRow
       className={getClassName(TableComponent.Row, className)}
       {...restProps}
+      {...dataProperties}
       ref={ref}
     >
       {withRenderProp(children, node => node)}
@@ -109,16 +120,16 @@ const RowInner = <T extends object>(
 }
 
 const Row = forwardRef(RowInner) as (<T>(
-  props: RowProps<T> & { ref?: React.Ref<HTMLTableRowElement> }
+  props: RowProps<T> & RowStyleProps & { ref?: React.Ref<HTMLTableRowElement> }
 ) => React.ReactElement) & { displayName?: string }
 
 Row.displayName = TableComponent.Row
 
+// TABLE COLUMN
 type ColumnStyleProps = {
   textAlign?: 'left' | 'center' | 'right'
 }
 
-// TABLE COLUMN
 const Column = forwardRef<HTMLTableColElement, ColumnProps & ColumnStyleProps>(
   ({ children, className, textAlign = 'left', ...restProps }, ref) => {
     const dataProperties = toDataProperties({ 'text-align': textAlign })

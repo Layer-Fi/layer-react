@@ -1,10 +1,10 @@
 import { Schema, pipe } from 'effect'
-import { ZonedDateTimeFromSelf } from '../../../utils/schema/utils'
 import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '../../../schemas/generalLedger/ledgerAccount'
 import { AccountIdentifierSchema } from '../../../schemas/accountIdentifier'
 import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '../../../features/tags/tagSchemas'
 import { CustomerSchema } from '../../../schemas/customer'
 import { VendorSchema } from '../../../schemas/vendor'
+import { ZonedDateTimeFromSelf } from '../../../schemas/common/zonedDateTimeFromSelf'
 
 export const JournalEntryFormLineItemSchema = Schema.Struct({
   externalId: Schema.NullOr(Schema.String),

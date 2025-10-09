@@ -1,5 +1,5 @@
 import { Schema } from 'effect'
-import { ZonedDateTimeFromSelf } from '../../../utils/schema/utils'
+import { ZonedDateTimeFromSelf } from '../../../schemas/common/zonedDateTimeFromSelf'
 import { PaymentMethodSchema } from '../../../components/PaymentMethod/schemas'
 
 export const InvoiceRefundFormSchema = Schema.Struct({
