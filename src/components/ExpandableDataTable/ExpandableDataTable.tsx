@@ -1,15 +1,15 @@
+import { useContext, useEffect, useMemo } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
   createColumnHelper,
   getExpandedRowModel,
   type Row,
-  type ExpandedState,
 } from '@tanstack/react-table'
 import { DataTable, type Column, type ColumnConfig, type DataTableProps } from '../DataTable/DataTable'
-import { useEffect, useMemo, useState } from 'react'
 import { HStack } from '../ui/Stack/Stack'
 import { ExpandButton } from '../ExpandButton/ExpandButton'
+import { ExpandableDataTableContext } from './ExpandableDataTableProvider'
 
 type ExpandableDataTableProps<TData, TColumns extends string> = Omit<DataTableProps<TData, TColumns>, 'columnConfig'> & {
   columnConfig: ColumnConfig<Row<TData>, TColumns>
@@ -30,7 +30,7 @@ export function ExpandableDataTable<TData extends { id: string }, TColumns exten
 }: ExpandableDataTableProps<TData, TColumns>) {
   const columnHelper = createColumnHelper<TData>()
   const columns: Column<Row<TData>, TColumns>[] = Object.values(columnConfig)
-  const [expanded, setExpanded] = useState<ExpandedState>({})
+  const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
 
   const columnDefs = columns.map((col) => {
     return columnHelper.display({
@@ -44,7 +44,7 @@ export function ExpandableDataTable<TData extends { id: string }, TColumns exten
     if (data !== undefined) {
       setExpanded(Object.fromEntries(data.map(d => [d.id, true])))
     }
-  }, [data])
+  }, [data, setExpanded])
 
   const table = useReactTable<TData>({
     data: data ?? EMPTY_ARRAY,
