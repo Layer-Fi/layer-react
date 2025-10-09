@@ -127,7 +127,6 @@ export const DefaultHeroContentConfig: HeroContentConfig = {
       url: 'https://www.google.com',
     },
   },
-  styleOverrides: {},
 }
 
 export const DefaultAccountingOfferingConfig: ServiceOfferingCardConfig = {
@@ -147,9 +146,6 @@ export const DefaultAccountingOfferingConfig: ServiceOfferingCardConfig = {
       label: '',
       url: '',
     },
-  },
-  styleOverrides: {
-    buttonVariant: 'outlined',
   },
   showStartingAtLabel: false,
 }
@@ -171,9 +167,6 @@ export const DefaultBookkeepingOfferingConfig: ServiceOfferingCardConfig = {
       label: '',
       url: '',
     },
-  },
-  styleOverrides: {
-    buttonVariant: 'outlined',
   },
   showStartingAtLabel: false,
 }

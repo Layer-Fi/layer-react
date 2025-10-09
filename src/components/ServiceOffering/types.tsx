@@ -1,5 +1,4 @@
 import { ReactNode } from 'react'
-import { ButtonVariant } from '../ui/Button/Button'
 
 /**
  * A Link acts as a call-to-action for users interacting with the ServiceOffering component.
@@ -133,7 +132,6 @@ export type HeroContentConfig = {
     primary: ServiceOfferingLink
     secondary: ServiceOfferingLink
   }
-  styleOverrides: Record<string, never> // empty object type
 }
 
 /**
@@ -153,9 +151,6 @@ export type ServiceOfferingCardConfig = {
   }
   cta: {
     primary: ServiceOfferingLink
-  }
-  styleOverrides: {
-    buttonVariant: ButtonVariant
   }
   showStartingAtLabel: boolean
 }

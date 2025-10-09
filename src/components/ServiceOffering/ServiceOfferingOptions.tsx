@@ -11,7 +11,6 @@ import { Check } from 'lucide-react'
 import classNames from 'classnames'
 import { useCallback, useMemo } from 'react'
 import { Separator } from '../Separator/Separator'
-import { ButtonVariant as UIButtonVariant } from '../ui/Button/Button'
 export interface ServiceOfferingOptionsProps {
   type: 'accounting' | 'bookkeeping'
   platformConfig: ServiceOfferingPlatformConfig
@@ -50,8 +49,6 @@ export const ServiceOfferingOffer = ({
 
   const baseClassName = classNames(className)
   const badgeVariant = type === 'bookkeeping' ? BadgeVariant.SUCCESS : BadgeVariant.INFO
-
-  const buttonVariant: UIButtonVariant = config.styleOverrides.buttonVariant
 
   return (
     <div className={baseClassName}>
@@ -99,7 +96,7 @@ export const ServiceOfferingOffer = ({
           </VStack>
 
           <Button
-            variant={buttonVariant}
+            variant='solid'
             onClick={handleCtaClick}
           >
             {config.cta.primary.label}
