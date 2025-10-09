@@ -26,7 +26,9 @@
     "prepack": "npm run typecheck && npm run build:clean",
     "lint": "eslint . && stylelint '**/*.{css,scss}'",
     "lint:eslint": "eslint .",
-    "lint:stylelint": "stylelint '**/*.{css,scss}'"
+    "lint:stylelint": "stylelint '**/*.{css,scss}'",
+    "clear:react": "rm -rf ./node_modules/react && rm -rf ./node_modules/react-dom",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -62,6 +64,8 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.3",
     "lodash": "^4.17.21",
     "npm-dts": "^1.3.13",
     "react": "^18.2.0",
@@ -72,6 +76,9 @@
     "stylelint-order": "^7.0.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.0"
+  },
+  "lint-staged": {
+    "*.{css,scss}": "stylelint --fix"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.8",
