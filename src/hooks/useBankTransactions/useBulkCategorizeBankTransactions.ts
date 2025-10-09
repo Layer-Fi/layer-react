@@ -1,0 +1,206 @@
+import { Schema } from 'effect'
+import { useCallback } from 'react'
+import type { Key } from 'swr'
+import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import { post } from '../../api/layer/authenticated_http'
+import { useLayerContext } from '../../contexts/LayerContext'
+import { useAuth } from '../useAuth'
+import { useBankTransactionsInvalidator } from './useBankTransactions'
+import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
+import { useProfitAndLossGlobalInvalidator } from '../useProfitAndLoss/useProfitAndLossGlobalInvalidator'
+
+const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'
+
+// Classification types (matching backend BankTransactionClassification)
+const AccountIdClassificationSchema = Schema.Struct({
+  type: Schema.Literal('AccountId'),
+  id: Schema.String,
+})
+
+const StableNameClassificationSchema = Schema.Struct({
+  type: Schema.Literal('StableName'),
+  stableName: Schema.propertySignature(Schema.String).pipe(
+    Schema.fromKey('stable_name'),
+  ),
+})
+
+const ExclusionClassificationSchema = Schema.Struct({
+  type: Schema.Literal('Exclusion'),
+  exclusionType: Schema.propertySignature(Schema.String).pipe(
+    Schema.fromKey('exclusion_type'),
+  ),
+})
+
+const BankTransactionClassificationSchema = Schema.Union(
+  AccountIdClassificationSchema,
+  StableNameClassificationSchema,
+  ExclusionClassificationSchema,
+)
+
+// Categorization types
+const CategoryCategorizationSchema = Schema.Struct({
+  type: Schema.Literal('Category'),
+  category: BankTransactionClassificationSchema,
+})
+
+const SplitEntrySchema = Schema.Struct({
+  amount: Schema.Number,
+  category: BankTransactionClassificationSchema,
+})
+
+const SplitCategorizationSchema = Schema.Struct({
+  type: Schema.Literal('Split'),
+  entries: Schema.Array(SplitEntrySchema),
+})
+
+const BankTransactionCategorizationSchema = Schema.Union(
+  CategoryCategorizationSchema,
+  SplitCategorizationSchema,
+)
+
+const TransactionCategorizationSchema = Schema.Struct({
+  transactionId: Schema.propertySignature(Schema.UUID).pipe(
+    Schema.fromKey('transaction_id'),
+  ),
+  categorization: BankTransactionCategorizationSchema,
+})
+
+const BulkCategorizeRequestSchema = Schema.Struct({
+  transactions: Schema.Array(TransactionCategorizationSchema),
+})
+
+type BulkCategorizeRequest = typeof BulkCategorizeRequestSchema.Type
+type BulkCategorizeRequestEncoded = typeof BulkCategorizeRequestSchema.Encoded
+
+// Response Schema
+const CategorizationResultSchema = Schema.Struct({
+  transactionId: Schema.propertySignature(Schema.UUID).pipe(
+    Schema.fromKey('transaction_id'),
+  ),
+  categorization: Schema.NullOr(BankTransactionCategorizationSchema),
+})
+
+const BulkCategorizeResponseSchema = Schema.Struct({
+  results: Schema.Array(CategorizationResultSchema),
+})
+
+type BulkCategorizeResponse = typeof BulkCategorizeResponseSchema.Type
+
+// API endpoint definition
+const bulkCategorizeBankTransactions = post<
+  BulkCategorizeResponse,
+  BulkCategorizeRequestEncoded,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/bulk-categorize`)
+
+function buildKey({
+  access_token: accessToken,
+  apiUrl,
+  businessId,
+}: {
+  access_token?: string
+  apiUrl?: string
+  businessId: string
+}) {
+  if (accessToken && apiUrl) {
+    return {
+      accessToken,
+      apiUrl,
+      businessId,
+      tags: [BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY],
+    } as const
+  }
+}
+
+type BulkCategorizeBankTransactionsSWRMutationResponse =
+  SWRMutationResponse<BulkCategorizeResponse, unknown, Key, BulkCategorizeRequest>
+
+class BulkCategorizeBankTransactionsSWRResponse {
+  private swrResponse: BulkCategorizeBankTransactionsSWRMutationResponse
+
+  constructor(swrResponse: BulkCategorizeBankTransactionsSWRMutationResponse) {
+    this.swrResponse = swrResponse
+  }
+
+  get data() {
+    return this.swrResponse.data
+  }
+
+  get trigger() {
+    return this.swrResponse.trigger
+  }
+
+  get isMutating() {
+    return this.swrResponse.isMutating
+  }
+
+  get isError() {
+    return this.swrResponse.error !== undefined
+  }
+
+  get error() {
+    return this.swrResponse.error
+  }
+}
+
+export const useBulkCategorizeBankTransactions = () => {
+  const { data } = useAuth()
+  const { businessId } = useLayerContext()
+
+  const rawMutationResponse = useSWRMutation(
+    () => buildKey({
+      ...data,
+      businessId,
+    }),
+    (
+      { accessToken, apiUrl, businessId },
+      { arg }: { arg: BulkCategorizeRequest },
+    ) => {
+      const encoded = Schema.encodeSync(BulkCategorizeRequestSchema)(arg)
+      return bulkCategorizeBankTransactions(
+        apiUrl,
+        accessToken,
+        {
+          params: { businessId },
+          body: encoded,
+        },
+      ).then(Schema.decodeUnknownPromise(BulkCategorizeResponseSchema))
+    },
+    {
+      revalidate: false,
+      throwOnError: true,
+    },
+  )
+
+  const mutationResponse = new BulkCategorizeBankTransactionsSWRResponse(rawMutationResponse)
+
+  const { debouncedInvalidateBankTransactions } = useBankTransactionsInvalidator()
+  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
+
+  const originalTrigger = mutationResponse.trigger
+
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const triggerResult = await originalTrigger(...triggerParameters)
+
+      void debouncedInvalidateBankTransactions()
+      void invalidatePnlDetailLines()
+      void debouncedInvalidateProfitAndLoss()
+
+      return triggerResult
+    },
+    [originalTrigger, debouncedInvalidateBankTransactions, invalidatePnlDetailLines, debouncedInvalidateProfitAndLoss],
+  )
+
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
+}
