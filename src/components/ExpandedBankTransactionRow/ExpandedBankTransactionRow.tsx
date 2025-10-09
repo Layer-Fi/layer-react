@@ -463,6 +463,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       ? rowState.splits
       : []
 
+    const isTransfer = bankTransaction.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
+
     const className = 'Layer__expanded-bank-transaction-row'
 
     return (
@@ -490,10 +492,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                         },
                         {
                           value: 'match',
-                          label: 'Match',
+                          label: isTransfer ? 'Transfer' : 'Match',
                           disabled: !hasMatch(bankTransaction),
-                          disabledMessage:
-                        'We could not find matching transactions',
                         },
                       ]}
                       selected={purpose}

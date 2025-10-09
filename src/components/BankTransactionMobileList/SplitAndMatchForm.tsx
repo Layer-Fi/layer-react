@@ -34,6 +34,8 @@ export const SplitAndMatchForm = ({
         : Purpose.categorize,
   )
 
+  const isTransfer = bankTransaction.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
+
   return (
     <div className='Layer__bank-transaction-mobile-list-item__split-and-match-form'>
       {formType === Purpose.categorize && (
@@ -66,7 +68,7 @@ export const SplitAndMatchForm = ({
         ? (
           <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
             <TextButton onClick={() => setFormType(Purpose.match)}>
-              or find match
+              {isTransfer ? 'or find transfer' : 'or find match'}
             </TextButton>
           </div>
         )

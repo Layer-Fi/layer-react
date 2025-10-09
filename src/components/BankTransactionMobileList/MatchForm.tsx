@@ -67,10 +67,12 @@ export const MatchForm = ({
     return
   }
 
+  const isTransfer = bankTransaction.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
+
   return (
     <div>
       <Text weight={TextWeight.bold} size={TextSize.sm}>
-        Find match
+        {isTransfer ? 'Find transfer' : 'Find match'}
       </Text>
       <MatchFormMobile
         classNamePrefix='Layer__bank-transaction-mobile-list-item'
@@ -125,7 +127,7 @@ export const MatchForm = ({
           >
             {isLoading || bankTransaction.processing
               ? 'Saving...'
-              : 'Approve match'}
+              : isTransfer ? 'Approve transfer' : 'Approve match'}
           </Button>
         )}
       </div>
