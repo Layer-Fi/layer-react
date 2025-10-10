@@ -24,8 +24,12 @@ const UncategorizeResultSchema = Schema.Struct({
   success: Schema.Boolean,
 })
 
-const BulkUncategorizeResponseSchema = Schema.Struct({
+const BulkUncategorizeResponseDataSchema = Schema.Struct({
   results: Schema.Array(UncategorizeResultSchema),
+})
+
+const BulkUncategorizeResponseSchema = Schema.Struct({
+  data: BulkUncategorizeResponseDataSchema,
 })
 
 type BulkUncategorizeResponse = typeof BulkUncategorizeResponseSchema.Type
@@ -56,7 +60,7 @@ function buildKey({
 }
 
 type BulkUncategorizeBankTransactionsSWRMutationResponse =
-  SWRMutationResponse<BulkUncategorizeResponse, unknown, Key, BulkUncategorizeRequest>
+  SWRMutationResponse<typeof BulkUncategorizeResponseDataSchema.Type, unknown, Key, BulkUncategorizeRequest>
 
 class BulkUncategorizeBankTransactionsSWRResponse {
   private swrResponse: BulkUncategorizeBankTransactionsSWRMutationResponse
@@ -108,7 +112,9 @@ export const useBulkUncategorizeBankTransactions = () => {
           params: { businessId },
           body: encoded,
         },
-      ).then(Schema.decodeUnknownPromise(BulkUncategorizeResponseSchema))
+      ).then(Schema.decodeUnknownPromise(BulkUncategorizeResponseSchema)).then(
+        (validatedResponse) => validatedResponse.data
+      )
     },
     {
       revalidate: false,

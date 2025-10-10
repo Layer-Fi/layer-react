@@ -26,7 +26,12 @@ const BulkMatchRequestSchema = Schema.Struct({
 type BulkMatchRequest = typeof BulkMatchRequestSchema.Type
 type BulkMatchRequestEncoded = typeof BulkMatchRequestSchema.Encoded
 
-type BulkMatchResponse = Record<never, never>
+const BulkMatchResponseDataSchema = Schema.Struct({})
+const BulkMatchResponseSchema = Schema.Struct({
+  data: BulkMatchResponseDataSchema,
+})
+
+type BulkMatchResponse = typeof BulkMatchResponseSchema.Type
 
 const bulkMatchBankTransactions = post<
   BulkMatchResponse,
@@ -54,7 +59,7 @@ function buildKey({
 }
 
 type BulkMatchBankTransactionsSWRMutationResponse =
-  SWRMutationResponse<BulkMatchResponse, unknown, Key, BulkMatchRequest>
+  SWRMutationResponse<typeof BulkMatchResponseDataSchema.Type, unknown, Key, BulkMatchRequest>
 
 class BulkMatchBankTransactionsSWRResponse {
   private swrResponse: BulkMatchBankTransactionsSWRMutationResponse
@@ -106,6 +111,8 @@ export const useBulkMatchBankTransactions = () => {
           params: { businessId },
           body: encoded,
         },
+      ).then(Schema.decodeUnknownPromise(BulkMatchResponseSchema)).then(
+        (validatedResponse) => validatedResponse.data
       )
     },
     {
