@@ -9,6 +9,7 @@ import { useUnifiedReport } from '../../features/reports/api/useUnifiedReport'
 import type { ReportEnum } from '../../schemas/reports/unifiedReport'
 import type { Row } from '@tanstack/react-table'
 import { ExpandableDataTableContext } from '../ExpandableDataTable/ExpandableDataTableProvider'
+import { asMutable } from '../../utils/asMutable'
 
 const COMPONENT_NAME = 'UnifiedReport'
 
@@ -32,10 +33,6 @@ const COLUMN_CONFIG: ColumnConfig<Row<LineItemWithId>, UnifiedReportColumns> = (
     cell: row => <MoneySpan amount={row.original.value} />,
   },
 })
-
-function asMutable<T>(a: readonly T[]): T[] {
-  return a as unknown as T[]
-}
 
 const getSubRows = (lineItem: LineItemWithId) => asMutable(lineItem.lineItems)
 type UnifiedReportTableProps = { report: ReportEnum }

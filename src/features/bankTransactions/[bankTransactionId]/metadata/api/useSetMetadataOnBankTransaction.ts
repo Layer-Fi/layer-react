@@ -3,7 +3,7 @@ import { useAuth } from '../../../../../hooks/useAuth'
 import { useLayerContext } from '../../../../../contexts/LayerContext'
 import { patch } from '../../../../../api/layer/authenticated_http'
 import { useCallback } from 'react'
-import { useBankTransactionsInvalidator, useBankTransactionsOptimisticUpdater } from '../../../../../hooks/useBankTransactions/useBankTransactions'
+import { useBankTransactionsGlobalCacheActions } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 import { encodeVendor, type VendorSchema } from '../../../../../schemas/vendor'
 import { encodeCustomer, type CustomerSchema } from '../../../../../schemas/customer'
 import { useMinMutatingMutation } from '../../../../../hooks/mutation/useMinMutatingMutation'
@@ -93,8 +93,7 @@ export function useSetMetadataOnBankTransaction({
     },
   )
 
-  const { debouncedInvalidateBankTransactions } = useBankTransactionsInvalidator()
-  const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
+  const { debouncedInvalidateBankTransactions, optimisticallyUpdateBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const { trigger: originalTrigger } = mutationResponse
 

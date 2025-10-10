@@ -13,6 +13,8 @@ export const BankTransactionsContext =
     refetch: () => {},
     categorize: () => Promise.resolve(undefined),
     match: () => Promise.resolve(undefined),
+    ruleSuggestion: null,
+    setRuleSuggestion: () => {},
     metadata: {
       pagination: {
         cursor: undefined,

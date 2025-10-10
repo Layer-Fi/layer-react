@@ -1,5 +1,5 @@
 import { debounce } from 'lodash'
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
   useBankTransactionsContext,
@@ -39,6 +39,8 @@ import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
 import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
 import { HStack } from '../ui/Stack/Stack'
+import { SuggestedCategorizationRuleUpdatesModal } from './SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
+import { SuggestedCategorizationRuleUpdatesDrawer } from '../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -153,6 +155,8 @@ const BankTransactionsContent = ({
     display,
     hasMore,
     fetchMore,
+    ruleSuggestion,
+    setRuleSuggestion,
     removeAfterCategorize,
   } = useBankTransactionsContext()
 
@@ -234,6 +238,32 @@ const BankTransactionsContent = ({
   useEffect(() => {
     setCurrentPage(1)
   }, [filters])
+
+  const handleRuleSuggestionOpenChange = useCallback((isOpen: boolean) => {
+    if (!isOpen) setRuleSuggestion(null)
+  }, [setRuleSuggestion])
+
+  const rulesSuggestionModal = useMemo(() => {
+    if (!ruleSuggestion) return undefined
+    return (
+      <SuggestedCategorizationRuleUpdatesModal
+        isOpen={true}
+        ruleSuggestion={ruleSuggestion}
+        onOpenChange={handleRuleSuggestionOpenChange}
+      />
+    )
+  }, [ruleSuggestion, handleRuleSuggestionOpenChange])
+
+  const rulesSuggestionDrawer = useMemo(() => {
+    if (!ruleSuggestion) return undefined
+    return (
+      <SuggestedCategorizationRuleUpdatesDrawer
+        isOpen={true}
+        onOpenChange={handleRuleSuggestionOpenChange}
+        ruleSuggestion={ruleSuggestion}
+      />
+    )
+  }, [ruleSuggestion, handleRuleSuggestionOpenChange])
 
   const bankTransactions = useMemo(() => {
     if (isMonthlyViewMode) return data
@@ -332,6 +362,7 @@ const BankTransactionsContent = ({
 
       {!listView && (
         <div className='Layer__bank-transactions__table-wrapper'>
+          {rulesSuggestionModal}
           <BankTransactionsTable
             categorizeView={categorizeView}
             editable={editable}
@@ -354,31 +385,36 @@ const BankTransactionsContent = ({
 
       {!isLoadingWithoutData && listView && mobileComponent !== 'mobileList'
         ? (
-          <BankTransactionList
-            bankTransactions={bankTransactions}
-            editable={editable}
-            removeTransaction={removeTransaction}
-            containerWidth={containerWidth}
-            stringOverrides={stringOverrides?.bankTransactionCTAs}
+          <div className='Layer__bank-transactions__list-wrapper'>
+            {rulesSuggestionModal}
+            <BankTransactionList
+              bankTransactions={bankTransactions}
+              editable={editable}
+              removeTransaction={removeTransaction}
+              containerWidth={containerWidth}
+              stringOverrides={stringOverrides?.bankTransactionCTAs}
 
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-          />
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+            />
+          </div>
         )
         : null}
 
       {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
         ? (
-          <BankTransactionMobileList
-            bankTransactions={bankTransactions}
-            editable={editable}
-            removeTransaction={removeTransaction}
-
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-          />
+          <>
+            <BankTransactionMobileList
+              bankTransactions={bankTransactions}
+              editable={editable}
+              removeTransaction={removeTransaction}
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+            />
+            {rulesSuggestionDrawer}
+          </>
         )
         : null}
 
