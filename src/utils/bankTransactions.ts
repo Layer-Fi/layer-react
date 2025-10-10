@@ -90,5 +90,5 @@ export const isTransferMatch = (bankTransaction?: BankTransaction) => {
 }
 
 export const hasSuggestedTransferMatches = (bankTransaction?: BankTransaction) => {
-  return bankTransaction?.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
+  return bankTransaction?.suggested_matches?.every(x => x.details.type === 'Transfer_Match') ?? false
 }
