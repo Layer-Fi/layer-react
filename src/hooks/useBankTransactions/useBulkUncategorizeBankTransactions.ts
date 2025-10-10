@@ -113,7 +113,7 @@ export const useBulkUncategorizeBankTransactions = () => {
           body: encoded,
         },
       ).then(Schema.decodeUnknownPromise(BulkUncategorizeResponseSchema)).then(
-        (validatedResponse) => validatedResponse.data
+        validatedResponse => validatedResponse.data,
       )
     },
     {

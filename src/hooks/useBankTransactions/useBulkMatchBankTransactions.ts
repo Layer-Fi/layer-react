@@ -112,7 +112,7 @@ export const useBulkMatchBankTransactions = () => {
           body: encoded,
         },
       ).then(Schema.decodeUnknownPromise(BulkMatchResponseSchema)).then(
-        (validatedResponse) => validatedResponse.data
+        validatedResponse => validatedResponse.data,
       )
     },
     {
