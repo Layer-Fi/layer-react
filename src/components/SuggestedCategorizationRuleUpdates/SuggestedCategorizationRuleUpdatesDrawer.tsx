@@ -1,7 +1,7 @@
 import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { Drawer } from '../ui/Modal/Modal'
 import { VStack } from '../ui/Stack/Stack'
-import { getHeaderForRule, SuggestedCategorizationRuleUpdates } from './SuggestedCategorizationRuleUpdates'
+import { RuleSuggestionHeader, SuggestedCategorizationRuleUpdates } from './SuggestedCategorizationRuleUpdates'
 
 interface SuggestedCategorizationRuleUpdatesDrawerProps {
   isOpen: boolean
@@ -18,7 +18,7 @@ export const SuggestedCategorizationRuleUpdatesDrawer = ({
     <Drawer flexBlock isOpen={isOpen} onOpenChange={onOpenChange} variant='mobile-drawer' isDismissable>
       {({ close }) => (
         <VStack className='Layer__suggested-categorization-rule-updates-drawer'>
-          {getHeaderForRule(ruleSuggestion)}
+          <RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />
           <SuggestedCategorizationRuleUpdates ruleSuggestion={ruleSuggestion} close={close} />
         </VStack>
       )}

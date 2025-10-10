@@ -9,6 +9,7 @@ import { Label } from '../ui/Typography/Text'
 import { AffectedTransactionsTable } from './AffectedTransactionsTable'
 import pluralize from 'pluralize'
 import { CreateRuleButton } from './CreateRuleButton'
+import { asMutable } from '../../utils/asMutable'
 
 interface RuleUpdatesPromptReviewStepProps {
   ruleSuggestion: UpdateCategorizationRulesSuggestion
@@ -21,10 +22,10 @@ export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptRevie
   return (
     <VStack gap='lg'>
       <Label size='md'>
-        {`The following ${pluralize('transaction', ruleSuggestion.transactionsThatWillBeAffected.length, ruleSuggestion.transactionsThatWillBeAffected.length != 1)} will be affected:`}
+        {`The following ${pluralize('transaction', ruleSuggestion.transactionsThatWillBeAffected.length, ruleSuggestion.transactionsThatWillBeAffected.length !== 1)} will be affected:`}
       </Label>
       <AffectedTransactionsTable
-        transactions={ruleSuggestion.transactionsThatWillBeAffected}
+        transactions={asMutable(ruleSuggestion.transactionsThatWillBeAffected)}
       />
       <Separator />
       <HStack gap='sm'>

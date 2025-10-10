@@ -120,7 +120,7 @@ export const CreateCategorizationRuleForCounterpartySchema = Schema.Struct({
     Schema.fromKey('suggestion_prompt'),
   ),
   transactionsThatWillBeAffected: pipe(
-    Schema.propertySignature(Schema.mutable(Schema.Array(MinimalBankTransactionSchema))),
+    Schema.propertySignature(Schema.Array(MinimalBankTransactionSchema)),
     Schema.fromKey('transactions_that_will_be_affected'),
   ),
 })

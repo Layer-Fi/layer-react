@@ -1,5 +1,5 @@
 import { debounce } from 'lodash'
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
   useBankTransactionsContext,
@@ -239,31 +239,31 @@ const BankTransactionsContent = ({
     setCurrentPage(1)
   }, [filters])
 
+  const handleRuleSuggestionOpenChange = useCallback((isOpen: boolean) => {
+    if (!isOpen) setRuleSuggestion(null)
+  }, [setRuleSuggestion])
+
   const rulesSuggestionModal = useMemo(() => {
     if (!ruleSuggestion) return undefined
     return (
       <SuggestedCategorizationRuleUpdatesModal
         isOpen={true}
         ruleSuggestion={ruleSuggestion}
-        onOpenChange={(isOpen: boolean) => {
-          if (!isOpen) setRuleSuggestion(null)
-        }}
+        onOpenChange={handleRuleSuggestionOpenChange}
       />
     )
-  }, [ruleSuggestion, setRuleSuggestion])
+  }, [ruleSuggestion, handleRuleSuggestionOpenChange])
 
   const rulesSuggestionDrawer = useMemo(() => {
     if (!ruleSuggestion) return undefined
     return (
       <SuggestedCategorizationRuleUpdatesDrawer
         isOpen={true}
-        onOpenChange={(isOpen: boolean) => {
-          if (!isOpen) setRuleSuggestion(null)
-        }}
+        onOpenChange={handleRuleSuggestionOpenChange}
         ruleSuggestion={ruleSuggestion}
       />
     )
-  }, [ruleSuggestion, setRuleSuggestion])
+  }, [ruleSuggestion, handleRuleSuggestionOpenChange])
 
   const bankTransactions = useMemo(() => {
     if (isMonthlyViewMode) return data
@@ -404,7 +404,7 @@ const BankTransactionsContent = ({
 
       {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
         ? (
-          <div className='Layer__bank-transactions__mobile-list-wrapper'>
+          <>
             <BankTransactionMobileList
               bankTransactions={bankTransactions}
               editable={editable}
@@ -414,7 +414,7 @@ const BankTransactionsContent = ({
               showTooltips={showTooltips}
             />
             {rulesSuggestionDrawer}
-          </div>
+          </>
         )
         : null}
 

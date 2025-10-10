@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { Button } from '../../components/ui/Button/Button'
 import { useWizard } from '../Wizard/Wizard'
@@ -20,6 +20,23 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesProm
   const { addToast } = useLayerContext()
   const [dontAskAgain, setDontAskAgain] = useState(false)
   const { trigger: rejectRuleSuggestion, isMutating } = useRejectCategorizationRulesUpdateSuggestion()
+  const handleRejectRuleSuggestion = useCallback(() => {
+    void (async () => {
+      if (dontAskAgain) {
+        if (ruleSuggestion.newRule.createdBySuggestionId) {
+          await rejectRuleSuggestion(ruleSuggestion.newRule.createdBySuggestionId)
+            .then(() => {
+              close()
+            }).catch(() => {
+              addToast({ content: 'Failed to reject rule suggestion', type: 'error' })
+            })
+        }
+      }
+      else {
+        close()
+      }
+    })()
+  }, [addToast, close, dontAskAgain, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
 
   return (
     <VStack gap='lg'>
@@ -27,29 +44,13 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesProm
       <Separator />
       <HStack gap='sm'>
         <Button
-          onClick={() => {
-            void (async () => {
-              if (dontAskAgain) {
-                if (ruleSuggestion.newRule.createdBySuggestionId) {
-                  await rejectRuleSuggestion(ruleSuggestion.newRule.createdBySuggestionId)
-                    .then(() => {
-                      close()
-                    }).catch(() => {
-                      addToast({ content: 'Failed to reject rule suggestion', type: 'error' })
-                    })
-                }
-              }
-              else {
-                close()
-              }
-            })()
-          }}
+          onClick={handleRejectRuleSuggestion}
           isPending={isMutating}
           variant='outlined'
         >
-          No, I&apos;ll decide each time
+          No, I`ll decide each time
         </Button>
-        {ruleSuggestion.transactionsThatWillBeAffected.length == 0
+        {ruleSuggestion.transactionsThatWillBeAffected.length === 0
           ? (
             <CreateRuleButton
               newRule={ruleSuggestion.newRule}
@@ -69,7 +70,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesProm
       <HStack gap='3xs' justify='center'>
         <CheckboxWithTooltip id='dont_ask_again' isSelected={dontAskAgain} onChange={(isSelected) => { setDontAskAgain(isSelected) }} />
         <Label size='sm' htmlFor='dont_ask_again'>
-          Don&apos;t ask me about this again
+          Don`t ask me about this again
         </Label>
       </HStack>
 
