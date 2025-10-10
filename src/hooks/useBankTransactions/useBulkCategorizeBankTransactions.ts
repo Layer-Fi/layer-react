@@ -74,8 +74,12 @@ const CategorizationResultSchema = Schema.Struct({
   categorization: Schema.NullOr(BankTransactionCategorizationSchema),
 })
 
-const BulkCategorizeResponseSchema = Schema.Struct({
+const BulkCategorizeResponseDataSchema = Schema.Struct({
   results: Schema.Array(CategorizationResultSchema),
+})
+
+const BulkCategorizeResponseSchema = Schema.Struct({
+  data: BulkCategorizeResponseDataSchema,
 })
 
 type BulkCategorizeResponse = typeof BulkCategorizeResponseSchema.Type
@@ -106,7 +110,7 @@ function buildKey({
 }
 
 type BulkCategorizeBankTransactionsSWRMutationResponse =
-  SWRMutationResponse<BulkCategorizeResponse, unknown, Key, BulkCategorizeRequest>
+  SWRMutationResponse<typeof BulkCategorizeResponseDataSchema.Type, unknown, Key, BulkCategorizeRequest>
 
 class BulkCategorizeBankTransactionsSWRResponse {
   private swrResponse: BulkCategorizeBankTransactionsSWRMutationResponse
@@ -158,7 +162,9 @@ export const useBulkCategorizeBankTransactions = () => {
           params: { businessId },
           body: encoded,
         },
-      ).then(Schema.decodeUnknownPromise(BulkCategorizeResponseSchema))
+      ).then(Schema.decodeUnknownPromise(BulkCategorizeResponseSchema)).then(
+        (validatedResponse) => validatedResponse.data
+      )
     },
     {
       revalidate: false,
