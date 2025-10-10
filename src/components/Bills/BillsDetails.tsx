@@ -1,7 +1,7 @@
 import { RefObject } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { BackButton, Button, ButtonVariant, IconButton, RetryButton, SubmitButton, TextButton } from '../Button'
-import { DatePicker } from '../DatePicker/DatePicker'
+import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
 import { Header, HeaderRow, HeaderCol } from '../Header'
 import { Input, InputGroup } from '../Input'
 import { Select } from '../Input/Select'
@@ -207,7 +207,7 @@ export const BillsDetails = ({
                 <form.Field name='received_at'>
                   {field => (
                     <InputGroup inline={true} label='Bill date'>
-                      <DatePicker
+                      <DeprecatedDatePicker
                         displayMode='dayPicker'
                         selected={convertToInputDate(field.state.value)}
                         onChange={e => field.handleChange(formatISO(e as Date))}
@@ -233,7 +233,7 @@ export const BillsDetails = ({
                 <form.Field name='due_at'>
                   {field => (
                     <InputGroup inline={true} label='Due date'>
-                      <DatePicker
+                      <DeprecatedDatePicker
                         displayMode='dayPicker'
                         selected={convertToInputDate(field.state.value)}
                         onChange={(d) => {

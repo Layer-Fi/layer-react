@@ -38,9 +38,12 @@ export interface DataTableProps<TData, TColumns extends string> {
     EmptyState: React.FC
     ErrorState: React.FC
   }
+  hideHeader?: boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dependencies?: readonly any[]
 }
 
-export const DataTable = <TData extends { id: string }, TColumns extends string>({
+export const DataTable = <TData extends { id: string, depth?: number }, TColumns extends string>({
   columnConfig,
   data,
   isLoading,
@@ -48,6 +51,8 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
   componentName,
   ariaLabel,
   slots,
+  hideHeader,
+  dependencies,
 }: DataTableProps<TData, TColumns>) => {
   const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
   const { EmptyState, ErrorState } = slots
@@ -85,7 +90,7 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
     }
 
     const RowRenderer = (row: TData) => (
-      <Row key={row.id}>
+      <Row key={row.id} depth={row?.depth}>
         {columns.map(col => (
           <Cell
             key={`${row.id}-${col.id}`}
@@ -102,14 +107,14 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
 
   return (
     <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`}>
-      <TableHeader columns={columns}>
+      <TableHeader columns={columns} hideHeader={hideHeader}>
         {({ id, header, isRowHeader }) => (
           <Column key={id} isRowHeader={isRowHeader} className={`Layer__UI__Table-Column__${componentName}--${id}`}>
             {header}
           </Column>
         )}
       </TableHeader>
-      <TableBody items={data}>
+      <TableBody items={data} dependencies={dependencies}>
         {renderTableBody}
       </TableBody>
     </Table>

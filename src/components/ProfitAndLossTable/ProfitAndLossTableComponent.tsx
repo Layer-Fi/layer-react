@@ -7,9 +7,9 @@ import { Button } from '../ui/Button/Button'
 import { MoneySpan } from '../ui/Typography/MoneyText'
 import classNames from 'classnames'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
-import type { LineItem } from '../../utils/schema/utils'
 import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { useEffectOnMount } from '../../hooks/useEffectOnMount/useEffectOnMount'
+import type { LineItem } from '../../schemas/common/lineItem'
 
 export interface ProfitAndLossTableStringOverrides {
   grossProfitLabel?: string

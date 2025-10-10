@@ -104,27 +104,53 @@ export interface ServiceOfferingPlatformConfig {
 
 export type ServiceOfferingType = 'accounting' | 'bookkeeping'
 
-export interface ServiceOfferingOverrides<StringOverrideKeys extends string, MediaUrlKeys extends string, CtaKeys extends string> {
-  stringOverrides?: Partial<Record<StringOverrideKeys, string>>
-  mediaUrls?: Partial<Record<MediaUrlKeys, string>>
-  cta?: Partial<Record<CtaKeys, ServiceOfferingLink>>
+/**
+ * Utility type for creating deep partial types - makes all properties optional recursively
+ */
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object
+    ? DeepPartial<T[P]>
+    : T[P];
 }
 
-export interface ServiceOfferingOverridesResolved<StringOverrideKeys extends string, MediaUrlKeys extends string, CtaKeys extends string> {
-  stringOverrides: Record<StringOverrideKeys, string>
-  mediaUrls: Record<MediaUrlKeys, string>
-  cta: Record<CtaKeys, ServiceOfferingLink>
+/**
+ * Configuration for the hero/main content section of the service offering page
+ */
+export type HeroContentConfig = {
+  stringOverrides: {
+    title: string
+    subtitle: string
+    heading1: string
+    heading1Desc: string
+    heading2: string
+    heading2Desc: string
+  }
+  mediaUrls: {
+    topOfFoldImage: string
+  }
+  cta: {
+    primary: ServiceOfferingLink
+    secondary: ServiceOfferingLink
+  }
 }
 
-export type HeroContentStringOverrideKeys = 'title' | 'subtitle' | 'heading1' | 'heading1Desc' | 'heading2' | 'heading2Desc'
-export type HeroContentMediaUrlKeys = 'topOfFoldImage'
-export type HeroContentCtaKeys = 'primary' | 'secondary'
-export type HeroContentConfigOverrides = ServiceOfferingOverrides<HeroContentStringOverrideKeys, HeroContentMediaUrlKeys, HeroContentCtaKeys>
-export type HeroContentConfigOverridesResolved = ServiceOfferingOverridesResolved<HeroContentStringOverrideKeys, HeroContentMediaUrlKeys, HeroContentCtaKeys>
-
-export type ServiceOfferingStringOverrideKeys = 'badge' | 'title' | 'subtitle' | 'priceAmount' | 'priceUnit'
-export type ServiceOfferingMediaUrlKeys = 'offerImage'
-export type ServiceOfferingCtaKeys = 'primary'
-export type ServiceOfferingConfigOverrides = ServiceOfferingOverrides<ServiceOfferingStringOverrideKeys, ServiceOfferingMediaUrlKeys, ServiceOfferingCtaKeys>
-export type ServiceOfferingConfigOverridesResolved = ServiceOfferingOverridesResolved<
-  ServiceOfferingStringOverrideKeys, ServiceOfferingMediaUrlKeys, ServiceOfferingCtaKeys> & { offerType: ServiceOfferingType }
+/**
+ * Configuration for individual service offering cards (accounting or bookkeeping)
+ */
+export type ServiceOfferingCardConfig = {
+  offerType: ServiceOfferingType
+  stringOverrides: {
+    badge: string
+    title: string
+    subtitle: string
+    priceAmount: string
+    priceUnit: string
+  }
+  mediaUrls: {
+    offerImage: string
+  }
+  cta: {
+    primary: ServiceOfferingLink
+  }
+  showStartingAtLabel: boolean
+}

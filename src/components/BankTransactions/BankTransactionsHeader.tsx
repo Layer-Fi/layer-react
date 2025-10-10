@@ -4,7 +4,7 @@ import { DisplayState, type DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { ButtonVariant, DownloadButton as DownloadButtonComponent } from '../Button'
 import { Header } from '../Container'
-import { DatePicker } from '../DatePicker'
+import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
 import { SyncingComponent } from '../SyncingComponent'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
@@ -158,7 +158,7 @@ export const BankTransactionsHeader = ({
       </div>
       {withDatePicker && dateRange
         ? (
-          <DatePicker
+          <DeprecatedDatePicker
             displayMode='monthPicker'
             selected={dateRange.startDate}
             onChange={(date) => {

@@ -186,7 +186,7 @@ export const InvoiceTable = () => {
   )
 
   const { data, isLoading, isError, size, setSize, refetch } = useListInvoices({ ...listInvoiceParams })
-  const invoices = data?.flatMap(({ data }) => data)
+  const invoices = useMemo(() => data?.flatMap(({ data }) => data), [data])
 
   const paginationMeta = data?.[data.length - 1].meta.pagination
   const hasMore = paginationMeta?.hasMore

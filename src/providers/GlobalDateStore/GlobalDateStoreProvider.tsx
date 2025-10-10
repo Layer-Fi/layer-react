@@ -10,7 +10,7 @@ import { useState, createContext, type PropsWithChildren, useContext, useMemo } 
 import { createStore, useStore } from 'zustand'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { useStoreWithDateSelected } from '../../utils/zustand/useStoreWithDateSelected'
-import type { UnifiedPickerMode } from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
+import type { UnifiedPickerMode } from '../../components/DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
 
 const _DATE_PICKER_MODES = [
   'dayPicker',

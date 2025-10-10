@@ -1,36 +1,28 @@
-import { HeroContentConfigOverridesResolved, HeroContentConfigOverrides, ServiceOfferingConfigOverridesResolved, ServiceOfferingConfigOverrides } from './types'
+import { HeroContentConfig, ServiceOfferingCardConfig, DeepPartial } from './types'
+import { merge } from 'lodash'
 
 /**
- * Merges main content config overrides with defaults.
- * @param defaults The default override values (must be complete)
+ * Merges hero content config overrides with defaults.
+ * @param defaults The default configuration (must be complete)
  * @param overrides The partial overrides to merge
- * @returns A merged HeroContentConfigOverridesResolved object with all keys required
+ * @returns A merged HeroContentConfig object with all keys required
  */
-export function mergeHeroContentOverrides(
-  defaults: HeroContentConfigOverridesResolved,
-  overrides: HeroContentConfigOverrides,
-): HeroContentConfigOverridesResolved {
-  return {
-    stringOverrides: { ...defaults.stringOverrides, ...overrides.stringOverrides },
-    mediaUrls: { ...defaults.mediaUrls, ...overrides.mediaUrls },
-    cta: { ...defaults.cta, ...overrides.cta },
-  }
+export function mergeHeroContentConfig(
+  defaults: HeroContentConfig,
+  overrides: DeepPartial<HeroContentConfig>,
+): HeroContentConfig {
+  return merge(defaults, overrides)
 }
 
 /**
-   * Merges service offering config overrides with defaults.
-   * @param defaults The default override values (must be complete)
-   * @param overrides The partial overrides to merge
-   * @returns A merged ServiceOfferingConfigOverridesResolved object with all keys required
-   */
-export function mergeServiceOfferingOverrides(
-  defaults: ServiceOfferingConfigOverridesResolved,
-  overrides: ServiceOfferingConfigOverrides,
-): ServiceOfferingConfigOverridesResolved {
-  return {
-    offerType: defaults.offerType,
-    stringOverrides: { ...defaults.stringOverrides, ...overrides.stringOverrides },
-    mediaUrls: { ...defaults.mediaUrls, ...overrides.mediaUrls },
-    cta: { ...defaults.cta, ...overrides.cta },
-  }
+ * Merges service offering config overrides with defaults.
+ * @param defaults The default configuration (must be complete)
+ * @param overrides The partial overrides to merge
+ * @returns A merged ServiceOfferingCardConfig object with all keys required
+ */
+export function mergeServiceOfferingConfig(
+  defaults: ServiceOfferingCardConfig,
+  overrides: DeepPartial<ServiceOfferingCardConfig>,
+): ServiceOfferingCardConfig {
+  return merge(defaults, overrides)
 }

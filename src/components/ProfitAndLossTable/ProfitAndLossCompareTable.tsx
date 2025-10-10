@@ -15,8 +15,8 @@ import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookke
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import { HStack } from '../ui/Stack/Stack'
 import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import { LineItem } from '../../utils/schema/utils'
 import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
+import { LineItem } from '../../schemas/common/lineItem'
 
 interface ProfitAndLossCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides

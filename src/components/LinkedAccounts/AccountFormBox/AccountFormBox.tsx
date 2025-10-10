@@ -5,7 +5,7 @@ import { Checkbox } from '../../ui/Checkbox/Checkbox'
 import { ErrorText, Text, TextSize } from '../../Typography'
 import { InputGroup } from '../../Input'
 import { AmountInput } from '../../Input/AmountInput'
-import { DatePicker } from '../../DatePicker'
+import { DeprecatedDatePicker } from '../../DeprecatedDatePicker/DeprecatedDatePicker'
 import { isEqual, startOfDay } from 'date-fns'
 import CheckCircle from '../../../icons/CheckCircle'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
@@ -87,7 +87,7 @@ export const AccountFormBox = ({
         </div>
         <div className={`${CLASS_NAME}__details-col__inputs`}>
           <InputGroup label='Opening date'>
-            <DatePicker
+            <DeprecatedDatePicker
               displayMode='dayPicker'
               onChange={(v) => {
                 if (!value.openingDate || !isEqual(value.openingDate, v as Date)) {
