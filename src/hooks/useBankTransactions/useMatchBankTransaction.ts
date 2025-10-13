@@ -83,10 +83,8 @@ export function useMatchBankTransaction({
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => (
-          tags.includes(BANK_ACCOUNTS_TAG_KEY)
-          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY)
-        ),
+        tags => tags.includes(BANK_ACCOUNTS_TAG_KEY)
+          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
       ))
       /**
        * SWR does not expose infinite queries through the matcher
