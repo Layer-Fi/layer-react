@@ -1,5 +1,5 @@
 import { debounce } from 'lodash'
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
   useBankTransactionsContext,
@@ -42,6 +42,7 @@ import { HStack } from '../ui/Stack/Stack'
 import { SuggestedCategorizationRuleUpdatesModal } from './SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
 import { SuggestedCategorizationRuleUpdatesDrawer } from '../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
 import { BulkSelectionStoreProvider } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { CategorizationRulesContext, CategorizationRulesProvider } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -103,22 +104,24 @@ export const BankTransactions = ({
 
   return (
     <ErrorBoundary onError={onError}>
-      <BankTransactionsProvider
-        monthlyView={monthlyView}
-        applyGlobalDateRange={applyGlobalDateRange}
-      >
-        <LegacyModeProvider overrideMode={mode}>
-          <BankTransactionTagVisibilityProvider showTags={showTags}>
-            <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-              <InAppLinkProvider renderInAppLink={renderInAppLink}>
-                <BulkSelectionStoreProvider>
-                  <BankTransactionsContent {...props} />
-                </BulkSelectionStoreProvider>
-              </InAppLinkProvider>
-            </BankTransactionCustomerVendorVisibilityProvider>
-          </BankTransactionTagVisibilityProvider>
-        </LegacyModeProvider>
-      </BankTransactionsProvider>
+      <CategorizationRulesProvider>
+        <BankTransactionsProvider
+          monthlyView={monthlyView}
+          applyGlobalDateRange={applyGlobalDateRange}
+        >
+          <LegacyModeProvider overrideMode={mode}>
+            <BankTransactionTagVisibilityProvider showTags={showTags}>
+              <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
+                <InAppLinkProvider renderInAppLink={renderInAppLink}>
+                  <BulkSelectionStoreProvider>
+                    <BankTransactionsContent {...props} />
+                  </BulkSelectionStoreProvider>
+                </InAppLinkProvider>
+              </BankTransactionCustomerVendorVisibilityProvider>
+            </BankTransactionTagVisibilityProvider>
+          </LegacyModeProvider>
+        </BankTransactionsProvider>
+      </CategorizationRulesProvider>
     </ErrorBoundary>
   )
 }
@@ -158,10 +161,10 @@ const BankTransactionsContent = ({
     display,
     hasMore,
     fetchMore,
-    ruleSuggestion,
-    setRuleSuggestion,
     removeAfterCategorize,
   } = useBankTransactionsContext()
+
+  const { ruleSuggestion, setRuleSuggestion } = useContext(CategorizationRulesContext)
 
   const {
     setFilters,
