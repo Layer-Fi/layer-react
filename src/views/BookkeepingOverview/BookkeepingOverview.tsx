@@ -73,13 +73,15 @@ export const BookkeepingOverview = ({
     }
   }
 
-  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings(1)
+  const { data, isError, isLoading, isValidating } = useCallBookings(1)
 
-  const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
+  const callBooking: CallBookingData | null = data?.[0]?.data[0] ?? null
 
-  const callBookingVisible = slotProps?._showCallBookings && callBooking && !isLoading && !isValidating && !isError
+  const callBookingVisible = _showBookACall && callBooking && !isLoading && !isValidating && !isError
 
-  console.debug(callBookings, isError, isLoading, isValidating)
+  if (!isError && !isLoading && !isValidating) {
+    console.debug(data, isError, isLoading, isValidating)
+  }
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -89,7 +91,6 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={(
           <VStack gap='lg'>
-            Hello
             {callBookingVisible && (
               <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} onBookCall={handleBookCall} />
             )}
