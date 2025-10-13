@@ -51,7 +51,7 @@ export const BankTransactionsTable = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-  showBulkSelection = true,
+  showBulkSelection = false,
 
   stringOverrides,
   isSyncing = false,

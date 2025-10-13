@@ -81,6 +81,7 @@ export interface BankTransactionsProps {
   collapseHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
+  _showBulkSelection?: boolean
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -96,6 +97,7 @@ export const BankTransactions = ({
   applyGlobalDateRange = false,
   mode,
   renderInAppLink,
+  _showBulkSelection = false,
   ...props
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
@@ -114,7 +116,7 @@ export const BankTransactions = ({
               <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
                 <InAppLinkProvider renderInAppLink={renderInAppLink}>
                   <BulkSelectionStoreProvider>
-                    <BankTransactionsContent {...props} />
+                    <BankTransactionsContent {...props} _showBulkSelection={_showBulkSelection} />
                   </BulkSelectionStoreProvider>
                 </InAppLinkProvider>
               </BankTransactionCustomerVendorVisibilityProvider>
@@ -142,6 +144,7 @@ const BankTransactionsContent = ({
   hideHeader = false,
   collapseHeader = false,
   stringOverrides,
+  _showBulkSelection = false,
 }: BankTransactionsProps) => {
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
@@ -363,6 +366,7 @@ const BankTransactionsContent = ({
           withUploadMenu={showUploadOptions}
           collapseHeader={collapseHeader}
           showStatusToggle={showStatusToggle}
+          _showBulkSelection={_showBulkSelection}
         />
       )}
 
@@ -385,6 +389,7 @@ const BankTransactionsContent = ({
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
+            showBulkSelection={_showBulkSelection}
           />
         </div>
       )}

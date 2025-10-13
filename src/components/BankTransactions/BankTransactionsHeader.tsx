@@ -41,6 +41,7 @@ export interface BankTransactionsHeaderProps {
   withUploadMenu?: boolean
   showStatusToggle?: boolean
   collapseHeader?: boolean
+  _showBulkSelection?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -127,6 +128,7 @@ export const BankTransactionsHeader = ({
   withUploadMenu,
   showStatusToggle,
   collapseHeader,
+  _showBulkSelection = false,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
   const { display } = useBankTransactionsContext()
@@ -215,7 +217,7 @@ export const BankTransactionsHeader = ({
     >
       {!collapseHeader && headerTopRow}
 
-      {count > 0
+      {_showBulkSelection && count > 0
         ? (
           <BulkActionsHeader
             selectedCount={count}
