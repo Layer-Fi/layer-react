@@ -14,8 +14,9 @@ import { BookkeepingProfitAndLossSummariesContainer } from './internal/Bookkeepi
 import { useKeepInMobileViewport } from './useKeepInMobileViewport'
 import { VStack } from '../../components/ui/Stack/Stack'
 import { CallBooking } from '../../components/CallBooking/CallBooking'
-import { CallBookingPurpose, CallBookingState, CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
+import { type CallBooking as CallBookingData } from '../../schemas/callBookings'
 import { useCalendly } from '../../hooks/useCalendly/useCalendly'
+import { useCallBookings } from '../../features/callBookings/api/useCallBookings'
 
 export interface BookkeepingOverviewProps {
   showTitle?: boolean
@@ -70,22 +71,13 @@ export const BookkeepingOverview = ({
     }
   }
 
-  const callBooking: CallBookingData = {
-    id: '123',
-    businessId: '123',
-    externalId: '123',
-    purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
-    state: CallBookingState.SCHEDULED,
-    callType: CallBookingType.GOOGLE_MEET,
-    eventStartAt: new Date(),
-    callLink: new URL('https://meet.google.com/123'),
-    cancellationReason: undefined,
-    didAttend: undefined,
-    bookkeeperName: 'John Doe',
-    bookkeeperEmail: 'john.doe@example.com',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }
+  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings(1)
+
+  const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
+
+  const callBookingVisible = slotProps?._showCallBookings && callBooking && !isLoading && !isValidating && !isError
+
+  console.debug(callBookings, isError, isLoading, isValidating)
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -95,7 +87,8 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={(
           <VStack gap='lg'>
-            {slotProps?._showCallBookings && (
+            Hello
+            {callBookingVisible && (
               <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} onBookCall={handleBookCall} />
             )}
             <Tasks
@@ -112,7 +105,7 @@ export const BookkeepingOverview = ({
             onClick={() => (upperElementInFocus.current = true)}
           >
             <VStack gap='lg'>
-              {slotProps?._showCallBookings && (
+              {callBookingVisible && (
                 <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} onBookCall={handleBookCall} />
               )}
               <Tasks
