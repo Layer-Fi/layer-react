@@ -60,7 +60,7 @@ export const BankTransactionsTable = ({
   onRefresh,
 }: BankTransactionsTableProps) => {
   const { selectedIds } = useSelectedIds()
-  const { selectMultiple, clearSelection } = useBulkSelectionActions()
+  const { selectMultiple, deselectMultiple } = useBulkSelectionActions()
 
   const showReceiptColumn =
     (showReceiptUploads
@@ -74,7 +74,6 @@ export const BankTransactionsTable = ({
     [showReceiptColumn],
   )
 
-  // Calculate checkbox state
   const currentPageIds = useMemo(
     () => bankTransactions?.map(tx => tx.id) ?? [],
     [bankTransactions],
@@ -90,14 +89,12 @@ export const BankTransactionsTable = ({
 
   const handleHeaderCheckboxChange = useCallback((checked: boolean) => {
     if (checked) {
-      // Select all on current page
       selectMultiple(currentPageIds)
     }
     else {
-      // Deselect all
-      clearSelection()
+      deselectMultiple(currentPageIds)
     }
-  }, [currentPageIds, selectMultiple, clearSelection])
+  }, [currentPageIds, selectMultiple, deselectMultiple])
 
   return (
     <table

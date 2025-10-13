@@ -9,39 +9,43 @@ type BulkSelectionActions = {
   select: (id: string) => void
   deselect: (id: string) => void
   selectMultiple: (ids: string[]) => void
+  deselectMultiple: (ids: string[]) => void
   clearSelection: () => void
 }
 
-type BulkSelectionStore = BulkSelectionState & {
-  actions: BulkSelectionActions
-}
+type BulkSelectionStore = BulkSelectionState & BulkSelectionActions
 
 function buildStore() {
   return createStore<BulkSelectionStore>(set => ({
     selected: new Set<string>(),
 
-    actions: {
-      select: (id: string) =>
-        set(state => ({
-          selected: new Set(state.selected).add(id),
-        })),
+    select: (id: string) =>
+      set(state => ({
+        selected: new Set(state.selected).add(id),
+      })),
 
-      deselect: (id: string) =>
-        set((state) => {
-          const newSet = new Set(state.selected)
-          newSet.delete(id)
-          return { selected: newSet }
-        }),
+    deselect: (id: string) =>
+      set((state) => {
+        const newSet = new Set(state.selected)
+        newSet.delete(id)
+        return { selected: newSet }
+      }),
 
-      selectMultiple: (ids: string[]) =>
-        set((state) => {
-          const newSet = new Set(state.selected)
-          ids.forEach(id => newSet.add(id))
-          return { selected: newSet }
-        }),
+    selectMultiple: (ids: string[]) =>
+      set((state) => {
+        const newSet = new Set(state.selected)
+        ids.forEach(id => newSet.add(id))
+        return { selected: newSet }
+      }),
 
-      clearSelection: () => set({ selected: new Set<string>() }),
-    },
+    deselectMultiple: (ids: string[]) =>
+      set((state) => {
+        const newSet = new Set(state.selected)
+        ids.forEach(id => newSet.delete(id))
+        return { selected: newSet }
+      }),
+
+    clearSelection: () => set({ selected: new Set<string>() }),
   }))
 }
 
@@ -76,12 +80,13 @@ export function useCountSelectedIds() {
 export function useBulkSelectionActions() {
   const store = useBulkSelectionStore()
 
-  const select = useStore(store, state => state.actions.select)
-  const deselect = useStore(store, state => state.actions.deselect)
-  const selectMultiple = useStore(store, state => state.actions.selectMultiple)
-  const clearSelection = useStore(store, state => state.actions.clearSelection)
+  const select = useStore(store, state => state.select)
+  const deselect = useStore(store, state => state.deselect)
+  const selectMultiple = useStore(store, state => state.selectMultiple)
+  const deselectMultiple = useStore(store, state => state.deselectMultiple)
+  const clearSelection = useStore(store, state => state.clearSelection)
 
-  return { select, deselect, selectMultiple, clearSelection }
+  return { select, deselect, selectMultiple, deselectMultiple, clearSelection }
 }
 
 export function useIdIsSelected() {
