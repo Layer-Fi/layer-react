@@ -7,13 +7,13 @@ import { Heading } from '../ui/Typography/Heading'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 
-import { DefaultHeroContentConfig, DefaultAccountingOfferingContentConfig, DefaultBookkeepingOfferingContentConfig, ServiceOfferingDefaultTextContent, ServiceOfferingContentID } from './content'
-import { HeroContentConfigOverrides, ServiceOfferingConfigOverrides, ServiceOfferingLink, ServiceOfferingPlatformConfig, ServiceOfferingType } from './types'
+import { DefaultHeroContentConfig, DefaultAccountingOfferingConfig, DefaultBookkeepingOfferingConfig, ServiceOfferingDefaultTextContent, ServiceOfferingContentID } from './content'
+import { HeroContentConfig, ServiceOfferingCardConfig, DeepPartial, ServiceOfferingLink, ServiceOfferingPlatformConfig, ServiceOfferingType } from './types'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from '../../hooks/useCalendly/useCalendly'
 import { View } from '../View'
-import { mergeHeroContentOverrides, mergeServiceOfferingOverrides } from './utils'
-import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
+import { mergeHeroContentConfig, mergeServiceOfferingConfig } from './utils'
+import { useSizeClass, useWindowSize } from '../../hooks/useWindowSize/useWindowSize'
 
 /**
  * Props for the ServiceOffering component.
@@ -25,13 +25,13 @@ import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
 export interface ServiceOfferingProps {
   platform: ServiceOfferingPlatformConfig
   availableOffers: ServiceOfferingType[]
-  heroOverrides: HeroContentConfigOverrides
+  heroOverrides: DeepPartial<HeroContentConfig>
   offeringOverrides: {
     stringOverrides?: {
       sectionTitle: string
     }
-    accounting: ServiceOfferingConfigOverrides
-    bookkeeping: ServiceOfferingConfigOverrides
+    accounting: DeepPartial<ServiceOfferingCardConfig>
+    bookkeeping: DeepPartial<ServiceOfferingCardConfig>
   }
 }
 
@@ -51,14 +51,18 @@ export const ServiceOffering = ({
 }: ServiceOfferingProps) => {
   const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly()
   const { isMobile } = useSizeClass()
+  const [width] = useWindowSize()
+
+  // Track layout mode to re-trigger image animation when it changes
+  const isStackedLayout = width <= 1440
 
   const hasAccountingEnabled = availableOffers.includes('accounting')
   const hasBookkeepingEnabled = availableOffers.includes('bookkeeping')
 
-  const heroConfig = mergeHeroContentOverrides(DefaultHeroContentConfig, heroOverrides)
+  const heroConfig = mergeHeroContentConfig(DefaultHeroContentConfig, heroOverrides)
   const offeringSectionTitle = offeringOverrides.stringOverrides?.sectionTitle ?? ServiceOfferingDefaultTextContent[ServiceOfferingContentID.offersTitle]
-  const accountingOfferingConfig = mergeServiceOfferingOverrides(DefaultAccountingOfferingContentConfig, offeringOverrides.accounting)
-  const bookkeepingOfferingConfig = mergeServiceOfferingOverrides(DefaultBookkeepingOfferingContentConfig, offeringOverrides.bookkeeping)
+  const accountingOfferingConfig = mergeServiceOfferingConfig(DefaultAccountingOfferingConfig, offeringOverrides.accounting)
+  const bookkeepingOfferingConfig = mergeServiceOfferingConfig(DefaultBookkeepingOfferingConfig, offeringOverrides.bookkeeping)
 
   const baseClassName = classNames(
     'Layer__service-offering',
@@ -83,31 +87,31 @@ export const ServiceOffering = ({
   const renderMainContent = useCallback(() => (
     <VStack className='Layer__service-offering--main'>
       <div className='Layer__service-offering__responsive-layout'>
-        <VStack gap='2xl' className='Layer__service-offering__responsive-content'>
+        <VStack gap={isMobile ? 'md' : 'lg'} pi={isMobile ? 'md' : 'lg'} className='Layer__service-offering__responsive-content'>
           <VStack>
             {!!heroConfig.stringOverrides?.title === false && (
               <>
-                <Heading size={isMobile ? '2xl' : '3xl'}>
+                <Heading size={isMobile ? 'xl' : '3xl'}>
                   {platform.platformName}
                   <br />
                 </Heading>
-                <Heading size={isMobile ? '2xl' : '3xl'} variant='subtle' weight='normal'>Accounting</Heading>
+                <Heading size={isMobile ? 'xl' : '3xl'} variant='subtle' weight='normal'>Accounting</Heading>
               </>
             )}
             {heroConfig.stringOverrides?.title != '' && (
               <>
-                <Heading size={isMobile ? '2xl' : '3xl'}>
+                <Heading size={isMobile ? 'xl' : '3xl'}>
                   {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.title, platform)}
                 </Heading>
               </>
             )}
           </VStack>
-          <Heading size={isMobile ? 'sm' : 'md'}>
+          <Heading variant='subtle' size={isMobile ? 'sm' : 'md'}>
             {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.subtitle, platform)}
           </Heading>
           <VStack>
-            <HStack gap='lg' pb='xs'>
-              <VStack pb='xs'>
+            <HStack gap='lg' pb={isMobile ? '3xs' : 'xs'}>
+              <VStack gap='xs'>
                 <Heading size={isMobile ? 'md' : 'lg'}>
                   {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading1, platform)}
                 </Heading>
@@ -117,7 +121,7 @@ export const ServiceOffering = ({
               </VStack>
             </HStack>
             <HStack gap='lg' pb='xs'>
-              <VStack pb='xs'>
+              <VStack gap='xs'>
                 <Heading size={isMobile ? 'md' : 'lg'}>
                   {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading2, platform)}
                 </Heading>
@@ -133,7 +137,11 @@ export const ServiceOffering = ({
           </HStack>
         </VStack>
         <VStack className='Layer__service-offering__responsive-image'>
-          <img src={heroConfig.mediaUrls.topOfFoldImage} alt={`${platform.platformName} Accounting dashboard interface showing financial data and business insights`} />
+          <img
+            key={`hero-image-${isStackedLayout}`}
+            src={heroConfig.mediaUrls.topOfFoldImage}
+            alt={`${platform.platformName} Accounting dashboard interface showing financial data and business insights`}
+          />
         </VStack>
       </div>
       {isCalendlyVisible && (
@@ -147,16 +155,17 @@ export const ServiceOffering = ({
             onModalClose={closeCalendly}
             open={isCalendlyVisible}
             rootElement={document.getElementById('root')!}
+            LoadingSpinner={() => <></>}
           />
         </HStack>
       )}
     </VStack>
-  ), [platform, heroConfig, isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly, handleLearnMore, handleMainCta, isMobile])
+  ), [platform, heroConfig, isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly, handleLearnMore, handleMainCta, isMobile, isStackedLayout])
 
   const RenderOffers = useMemo(() => (
-    <VStack gap='3xl' className='Layer__service-offering--offers'>
+    <VStack gap={isMobile ? 'lg' : '2xl'} className='Layer__service-offering--offers'>
       <HStack align='center'>
-        <Heading size={isMobile ? 'sm' : 'md'} align='center' style={{ maxWidth: '480px', margin: '0 auto' }}>
+        <Heading size='md' align='center' style={{ maxWidth: '480px', margin: '0 auto' }}>
           {ServiceOfferingHelper.bindTextValues(offeringSectionTitle, platform)}
         </Heading>
       </HStack>

@@ -14,20 +14,16 @@ import { DataModel } from '../../types/general'
 import { useLinkedAccounts } from '../useLinkedAccounts'
 import {
   BankTransactionFilters,
-  BankTransactionsDateFilterMode,
-  UseAugmentedBankTransactionsParams,
 } from './types'
 import {
   applyAccountFilter,
   applyAmountFilter,
   applyCategorizationStatusFilter,
-  collectAccounts,
 } from './utils'
-import { endOfMonth, startOfMonth } from 'date-fns'
 import { useBankTransactions, type UseBankTransactionsOptions } from './useBankTransactions'
 import { useCategorizeBankTransaction } from './useCategorizeBankTransaction'
 import { useMatchBankTransaction } from './useMatchBankTransaction'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { decodeRulesSuggestion, UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -103,8 +99,12 @@ export function bankTransactionFiltersToHookOptions(
   }
 }
 
+export type UseAugmentedBankTransactionsWithFiltersParams = {
+  filters: BankTransactionFilters
+}
+
 export const useAugmentedBankTransactions = (
-  params?: UseAugmentedBankTransactionsParams,
+  params: UseAugmentedBankTransactionsWithFiltersParams,
 ) => {
   const {
     addToast,
@@ -115,30 +115,9 @@ export const useAugmentedBankTransactions = (
     eventCallbacks,
   } = useLayerContext()
 
-  const dateFilterMode = params?.applyGlobalDateRange
-    ? BankTransactionsDateFilterMode.GlobalDateRange
-    : params?.monthlyView
-      ? BankTransactionsDateFilterMode.MonthlyView
-      : undefined
+  const [ruleSuggestion, setRuleSuggestion] = useState<UpdateCategorizationRulesSuggestion | null>(null)
 
-  const globalDateRange = useGlobalDateRange({ displayMode: 'monthPicker' })
-
-  const defaultDateRange = {
-    startDate: startOfMonth(new Date()),
-    endDate: endOfMonth(new Date()),
-  }
-
-  const initialFilters: BankTransactionFilters = {
-    ...(params?.scope && { categorizationStatus: params?.scope }),
-    ...(dateFilterMode === BankTransactionsDateFilterMode.MonthlyView && { dateRange: defaultDateRange }),
-  }
-
-  const [baseFilters, setBaseFilters] = useState<BankTransactionFilters>(initialFilters)
-
-  const filters = useMemo(() => ({
-    ...baseFilters,
-    ...(dateFilterMode === BankTransactionsDateFilterMode.GlobalDateRange && { dateRange: globalDateRange }),
-  }), [dateFilterMode, baseFilters, globalDateRange])
+  const { filters } = params
 
   const display = filters?.categorizationStatus ?? DisplayState.categorized
 
@@ -186,18 +165,6 @@ export const useAugmentedBankTransactions = (
     return false
   }, [rawResponseData])
 
-  const accountsList = useMemo(
-    () => (data ? collectAccounts(data) : []),
-    [data],
-  )
-
-  const setFilters = useCallback((newFilters: BankTransactionFilters) => {
-    setBaseFilters((prevFilters: BankTransactionFilters) => ({
-      ...prevFilters,
-      ...newFilters,
-    }))
-  }, [])
-
   const filteredData = useMemo(() => {
     let filtered = data
 
@@ -224,6 +191,10 @@ export const useAugmentedBankTransactions = (
   }, [filters, data])
 
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
+    if (newBankTransaction.update_categorization_rules_suggestion) {
+      const decodedRuleSuggestion = decodeRulesSuggestion(newBankTransaction.update_categorization_rules_suggestion)
+      setRuleSuggestion(decodedRuleSuggestion)
+    }
     const updatedData = rawResponseData?.map((page) => {
       return {
         ...page,
@@ -248,7 +219,7 @@ export const useAugmentedBankTransactions = (
     const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
 
     if (existingTransaction) {
-      updateOneLocal({ ...existingTransaction, processing: true, error: undefined })
+      updateOneLocal({ ...existingTransaction, update_categorization_rules_suggestion: undefined, processing: true, error: undefined })
     }
 
     return categorizeBankTransaction({
@@ -483,10 +454,8 @@ export const useAugmentedBankTransactions = (
     updateOneLocal,
     shouldHideAfterCategorize,
     removeAfterCategorize,
-    filters,
-    setFilters,
-    dateFilterMode,
-    accountsList,
+    ruleSuggestion,
+    setRuleSuggestion,
     display,
     fetchMore,
     hasMore,

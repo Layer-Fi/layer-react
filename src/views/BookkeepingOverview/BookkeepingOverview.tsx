@@ -38,6 +38,7 @@ export interface BookkeepingOverviewProps {
     _showCallBookings?: boolean
     calendlyUrl?: string
   }
+  _showBookACall?: boolean
   onClickReconnectAccounts?: () => void
   /**
    * @deprecated Use `stringOverrides.title` instead
@@ -53,6 +54,7 @@ export const BookkeepingOverview = ({
   onClickReconnectAccounts,
   stringOverrides,
   slotProps,
+  _showBookACall,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()

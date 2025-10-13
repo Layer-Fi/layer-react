@@ -15,7 +15,11 @@ import {
   SingleCategoryUpdate,
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
-import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
+import {
+  getCategorizePayload,
+  hasMatch,
+  hasSuggestedTransferMatches,
+} from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
 import { Tag, makeTagKeyValueFromTag, makeTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
 import { TagDimensionsGroup } from '../Journal/JournalEntryForm/TagDimensionsGroup'
@@ -490,7 +494,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                         },
                         {
                           value: 'match',
-                          label: 'Match',
+                          label: hasSuggestedTransferMatches(bankTransaction) ? 'Transfer' : 'Match',
                           disabled: !hasMatch(bankTransaction),
                           disabledMessage:
                         'We could not find matching transactions',

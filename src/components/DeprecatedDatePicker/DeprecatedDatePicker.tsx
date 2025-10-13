@@ -4,11 +4,11 @@ import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
 import { Button, ButtonVariant } from '../Button'
-import { CustomDateRange, DatePickerOptions } from './DatePickerOptions'
+import { CustomDateRange, DeprecatedDatePickerOptions } from './DeprecatedDatePickerOptions'
 import type {
   UnifiedPickerMode,
-  DatePickerModeSelectorProps,
-} from './ModeSelector/DatePickerModeSelector'
+  DeprecatedDatePickerModeSelectorProps,
+} from './ModeSelector/DeprecatedDatePickerModeSelector'
 import classNames from 'classnames'
 import { endOfDay, endOfMonth, endOfYear, getYear } from 'date-fns'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
@@ -30,7 +30,7 @@ const ReactDatePicker = (((RDP.default as any).default as any)
 
 type NavigationArrows = 'desktop' | 'mobile'
 
-interface DatePickerProps {
+interface DeprecatedDatePickerProps {
   displayMode: UnifiedPickerMode | 'timePicker'
   selected: Date | [Date, Date | null]
   onChange: (date: Date | [Date, Date | null]) => void
@@ -50,12 +50,12 @@ interface DatePickerProps {
   navigateArrows?: NavigationArrows[]
   onChangeMode?: (mode: UnifiedPickerMode) => void
   slots?: {
-    ModeSelector: FC<DatePickerModeSelectorProps>
+    ModeSelector: FC<DeprecatedDatePickerModeSelectorProps>
   }
   highlightYears?: number[]
 }
 
-const isRangeMode = (displayMode: DatePickerProps['displayMode']) =>
+const isRangeMode = (displayMode: DeprecatedDatePickerProps['displayMode']) =>
   displayMode === 'dayRangePicker' || displayMode === 'monthRangePicker'
 
 const showNavigationArrows = (navigateArrows?: NavigationArrows[], isDesktop?: boolean) => {
@@ -130,7 +130,11 @@ const getDateFormat = (mode: UnifiedPickerMode | 'timePicker') => {
       })
   }
 }
-export const DatePicker = ({
+
+/**
+ * @deprecated This will be replaced with the new `DatePicker` and `DateSelection` components.
+ */
+export const DeprecatedDatePicker = ({
   selected,
   onChange,
   disabled,
@@ -152,7 +156,7 @@ export const DatePicker = ({
   onChangeMode,
   slots,
   ...props
-}: DatePickerProps) => {
+}: DeprecatedDatePickerProps) => {
   const { ModeSelector } = slots ?? {}
 
   const pickerRef = useRef<{
@@ -411,7 +415,7 @@ export const DatePicker = ({
           )
           : null}
         {pickerMode === 'dayRangePicker' && (
-          <DatePickerOptions
+          <DeprecatedDatePickerOptions
             customDateRanges={customDateRanges}
             setSelectedDate={handleSetCustomDate}
           />

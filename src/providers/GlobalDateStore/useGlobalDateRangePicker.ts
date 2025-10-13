@@ -8,7 +8,7 @@ import {
 import {
   DEFAULT_ALLOWED_PICKER_MODES,
   type UnifiedPickerMode,
-} from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
+} from '../../components/DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
 import { getArrayWithAtLeastOneOrFallback, type ReadonlyArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
 
 export const getAllowedDateRangePickerModes = ({

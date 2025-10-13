@@ -1,0 +1,13 @@
+.Layer__ExpandButton {
+  height: 16px;
+  min-width: 16px;
+  transition: transform 0.1s ease-in-out;
+
+  &--collapsed {
+    transform: rotate(-90deg);
+  }
+
+  &--expanded {
+    transform: rotate(0deg);
+  }
+}

@@ -1,0 +1,43 @@
+.Layer__UI__Calendar {
+  width: min-content;
+}
+
+.Layer__UI__CalendarGrid {
+  border-collapse: collapse;
+}
+
+.Layer__UI__CalendarCell,
+.Layer__UI__CalendarHeaderCell {
+  height: 2rem;
+  width: 2rem;
+
+  border-radius: var(--border-radius-3xs);
+  font-size: var(--text-sm);
+
+  line-height: 2rem;
+  text-align: center;
+}
+
+.Layer__UI__CalendarCell {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &[data-hovered] {
+    background-color: var(--color-base-400);
+  }
+
+  &[data-selected] {
+    background-color: var(--color-base-900);
+    color: var(--color-base-0);
+  }
+
+  &[data-disabled] {
+    color: var(--color-base-400);
+  }
+
+  &[data-outside-month] {
+    color: var(--color-base-0);
+    transition: none;
+  }
+}

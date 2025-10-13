@@ -1,4 +1,5 @@
 import { Schema, pipe } from 'effect'
+import { AccountIdentifierSchema } from './accountIdentifier'
 import { TransactionTagSchema } from '../features/tags/tagSchemas'
 import { CustomerSchema } from './customer'
 import { VendorSchema } from './vendor'
@@ -205,3 +206,16 @@ export enum CategoriesListMode {
   Revenue = 'REVENUE',
   Default = 'DEFAULT',
 }
+
+export const ExclusionSchema = Schema.Struct({
+  type: Schema.Literal('Exclusion'),
+  exclusionType: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('exclusion_type'),
+  ),
+})
+
+export const ClassificationSchema = Schema.Union(
+  AccountIdentifierSchema,
+  ExclusionSchema,
+)

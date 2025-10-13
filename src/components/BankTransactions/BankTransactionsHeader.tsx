@@ -4,7 +4,7 @@ import { DisplayState, type DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { ButtonVariant, DownloadButton as DownloadButtonComponent } from '../Button'
 import { Header } from '../Container'
-import { DatePicker } from '../DatePicker'
+import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
 import { SyncingComponent } from '../SyncingComponent'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
@@ -13,6 +13,7 @@ import { MobileComponentType } from './constants'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useBankTransactionsFiltersContext } from '../../contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import { SearchField } from '../SearchField/SearchField'
 import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
@@ -49,7 +50,7 @@ type TransactionsSearchProps = {
 }
 
 function TransactionsSearch({ slot }: TransactionsSearchProps) {
-  const { filters, setFilters } = useBankTransactionsContext()
+  const { filters, setFilters } = useBankTransactionsFiltersContext()
 
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
 
@@ -80,7 +81,7 @@ const DownloadButton = ({
   downloadButtonTextOverride?: string
   iconOnly?: boolean
 }) => {
-  const { filters } = useBankTransactionsContext()
+  const { filters } = useBankTransactionsFiltersContext()
 
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -125,12 +126,12 @@ export const BankTransactionsHeader = ({
   collapseHeader,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
+  const { display } = useBankTransactionsContext()
   const {
     setFilters,
     filters,
     dateFilterMode,
-    display,
-  } = useBankTransactionsContext()
+  } = useBankTransactionsFiltersContext()
 
   const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
   const dateRange = filters?.dateRange
@@ -157,7 +158,7 @@ export const BankTransactionsHeader = ({
       </div>
       {withDatePicker && dateRange
         ? (
-          <DatePicker
+          <DeprecatedDatePicker
             displayMode='monthPicker'
             selected={dateRange.startDate}
             onChange={(date) => {

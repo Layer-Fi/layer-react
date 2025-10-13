@@ -6,17 +6,11 @@
   }
 
   .Layer__call-booking-actions {
-    align-items: start;
-    justify-content: start;
     width: 100%;
     margin-top: var(--spacing-md);
   }
 
   .Layer__call-booking-state {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-    align-items: center;
     text-align: center;
   }
 }

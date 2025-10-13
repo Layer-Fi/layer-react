@@ -1,11 +1,11 @@
-import { DatePicker } from '../DatePicker/DatePicker'
+import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
 import { useBillsContext } from '../../contexts/BillsContext'
 
 export const BillsDatePicker = () => {
   const { dateRange, setDateRange } = useBillsContext()
 
   return (
-    <DatePicker
+    <DeprecatedDatePicker
       displayMode='monthRangePicker'
       selected={[dateRange.startDate, dateRange.endDate]}
       onChange={(e) => {
