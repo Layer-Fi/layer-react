@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
@@ -8,6 +8,8 @@ import {
 } from '../BankTransactions/BankTransactions'
 import { BankTransactionsLoader } from '../BankTransactionsLoader'
 import { SyncingComponent } from '../SyncingComponent'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { useSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
@@ -57,6 +59,9 @@ export const BankTransactionsTable = ({
   lastPage,
   onRefresh,
 }: BankTransactionsTableProps) => {
+  const { selectedIds } = useSelectedIds()
+  const { selectMultiple, clearSelection } = useBulkSelectionActions()
+
   const showReceiptColumn =
     (showReceiptUploads
       && bankTransactions?.some(
@@ -69,6 +74,31 @@ export const BankTransactionsTable = ({
     [showReceiptColumn],
   )
 
+  // Calculate checkbox state
+  const currentPageIds = useMemo(
+    () => bankTransactions?.map(tx => tx.id) ?? [],
+    [bankTransactions],
+  )
+
+  const selectedCount = useMemo(
+    () => currentPageIds.filter(id => selectedIds.has(id)).length,
+    [currentPageIds, selectedIds],
+  )
+
+  const isAllSelected = selectedCount > 0 && selectedCount === currentPageIds.length
+  const isPartiallySelected = selectedCount > 0 && selectedCount < currentPageIds.length
+
+  const handleHeaderCheckboxChange = useCallback((checked: boolean) => {
+    if (checked) {
+      // Select all on current page
+      selectMultiple(currentPageIds)
+    }
+    else {
+      // Deselect all
+      clearSelection()
+    }
+  }, [currentPageIds, selectMultiple, clearSelection])
+
   return (
     <table
       width='100%'
@@ -77,7 +107,16 @@ export const BankTransactionsTable = ({
       <thead>
         <tr>
           {showBulkSelection && (
-            <th className='Layer__table-header Layer__bank-transactions__checkbox-col' />
+            <th className='Layer__table-header Layer__bank-transactions__checkbox-col'>
+              <span className='Layer__table-cell-content'>
+                <Checkbox
+                  isSelected={isAllSelected}
+                  isIndeterminate={isPartiallySelected}
+                  onChange={handleHeaderCheckboxChange}
+                  aria-label='Select all transactions on this page'
+                />
+              </span>
+            </th>
           )}
           <th className='Layer__table-header Layer__bank-transactions__date-col'>
             {stringOverrides?.transactionsTable?.dateColumnHeaderText || 'Date'}

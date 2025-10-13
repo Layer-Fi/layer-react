@@ -1,0 +1,36 @@
+.Layer__bulk-actions-header {
+  background-color: var(--color-primary-50);
+  border-bottom: 1px solid var(--color-primary-200);
+  padding-block: var(--spacing-sm);
+  z-index: 10;
+
+  .Layer__bulk-actions-header__select {
+    min-width: 200px;
+  }
+}
+
+.Layer__bulk-actions-header__selection-info {
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--border-radius-sm);
+  padding-inline: var(--spacing-sm);
+  padding-block: var(--spacing-xs);
+  background-color: var(--color-base-100);
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.Layer__bulk-actions-header__divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--color-base-300);
+  margin-inline: var(--spacing-xs);
+}
+
+.Layer__bulk-actions-header__confirm-button {
+  margin-inline-end: var(--spacing-md);
+}
+
