@@ -43,6 +43,7 @@ import { VStack } from '../ui/Stack/Stack'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
 type Props = {
   index: number
@@ -119,6 +120,10 @@ export const BankTransactionRow = ({
     setShowRetry(false)
     setOpen(!open)
   }
+
+  const { select, deselect } = useBulkSelectionActions()
+  const isSelected = useIdIsSelected()
+  const isTransactionSelected = isSelected(bankTransaction.id)
 
   const openRow = {
     onMouseDown: () => {
@@ -211,9 +216,14 @@ export const BankTransactionRow = ({
           <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
             <span className='Layer__table-cell-content'>
               <Checkbox
-                isSelected={false}
-                onChange={() => {
-                  // TODO: Implement selection logic
+                isSelected={isTransactionSelected}
+                onChange={(selected) => {
+                  if (selected) {
+                    select(bankTransaction.id)
+                  }
+                  else {
+                    deselect(bankTransaction.id)
+                  }
                 }}
               />
             </span>

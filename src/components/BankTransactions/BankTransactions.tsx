@@ -41,6 +41,7 @@ import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkCont
 import { HStack } from '../ui/Stack/Stack'
 import { SuggestedCategorizationRuleUpdatesModal } from './SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
 import { SuggestedCategorizationRuleUpdatesDrawer } from '../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
+import { BulkSelectionStoreProvider } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -110,7 +111,9 @@ export const BankTransactions = ({
           <BankTransactionTagVisibilityProvider showTags={showTags}>
             <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
               <InAppLinkProvider renderInAppLink={renderInAppLink}>
-                <BankTransactionsContent {...props} />
+                <BulkSelectionStoreProvider>
+                  <BankTransactionsContent {...props} />
+                </BulkSelectionStoreProvider>
               </InAppLinkProvider>
             </BankTransactionCustomerVendorVisibilityProvider>
           </BankTransactionTagVisibilityProvider>
