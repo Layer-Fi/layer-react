@@ -29,6 +29,7 @@ interface BankTransactionsTableProps {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
+  showBulkSelection?: boolean
 
   stringOverrides?: BankTransactionsStringOverrides
   isSyncing?: boolean
@@ -48,6 +49,7 @@ export const BankTransactionsTable = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
+  showBulkSelection = true,
 
   stringOverrides,
   isSyncing = false,
@@ -74,6 +76,9 @@ export const BankTransactionsTable = ({
     >
       <thead>
         <tr>
+          {showBulkSelection && (
+            <th className='Layer__table-header Layer__bank-transactions__checkbox-col' />
+          )}
           <th className='Layer__table-header Layer__bank-transactions__date-col'>
             {stringOverrides?.transactionsTable?.dateColumnHeaderText || 'Date'}
           </th>
@@ -132,6 +137,7 @@ export const BankTransactionsTable = ({
                 showReceiptUploads={showReceiptUploads}
                 showReceiptUploadColumn={showReceiptColumn}
                 showTooltips={showTooltips}
+                showBulkSelection={showBulkSelection}
                 stringOverrides={stringOverrides?.bankTransactionCTAs}
               />
             ),

@@ -42,6 +42,7 @@ import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransa
 import { VStack } from '../ui/Stack/Stack'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
 
 type Props = {
   index: number
@@ -55,6 +56,7 @@ type Props = {
   showReceiptUploads: boolean
   showReceiptUploadColumn: boolean
   showTooltips: boolean
+  showBulkSelection?: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
 }
 
@@ -99,6 +101,7 @@ export const BankTransactionRow = ({
   showReceiptUploads,
   showReceiptUploadColumn,
   showTooltips,
+  showBulkSelection = false,
   stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -204,6 +207,18 @@ export const BankTransactionRow = ({
   return (
     <>
       <tr className={rowClassName}>
+        {showBulkSelection && (
+          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
+            <span className='Layer__table-cell-content'>
+              <Checkbox
+                isSelected={false}
+                onChange={() => {
+                  // TODO: Implement selection logic
+                }}
+              />
+            </span>
+          </td>
+        )}
         <td
           className='Layer__table-cell Layer__bank-transaction-table__date-col'
           {...openRow}
