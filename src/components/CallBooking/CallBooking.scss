@@ -21,3 +21,21 @@
     padding: var(--spacing-md);
   }
 }
+
+.Layer__call-booking-actions {
+  position: relative;
+  
+}
+
+.Layer__call-booking-add-to-calendar-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: var(--spacing-xs);
+  z-index: 1000;
+  background-color: var(--color-white);
+  border: 1px solid var(--outline-subtle);
+  border-radius: 8px;
+  padding: var(--spacing-xs);
+  min-width: 200px;
+}

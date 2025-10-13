@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Button, ButtonVariant } from '../Button/Button'
 import { Container } from '../Container'
 import { HStack, VStack } from '../ui/Stack/Stack'
@@ -6,9 +5,10 @@ import { Heading } from '../ui/Typography/Heading'
 import { Span } from '../ui/Typography/Text'
 import { Separator } from '../Separator/Separator'
 import { Clock, Link, Milestone, Users, Video } from 'lucide-react'
-import { CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
+import { CallBookingPurpose, CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
 import { format as formatTime } from 'date-fns'
 import { DATE_FORMAT_WITH_TIME } from '../../config/general'
+import { AddToCalendar } from '../AddToCalendar/AddToCalendar'
 
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
   <VStack gap='md' align='center'>
@@ -24,14 +24,10 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
 
 const ScheduledCallState = ({
   callBooking,
-  onAddToCalendar: onAdd,
 }: {
   callBooking: CallBookingData
-  onAddToCalendar: (callBooking: CallBookingData) => void
 }) => {
-  const onAddToCalendar = useCallback(() => {
-    onAdd(callBooking)
-  }, [callBooking, onAdd])
+  const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? 'Onboarding call' : 'Adhoc call'
 
   return (
     <VStack gap='md' align='center'>
@@ -44,7 +40,7 @@ const ScheduledCallState = ({
       <VStack align='start' className='Layer__call-booking-details' gap='xs'>
         <HStack align='center' gap='sm'>
           <Milestone size={20} />
-          <Span size='lg' weight='bold'>Onboarding call</Span>
+          <Span size='lg' weight='bold'>{purpose}</Span>
         </HStack>
         <HStack align='center' gap='sm'>
           <Video size={20} />
@@ -64,7 +60,15 @@ const ScheduledCallState = ({
         </HStack>
       </VStack>
       <VStack gap='xs' align='start' justify='start' className='Layer__call-booking-actions'>
-        <Button variant={ButtonVariant.primary} onClick={onAddToCalendar}>Add to your calendar</Button>
+        <VStack className='.Layer__call-booking-add-to-calendar-dropdown'>
+          <AddToCalendar
+            title={callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? 'Onboarding call' : 'Adhoc call'}
+            description={callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'}
+            location={callBooking.callLink.toString()}
+            startDate={callBooking.eventStartAt}
+            organizer={{ name: callBooking.bookkeeperName, email: callBooking.bookkeeperEmail }}
+          />
+        </VStack>
       </VStack>
     </VStack>
   )
@@ -85,7 +89,7 @@ export const CallBooking = ({
     <Container name='call-booking'>
       {onAddToCalendar && callBooking
         ? (
-          <ScheduledCallState callBooking={callBooking} onAddToCalendar={onAddToCalendar} />
+          <ScheduledCallState callBooking={callBooking} />
         )
         : (
           <EmptyState onBookCall={onBookCall} />
