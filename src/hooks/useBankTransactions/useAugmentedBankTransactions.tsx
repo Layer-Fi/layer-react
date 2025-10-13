@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { TagFilterInput } from '../../types/tags'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
@@ -23,7 +23,8 @@ import {
 import { useBankTransactions, type UseBankTransactionsOptions } from './useBankTransactions'
 import { useCategorizeBankTransaction } from './useCategorizeBankTransaction'
 import { useMatchBankTransaction } from './useMatchBankTransaction'
-import { decodeRulesSuggestion, UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
+import { decodeRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
+import { CategorizationRulesContext } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -115,7 +116,7 @@ export const useAugmentedBankTransactions = (
     eventCallbacks,
   } = useLayerContext()
 
-  const [ruleSuggestion, setRuleSuggestion] = useState<UpdateCategorizationRulesSuggestion | null>(null)
+  const { setRuleSuggestion } = useContext(CategorizationRulesContext)
 
   const { filters } = params
 
@@ -454,8 +455,6 @@ export const useAugmentedBankTransactions = (
     updateOneLocal,
     shouldHideAfterCategorize,
     removeAfterCategorize,
-    ruleSuggestion,
-    setRuleSuggestion,
     display,
     fetchMore,
     hasMore,
