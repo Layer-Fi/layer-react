@@ -173,7 +173,7 @@ export const BankTransactionsHeader = ({
     }
   }, [selectedIds, bulkCategorize, clearSelection])
 
-  const handleUncategorize = useCallback(async () => {
+  const handleUncategorize = useCallback(() => { // TODO: re-add async when implemented
     setIsProcessing(true)
     try {
       // TODO: Implement bulk uncategorize
@@ -187,7 +187,7 @@ export const BankTransactionsHeader = ({
     }
   }, [clearSelection])
 
-  const handleMatch = useCallback(async () => {
+  const handleMatch = useCallback(() => { // TODO: re-add async when implemented
     setIsProcessing(true)
     try {
       // TODO: Implement bulk match
