@@ -2,6 +2,7 @@ import { HStack } from '../ui/Stack/Stack'
 import { Button } from '../ui/Button/Button'
 import { Span } from '../ui/Typography/Text'
 import { X } from 'lucide-react'
+import './bulkActionsHeader.scss'
 
 interface ClearButtonProps {
   onClick: () => void
@@ -27,26 +28,20 @@ export const BulkActionsHeader = ({
 
   return (
     <HStack justify='space-between' align='center' gap='xs'>
-      <HStack
-        align='center'
-        gap='md'
-        className='Layer__bulk-actions-header__selection-info'
-      >
-        <Span weight='bold' size='md'>
+      <HStack justify='space-between' align='center' className='Layer__bulk-actions-header__selection-container'>
+        <Span>
           {selectedCount}
           {' '}
-          {selectedCount === 1 ? 'item' : 'items'}
-          {' '}
-          selected
+          item(s) selected
         </Span>
         {ClearButton && (
           <Button
-            variant='text'
+            variant='ghost'
+            icon
             onClick={ClearButton.onClick}
             aria-label='Cancel bulk actions'
-            style={{ marginTop: '2px' }}
           >
-            <X size={20} />
+            <X size={16} />
           </Button>
         )}
       </HStack>
