@@ -7,17 +7,10 @@ interface ClearButtonProps {
   onClick: () => void
 }
 
-interface ConfirmButtonProps {
-  onClick: () => void
-  isDisabled?: boolean
-  label?: string
-}
-
 interface BulkActionsHeaderProps {
   selectedCount: number
   slotProps?: {
     ClearButton?: ClearButtonProps
-    ConfirmButton?: ConfirmButtonProps
   }
   slots?: {
     Actions?: React.FC
@@ -30,52 +23,38 @@ export const BulkActionsHeader = ({
   slots = {},
 }: BulkActionsHeaderProps) => {
   const { Actions } = slots
-  const { ClearButton, ConfirmButton } = slotProps
+  const { ClearButton } = slotProps
 
   return (
     <HStack justify='space-between' align='center' gap='xs'>
-      <HStack align='center' gap='sm'>
-        <HStack
-          align='center'
-          gap='md'
-          className='Layer__bulk-actions-header__selection-info'
-        >
-          <Span weight='bold' size='md'>
-            {selectedCount}
-            {' '}
-            {selectedCount === 1 ? 'item' : 'items'}
-            {' '}
-            selected
-          </Span>
-          {ClearButton && (
-            <Button
-              variant='text'
-              onClick={ClearButton.onClick}
-              aria-label='Cancel bulk actions'
-              style={{ marginTop: '2px' }}
-            >
-              <X size={20} />
-            </Button>
-          )}
-        </HStack>
-        {Actions && (
-          <>
-            <div className='Layer__bulk-actions-header__divider' />
-            <Actions />
-          </>
+      <HStack
+        align='center'
+        gap='md'
+        className='Layer__bulk-actions-header__selection-info'
+      >
+        <Span weight='bold' size='md'>
+          {selectedCount}
+          {' '}
+          {selectedCount === 1 ? 'item' : 'items'}
+          {' '}
+          selected
+        </Span>
+        {ClearButton && (
+          <Button
+            variant='text'
+            onClick={ClearButton.onClick}
+            aria-label='Cancel bulk actions'
+            style={{ marginTop: '2px' }}
+          >
+            <X size={20} />
+          </Button>
         )}
       </HStack>
 
-      {ConfirmButton && (
-        <div className='Layer__bulk-actions-header__confirm-button'>
-          <Button
-            variant='solid'
-            onClick={ConfirmButton.onClick}
-            isDisabled={ConfirmButton.isDisabled}
-          >
-            {ConfirmButton.label || 'Apply'}
-          </Button>
-        </div>
+      {Actions && (
+        <HStack align='center' gap='sm'>
+          <Actions />
+        </HStack>
       )}
     </HStack>
   )

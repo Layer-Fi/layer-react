@@ -148,52 +148,60 @@ export const BankTransactionsHeader = ({
   const { clearSelection } = useBulkSelectionActions()
   const { trigger: bulkCategorize, isMutating } = useBulkCategorizeBankTransactions()
   const [isProcessing, setIsProcessing] = useState(false)
-  const [selectedAction, setSelectedAction] = useState<'categorize' | 'uncategorize' | 'match' | null>(null)
 
-  const handleConfirm = useCallback(async () => {
-    if (!selectedAction) return
-
+  const handleCategorize = useCallback(async () => {
     setIsProcessing(true)
     try {
-      switch (selectedAction) {
-        case 'categorize': {
-          const transactions = Array.from(selectedIds).map(transactionId => ({
-            transactionId,
-            categorization: {
-              type: 'Category' as const,
-              category: {
-                type: 'StableName' as const,
-                stableName: 'MEALS', // TODO: Input category
-              },
-            },
-          }))
-          await bulkCategorize({ transactions })
-          clearSelection()
-          setSelectedAction(null)
-          break
-        }
-        case 'uncategorize': {
-          // TODO: Implement bulk uncategorize
-          setSelectedAction(null)
-          break
-        }
-        case 'match': {
-          // TODO: Implement bulk match
-          setSelectedAction(null)
-          break
-        }
-      }
+      const transactions = Array.from(selectedIds).map(transactionId => ({
+        transactionId,
+        categorization: {
+          type: 'Category' as const,
+          category: {
+            type: 'StableName' as const,
+            stableName: 'MEALS', // TODO: Input category
+          },
+        },
+      }))
+      await bulkCategorize({ transactions })
+      clearSelection()
     }
     catch (error) {
-      console.error('Bulk action failed:', error)
+      console.error('Bulk categorize failed:', error)
     }
     finally {
       setIsProcessing(false)
     }
-  }, [selectedAction, selectedIds, bulkCategorize, clearSelection])
+  }, [selectedIds, bulkCategorize, clearSelection])
+
+  const handleUncategorize = useCallback(async () => {
+    setIsProcessing(true)
+    try {
+      // TODO: Implement bulk uncategorize
+      clearSelection()
+    }
+    catch (error) {
+      console.error('Bulk uncategorize failed:', error)
+    }
+    finally {
+      setIsProcessing(false)
+    }
+  }, [clearSelection])
+
+  const handleMatch = useCallback(async () => {
+    setIsProcessing(true)
+    try {
+      // TODO: Implement bulk match
+      clearSelection()
+    }
+    catch (error) {
+      console.error('Bulk match failed:', error)
+    }
+    finally {
+      setIsProcessing(false)
+    }
+  }, [clearSelection])
 
   const handleClearBulkActions = useCallback(() => {
-    setSelectedAction(null)
     clearSelection()
   }, [clearSelection])
 
@@ -255,32 +263,27 @@ export const BankTransactionsHeader = ({
               ClearButton: {
                 onClick: handleClearBulkActions,
               },
-              ConfirmButton: {
-                onClick: () => void handleConfirm(),
-                isDisabled: !selectedAction || isMutating || isProcessing,
-                label: isMutating || isProcessing ? 'Processing...' : 'Apply',
-              },
             }}
             slots={{
               Actions: () => (
                 <>
                   <Button
-                    variant={selectedAction === 'categorize' ? 'solid' : 'outlined'}
-                    onClick={() => setSelectedAction('categorize')}
+                    variant='outlined'
+                    onClick={() => void handleCategorize()}
                     isDisabled={isMutating || isProcessing}
                   >
                     Categorize
                   </Button>
                   <Button
-                    variant={selectedAction === 'uncategorize' ? 'solid' : 'outlined'}
-                    onClick={() => setSelectedAction('uncategorize')}
+                    variant='outlined'
+                    onClick={() => void handleUncategorize()}
                     isDisabled={isMutating || isProcessing}
                   >
                     Uncategorize
                   </Button>
                   <Button
-                    variant={selectedAction === 'match' ? 'solid' : 'outlined'}
-                    onClick={() => setSelectedAction('match')}
+                    variant='outlined'
+                    onClick={() => void handleMatch()}
                     isDisabled={isMutating || isProcessing}
                   >
                     Match
