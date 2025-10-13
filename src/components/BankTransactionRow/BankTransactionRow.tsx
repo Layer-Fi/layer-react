@@ -57,7 +57,7 @@ type Props = {
   showReceiptUploads: boolean
   showReceiptUploadColumn: boolean
   showTooltips: boolean
-  showBulkSelection?: boolean
+  _showBulkSelection?: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
 }
 
@@ -102,7 +102,7 @@ export const BankTransactionRow = ({
   showReceiptUploads,
   showReceiptUploadColumn,
   showTooltips,
-  showBulkSelection = false,
+  _showBulkSelection = false,
   stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -212,7 +212,7 @@ export const BankTransactionRow = ({
   return (
     <>
       <tr className={rowClassName}>
-        {showBulkSelection && (
+        {_showBulkSelection && (
           <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
             <span className='Layer__table-cell-content'>
               <Checkbox

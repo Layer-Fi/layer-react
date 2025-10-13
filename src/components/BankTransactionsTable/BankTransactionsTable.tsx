@@ -173,7 +173,7 @@ export const BankTransactionsTable = ({
                 showReceiptUploads={showReceiptUploads}
                 showReceiptUploadColumn={showReceiptColumn}
                 showTooltips={showTooltips}
-                showBulkSelection={showBulkSelection}
+                _showBulkSelection={_showBulkSelection}
                 stringOverrides={stringOverrides?.bankTransactionCTAs}
               />
             ),

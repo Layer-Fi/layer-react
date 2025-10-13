@@ -389,7 +389,7 @@ const BankTransactionsContent = ({
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
-            showBulkSelection={_showBulkSelection}
+            _showBulkSelection={_showBulkSelection}
           />
         </div>
       )}
