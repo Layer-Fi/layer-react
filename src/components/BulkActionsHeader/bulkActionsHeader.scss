@@ -1,8 +1,8 @@
 .Layer__bulk-actions-header {
-  background-color: var(--color-primary-50);
-  border-bottom: 1px solid var(--color-primary-200);
-  padding-block: var(--spacing-sm);
   z-index: 10;
+  padding-block: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-primary-200);
+  background-color: var(--color-primary-50);
 
   .Layer__bulk-actions-header__select {
     min-width: 200px;
@@ -10,10 +10,10 @@
 }
 
 .Layer__bulk-actions-header__selection-info {
-  border: 1px solid var(--color-base-300);
-  border-radius: var(--border-radius-sm);
-  padding-inline: var(--spacing-sm);
   padding-block: var(--spacing-xs);
+  padding-inline: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-base-300);
   background-color: var(--color-base-100);
 
   button {
@@ -24,10 +24,10 @@
 }
 
 .Layer__bulk-actions-header__divider {
-  width: 1px;
   height: 24px;
-  background-color: var(--color-base-300);
+  width: 1px;
   margin-inline: var(--spacing-xs);
+  background-color: var(--color-base-300);
 }
 
 .Layer__bulk-actions-header__confirm-button {
@@ -37,20 +37,20 @@
 .Layer__bulk-actions-header__selection-container {
   display: inline-flex !important;
   justify-content: space-between;
-  border: 1px solid var(--color-base-300);
-  border-radius: var(--btn-border-radius);
-  background-color: var(--color-primary-50);
   height: 2.25rem;
   min-inline-size: fit-content;
+  border-radius: var(--btn-border-radius);
+  border: 1px solid var(--color-base-300);
+  background-color: var(--color-primary-50);
 }
 
 .Layer__bulk-actions-header__selection-container span {
+  padding-inline: var(--spacing-sm);
   font-size: var(--text-md);
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
   color: var(--fg-default);
   white-space: nowrap;
-  padding-inline: var(--spacing-sm);
 }
 
 .Layer__bulk-actions-header__selection-container .Layer__UI__Button[data-variant='ghost'][data-hovered] {
