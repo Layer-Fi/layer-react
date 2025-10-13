@@ -73,15 +73,9 @@ export const BookkeepingOverview = ({
     }
   }
 
-  const { data, isError, isLoading, isValidating } = useCallBookings(1)
-
-  const callBooking: CallBookingData | null = data?.[0]?.data[0] ?? null
-
+  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings(1)
+  const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
   const callBookingVisible = _showBookACall && callBooking && !isLoading && !isValidating && !isError
-
-  if (!isError && !isLoading && !isValidating) {
-    console.debug(data, isError, isLoading, isValidating)
-  }
 
   return (
     <ProfitAndLoss asContainer={false}>
