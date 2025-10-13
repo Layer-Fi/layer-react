@@ -198,7 +198,7 @@ export const BookkeepingOverview = ({
             url={calendlyLink}
             onModalClose={closeCalendly}
             open={isCalendlyVisible}
-            rootElement={document.getElementById('root')!}
+            rootElement={document.body}
           />
         </div>
       )}
