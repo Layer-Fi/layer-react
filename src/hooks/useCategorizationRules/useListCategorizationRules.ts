@@ -213,27 +213,10 @@ export function useCategorizationRulesGlobalCacheActions() {
   [patchCache],
   )
 
-  const patchCategorizationRuleWithTransformation = useCallback((transformation: (categorizationRule: CategorizationRule) => CategorizationRule) =>
-    patchCache<ListCategorizationRulesReturn[] | ListCategorizationRulesReturn | undefined>(
-      tags => tags.includes(LIST_CATEGORIZATION_RULES_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListCategorizationRulesReturn): ListCategorizationRulesReturn => ({
-          ...page,
-          data: page.data.map(transformation),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
   const forceReloadCategorizationRules = useCallback(
     () => forceReload(tags => tags.includes(LIST_CATEGORIZATION_RULES_TAG_KEY)),
     [forceReload],
   )
 
-  return { patchCategorizationRuleByKey, patchCategorizationRuleWithTransformation, forceReloadCategorizationRules }
+  return { patchCategorizationRuleByKey, forceReloadCategorizationRules }
 }
