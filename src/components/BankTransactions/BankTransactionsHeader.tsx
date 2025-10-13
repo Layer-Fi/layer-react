@@ -23,9 +23,8 @@ import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDow
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
-import { useCountSelectedIds, useBulkSelectionActions, useSelectedIds } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BulkActionsHeader } from '../BulkActionsHeader/BulkActionsHeader'
-import { useBulkCategorizeBankTransactions } from '../../hooks/useBankTransactions/useBulkCategorizeBankTransactions'
 import { Button } from '../ui/Button/Button'
 
 export interface BankTransactionsHeaderProps {
@@ -144,62 +143,23 @@ export const BankTransactionsHeader = ({
   }, [setFilters])
 
   const { count } = useCountSelectedIds()
-  const { selectedIds } = useSelectedIds()
+  // const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
-  const { trigger: bulkCategorize, isMutating } = useBulkCategorizeBankTransactions()
-  const [isProcessing, setIsProcessing] = useState(false)
 
-  const handleCategorize = useCallback(async () => {
-    setIsProcessing(true)
-    try {
-      const transactions = Array.from(selectedIds).map(transactionId => ({
-        transactionId,
-        categorization: {
-          type: 'Category' as const,
-          category: {
-            type: 'StableName' as const,
-            stableName: 'MEALS', // TODO: Input category
-          },
-        },
-      }))
-      await bulkCategorize({ transactions })
-      clearSelection()
-    }
-    catch (error) {
-      console.error('Bulk categorize failed:', error)
-    }
-    finally {
-      setIsProcessing(false)
-    }
-  }, [selectedIds, bulkCategorize, clearSelection])
+  const handleCategorize = () => {
+    // TODO: Implement bulk categorize functionality
+    return
+  }
 
-  const handleUncategorize = useCallback(() => { // TODO: re-add async when implemented
-    setIsProcessing(true)
-    try {
-      // TODO: Implement bulk uncategorize
-      clearSelection()
-    }
-    catch (error) {
-      console.error('Bulk uncategorize failed:', error)
-    }
-    finally {
-      setIsProcessing(false)
-    }
-  }, [clearSelection])
+  const handleUncategorize = () => {
+    // TODO: Implement bulk uncategorize functionality
+    return
+  }
 
-  const handleMatch = useCallback(() => { // TODO: re-add async when implemented
-    setIsProcessing(true)
-    try {
-      // TODO: Implement bulk match
-      clearSelection()
-    }
-    catch (error) {
-      console.error('Bulk match failed:', error)
-    }
-    finally {
-      setIsProcessing(false)
-    }
-  }, [clearSelection])
+  const handleMatch = () => {
+    // TODO: Implement bulk match functionality
+    return
+  }
 
   const handleClearBulkActions = useCallback(() => {
     clearSelection()
@@ -269,22 +229,19 @@ export const BankTransactionsHeader = ({
                 <>
                   <Button
                     variant='outlined'
-                    onClick={() => void handleCategorize()}
-                    isDisabled={isMutating || isProcessing}
+                    onClick={handleCategorize}
                   >
                     Categorize
                   </Button>
                   <Button
                     variant='outlined'
-                    onClick={() => void handleUncategorize()}
-                    isDisabled={isMutating || isProcessing}
+                    onClick={handleUncategorize}
                   >
                     Uncategorize
                   </Button>
                   <Button
                     variant='outlined'
-                    onClick={() => void handleMatch()}
-                    isDisabled={isMutating || isProcessing}
+                    onClick={handleMatch}
                   >
                     Match
                   </Button>
