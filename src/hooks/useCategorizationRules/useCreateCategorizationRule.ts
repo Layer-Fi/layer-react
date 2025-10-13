@@ -8,6 +8,7 @@ import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLo
 import { useProfitAndLossGlobalInvalidator } from '../useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { Schema } from 'effect/index'
 import { useBankTransactionsGlobalCacheActions } from '../useBankTransactions/useBankTransactions'
+import { useCategorizationRulesGlobalCacheActions } from './useListCategorizationRules'
 
 const CREATE_CATEGORIZATION_RULE_TAG = '#create-categorization-rule'
 
@@ -49,6 +50,7 @@ export function useCreateCategorizationRule() {
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+  const { forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
 
   const mutationResponse = useSWRMutation(
     () => buildKey({
@@ -81,12 +83,13 @@ export function useCreateCategorizationRule() {
       const triggerResult = await originalTrigger(...triggerParameters)
       void forceReloadBankTransactions()
       void invalidatePnlDetailLines()
+      void forceReloadCategorizationRules()
 
       void debouncedInvalidateProfitAndLoss()
 
       return triggerResult
     },
-    [originalTrigger, forceReloadBankTransactions, invalidatePnlDetailLines, debouncedInvalidateProfitAndLoss],
+    [originalTrigger, forceReloadBankTransactions, invalidatePnlDetailLines, forceReloadCategorizationRules, debouncedInvalidateProfitAndLoss],
   )
 
   return new Proxy(mutationResponse, {

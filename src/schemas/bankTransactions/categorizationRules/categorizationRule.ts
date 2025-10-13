@@ -159,6 +159,10 @@ export const CategorizationRuleSchema = Schema.Struct({
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('updated_at'),
   ),
+  archivedAt: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
+    Schema.fromKey('archived_at'),
+  ),
 })
 
 export type CategorizationRule = typeof CategorizationRuleSchema.Type
