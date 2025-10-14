@@ -6,6 +6,14 @@ import { useBankTransactionsNavigation } from '../../providers/BankTransactionsR
 import BackArrow from '../../icons/BackArrow'
 import { CategorizationRulesTable } from './CategorizationRulesTable/CategorizationRulesTable'
 
+const CategorizationRulesDrawerHeader = () => {
+  return (
+    <HStack justify='space-between' align='center' fluid pie='md'>
+      <Heading size='sm'>Categorization Rules</Heading>
+    </HStack>
+  )
+}
+
 export const CategorizationRulesDrawer = () => {
   const { toBankTransactionsTable } = useBankTransactionsNavigation()
 
