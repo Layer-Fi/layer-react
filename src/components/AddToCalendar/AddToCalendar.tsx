@@ -1,8 +1,22 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Calendar, ChevronDown } from 'lucide-react'
 import { Button } from '../ui/Button/Button'
 import { VStack } from '../ui/Stack/Stack'
 import classNames from 'classnames'
+
+// Format date for different calendar services
+const formatDate = (date: Date) => {
+  return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+}
+
+// Escape special characters for ICS format per RFC 5545
+const escapeICSText = (text: string) => {
+  return text
+    .replace(/\\/g, '\\\\') // Escape backslashes first
+    .replace(/;/g, '\\;') // Escape semicolons
+    .replace(/,/g, '\\,') // Escape commas
+    .replace(/\n/g, '\\n') // Escape newlines
+}
 
 export type AddToCalendarProps = {
   title: string
@@ -25,18 +39,13 @@ export const AddToCalendar = ({
 }: AddToCalendarProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
-  // Format date for different calendar services
-  const formatDate = (date: Date) => {
-    return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-  }
-
   if (!endDate) {
     const defaultDurationInMinutes = 15
     endDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
   }
 
   // Generate Google Calendar URL
-  const getGoogleCalendarUrl = () => {
+  const getGoogleCalendarUrl = useCallback(() => {
     const baseUrl = 'https://calendar.google.com/calendar/render'
     const params = new URLSearchParams({
       action: 'TEMPLATE',
@@ -47,10 +56,10 @@ export const AddToCalendar = ({
       ctz: Intl.DateTimeFormat().resolvedOptions().timeZone,
     })
     return `${baseUrl}?${params.toString()}`
-  }
+  }, [title, description, location, startDate, endDate])
 
   // Generate ICS file content
-  const generateICS = () => {
+  const generateICS = useCallback(() => {
     const icsContent = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
@@ -58,10 +67,10 @@ export const AddToCalendar = ({
       'BEGIN:VEVENT',
       `DTSTART:${formatDate(startDate)}`,
       `DTEND:${formatDate(endDate)}`,
-      `SUMMARY:${title}`,
-      `DESCRIPTION:${description}`,
-      `LOCATION:${location}`,
-      `ORGANIZER;CN=${organizer.name}:mailto:${organizer.email}`,
+      `SUMMARY:${escapeICSText(title)}`,
+      `DESCRIPTION:${escapeICSText(description)}`,
+      `LOCATION:${escapeICSText(location ?? '')}`,
+      `ORGANIZER;CN=${escapeICSText(organizer.name)}:mailto:${organizer.email}`,
       `UID:${Date.now()}@addtocalendar.com`,
       `DTSTAMP:${formatDate(new Date())}`,
       'STATUS:CONFIRMED',
@@ -79,10 +88,10 @@ export const AddToCalendar = ({
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
     setIsOpen(false)
-  }
+  }, [title, description, location, organizer, startDate, endDate])
 
   // Handle calendar provider click
-  const handleCalendarClick = (provider: string) => {
+  const handleCalendarClick = useCallback((provider: string) => {
     let url
     switch (provider) {
       case 'google':
@@ -96,7 +105,7 @@ export const AddToCalendar = ({
     }
     window.open(url, '_blank')
     setIsOpen(false)
-  }
+  }, [generateICS, getGoogleCalendarUrl])
 
   return (
     <div className={classNames('relative inline-block', className)}>
