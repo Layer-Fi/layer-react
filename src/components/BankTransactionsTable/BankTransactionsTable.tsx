@@ -104,7 +104,7 @@ export const BankTransactionsTable = ({
       <thead>
         <tr>
           {_showBulkSelection && (
-            <th className='Layer__table-header Layer__bank-transactions__checkbox-col'>
+            <th className='Layer__table-header Layer__bank-transactions__checkbox-col' style={{ padding: 0 }}>
               <span className='Layer__table-cell-content'>
                 <Checkbox
                   isSelected={isAllSelected}

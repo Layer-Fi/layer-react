@@ -9,31 +9,6 @@
   }
 }
 
-.Layer__bulk-actions-header__selection-info {
-  padding-block: var(--spacing-xs);
-  padding-inline: var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--color-base-300);
-  background-color: var(--color-base-100);
-
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-.Layer__bulk-actions-header__divider {
-  height: 24px;
-  width: 1px;
-  margin-inline: var(--spacing-xs);
-  background-color: var(--color-base-300);
-}
-
-.Layer__bulk-actions-header__confirm-button {
-  margin-inline-end: var(--spacing-md);
-}
-
 .Layer__bulk-actions-header__selection-container {
   display: inline-flex !important;
   justify-content: space-between;
