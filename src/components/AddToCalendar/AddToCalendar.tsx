@@ -127,7 +127,7 @@ export const AddToCalendar = ({
       slotProps={{
         Dialog: { width: '10rem' },
       }}
-      // variant='compact'
+      variant='compact'
     >
       <MenuList>
         <MenuItem key='google' onClick={() => handleCalendarClick('google')}>
