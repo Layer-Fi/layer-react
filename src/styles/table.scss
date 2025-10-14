@@ -336,12 +336,14 @@
 
 @container (min-width: 1400px) {
   .Layer__table tr td:first-child .Layer__table-cell-content,
-  .Layer__table tr th:first-child.Layer__table-cell .Layer__table-cell-content {
+  .Layer__table tr th:first-child.Layer__table-cell .Layer__table-cell-content,
+  .Layer__table tr th:first-child.Layer__table-header .Layer__table-cell-content {
     padding-left: var(--spacing-xl);
   }
 
   .Layer__table tr td:last-child .Layer__table-cell-content,
-  .Layer__table tr th:last-child.Layer__table-cell .Layer__table-cell-content {
+  .Layer__table tr th:last-child.Layer__table-cell .Layer__table-cell-content,
+  .Layer__table tr th:last-child.Layer__table-header .Layer__table-cell-content {
     padding-right: var(--spacing-xl);
   }
 }

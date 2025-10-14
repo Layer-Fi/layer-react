@@ -51,7 +51,8 @@
     outline-offset: 2px;
   }
 
-  &[data-selected] [slot='checkbox'] {
+  &[data-selected] [slot='checkbox'],
+  &[data-indeterminate] [slot='checkbox'] {
     background-color: var(--fg-default);
     color: var(--bg-default);
     border-color: var(--fg-default);

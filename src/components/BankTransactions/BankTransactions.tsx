@@ -41,6 +41,7 @@ import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkCont
 import { HStack } from '../ui/Stack/Stack'
 import { SuggestedCategorizationRuleUpdatesModal } from './SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
 import { SuggestedCategorizationRuleUpdatesDrawer } from '../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
+import { BulkSelectionStoreProvider } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { CategorizationRulesDrawer } from '../CategorizationRules/CategorizationRulesDrawer'
@@ -83,6 +84,7 @@ export interface BankTransactionsProps {
   stringOverrides?: BankTransactionsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
   _showCategorizationRules?: boolean
+  _showBulkSelection?: boolean
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -98,6 +100,7 @@ export const BankTransactions = ({
   applyGlobalDateRange = false,
   mode,
   renderInAppLink,
+  _showBulkSelection = false,
   ...props
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
@@ -116,7 +119,9 @@ export const BankTransactions = ({
               <BankTransactionTagVisibilityProvider showTags={showTags}>
                 <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
                   <InAppLinkProvider renderInAppLink={renderInAppLink}>
+                  <BulkSelectionStoreProvider>
                     <BankTransactionsContent {...props} />
+                  </BulkSelectionStoreProvider>
                   </InAppLinkProvider>
                 </BankTransactionCustomerVendorVisibilityProvider>
               </BankTransactionTagVisibilityProvider>
@@ -152,6 +157,7 @@ const BankTransactionsTableView = ({
   collapseHeader = false,
   stringOverrides,
   _showCategorizationRules = false,
+  _showBulkSelection = false,
 }: BankTransactionsProps) => {
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
@@ -369,6 +375,7 @@ const BankTransactionsTableView = ({
           collapseHeader={collapseHeader}
           showStatusToggle={showStatusToggle}
           _showCategorizationRules={_showCategorizationRules}
+          _showBulkSelection={_showBulkSelection}
         />
       )}
 
@@ -391,6 +398,7 @@ const BankTransactionsTableView = ({
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
+            _showBulkSelection={_showBulkSelection}
           />
         </div>
       )}
