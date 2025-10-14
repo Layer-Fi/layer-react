@@ -45,7 +45,6 @@ export const AddToCalendar = ({
     effectiveEndDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
   }
 
-  // Generate Google Calendar URL
   const getGoogleCalendarUrl = useCallback(() => {
     const baseUrl = 'https://calendar.google.com/calendar/render'
     const params = new URLSearchParams({
@@ -59,7 +58,6 @@ export const AddToCalendar = ({
     return `${baseUrl}?${params.toString()}`
   }, [title, description, location, startDate, effectiveEndDate])
 
-  // Generate ICS file content
   const generateICS = useCallback(() => {
     const icsContent = [
       'BEGIN:VCALENDAR',
@@ -91,7 +89,6 @@ export const AddToCalendar = ({
     setIsOpen(false)
   }, [title, description, location, organizer, startDate, effectiveEndDate])
 
-  // Handle calendar provider click
   const handleCalendarClick = useCallback((provider: string) => {
     let url
     switch (provider) {
@@ -110,7 +107,6 @@ export const AddToCalendar = ({
 
   return (
     <div className={classNames('relative inline-block', className)}>
-      {/* Add to Calendar Button */}
       <div className='relative'>
         <Button
           onClick={() => setIsOpen(!isOpen)}
@@ -121,7 +117,6 @@ export const AddToCalendar = ({
           <ChevronDown size={16} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
         </Button>
 
-        {/* Dropdown Menu */}
         {isOpen && (
           <VStack gap='xs' className='Layer__call-booking-add-to-calendar-dropdown'>
             <Button
@@ -142,7 +137,6 @@ export const AddToCalendar = ({
         )}
       </div>
 
-      {/* Click outside to close */}
       {isOpen && (
         <div
           className='fixed inset-0 z-40'
