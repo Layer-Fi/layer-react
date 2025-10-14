@@ -40,6 +40,13 @@ export const AddToCalendar = ({
   let effectiveEndDate = endDate
   if (!effectiveEndDate) {
     const defaultDurationInMinutes = 15
+    // We can set a temporary end date if not specified.
+    //
+    // Backend: Once the external event resource is created on Calendly and we request to create
+    // a new call booking, the backend will automatically lift event details from Calendly.
+    //
+    // Frontend: We do not have calendly secrets locally, so we just need a temporary date to
+    // generate the iCalendar file. We use a conservative duration of 15 minutes.
     effectiveEndDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
   }
 
