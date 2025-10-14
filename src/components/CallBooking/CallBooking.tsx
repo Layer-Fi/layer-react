@@ -60,7 +60,7 @@ const ScheduledCallState = ({
         </HStack>
       </VStack>
       <HStack gap='xs' align='start' justify='start' className='Layer__call-booking-actions'>
-        <VStack className='.Layer__call-booking-add-to-calendar-dropdown'>
+        <VStack>
           <AddToCalendar
             title={callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? 'Onboarding call' : 'Adhoc call'}
             description={callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'}
