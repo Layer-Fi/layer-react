@@ -4,7 +4,7 @@ import { Button } from '../ui/Button/Button'
 import { VStack } from '../ui/Stack/Stack'
 import classNames from 'classnames'
 
-export interface AddToCalendarProps {
+export type AddToCalendarProps = {
   title: string
   description: string
   location?: string
