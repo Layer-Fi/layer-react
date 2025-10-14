@@ -772,6 +772,10 @@
   }
 }
 
+.Layer__table-header.Layer__bank-transactions__checkbox-col {
+  padding: 0;
+}
+
 .Layer__bank-transactions__date-col {
   box-sizing: border-box;
   width: 140px;
@@ -811,6 +815,10 @@
       max-width: 150px;
       padding-right: var(--spacing-md);
       padding-left: var(--spacing-xl);
+    }
+
+    .Layer__bank-transactions__checkbox-col + .Layer__table-header.Layer__bank-transactions__date-col {
+      padding-left: var(--spacing-md);
     }
 
     .Layer__table-header.Layer__table-cell__category-col {
