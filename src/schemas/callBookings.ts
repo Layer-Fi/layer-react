@@ -1,5 +1,6 @@
 import { PaginatedResponseMetaSchema } from '../types/utility/pagination'
 import { Schema, pipe } from 'effect'
+import { createTransformedEnumSchema } from './utils'
 
 // Enums matching the frontend types
 export enum CallBookingState {
@@ -24,28 +25,6 @@ const CallBookingStateSchema = Schema.Enums(CallBookingState)
 const CallBookingTypeSchema = Schema.Enums(CallBookingType)
 
 const CallBookingPurposeSchema = Schema.Enums(CallBookingPurpose)
-
-// Helper function to create transformed enum schemas with safe defaults
-const createTransformedEnumSchema = <T extends Record<string, string>>(
-  enumSchema: Schema.Schema<T[keyof T], T[keyof T]>,
-  enumObject: T,
-  defaultValue: T[keyof T],
-) => {
-  return Schema.transform(
-    Schema.NonEmptyTrimmedString,
-    Schema.typeSchema(enumSchema),
-    {
-      strict: false,
-      decode: (input) => {
-        if (Object.values(enumObject).includes(input as T[keyof T])) {
-          return input as T[keyof T]
-        }
-        return defaultValue
-      },
-      encode: input => input,
-    },
-  )
-}
 
 // Transformed schemas with safe defaults for unknown values
 const TransformedCallBookingStateSchema = createTransformedEnumSchema(
