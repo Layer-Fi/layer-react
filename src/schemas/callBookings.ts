@@ -45,7 +45,6 @@ const TransformedCallBookingPurposeSchema = createTransformedEnumSchema(
   CallBookingPurpose.ADHOC,
 )
 
-// Base CallBooking schema without the transform
 const CallBookingSchema = Schema.Struct({
   id: Schema.UUID,
 
