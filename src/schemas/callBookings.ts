@@ -172,25 +172,9 @@ const CreateCallBookingBodySchemaDefinition = Schema.Struct({
     Schema.propertySignature(CallBookingTypeSchema),
     Schema.fromKey('call_type'),
   ),
-
-  eventStartAt: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('event_start_at'),
-  ),
-
-  eventEndAt: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
-    Schema.fromKey('event_end_at'),
-  ),
-
-  location: Schema.optional(Schema.String),
-
-  cancellationReason: pipe(
-    Schema.optional(Schema.String),
-    Schema.fromKey('cancellation_reason'),
-  ),
 })
 
 export const CreateCallBookingBodySchema = CreateCallBookingBodySchemaDefinition
 export const encodeCreateCallBookingBody = Schema.encodeSync(CreateCallBookingBodySchemaDefinition)
 export type CreateCallBookingBody = typeof CreateCallBookingBodySchemaDefinition.Type
+export type CreateCallBookingBodyEncoded = typeof CreateCallBookingBodySchemaDefinition.Encoded

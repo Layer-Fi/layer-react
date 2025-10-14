@@ -27,30 +27,35 @@ export const isCalendlyLink = (link?: ServiceOfferingLink) => {
   }
 }
 
-const handleCalendlyMessage = (e: MessageEvent) => {
-  const data = e.data as CalendlyMessageData
-
-  if (data.event && typeof data.event === 'string' && data.event.indexOf('calendly') === 0) {
-    console.debug('Calendly event:', data.event)
-
-    if (data.event === 'calendly.event_scheduled') {
-      console.debug('Booking successful!', data.payload)
-    }
-  }
+export interface UseCalendlyOptions {
+  onEventScheduled?: (payload?: CalendlyPayload) => void
 }
 
-export const useCalendly = () => {
+export const useCalendly = (options?: UseCalendlyOptions) => {
   const [isCalendlyVisible, setIsCalendlyVisible] = useState(false)
   const [calendlyLink, setCalendlyLink] = useState('')
   const calendlyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const handleCalendlyMessage = (e: MessageEvent) => {
+      const data = e.data as CalendlyMessageData
+
+      if (data.event && typeof data.event === 'string' && data.event.indexOf('calendly') === 0) {
+        console.debug('Calendly event:', data.event)
+
+        if (data.event === 'calendly.event_scheduled') {
+          console.debug('Booking successful!', data.payload)
+          options?.onEventScheduled?.(data.payload)
+        }
+      }
+    }
+
     window.addEventListener('message', handleCalendlyMessage)
 
     return () => {
       window.removeEventListener('message', handleCalendlyMessage)
     }
-  }, [])
+  }, [options])
 
   const openCalendly = useCallback((link: string) => {
     setCalendlyLink(link)

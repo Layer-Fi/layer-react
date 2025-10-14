@@ -5,6 +5,7 @@ import { Button, ButtonVariant } from '../Button/Button'
 import { WelcomeStep, WelcomeStepFooter } from './Steps/WelcomeStep'
 import { SummaryStep } from './Steps/SummaryStep'
 import { BusinessInfoStep } from './Steps/BusinessInfoStep'
+import { BookOnboardingCallStep } from './Steps/BookOnboardingCallStep'
 
 const PLATFORM_ONBOARDING_STEPS = [
   {
@@ -13,11 +14,15 @@ const PLATFORM_ONBOARDING_STEPS = [
   },
   {
     id: 'business-info',
-    label: 'Confirm your informations',
+    label: 'Confirm your information',
   },
   {
     id: 'link-accounts',
     label: 'Connect accounts',
+  },
+  {
+    id: 'book-onboarding-call',
+    label: 'Book onboarding call',
   },
   {
     id: 'summary',
@@ -32,7 +37,7 @@ type PlatformOnboardingProps = {
 }
 
 export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
-  const [step, setStep] = useState<PlatformOnboardingStepKey>(PLATFORM_ONBOARDING_STEPS[0].id)
+  const [step, setStep] = useState<PlatformOnboardingStepKey>(PLATFORM_ONBOARDING_STEPS[3].id)
 
   const isFirstStep = PLATFORM_ONBOARDING_STEPS[0].id === step
 
@@ -65,6 +70,8 @@ export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
         return <BusinessInfoStep onNext={nextStep} />
       case 'link-accounts':
         return <LinkAccounts onComplete={nextStep} />
+      case 'book-onboarding-call':
+        return <BookOnboardingCallStep onNext={nextStep} />
       case 'summary':
         return <SummaryStep onNext={nextStep} />
     }
