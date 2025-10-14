@@ -119,9 +119,9 @@ export const BankTransactions = ({
               <BankTransactionTagVisibilityProvider showTags={showTags}>
                 <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
                   <InAppLinkProvider renderInAppLink={renderInAppLink}>
-                  <BulkSelectionStoreProvider>
-                    <BankTransactionsContent {...props} />
-                  </BulkSelectionStoreProvider>
+                    <BulkSelectionStoreProvider>
+                      <BankTransactionsContent {...props} />
+                    </BulkSelectionStoreProvider>
                   </InAppLinkProvider>
                 </BankTransactionCustomerVendorVisibilityProvider>
               </BankTransactionTagVisibilityProvider>

@@ -261,8 +261,8 @@ export const BankTransactionsHeader = ({
                 iconOnly={listView}
               />
               {_showCategorizationRules
-            ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} />
-            : withUploadMenu && <BankTransactionsUploadMenu />}
+                ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} />
+                : withUploadMenu && <BankTransactionsUploadMenu />}
             </HStack>
           </TransactionsActions>
         )}
