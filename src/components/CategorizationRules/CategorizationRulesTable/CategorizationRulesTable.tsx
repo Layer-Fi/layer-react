@@ -9,6 +9,7 @@ import { ColumnConfig } from '../../DataTable/DataTable'
 import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
 import { Span } from '../../ui/Typography/Text'
 import { CategoriesListMode } from '../../../schemas/categorization'
+import { useCurrentCategorizationRulesPage, useSetCurrentCategorizationRulesPage } from '../../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 
 enum CategorizationRuleColumns {
   Category = 'Category',
@@ -24,6 +25,9 @@ export const CategorizationRulesTable = () => {
   const paginationMeta = data?.[data.length - 1].meta.pagination
   const hasMore = paginationMeta?.hasMore
 
+  const currentPage = useCurrentCategorizationRulesPage()
+  const setCurrentPage = useSetCurrentCategorizationRulesPage()
+
   const fetchMore = useCallback(() => {
     if (hasMore) {
       void setSize(size + 1)
@@ -32,11 +36,13 @@ export const CategorizationRulesTable = () => {
 
   const paginationProps = useMemo(() => {
     return {
+      initialPage: currentPage,
+      onSetPage: setCurrentPage,
       pageSize: 10,
       hasMore,
       fetchMore,
     }
-  }, [fetchMore, hasMore])
+  }, [hasMore, fetchMore, currentPage, setCurrentPage])
 
   const CategorizationRulesTableEmptyState = useCallback(() => {
     return (
