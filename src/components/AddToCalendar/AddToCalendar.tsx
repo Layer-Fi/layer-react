@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Calendar, ChevronDown } from 'lucide-react'
 import { Button } from '../ui/Button/Button'
 import { VStack } from '../ui/Stack/Stack'
@@ -38,12 +38,30 @@ export const AddToCalendar = ({
   className,
 }: AddToCalendarProps) => {
   const [isOpen, setIsOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   let effectiveEndDate = endDate
   if (!effectiveEndDate) {
     const defaultDurationInMinutes = 15
     effectiveEndDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
   }
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
 
   const getGoogleCalendarUrl = useCallback(() => {
     const baseUrl = 'https://calendar.google.com/calendar/render'
@@ -106,11 +124,13 @@ export const AddToCalendar = ({
   }, [generateICS, getGoogleCalendarUrl])
 
   return (
-    <div className={classNames('relative inline-block', className)}>
+    <div className={classNames('relative inline-block', className)} ref={dropdownRef}>
       <div className='relative'>
         <Button
           onClick={() => setIsOpen(!isOpen)}
           variant='outlined'
+          aria-expanded={isOpen}
+          aria-haspopup='menu'
         >
           <Calendar size={16} />
           Add to Calendar
@@ -136,14 +156,6 @@ export const AddToCalendar = ({
           </VStack>
         )}
       </div>
-
-      {isOpen && (
-        <div
-          className='fixed inset-0 z-40'
-          onClick={() => setIsOpen(false)}
-        >
-        </div>
-      )}
     </div>
   )
 }

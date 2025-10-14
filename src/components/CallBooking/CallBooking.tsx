@@ -84,17 +84,15 @@ const ScheduledCallState = ({
 export interface CallBookingProps {
   callBooking?: CallBookingData
   onBookCall?: () => void
-  onAddToCalendar?: (callBooking: CallBookingData) => void
 }
 
 export const CallBooking = ({
   callBooking,
   onBookCall,
-  onAddToCalendar,
 }: CallBookingProps) => {
   return (
     <Container name='call-booking'>
-      {onAddToCalendar && callBooking
+      {callBooking
         ? (
           <ScheduledCallState callBooking={callBooking} />
         )

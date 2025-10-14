@@ -86,7 +86,7 @@ export const BookkeepingOverview = ({
         sidebar={(
           <VStack gap='lg'>
             {callBookingVisible && (
-              <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} onBookCall={handleBookCall} />
+              <CallBooking callBooking={callBooking} onBookCall={handleBookCall} />
             )}
             <Tasks
               stringOverrides={stringOverrides?.tasks}
@@ -103,7 +103,7 @@ export const BookkeepingOverview = ({
           >
             <VStack gap='lg'>
               {callBookingVisible && (
-                <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} onBookCall={handleBookCall} />
+                <CallBooking callBooking={callBooking} onBookCall={handleBookCall} />
               )}
               <Tasks
                 mobile
