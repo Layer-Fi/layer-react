@@ -36,9 +36,7 @@ export interface BookkeepingOverviewProps {
       }
     }
   }
-  /**
-   * Set to true to enable experimental 'Book a call' widget on the bookkeeping overview component.
-   */
+
   _showBookACall?: boolean
 
   onClickReconnectAccounts?: () => void

@@ -49,11 +49,8 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       pbe,
       pbs,
     })
-
-    // Automatically handle external links
     const effectiveTarget = external ? '_blank' : target
     const effectiveRel = external ? 'noopener noreferrer' : rel
-
     return (
       <ReactAriaLink
         {...restProps}
