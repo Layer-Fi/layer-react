@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect/index'
 import { BankTransactionCounterpartySchema, MinimalBankTransactionSchema } from '../base'
-import { ClassificationSchema } from '../../categorization'
+import { AccountIdentifierSchema } from '../../accountIdentifier'
 
 export enum BankTransactionType {
   REVENUE = 'REVENUE',
@@ -49,17 +49,17 @@ export const CreateCategorizationRuleSchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
   name: Schema.NullishOr(Schema.String),
-  category: Schema.NullishOr(ClassificationSchema),
+  category: Schema.NullishOr(AccountIdentifierSchema),
   suggestion1: pipe(
-    Schema.propertySignature(Schema.NullishOr(ClassificationSchema)),
+    Schema.propertySignature(Schema.NullishOr(AccountIdentifierSchema)),
     Schema.fromKey('suggestion_1'),
   ),
   suggestion2: pipe(
-    Schema.propertySignature(Schema.NullishOr(ClassificationSchema)),
+    Schema.propertySignature(Schema.NullishOr(AccountIdentifierSchema)),
     Schema.fromKey('suggestion_2'),
   ),
   suggestion3: pipe(
-    Schema.propertySignature(Schema.NullishOr(ClassificationSchema)),
+    Schema.propertySignature(Schema.NullishOr(AccountIdentifierSchema)),
     Schema.fromKey('suggestion_3'),
   ),
   businessNameFilter: pipe(
@@ -134,21 +134,21 @@ export const CategorizationRuleSchema = Schema.Struct({
     Schema.fromKey('business_id'),
   ),
   name: Schema.NullishOr(Schema.String),
-  category: Schema.NullishOr(ClassificationSchema),
+  category: Schema.NullishOr(AccountIdentifierSchema),
   suggestion1: pipe(
-    Schema.propertySignature(Schema.NullishOr(ClassificationSchema)),
+    Schema.propertySignature(Schema.NullishOr(AccountIdentifierSchema)),
     Schema.fromKey('suggestion_1'),
   ),
   suggestion2: pipe(
-    Schema.propertySignature(Schema.NullishOr(ClassificationSchema)),
+    Schema.propertySignature(Schema.NullishOr(AccountIdentifierSchema)),
     Schema.fromKey('suggestion_2'),
   ),
   suggestion3: pipe(
-    Schema.propertySignature(Schema.NullishOr(ClassificationSchema)),
+    Schema.propertySignature(Schema.NullishOr(AccountIdentifierSchema)),
     Schema.fromKey('suggestion_3'),
   ),
   counterpartyFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
+    Schema.propertySignature(Schema.NullishOr(BankTransactionCounterpartySchema)),
     Schema.fromKey('counterparty_filter'),
   ),
   createdAt: pipe(

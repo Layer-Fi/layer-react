@@ -2,10 +2,10 @@ import { useCallback, useId, useMemo } from 'react'
 import { ComboBox } from '../ui/ComboBox/ComboBox'
 import { VStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
-import { isOptionalAccountNestedCategory, type Category } from '../../types/categories'
+import { isAccountNestedCategory, isOptionalAccountNestedCategory, type Category } from '../../types/categories'
 import { type CategoriesListMode } from '../../schemas/categorization'
 import { useCategories } from '../../hooks/categories/useCategories'
-import { AccountIdentifierEquivalence, makeAccountId, makeStableName, type AccountIdentifier } from '../../schemas/accountIdentifier'
+import { AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName, type AccountIdentifier } from '../../schemas/accountIdentifier'
 
 class CategoryAsOption {
   private internalCategory: Category
@@ -16,6 +16,17 @@ class CategoryAsOption {
 
   get label() {
     return this.internalCategory.display_name
+  }
+
+  get accountId() {
+    if (isAccountNestedCategory(this.internalCategory)) return makeAccountId(this.internalCategory.id)
+    return null
+  }
+
+  get accountStableName() {
+    if (isOptionalAccountNestedCategory(this.internalCategory)) return makeStableName(this.internalCategory.stable_name)
+    if (isAccountNestedCategory(this.internalCategory) && this.internalCategory.stable_name) return makeStableName(this.internalCategory.stable_name)
+    return null
   }
 
   get accountIdentifier() {
@@ -58,7 +69,12 @@ export const LedgerAccountCombobox = ({ label, value, mode, onValueChange, isRea
 
   const selectedCategory = useMemo(() => {
     if (!value) return null
-    return options.find(option => AccountIdentifierEquivalence(value, option.accountIdentifier)) ?? null
+    return options.find((option) => {
+      if (value.type === 'AccountId') {
+        return option.accountId ? AccountIdEquivalence(value, option.accountId) : false
+      }
+      return option.accountStableName ? AccountStableNameEquivalence(value, option.accountStableName) : false
+    }) ?? null
   }, [options, value])
 
   const onSelectedValueChange = useCallback((option: CategoryAsOption | null) => {
