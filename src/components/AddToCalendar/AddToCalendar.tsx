@@ -4,7 +4,7 @@ import { Button } from '../ui/Button/Button'
 import { VStack } from '../ui/Stack/Stack'
 import classNames from 'classnames'
 
-export interface AddToCalendarProps {
+export type AddToCalendarProps = {
   title: string
   description: string
   location?: string
@@ -39,7 +39,7 @@ export const AddToCalendar = ({
       dates: `${formatDate(startDate)}/${formatDate(endDate)}`,
       details: description,
       location: location ?? '',
-      ctz: startDate.toLocaleString(),
+      ctz: Intl.DateTimeFormat().resolvedOptions().timeZone,
     })
     return `${baseUrl}?${params.toString()}`
   }
