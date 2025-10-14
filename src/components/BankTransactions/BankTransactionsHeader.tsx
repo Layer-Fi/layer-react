@@ -147,11 +147,30 @@ export const BankTransactionsHeader = ({
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
 
-  // TODO: Implement handleCategorize(), handleUncategorize(), handleMatch()
-
-  const handleClearBulkActions = useCallback(() => {
-    clearSelection()
-  }, [clearSelection])
+  const BulkActions = useCallback(() => {
+    return (
+      <HStack align='center' gap='sm'>
+        <Button
+          variant='outlined'
+          // TODO: onClick
+        >
+          Categorize
+        </Button>
+        <Button
+          variant='outlined'
+          // TODO: onClick
+        >
+          Uncategorize
+        </Button>
+        <Button
+          variant='outlined'
+          // TODO: onClick
+        >
+          Match
+        </Button>
+      </HStack>
+    )
+  }, [])
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
@@ -206,30 +225,9 @@ export const BankTransactionsHeader = ({
       {_showBulkSelection && count > 0
         ? (
           <BulkActionsHeader
-            selectedCount={count}
-            onClear={handleClearBulkActions}
-            actions={(
-              <>
-                <Button
-                  variant='outlined'
-                  // TODO: onClick
-                >
-                  Categorize
-                </Button>
-                <Button
-                  variant='outlined'
-                  // TODO: onClick
-                >
-                  Uncategorize
-                </Button>
-                <Button
-                  variant='outlined'
-                  // TODO: onClick
-                >
-                  Match
-                </Button>
-              </>
-            )}
+            count={{ showCount: true, totalCount: count }}
+            slotProps={{ ClearSelectionButton: { onClick: clearSelection } }}
+            slots={{ Actions: BulkActions }}
           />
         )
         : (
