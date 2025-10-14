@@ -28,7 +28,7 @@ export const BulkActionsHeader = ({
 
   return (
     <HStack justify='space-between' align='center' gap='xs'>
-      <HStack justify='space-between' align='center' className='Layer__bulk-actions-header__selection-container'>
+      <HStack justify='space-between' align='center' gap='xs' pie='3xs' pis='xs' className='Layer__bulk-actions-header__selection-container'>
         <Span>
           {selectedCount}
           {' '}
@@ -38,6 +38,7 @@ export const BulkActionsHeader = ({
           <Button
             variant='ghost'
             icon
+            inset
             onClick={ClearButton.onClick}
             aria-label='Cancel bulk actions'
           >

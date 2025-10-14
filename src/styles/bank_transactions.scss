@@ -759,15 +759,9 @@
 }
 
 .Layer__bank-transactions__checkbox-col {
-  box-sizing: border-box;
   width: 48px;
-  min-width: 48px;
-  max-width: 48px;
-  padding-inline: var(--spacing-sm);
 
   .Layer__table-cell-content {
-    display: flex;
-    align-items: center;
     justify-content: center;
   }
 }
