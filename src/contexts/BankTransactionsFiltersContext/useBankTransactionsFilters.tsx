@@ -6,6 +6,7 @@ import {
 } from '../../hooks/useBankTransactions/types'
 import { DisplayState } from '../../types'
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useSetCurrentBankTransactionsPage } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 
 export type useBankTransactionsFiltersParams = {
   scope?: DisplayState
@@ -39,6 +40,8 @@ export const useBankTransactionsFilters = (
   const [baseFilters, setBaseFilters] =
     useState<BankTransactionFilters>(initialFilters)
 
+  const setCurrentPage = useSetCurrentBankTransactionsPage()
+
   const filters = useMemo(
     () => ({
       ...baseFilters,
@@ -50,11 +53,17 @@ export const useBankTransactionsFilters = (
   )
 
   const setFilters = useCallback((newFilters: BankTransactionFilters) => {
-    setBaseFilters((prevFilters: BankTransactionFilters) => ({
-      ...prevFilters,
-      ...newFilters,
-    }))
-  }, [])
+    setBaseFilters((prevFilters: BankTransactionFilters) => {
+      const merged = {
+        ...prevFilters,
+        ...newFilters,
+      }
+      if (JSON.stringify(prevFilters) !== JSON.stringify(merged)) {
+        setCurrentPage(1)
+      }
+      return merged
+    })
+  }, [setCurrentPage])
 
   return useMemo(
     () => ({

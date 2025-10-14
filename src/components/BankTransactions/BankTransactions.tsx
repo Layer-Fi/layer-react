@@ -41,8 +41,8 @@ import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkCont
 import { HStack } from '../ui/Stack/Stack'
 import { SuggestedCategorizationRuleUpdatesModal } from './SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
 import { SuggestedCategorizationRuleUpdatesDrawer } from '../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
-import { CategorizationRulesContext } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
-import { BankTransactionsRoute, useBankTransactionsRouteState, useCurrentBankTransactionsPage, useSetCurrentBankTransactionsPage } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import { CategorizationRulesContext, CategorizationRulesProvider } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
+import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage, useSetCurrentBankTransactionsPage } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { CategorizationRulesDrawer } from '../CategorizationRules/CategorizationRulesDrawer'
 
 const COMPONENT_NAME = 'bank-transactions'
@@ -106,20 +106,24 @@ export const BankTransactions = ({
 
   return (
     <ErrorBoundary onError={onError}>
-      <BankTransactionsProvider
-        monthlyView={monthlyView}
-        applyGlobalDateRange={applyGlobalDateRange}
-      >
-        <LegacyModeProvider overrideMode={mode}>
-          <BankTransactionTagVisibilityProvider showTags={showTags}>
-            <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-              <InAppLinkProvider renderInAppLink={renderInAppLink}>
-                <BankTransactionsContent {...props} />
-              </InAppLinkProvider>
-            </BankTransactionCustomerVendorVisibilityProvider>
-          </BankTransactionTagVisibilityProvider>
-        </LegacyModeProvider>
-      </BankTransactionsProvider>
+      <CategorizationRulesProvider>
+        <BankTransactionsRouteStoreProvider>
+          <BankTransactionsProvider
+            monthlyView={monthlyView}
+            applyGlobalDateRange={applyGlobalDateRange}
+          >
+            <LegacyModeProvider overrideMode={mode}>
+              <BankTransactionTagVisibilityProvider showTags={showTags}>
+                <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
+                  <InAppLinkProvider renderInAppLink={renderInAppLink}>
+                    <BankTransactionsContent {...props} />
+                  </InAppLinkProvider>
+                </BankTransactionCustomerVendorVisibilityProvider>
+              </BankTransactionTagVisibilityProvider>
+            </LegacyModeProvider>
+          </BankTransactionsProvider>
+        </BankTransactionsRouteStoreProvider>
+      </CategorizationRulesProvider>
     </ErrorBoundary>
   )
 }
@@ -248,10 +252,6 @@ const BankTransactionsTableView = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputFilters, categorizeView, categorizationEnabled])
 
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [filters, setCurrentPage])
-
   const handleRuleSuggestionOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) setRuleSuggestion(null)
   }, [setRuleSuggestion])
@@ -297,7 +297,6 @@ const BankTransactionsTableView = ({
             ? DisplayState.all
             : DisplayState.review,
     })
-    setCurrentPage(1)
   }
 
   const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
