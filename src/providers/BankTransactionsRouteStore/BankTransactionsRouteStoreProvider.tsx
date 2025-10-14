@@ -1,4 +1,4 @@
-import { useState, createContext, useContext, type PropsWithChildren } from 'react'
+import { useState, createContext, useContext, type PropsWithChildren, useMemo } from 'react'
 import { createStore, useStore } from 'zustand'
 
 export enum BankTransactionsRoute {
@@ -18,8 +18,10 @@ type BankTransactionsRouteStoreShape = {
     toBankTransactionsTable: () => void
     toCategorizationRulesTable: () => void
   }
-  setCurrentBankTransactionsPage: (page: number) => void
-  setCurrentCategorizationRulesPage: (page: number) => void
+  actions: {
+    setCurrentBankTransactionsPage: (page: number) => void
+    setCurrentCategorizationRulesPage: (page: number) => void
+  }
 }
 
 const BankTransactionsRouteStoreContext = createContext(
@@ -31,8 +33,10 @@ const BankTransactionsRouteStoreContext = createContext(
       toBankTransactionsTable: () => {},
       toCategorizationRulesTable: () => {},
     },
-    setCurrentBankTransactionsPage: () => {},
-    setCurrentCategorizationRulesPage: () => {},
+    actions: {
+      setCurrentBankTransactionsPage: () => {},
+      setCurrentCategorizationRulesPage: () => {},
+    },
   })),
 )
 
@@ -48,22 +52,20 @@ export function useBankTransactionsNavigation() {
 
 export function useCurrentBankTransactionsPage() {
   const store = useContext(BankTransactionsRouteStoreContext)
-  return useStore(store, state => state.currentBankTransactionsPage)
-}
-
-export function useCurrentCategorizationRulesPage() {
-  const store = useContext(BankTransactionsRouteStoreContext)
-  return useStore(store, state => state.currentCategorizationRulesPage)
-}
-
-export function useSetCurrentBankTransactionsPage() {
-  const store = useContext(BankTransactionsRouteStoreContext)
-  return useStore(store, state => state.setCurrentBankTransactionsPage)
+  const currentBankTransactionsPage = useStore(store, state => state.currentBankTransactionsPage)
+  const setCurrentBankTransactionsPage = useStore(store, state => state.actions.setCurrentBankTransactionsPage)
+  return useMemo(() => ({ currentBankTransactionsPage, setCurrentBankTransactionsPage }),
+    [currentBankTransactionsPage, setCurrentBankTransactionsPage],
+  )
 }
 
 export function useSetCurrentCategorizationRulesPage() {
   const store = useContext(BankTransactionsRouteStoreContext)
-  return useStore(store, state => state.setCurrentCategorizationRulesPage)
+  const currentCategorizationRulesPage = useStore(store, state => state.currentCategorizationRulesPage)
+  const setCurrentCategorizationRulesPage = useStore(store, state => state.actions.setCurrentCategorizationRulesPage)
+  return useMemo(() => ({ currentCategorizationRulesPage, setCurrentCategorizationRulesPage }),
+    [currentCategorizationRulesPage, setCurrentCategorizationRulesPage],
+  )
 }
 
 export function BankTransactionsRouteStoreProvider(props: PropsWithChildren) {
@@ -88,11 +90,13 @@ export function BankTransactionsRouteStoreProvider(props: PropsWithChildren) {
           }))
         },
       },
-      setCurrentBankTransactionsPage: (page: number) => {
-        set({ currentBankTransactionsPage: page })
-      },
-      setCurrentCategorizationRulesPage: (page: number) => {
-        set({ currentCategorizationRulesPage: page })
+      actions: {
+        setCurrentBankTransactionsPage: (page: number) => {
+          set({ currentBankTransactionsPage: page })
+        },
+        setCurrentCategorizationRulesPage: (page: number) => {
+          set({ currentCategorizationRulesPage: page })
+        },
       },
     })),
   )

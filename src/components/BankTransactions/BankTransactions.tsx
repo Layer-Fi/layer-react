@@ -42,7 +42,7 @@ import { HStack } from '../ui/Stack/Stack'
 import { SuggestedCategorizationRuleUpdatesModal } from './SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
 import { SuggestedCategorizationRuleUpdatesDrawer } from '../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
-import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage, useSetCurrentBankTransactionsPage } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { CategorizationRulesDrawer } from '../CategorizationRules/CategorizationRulesDrawer'
 
 const COMPONENT_NAME = 'bank-transactions'
@@ -156,8 +156,7 @@ const BankTransactionsTableView = ({
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
 
-  const currentPage = useCurrentBankTransactionsPage()
-  const setCurrentPage = useSetCurrentBankTransactionsPage()
+  const { currentBankTransactionsPage: currentPage, setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
 
   const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)

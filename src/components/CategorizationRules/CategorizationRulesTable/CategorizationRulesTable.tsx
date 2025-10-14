@@ -1,5 +1,5 @@
 export const CategorizationRulesTable = () => {
   return (
-    <>Rulez</>
+    null
   )
 }
