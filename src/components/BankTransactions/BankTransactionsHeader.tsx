@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DisplayState, type DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
@@ -33,7 +33,6 @@ export interface BankTransactionsHeaderProps {
   asWidget?: boolean
   categorizedOnly?: boolean
   categorizeView?: boolean
-  onCategorizationDisplayChange: (event: ChangeEvent<HTMLInputElement>) => void
   mobileComponent?: MobileComponentType
   listView?: boolean
   isDataLoading?: boolean
@@ -122,7 +121,6 @@ export const BankTransactionsHeader = ({
   asWidget,
   categorizedOnly,
   categorizeView = true,
-  onCategorizationDisplayChange,
   mobileComponent,
   listView,
   stringOverrides,
@@ -211,6 +209,19 @@ export const BankTransactionsHeader = ({
         : null}
     </div>
   ), [asWidget, business, dateRange, isSyncing, listView, setDateRange, stringOverrides?.header, withDatePicker])
+
+  const onCategorizationDisplayChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFilters({
+      categorizationStatus:
+        event.target.value === 'categorized' // see DisplayState enum
+          ? DisplayState.categorized
+          : event.target.value === 'all' // see DisplayState enum
+            ? DisplayState.all
+            : DisplayState.review,
+    })
+  }
 
   return (
     <Header
