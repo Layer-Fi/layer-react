@@ -56,10 +56,6 @@ export const TagDimensionSchema = Schema.Struct({
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('updated_at'),
   ),
-  userVisible: pipe(
-    Schema.propertySignature(Schema.Boolean),
-    Schema.fromKey('user_visible'),
-  ),
 })
 export type TagDimension = typeof TagDimensionSchema.Type
 
