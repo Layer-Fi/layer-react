@@ -29,7 +29,7 @@ export const BulkActionsHeader = ({
             icon
             inset
             onClick={onClear}
-            aria-label='Cancel bulk actions'
+            aria-label='Clear Bulk Selections'
           >
             <X size={16} />
           </Button>
