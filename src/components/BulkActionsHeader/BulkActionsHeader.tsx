@@ -4,28 +4,17 @@ import { Span } from '../ui/Typography/Text'
 import { X } from 'lucide-react'
 import './bulkActionsHeader.scss'
 
-interface ClearButtonProps {
-  onClick: () => void
-}
-
 interface BulkActionsHeaderProps {
   selectedCount: number
-  slotProps?: {
-    ClearButton?: ClearButtonProps
-  }
-  slots?: {
-    Actions?: React.FC
-  }
+  onClear?: () => void
+  actions?: React.ReactNode
 }
 
 export const BulkActionsHeader = ({
   selectedCount,
-  slotProps = {},
-  slots = {},
+  onClear,
+  actions,
 }: BulkActionsHeaderProps) => {
-  const { Actions } = slots
-  const { ClearButton } = slotProps
-
   return (
     <HStack justify='space-between' align='center' gap='xs'>
       <HStack justify='space-between' align='center' gap='xs' pie='3xs' pis='xs' className='Layer__bulk-actions-header__selection-container'>
@@ -34,12 +23,12 @@ export const BulkActionsHeader = ({
           {' '}
           item(s) selected
         </Span>
-        {ClearButton && (
+        {onClear && (
           <Button
             variant='ghost'
             icon
             inset
-            onClick={ClearButton.onClick}
+            onClick={onClear}
             aria-label='Cancel bulk actions'
           >
             <X size={16} />
@@ -47,9 +36,9 @@ export const BulkActionsHeader = ({
         )}
       </HStack>
 
-      {Actions && (
+      {actions && (
         <HStack align='center' gap='sm'>
-          <Actions />
+          {actions}
         </HStack>
       )}
     </HStack>

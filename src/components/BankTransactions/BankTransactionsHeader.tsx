@@ -221,35 +221,29 @@ export const BankTransactionsHeader = ({
         ? (
           <BulkActionsHeader
             selectedCount={count}
-            slotProps={{
-              ClearButton: {
-                onClick: handleClearBulkActions,
-              },
-            }}
-            slots={{
-              Actions: () => (
-                <>
-                  <Button
-                    variant='outlined'
-                    onClick={handleCategorize}
-                  >
-                    Categorize
-                  </Button>
-                  <Button
-                    variant='outlined'
-                    onClick={handleUncategorize}
-                  >
-                    Uncategorize
-                  </Button>
-                  <Button
-                    variant='outlined'
-                    onClick={handleMatch}
-                  >
-                    Match
-                  </Button>
-                </>
-              ),
-            }}
+            onClear={handleClearBulkActions}
+            actions={(
+              <>
+                <Button
+                  variant='outlined'
+                  onClick={handleCategorize}
+                >
+                  Categorize
+                </Button>
+                <Button
+                  variant='outlined'
+                  onClick={handleUncategorize}
+                >
+                  Uncategorize
+                </Button>
+                <Button
+                  variant='outlined'
+                  onClick={handleMatch}
+                >
+                  Match
+                </Button>
+              </>
+            )}
           />
         )
         : (
