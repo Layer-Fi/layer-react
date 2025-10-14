@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DisplayState, type DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
@@ -24,13 +24,15 @@ import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransact
 import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
 import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
+import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { BulkActionsHeader } from '../BulkActionsHeader/BulkActionsHeader'
+import { Button } from '../ui/Button/Button'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
   asWidget?: boolean
   categorizedOnly?: boolean
   categorizeView?: boolean
-  onCategorizationDisplayChange: (event: ChangeEvent<HTMLInputElement>) => void
   mobileComponent?: MobileComponentType
   listView?: boolean
   isDataLoading?: boolean
@@ -40,6 +42,7 @@ export interface BankTransactionsHeaderProps {
   showStatusToggle?: boolean
   collapseHeader?: boolean
   _showCategorizationRules?: boolean
+  _showBulkSelection?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -118,7 +121,6 @@ export const BankTransactionsHeader = ({
   asWidget,
   categorizedOnly,
   categorizeView = true,
-  onCategorizationDisplayChange,
   mobileComponent,
   listView,
   stringOverrides,
@@ -127,6 +129,7 @@ export const BankTransactionsHeader = ({
   showStatusToggle,
   collapseHeader,
   _showCategorizationRules = false,
+  _showBulkSelection = false,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
   const { display } = useBankTransactionsContext()
@@ -141,6 +144,34 @@ export const BankTransactionsHeader = ({
   const setDateRange = useCallback((newRange: DateRange) => {
     setFilters({ dateRange: newRange })
   }, [setFilters])
+
+  const { count } = useCountSelectedIds()
+  const { clearSelection } = useBulkSelectionActions()
+
+  const BulkActions = useCallback(() => {
+    return (
+      <HStack align='center' gap='sm'>
+        <Button
+          variant='outlined'
+          // TODO: onClick
+        >
+          Categorize
+        </Button>
+        <Button
+          variant='outlined'
+          // TODO: onClick
+        >
+          Uncategorize
+        </Button>
+        <Button
+          variant='outlined'
+          // TODO: onClick
+        >
+          Match
+        </Button>
+      </HStack>
+    )
+  }, [])
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
@@ -179,6 +210,19 @@ export const BankTransactionsHeader = ({
     </div>
   ), [asWidget, business, dateRange, isSyncing, listView, setDateRange, stringOverrides?.header, withDatePicker])
 
+  const onCategorizationDisplayChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFilters({
+      categorizationStatus:
+        event.target.value === 'categorized' // see DisplayState enum
+          ? DisplayState.categorized
+          : event.target.value === 'all' // see DisplayState enum
+            ? DisplayState.all
+            : DisplayState.review,
+    })
+  }
+
   return (
     <Header
       className={classNames(
@@ -191,37 +235,48 @@ export const BankTransactionsHeader = ({
       style={{ top: shiftStickyHeader }}
     >
       {!collapseHeader && headerTopRow}
-      <TransactionsActions>
-        <HStack slot='toggle' justify='center' gap='xs'>
-          {collapseHeader && headerTopRow}
-          {!categorizedOnly && categorizeView && showStatusToggle && (
-            <Toggle
-              name='bank-transaction-display'
-              size={
-                mobileComponent === 'mobileList'
-                  ? ToggleSize.small
-                  : ToggleSize.medium
-              }
-              options={[
-                { label: 'To Review', value: DisplayState.review },
-                { label: 'Categorized', value: DisplayState.categorized },
-              ]}
-              selected={display}
-              onChange={onCategorizationDisplayChange}
-            />
-          )}
-        </HStack>
-        <TransactionsSearch slot='search' />
-        <HStack slot='download-upload' justify='center' gap='xs'>
-          <DownloadButton
-            downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={listView}
+
+      {_showBulkSelection && count > 0
+        ? (
+          <BulkActionsHeader
+            count={{ showCount: true, totalCount: count }}
+            slotProps={{ ClearSelectionButton: { onClick: clearSelection } }}
+            slots={{ Actions: BulkActions }}
           />
-          {_showCategorizationRules
-            ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} />
-            : withUploadMenu && <BankTransactionsUploadMenu />}
-        </HStack>
-      </TransactionsActions>
+        )
+        : (
+          <TransactionsActions>
+            <HStack slot='toggle' justify='center' gap='xs'>
+              {collapseHeader && headerTopRow}
+              {!categorizedOnly && categorizeView && showStatusToggle && (
+                <Toggle
+                  name='bank-transaction-display'
+                  size={
+                    mobileComponent === 'mobileList'
+                      ? ToggleSize.small
+                      : ToggleSize.medium
+                  }
+                  options={[
+                    { label: 'To Review', value: DisplayState.review },
+                    { label: 'Categorized', value: DisplayState.categorized },
+                  ]}
+                  selected={display}
+                  onChange={onCategorizationDisplayChange}
+                />
+              )}
+            </HStack>
+            <TransactionsSearch slot='search' />
+            <HStack slot='download-upload' justify='center' gap='xs'>
+              <DownloadButton
+                downloadButtonTextOverride={stringOverrides?.downloadButton}
+                iconOnly={listView}
+              />
+              {_showCategorizationRules
+                ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} />
+                : withUploadMenu && <BankTransactionsUploadMenu />}
+            </HStack>
+          </TransactionsActions>
+        )}
     </Header>
   )
 }

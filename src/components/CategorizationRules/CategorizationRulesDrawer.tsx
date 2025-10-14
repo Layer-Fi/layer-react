@@ -27,11 +27,3 @@ export const CategorizationRulesDrawer = () => {
     </>
   )
 }
-
-const CategorizationRulesDrawerHeader = () => {
-  return (
-    <HStack justify='space-between' align='center' fluid pie='md'>
-      <Heading size='sm'>Categorization Rules</Heading>
-    </HStack>
-  )
-}

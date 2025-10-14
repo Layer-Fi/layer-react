@@ -37,6 +37,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
   _showCategorizationRules?: boolean
+  _showBulkSelection?: boolean
 }
 
 export const BankTransactionsWithLinkedAccounts = ({
@@ -59,6 +60,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   stringOverrides,
   renderInAppLink,
   _showCategorizationRules,
+  _showBulkSelection = false,
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
     <View
@@ -85,6 +87,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         stringOverrides={stringOverrides?.bankTransactions}
         renderInAppLink={renderInAppLink}
         _showCategorizationRules={_showCategorizationRules}
+        _showBulkSelection={_showBulkSelection}
       />
     </View>
   )

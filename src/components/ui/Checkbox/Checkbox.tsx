@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react'
+import { Check, Minus } from 'lucide-react'
 import { useMemo } from 'react'
 import { Checkbox as ReactAriaCheckbox, type CheckboxProps as AriaCheckboxProps } from 'react-aria-components'
 import { withRenderProp } from '../../utility/withRenderProp'
@@ -21,7 +21,7 @@ type CheckboxWithTooltipProps = CheckboxProps & {
   tooltip?: string
 }
 
-export function Checkbox({ children, className, variant = 'default', size = 'md', ...props }: CheckboxProps) {
+export function Checkbox({ children, className, variant = 'default', size = 'md', isIndeterminate, ...props }: CheckboxProps) {
   const dataProperties = useMemo(() => toDataProperties({
     size,
     variant,
@@ -32,12 +32,15 @@ export function Checkbox({ children, className, variant = 'default', size = 'md'
     <ReactAriaCheckbox
       {...dataProperties}
       {...props}
+      isIndeterminate={isIndeterminate}
       className={classNames(CLASS_NAME, className)}
     >
       {withRenderProp(children, node => (
         <>
           <div slot='checkbox'>
-            <Check size={size === 'lg' ? 16 : 12} />
+            {isIndeterminate
+              ? <Minus size={size === 'lg' ? 16 : 12} />
+              : <Check size={size === 'lg' ? 16 : 12} />}
           </div>
           {node}
         </>
