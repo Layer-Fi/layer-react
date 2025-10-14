@@ -48,15 +48,14 @@ const ScheduledCallState = ({
         </HStack>
         <HStack align='center' gap='sm'>
           <Clock size={20} />
+<HStack gap='xs' align='center'>
           <Span size='md'>{callBooking.eventStartAt && formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME)}</Span>
-        </HStack>
-        <HStack align='center' gap='sm'>
-          <Link size={20} />
-          <a href={callBooking.callLink.toString()} className='Layer__call-booking-link Layer__text-btn' target='_blank' rel='noopener noreferrer'>
+        {callBooking.eventStartAt && (
             <Span size='md'>
-              {callBooking.callLink.toString()}
+              {getTimezoneDisplay(callBooking.eventStartAt)}
             </Span>
-          </a>
+          )}
+          </HStack>
         </HStack>
       </VStack>
       <VStack gap='xs' align='start' justify='start' className='Layer__call-booking-actions'>
