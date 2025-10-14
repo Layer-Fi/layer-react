@@ -41,6 +41,7 @@ import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkCont
 import { HStack } from '../ui/Stack/Stack'
 import { SuggestedCategorizationRuleUpdatesModal } from './SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
 import { SuggestedCategorizationRuleUpdatesDrawer } from '../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
+import { BulkSelectionStoreProvider } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
 
 const COMPONENT_NAME = 'bank-transactions'
@@ -80,6 +81,7 @@ export interface BankTransactionsProps {
   collapseHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
+  _showBulkSelection?: boolean
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -95,6 +97,7 @@ export const BankTransactions = ({
   applyGlobalDateRange = false,
   mode,
   renderInAppLink,
+  _showBulkSelection = false,
   ...props
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
@@ -112,7 +115,9 @@ export const BankTransactions = ({
             <BankTransactionTagVisibilityProvider showTags={showTags}>
               <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
                 <InAppLinkProvider renderInAppLink={renderInAppLink}>
-                  <BankTransactionsContent {...props} />
+                  <BulkSelectionStoreProvider>
+                    <BankTransactionsContent {...props} _showBulkSelection={_showBulkSelection} />
+                  </BulkSelectionStoreProvider>
                 </InAppLinkProvider>
               </BankTransactionCustomerVendorVisibilityProvider>
             </BankTransactionTagVisibilityProvider>
@@ -139,6 +144,7 @@ const BankTransactionsContent = ({
   hideHeader = false,
   collapseHeader = false,
   stringOverrides,
+  _showBulkSelection = false,
 }: BankTransactionsProps) => {
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
@@ -360,6 +366,7 @@ const BankTransactionsContent = ({
           withUploadMenu={showUploadOptions}
           collapseHeader={collapseHeader}
           showStatusToggle={showStatusToggle}
+          _showBulkSelection={_showBulkSelection}
         />
       )}
 
@@ -382,6 +389,7 @@ const BankTransactionsContent = ({
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
+            _showBulkSelection={_showBulkSelection}
           />
         </div>
       )}

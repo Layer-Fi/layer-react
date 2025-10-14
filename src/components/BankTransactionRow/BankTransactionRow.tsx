@@ -42,6 +42,8 @@ import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransa
 import { VStack } from '../ui/Stack/Stack'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
 type Props = {
   index: number
@@ -55,6 +57,7 @@ type Props = {
   showReceiptUploads: boolean
   showReceiptUploadColumn: boolean
   showTooltips: boolean
+  _showBulkSelection?: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
 }
 
@@ -99,6 +102,7 @@ export const BankTransactionRow = ({
   showReceiptUploads,
   showReceiptUploadColumn,
   showTooltips,
+  _showBulkSelection = false,
   stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -116,6 +120,10 @@ export const BankTransactionRow = ({
     setShowRetry(false)
     setOpen(!open)
   }
+
+  const { select, deselect } = useBulkSelectionActions()
+  const isSelected = useIdIsSelected()
+  const isTransactionSelected = isSelected(bankTransaction.id)
 
   const openRow = {
     onMouseDown: () => {
@@ -204,6 +212,23 @@ export const BankTransactionRow = ({
   return (
     <>
       <tr className={rowClassName}>
+        {_showBulkSelection && (
+          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
+            <span className='Layer__table-cell-content'>
+              <Checkbox
+                isSelected={isTransactionSelected}
+                onChange={(selected) => {
+                  if (selected) {
+                    select(bankTransaction.id)
+                  }
+                  else {
+                    deselect(bankTransaction.id)
+                  }
+                }}
+              />
+            </span>
+          </td>
+        )}
         <td
           className='Layer__table-cell Layer__bank-transaction-table__date-col'
           {...openRow}

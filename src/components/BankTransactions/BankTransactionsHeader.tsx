@@ -23,6 +23,9 @@ import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDow
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
+import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { BulkActionsHeader } from '../BulkActionsHeader/BulkActionsHeader'
+import { Button } from '../ui/Button/Button'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -38,6 +41,7 @@ export interface BankTransactionsHeaderProps {
   withUploadMenu?: boolean
   showStatusToggle?: boolean
   collapseHeader?: boolean
+  _showBulkSelection?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -124,6 +128,7 @@ export const BankTransactionsHeader = ({
   withUploadMenu,
   showStatusToggle,
   collapseHeader,
+  _showBulkSelection = false,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
   const { display } = useBankTransactionsContext()
@@ -138,6 +143,34 @@ export const BankTransactionsHeader = ({
   const setDateRange = useCallback((newRange: DateRange) => {
     setFilters({ dateRange: newRange })
   }, [setFilters])
+
+  const { count } = useCountSelectedIds()
+  const { clearSelection } = useBulkSelectionActions()
+
+  const BulkActions = useCallback(() => {
+    return (
+      <HStack align='center' gap='sm'>
+        <Button
+          variant='outlined'
+          // TODO: onClick
+        >
+          Categorize
+        </Button>
+        <Button
+          variant='outlined'
+          // TODO: onClick
+        >
+          Uncategorize
+        </Button>
+        <Button
+          variant='outlined'
+          // TODO: onClick
+        >
+          Match
+        </Button>
+      </HStack>
+    )
+  }, [])
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
@@ -188,35 +221,46 @@ export const BankTransactionsHeader = ({
       style={{ top: shiftStickyHeader }}
     >
       {!collapseHeader && headerTopRow}
-      <TransactionsActions>
-        <HStack slot='toggle' justify='center' gap='xs'>
-          {collapseHeader && headerTopRow}
-          {!categorizedOnly && categorizeView && showStatusToggle && (
-            <Toggle
-              name='bank-transaction-display'
-              size={
-                mobileComponent === 'mobileList'
-                  ? ToggleSize.small
-                  : ToggleSize.medium
-              }
-              options={[
-                { label: 'To Review', value: DisplayState.review },
-                { label: 'Categorized', value: DisplayState.categorized },
-              ]}
-              selected={display}
-              onChange={onCategorizationDisplayChange}
-            />
-          )}
-        </HStack>
-        <TransactionsSearch slot='search' />
-        <HStack slot='download-upload' justify='center' gap='xs'>
-          <DownloadButton
-            downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={listView}
+
+      {_showBulkSelection && count > 0
+        ? (
+          <BulkActionsHeader
+            count={{ showCount: true, totalCount: count }}
+            slotProps={{ ClearSelectionButton: { onClick: clearSelection } }}
+            slots={{ Actions: BulkActions }}
           />
-          {withUploadMenu && <BankTransactionsUploadMenu />}
-        </HStack>
-      </TransactionsActions>
+        )
+        : (
+          <TransactionsActions>
+            <HStack slot='toggle' justify='center' gap='xs'>
+              {collapseHeader && headerTopRow}
+              {!categorizedOnly && categorizeView && showStatusToggle && (
+                <Toggle
+                  name='bank-transaction-display'
+                  size={
+                    mobileComponent === 'mobileList'
+                      ? ToggleSize.small
+                      : ToggleSize.medium
+                  }
+                  options={[
+                    { label: 'To Review', value: DisplayState.review },
+                    { label: 'Categorized', value: DisplayState.categorized },
+                  ]}
+                  selected={display}
+                  onChange={onCategorizationDisplayChange}
+                />
+              )}
+            </HStack>
+            <TransactionsSearch slot='search' />
+            <HStack slot='download-upload' justify='center' gap='xs'>
+              <DownloadButton
+                downloadButtonTextOverride={stringOverrides?.downloadButton}
+                iconOnly={listView}
+              />
+              {withUploadMenu && <BankTransactionsUploadMenu />}
+            </HStack>
+          </TransactionsActions>
+        )}
     </Header>
   )
 }
