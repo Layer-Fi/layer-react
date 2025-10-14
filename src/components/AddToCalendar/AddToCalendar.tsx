@@ -1,21 +1,21 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback } from 'react'
 import { Calendar, ChevronDown } from 'lucide-react'
 import { Button } from '../ui/Button/Button'
-import { VStack } from '../ui/Stack/Stack'
-import classNames from 'classnames'
+import { DropdownMenu, MenuItem, MenuList } from '../ui/DropdownMenu/DropdownMenu'
+import { Span } from '../ui/Typography/Text'
+import { generateIcsCalendar, type IcsCalendar, type IcsEvent } from 'ts-ics'
+import { uniqueId } from 'lodash'
 
-// Format date for different calendar services
+// Format date for Google Calendar URL
+// Input:  2025-10-14T15:30:45.123Z
+//          ↓ (remove - and :)
+//         20251014T153045.123Z
+//          ↓ (remove .123 milliseconds)
+// Output: 20251014T153045Z
+//
+// Reference: https://stackoverflow.com/questions/22757908/what-parameters-are-required-to-create-an-add-to-google-calendar-link
 const formatDate = (date: Date) => {
   return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-}
-
-// Escape special characters for ICS format per RFC 5545
-const escapeICSText = (text: string) => {
-  return text
-    .replace(/\\/g, '\\\\') // Escape backslashes first
-    .replace(/;/g, '\\;') // Escape semicolons
-    .replace(/,/g, '\\,') // Escape commas
-    .replace(/\n/g, '\\n') // Escape newlines
 }
 
 export type AddToCalendarProps = {
@@ -25,7 +25,6 @@ export type AddToCalendarProps = {
   startDate: Date
   endDate?: Date | null
   organizer: { name: string, email: string }
-  className?: string
 }
 
 export const AddToCalendar = ({
@@ -35,33 +34,12 @@ export const AddToCalendar = ({
   startDate,
   endDate,
   organizer,
-  className,
 }: AddToCalendarProps) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-
   let effectiveEndDate = endDate
   if (!effectiveEndDate) {
     const defaultDurationInMinutes = 15
     effectiveEndDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
   }
-
-  // Handle click outside to close dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
 
   const getGoogleCalendarUrl = useCallback(() => {
     const baseUrl = 'https://calendar.google.com/calendar/render'
@@ -77,25 +55,26 @@ export const AddToCalendar = ({
   }, [title, description, location, startDate, effectiveEndDate])
 
   const generateICS = useCallback(() => {
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Add to Calendar//EN',
-      'BEGIN:VEVENT',
-      `DTSTART:${formatDate(startDate)}`,
-      `DTEND:${formatDate(effectiveEndDate)}`,
-      `SUMMARY:${escapeICSText(title)}`,
-      `DESCRIPTION:${escapeICSText(description)}`,
-      `LOCATION:${escapeICSText(location ?? '')}`,
-      `ORGANIZER;CN=${escapeICSText(organizer.name)}:mailto:${organizer.email}`,
-      `UID:${Date.now()}@addtocalendar.com`,
-      `DTSTAMP:${formatDate(new Date())}`,
-      'STATUS:CONFIRMED',
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\r\n')
+    const event: IcsEvent = {
+      summary: title,
+      description,
+      uid: uniqueId('ics-'),
+      stamp: { date: new Date() },
+      start: { date: startDate },
+      end: { date: effectiveEndDate },
+      location: location ?? '',
+      organizer: { name: organizer.name, email: organizer.email },
+      status: 'CONFIRMED' as const,
+    }
 
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
+    const calendar: IcsCalendar = {
+      version: '2.0',
+      prodId: '-//Layer//Layer Calendar//EN',
+      events: [event],
+    }
+
+    const value = generateIcsCalendar(calendar)
+    const blob = new Blob([value], { type: 'text/calendar' })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
@@ -104,7 +83,6 @@ export const AddToCalendar = ({
     link.click()
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
-    setIsOpen(false)
   }, [title, description, location, organizer, startDate, effectiveEndDate])
 
   const handleCalendarClick = useCallback((provider: string) => {
@@ -120,42 +98,35 @@ export const AddToCalendar = ({
         return
     }
     window.open(url, '_blank')
-    setIsOpen(false)
   }, [generateICS, getGoogleCalendarUrl])
 
-  return (
-    <div className={classNames('relative inline-block', className)} ref={dropdownRef}>
-      <div className='relative'>
-        <Button
-          onClick={() => setIsOpen(!isOpen)}
-          variant='outlined'
-          aria-expanded={isOpen}
-          aria-haspopup='menu'
-        >
-          <Calendar size={16} />
-          Add to Calendar
-          <ChevronDown size={16} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-        </Button>
+  const Trigger = useCallback(() => {
+    return (
+      <Button variant='outlined'>
+        <Calendar size={16} />
+        Add to Calendar
+        <ChevronDown size={16} />
+      </Button>
+    )
+  }, [])
 
-        {isOpen && (
-          <VStack gap='xs' className='Layer__call-booking-add-to-calendar-dropdown'>
-            <Button
-              onClick={() => handleCalendarClick('google')}
-              variant='ghost'
-            >
-              <Calendar size={16} />
-              Google Calendar
-            </Button>
-            <Button
-              onClick={() => handleCalendarClick('ics')}
-              variant='ghost'
-            >
-              <Calendar size={16} />
-              Download .ics file
-            </Button>
-          </VStack>
-        )}
-      </div>
-    </div>
+  return (
+    <DropdownMenu
+      ariaLabel='Add to Calendar'
+      slots={{ Trigger }}
+      slotProps={{
+        Dialog: { width: '10rem' },
+      }}
+      variant='compact'
+    >
+      <MenuList>
+        <MenuItem key='google' onClick={() => handleCalendarClick('google')}>
+          <Span size='sm'>Google Calendar</Span>
+        </MenuItem>
+        <MenuItem key='ics' onClick={() => handleCalendarClick('ics')}>
+          <Span size='sm'>Download .ics file</Span>
+        </MenuItem>
+      </MenuList>
+    </DropdownMenu>
   )
 }
