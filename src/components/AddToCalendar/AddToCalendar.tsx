@@ -39,7 +39,7 @@ export const AddToCalendar = ({
       dates: `${formatDate(startDate)}/${formatDate(endDate)}`,
       details: description,
       location: location ?? '',
-      ctz: startDate.toLocaleString(),
+      ctz: Intl.DateTimeFormat().resolvedOptions().timeZone,
     })
     return `${baseUrl}?${params.toString()}`
   }
