@@ -66,6 +66,7 @@ const ScheduledCallState = ({
             description={callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'}
             location={callBooking.callLink.toString()}
             startDate={callBooking.eventStartAt}
+            endDate={callBooking.eventEndAt}
             organizer={{ name: callBooking.bookkeeperName, email: callBooking.bookkeeperEmail }}
           />
         </VStack>

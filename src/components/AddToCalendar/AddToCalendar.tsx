@@ -9,6 +9,7 @@ export type AddToCalendarProps = {
   description: string
   location?: string
   startDate: Date
+  endDate?: Date | null
   organizer: { name: string, email: string }
   className?: string
 }
@@ -18,6 +19,7 @@ export const AddToCalendar = ({
   description,
   location,
   startDate,
+  endDate,
   organizer,
   className,
 }: AddToCalendarProps) => {
@@ -28,7 +30,10 @@ export const AddToCalendar = ({
     return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
   }
 
-  const endDate = startDate
+  if (!endDate) {
+    const defaultDurationInMinutes = 15
+    endDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
+  }
 
   // Generate Google Calendar URL
   const getGoogleCalendarUrl = () => {

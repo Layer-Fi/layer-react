@@ -25,52 +25,49 @@ const CallBookingTypeSchema = Schema.Enums(CallBookingType)
 
 const CallBookingPurposeSchema = Schema.Enums(CallBookingPurpose)
 
+// Helper function to create transformed enum schemas with safe defaults
+const createTransformedEnumSchema = <T extends Record<string, string>>(
+  enumSchema: Schema.Schema<T[keyof T], T[keyof T]>,
+  enumObject: T,
+  defaultValue: T[keyof T],
+) => {
+  return Schema.transform(
+    Schema.NonEmptyTrimmedString,
+    Schema.typeSchema(enumSchema),
+    {
+      strict: false,
+      decode: (input) => {
+        if (Object.values(enumObject).includes(input as T[keyof T])) {
+          return input as T[keyof T]
+        }
+        return defaultValue
+      },
+      encode: input => input,
+    },
+  )
+}
+
 // Transformed schemas with safe defaults for unknown values
-const TransformedCallBookingStateSchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(CallBookingStateSchema),
-  {
-    strict: false,
-    decode: (input) => {
-      if (Object.values(CallBookingState).includes(input as CallBookingState)) {
-        return input as CallBookingState
-      }
-      return CallBookingState.SCHEDULED // Safe default for unknown values
-    },
-    encode: input => input,
-  },
+const TransformedCallBookingStateSchema = createTransformedEnumSchema(
+  CallBookingStateSchema,
+  CallBookingState,
+  CallBookingState.SCHEDULED,
 )
 
-const TransformedCallBookingTypeSchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(CallBookingTypeSchema),
-  {
-    decode: (input) => {
-      if (Object.values(CallBookingType).includes(input as CallBookingType)) {
-        return input as CallBookingType
-      }
-      return CallBookingType.GOOGLE_MEET // Safe default for unknown values
-    },
-    encode: input => input,
-  },
+const TransformedCallBookingTypeSchema = createTransformedEnumSchema(
+  CallBookingTypeSchema,
+  CallBookingType,
+  CallBookingType.GOOGLE_MEET,
 )
 
-const TransformedCallBookingPurposeSchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(CallBookingPurposeSchema),
-  {
-    decode: (input) => {
-      if (Object.values(CallBookingPurpose).includes(input as CallBookingPurpose)) {
-        return input as CallBookingPurpose
-      }
-      return CallBookingPurpose.ADHOC // Safe default for unknown values
-    },
-    encode: input => input,
-  },
+const TransformedCallBookingPurposeSchema = createTransformedEnumSchema(
+  CallBookingPurposeSchema,
+  CallBookingPurpose,
+  CallBookingPurpose.ADHOC,
 )
 
-// Main CallBooking schema
-export const CallBookingSchema = Schema.Struct({
+// Base CallBooking schema without the transform
+const CallBookingSchema = Schema.Struct({
   id: Schema.UUID,
 
   businessId: pipe(
@@ -95,6 +92,11 @@ export const CallBookingSchema = Schema.Struct({
   eventStartAt: pipe(
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('event_start_at'),
+  ),
+
+  eventEndAt: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
+    Schema.fromKey('event_end_at'),
   ),
 
   callLink: pipe(
@@ -172,8 +174,13 @@ const CreateCallBookingBodySchemaDefinition = Schema.Struct({
   ),
 
   eventStartAt: pipe(
-    Schema.optional(Schema.Date),
+    Schema.propertySignature(Schema.Date),
     Schema.fromKey('event_start_at'),
+  ),
+
+  eventEndAt: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
+    Schema.fromKey('event_end_at'),
   ),
 
   location: Schema.optional(Schema.String),
