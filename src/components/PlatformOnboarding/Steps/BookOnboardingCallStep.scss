@@ -1,13 +1,13 @@
 .Layer__platform-onboarding__book-onboarding-call {
-    &.is-tablet {
-        .calendly-inline-widget {
-            height: 60rem;
-        }
+  &.is-tablet {
+    .calendly-inline-widget {
+      height: 60rem;
     }
-    
-    &.is-desktop {
-        .calendly-inline-widget {
-            height: 60rem;
-        }
+  }
+
+  &.is-desktop {
+    .calendly-inline-widget {
+      height: 60rem;
     }
+  }
 }

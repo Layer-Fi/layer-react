@@ -44,11 +44,18 @@ export const BookOnboardingCallStep = ({ title = defaultTitle, description = def
       return
     }
 
+    const uuid = payload.event.uri.split('/').pop()
+    if (!uuid) {
+      console.error('No UUID provided from Calendly')
+      setError(true)
+      return
+    }
+
     // Use void operator to explicitly discard the promise
     void (async () => {
       try {
         await createCallBooking({
-          external_id: payload.event.uri,
+          external_id: uuid,
           purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
           call_type: CallBookingType.GOOGLE_MEET,
         })
