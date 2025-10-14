@@ -7,6 +7,19 @@ import { generateIcsCalendar, type IcsCalendar, type IcsEvent } from 'ts-ics'
 import { uniqueId } from 'lodash'
 import { CalendarEvent, google, office365, outlook, yahoo } from 'calendar-link'
 
+/**
+ * This property specifies the identifier for the product that
+ * created the iCalendar object.
+ *
+ * This is required by the iCalendar standard.
+ * https://datatracker.ietf.org/doc/html/rfc5545#section-3.7.3
+ */
+const LAYER_ICS_PRODUCT_ID = '-//Layer//Layer Calendar//EN'
+
+const prepareIcsFilename = (title: string) => {
+  return title.replace(/[^a-z0-9]/gi, '_').toLowerCase().trim()
+}
+
 export type AddToCalendarProps = {
   title: string
   description: string
@@ -55,7 +68,7 @@ export const AddToCalendar = ({
 
     const calendar: IcsCalendar = {
       version: '2.0',
-      prodId: '-//Layer//Layer Calendar//EN',
+      prodId: LAYER_ICS_PRODUCT_ID,
       events: [event],
     }
 
@@ -63,9 +76,10 @@ export const AddToCalendar = ({
     const blob = new Blob([value], { type: 'text/calendar' })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
-    const title = calendarEvent.title.replace(/[^a-z0-9]/gi, '_').toLowerCase().trim()
+    const filename = prepareIcsFilename(calendarEvent.title)
+
     link.href = url
-    link.download = `${title}.ics`
+    link.download = `${filename}.ics`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
