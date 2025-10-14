@@ -99,7 +99,7 @@ export const AddToCalendar = ({
       <div className='relative'>
         <Button
           onClick={() => setIsOpen(!isOpen)}
-          variant='solid'
+          variant='outlined'
         >
           <Calendar size={16} />
           Add to Calendar
