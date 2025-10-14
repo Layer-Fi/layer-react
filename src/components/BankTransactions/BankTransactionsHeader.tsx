@@ -27,6 +27,9 @@ import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/Bu
 import { BulkActionsHeader } from '../BulkActionsHeader/BulkActionsHeader'
 import { Button } from '../ui/Button/Button'
 import { BulkActionsConfirmationModal } from '../BulkActionsConfirmationModal/BulkActionsConfirmationModal'
+import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect'
+import { VStack } from '../ui/Stack/Stack'
+import { Label } from '../ui/Typography/Text'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -150,6 +153,7 @@ export const BankTransactionsHeader = ({
 
   const [isConfirmModalAllOpen, setIsConfirmModalAllOpen] = useState(false)
   const [isCategorizeModalAllOpen, setIsCategorizeModalAllOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<CategoryOption | undefined>(undefined)
 
   const BulkActions = useCallback(() => {
     return (
@@ -182,13 +186,27 @@ export const BankTransactionsHeader = ({
           itemCount={count}
           actionLabel='categorize'
           itemLabel='transactions'
+          descriptionLabel={` as ${selectedCategory?.payload?.display_name}`}
           onConfirm={() => {}}
           confirmLabel='Categorize All'
           cancelLabel='Cancel'
-        />
+          confirmDisabled={!selectedCategory}
+          hideDescription={!selectedCategory}
+        >
+          <VStack gap='xs'>
+            <Label>Select category</Label>
+            <CategorySelect
+              name='bulk-category-select'
+              value={selectedCategory}
+              onChange={setSelectedCategory}
+              showTooltips={false}
+              excludeMatches={true}
+            />
+          </VStack>
+        </BulkActionsConfirmationModal>
       </HStack>
     )
-  }, [count, isConfirmModalAllOpen, isCategorizeModalAllOpen])
+  }, [count, isConfirmModalAllOpen, isCategorizeModalAllOpen, selectedCategory])
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
