@@ -39,9 +39,10 @@ export const AddToCalendar = ({
 }: AddToCalendarProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
-  if (!endDate) {
+  let effectiveEndDate = endDate
+  if (!effectiveEndDate) {
     const defaultDurationInMinutes = 15
-    endDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
+    effectiveEndDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
   }
 
   // Generate Google Calendar URL
@@ -50,13 +51,13 @@ export const AddToCalendar = ({
     const params = new URLSearchParams({
       action: 'TEMPLATE',
       text: title,
-      dates: `${formatDate(startDate)}/${formatDate(endDate)}`,
+      dates: `${formatDate(startDate)}/${formatDate(effectiveEndDate)}`,
       details: description,
       location: location ?? '',
       ctz: Intl.DateTimeFormat().resolvedOptions().timeZone,
     })
     return `${baseUrl}?${params.toString()}`
-  }, [title, description, location, startDate, endDate])
+  }, [title, description, location, startDate, effectiveEndDate])
 
   // Generate ICS file content
   const generateICS = useCallback(() => {
@@ -66,7 +67,7 @@ export const AddToCalendar = ({
       'PRODID:-//Add to Calendar//EN',
       'BEGIN:VEVENT',
       `DTSTART:${formatDate(startDate)}`,
-      `DTEND:${formatDate(endDate)}`,
+      `DTEND:${formatDate(effectiveEndDate)}`,
       `SUMMARY:${escapeICSText(title)}`,
       `DESCRIPTION:${escapeICSText(description)}`,
       `LOCATION:${escapeICSText(location ?? '')}`,
@@ -88,7 +89,7 @@ export const AddToCalendar = ({
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
     setIsOpen(false)
-  }, [title, description, location, organizer, startDate, endDate])
+  }, [title, description, location, organizer, startDate, effectiveEndDate])
 
   // Handle calendar provider click
   const handleCalendarClick = useCallback((provider: string) => {
