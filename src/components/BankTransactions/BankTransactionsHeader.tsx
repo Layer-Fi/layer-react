@@ -145,23 +145,9 @@ export const BankTransactionsHeader = ({
   }, [setFilters])
 
   const { count } = useCountSelectedIds()
-  // const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
 
-  const handleCategorize = () => {
-    // TODO: Implement bulk categorize functionality
-    return
-  }
-
-  const handleUncategorize = () => {
-    // TODO: Implement bulk uncategorize functionality
-    return
-  }
-
-  const handleMatch = () => {
-    // TODO: Implement bulk match functionality
-    return
-  }
+  // TODO: Implement handleCategorize(), handleUncategorize(), handleMatch()
 
   const handleClearBulkActions = useCallback(() => {
     clearSelection()
@@ -226,19 +212,19 @@ export const BankTransactionsHeader = ({
               <>
                 <Button
                   variant='outlined'
-                  onClick={handleCategorize}
+                  // TODO: onClick
                 >
                   Categorize
                 </Button>
                 <Button
                   variant='outlined'
-                  onClick={handleUncategorize}
+                  // TODO: onClick
                 >
                   Uncategorize
                 </Button>
                 <Button
                   variant='outlined'
-                  onClick={handleMatch}
+                  // TODO: onClick
                 >
                   Match
                 </Button>
