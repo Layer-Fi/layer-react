@@ -1,55 +1,7 @@
 import { centsToDollars, centsToDollarsWithoutCommas } from '../../../models/Money'
 import type { AugmentedLedgerAccountBalance } from '../../../types/chart_of_accounts'
 import { convertCentsToCurrency } from '../../../utils/format'
-import { LedgerAccountSubtypeOrderEnum, LedgerAccountTypeOrderEnum } from './types'
 import { NestedLedgerAccountType } from '../../../../src/schemas/generalLedger/ledgerAccount'
-
-const compareByEnum = (
-  a: string | undefined,
-  b: string | undefined,
-  enumMap: Record<string, number>,
-): number => {
-  const aVal = a !== undefined ? enumMap[a] : undefined
-  const bVal = b !== undefined ? enumMap[b] : undefined
-
-  if (aVal !== undefined && bVal !== undefined) return aVal - bVal
-  if (aVal === undefined && bVal !== undefined) return 1
-  if (aVal !== undefined && bVal === undefined) return -1
-  return 0
-}
-
-const compareAccounts = (a: NestedLedgerAccountType, b: NestedLedgerAccountType): number => {
-  const typeComparison = compareByEnum(
-    a.accountType.value,
-    b.accountType.value,
-    LedgerAccountTypeOrderEnum as unknown as Record<string, number>,
-  )
-  if (typeComparison !== 0) return typeComparison
-
-  const subtypeComparison = compareByEnum(
-    a.accountSubtype?.value,
-    b.accountSubtype?.value,
-    LedgerAccountSubtypeOrderEnum as unknown as Record<string, number>,
-  )
-  if (subtypeComparison !== 0) return subtypeComparison
-
-  const subtypeNameCompare = (a.accountSubtype?.displayName ?? '')
-    .localeCompare(b.accountSubtype?.displayName ?? '')
-  if (subtypeNameCompare !== 0) return subtypeNameCompare
-
-  return a.name.localeCompare(b.name)
-}
-
-export const sortAccountsRecursive = (accounts: NestedLedgerAccountType[]): NestedLedgerAccountType[] => {
-  return accounts
-    .map(account => ({
-      ...account,
-      subAccounts: account.subAccounts
-        ? sortAccountsRecursive(Array.from(account.subAccounts))
-        : [],
-    }))
-    .sort(compareAccounts)
-}
 
 const accountMatchesQuery = (account: NestedLedgerAccountType, query: string) => {
   return [
