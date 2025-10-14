@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DisplayState, type DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
@@ -23,6 +23,7 @@ import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDow
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
+import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
 import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BulkActionsHeader } from '../BulkActionsHeader/BulkActionsHeader'
 import { Button } from '../ui/Button/Button'
@@ -32,7 +33,6 @@ export interface BankTransactionsHeaderProps {
   asWidget?: boolean
   categorizedOnly?: boolean
   categorizeView?: boolean
-  onCategorizationDisplayChange: (event: ChangeEvent<HTMLInputElement>) => void
   mobileComponent?: MobileComponentType
   listView?: boolean
   isDataLoading?: boolean
@@ -41,6 +41,7 @@ export interface BankTransactionsHeaderProps {
   withUploadMenu?: boolean
   showStatusToggle?: boolean
   collapseHeader?: boolean
+  _showCategorizationRules?: boolean
   _showBulkSelection?: boolean
 }
 
@@ -120,7 +121,6 @@ export const BankTransactionsHeader = ({
   asWidget,
   categorizedOnly,
   categorizeView = true,
-  onCategorizationDisplayChange,
   mobileComponent,
   listView,
   stringOverrides,
@@ -128,6 +128,7 @@ export const BankTransactionsHeader = ({
   withUploadMenu,
   showStatusToggle,
   collapseHeader,
+  _showCategorizationRules = false,
   _showBulkSelection = false,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
@@ -209,6 +210,19 @@ export const BankTransactionsHeader = ({
     </div>
   ), [asWidget, business, dateRange, isSyncing, listView, setDateRange, stringOverrides?.header, withDatePicker])
 
+  const onCategorizationDisplayChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFilters({
+      categorizationStatus:
+        event.target.value === 'categorized' // see DisplayState enum
+          ? DisplayState.categorized
+          : event.target.value === 'all' // see DisplayState enum
+            ? DisplayState.all
+            : DisplayState.review,
+    })
+  }
+
   return (
     <Header
       className={classNames(
@@ -257,7 +271,9 @@ export const BankTransactionsHeader = ({
                 downloadButtonTextOverride={stringOverrides?.downloadButton}
                 iconOnly={listView}
               />
-              {withUploadMenu && <BankTransactionsUploadMenu />}
+              {_showCategorizationRules
+                ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} />
+                : withUploadMenu && <BankTransactionsUploadMenu />}
             </HStack>
           </TransactionsActions>
         )}
