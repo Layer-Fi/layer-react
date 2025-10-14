@@ -26,6 +26,7 @@ import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/
 import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BulkActionsHeader } from '../BulkActionsHeader/BulkActionsHeader'
 import { Button } from '../ui/Button/Button'
+import { BulkActionsConfirmationModal } from '../BulkActionsConfirmationModal/BulkActionsConfirmationModal'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -147,30 +148,47 @@ export const BankTransactionsHeader = ({
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
 
+  const [isConfirmModalAllOpen, setIsConfirmModalAllOpen] = useState(false)
+  const [isCategorizeModalAllOpen, setIsCategorizeModalAllOpen] = useState(false)
+
   const BulkActions = useCallback(() => {
     return (
       <HStack align='center' gap='sm'>
         <Button
           variant='outlined'
-          // TODO: onClick
+          onClick={() => setIsConfirmModalAllOpen(true)}
         >
-          Categorize
+          Confirm All
         </Button>
+        <BulkActionsConfirmationModal
+          isOpen={isConfirmModalAllOpen}
+          onOpenChange={setIsConfirmModalAllOpen}
+          itemCount={count}
+          actionLabel='confirm'
+          itemLabel='suggestions'
+          onConfirm={() => {}}
+          confirmLabel='Confirm All'
+          cancelLabel='Cancel'
+        />
         <Button
           variant='outlined'
-          // TODO: onClick
+          onClick={() => setIsCategorizeModalAllOpen(true)}
         >
-          Uncategorize
+          Categorize All
         </Button>
-        <Button
-          variant='outlined'
-          // TODO: onClick
-        >
-          Match
-        </Button>
+        <BulkActionsConfirmationModal
+          isOpen={isCategorizeModalAllOpen}
+          onOpenChange={setIsCategorizeModalAllOpen}
+          itemCount={count}
+          actionLabel='categorize'
+          itemLabel='transactions'
+          onConfirm={() => {}}
+          confirmLabel='Categorize All'
+          cancelLabel='Cancel'
+        />
       </HStack>
     )
-  }, [])
+  }, [count, isConfirmModalAllOpen, isCategorizeModalAllOpen])
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
