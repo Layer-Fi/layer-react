@@ -36,6 +36,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
+  _showCategorizationRules?: boolean
 }
 
 export const BankTransactionsWithLinkedAccounts = ({
@@ -57,6 +58,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   mobileComponent,
   stringOverrides,
   renderInAppLink,
+  _showCategorizationRules,
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
     <View
@@ -82,6 +84,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         mode={mode}
         stringOverrides={stringOverrides?.bankTransactions}
         renderInAppLink={renderInAppLink}
+        _showCategorizationRules={_showCategorizationRules}
       />
     </View>
   )

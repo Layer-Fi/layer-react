@@ -23,6 +23,7 @@ import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDow
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
+import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -38,6 +39,7 @@ export interface BankTransactionsHeaderProps {
   withUploadMenu?: boolean
   showStatusToggle?: boolean
   collapseHeader?: boolean
+  _showCategorizationRules?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -124,6 +126,7 @@ export const BankTransactionsHeader = ({
   withUploadMenu,
   showStatusToggle,
   collapseHeader,
+  _showCategorizationRules = false,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
   const { display } = useBankTransactionsContext()
@@ -214,7 +217,9 @@ export const BankTransactionsHeader = ({
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={listView}
           />
-          {withUploadMenu && <BankTransactionsUploadMenu />}
+          {_showCategorizationRules
+            ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} />
+            : withUploadMenu && <BankTransactionsUploadMenu />}
         </HStack>
       </TransactionsActions>
     </Header>

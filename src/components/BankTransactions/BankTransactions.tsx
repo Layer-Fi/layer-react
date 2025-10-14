@@ -41,7 +41,9 @@ import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkCont
 import { HStack } from '../ui/Stack/Stack'
 import { SuggestedCategorizationRuleUpdatesModal } from './SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
 import { SuggestedCategorizationRuleUpdatesDrawer } from '../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
-import { CategorizationRulesContext, CategorizationRulesProvider } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
+import { CategorizationRulesContext } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
+import { BankTransactionsRoute, useBankTransactionsRouteState, useCurrentBankTransactionsPage, useSetCurrentBankTransactionsPage } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import { CategorizationRulesDrawer } from '../CategorizationRules/CategorizationRulesDrawer'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -80,6 +82,7 @@ export interface BankTransactionsProps {
   collapseHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
+  _showCategorizationRules?: boolean
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -103,27 +106,32 @@ export const BankTransactions = ({
 
   return (
     <ErrorBoundary onError={onError}>
-      <CategorizationRulesProvider>
-        <BankTransactionsProvider
-          monthlyView={monthlyView}
-          applyGlobalDateRange={applyGlobalDateRange}
-        >
-          <LegacyModeProvider overrideMode={mode}>
-            <BankTransactionTagVisibilityProvider showTags={showTags}>
-              <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-                <InAppLinkProvider renderInAppLink={renderInAppLink}>
-                  <BankTransactionsContent {...props} />
-                </InAppLinkProvider>
-              </BankTransactionCustomerVendorVisibilityProvider>
-            </BankTransactionTagVisibilityProvider>
-          </LegacyModeProvider>
-        </BankTransactionsProvider>
-      </CategorizationRulesProvider>
+      <BankTransactionsProvider
+        monthlyView={monthlyView}
+        applyGlobalDateRange={applyGlobalDateRange}
+      >
+        <LegacyModeProvider overrideMode={mode}>
+          <BankTransactionTagVisibilityProvider showTags={showTags}>
+            <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
+              <InAppLinkProvider renderInAppLink={renderInAppLink}>
+                <BankTransactionsContent {...props} />
+              </InAppLinkProvider>
+            </BankTransactionCustomerVendorVisibilityProvider>
+          </BankTransactionTagVisibilityProvider>
+        </LegacyModeProvider>
+      </BankTransactionsProvider>
     </ErrorBoundary>
   )
 }
 
-const BankTransactionsContent = ({
+const BankTransactionsContent = (props: BankTransactionsProps) => {
+  const routeState = useBankTransactionsRouteState()
+  return routeState.route === BankTransactionsRoute.BankTransactionsTable
+    ? <BankTransactionsTableView {...props} />
+    : <CategorizationRulesDrawer />
+}
+
+const BankTransactionsTableView = ({
   asWidget = false,
   pageSize = 20,
 
@@ -139,11 +147,13 @@ const BankTransactionsContent = ({
   hideHeader = false,
   collapseHeader = false,
   stringOverrides,
+  _showCategorizationRules = false,
 }: BankTransactionsProps) => {
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
 
-  const [currentPage, setCurrentPage] = useState(1)
+  const currentPage = useCurrentBankTransactionsPage()
+  const setCurrentPage = useSetCurrentBankTransactionsPage()
 
   const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
@@ -240,7 +250,7 @@ const BankTransactionsContent = ({
 
   useEffect(() => {
     setCurrentPage(1)
-  }, [filters])
+  }, [filters, setCurrentPage])
 
   const handleRuleSuggestionOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) setRuleSuggestion(null)
@@ -360,6 +370,7 @@ const BankTransactionsContent = ({
           withUploadMenu={showUploadOptions}
           collapseHeader={collapseHeader}
           showStatusToggle={showStatusToggle}
+          _showCategorizationRules={_showCategorizationRules}
         />
       )}
 

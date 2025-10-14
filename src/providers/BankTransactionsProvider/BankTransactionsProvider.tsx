@@ -5,6 +5,8 @@ import {
   BankTransactionsFiltersContext,
 } from '../../contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsFilters, useBankTransactionsFiltersParams } from '../../contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
+import { CategorizationRulesProvider } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
+import { BankTransactionsRouteStoreProvider } from '../BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 
 interface BankTransactionsProviderProps extends useBankTransactionsFiltersParams {
   children: ReactNode
@@ -25,10 +27,14 @@ export const BankTransactionsProvider = ({
   const bankTransactionsContextData = useAugmentedBankTransactions({ filters: filtersContextValue.filters })
 
   return (
-    <BankTransactionsFiltersContext.Provider value={filtersContextValue}>
-      <BankTransactionsContext.Provider value={bankTransactionsContextData}>
-        {children}
-      </BankTransactionsContext.Provider>
-    </BankTransactionsFiltersContext.Provider>
+    <CategorizationRulesProvider>
+      <BankTransactionsRouteStoreProvider>
+        <BankTransactionsFiltersContext.Provider value={filtersContextValue}>
+          <BankTransactionsContext.Provider value={bankTransactionsContextData}>
+            {children}
+          </BankTransactionsContext.Provider>
+        </BankTransactionsFiltersContext.Provider>
+      </BankTransactionsRouteStoreProvider>
+    </CategorizationRulesProvider>
   )
 }
