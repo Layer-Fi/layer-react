@@ -186,7 +186,7 @@ export const BankTransactionsHeader = ({
         <BaseConfirmationModal
           isOpen={isConfirmAllModalOpen}
           onOpenChange={setIsConfirmAllModalOpen}
-          title='Confirm all selected suggestions?'
+          title='Confirm all suggestions?'
           content={(
             <Span>
               {`This action will confirm ${count} selected ${pluralize('transaction', count)}.`}
