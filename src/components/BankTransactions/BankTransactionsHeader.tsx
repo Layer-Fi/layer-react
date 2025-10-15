@@ -27,10 +27,11 @@ import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
 import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BulkActionsHeader } from '../BulkActionsHeader/BulkActionsHeader'
 import { Button } from '../ui/Button/Button'
-import { BulkActionsConfirmationModal } from '../BulkActionsConfirmationModal/BulkActionsConfirmationModal'
+import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
 import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect'
 import { VStack } from '../ui/Stack/Stack'
-import { Label } from '../ui/Typography/Text'
+import { Label, Span } from '../ui/Typography/Text'
+import pluralize from 'pluralize'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -180,15 +181,19 @@ export const BankTransactionsHeader = ({
         >
           Confirm All
         </Button>
-        <BulkActionsConfirmationModal
+        <BaseConfirmationModal
           isOpen={isConfirmAllModalOpen}
           onOpenChange={setIsConfirmAllModalOpen}
-          itemCount={count}
-          actionLabel='confirm'
-          itemLabel='suggestions'
+          title='Confirm all selected suggestions?'
+          content={(
+            <Span>
+              {`This action will confirm ${count} selected ${pluralize('transaction', count)}.`}
+            </Span>
+          )}
           onConfirm={() => {}}
           confirmLabel='Confirm All'
           cancelLabel='Cancel'
+          closeOnConfirm
         />
         <Button
           variant='outlined'
@@ -196,30 +201,35 @@ export const BankTransactionsHeader = ({
         >
           Categorize All
         </Button>
-        <BulkActionsConfirmationModal
+        <BaseConfirmationModal
           isOpen={isCategorizeAllModalOpen}
           onOpenChange={handleCategorizeModalClose}
-          itemCount={count}
-          actionLabel='categorize'
-          itemLabel='transactions'
-          descriptionLabel={selectedCategory?.payload?.display_name ? ` as ${selectedCategory?.payload?.display_name}` : ''}
+          title='Categorize all selected transactions?'
+          content={(
+            <VStack gap='xs'>
+              <VStack gap='xs'>
+                <Label>Select category</Label>
+                <CategorySelect
+                  name='bulk-category-select'
+                  value={selectedCategory}
+                  onChange={setSelectedCategory}
+                  showTooltips={false}
+                  excludeMatches={true}
+                />
+              </VStack>
+              {selectedCategory && (
+                <Span>
+                  {`This action will categorize ${count} selected transactions as ${selectedCategory?.payload?.display_name}.`}
+                </Span>
+              )}
+            </VStack>
+          )}
           onConfirm={() => {}}
           confirmLabel='Categorize All'
           cancelLabel='Cancel'
           confirmDisabled={!selectedCategory}
-          hideDescription={!selectedCategory}
-        >
-          <VStack gap='xs'>
-            <Label>Select category</Label>
-            <CategorySelect
-              name='bulk-category-select'
-              value={selectedCategory}
-              onChange={setSelectedCategory}
-              showTooltips={false}
-              excludeMatches={true}
-            />
-          </VStack>
-        </BulkActionsConfirmationModal>
+          closeOnConfirm
+        />
       </HStack>
     )
   }, [
