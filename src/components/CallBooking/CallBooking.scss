@@ -7,6 +7,7 @@
 
   .Layer__call-booking-actions {
     width: 100%;
+    position: relative;
   }
 
   .Layer__call-booking-state {
@@ -19,21 +20,4 @@
   .Layer__call-booking {
     padding: var(--spacing-md);
   }
-}
-
-.Layer__call-booking-actions {
-  position: relative;
-}
-
-.Layer__call-booking-add-to-calendar-dropdown {
-  position: absolute;
-  z-index: 1000;
-  top: 100%;
-  left: 0;
-  min-width: 10rem;
-  padding: var(--spacing-xs);
-  border-radius: 0.5rem;
-  border: 1px solid var(--outline-subtle);
-  margin-top: var(--spacing-xs);
-  background-color: var(--color-white);
 }
