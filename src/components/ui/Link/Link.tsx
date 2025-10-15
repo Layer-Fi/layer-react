@@ -5,17 +5,14 @@ import type { Spacing } from '../sharedUITypes'
 
 const LINK_CLASS_NAME = 'Layer__UI__Link'
 
-export type LinkVariant = 'primary' | 'subtle' | 'inline'
 type LinkSize = 'xs' | 'sm' | 'md' | 'lg'
-type LinkUnderline = 'none' | 'hover' | 'always'
 
 type LinkProps = Omit<ReactAriaLinkProps, 'className'> & PropsWithChildren<{
-  variant?: LinkVariant
   size?: LinkSize
   weight?: 'normal' | 'bold'
-  underline?: LinkUnderline
   ellipsis?: true
   external?: true
+  disabled?: true
   pb?: Spacing
   pbe?: Spacing
   pbs?: Spacing
@@ -24,12 +21,11 @@ type LinkProps = Omit<ReactAriaLinkProps, 'className'> & PropsWithChildren<{
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
   function Link({
     children,
-    variant = 'inline',
     size = 'md',
     weight,
-    underline,
     ellipsis,
     external,
+    disabled,
     pb,
     pbe,
     pbs,
@@ -39,15 +35,14 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
     ...restProps
   }, ref) {
     const dataProperties = toDataProperties({
-      variant,
       size,
       weight,
-      underline,
       ellipsis,
       external,
       pb,
       pbe,
       pbs,
+      disabled,
     })
     const effectiveTarget = external ? '_blank' : target
     const effectiveRel = external ? 'noopener noreferrer' : rel
