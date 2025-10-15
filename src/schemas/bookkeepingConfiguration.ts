@@ -1,47 +1,25 @@
 import { Schema, pipe } from 'effect'
-export { BookkeepingStatus } from '../hooks/bookkeeping/useBookkeepingStatus'
+import { createTransformedEnumSchema } from './utils'
 
 export enum TransactionTaggingStrategy {
   PC_MSO = 'PC_MSO',
 }
 
-const BookkeepingStatusSchema = Schema.Literal(
-  'NOT_PURCHASED',
-  'ONBOARDING',
-  'BOOKKEEPING_PAUSED',
-  'ACTIVE',
-)
+export enum BookkeepingStatus {
+  NOT_PURCHASED = 'NOT_PURCHASED',
+  ONBOARDING = 'ONBOARDING',
+  BOOKKEEPING_PAUSED = 'BOOKKEEPING_PAUSED',
+  ACTIVE = 'ACTIVE',
+}
 
-const TransactionTaggingStrategySchema = Schema.Literal(
-  'PC_MSO',
-)
+const BookkeepingStatusSchema = Schema.Enums(BookkeepingStatus)
+const TransactionTaggingStrategySchema = Schema.Enums(TransactionTaggingStrategy)
 
-const TransformedBookkeepingStatusSchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(BookkeepingStatusSchema),
-  {
-    decode: (input: string) => {
-      if (BookkeepingStatusSchema.literals.includes(input as typeof BookkeepingStatusSchema.Type)) {
-        return input as typeof BookkeepingStatusSchema.Type
-      }
-      return 'NOT_PURCHASED'
-    },
-    encode: input => input,
-  },
-)
-
-const TransformedTransactionTaggingStrategySchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(TransactionTaggingStrategySchema),
-  {
-    decode: (input: string) => {
-      if (TransactionTaggingStrategySchema.literals.includes(input as typeof TransactionTaggingStrategySchema.Type)) {
-        return input as typeof TransactionTaggingStrategySchema.Type
-      }
-      return 'PC_MSO'
-    },
-    encode: input => input,
-  },
+const TransformedBookkeepingStatusSchema = createTransformedEnumSchema(BookkeepingStatusSchema, BookkeepingStatus, BookkeepingStatus.NOT_PURCHASED)
+const TransformedTransactionTaggingStrategySchema = createTransformedEnumSchema(
+  TransactionTaggingStrategySchema,
+  TransactionTaggingStrategy,
+  TransactionTaggingStrategy.PC_MSO,
 )
 
 export const BookkeepingConfigurationSchema = Schema.Struct({
