@@ -52,7 +52,7 @@ export const useCalendly = (options?: UseCalendlyOptions) => {
     return () => {
       window.removeEventListener('message', handleCalendlyMessage)
     }
-  }, [options])
+  }, [options?.onEventScheduled])
 
   const openCalendly = useCallback((link: string) => {
     setCalendlyLink(link)
