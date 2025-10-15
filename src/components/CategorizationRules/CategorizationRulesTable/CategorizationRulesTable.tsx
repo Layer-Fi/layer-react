@@ -23,7 +23,6 @@ enum CategorizationRuleColumns {
 const COMPONENT_NAME = 'CategorizationRulesTable'
 
 export const CategorizationRulesTable = () => {
-  const listRulesParams = {}
   const [selectedRule, setSelectedRule] = useState<CategorizationRule | null>(null)
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState(false)
   const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
@@ -39,10 +38,10 @@ export const CategorizationRulesTable = () => {
     }
   }, [addToast, archiveCategorizationRuleTrigger, selectedRule?.id])
 
-  const { data, isLoading, isError, size, setSize, refetch } = useListCategorizationRules({ ...listRulesParams })
+  const { data, isLoading, isError, size, setSize, refetch } = useListCategorizationRules({})
   const categorizationRules = useMemo(() => data?.flatMap(({ data }) => data), [data])
 
-  const paginationMeta = data?.[data.length - 1].meta.pagination
+  const paginationMeta = data && data.length > 0 ? data[data.length - 1].meta.pagination : undefined
   const hasMore = paginationMeta?.hasMore
 
   const { currentCategorizationRulesPage: currentPage, setCurrentCategorizationRulesPage: setCurrentPage } = useSetCurrentCategorizationRulesPage()
