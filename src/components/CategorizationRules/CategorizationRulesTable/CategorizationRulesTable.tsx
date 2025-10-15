@@ -6,7 +6,6 @@ import { DataState, DataStateStatus } from '../../DataState/DataState'
 import { PencilRuler, Trash2 } from 'lucide-react'
 import { CategorizationRule } from '../../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { ColumnConfig } from '../../DataTable/DataTable'
-import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
 import { Span } from '../../ui/Typography/Text'
 import { CategoriesListMode } from '../../../schemas/categorization'
 import { useSetCurrentCategorizationRulesPage } from '../../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
@@ -14,6 +13,8 @@ import { Button } from '../../ui/Button/Button'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
 import { useArchiveCategorizationRule } from '../../../hooks/useCategorizationRules/useArchiveCategorizationRule'
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
+import { useCategories } from '../../../hooks/categories/useCategories'
+import { CategoryAsOption, findCategoryInOptions, getLeafCategories } from '../../../types/categories'
 
 enum CategorizationRuleColumns {
   Category = 'Category',
@@ -28,6 +29,12 @@ export const CategorizationRulesTable = () => {
   const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
   const { addToast } = useLayerContext()
 
+  const { data: categories } = useCategories({ mode: CategoriesListMode.All })
+  const options = useMemo(() => {
+    if (!categories) return []
+    return getLeafCategories(categories).map(category => new CategoryAsOption(category))
+  }, [categories])
+
   const archiveCategorizationRule = useCallback(() => {
     if (selectedRule?.id) {
       archiveCategorizationRuleTrigger(selectedRule?.id).then(() => {
@@ -38,7 +45,7 @@ export const CategorizationRulesTable = () => {
     }
   }, [addToast, archiveCategorizationRuleTrigger, selectedRule?.id])
 
-  const { data, hasMore, isLoading, isError, size, setSize, refetch } = useListCategorizationRules({})
+  const { data, hasMore, isLoading: rulesAreLoading, isError, size, setSize, refetch } = useListCategorizationRules({})
   const categorizationRules = useMemo(() => data?.flatMap(({ data }) => data), [data])
 
   const { currentCategorizationRulesPage: currentPage, setCurrentCategorizationRulesPage: setCurrentPage } = useSetCurrentCategorizationRulesPage()
@@ -93,17 +100,7 @@ export const CategorizationRulesTable = () => {
       id: CategorizationRuleColumns.Category,
       header: 'Category',
       cell: row => (
-        row.category
-          ? (
-            <LedgerAccountCombobox
-              label='Account'
-              value={row.category}
-              mode={CategoriesListMode.All}
-              onValueChange={() => {}}
-              isReadOnly={true}
-            />
-          )
-          : undefined
+        <Span ellipsis>{row.category && findCategoryInOptions(row.category, options)?.label}</Span>
       ),
       isRowHeader: true,
     },
@@ -131,7 +128,7 @@ export const CategorizationRulesTable = () => {
       <PaginatedTable
         ariaLabel='CategorizationRules'
         data={categorizationRules}
-        isLoading={data === undefined || isLoading}
+        isLoading={data === undefined || rulesAreLoading}
         isError={isError}
         columnConfig={columnConfig}
         paginationProps={paginationProps}

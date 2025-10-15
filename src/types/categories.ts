@@ -1,3 +1,5 @@
+import { AccountIdentifier, AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName } from '../schemas/accountIdentifier'
+
 type BaseCategory = {
   display_name: string
   category: string
@@ -98,4 +100,54 @@ export function hasSuggestions(
     && (categorization as SuggestedCategorization).suggestions !== undefined
     && (categorization as SuggestedCategorization).suggestions.length > 0
   )
+}
+export class CategoryAsOption {
+  private internalCategory: Category
+
+  constructor(category: Category) {
+    this.internalCategory = category
+  }
+
+  get label() {
+    return this.internalCategory.display_name
+  }
+
+  get accountId() {
+    if (isAccountNestedCategory(this.internalCategory)) return makeAccountId(this.internalCategory.id)
+    return null
+  }
+
+  get accountStableName() {
+    if (isOptionalAccountNestedCategory(this.internalCategory)) return makeStableName(this.internalCategory.stable_name)
+    if (isAccountNestedCategory(this.internalCategory) && this.internalCategory.stable_name) return makeStableName(this.internalCategory.stable_name)
+    return null
+  }
+
+  get accountIdentifier() {
+    if (isOptionalAccountNestedCategory(this.internalCategory)) return makeStableName(this.internalCategory.stable_name)
+    return makeAccountId(this.internalCategory.id)
+  }
+
+  get value() {
+    if (isOptionalAccountNestedCategory(this.internalCategory)) return this.internalCategory.stable_name
+    return this.internalCategory.id
+  }
+}
+
+export const getLeafCategories = (categories: Category[]): Category[] => {
+  return categories.flatMap((category) => {
+    if (!category.subCategories || category.subCategories.length === 0) {
+      return [category]
+    }
+    return getLeafCategories(category.subCategories)
+  })
+}
+
+export const findCategoryInOptions = (category: AccountIdentifier, options: CategoryAsOption[]): CategoryAsOption | undefined => {
+  return options.find((option) => {
+    if (category.type === 'AccountId') {
+      return option.accountId ? AccountIdEquivalence(category, option.accountId) : false
+    }
+    return option.accountStableName ? AccountStableNameEquivalence(category, option.accountStableName) : false
+  })
 }

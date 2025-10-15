@@ -2,52 +2,10 @@ import { useCallback, useId, useMemo } from 'react'
 import { ComboBox } from '../ui/ComboBox/ComboBox'
 import { VStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
-import { isAccountNestedCategory, isOptionalAccountNestedCategory, type Category } from '../../types/categories'
+import { getLeafCategories, CategoryAsOption, findCategoryInOptions } from '../../types/categories'
 import { type CategoriesListMode } from '../../schemas/categorization'
 import { useCategories } from '../../hooks/categories/useCategories'
-import { AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName, type AccountIdentifier } from '../../schemas/accountIdentifier'
-
-class CategoryAsOption {
-  private internalCategory: Category
-
-  constructor(category: Category) {
-    this.internalCategory = category
-  }
-
-  get label() {
-    return this.internalCategory.display_name
-  }
-
-  get accountId() {
-    if (isAccountNestedCategory(this.internalCategory)) return makeAccountId(this.internalCategory.id)
-    return null
-  }
-
-  get accountStableName() {
-    if (isOptionalAccountNestedCategory(this.internalCategory)) return makeStableName(this.internalCategory.stable_name)
-    if (isAccountNestedCategory(this.internalCategory) && this.internalCategory.stable_name) return makeStableName(this.internalCategory.stable_name)
-    return null
-  }
-
-  get accountIdentifier() {
-    if (isOptionalAccountNestedCategory(this.internalCategory)) return makeStableName(this.internalCategory.stable_name)
-    return makeAccountId(this.internalCategory.id)
-  }
-
-  get value() {
-    if (isOptionalAccountNestedCategory(this.internalCategory)) return this.internalCategory.stable_name
-    return this.internalCategory.id
-  }
-}
-
-const getLeafCategories = (categories: Category[]): Category[] => {
-  return categories.flatMap((category) => {
-    if (!category.subCategories || category.subCategories.length === 0) {
-      return [category]
-    }
-    return getLeafCategories(category.subCategories)
-  })
-}
+import { type AccountIdentifier } from '../../schemas/accountIdentifier'
 
 type LedgerAccountComboboxProps = {
   label: string
@@ -69,12 +27,7 @@ export const LedgerAccountCombobox = ({ label, value, mode, onValueChange, isRea
 
   const selectedCategory = useMemo(() => {
     if (!value) return null
-    return options.find((option) => {
-      if (value.type === 'AccountId') {
-        return option.accountId ? AccountIdEquivalence(value, option.accountId) : false
-      }
-      return option.accountStableName ? AccountStableNameEquivalence(value, option.accountStableName) : false
-    }) ?? null
+    return findCategoryInOptions(value, options) ?? null
   }, [options, value])
 
   const onSelectedValueChange = useCallback((option: CategoryAsOption | null) => {
