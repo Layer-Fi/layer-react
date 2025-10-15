@@ -38,11 +38,8 @@ export const CategorizationRulesTable = () => {
     }
   }, [addToast, archiveCategorizationRuleTrigger, selectedRule?.id])
 
-  const { data, isLoading, isError, size, setSize, refetch } = useListCategorizationRules({})
+  const { data, hasMore, isLoading, isError, size, setSize, refetch } = useListCategorizationRules({})
   const categorizationRules = useMemo(() => data?.flatMap(({ data }) => data), [data])
-
-  const paginationMeta = data && data.length > 0 ? data[data.length - 1].meta.pagination : undefined
-  const hasMore = paginationMeta?.hasMore
 
   const { currentCategorizationRulesPage: currentPage, setCurrentCategorizationRulesPage: setCurrentPage } = useSetCurrentCategorizationRulesPage()
 
@@ -123,7 +120,7 @@ export const CategorizationRulesTable = () => {
           aria-label='Delete rule'
           variant='ghost'
         >
-          <Trash2 />
+          <Trash2 size={16} />
         </Button>
       ),
     },
@@ -147,8 +144,8 @@ export const CategorizationRulesTable = () => {
       <BaseConfirmationModal
         isOpen={showDeletionConfirmationModal}
         onOpenChange={setShowDeletionConfirmationModal}
-        title='Delete this categorization rule?'
-        description={`Any previously auto-categorized ${selectedRule?.counterpartyFilter?.name} transactions will not be uncategorized.`}
+        title='Delete categorization rule?'
+        description={`Transactions will no longer automatically be categorized as by this rule. Any transactions previously categorized to ${selectedRule?.counterpartyFilter?.name} will not be affected.`}
         onConfirm={archiveCategorizationRule}
         confirmLabel='Delete'
         cancelLabel='Cancel'
