@@ -11,6 +11,7 @@ import OutlookIcon from '../../assets/images/outlook-icon.webp'
 import YahooIcon from '../../assets/images/yahoo-calendar-icon.webp'
 import { HStack } from '../ui/Stack/Stack'
 import { downloadICS } from './downloadICS'
+import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 
 /**
  * Required to be specified by the iCalendar standard.
@@ -18,6 +19,8 @@ import { downloadICS } from './downloadICS'
  */
 const LAYER_ICS_PRODUCT_ID = '-//Layer//Layer Calendar//EN'
 const DEFAULT_DURATION_MS = 15 * 60 * 1000 // 15 minutes
+
+export type AddToCalendarProvider = 'google' | 'outlook' | 'yahoo' | 'ics'
 
 export type AddToCalendarProps = {
   title: string
@@ -69,7 +72,7 @@ export const AddToCalendar = ({
     downloadICS(calendar, calendarEvent.title)
   }, [calendarEvent, startDate, effectiveEndDate, location, organizer.email, organizer.name])
 
-  const handleCalendarClick = useCallback((provider: string) => {
+  const handleCalendarClick = useCallback((provider: AddToCalendarProvider) => {
     let url
     switch (provider) {
       case 'google':
@@ -85,7 +88,10 @@ export const AddToCalendar = ({
         generateICS()
         return
       default:
-        return
+        unsafeAssertUnreachable({
+          value: provider,
+          message: 'Invalid provider',
+        })
     }
     window.open(url, '_blank')
   }, [generateICS, calendarEvent])
