@@ -24,6 +24,8 @@ const prepareIcsFilename = (title: string) => {
   return title.replace(/[^a-z0-9]/gi, '_').toLowerCase().trim()
 }
 
+const DEFAULT_DURATION_MS = 15 * 60 * 1000 // 15 minutes
+
 export type AddToCalendarProps = {
   title: string
   description: string
@@ -41,18 +43,7 @@ export const AddToCalendar = ({
   endDate,
   organizer,
 }: AddToCalendarProps) => {
-  let effectiveEndDate = endDate
-  if (!effectiveEndDate) {
-    const defaultDurationInMinutes = 15
-    // We can set a temporary end date if not specified.
-    //
-    // Backend: Once the external event resource is created on Calendly and we request to create
-    // a new call booking, the backend will automatically lift event details from Calendly.
-    //
-    // Frontend: We do not have calendly secrets locally, so we just need a temporary date to
-    // generate the iCalendar file. We use a conservative duration of 15 minutes.
-    effectiveEndDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
-  }
+  const effectiveEndDate = useMemo(() => endDate ?? new Date(startDate.getTime() + DEFAULT_DURATION_MS), [endDate, startDate])
 
   const calendarEvent: CalendarEvent = useMemo(() => ({
     title,

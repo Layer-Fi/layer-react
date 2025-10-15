@@ -10,16 +10,11 @@ import {
   TransactionTaggingStrategy,
 } from '../../schemas/bookkeepingConfiguration'
 
-// Re-export types and enums for consumers
 export type { BookkeepingConfiguration }
 export { BookkeepingStatus, TransactionTaggingStrategy }
 
 export const BOOKKEEPING_CONFIGURATION_TAG_KEY = '#bookkeeping-configuration'
 
-/**
- * Wrapper class for the SWR response
- * Provides a clean interface for the hook's return value
- */
 class BookkeepingConfigurationSWRResponse {
   private swrResponse: SWRResponse<BookkeepingConfiguration>
 
@@ -52,9 +47,6 @@ type GetBookkeepingConfigurationParams = {
   businessId: string
 }
 
-/**
- * Builds the SWR cache key for the bookkeeping configuration query
- */
 function buildKey({
   access_token: accessToken,
   apiUrl,
@@ -74,9 +66,6 @@ function buildKey({
   }
 }
 
-/**
- * API endpoint builder for fetching bookkeeping configuration
- */
 const getBookkeepingConfiguration = get<
   Record<string, unknown>,
   GetBookkeepingConfigurationParams
@@ -104,9 +93,7 @@ export function useBookkeepingConfiguration({
           businessId,
         },
       })()
-        // Runtime validation and transformation using the schema
         .then(Schema.decodeUnknownPromise(BookkeepingConfigurationResponseSchema))
-        // Extract the data from the response envelope
         .then(({ data }) => data),
   )
 
