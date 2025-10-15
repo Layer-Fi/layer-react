@@ -1,3 +1,5 @@
+import { AccountIdentifier, AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName } from '../schemas/accountIdentifier'
+
 type BaseCategory = {
   display_name: string
   category: string
@@ -98,4 +100,35 @@ export function hasSuggestions(
     && (categorization as SuggestedCategorization).suggestions !== undefined
     && (categorization as SuggestedCategorization).suggestions.length > 0
   )
+}
+
+export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentifier, category: Category) => {
+  if (accountIdentifier.type === 'AccountId') {
+    switch (category.type) {
+      case 'AccountNested':
+        return AccountIdEquivalence(accountIdentifier, makeAccountId(category.id))
+      case 'OptionalAccountNested':
+        return false
+      case 'ExclusionNested':
+        return false
+    }
+  }
+
+  switch (category.type) {
+    case 'AccountNested':
+      return category.stable_name ? AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stable_name)) : null
+    case 'OptionalAccountNested':
+      return AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stable_name))
+    case 'ExclusionNested':
+      return false
+  }
+}
+
+export const getLeafCategories = (categories: Category[]): Category[] => {
+  return categories.flatMap((category) => {
+    if (!category.subCategories || category.subCategories.length === 0) {
+      return [category]
+    }
+    return getLeafCategories(category.subCategories)
+  })
 }

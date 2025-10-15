@@ -49,6 +49,14 @@ class ListCategorizationRulesSWRResponse {
     return this.swrResponse.data
   }
 
+  get paginationMeta() {
+    return this.data && this.data.length > 0 ? this.data[this.data.length - 1].meta.pagination : undefined
+  }
+
+  get hasMore() {
+    return this.paginationMeta?.hasMore
+  }
+
   get size() {
     return this.swrResponse.size
   }
