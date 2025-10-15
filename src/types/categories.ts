@@ -102,7 +102,7 @@ export function hasSuggestions(
   )
 }
 
-export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentifier, category: Category) => {
+export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentifier, category: Category): boolean => {
   if (accountIdentifier.type === 'AccountId') {
     switch (category.type) {
       case 'AccountNested':
@@ -116,7 +116,7 @@ export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentif
 
   switch (category.type) {
     case 'AccountNested':
-      return category.stable_name ? AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stable_name)) : null
+      return category.stable_name ? AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stable_name)) : false
     case 'OptionalAccountNested':
       return AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stable_name))
     case 'ExclusionNested':
