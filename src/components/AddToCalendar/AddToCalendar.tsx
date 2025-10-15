@@ -22,8 +22,6 @@ const DEFAULT_DURATION_MS = 15 * 60 * 1000 // 15 minutes
 
 export type AddToCalendarProvider = 'google' | 'outlook' | 'yahoo' | 'ics'
 
-const DEFAULT_DURATION_MS = 15 * 60 * 1000 // 15 minutes
-
 export type AddToCalendarProps = {
   title: string
   description: string
