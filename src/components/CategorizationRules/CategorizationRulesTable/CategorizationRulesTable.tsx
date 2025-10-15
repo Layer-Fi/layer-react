@@ -14,7 +14,7 @@ import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmat
 import { useArchiveCategorizationRule } from '../../../hooks/useCategorizationRules/useArchiveCategorizationRule'
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useCategories } from '../../../hooks/categories/useCategories'
-import { getLeafCategories, findCategoryForAccountIdentifier } from '../../../types/categories'
+import { getLeafCategories, accountIdentifierIsForCategory } from '../../../types/categories'
 
 enum CategorizationRuleColumns {
   Category = 'Category',
@@ -99,13 +99,17 @@ export const CategorizationRulesTable = () => {
     [CategorizationRuleColumns.Category]: {
       id: CategorizationRuleColumns.Category,
       header: 'Category',
-      cell: row => (
-        row.category
-          ? (
-            <Span ellipsis>{findCategoryForAccountIdentifier(row.category, options)?.display_name}</Span>
-          )
+      cell: (row) => {
+        const accountIdentifier = row.category
+        const displayName = accountIdentifier
+          ? options.find(category =>
+            accountIdentifierIsForCategory(accountIdentifier, category),
+          )?.display_name
           : undefined
-      ),
+        return displayName && (
+          <Span ellipsis>{displayName}</Span>
+        )
+      },
       isRowHeader: true,
     },
     [CategorizationRuleColumns.Delete]: {

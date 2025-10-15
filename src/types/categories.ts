@@ -124,12 +124,6 @@ export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentif
   }
 }
 
-export const findCategoryForAccountIdentifier = (accountIdentifier: AccountIdentifier, categories: Category[]): Category | undefined => {
-  return categories.find((category) => {
-    accountIdentifierIsForCategory(accountIdentifier, category)
-  })
-}
-
 export const getLeafCategories = (categories: Category[]): Category[] => {
   return categories.flatMap((category) => {
     if (!category.subCategories || category.subCategories.length === 0) {
