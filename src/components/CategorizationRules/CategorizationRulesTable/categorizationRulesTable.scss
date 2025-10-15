@@ -12,6 +12,10 @@
     grid-template-columns:
       minmax(8rem, 45%)
       minmax(8rem, 45%)
-      minmax(2rem, 10%);
+      auto;
+
+    > *:last-child {
+      justify-content: end;
+    }
   }
 }

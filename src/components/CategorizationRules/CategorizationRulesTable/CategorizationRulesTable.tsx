@@ -100,7 +100,11 @@ export const CategorizationRulesTable = () => {
       id: CategorizationRuleColumns.Category,
       header: 'Category',
       cell: row => (
-        <Span ellipsis>{row.category && findCategoryInOptions(row.category, options)?.label}</Span>
+        row.category
+          ? (
+            <Span ellipsis>{findCategoryInOptions(row.category, options)?.label}</Span>
+          )
+          : undefined
       ),
       isRowHeader: true,
     },
