@@ -209,7 +209,7 @@ export const BankTransactionsHeader = ({
           title='Categorize all selected transactions?'
           content={(
             <VStack gap='xs'>
-              <VStack gap='xs'>
+              <VStack gap='3xs'>
                 <Label htmlFor={categorySelectId}>Select category</Label>
                 <CategorySelect
                   name={categorySelectId}
