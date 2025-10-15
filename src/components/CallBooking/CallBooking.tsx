@@ -29,7 +29,7 @@ const ScheduledCallState = ({
 }: {
   callBooking: CallBookingData
 }) => {
-  const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? 'Onboarding call' : 'Adhoc call'
+  const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? 'Onboarding call' : 'Ad hoc call'
 
   return (
     <VStack gap='md' align='center'>

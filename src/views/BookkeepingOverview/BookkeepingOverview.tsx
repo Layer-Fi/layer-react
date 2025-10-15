@@ -66,13 +66,7 @@ export const BookkeepingOverview = ({
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
 
-  const handleBookCall = () => {
-    // TODO: Not yet implemented
-    // const calendlyUrl = _bookACallAdhocUrl
-    // if (calendlyUrl) {
-    //   openCalendly(calendlyUrl)
-    // }
-  }
+  const handleBookCall = () => {} // TODO
 
   const { data: callBookings, isError, isLoading, isValidating } = useCallBookings(1)
   const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null

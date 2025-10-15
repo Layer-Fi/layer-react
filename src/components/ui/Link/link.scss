@@ -9,7 +9,6 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
 
-  color: var(--link-color, var(--color-base-900));
   text-decoration: none;
 
   &[data-ellipsis] {
@@ -20,73 +19,10 @@
     max-inline-size: 100%;
   }
 
-  &[data-focus-visible] {
-    border-radius: var(--border-radius-3xs);
-    outline: 2px solid var(--outline-default, var(--color-base-900));
-    outline-offset: 2px;
-  }
-
   &[data-disabled] {
     cursor: not-allowed;
     color: var(--color-base-500);
     pointer-events: none;
-  }
-
-  // Variant: primary - Bold, prominent links
-  &[data-variant='primary'] {
-    font-weight: var(--font-weight-bold);
-    color: var(--link-color-primary, var(--color-base-900));
-
-    &[data-hovered]:not([data-disabled]) {
-      text-decoration: underline;
-      text-decoration-thickness: 1.5px;
-      text-underline-offset: 2px;
-    }
-
-    &[data-pressed]:not([data-disabled]) {
-      color: var(--link-color-primary-pressed, var(--color-base-700));
-    }
-  }
-
-  // Variant: subtle - Secondary, less prominent links
-  &[data-variant='subtle'] {
-    color: var(--link-color-subtle, var(--color-base-600));
-
-    &[data-hovered]:not([data-disabled]) {
-      color: var(--link-color-subtle-hovered, var(--color-base-900));
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    &[data-pressed]:not([data-disabled]) {
-      color: var(--link-color-subtle-pressed, var(--color-base-700));
-    }
-  }
-
-  // Variant: inline - Natural flow within text
-  &[data-variant='inline'] {
-    color: inherit;
-    text-decoration: underline;
-    text-decoration-color: var(--color-base-400);
-    text-underline-offset: 2px;
-
-    &[data-hovered]:not([data-disabled]) {
-      text-decoration-color: currentcolor;
-      text-decoration-thickness: 1.5px;
-    }
-
-    &[data-pressed]:not([data-disabled]) {
-      text-decoration-color: var(--color-base-600);
-    }
-  }
-
-  // External link indicator
-  &[data-external]::after {
-    content: '↗';
-    display: inline-block;
-    margin-inline-start: 0.25rem;
-    font-size: 0.875em;
-    opacity: 0.7;
   }
 
   // Sizes
@@ -121,32 +57,6 @@
 
     &[data-pbs='#{$spacing}'] {
       padding-block-start: var(--spacing-#{$spacing});
-    }
-  }
-
-  // Underline overrides - takes precedence over variant defaults
-  &[data-underline='none'] {
-    text-decoration: none;
-
-    &[data-hovered]:not([data-disabled]) {
-      text-decoration: none;
-    }
-  }
-
-  &[data-underline='always'] {
-    text-decoration: underline;
-    text-decoration-color: currentcolor;
-    text-underline-offset: 2px;
-  }
-
-  &[data-underline='hover'] {
-    text-decoration: none;
-
-    &[data-hovered]:not([data-disabled]) {
-      text-decoration: underline;
-      text-decoration-color: currentcolor;
-      text-decoration-thickness: 1.5px;
-      text-underline-offset: 2px;
     }
   }
 }
