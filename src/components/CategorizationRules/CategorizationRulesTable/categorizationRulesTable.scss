@@ -6,7 +6,8 @@
   .Layer__UI__Table-TableHeader > tr {
     display: grid;
     grid-template-columns:
-      minmax(2rem, 50%)
-      minmax(2rem, 50%);
+      minmax(2rem, 45%)
+      minmax(2rem, 45%)
+      minmax(1rem, 10%);
   }
 }

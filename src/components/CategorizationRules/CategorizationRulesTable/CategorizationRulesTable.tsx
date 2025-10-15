@@ -1,24 +1,44 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useListCategorizationRules } from '../../../hooks/useCategorizationRules/useListCategorizationRules'
 import { Container } from '../../Container/Container'
 import { PaginatedTable } from '../../DataTable/PaginatedTable'
 import { DataState, DataStateStatus } from '../../DataState/DataState'
-import { PencilRuler } from 'lucide-react'
+import { PencilRuler, Trash2 } from 'lucide-react'
 import { CategorizationRule } from '../../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { ColumnConfig } from '../../DataTable/DataTable'
 import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
 import { Span } from '../../ui/Typography/Text'
 import { CategoriesListMode } from '../../../schemas/categorization'
 import { useSetCurrentCategorizationRulesPage } from '../../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import { Button } from '../../ui/Button/Button'
+import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
+import { useArchiveCategorizationRule } from '../../../hooks/useCategorizationRules/useArchiveCategorizationRule'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 
 enum CategorizationRuleColumns {
   Category = 'Category',
   Counterparty = 'Counterparty',
+  Delete = 'Delete',
 }
 const COMPONENT_NAME = 'CategorizationRulesTable'
 
 export const CategorizationRulesTable = () => {
   const listRulesParams = {}
+  const [selectedRule, setSelectedRule] = useState<CategorizationRule | null>(null)
+  const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState(false)
+  const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
+  const { addToast } = useLayerContext()
+
+  const archiveCategorizationRule = useCallback(() => {
+    if (selectedRule?.id) {
+      archiveCategorizationRuleTrigger(selectedRule?.id).then(() => {
+        setShowDeletionConfirmationModal(false)
+      }).catch(() => {
+        addToast({ content: 'Failed to archive categorization rule', type: 'error' })
+      })
+    }
+  }, [addToast, archiveCategorizationRuleTrigger, selectedRule?.id])
+
   const { data, isLoading, isError, size, setSize, refetch } = useListCategorizationRules({ ...listRulesParams })
   const categorizationRules = useMemo(() => data?.flatMap(({ data }) => data), [data])
 
@@ -65,7 +85,7 @@ export const CategorizationRulesTable = () => {
     />
   ), [refetch])
 
-  const columnConfig: ColumnConfig<CategorizationRule, CategorizationRuleColumns> = useMemo(() => ({
+  const columnConfig: ColumnConfig<CategorizationRule, CategorizationRuleColumns> = ({
     [CategorizationRuleColumns.Counterparty]: {
       id: CategorizationRuleColumns.Counterparty,
       header: 'Counterparty',
@@ -91,7 +111,24 @@ export const CategorizationRulesTable = () => {
       ),
       isRowHeader: true,
     },
-  }), [])
+    [CategorizationRuleColumns.Delete]: {
+      id: CategorizationRuleColumns.Delete,
+      cell: row => (
+        <Button
+          inset
+          icon
+          onPress={() => {
+            setSelectedRule(row)
+            setShowDeletionConfirmationModal(true)
+          }}
+          aria-label='Delete rule'
+          variant='ghost'
+        >
+          <Trash2 />
+        </Button>
+      ),
+    },
+  })
 
   return (
     <Container name='CategorizationRulesTable'>
@@ -107,6 +144,15 @@ export const CategorizationRulesTable = () => {
           EmptyState: CategorizationRulesTableEmptyState,
           ErrorState: CategorizationRulesTableErrorState,
         }}
+      />
+      <BaseConfirmationModal
+        isOpen={showDeletionConfirmationModal}
+        onOpenChange={setShowDeletionConfirmationModal}
+        title='Delete this categorization rule?'
+        description={`Any previously auto-categorized ${selectedRule?.counterpartyFilter?.name} transactions will not be uncategorized.`}
+        onConfirm={archiveCategorizationRule}
+        confirmLabel='Delete'
+        cancelLabel='Cancel'
       />
     </Container>
   )
