@@ -3,26 +3,21 @@ import { Calendar, ChevronDown } from 'lucide-react'
 import { Button } from '../ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '../ui/DropdownMenu/DropdownMenu'
 import { Span } from '../ui/Typography/Text'
-import { generateIcsCalendar, type IcsCalendar, type IcsEvent } from 'ts-ics'
+import { type IcsCalendar, type IcsEvent } from 'ts-ics'
 import { uniqueId } from 'lodash'
 import { CalendarEvent, google, outlook, yahoo } from 'calendar-link'
 import GoogleIcon from '../../assets/images/google-calendar.png'
 import OutlookIcon from '../../assets/images/outlook-icon.webp'
 import YahooIcon from '../../assets/images/yahoo-calendar-icon.webp'
 import { HStack } from '../ui/Stack/Stack'
+import { downloadICS } from './downloadICS'
 
 /**
- * This property specifies the identifier for the product that
- * created the iCalendar object.
- *
- * This is required by the iCalendar standard.
+ * Required to be specified by the iCalendar standard.
  * https://datatracker.ietf.org/doc/html/rfc5545#section-3.7.3
  */
 const LAYER_ICS_PRODUCT_ID = '-//Layer//Layer Calendar//EN'
-
-const prepareIcsFilename = (title: string) => {
-  return title.replace(/[^a-z0-9]/gi, '_').toLowerCase().trim()
-}
+const DEFAULT_DURATION_MS = 15 * 60 * 1000 // 15 minutes
 
 export type AddToCalendarProps = {
   title: string
@@ -41,19 +36,7 @@ export const AddToCalendar = ({
   endDate,
   organizer,
 }: AddToCalendarProps) => {
-  let effectiveEndDate = endDate
-  if (!effectiveEndDate) {
-    const defaultDurationInMinutes = 15
-    // We can set a temporary end date if not specified.
-    //
-    // Backend: Once the external event resource is created on Calendly and we request to create
-    // a new call booking, the backend will automatically lift event details from Calendly.
-    //
-    // Frontend: We do not have calendly secrets locally, so we just need a temporary date to
-    // generate the iCalendar file. We use a conservative duration of 15 minutes.
-    effectiveEndDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
-  }
-
+  const effectiveEndDate = useMemo(() => endDate ?? new Date(startDate.getTime() + DEFAULT_DURATION_MS), [endDate, startDate])
   const calendarEvent: CalendarEvent = useMemo(() => ({
     title,
     description,
@@ -83,18 +66,7 @@ export const AddToCalendar = ({
       events: [event],
     }
 
-    const value = generateIcsCalendar(calendar)
-    const blob = new Blob([value], { type: 'text/calendar' })
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    const filename = prepareIcsFilename(calendarEvent.title)
-
-    link.href = url
-    link.download = `${filename}.ics`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
+    downloadICS(calendar, calendarEvent.title)
   }, [calendarEvent, startDate, effectiveEndDate, location, organizer.email, organizer.name])
 
   const handleCalendarClick = useCallback((provider: string) => {
