@@ -202,7 +202,7 @@ export const BankTransactionsHeader = ({
           itemCount={count}
           actionLabel='categorize'
           itemLabel='transactions'
-          descriptionLabel={` as ${selectedCategory?.payload?.display_name}`}
+          descriptionLabel={selectedCategory?.payload?.display_name ? ` as ${selectedCategory?.payload?.display_name}` : ''}
           onConfirm={() => {}}
           confirmLabel='Categorize All'
           cancelLabel='Cancel'
