@@ -72,7 +72,7 @@ export function BankTransactionsRouteStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<BankTransactionsRouteStoreShape>(set => ({
       routeState: { route: BankTransactionsRoute.BankTransactionsTable },
-      currentBankTransactionsPage: 1, // Bank transactions is one-indexed for some reason
+      currentBankTransactionsPage: 1, // Bank transactions has separate, 1-indexed pagination logic
       currentCategorizationRulesPage: 0,
       navigate: {
         toCategorizationRulesTable: () => {

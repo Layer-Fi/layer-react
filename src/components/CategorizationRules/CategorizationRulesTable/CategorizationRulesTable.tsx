@@ -84,7 +84,7 @@ export const CategorizationRulesTable = () => {
     />
   ), [refetch])
 
-  const columnConfig: ColumnConfig<CategorizationRule, CategorizationRuleColumns> = ({
+  const columnConfig: ColumnConfig<CategorizationRule, CategorizationRuleColumns> = useMemo(() => ({
     [CategorizationRuleColumns.Counterparty]: {
       id: CategorizationRuleColumns.Counterparty,
       header: 'Counterparty',
@@ -127,7 +127,7 @@ export const CategorizationRulesTable = () => {
         </Button>
       ),
     },
-  })
+  }), [])
 
   return (
     <Container name='CategorizationRulesTable'>
