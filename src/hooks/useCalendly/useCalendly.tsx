@@ -41,10 +41,7 @@ export const useCalendly = (options?: UseCalendlyOptions) => {
       const data = e.data as CalendlyMessageData
 
       if (data.event && typeof data.event === 'string' && data.event.indexOf('calendly') === 0) {
-        console.debug('Calendly event:', data.event)
-
         if (data.event === 'calendly.event_scheduled') {
-          console.debug('Booking successful!', data.payload)
           options?.onEventScheduled?.(data.payload)
         }
       }
