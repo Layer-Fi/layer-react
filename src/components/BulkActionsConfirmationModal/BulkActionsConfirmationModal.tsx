@@ -2,20 +2,20 @@ import { ReactNode } from 'react'
 import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
 import { Span } from '../ui/Typography/Text'
 import { VStack } from '../ui/Stack/Stack'
-import { capitalizeFirstLetter } from './utils'
+import _ from 'lodash'
 
 interface BulkActionsConfirmationModalProps {
   isOpen: boolean
-  onOpenChange?: (isOpen: boolean) => void
   itemCount: number
   actionLabel: string
   itemLabel: string
   descriptionLabel?: string
-  onConfirm: () => void | Promise<void>
   confirmLabel: string
   cancelLabel: string
   confirmDisabled?: boolean
   hideDescription?: boolean
+  onOpenChange?: (isOpen: boolean) => void
+  onConfirm: () => void | Promise<void>
   children?: ReactNode
 }
 
@@ -37,7 +37,7 @@ export const BulkActionsConfirmationModal = ({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={`${capitalizeFirstLetter(actionLabel)} all selected ${itemLabel}?`}
+      title={`${_.capitalize(actionLabel)} all selected ${itemLabel}?`}
       content={(
         <VStack gap='xs'>
           {children}
