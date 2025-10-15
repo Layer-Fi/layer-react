@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useId, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DisplayState, type DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
@@ -157,6 +157,8 @@ export const BankTransactionsHeader = ({
   const [isCategorizeAllModalOpen, setIsCategorizeAllModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<CategoryOption | undefined>(undefined)
 
+  const categorySelectId = useId()
+
   const handleConfirmAllClick = useCallback(() => {
     setIsConfirmAllModalOpen(true)
   }, [])
@@ -208,9 +210,9 @@ export const BankTransactionsHeader = ({
           content={(
             <VStack gap='xs'>
               <VStack gap='xs'>
-                <Label>Select category</Label>
+                <Label htmlFor={categorySelectId}>Select category</Label>
                 <CategorySelect
-                  name='bulk-category-select'
+                  name={categorySelectId}
                   value={selectedCategory}
                   onChange={setSelectedCategory}
                   showTooltips={false}
@@ -234,6 +236,7 @@ export const BankTransactionsHeader = ({
     )
   }, [
     count,
+    categorySelectId,
     isConfirmAllModalOpen,
     isCategorizeAllModalOpen,
     selectedCategory,
