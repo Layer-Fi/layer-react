@@ -35,10 +35,10 @@ export interface BookkeepingOverviewProps {
         variants?: Variants
       }
     }
-    _showCallBookings?: boolean
-    calendlyUrl?: string
   }
+
   _showBookACall?: boolean
+
   onClickReconnectAccounts?: () => void
   /**
    * @deprecated Use `stringOverrides.title` instead
@@ -58,7 +58,7 @@ export const BookkeepingOverview = ({
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
-  const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly()
+  const { isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly } = useCalendly()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -67,10 +67,11 @@ export const BookkeepingOverview = ({
     useKeepInMobileViewport()
 
   const handleBookCall = () => {
-    const calendlyUrl = slotProps?.calendlyUrl
-    if (calendlyUrl) {
-      openCalendly(calendlyUrl)
-    }
+    // TODO: Not yet implemented
+    // const calendlyUrl = _bookACallAdhocUrl
+    // if (calendlyUrl) {
+    //   openCalendly(calendlyUrl)
+    // }
   }
 
   const { data: callBookings, isError, isLoading, isValidating } = useCallBookings(1)

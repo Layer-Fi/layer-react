@@ -5,7 +5,24 @@ import { DropdownMenu, MenuItem, MenuList } from '../ui/DropdownMenu/DropdownMen
 import { Span } from '../ui/Typography/Text'
 import { generateIcsCalendar, type IcsCalendar, type IcsEvent } from 'ts-ics'
 import { uniqueId } from 'lodash'
-import { CalendarEvent, google, office365, outlook, yahoo } from 'calendar-link'
+import { CalendarEvent, google, outlook, yahoo } from 'calendar-link'
+import GoogleIcon from '../../assets/images/google-calendar.png'
+import OutlookIcon from '../../assets/images/outlook-icon.webp'
+import YahooIcon from '../../assets/images/yahoo-calendar-icon.webp'
+import { HStack } from '../ui/Stack/Stack'
+
+/**
+ * This property specifies the identifier for the product that
+ * created the iCalendar object.
+ *
+ * This is required by the iCalendar standard.
+ * https://datatracker.ietf.org/doc/html/rfc5545#section-3.7.3
+ */
+const LAYER_ICS_PRODUCT_ID = '-//Layer//Layer Calendar//EN'
+
+const prepareIcsFilename = (title: string) => {
+  return title.replace(/[^a-z0-9]/gi, '_').toLowerCase().trim()
+}
 
 export type AddToCalendarProps = {
   title: string
@@ -27,6 +44,13 @@ export const AddToCalendar = ({
   let effectiveEndDate = endDate
   if (!effectiveEndDate) {
     const defaultDurationInMinutes = 15
+    // We can set a temporary end date if not specified.
+    //
+    // Backend: Once the external event resource is created on Calendly and we request to create
+    // a new call booking, the backend will automatically lift event details from Calendly.
+    //
+    // Frontend: We do not have calendly secrets locally, so we just need a temporary date to
+    // generate the iCalendar file. We use a conservative duration of 15 minutes.
     effectiveEndDate = new Date(startDate.getTime() + 1000 * 60 * defaultDurationInMinutes)
   }
 
@@ -55,7 +79,7 @@ export const AddToCalendar = ({
 
     const calendar: IcsCalendar = {
       version: '2.0',
-      prodId: '-//Layer//Layer Calendar//EN',
+      prodId: LAYER_ICS_PRODUCT_ID,
       events: [event],
     }
 
@@ -63,9 +87,10 @@ export const AddToCalendar = ({
     const blob = new Blob([value], { type: 'text/calendar' })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
-    const title = calendarEvent.title.replace(/[^a-z0-9]/gi, '_').toLowerCase().trim()
+    const filename = prepareIcsFilename(calendarEvent.title)
+
     link.href = url
-    link.download = `${title}.ics`
+    link.download = `${filename}.ics`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -80,9 +105,6 @@ export const AddToCalendar = ({
         break
       case 'outlook':
         url = outlook(calendarEvent)
-        break
-      case 'office365':
-        url = office365(calendarEvent)
         break
       case 'yahoo':
         url = yahoo(calendarEvent)
@@ -113,23 +135,31 @@ export const AddToCalendar = ({
       slotProps={{
         Dialog: { width: '10rem' },
       }}
-      // variant='compact'
     >
       <MenuList>
         <MenuItem key='google' onClick={() => handleCalendarClick('google')}>
-          <Span size='sm'>Google Calendar</Span>
+          <HStack gap='sm'>
+            <img className='Layer__AddToCalendar__CalendarIcon' src={GoogleIcon} alt='Google Calendar' />
+            <Span size='sm'>Google Calendar</Span>
+          </HStack>
         </MenuItem>
         <MenuItem key='ics' onClick={() => handleCalendarClick('outlook')}>
-          <Span size='sm'>Outlook</Span>
-        </MenuItem>
-        <MenuItem key='ics' onClick={() => handleCalendarClick('office365')}>
-          <Span size='sm'>Office 365</Span>
+          <HStack gap='sm'>
+            <img className='Layer__AddToCalendar__CalendarIcon' src={OutlookIcon} alt='Outlook Calendar' />
+            <Span size='sm'>Outlook</Span>
+          </HStack>
         </MenuItem>
         <MenuItem key='ics' onClick={() => handleCalendarClick('yahoo')}>
-          <Span size='sm'>Yahoo</Span>
+          <HStack gap='sm'>
+            <img className='Layer__AddToCalendar__CalendarIcon' src={YahooIcon} alt='Yahoo Calendar' />
+            <Span size='sm'>Yahoo</Span>
+          </HStack>
         </MenuItem>
         <MenuItem key='ics' onClick={() => handleCalendarClick('ics')}>
-          <Span size='sm'>Download .ics file</Span>
+          <HStack gap='sm'>
+            <Calendar size={16} />
+            <Span size='sm'>Download .ics file</Span>
+          </HStack>
         </MenuItem>
       </MenuList>
     </DropdownMenu>

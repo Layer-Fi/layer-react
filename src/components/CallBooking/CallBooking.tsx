@@ -3,13 +3,14 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
 import { Span } from '../ui/Typography/Text'
 import { Separator } from '../Separator/Separator'
-import { Clock, Link, Milestone, Users, Video } from 'lucide-react'
+import { Clock, Link as LinkIcon, Milestone, Users, Video } from 'lucide-react'
 import { CallBookingPurpose, CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
 import { format as formatTime } from 'date-fns'
 import { DATE_FORMAT_WITH_TIME } from '../../config/general'
 import { AddToCalendar } from '../AddToCalendar/AddToCalendar'
 import { getTimezoneDisplay } from '../../utils/time/timezoneUtils'
 import { Button } from '../ui/Button/Button'
+import { Link } from '../ui/Link/Link'
 
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
   <VStack gap='md' align='center'>
@@ -70,12 +71,14 @@ const ScheduledCallState = ({
             organizer={{ name: callBooking.bookkeeperName, email: callBooking.bookkeeperEmail }}
           />
         </VStack>
-        <a href={callBooking.callLink.toString()} className='Layer__call-booking-link Layer__text-btn' target='_blank' rel='noopener noreferrer'>
+
+        <Link href={callBooking.callLink.toString()} target='_blank' rel='noopener noreferrer'>
           <Button variant='outlined'>
-            <Link size={16} />
+            <LinkIcon size={16} />
             Join call
           </Button>
-        </a>
+        </Link>
+
       </HStack>
     </VStack>
   )
