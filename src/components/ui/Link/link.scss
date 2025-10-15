@@ -9,7 +9,6 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
 
-  color: var(--link-color, var(--color-base-900));
   text-decoration: none;
 
   &[data-ellipsis] {
