@@ -120,7 +120,7 @@ export const BankTransactions = ({
                 <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
                   <InAppLinkProvider renderInAppLink={renderInAppLink}>
                     <BulkSelectionStoreProvider>
-                      <BankTransactionsContent {...props} />
+                      <BankTransactionsContent {...props} _showBulkSelection={_showBulkSelection} />
                     </BulkSelectionStoreProvider>
                   </InAppLinkProvider>
                 </BankTransactionCustomerVendorVisibilityProvider>
