@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DisplayState, type DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
@@ -151,22 +151,28 @@ export const BankTransactionsHeader = ({
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
 
-  const [isConfirmModalAllOpen, setIsConfirmModalAllOpen] = useState(false)
-  const [isCategorizeModalAllOpen, setIsCategorizeModalAllOpen] = useState(false)
+  const [isConfirmAllModalOpen, setIsConfirmAllModalOpen] = useState(false)
+  const [isCategorizeModalAllOpen, setIsCategorizeAllModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<CategoryOption | undefined>(undefined)
+
+  useEffect(() => {
+    if (!isCategorizeModalAllOpen) {
+      setSelectedCategory(undefined)
+    }
+  }, [isCategorizeModalAllOpen])
 
   const BulkActions = useCallback(() => {
     return (
       <HStack align='center' gap='sm'>
         <Button
           variant='outlined'
-          onClick={() => setIsConfirmModalAllOpen(true)}
+          onClick={() => setIsConfirmAllModalOpen(true)}
         >
           Confirm All
         </Button>
         <BulkActionsConfirmationModal
-          isOpen={isConfirmModalAllOpen}
-          onOpenChange={setIsConfirmModalAllOpen}
+          isOpen={isConfirmAllModalOpen}
+          onOpenChange={setIsConfirmAllModalOpen}
           itemCount={count}
           actionLabel='confirm'
           itemLabel='suggestions'
@@ -176,13 +182,13 @@ export const BankTransactionsHeader = ({
         />
         <Button
           variant='outlined'
-          onClick={() => setIsCategorizeModalAllOpen(true)}
+          onClick={() => setIsCategorizeAllModalOpen(true)}
         >
           Categorize All
         </Button>
         <BulkActionsConfirmationModal
           isOpen={isCategorizeModalAllOpen}
-          onOpenChange={setIsCategorizeModalAllOpen}
+          onOpenChange={setIsCategorizeAllModalOpen}
           itemCount={count}
           actionLabel='categorize'
           itemLabel='transactions'
@@ -206,7 +212,7 @@ export const BankTransactionsHeader = ({
         </BulkActionsConfirmationModal>
       </HStack>
     )
-  }, [count, isConfirmModalAllOpen, isCategorizeModalAllOpen, selectedCategory])
+  }, [count, isConfirmAllModalOpen, isCategorizeModalAllOpen, selectedCategory])
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>

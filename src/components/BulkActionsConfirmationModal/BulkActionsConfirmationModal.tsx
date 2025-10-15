@@ -25,7 +25,7 @@ export const BulkActionsConfirmationModal = ({
   itemCount,
   actionLabel,
   itemLabel,
-  descriptionLabel,
+  descriptionLabel = '',
   onConfirm,
   confirmLabel,
   cancelLabel,
