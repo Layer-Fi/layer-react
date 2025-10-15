@@ -101,37 +101,33 @@ export function hasSuggestions(
     && (categorization as SuggestedCategorization).suggestions.length > 0
   )
 }
-export class CategoryAsOption {
-  private internalCategory: Category
 
-  constructor(category: Category) {
-    this.internalCategory = category
+export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentifier, category: Category) => {
+  if (accountIdentifier.type === 'AccountId') {
+    switch (category.type) {
+      case 'AccountNested':
+        return AccountIdEquivalence(accountIdentifier, makeAccountId(category.id))
+      case 'OptionalAccountNested':
+        return false
+      case 'ExclusionNested':
+        return false
+    }
   }
 
-  get label() {
-    return this.internalCategory.display_name
+  switch (category.type) {
+    case 'AccountNested':
+      return category.stable_name ? AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stable_name)) : null
+    case 'OptionalAccountNested':
+      return AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stable_name))
+    case 'ExclusionNested':
+      return false
   }
+}
 
-  get accountId() {
-    if (isAccountNestedCategory(this.internalCategory)) return makeAccountId(this.internalCategory.id)
-    return null
-  }
-
-  get accountStableName() {
-    if (isOptionalAccountNestedCategory(this.internalCategory)) return makeStableName(this.internalCategory.stable_name)
-    if (isAccountNestedCategory(this.internalCategory) && this.internalCategory.stable_name) return makeStableName(this.internalCategory.stable_name)
-    return null
-  }
-
-  get accountIdentifier() {
-    if (isOptionalAccountNestedCategory(this.internalCategory)) return makeStableName(this.internalCategory.stable_name)
-    return makeAccountId(this.internalCategory.id)
-  }
-
-  get value() {
-    if (isOptionalAccountNestedCategory(this.internalCategory)) return this.internalCategory.stable_name
-    return this.internalCategory.id
-  }
+export const findCategoryForAccountIdentifier = (accountIdentifier: AccountIdentifier, categories: Category[]): Category | undefined => {
+  return categories.find((category) => {
+    accountIdentifierIsForCategory(accountIdentifier, category)
+  })
 }
 
 export const getLeafCategories = (categories: Category[]): Category[] => {
@@ -140,14 +136,5 @@ export const getLeafCategories = (categories: Category[]): Category[] => {
       return [category]
     }
     return getLeafCategories(category.subCategories)
-  })
-}
-
-export const findCategoryInOptions = (category: AccountIdentifier, options: CategoryAsOption[]): CategoryAsOption | undefined => {
-  return options.find((option) => {
-    if (category.type === 'AccountId') {
-      return option.accountId ? AccountIdEquivalence(category, option.accountId) : false
-    }
-    return option.accountStableName ? AccountStableNameEquivalence(category, option.accountStableName) : false
   })
 }
