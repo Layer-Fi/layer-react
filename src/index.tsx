@@ -49,6 +49,7 @@ export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWith
 export { GeneralLedgerView } from './views/GeneralLedger'
 export { ProjectProfitabilityView } from './views/ProjectProfitability'
 export { unstable_BillsView } from './views/Bills'
+export { UnifiedReport as unstable_UnifiedReports } from './components/UnifiedReport/UnifiedReport'
 export { Reports } from './views/Reports'
 export { ProfitAndLossView } from './components/ProfitAndLossView'
 export { Invoices } from './components/Invoices/Invoices'
