@@ -19,7 +19,7 @@ import { convertLedgerEntrySourceToLinkingMetadata, LedgerEntrySourceType } from
 import { Direction } from '../../types'
 import { BreadcrumbItem, DetailReportBreadcrumb } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import type { PnlDetailLine } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
-import { MoneySpan } from '../ui/Typography/MoneyText'
+import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
 import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
 

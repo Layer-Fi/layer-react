@@ -10,7 +10,7 @@ import { formatPercent } from '../../utils/format'
 import classNames from 'classnames'
 import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
 import { Button } from '../ui/Button/Button'
-import { MoneySpan } from '../ui/Typography/MoneyText'
+import { MoneySpan } from '../ui/Typography/MoneySpan'
 
 export interface DetailedTableStringOverrides {
   categoryColumnHeader?: string
