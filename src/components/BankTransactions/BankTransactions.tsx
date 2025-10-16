@@ -42,6 +42,7 @@ import { HStack } from '../ui/Stack/Stack'
 import { SuggestedCategorizationRuleUpdatesModal } from './SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
 import { SuggestedCategorizationRuleUpdatesDrawer } from '../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
 import { BulkSelectionStoreProvider } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { CategorySelectionStoreProvider } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { CategorizationRulesDrawer } from '../CategorizationRules/CategorizationRulesDrawer'
@@ -120,7 +121,9 @@ export const BankTransactions = ({
                 <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
                   <InAppLinkProvider renderInAppLink={renderInAppLink}>
                     <BulkSelectionStoreProvider>
-                      <BankTransactionsContent {...props} _showBulkSelection={_showBulkSelection} />
+                      <CategorySelectionStoreProvider>
+                        <BankTransactionsContent {...props} _showBulkSelection={_showBulkSelection} />
+                      </CategorySelectionStoreProvider>
                     </BulkSelectionStoreProvider>
                   </InAppLinkProvider>
                 </BankTransactionCustomerVendorVisibilityProvider>

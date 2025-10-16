@@ -25,6 +25,7 @@ import { CategorySelect } from '../CategorySelect'
 import {
   mapCategoryToOption,
   mapSuggestedMatchToOption,
+  type CategoryOption,
 } from '../CategorySelect/CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
@@ -44,6 +45,7 @@ import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibilit
 import { Span } from '../ui/Typography/Text'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useCategorySelection, useCategorySelectionActions } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 type Props = {
   index: number
@@ -112,9 +114,20 @@ export const BankTransactionRow = ({
     match: matchBankTransaction,
     shouldHideAfterCategorize,
   } = useBankTransactionsContext()
-  const [selectedCategory, setSelectedCategory] = useState(
-    getDefaultSelectedCategory(bankTransaction),
-  )
+
+  const { selectedCategory: storedCategory } = useCategorySelection(bankTransaction.id)
+  const { setSelection, setSelectionIfNotExists } = useCategorySelectionActions()
+
+  const defaultCategory = getDefaultSelectedCategory(bankTransaction)
+  if (defaultCategory && !storedCategory) {
+    setSelectionIfNotExists(bankTransaction.id, defaultCategory)
+  }
+
+  const selectedCategory = storedCategory
+  const setSelectedCategory = (category: CategoryOption) => {
+    setSelection(bankTransaction.id, category)
+  }
+
   const [open, setOpen] = useState(false)
   const toggleOpen = () => {
     setShowRetry(false)
