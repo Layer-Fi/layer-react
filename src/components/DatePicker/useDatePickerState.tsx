@@ -24,8 +24,8 @@ export const useDatePickerState = ({ date, setDate, minDate = null, maxDate = nu
   useEffect(() => {
     // Mirror global date into local date if it changes.
     setLocalDate(dateZdt)
-    const invalid = getIsDateInvalid(dateZdt, { minDate: minDateZdt, maxDate: maxDateZdt })
 
+    const invalid = getIsDateInvalid(dateZdt, { minDate: minDateZdt, maxDate: maxDateZdt })
     setIsInvalid(!!invalid)
     setErrorText(invalid)
   }, [minDate, maxDate, dateZdt, minDateZdt, maxDateZdt])

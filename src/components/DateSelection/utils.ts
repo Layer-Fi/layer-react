@@ -73,6 +73,7 @@ const PRESET_ARGS = {
 function typedEntries<T extends Record<PropertyKey, unknown>>(obj: T) {
   return Object.entries(obj) as [keyof T, T[keyof T]][]
 }
+
 function fromEntriesStrict<K extends PropertyKey, V>(
   entries: Iterable<readonly [K, V]>,
 ): Record<K, V> {
