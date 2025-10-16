@@ -4,10 +4,7 @@ import { ReportEnum, type DateQueryParams, type DateRangeQueryParams } from '../
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { useGlobalDate, useGlobalDateRange } from '../GlobalDateStore/GlobalDateStoreProvider'
 
-type UnifiedReportRouteState = { report: ReportEnum }
-type UnifiedReportStoreShape = {
-  route: UnifiedReportRouteState
-}
+type UnifiedReportStoreShape = { report: ReportEnum }
 
 export enum UnifiedReportDateVariant {
   Date = 'Date',
@@ -33,14 +30,14 @@ export const getDateVariantForReportType = (reportType: ReportEnum): UnifiedRepo
 
 const UnifiedReportStoreContext = createContext(
   createStore<UnifiedReportStoreShape>(() => ({
-    route: { report: ReportEnum.CashflowStatement },
+    report: ReportEnum.CashflowStatement,
   })),
 )
 
 export function useUnifiedReportDateVariant(): UnifiedReportDateVariant {
   const store = useContext(UnifiedReportStoreContext)
 
-  const report = useStore(store, state => state.route.report)
+  const report = useStore(store, state => state.report)
   return getDateVariantForReportType(report)
 }
 
@@ -49,7 +46,7 @@ export function useUnifiedReportWithDateParams(): UnifiedReportWithDateParams {
   const { date: effectiveDate } = useGlobalDate()
   const { startDate, endDate } = useGlobalDateRange({ displayMode: 'dayRangePicker' })
 
-  const report = useStore(store, state => state.route.report)
+  const report = useStore(store, state => state.report)
   const dateVariant = getDateVariantForReportType(report)
 
   switch (dateVariant) {
@@ -68,7 +65,7 @@ export function useUnifiedReportWithDateParams(): UnifiedReportWithDateParams {
 export function UnifiedReportStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<UnifiedReportStoreShape>(() => ({
-      route: { report: ReportEnum.CashflowStatement },
+      report: ReportEnum.CashflowStatement,
     })),
   )
 

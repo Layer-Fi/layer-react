@@ -1,39 +1,28 @@
-import { ReportEnum } from '../../../schemas/reports/unifiedReport'
-import { useUnifiedReportWithDateParams } from '../../../providers/UnifiedReportStore/UnifiedReportStoreProvider'
-import { BalanceSheetDownloadButton } from '../../BalanceSheet/download/BalanceSheetDownloadButton'
-import { CashflowStatementDownloadButton } from '../../StatementOfCashFlow/download/CashflowStatementDownloadButton'
-import { unsafeAssertUnreachable } from '../../../utils/switch/assertUnreachable'
+import { Button } from '../../ui/Button/Button'
+import DownloadCloud from '../../../icons/DownloadCloud'
+import InvisibleDownload, { useInvisibleDownload } from '../../utility/InvisibleDownload'
+import { useUnifiedReportDownload } from './useUnifiedReportDownload'
+import RefreshCcw from '../../../icons/RefreshCcw'
 
-type UnifiedReportDownloadButtonProps = {
-  iconOnly?: boolean
-}
+export function UnifiedReportDownloadButton() {
+  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
-export function UnifiedReportDownloadButton({
-  iconOnly,
-}: UnifiedReportDownloadButtonProps) {
-  const reportWithDateParams = useUnifiedReportWithDateParams()
-
-  if (reportWithDateParams.report === ReportEnum.BalanceSheet) {
-    return (
-      <BalanceSheetDownloadButton
-        effectiveDate={reportWithDateParams.effectiveDate}
-        iconOnly={iconOnly}
-      />
-    )
-  }
-
-  if (reportWithDateParams.report === ReportEnum.CashflowStatement) {
-    return (
-      <CashflowStatementDownloadButton
-        startDate={reportWithDateParams.startDate}
-        endDate={reportWithDateParams.endDate}
-        iconOnly={iconOnly}
-      />
-    )
-  }
-
-  unsafeAssertUnreachable({
-    value: reportWithDateParams,
-    message: 'Unexpected report type in UnifiedReportDownloadButton',
+  const { trigger, isMutating, isError } = useUnifiedReportDownload({
+    onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
   })
+
+  return (
+    <>
+      <Button
+        variant='outlined'
+        onPress={() => { void trigger() }}
+        isPending={isMutating}
+        isDisabled={isMutating}
+      >
+        {isError ? 'Retry' : 'Download'}
+        {isError ? <RefreshCcw size={12} /> : <DownloadCloud size={16} /> }
+      </Button>
+      <InvisibleDownload ref={invisibleDownloadRef} />
+    </>
+  )
 }
