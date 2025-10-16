@@ -129,7 +129,7 @@ export const CategorizationRulesTable = () => {
         </Button>
       ),
     },
-  }), [])
+  }), [options])
 
   return (
     <Container name='CategorizationRulesTable'>
