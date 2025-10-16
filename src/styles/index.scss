@@ -32,6 +32,8 @@
 @forward '../components/LinkedAccounts/BasicLinkedAccount/basicLinkedAccount';
 @forward '../components/BaseDetailView/baseDetailView';
 @forward '../components/Bills/bills';
+@forward '../components/CategorizationRules/CategorizationRulesTable/categorizationRulesTable';
+@forward '../components/BulkActionsHeader/bulkActionsHeader';
 @forward '../components/Invoices/InvoiceTable/invoiceTable';
 @forward '../components/Invoices/InvoiceDetail/invoiceDetail';
 @forward '../components/Invoices/InvoiceForm/invoiceForm';
@@ -54,6 +56,7 @@
 @forward '../components/ProfitAndLossDetailReport/profit_and_loss_detail_report';
 @forward '../components/ProfitAndLossHeader/profitAndLossHeader';
 @forward '../components/BookkeepingStatus/bookkeepingStatus';
+@forward '../components/SuggestedCategorizationRuleUpdates/suggested_categorization_rule_updates';
 @forward '../components/Tabs/tabs';
 @forward '../components/MobilePanel/mobilePanel';
 @forward '../components/UploadTransactions/uploadTransactions';

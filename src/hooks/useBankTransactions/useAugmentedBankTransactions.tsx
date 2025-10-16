@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { TagFilterInput } from '../../types/tags'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
@@ -23,6 +23,8 @@ import {
 import { useBankTransactions, type UseBankTransactionsOptions } from './useBankTransactions'
 import { useCategorizeBankTransaction } from './useCategorizeBankTransaction'
 import { useMatchBankTransaction } from './useMatchBankTransaction'
+import { decodeRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
+import { CategorizationRulesContext } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -114,6 +116,8 @@ export const useAugmentedBankTransactions = (
     eventCallbacks,
   } = useLayerContext()
 
+  const { setRuleSuggestion } = useContext(CategorizationRulesContext)
+
   const { filters } = params
 
   const display = filters?.categorizationStatus ?? DisplayState.categorized
@@ -188,6 +192,10 @@ export const useAugmentedBankTransactions = (
   }, [filters, data])
 
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
+    if (newBankTransaction.update_categorization_rules_suggestion) {
+      const decodedRuleSuggestion = decodeRulesSuggestion(newBankTransaction.update_categorization_rules_suggestion)
+      setRuleSuggestion(decodedRuleSuggestion)
+    }
     const updatedData = rawResponseData?.map((page) => {
       return {
         ...page,
@@ -212,7 +220,7 @@ export const useAugmentedBankTransactions = (
     const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
 
     if (existingTransaction) {
-      updateOneLocal({ ...existingTransaction, processing: true, error: undefined })
+      updateOneLocal({ ...existingTransaction, update_categorization_rules_suggestion: undefined, processing: true, error: undefined })
     }
 
     return categorizeBankTransaction({

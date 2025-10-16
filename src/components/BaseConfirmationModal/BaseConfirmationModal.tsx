@@ -23,6 +23,7 @@ export type BaseConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChan
   cancelLabel?: string
   errorText?: string
   closeOnConfirm?: boolean
+  confirmDisabled?: boolean
 }
 
 export function BaseConfirmationModal({
@@ -37,6 +38,7 @@ export function BaseConfirmationModal({
   cancelLabel = 'Cancel',
   errorText,
   closeOnConfirm = true,
+  confirmDisabled = false,
 }: BaseConfirmationModalProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<APIError | Error | null>(null)
@@ -68,7 +70,7 @@ export function BaseConfirmationModal({
   return (
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} role='alertdialog'>
       {({ close }) => (
-        <>
+        <VStack gap='xs'>
           <VStack pbe='2xs'>
             <ModalTitleWithClose
               heading={(
@@ -90,6 +92,7 @@ export function BaseConfirmationModal({
               <SubmitButton
                 onClick={() => onClickConfirm(close)}
                 processing={isProcessing}
+                disabled={confirmDisabled}
                 error={getErrorMessage(error, errorText) ?? ''}
                 withRetry
                 noIcon={!isProcessing}
@@ -98,7 +101,7 @@ export function BaseConfirmationModal({
               </SubmitButton>
             </HStack>
           </ModalActions>
-        </>
+        </VStack>
       )}
     </Modal>
   )

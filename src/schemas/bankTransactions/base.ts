@@ -18,6 +18,8 @@ export const MinimalBankTransactionSchema = Schema.Struct({
   description: Schema.optional(Schema.NullOr(Schema.String)),
 })
 
+export type MinimalBankTransaction = typeof MinimalBankTransactionSchema.Type
+
 export const BankTransactionCounterpartySchema = Schema.Struct({
   id: Schema.String,
   externalId: Schema.optional(Schema.String).pipe(

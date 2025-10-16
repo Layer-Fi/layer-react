@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useState } from 'react'
+import { useCallback, useId, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DisplayState, type DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
@@ -23,13 +23,21 @@ import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDow
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
+import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
+import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { BulkActionsHeader } from '../BulkActionsHeader/BulkActionsHeader'
+import { Button } from '../ui/Button/Button'
+import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
+import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect'
+import { VStack } from '../ui/Stack/Stack'
+import { Label, Span } from '../ui/Typography/Text'
+import pluralize from 'pluralize'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
   asWidget?: boolean
   categorizedOnly?: boolean
   categorizeView?: boolean
-  onCategorizationDisplayChange: (event: ChangeEvent<HTMLInputElement>) => void
   mobileComponent?: MobileComponentType
   listView?: boolean
   isDataLoading?: boolean
@@ -38,6 +46,8 @@ export interface BankTransactionsHeaderProps {
   withUploadMenu?: boolean
   showStatusToggle?: boolean
   collapseHeader?: boolean
+  _showCategorizationRules?: boolean
+  _showBulkSelection?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -116,7 +126,6 @@ export const BankTransactionsHeader = ({
   asWidget,
   categorizedOnly,
   categorizeView = true,
-  onCategorizationDisplayChange,
   mobileComponent,
   listView,
   stringOverrides,
@@ -124,6 +133,8 @@ export const BankTransactionsHeader = ({
   withUploadMenu,
   showStatusToggle,
   collapseHeader,
+  _showCategorizationRules = false,
+  _showBulkSelection = false,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
   const { display } = useBankTransactionsContext()
@@ -138,6 +149,100 @@ export const BankTransactionsHeader = ({
   const setDateRange = useCallback((newRange: DateRange) => {
     setFilters({ dateRange: newRange })
   }, [setFilters])
+
+  const { count } = useCountSelectedIds()
+  const { clearSelection } = useBulkSelectionActions()
+
+  const [isConfirmAllModalOpen, setIsConfirmAllModalOpen] = useState(false)
+  const [isCategorizeAllModalOpen, setIsCategorizeAllModalOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<CategoryOption | undefined>(undefined)
+
+  const categorySelectId = useId()
+
+  const handleConfirmAllClick = useCallback(() => {
+    setIsConfirmAllModalOpen(true)
+  }, [])
+
+  const handleCategorizeAllClick = useCallback(() => {
+    setIsCategorizeAllModalOpen(true)
+  }, [])
+
+  const handleCategorizeModalClose = useCallback((isOpen: boolean) => {
+    setIsCategorizeAllModalOpen(isOpen)
+    if (!isOpen) {
+      setSelectedCategory(undefined)
+    }
+  }, [])
+
+  const BulkActions = useCallback(() => {
+    return (
+      <HStack align='center' gap='sm'>
+        <Button
+          variant='outlined'
+          onClick={handleConfirmAllClick}
+        >
+          Confirm All
+        </Button>
+        <BaseConfirmationModal
+          isOpen={isConfirmAllModalOpen}
+          onOpenChange={setIsConfirmAllModalOpen}
+          title='Confirm all suggestions?'
+          content={(
+            <Span>
+              {`This action will confirm ${count} selected ${pluralize('transaction', count)}.`}
+            </Span>
+          )}
+          onConfirm={() => {}}
+          confirmLabel='Confirm All'
+          cancelLabel='Cancel'
+          closeOnConfirm
+        />
+        <Button
+          variant='outlined'
+          onClick={handleCategorizeAllClick}
+        >
+          Categorize All
+        </Button>
+        <BaseConfirmationModal
+          isOpen={isCategorizeAllModalOpen}
+          onOpenChange={handleCategorizeModalClose}
+          title='Categorize all selected transactions?'
+          content={(
+            <VStack gap='xs'>
+              <VStack gap='3xs'>
+                <Label htmlFor={categorySelectId}>Select category</Label>
+                <CategorySelect
+                  name={categorySelectId}
+                  value={selectedCategory}
+                  onChange={setSelectedCategory}
+                  showTooltips={false}
+                  excludeMatches={true}
+                />
+              </VStack>
+              {selectedCategory && (
+                <Span>
+                  {`This action will categorize ${count} selected transactions as ${selectedCategory?.payload?.display_name}.`}
+                </Span>
+              )}
+            </VStack>
+          )}
+          onConfirm={() => {}}
+          confirmLabel='Categorize All'
+          cancelLabel='Cancel'
+          confirmDisabled={!selectedCategory}
+          closeOnConfirm
+        />
+      </HStack>
+    )
+  }, [
+    count,
+    categorySelectId,
+    isConfirmAllModalOpen,
+    isCategorizeAllModalOpen,
+    selectedCategory,
+    handleConfirmAllClick,
+    handleCategorizeAllClick,
+    handleCategorizeModalClose])
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
@@ -176,6 +281,19 @@ export const BankTransactionsHeader = ({
     </div>
   ), [asWidget, business, dateRange, isSyncing, listView, setDateRange, stringOverrides?.header, withDatePicker])
 
+  const onCategorizationDisplayChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFilters({
+      categorizationStatus:
+        event.target.value === 'categorized' // see DisplayState enum
+          ? DisplayState.categorized
+          : event.target.value === 'all' // see DisplayState enum
+            ? DisplayState.all
+            : DisplayState.review,
+    })
+  }
+
   return (
     <Header
       className={classNames(
@@ -188,35 +306,48 @@ export const BankTransactionsHeader = ({
       style={{ top: shiftStickyHeader }}
     >
       {!collapseHeader && headerTopRow}
-      <TransactionsActions>
-        <HStack slot='toggle' justify='center' gap='xs'>
-          {collapseHeader && headerTopRow}
-          {!categorizedOnly && categorizeView && showStatusToggle && (
-            <Toggle
-              name='bank-transaction-display'
-              size={
-                mobileComponent === 'mobileList'
-                  ? ToggleSize.small
-                  : ToggleSize.medium
-              }
-              options={[
-                { label: 'To Review', value: DisplayState.review },
-                { label: 'Categorized', value: DisplayState.categorized },
-              ]}
-              selected={display}
-              onChange={onCategorizationDisplayChange}
-            />
-          )}
-        </HStack>
-        <TransactionsSearch slot='search' />
-        <HStack slot='download-upload' justify='center' gap='xs'>
-          <DownloadButton
-            downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={listView}
+
+      {_showBulkSelection && count > 0
+        ? (
+          <BulkActionsHeader
+            count={{ showCount: true, totalCount: count }}
+            slotProps={{ ClearSelectionButton: { onClick: clearSelection } }}
+            slots={{ Actions: BulkActions }}
           />
-          {withUploadMenu && <BankTransactionsUploadMenu />}
-        </HStack>
-      </TransactionsActions>
+        )
+        : (
+          <TransactionsActions>
+            <HStack slot='toggle' justify='center' gap='xs'>
+              {collapseHeader && headerTopRow}
+              {!categorizedOnly && categorizeView && showStatusToggle && (
+                <Toggle
+                  name='bank-transaction-display'
+                  size={
+                    mobileComponent === 'mobileList'
+                      ? ToggleSize.small
+                      : ToggleSize.medium
+                  }
+                  options={[
+                    { label: 'To Review', value: DisplayState.review },
+                    { label: 'Categorized', value: DisplayState.categorized },
+                  ]}
+                  selected={display}
+                  onChange={onCategorizationDisplayChange}
+                />
+              )}
+            </HStack>
+            <TransactionsSearch slot='search' />
+            <HStack slot='download-upload' justify='center' gap='xs'>
+              <DownloadButton
+                downloadButtonTextOverride={stringOverrides?.downloadButton}
+                iconOnly={listView}
+              />
+              {_showCategorizationRules
+                ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} />
+                : withUploadMenu && <BankTransactionsUploadMenu />}
+            </HStack>
+          </TransactionsActions>
+        )}
     </Header>
   )
 }

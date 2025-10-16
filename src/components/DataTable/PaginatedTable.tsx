@@ -11,6 +11,8 @@ import { VStack } from '../ui/Stack/Stack'
 import { Pagination } from '../Pagination'
 
 interface PaginationProps {
+  initialPage?: number
+  onSetPage?: (page: number) => void
   pageSize?: number
   hasMore?: boolean
   fetchMore?: () => void
@@ -30,9 +32,10 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
   paginationProps,
   slots,
 }: PaginatedTableProps<TData, TColumns>) {
-  const { pageSize = 20, hasMore, fetchMore } = paginationProps
+  const { pageSize = 20, hasMore, fetchMore, initialPage = 0, onSetPage } = paginationProps
 
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: initialPage, pageSize })
+
   const columnHelper = createColumnHelper<TData>()
   const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
 
@@ -48,7 +51,14 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
     data: data ?? EMPTY_ARRAY,
     columns: columnDefs,
     state: { pagination },
-    onPaginationChange: setPagination,
+    onPaginationChange: (updaterOrValue) => {
+      const newPagination =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(pagination)
+        : updaterOrValue
+      onSetPage?.(newPagination.pageIndex)
+      setPagination(newPagination)
+    },
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
     autoResetPageIndex: false,

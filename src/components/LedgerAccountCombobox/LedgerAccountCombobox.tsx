@@ -2,7 +2,7 @@ import { useCallback, useId, useMemo } from 'react'
 import { ComboBox } from '../ui/ComboBox/ComboBox'
 import { VStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
-import { isOptionalAccountNestedCategory, type Category } from '../../types/categories'
+import { isOptionalAccountNestedCategory, type Category, getLeafCategories } from '../../types/categories'
 import { type CategoriesListMode } from '../../schemas/categorization'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { AccountIdentifierEquivalence, makeAccountId, makeStableName, type AccountIdentifier } from '../../schemas/accountIdentifier'
@@ -27,15 +27,6 @@ class CategoryAsOption {
     if (isOptionalAccountNestedCategory(this.internalCategory)) return this.internalCategory.stable_name
     return this.internalCategory.id
   }
-}
-
-const getLeafCategories = (categories: Category[]): Category[] => {
-  return categories.flatMap((category) => {
-    if (!category.subCategories || category.subCategories.length === 0) {
-      return [category]
-    }
-    return getLeafCategories(category.subCategories)
-  })
 }
 
 type LedgerAccountComboboxProps = {
