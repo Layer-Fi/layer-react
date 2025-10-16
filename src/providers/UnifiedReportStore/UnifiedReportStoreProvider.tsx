@@ -1,6 +1,6 @@
 import { useState, createContext, useContext, type PropsWithChildren } from 'react'
 import { createStore, useStore } from 'zustand'
-import { ReportEnum, type UnifiedReportDateQueryParams } from '../../schemas/reports/unifiedReport'
+import { ReportEnum, type DateQueryParams, type DateRangeQueryParams } from '../../schemas/reports/unifiedReport'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { useGlobalDate, useGlobalDateRange } from '../GlobalDateStore/GlobalDateStoreProvider'
 
@@ -14,18 +14,21 @@ export enum UnifiedReportDateVariant {
   DateRange = 'DateRange',
 }
 
+const reportToDateVariantMap = {
+  [ReportEnum.BalanceSheet]: UnifiedReportDateVariant.Date,
+  [ReportEnum.CashflowStatement]: UnifiedReportDateVariant.DateRange,
+} as const
+
+export type UnifiedReportWithDateParams =
+  | {
+    report: ReportEnum.BalanceSheet
+  } & DateQueryParams
+  | {
+    report: ReportEnum.CashflowStatement
+  } & DateRangeQueryParams
+
 export const getDateVariantForReportType = (reportType: ReportEnum): UnifiedReportDateVariant => {
-  switch (reportType) {
-    case ReportEnum.BalanceSheet:
-      return UnifiedReportDateVariant.Date
-    case ReportEnum.CashflowStatement:
-      return UnifiedReportDateVariant.DateRange
-    default:
-      unsafeAssertUnreachable({
-        value: reportType,
-        message: 'Unexpected report type',
-      })
-  }
+  return reportToDateVariantMap[reportType]
 }
 
 const UnifiedReportStoreContext = createContext(
@@ -34,11 +37,6 @@ const UnifiedReportStoreContext = createContext(
   })),
 )
 
-export function useUnifiedReportType() {
-  const store = useContext(UnifiedReportStoreContext)
-  return useStore(store, state => state.route)
-}
-
 export function useUnifiedReportDateVariant(): UnifiedReportDateVariant {
   const store = useContext(UnifiedReportStoreContext)
 
@@ -46,19 +44,19 @@ export function useUnifiedReportDateVariant(): UnifiedReportDateVariant {
   return getDateVariantForReportType(report)
 }
 
-export function useUnifiedReportDateOrDateRange(): UnifiedReportDateQueryParams {
+export function useUnifiedReportWithDateParams(): UnifiedReportWithDateParams {
   const store = useContext(UnifiedReportStoreContext)
   const { date: effectiveDate } = useGlobalDate()
-  const dateRange = useGlobalDateRange({ displayMode: 'dayRangePicker' })
+  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'dayRangePicker' })
 
   const report = useStore(store, state => state.route.report)
   const dateVariant = getDateVariantForReportType(report)
 
   switch (dateVariant) {
     case UnifiedReportDateVariant.Date:
-      return { effectiveDate }
+      return { report, effectiveDate } as UnifiedReportWithDateParams
     case UnifiedReportDateVariant.DateRange:
-      return dateRange
+      return { report, startDate, endDate } as UnifiedReportWithDateParams
     default:
       unsafeAssertUnreachable({
         value: dateVariant,
