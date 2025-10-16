@@ -70,7 +70,7 @@ export function BaseConfirmationModal({
   return (
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} role='alertdialog'>
       {({ close }) => (
-        <VStack gap='xs'>
+        <VStack>
           <VStack pbe='2xs'>
             <ModalTitleWithClose
               heading={(
