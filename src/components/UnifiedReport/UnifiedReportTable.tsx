@@ -8,7 +8,7 @@ import { MoneySpan } from '../ui/Typography/MoneyText'
 import { useUnifiedReport } from '../../features/reports/api/useUnifiedReport'
 import type { Row } from '@tanstack/react-table'
 import { ExpandableDataTableContext } from '../ExpandableDataTable/ExpandableDataTableProvider'
-import { useUnifiedReportDateOrDateRange, useUnifiedReportRoute } from '../../providers/UnifiedReportRouteStore/UnifiedReportRouteStoreProvider'
+import { useUnifiedReportDateOrDateRange, useUnifiedReportType } from '../../providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { asMutable } from '../../utils/asMutable'
 
 const COMPONENT_NAME = 'UnifiedReport'
@@ -37,7 +37,7 @@ const COLUMN_CONFIG: ColumnConfig<Row<LineItemWithId>, UnifiedReportColumns> = (
 const getSubRows = (lineItem: LineItemWithId) => asMutable(lineItem.lineItems)
 
 export const UnifiedReportTable = () => {
-  const { report } = useUnifiedReportRoute()
+  const { report } = useUnifiedReportType()
   const dateParams = useUnifiedReportDateOrDateRange()
   const { data, isLoading, isError, refetch } = useUnifiedReport({ report, ...dateParams })
   const { setExpanded } = useContext(ExpandableDataTableContext)

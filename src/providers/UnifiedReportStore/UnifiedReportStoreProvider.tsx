@@ -5,7 +5,7 @@ import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { useGlobalDate, useGlobalDateRange } from '../GlobalDateStore/GlobalDateStoreProvider'
 
 type UnifiedReportRouteState = { report: ReportEnum }
-type UnifiedReportRouteStoreShape = {
+type UnifiedReportStoreShape = {
   route: UnifiedReportRouteState
 }
 
@@ -28,26 +28,26 @@ export const getDateVariantForReportType = (reportType: ReportEnum): UnifiedRepo
   }
 }
 
-const UnifiedReportRouteStoreContext = createContext(
-  createStore<UnifiedReportRouteStoreShape>(() => ({
+const UnifiedReportStoreContext = createContext(
+  createStore<UnifiedReportStoreShape>(() => ({
     route: { report: ReportEnum.CashflowStatement },
   })),
 )
 
-export function useUnifiedReportRoute() {
-  const store = useContext(UnifiedReportRouteStoreContext)
+export function useUnifiedReportType() {
+  const store = useContext(UnifiedReportStoreContext)
   return useStore(store, state => state.route)
 }
 
 export function useUnifiedReportDateVariant(): UnifiedReportDateVariant {
-  const store = useContext(UnifiedReportRouteStoreContext)
+  const store = useContext(UnifiedReportStoreContext)
 
   const report = useStore(store, state => state.route.report)
   return getDateVariantForReportType(report)
 }
 
 export function useUnifiedReportDateOrDateRange(): UnifiedReportDateQueryParams {
-  const store = useContext(UnifiedReportRouteStoreContext)
+  const store = useContext(UnifiedReportStoreContext)
   const { date: effectiveDate } = useGlobalDate()
   const dateRange = useGlobalDateRange({ displayMode: 'dayRangePicker' })
 
@@ -67,16 +67,16 @@ export function useUnifiedReportDateOrDateRange(): UnifiedReportDateQueryParams 
   }
 }
 
-export function UnifiedReportRouteStoreProvider(props: PropsWithChildren) {
+export function UnifiedReportStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
-    createStore<UnifiedReportRouteStoreShape>(() => ({
+    createStore<UnifiedReportStoreShape>(() => ({
       route: { report: ReportEnum.CashflowStatement },
     })),
   )
 
   return (
-    <UnifiedReportRouteStoreContext.Provider value={store}>
+    <UnifiedReportStoreContext.Provider value={store}>
       {props.children}
-    </UnifiedReportRouteStoreContext.Provider>
+    </UnifiedReportStoreContext.Provider>
   )
 }
