@@ -28,7 +28,7 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from './BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
-import { MoneySpan } from '../ui/Typography/MoneyText'
+import { MoneySpan } from '../ui/Typography/MoneySpan'
 
 type Props = {
   index: number
@@ -182,7 +182,7 @@ export const BankTransactionListItem = ({
           }`}
         >
           <Text as='span'>
-            <MoneySpan amount={bankTransaction.amount} prefix={isCredit(bankTransaction) ? '+' : ''} />
+            <MoneySpan amount={bankTransaction.amount} displayPlusSign={isCredit(bankTransaction)} />
           </Text>
         </span>
       </span>
