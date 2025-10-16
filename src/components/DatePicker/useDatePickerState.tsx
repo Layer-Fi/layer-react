@@ -34,7 +34,7 @@ export const useDatePickerState = ({ date, setDate, minDate = null, maxDate = nu
     (date: ZonedDateTime | null) => {
       setLocalDate(date)
 
-      // Don’t show errors for empty/partial year while typing
+      // Don’t show errors for empty/partial year while typing.
       if (date === null || date.year <= 1000) {
         setIsInvalid(true)
         setErrorText(null)
@@ -48,7 +48,6 @@ export const useDatePickerState = ({ date, setDate, minDate = null, maxDate = nu
         return
       }
 
-      // Clear errors and commit globally
       setIsInvalid(false)
       setErrorText(null)
       setDate?.(date.toDate())

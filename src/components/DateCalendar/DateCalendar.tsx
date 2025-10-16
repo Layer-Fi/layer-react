@@ -6,7 +6,7 @@ import { HStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
 import { type ZonedDateTime } from '@internationalized/date'
 
-export type DateCalendarProps = {
+type DateCalendarProps = {
   minDate?: ZonedDateTime | null
   maxDate?: ZonedDateTime | null
 }

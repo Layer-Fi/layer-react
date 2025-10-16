@@ -3,7 +3,6 @@ import { FieldError, TextField, type TextFieldProps } from '../../../components/
 import { Label } from '../../../components/ui/Typography/Text'
 import { useFieldContext } from '../hooks/useForm'
 import type { CommonFormFieldProps } from '../types'
-import { VStack } from '../../../components/ui/Stack/Stack'
 
 export type BaseFormTextFieldProps = CommonFormFieldProps & {
   inputMode?: TextFieldProps['inputMode']
@@ -50,10 +49,8 @@ export function BaseFormTextField({
           {label}
         </Label>
       )}
-      <VStack gap='3xs'>
-        {children}
-        {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
-      </VStack>
+      {children}
+      {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
     </TextField>
   )
 }

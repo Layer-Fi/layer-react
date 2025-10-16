@@ -13,17 +13,17 @@ import { TriangleAlert } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip/Tooltip'
 import { useMemo } from 'react'
 
-export type DatePickerProps = {
-  date: ZonedDateTime | null
-  onChange: (date: ZonedDateTime | null) => void
-  minDate?: ZonedDateTime | null
-  maxDate?: ZonedDateTime | null
+type DatePickerProps = {
   label: string
   isReadOnly?: boolean
   showLabel?: boolean
+  date: ZonedDateTime | null
+  minDate?: ZonedDateTime | null
+  maxDate?: ZonedDateTime | null
   isInvalid?: boolean
   errorText?: string | null
   onBlur?: () => void
+  onChange: (date: ZonedDateTime | null) => void
 }
 
 export const DatePicker = ({
@@ -31,12 +31,12 @@ export const DatePicker = ({
   isReadOnly,
   showLabel = true,
   date,
-  onChange,
-  onBlur,
-  isInvalid,
-  errorText,
   minDate,
   maxDate,
+  isInvalid,
+  errorText,
+  onBlur,
+  onChange,
 }: DatePickerProps) => {
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
@@ -55,8 +55,8 @@ export const DatePicker = ({
     <BaseDatePicker
       granularity='day'
       value={date}
-      onChange={onChange}
       onBlur={onBlur}
+      onChange={onChange}
       isInvalid={isInvalid}
       {...additionalAriaProps}
     >
@@ -65,7 +65,7 @@ export const DatePicker = ({
         <DateInput inset>
           {segment => <DateSegment isReadOnly={isReadOnly} segment={segment} />}
         </DateInput>
-        <HStack gap='xs' align='center'>
+        <HStack gap='3xs' align='center'>
           {errorText && errorTriangle}
           <Button icon inset variant='ghost'>
             <ChevronDown size={20} />
