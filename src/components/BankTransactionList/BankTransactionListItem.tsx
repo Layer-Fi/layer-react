@@ -181,9 +181,7 @@ export const BankTransactionListItem = ({
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
         >
-          <Text as='span'>
-            <MoneySpan amount={bankTransaction.amount} displayPlusSign={isCredit(bankTransaction)} />
-          </Text>
+          <MoneySpan amount={bankTransaction.amount} displayPlusSign={isCredit(bankTransaction)} />
         </span>
       </span>
       {!categorizationEnabled && !categorized
