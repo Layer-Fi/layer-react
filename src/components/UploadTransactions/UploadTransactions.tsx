@@ -19,8 +19,8 @@ function UploadTransactionsHeader({ currentStep, isValid }: UploadTransactionsHe
   if (currentStep === UploadTransactionsStep.Confirmation) return null
 
   return (
-    <VStack gap='xs'>
-      <Heading level={1} size='xl' pie='2xl'>
+    <VStack>
+      <Heading level={1} size='lg' pie='2xl' pbe='3xs'>
         {currentStep === UploadTransactionsStep.UploadCsv && 'Upload transactions'}
         {currentStep === UploadTransactionsStep.ValidateCsv
           && (isValid
@@ -28,7 +28,7 @@ function UploadTransactionsHeader({ currentStep, isValid }: UploadTransactionsHe
             : 'Some transactions couldn\'t be parsed'
           )}
       </Heading>
-      <Heading level={2} pbe='xl' size='xs' variant='subtle' weight='normal'>
+      <Heading level={2} size='xs' pbe='lg' variant='subtle' weight='normal'>
         {currentStep === UploadTransactionsStep.UploadCsv && 'Import a file of transactions from your bank account or credit card'}
         {currentStep === UploadTransactionsStep.ValidateCsv
           && (isValid
