@@ -435,7 +435,7 @@ export const BankTransactionRow = ({
         </td>
       </tr>
       <tr>
-        <td colSpan={6} className='Layer__bank-transaction-row__expanded-td'>
+        <td colSpan={7} className='Layer__bank-transaction-row__expanded-td'>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}
