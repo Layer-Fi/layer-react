@@ -181,7 +181,7 @@ export const BankTransactionsHeader = ({
           variant='outlined'
           onClick={handleConfirmAllClick}
         >
-          Confirm All
+          Confirm all
         </Button>
         <BaseConfirmationModal
           isOpen={isConfirmAllModalOpen}
@@ -201,7 +201,7 @@ export const BankTransactionsHeader = ({
           variant='outlined'
           onClick={handleCategorizeAllClick}
         >
-          Categorize All
+          Set category
         </Button>
         <BaseConfirmationModal
           isOpen={isCategorizeAllModalOpen}
