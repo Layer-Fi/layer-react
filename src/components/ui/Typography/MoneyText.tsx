@@ -8,10 +8,11 @@ type MoneyTextProps = {
   amount: number
   bold?: boolean
   size?: 'xs' | 'sm' | 'md' | 'lg'
+  prefix?: string
 } & Pick<ComponentPropsWithoutRef<'span'>, 'slot'>
 
 const MoneySpan = forwardRef<HTMLSpanElement, MoneyTextProps>(
-  ({ amount, bold, size, ...restProps }, ref) => {
+  ({ amount, bold, size, prefix, ...restProps }, ref) => {
     const dataProperties = toDataProperties({
       bold,
       positive: amount >= 0,
@@ -21,6 +22,7 @@ const MoneySpan = forwardRef<HTMLSpanElement, MoneyTextProps>(
 
     return (
       <span {...restProps} {...dataProperties} className={CLASS_NAME} ref={ref}>
+        {prefix}
         {formatMoney(Math.abs(amount))}
       </span>
     )

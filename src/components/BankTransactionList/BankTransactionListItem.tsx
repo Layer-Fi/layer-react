@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
-import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
 import {
   getCategorizePayload,
@@ -29,6 +28,7 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from './BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
+import { MoneySpan } from '../ui/Typography/MoneyText'
 
 type Props = {
   index: number
@@ -182,8 +182,7 @@ export const BankTransactionListItem = ({
           }`}
         >
           <Text as='span'>
-            {isCredit(bankTransaction) ? '+$' : ' $'}
-            {formatMoney(bankTransaction.amount)}
+            <MoneySpan amount={bankTransaction.amount} prefix={isCredit(bankTransaction) ? '+' : ''} />
           </Text>
         </span>
       </span>
