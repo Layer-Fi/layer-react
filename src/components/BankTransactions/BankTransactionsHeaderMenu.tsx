@@ -11,6 +11,7 @@ import { ChevronRight, PencilRuler } from 'lucide-react'
 
 interface BankTransactionsHeaderMenuProps {
   withUploadMenu?: boolean
+  isDisabled?: boolean
 }
 
 enum BankTransactionsHeaderMenuActions {
@@ -43,16 +44,16 @@ const BankTransactionsHeaderMenuIcon = ({
   )
 }
 
-export const BankTransactionsHeaderMenu = ({ withUploadMenu }: BankTransactionsHeaderMenuProps) => {
+export const BankTransactionsHeaderMenu = ({ withUploadMenu, isDisabled }: BankTransactionsHeaderMenuProps) => {
   const { toCategorizationRulesTable } = useBankTransactionsNavigation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const Trigger = useCallback(() => {
     return (
-      <Button icon variant='outlined'>
+      <Button icon variant='outlined' isDisabled={isDisabled}>
         <MenuIcon size={14} />
       </Button>
     )
-  }, [])
+  }, [isDisabled])
   return (
     <>
       <DropdownMenu

@@ -25,13 +25,14 @@ import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
 import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
 import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { BulkActionsHeader } from '../BulkActionsHeader/BulkActionsHeader'
 import { Button } from '../ui/Button/Button'
 import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
 import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect'
 import { VStack } from '../ui/Stack/Stack'
 import { Label, Span } from '../ui/Typography/Text'
 import pluralize from 'pluralize'
+import { X } from 'lucide-react'
+import '../BulkActionsHeader/bulkActionsHeader.scss'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -57,9 +58,10 @@ export interface BankTransactionsHeaderStringOverrides {
 
 type TransactionsSearchProps = {
   slot?: string
+  isDisabled?: boolean
 }
 
-function TransactionsSearch({ slot }: TransactionsSearchProps) {
+function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   const { filters, setFilters } = useBankTransactionsFiltersContext()
 
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
@@ -80,6 +82,7 @@ function TransactionsSearch({ slot }: TransactionsSearchProps) {
       label='Search transactions'
       value={localSearch}
       onChange={handleSearch}
+      isDisabled={isDisabled}
     />
   )
 }
@@ -87,9 +90,11 @@ function TransactionsSearch({ slot }: TransactionsSearchProps) {
 const DownloadButton = ({
   downloadButtonTextOverride,
   iconOnly,
+  disabled,
 }: {
   downloadButtonTextOverride?: string
   iconOnly?: boolean
+  disabled?: boolean
 }) => {
   const { filters } = useBankTransactionsFiltersContext()
 
@@ -115,6 +120,7 @@ const DownloadButton = ({
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
         text={downloadButtonTextOverride ?? 'Download'}
+        disabled={disabled}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>
@@ -178,7 +184,7 @@ export const BankTransactionsHeader = ({
     return (
       <HStack align='center' gap='sm'>
         <Button
-          variant='outlined'
+          variant='solid'
           onClick={handleConfirmAllClick}
         >
           Confirm all
@@ -198,7 +204,7 @@ export const BankTransactionsHeader = ({
           closeOnConfirm
         />
         <Button
-          variant='outlined'
+          variant='solid'
           onClick={handleCategorizeAllClick}
         >
           Set category
@@ -307,16 +313,30 @@ export const BankTransactionsHeader = ({
     >
       {!collapseHeader && headerTopRow}
 
-      {_showBulkSelection && count > 0
-        ? (
-          <BulkActionsHeader
-            count={{ showCount: true, totalCount: count }}
-            slotProps={{ ClearSelectionButton: { onClick: clearSelection } }}
-            slots={{ Actions: BulkActions }}
-          />
-        )
-        : (
-          <TransactionsActions>
+      <TransactionsActions>
+        {_showBulkSelection && count > 0
+          ? (
+            <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
+              <HStack justify='space-between' align='center' gap='xs' pie='3xs' pis='sm' className='Layer__bulk-actions-header__selection-container'>
+                <Span>
+                  {count}
+                  {' selected '}
+                  {pluralize('item', count)}
+                </Span>
+                <Button
+                  variant='ghost'
+                  icon
+                  inset
+                  onClick={clearSelection}
+                  aria-label='Clear Bulk Selections'
+                >
+                  <X size={16} />
+                </Button>
+              </HStack>
+              <BulkActions />
+            </HStack>
+          )
+          : (
             <HStack slot='toggle' justify='center' gap='xs'>
               {collapseHeader && headerTopRow}
               {!categorizedOnly && categorizeView && showStatusToggle && (
@@ -336,18 +356,19 @@ export const BankTransactionsHeader = ({
                 />
               )}
             </HStack>
-            <TransactionsSearch slot='search' />
-            <HStack slot='download-upload' justify='center' gap='xs'>
-              <DownloadButton
-                downloadButtonTextOverride={stringOverrides?.downloadButton}
-                iconOnly={listView}
-              />
-              {_showCategorizationRules
-                ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} />
-                : withUploadMenu && <BankTransactionsUploadMenu />}
-            </HStack>
-          </TransactionsActions>
-        )}
+          )}
+        <TransactionsSearch slot='search' isDisabled={_showBulkSelection && count > 0} />
+        <HStack slot='download-upload' justify='center' gap='xs'>
+          <DownloadButton
+            downloadButtonTextOverride={stringOverrides?.downloadButton}
+            iconOnly={listView}
+            disabled={_showBulkSelection && count > 0}
+          />
+          {_showCategorizationRules
+            ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} isDisabled={_showBulkSelection && count > 0} />
+            : withUploadMenu && <BankTransactionsUploadMenu isDisabled={_showBulkSelection && count > 0} />}
+        </HStack>
+      </TransactionsActions>
     </Header>
   )
 }
