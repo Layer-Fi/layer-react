@@ -88,13 +88,21 @@ export const BankTransactionsTable = ({
   const isPartiallySelected = selectedCount > 0 && selectedCount < currentPageIds.length
 
   const handleHeaderCheckboxChange = useCallback((checked: boolean) => {
-    if (checked) {
+    if (isPartiallySelected) {
+      deselectMultiple(currentPageIds)
+    }
+    else if (checked) {
       selectMultiple(currentPageIds)
     }
     else {
       deselectMultiple(currentPageIds)
     }
-  }, [currentPageIds, selectMultiple, deselectMultiple])
+  }, [
+    currentPageIds,
+    isPartiallySelected,
+    selectMultiple,
+    deselectMultiple,
+  ])
 
   return (
     <table
