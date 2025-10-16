@@ -9,7 +9,6 @@ export type BankTransactionsCategoryState = {
 type BankTransactionsCategoryActions = {
   actions: {
     setTransactionCategory: (id: string, category: CategoryOption) => void
-    setMultipleTransactionCategories: (transactionCategories: Array<{ id: string, category: CategoryOption }>) => void
     setOnlyNewTransactionCategories: (transactionCategories: Array<{ id: string, category: CategoryOption }>) => void
 
     clearTransactionCategory: (id: string) => void
@@ -28,16 +27,6 @@ function buildStore() {
         set((state) => {
           const newMap = new Map(state.transactionCategories)
           newMap.set(id, category)
-          return { transactionCategories: newMap }
-        })
-      },
-
-      setMultipleTransactionCategories: (transactionCategories: Array<{ id: string, category: CategoryOption }>): void => {
-        set((state) => {
-          const newMap = new Map(state.transactionCategories)
-          transactionCategories.forEach(({ id, category }) => {
-            newMap.set(id, category)
-          })
           return { transactionCategories: newMap }
         })
       },
@@ -83,7 +72,7 @@ function buildStore() {
 
 const BankTransactionsCategoryStoreContext = createContext<ReturnType<typeof buildStore> | null>(null)
 
-function useBankTransactionsCategoryStore() {
+function useBankTransactionsCategoryStore(): ReturnType<typeof buildStore> {
   const store = useContext(BankTransactionsCategoryStoreContext)
 
   if (!store) {
@@ -93,7 +82,7 @@ function useBankTransactionsCategoryStore() {
   return store
 }
 
-export function useBankTransactionsCategoryActions() {
+export function useBankTransactionsCategoryActions(): BankTransactionsCategoryActions['actions'] {
   const store = useBankTransactionsCategoryStore()
 
   return useStore(store, state => state.actions)
@@ -119,7 +108,7 @@ type BankTransactionsCategoryStoreProviderProps = PropsWithChildren
 
 export function BankTransactionsCategoryStoreProvider({
   children,
-}: BankTransactionsCategoryStoreProviderProps) {
+}: BankTransactionsCategoryStoreProviderProps): JSX.Element {
   const [store] = useState(() => buildStore())
   return (
     <BankTransactionsCategoryStoreContext.Provider value={store}>
