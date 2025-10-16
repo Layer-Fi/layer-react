@@ -6,6 +6,7 @@ import { FieldError } from '../../../components/ui/Form/Form'
 import type { CommonFormFieldProps } from '../types'
 import type { ZonedDateTime } from '@internationalized/date'
 import { InputGroup } from '../../../components/ui/Input/InputGroup'
+import { VStack } from '../../../components/ui/Stack/Stack'
 
 export type FormDateFieldProps = CommonFormFieldProps
 export function FormDateField({
@@ -59,12 +60,14 @@ export function FormDateField({
           {label}
         </Label>
       )}
-      <InputGroup slot='input'>
-        <DateInput inset>
-          {segment => <DateSegment isReadOnly={isReadOnly} segment={segment} />}
-        </DateInput>
-      </InputGroup>
-      {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
+      <VStack gap='3xs'>
+        <InputGroup slot='input'>
+          <DateInput inset>
+            {segment => <DateSegment isReadOnly={isReadOnly} segment={segment} />}
+          </DateInput>
+        </InputGroup>
+        {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
+      </VStack>
     </DateField>
   )
 }

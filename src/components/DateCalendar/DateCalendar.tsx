@@ -1,23 +1,20 @@
-import { startOfToday } from 'date-fns'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
 import { Button } from '../ui/Button/Button'
 import { Calendar, CalendarCell, CalendarGrid, CalendarGridBody, CalendarGridHeader, CalendarHeaderCell } from '../ui/Calendar/Calendar'
 import { HStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
-import { getLocalTimeZone, fromDate } from '@internationalized/date'
+import { type ZonedDateTime } from '@internationalized/date'
 
-type DateCalendarProps = {
-  minDate?: Date | null
-  maxDate?: Date | null
+export type DateCalendarProps = {
+  minDate?: ZonedDateTime | null
+  maxDate?: ZonedDateTime | null
 }
-export const DateCalendar = ({ minDate, maxDate = startOfToday() }: DateCalendarProps) => {
-  const minZonedDateTime = minDate ? fromDate(minDate, getLocalTimeZone()) : null
-  const maxZonedDateTime = maxDate ? fromDate(maxDate, getLocalTimeZone()) : null
 
+export const DateCalendar = ({ minDate, maxDate }: DateCalendarProps) => {
   return (
-    <Calendar minValue={minZonedDateTime} maxValue={maxZonedDateTime}>
-      <HStack align='center' justify='space-between' pbe='xs' className='Layer__DateCalendar__Header'>
+    <Calendar minValue={minDate} maxValue={maxDate}>
+      <HStack align='center' justify='space-between' pb='xs' pi='xs' className='Layer__DateCalendar__Header'>
         <Button icon inset variant='ghost' slot='previous'>
           <ChevronLeft size={20} />
         </Button>
@@ -26,18 +23,20 @@ export const DateCalendar = ({ minDate, maxDate = startOfToday() }: DateCalendar
           <ChevronRight size={20} />
         </Button>
       </HStack>
-      <CalendarGrid>
-        <CalendarGridHeader>
-          {day => (
-            <CalendarHeaderCell>
-              {day}
-            </CalendarHeaderCell>
-          )}
-        </CalendarGridHeader>
-        <CalendarGridBody>
-          {date => <CalendarCell date={date} />}
-        </CalendarGridBody>
-      </CalendarGrid>
+      <HStack pb='xs' pi='xs'>
+        <CalendarGrid>
+          <CalendarGridHeader>
+            {day => (
+              <CalendarHeaderCell>
+                {day}
+              </CalendarHeaderCell>
+            )}
+          </CalendarGridHeader>
+          <CalendarGridBody>
+            {date => <CalendarCell date={date} />}
+          </CalendarGridBody>
+        </CalendarGrid>
+      </HStack>
     </Calendar>
   )
 }
