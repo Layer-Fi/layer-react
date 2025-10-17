@@ -1,4 +1,4 @@
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import type { CategoryWithEntries } from '../../types/bank_transactions'
 import { hasSuggestions } from '../../types/categories'
 import { CategoryOptionPayload, OptionActionType } from '../../types/categoryOption'

@@ -8,7 +8,7 @@ import { UploadTransactionsValidateCsvStep } from './UploadTransactionsValidateC
 import { type CustomAccountParseCsvResponse } from '../../hooks/customAccounts/useCustomAccountParseCsv'
 import { UploadTransactionsConfirmationStep } from './UploadTransactionsConfirmationStep'
 import { UploadTransactionsStep } from './types'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 
 type UploadTransactionsHeaderProps = {
   currentStep: UploadTransactionsStep

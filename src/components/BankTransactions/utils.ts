@@ -1,4 +1,4 @@
-import { BankTransaction, DisplayState } from '../../types'
+import { BankTransaction, DisplayState } from '../../types/bank_transactions'
 import { CategorizedCategories, ReviewCategories } from './constants'
 
 export const filterVisibility = (

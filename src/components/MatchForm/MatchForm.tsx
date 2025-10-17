@@ -1,7 +1,7 @@
 import { DATE_FORMAT } from '../../config/general'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { isTransferMatch } from '../../utils/bankTransactions'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'

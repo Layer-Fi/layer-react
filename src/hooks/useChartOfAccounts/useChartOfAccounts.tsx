@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constants'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { FormError, DateRange, Direction, NewAccount } from '../../types'
+import { FormError, DateRange } from '../../types/general'
+import type { Direction } from '../../types/general'
 import {
+  NewAccount,
   EditAccount,
 } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'

@@ -1,5 +1,5 @@
 import { getMonth, getYear, startOfMonth, startOfYear, subMonths, subYears } from 'date-fns'
-import { DateRange } from '../../types'
+import { DateRange } from '../../types/general'
 import { range } from '../../utils/array/range'
 import { isArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
 import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'

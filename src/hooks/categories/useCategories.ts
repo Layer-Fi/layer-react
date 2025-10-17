@@ -2,7 +2,7 @@ import useSWR from 'swr'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
-import { Category } from '../../types'
+import { Category } from '../../types/categories'
 import { get } from '../../api/layer/authenticated_http'
 import type { CategoriesListMode } from '../../schemas/categorization'
 

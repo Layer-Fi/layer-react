@@ -11,10 +11,8 @@ import Trash from '../../icons/Trash'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import {
   BankTransaction,
-  SplitCategoryUpdate,
-  SingleCategoryUpdate,
-} from '../../types'
-import { hasSuggestions } from '../../types/categories'
+} from '../../types/bank_transactions'
+import { hasSuggestions, SingleCategoryUpdate, SplitCategoryUpdate } from '../../types/categories'
 import {
   getCategorizePayload,
   hasMatch,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import AlertOctagon from '../../icons/AlertOctagon'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { Text } from '../Typography'
 
 interface APIErrorNotificationsProps {

@@ -6,7 +6,7 @@ import {
   centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
 } from '../../models/Money'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import {
   SingleCategoryUpdate,
   SplitCategoryUpdate,
