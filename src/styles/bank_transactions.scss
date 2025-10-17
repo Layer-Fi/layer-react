@@ -483,8 +483,8 @@
 }
 
 .Layer__bank-transaction-row__expand-button {
-  width: 36px;
-  min-width: 36px;
+  width: fit-content;
+  vertical-align: middle;
 }
 
 .Layer__bank-transaction-row__actions-cell--open {
@@ -565,6 +565,10 @@
     transition:
       max-height 350ms ease-out,
       opacity 200ms ease-out;
+
+    .Layer__tooltip-trigger {
+      padding: 0;
+    }
   }
 
   .Layer__bank-transaction-list-item__expanded-row {

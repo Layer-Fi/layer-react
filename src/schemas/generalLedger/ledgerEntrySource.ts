@@ -1,5 +1,5 @@
 import { Schema, pipe } from 'effect'
-import { Direction } from '../../types'
+import { Direction } from '../../types/general'
 import { EntityName, LinkingMetadata } from '../../contexts/InAppLinkContext'
 import { CustomerSchema } from '../customer'
 import { VendorSchema } from '../vendor'

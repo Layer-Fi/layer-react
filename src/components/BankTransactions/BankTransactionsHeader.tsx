@@ -1,6 +1,7 @@
 import { useCallback, useId, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { DisplayState, type DateRange } from '../../types'
+import type { DateRange } from '../../types/general'
+import { DisplayState } from '../../types/bank_transactions'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { ButtonVariant, DownloadButton as DownloadButtonComponent } from '../Button'
 import { Header } from '../Container'

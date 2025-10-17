@@ -1,4 +1,4 @@
-import type { ReportingBasis } from '../types'
+import type { ReportingBasis } from './general'
 import { ReadonlyArrayWithAtLeastOne } from '../utils/array/getArrayWithAtLeastOneOrFallback'
 import { LineItem } from '../schemas/common/lineItem'
 import { TagViewConfig } from './tags'

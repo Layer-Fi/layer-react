@@ -1,6 +1,8 @@
 import { filterVisibility } from '../components/BankTransactions/utils'
 import { CategoryOption } from '../components/CategorySelect/CategorySelect'
-import { BankTransaction, DateRange, Direction, DisplayState } from '../types'
+import { DateRange } from '../types/general'
+import { BankTransaction, DisplayState } from '../types/bank_transactions'
+import { Direction } from '../types/general'
 import { isWithinInterval, parseISO } from 'date-fns'
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
