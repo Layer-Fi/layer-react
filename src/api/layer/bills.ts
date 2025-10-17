@@ -1,4 +1,4 @@
-import { Metadata } from '../../types'
+import type { Metadata } from '../../types/api'
 import { Bill, BillLineItem, BillPayment, SalesTax } from '../../types/bills'
 import { get, post } from './authenticated_http'
 

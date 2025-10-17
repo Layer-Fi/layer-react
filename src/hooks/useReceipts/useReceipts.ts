@@ -4,7 +4,7 @@ import { DocumentWithStatus } from '../../components/BankTransactionReceipts/Ban
 import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { hasReceipts } from '../../utils/bankTransactions'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useAuth } from '../useAuth'

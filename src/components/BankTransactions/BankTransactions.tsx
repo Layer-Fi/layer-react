@@ -10,7 +10,7 @@ import { BankTransactionFilters, BankTransactionsDateFilterMode } from '../../ho
 import { useElementSize } from '../../hooks/useElementSize'
 import { useIsVisible } from '../../hooks/useIsVisible'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
-import { BankTransaction, DisplayState } from '../../types'
+import { BankTransaction, DisplayState } from '../../types/bank_transactions'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList/BankTransactionMobileList'
 import {

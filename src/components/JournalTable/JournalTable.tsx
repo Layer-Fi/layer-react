@@ -7,7 +7,7 @@ import {
   JournalEntry,
   JournalEntryLine,
   JournalEntryLineItem,
-} from '../../types'
+} from '../../types/journal'
 import { View } from '../../types/general'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'

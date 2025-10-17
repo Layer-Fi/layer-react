@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { LedgerAccounts, LedgerAccountsEntry } from '../../types'
+import { LedgerAccountsEntry, type LedgerAccountLineItem } from '../../types/ledger_accounts'
 import { DataModel } from '../../types/general'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
@@ -10,7 +10,7 @@ import { useListLedgerAccountLines, type ListLedgerAccountLinesReturn } from '..
 import type { LedgerAccountBalanceWithNodeType } from '../../types/chart_of_accounts'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
-  data?: LedgerAccounts
+  data?: LedgerAccountLineItem[] | undefined
   entryData?: LedgerAccountsEntry
   isLoading?: boolean
   isLoadingEntry?: boolean
@@ -61,7 +61,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
 
   const data = useMemo(() => {
     if (!paginatedData || !shouldFetch) return undefined
-    return paginatedData.flatMap(page => page.data) as LedgerAccounts
+    return paginatedData.flatMap(page => page.data)
   }, [paginatedData, shouldFetch])
 
   const hasMore = useMemo(() => {

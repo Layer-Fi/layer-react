@@ -1,5 +1,5 @@
 import { DATE_FORMAT } from '../../config/general'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import {
   BankTransactionCTAStringOverrides,
 } from '../BankTransactions/BankTransactions'

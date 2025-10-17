@@ -2,7 +2,7 @@ import useSWR from 'swr'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { getBankTransactionMetadata } from '../../api/layer/bankTransactions'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 
 export const GET_BANK_TRANSACTION_METADATA_TAG_KEY = '#bank-transaction-metadata'
 

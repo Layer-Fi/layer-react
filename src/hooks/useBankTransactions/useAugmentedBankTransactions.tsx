@@ -2,14 +2,14 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'r
 import { TagFilterInput } from '../../types/tags'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
-  BankTransaction,
   CategoryUpdate,
-} from '../../types'
+} from '../../types/categories'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import {
-  Direction,
   DisplayState,
+  BankTransaction,
 } from '../../types/bank_transactions'
+import { Direction } from '../../types/general'
 import { DataModel } from '../../types/general'
 import { useLinkedAccounts } from '../useLinkedAccounts'
 import {
