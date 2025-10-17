@@ -5,7 +5,7 @@ import type {
   NewChildAccount,
 } from '../../types/chart_of_accounts'
 import type { S3PresignedUrl } from '../../types/general'
-import type { LedgerAccountLineItems, type LedgerAccountsEntry } from '../../types/ledger_accounts'
+import type { LedgerAccountLineItems, LedgerAccountsEntry } from '../../types/ledger_accounts'
 import { get, post, put } from './authenticated_http'
 
 export const createAccount = post<{ data: SingleChartAccountEncodedType }, NewAccount>(
