@@ -182,7 +182,7 @@ export const BankTransactionsHeader = ({
 
   const BulkActions = useCallback(() => {
     return (
-      <HStack align='center' gap='sm'>
+      <HStack pis='3xl' align='center' gap='xs'>
         <Button
           variant='solid'
           onClick={handleConfirmAllClick}
@@ -204,7 +204,7 @@ export const BankTransactionsHeader = ({
           closeOnConfirm
         />
         <Button
-          variant='solid'
+          variant='outlined'
           onClick={handleCategorizeAllClick}
         >
           Set category
@@ -317,21 +317,26 @@ export const BankTransactionsHeader = ({
         {_showBulkSelection && count > 0
           ? (
             <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
-              <HStack justify='space-between' align='center' gap='xs' pie='3xs' pis='sm' className='Layer__bulk-actions-header__selection-container'>
-                <Span>
-                  {count}
-                  {' selected '}
-                  {pluralize('item', count)}
-                </Span>
-                <Button
-                  variant='ghost'
-                  icon
-                  inset
-                  onClick={clearSelection}
-                  aria-label='Clear Bulk Selections'
-                >
-                  <X size={16} />
-                </Button>
+              <HStack justify='space-between' align='center' gap='lg' pie='3xs' pis='sm' className='Layer__bulk-actions-header__selection-container'>
+                <div style={{ minWidth: '120px' }}>
+                  <Span>
+                    {count}
+                    {' selected '}
+                    {pluralize('item', count)}
+                  </Span>
+                </div>
+                <HStack align='center' gap='xs'>
+                  <div style={{ width: '1px', height: '32px', backgroundColor: 'var(--color-base-300)' }} />
+                  <Button
+                    variant='ghost'
+                    icon
+                    inset
+                    onClick={clearSelection}
+                    aria-label='Clear Bulk Selections'
+                  >
+                    Clear
+                  </Button>
+                </HStack>
               </HStack>
               <BulkActions />
             </HStack>
