@@ -32,6 +32,7 @@ const listCallBookings = get<
   const parameters = toDefinedSearchParameters({
     cursor,
     limit,
+    status: 'SCHEDULED',
   })
 
   return `/v1/businesses/${businessId}/call-bookings?${parameters}`

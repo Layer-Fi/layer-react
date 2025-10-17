@@ -154,7 +154,7 @@ export const ServiceOffering = ({
             url={calendlyLink}
             onModalClose={closeCalendly}
             open={isCalendlyVisible}
-            rootElement={document.getElementById('root')!}
+            rootElement={document.body}
             LoadingSpinner={() => <></>}
           />
         </HStack>
