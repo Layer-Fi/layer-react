@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { BankTransactionMemo } from '../../../../components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { VStack } from '../../../../components/ui/Stack/Stack'
-import type { BankTransaction } from '../../../../types'
+import type { BankTransaction } from '../../../../types/bank_transactions'
 import { BankTransactionCustomerVendorSelector } from '../customerVendor/components/BankTransactionCustomerVendorSelector'
 import { useBankTransactionCustomerVendorVisibility } from '../customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { useBankTransactionTagVisibility } from '../tags/components/BankTransactionTagVisibilityProvider'

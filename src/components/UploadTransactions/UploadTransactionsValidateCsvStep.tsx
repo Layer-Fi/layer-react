@@ -11,7 +11,7 @@ import { convertCentsToCurrency, formatDate } from '../../utils/format'
 import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
 import { Badge, BadgeVariant } from '../Badge'
 import { useWizard } from '../Wizard/Wizard'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { CustomAccountTransactionRow } from '../../hooks/customAccounts/types'
 import { PreviewCsv } from '../CsvUpload/types'
 

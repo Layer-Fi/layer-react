@@ -5,7 +5,7 @@ import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
 import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { hasSuggestions } from '../../types/categories'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import {

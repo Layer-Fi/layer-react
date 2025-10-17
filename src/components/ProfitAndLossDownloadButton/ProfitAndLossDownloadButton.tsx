@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { ProfitAndLossFullReportDownloadButton } from './ProfitAndLossFullReportDownloadButton'
 import { type ProfitAndLossDownloadButtonStringOverrides } from './types'
-import type { MoneyFormat } from '../../types'
+import type { MoneyFormat } from '../../types/general'
 import { ProfitAndLossDetailLinesDownloadButton } from './ProfitAndLossDetailLinesDownloadButton'
 import { useSizeClass } from '../../hooks/useWindowSize'
 

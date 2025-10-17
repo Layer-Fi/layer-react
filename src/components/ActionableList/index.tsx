@@ -1,1 +1,1 @@
-export { ActionableList, ActionableListOption } from './ActionableList'
+export { ActionableList } from './ActionableList'

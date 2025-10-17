@@ -1,5 +1,5 @@
-import { StatementOfCashFlow } from '../../types'
 import type { S3PresignedUrl } from '../../types/general'
+import type { StatementOfCashFlow } from '../../types/statement_of_cash_flow'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { get } from './authenticated_http'
 

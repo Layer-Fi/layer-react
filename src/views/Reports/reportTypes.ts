@@ -1,6 +1,6 @@
 import type { CustomDateRange } from '../../components/DeprecatedDatePicker/DeprecatedDatePickerOptions'
 import type { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import type { MoneyFormat } from '../../types'
+import type { MoneyFormat } from '../../types/general'
 
 export type TimeRangePickerConfig = {
   /**

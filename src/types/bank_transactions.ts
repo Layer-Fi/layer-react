@@ -3,14 +3,9 @@ import type { VendorSchema } from '../schemas/vendor'
 import { MatchDetailsType } from '../schemas/bankTransactions/match'
 import { Categorization, Category } from './categories'
 import { CategorizationStatus } from '../schemas/bankTransactions/bankTransaction'
-import { S3PresignedUrl } from './general'
+import { S3PresignedUrl, type Direction } from './general'
 import type { TransactionTagEncoded } from '../features/tags/tagSchemas'
 import { UpdateCategorizationRulesSuggestionSchema } from '../schemas/bankTransactions/categorizationRules/categorizationRule'
-
-export enum Direction {
-  CREDIT = 'CREDIT',
-  DEBIT = 'DEBIT',
-}
 
 export enum BankTransactionMatchType {
   CONFIRM_MATCH = 'Confirm_Match',

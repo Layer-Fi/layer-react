@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { hasMatch, hasSuggestedTransferMatches } from '../../utils/bankTransactions'
 import { TextButton } from '../Button'
 import { MatchForm } from './MatchForm'

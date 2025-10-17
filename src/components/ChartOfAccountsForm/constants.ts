@@ -1,4 +1,4 @@
-import { Direction } from '../../types'
+import { Direction } from '../../types/general'
 import { BaseSelectOption } from '../../types/general'
 
 export const LEDGER_ACCOUNT_TYPES: BaseSelectOption[] = [
