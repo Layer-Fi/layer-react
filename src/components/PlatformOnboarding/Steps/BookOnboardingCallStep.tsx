@@ -51,7 +51,7 @@ export const BookOnboardingCallStep = ({ title = defaultTitle, description = def
 
   const calendlyUrl = bookkeepingConfiguration?.onboardingCallUrl
 
-  const createCallBookingAndNext = useCallback(async (externalId: string, isRetrying: boolean) => {
+  const createCallBookingAndGoToNextStep = useCallback(async (externalId: string, isRetrying: boolean) => {
     setState(isRetrying ? BookOnboardingCallStepState.RETRYING : BookOnboardingCallStepState.RECORDING)
 
     await createCallBooking({ external_id: externalId, purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING, call_type: CallBookingType.GOOGLE_MEET })
@@ -78,8 +78,8 @@ export const BookOnboardingCallStep = ({ title = defaultTitle, description = def
       return
     }
 
-    void createCallBookingAndNext(uuid, false)
-  }, [createCallBookingAndNext])
+    void createCallBookingAndGoToNextStep(uuid, false)
+  }, [createCallBookingAndGoToNextStep])
 
   const { isCalendlyVisible, calendlyLink, openCalendly, closeCalendly } = useCalendly({
     onEventScheduled: handleEventScheduled,
@@ -92,8 +92,8 @@ export const BookOnboardingCallStep = ({ title = defaultTitle, description = def
       return
     }
 
-    void createCallBookingAndNext(externalId, true)
-  }, [createCallBookingAndNext, externalId])
+    void createCallBookingAndGoToNextStep(externalId, true)
+  }, [createCallBookingAndGoToNextStep, externalId])
 
   const className = classNames('Layer__platform-onboarding__book-onboarding-call', {
     'is-mobile': isMobile,
