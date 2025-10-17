@@ -31,7 +31,6 @@ import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect
 import { VStack } from '../ui/Stack/Stack'
 import { Label, Span } from '../ui/Typography/Text'
 import pluralize from 'pluralize'
-import { X } from 'lucide-react'
 import '../BulkActionsHeader/bulkActionsHeader.scss'
 
 export interface BankTransactionsHeaderProps {
@@ -317,7 +316,7 @@ export const BankTransactionsHeader = ({
         {_showBulkSelection && count > 0
           ? (
             <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
-              <HStack justify='space-between' align='center' gap='lg' pie='3xs' pis='sm' className='Layer__bulk-actions-header__selection-container'>
+              <HStack justify='space-between' align='center' gap='sm' pi='sm' className='Layer__bulk-actions-header__selection-container'>
                 <div style={{ minWidth: '120px' }}>
                   <Span>
                     {count}
@@ -325,12 +324,10 @@ export const BankTransactionsHeader = ({
                     {pluralize('item', count)}
                   </Span>
                 </div>
-                <HStack align='center' gap='xs'>
-                  <div style={{ width: '1px', height: '32px', backgroundColor: 'var(--color-base-300)' }} />
+                <div style={{ width: '1px', height: '32px', backgroundColor: 'var(--color-base-300)' }} />
+                <HStack align='center'>
                   <Button
-                    variant='ghost'
-                    icon
-                    inset
+                    variant='text'
                     onClick={clearSelection}
                     aria-label='Clear Bulk Selections'
                   >
