@@ -6,9 +6,9 @@ import type { LineItemWithId } from '../../schemas/common/lineItem'
 import { ExpandableDataTable } from '../ExpandableDataTable/ExpandableDataTable'
 import { MoneySpan } from '../ui/Typography/MoneyText'
 import { useUnifiedReport } from '../../features/reports/api/useUnifiedReport'
-import type { ReportEnum } from '../../schemas/reports/unifiedReport'
 import type { Row } from '@tanstack/react-table'
 import { ExpandableDataTableContext } from '../ExpandableDataTable/ExpandableDataTableProvider'
+import { useUnifiedReportDateOrDateRange, useUnifiedReportRoute } from '../../providers/UnifiedReportRouteStore/UnifiedReportRouteStoreProvider'
 import { asMutable } from '../../utils/asMutable'
 
 const COMPONENT_NAME = 'UnifiedReport'
@@ -35,10 +35,11 @@ const COLUMN_CONFIG: ColumnConfig<Row<LineItemWithId>, UnifiedReportColumns> = (
 })
 
 const getSubRows = (lineItem: LineItemWithId) => asMutable(lineItem.lineItems)
-type UnifiedReportTableProps = { report: ReportEnum }
 
-export const UnifiedReportTable = ({ report }: UnifiedReportTableProps) => {
-  const { data, isLoading, isError, refetch } = useUnifiedReport({ report })
+export const UnifiedReportTable = () => {
+  const { report } = useUnifiedReportRoute()
+  const dateParams = useUnifiedReportDateOrDateRange()
+  const { data, isLoading, isError, refetch } = useUnifiedReport({ report, ...dateParams })
   const { setExpanded } = useContext(ExpandableDataTableContext)
   const mutableLineItems = data ? asMutable(data?.lineItems) : undefined
 
