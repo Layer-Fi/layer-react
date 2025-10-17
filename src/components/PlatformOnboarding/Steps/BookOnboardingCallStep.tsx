@@ -106,6 +106,10 @@ export const BookOnboardingCallStep = ({ title = defaultTitle, description = def
     return null
   }
 
+  const calendlyWidgetClassName = classNames('Layer__calendly-inline-widget', {
+    'Layer__calendly-inline-widget--success': state !== BookOnboardingCallStepState.INITIAL,
+  })
+
   return (
     <VStack gap='md' className={className}>
       <Heading size={isDesktop ? 'lg' : 'md'} className='Layer__platform-onboarding__heading'>{title}</Heading>
@@ -129,7 +133,12 @@ export const BookOnboardingCallStep = ({ title = defaultTitle, description = def
         && <Button variant='branded' style={{ width: 'fit-content' }} onClick={() => openCalendly(calendlyUrl)}>Book a call</Button>}
 
       {(isDesktop && state === BookOnboardingCallStepState.INITIAL)
-        && <CalendlyInlineWidget url={calendlyUrl} className={state !== BookOnboardingCallStepState.INITIAL ? 'calendly-inline-widget-success' : 'calendly-inline-widget'} />}
+        && (
+          <CalendlyInlineWidget
+            url={calendlyUrl}
+            className={calendlyWidgetClassName}
+          />
+        )}
 
       {isCalendlyVisible && (
         <PopupModal

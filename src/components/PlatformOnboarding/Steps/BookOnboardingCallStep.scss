@@ -4,22 +4,12 @@
     height: 6rem;
   }
 
-  &.is-tablet {
-    .calendly-inline-widget-success {
-      height: 36rem;
-    }
-
-    .calendly-inline-widget {
-      height: 56rem;
-    }
-  }
-
+  &.is-tablet,
   &.is-desktop {
-    .calendly-inline-widget-success {
+    .Layer__calendly-inline-widget--success {
       height: 36rem;
     }
-
-    .calendly-inline-widget {
+    .Layer__calendly-inline-widget {
       height: 56rem;
     }
   }
