@@ -7,7 +7,6 @@ import { SummaryStep } from './Steps/SummaryStep'
 import { BusinessInfoStep } from './Steps/BusinessInfoStep'
 import { BookOnboardingCallStep } from './Steps/BookOnboardingCallStep'
 import { useBookkeepingConfiguration } from '../../hooks/useBookkeepingConfiguration'
-import { useLayerContext } from '../../contexts/LayerContext'
 
 const ALL_PLATFORM_ONBOARDING_STEPS = [
   {
@@ -39,8 +38,7 @@ type PlatformOnboardingProps = {
 }
 
 export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
-  const { businessId } = useLayerContext()
-  const { data: bookkeepingConfiguration } = useBookkeepingConfiguration({ businessId })
+  const { data: bookkeepingConfiguration } = useBookkeepingConfiguration()
 
   const platformOnboardingSteps = useMemo(() => {
     const hasOnboardingCallUrl = !!bookkeepingConfiguration?.onboardingCallUrl
