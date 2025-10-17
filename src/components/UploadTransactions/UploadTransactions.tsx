@@ -18,10 +18,6 @@ type UploadTransactionsHeaderProps = {
 }
 
 function UploadTransactionsHeader({ currentStep, isValid, onClose }: UploadTransactionsHeaderProps) {
-  const onClickClose = useCallback(() => {
-    void Promise.resolve(onClose?.())
-  }, [onClose])
-
   if (currentStep === UploadTransactionsStep.Confirmation) return null
 
   return (
@@ -44,7 +40,7 @@ function UploadTransactionsHeader({ currentStep, isValid, onClose }: UploadTrans
             )}
         </Heading>
       </VStack>
-      <Button icon variant='outlined' onClick={onClickClose}>
+      <Button icon variant='outlined' onClick={onClose}>
         <X size={16} />
       </Button>
     </HStack>
