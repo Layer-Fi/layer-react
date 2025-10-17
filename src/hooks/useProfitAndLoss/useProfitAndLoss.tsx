@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import {
-  ReportingBasis,
   SortDirection,
-} from '../../types'
+} from '../../types/general'
+import { ReportingBasis } from '../../types/general'
 import {
   collectExpensesItems,
   collectRevenueItems,

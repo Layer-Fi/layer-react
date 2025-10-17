@@ -7,7 +7,7 @@ import { UploadTransactionsValidateCsvStep } from './UploadTransactionsValidateC
 import { type CustomAccountParseCsvResponse } from '../../hooks/customAccounts/useCustomAccountParseCsv'
 import { UploadTransactionsConfirmationStep } from './UploadTransactionsConfirmationStep'
 import { UploadTransactionsStep } from './types'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { Button } from '../ui/Button/Button'
 import { X } from 'lucide-react'
 

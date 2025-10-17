@@ -1,6 +1,6 @@
 import { DATE_FORMAT } from '../../config/general'
 import Scissors from '../../icons/Scissors'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import { isTransferMatch } from '../../utils/bankTransactions'
 import { Badge } from '../Badge'

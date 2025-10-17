@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
-import { BankTransaction, CategorizationType } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { hasReceipts } from '../../utils/bankTransactions'
 import { ActionableList } from '../ActionableList'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
@@ -13,6 +13,7 @@ import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawer } from '../CategorySelect/CategorySelectDrawer'
+import { CategorizationType } from '../../types/categories'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction

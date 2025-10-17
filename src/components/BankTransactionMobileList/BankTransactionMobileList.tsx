@@ -1,4 +1,4 @@
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { BankTransactionMobileListItem } from './BankTransactionMobileListItem'
 import {
   useTransactionToOpen,

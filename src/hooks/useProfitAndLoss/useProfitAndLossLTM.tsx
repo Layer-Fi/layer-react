@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { ReportingBasis } from '../../types'
+import { ReportingBasis } from '../../types/general'
 import { startOfMonth, sub } from 'date-fns'
 import type { ProfitAndLossSummary } from './schemas'
 import { useProfitAndLossSummaries } from './useProfitAndLossSummaries'
