@@ -50,8 +50,7 @@ export const ModalTitleWithClose = forwardRef<
       {heading}
       <Button
         icon
-        inset
-        variant='ghost'
+        variant='outlined'
         slot='close'
         onPress={onClose}
         aria-label='Close Modal'
