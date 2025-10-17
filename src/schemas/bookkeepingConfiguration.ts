@@ -24,32 +24,32 @@ const TransformedTransactionTaggingStrategySchema = createTransformedEnumSchema(
 
 export const BookkeepingConfigurationSchema = Schema.Struct({
   businessId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('business_id'),
   ),
 
   bookkeeperId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
     Schema.fromKey('bookkeeper_id'),
   ),
 
   firstMonthPurchasedDate: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('first_month_purchased_date'),
   ),
 
   onboardingDate: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('onboarding_date'),
   ),
 
   churnedDate: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('churned_date'),
   ),
 
   bookkeepingEndDate: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('bookkeeping_end_date'),
   ),
 
