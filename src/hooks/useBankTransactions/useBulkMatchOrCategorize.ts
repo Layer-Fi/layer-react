@@ -15,6 +15,7 @@ import { mapCategoryToOption } from '../../components/CategorySelect/CategorySel
 import type { CategoryOption } from '../../types/categoryOption'
 import { getCategorizePayload } from '../../utils/bankTransactions'
 import { GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
+import { useLayerContext } from '../../contexts/LayerContext'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
@@ -57,14 +58,17 @@ const bulkMatchOrCategorize = post<
 function buildKey({
   access_token: accessToken,
   apiUrl,
+  businessId,
 }: {
   access_token?: string
   apiUrl?: string
+  businessId: string
 }) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
+      businessId,
       tags: [BULK_MATCH_OR_CATEGORIZE_TAG],
     } as const
   }
@@ -101,7 +105,8 @@ type UseBulkMatchOrCategorizeProps = {
 }
 
 export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatchOrCategorizeProps) => {
-  const { data: auth } = useAuth()
+  const { data } = useAuth()
+  const { businessId } = useLayerContext()
   const { selectedIds } = useSelectedIds()
   const { selectedCategories }: { selectedCategories: Map<string, CategoryOption> } = useAllCategorySelections()
 
@@ -156,16 +161,17 @@ export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatc
 
   const rawMutationResponse = useSWRMutation(
     () => buildKey({
-      access_token: auth?.access_token,
-      apiUrl: auth?.apiUrl,
+      ...data,
+      businessId,
     }),
     (
-      { accessToken, apiUrl },
+      { accessToken, apiUrl, businessId },
       { arg }: { arg: BulkMatchOrCategorizeRequest },
     ) => bulkMatchOrCategorize(
       apiUrl,
       accessToken,
       {
+        params: { businessId },
         body: arg,
       },
     ),
