@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { Button } from '../../components/ui/Button/Button'
-import { Separator } from '../Separator/Separator'
 import { CheckboxWithTooltip } from '../ui/Checkbox/Checkbox'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { useWizard } from '../Wizard/Wizard'
@@ -27,7 +26,6 @@ export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptRevie
       <AffectedTransactionsTable
         transactions={asMutable(ruleSuggestion.transactionsThatWillBeAffected)}
       />
-      <Separator />
       <VStack gap='sm' align='end'>
         <HStack gap='sm'>
           <Button
