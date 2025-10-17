@@ -3,6 +3,7 @@ import { HStack } from '../ui/Stack/Stack'
 import { Button } from '../ui/Button/Button'
 import { Span } from '../ui/Typography/Text'
 import './bulkActionsHeader.scss'
+import { X } from 'lucide-react'
 
 interface CountProps {
   showCount?: true
@@ -29,7 +30,7 @@ export const BulkActionsHeader = ({ count, slotProps = {}, slots }: BulkActionsH
 
   return (
     <HStack justify='space-between' align='center' gap='xs'>
-      <HStack justify='space-between' align='center' gap='md'>
+      <HStack justify='space-between' align='center' gap='xs' pie='3xs' pis='sm' className='Layer__bulk-actions-header__selection-container'>
         {showCount && totalCount && (
           <Span>
             {totalCount}
@@ -39,12 +40,13 @@ export const BulkActionsHeader = ({ count, slotProps = {}, slots }: BulkActionsH
         )}
         {ClearSelectionButton && (
           <Button
-            variant='outlined'
+            variant='ghost'
+            icon
             inset
             onClick={ClearSelectionButton.onClick}
             aria-label='Clear Bulk Selections'
           >
-            Clear
+            <X size={16} />
           </Button>
         )}
       </HStack>
