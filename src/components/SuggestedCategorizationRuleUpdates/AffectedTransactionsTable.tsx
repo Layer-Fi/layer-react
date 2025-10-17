@@ -9,6 +9,7 @@ import type { MinimalBankTransaction } from '../../schemas/bankTransactions/base
 import { BankTransactionDirection } from '../../schemas/bankTransactions/base'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 
 const COMPONENT_NAME = 'AffectedTransactionsTable'
 
@@ -64,13 +65,19 @@ export const AffectedTransactionsTable = ({
     [TransactionColumns.Description]: {
       id: TransactionColumns.Description,
       header: 'Description',
-      cell: row => (
-        <Span
-          ellipsis
-        >
-          {row.counterpartyName || row.description || '-'}
-        </Span>
-      ),
+      cell: (row) => {
+        const description = row.counterpartyName || row.description || '-'
+
+        if (description.length > 30) {
+          return (
+            <Tooltip>
+              <TooltipTrigger><Span ellipsis>{description}</Span></TooltipTrigger>
+              <TooltipContent className='Layer__tooltip'>{description}</TooltipContent>
+            </Tooltip>
+          )
+        }
+        return <Span ellipsis>{description}</Span>
+      },
       isRowHeader: true,
     },
     [TransactionColumns.Amount]: {
