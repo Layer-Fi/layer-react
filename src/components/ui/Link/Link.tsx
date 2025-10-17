@@ -1,7 +1,6 @@
 import { forwardRef, type PropsWithChildren } from 'react'
 import { Link as ReactAriaLink, type LinkProps as ReactAriaLinkProps } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
-import type { Spacing } from '../sharedUITypes'
 
 const LINK_CLASS_NAME = 'Layer__UI__Link'
 
@@ -13,9 +12,6 @@ type LinkProps = Omit<ReactAriaLinkProps, 'className'> & PropsWithChildren<{
   ellipsis?: true
   external?: true
   disabled?: true
-  pb?: Spacing
-  pbe?: Spacing
-  pbs?: Spacing
 }>
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
@@ -26,9 +22,6 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
     ellipsis,
     external,
     disabled,
-    pb,
-    pbe,
-    pbs,
     href,
     target,
     rel,
@@ -39,9 +32,6 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       weight,
       ellipsis,
       external,
-      pb,
-      pbe,
-      pbs,
       disabled,
     })
     const effectiveTarget = external ? '_blank' : target

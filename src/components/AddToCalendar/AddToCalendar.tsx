@@ -10,8 +10,9 @@ import GoogleIcon from '../../assets/images/google-calendar.png'
 import OutlookIcon from '../../assets/images/outlook-icon.webp'
 import YahooIcon from '../../assets/images/yahoo-calendar-icon.webp'
 import { HStack } from '../ui/Stack/Stack'
-import { downloadICS } from './downloadICS'
+import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
+import { downloadICS, prepareIcsFilename } from './downloadICS'
 
 /**
  * Required to be specified by the iCalendar standard.
@@ -39,6 +40,7 @@ export const AddToCalendar = ({
   endDate,
   organizer,
 }: AddToCalendarProps) => {
+  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   const effectiveEndDate = useMemo(() => endDate ?? new Date(startDate.getTime() + DEFAULT_DURATION_MS), [endDate, startDate])
   const calendarEvent: CalendarEvent = useMemo(() => ({
     title,
@@ -69,8 +71,9 @@ export const AddToCalendar = ({
       events: [event],
     }
 
-    downloadICS(calendar, calendarEvent.title)
-  }, [calendarEvent, startDate, effectiveEndDate, location, organizer.email, organizer.name])
+    const filename = prepareIcsFilename(calendarEvent.title)
+    downloadICS(calendar, filename, triggerInvisibleDownload)
+  }, [calendarEvent, startDate, effectiveEndDate, location, organizer.email, organizer.name, triggerInvisibleDownload])
 
   const handleCalendarClick = useCallback((provider: AddToCalendarProvider) => {
     let url
@@ -107,39 +110,42 @@ export const AddToCalendar = ({
   }, [])
 
   return (
-    <DropdownMenu
-      ariaLabel='Add to Calendar'
-      slots={{ Trigger }}
-      slotProps={{
-        Dialog: { width: '10rem' },
-      }}
-    >
-      <MenuList>
-        <MenuItem key='google' onClick={() => handleCalendarClick('google')}>
-          <HStack gap='sm'>
-            <img className='Layer__AddToCalendar__CalendarIcon' src={GoogleIcon} alt='Google Calendar' />
-            <Span size='sm'>Google Calendar</Span>
-          </HStack>
-        </MenuItem>
-        <MenuItem key='outlook' onClick={() => handleCalendarClick('outlook')}>
-          <HStack gap='sm'>
-            <img className='Layer__AddToCalendar__CalendarIcon' src={OutlookIcon} alt='Outlook Calendar' />
-            <Span size='sm'>Outlook</Span>
-          </HStack>
-        </MenuItem>
-        <MenuItem key='yahoo' onClick={() => handleCalendarClick('yahoo')}>
-          <HStack gap='sm'>
-            <img className='Layer__AddToCalendar__CalendarIcon' src={YahooIcon} alt='Yahoo Calendar' />
-            <Span size='sm'>Yahoo</Span>
-          </HStack>
-        </MenuItem>
-        <MenuItem key='ics' onClick={() => handleCalendarClick('ics')}>
-          <HStack gap='sm'>
-            <Calendar size={16} />
-            <Span size='sm'>Download .ics file</Span>
-          </HStack>
-        </MenuItem>
-      </MenuList>
-    </DropdownMenu>
+    <>
+      <InvisibleDownload ref={invisibleDownloadRef} />
+      <DropdownMenu
+        ariaLabel='Add to Calendar'
+        slots={{ Trigger }}
+        slotProps={{
+          Dialog: { width: '10rem' },
+        }}
+      >
+        <MenuList>
+          <MenuItem key='google' onClick={() => handleCalendarClick('google')}>
+            <HStack gap='sm'>
+              <img className='Layer__AddToCalendar__CalendarIcon' src={GoogleIcon} alt='Google Calendar' />
+              <Span size='sm'>Google Calendar</Span>
+            </HStack>
+          </MenuItem>
+          <MenuItem key='outlook' onClick={() => handleCalendarClick('outlook')}>
+            <HStack gap='sm'>
+              <img className='Layer__AddToCalendar__CalendarIcon' src={OutlookIcon} alt='Outlook Calendar' />
+              <Span size='sm'>Outlook</Span>
+            </HStack>
+          </MenuItem>
+          <MenuItem key='yahoo' onClick={() => handleCalendarClick('yahoo')}>
+            <HStack gap='sm'>
+              <img className='Layer__AddToCalendar__CalendarIcon' src={YahooIcon} alt='Yahoo Calendar' />
+              <Span size='sm'>Yahoo</Span>
+            </HStack>
+          </MenuItem>
+          <MenuItem key='ics' onClick={() => handleCalendarClick('ics')}>
+            <HStack gap='sm'>
+              <Calendar size={16} />
+              <Span size='sm'>Download .ics file</Span>
+            </HStack>
+          </MenuItem>
+        </MenuList>
+      </DropdownMenu>
+    </>
   )
 }
