@@ -1,15 +1,14 @@
 import { useMemo } from 'react'
 import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTable'
 import { type ColumnConfig } from '../DataTable/DataTable'
-import { DateTime } from '../DateTime'
-import { TextSize, TextWeight } from '../Typography'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import type { MinimalBankTransaction } from '../../schemas/bankTransactions/base'
 import { BankTransactionDirection } from '../../schemas/bankTransactions/base'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
+import { DateTime } from '../DateTime'
+import { TextSize, TextWeight } from '../Typography'
 
 const COMPONENT_NAME = 'AffectedTransactionsTable'
 
@@ -61,23 +60,18 @@ export const AffectedTransactionsTable = ({
           }
         />
       ),
+      isRowHeader: true,
     },
     [TransactionColumns.Description]: {
       id: TransactionColumns.Description,
       header: 'Description',
-      cell: (row) => {
-        const description = row.counterpartyName || row.description || '-'
-
-        if (description.length > 30) {
-          return (
-            <Tooltip>
-              <TooltipTrigger><Span ellipsis>{description}</Span></TooltipTrigger>
-              <TooltipContent className='Layer__tooltip'>{description}</TooltipContent>
-            </Tooltip>
-          )
-        }
-        return <Span ellipsis>{description}</Span>
-      },
+      cell: row => (
+        <Span
+          ellipsis
+        >
+          {row.counterpartyName || row.description || '-'}
+        </Span>
+      ),
       isRowHeader: true,
     },
     [TransactionColumns.Amount]: {
