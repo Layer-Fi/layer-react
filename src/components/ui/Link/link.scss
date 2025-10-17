@@ -33,30 +33,4 @@
       font-size: var(--text-#{$size});
     }
   }
-
-  // Weights
-  $weights: normal bold;
-
-  @each $weight in $weights {
-    &[data-weight='#{$weight}'] {
-      font-weight: var(--font-weight-#{$weight});
-    }
-  }
-
-  // Spacing
-  $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
-
-  @each $spacing in $spacings {
-    &[data-pb='#{$spacing}'] {
-      padding-block: var(--spacing-#{$spacing});
-    }
-
-    &[data-pbe='#{$spacing}'] {
-      padding-block-end: var(--spacing-#{$spacing});
-    }
-
-    &[data-pbs='#{$spacing}'] {
-      padding-block-start: var(--spacing-#{$spacing});
-    }
-  }
 }
