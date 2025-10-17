@@ -31,7 +31,6 @@ import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect
 import { VStack } from '../ui/Stack/Stack'
 import { Label, Span } from '../ui/Typography/Text'
 import pluralize from 'pluralize'
-import '../BulkActionsHeader/bulkActionsHeader.scss'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
