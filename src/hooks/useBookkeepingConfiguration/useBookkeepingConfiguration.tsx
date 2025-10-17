@@ -9,6 +9,7 @@ import {
   BookkeepingStatus,
   TransactionTaggingStrategy,
 } from '../../schemas/bookkeepingConfiguration'
+import { useLayerContext } from '../../contexts/LayerContext'
 
 export type { BookkeepingConfiguration }
 export { BookkeepingStatus, TransactionTaggingStrategy }
@@ -73,11 +74,10 @@ const getBookkeepingConfiguration = get<
   return `/v1/businesses/${businessId}/bookkeeping/config`
 })
 
-export function useBookkeepingConfiguration({
-  businessId,
-}: GetBookkeepingConfigurationParams) {
+export function useBookkeepingConfiguration() {
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { businessId } = useLayerContext()
 
   const queryKey = buildKey({
     ...auth,
