@@ -33,8 +33,8 @@ import { SubmitButton, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { Button } from '../ui/Button/Button'
 import { CategorySelect } from '../CategorySelect'
+import { CategoryOption } from '../../types/categoryOption'
 import {
-  CategoryOption,
   mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'

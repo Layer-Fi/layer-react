@@ -19,8 +19,8 @@ import { Tag, makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../fe
 import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
+import { CategoryOption } from '../../types/categoryOption'
 import {
-  CategoryOption,
   mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'

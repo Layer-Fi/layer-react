@@ -1,10 +1,7 @@
 import { BankTransaction } from '../../types'
 import type { CategoryWithEntries } from '../../types/bank_transactions'
 import { hasSuggestions } from '../../types/categories'
-import {
-  CategoryOptionPayload,
-  OptionActionType,
-} from '../CategorySelect/CategorySelect'
+import { CategoryOptionPayload, OptionActionType } from '../../types/categoryOption'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 
 export interface Option {
