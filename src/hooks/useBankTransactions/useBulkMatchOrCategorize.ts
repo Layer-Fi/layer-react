@@ -6,8 +6,7 @@ import { post } from '../../api/layer/authenticated_http'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { useAuth } from '../useAuth'
 import { useSelectedIds } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useAllCategorySelections } from '../../providers/BankTransactionsCategoryStore/CategorySelectionStoreProvider'
-import type { Key } from 'swr'
+import { useGetAllBankTransactionsCategories } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import type { SWRMutationResponse } from 'swr/mutation'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import { OptionActionType } from '../../types/categoryOption'
@@ -16,6 +15,7 @@ import type { CategoryOption } from '../../types/categoryOption'
 import { getCategorizePayload } from '../../utils/bankTransactions'
 import { GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
 import { useLayerContext } from '../../contexts/LayerContext'
+import type { Key } from 'swr'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
@@ -108,32 +108,32 @@ export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatc
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { selectedIds } = useSelectedIds()
-  const { selectedCategories }: { selectedCategories: Map<string, CategoryOption> } = useAllCategorySelections()
+  const { transactionCategories } = useGetAllBankTransactionsCategories()
 
   const buildTransactionsPayload = useCallback((): BulkMatchOrCategorizeRequest => {
     const transactions: Record<string, typeof BulkActionSchema.Type> = {}
 
     for (const transactionId of selectedIds) {
-      const categoryOption: CategoryOption | undefined = selectedCategories.get(transactionId)
+      const transactionCategory: CategoryOption | undefined = transactionCategories.get(transactionId)
 
-      if (!categoryOption) {
+      if (!transactionCategory) {
         continue
       }
 
-      if (categoryOption.payload.option_type === OptionActionType.MATCH) {
+      if (transactionCategory.payload.option_type === OptionActionType.MATCH) {
         transactions[transactionId] = {
           type: 'match',
-          suggested_match_id: categoryOption.payload.id,
+          suggested_match_id: transactionCategory.payload.id,
         }
       }
-      else if (categoryOption.payload.option_type === OptionActionType.CATEGORY) {
+      else if (transactionCategory.payload.option_type === OptionActionType.CATEGORY) {
         // Split Categorization
-        if (categoryOption.payload.entries && categoryOption.payload.entries.length > 0) {
+        if (transactionCategory.payload.entries && transactionCategory.payload.entries.length > 0) {
           transactions[transactionId] = {
             type: 'categorize',
             categorization: {
               type: 'Split',
-              entries: categoryOption.payload.entries.map((entry) => {
+              entries: transactionCategory.payload.entries.map((entry) => {
                 const categoryPayload = getCategorizePayload(mapCategoryToOption(entry.category))
                 return {
                   amount: entry.amount ?? 0,
@@ -149,7 +149,7 @@ export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatc
             type: 'categorize',
             categorization: {
               type: 'Category',
-              category: getCategorizePayload(categoryOption),
+              category: getCategorizePayload(transactionCategory),
             },
           }
         }
@@ -157,7 +157,7 @@ export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatc
     }
 
     return { transactions }
-  }, [selectedIds, selectedCategories])
+  }, [selectedIds, transactionCategories])
 
   const rawMutationResponse = useSWRMutation(
     () => buildKey({
