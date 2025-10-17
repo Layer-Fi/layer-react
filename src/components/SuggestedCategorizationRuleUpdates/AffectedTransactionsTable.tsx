@@ -1,14 +1,14 @@
 import { useMemo } from 'react'
 import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTable'
 import { type ColumnConfig } from '../DataTable/DataTable'
+import { DateTime } from '../DateTime'
+import { TextSize, TextWeight } from '../Typography'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import type { MinimalBankTransaction } from '../../schemas/bankTransactions/base'
 import { BankTransactionDirection } from '../../schemas/bankTransactions/base'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
-import { DateTime } from '../DateTime'
-import { TextSize, TextWeight } from '../Typography'
 
 const COMPONENT_NAME = 'AffectedTransactionsTable'
 
@@ -60,7 +60,6 @@ export const AffectedTransactionsTable = ({
           }
         />
       ),
-      isRowHeader: true,
     },
     [TransactionColumns.Description]: {
       id: TransactionColumns.Description,
