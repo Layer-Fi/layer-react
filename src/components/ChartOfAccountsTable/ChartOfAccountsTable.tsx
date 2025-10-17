@@ -229,7 +229,7 @@ export const ChartOfAccountsTableContent = ({
               <HStack {...(!hasSubAccounts && { pis: 'lg' })} overflow='hidden'>
                 {enableAccountNumbers
                   && highlightMatch({
-                    text: account.accountNumber || '-----',
+                    text: account.accountNumber || '',
                     query: searchQuery,
                     isMatching: account.isMatching,
                   })}
