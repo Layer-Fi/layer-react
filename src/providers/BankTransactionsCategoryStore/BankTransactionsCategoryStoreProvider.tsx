@@ -1,6 +1,6 @@
 import { createContext, type PropsWithChildren, useContext, useState } from 'react'
 import { createStore, useStore } from 'zustand'
-import type { CategoryOption } from '../../components/CategorySelect/CategorySelect'
+import type { CategoryOption } from '../../types/categoryOption'
 
 export type BankTransactionsCategoryState = {
   transactionCategories: Map<string, CategoryOption>
