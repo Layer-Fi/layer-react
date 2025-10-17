@@ -21,7 +21,7 @@ const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
 const _BulkMatchOrCategorizeRequestSchema = Schema.Struct({
   transactions: Schema.Record({
-    key: Schema.String,
+    key: Schema.UUID,
     value: BulkActionSchema,
   }),
 })
@@ -51,7 +51,7 @@ const bulkMatchOrCategorize = post<
       match_source,
     })
 
-    return `/v1/businesses/${businessId}/bank-transactions/bulk-match-or-categorize${parameters ? `?${parameters}` : ''}`
+    return `/v1/businesses/${businessId}/bank-transactions/bulk-match-or-categorize${parameters}`
   },
 )
 
