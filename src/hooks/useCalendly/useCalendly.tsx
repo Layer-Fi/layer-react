@@ -27,6 +27,20 @@ export const isCalendlyLink = (link?: ServiceOfferingLink) => {
   }
 }
 
+export const createCalendlyMessageHandler = (
+  onEventScheduled?: (payload?: CalendlyPayload) => void,
+) => {
+  return (e: MessageEvent) => {
+    const data = e.data as CalendlyMessageData
+
+    if (data.event && typeof data.event === 'string' && data.event.startsWith('calendly')) {
+      if (data.event === 'calendly.event_scheduled') {
+        onEventScheduled?.(data.payload)
+      }
+    }
+  }
+}
+
 export interface UseCalendlyOptions {
   onEventScheduled?: (payload?: CalendlyPayload) => void
 }
@@ -37,18 +51,8 @@ export const useCalendly = (options?: UseCalendlyOptions) => {
   const calendlyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleCalendlyMessage = (e: MessageEvent) => {
-      const data = e.data as CalendlyMessageData
-
-      if (data.event && typeof data.event === 'string' && data.event.indexOf('calendly') === 0) {
-        if (data.event === 'calendly.event_scheduled') {
-          options?.onEventScheduled?.(data.payload)
-        }
-      }
-    }
-
+    const handleCalendlyMessage = createCalendlyMessageHandler(options?.onEventScheduled)
     window.addEventListener('message', handleCalendlyMessage)
-
     return () => {
       window.removeEventListener('message', handleCalendlyMessage)
     }
