@@ -2,8 +2,8 @@ import pluralize from 'pluralize'
 import { HStack } from '../ui/Stack/Stack'
 import { Button } from '../ui/Button/Button'
 import { Span } from '../ui/Typography/Text'
-import './bulkActionsHeader.scss'
 import { X } from 'lucide-react'
+import './bulkActionsHeader.scss'
 
 interface CountProps {
   showCount?: true
