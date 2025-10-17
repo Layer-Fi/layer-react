@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Bill } from '../types/bills'
-import { DateRange, Metadata } from '../types'
+import { Metadata } from '../types/api'
+import { DateRange } from '../types/general'
 import { endOfMonth, startOfMonth, sub } from 'date-fns'
 import { Vendor } from '../types/vendors'
 import { useLayerContext } from '../contexts/LayerContext'

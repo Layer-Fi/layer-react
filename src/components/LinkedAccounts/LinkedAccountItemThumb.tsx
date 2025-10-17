@@ -4,7 +4,7 @@ import { LinkedAccount } from '../../types/linked_accounts'
 import { LinkedAccountOptions } from '../LinkedAccountOptions'
 import { LinkedAccountThumb } from '../LinkedAccountThumb/LinkedAccountThumb'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import type { HoverMenuProps } from '../HoverMenu'
+import type { HoverMenuProps } from '../HoverMenu/HoverMenu'
 import { LinkedAccountPill } from '../LinkedAccountPill/LinkedAccountPill'
 import { UnlinkAccountConfirmationModal } from './UnlinkAccountConfirmationModal/UnlinkAccountConfirmationModal'
 

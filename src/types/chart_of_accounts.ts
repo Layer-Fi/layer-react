@@ -1,4 +1,4 @@
-import { Direction } from './bank_transactions'
+import { Direction } from './general'
 import { NestedLedgerAccountType } from '../schemas/generalLedger/ledgerAccount'
 
 export type AugmentedLedgerAccountBalance = NestedLedgerAccountType & { isMatching?: true }
