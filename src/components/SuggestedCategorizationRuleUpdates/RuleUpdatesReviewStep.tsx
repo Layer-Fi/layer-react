@@ -28,29 +28,31 @@ export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptRevie
         transactions={asMutable(ruleSuggestion.transactionsThatWillBeAffected)}
       />
       <Separator />
-      <HStack gap='sm'>
-        <Button
-          onClick={() => {
-            previous()
-          }}
-          variant='outlined'
-        >
-          Back
-        </Button>
-        <CreateRuleButton
-          newRule={{
-            ...ruleSuggestion.newRule,
-            applyRetroactively: applyRuleRetroactively,
-          }}
-          buttonText='Submit'
-        />
-      </HStack>
-      <HStack gap='3xs' justify='center'>
-        <CheckboxWithTooltip id='apply_rule' isSelected={applyRuleRetroactively} onChange={(isSelected) => { setApplyRuleRetroactively(isSelected) }} />
-        <Label size='sm' htmlFor='apply_rule'>
-          Apply rule after creating?
-        </Label>
-      </HStack>
+      <VStack gap='sm' align='end'>
+        <HStack gap='sm'>
+          <Button
+            onClick={() => {
+              previous()
+            }}
+            variant='outlined'
+          >
+            Back
+          </Button>
+          <CreateRuleButton
+            newRule={{
+              ...ruleSuggestion.newRule,
+              applyRetroactively: applyRuleRetroactively,
+            }}
+            buttonText='Submit'
+          />
+        </HStack>
+        <HStack gap='3xs' justify='center'>
+          <CheckboxWithTooltip id='apply_rule' isSelected={applyRuleRetroactively} onChange={(isSelected) => { setApplyRuleRetroactively(isSelected) }} />
+          <Label size='sm' htmlFor='apply_rule'>
+            Apply rule after creating?
+          </Label>
+        </HStack>
+      </VStack>
     </VStack>
   )
 }
