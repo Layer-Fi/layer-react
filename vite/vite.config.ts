@@ -1,4 +1,4 @@
-import { defineConfig, Plugin } from "vite"
+import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import dts from "vite-plugin-dts"
 import path from "node:path"
@@ -24,6 +24,8 @@ export default defineConfig(({ mode, command }) => {
   const isWatch = command === 'build' && process.argv.includes('--watch')
 
   return {
+    publicDir: false,
+
     plugins: [
       react(),
       isESM
@@ -42,11 +44,9 @@ export default defineConfig(({ mode, command }) => {
     ].filter(Boolean),
 
     build: {
-      assetsInlineLimit: 100_000_000,
       minify: false,
-      sourcemap: false,
-      cssCodeSplit: false,
       cssMinify: false,
+      cssCodeSplit: false,
       lib: isESM
         ? {
             entry: {
@@ -74,11 +74,10 @@ export default defineConfig(({ mode, command }) => {
       outDir: path.resolve(__dirname, `../${OUT_DIR}`),
       target: "es2016",
       emptyOutDir: isESM && !isWatch,
-      publicDir: false,
     },
 
     resolve: {
-      extensions: [".tsx", ".ts", ".js", ".jsx"],
+      extensions: [".tsx", ".ts"],
     },
   }
 })
