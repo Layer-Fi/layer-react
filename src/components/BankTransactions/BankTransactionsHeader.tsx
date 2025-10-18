@@ -319,14 +319,14 @@ export const BankTransactionsHeader = ({
           ? (
             <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
               <HStack justify='space-between' align='center' gap='sm' pi='sm'>
-                <div style={{ minWidth: '120px' }}>
+                <div style={{ minWidth: '7.5rem' }}>
                   <Span>
                     {count}
                     {' selected '}
                     {pluralize('item', count)}
                   </Span>
                 </div>
-                <div style={{ width: '1px', height: '32px', backgroundColor: 'var(--color-base-300)' }} />
+                <div style={{ width: '1px', height: '2rem', backgroundColor: 'var(--color-base-300)' }} />
                 <HStack align='center'>
                   <Button
                     variant='text'
