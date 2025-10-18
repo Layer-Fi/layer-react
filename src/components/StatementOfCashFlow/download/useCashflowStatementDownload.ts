@@ -5,6 +5,8 @@ import type { S3PresignedUrl } from '../../../types/general'
 import type { Awaitable } from '../../../types/utility/promises'
 import { getCashflowStatementCSV } from '../../../api/layer/statement-of-cash-flow'
 
+const DOWNLOAD_CASHFLOW_STATEMENT_TAG_KEY = '#download-cashflow-statement'
+
 function buildKey({
   access_token: accessToken,
   apiUrl,
@@ -25,7 +27,7 @@ function buildKey({
       businessId,
       startDate,
       endDate,
-      tags: ['#cashflow-statement', '#exports', '#csv'],
+      tags: [DOWNLOAD_CASHFLOW_STATEMENT_TAG_KEY],
     }
   }
 }

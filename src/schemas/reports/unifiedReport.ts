@@ -12,6 +12,7 @@ export const DateQueryParamsSchema = Schema.Struct({
     Schema.fromKey('effective_date'),
   ),
 })
+export type DateQueryParams = typeof DateQueryParamsSchema.Type
 
 export const DateRangeQueryParamsSchema = Schema.Struct({
   startDate: pipe(
@@ -23,6 +24,7 @@ export const DateRangeQueryParamsSchema = Schema.Struct({
     Schema.fromKey('end_date'),
   ),
 })
+export type DateRangeQueryParams = typeof DateRangeQueryParamsSchema.Type
 
 export const UnifiedReportDateQueryParamsSchema = Schema.Union(
   DateQueryParamsSchema,

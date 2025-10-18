@@ -5,6 +5,8 @@ import { getBalanceSheetExcel } from '../../../api/layer/balance_sheet'
 import type { S3PresignedUrl } from '../../../types/general'
 import type { Awaitable } from '../../../types/utility/promises'
 
+const DOWNLOAD_BALANCE_SHEET_TAG_KEY = '#download-balance-sheet'
+
 function buildKey({
   access_token: accessToken,
   apiUrl,
@@ -22,7 +24,7 @@ function buildKey({
       apiUrl,
       businessId,
       effectiveDate,
-      tags: ['#balance-sheet', '#exports', '#excel'],
+      tags: [DOWNLOAD_BALANCE_SHEET_TAG_KEY],
     }
   }
 }
