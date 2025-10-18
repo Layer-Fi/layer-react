@@ -72,7 +72,7 @@ export default defineConfig(({ mode, command }) => {
         },
       },
       outDir: path.resolve(__dirname, `../${OUT_DIR}`),
-      target: 'es2022',
+      target: 'es2016',
       emptyOutDir: isESM && !isWatch,
     },
 
