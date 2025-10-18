@@ -1,9 +1,12 @@
-import { Schema } from 'effect'
+import { Schema, pipe } from 'effect'
 
 export const AccountIdentifierPayloadSchema = Schema.Union(
   Schema.Struct({
     type: Schema.Literal('StableName'),
-    stable_name: Schema.String,
+    stableName: pipe(
+      Schema.propertySignature(Schema.String),
+      Schema.fromKey('stable_name'),
+    ),
   }),
   Schema.Struct({
     type: Schema.Literal('AccountId'),
@@ -11,7 +14,10 @@ export const AccountIdentifierPayloadSchema = Schema.Union(
   }),
   Schema.Struct({
     type: Schema.Literal('Exclusion'),
-    exclusion_type: Schema.String,
+    exclusionType: pipe(
+      Schema.propertySignature(Schema.String),
+      Schema.fromKey('exclusion_type'),
+    ),
   }),
 )
 
@@ -38,7 +44,10 @@ export const CategoryUpdateSchema = Schema.Union(
 export const BulkActionSchema = Schema.Union(
   Schema.Struct({
     type: Schema.Literal('match'),
-    suggested_match_id: Schema.String,
+    suggestedMatchId: pipe(
+      Schema.propertySignature(Schema.String),
+      Schema.fromKey('suggested_match_id'),
+    ),
   }),
   Schema.Struct({
     type: Schema.Literal('categorize'),
@@ -47,16 +56,31 @@ export const BulkActionSchema = Schema.Union(
 )
 
 export const MatchedResultSchema = Schema.Struct({
-  transaction_id: Schema.String,
-  suggested_match_id: Schema.String,
+  transactionId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('transaction_id'),
+  ),
+  suggestedMatchId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('suggested_match_id'),
+  ),
 })
 
 export const CategorizedResultSchema = Schema.Struct({
-  transaction_id: Schema.String,
+  transactionId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('transaction_id'),
+  ),
   categorization: Schema.NullOr(CategoryUpdateSchema),
 })
 
 export const BulkMatchOrCategorizeDataSchema = Schema.Struct({
-  matched_results: Schema.Array(MatchedResultSchema),
-  categorized_results: Schema.Array(CategorizedResultSchema),
+  matchedResults: pipe(
+    Schema.propertySignature(Schema.Array(MatchedResultSchema)),
+    Schema.fromKey('matched_results'),
+  ),
+  categorizedResults: pipe(
+    Schema.propertySignature(Schema.Array(CategorizedResultSchema)),
+    Schema.fromKey('categorized_results'),
+  ),
 })
