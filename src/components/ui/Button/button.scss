@@ -78,6 +78,7 @@
 
   &[data-variant='outlined'] {
     border: 1px solid var(--button-border-color-ghost);
+    box-sizing: border-box;
 
     background-color: transparent;
     color: var(--button-fg-ghost);
