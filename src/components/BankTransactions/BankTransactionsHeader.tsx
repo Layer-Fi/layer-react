@@ -158,6 +158,8 @@ export const BankTransactionsHeader = ({
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
 
+  const showBulkActions = _showBulkSelection && count > 0
+
   const [isConfirmAllModalOpen, setIsConfirmAllModalOpen] = useState(false)
   const [isCategorizeAllModalOpen, setIsCategorizeAllModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<CategoryOption | undefined>(undefined)
@@ -313,7 +315,7 @@ export const BankTransactionsHeader = ({
       {!collapseHeader && headerTopRow}
 
       <TransactionsActions>
-        {_showBulkSelection && count > 0
+        {showBulkActions
           ? (
             <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
               <HStack justify='space-between' align='center' gap='sm' pi='sm' className='Layer__bulk-actions-header__selection-container'>
@@ -359,16 +361,16 @@ export const BankTransactionsHeader = ({
               )}
             </HStack>
           )}
-        <TransactionsSearch slot='search' isDisabled={_showBulkSelection && count > 0} />
+        <TransactionsSearch slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
           <DownloadButton
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={listView}
-            disabled={_showBulkSelection && count > 0}
+            disabled={showBulkActions}
           />
           {_showCategorizationRules
-            ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} isDisabled={_showBulkSelection && count > 0} />
-            : withUploadMenu && <BankTransactionsUploadMenu isDisabled={_showBulkSelection && count > 0} />}
+            ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} isDisabled={showBulkActions} />
+            : withUploadMenu && <BankTransactionsUploadMenu isDisabled={showBulkActions} />}
         </HStack>
       </TransactionsActions>
     </Header>
