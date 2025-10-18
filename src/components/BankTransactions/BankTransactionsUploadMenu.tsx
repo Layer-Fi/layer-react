@@ -8,14 +8,18 @@ import { BankTransactionsUploadModal } from './BankTransactionsUploadModal/BankT
 import { Span } from '../ui/Typography/Text'
 import { Heading } from '../ui/Typography/Heading'
 
-const MenuTriggerButton = () => (
-  <Button variant='outlined' icon>
-    <UploadCloud size={12} />
-  </Button>
-)
+interface BankTransactionsUploadMenuProps {
+  isDisabled?: boolean
+}
 
-export const BankTransactionsUploadMenu = () => {
+export const BankTransactionsUploadMenu = ({ isDisabled }: BankTransactionsUploadMenuProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const MenuTriggerButton = () => (
+    <Button variant='outlined' icon isDisabled={isDisabled}>
+      <UploadCloud size={12} />
+    </Button>
+  )
 
   return (
     <>

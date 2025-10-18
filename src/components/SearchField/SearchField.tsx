@@ -10,9 +10,10 @@ export type SearchFieldProps = {
   slot?: string
   onChange: (value: string) => void
   label: string
+  isDisabled?: boolean
 }
 
-export function SearchField({ slot = 'search', label, ...restProps }: SearchFieldProps) {
+export function SearchField({ slot = 'search', label, isDisabled, ...restProps }: SearchFieldProps) {
   return (
     <Group slot={slot} className={CLASS_NAME}>
       <VStack slot='icon' align='center' justify='center'>
@@ -22,6 +23,7 @@ export function SearchField({ slot = 'search', label, ...restProps }: SearchFiel
         {...restProps}
         placeholder={label}
         aria-label={label}
+        isDisabled={isDisabled}
       />
     </Group>
   )

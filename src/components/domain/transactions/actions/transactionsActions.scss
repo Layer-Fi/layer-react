@@ -24,4 +24,9 @@
   > [slot='download-upload'] {
     grid-area: download-upload;
   }
+
+  .Layer__UI__Button[data-disabled] {
+    opacity: 0.9;
+    background-color: var(--color-base-100);
+  }
 }
