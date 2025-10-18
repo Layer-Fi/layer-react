@@ -318,7 +318,7 @@ export const BankTransactionsHeader = ({
         {showBulkActions
           ? (
             <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
-              <HStack justify='space-between' align='center' gap='sm' pi='sm' className='Layer__bulk-actions-header__selection-container'>
+              <HStack justify='space-between' align='center' gap='sm' pi='sm'>
                 <div style={{ minWidth: '120px' }}>
                   <Span>
                     {count}
