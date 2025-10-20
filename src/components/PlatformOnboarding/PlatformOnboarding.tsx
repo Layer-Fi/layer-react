@@ -8,30 +8,36 @@ import { BusinessInfoStep } from './Steps/BusinessInfoStep'
 import { BookOnboardingCallStep } from './Steps/BookOnboardingCallStep'
 import { useBookkeepingConfiguration } from '../../hooks/useBookkeepingConfiguration'
 
-const ALL_PLATFORM_ONBOARDING_STEPS = [
+enum PlatformOnboardingStep {
+  WELCOME = 'welcome',
+  BUSINESS_INFO = 'business-info',
+  LINK_ACCOUNTS = 'link-accounts',
+  BOOK_ONBOARDING_CALL = 'book-onboarding-call',
+  SUMMARY = 'summary',
+}
+
+const ALL_PLATFORM_ONBOARDING_STEPS: { id: PlatformOnboardingStep, label: string }[] = [
   {
-    id: 'welcome',
+    id: PlatformOnboardingStep.WELCOME,
     label: 'Get started',
   },
   {
-    id: 'business-info',
+    id: PlatformOnboardingStep.BUSINESS_INFO,
     label: 'Confirm your information',
   },
   {
-    id: 'link-accounts',
+    id: PlatformOnboardingStep.LINK_ACCOUNTS,
     label: 'Connect accounts',
   },
   {
-    id: 'book-onboarding-call',
+    id: PlatformOnboardingStep.BOOK_ONBOARDING_CALL,
     label: 'Book onboarding call',
   },
   {
-    id: 'summary',
+    id: PlatformOnboardingStep.SUMMARY,
     label: 'Summary',
   },
 ] as const
-
-type PlatformOnboardingStepKey = typeof ALL_PLATFORM_ONBOARDING_STEPS[number]['id']
 
 type PlatformOnboardingProps = {
   onComplete?: () => void
@@ -43,14 +49,14 @@ export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
   const platformOnboardingSteps = useMemo(() => {
     const hasOnboardingCallUrl = !!bookkeepingConfiguration?.onboardingCallUrl
     return ALL_PLATFORM_ONBOARDING_STEPS.filter((step) => {
-      if (step.id === 'book-onboarding-call') {
+      if (step.id === PlatformOnboardingStep.BOOK_ONBOARDING_CALL) {
         return hasOnboardingCallUrl
       }
       return true
     })
   }, [bookkeepingConfiguration?.onboardingCallUrl])
 
-  const [step, setStep] = useState<PlatformOnboardingStepKey>(platformOnboardingSteps[0].id)
+  const [step, setStep] = useState<PlatformOnboardingStep>(platformOnboardingSteps[0].id)
 
   const isFirstStep = platformOnboardingSteps[0].id === step
 
@@ -77,21 +83,21 @@ export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
 
   const renderStepContent = () => {
     switch (step) {
-      case 'welcome':
+      case PlatformOnboardingStep.WELCOME:
         return <WelcomeStep onNext={nextStep} stepsEnabled={platformOnboardingSteps.map(s => s.id)} />
-      case 'business-info':
+      case PlatformOnboardingStep.BUSINESS_INFO:
         return <BusinessInfoStep onNext={nextStep} />
-      case 'link-accounts':
+      case PlatformOnboardingStep.LINK_ACCOUNTS:
         return <LinkAccounts onComplete={nextStep} />
-      case 'book-onboarding-call':
+      case PlatformOnboardingStep.BOOK_ONBOARDING_CALL:
         return <BookOnboardingCallStep onNext={nextStep} />
-      case 'summary':
+      case PlatformOnboardingStep.SUMMARY:
         return <SummaryStep onNext={nextStep} />
     }
   }
 
   const renderStepFooter = () => {
-    if (step === 'welcome') {
+    if (step === PlatformOnboardingStep.WELCOME) {
       return <WelcomeStepFooter />
     }
   }
@@ -113,7 +119,7 @@ export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
           {platformOnboardingSteps.length > 1 && (
             <ProgressSteps
               steps={platformOnboardingSteps.map(step => step.label)}
-              currentStep={step === 'summary' ? platformOnboardingSteps.length : platformOnboardingSteps.findIndex(s => s.id === step)}
+              currentStep={step === PlatformOnboardingStep.SUMMARY ? platformOnboardingSteps.length : platformOnboardingSteps.findIndex(s => s.id === step)}
             />
           )}
           <div className='Layer__platform-onboarding-layout__content'>
