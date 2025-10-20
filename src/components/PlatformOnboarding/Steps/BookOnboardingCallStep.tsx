@@ -10,7 +10,6 @@ import { useCallback, useState } from 'react'
 import { useCreateCallBooking } from '../../../features/callBookings/api/useCreateCallBookings'
 import { LoadingSpinner } from '../../ui/Loading/LoadingSpinner'
 import { useBookkeepingConfiguration } from '../../../hooks/useBookkeepingConfiguration'
-import { useLayerContext } from '../../../contexts/LayerContext'
 import { CallBookingPurpose, CallBookingType } from '../../../schemas/callBookings'
 
 interface CalendlyPayload {
@@ -43,8 +42,7 @@ const defaultDescription = 'During this call, we will review all of your informa
 export const BookOnboardingCallStep = ({ title = defaultTitle, description = defaultDescription, onNext }: BookOnboardingCallStepProps) => {
   const { isMobile, isTablet, isDesktop } = useSizeClass()
   const { trigger: createCallBooking } = useCreateCallBooking()
-  const { businessId } = useLayerContext()
-  const { data: bookkeepingConfiguration } = useBookkeepingConfiguration({ businessId })
+  const { data: bookkeepingConfiguration } = useBookkeepingConfiguration()
 
   const [state, setState] = useState(BookOnboardingCallStepState.INITIAL)
   const [externalId, setExternalId] = useState<string | null>(null)
