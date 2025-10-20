@@ -1,0 +1,36 @@
+.Layer__UI__Link {
+  position: relative;
+  display: inline;
+
+  outline: none;
+  cursor: pointer;
+
+  font-size: var(--text-md);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-normal);
+
+  text-decoration: none;
+
+  &[data-ellipsis] {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-inline-size: 100%;
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    color: var(--color-base-500);
+    pointer-events: none;
+  }
+
+  // Sizes
+  $sizes: xs sm md lg;
+
+  @each $size in $sizes {
+    &[data-size='#{$size}'] {
+      font-size: var(--text-#{$size});
+    }
+  }
+}
