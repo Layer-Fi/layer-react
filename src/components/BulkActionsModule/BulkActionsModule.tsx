@@ -15,14 +15,14 @@ export const BulkActionsModule = ({ count, clearSelection, slots }: BulkActionsM
   return (
     <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
       <HStack justify='space-between' align='center' gap='sm' pi='sm'>
-        <div style={{ minWidth: '7.5rem' }}>
+        <div className='Layer__BulkActionsModule__SelectedItems'>
           <Span>
             {count}
             {' selected '}
             {pluralize('item', count)}
           </Span>
         </div>
-        <div style={{ width: '1px', height: '2rem', backgroundColor: 'var(--color-base-300)' }} />
+        <div className='Layer__BulkActionsModule__Divider' />
         <HStack align='center'>
           <Button
             variant='text'
