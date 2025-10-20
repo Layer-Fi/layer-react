@@ -14,7 +14,7 @@ export interface BulkActionsModuleProps {
 export const BulkActionsModule = ({ count, clearSelection, slots }: BulkActionsModuleProps) => {
   return (
     <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
-      <HStack justify='space-between' align='center' gap='sm' pi='sm'>
+      <HStack justify='space-between' align='center' gap='sm' pi='sm' className='Layer__BulkActionsModule__SelectedItemsContainer'>
         <div className='Layer__BulkActionsModule__SelectedItems'>
           <Span>
             {count}
