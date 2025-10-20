@@ -29,7 +29,7 @@ export const BulkActionsHeader = ({ count, slotProps = {}, slots }: BulkActionsH
   const { ClearSelectionButton } = slotProps
 
   return (
-    <HStack justify='space-between' align='center' gap='xs'>
+    <HStack justify='space-between' align='center' gap='xs' className='Layer__bulk-actions-header'>
       <HStack justify='space-between' align='center' gap='xs' pie='3xs' pis='sm' className='Layer__bulk-actions-header__selection-container'>
         {showCount && totalCount && (
           <Span>
