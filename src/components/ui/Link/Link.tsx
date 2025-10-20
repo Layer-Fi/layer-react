@@ -8,7 +8,6 @@ type LinkSize = 'xs' | 'sm' | 'md' | 'lg'
 
 type LinkProps = Omit<ReactAriaLinkProps, 'className'> & PropsWithChildren<{
   size?: LinkSize
-  weight?: 'normal' | 'bold'
   ellipsis?: true
   external?: true
   disabled?: true
@@ -18,7 +17,6 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
   function Link({
     children,
     size = 'md',
-    weight,
     ellipsis,
     external,
     disabled,
@@ -29,7 +27,6 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
   }, ref) {
     const dataProperties = toDataProperties({
       size,
-      weight,
       ellipsis,
       external,
       disabled,
