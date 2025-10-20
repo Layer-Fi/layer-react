@@ -1,0 +1,16 @@
+.Layer__platform-onboarding__book-onboarding-call {
+  .Layer__platform-onboarding__error {
+    height: 6rem;
+  }
+
+  &.is-tablet,
+  &.is-desktop {
+    .Layer__calendly-inline-widget--success {
+      height: 36rem;
+    }
+
+    .Layer__calendly-inline-widget {
+      height: 56rem;
+    }
+  }
+}
