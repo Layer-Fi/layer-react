@@ -5,7 +5,7 @@ import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
 import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { hasSuggestions } from '../../types/categories'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import {
@@ -435,7 +435,7 @@ export const BankTransactionRow = ({
         </td>
       </tr>
       <tr>
-        <td colSpan={6} className='Layer__bank-transaction-row__expanded-td'>
+        <td colSpan={_showBulkSelection ? 7 : 6} className='Layer__bank-transaction-row__expanded-td'>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}

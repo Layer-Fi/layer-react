@@ -1,5 +1,5 @@
 import { ReceiptsProvider } from '../../providers/ReceiptsProvider'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { Purpose } from './BankTransactionMobileListItem'
 import { BusinessForm } from './BusinessForm'
 import { PersonalForm } from './PersonalForm'

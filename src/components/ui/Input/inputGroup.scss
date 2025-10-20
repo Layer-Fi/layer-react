@@ -22,6 +22,11 @@
     outline: 2px solid var(--outline-default);
   }
 
+  &[data-invalid] {
+    border-color: var(--color-danger);
+    outline: none;
+  }
+
   &[data-action-count='2'] {
     grid-template-columns: minmax(0, 1fr) auto auto;
   }

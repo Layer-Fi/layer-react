@@ -1,5 +1,5 @@
 import { differenceInDays, formatISO } from 'date-fns'
-import { ZonedDateTime } from '@internationalized/date'
+import { ZonedDateTime, fromDate, getLocalTimeZone } from '@internationalized/date'
 
 export const toLocalDateString = (date: Date): string => formatISO(date.valueOf(), { representation: 'date' })
 
@@ -16,3 +16,5 @@ export function getDueDifference(dueDate: Date): number {
 export function isZonedDateTime(val: unknown): val is ZonedDateTime {
   return val instanceof ZonedDateTime
 }
+
+export const convertDateToZonedDateTime = (date: Date | null) => date ? fromDate(date, getLocalTimeZone()) : null

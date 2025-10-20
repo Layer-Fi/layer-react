@@ -3,7 +3,7 @@ import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTab
 import { type ColumnConfig } from '../DataTable/DataTable'
 import { DateTime } from '../DateTime'
 import { TextSize, TextWeight } from '../Typography'
-import { MoneySpan } from '../ui/Typography/MoneyText'
+import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import type { MinimalBankTransaction } from '../../schemas/bankTransactions/base'
 import { BankTransactionDirection } from '../../schemas/bankTransactions/base'

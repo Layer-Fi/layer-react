@@ -1,6 +1,7 @@
 import { useCallback, useId, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { DisplayState, type DateRange } from '../../types'
+import type { DateRange } from '../../types/general'
+import { DisplayState } from '../../types/bank_transactions'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { ButtonVariant, DownloadButton as DownloadButtonComponent } from '../Button'
 import { Header } from '../Container'
@@ -181,7 +182,7 @@ export const BankTransactionsHeader = ({
           variant='outlined'
           onClick={handleConfirmAllClick}
         >
-          Confirm All
+          Confirm all
         </Button>
         <BaseConfirmationModal
           isOpen={isConfirmAllModalOpen}
@@ -201,7 +202,7 @@ export const BankTransactionsHeader = ({
           variant='outlined'
           onClick={handleCategorizeAllClick}
         >
-          Categorize All
+          Set category
         </Button>
         <BaseConfirmationModal
           isOpen={isCategorizeAllModalOpen}

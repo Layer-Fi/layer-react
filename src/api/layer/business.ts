@@ -1,4 +1,4 @@
-import { Business } from '../../types'
+import type { Business } from '../../types/business'
 import { get, put } from './authenticated_http'
 
 export type UpdateBusinessBody = Partial<Business>

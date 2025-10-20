@@ -4,7 +4,7 @@ import type { RawCustomTransaction } from './types'
 import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from './useCustomAccounts'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { APIError } from '../../models/APIError'
 
 type CreateCustomAccountTransactionsBody = {

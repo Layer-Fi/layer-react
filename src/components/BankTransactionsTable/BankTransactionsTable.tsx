@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from 'react'
 import { DATE_FORMAT } from '../../config/general'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { BankTransactionRow } from '../BankTransactionRow/BankTransactionRow'
 import {

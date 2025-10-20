@@ -7,7 +7,7 @@ const accountMatchesQuery = (account: NestedLedgerAccountType, query: string) =>
   return [
     account.name,
     account.accountType.displayName,
-    account.accountNumber || '-----',
+    account.accountNumber || '',
     account.accountSubtype?.displayName || '',
     centsToDollars(account.balance),
     centsToDollarsWithoutCommas(account.balance),

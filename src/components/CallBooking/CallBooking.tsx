@@ -1,14 +1,16 @@
-import { useCallback } from 'react'
-import { Button, ButtonVariant } from '../Button/Button'
 import { Container } from '../Container'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
 import { Span } from '../ui/Typography/Text'
 import { Separator } from '../Separator/Separator'
-import { Clock, Link, Milestone, Users, Video } from 'lucide-react'
-import { CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
+import { Clock, Link as LinkIcon, Milestone, Users, Video } from 'lucide-react'
+import { CallBookingPurpose, CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
 import { format as formatTime } from 'date-fns'
 import { DATE_FORMAT_WITH_TIME } from '../../config/general'
+import { AddToCalendar } from '../AddToCalendar/AddToCalendar'
+import { getTimezoneDisplay } from '../../utils/time/timezoneUtils'
+import { Button } from '../ui/Button/Button'
+import { Link } from '../ui/Link/Link'
 
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
   <VStack gap='md' align='center'>
@@ -17,21 +19,17 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
       Book a call with your bookkeeper
     </Span>
     <VStack gap='xs'>
-      <Button variant={ButtonVariant.primary} onClick={onBookCall}>Book a call</Button>
+      <Button variant='solid' onClick={onBookCall}>Book a call</Button>
     </VStack>
   </VStack>
 )
 
 const ScheduledCallState = ({
   callBooking,
-  onAddToCalendar: onAdd,
 }: {
   callBooking: CallBookingData
-  onAddToCalendar: (callBooking: CallBookingData) => void
 }) => {
-  const onAddToCalendar = useCallback(() => {
-    onAdd(callBooking)
-  }, [callBooking, onAdd])
+  const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? 'Onboarding call' : 'Ad hoc call'
 
   return (
     <VStack gap='md' align='center'>
@@ -44,7 +42,7 @@ const ScheduledCallState = ({
       <VStack align='start' className='Layer__call-booking-details' gap='xs'>
         <HStack align='center' gap='sm'>
           <Milestone size={20} />
-          <Span size='lg' weight='bold'>Onboarding call</Span>
+          <Span size='lg' weight='bold'>{purpose}</Span>
         </HStack>
         <HStack align='center' gap='sm'>
           <Video size={20} />
@@ -52,20 +50,36 @@ const ScheduledCallState = ({
         </HStack>
         <HStack align='center' gap='sm'>
           <Clock size={20} />
-          <Span size='md'>{callBooking.eventStartAt && formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME)}</Span>
-        </HStack>
-        <HStack align='center' gap='sm'>
-          <Link size={20} />
-          <a href={callBooking.callLink.toString()} className='Layer__call-booking-link Layer__text-btn' target='_blank' rel='noopener noreferrer'>
-            <Span size='md'>
-              {callBooking.callLink.toString()}
-            </Span>
-          </a>
+          <HStack gap='xs' align='center'>
+            <Span size='md'>{callBooking.eventStartAt && formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME)}</Span>
+            {callBooking.eventStartAt && (
+              <Span size='md'>
+                {getTimezoneDisplay(callBooking.eventStartAt)}
+              </Span>
+            )}
+          </HStack>
         </HStack>
       </VStack>
-      <VStack gap='xs' align='start' justify='start' className='Layer__call-booking-actions'>
-        <Button variant={ButtonVariant.primary} onClick={onAddToCalendar}>Add to your calendar</Button>
-      </VStack>
+      <HStack gap='xs' align='start' justify='start' className='Layer__call-booking-actions'>
+        <VStack>
+          <AddToCalendar
+            title={callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? 'Onboarding call' : 'Adhoc call'}
+            description={callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'}
+            location={callBooking.callLink.toString()}
+            startDate={callBooking.eventStartAt}
+            endDate={callBooking.eventEndAt}
+            organizer={{ name: callBooking.bookkeeperName, email: callBooking.bookkeeperEmail }}
+          />
+        </VStack>
+
+        <Link href={callBooking.callLink.toString()} target='_blank' rel='noopener noreferrer'>
+          <Button variant='outlined'>
+            <LinkIcon size={16} />
+            Join call
+          </Button>
+        </Link>
+
+      </HStack>
     </VStack>
   )
 }
@@ -73,19 +87,17 @@ const ScheduledCallState = ({
 export interface CallBookingProps {
   callBooking?: CallBookingData
   onBookCall?: () => void
-  onAddToCalendar?: (callBooking: CallBookingData) => void
 }
 
 export const CallBooking = ({
   callBooking,
   onBookCall,
-  onAddToCalendar,
 }: CallBookingProps) => {
   return (
     <Container name='call-booking'>
-      {onAddToCalendar && callBooking
+      {callBooking
         ? (
-          <ScheduledCallState callBooking={callBooking} onAddToCalendar={onAddToCalendar} />
+          <ScheduledCallState callBooking={callBooking} />
         )
         : (
           <EmptyState onBookCall={onBookCall} />
