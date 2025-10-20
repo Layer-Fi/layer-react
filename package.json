@@ -52,6 +52,7 @@
     "@stylistic/stylelint-config": "^2.0.0",
     "@stylistic/stylelint-plugin": "^3.1.2",
     "@types/lodash": "^4.17.16",
+    "@types/node": "^24.9.0",
     "@types/pluralize": "^0.0.33",
     "@types/react": "^18.2.0",
     "@types/react-datepicker": "^6.2.0",
