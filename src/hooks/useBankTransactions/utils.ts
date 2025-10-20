@@ -1,5 +1,5 @@
 import { filterVisibility } from '../../components/BankTransactions/utils'
-import { BankTransaction, DisplayState } from '../../types'
+import { BankTransaction, DisplayState } from '../../types/bank_transactions'
 import { AccountItem, NumericRangeFilter } from './types'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {

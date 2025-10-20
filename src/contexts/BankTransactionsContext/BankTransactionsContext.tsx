@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
-import { DisplayState } from '../../types'
+import { DisplayState } from '../../types/bank_transactions'
 
 export type BankTransactionsContextType = ReturnType<typeof useAugmentedBankTransactions>
 
@@ -13,8 +13,6 @@ export const BankTransactionsContext =
     refetch: () => {},
     categorize: () => Promise.resolve(undefined),
     match: () => Promise.resolve(undefined),
-    ruleSuggestion: null,
-    setRuleSuggestion: () => {},
     metadata: {
       pagination: {
         cursor: undefined,

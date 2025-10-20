@@ -3,7 +3,7 @@
   inline-size: min(90svi, 60ch);
 
   border-radius: var(--border-radius-xs);
-  border: 2px solid var(--outline-default);
+  border: 1px solid var(--outline-default);
 
   background: var(--color-base-0);
 
@@ -14,5 +14,9 @@
         calc(var(--trigger-width) * 1.5),
         min(80ch, 90svi),
       );
+  }
+
+  &[data-trigger='DatePicker'] {
+    inline-size: unset;
   }
 }

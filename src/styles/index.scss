@@ -33,6 +33,8 @@
 @forward '../components/LinkedAccounts/BasicLinkedAccount/basicLinkedAccount';
 @forward '../components/BaseDetailView/baseDetailView';
 @forward '../components/Bills/bills';
+@forward '../components/CategorizationRules/CategorizationRulesTable/categorizationRulesTable';
+@forward '../components/BulkActionsHeader/bulkActionsHeader';
 @forward '../components/Invoices/InvoiceTable/invoiceTable';
 @forward '../components/Invoices/InvoiceDetail/invoiceDetail';
 @forward '../components/Invoices/InvoiceForm/invoiceForm';
@@ -66,6 +68,7 @@
 @forward '../components/UnifiedReport/unifiedReport';
 @forward '../components/DateCalendar/dateCalendar';
 @forward '../components/PlatformOnboarding/Steps/BookOnboardingCallStep';
+@forward '../components/DateSelection/dateSelection';
 @forward '../features/features';
 @forward '../public/styles/publicReset';
 @forward './ledger_account';

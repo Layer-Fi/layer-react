@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import type { BankTransaction } from '../../../../../types'
+import type { BankTransaction } from '../../../../../types/bank_transactions'
 import { CustomerVendorSelector } from '../../../../customerVendor/components/CustomerVendorSelector'
 import { decodeCustomerVendor, type CustomerVendorSchema } from '../../../../customerVendor/customerVendorSchemas'
 import { unsafeAssertUnreachable } from '../../../../../utils/switch/assertUnreachable'

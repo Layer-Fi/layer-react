@@ -3,7 +3,7 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'

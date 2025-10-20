@@ -4,7 +4,7 @@ import {
   BankTransactionFilters,
   BankTransactionsDateFilterMode,
 } from '../../hooks/useBankTransactions/types'
-import { DisplayState } from '../../types'
+import { DisplayState } from '../../types/bank_transactions'
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type useBankTransactionsFiltersParams = {

@@ -1,4 +1,4 @@
-import { Direction } from '../../types/bank_transactions'
+import { Direction } from '../../types/general'
 
 export enum CustomAccountSubtype {
   CHECKING = 'CHECKING',

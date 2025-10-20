@@ -18,6 +18,8 @@ export const AccountIdentifierSchema = Schema.Union(
   AccountIdSchema,
 )
 
+export type AccountId = typeof AccountIdSchema.Type
+export type AccountStableName = typeof StableNameSchema.Type
 export type AccountIdentifier = typeof AccountIdentifierSchema.Type
 export type AccountIdentifierEncoded = typeof AccountIdentifierSchema.Encoded
 
@@ -27,4 +29,6 @@ export const makeStableName = (stableName: string) =>
 export const makeAccountId = (id: string) =>
   Schema.decodeSync(AccountIdSchema)({ type: 'AccountId', id })
 
+export const AccountIdEquivalence = Schema.equivalence(AccountIdSchema)
+export const AccountStableNameEquivalence = Schema.equivalence(StableNameSchema)
 export const AccountIdentifierEquivalence = Schema.equivalence(AccountIdentifierSchema)

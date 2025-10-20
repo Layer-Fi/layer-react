@@ -1,0 +1,21 @@
+.Layer__CategorizationRulesTable {
+  border: none;
+}
+
+.Layer__UI__Table__CategorizationRulesTable {
+  table-layout: fixed;
+  width: 100%;
+
+  .Layer__UI__Table-Row,
+  .Layer__UI__Table-TableHeader > tr {
+    display: grid;
+    grid-template-columns:
+      minmax(8rem, 45%)
+      minmax(8rem, 45%)
+      auto;
+
+    > *:last-child {
+      justify-content: end;
+    }
+  }
+}
