@@ -24,10 +24,6 @@ export type UnifiedReportWithDateParams =
     report: ReportEnum.CashflowStatement
   } & DateRangeQueryParams
 
-export const getDateVariantForReportType = (reportType: ReportEnum): UnifiedReportDateVariant => {
-  return reportToDateVariantMap[reportType]
-}
-
 const UnifiedReportStoreContext = createContext(
   createStore<UnifiedReportStoreShape>(() => ({
     report: ReportEnum.CashflowStatement,
@@ -38,7 +34,7 @@ export function useUnifiedReportDateVariant(): UnifiedReportDateVariant {
   const store = useContext(UnifiedReportStoreContext)
 
   const report = useStore(store, state => state.report)
-  return getDateVariantForReportType(report)
+  return reportToDateVariantMap[report]
 }
 
 export function useUnifiedReportWithDateParams(): UnifiedReportWithDateParams {
@@ -47,7 +43,7 @@ export function useUnifiedReportWithDateParams(): UnifiedReportWithDateParams {
   const { startDate, endDate } = useGlobalDateRange({ displayMode: 'dayRangePicker' })
 
   const report = useStore(store, state => state.report)
-  const dateVariant = getDateVariantForReportType(report)
+  const dateVariant = reportToDateVariantMap[report]
 
   switch (dateVariant) {
     case UnifiedReportDateVariant.Date:
