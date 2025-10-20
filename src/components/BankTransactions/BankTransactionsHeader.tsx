@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import type { DateRange } from '../../types/general'
 import { DisplayState } from '../../types/bank_transactions'
@@ -26,12 +26,8 @@ import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
 import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
 import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { Button } from '../ui/Button/Button'
-import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
-import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect'
-import { VStack } from '../ui/Stack/Stack'
-import { Label, Span } from '../ui/Typography/Text'
-import pluralize from 'pluralize'
+import { BulkActionsModule } from '../BulkActionsModule/BulkActionsModule'
+import { BankTransactionsBulkActions } from './BankTransactionsBulkActions'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -160,97 +156,6 @@ export const BankTransactionsHeader = ({
 
   const showBulkActions = _showBulkSelection && count > 0
 
-  const [isConfirmAllModalOpen, setIsConfirmAllModalOpen] = useState(false)
-  const [isCategorizeAllModalOpen, setIsCategorizeAllModalOpen] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState<CategoryOption | undefined>(undefined)
-
-  const categorySelectId = useId()
-
-  const handleConfirmAllClick = useCallback(() => {
-    setIsConfirmAllModalOpen(true)
-  }, [])
-
-  const handleCategorizeAllClick = useCallback(() => {
-    setIsCategorizeAllModalOpen(true)
-  }, [])
-
-  const handleCategorizeModalClose = useCallback((isOpen: boolean) => {
-    setIsCategorizeAllModalOpen(isOpen)
-    if (!isOpen) {
-      setSelectedCategory(undefined)
-    }
-  }, [])
-
-  const BulkActions = useCallback(() => {
-    return (
-      <HStack pis='3xl' align='center' gap='xs'>
-        <Button
-          variant='solid'
-          onClick={handleConfirmAllClick}
-        >
-          Confirm all
-        </Button>
-        <BaseConfirmationModal
-          isOpen={isConfirmAllModalOpen}
-          onOpenChange={setIsConfirmAllModalOpen}
-          title='Confirm all suggestions?'
-          content={(
-            <Span>
-              {`This action will confirm ${count} selected ${pluralize('transaction', count)}.`}
-            </Span>
-          )}
-          onConfirm={() => {}}
-          confirmLabel='Confirm All'
-          cancelLabel='Cancel'
-          closeOnConfirm
-        />
-        <Button
-          variant='outlined'
-          onClick={handleCategorizeAllClick}
-        >
-          Set category
-        </Button>
-        <BaseConfirmationModal
-          isOpen={isCategorizeAllModalOpen}
-          onOpenChange={handleCategorizeModalClose}
-          title='Categorize all selected transactions?'
-          content={(
-            <VStack gap='xs'>
-              <VStack gap='3xs'>
-                <Label htmlFor={categorySelectId}>Select category</Label>
-                <CategorySelect
-                  name={categorySelectId}
-                  value={selectedCategory}
-                  onChange={setSelectedCategory}
-                  showTooltips={false}
-                  excludeMatches={true}
-                />
-              </VStack>
-              {selectedCategory && (
-                <Span>
-                  {`This action will categorize ${count} selected transactions as ${selectedCategory?.payload?.display_name}.`}
-                </Span>
-              )}
-            </VStack>
-          )}
-          onConfirm={() => {}}
-          confirmLabel='Categorize All'
-          cancelLabel='Cancel'
-          confirmDisabled={!selectedCategory}
-          closeOnConfirm
-        />
-      </HStack>
-    )
-  }, [
-    count,
-    categorySelectId,
-    isConfirmAllModalOpen,
-    isCategorizeAllModalOpen,
-    selectedCategory,
-    handleConfirmAllClick,
-    handleCategorizeAllClick,
-    handleCategorizeModalClose])
-
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
       <div className='Layer__bank-transactions__header__content-title'>
@@ -317,28 +222,15 @@ export const BankTransactionsHeader = ({
       <TransactionsActions>
         {showBulkActions
           ? (
-            <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
-              <HStack justify='space-between' align='center' gap='sm' pi='sm'>
-                <div style={{ minWidth: '7.5rem' }}>
-                  <Span>
-                    {count}
-                    {' selected '}
-                    {pluralize('item', count)}
-                  </Span>
-                </div>
-                <div style={{ width: '1px', height: '2rem', backgroundColor: 'var(--color-base-300)' }} />
-                <HStack align='center'>
-                  <Button
-                    variant='text'
-                    onClick={clearSelection}
-                    aria-label='Clear Bulk Selections'
-                  >
-                    Clear
-                  </Button>
-                </HStack>
-              </HStack>
-              <BulkActions />
-            </HStack>
+            <BulkActionsModule
+              count={count}
+              clearSelection={clearSelection}
+              slots={{ BulkActions: () => (
+                <BankTransactionsBulkActions
+                  count={count}
+                />
+              ) }}
+            />
           )
           : (
             <HStack slot='toggle' justify='center' gap='xs'>
