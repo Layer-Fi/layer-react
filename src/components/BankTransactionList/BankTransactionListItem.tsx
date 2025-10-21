@@ -29,6 +29,7 @@ import { BankTransactionProcessingInfo } from './BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
+import { useSizeClass } from '../../hooks/useWindowSize'
 
 type Props = {
   index: number
@@ -76,6 +77,7 @@ export const BankTransactionListItem = ({
 
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const { isDesktop } = useSizeClass()
 
   const { isVisible } = useDelayedVisibility({ delay: index * 80 })
 
@@ -161,7 +163,10 @@ export const BankTransactionListItem = ({
         </div>
         <div
           onClick={toggleOpen}
-          className='Layer__bank-transaction-row__expand-button'
+          className={classNames(
+            'Layer__bank-transaction-row__expand-button',
+            !isDesktop && 'Layer__bank-transaction-row__expand-button--mobile',
+          )}
         >
           <ChevronDownFill
             className={`Layer__chevron ${
