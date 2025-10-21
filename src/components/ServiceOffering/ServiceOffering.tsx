@@ -8,7 +8,7 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 
 import { DefaultHeroContentConfig, DefaultAccountingOfferingConfig, DefaultBookkeepingOfferingConfig, ServiceOfferingDefaultTextContent, ServiceOfferingContentID } from './content'
-import { HeroContentConfig, ServiceOfferingCardConfig, DeepPartial, ServiceOfferingLink, ServiceOfferingPlatformConfig, ServiceOfferingType } from './types'
+import { HeroContentConfig, ServiceOfferingCardConfig, DeepPartial, ServiceOfferingLink, ServiceOfferingPlatformConfig } from './types'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from '../../hooks/useCalendly/useCalendly'
 import { View } from '../View'
@@ -24,7 +24,7 @@ import { useSizeClass, useWindowSize } from '../../hooks/useWindowSize/useWindow
  */
 export interface ServiceOfferingProps {
   platform: ServiceOfferingPlatformConfig
-  availableOffers: ServiceOfferingType[]
+  availableOffers: ('accounting' | 'bookkeeping')[]
   heroOverrides: DeepPartial<HeroContentConfig>
   offeringOverrides: {
     stringOverrides?: {
