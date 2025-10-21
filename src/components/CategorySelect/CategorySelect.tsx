@@ -24,10 +24,12 @@ import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails, MatchDetailsType } from '../../schemas/bankTransactions/match'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/bankTransactions/match'
 import { type ReactNode, useCallback, useState } from 'react'
 import type { Option } from '../BankTransactionMobileList/utils'
 import { HStack } from '../ui/Stack/Stack'
+import { OptionActionType } from '../../types/categoryOption'
+import { CategoryOption } from '../../types/categoryOption'
 
 type Props = {
   name?: string
@@ -39,33 +41,6 @@ type Props = {
   showTooltips: boolean
   excludeMatches?: boolean
   asDrawer?: boolean
-}
-
-export enum OptionActionType {
-  CATEGORY = 'category',
-  MATCH = 'match',
-  HIDDEN = 'hidden',
-  SUGGESTIONS_LOADING = 'suggestions loading',
-}
-
-export interface CategoryOptionPayload {
-  id: string
-  option_type: OptionActionType
-  display_name: string
-  description?: string
-  date?: string
-  amount?: number
-  type?: string
-  stable_name?: string
-  entries?: CategoryWithEntries['entries']
-  subCategories: Category[] | null
-  details?: MatchDetailsType
-}
-
-export interface CategoryOption {
-  type: string
-  disabled?: boolean
-  payload: CategoryOptionPayload
 }
 
 export const mapCategoryToOption = (category: CategoryWithEntries): CategoryOption => {
