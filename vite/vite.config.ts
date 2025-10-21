@@ -2,21 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
 import path from 'node:path'
-import pkg from '../package.json'
 import { bundleCss } from './plugins/bundleCss'
 import { cleanupBuild } from './plugins/cleanupBuild'
-import { OUT_DIR } from './constants'
-
-function buildExternalDeps(): (string | RegExp)[] {
-  const deps = [
-    ...Object.keys(pkg.peerDependencies ?? {}),
-    ...Object.keys(pkg.dependencies ?? {}),
-  ]
-  return deps.map((dep) => {
-    const escaped = dep.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    return new RegExp(`^${escaped}($|/)`)
-  })
-}
+import { buildExternalDeps, OUT_DIR } from './utils'
 
 export default defineConfig(({ mode, command }) => {
   const isESM = mode === 'esm'
