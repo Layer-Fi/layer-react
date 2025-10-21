@@ -2,7 +2,7 @@
 import { Plugin } from 'vite'
 import path from 'node:path'
 import fs from 'node:fs'
-import { OUT_DIR } from '../constants'
+import { OUT_DIR } from '../utils'
 
 export function bundleCss(): Plugin {
   return {
