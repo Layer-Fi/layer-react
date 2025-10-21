@@ -46,7 +46,6 @@ export const BankTransactionsCategorizeAllButton = () => {
                 onChange={setSelectedCategory}
                 showTooltips={false}
                 excludeMatches={true}
-                className='Layer__BankTransactionsBulkActions__CategorySelectModal'
               />
             </VStack>
             {selectedCategory && (

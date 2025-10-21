@@ -17,12 +17,9 @@
     grid-area: search;
   }
 
-  &:has(.Layer__MinimalSearchField[data-disabled]) {
-    opacity: 0.9;
-    background-color: var(--color-base-100);
-    cursor: not-allowed;
-
-    & > [slot='icon'] {
+  .Layer__SearchField__Icon {
+    &[data-disabled] {
+      cursor: not-allowed;
       color: var(--color-base-500);
     }
   }

@@ -38,4 +38,8 @@
   &[data-empty] > [slot='clear-button'] {
     display: none;
   }
+  
+  &[data-disabled] {
+    cursor: not-allowed;
+  }
 }

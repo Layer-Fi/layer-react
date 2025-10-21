@@ -16,7 +16,7 @@ export type SearchFieldProps = {
 export function SearchField({ slot = 'search', label, isDisabled, ...restProps }: SearchFieldProps) {
   return (
     <Group slot={slot} className={CLASS_NAME}>
-      <VStack slot='icon' align='center' justify='center'>
+      <VStack slot='icon' align='center' justify='center' className='Layer__SearchField__Icon' data-disabled={isDisabled || undefined}>
         <Search size={14} />
       </VStack>
       <MinimalSearchField

@@ -107,8 +107,6 @@
 
   &:disabled {
     box-shadow: none;
-    opacity: 0.9;
-    background-color: var(--color-base-100);
     cursor: not-allowed;
 
     >.Layer__btn-content {
