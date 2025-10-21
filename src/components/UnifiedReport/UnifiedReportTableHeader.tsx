@@ -3,11 +3,12 @@ import { Button } from '../ui/Button/Button'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { ExpandableDataTableContext } from '../ExpandableDataTable/ExpandableDataTableProvider'
 import { DateSelection } from '../DateSelection/DateSelection'
-import { UnifiedReportDateVariant, useUnifiedReportDateVariant } from '../../providers/UnifiedReportRouteStore/UnifiedReportRouteStoreProvider'
+import { UnifiedReportDateVariant, useUnifiedReportDateVariant } from '../../providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { DateRangeSelection } from '../DateSelection/DateRangeSelection'
 import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { getActivationDate } from '../../utils/business'
 import { endOfToday, startOfDay } from 'date-fns'
+import { UnifiedReportDownloadButton } from './download/UnifiedReportDownloadButton'
 
 export const UnifiedReportTableHeader = () => {
   const { business } = useLayerContext()
@@ -46,7 +47,7 @@ export const UnifiedReportTableHeader = () => {
           <Button variant='outlined' onClick={onClickExpandOrCollapse}>
             {shouldCollapse ? 'Collapse All' : 'Expand All'}
           </Button>
-          {/** TODO: This is where the download button will go */}
+          <UnifiedReportDownloadButton />
         </HStack>
       </HStack>
     </VStack>
