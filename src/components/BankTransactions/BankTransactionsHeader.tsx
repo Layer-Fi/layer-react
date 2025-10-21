@@ -25,9 +25,9 @@ import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransact
 import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
 import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
-import { useCountSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useCountSelectedIds } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BulkActionsModule } from '../BulkActionsModule/BulkActionsModule'
-import { BankTransactionsBulkActions } from './BankTransactionsBulkActions'
+import { BankTransactionsBulkActions } from './BankTransactionsBulkActions/BankTransactionsBulkActions'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -152,7 +152,6 @@ export const BankTransactionsHeader = ({
   }, [setFilters])
 
   const { count } = useCountSelectedIds()
-  const { clearSelection } = useBulkSelectionActions()
 
   const showBulkActions = _showBulkSelection && count > 0
 
@@ -223,12 +222,8 @@ export const BankTransactionsHeader = ({
         {showBulkActions
           ? (
             <BulkActionsModule
-              count={count}
-              clearSelection={clearSelection}
               slots={{ BulkActions: () => (
-                <BankTransactionsBulkActions
-                  count={count}
-                />
+                <BankTransactionsBulkActions />
               ) }}
             />
           )

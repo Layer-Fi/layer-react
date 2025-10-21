@@ -1,23 +1,15 @@
+import { Label, Span } from '../../ui/Typography/Text'
+import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
+import { VStack } from '../../ui/Stack/Stack'
 import { useCallback, useId, useState } from 'react'
-import { HStack, VStack } from '../ui/Stack/Stack'
-import { Button } from '../ui/Button/Button'
-import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
-import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect'
-import { Label, Span } from '../ui/Typography/Text'
-import pluralize from 'pluralize'
+import { CategoryOption, CategorySelect } from '../../CategorySelect/CategorySelect'
+import { Button } from '../../ui/Button/Button'
+import { useCountSelectedIds } from '../../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
-export interface BankTransactionsBulkActionsProps {
-  count: number
-}
-
-export const BankTransactionsBulkActions = ({ count }: BankTransactionsBulkActionsProps) => {
-  const [isConfirmAllModalOpen, setIsConfirmAllModalOpen] = useState(false)
+export const BankTransactionsCategorizeAllButton = () => {
+  const { count } = useCountSelectedIds()
   const [isCategorizeAllModalOpen, setIsCategorizeAllModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<CategoryOption | undefined>(undefined)
-
-  const handleConfirmAllClick = useCallback(() => {
-    setIsConfirmAllModalOpen(true)
-  }, [])
 
   const handleCategorizeAllClick = useCallback(() => {
     setIsCategorizeAllModalOpen(true)
@@ -33,28 +25,7 @@ export const BankTransactionsBulkActions = ({ count }: BankTransactionsBulkActio
   const categorySelectId = useId()
 
   return (
-
-    <HStack pis='3xl' align='center' gap='xs'>
-      <Button
-        variant='solid'
-        onClick={handleConfirmAllClick}
-      >
-        Confirm all
-      </Button>
-      <BaseConfirmationModal
-        isOpen={isConfirmAllModalOpen}
-        onOpenChange={setIsConfirmAllModalOpen}
-        title='Confirm all suggestions?'
-        content={(
-          <Span>
-            {`This action will confirm ${count} selected ${pluralize('transaction', count)}.`}
-          </Span>
-        )}
-        onConfirm={() => {}}
-        confirmLabel='Confirm All'
-        cancelLabel='Cancel'
-        closeOnConfirm
-      />
+    <>
       <Button
         variant='outlined'
         onClick={handleCategorizeAllClick}
@@ -75,7 +46,7 @@ export const BankTransactionsBulkActions = ({ count }: BankTransactionsBulkActio
                 onChange={setSelectedCategory}
                 showTooltips={false}
                 excludeMatches={true}
-                className='Layer__category-select--modal'
+                className='Layer__BankTransactionsBulkActions__CategorySelectModal'
               />
             </VStack>
             {selectedCategory && (
@@ -91,6 +62,6 @@ export const BankTransactionsBulkActions = ({ count }: BankTransactionsBulkActio
         confirmDisabled={!selectedCategory}
         closeOnConfirm
       />
-    </HStack>
+    </>
   )
 }
