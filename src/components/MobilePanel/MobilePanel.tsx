@@ -3,6 +3,7 @@ import { BackButton } from '../Button/BackButton'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import classNames from 'classnames'
 import { createPortal } from 'react-dom'
+import './mobilePanel.scss'
 
 export type MobilePanelProps = {
   header?: ReactNode

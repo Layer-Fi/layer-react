@@ -4,6 +4,7 @@ import { DateSelectionComboBox } from './DateSelectionComboBox'
 import { DatePicker } from '../DatePicker/DatePicker'
 import { useGlobalDate, useGlobalDateActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useDatePickerState } from '../DatePicker/useDatePickerState'
+import './dateSelection.scss'
 
 type DateSelectionProps = {
   minDate?: Date | null

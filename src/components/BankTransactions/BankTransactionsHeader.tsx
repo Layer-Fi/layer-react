@@ -17,7 +17,7 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import { useBankTransactionsFiltersContext } from '../../contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import { SearchField } from '../SearchField/SearchField'
-import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
+import { BankTransactionsActions } from '../BankTransactionsActions/BankTransactionsActions'
 import { HStack } from '../ui/Stack/Stack'
 import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
@@ -317,7 +317,7 @@ export const BankTransactionsHeader = ({
           />
         )
         : (
-          <TransactionsActions>
+          <BankTransactionsActions>
             <HStack slot='toggle' justify='center' gap='xs'>
               {collapseHeader && headerTopRow}
               {!categorizedOnly && categorizeView && showStatusToggle && (
@@ -347,7 +347,7 @@ export const BankTransactionsHeader = ({
                 ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} />
                 : withUploadMenu && <BankTransactionsUploadMenu />}
             </HStack>
-          </TransactionsActions>
+          </BankTransactionsActions>
         )}
     </Header>
   )

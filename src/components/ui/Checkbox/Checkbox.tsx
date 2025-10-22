@@ -5,6 +5,7 @@ import { withRenderProp } from '../../utility/withRenderProp'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../../Tooltip'
 import classNames from 'classnames'
+import './checkbox.scss'
 
 const CLASS_NAME = 'Layer__Checkbox'
 

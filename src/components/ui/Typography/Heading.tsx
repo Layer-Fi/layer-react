@@ -3,6 +3,7 @@ import { Heading as ReactAriaHeading, HeadingProps as ReactAriaHeadingProps } fr
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import type { Spacing } from '../sharedUITypes'
 import classNames from 'classnames'
+import './heading.scss'
 
 type HeadingDataProps = {
   align?: 'center'

@@ -8,6 +8,7 @@ import { DataState, DataStateStatus } from '../DataState/DataState'
 import { FileSpreadsheet } from 'lucide-react'
 import CloseIcon from '../../icons/CloseIcon'
 import { Button } from '../ui/Button/Button'
+import './csvUpload.scss'
 
 const VALID_EXTENSIONS = ['.csv']
 const VALID_FILE_TYPES = ['text/csv', 'text/plain', 'application/vnd.ms-excel']

@@ -7,6 +7,7 @@ import { SummaryStep } from './Steps/SummaryStep'
 import { BusinessInfoStep } from './Steps/BusinessInfoStep'
 import { BookOnboardingCallStep } from './Steps/BookOnboardingCallStep'
 import { useBookkeepingConfiguration } from '../../hooks/useBookkeepingConfiguration'
+import './platformOnboarding.scss'
 
 enum PlatformOnboardingStep {
   WELCOME = 'welcome',

@@ -7,6 +7,7 @@ import {
   Label as ReactAriaLabel,
   Text as ReactAriaText,
 } from 'react-aria-components'
+import './text.scss'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'

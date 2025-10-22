@@ -4,6 +4,7 @@ import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { RuleUpdatesPromptStep } from './RuleUpdatesPromptStep'
 import { RuleUpdatesReviewStep } from './RuleUpdatesReviewStep'
 import { ModalHeading } from '../ui/Modal/ModalSlots'
+import './suggestedCategorizationRuleUpdates.scss'
 
 type SuggestedCategorizationRuleUpdatesProps = {
   close: () => void

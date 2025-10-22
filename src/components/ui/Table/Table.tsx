@@ -17,6 +17,7 @@ import {
 } from 'react-aria-components'
 import classNames, { type Argument } from 'classnames'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import './table.scss'
 
 enum TableComponent {
   Table = 'Table',
