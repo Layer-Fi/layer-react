@@ -5,82 +5,12 @@ import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
+import { BulkCategorizeRequestSchema, BulkCategorizeResponseSchema, BulkCategorizeResponseDataSchema } from '../../schemas/bankTransactions/bulkCategorizeSchemas'
 
 const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'
 
-const AccountIdClassificationSchema = Schema.Struct({
-  type: Schema.Literal('AccountId'),
-  id: Schema.String,
-})
-
-const StableNameClassificationSchema = Schema.Struct({
-  type: Schema.Literal('StableName'),
-  stableName: Schema.propertySignature(Schema.String).pipe(
-    Schema.fromKey('stable_name'),
-  ),
-})
-
-const ExclusionClassificationSchema = Schema.Struct({
-  type: Schema.Literal('Exclusion'),
-  exclusionType: Schema.propertySignature(Schema.String).pipe(
-    Schema.fromKey('exclusion_type'),
-  ),
-})
-
-const BankTransactionClassificationSchema = Schema.Union(
-  AccountIdClassificationSchema,
-  StableNameClassificationSchema,
-  ExclusionClassificationSchema,
-)
-
-const CategoryCategorizationSchema = Schema.Struct({
-  type: Schema.Literal('Category'),
-  category: BankTransactionClassificationSchema,
-})
-
-const SplitEntrySchema = Schema.Struct({
-  amount: Schema.Number,
-  category: BankTransactionClassificationSchema,
-})
-
-const SplitCategorizationSchema = Schema.Struct({
-  type: Schema.Literal('Split'),
-  entries: Schema.Array(SplitEntrySchema),
-})
-
-const BankTransactionCategorizationSchema = Schema.Union(
-  CategoryCategorizationSchema,
-  SplitCategorizationSchema,
-)
-
-const TransactionCategorizationSchema = Schema.Struct({
-  transactionId: Schema.propertySignature(Schema.UUID).pipe(
-    Schema.fromKey('transaction_id'),
-  ),
-  categorization: BankTransactionCategorizationSchema,
-})
-
-const BulkCategorizeRequestSchema = Schema.Struct({
-  transactions: Schema.Array(TransactionCategorizationSchema),
-})
-
 type BulkCategorizeRequest = typeof BulkCategorizeRequestSchema.Type
 type BulkCategorizeRequestEncoded = typeof BulkCategorizeRequestSchema.Encoded
-
-const CategorizationResultSchema = Schema.Struct({
-  transactionId: Schema.propertySignature(Schema.UUID).pipe(
-    Schema.fromKey('transaction_id'),
-  ),
-  categorization: Schema.NullOr(BankTransactionCategorizationSchema),
-})
-
-const BulkCategorizeResponseDataSchema = Schema.Struct({
-  results: Schema.Array(CategorizationResultSchema),
-})
-
-const BulkCategorizeResponseSchema = Schema.Struct({
-  data: BulkCategorizeResponseDataSchema,
-})
 
 type BulkCategorizeResponse = typeof BulkCategorizeResponseSchema.Type
 
