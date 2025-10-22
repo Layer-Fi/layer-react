@@ -66,10 +66,10 @@ function useBulkSelectionStore() {
   return store
 }
 
-export function useSelectedIds() {
+export function useSelectedIds(): { selectedIds: Set<string> } {
   const store = useBulkSelectionStore()
 
-  const selectedIds = useStore(store, state => state.selected)
+  const selectedIds: Set<string> = useStore(store, state => state.selected)
 
   return { selectedIds }
 }
