@@ -7,14 +7,21 @@ import { TasksPanelNotification } from './TasksPanelNotification'
 import { TasksYearsTabs } from './TasksYearsTabs'
 import { ConditionalBlock } from '../utility/ConditionalBlock'
 import { TasksEmptyContainer } from './container/TasksEmptyContainer'
-import { P } from '../ui/Typography/Text'
+import { P, Span } from '../ui/Typography/Text'
 import { Heading } from '../ui/Typography/Heading'
 import { VStack } from '../ui/Stack/Stack'
 import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { Container } from '../Container'
-import { TasksEmptyState } from './TasksEmptyState'
 import { CallBookingPurpose, useCallBookings } from '../../features/callBookings/api/useCallBookings'
 import { useMemo } from 'react'
+
+const TasksOnboardingEmptyState = () => {
+  return (
+    <VStack gap='lg' pi='md' pbe='md'>
+      <Span>Once you complete your bookkeeping onboarding call, you will see your bookkeeping tasks here.</Span>
+    </VStack>
+  )
+}
 
 export interface TasksStringOverrides {
   header?: string
@@ -66,7 +73,7 @@ export function Tasks({
       <TasksHeader tasksHeader={stringOverrides?.header || tasksHeader} />
       <VStack className='Layer__tasks__content'>
         {tasksState === 'onboarding' && (
-          <TasksEmptyState />
+          <TasksOnboardingEmptyState />
         )}
         {tasksState === 'active' && (
           <ConditionalBlock
