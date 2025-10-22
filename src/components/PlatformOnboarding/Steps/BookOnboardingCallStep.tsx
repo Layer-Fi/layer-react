@@ -36,7 +36,7 @@ enum BookOnboardingCallStepState {
 }
 
 const defaultTitle = 'Schedule an onboarding call with our bookkeeping team to finish your onboarding'
-const defaultDescription = 'During this call, we will review all of your information, answer any questions you have, and then get you live on bookkeeping.'
+const defaultDescription = 'During this call we will review your information, answer any questions you have, then get you live on bookkeeping.'
 
 export const BookOnboardingCallStep = ({ title = defaultTitle, description = defaultDescription, onNext }: BookOnboardingCallStepProps) => {
   const { isMobile, isTablet, isDesktop } = useSizeClass()
