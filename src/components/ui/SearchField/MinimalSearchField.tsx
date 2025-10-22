@@ -22,7 +22,6 @@ export function MinimalSearchField({
       <ReactAriaInput
         slot='input'
         placeholder={placeholder}
-        style={isDisabled ? { cursor: 'not-allowed' } : undefined}
       />
       <Button slot='clear-button' inset icon variant='ghost' aria-label='Clear search'>
         <X />
