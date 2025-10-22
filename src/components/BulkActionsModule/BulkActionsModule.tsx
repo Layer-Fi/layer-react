@@ -3,6 +3,7 @@ import { Button } from '../ui/Button/Button'
 import { HStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 import pluralize from 'pluralize'
+import './bulkActionsModule.scss'
 
 export interface BulkActionsModuleProps {
   slots: {
