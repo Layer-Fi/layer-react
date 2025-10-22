@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { parseISO, differenceInDays } from 'date-fns'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import './dueStatus.scss'
 
 export interface DueStatusProps {
   dueDate: Date | string

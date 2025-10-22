@@ -2,6 +2,7 @@ import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBook
 import { Text, TextSize } from '../Typography/Text'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { getBookkeepingStatusConfig } from './utils'
+import './bookkeepingStatus.scss'
 
 type BookkeepingStatusProps = {
   monthNumber?: number

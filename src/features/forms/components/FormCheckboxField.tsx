@@ -4,6 +4,7 @@ import { CheckboxWithTooltip } from '../../../components/ui/Checkbox/Checkbox'
 import { Label } from '../../../components/ui/Typography/Text'
 import classNames from 'classnames'
 import type { CommonFormFieldProps } from '../types'
+import './formCheckboxField.scss'
 
 export type FormCheckboxFieldProps = CommonFormFieldProps
 const FORM_CHECKBOX_FIELD_CLASSNAME = 'Layer__FormCheckboxField'

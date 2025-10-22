@@ -13,6 +13,7 @@ import { HStack } from '../ui/Stack/Stack'
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { downloadICS, prepareIcsFilename } from './downloadICS'
+import './addToCalendar.scss'
 
 /**
  * Required to be specified by the iCalendar standard.

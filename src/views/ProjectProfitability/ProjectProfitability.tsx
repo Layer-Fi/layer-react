@@ -10,6 +10,7 @@ import { MoneyFormat } from '../../types/general'
 import { DisplayState } from '../../types/bank_transactions'
 import { AccountingOverview } from '../AccountingOverview'
 import type { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import './projectProfitability.scss'
 
 export type TagOption = {
   label: string

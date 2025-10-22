@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react'
+import './linkAccountsListContainer.scss'
 
 export function LinkAccountsListContainer({ children }: PropsWithChildren) {
   const CLASS_NAME = 'Layer__LinkAccountsListContainer'

@@ -10,6 +10,7 @@ import { useCallback, useState } from 'react'
 import { useCreateCallBooking } from '../../../features/callBookings/api/useCreateCallBookings'
 import { useBookkeepingConfiguration } from '../../../hooks/useBookkeepingConfiguration'
 import { CallBookingPurpose, CallBookingType } from '../../../schemas/callBookings'
+import './bookOnboardingCallStep.scss'
 
 interface CalendlyPayload {
   event: {

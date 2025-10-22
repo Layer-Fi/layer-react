@@ -9,6 +9,7 @@ import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { getActivationDate } from '../../utils/business'
 import { endOfToday, startOfDay } from 'date-fns'
 import { UnifiedReportDownloadButton } from './download/UnifiedReportDownloadButton'
+import './unifiedReportTableHeader.scss'
 
 export const UnifiedReportTableHeader = () => {
   const { business } = useLayerContext()

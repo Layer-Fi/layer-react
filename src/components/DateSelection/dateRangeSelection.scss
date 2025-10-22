@@ -1,0 +1,8 @@
+.Layer__DateRangeSelection {
+  display: grid;
+  grid-template-columns: 9rem repeat(2, minmax(10rem, 12rem));
+
+  .Layer__tooltip-trigger {
+    padding-top: 0;
+  }
+}

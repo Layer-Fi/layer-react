@@ -2,6 +2,7 @@ import CheckIcon from '../../icons/Check'
 import ChevronRight from '../../icons/ChevronRight'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
+import './actionableList.scss'
 
 export interface ActionableListOption<T> {
   label: string

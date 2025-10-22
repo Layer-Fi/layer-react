@@ -38,8 +38,14 @@ export default defineConfig(({ mode, command }) => {
       lib: isESM
         ? {
           entry: {
-            index: path.resolve(__dirname, '../src/index.tsx'),
+            /**
+             * Important that the `styles/index.scss` entry is before `src/index.tsx` so that CSS
+             * files imported from the styles index file appear earlier in the generated CSS than
+             * the CSS for the individual components. This means individual component styles will
+             * will be prioritized over global styles.
+             */
             styles: path.resolve(__dirname, '../src/styles/index.scss'),
+            index: path.resolve(__dirname, '../src/index.tsx'),
           },
           formats: ['es'],
         }

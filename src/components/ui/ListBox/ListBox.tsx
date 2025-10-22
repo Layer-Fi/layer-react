@@ -15,6 +15,7 @@ import {
 import { mergeRefs } from '@react-aria/utils'
 import { Header } from '../Typography/Text'
 import { useStopClickEventsRefCallback } from '../../../hooks/ref/useStopClickEventsRef'
+import './listBox.scss'
 
 const LIST_BOX_CLASS_NAME = 'Layer__ListBox'
 type ListBoxProps<T extends Record<string, unknown>> = Omit<
