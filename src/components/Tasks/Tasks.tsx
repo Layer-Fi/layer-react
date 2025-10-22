@@ -72,6 +72,11 @@ export function Tasks({
       />
       <TasksHeader tasksHeader={stringOverrides?.header || tasksHeader} />
       <VStack className='Layer__tasks__content'>
+        {tasksState === 'loading' && (
+          <TasksEmptyContainer>
+            <Loader />
+          </TasksEmptyContainer>
+        )}
         {tasksState === 'onboarding' && (
           <TasksOnboardingEmptyState />
         )}
