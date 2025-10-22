@@ -4,7 +4,8 @@ import { useEnvironment } from '../../../providers/Environment/EnvironmentInputP
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { get } from '../../../api/layer/authenticated_http'
 import { Schema } from 'effect'
-import { UnifiedReportSchema, type ReportEnum, type UnifiedReport } from '../../../schemas/reports/unifiedReport'
+import { UnifiedReportSchema, type ReportEnum, type UnifiedReport, type UnifiedReportDateQueryParams } from '../../../schemas/reports/unifiedReport'
+import { toDefinedSearchParameters } from '../../../utils/request/toDefinedSearchParameters'
 
 export const UNIFIED_REPORT_TAG_KEY = '#unified-report'
 
@@ -13,12 +14,14 @@ function buildKey({
   apiUrl,
   businessId,
   report,
+  ...dateParams
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
   report: ReportEnum
-}) {
+} & UnifiedReportDateQueryParams,
+) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
@@ -26,14 +29,19 @@ function buildKey({
       businessId,
       report,
       tags: [UNIFIED_REPORT_TAG_KEY],
+      ...dateParams,
     } as const
   }
 }
 
 const getUnifiedReport = get<
   { data: unknown },
-  { businessId: string, report: ReportEnum }
->(({ businessId, report }) => `/v1/businesses/${businessId}/reports/unified/${report}`)
+  { businessId: string, report: ReportEnum } & UnifiedReportDateQueryParams
+>(({ businessId, report, ...dateParams }) => {
+  const parameters = toDefinedSearchParameters({ ...dateParams })
+
+  return `/v1/businesses/${businessId}/reports/unified/${report}?${parameters}`
+})
 
 type LineItemDecoded = UnifiedReport['lineItems'][number]
 
@@ -82,9 +90,9 @@ class UnifiedReportSWRResponse {
 
 type UseUnifiedReportParameters = {
   report: ReportEnum
-}
+} & UnifiedReportDateQueryParams
 
-export function useUnifiedReport({ report }: UseUnifiedReportParameters) {
+export function useUnifiedReport({ report, ...dateParams }: UseUnifiedReportParameters) {
   const { data: auth } = useAuth()
   const { apiUrl } = useEnvironment()
   const { businessId } = useLayerContext()
@@ -95,9 +103,10 @@ export function useUnifiedReport({ report }: UseUnifiedReportParameters) {
       apiUrl,
       businessId,
       report,
+      ...dateParams,
     }),
     ({ accessToken, apiUrl, businessId }) => getUnifiedReport(apiUrl, accessToken, {
-      params: { businessId, report },
+      params: { businessId, report, ...dateParams },
     })().then(({ data }) =>
       Schema
         .decodeUnknownPromise(UnifiedReportSchema)(data)

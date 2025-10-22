@@ -1,6 +1,6 @@
-import { DatePickerModeSelector } from '../../DatePicker/ModeSelector/DatePickerModeSelector'
+import { DeprecatedDatePickerModeSelector } from '../../DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
 import type { TimeRangePickerConfig } from '../../../views/Reports/reportTypes'
-import { DatePicker } from '../../DatePicker'
+import { DeprecatedDatePicker } from '../../DeprecatedDatePicker/DeprecatedDatePicker'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../../utils/business'
 import { getAllowedDateRangePickerModes, useGlobalDateRangePicker } from '../../../providers/GlobalDateStore/useGlobalDateRangePicker'
@@ -39,14 +39,14 @@ export function StatementOfCashFlowDatePicker({
   const minDate = getEarliestDateToBrowse(business)
 
   return (
-    <DatePicker
+    <DeprecatedDatePicker
       selected={dateOrDateRange}
       onChange={onChangeDateOrDateRange}
       displayMode={rangeDisplayMode}
       allowedModes={cleanedAllowedModes}
       onChangeMode={onChangeMode}
       slots={{
-        ModeSelector: DatePickerModeSelector,
+        ModeSelector: DeprecatedDatePickerModeSelector,
       }}
       customDateRanges={customDateRanges}
       minDate={minDate}

@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { PopupModal } from 'react-calendly'
+import classNames from 'classnames'
 import { Container } from '../../components/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -9,11 +11,12 @@ import { View } from '../../components/View'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { Variants } from '../../utils/styleUtils/sizeVariants'
 import { BookkeepingProfitAndLossSummariesContainer } from './internal/BookkeepingProfitAndLossSummariesContainer'
-import classNames from 'classnames'
 import { useKeepInMobileViewport } from './useKeepInMobileViewport'
 import { VStack } from '../../components/ui/Stack/Stack'
 import { CallBooking } from '../../components/CallBooking/CallBooking'
-import { CallBookingPurpose, CallBookingState, CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
+import { type CallBooking as CallBookingData } from '../../schemas/callBookings'
+import { useCalendly } from '../../hooks/useCalendly/useCalendly'
+import { useCallBookings } from '../../features/callBookings/api/useCallBookings'
 
 export interface BookkeepingOverviewProps {
   showTitle?: boolean
@@ -33,7 +36,9 @@ export interface BookkeepingOverviewProps {
       }
     }
   }
+
   _showBookACall?: boolean
+
   onClickReconnectAccounts?: () => void
   /**
    * @deprecated Use `stringOverrides.title` instead
@@ -53,6 +58,7 @@ export const BookkeepingOverview = ({
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
+  const { isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly } = useCalendly()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -60,22 +66,11 @@ export const BookkeepingOverview = ({
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
 
-  const exampleCallBooking: CallBookingData = {
-    id: '123',
-    businessId: '123',
-    externalId: '123',
-    purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
-    state: CallBookingState.SCHEDULED,
-    callType: CallBookingType.GOOGLE_MEET,
-    eventStartAt: new Date(),
-    callLink: new URL('https://meet.google.com/123'),
-    cancellationReason: undefined,
-    didAttend: undefined,
-    bookkeeperName: 'John Doe',
-    bookkeeperEmail: 'john.doe@example.com',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }
+  const handleBookCall = () => {} // TODO
+
+  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings(1)
+  const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
+  const callBookingVisible = _showBookACall && callBooking && !isLoading && !isValidating && !isError
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -85,8 +80,8 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={(
           <VStack gap='lg'>
-            {_showBookACall && (
-              <CallBooking callBooking={exampleCallBooking} onAddToCalendar={() => {}} />
+            {callBookingVisible && (
+              <CallBooking callBooking={callBooking} onBookCall={handleBookCall} />
             )}
             <Tasks
               stringOverrides={stringOverrides?.tasks}
@@ -102,8 +97,8 @@ export const BookkeepingOverview = ({
             onClick={() => (upperElementInFocus.current = true)}
           >
             <VStack gap='lg'>
-              {_showBookACall && (
-                <CallBooking callBooking={exampleCallBooking} onAddToCalendar={() => {}} />
+              {callBookingVisible && (
+                <CallBooking callBooking={callBooking} onBookCall={handleBookCall} />
               )}
               <Tasks
                 mobile
@@ -183,6 +178,19 @@ export const BookkeepingOverview = ({
           </Container>
         </div>
       </View>
+      {isCalendlyVisible && (
+        <div
+          ref={calendlyRef}
+          className={classNames('Layer__calendly-container', { visible: isCalendlyVisible })}
+        >
+          <PopupModal
+            url={calendlyLink}
+            onModalClose={closeCalendly}
+            open={isCalendlyVisible}
+            rootElement={document.body}
+          />
+        </div>
+      )}
     </ProfitAndLoss>
   )
 }

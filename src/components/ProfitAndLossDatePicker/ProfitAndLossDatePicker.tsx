@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
-import { DatePicker } from '../DatePicker'
-import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
+import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
+import { DeprecatedDatePickerModeSelector } from '../DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
 import { getAllowedDateRangePickerModes, getInitialDateRangePickerMode, useGlobalDateRangePicker } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
 import { ReportKey, useReportModeActions, useReportModeStore, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { type DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -46,14 +46,14 @@ export const ProfitAndLossDatePicker = ({
 
   const minDate = getEarliestDateToBrowse(business)
   return (
-    <DatePicker
+    <DeprecatedDatePicker
       selected={dateOrDateRange}
       onChange={onChangeDateOrDateRange}
       displayMode={rangeDisplayMode}
       allowedModes={cleanedAllowedModes}
       onChangeMode={onChangeMode}
       slots={{
-        ModeSelector: DatePickerModeSelector,
+        ModeSelector: DeprecatedDatePickerModeSelector,
       }}
       customDateRanges={customDateRanges}
       minDate={minDate}

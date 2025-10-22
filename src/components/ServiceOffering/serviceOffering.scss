@@ -1,0 +1,132 @@
+.Layer__service-offering {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+  border-radius: var(--border-radius-sm);
+  border: none;
+  background: var(--color-white);
+}
+
+.Layer__service-offering__calendly-container {
+  overflow: hidden;
+  max-height: 0;
+  margin: 0;
+  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.visible {
+    max-height: 800px;
+    margin: var(--spacing-lg) 0;
+  }
+
+  // Ensure the inner calendly widget has proper height
+  .calendly-inline-widget {
+    min-height: 630px;
+    width: 100%;
+    margin-bottom: var(--spacing-lg);
+    transition: opacity 0.3s ease-in-out 0.8s;
+  }
+}
+
+// Service Offering Options Component
+.Layer__service-offering-options {
+  max-width: 1200px;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  margin: 0 auto;
+}
+
+.Layer__service-offering-options__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-2xl);
+  justify-items: center;
+  margin: 0 auto;
+
+  @media (width <= 720px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.Layer__service-offering-options__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  border-radius: 16px;
+  border: 1px solid var(--color-base-100);
+  box-shadow: 0 5px 10px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+  margin: 0;
+  background: white;
+  overflow-wrap: break-word;
+}
+
+.Layer__service-offering-options__feature-check {
+  color: var(--fg-subtle);
+}
+
+// Layout configurations for different offer positions
+.Layer__service-offering__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.Layer__service-offering__offers {
+  width: 100%;
+  background-color: transparent;
+}
+
+.Layer__service-offering__responsive-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  @media (width <= 1440px) {
+    flex-direction: column;
+  }
+}
+
+.Layer__service-offering__responsive-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+  max-width: 420px;
+
+  @media (width <= 1440px) {
+    max-width: 100%;
+  }
+}
+
+.Layer__service-offering__responsive-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: margin-top 0.3s ease-in-out, opacity 0.3s ease-in-out;
+
+  @media (width <= 1440px) {
+    margin-top: var(--spacing-lg);
+  }
+
+  img {
+    height: auto;
+    max-height: 480px;
+    max-width: 100%;
+    object-fit: cover;
+    opacity: 0;
+    animation: fade-in-image 0.4s ease-in forwards;
+    animation-delay: 0.1s;
+  }
+}
+
+@keyframes fade-in-image {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

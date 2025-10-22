@@ -4,7 +4,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { getBankTransactions, type GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
 import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'
-import type { BankTransaction } from '../../types'
+import type { BankTransaction } from '../../types/bank_transactions'
 import { debounce } from 'lodash'
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
@@ -125,8 +125,13 @@ type BankTransactionsInvalidateOptions = {
   withPrecedingOptimisticUpdate?: boolean
 }
 
-export function useBankTransactionsInvalidator() {
-  const { invalidate } = useGlobalCacheActions()
+export const useBankTransactionsGlobalCacheActions = () => {
+  const { invalidate, optimisticUpdate, forceReload } = useGlobalCacheActions()
+
+  const forceReloadBankTransactions = useCallback(
+    () => forceReload(tags => tags.includes(BANK_TRANSACTIONS_TAG_KEY)),
+    [forceReload],
+  )
 
   const invalidateBankTransactions = useCallback(
     (invalidateOptions?: BankTransactionsInvalidateOptions) => invalidate(
@@ -147,15 +152,6 @@ export function useBankTransactionsInvalidator() {
     ),
     [invalidateBankTransactions],
   )
-
-  return {
-    invalidateBankTransactions,
-    debouncedInvalidateBankTransactions,
-  }
-}
-
-export function useBankTransactionsOptimisticUpdater() {
-  const { optimisticUpdate } = useGlobalCacheActions()
 
   const optimisticallyUpdateBankTransactions = useCallback(
     (
@@ -189,5 +185,10 @@ export function useBankTransactionsOptimisticUpdater() {
     [optimisticUpdate],
   )
 
-  return { optimisticallyUpdateBankTransactions }
+  return {
+    invalidateBankTransactions,
+    debouncedInvalidateBankTransactions,
+    forceReloadBankTransactions,
+    optimisticallyUpdateBankTransactions,
+  }
 }

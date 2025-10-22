@@ -1,19 +1,19 @@
 import { RefObject } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { BackButton, Button, ButtonVariant, IconButton, RetryButton, SubmitButton, TextButton } from '../Button'
-import { DatePicker } from '../DatePicker/DatePicker'
+import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
 import { Header, HeaderRow, HeaderCol } from '../Header'
 import { Input, InputGroup } from '../Input'
 import { Select } from '../Input/Select'
 import { Textarea } from '../Textarea'
 import { TextWeight, TextSize, Text, ErrorText } from '../Typography'
 import { EditableBill, useBillForm } from './useBillForm'
-import type { Bill, Category } from '../../types'
+import type { Category } from '../../types/categories'
 import { formatDate } from '../../utils/format'
 import { formatISO, parseISO } from 'date-fns'
 import { Panel } from '../Panel'
 import { BillsSidebar } from './BillsSidebar'
-import { BillTerms } from '../../types/bills'
+import { Bill, BillTerms } from '../../types/bills'
 import { SelectVendor } from '../Vendors/SelectVendor'
 import { CategorySelect, mapCategoryToOption } from '../CategorySelect/CategorySelect'
 import { AmountInput } from '../Input/AmountInput'
@@ -207,7 +207,7 @@ export const BillsDetails = ({
                 <form.Field name='received_at'>
                   {field => (
                     <InputGroup inline={true} label='Bill date'>
-                      <DatePicker
+                      <DeprecatedDatePicker
                         displayMode='dayPicker'
                         selected={convertToInputDate(field.state.value)}
                         onChange={e => field.handleChange(formatISO(e as Date))}
@@ -233,7 +233,7 @@ export const BillsDetails = ({
                 <form.Field name='due_at'>
                   {field => (
                     <InputGroup inline={true} label='Due date'>
-                      <DatePicker
+                      <DeprecatedDatePicker
                         displayMode='dayPicker'
                         selected={convertToInputDate(field.state.value)}
                         onChange={(d) => {

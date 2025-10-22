@@ -7,6 +7,7 @@ import {
   type ModalOverlayProps,
 } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import './modal.scss'
 
 type ModalSize = 'md' | 'lg' | 'xl'
 type ModalVariant = 'center' | 'drawer' | 'mobile-drawer'
@@ -118,12 +119,14 @@ type AllowedInternalDrawerProps = Pick<
 
 export type DrawerProps = AllowedModalOverlayProps &
   AllowedInternalDrawerProps &
-  AllowedDialogProps
+  AllowedDialogProps &
+  AllowedInternalModalProps
 
 export function Drawer({
   isOpen,
   onOpenChange,
   size = 'md',
+  flexBlock,
   children,
   'aria-label': ariaLabel,
   variant = 'drawer',
@@ -132,7 +135,7 @@ export function Drawer({
 }: DrawerProps) {
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
-      <InternalModal size={size} variant={variant}>
+      <InternalModal flexBlock={flexBlock} size={size} variant={variant}>
         <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
           {children}
         </Dialog>

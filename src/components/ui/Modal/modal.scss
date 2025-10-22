@@ -32,10 +32,6 @@
   block-size: min(42rem, 90%);
   inline-size: min(36rem, 90%);
 
-  &[data-flex-block] {
-    block-size: auto;
-  }
-
   &[data-size='lg'] {
     inline-size: min(42rem, 90%);
   }
@@ -73,6 +69,10 @@
     &[data-exiting] {
       animation: mobile-drawer-slide 200ms reverse ease-in;
     }
+  }
+
+  &[data-flex-block] {
+    block-size: auto;
   }
 }
 

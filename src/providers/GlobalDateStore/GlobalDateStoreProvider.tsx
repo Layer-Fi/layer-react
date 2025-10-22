@@ -3,6 +3,7 @@ import {
   endOfMonth,
   endOfYear,
   min,
+  max,
   startOfMonth,
   startOfYear,
 } from 'date-fns'
@@ -10,7 +11,7 @@ import { useState, createContext, type PropsWithChildren, useContext, useMemo } 
 import { createStore, useStore } from 'zustand'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { useStoreWithDateSelected } from '../../utils/zustand/useStoreWithDateSelected'
-import type { UnifiedPickerMode } from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
+import type { UnifiedPickerMode } from '../../components/DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
 
 const _DATE_PICKER_MODES = [
   'dayPicker',
@@ -28,7 +29,12 @@ export type DateRangePickerMode = typeof _RANGE_PICKER_MODES[number]
 export const isDateRangePickerMode = (mode: string): mode is DateRangePickerMode => {
   return _RANGE_PICKER_MODES.includes(mode as DateRangePickerMode)
 }
-function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
+
+export function clampToAfterActivationDate(date: Date | number, activationDate: Date) {
+  return max([date, activationDate])
+}
+
+export function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
   return min([date, cutoff])
 }
 

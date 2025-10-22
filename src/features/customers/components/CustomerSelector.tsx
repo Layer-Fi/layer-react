@@ -8,6 +8,7 @@ import { Label } from '../../../components/ui/Typography/Text'
 import { Customer } from '../../../schemas/customer'
 import classNames from 'classnames'
 import { getCustomerName } from '../util'
+import './customerSelector.scss'
 
 class CustomerAsOption {
   private internalCustomer: Customer

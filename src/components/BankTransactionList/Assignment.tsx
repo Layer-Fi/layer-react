@@ -1,7 +1,8 @@
 import { DATE_FORMAT } from '../../config/general'
 import Scissors from '../../icons/Scissors'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
+import { isTransferMatch } from '../../utils/bankTransactions'
 import { Badge } from '../Badge'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'
@@ -24,7 +25,7 @@ export const Assignment = ({ bankTransaction }: AssignmentProps) => {
           classNamePrefix='Layer__bank-transaction-list-item'
           bankTransaction={bankTransaction}
           dateFormat={DATE_FORMAT}
-          text='Matched'
+          text={isTransferMatch(bankTransaction) ? 'Transfer' : 'Matched'}
         />
         <Text className='Layer__bank-transaction-list-item__category-text__text'>
           {`${formatTime(

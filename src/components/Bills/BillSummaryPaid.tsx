@@ -1,4 +1,4 @@
-import { Bill } from '../../types'
+import type { Bill } from '../../types/bills'
 import { convertFromCents, convertNumberToCurrency, formatDate } from '../../utils/format'
 import { Text, TextSize, TextWeight } from '../Typography/Text'
 import { DATE_FORMAT_SHORT } from '../../config/general'

@@ -24,10 +24,11 @@ import { List, Trash2 } from 'lucide-react'
 import { convertCentsToCurrency } from '../../utils/format'
 import { Span } from '../ui/Typography/Text'
 import { DataState, DataStateStatus } from '../DataState/DataState'
-import { filterAccounts, getMatchedTextIndices, sortAccountsRecursive } from './utils/utils'
+import { filterAccounts, getMatchedTextIndices } from './utils/utils'
 import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
 import { LedgerBalancesSchemaType, NestedLedgerAccountType } from '../../schemas/generalLedger/ledgerAccount'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { asMutable } from '../../utils/asMutable'
 
 const highlightMatch = ({ text, query, isMatching }: { text: string, query: string, isMatching?: boolean }): ReactNode => {
   const matchedTextIndices = getMatchedTextIndices({ text, query, isMatching })
@@ -92,7 +93,6 @@ export const ChartOfAccountsTableContent = ({
   const { editAccount, deleteAccount, isError } = useContext(ChartOfAccountsContext)
   const [toggledKeys, setToggledKeys] = useState<Record<string, boolean>>({})
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
-  const sortedAccounts = useMemo(() => sortAccountsRecursive(Array.from(data.accounts)), [data.accounts])
   const { accountingConfiguration } = useLayerContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
 
@@ -148,10 +148,10 @@ export const ChartOfAccountsTableContent = ({
   }, [searchQuery])
 
   const filteredAccounts = useMemo(() => {
-    if (!searchQuery) return sortedAccounts
+    if (!searchQuery) return data.accounts
 
-    return filterAccounts(sortedAccounts, searchQuery.toLowerCase())
-  }, [searchQuery, sortedAccounts])
+    return filterAccounts(asMutable(data.accounts), searchQuery.toLowerCase())
+  }, [data.accounts, searchQuery])
 
   const renderChartOfAccountsDesktopRow = ({ account, index, depth, searchQuery }: {
     account: AugmentedLedgerAccountBalance
@@ -229,7 +229,7 @@ export const ChartOfAccountsTableContent = ({
               <HStack {...(!hasSubAccounts && { pis: 'lg' })} overflow='hidden'>
                 {enableAccountNumbers
                   && highlightMatch({
-                    text: account.accountNumber || '-----',
+                    text: account.accountNumber || '',
                     query: searchQuery,
                     isMatching: account.isMatching,
                   })}

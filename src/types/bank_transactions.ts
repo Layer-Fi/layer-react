@@ -3,13 +3,9 @@ import type { VendorSchema } from '../schemas/vendor'
 import { MatchDetailsType } from '../schemas/bankTransactions/match'
 import { Categorization, Category } from './categories'
 import { CategorizationStatus } from '../schemas/bankTransactions/bankTransaction'
-import { S3PresignedUrl } from './general'
+import { S3PresignedUrl, type Direction } from './general'
 import type { TransactionTagEncoded } from '../features/tags/tagSchemas'
-
-export enum Direction {
-  CREDIT = 'CREDIT',
-  DEBIT = 'DEBIT',
-}
+import { UpdateCategorizationRulesSuggestionSchema } from '../schemas/bankTransactions/categorizationRules/categorizationRule'
 
 export enum BankTransactionMatchType {
   CONFIRM_MATCH = 'Confirm_Match',
@@ -68,6 +64,7 @@ export interface BankTransaction extends Record<string, unknown> {
 
   customer: typeof CustomerSchema.Encoded | null
   vendor: typeof VendorSchema.Encoded | null
+  update_categorization_rules_suggestion?: typeof UpdateCategorizationRulesSuggestionSchema.Encoded | null
 }
 
 export interface SuggestedMatch {

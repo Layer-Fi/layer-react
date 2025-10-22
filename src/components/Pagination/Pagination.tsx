@@ -5,6 +5,7 @@ import ChevronRight from '../../icons/ChevronRight'
 import { Button } from '../ui/Button/Button'
 import type { ComponentProps } from 'react'
 import { VStack } from '../ui/Stack/Stack'
+import './pagination.scss'
 
 export interface PaginationProps {
   currentPage: number

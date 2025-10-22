@@ -1,6 +1,6 @@
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import ChevronRight from '../../icons/ChevronRight'
-import { Bill } from '../../types'
+import type { Bill } from '../../types/bills'
 import { convertCentsToCurrency, formatDate } from '../../utils/format'
 import { getVendorName } from '../../utils/vendors'
 import { ButtonVariant } from '../Button/Button'

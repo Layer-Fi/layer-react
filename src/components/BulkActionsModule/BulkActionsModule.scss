@@ -1,0 +1,14 @@
+.Layer__BulkActionsModule__SelectedItemsContainer {
+  border-radius: var(--border-radius-xs);
+  border: 1px solid var(--color-base-300);
+}
+
+.Layer__BulkActionsModule__SelectedItems {
+  min-width: 7.5rem;
+}
+
+.Layer__BulkActionsModule__Divider {
+  height: 2rem;
+  width: 1px;
+  background-color: var(--color-base-300);
+}

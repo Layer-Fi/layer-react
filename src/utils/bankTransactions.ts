@@ -1,6 +1,8 @@
 import { filterVisibility } from '../components/BankTransactions/utils'
 import { CategoryOption } from '../components/CategorySelect/CategorySelect'
-import { BankTransaction, DateRange, Direction, DisplayState } from '../types'
+import { DateRange } from '../types/general'
+import { BankTransaction, DisplayState } from '../types/bank_transactions'
+import { Direction } from '../types/general'
 import { isWithinInterval, parseISO } from 'date-fns'
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
@@ -84,3 +86,11 @@ export const getCategorizePayload = (category: CategoryOption) => {
 
 export const hasReceipts = (bankTransaction?: BankTransaction) =>
   bankTransaction?.document_ids && bankTransaction.document_ids.length > 0
+
+export const isTransferMatch = (bankTransaction?: BankTransaction) => {
+  return bankTransaction?.match?.details.type === 'Transfer_Match'
+}
+
+export const hasSuggestedTransferMatches = (bankTransaction?: BankTransaction) => {
+  return bankTransaction?.suggested_matches?.every(x => x.details.type === 'Transfer_Match') ?? false
+}
