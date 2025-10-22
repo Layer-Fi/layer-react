@@ -1,5 +1,6 @@
 import { ReactNode, RefObject, useEffect, useState } from 'react'
 import classNames from 'classnames'
+import './panel.scss'
 
 export interface PanelProps {
   children: ReactNode

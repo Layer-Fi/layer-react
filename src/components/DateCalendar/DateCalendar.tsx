@@ -5,6 +5,7 @@ import { Calendar, CalendarCell, CalendarGrid, CalendarGridBody, CalendarGridHea
 import { HStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
 import { type ZonedDateTime } from '@internationalized/date'
+import './dateCalendar.scss'
 
 type DateCalendarProps = {
   minDate?: ZonedDateTime | null

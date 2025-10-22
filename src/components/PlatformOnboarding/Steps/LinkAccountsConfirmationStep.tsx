@@ -11,6 +11,7 @@ import { Button, ButtonVariant } from '../../Button'
 import { useWizard } from '../../Wizard/Wizard'
 import { useConfirmAndExcludeMultiple } from '../../LinkedAccounts/ConfirmationModal/useConfirmAndExcludeMultiple'
 import { LinkAccountsListContainer } from '../Container/LinkAccountsListContainer'
+import './linkAccountsConfirmationStep.scss'
 
 function getSubmitButtonText({
   totalCount,

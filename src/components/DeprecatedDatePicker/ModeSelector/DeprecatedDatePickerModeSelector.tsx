@@ -1,6 +1,7 @@
 import { Toggle } from '../../Toggle'
 import { ToggleSize } from '../../Toggle/Toggle'
 import type { DatePickerMode, DateRangePickerMode } from '../../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import './deprecatedDatePickerModeSelector.scss'
 
 export type UnifiedPickerMode = DatePickerMode | DateRangePickerMode
 

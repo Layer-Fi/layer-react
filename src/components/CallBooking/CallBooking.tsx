@@ -11,6 +11,7 @@ import { AddToCalendar } from '../AddToCalendar/AddToCalendar'
 import { getTimezoneDisplay } from '../../utils/time/timezoneUtils'
 import { Button } from '../ui/Button/Button'
 import { Link } from '../ui/Link/Link'
+import './callBooking.scss'
 
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
   <VStack gap='md' align='center'>

@@ -4,7 +4,7 @@ import { type Invoice, InvoiceStatus } from '../../../features/invoices/invoiceS
 import { convertCentsToCurrency, formatDate } from '../../../utils/format'
 import { unsafeAssertUnreachable } from '../../../utils/switch/assertUnreachable'
 import type { ColumnConfig } from '../../DataTable/DataTable'
-import { PaginatedTable } from '../../DataTable/PaginatedTable'
+import { PaginatedTable } from '../../PaginatedDataTable/PaginatedDataTable'
 import { VStack } from '../../ui/Stack/Stack'
 import { Span } from '../../ui/Typography/Text'
 import { Button } from '../../ui/Button/Button'
@@ -19,6 +19,7 @@ import { Container } from '../../Container'
 import { useInvoiceTableFilters, useInvoiceNavigation, type InvoiceTableFilters } from '../../../providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useDebouncedSearchInput } from '../../../hooks/search/useDebouncedSearchQuery'
 import { getCustomerName } from '../../../features/customers/util'
+import './invoiceTable.scss'
 
 const COMPONENT_NAME = 'InvoiceTable'
 

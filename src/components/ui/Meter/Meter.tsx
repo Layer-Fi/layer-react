@@ -3,6 +3,7 @@ import { Meter as ReactAriaMeter, MeterProps as ReactAriaMeterProps } from 'reac
 import { Label, Span } from '../Typography/Text'
 import { HStack, VStack } from '../Stack/Stack'
 import classNames from 'classnames'
+import './meter.scss'
 
 const getClassnameForSubComponent = (className: string | undefined, suffix: string) => {
   return classNames(`${METER_CLASS_NAME}__${suffix}`, className && `${className}__${suffix}`)

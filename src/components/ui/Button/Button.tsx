@@ -3,6 +3,7 @@ import { Button as ReactAriaButton, type ButtonProps } from 'react-aria-componen
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import { withRenderProp } from '../../utility/withRenderProp'
 import { LoadingSpinner } from '../Loading/LoadingSpinner'
+import './button.scss'
 
 const BUTTON_CLASS_NAMES = {
   DEFAULT: 'Layer__UI__Button',

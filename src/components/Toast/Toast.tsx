@@ -1,5 +1,6 @@
 import { useLayerContext } from '../../contexts/LayerContext'
 import classNames from 'classnames'
+import './toast.scss'
 
 export interface ToastProps {
   id?: string

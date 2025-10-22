@@ -2,6 +2,7 @@ import { Group } from 'react-aria-components'
 import { Search } from 'lucide-react'
 import { MinimalSearchField } from '../ui/SearchField/MinimalSearchField'
 import { VStack } from '../ui/Stack/Stack'
+import './searchField.scss'
 
 const CLASS_NAME = 'Layer__SearchField Layer__InputGroup'
 

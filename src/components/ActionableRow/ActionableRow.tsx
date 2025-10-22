@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 import ChevronRightIcon from '../../icons/ChevronRight'
 import { IconButton } from '../Button'
 import { Text } from '../Typography'
+import './actionableRow.scss'
 
 interface ActionableRowProps {
   icon?: ReactNode

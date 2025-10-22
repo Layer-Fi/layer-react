@@ -4,6 +4,7 @@ import { DatePicker } from '../DatePicker/DatePicker'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useDatePickerState } from '../DatePicker/useDatePickerState'
 import { useEffect } from 'react'
+import './dateRangeSelection.scss'
 
 type DateRangeSelectionProps = {
   minDate?: Date | null

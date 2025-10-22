@@ -20,6 +20,7 @@ import Check from '../../../icons/Check'
 import { ChevronDown, Lock, X } from 'lucide-react'
 import { LoadingSpinner } from '../Loading/LoadingSpinner'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import './comboBox.scss'
 
 const COMBO_BOX_CLASS_NAMES = {
   CONTAINER: 'Layer__ComboBoxContainer',

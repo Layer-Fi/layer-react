@@ -3,6 +3,7 @@ import { useElementSize } from '../../hooks/useElementSize'
 import { Tab } from './Tab'
 import classNames from 'classnames'
 import { HStack } from '../ui/Stack/Stack'
+import './tabs.scss'
 
 const STARTING_PADDING = 12
 

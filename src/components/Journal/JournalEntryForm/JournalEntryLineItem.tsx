@@ -10,6 +10,7 @@ import { AccountIdentifier } from '../../../schemas/accountIdentifier'
 import { TagDimensionsGroup } from './TagDimensionsGroup'
 import { DebitCreditPill } from '../../DebitCreditPill/DebitCreditPill'
 import { CategoriesListMode } from '../../../schemas/categorization'
+import './journalEntryLineItem.scss'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 

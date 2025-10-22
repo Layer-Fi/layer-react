@@ -11,6 +11,7 @@ import { useCreateCallBooking } from '../../../features/callBookings/api/useCrea
 import { LoadingSpinner } from '../../ui/Loading/LoadingSpinner'
 import { useBookkeepingConfiguration } from '../../../hooks/useBookkeepingConfiguration'
 import { CallBookingPurpose, CallBookingType } from '../../../schemas/callBookings'
+import './bookOnboardingCallStep.scss'
 
 interface CalendlyPayload {
   event: {

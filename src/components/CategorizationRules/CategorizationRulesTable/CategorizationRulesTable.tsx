@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useListCategorizationRules } from '../../../hooks/useCategorizationRules/useListCategorizationRules'
 import { Container } from '../../Container/Container'
-import { PaginatedTable } from '../../DataTable/PaginatedTable'
+import { PaginatedTable } from '../../PaginatedDataTable/PaginatedDataTable'
 import { DataState, DataStateStatus } from '../../DataState/DataState'
 import { PencilRuler, Trash2 } from 'lucide-react'
 import { CategorizationRule } from '../../../schemas/bankTransactions/categorizationRules/categorizationRule'
@@ -15,6 +15,7 @@ import { useArchiveCategorizationRule } from '../../../hooks/useCategorizationRu
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useCategories } from '../../../hooks/categories/useCategories'
 import { getLeafCategories, accountIdentifierIsForCategory } from '../../../types/categories'
+import './categorizationRulesTable.scss'
 
 enum CategorizationRuleColumns {
   Category = 'Category',

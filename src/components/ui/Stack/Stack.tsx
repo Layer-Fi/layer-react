@@ -2,6 +2,7 @@ import { forwardRef, type PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import type { Spacing } from '../sharedUITypes'
 import classNames from 'classnames'
+import './stack.scss'
 
 export type StackProps = PropsWithChildren<{
   align?: 'start' | 'center' | 'baseline' | 'end'

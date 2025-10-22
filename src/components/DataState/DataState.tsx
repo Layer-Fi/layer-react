@@ -7,6 +7,7 @@ import { Button, ButtonVariant } from '../Button'
 import { Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
+import './dataState.scss'
 
 export enum DataStateStatus {
   allDone = 'allDone',

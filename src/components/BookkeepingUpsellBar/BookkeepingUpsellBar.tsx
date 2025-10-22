@@ -2,6 +2,7 @@ import CoffeeIcon from '../../icons/Coffee'
 import { Button, ButtonVariant, Link } from '../Button'
 import { IconBox } from '../IconBox'
 import { Text, TextSize, TextWeight } from '../Typography'
+import './bookkeepingUpsellBar.scss'
 
 interface BookkeepingUpsellBarProps {
   onClick?: () => void

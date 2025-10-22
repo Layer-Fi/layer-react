@@ -4,6 +4,7 @@ import {
   type GroupProps as ReactAriaGroupProps,
 } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import './inputGroup.scss'
 
 const INPUT_GROUP_CLASS_NAME = 'Layer__InputGroup'
 

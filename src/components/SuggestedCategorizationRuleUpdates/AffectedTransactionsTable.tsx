@@ -9,6 +9,7 @@ import type { MinimalBankTransaction } from '../../schemas/bankTransactions/base
 import { BankTransactionDirection } from '../../schemas/bankTransactions/base'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
+import './affectedTransactionsTable.scss'
 
 const COMPONENT_NAME = 'AffectedTransactionsTable'
 
