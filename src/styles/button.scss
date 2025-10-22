@@ -107,7 +107,6 @@
 
   &:disabled {
     box-shadow: none;
-    background-color: var(--color-base-200);
     cursor: not-allowed;
 
     >.Layer__btn-content {

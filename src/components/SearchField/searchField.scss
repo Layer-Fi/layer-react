@@ -16,4 +16,11 @@
   & > [slot='search'] {
     grid-area: search;
   }
+
+  .Layer__SearchField__Icon {
+    &[data-disabled] {
+      cursor: not-allowed;
+      color: var(--color-base-500);
+    }
+  }
 }

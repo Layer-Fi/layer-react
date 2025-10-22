@@ -12,21 +12,23 @@ export type SearchFieldProps = {
   slot?: string
   onChange: (value: string) => void
   label: string
+  isDisabled?: boolean
   className?: string
 }
 
-export function SearchField({ slot = 'search', className, label, ...restProps }: SearchFieldProps) {
+export function SearchField({ slot = 'search', className, label, isDisabled, ...restProps }: SearchFieldProps) {
   const combinedClassName = classNames(CLASS_NAME, className)
 
   return (
     <InputGroup slot={slot} className={combinedClassName}>
-      <VStack slot='icon' align='center' justify='center'>
+      <VStack slot='icon' align='center' justify='center' className='Layer__SearchField__Icon' data-disabled={isDisabled || undefined}>
         <Search size={14} />
       </VStack>
       <MinimalSearchField
         {...restProps}
         placeholder={label}
         aria-label={label}
+        isDisabled={isDisabled}
       />
     </InputGroup>
   )
