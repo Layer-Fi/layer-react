@@ -22,6 +22,7 @@ import type { PnlDetailLine } from '../../hooks/useProfitAndLoss/useProfitAndLos
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
 import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
+import './profitAndLossDetailReport.scss'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 

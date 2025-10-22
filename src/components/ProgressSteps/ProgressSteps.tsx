@@ -1,6 +1,7 @@
 import { Text, TextSize } from '../Typography'
 import Check from '../../icons/Check'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import './progressSteps.scss'
 
 export type ProgressStepsProps = {
   steps: string[]

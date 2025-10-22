@@ -1,6 +1,7 @@
 import { forwardRef, type ComponentPropsWithoutRef } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import { centsToDollars as formatMoney } from '../../../models/Money'
+import './moneySpan.scss'
 
 const CLASS_NAME = 'Layer__MoneyText'
 

@@ -483,8 +483,13 @@
 }
 
 .Layer__bank-transaction-row__expand-button {
+  min-width: 2rem;
+}
+
+.Layer__bank-transaction-row__expand-button--mobile {
   width: fit-content;
   vertical-align: middle;
+  min-width: unset;
 }
 
 .Layer__bank-transaction-row__actions-cell--open {

@@ -2,28 +2,3 @@
   overflow: hidden;
   width: clamp(24rem, 100%, 1406px);
 }
-
-.Layer__UnifiedReport__Header {
-  height: 4.75rem;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.Layer__UI__Table__UnifiedReport {
-  table-layout: fixed;
-  width: 100%;
-
-  .Layer__UI__Table-Row,
-  .Layer__UI__Table-TableHeader > tr {
-    display: grid;
-    grid-template-columns:
-      minmax(16rem, 80%)
-      minmax(8rem, 20%);
-  }
-
-  .Layer__UI__Table-Column__UnifiedReport,
-  .Layer__UI__Table-Cell__UnifiedReport {
-    &--Value {
-      justify-content: flex-end;
-    }
-  }
-}

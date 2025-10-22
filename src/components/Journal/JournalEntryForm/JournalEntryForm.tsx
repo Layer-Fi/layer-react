@@ -17,6 +17,7 @@ import { CustomerVendorSelector } from '../../../features/customerVendor/compone
 import { TagDimensionsGroup } from './TagDimensionsGroup'
 import type { CustomerVendorSchema } from '../../../features/customerVendor/customerVendorSchemas'
 import { Separator } from '../../Separator/Separator'
+import './journalEntryForm.scss'
 
 type CustomerVendor = typeof CustomerVendorSchema.Type
 

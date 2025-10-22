@@ -5,6 +5,7 @@ import { SearchField, type SearchFieldProps } from '../SearchField/SearchField'
 import { Button } from '../ui/Button/Button'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
+import './dataTableHeader.scss'
 
 interface CountProps {
   showCount?: true

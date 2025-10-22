@@ -2,17 +2,18 @@ import { Container } from '../Container'
 import { UnifiedReportTable } from './UnifiedReportTable'
 import { UnifiedReportTableHeader } from './UnifiedReportTableHeader'
 import { ExpandableDataTableProvider } from '../ExpandableDataTable/ExpandableDataTableProvider'
-import { UnifiedReportRouteStoreProvider } from '../../providers/UnifiedReportRouteStore/UnifiedReportRouteStoreProvider'
+import { UnifiedReportStoreProvider } from '../../providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import './unifiedReport.scss'
 
 export const UnifiedReport = () => {
   return (
     <Container name='UnifiedReport'>
-      <UnifiedReportRouteStoreProvider>
+      <UnifiedReportStoreProvider>
         <ExpandableDataTableProvider>
           <UnifiedReportTableHeader />
           <UnifiedReportTable />
         </ExpandableDataTableProvider>
-      </UnifiedReportRouteStoreProvider>
+      </UnifiedReportStoreProvider>
     </Container>
   )
 }

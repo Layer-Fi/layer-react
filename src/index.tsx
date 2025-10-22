@@ -38,7 +38,7 @@ export { LinkAccounts } from './components/PlatformOnboarding/LinkAccounts'
 export { PlatformOnboarding } from './components/PlatformOnboarding/PlatformOnboarding'
 
 /* --------------------- Banners -------------------------- */
-export { BookkeepingUpsellBar } from './components/UpsellBanner'
+export { BookkeepingUpsellBar } from './components/BookkeepingUpsellBar'
 
 /*
 ======================= Composite Views =======================

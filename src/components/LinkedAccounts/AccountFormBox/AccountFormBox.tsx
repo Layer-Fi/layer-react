@@ -9,6 +9,7 @@ import { DeprecatedDatePicker } from '../../DeprecatedDatePicker/DeprecatedDateP
 import { isEqual, startOfDay } from 'date-fns'
 import CheckCircle from '../../../icons/CheckCircle'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import './accountFormBox.scss'
 
 export type AccountFormBoxData = {
   account: LinkedAccount
