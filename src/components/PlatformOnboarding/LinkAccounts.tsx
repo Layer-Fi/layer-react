@@ -7,6 +7,7 @@ import { Heading } from '../ui/Typography/Heading'
 import { getAccountsNeedingConfirmation } from '../../hooks/useLinkedAccounts/useLinkedAccounts'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import type { Awaitable } from '../../types/utility/promises'
+import './linkAccounts.scss'
 
 type LinkAccountsProps = {
   onComplete?: () => Awaitable<void>

@@ -5,6 +5,7 @@ import {
 } from 'react-aria-components'
 import { Button } from '../Button/Button'
 import X from '../../../icons/X'
+import './minimalSearchField.scss'
 
 const CLASS_NAME = 'Layer__MinimalSearchField'
 

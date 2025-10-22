@@ -17,7 +17,7 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import { useBankTransactionsFiltersContext } from '../../contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import { SearchField } from '../SearchField/SearchField'
-import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
+import { BankTransactionsActions } from '../BankTransactionsActions/BankTransactionsActions'
 import { HStack } from '../ui/Stack/Stack'
 import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
@@ -218,7 +218,7 @@ export const BankTransactionsHeader = ({
     >
       {!collapseHeader && headerTopRow}
 
-      <TransactionsActions>
+      <BankTransactionsActions>
         {showBulkActions
           ? (
             <BulkActionsModule
@@ -259,7 +259,7 @@ export const BankTransactionsHeader = ({
             ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} isDisabled={showBulkActions} />
             : withUploadMenu && <BankTransactionsUploadMenu isDisabled={showBulkActions} />}
         </HStack>
-      </TransactionsActions>
+      </BankTransactionsActions>
     </Header>
   )
 }

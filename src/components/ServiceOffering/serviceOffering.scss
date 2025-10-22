@@ -31,42 +31,6 @@
   }
 }
 
-.Layer__feature-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-  width: 33%;
-  margin: auto 0;
-  text-align: center;
-
-  .img-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    height: 320px;
-    width: auto;
-
-    @media (width <= 768px) {
-      height: 100%;
-      max-width: max(80%, 240px);
-      margin: var(--spacing-xl) auto;
-    }
-
-    @media (width <= 1024px) {
-      margin: var(--spacing-md) auto;
-    }
-
-    img {
-      height: 100%;
-      width: auto;
-      max-width: 100%;
-      margin: 0 auto;
-      filter: drop-shadow(0 12px 16px rgb(0 0 0 / 20%));
-    }
-  }
-}
-
 // Service Offering Options Component
 .Layer__service-offering-options {
   max-width: 1200px;
@@ -164,19 +128,5 @@
 
   to {
     opacity: 1;
-  }
-}
-
-// Mobile feature sections (no carousel)
-.Layer__mobile-feature-section {
-  box-sizing: border-box;
-  gap: var(--spacing-xl);
-  width: 100%;
-  padding: 0 var(--spacing-md);
-
-  .Layer__feature-card {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
   }
 }

@@ -4,6 +4,7 @@ import { HStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
 import { PaymentMethod } from './schemas'
 import classNames from 'classnames'
+import './paymentMethodComboBox.scss'
 
 type PaymentMethodOption = {
   label: string

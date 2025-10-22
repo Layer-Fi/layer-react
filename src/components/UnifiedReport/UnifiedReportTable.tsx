@@ -10,6 +10,7 @@ import type { Row } from '@tanstack/react-table'
 import { ExpandableDataTableContext } from '../ExpandableDataTable/ExpandableDataTableProvider'
 import { useUnifiedReportWithDateParams } from '../../providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { asMutable } from '../../utils/asMutable'
+import './unifiedReportTable.scss'
 
 const COMPONENT_NAME = 'UnifiedReport'
 

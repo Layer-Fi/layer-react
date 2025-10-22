@@ -14,6 +14,7 @@ import { isCalendlyLink, useCalendly } from '../../hooks/useCalendly/useCalendly
 import { View } from '../View'
 import { mergeHeroContentConfig, mergeServiceOfferingConfig } from './utils'
 import { useSizeClass, useWindowSize } from '../../hooks/useWindowSize/useWindowSize'
+import './serviceOffering.scss'
 
 /**
  * Props for the ServiceOffering component.

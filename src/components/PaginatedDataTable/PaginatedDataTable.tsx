@@ -5,10 +5,11 @@ import {
   getPaginationRowModel,
   createColumnHelper,
 } from '@tanstack/react-table'
-import { DataTable, type Column, type DataTableProps } from './DataTable'
+import { DataTable, type Column, type DataTableProps } from '../DataTable/DataTable'
 import { useCallback, useMemo, useState } from 'react'
 import { VStack } from '../ui/Stack/Stack'
 import { Pagination } from '../Pagination'
+import './paginatedDataTable.scss'
 
 interface PaginationProps {
   initialPage?: number

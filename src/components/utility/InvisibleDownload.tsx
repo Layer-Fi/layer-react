@@ -1,5 +1,6 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 import { runDelayedSync } from '../../utils/delay/runDelayed'
+import './invisibleDownload.scss'
 
 type InvisibleDownloadHandle = {
   trigger: (options: { url: string, filename?: string }) => Promise<void>
