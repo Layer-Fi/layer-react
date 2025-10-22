@@ -34,9 +34,9 @@ const ScheduledCallState = ({
   return (
     <VStack gap='md' align='center'>
       <Users size={36} strokeWidth={1.5} />
-      <Heading size='sm'>Confirmed</Heading>
+      <Heading size='sm'>Upcoming Call</Heading>
       <Span variant='subtle'>
-        Your call with our bookkeeping team
+        Meet with our bookkeeping team
       </Span>
       <Separator />
       <VStack align='start' className='Layer__call-booking-details' gap='xs'>
