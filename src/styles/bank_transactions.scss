@@ -522,11 +522,16 @@
 
   @container (max-width: 768px) {
     display: grid;
-    grid-template-areas:
-      'amount category button'
-      'customer tags .';
+    grid-template-areas: 'amount category button';
     grid-template-columns: minmax(8rem, 12rem) minmax(12rem, 24.5rem) 2.25rem;
     max-width: 40rem;
+
+    &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__customer),
+    &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__tags) {
+      grid-template-areas:
+        'amount category button'
+        'customer tags .';
+    }
   }
 }
 
