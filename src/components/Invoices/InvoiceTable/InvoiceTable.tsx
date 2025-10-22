@@ -279,6 +279,7 @@ export const InvoiceTable = () => {
             label: 'Search invoices',
             value: inputValue,
             onChange: handleInputChange,
+            className: 'Layer__InvoiceTable__SearchField',
           },
         }}
       />

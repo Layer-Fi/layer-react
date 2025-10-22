@@ -1,21 +1,25 @@
-import { Group } from 'react-aria-components'
 import { Search } from 'lucide-react'
 import { MinimalSearchField } from '../ui/SearchField/MinimalSearchField'
 import { VStack } from '../ui/Stack/Stack'
+import { InputGroup } from '../ui/Input/InputGroup'
+import classNames from 'classnames'
 import './searchField.scss'
 
-const CLASS_NAME = 'Layer__SearchField Layer__InputGroup'
+const CLASS_NAME = 'Layer__SearchField'
 
 export type SearchFieldProps = {
   value: string
   slot?: string
   onChange: (value: string) => void
   label: string
+  className?: string
 }
 
-export function SearchField({ slot = 'search', label, ...restProps }: SearchFieldProps) {
+export function SearchField({ slot = 'search', className, label, ...restProps }: SearchFieldProps) {
+  const combinedClassName = classNames(CLASS_NAME, className)
+
   return (
-    <Group slot={slot} className={CLASS_NAME}>
+    <InputGroup slot={slot} className={combinedClassName}>
       <VStack slot='icon' align='center' justify='center'>
         <Search size={14} />
       </VStack>
@@ -24,6 +28,6 @@ export function SearchField({ slot = 'search', label, ...restProps }: SearchFiel
         placeholder={label}
         aria-label={label}
       />
-    </Group>
+    </InputGroup>
   )
 }

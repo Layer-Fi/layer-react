@@ -4,6 +4,8 @@ import {
   type GroupProps as ReactAriaGroupProps,
 } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import classNames from 'classnames'
+
 import './inputGroup.scss'
 
 const INPUT_GROUP_CLASS_NAME = 'Layer__InputGroup'
@@ -14,7 +16,9 @@ type InputGroupProps = ReactAriaGroupProps & {
 }
 
 export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
-  function InputGroup({ actionCount, slots: slots, children, ...restProps }, ref) {
+  function InputGroup({ actionCount, className, slots: slots, children, ...restProps }, ref) {
+    const combinedClassName = classNames(INPUT_GROUP_CLASS_NAME, className)
+
     const dataProperties = toDataProperties({
       'action-count': actionCount,
     })
@@ -23,11 +27,10 @@ export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
       <ReactAriaGroup
         {...restProps}
         {...dataProperties}
-        className={INPUT_GROUP_CLASS_NAME}
+        className={combinedClassName}
         ref={ref}
       >
         {children}
-
       </ReactAriaGroup>
     )
   },
