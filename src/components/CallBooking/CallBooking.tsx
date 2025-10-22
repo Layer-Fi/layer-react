@@ -41,17 +41,17 @@ const ScheduledCallState = ({
       <Separator />
       <VStack align='start' className='Layer__call-booking-details' gap='xs'>
         <HStack align='center' gap='sm'>
-          <Milestone size={20} />
+          <Milestone size={16} />
           <Span>Purpose: </Span>
           <Span>{purpose}</Span>
         </HStack>
         <HStack align='center' gap='sm'>
-          <Video size={20} />
+          <Video size={16} />
           <Span>Location: </Span>
           <Span size='md'>{callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'}</Span>
         </HStack>
         <HStack align='center' gap='sm'>
-          <Clock size={20} />
+          <Clock size={16} />
           <HStack gap='xs' align='center'>
             <Span>Date & time: </Span>
             <Span size='md'>
