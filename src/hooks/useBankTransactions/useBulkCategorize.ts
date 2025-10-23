@@ -91,9 +91,7 @@ export const useBulkCategorize = () => {
           params: { businessId },
           body: encoded,
         },
-      ).then(Schema.decodeUnknownPromise(BulkCategorizeResponseSchema)).then(
-        validatedResponse => validatedResponse.data,
-      )
+      ).then(response => Schema.decodeUnknownSync(BulkCategorizeResponseDataSchema)(response.data))
     },
     {
       revalidate: false,
