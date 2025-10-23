@@ -1,5 +1,5 @@
 import { pipe, Schema } from 'effect/index'
-import { ClassificationSchema, CategorizationSchema } from '../categorization'
+import { ClassificationSchema } from '../categorization'
 import { MatchSchema, SuggestedMatchSchema } from './match'
 import { CustomerSchema } from '../customer'
 import { VendorSchema } from '../vendor'
@@ -16,30 +16,18 @@ export enum CategorizationStatus {
   MATCHED = 'MATCHED',
 }
 
-export const CategorizationStatusSchema = Schema.Enums(CategorizationStatus)
-
-export enum ClassifierAgent {
-  API = 'API',
-  LAYER_MANUAL = 'LAYER_MANUAL',
-  LAYER_AUTO = 'LAYER_AUTO',
-  LAYER_RULE = 'LAYER_RULE',
-}
-
-export const ClassifierAgentSchema = Schema.Enums(ClassifierAgent)
-
 export enum InputStrategy {
   Auto = 'AUTO',
   AskFromSuggestions = 'ASK_FROM_SUGGESTIONS',
   LayerReview = 'LAYER_REVIEW',
-  DirectInput = 'DIRECT_INPUT',
 }
-
-export const InputStrategySchema = Schema.Enums(InputStrategy)
 
 export const AccountInstitutionSchema = Schema.Struct({
   name: Schema.String,
   logo: Schema.NullOr(Schema.String),
 })
+
+export const InputStrategySchema = Schema.Enums(InputStrategy)
 
 export const CategorizationFlowSchema = Schema.Struct({
   type: InputStrategySchema,
@@ -53,7 +41,6 @@ export const BankTransactionSchema = Schema.Struct({
     Schema.propertySignature(Schema.String),
     Schema.fromKey('business_id'),
   ),
-  source: Schema.optional(Schema.String),
   sourceTransactionId: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('source_transaction_id'),
@@ -61,10 +48,6 @@ export const BankTransactionSchema = Schema.Struct({
   sourceAccountId: pipe(
     Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('source_account_id'),
-  ),
-  importedAt: pipe(
-    Schema.optional(Schema.Date),
-    Schema.fromKey('imported_at'),
   ),
   date: Schema.Date,
   direction: BankTransactionDirectionSchema,
@@ -85,15 +68,6 @@ export const BankTransactionSchema = Schema.Struct({
   accountInstitution: pipe(
     Schema.optional(Schema.NullOr(AccountInstitutionSchema)),
     Schema.fromKey('account_institution'),
-  ),
-  categorizationStatus: pipe(
-    Schema.optional(CategorizationStatusSchema),
-    Schema.fromKey('categorization_status'),
-  ),
-  category: Schema.optional(Schema.NullOr(CategorizationSchema)),
-  categorizationMethod: pipe(
-    Schema.optional(Schema.NullOr(ClassifierAgentSchema)),
-    Schema.fromKey('categorization_method'),
   ),
   categorizationFlow: pipe(
     Schema.optional(Schema.NullOr(CategorizationFlowSchema)),
