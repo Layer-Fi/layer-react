@@ -4,6 +4,7 @@ import { post } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { Schema } from 'effect'
+import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
 
 export const BulkUncategorizeRequestSchema = Schema.Struct({
@@ -44,6 +45,8 @@ export const useBulkUncategorize = () => {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+
   const mutationResponse = useSWRMutation(
     () => buildKey({
       ...data,
@@ -65,15 +68,17 @@ export const useBulkUncategorize = () => {
     },
   )
 
-  const { trigger: originalTrigger } = mutationResponse
+  const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
+      void forceReloadBankTransactions()
+
       return triggerResult
     },
-    [originalTrigger],
+    [originalTrigger, forceReloadBankTransactions],
   )
 
   return new Proxy(mutationResponse, {
