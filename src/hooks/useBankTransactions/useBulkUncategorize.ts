@@ -3,9 +3,14 @@ import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
-import { BulkUncategorizeRequestSchema } from '../../schemas/bankTransactions/bulkUncategorizeSchemas'
 import { Schema } from 'effect'
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
+
+export const BulkUncategorizeRequestSchema = Schema.Struct({
+  transactionIds: Schema.propertySignature(Schema.Array(Schema.UUID)).pipe(
+    Schema.fromKey('transaction_ids'),
+  ),
+})
 
 type BulkUncategorizeRequest = typeof BulkUncategorizeRequestSchema.Type
 type BulkUncategorizeRequestEncoded = typeof BulkUncategorizeRequestSchema.Encoded
