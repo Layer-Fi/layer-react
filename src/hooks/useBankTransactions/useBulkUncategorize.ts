@@ -11,6 +11,7 @@ const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-tra
 
 type BulkUncategorizeRequest = typeof BulkUncategorizeRequestSchema.Type
 type BulkUncategorizeRequestEncoded = typeof BulkUncategorizeRequestSchema.Encoded
+
 type BulkUncategorizeResponse = typeof BulkUncategorizeResponseSchema.Type
 
 const BulkUncategorize = post<
@@ -90,9 +91,7 @@ export const useBulkUncategorize = () => {
           params: { businessId },
           body: encoded,
         },
-      ).then(Schema.decodeUnknownPromise(BulkUncategorizeResponseSchema)).then(
-        validatedResponse => validatedResponse.data,
-      )
+      ).then(response => Schema.decodeUnknownSync(BulkUncategorizeResponseDataSchema)(response.data))
     },
     {
       revalidate: false,

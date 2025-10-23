@@ -1,4 +1,5 @@
 import { Schema } from 'effect/index'
+import { BankTransactionSchema } from './bankTransaction'
 
 export const BulkUncategorizeRequestSchema = Schema.Struct({
   transactionIds: Schema.propertySignature(Schema.Array(Schema.UUID)).pipe(
@@ -6,16 +7,7 @@ export const BulkUncategorizeRequestSchema = Schema.Struct({
   ),
 })
 
-export const UncategorizeResultSchema = Schema.Struct({
-  transactionId: Schema.propertySignature(Schema.UUID).pipe(
-    Schema.fromKey('transaction_id'),
-  ),
-  success: Schema.Boolean,
-})
-
-export const BulkUncategorizeResponseDataSchema = Schema.Struct({
-  results: Schema.Array(UncategorizeResultSchema),
-})
+export const BulkUncategorizeResponseDataSchema = Schema.Array(BankTransactionSchema)
 
 export const BulkUncategorizeResponseSchema = Schema.Struct({
   data: BulkUncategorizeResponseDataSchema,
