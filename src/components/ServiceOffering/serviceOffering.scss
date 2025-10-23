@@ -23,7 +23,7 @@
   }
 
   // Ensure the inner calendly widget has proper height
-  .calendly-inline-widget {
+  .Layer__calendly-inline-widget {
     min-height: 630px;
     width: 100%;
     margin-bottom: var(--spacing-lg);
@@ -79,13 +79,17 @@
   background-color: transparent;
 }
 
-.Layer__service-offering__responsive-layout {
+.Layer__service-offering__layout {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
 
   @media (width <= 1440px) {
     flex-direction: column;
+  }
+  @media (width > 1440px) {
+    max-width: 1440px;
+    margin: 0 auto;
   }
 }
 
@@ -93,14 +97,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2xl);
-  max-width: 420px;
 
   @media (width <= 1440px) {
     max-width: 100%;
   }
 }
 
-.Layer__service-offering__responsive-image {
+.Layer__service-offering__media-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -112,7 +115,6 @@
 
   img {
     height: auto;
-    max-height: 480px;
     max-width: 100%;
     object-fit: cover;
     opacity: 0;
