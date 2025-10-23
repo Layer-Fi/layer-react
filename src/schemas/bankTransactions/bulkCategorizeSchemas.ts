@@ -1,38 +1,14 @@
 import { Schema } from 'effect'
-
-export const AccountIdClassificationSchema = Schema.Struct({
-  type: Schema.Literal('AccountId'),
-  id: Schema.String,
-})
-
-export const StableNameClassificationSchema = Schema.Struct({
-  type: Schema.Literal('StableName'),
-  stableName: Schema.propertySignature(Schema.String).pipe(
-    Schema.fromKey('stable_name'),
-  ),
-})
-
-export const ExclusionClassificationSchema = Schema.Struct({
-  type: Schema.Literal('Exclusion'),
-  exclusionType: Schema.propertySignature(Schema.String).pipe(
-    Schema.fromKey('exclusion_type'),
-  ),
-})
-
-export const BankTransactionClassificationSchema = Schema.Union(
-  AccountIdClassificationSchema,
-  StableNameClassificationSchema,
-  ExclusionClassificationSchema,
-)
+import { ClassificationSchema } from '../categorization'
 
 export const CategoryCategorizationSchema = Schema.Struct({
   type: Schema.Literal('Category'),
-  category: BankTransactionClassificationSchema,
+  category: ClassificationSchema,
 })
 
 export const SplitEntrySchema = Schema.Struct({
   amount: Schema.Number,
-  category: BankTransactionClassificationSchema,
+  category: ClassificationSchema,
 })
 
 export const SplitCategorizationSchema = Schema.Struct({
