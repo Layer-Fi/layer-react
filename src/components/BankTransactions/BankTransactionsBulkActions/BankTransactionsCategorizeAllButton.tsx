@@ -20,7 +20,7 @@ export const BankTransactionsCategorizeAllButton = () => {
     if (!isOpen) {
       setSelectedCategory(undefined)
     }
-  }, [setSelectedCategory])
+  }, [])
 
   const categorySelectId = useId()
 
