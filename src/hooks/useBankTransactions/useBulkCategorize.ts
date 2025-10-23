@@ -73,7 +73,6 @@ class BulkCategorizeSWRResponse {
 export const useBulkCategorize = () => {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
-  // const { mutate } = useSWRConfig()
 
   const rawMutationResponse = useSWRMutation(
     () => buildKey({
@@ -104,28 +103,14 @@ export const useBulkCategorize = () => {
 
   const mutationResponse = new BulkCategorizeSWRResponse(rawMutationResponse)
 
-  // const { debouncedInvalidateBankTransactions } = useBankTransactionsInvalidator()
-  // const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
-  // const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      // void mutate(key => withSWRKeyTags(
-      //   key,
-      //   tags => tags.includes(BANK_ACCOUNTS_TAG_KEY)
-      //     || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
-      // ))
-      // void debouncedInvalidateBankTransactions()
-      // void invalidatePnlDetailLines()
-      // void debouncedInvalidateProfitAndLoss()
-
       return triggerResult
     },
-    // [originalTrigger, mutate, debouncedInvalidateBankTransactions, invalidatePnlDetailLines, debouncedInvalidateProfitAndLoss],
     [originalTrigger],
   )
 
