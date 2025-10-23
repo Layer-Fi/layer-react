@@ -35,7 +35,7 @@ export const BankTransactionsRecategorizeAllButton = () => {
       <BaseConfirmationModal
         isOpen={isRecategorizeAllModalOpen}
         onOpenChange={handleRecategorizeModalClose}
-        title='Re-categorize all selected transactions?'
+        title='Recategorize all selected transactions?'
         content={(
           <VStack gap='xs'>
             <VStack gap='3xs'>
@@ -50,13 +50,13 @@ export const BankTransactionsRecategorizeAllButton = () => {
             </VStack>
             {selectedCategory && (
               <Span>
-                {`This action will re-categorize ${count} selected transactions as ${selectedCategory?.payload?.display_name}.`}
+                {`This action will recategorize ${count} selected transactions as ${selectedCategory?.payload?.display_name}.`}
               </Span>
             )}
           </VStack>
         )}
         onConfirm={() => {}}
-        confirmLabel='Re-categorize All'
+        confirmLabel='Recategorize All'
         cancelLabel='Cancel'
         confirmDisabled={!selectedCategory}
         closeOnConfirm

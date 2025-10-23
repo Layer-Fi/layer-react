@@ -20,13 +20,8 @@ export const BankTransactionsUncategorizeAllButton = () => {
   const handleConfirm = useCallback(async () => {
     const transactionIds = Array.from(selectedIds)
 
-    try {
-      await trigger({ transactionIds })
-      clearSelection()
-    }
-    catch (error) {
-      console.error('Failed to uncategorize transactions:', error)
-    }
+    await trigger({ transactionIds })
+    clearSelection()
   }, [selectedIds, trigger, clearSelection])
 
   return (
@@ -49,7 +44,7 @@ export const BankTransactionsUncategorizeAllButton = () => {
         onConfirm={handleConfirm}
         confirmLabel='Uncategorize All'
         cancelLabel='Cancel'
-        closeOnConfirm
+        errorText='Failed to uncategorize transactions'
       />
     </>
   )
