@@ -1,14 +1,13 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
-import { BulkMatchOrCategorizeDataSchema, BulkActionSchema } from '../../schemas/bankTransactions/bulkMatchOrCategorizeSchemas'
+import { BulkActionSchema } from '../../schemas/bankTransactions/bulkMatchOrCategorizeSchemas'
 import { ClassificationSchema } from '../../schemas/categorization'
 import { post } from '../../api/layer/authenticated_http'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { useAuth } from '../useAuth'
 import { useSelectedIds } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useGetAllBankTransactionsCategories } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import type { SWRMutationResponse } from 'swr/mutation'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import { OptionActionType } from '../../types/categoryOption'
 import { mapCategoryToOption } from '../../components/CategorySelect/CategorySelect'
@@ -16,7 +15,6 @@ import type { CategoryOption } from '../../types/categoryOption'
 import { getCategorizePayload } from '../../utils/bankTransactions'
 import type { GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
 import { useLayerContext } from '../../contexts/LayerContext'
-import type { Key } from 'swr'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
@@ -35,12 +33,6 @@ export type BulkMatchOrCategorizeParams = {
 
 type BulkMatchOrCategorizeRequest = typeof _BulkMatchOrCategorizeRequestSchema.Type
 type BulkMatchOrCategorizeRequestEncoded = typeof _BulkMatchOrCategorizeRequestSchema.Encoded
-
-const _BulkMatchOrCategorizeResponseSchema = Schema.Struct({
-  data: BulkMatchOrCategorizeDataSchema,
-})
-
-type BulkMatchOrCategorizeResponse = typeof _BulkMatchOrCategorizeResponseSchema.Type
 
 const bulkMatchOrCategorize = post<
   Record<string, unknown>,
@@ -73,32 +65,6 @@ function buildKey({
       businessId,
       tags: [BULK_MATCH_OR_CATEGORIZE_TAG],
     } as const
-  }
-}
-
-type BulkMatchOrCategorizeSWRMutationResponse = SWRMutationResponse<BulkMatchOrCategorizeResponse, unknown, Key, BulkMatchOrCategorizeRequest>
-
-class BulkMatchOrCategorizeSWRResponse {
-  private swrResponse: BulkMatchOrCategorizeSWRMutationResponse
-
-  constructor(swrResponse: BulkMatchOrCategorizeSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
   }
 }
 
@@ -162,7 +128,7 @@ export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatc
     return { transactions }
   }, [selectedIds, transactionCategories])
 
-  const rawMutationResponse = useSWRMutation(
+  const mutationResponse = useSWRMutation(
     () => buildKey({
       ...data,
       businessId,
@@ -177,15 +143,13 @@ export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatc
         params: { businessId },
         body: Schema.encodeSync(_BulkMatchOrCategorizeRequestSchema)(arg),
       },
-    ).then(Schema.decodeUnknownPromise(_BulkMatchOrCategorizeResponseSchema)),
+    ).then(({ data }) => data),
     {
       revalidate: false,
     },
   )
 
-  const mutationResponse = new BulkMatchOrCategorizeSWRResponse(rawMutationResponse)
-
-  const originalTrigger = mutationResponse.trigger
+  const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {

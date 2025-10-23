@@ -34,33 +34,3 @@ export const BulkActionSchema = Schema.Union(
     categorization: CategoryUpdateSchema,
   }),
 )
-
-export const MatchedResultSchema = Schema.Struct({
-  transactionId: pipe(
-    Schema.propertySignature(Schema.UUID),
-    Schema.fromKey('transaction_id'),
-  ),
-  suggestedMatchId: pipe(
-    Schema.propertySignature(Schema.UUID),
-    Schema.fromKey('suggested_match_id'),
-  ),
-})
-
-export const CategorizedResultSchema = Schema.Struct({
-  transactionId: pipe(
-    Schema.propertySignature(Schema.UUID),
-    Schema.fromKey('transaction_id'),
-  ),
-  categorization: Schema.NullOr(CategoryUpdateSchema),
-})
-
-export const BulkMatchOrCategorizeDataSchema = Schema.Struct({
-  matchedResults: pipe(
-    Schema.propertySignature(Schema.Array(MatchedResultSchema)),
-    Schema.fromKey('matched_results'),
-  ),
-  categorizedResults: pipe(
-    Schema.propertySignature(Schema.Array(CategorizedResultSchema)),
-    Schema.fromKey('categorized_results'),
-  ),
-})
