@@ -1,34 +1,14 @@
 import { Schema, pipe } from 'effect'
-
-export const AccountIdentifierPayloadSchema = Schema.Union(
-  Schema.Struct({
-    type: Schema.Literal('StableName'),
-    stableName: pipe(
-      Schema.propertySignature(Schema.String),
-      Schema.fromKey('stable_name'),
-    ),
-  }),
-  Schema.Struct({
-    type: Schema.Literal('AccountId'),
-    id: Schema.String,
-  }),
-  Schema.Struct({
-    type: Schema.Literal('Exclusion'),
-    exclusionType: pipe(
-      Schema.propertySignature(Schema.String),
-      Schema.fromKey('exclusion_type'),
-    ),
-  }),
-)
+import { ClassificationSchema } from '../categorization'
 
 export const SingleCategoryUpdateSchema = Schema.Struct({
   type: Schema.Literal('Category'),
-  category: AccountIdentifierPayloadSchema,
+  category: ClassificationSchema,
 })
 
 export const SplitCategoryEntrySchema = Schema.Struct({
   amount: Schema.Number,
-  category: AccountIdentifierPayloadSchema,
+  category: ClassificationSchema,
 })
 
 export const SplitCategoryUpdateSchema = Schema.Struct({

@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
-import { BulkMatchOrCategorizeDataSchema, BulkActionSchema, AccountIdentifierPayloadSchema } from '../../schemas/bankTransactions/bulkMatchOrCategorizeSchemas'
+import { BulkMatchOrCategorizeDataSchema, BulkActionSchema } from '../../schemas/bankTransactions/bulkMatchOrCategorizeSchemas'
+import { ClassificationSchema } from '../../schemas/categorization'
 import { post } from '../../api/layer/authenticated_http'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { useAuth } from '../useAuth'
@@ -138,7 +139,7 @@ export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatc
                 const categoryPayload = getCategorizePayload(mapCategoryToOption(entry.category))
                 return {
                   amount: entry.amount ?? 0,
-                  category: Schema.decodeSync(AccountIdentifierPayloadSchema)(categoryPayload),
+                  category: Schema.decodeSync(ClassificationSchema)(categoryPayload),
                 }
               }),
             },
@@ -151,7 +152,7 @@ export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatc
             type: 'categorize',
             categorization: {
               type: 'Category',
-              category: Schema.decodeSync(AccountIdentifierPayloadSchema)(categoryPayload),
+              category: Schema.decodeSync(ClassificationSchema)(categoryPayload),
             },
           }
         }
