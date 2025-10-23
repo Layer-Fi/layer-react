@@ -1,21 +1,17 @@
-import { Schema } from 'effect'
 import { useCallback } from 'react'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
-import { BulkUncategorizeRequestSchema, BulkUncategorizeResponseSchema, BulkUncategorizeResponseDataSchema } from '../../schemas/bankTransactions/bulkUncategorizeSchemas'
-
+import { BulkUncategorizeRequestSchema } from '../../schemas/bankTransactions/bulkUncategorizeSchemas'
+import { Schema } from 'effect'
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
 
 type BulkUncategorizeRequest = typeof BulkUncategorizeRequestSchema.Type
 type BulkUncategorizeRequestEncoded = typeof BulkUncategorizeRequestSchema.Encoded
 
-type BulkUncategorizeResponse = typeof BulkUncategorizeResponseSchema.Type
-
-const BulkUncategorize = post<
-  BulkUncategorizeResponse,
+const bulkUncategorize = post<
+  { data: unknown },
   BulkUncategorizeRequestEncoded,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/bulk-uncategorize`)
@@ -39,42 +35,11 @@ function buildKey({
   }
 }
 
-type BulkUncategorizeSWRMutationResponse =
-  SWRMutationResponse<typeof BulkUncategorizeResponseDataSchema.Type, unknown, Key, BulkUncategorizeRequest>
-
-class BulkUncategorizeSWRResponse {
-  private swrResponse: BulkUncategorizeSWRMutationResponse
-
-  constructor(swrResponse: BulkUncategorizeSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
-  get error() {
-    return this.swrResponse.error
-  }
-}
-
 export const useBulkUncategorize = () => {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
-  const rawMutationResponse = useSWRMutation(
+  const mutationResponse = useSWRMutation(
     () => buildKey({
       ...data,
       businessId,
@@ -82,26 +47,20 @@ export const useBulkUncategorize = () => {
     (
       { accessToken, apiUrl, businessId },
       { arg }: { arg: BulkUncategorizeRequest },
-    ) => {
-      const encoded = Schema.encodeSync(BulkUncategorizeRequestSchema)(arg)
-      return BulkUncategorize(
-        apiUrl,
-        accessToken,
-        {
-          params: { businessId },
-          body: encoded,
-        },
-      ).then(response => Schema.decodeUnknownSync(BulkUncategorizeResponseDataSchema)(response.data))
-    },
+    ) => bulkUncategorize(
+      apiUrl,
+      accessToken,
+      {
+        params: { businessId },
+        body: Schema.encodeSync(BulkUncategorizeRequestSchema)(arg),
+      },
+    ).then(({ data }) => data),
     {
       revalidate: false,
-      throwOnError: true,
     },
   )
 
-  const mutationResponse = new BulkUncategorizeSWRResponse(rawMutationResponse)
-
-  const originalTrigger = mutationResponse.trigger
+  const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
