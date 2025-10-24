@@ -56,11 +56,9 @@ const ScheduledCallState = ({
           <HStack gap='xs' align='center'>
             <Span>Date & time: </Span>
             <Span size='md'>
-              {callBooking.eventStartAt && formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME_READABLE)}
-              {callBooking.eventStartAt && ' '}
-              {callBooking.eventStartAt && (
-                <>{getTimezoneDisplay(callBooking.eventStartAt)}</>
-              )}
+              {formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME_READABLE)}
+              {' '}
+              <>{getTimezoneDisplay(callBooking.eventStartAt)}</>
             </Span>
 
           </HStack>
