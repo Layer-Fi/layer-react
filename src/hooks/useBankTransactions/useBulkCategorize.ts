@@ -1,21 +1,50 @@
 import { Schema } from 'effect'
 import { useCallback } from 'react'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
-import { BulkCategorizeRequestSchema, BulkCategorizeResponseSchema, BulkCategorizeResponseDataSchema } from '../../schemas/bankTransactions/bulkCategorizeSchemas'
+import { ClassificationSchema } from '../../schemas/categorization'
+import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
 
 const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'
+
+export const CategoryCategorizationSchema = Schema.Struct({
+  type: Schema.Literal('Category'),
+  category: ClassificationSchema,
+})
+
+export const SplitEntrySchema = Schema.Struct({
+  amount: Schema.Number,
+  category: ClassificationSchema,
+})
+
+export const SplitCategorizationSchema = Schema.Struct({
+  type: Schema.Literal('Split'),
+  entries: Schema.Array(SplitEntrySchema),
+})
+
+const BankTransactionCategorizationSchema = Schema.Union(
+  CategoryCategorizationSchema,
+  SplitCategorizationSchema,
+)
+
+export const TransactionCategorizationSchema = Schema.Struct({
+  transactionId: Schema.propertySignature(Schema.UUID).pipe(
+    Schema.fromKey('transaction_id'),
+  ),
+  categorization: BankTransactionCategorizationSchema,
+})
+
+export const BulkCategorizeRequestSchema = Schema.Struct({
+  transactions: Schema.Array(TransactionCategorizationSchema),
+})
 
 type BulkCategorizeRequest = typeof BulkCategorizeRequestSchema.Type
 type BulkCategorizeRequestEncoded = typeof BulkCategorizeRequestSchema.Encoded
 
-type BulkCategorizeResponse = typeof BulkCategorizeResponseSchema.Type
-
 const bulkCategorize = post<
-  BulkCategorizeResponse,
+  Record<string, unknown>,
   BulkCategorizeRequestEncoded,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/bulk-categorize`)
@@ -39,42 +68,13 @@ function buildKey({
   }
 }
 
-type BulkCategorizeSWRMutationResponse =
-  SWRMutationResponse<typeof BulkCategorizeResponseDataSchema.Type, unknown, Key, BulkCategorizeRequest>
-
-class BulkCategorizeSWRResponse {
-  private swrResponse: BulkCategorizeSWRMutationResponse
-
-  constructor(swrResponse: BulkCategorizeSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
-  get error() {
-    return this.swrResponse.error
-  }
-}
-
 export const useBulkCategorize = () => {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
-  const rawMutationResponse = useSWRMutation(
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+
+  const mutationResponse = useSWRMutation(
     () => buildKey({
       ...data,
       businessId,
@@ -82,24 +82,18 @@ export const useBulkCategorize = () => {
     (
       { accessToken, apiUrl, businessId },
       { arg }: { arg: BulkCategorizeRequest },
-    ) => {
-      const encoded = Schema.encodeSync(BulkCategorizeRequestSchema)(arg)
-      return BulkCategorize(
-        apiUrl,
-        accessToken,
-        {
-          params: { businessId },
-          body: encoded,
-        },
-      ).then(response => Schema.decodeUnknownSync(BulkCategorizeResponseDataSchema)(response.data))
-    },
+    ) => bulkCategorize(
+      apiUrl,
+      accessToken,
+      {
+        params: { businessId },
+        body: Schema.encodeSync(BulkCategorizeRequestSchema)(arg),
+      },
+    ).then(({ data }) => data),
     {
       revalidate: false,
-      throwOnError: true,
     },
   )
-
-  const mutationResponse = new BulkCategorizeSWRResponse(rawMutationResponse)
 
   const originalTrigger = mutationResponse.trigger
 
@@ -107,9 +101,11 @@ export const useBulkCategorize = () => {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
+      void forceReloadBankTransactions()
+
       return triggerResult
     },
-    [originalTrigger],
+    [originalTrigger, forceReloadBankTransactions],
   )
 
   return new Proxy(mutationResponse, {
