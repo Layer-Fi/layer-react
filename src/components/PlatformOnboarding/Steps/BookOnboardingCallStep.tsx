@@ -112,16 +112,16 @@ export const BookOnboardingCallStep = ({ title = defaultTitle, description = def
     <VStack gap='md' className={className}>
       <Heading size={isDesktop ? 'lg' : 'md'} className='Layer__platform-onboarding__heading'>{title}</Heading>
       <Span variant='subtle'>{description}</Span>
-      <VStack
-        gap='sm'
-        className={classNames('Layer__platform-onboarding__error', {
-          'Layer__platform-onboarding__error--hidden': state !== BookOnboardingCallStepState.ERROR && state !== BookOnboardingCallStepState.RETRYING,
-        })}
-      >
-        <Span>Your call was booked successfully, but we encountered some issues recording it on our system. Please try again.</Span>
-        <Button variant='solid' style={{ width: 'fit-content' }} onClick={retry}>Retry</Button>
-      </VStack>
-
+      {(state === BookOnboardingCallStepState.ERROR || state === BookOnboardingCallStepState.RETRYING)
+        && (
+          <VStack
+            gap='sm'
+            className='Layer__platform-onboarding__error'
+          >
+            <Span>Your call was booked successfully, but we encountered some issues recording it on our system. Please try again.</Span>
+            <Button variant='solid' style={{ width: 'fit-content' }} onClick={retry}>Retry</Button>
+          </VStack>
+        )}
       {(!isDesktop && state === BookOnboardingCallStepState.INITIAL)
         && <Button variant='branded' style={{ width: 'fit-content' }} onClick={() => openCalendly(calendlyUrl)}>Book a call</Button>}
 
