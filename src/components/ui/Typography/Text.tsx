@@ -18,7 +18,7 @@ export type TextStyleProps = {
   pbs?: Spacing
   size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   status?: 'error'
-  variant?: 'placeholder' | 'subtle'
+  variant?: 'placeholder' | 'subtle' | 'inherit'
   weight?: 'normal' | 'bold'
 }
 

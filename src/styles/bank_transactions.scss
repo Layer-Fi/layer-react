@@ -166,23 +166,6 @@
       max-width: var(--width);
       border-left: 1px solid var(--border-color);
       background-color: var(--color-base-0);
-
-      .Layer__bank-transaction-row__actions-disabled {
-        transition: all var(--transition-speed) ease-out;
-        padding-right: var(--spacing-xs);
-        padding-left: 0;
-
-        .Layer__select--is-disabled {
-          cursor: default;
-
-          .Layer__select__control--is-disabled {
-            border: none;
-            box-shadow: none;
-            background-color: var(--color-base-50);
-            cursor: default;
-          }
-        }
-      }
     }
   }
 }
@@ -502,7 +485,7 @@
   align-items: start;
   min-width: 40rem;
 
-  .Layer__category-menu--full {
+  .Layer__BankTransactionCategoryComboBox {
     grid-area: category;
     max-width: 24.5rem;
   }
@@ -821,17 +804,6 @@
     .Layer__table-header.Layer__table-cell__category-col {
       padding-right: var(--spacing-xl);
       padding-left: var(--spacing-md);
-    }
-  }
-
-  .Layer__bank-transactions__table {
-    .Layer__skeleton-table-body__loader {
-      td:last-child {
-        .Layer__bank-transaction-row__actions-disabled {
-          padding-right: var(--spacing-md);
-          padding-left: var(--spacing-md);
-        }
-      }
     }
   }
 }

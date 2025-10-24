@@ -4,18 +4,15 @@ import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
 import { BankTransaction } from '../../types/bank_transactions'
 import {
-  getCategorizePayload,
   hasReceipts,
   isCredit,
 } from '../../utils/bankTransactions'
-import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionCTAStringOverrides,
 } from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { RetryButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { CategorySelect } from '../CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText, Text } from '../Typography'
@@ -30,6 +27,9 @@ import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibilit
 import { Span } from '../ui/Typography/Text'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { useSizeClass } from '../../hooks/useWindowSize'
+import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
+import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../BankTransactionCategoryComboBox/options'
+import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 
 type Props = {
   index: number
@@ -66,7 +66,7 @@ export const BankTransactionListItem = ({
     shouldHideAfterCategorize,
   } = useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState(
-    getDefaultSelectedCategory(bankTransaction),
+    getDefaultSelectedCategoryForBankTransaction(bankTransaction),
   )
 
   const [open, setOpen] = useState(false)
@@ -107,18 +107,25 @@ export const BankTransactionListItem = ({
       return
     }
 
-    if (!selectedCategory) {
+    if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
       return
     }
 
-    if (selectedCategory.type === 'match') {
-      await matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
+    if (isSuggestedMatchAsOption(selectedCategory)) {
+      await matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
       return
     }
+
+    if (isSplitAsOption(selectedCategory)) {
+      // TODO: implement split categorization
+      return
+    }
+
+    if (selectedCategory.classificationEncoded === null) return
 
     await categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
-      category: getCategorizePayload(selectedCategory),
+      category: selectedCategory.classificationEncoded,
     })
   }
 
@@ -219,16 +226,14 @@ export const BankTransactionListItem = ({
       <span className={`${className}__base-row`}>
         {categorizationEnabled && !categorized
           ? (
-            <CategorySelect
+            <BankTransactionCategoryComboBox
               bankTransaction={bankTransaction}
-              name={`category-${bankTransaction.id}`}
-              value={selectedCategory}
-              onChange={(category) => {
+              selectedValue={selectedCategory}
+              onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
+                setSelectedCategory(selectedCategory)
                 setShowRetry(false)
-                setSelectedCategory(category)
               }}
-              disabled={bankTransaction.processing}
-              showTooltips={showTooltips}
+              isLoading={bankTransaction.processing}
             />
           )
           : null}

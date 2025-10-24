@@ -1,101 +1,68 @@
 import { BankTransaction } from '../../types/bank_transactions'
-import type { CategoryWithEntries } from '../../types/bank_transactions'
 import { hasSuggestions } from '../../types/categories'
-import {
-  CategoryOptionPayload,
-  OptionActionType,
-} from '../CategorySelect/CategorySelect'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
+import { CategoryAsOption, ApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption } from '../BankTransactionCategoryComboBox/options'
+import type { NestedCategorization } from '../../schemas/categorization'
 
-export interface Option {
+export interface CategoryGroup {
   label: string
   id: string
-  description?: string
-  value: {
-    type: 'CATEGORY' | 'SELECT_CATEGORY' | 'GROUP'
-    payload?: CategoryOptionPayload
-    items?: Option[]
-  }
-  asLink?: boolean
-  secondary?: boolean
+  categories: CategoryAsOption[]
 }
 
-export const mapCategoryToOption = (category: CategoryWithEntries): Option => ({
-  label: category.display_name,
-  id: ('id' in category) ? category.id : category.stable_name,
-  description: category.description ?? undefined,
-  value: {
-    type: 'CATEGORY',
-    payload: {
-      id: ('id' in category) ? category.id : '',
-      option_type: OptionActionType.CATEGORY,
-      display_name: category.display_name,
-      type: category.type,
-      description: category.description ?? undefined,
-      stable_name: ('stable_name' in category) ? category.stable_name ?? '' : '',
-      entries: category.entries,
-      subCategories: category.subCategories,
-    },
-  },
-})
+function getLeafCategories(category: NestedCategorization): NestedCategorization[] {
+  if (!category.subCategories || category.subCategories.length === 0) {
+    return [category]
+  }
 
-export const flattenCategories = (categories: CategoryWithEntries[]): Option[] => {
-  const visit = (cat: CategoryWithEntries): Option[] => {
-    const subCategories = cat.subCategories
+  return category.subCategories.flatMap(subCategory => getLeafCategories(subCategory))
+}
 
-    if (!subCategories || subCategories.length === 0) return [mapCategoryToOption(cat)]
+export const flattenCategories = (categories: NestedCategorization[]): Array<CategoryGroup | CategoryAsOption> => {
+  return categories.flatMap((category: NestedCategorization): Array<CategoryGroup | CategoryAsOption> => {
+    const subCategories = category.subCategories
 
-    if (subCategories.every(subCategory => !subCategory.subCategories || subCategory.subCategories.length === 0)) {
-      return [
-        {
-          label: cat.display_name,
-          id: 'id' in cat ? cat.id : cat.stable_name,
-          asLink: true,
-          value: {
-            type: 'GROUP',
-            items: subCategories.flatMap(visit),
-          },
-        } satisfies Option,
-      ]
+    if (!subCategories || subCategories.length === 0) {
+      return [new CategoryAsOption(category)]
     }
 
-    return subCategories.flatMap(visit)
-  }
+    const leafCategories = getLeafCategories(category)
 
-  return categories.flatMap(visit)
-}
+    if (subCategories.every(subCategory => !subCategory.subCategories || subCategory.subCategories.length === 0)) {
+      return [{
+        label: category.displayName,
+        id: 'id' in category ? category.id : category.stableName,
+        categories: leafCategories.map(cat => new CategoryAsOption(cat)),
+      } satisfies CategoryGroup]
+    }
 
-export const flattenOptionGroups = (options: Option[]): Option[] => {
-  return options.flatMap(opt =>
-    opt.value?.type === 'GROUP' && Array.isArray(opt.value.items)
-      ? [opt, ...flattenOptionGroups(opt.value.items)]
-      : [opt],
-  )
+    return leafCategories.map(cat => new CategoryAsOption(cat))
+  })
 }
 
 export const getAssignedValue = (
   bankTransaction: BankTransaction,
-): Option | undefined => {
+): BankTransactionCategoryComboBoxOption | null => {
   if (
     bankTransaction.categorization_status === CategorizationStatus.MATCHED
     || bankTransaction?.categorization_status === CategorizationStatus.SPLIT
   ) {
-    return
+    return null
   }
 
   if (
     bankTransaction.category
-    && bankTransaction.category.type != 'ExclusionNested'
+    && bankTransaction.category.type != 'Exclusion'
   ) {
-    return mapCategoryToOption(bankTransaction.category)
+    return new ApiCategorizationAsOption(bankTransaction.category)
   }
 
   if (hasSuggestions(bankTransaction.categorization_flow)) {
     const firstSuggestion = (
       bankTransaction.categorization_flow
     ).suggestions[0]
-    return mapCategoryToOption(firstSuggestion)
+    return new ApiCategorizationAsOption(firstSuggestion)
   }
 
-  return
+  return null
 }

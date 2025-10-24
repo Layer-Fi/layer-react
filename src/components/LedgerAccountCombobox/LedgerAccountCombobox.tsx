@@ -2,37 +2,15 @@ import { useCallback, useId, useMemo } from 'react'
 import { ComboBox } from '../ui/ComboBox/ComboBox'
 import { VStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
-import { isOptionalAccountNestedCategory, type Category, getLeafCategories } from '../../types/categories'
-import { type CategoriesListMode } from '../../schemas/categorization'
+import { getLeafCategories } from '../../types/categories'
+import { ClassificationEquivalence, type CategoriesListMode, type Classification } from '../../schemas/categorization'
 import { useCategories } from '../../hooks/categories/useCategories'
-import { AccountIdentifierEquivalence, makeAccountId, makeStableName, type AccountIdentifier } from '../../schemas/accountIdentifier'
-
-class CategoryAsOption {
-  private internalCategory: Category
-
-  constructor(category: Category) {
-    this.internalCategory = category
-  }
-
-  get label() {
-    return this.internalCategory.display_name
-  }
-
-  get accountIdentifier() {
-    if (isOptionalAccountNestedCategory(this.internalCategory)) return makeStableName(this.internalCategory.stable_name)
-    return makeAccountId(this.internalCategory.id)
-  }
-
-  get value() {
-    if (isOptionalAccountNestedCategory(this.internalCategory)) return this.internalCategory.stable_name
-    return this.internalCategory.id
-  }
-}
+import { CategoryAsOption } from '../BankTransactionCategoryComboBox/options'
 
 type LedgerAccountComboboxProps = {
   label: string
-  value: AccountIdentifier | null
-  onValueChange: (value: AccountIdentifier | null) => void
+  value: Classification | null
+  onValueChange: (value: Classification | null) => void
   mode?: CategoriesListMode
   isReadOnly?: boolean
   showLabel?: boolean
@@ -49,11 +27,11 @@ export const LedgerAccountCombobox = ({ label, value, mode, onValueChange, isRea
 
   const selectedCategory = useMemo(() => {
     if (!value) return null
-    return options.find(option => AccountIdentifierEquivalence(value, option.accountIdentifier)) ?? null
+    return options.find(option => ClassificationEquivalence(value, option.classification)) ?? null
   }, [options, value])
 
   const onSelectedValueChange = useCallback((option: CategoryAsOption | null) => {
-    onValueChange(option?.accountIdentifier ?? null)
+    onValueChange(option?.classification ?? null)
   }, [onValueChange])
 
   const inputId = useId()
