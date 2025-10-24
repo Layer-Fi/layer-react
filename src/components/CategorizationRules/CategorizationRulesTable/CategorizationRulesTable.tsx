@@ -16,6 +16,7 @@ import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useCategories } from '../../../hooks/categories/useCategories'
 import { getLeafCategories, accountIdentifierIsForCategory } from '../../../types/categories'
 import './categorizationRulesTable.scss'
+import { AccountIdentifier } from '../../../schemas/accountIdentifier'
 
 enum CategorizationRuleColumns {
   Category = 'Category',
@@ -30,11 +31,23 @@ export const CategorizationRulesTable = () => {
   const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
   const { addToast } = useLayerContext()
 
-  const { data: categories } = useCategories({ mode: CategoriesListMode.All })
-  const options = useMemo(() => {
-    if (!categories) return []
-    return getLeafCategories(categories)
-  }, [categories])
+  const CategoryDisplay = ({ accountIdentifier }: { accountIdentifier: AccountIdentifier }) => {
+    const { data: categories, isLoading } = useCategories({ mode: CategoriesListMode.All })
+    const options = useMemo(() => {
+      if (isLoading || !categories || !categories.length) return []
+      return getLeafCategories(categories)
+    }, [categories, isLoading])
+    const displayName = accountIdentifier
+      ? options.find(category =>
+        accountIdentifierIsForCategory(accountIdentifier, category),
+      )?.display_name
+      : undefined
+    return displayName
+      ? (
+        <Span ellipsis>{displayName}</Span>
+      )
+      : null
+  }
 
   const archiveCategorizationRule = useCallback(() => {
     if (selectedRule?.id) {
@@ -102,13 +115,8 @@ export const CategorizationRulesTable = () => {
       header: 'Category',
       cell: (row) => {
         const accountIdentifier = row.category
-        const displayName = accountIdentifier
-          ? options.find(category =>
-            accountIdentifierIsForCategory(accountIdentifier, category),
-          )?.display_name
-          : undefined
-        return displayName && (
-          <Span ellipsis>{displayName}</Span>
+        return accountIdentifier && (
+          <CategoryDisplay accountIdentifier={accountIdentifier} />
         )
       },
       isRowHeader: true,
@@ -130,7 +138,7 @@ export const CategorizationRulesTable = () => {
         </Button>
       ),
     },
-  }), [options])
+  }), [])
 
   return (
     <Container name='CategorizationRulesTable'>
