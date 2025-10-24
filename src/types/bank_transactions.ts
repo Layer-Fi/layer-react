@@ -8,7 +8,7 @@ import type { Tag, TransactionTagEncoded } from '../features/tags/tagSchemas'
 import { UpdateCategorizationRulesSuggestionSchema } from '../schemas/bankTransactions/categorizationRules/categorizationRule'
 import type { CategorizationEncoded } from '../schemas/categorization'
 import type { CustomerVendorSchema } from '../features/customerVendor/customerVendorSchemas'
-import type { BankTransactionCategoryComboBoxOption } from './categorizationOption'
+import type { BankTransactionCategoryComboBoxOption } from '../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export enum BankTransactionMatchType {
   CONFIRM_MATCH = 'Confirm_Match',
@@ -80,7 +80,9 @@ export interface BankTransactionMetadata {
 export interface DocumentS3Urls {
   type: 'Document_S3_Urls'
   documentUrls: S3PresignedUrl[]
-} export type Split = {
+}
+
+export type Split = {
   amount: number
   inputValue: string
   category: BankTransactionCategoryComboBoxOption | null

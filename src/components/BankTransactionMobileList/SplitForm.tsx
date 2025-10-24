@@ -24,7 +24,8 @@ import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawerWithTrigger } from '../CategorySelect/CategorySelectDrawerWithTrigger'
 import { isSplitCategorizationEncoded } from '../../schemas/categorization'
-import { ApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption } from '../../types/categorizationOption'
+import { ApiCategorizationAsOption } from '../../types/categorizationOption'
+import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { type Split } from '../../types/bank_transactions'
 
 type RowState = {

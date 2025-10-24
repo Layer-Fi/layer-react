@@ -7,7 +7,8 @@ import { SearchField } from '../SearchField/SearchField'
 import { Button } from '../ui/Button/Button'
 import { ChevronLeft } from 'lucide-react'
 import { ModalHeading } from '../ui/Modal/ModalSlots'
-import type { BankTransactionCategoryComboBoxOption, CategoryAsOption } from '../../types/categorizationOption'
+import type { CategoryAsOption } from '../../types/categorizationOption'
+import type { BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export interface BusinessCategoriesProps {
   select: (category: BankTransactionCategoryComboBoxOption | null) => void

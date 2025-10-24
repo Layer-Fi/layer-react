@@ -11,7 +11,7 @@ import {
 import { makeAccountId, makeStableName } from '../schemas/accountIdentifier'
 import { unsafeAssertUnreachable } from '../utils/switch/assertUnreachable'
 
-export enum BankTransactionCategorizationOption {
+export enum CategorizationOption {
   Category = 'Category',
   SuggestedMatch = 'SuggestedMatch',
   Split = 'Split',
@@ -27,7 +27,7 @@ export abstract class BaseOption<T> {
   }
 
   abstract get original(): T
-  abstract get type(): BankTransactionCategorizationOption
+  abstract get type(): CategorizationOption
   abstract get label(): string
   abstract get value(): string
   abstract get classification(): Classification | null
@@ -44,7 +44,7 @@ export class SuggestedMatchAsOption extends BaseOption<SuggestedMatch> {
   }
 
   get type() {
-    return BankTransactionCategorizationOption.SuggestedMatch
+    return CategorizationOption.SuggestedMatch
   }
 
   get label() {
@@ -74,7 +74,7 @@ export class CategoryAsOption extends BaseOption<NestedCategorization> {
   }
 
   get type() {
-    return BankTransactionCategorizationOption.Category
+    return CategorizationOption.Category
   }
 
   get label() {
@@ -134,7 +134,7 @@ export class PlaceholderAsOption extends BaseOption<PlaceholderOption> {
   }
 
   get type() {
-    return BankTransactionCategorizationOption.Placeholder
+    return CategorizationOption.Placeholder
   }
 
   get label() {
@@ -172,7 +172,7 @@ export class SplitAsOption extends BaseOption<Split[]> {
   }
 
   get type() {
-    return BankTransactionCategorizationOption.Split
+    return CategorizationOption.Split
   }
 
   get label(): string {
@@ -204,7 +204,7 @@ export class ApiCategorizationAsOption extends BaseOption<CategorizationEncoded>
   }
 
   get type() {
-    return BankTransactionCategorizationOption.ApiCategorization
+    return CategorizationOption.ApiCategorization
   }
 
   get label() {
@@ -234,31 +234,4 @@ export class ApiCategorizationAsOption extends BaseOption<CategorizationEncoded>
   get classificationEncoded(): ClassificationEncoded | null {
     return this.classification ? Schema.encodeSync(ClassificationSchema)(this.classification) : null
   }
-}
-
-export type BankTransactionCategoryComboBoxOption =
-  CategoryAsOption
-  | SuggestedMatchAsOption
-  | SplitAsOption
-  | PlaceholderAsOption
-  | ApiCategorizationAsOption
-
-export const isCategoryAsOption = (option: BankTransactionCategoryComboBoxOption): option is CategoryAsOption => {
-  return option.type === BankTransactionCategorizationOption.Category
-}
-
-export const isSuggestedMatchAsOption = (option: BankTransactionCategoryComboBoxOption): option is SuggestedMatchAsOption => {
-  return option.type === BankTransactionCategorizationOption.SuggestedMatch
-}
-
-export const isSplitAsOption = (option: BankTransactionCategoryComboBoxOption): option is SplitAsOption => {
-  return option.type === BankTransactionCategorizationOption.Split
-}
-
-export const isApiCategorizationAsOption = (option: BankTransactionCategoryComboBoxOption): option is ApiCategorizationAsOption => {
-  return option.type === BankTransactionCategorizationOption.ApiCategorization
-}
-
-export const isPlaceholderAsOption = (option: BankTransactionCategoryComboBoxOption): option is PlaceholderAsOption => {
-  return option.type === BankTransactionCategorizationOption.Placeholder
 }

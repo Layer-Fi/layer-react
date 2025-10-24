@@ -2,7 +2,7 @@ import ChevronDown from '../../icons/ChevronDown'
 import classNames from 'classnames'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
 import { useState } from 'react'
-import type { BankTransactionCategoryComboBoxOption } from '../../types/categorizationOption'
+import type { BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 type Props = {
   value: BankTransactionCategoryComboBoxOption | null
