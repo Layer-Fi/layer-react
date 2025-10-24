@@ -34,7 +34,7 @@ export const CategorizationRulesTable = () => {
   const CategoryDisplay = ({ accountIdentifier }: { accountIdentifier: AccountIdentifier }) => {
     const { data: categories, isLoading } = useCategories({ mode: CategoriesListMode.All })
     const options = useMemo(() => {
-      if (isLoading || !categories || !categories.length) return []
+      if (isLoading || !categories) return []
       return getLeafCategories(categories)
     }, [categories, isLoading])
     const displayName = accountIdentifier
