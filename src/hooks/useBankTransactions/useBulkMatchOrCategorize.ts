@@ -1,22 +1,51 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
+import { Schema, pipe } from 'effect'
 import useSWRMutation from 'swr/mutation'
-import { BulkActionSchema } from '../../schemas/bankTransactions/bulkMatchOrCategorizeSchemas'
-import { ClassificationSchema } from '../../schemas/categorization'
 import { post } from '../../api/layer/authenticated_http'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { useAuth } from '../useAuth'
 import { useSelectedIds } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useGetAllBankTransactionsCategories } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
-import { OptionActionType } from '../../types/categoryOption'
-import { mapCategoryToOption } from '../../components/CategorySelect/CategorySelect'
-import type { CategoryOption } from '../../types/categoryOption'
-import { getCategorizePayload } from '../../utils/bankTransactions'
-import type { GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { ClassificationSchema } from '../../schemas/categorization'
+import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
+import { buildBulkMatchOrCategorizePayload } from './utils'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
+
+export const SingleCategoryUpdateSchema = Schema.Struct({
+  type: Schema.Literal('Category'),
+  category: ClassificationSchema,
+})
+
+export const SplitCategoryEntrySchema = Schema.Struct({
+  amount: Schema.Number,
+  category: ClassificationSchema,
+})
+
+export const SplitCategoryUpdateSchema = Schema.Struct({
+  type: Schema.Literal('Split'),
+  entries: Schema.Array(SplitCategoryEntrySchema),
+})
+
+export const CategoryUpdateSchema = Schema.Union(
+  SingleCategoryUpdateSchema,
+  SplitCategoryUpdateSchema,
+)
+
+export const BulkActionSchema = Schema.Union(
+  Schema.Struct({
+    type: Schema.Literal('match'),
+    suggestedMatchId: pipe(
+      Schema.propertySignature(Schema.UUID),
+      Schema.fromKey('suggested_match_id'),
+    ),
+  }),
+  Schema.Struct({
+    type: Schema.Literal('categorize'),
+    categorization: CategoryUpdateSchema,
+  }),
+)
 
 const _BulkMatchOrCategorizeRequestSchema = Schema.Struct({
   transactions: Schema.Record({
@@ -68,63 +97,16 @@ function buildKey({
   }
 }
 
-type UseBulkMatchOrCategorizeProps = {
-  mutateBankTransactions?: SWRInfiniteKeyedMutator<Array<GetBankTransactionsReturn>>
-}
-
-export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatchOrCategorizeProps) => {
+export const useBulkMatchOrCategorize = () => {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { selectedIds } = useSelectedIds()
   const { transactionCategories } = useGetAllBankTransactionsCategories()
 
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+
   const buildTransactionsPayload = useCallback((): BulkMatchOrCategorizeRequest => {
-    const transactions: Record<string, typeof BulkActionSchema.Type> = {}
-
-    for (const transactionId of selectedIds) {
-      const transactionCategory: CategoryOption | undefined = transactionCategories.get(transactionId)
-
-      if (!transactionCategory) {
-        continue
-      }
-
-      if (transactionCategory.payload.option_type === OptionActionType.MATCH) {
-        transactions[transactionId] = {
-          type: 'match',
-          suggestedMatchId: transactionCategory.payload.id,
-        }
-      }
-      else if (transactionCategory.payload.option_type === OptionActionType.CATEGORY) {
-        // Split Categorization
-        if (transactionCategory.payload.entries && transactionCategory.payload.entries.length > 0) {
-          transactions[transactionId] = {
-            type: 'categorize',
-            categorization: {
-              type: 'Split',
-              entries: transactionCategory.payload.entries.map((entry) => {
-                const categoryPayload = getCategorizePayload(mapCategoryToOption(entry.category))
-                return {
-                  amount: entry.amount ?? 0,
-                  category: Schema.decodeSync(ClassificationSchema)(categoryPayload),
-                }
-              }),
-            },
-          }
-        }
-        else {
-          // Single Categorization
-          const categoryPayload = getCategorizePayload(transactionCategory)
-          transactions[transactionId] = {
-            type: 'categorize',
-            categorization: {
-              type: 'Category',
-              category: Schema.decodeSync(ClassificationSchema)(categoryPayload),
-            },
-          }
-        }
-      }
-    }
-
+    const transactions = buildBulkMatchOrCategorizePayload(selectedIds, transactionCategories)
     return { transactions }
   }, [selectedIds, transactionCategories])
 
@@ -155,13 +137,13 @@ export const useBulkMatchOrCategorize = ({ mutateBankTransactions }: UseBulkMatc
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void mutateBankTransactions?.()
+      void forceReloadBankTransactions()
 
       return triggerResult
     },
     [
       originalTrigger,
-      mutateBankTransactions,
+      forceReloadBankTransactions,
     ],
   )
 

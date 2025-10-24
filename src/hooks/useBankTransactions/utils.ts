@@ -1,6 +1,12 @@
+import { Schema } from 'effect'
 import { filterVisibility } from '../../components/BankTransactions/utils'
 import { BankTransaction, DisplayState } from '../../types/bank_transactions'
 import { AccountItem, NumericRangeFilter } from './types'
+import { OptionActionType, CategoryOption } from '../../types/categoryOption'
+import { getCategorizePayload } from '../../utils/bankTransactions'
+import { mapCategoryToOption } from '../../components/CategorySelect/CategorySelect'
+import { ClassificationSchema } from '../../schemas/categorization'
+import { BulkActionSchema } from './useBulkMatchOrCategorize'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
   const accounts: AccountItem[] = []
@@ -65,4 +71,57 @@ export const applyCategorizationStatusFilter = (
       || (filter === DisplayState.review && tx.recently_categorized)
       || (filter === DisplayState.categorized && tx.recently_categorized),
   )
+}
+
+export const buildBulkMatchOrCategorizePayload = (
+  selectedIds: Iterable<string>,
+  transactionCategories: Map<string, CategoryOption>,
+): Record<string, typeof BulkActionSchema.Type> => {
+  const transactions: Record<string, typeof BulkActionSchema.Type> = {}
+
+  for (const transactionId of selectedIds) {
+    const transactionCategory: CategoryOption | undefined = transactionCategories.get(transactionId)
+
+    if (!transactionCategory) {
+      continue
+    }
+
+    if (transactionCategory.payload.option_type === OptionActionType.MATCH) {
+      transactions[transactionId] = {
+        type: 'match',
+        suggestedMatchId: transactionCategory.payload.id,
+      }
+    }
+    else if (transactionCategory.payload.option_type === OptionActionType.CATEGORY) {
+      // Split Categorization
+      if (transactionCategory.payload.entries && transactionCategory.payload.entries.length > 0) {
+        transactions[transactionId] = {
+          type: 'categorize',
+          categorization: {
+            type: 'Split',
+            entries: transactionCategory.payload.entries.map((entry) => {
+              const categoryPayload = getCategorizePayload(mapCategoryToOption(entry.category))
+              return {
+                amount: entry.amount ?? 0,
+                category: Schema.decodeSync(ClassificationSchema)(categoryPayload),
+              }
+            }),
+          },
+        }
+      }
+      else {
+        // Single Categorization
+        const categoryPayload = getCategorizePayload(transactionCategory)
+        transactions[transactionId] = {
+          type: 'categorize',
+          categorization: {
+            type: 'Category',
+            category: Schema.decodeSync(ClassificationSchema)(categoryPayload),
+          },
+        }
+      }
+    }
+  }
+
+  return transactions
 }
