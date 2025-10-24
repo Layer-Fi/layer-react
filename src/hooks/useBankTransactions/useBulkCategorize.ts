@@ -14,7 +14,7 @@ type BulkCategorizeRequestEncoded = typeof BulkCategorizeRequestSchema.Encoded
 
 type BulkCategorizeResponse = typeof BulkCategorizeResponseSchema.Type
 
-const BulkCategorize = post<
+const bulkCategorize = post<
   BulkCategorizeResponse,
   BulkCategorizeRequestEncoded,
   { businessId: string }
