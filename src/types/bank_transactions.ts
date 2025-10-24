@@ -4,9 +4,11 @@ import { MatchDetailsType } from '../schemas/bankTransactions/match'
 import { Categorization } from './categories'
 import { CategorizationStatus } from '../schemas/bankTransactions/bankTransaction'
 import { S3PresignedUrl, type Direction } from './general'
-import type { TransactionTagEncoded } from '../features/tags/tagSchemas'
+import type { Tag, TransactionTagEncoded } from '../features/tags/tagSchemas'
 import { UpdateCategorizationRulesSuggestionSchema } from '../schemas/bankTransactions/categorizationRules/categorizationRule'
 import type { CategorizationEncoded } from '../schemas/categorization'
+import type { CustomerVendorSchema } from '../features/customerVendor/customerVendorSchemas'
+import type { BankTransactionCategoryComboBoxOption } from './categorizationOption'
 
 export enum BankTransactionMatchType {
   CONFIRM_MATCH = 'Confirm_Match',
@@ -78,4 +80,10 @@ export interface BankTransactionMetadata {
 export interface DocumentS3Urls {
   type: 'Document_S3_Urls'
   documentUrls: S3PresignedUrl[]
+} export type Split = {
+  amount: number
+  inputValue: string
+  category: BankTransactionCategoryComboBoxOption | null
+  tags: readonly Tag[]
+  customerVendor: typeof CustomerVendorSchema.Type | null
 }

@@ -5,7 +5,7 @@ import { useCallback, useId, useState } from 'react'
 import { Button } from '../../ui/Button/Button'
 import { useCountSelectedIds } from '../../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BankTransactionCategoryComboBox } from '../../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../BankTransactionCategoryComboBox/options'
+import { isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../../types/categorizationOption'
 
 export const BankTransactionsCategorizeAllButton = () => {
   const { count } = useCountSelectedIds()

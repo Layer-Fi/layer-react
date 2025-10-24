@@ -5,7 +5,7 @@ import { Label } from '../ui/Typography/Text'
 import { getLeafCategories } from '../../types/categories'
 import { ClassificationEquivalence, type CategoriesListMode, type Classification } from '../../schemas/categorization'
 import { useCategories } from '../../hooks/categories/useCategories'
-import { CategoryAsOption } from '../BankTransactionCategoryComboBox/options'
+import { CategoryAsOption } from '../../types/categorizationOption'
 
 type LedgerAccountComboboxProps = {
   label: string

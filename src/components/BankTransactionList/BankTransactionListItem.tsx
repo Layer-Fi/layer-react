@@ -28,7 +28,7 @@ import { Span } from '../ui/Typography/Text'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
-import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../BankTransactionCategoryComboBox/options'
+import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../types/categorizationOption'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 
 type Props = {

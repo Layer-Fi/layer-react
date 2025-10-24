@@ -2,7 +2,7 @@ import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransac
 import type { NestedCategorization } from '../../schemas/categorization'
 import type { BankTransaction, SuggestedMatch } from '../../types/bank_transactions'
 import { CategorizationType, hasSuggestions } from '../../types/categories'
-import { ApiCategorizationAsOption, CategoryAsOption, PlaceholderAsOption, SuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from './options'
+import { ApiCategorizationAsOption, CategoryAsOption, PlaceholderAsOption, SuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../types/categorizationOption'
 
 export enum BankTransactionCategoryComboBoxGroupLabel {
   TRANSFER = 'TRANSFER',

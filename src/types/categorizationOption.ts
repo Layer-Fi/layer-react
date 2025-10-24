@@ -1,5 +1,5 @@
 import { Schema } from 'effect'
-import type { SuggestedMatch } from '../../types/bank_transactions'
+import type { SuggestedMatch, Split } from './bank_transactions'
 import {
   ClassificationSchema,
   makeExclusion,
@@ -7,10 +7,9 @@ import {
   type Classification,
   type ClassificationEncoded,
   type NestedCategorization,
-} from '../../schemas/categorization'
-import type { Tag } from '../../features/tags/tagSchemas'
-import type { CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
-import { makeAccountId, makeStableName } from '../../schemas/accountIdentifier'
+} from '../schemas/categorization'
+import { makeAccountId, makeStableName } from '../schemas/accountIdentifier'
+import { unsafeAssertUnreachable } from '../utils/switch/assertUnreachable'
 
 export enum BankTransactionCategorizationOption {
   Category = 'Category',
@@ -90,10 +89,11 @@ export class CategoryAsOption extends BaseOption<NestedCategorization> {
         return this.internalValue.stableName
       case 'ExclusionNested':
         return this.internalValue.id
-      default: {
-        const _exhaustive: never = this.internalValue
-        throw new Error(`Unexpected category type: ${(_exhaustive as NestedCategorization).type}`)
-      }
+      default:
+        return unsafeAssertUnreachable({
+          value: this.internalValue,
+          message: 'Unexpected category type in CategoryAsOption.value',
+        })
     }
   }
 
@@ -105,10 +105,11 @@ export class CategoryAsOption extends BaseOption<NestedCategorization> {
         return makeStableName(this.internalValue.stableName)
       case 'ExclusionNested':
         return makeExclusion(this.internalValue.id)
-      default: {
-        const _exhaustive: never = this.internalValue
-        throw new Error(`Unexpected category type: ${(_exhaustive as NestedCategorization).type}`)
-      }
+      default:
+        return unsafeAssertUnreachable({
+          value: this.internalValue,
+          message: 'Unexpected category type in CategoryAsOption.classification',
+        })
     }
   }
 
@@ -222,10 +223,11 @@ export class ApiCategorizationAsOption extends BaseOption<CategorizationEncoded>
         return makeExclusion(this.internalValue.id)
       case 'Split_Categorization':
         return null
-      default: {
-        const _exhaustive: never = this.internalValue
-        throw new Error(`Unexpected categorization type: ${(_exhaustive as CategorizationEncoded).type}`)
-      }
+      default:
+        return unsafeAssertUnreachable({
+          value: this.internalValue,
+          message: 'Unexpected categorization type in ApiCategorizationAsOption.classification',
+        })
     }
   }
 
@@ -240,14 +242,6 @@ export type BankTransactionCategoryComboBoxOption =
   | SplitAsOption
   | PlaceholderAsOption
   | ApiCategorizationAsOption
-
-export type Split = {
-  amount: number
-  inputValue: string
-  category: BankTransactionCategoryComboBoxOption | null
-  tags: readonly Tag[]
-  customerVendor: typeof CustomerVendorSchema.Type | null
-}
 
 export const isCategoryAsOption = (option: BankTransactionCategoryComboBoxOption): option is CategoryAsOption => {
   return option.type === BankTransactionCategorizationOption.Category

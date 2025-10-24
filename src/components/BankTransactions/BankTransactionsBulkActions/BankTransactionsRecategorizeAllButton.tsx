@@ -4,7 +4,7 @@ import { VStack } from '../../ui/Stack/Stack'
 import { useCallback, useId, useState } from 'react'
 import { Button } from '../../ui/Button/Button'
 import { useCountSelectedIds } from '../../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../BankTransactionCategoryComboBox/options'
+import { isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../../types/categorizationOption'
 import { BankTransactionCategoryComboBox } from '../../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 
 export const BankTransactionsRecategorizeAllButton = () => {

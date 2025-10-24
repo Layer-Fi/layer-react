@@ -14,7 +14,7 @@ import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawer } from '../CategorySelect/CategorySelectDrawer'
 import { CategorizationType } from '../../types/categories'
-import { ApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption } from '../BankTransactionCategoryComboBox/options'
+import { ApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption } from '../../types/categorizationOption'
 
 type DisplayOption = {
   label: string

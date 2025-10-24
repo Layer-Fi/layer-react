@@ -42,7 +42,8 @@ import { BankTransactionFormFields } from '../../features/bankTransactions/[bank
 import { useBankTransactionTagVisibility } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import { useBankTransactionCustomerVendorVisibility } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { isSplitCategorizationEncoded, type ClassificationEncoded } from '../../schemas/categorization'
-import { ApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption, type Split } from '../BankTransactionCategoryComboBox/options'
+import { ApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption } from '../../types/categorizationOption'
+import { type Split } from '../../types/bank_transactions'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 
 type Props = {

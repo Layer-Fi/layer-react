@@ -1,7 +1,7 @@
 import { BankTransaction } from '../../types/bank_transactions'
 import { hasSuggestions } from '../../types/categories'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
-import { CategoryAsOption, ApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption } from '../BankTransactionCategoryComboBox/options'
+import { CategoryAsOption, ApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption } from '../../types/categorizationOption'
 import type { NestedCategorization } from '../../schemas/categorization'
 
 export interface CategoryGroup {
