@@ -14,7 +14,7 @@
       minmax(8rem, 45%)
       auto;
 
-    > *:last-child {
+    > :nth-child(3) {
       justify-content: end;
     }
   }
