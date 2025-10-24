@@ -13,8 +13,10 @@
       minmax(8rem, 45%)
       minmax(8rem, 45%)
       auto;
+  }
 
-    > :nth-child(3) {
+  .Layer__UI__Table-Cell__CategorizationRulesTable {
+    &--Delete {
       justify-content: end;
     }
   }
