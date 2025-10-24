@@ -22,6 +22,11 @@ export enum InputStrategy {
   LayerReview = 'LAYER_REVIEW',
 }
 
+export const AccountInstitutionSchema = Schema.Struct({
+  name: Schema.String,
+  logo: Schema.NullOr(Schema.String),
+})
+
 export const InputStrategySchema = Schema.Enums(InputStrategy)
 
 export const CategorizationFlowSchema = Schema.Struct({
@@ -55,6 +60,14 @@ export const BankTransactionSchema = Schema.Struct({
   accountName: pipe(
     Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('account_name'),
+  ),
+  accountMask: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('account_mask'),
+  ),
+  accountInstitution: pipe(
+    Schema.optional(Schema.NullOr(AccountInstitutionSchema)),
+    Schema.fromKey('account_institution'),
   ),
   categorizationFlow: pipe(
     Schema.optional(Schema.NullOr(CategorizationFlowSchema)),

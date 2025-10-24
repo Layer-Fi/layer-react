@@ -6,17 +6,17 @@ import { CategoryOption, CategorySelect } from '../../CategorySelect/CategorySel
 import { Button } from '../../ui/Button/Button'
 import { useCountSelectedIds } from '../../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
-export const BankTransactionsCategorizeAllButton = () => {
+export const BankTransactionsRecategorizeAllButton = () => {
   const { count } = useCountSelectedIds()
-  const [isCategorizeAllModalOpen, setIsCategorizeAllModalOpen] = useState(false)
+  const [isRecategorizeAllModalOpen, setIsRecategorizeAllModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<CategoryOption | undefined>(undefined)
 
-  const handleCategorizeAllClick = useCallback(() => {
-    setIsCategorizeAllModalOpen(true)
+  const handleRecategorizeAllClick = useCallback(() => {
+    setIsRecategorizeAllModalOpen(true)
   }, [])
 
-  const handleCategorizeModalClose = useCallback((isOpen: boolean) => {
-    setIsCategorizeAllModalOpen(isOpen)
+  const handleRecategorizeModalClose = useCallback((isOpen: boolean) => {
+    setIsRecategorizeAllModalOpen(isOpen)
     if (!isOpen) {
       setSelectedCategory(undefined)
     }
@@ -28,14 +28,14 @@ export const BankTransactionsCategorizeAllButton = () => {
     <>
       <Button
         variant='outlined'
-        onClick={handleCategorizeAllClick}
+        onClick={handleRecategorizeAllClick}
       >
-        Set category
+        Re-categorize all
       </Button>
       <BaseConfirmationModal
-        isOpen={isCategorizeAllModalOpen}
-        onOpenChange={handleCategorizeModalClose}
-        title='Categorize all selected transactions?'
+        isOpen={isRecategorizeAllModalOpen}
+        onOpenChange={handleRecategorizeModalClose}
+        title='Recategorize all selected transactions?'
         content={(
           <VStack gap='xs'>
             <VStack gap='3xs'>
@@ -50,13 +50,13 @@ export const BankTransactionsCategorizeAllButton = () => {
             </VStack>
             {selectedCategory && (
               <Span>
-                {`This action will categorize ${count} selected transactions as ${selectedCategory?.payload?.display_name}.`}
+                {`This action will recategorize ${count} selected transactions as ${selectedCategory?.payload?.display_name}.`}
               </Span>
             )}
           </VStack>
         )}
         onConfirm={() => {}}
-        confirmLabel='Categorize All'
+        confirmLabel='Recategorize All'
         cancelLabel='Cancel'
         confirmDisabled={!selectedCategory}
         closeOnConfirm

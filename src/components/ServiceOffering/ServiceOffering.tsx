@@ -87,7 +87,7 @@ export const ServiceOffering = ({
 
   const renderMainContent = useCallback(() => (
     <VStack className='Layer__service-offering--main'>
-      <div className='Layer__service-offering__responsive-layout'>
+      <div className='Layer__service-offering__layout'>
         <VStack gap={isMobile ? 'md' : 'lg'} pi={isMobile ? 'md' : 'lg'} className='Layer__service-offering__responsive-content'>
           <VStack>
             {!!heroConfig.stringOverrides?.title === false && (
@@ -137,8 +137,9 @@ export const ServiceOffering = ({
             <Button variant='branded' onClick={handleMainCta}>{heroConfig.cta.primary.label}</Button>
           </HStack>
         </VStack>
-        <VStack className='Layer__service-offering__responsive-image'>
+        <VStack className='Layer__service-offering__media-container'>
           <img
+            className='Layer__service-offering__media-image'
             key={`hero-image-${isStackedLayout}`}
             src={heroConfig.mediaUrls.topOfFoldImage}
             alt={`${platform.platformName} Accounting dashboard interface showing financial data and business insights`}
