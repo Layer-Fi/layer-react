@@ -25,6 +25,7 @@ import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmat
 import { InvoiceDetailHeaderMenu } from './InvoiceDetailHeaderMenu'
 import type { Awaitable } from '../../../types/utility/promises'
 import { useInvoicesContext } from '../../../contexts/InvoicesContext/InvoicesContext'
+import './invoiceDetail.scss'
 
 export const InvoiceDetail = () => {
   const viewState = useInvoiceDetail()

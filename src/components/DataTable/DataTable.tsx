@@ -8,6 +8,7 @@ import {
   Cell,
   Row,
 } from '../ui/Table/Table'
+import './dataTable.scss'
 
 export type Column<TData, K> = {
   id: K

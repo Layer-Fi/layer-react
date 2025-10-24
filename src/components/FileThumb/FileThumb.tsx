@@ -5,6 +5,7 @@ import TrashIcon from '../../icons/Trash'
 import { IconButton } from '../Button'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
+import './fileThumb.scss'
 
 type FileThumbProps = {
   url?: string

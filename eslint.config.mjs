@@ -9,7 +9,7 @@ import unusedImportsPlugin from 'eslint-plugin-unused-imports'
 
 export default tsEslint.config(
   {
-    ignores: ['build/**', 'dist/**', 'bin/**', 'node_modules/**'],
+    ignores: ['dist/**', 'node_modules/**', 'vite/**'],
   },
   js.configs.recommended,
   ...tsEslint.configs.recommendedTypeChecked,

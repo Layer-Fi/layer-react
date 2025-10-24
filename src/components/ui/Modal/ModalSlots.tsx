@@ -4,6 +4,7 @@ import { Button } from '../Button/Button'
 import { Heading } from '../Typography/Heading'
 import { P } from '../Typography/Text'
 import classNames from 'classnames'
+import './modalSlots.scss'
 
 const MODAL_CLOSE_BUTTON_CLASS_NAME = 'Layer__ModalCloseButton'
 

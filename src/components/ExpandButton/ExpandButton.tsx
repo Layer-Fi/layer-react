@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import ChevronDownFill from '../../icons/ChevronDownFill'
+import './expandButton.scss'
 
 type ExpandButtonProps = {
   isExpanded: boolean

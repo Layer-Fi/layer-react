@@ -25,6 +25,7 @@ import { type Tag } from '../../../features/tags/tagSchemas'
 import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
 import { CategoriesListMode } from '../../../schemas/categorization'
 import { TagDimensionCombobox } from '../../../features/tags/components/TagDimensionCombobox'
+import './invoiceForm.scss'
 
 const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
 const INVOICE_FORM_FIELD_CSS_PREFIX = `${INVOICE_FORM_CSS_PREFIX}__Field`

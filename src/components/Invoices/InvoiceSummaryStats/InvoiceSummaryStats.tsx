@@ -8,6 +8,7 @@ import { Meter } from '../../ui/Meter/Meter'
 import { HStack, VStack } from '../../ui/Stack/Stack'
 import { Span } from '../../ui/Typography/Text'
 import { BigDecimal as BD } from 'effect'
+import './invoiceSummaryStats.scss'
 
 const getPercentageOverdue = (sentTotal: bigint | undefined, overdueTotal: bigint | undefined): number => {
   if (!sentTotal && !overdueTotal) return 50

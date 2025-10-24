@@ -10,6 +10,7 @@ import { UploadTransactionsStep } from './types'
 import { BankTransaction } from '../../types/bank_transactions'
 import { Button } from '../ui/Button/Button'
 import { X } from 'lucide-react'
+import './uploadTransactions.scss'
 
 type UploadTransactionsHeaderProps = {
   currentStep: UploadTransactionsStep

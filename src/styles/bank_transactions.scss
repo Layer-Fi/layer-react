@@ -299,7 +299,7 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   min-width: 40rem;
-  max-width: 64rem;
+  max-width: 76rem;
 }
 
 .Layer__expanded-bank-transaction-row__content-panels {
@@ -309,13 +309,7 @@
 }
 
 .Layer__bank-transaction-form-fields {
-  .Layer__ComboBoxContainer {
-    max-width: 20rem;
-  }
-
-  .Layer__bank-transaction-memo-input-group {
-    max-width: 40rem;
-  }
+  max-width: 40rem;
 }
 
 .Layer__expanded-bank-transaction-row__content-panel {
@@ -413,7 +407,6 @@
 
 .Layer__expanded-bank-transaction-row__splits-inputs {
   display: flex;
-  flex: 1;
   flex-direction: column;
   gap: var(--spacing-xs);
   padding-top: 2px;
@@ -483,8 +476,13 @@
 }
 
 .Layer__bank-transaction-row__expand-button {
+  min-width: 2.25rem;
+}
+
+.Layer__bank-transaction-row__expand-button--mobile {
   width: fit-content;
   vertical-align: middle;
+  min-width: unset;
 }
 
 .Layer__bank-transaction-row__actions-cell--open {
@@ -499,20 +497,14 @@
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry {
-  display: grid;
-  grid-template-areas:
-    'amount category category button'
-    'customer tags tags .';
-  grid-template-columns: minmax(8rem, 12rem) minmax(12rem, 16rem) 1fr auto;
-
+  display: flex;
   gap: var(--spacing-xs);
-
   align-items: start;
-  max-width: 40rem;
+  min-width: 40rem;
 
   .Layer__category-menu--full {
     grid-area: category;
-    width: 100%;
+    max-width: 24.5rem;
   }
 
   &__amount {
@@ -521,21 +513,32 @@
 
   &__customer {
     grid-area: customer;
+    min-width: 12rem;
   }
 
   &__button {
     grid-area: button;
+  }
+
+  @container (max-width: 768px) {
+    display: grid;
+    grid-template-areas: 'amount category button';
+    grid-template-columns: minmax(8rem, 12rem) minmax(12rem, 24.5rem) 2.25rem;
+    max-width: 40rem;
+
+    &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__customer),
+    &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__tags) {
+      grid-template-areas:
+        'amount category button'
+        'customer tags .';
+    }
   }
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry__tags {
   display: flex;
   grid-area: tags;
-  gap: var(--spacing-sm);
-
-  .Layer__JournalEntryForm__Field--tag {
-    width: 12rem;
-  }
+  column-gap: var(--spacing-xs);
 }
 
 .Layer__bank-transactions__list {
@@ -1287,7 +1290,6 @@
 @container (max-width: 600px) {
   .Layer__expanded-bank-transaction-row__splits-inputs {
     display: flex;
-    flex: 1;
     flex-direction: column;
     gap: var(--spacing-xs);
     width: 100%;

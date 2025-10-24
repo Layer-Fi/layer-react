@@ -12,6 +12,7 @@ import type {
 import classNames from 'classnames'
 import { endOfDay, endOfMonth, endOfYear, getYear } from 'date-fns'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
+import './deprecatedDatePicker.scss'
 
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612

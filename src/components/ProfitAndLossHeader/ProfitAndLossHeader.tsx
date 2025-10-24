@@ -9,6 +9,7 @@ import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLos
 import { ProfitAndLossDownloadButton } from '../ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
 import { HStack } from '../ui/Stack/Stack'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '../ProfitAndLossDownloadButton/types'
+import './profitAndLossHeader.scss'
 
 interface ProfitAndLossHeaderStringOverrides {
   title?: string
