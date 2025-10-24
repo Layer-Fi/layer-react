@@ -210,28 +210,7 @@ export function CustomerVendorSelector({
 
   const inputId = useId()
 
-  const isFiltered = effectiveSearchQuery !== undefined
-
-  const isLoading = isLoadingCustomers || isLoadingVendors
   const isError = isErrorLoadingCustomers || isErrorLoadingVendors
-
-  const noSecondPartiesExist = !isLoading
-    && !isFiltered
-    && customerPages !== undefined
-    && vendorPages !== undefined
-    && customerPages.every(({ data }) => data.length === 0)
-    && vendorPages.every(({ data }) => data.length === 0)
-
-  const shouldHideComponent = noSecondPartiesExist || (isReadOnly && selectedCustomerVendor === null)
-
-  if (shouldHideComponent) {
-    /*
-     * If there are no existing customers or vendors, the selector is pointless.
-     *
-     * This behavior will change when we support directly adding customers and vendors.
-     */
-    return null
-  }
 
   const isLoadingCustomersWithoutFallback = isLoadingCustomers && !customerPages
   const isLoadingVendorsWithoutFallback = isLoadingVendors && !vendorPages
