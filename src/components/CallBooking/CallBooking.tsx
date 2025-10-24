@@ -54,7 +54,7 @@ const ScheduledCallState = ({
         <HStack align='center' gap='sm'>
           <Clock size={16} />
           <HStack gap='xs' align='center'>
-            <Span>Date & time: </Span>
+            <Span>Date: </Span>
             <Span size='md'>
               {formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME_READABLE)}
               {' '}
