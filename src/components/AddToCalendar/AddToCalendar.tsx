@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { Calendar, ChevronDown } from 'lucide-react'
+import { Calendar, ChevronDown, Download } from 'lucide-react'
 import { Button } from '../ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '../ui/DropdownMenu/DropdownMenu'
 import { Span } from '../ui/Typography/Text'
@@ -114,7 +114,7 @@ export const AddToCalendar = ({
     <>
       <InvisibleDownload ref={invisibleDownloadRef} />
       <DropdownMenu
-        ariaLabel='Add to Calendar'
+        ariaLabel='Add to calendar'
         slots={{ Trigger }}
         slotProps={{
           Dialog: { width: '10rem' },
@@ -141,7 +141,7 @@ export const AddToCalendar = ({
           </MenuItem>
           <MenuItem key='ics' onClick={() => handleCalendarClick('ics')}>
             <HStack gap='sm'>
-              <Calendar size={16} />
+              <Download size={16} />
               <Span size='sm'>Download .ics file</Span>
             </HStack>
           </MenuItem>
