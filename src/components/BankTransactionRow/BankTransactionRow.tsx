@@ -44,6 +44,7 @@ import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibilit
 import { Span } from '../ui/Typography/Text'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useBankTransactionsCategoryActions } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 type Props = {
   index: number
@@ -124,6 +125,7 @@ export const BankTransactionRow = ({
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
+  const { setTransactionCategory, setOnlyNewTransactionCategories } = useBankTransactionsCategoryActions()
 
   const openRow = {
     onMouseDown: () => {
@@ -142,6 +144,13 @@ export const BankTransactionRow = ({
       setShowRetry(true)
     }
   }, [bankTransaction.error])
+
+  useEffect(() => {
+    const defaultCategory = getDefaultSelectedCategory(bankTransaction)
+    if (defaultCategory) {
+      setOnlyNewTransactionCategories([{ id: bankTransaction.id, category: defaultCategory }])
+    }
+  }, [bankTransaction.id, bankTransaction.suggested_matches, bankTransaction.categorization_flow, setOnlyNewTransactionCategories])
 
   useEffect(() => {
     if (
@@ -310,6 +319,7 @@ export const BankTransactionRow = ({
                   value={selectedCategory}
                   onChange={(category) => {
                     setSelectedCategory(category)
+                    setTransactionCategory(bankTransaction.id, category)
                     setShowRetry(false)
                   }}
                   disabled={bankTransaction.processing}

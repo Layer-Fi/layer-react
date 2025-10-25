@@ -73,11 +73,13 @@ export const applyCategorizationStatusFilter = (
   )
 }
 
+type BulkAction = typeof BulkActionSchema.Type
+
 export const buildBulkMatchOrCategorizePayload = (
   selectedIds: Iterable<string>,
   transactionCategories: Map<string, CategoryOption>,
-): Record<string, typeof BulkActionSchema.Type> => {
-  const transactions: Record<string, typeof BulkActionSchema.Type> = {}
+): Record<string, BulkAction> => {
+  const transactions: Record<string, BulkAction> = {}
 
   for (const transactionId of selectedIds) {
     const transactionCategory: CategoryOption | undefined = transactionCategories.get(transactionId)
