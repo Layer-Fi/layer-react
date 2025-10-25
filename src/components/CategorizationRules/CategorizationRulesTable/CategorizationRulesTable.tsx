@@ -14,7 +14,7 @@ import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmat
 import { useArchiveCategorizationRule } from '../../../hooks/useCategorizationRules/useArchiveCategorizationRule'
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useCategories } from '../../../hooks/categories/useCategories'
-import { getLeafCategories, accountIdentifierIsForCategory } from '../../../types/categories'
+import { getLeafCategories, accountIdentifierIsForCategory, Category } from '../../../types/categories'
 import './categorizationRulesTable.scss'
 import { AccountIdentifier } from '../../../schemas/accountIdentifier'
 
@@ -25,29 +25,30 @@ enum CategorizationRuleColumns {
 }
 const COMPONENT_NAME = 'CategorizationRulesTable'
 
+const CategoryDisplay = ({ accountIdentifier, options }: { accountIdentifier: AccountIdentifier, options: Category[] }) => {
+  const displayName = accountIdentifier
+    ? options.find(category =>
+      accountIdentifierIsForCategory(accountIdentifier, category),
+    )?.display_name
+    : undefined
+  return displayName
+    ? (
+      <Span ellipsis>{displayName}</Span>
+    )
+    : null
+}
+
 export const CategorizationRulesTable = () => {
   const [selectedRule, setSelectedRule] = useState<CategorizationRule | null>(null)
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState(false)
   const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
   const { addToast } = useLayerContext()
 
-  const CategoryDisplay = ({ accountIdentifier }: { accountIdentifier: AccountIdentifier }) => {
-    const { data: categories, isLoading } = useCategories({ mode: CategoriesListMode.All })
-    const options = useMemo(() => {
-      if (isLoading || !categories) return []
-      return getLeafCategories(categories)
-    }, [categories, isLoading])
-    const displayName = accountIdentifier
-      ? options.find(category =>
-        accountIdentifierIsForCategory(accountIdentifier, category),
-      )?.display_name
-      : undefined
-    return displayName
-      ? (
-        <Span ellipsis>{displayName}</Span>
-      )
-      : null
-  }
+  const { data: categories, isLoading: categoriesAreLoading } = useCategories({ mode: CategoriesListMode.All })
+  const options = useMemo(() => {
+    if (categoriesAreLoading || !categories) return []
+    return getLeafCategories(categories)
+  }, [categories, categoriesAreLoading])
 
   const archiveCategorizationRule = useCallback(() => {
     if (selectedRule?.id) {
@@ -116,7 +117,7 @@ export const CategorizationRulesTable = () => {
       cell: (row) => {
         const accountIdentifier = row.category
         return accountIdentifier && (
-          <CategoryDisplay accountIdentifier={accountIdentifier} />
+          <CategoryDisplay accountIdentifier={accountIdentifier} options={options} />
         )
       },
       isRowHeader: true,
@@ -138,14 +139,14 @@ export const CategorizationRulesTable = () => {
         </Button>
       ),
     },
-  }), [])
+  }), [options])
 
   return (
     <Container name='CategorizationRulesTable'>
       <PaginatedTable
         ariaLabel='CategorizationRules'
         data={categorizationRules}
-        isLoading={data === undefined || rulesAreLoading}
+        isLoading={data === undefined || rulesAreLoading || categoriesAreLoading}
         isError={isError}
         columnConfig={columnConfig}
         paginationProps={paginationProps}
