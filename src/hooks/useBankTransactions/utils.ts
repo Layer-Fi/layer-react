@@ -1,12 +1,8 @@
-import { Schema } from 'effect'
 import { filterVisibility } from '../../components/BankTransactions/utils'
 import { BankTransaction, DisplayState } from '../../types/bank_transactions'
 import { AccountItem, NumericRangeFilter } from './types'
-import { OptionActionType, CategoryOption } from '../../types/categoryOption'
-import { getCategorizePayload } from '../../utils/bankTransactions'
-import { mapCategoryToOption } from '../../components/CategorySelect/CategorySelect'
-import { ClassificationSchema } from '../../schemas/categorization'
 import { BulkActionSchema } from './useBulkMatchOrCategorize'
+import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
   const accounts: AccountItem[] = []
@@ -77,48 +73,61 @@ type BulkAction = typeof BulkActionSchema.Type
 
 export const buildBulkMatchOrCategorizePayload = (
   selectedIds: Iterable<string>,
-  transactionCategories: Map<string, CategoryOption>,
+  transactionCategories: Map<string, BankTransactionCategoryComboBoxOption>,
 ): Record<string, BulkAction> => {
   const transactions: Record<string, BulkAction> = {}
 
   for (const transactionId of selectedIds) {
-    const transactionCategory: CategoryOption | undefined = transactionCategories.get(transactionId)
+    const transactionCategory = transactionCategories.get(transactionId)
 
     if (!transactionCategory) {
       continue
     }
 
-    if (transactionCategory.payload.option_type === OptionActionType.MATCH) {
+    // Handle suggested match
+    if (isSuggestedMatchAsOption(transactionCategory)) {
       transactions[transactionId] = {
         type: 'match',
-        suggestedMatchId: transactionCategory.payload.id,
+        suggestedMatchId: transactionCategory.value,
       }
     }
-    else if (transactionCategory.payload.option_type === OptionActionType.CATEGORY) {
-      // Split Categorization
-      if (transactionCategory.payload.entries && transactionCategory.payload.entries.length > 0) {
+    // Handle split categorization
+    else if (isSplitAsOption(transactionCategory)) {
+      const splitEntries = transactionCategory.original
+        .map((split) => {
+          if (!split.category || !isCategoryAsOption(split.category)) {
+            return null
+          }
+          const classification = split.category.classification
+          if (!classification) {
+            return null
+          }
+          return {
+            amount: split.amount,
+            category: classification,
+          }
+        })
+        .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
+
+      if (splitEntries.length > 0) {
         transactions[transactionId] = {
           type: 'categorize',
           categorization: {
             type: 'Split',
-            entries: transactionCategory.payload.entries.map((entry) => {
-              const categoryPayload = getCategorizePayload(mapCategoryToOption(entry.category))
-              return {
-                amount: entry.amount ?? 0,
-                category: Schema.decodeSync(ClassificationSchema)(categoryPayload),
-              }
-            }),
+            entries: splitEntries,
           },
         }
       }
-      else {
-        // Single Categorization
-        const categoryPayload = getCategorizePayload(transactionCategory)
+    }
+    // Handle single category or API categorization
+    else if (isCategoryAsOption(transactionCategory)) {
+      const classification = transactionCategory.classification
+      if (classification) {
         transactions[transactionId] = {
           type: 'categorize',
           categorization: {
             type: 'Category',
-            category: Schema.decodeSync(ClassificationSchema)(categoryPayload),
+            category: classification,
           },
         }
       }
