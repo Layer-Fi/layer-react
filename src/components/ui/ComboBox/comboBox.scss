@@ -135,18 +135,19 @@
     &--disabled {
       cursor: not-allowed;
     }
+
+    &--hidden {
+      display: none;
+    }
   }
 }
 
 .Layer__ComboBoxGroup {
   padding-block: var(--spacing-xs);
 
-  &:not(:last-of-type) {
-    border-bottom: 1px solid var(--border-color);
-  }
-
   > .Layer__ComboBoxGroupHeading {
-    padding-block: var(--spacing-3xs);
+    padding-block-start: var(--spacing-3xs);
+    padding-block-end: var(--spacing-xs);
     padding-inline: var(--spacing-sm);
   }
 
@@ -156,9 +157,6 @@
 }
 
 .Layer__ComboBoxOption {
-  grid-template-columns: 16px auto;
-  gap: var(--spacing-2xs);
-
   padding-block: var(--spacing-xs);
   padding-inline: var(--spacing-3xs);
 
@@ -181,7 +179,7 @@
   }
 
   &--disabled {
-    opacity: 0.5;
+    color: var(--color-base-500);
   }
 }
 

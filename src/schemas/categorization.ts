@@ -1,5 +1,5 @@
 import { Schema, pipe } from 'effect'
-import { AccountIdentifierSchema } from './accountIdentifier'
+import { AccountIdentifierSchema, type AccountIdentifier } from './accountIdentifier'
 import { TransactionTagSchema } from '../features/tags/tagSchemas'
 import { CustomerSchema } from './customer'
 import { VendorSchema } from './vendor'
@@ -15,6 +15,7 @@ export const BaseCategorizationSchema = Schema.Struct({
 })
 
 export const AccountCategorizationSchema = Schema.Struct({
+  type: Schema.Literal('Account'),
   id: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('id'),
@@ -30,8 +31,10 @@ export const AccountCategorizationSchema = Schema.Struct({
   ),
   description: Schema.optional(Schema.NullOr(Schema.String)),
 })
+export const AccountCategorizationEncoded = typeof AccountCategorizationSchema.Encoded
 
 export const ExclusionCategorizationSchema = Schema.Struct({
+  type: Schema.Literal('Exclusion'),
   id: Schema.String,
   category: Schema.String,
   displayName: pipe(
@@ -40,8 +43,10 @@ export const ExclusionCategorizationSchema = Schema.Struct({
   ),
   description: Schema.optional(Schema.NullOr(Schema.String)),
 })
+export const ExclusionCategorizationEncoded = typeof ExclusionCategorizationSchema.Encoded
 
 export const AccountSplitEntrySchema = Schema.Struct({
+  type: Schema.Literal('AccountSplitEntry'),
   amount: Schema.Number,
   category: AccountCategorizationSchema,
   tags: pipe(
@@ -53,6 +58,7 @@ export const AccountSplitEntrySchema = Schema.Struct({
 })
 
 export const ExclusionSplitEntrySchema = Schema.Struct({
+  type: Schema.Literal('ExclusionSplitEntry'),
   amount: Schema.Number,
   category: ExclusionCategorizationSchema,
   tags: pipe(
@@ -67,8 +73,10 @@ export const SplitCategorizationEntrySchema = Schema.Union(
   AccountSplitEntrySchema,
   ExclusionSplitEntrySchema,
 )
+export type SplitCategorizationEntryEncoded = typeof SplitCategorizationEntrySchema.Encoded
 
 export const SplitCategorizationSchema = Schema.Struct({
+  type: Schema.Literal('Split_Categorization'),
   id: Schema.String,
   category: Schema.String,
   displayName: pipe(
@@ -191,7 +199,37 @@ export type SplitCategorizationEntry = typeof SplitCategorizationEntrySchema.Typ
 export type SplitCategorization = typeof SplitCategorizationSchema.Type
 export type Categorization = typeof CategorizationSchema.Type
 
+export type AccountCategorizationEncoded = typeof AccountCategorizationSchema.Encoded
+export type ExclusionCategorizationEncoded = typeof ExclusionCategorizationSchema.Encoded
+export type SplitCategorizationEncoded = typeof SplitCategorizationSchema.Encoded
+export type CategorizationEncoded = typeof CategorizationSchema.Encoded
+
+// Type guards for CategorizationEncoded union
+export const isAccountCategorizationEncoded = (categorization: CategorizationEncoded): categorization is AccountCategorizationEncoded => {
+  return categorization.type === 'Account'
+}
+
+export const isSplitCategorizationEncoded = (categorization: CategorizationEncoded): categorization is SplitCategorizationEncoded => {
+  return categorization.type === 'Split_Categorization'
+}
+
+export const isExclusionCategorizationEncoded = (categorization: CategorizationEncoded): categorization is ExclusionCategorizationEncoded => {
+  return categorization.type === 'Exclusion'
+}
+
 export type NestedCategorization = typeof NestedCategorizationSchema.Type
+
+export const isNestedAccountCategorization = (categorization: NestedCategorization): categorization is NestedAccountCategorization => {
+  return categorization.type === 'AccountNested'
+}
+
+export const isNestedOptionalCategorization = (categorization: NestedCategorization): categorization is NestedOptionalCategorization => {
+  return categorization.type === 'OptionalAccountNested'
+}
+
+export const isNestedExclusionCategorization = (categorization: NestedCategorization): categorization is NestedExclusionCategorization => {
+  return categorization.type === 'ExclusionNested'
+}
 
 export const CategoryListSchema = Schema.Struct({
   type: Schema.Literal('Category_List'),
@@ -215,7 +253,18 @@ export const ExclusionSchema = Schema.Struct({
   ),
 })
 
+export const makeExclusion = (exclusionType: string) =>
+  Schema.decodeSync(ExclusionSchema)({ type: 'Exclusion', exclusion_type: exclusionType })
+
 export const ClassificationSchema = Schema.Union(
   AccountIdentifierSchema,
   ExclusionSchema,
 )
+
+export const isClassificationAccountIdentifier = (value: Classification): value is AccountIdentifier => {
+  return value.type === 'StableName' || value.type === 'AccountId'
+}
+
+export const ClassificationEquivalence = Schema.equivalence(ClassificationSchema)
+export type Classification = typeof ClassificationSchema.Type
+export type ClassificationEncoded = typeof ClassificationSchema.Encoded
