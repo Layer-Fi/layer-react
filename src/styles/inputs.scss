@@ -463,39 +463,6 @@
       color: inherit;
     }
   }
-
-  .Layer__select__option-content__match {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-
-    .Layer__select__option-content__match__main-row {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-3xs);
-    }
-
-    .Layer__select__option-content__match__date {
-      font-size: var(--text-sm);
-      color: var(--color-base-600);
-      white-space: nowrap;
-    }
-
-    .Layer__select__option-content__match__description {
-      font-size: var(--text-sm);
-      color: var(--color-base-700);
-    }
-
-    .Layer__select__option-content__match__amount-row {
-      display: flex;
-    }
-
-    .Layer__select__option-content__match__amount {
-      font-size: var(--text-sm);
-      font-weight: var(--font-weight-bold);
-      color: var(--color-base-900);
-    }
-  }
 }
 
 .Layer__category-menu.Layer__category-menu--full {

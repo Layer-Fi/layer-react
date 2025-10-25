@@ -1,0 +1,11 @@
+.Layer__BankTransactionCategoryComboBox__LoadingSuggestionsOption {
+  color: var(--color-base-900);
+}
+
+.Layer__BankTransactionCategoryComboBox__CustomGroupHeading {
+  /* style the parent .Layer__ComboBoxGroupHeading of this element */
+  :is(.Layer__ComboBoxGroupHeading:has(&)) {
+    border-bottom: 1px solid var(--border-color);
+    margin-block-end: var(--spacing-3xs);
+  }
+}
