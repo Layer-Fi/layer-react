@@ -25,17 +25,19 @@ enum CategorizationRuleColumns {
 }
 const COMPONENT_NAME = 'CategorizationRulesTable'
 
-const CategoryDisplay = ({ accountIdentifier, options }: { accountIdentifier: AccountIdentifier, options: NestedCategorization[] }) => {
-  const displayName = accountIdentifier
-    ? options.find(category =>
-      accountIdentifierIsForCategory(accountIdentifier, category),
-    )?.displayName
-    : undefined
-  return displayName
-    ? (
-      <Span ellipsis>{displayName}</Span>
-    )
-    : null
+const CategoryDisplay = ({
+  accountIdentifier,
+  options,
+}: {
+  accountIdentifier: AccountIdentifier
+  options: NestedCategorization[]
+}) => {
+  if (!accountIdentifier) return null
+  const category = options.find(cat =>
+    accountIdentifierIsForCategory(accountIdentifier, cat),
+  )
+  if (!category?.displayName) return null
+  return <Span ellipsis>{category.displayName}</Span>
 }
 
 export const CategorizationRulesTable = () => {
@@ -46,9 +48,9 @@ export const CategorizationRulesTable = () => {
 
   const { data: categories, isLoading: categoriesAreLoading } = useCategories({ mode: CategoriesListMode.All })
   const options = useMemo(() => {
-    if (categoriesAreLoading || !categories) return []
+    if (!categories) return []
     return getLeafCategories(categories)
-  }, [categories, categoriesAreLoading])
+  }, [categories])
 
   const archiveCategorizationRule = useCallback(() => {
     if (selectedRule?.id) {
