@@ -1,11 +1,14 @@
 import type { CustomerSchema } from '../schemas/customer'
 import type { VendorSchema } from '../schemas/vendor'
 import { MatchDetailsType } from '../schemas/bankTransactions/match'
-import { Categorization, Category } from './categories'
+import { Categorization } from './categories'
 import { CategorizationStatus } from '../schemas/bankTransactions/bankTransaction'
 import { S3PresignedUrl, type Direction } from './general'
-import type { TransactionTagEncoded } from '../features/tags/tagSchemas'
+import type { Tag, TransactionTagEncoded } from '../features/tags/tagSchemas'
 import { UpdateCategorizationRulesSuggestionSchema } from '../schemas/bankTransactions/categorizationRules/categorizationRule'
+import type { CategorizationEncoded } from '../schemas/categorization'
+import type { CustomerVendorSchema } from '../features/customerVendor/customerVendorSchemas'
+import type { BankTransactionCategoryComboBoxOption } from '../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export enum BankTransactionMatchType {
   CONFIRM_MATCH = 'Confirm_Match',
@@ -15,16 +18,6 @@ export enum DisplayState {
   all = 'all',
   review = 'review',
   categorized = 'categorized',
-}
-
-export type CategoryWithEntries = Category & { entries?: Array<CategoryEntry> }
-type CategoryEntry = {
-  type?: string
-  amount?: number
-  category: CategoryWithEntries
-  tags?: Array<TransactionTagEncoded>
-  customer?: typeof CustomerSchema.Encoded | null
-  vendor?: typeof VendorSchema.Encoded | null
 }
 
 export interface AccountInstitution {
@@ -51,7 +44,7 @@ export interface BankTransaction extends Record<string, unknown> {
   amount: number
   direction: Direction
   counterparty_name: string
-  category: CategoryWithEntries | null
+  category: CategorizationEncoded | null
   categorization_status: CategorizationStatus
   categorization_flow: Categorization | null
   categorization_method: string
@@ -87,4 +80,12 @@ export interface BankTransactionMetadata {
 export interface DocumentS3Urls {
   type: 'Document_S3_Urls'
   documentUrls: S3PresignedUrl[]
+}
+
+export type Split = {
+  amount: number
+  inputValue: string
+  category: BankTransactionCategoryComboBoxOption | null
+  tags: readonly Tag[]
+  customerVendor: typeof CustomerVendorSchema.Type | null
 }

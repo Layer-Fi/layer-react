@@ -6,10 +6,9 @@ import type { AppForm } from '../../../features/forms/hooks/useForm'
 import type { JournalEntryForm } from './journalEntryFormSchemas'
 import './journalEntryLineItem.scss'
 import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
-import { AccountIdentifier } from '../../../schemas/accountIdentifier'
-import { TagDimensionsGroup } from './TagDimensionsGroup'
+import { TagDimensionsGroup } from '../../../features/tags/components/TagDimensionsGroup'
 import { DebitCreditPill } from '../../DebitCreditPill/DebitCreditPill'
-import { CategoriesListMode } from '../../../schemas/categorization'
+import { CategoriesListMode, isClassificationAccountIdentifier, type Classification } from '../../../schemas/categorization'
 import './journalEntryLineItem.scss'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
@@ -31,8 +30,8 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, sh
       >
         <form.Field name={`lineItems[${index}].accountIdentifier`}>
           {(field) => {
-            const onValueChange = (value: AccountIdentifier | null) => {
-              if (value === null) {
+            const onValueChange = (value: Classification | null) => {
+              if (value === null || !isClassificationAccountIdentifier(value)) {
                 return
               }
               field.setValue(value)

@@ -6,7 +6,7 @@ import { Separator } from '../Separator/Separator'
 import { Clock, Link as LinkIcon, Milestone, Users, Video } from 'lucide-react'
 import { CallBookingPurpose, CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
 import { format as formatTime } from 'date-fns'
-import { DATE_FORMAT_WITH_TIME } from '../../config/general'
+import { DATE_FORMAT_WITH_TIME_READABLE } from '../../config/general'
 import { AddToCalendar } from '../AddToCalendar/AddToCalendar'
 import { getTimezoneDisplay } from '../../utils/time/timezoneUtils'
 import { Button } from '../ui/Button/Button'
@@ -35,29 +35,32 @@ const ScheduledCallState = ({
   return (
     <VStack gap='md' align='center'>
       <Users size={36} strokeWidth={1.5} />
-      <Heading size='sm'>Confirmed</Heading>
+      <Heading size='sm'>Upcoming Call</Heading>
       <Span variant='subtle'>
-        Your call with our bookkeeping team
+        Meet with our bookkeeping team
       </Span>
       <Separator />
       <VStack align='start' className='Layer__call-booking-details' gap='xs'>
         <HStack align='center' gap='sm'>
-          <Milestone size={20} />
-          <Span size='lg' weight='bold'>{purpose}</Span>
+          <Milestone size={16} />
+          <Span>Purpose: </Span>
+          <Span>{purpose}</Span>
         </HStack>
         <HStack align='center' gap='sm'>
-          <Video size={20} />
+          <Video size={16} />
+          <Span>Location: </Span>
           <Span size='md'>{callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'}</Span>
         </HStack>
         <HStack align='center' gap='sm'>
-          <Clock size={20} />
+          <Clock size={16} />
           <HStack gap='xs' align='center'>
-            <Span size='md'>{callBooking.eventStartAt && formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME)}</Span>
-            {callBooking.eventStartAt && (
-              <Span size='md'>
-                {getTimezoneDisplay(callBooking.eventStartAt)}
-              </Span>
-            )}
+            <Span>Date: </Span>
+            <Span size='md'>
+              {formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME_READABLE)}
+              {' '}
+              <>{getTimezoneDisplay(callBooking.eventStartAt)}</>
+            </Span>
+
           </HStack>
         </HStack>
       </VStack>

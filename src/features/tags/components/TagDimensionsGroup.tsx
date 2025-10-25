@@ -1,8 +1,9 @@
-import { TagDimensionCombobox } from '../../../features/tags/components/TagDimensionCombobox'
-import { Tag } from '../../../features/tags/tagSchemas'
+import { TagDimensionCombobox } from './TagDimensionCombobox'
+import { Tag } from '../tagSchemas'
 import { useLayerContext } from '../../../contexts/LayerContext'
+import './tagDimensionsGroup.scss'
 
-const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
+const TAG_DIMENSIONS_GROUP_CSS_PREFIX = 'Layer__TagDimensionsGroup'
 
 export interface TagDimensionsGroupProps {
   value: readonly Tag[]
@@ -51,7 +52,7 @@ export const TagDimensionsGroup = ({
           value={getSelectedTagForDimension(dimension.key)}
           onValueChange={handleTagValueChange(dimension.key)}
           showLabel={showLabels}
-          className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--tag`}
+          className={`${TAG_DIMENSIONS_GROUP_CSS_PREFIX}__TagComboBox`}
         />
       ))}
     </>

@@ -105,7 +105,7 @@ export const CategorizationRulesTable = () => {
         const displayName = accountIdentifier
           ? options.find(category =>
             accountIdentifierIsForCategory(accountIdentifier, category),
-          )?.display_name
+          )?.displayName
           : undefined
         return displayName && (
           <Span ellipsis>{displayName}</Span>
