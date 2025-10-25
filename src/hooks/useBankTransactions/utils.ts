@@ -2,7 +2,7 @@ import { filterVisibility } from '../../components/BankTransactions/utils'
 import { BankTransaction, DisplayState } from '../../types/bank_transactions'
 import { AccountItem, NumericRangeFilter } from './types'
 import { BulkActionSchema } from './useBulkMatchOrCategorize'
-import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, isApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
   const accounts: AccountItem[] = []
@@ -84,14 +84,13 @@ export const buildBulkMatchOrCategorizePayload = (
       continue
     }
 
-    // Handle suggested match
     if (isSuggestedMatchAsOption(transactionCategory)) {
       transactions[transactionId] = {
         type: 'match',
         suggestedMatchId: transactionCategory.value,
       }
     }
-    // Handle split categorization
+
     else if (isSplitAsOption(transactionCategory)) {
       const splitEntries = transactionCategory.original
         .map((split) => {
@@ -119,8 +118,21 @@ export const buildBulkMatchOrCategorizePayload = (
         }
       }
     }
-    // Handle single category or API categorization
+
     else if (isCategoryAsOption(transactionCategory)) {
+      const classification = transactionCategory.classification
+      if (classification) {
+        transactions[transactionId] = {
+          type: 'categorize',
+          categorization: {
+            type: 'Category',
+            category: classification,
+          },
+        }
+      }
+    }
+
+    else if (isApiCategorizationAsOption(transactionCategory)) {
       const classification = transactionCategory.classification
       if (classification) {
         transactions[transactionId] = {
