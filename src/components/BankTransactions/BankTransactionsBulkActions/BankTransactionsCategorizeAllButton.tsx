@@ -3,14 +3,18 @@ import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmat
 import { VStack } from '../../ui/Stack/Stack'
 import { useCallback, useId, useState } from 'react'
 import { Button } from '../../ui/Button/Button'
-import { useCountSelectedIds } from '../../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useCountSelectedIds, useSelectedIds, useBulkSelectionActions } from '../../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BankTransactionCategoryComboBox } from '../../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { useBulkCategorize } from '../../../hooks/useBankTransactions/useBulkCategorize'
 
 export const BankTransactionsCategorizeAllButton = () => {
   const { count } = useCountSelectedIds()
+  const { selectedIds } = useSelectedIds()
+  const { clearSelection } = useBulkSelectionActions()
   const [isCategorizeAllModalOpen, setIsCategorizeAllModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<BankTransactionCategoryComboBoxOption | null>(null)
+  const { trigger } = useBulkCategorize()
 
   const handleCategorizeAllClick = useCallback(() => {
     setIsCategorizeAllModalOpen(true)
@@ -22,6 +26,27 @@ export const BankTransactionsCategorizeAllButton = () => {
       setSelectedCategory(null)
     }
   }, [])
+
+  const handleConfirm = useCallback(async () => {
+    if (!selectedCategory || !isCategoryAsOption(selectedCategory)) {
+      return
+    }
+
+    const transactionIds = Array.from(selectedIds)
+    const categorization = {
+      type: 'Category' as const,
+      category: selectedCategory.classification,
+    }
+
+    await trigger({
+      transactions: transactionIds.map(transactionId => ({
+        transactionId,
+        categorization,
+      })),
+    })
+
+    clearSelection()
+  }, [selectedIds, selectedCategory, trigger, clearSelection])
 
   const categorySelectId = useId()
 
@@ -55,11 +80,11 @@ export const BankTransactionsCategorizeAllButton = () => {
             )}
           </VStack>
         )}
-        onConfirm={() => {}}
+        onConfirm={handleConfirm}
         confirmLabel='Categorize All'
         cancelLabel='Cancel'
         confirmDisabled={!selectedCategory}
-        closeOnConfirm
+        errorText='Failed to categorize transactions'
       />
     </>
   )
