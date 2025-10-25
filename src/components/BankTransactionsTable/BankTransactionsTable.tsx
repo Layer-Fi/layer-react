@@ -6,7 +6,7 @@ import { BankTransactionRow } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionsStringOverrides,
 } from '../BankTransactions/BankTransactions'
-import { BankTransactionsLoader } from '../BankTransactionsLoader'
+import { BankTransactionsLoader } from '../BankTransactionsLoader/BankTransactionsLoader'
 import { SyncingComponent } from '../SyncingComponent'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -157,11 +157,7 @@ export const BankTransactionsTable = ({
             )}
         </tr>
       </thead>
-      {isLoading && page && page === 1
-        ? (
-          <BankTransactionsLoader isLoading={true} showTooltips={showTooltips} />
-        )
-        : null}
+      {isLoading && page && page === 1 && <BankTransactionsLoader />}
       <tbody>
         {!isLoading
           && bankTransactions?.map(

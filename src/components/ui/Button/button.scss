@@ -1,5 +1,6 @@
 .Layer__UI__Button {
   all: unset;
+  box-sizing: border-box;
   display: inline-grid;
 
   grid-template-rows: minmax(0, 1fr);
@@ -122,7 +123,7 @@
   &[data-variant='text'] {
     --size: inherit;
 
-    display: inline-block;
+    display: inline-flex;
     overflow: hidden;
     text-overflow: ellipsis;
 

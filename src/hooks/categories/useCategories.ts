@@ -1,10 +1,10 @@
 import useSWR from 'swr'
+import { Schema } from 'effect'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
-import { Category } from '../../types/categories'
 import { get } from '../../api/layer/authenticated_http'
-import type { CategoriesListMode } from '../../schemas/categorization'
+import { CategoryListSchema, type CategoriesListMode, type NestedCategorization } from '../../schemas/categorization'
 
 export const CATEGORIES_TAG_KEY = '#categories'
 
@@ -34,7 +34,7 @@ export const getCategories = get<
   {
     data: {
       type: 'Category_List'
-      categories: Category[]
+      categories: NestedCategorization[]
     }
   },
   {
@@ -69,7 +69,9 @@ export function useCategories({ mode }: UseCategoriesOptions = {}) {
           businessId,
           mode,
         },
-      })().then(({ data }) => data.categories),
+      })()
+      .then(({ data }) => Schema.decodeUnknownPromise(CategoryListSchema)(data))
+      .then(categoryList => categoryList.categories),
   )
 }
 
