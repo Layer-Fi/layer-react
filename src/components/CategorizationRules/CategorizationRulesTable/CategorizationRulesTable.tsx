@@ -7,14 +7,14 @@ import { PencilRuler, Trash2 } from 'lucide-react'
 import { CategorizationRule } from '../../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { ColumnConfig } from '../../DataTable/DataTable'
 import { Span } from '../../ui/Typography/Text'
-import { CategoriesListMode } from '../../../schemas/categorization'
+import { CategoriesListMode, NestedCategorization } from '../../../schemas/categorization'
 import { useSetCurrentCategorizationRulesPage } from '../../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { Button } from '../../ui/Button/Button'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
 import { useArchiveCategorizationRule } from '../../../hooks/useCategorizationRules/useArchiveCategorizationRule'
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useCategories } from '../../../hooks/categories/useCategories'
-import { getLeafCategories, accountIdentifierIsForCategory, Category } from '../../../types/categories'
+import { getLeafCategories, accountIdentifierIsForCategory } from '../../../types/categories'
 import './categorizationRulesTable.scss'
 import { AccountIdentifier } from '../../../schemas/accountIdentifier'
 
@@ -25,11 +25,11 @@ enum CategorizationRuleColumns {
 }
 const COMPONENT_NAME = 'CategorizationRulesTable'
 
-const CategoryDisplay = ({ accountIdentifier, options }: { accountIdentifier: AccountIdentifier, options: Category[] }) => {
+const CategoryDisplay = ({ accountIdentifier, options }: { accountIdentifier: AccountIdentifier, options: NestedCategorization[] }) => {
   const displayName = accountIdentifier
     ? options.find(category =>
       accountIdentifierIsForCategory(accountIdentifier, category),
-    )?.display_name
+    )?.displayName
     : undefined
   return displayName
     ? (
