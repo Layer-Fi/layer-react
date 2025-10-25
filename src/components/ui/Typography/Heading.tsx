@@ -10,7 +10,7 @@ type HeadingDataProps = {
   pbe?: Spacing
   pie?: Spacing
   size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
-  variant?: 'subtle' | 'dark'
+  variant?: 'subtle'
   weight?: 'normal' | 'bold'
   ellipsis?: true
 }

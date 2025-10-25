@@ -7,12 +7,8 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-bold);
 
-  color: var(--color-base-700);
   text-wrap: pretty;
-
-  &[data-variant='dark'] {
-    color: var(--color-base-900);
-  }
+  color: var(--color-base-900);
 
   &[data-variant='subtle'] {
     color: var(--fg-subtle);

@@ -11,6 +11,7 @@
   grid-template-columns: 1fr auto;
   gap: var(--spacing-sm);
   align-items: center;
+  margin-block-end: var(--spacing-md);
 
   > [slot='title'] {
     grid-area: title;
@@ -33,5 +34,5 @@
 }
 
 .Layer__ModalActions {
-  padding-block-start: var(--spacing-lg);
+  margin-block-start: var(--spacing-3xl);
 }
