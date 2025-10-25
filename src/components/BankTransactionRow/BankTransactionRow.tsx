@@ -40,6 +40,7 @@ import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryCombo
 import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSplitCategorizationEncoded, type CategorizationEncoded } from '../../schemas/categorization'
+import { useBankTransactionsCategoryActions } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 type Props = {
   index: number
@@ -103,6 +104,7 @@ export const BankTransactionRow = ({
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
+  const { setTransactionCategory, setOnlyNewTransactionCategories } = useBankTransactionsCategoryActions()
 
   const openRow = {
     onMouseDown: () => {
@@ -121,6 +123,13 @@ export const BankTransactionRow = ({
       setShowRetry(true)
     }
   }, [bankTransaction.error])
+
+  useEffect(() => {
+    const defaultCategory = getDefaultSelectedCategoryForBankTransaction(bankTransaction)
+    if (defaultCategory) {
+      setOnlyNewTransactionCategories([{ id: bankTransaction.id, category: defaultCategory }])
+    }
+  }, [setOnlyNewTransactionCategories, bankTransaction])
 
   useEffect(() => {
     if (
@@ -292,6 +301,7 @@ export const BankTransactionRow = ({
                   selectedValue={selectedCategory}
                   onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
                     setSelectedCategory(selectedCategory)
+                    setTransactionCategory(bankTransaction.id, selectedCategory)
                     setShowRetry(false)
                   }}
                   isLoading={bankTransaction.processing}
