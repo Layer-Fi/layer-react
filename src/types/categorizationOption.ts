@@ -10,6 +10,7 @@ import {
 } from '../schemas/categorization'
 import { makeAccountId, makeStableName } from '../schemas/accountIdentifier'
 import { unsafeAssertUnreachable } from '../utils/switch/assertUnreachable'
+import { BaseComboBoxOption } from '../components/ui/ComboBox/baseComboBoxOption'
 
 export enum CategorizationOption {
   Category = 'Category',
@@ -19,22 +20,18 @@ export enum CategorizationOption {
   ApiCategorization = 'ApiCategorization',
 }
 
-export abstract class BaseOption<T> {
-  protected internalValue: T
-
-  constructor(value: T) {
-    this.internalValue = value
-  }
-
-  abstract get original(): T
+export abstract class BaseCategorizationOption<T> extends BaseComboBoxOption<T> {
+  /** Returns the option type discriminator */
   abstract get type(): CategorizationOption
-  abstract get label(): string
-  abstract get value(): string
+
+  /** Returns the Classification for this option, or null if not applicable */
   abstract get classification(): Classification | null
+
+  /** Returns the encoded Classification for this option, or null if not applicable */
   abstract get classificationEncoded(): ClassificationEncoded | null
 }
 
-export class SuggestedMatchAsOption extends BaseOption<SuggestedMatch> {
+export class SuggestedMatchAsOption extends BaseCategorizationOption<SuggestedMatch> {
   constructor(suggestedMatch: SuggestedMatch) {
     super(suggestedMatch)
   }
@@ -64,7 +61,7 @@ export class SuggestedMatchAsOption extends BaseOption<SuggestedMatch> {
   }
 }
 
-export class CategoryAsOption extends BaseOption<NestedCategorization> {
+export class CategoryAsOption extends BaseCategorizationOption<NestedCategorization> {
   constructor(category: NestedCategorization) {
     super(category)
   }
@@ -124,7 +121,7 @@ export type PlaceholderOption = {
   isHidden?: boolean
 }
 
-export class PlaceholderAsOption extends BaseOption<PlaceholderOption> {
+export class PlaceholderAsOption extends BaseCategorizationOption<PlaceholderOption> {
   constructor(placeholder: PlaceholderOption) {
     super(placeholder)
   }
@@ -162,7 +159,7 @@ export class PlaceholderAsOption extends BaseOption<PlaceholderOption> {
   }
 }
 
-export class SplitAsOption extends BaseOption<Split[]> {
+export class SplitAsOption extends BaseCategorizationOption<Split[]> {
   constructor(splits: Split[]) {
     super(splits)
   }
@@ -194,7 +191,7 @@ export class SplitAsOption extends BaseOption<Split[]> {
   }
 }
 
-export class ApiCategorizationAsOption extends BaseOption<CategorizationEncoded> {
+export class ApiCategorizationAsOption extends BaseCategorizationOption<CategorizationEncoded> {
   constructor(categorization: CategorizationEncoded) {
     super(categorization)
   }

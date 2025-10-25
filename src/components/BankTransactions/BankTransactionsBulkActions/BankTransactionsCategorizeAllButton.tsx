@@ -50,7 +50,7 @@ export const BankTransactionsCategorizeAllButton = () => {
             </VStack>
             {selectedCategory && isCategoryAsOption(selectedCategory) && (
               <Span>
-                {`This action will categorize ${count} selected transactions as ${selectedCategory?.original?.displayName}.`}
+                {`This action will categorize ${count} selected transactions as ${selectedCategory.original.displayName}.`}
               </Span>
             )}
           </VStack>
