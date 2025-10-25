@@ -8,7 +8,7 @@ export type BankTransactionsCategoryState = {
 
 type BankTransactionsCategoryActions = {
   actions: {
-    setTransactionCategory: (id: string, category: BankTransactionCategoryComboBoxOption) => void
+    setTransactionCategory: (id: string, category: BankTransactionCategoryComboBoxOption | null) => void
     setOnlyNewTransactionCategories: (transactionCategories: Array<{ id: string, category: BankTransactionCategoryComboBoxOption }>) => void
 
     clearTransactionCategory: (id: string) => void
@@ -23,7 +23,10 @@ function buildStore() {
   return createStore<BankTransactionsCategoryStore>(set => ({
     transactionCategories: new Map<string, BankTransactionCategoryComboBoxOption>(),
     actions: {
-      setTransactionCategory: (id: string, category: BankTransactionCategoryComboBoxOption): void => {
+      setTransactionCategory: (id: string, category: BankTransactionCategoryComboBoxOption | null): void => {
+        if (!category) {
+          return
+        }
         set((state) => {
           const newMap = new Map(state.transactionCategories)
           newMap.set(id, category)

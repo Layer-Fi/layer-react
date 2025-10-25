@@ -125,11 +125,11 @@ export const BankTransactionRow = ({
   }, [bankTransaction.error])
 
   useEffect(() => {
-    const defaultCategory = getDefaultSelectedCategory(bankTransaction)
+    const defaultCategory = getDefaultSelectedCategoryForBankTransaction(bankTransaction)
     if (defaultCategory) {
       setOnlyNewTransactionCategories([{ id: bankTransaction.id, category: defaultCategory }])
     }
-  }, [bankTransaction.id, bankTransaction.suggested_matches, bankTransaction.categorization_flow, setOnlyNewTransactionCategories])
+  }, [setOnlyNewTransactionCategories, bankTransaction])
 
   useEffect(() => {
     if (
@@ -303,7 +303,6 @@ export const BankTransactionRow = ({
                     setSelectedCategory(selectedCategory)
                     setTransactionCategory(bankTransaction.id, selectedCategory)
                     setShowRetry(false)
-                    
                   }}
                   isLoading={bankTransaction.processing}
                 />
