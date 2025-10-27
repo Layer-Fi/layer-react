@@ -1,7 +1,7 @@
 import { filterVisibility } from '../../components/BankTransactions/utils'
 import { BankTransaction, DisplayState } from '../../types/bank_transactions'
 import { AccountItem, NumericRangeFilter } from './types'
-import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, isApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, isApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { MatchOrCategorizeTransactionRequestSchema } from './useBulkMatchOrCategorize'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
@@ -80,7 +80,7 @@ export const buildBulkMatchOrCategorizePayload = (
   for (const transactionId of selectedIds) {
     const transactionCategory = transactionCategories.get(transactionId) ?? null
 
-    if (!transactionCategory) {
+    if (!transactionCategory || isPlaceholderAsOption(transactionCategory)) {
       continue
     }
 
