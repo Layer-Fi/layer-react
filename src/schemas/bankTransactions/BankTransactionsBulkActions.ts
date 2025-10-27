@@ -24,9 +24,3 @@ export const CategoryUpdateSchema = Schema.Union(
   SingleCategoryUpdateSchema,
   SplitCategoryUpdateSchema,
 )
-
-export const BulkUncategorizeRequestSchema = Schema.Struct({
-  transactionIds: Schema.propertySignature(Schema.Array(Schema.UUID)).pipe(
-    Schema.fromKey('transaction_ids'),
-  ),
-})

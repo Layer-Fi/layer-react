@@ -112,6 +112,7 @@ export const useBulkMatchOrCategorize = () => {
     ).then(({ data }) => data),
     {
       revalidate: false,
+      throwOnError: true,
     },
   )
 

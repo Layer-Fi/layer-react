@@ -72,6 +72,7 @@ export const useBulkCategorize = () => {
     ).then(({ data }) => data),
     {
       revalidate: false,
+      throwOnError: true,
     },
   )
 
