@@ -5,7 +5,7 @@ import { post } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
-import { CategoryUpdateSchema } from './types'
+import { CategoryUpdateSchema } from '../../schemas/bankTransactions/BankTransactionsBulkActions'
 
 const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'
 

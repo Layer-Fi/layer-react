@@ -5,13 +5,9 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { Schema } from 'effect'
 import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
-const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
+import { BulkUncategorizeRequestSchema } from '../../schemas/bankTransactions/BankTransactionsBulkActions'
 
-export const BulkUncategorizeRequestSchema = Schema.Struct({
-  transactionIds: Schema.propertySignature(Schema.Array(Schema.UUID)).pipe(
-    Schema.fromKey('transaction_ids'),
-  ),
-})
+const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
 
 type BulkUncategorizeRequest = typeof BulkUncategorizeRequestSchema.Type
 type BulkUncategorizeRequestEncoded = typeof BulkUncategorizeRequestSchema.Encoded

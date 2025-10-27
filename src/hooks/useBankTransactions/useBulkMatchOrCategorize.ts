@@ -9,7 +9,7 @@ import { useGetAllBankTransactionsCategories } from '../../providers/BankTransac
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
 import { buildBulkMatchOrCategorizePayload } from './utils'
-import { CategoryUpdateSchema } from './types'
+import { CategoryUpdateSchema } from '../../schemas/bankTransactions/BankTransactionsBulkActions'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
