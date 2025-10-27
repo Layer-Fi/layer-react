@@ -105,7 +105,7 @@ export const buildBulkMatchOrCategorizePayload = (
             amount: split.amount,
             category: classification,
             tags: split.tags,
-            customerId: split.customerVendor?.id,
+            customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
             vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
           }
         })
