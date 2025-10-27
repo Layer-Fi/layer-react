@@ -8,9 +8,8 @@ import { DataState, DataStateStatus } from '../DataState/DataState'
 import type { MinimalBankTransaction } from '../../schemas/bankTransactions/base'
 import { BankTransactionDirection } from '../../schemas/bankTransactions/base'
 import { VStack } from '../ui/Stack/Stack'
-import { Span } from '../ui/Typography/Text'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import './affectedTransactionsTable.scss'
+import { SpanWithTooltip } from '../ui/Typography/TextWithTooltip'
 
 const COMPONENT_NAME = 'AffectedTransactionsTable'
 
@@ -68,16 +67,11 @@ export const AffectedTransactionsTable = ({
       header: 'Description',
       cell: (row) => {
         const description = row.counterpartyName || row.description || '-'
-
-        if (description.length > 30) {
-          return (
-            <Tooltip>
-              <TooltipTrigger asChild><Span ellipsis>{description}</Span></TooltipTrigger>
-              <TooltipContent className='Layer__tooltip'>{description}</TooltipContent>
-            </Tooltip>
-          )
-        }
-        return <Span ellipsis>{description}</Span>
+        return (
+          <SpanWithTooltip>
+            {description}
+          </SpanWithTooltip>
+        )
       },
       isRowHeader: true,
     },

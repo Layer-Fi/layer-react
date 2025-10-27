@@ -19,6 +19,7 @@ export interface TooltipOptions {
   onOpenChange?: (open: boolean) => void
   offset?: number
   shift?: { padding?: number }
+  wordBreak?: 'break-all'
 }
 
 export const Tooltip = ({
@@ -35,8 +36,8 @@ export const Tooltip = ({
 
 export const TooltipTrigger = forwardRef<
   HTMLElement,
-  HTMLProps<HTMLElement> & { asChild?: boolean }
->(function TooltipTrigger({ children, asChild = false, ...props }, propRef) {
+  HTMLProps<HTMLElement> & { asChild?: boolean, wordBreak?: 'break-all' }
+>(function TooltipTrigger({ children, asChild = false, wordBreak, ...props }, propRef) {
   const context = useTooltipContext()
   const childrenRef = (isValidElement(children) && 'ref' in children)
     ? children.ref as Ref<unknown>
@@ -52,6 +53,7 @@ export const TooltipTrigger = forwardRef<
         ...props,
         ...children.props,
         'data-state': context.open ? 'open' : 'closed',
+        'data-word-break': wordBreak,
       }),
     )
   }
@@ -70,16 +72,15 @@ export const TooltipTrigger = forwardRef<
   )
 })
 
-type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'md' }
-
+type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'md', wordBreak?: 'break-all' }
 export const TooltipContent = forwardRef<
   HTMLDivElement,
   TooltipContentProps
->(function TooltipContent({ className, width, ...props }, propRef) {
+>(function TooltipContent({ className, width, wordBreak, ...props }, propRef) {
   const context = useTooltipContext()
   const ref = useMergeRefs([context.refs.setFloating, propRef])
 
-  const dataProperties = toDataProperties({ width })
+  const dataProperties = toDataProperties({ width, 'word-break': wordBreak })
 
   if (!context.open || context.disabled) return null
 

@@ -15,8 +15,7 @@ import { RetryButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { ErrorText, Text } from '../Typography'
-import { TextUseTooltip } from '../Typography/Text'
+import { ErrorText } from '../Typography'
 import { Assignment } from './Assignment'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
@@ -30,6 +29,7 @@ import { useSizeClass } from '../../hooks/useWindowSize'
 import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { SpanWithTooltip } from '../ui/Typography/TextWithTooltip'
 
 type Props = {
   index: number
@@ -184,9 +184,11 @@ export const BankTransactionListItem = ({
       </span>
       <span className={`${className}__body`}>
         <span className={`${className}__body__name`}>
-          <Text as='span' withTooltip={TextUseTooltip.whenTruncated}>
+          <SpanWithTooltip>
             {bankTransaction.counterparty_name ?? bankTransaction.description}
-          </Text>
+            {' '}
+            ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+          </SpanWithTooltip>
         </span>
         <span
           className={`${className}__amount-${
