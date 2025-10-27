@@ -11,8 +11,8 @@ export const SplitCategoryEntrySchema = Schema.Struct({
   category: ClassificationSchema,
   amount: Schema.Number,
   tags: Schema.optional(Schema.Array(TagKeyValueSchema)),
-  customerId: Schema.optional(Schema.UUID),
-  vendorId: Schema.optional(Schema.UUID),
+  customerId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('customer_id')),
+  vendorId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('vendor_id')),
 })
 
 export const SplitCategoryUpdateSchema = Schema.Struct({
