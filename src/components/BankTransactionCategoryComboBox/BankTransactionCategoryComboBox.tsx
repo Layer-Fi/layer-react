@@ -134,8 +134,6 @@ export const BankTransactionCategoryComboBox = ({
 }: BankTransactionCategoryComboBoxProps) => {
   const { data: categories } = useCategories()
 
-  const loadingSuggestions = bankTransaction && isLoadingSuggestions(bankTransaction)
-
   const matchGroup = useMemo(() => {
     if (!includeSuggestedMatches || !bankTransaction) return null
     return getSuggestedMatchesGroup(bankTransaction)
@@ -164,6 +162,7 @@ export const BankTransactionCategoryComboBox = ({
   [allCategoriesGroup, categoryGroups, matchGroup, suggestedGroup])
 
   const numMatchOptions = matchGroup?.options.length || 0
+  const loadingSuggestions = bankTransaction && numMatchOptions === 0 && isLoadingSuggestions(bankTransaction)
 
   const placeholder = numMatchOptions > 1
     ? `${numMatchOptions} possible matches...`
