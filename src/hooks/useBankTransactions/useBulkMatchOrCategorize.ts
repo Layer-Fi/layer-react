@@ -54,24 +54,24 @@ const BulkMatchOrCategorizeRequestSchema = Schema.Struct({
   }),
 })
 
-export type BulkMatchOrCategorizeParams = {
-  businessId: string
-  categorization_source?: 'API_DIRECT' | 'API_FROM_COMPONENT' | 'LAYER_BOOKKEEPING'
-  match_source?: 'API_CONFIRM_MATCH_DIRECT' | 'API_CONFIRM_MATCH_FROM_COMPONENT' | 'LAYER_BOOKKEEPING_CONFIRM_MATCH'
-}
-
 type BulkMatchOrCategorizeRequest = typeof BulkMatchOrCategorizeRequestSchema.Type
 type BulkMatchOrCategorizeRequestEncoded = typeof BulkMatchOrCategorizeRequestSchema.Encoded
+
+const _BulkMatchOrCategorizeParamsSchema = Schema.Struct({
+  businessId: Schema.String,
+})
+
+type BulkMatchOrCategorizeParams = typeof _BulkMatchOrCategorizeParamsSchema.Type
 
 const bulkMatchOrCategorize = post<
   Record<string, unknown>,
   BulkMatchOrCategorizeRequestEncoded,
   BulkMatchOrCategorizeParams
 >(
-  ({ businessId, categorization_source, match_source }) => {
+  ({ businessId }) => {
     const parameters = toDefinedSearchParameters({
-      categorization_source: categorization_source ?? 'API_FROM_COMPONENT',
-      match_source: match_source ?? 'API_CONFIRM_MATCH_FROM_COMPONENT',
+      categorization_source: 'API_FROM_COMPONENT',
+      match_source: 'API_CONFIRM_MATCH_FROM_COMPONENT',
     })
 
     return `/v1/businesses/${businessId}/bank-transactions/bulk-match-or-categorize${parameters}`
@@ -105,7 +105,7 @@ export const useBulkMatchOrCategorize = () => {
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
-  const buildTransactionsPayload = useCallback((): BulkMatchOrCategorizeRequest => {
+  const buildTransactionsPayload: () => BulkMatchOrCategorizeRequest = useCallback(() => {
     const transactions = buildBulkMatchOrCategorizePayload(selectedIds, transactionCategories)
     return { transactions }
   }, [selectedIds, transactionCategories])
