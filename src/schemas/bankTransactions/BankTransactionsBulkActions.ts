@@ -1,5 +1,6 @@
 import { Schema } from 'effect/index'
 import { ClassificationSchema } from '../categorization'
+import { TagKeyValueSchema } from '../../features/tags/tagSchemas'
 
 export const SingleCategoryUpdateSchema = Schema.Struct({
   type: Schema.Literal('Category'),
@@ -7,8 +8,11 @@ export const SingleCategoryUpdateSchema = Schema.Struct({
 })
 
 export const SplitCategoryEntrySchema = Schema.Struct({
-  amount: Schema.Number,
   category: ClassificationSchema,
+  amount: Schema.Number,
+  tags: Schema.optional(Schema.Array(TagKeyValueSchema)),
+  customerId: Schema.optional(Schema.UUID),
+  vendorId: Schema.optional(Schema.UUID),
 })
 
 export const SplitCategoryUpdateSchema = Schema.Struct({
