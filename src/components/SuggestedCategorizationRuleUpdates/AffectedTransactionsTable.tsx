@@ -72,7 +72,7 @@ export const AffectedTransactionsTable = ({
         if (description.length > 30) {
           return (
             <Tooltip>
-              <TooltipTrigger><Span ellipsis>{description}</Span></TooltipTrigger>
+              <TooltipTrigger asChild><Span ellipsis>{description}</Span></TooltipTrigger>
               <TooltipContent className='Layer__tooltip'>{description}</TooltipContent>
             </Tooltip>
           )
