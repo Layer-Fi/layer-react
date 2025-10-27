@@ -43,6 +43,7 @@ export const BankTransactionsConfirmAllButton = () => {
         confirmLabel='Confirm All'
         cancelLabel='Cancel'
         errorText='Failed to confirm transactions'
+        closeOnConfirm={true}
       />
     </>
   )

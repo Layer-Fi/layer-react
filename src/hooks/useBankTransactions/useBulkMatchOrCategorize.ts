@@ -47,7 +47,7 @@ export const BulkActionSchema = Schema.Union(
   }),
 )
 
-const _BulkMatchOrCategorizeRequestSchema = Schema.Struct({
+const BulkMatchOrCategorizeRequestSchema = Schema.Struct({
   transactions: Schema.Record({
     key: Schema.UUID,
     value: BulkActionSchema,
@@ -60,8 +60,8 @@ export type BulkMatchOrCategorizeParams = {
   match_source?: 'API_CONFIRM_MATCH_DIRECT' | 'API_CONFIRM_MATCH_FROM_COMPONENT' | 'LAYER_BOOKKEEPING_CONFIRM_MATCH'
 }
 
-type BulkMatchOrCategorizeRequest = typeof _BulkMatchOrCategorizeRequestSchema.Type
-type BulkMatchOrCategorizeRequestEncoded = typeof _BulkMatchOrCategorizeRequestSchema.Encoded
+type BulkMatchOrCategorizeRequest = typeof BulkMatchOrCategorizeRequestSchema.Type
+type BulkMatchOrCategorizeRequestEncoded = typeof BulkMatchOrCategorizeRequestSchema.Encoded
 
 const bulkMatchOrCategorize = post<
   Record<string, unknown>,
@@ -70,8 +70,8 @@ const bulkMatchOrCategorize = post<
 >(
   ({ businessId, categorization_source, match_source }) => {
     const parameters = toDefinedSearchParameters({
-      categorization_source,
-      match_source,
+      categorization_source: categorization_source ?? 'API_FROM_COMPONENT',
+      match_source: match_source ?? 'API_CONFIRM_MATCH_FROM_COMPONENT',
     })
 
     return `/v1/businesses/${businessId}/bank-transactions/bulk-match-or-categorize${parameters}`
@@ -123,7 +123,7 @@ export const useBulkMatchOrCategorize = () => {
       accessToken,
       {
         params: { businessId },
-        body: Schema.encodeSync(_BulkMatchOrCategorizeRequestSchema)(arg),
+        body: Schema.encodeSync(BulkMatchOrCategorizeRequestSchema)(arg),
       },
     ).then(({ data }) => data),
     {

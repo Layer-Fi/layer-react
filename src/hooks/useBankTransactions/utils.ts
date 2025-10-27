@@ -119,20 +119,7 @@ export const buildBulkMatchOrCategorizePayload = (
       }
     }
 
-    else if (isCategoryAsOption(transactionCategory)) {
-      const classification = transactionCategory.classification
-      if (classification) {
-        transactions[transactionId] = {
-          type: 'categorize',
-          categorization: {
-            type: 'Category',
-            category: classification,
-          },
-        }
-      }
-    }
-
-    else if (isApiCategorizationAsOption(transactionCategory)) {
+    else if (isCategoryAsOption(transactionCategory) || isApiCategorizationAsOption(transactionCategory)) {
       const classification = transactionCategory.classification
       if (classification) {
         transactions[transactionId] = {
