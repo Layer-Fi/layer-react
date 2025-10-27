@@ -12,7 +12,6 @@ import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
 import { useBankTransactionsCategoryActions } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { BankTransactionCategoryComboBoxOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
@@ -112,8 +111,6 @@ export const BankTransactionsTable = ({
       id: transaction.id,
       category: getDefaultSelectedCategoryForBankTransaction(transaction),
     }))
-      .filter((row): row is { id: string, category: BankTransactionCategoryComboBoxOption } =>
-        row.category !== null)
 
     if (defaultCategories.length > 0) {
       setOnlyNewTransactionCategories(defaultCategories)
