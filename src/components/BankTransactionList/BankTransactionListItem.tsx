@@ -186,8 +186,6 @@ export const BankTransactionListItem = ({
         <span className={`${className}__body__name`}>
           <SpanWithTooltip>
             {bankTransaction.counterparty_name ?? bankTransaction.description}
-            {' '}
-            ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
           </SpanWithTooltip>
         </span>
         <span
