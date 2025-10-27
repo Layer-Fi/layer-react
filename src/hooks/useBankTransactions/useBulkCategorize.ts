@@ -4,36 +4,16 @@ import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
-import { ClassificationSchema } from '../../schemas/categorization'
 import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
+import { CategoryUpdateSchema } from './types'
 
 const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'
-
-export const CategoryCategorizationSchema = Schema.Struct({
-  type: Schema.Literal('Category'),
-  category: ClassificationSchema,
-})
-
-export const SplitEntrySchema = Schema.Struct({
-  amount: Schema.Number,
-  category: ClassificationSchema,
-})
-
-export const SplitCategorizationSchema = Schema.Struct({
-  type: Schema.Literal('Split'),
-  entries: Schema.Array(SplitEntrySchema),
-})
-
-const BankTransactionCategorizationSchema = Schema.Union(
-  CategoryCategorizationSchema,
-  SplitCategorizationSchema,
-)
 
 export const TransactionCategorizationSchema = Schema.Struct({
   transactionId: Schema.propertySignature(Schema.UUID).pipe(
     Schema.fromKey('transaction_id'),
   ),
-  categorization: BankTransactionCategorizationSchema,
+  categorization: CategoryUpdateSchema,
 })
 
 export const BulkCategorizeRequestSchema = Schema.Struct({

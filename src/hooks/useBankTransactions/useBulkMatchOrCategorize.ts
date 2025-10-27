@@ -7,31 +7,11 @@ import { useAuth } from '../useAuth'
 import { useSelectedIds } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useGetAllBankTransactionsCategories } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { ClassificationSchema } from '../../schemas/categorization'
 import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
 import { buildBulkMatchOrCategorizePayload } from './utils'
+import { CategoryUpdateSchema } from './types'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
-
-export const SingleCategoryUpdateSchema = Schema.Struct({
-  type: Schema.Literal('Category'),
-  category: ClassificationSchema,
-})
-
-export const SplitCategoryEntrySchema = Schema.Struct({
-  amount: Schema.Number,
-  category: ClassificationSchema,
-})
-
-export const SplitCategoryUpdateSchema = Schema.Struct({
-  type: Schema.Literal('Split'),
-  entries: Schema.Array(SplitCategoryEntrySchema),
-})
-
-export const CategoryUpdateSchema = Schema.Union(
-  SingleCategoryUpdateSchema,
-  SplitCategoryUpdateSchema,
-)
 
 export const BulkActionSchema = Schema.Union(
   Schema.Struct({
