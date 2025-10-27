@@ -9,11 +9,22 @@ import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTr
 import { Button, ButtonVariant } from '../Button'
 import { FileInput } from '../Input'
 import { ErrorText } from '../Typography'
-import { Option, mapCategoryToOption, getAssignedValue } from './utils'
+import { getAssignedValue } from './utils'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawer } from '../CategorySelect/CategorySelectDrawer'
 import { CategorizationType } from '../../types/categories'
+import { ApiCategorizationAsOption } from '../../types/categorizationOption'
+import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+
+type DisplayOption = {
+  label: string
+  id: string
+  description?: string
+  value: BankTransactionCategoryComboBoxOption | { type: 'SELECT_CATEGORY' }
+  secondary?: boolean
+  asLink?: boolean
+}
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
@@ -34,7 +45,7 @@ export const BusinessForm = ({
 
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()
-  const [selectedCategory, setSelectedCategory] = useState<Option | undefined>(
+  const [selectedCategory, setSelectedCategory] = useState<BankTransactionCategoryComboBoxOption | null>(
     getAssignedValue(bankTransaction),
   )
   const [showRetry, setShowRetry] = useState(false)
@@ -46,16 +57,26 @@ export const BusinessForm = ({
     }
   }, [bankTransaction.error])
 
-  const options = useMemo(() => {
-    const options =
+  const options = useMemo((): DisplayOption[] => {
+    const options: DisplayOption[] =
       bankTransaction?.categorization_flow?.type === CategorizationType.ASK_FROM_SUGGESTIONS
-        ? bankTransaction.categorization_flow.suggestions.map(x =>
-          mapCategoryToOption(x),
-        )
+        ? bankTransaction.categorization_flow.suggestions.map((x) => {
+          const opt = new ApiCategorizationAsOption(x)
+          return {
+            label: opt.label,
+            id: opt.value,
+            description: x.description ?? undefined,
+            value: opt,
+          }
+        })
         : []
 
-    if (selectedCategory && !options.find(x => x.id === selectedCategory?.id)) {
-      options.unshift(selectedCategory)
+    if (selectedCategory && !options.find(x => x.id === selectedCategory.value)) {
+      options.unshift({
+        label: selectedCategory.label,
+        id: selectedCategory.value,
+        value: selectedCategory,
+      })
     }
 
     if (options.length) {
@@ -73,37 +94,31 @@ export const BusinessForm = ({
     return options
   }, [bankTransaction, selectedCategory])
 
-  const onCategorySelect = (category: Option) => {
-    if (category.value.type === 'SELECT_CATEGORY') {
+  const onCategorySelect = (category: DisplayOption) => {
+    if ('type' in category.value && category.value.type === 'SELECT_CATEGORY') {
       setIsDrawerOpen(true)
     }
     else {
+      const option = category.value
       if (
         selectedCategory
-        && category.value.payload?.id === selectedCategory.value.payload?.id
+        && option.value === selectedCategory.value
       ) {
-        setSelectedCategory(undefined)
+        setSelectedCategory(null)
       }
       else {
-        setSelectedCategory(category)
+        setSelectedCategory(option)
       }
     }
   }
 
   const save = () => {
-    if (!selectedCategory || !selectedCategory.value.payload) {
+    if (!selectedCategory) {
       return
     }
 
-    const payload = selectedCategory?.value?.payload?.id
-      ? {
-        type: 'AccountId' as const,
-        id: selectedCategory.value.payload.id,
-      }
-      : {
-        type: 'StableName' as const,
-        stable_name: selectedCategory.value.payload?.stable_name || '',
-      }
+    const payload = selectedCategory.classificationEncoded
+    if (payload === null) return
 
     void categorizeBankTransaction(
       bankTransaction.id,
@@ -120,10 +135,10 @@ export const BusinessForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__business-form'>
         {showCategorization
           ? (
-            <ActionableList<Option['value']>
+            <ActionableList<BankTransactionCategoryComboBoxOption | { type: 'SELECT_CATEGORY' }>
               options={options}
               onClick={onCategorySelect}
-              selectedId={selectedCategory?.id}
+              selectedId={selectedCategory?.value}
               showDescriptions={showTooltips}
             />
           )
@@ -195,7 +210,7 @@ export const BusinessForm = ({
       </div>
       <CategorySelectDrawer
         onSelect={setSelectedCategory}
-        selectedId={selectedCategory?.id}
+        selectedId={selectedCategory?.value}
         showTooltips={showTooltips}
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}

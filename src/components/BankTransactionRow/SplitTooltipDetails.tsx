@@ -1,14 +1,14 @@
 import { centsToDollars as formatMoney } from '../../models/Money'
-import type { CategoryWithEntries } from '../../types/bank_transactions'
+import { isSplitCategorizationEncoded, type CategorizationEncoded } from '../../schemas/categorization'
 
 export const SplitTooltipDetails = ({
   classNamePrefix,
   category,
 }: {
   classNamePrefix: string
-  category: CategoryWithEntries | null
+  category: CategorizationEncoded | null
 }) => {
-  if (!category || !category.entries) {
+  if (!category || !isSplitCategorizationEncoded(category)) {
     return
   }
 
