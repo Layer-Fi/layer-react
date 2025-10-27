@@ -3,14 +3,18 @@ import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmat
 import { VStack } from '../../ui/Stack/Stack'
 import { useCallback, useId, useState } from 'react'
 import { Button } from '../../ui/Button/Button'
-import { useCountSelectedIds } from '../../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { useCountSelectedIds, useSelectedIds, useBulkSelectionActions } from '../../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BankTransactionCategoryComboBox } from '../../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { isApiCategorizationAsOption, isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { useBulkCategorize } from '../../../hooks/useBankTransactions/useBulkCategorize'
 
 export const BankTransactionsRecategorizeAllButton = () => {
   const { count } = useCountSelectedIds()
+  const { selectedIds } = useSelectedIds()
+  const { clearSelection } = useBulkSelectionActions()
   const [isRecategorizeAllModalOpen, setIsRecategorizeAllModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<BankTransactionCategoryComboBoxOption | null>(null)
+  const { trigger } = useBulkCategorize()
 
   const handleRecategorizeAllClick = useCallback(() => {
     setIsRecategorizeAllModalOpen(true)
@@ -22,6 +26,31 @@ export const BankTransactionsRecategorizeAllButton = () => {
       setSelectedCategory(null)
     }
   }, [])
+
+  const handleConfirm = useCallback(async () => {
+    if (!selectedCategory || selectedCategory.classification === null) {
+      return
+    }
+
+    if (!isCategoryAsOption(selectedCategory) && !isApiCategorizationAsOption(selectedCategory)) {
+      return
+    }
+
+    const transactionIds = Array.from(selectedIds)
+    const categorization = {
+      type: 'Category' as const,
+      category: selectedCategory.classification,
+    }
+
+    await trigger({
+      transactions: transactionIds.map(transactionId => ({
+        transactionId,
+        categorization,
+      })),
+    })
+
+    clearSelection()
+  }, [selectedIds, selectedCategory, trigger, clearSelection])
 
   const categorySelectId = useId()
 
@@ -55,10 +84,11 @@ export const BankTransactionsRecategorizeAllButton = () => {
             )}
           </VStack>
         )}
-        onConfirm={() => {}}
+        onConfirm={handleConfirm}
         confirmLabel='Recategorize All'
         cancelLabel='Cancel'
         confirmDisabled={!selectedCategory}
+        errorText='Failed to recategorize transactions'
         closeOnConfirm
       />
     </>
