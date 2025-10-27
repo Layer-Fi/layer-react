@@ -5,7 +5,7 @@ import { useCallback, useId, useState } from 'react'
 import { Button } from '../../ui/Button/Button'
 import { useCountSelectedIds, useSelectedIds, useBulkSelectionActions } from '../../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BankTransactionCategoryComboBox } from '../../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isApiCategorizationAsOption, isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { useBulkCategorize } from '../../../hooks/useBankTransactions/useBulkCategorize'
 
 export const BankTransactionsCategorizeAllButton = () => {
@@ -28,7 +28,7 @@ export const BankTransactionsCategorizeAllButton = () => {
   }, [])
 
   const handleConfirm = useCallback(async () => {
-    if (!selectedCategory || !isCategoryAsOption(selectedCategory)) {
+    if (!selectedCategory || !isCategoryAsOption(selectedCategory) || !isApiCategorizationAsOption(selectedCategory)) {
       return
     }
 
@@ -85,6 +85,7 @@ export const BankTransactionsCategorizeAllButton = () => {
         cancelLabel='Cancel'
         confirmDisabled={!selectedCategory}
         errorText='Failed to categorize transactions'
+        closeOnConfirm={true}
       />
     </>
   )
