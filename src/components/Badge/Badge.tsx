@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 import { ButtonProps } from '../Button/Button'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
+import './badge.scss'
 
 export enum BadgeSize {
   EXTRA_SMALL = 'xs',

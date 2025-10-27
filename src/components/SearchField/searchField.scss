@@ -1,4 +1,4 @@
-.Layer__SearchField {
+.Layer__SearchField.Layer__InputGroup {
   display: grid;
   grid-template-areas: 'icon search';
   grid-template-columns: auto minmax(0, 1fr);
@@ -15,5 +15,12 @@
 
   & > [slot='search'] {
     grid-area: search;
+  }
+
+  .Layer__SearchField__Icon {
+    &[data-disabled] {
+      cursor: not-allowed;
+      color: var(--color-base-500);
+    }
   }
 }

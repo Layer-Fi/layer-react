@@ -38,7 +38,7 @@ export { LinkAccounts } from './components/PlatformOnboarding/LinkAccounts'
 export { PlatformOnboarding } from './components/PlatformOnboarding/PlatformOnboarding'
 
 /* --------------------- Banners -------------------------- */
-export { BookkeepingUpsellBar } from './components/UpsellBanner'
+export { BookkeepingUpsellBar } from './components/BookkeepingUpsellBar'
 
 /*
 ======================= Composite Views =======================
@@ -60,5 +60,6 @@ export { Invoices } from './components/Invoices/Invoices'
 export { LayerProvider } from './providers/LayerProvider'
 export { useLayerContext } from './contexts/LayerContext'
 
-export { DisplayState, Direction } from './types/bank_transactions'
-export { LinkingMetadata, EntityName } from './contexts/InAppLinkContext'
+export { DisplayState } from './types/bank_transactions'
+export { Direction } from './types/general'
+export { type LinkingMetadata, EntityName } from './contexts/InAppLinkContext'

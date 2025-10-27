@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import type { BankTransaction } from '../../../../../types'
+import type { BankTransaction } from '../../../../../types/bank_transactions'
 import { useTagBankTransaction } from '../api/useTagBankTransaction'
 import { useRemoveTagFromBankTransaction } from '../api/useRemoveTagFromBankTransaction'
 import {

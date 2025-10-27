@@ -1,8 +1,6 @@
-import {
-  DateRange,
-  Direction,
-  DisplayState,
-} from '../../types'
+import { DateRange } from '../../types/general'
+import { DisplayState } from '../../types/bank_transactions'
+import { Direction } from '../../types/general'
 import { TagFilterInput } from '../../types/tags'
 
 export interface NumericRangeFilter {

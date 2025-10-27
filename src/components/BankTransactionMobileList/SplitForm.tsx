@@ -6,36 +6,27 @@ import {
   centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
 } from '../../models/Money'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import {
   SingleCategoryUpdate,
   SplitCategoryUpdate,
   hasSuggestions,
 } from '../../types/categories'
-import { getCategorizePayload, hasReceipts } from '../../utils/bankTransactions'
+import { hasReceipts } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { Tag, makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
-import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
+import { makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
+import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'
 import { Button, ButtonVariant, TextButton } from '../Button'
-import { CategorySelect } from '../CategorySelect'
-import {
-  CategoryOption,
-  mapCategoryToExclusionOption,
-  mapCategoryToOption,
-} from '../CategorySelect/CategorySelect'
 import { FileInput, Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
-
-type Split = {
-  amount: number
-  inputValue: string
-  category: CategoryOption | undefined
-  tags: readonly Tag[]
-  customerVendor: typeof CustomerVendorSchema.Type | null
-}
+import { CategorySelectDrawerWithTrigger } from '../CategorySelect/CategorySelectDrawerWithTrigger'
+import { isSplitCategorizationEncoded } from '../../schemas/categorization'
+import { ApiCategorizationAsOption } from '../../types/categorizationOption'
+import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type Split } from '../../types/bank_transactions'
 
 type RowState = {
   splits: Split[]
@@ -75,7 +66,7 @@ export const SplitForm = ({
       : null
 
   const [rowState, updateRowState] = useState<RowState>({
-    splits: bankTransaction.category?.entries
+    splits: bankTransaction.category && isSplitCategorizationEncoded(bankTransaction.category)
       ? bankTransaction.category?.entries.map((c) => {
         // Use split-specific tags/customer/vendor only (no fallback to transaction-level values when splits exist)
         const splitTags = c.tags?.map(tag => makeTagFromTransactionTag({
@@ -96,29 +87,21 @@ export const SplitForm = ({
             ? decodeCustomerVendor({ ...c.vendor, customerVendorType: 'VENDOR' })
             : null
 
-        return c.type === 'ExclusionSplitEntry' && c.category.type === 'ExclusionNested'
-          ? {
-            amount: c.amount || 0,
-            inputValue: formatMoney(c.amount),
-            category: mapCategoryToExclusionOption(c.category),
-            tags: splitTags,
-            customerVendor: splitCustomerVendor,
-          }
-          : {
-            amount: c.amount || 0,
-            inputValue: formatMoney(c.amount),
-            category: mapCategoryToOption(c.category),
-            tags: splitTags,
-            customerVendor: splitCustomerVendor,
-          }
+        return {
+          amount: c.amount || 0,
+          inputValue: formatMoney(c.amount),
+          category: new ApiCategorizationAsOption(c.category),
+          tags: splitTags,
+          customerVendor: splitCustomerVendor,
+        }
       })
       : [
         {
           amount: bankTransaction.amount,
           inputValue: formatMoney(bankTransaction.amount),
           category: defaultCategory
-            ? mapCategoryToOption(defaultCategory)
-            : undefined,
+            ? new ApiCategorizationAsOption(defaultCategory)
+            : null,
           tags: [],
           customerVendor: initialCustomerVendor,
         },
@@ -126,8 +109,8 @@ export const SplitForm = ({
           amount: 0,
           inputValue: '0.00',
           category: defaultCategory
-            ? mapCategoryToOption(defaultCategory)
-            : undefined,
+            ? new ApiCategorizationAsOption(defaultCategory)
+            : null,
           tags: [],
           customerVendor: initialCustomerVendor,
         },
@@ -188,7 +171,7 @@ export const SplitForm = ({
     }
   }
 
-  const changeCategory = (index: number, newValue: CategoryOption) => {
+  const changeCategory = (index: number, newValue: BankTransactionCategoryComboBoxOption | null) => {
     rowState.splits[index].category = newValue
     updateRowState({ ...rowState })
     setFormError(undefined)
@@ -203,8 +186,8 @@ export const SplitForm = ({
           amount: 0,
           inputValue: '0.00',
           category: defaultCategory
-            ? mapCategoryToOption(defaultCategory)
-            : undefined,
+            ? new ApiCategorizationAsOption(defaultCategory)
+            : null,
           tags: [],
           customerVendor: initialCustomerVendor,
         },
@@ -246,14 +229,12 @@ export const SplitForm = ({
       rowState.splits.length === 1 && rowState?.splits[0].category
         ? ({
           type: 'Category',
-          category: getCategorizePayload(rowState?.splits[0].category),
+          category: rowState?.splits[0].category?.classificationEncoded,
         } as SingleCategoryUpdate)
         : ({
           type: 'Split',
           entries: rowState.splits.map(split => ({
-            category: split.category
-              ? getCategorizePayload(split.category)
-              : '',
+            category: split.category?.classificationEncoded,
             amount: split.amount,
             tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
             customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
@@ -283,15 +264,9 @@ export const SplitForm = ({
                   key={`split-${index}`}
                 >
                   <div className='Layer__bank-transactions__table-cell--split-entry__right-col'>
-                    <CategorySelect
-                      bankTransaction={bankTransaction}
-                      name={`category-${bankTransaction.id}`}
+                    <CategorySelectDrawerWithTrigger
                       value={split.category}
                       onChange={value => changeCategory(index, value)}
-                      className='Layer__category-menu--full'
-                      disabled={bankTransaction.processing}
-                      excludeMatches
-                      asDrawer
                       showTooltips={showTooltips}
                     />
                   </div>

@@ -1,1 +1,1 @@
-export { HoverMenu, HoverMenuProps } from './HoverMenu'
+export { HoverMenu } from './HoverMenu'

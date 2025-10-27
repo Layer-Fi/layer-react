@@ -1,48 +1,5 @@
 import { AccountIdentifier, AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName } from '../schemas/accountIdentifier'
-
-type BaseCategory = {
-  display_name: string
-  category: string
-  subCategories: Array<Category> | null
-  description: string | null
-}
-
-type AccountNestedCategory = {
-  type: 'AccountNested'
-  id: string
-  stable_name: string | null
-} & BaseCategory
-type OptionalAccountNestedCategory = {
-  type: 'OptionalAccountNested'
-  stable_name: string
-} & BaseCategory
-type ExclusionNestedCategory = {
-  type: 'ExclusionNested'
-  id: string
-} & BaseCategory
-
-export type Category =
-  | AccountNestedCategory
-  | OptionalAccountNestedCategory
-  | ExclusionNestedCategory
-
-export function isAccountNestedCategory(
-  v: Category,
-): v is AccountNestedCategory {
-  return v.type === 'AccountNested'
-}
-
-export function isOptionalAccountNestedCategory(
-  v: Category,
-): v is OptionalAccountNestedCategory {
-  return v.type === 'OptionalAccountNested'
-}
-
-export function isExclusionNestedCategory(
-  v: Category,
-): v is ExclusionNestedCategory {
-  return v.type === 'ExclusionNested'
-}
+import { CategorizationEncoded as ApiCategorization, type ClassificationEncoded, type NestedCategorization } from '../schemas/categorization'
 
 export enum CategorizationType {
   AUTO = 'AUTO',
@@ -53,11 +10,11 @@ export enum CategorizationType {
 
 export interface AutoCategorization {
   type: CategorizationType.AUTO
-  category: Category
+  category: ApiCategorization
 }
 export interface SuggestedCategorization {
   type: CategorizationType
-  suggestions: Category[]
+  suggestions: ApiCategorization[]
 }
 export type Categorization = AutoCategorization | SuggestedCategorization
 
@@ -77,13 +34,13 @@ export type AccountIdentifierPayloadObject =
 
 export type SingleCategoryUpdate = {
   type: 'Category'
-  category: AccountIdentifierPayloadObject
+  category: ClassificationEncoded
 }
 
 export type SplitCategoryUpdate = {
   type: 'Split'
   entries: {
-    category: string | AccountIdentifierPayloadObject
+    category: ClassificationEncoded
     amount: number
     tags?: Array<{ key: string, value: string }>
     customer_id?: string | null
@@ -102,7 +59,7 @@ export function hasSuggestions(
   )
 }
 
-export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentifier, category: Category): boolean => {
+export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentifier, category: NestedCategorization): boolean => {
   if (accountIdentifier.type === 'AccountId') {
     switch (category.type) {
       case 'AccountNested':
@@ -116,15 +73,15 @@ export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentif
 
   switch (category.type) {
     case 'AccountNested':
-      return category.stable_name ? AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stable_name)) : false
+      return category.stableName ? AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stableName)) : false
     case 'OptionalAccountNested':
-      return AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stable_name))
+      return AccountStableNameEquivalence(accountIdentifier, makeStableName(category.stableName))
     case 'ExclusionNested':
       return false
   }
 }
 
-export const getLeafCategories = (categories: Category[]): Category[] => {
+export const getLeafCategories = (categories: NestedCategorization[]): NestedCategorization[] => {
   return categories.flatMap((category) => {
     if (!category.subCategories || category.subCategories.length === 0) {
       return [category]

@@ -5,6 +5,7 @@ import { Calendar, CalendarCell, CalendarGrid, CalendarGridBody, CalendarGridHea
 import { HStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
 import { type ZonedDateTime } from '@internationalized/date'
+import './dateCalendar.scss'
 
 type DateCalendarProps = {
   minDate?: ZonedDateTime | null
@@ -18,7 +19,7 @@ export const DateCalendar = ({ minDate, maxDate }: DateCalendarProps) => {
         <Button icon inset variant='ghost' slot='previous'>
           <ChevronLeft size={20} />
         </Button>
-        <Heading variant='dark' weight='normal' size='sm' />
+        <Heading weight='normal' size='sm' />
         <Button icon inset variant='ghost' slot='next'>
           <ChevronRight size={20} />
         </Button>

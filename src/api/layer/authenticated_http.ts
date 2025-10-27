@@ -1,11 +1,11 @@
-import { version as packageVersion } from '../../../package.json'
+import pkg from '../../../package.json'
 import { APIError, APIErrorMessage } from '../../models/APIError'
 import { reportError } from '../../models/ErrorHandler'
 import type { ParameterValues } from '../../utils/request/toDefinedSearchParameters'
 
 const CUSTOM_PREFIX = 'Layer-'
 const CUSTOM_HEADERS = {
-  [`${CUSTOM_PREFIX}React-Version`]: packageVersion,
+  [`${CUSTOM_PREFIX}React-Version`]: pkg.version,
 } as const
 
 type APIResponseError = {

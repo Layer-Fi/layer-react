@@ -6,6 +6,7 @@ import { Button, ButtonVariant, SubmitButton } from '../Button'
 import { ErrorText } from '../Typography'
 import { Spacer, HStack, VStack } from '../../components/ui/Stack/Stack'
 import { type CustomAccount, CustomAccountSubtype } from '../../hooks/customAccounts/types'
+import './customAccountForm.scss'
 
 const accountTypeOptions = [
   { value: CustomAccountSubtype.CHECKING, label: 'Checking' },

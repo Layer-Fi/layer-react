@@ -10,6 +10,7 @@ import { PaymentMethodComboBox } from '../../PaymentMethod/PaymentMethodComboBox
 import { Span } from '../../ui/Typography/Text'
 import { flattenValidationErrors } from '../../../utils/form'
 import type { CustomerRefund } from '../../../features/invoices/customerRefundSchemas'
+import './invoiceRefundForm.scss'
 
 const INVOICE_REFUND_FORM_CSS_PREFIX = 'Layer__InvoiceRefundForm'
 const INVOICE_REFUND_FORM_FIELD_CSS_PREFIX = `${INVOICE_REFUND_FORM_CSS_PREFIX}__Field`

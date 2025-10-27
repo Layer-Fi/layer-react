@@ -7,6 +7,7 @@ import {
   type ModalOverlayProps,
 } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import './modal.scss'
 
 type ModalSize = 'md' | 'lg' | 'xl'
 type ModalVariant = 'center' | 'drawer' | 'mobile-drawer'

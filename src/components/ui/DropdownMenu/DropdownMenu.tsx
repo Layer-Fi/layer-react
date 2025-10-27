@@ -1,6 +1,7 @@
 import React, { type PropsWithChildren, createContext, useContext } from 'react'
 import { Menu as AriaMenu, MenuItem as AriaMenuItem, MenuTrigger, Popover, Dialog } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import './dropdownMenu.scss'
 
 type DropdownMenuContextValue = {
   variant?: 'compact'

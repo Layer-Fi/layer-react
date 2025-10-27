@@ -15,6 +15,7 @@ import { convertCentsToBigDecimal, formatBigDecimalToString } from '../../../uti
 import { Heading } from '../../ui/Typography/Heading'
 import { BigDecimal as BD } from 'effect'
 import { flattenValidationErrors } from '../../../utils/form'
+import './invoicePaymentForm.scss'
 
 const INVOICE_PAYMENT_FORM_CSS_PREFIX = 'Layer__InvoicePaymentForm'
 const INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX = `${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Field`

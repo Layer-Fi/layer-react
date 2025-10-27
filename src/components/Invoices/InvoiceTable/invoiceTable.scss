@@ -2,6 +2,10 @@
   width: clamp(48rem, 100%, 1406px);
 }
 
+.Layer__InvoiceTable__SearchField {
+  width: 15rem;
+}
+
 .Layer__UI__Table__InvoiceTable {
   table-layout: fixed;
   width: 100%;

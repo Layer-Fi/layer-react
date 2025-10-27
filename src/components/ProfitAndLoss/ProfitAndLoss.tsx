@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison'
-import { ReportingBasis } from '../../types'
+import { ReportingBasis } from '../../types/general'
 import { Container } from '../Container'
 import { ProfitAndLossChart } from '../ProfitAndLossChart'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
