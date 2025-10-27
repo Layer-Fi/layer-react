@@ -65,14 +65,9 @@ export const AffectedTransactionsTable = ({
     [TransactionColumns.Description]: {
       id: TransactionColumns.Description,
       header: 'Description',
-      cell: (row) => {
-        const description = row.counterpartyName || row.description || '-'
-        return (
-          <SpanWithTooltip>
-            {description}
-          </SpanWithTooltip>
-        )
-      },
+      cell: row => (
+        <SpanWithTooltip>{row.counterpartyName || row.description || '-'}</SpanWithTooltip>
+      ),
       isRowHeader: true,
     },
     [TransactionColumns.Amount]: {
