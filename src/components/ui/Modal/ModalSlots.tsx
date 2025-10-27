@@ -5,6 +5,8 @@ import { Heading } from '../Typography/Heading'
 import { P } from '../Typography/Text'
 import classNames from 'classnames'
 import './modalSlots.scss'
+import { VStack } from '../Stack/Stack'
+import { Separator } from '../../Separator/Separator'
 
 const MODAL_CLOSE_BUTTON_CLASS_NAME = 'Layer__ModalCloseButton'
 
@@ -44,22 +46,24 @@ export const ModalTitleWithClose = forwardRef<
   ModalTitleWithCloseProps
 >(function ModalTitleWithClose({ heading, onClose }, ref) {
   return (
-    <div
-      className='Layer__ModalTitleWithClose'
-      ref={ref}
-    >
-      {heading}
-      <Button
-        icon
-        inset
-        variant='ghost'
-        slot='close'
-        onPress={onClose}
-        aria-label='Close Modal'
+    <VStack>
+      <div
+        className='Layer__ModalTitleWithClose'
+        ref={ref}
       >
-        <X size={16} />
-      </Button>
-    </div>
+        {heading}
+        <Button
+          icon
+          variant='outlined'
+          slot='close'
+          onPress={onClose}
+          aria-label='Close Modal'
+        >
+          <X size={16} />
+        </Button>
+      </div>
+      <Separator mbe='md' />
+    </VStack>
   )
 })
 
