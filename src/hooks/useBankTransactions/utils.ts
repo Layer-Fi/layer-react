@@ -1,8 +1,8 @@
 import { filterVisibility } from '../../components/BankTransactions/utils'
 import { BankTransaction, DisplayState } from '../../types/bank_transactions'
 import { AccountItem, NumericRangeFilter } from './types'
-import { BulkActionSchema } from './useBulkMatchOrCategorize'
 import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, isApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { MatchOrCategorizeTransactionRequestSchema } from './useBulkMatchOrCategorize'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
   const accounts: AccountItem[] = []
@@ -69,13 +69,13 @@ export const applyCategorizationStatusFilter = (
   )
 }
 
-type BulkAction = typeof BulkActionSchema.Type
+type MatchOrCategorizeTransaction = typeof MatchOrCategorizeTransactionRequestSchema.Type
 
 export const buildBulkMatchOrCategorizePayload = (
   selectedIds: Iterable<string>,
   transactionCategories: Map<string, BankTransactionCategoryComboBoxOption | null>,
-): Record<string, BulkAction> => {
-  const transactions: Record<string, BulkAction> = {}
+): Record<string, MatchOrCategorizeTransaction> => {
+  const transactions: Record<string, MatchOrCategorizeTransaction> = {}
 
   for (const transactionId of selectedIds) {
     const transactionCategory = transactionCategories.get(transactionId) ?? null
@@ -94,7 +94,7 @@ export const buildBulkMatchOrCategorizePayload = (
     else if (isSplitAsOption(transactionCategory)) {
       const splitEntries = transactionCategory.original
         .map((split) => {
-          if (!split.category || !isCategoryAsOption(split.category)) {
+          if (!split.category || !isCategoryAsOption(split.category) || !isApiCategorizationAsOption(split.category)) {
             return null
           }
           const classification = split.category.classification
@@ -104,6 +104,9 @@ export const buildBulkMatchOrCategorizePayload = (
           return {
             amount: split.amount,
             category: classification,
+            tags: split.tags,
+            customerId: split.customerVendor?.id,
+            vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
           }
         })
         .filter((entry): entry is NonNullable<typeof entry> => entry !== null)

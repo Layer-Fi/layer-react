@@ -13,7 +13,7 @@ import { CategoryUpdateSchema } from '../../schemas/bankTransactions/BankTransac
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
-export const BulkMatchTransactionRequestSchema = Schema.Struct({
+export const MatchTransactionRequestSchema = Schema.Struct({
   type: Schema.Literal('match'),
   suggestedMatchId: pipe(
     Schema.propertySignature(Schema.UUID),
@@ -21,20 +21,20 @@ export const BulkMatchTransactionRequestSchema = Schema.Struct({
   ),
 })
 
-export const BulkCategorizeTransactionRequestSchema = Schema.Struct({
+export const CategorizeTransactionRequestSchema = Schema.Struct({
   type: Schema.Literal('categorize'),
   categorization: CategoryUpdateSchema,
 })
 
-export const BulkMatchOrCategorizeTransactionRequestSchema = Schema.Union(
-  BulkMatchTransactionRequestSchema,
-  BulkCategorizeTransactionRequestSchema,
+export const MatchOrCategorizeTransactionRequestSchema = Schema.Union(
+  MatchTransactionRequestSchema,
+  CategorizeTransactionRequestSchema,
 )
 
-const BulkMatchOrCategorizeRequestSchema = Schema.Struct({
+export const BulkMatchOrCategorizeRequestSchema = Schema.Struct({
   transactions: Schema.Record({
     key: Schema.UUID,
-    value: BulkMatchOrCategorizeTransactionRequestSchema,
+    value: MatchOrCategorizeTransactionRequestSchema,
   }),
 })
 
