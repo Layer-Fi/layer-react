@@ -1,12 +1,12 @@
 import { useMemo, useCallback } from 'react'
 import { DATE_FORMAT } from '../../config/general'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { BankTransactionRow } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionsStringOverrides,
 } from '../BankTransactions/BankTransactions'
-import { BankTransactionsLoader } from '../BankTransactionsLoader'
+import { BankTransactionsLoader } from '../BankTransactionsLoader/BankTransactionsLoader'
 import { SyncingComponent } from '../SyncingComponent'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -88,13 +88,18 @@ export const BankTransactionsTable = ({
   const isPartiallySelected = selectedCount > 0 && selectedCount < currentPageIds.length
 
   const handleHeaderCheckboxChange = useCallback((checked: boolean) => {
-    if (checked) {
-      selectMultiple(currentPageIds)
-    }
-    else {
+    if (!checked || isPartiallySelected) {
       deselectMultiple(currentPageIds)
     }
-  }, [currentPageIds, selectMultiple, deselectMultiple])
+    else {
+      selectMultiple(currentPageIds)
+    }
+  }, [
+    currentPageIds,
+    isPartiallySelected,
+    selectMultiple,
+    deselectMultiple,
+  ])
 
   return (
     <table
@@ -152,11 +157,7 @@ export const BankTransactionsTable = ({
             )}
         </tr>
       </thead>
-      {isLoading && page && page === 1
-        ? (
-          <BankTransactionsLoader isLoading={true} showTooltips={showTooltips} />
-        )
-        : null}
+      {isLoading && page && page === 1 && <BankTransactionsLoader />}
       <tbody>
         {!isLoading
           && bankTransactions?.map(

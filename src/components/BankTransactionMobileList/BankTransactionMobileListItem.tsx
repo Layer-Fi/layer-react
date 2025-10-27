@@ -3,7 +3,7 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
@@ -97,7 +97,7 @@ export const BankTransactionMobileListItem = ({
   const [removeAnim, setRemoveAnim] = useState(false)
   const [purpose, setPurpose] = useState<Purpose>(
     bankTransaction.category
-      ? bankTransaction.category.type === 'ExclusionNested'
+      ? bankTransaction.category.type === 'Exclusion'
         ? Purpose.personal
         : bankTransaction.categorization_status === CategorizationStatus.SPLIT
           ? Purpose.more

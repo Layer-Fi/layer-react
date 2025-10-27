@@ -10,6 +10,7 @@ import {
 import { withRenderProp } from '../../utility/withRenderProp'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import classNames from 'classnames'
+import './form.scss'
 
 const FORM_CLASS_NAME = 'Layer__UI__Form'
 export const Form = forwardRef<HTMLFormElement, ReactAriaFormProps>(

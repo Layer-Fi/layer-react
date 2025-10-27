@@ -70,19 +70,19 @@ export function BaseConfirmationModal({
   return (
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} role='alertdialog'>
       {({ close }) => (
-        <VStack gap='xs'>
-          <VStack pbe='2xs'>
-            <ModalTitleWithClose
-              heading={(
-                <ModalHeading size='md'>
-                  {title}
-                </ModalHeading>
-              )}
-              onClose={close}
-            />
+        <VStack>
+          <ModalTitleWithClose
+            heading={(
+              <ModalHeading size='sm'>
+                {title}
+              </ModalHeading>
+            )}
+            onClose={close}
+          />
+          <VStack gap='md'>
+            {description && <ModalDescription>{description}</ModalDescription>}
+            {content && <ModalContent>{content}</ModalContent>}
           </VStack>
-          {description && <ModalDescription>{description}</ModalDescription>}
-          {content && <ModalContent>{content}</ModalContent>}
           <ModalActions>
             <HStack gap='md'>
               <Spacer />

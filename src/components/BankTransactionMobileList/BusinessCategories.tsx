@@ -1,17 +1,23 @@
 import { useCallback, useMemo, useState } from 'react'
 import { ActionableList } from '../ActionableList'
-import { Option, flattenCategories, flattenOptionGroups } from './utils'
+import { flattenCategories, type CategoryGroup } from './utils'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { SearchField } from '../SearchField/SearchField'
 import { Button } from '../ui/Button/Button'
 import { ChevronLeft } from 'lucide-react'
 import { ModalHeading } from '../ui/Modal/ModalSlots'
+import type { CategoryAsOption } from '../../types/categorizationOption'
+import type { BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export interface BusinessCategoriesProps {
-  select: (category: Option) => void
+  select: (category: BankTransactionCategoryComboBoxOption | null) => void
   selectedId?: string
   showTooltips: boolean
+}
+
+const isGroup = (item: CategoryGroup | CategoryAsOption): item is CategoryGroup => {
+  return 'categories' in item
 }
 
 export const BusinessCategories = ({
@@ -22,11 +28,13 @@ export const BusinessCategories = ({
   const { data: categories } = useCategories()
   const [query, setQuery] = useState('')
 
-  const categoryOptions = flattenCategories(
-    (categories ?? []).filter(category => category.type != 'ExclusionNested'),
-  )
+  const categoryOptions = useMemo(() =>
+    flattenCategories(
+      (categories ?? []).filter(category => category.type != 'ExclusionNested'),
+    ),
+  [categories])
 
-  const [optionsToShow, setOptionsToShow] = useState(categoryOptions)
+  const [optionsToShow, setOptionsToShow] = useState<Array<CategoryGroup | CategoryAsOption>>(categoryOptions)
   const [selectedGroup, setSelectedGroup] = useState<string>()
 
   const filteredOptions = useMemo(() => {
@@ -34,24 +42,34 @@ export const BusinessCategories = ({
 
     if (query) {
       const lower = query.toLowerCase()
-      const flattenedOptions = flattenOptionGroups(options)
 
-      options = flattenedOptions.filter(opt =>
-        opt.label.toLowerCase().includes(lower),
-      )
+      options = options.flatMap((opt) => {
+        if (isGroup(opt)) {
+          // Search within group categories
+          return opt.categories.filter(cat =>
+            cat.label.toLowerCase().includes(lower),
+          )
+        }
+        // Filter individual categories
+        return opt.label.toLowerCase().includes(lower) ? [opt] : []
+      })
     }
 
-    return options.sort((a, b) => a.label.localeCompare(b.label))
+    return options
+      .sort((a, b) => a.label.localeCompare(b.label))
+      .map(opt => isGroup(opt)
+        ? { label: opt.label, id: opt.id, value: opt, asLink: true }
+        : { label: opt.label, id: opt.value, description: opt.original.description ?? undefined, value: opt })
   }, [optionsToShow, query])
 
-  const onCategorySelect = (v: Option) => {
-    if (v.value.type === 'GROUP' && v.value.items) {
-      setOptionsToShow(v.value.items)
-      setSelectedGroup(v.label)
+  const onCategorySelect = (item: { value: CategoryGroup | CategoryAsOption }) => {
+    if (isGroup(item.value)) {
+      setOptionsToShow(item.value.categories)
+      setSelectedGroup(item.value.label)
       setQuery('')
       return
     }
-    select(v)
+    select(item.value)
   }
 
   const clearSelectedGroup = useCallback(() => {
@@ -77,7 +95,7 @@ export const BusinessCategories = ({
         </HStack>
         <SearchField value={query} onChange={setQuery} label='Search categories...' />
       </VStack>
-      <ActionableList<Option['value']>
+      <ActionableList<CategoryAsOption | CategoryGroup>
         options={filteredOptions}
         onClick={onCategorySelect}
         selectedId={selectedId}

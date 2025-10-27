@@ -23,8 +23,9 @@ import { useInvoiceDetail } from '../../../providers/InvoicesRouteStore/Invoices
 import { flattenValidationErrors } from '../../../utils/form'
 import { type Tag } from '../../../features/tags/tagSchemas'
 import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
-import { CategoriesListMode } from '../../../schemas/categorization'
+import { CategoriesListMode, isClassificationAccountIdentifier, type Classification } from '../../../schemas/categorization'
 import { TagDimensionCombobox } from '../../../features/tags/components/TagDimensionCombobox'
+import './invoiceForm.scss'
 
 const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
 const INVOICE_FORM_FIELD_CSS_PREFIX = `${INVOICE_FORM_CSS_PREFIX}__Field`
@@ -73,12 +74,19 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
       >
         <form.Field name={`lineItems[${index}].accountIdentifier`}>
           {(field) => {
+            const onValueChange = (value: Classification | null) => {
+              if (value && !isClassificationAccountIdentifier(value)) {
+                return
+              }
+              field.setValue(value)
+            }
+
             return (
               <LedgerAccountCombobox
                 label='Revenue account (hidden)'
                 value={field.state.value}
                 mode={CategoriesListMode.Revenue}
-                onValueChange={field.setValue}
+                onValueChange={onValueChange}
                 isReadOnly={isReadOnly}
                 showLabel={index === 0}
               />

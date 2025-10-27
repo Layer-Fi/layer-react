@@ -10,6 +10,7 @@ import { BankTransactionDirection } from '../../schemas/bankTransactions/base'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
+import './affectedTransactionsTable.scss'
 
 const COMPONENT_NAME = 'AffectedTransactionsTable'
 

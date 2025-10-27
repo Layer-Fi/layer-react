@@ -7,6 +7,7 @@ import {
   Label as ReactAriaLabel,
   Text as ReactAriaText,
 } from 'react-aria-components'
+import './text.scss'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'
@@ -17,7 +18,7 @@ export type TextStyleProps = {
   pbs?: Spacing
   size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   status?: 'error'
-  variant?: 'placeholder' | 'subtle'
+  variant?: 'placeholder' | 'subtle' | 'inherit'
   weight?: 'normal' | 'bold'
 }
 

@@ -1,9 +1,10 @@
 import { Fragment, ReactNode, useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import { BalanceSheet, LineItem } from '../../types'
 import { TableCellAlign } from '../../types/table'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { useEffectOnMount } from '../../hooks/useEffectOnMount/useEffectOnMount'
+import type { BalanceSheet } from '../../types/balance_sheet'
+import type { LineItem } from '../../types/line_item'
 
 export interface BalanceSheetTableStringOverrides {
   typeColumnHeader?: string

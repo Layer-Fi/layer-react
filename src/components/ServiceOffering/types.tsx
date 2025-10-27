@@ -102,8 +102,6 @@ export interface ServiceOfferingPlatformConfig {
   industry: string
 }
 
-export type ServiceOfferingType = 'accounting' | 'bookkeeping'
-
 /**
  * Utility type for creating deep partial types - makes all properties optional recursively
  */
@@ -138,7 +136,7 @@ export type HeroContentConfig = {
  * Configuration for individual service offering cards (accounting or bookkeeping)
  */
 export type ServiceOfferingCardConfig = {
-  offerType: ServiceOfferingType
+  offerType: 'accounting' | 'bookkeeping'
   stringOverrides: {
     badge: string
     title: string

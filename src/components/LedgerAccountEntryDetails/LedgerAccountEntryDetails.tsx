@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import XIcon from '../../icons/X'
-import { Direction } from '../../types'
+import { Direction } from '../../types/general'
 import { LedgerEntrySourceType, decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/generalLedger/ledgerEntrySource'
 import { TableCellAlign } from '../../types/table'
 import { convertCentsToCurrency, humanizeEnum } from '../../utils/format'

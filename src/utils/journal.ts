@@ -1,4 +1,4 @@
-import { LedgerAccountLineItem, LedgerAccountsEntry } from '../types'
+import { LedgerAccountLineItem, LedgerAccountsEntry } from '../types/ledger_accounts'
 import { AccountIdentifierPayloadObject } from '../types/categories'
 import { JournalEntry, JournalEntryLineItem } from '../types/journal'
 

@@ -118,10 +118,10 @@ function LinkedAccountsOpeningBalanceModalContent({
   }
 
   return (
-    <VStack gap='lg'>
+    <VStack>
       <ModalTitleWithClose
         heading={(
-          <ModalHeading size='xl'>
+          <ModalHeading size='sm'>
             {stringOverrides?.title ?? 'Add opening balance'}
           </ModalHeading>
         )}

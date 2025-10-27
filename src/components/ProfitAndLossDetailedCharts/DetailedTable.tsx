@@ -5,7 +5,7 @@ import {
   ProfitAndLossFilters,
 } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import SortArrows from '../../icons/SortArrows'
-import { SortDirection } from '../../types'
+import { SortDirection } from '../../types/general'
 import { formatPercent } from '../../utils/format'
 import classNames from 'classnames'
 import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'

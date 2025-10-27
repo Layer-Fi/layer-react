@@ -1,14 +1,15 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 import { runDelayedSync } from '../../utils/delay/runDelayed'
+import './invisibleDownload.scss'
 
 type InvisibleDownloadHandle = {
-  trigger: (options: { url: string }) => Promise<void>
+  trigger: (options: { url: string, filename?: string }) => Promise<void>
 }
 
 export function useInvisibleDownload() {
   const invisibleDownloadRef = useRef<InvisibleDownloadHandle>(null)
 
-  const triggerInvisibleDownload = useCallback((options: { url: string }) => {
+  const triggerInvisibleDownload = useCallback((options: { url: string, filename?: string }) => {
     void invisibleDownloadRef.current?.trigger(options)
   }, [])
 
@@ -21,8 +22,11 @@ const InvisibleDownload = forwardRef<InvisibleDownloadHandle>((_props, ref) => {
   const internalRef = useRef<HTMLAnchorElement>(null)
 
   useImperativeHandle(ref, () => ({
-    trigger: async ({ url }) => {
+    trigger: async ({ url, filename }) => {
       internalRef.current?.setAttribute('href', url)
+      if (filename) {
+        internalRef.current?.setAttribute('download', filename)
+      }
 
       return runDelayedSync(() => internalRef.current?.click())
     },

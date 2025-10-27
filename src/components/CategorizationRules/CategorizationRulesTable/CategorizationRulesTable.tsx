@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useListCategorizationRules } from '../../../hooks/useCategorizationRules/useListCategorizationRules'
 import { Container } from '../../Container/Container'
-import { PaginatedTable } from '../../DataTable/PaginatedTable'
+import { PaginatedTable } from '../../PaginatedDataTable/PaginatedDataTable'
 import { DataState, DataStateStatus } from '../../DataState/DataState'
 import { PencilRuler, Trash2 } from 'lucide-react'
 import { CategorizationRule } from '../../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { ColumnConfig } from '../../DataTable/DataTable'
 import { Span } from '../../ui/Typography/Text'
-import { CategoriesListMode } from '../../../schemas/categorization'
+import { CategoriesListMode, NestedCategorization } from '../../../schemas/categorization'
 import { useSetCurrentCategorizationRulesPage } from '../../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { Button } from '../../ui/Button/Button'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
@@ -15,6 +15,8 @@ import { useArchiveCategorizationRule } from '../../../hooks/useCategorizationRu
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useCategories } from '../../../hooks/categories/useCategories'
 import { getLeafCategories, accountIdentifierIsForCategory } from '../../../types/categories'
+import './categorizationRulesTable.scss'
+import { AccountIdentifier } from '../../../schemas/accountIdentifier'
 
 enum CategorizationRuleColumns {
   Category = 'Category',
@@ -23,13 +25,28 @@ enum CategorizationRuleColumns {
 }
 const COMPONENT_NAME = 'CategorizationRulesTable'
 
+const CategoryDisplay = ({
+  accountIdentifier,
+  options,
+}: {
+  accountIdentifier: AccountIdentifier
+  options: NestedCategorization[]
+}) => {
+  if (!accountIdentifier) return null
+  const category = options.find(cat =>
+    accountIdentifierIsForCategory(accountIdentifier, cat),
+  )
+  if (!category?.displayName) return null
+  return <Span ellipsis>{category.displayName}</Span>
+}
+
 export const CategorizationRulesTable = () => {
   const [selectedRule, setSelectedRule] = useState<CategorizationRule | null>(null)
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState(false)
   const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
   const { addToast } = useLayerContext()
 
-  const { data: categories } = useCategories({ mode: CategoriesListMode.All })
+  const { data: categories, isLoading: categoriesAreLoading } = useCategories({ mode: CategoriesListMode.All })
   const options = useMemo(() => {
     if (!categories) return []
     return getLeafCategories(categories)
@@ -101,13 +118,8 @@ export const CategorizationRulesTable = () => {
       header: 'Category',
       cell: (row) => {
         const accountIdentifier = row.category
-        const displayName = accountIdentifier
-          ? options.find(category =>
-            accountIdentifierIsForCategory(accountIdentifier, category),
-          )?.display_name
-          : undefined
-        return displayName && (
-          <Span ellipsis>{displayName}</Span>
+        return accountIdentifier && (
+          <CategoryDisplay accountIdentifier={accountIdentifier} options={options} />
         )
       },
       isRowHeader: true,
@@ -136,7 +148,7 @@ export const CategorizationRulesTable = () => {
       <PaginatedTable
         ariaLabel='CategorizationRules'
         data={categorizationRules}
-        isLoading={data === undefined || rulesAreLoading}
+        isLoading={data === undefined || rulesAreLoading || categoriesAreLoading}
         isError={isError}
         columnConfig={columnConfig}
         paginationProps={paginationProps}

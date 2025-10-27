@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Bill } from '../../types'
+import type { Bill } from '../../types/bills'
 import { convertFromCents, convertNumberToCurrency } from '../../utils/format'
 import { Text, TextSize, TextStatus, TextWeight } from '../Typography/Text'
 import { differenceInDays, parseISO } from 'date-fns'

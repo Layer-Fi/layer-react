@@ -8,12 +8,13 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 
 import { DefaultHeroContentConfig, DefaultAccountingOfferingConfig, DefaultBookkeepingOfferingConfig, ServiceOfferingDefaultTextContent, ServiceOfferingContentID } from './content'
-import { HeroContentConfig, ServiceOfferingCardConfig, DeepPartial, ServiceOfferingLink, ServiceOfferingPlatformConfig, ServiceOfferingType } from './types'
+import { HeroContentConfig, ServiceOfferingCardConfig, DeepPartial, ServiceOfferingLink, ServiceOfferingPlatformConfig } from './types'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from '../../hooks/useCalendly/useCalendly'
 import { View } from '../View'
 import { mergeHeroContentConfig, mergeServiceOfferingConfig } from './utils'
 import { useSizeClass, useWindowSize } from '../../hooks/useWindowSize/useWindowSize'
+import './serviceOffering.scss'
 
 /**
  * Props for the ServiceOffering component.
@@ -24,7 +25,7 @@ import { useSizeClass, useWindowSize } from '../../hooks/useWindowSize/useWindow
  */
 export interface ServiceOfferingProps {
   platform: ServiceOfferingPlatformConfig
-  availableOffers: ServiceOfferingType[]
+  availableOffers: ('accounting' | 'bookkeeping')[]
   heroOverrides: DeepPartial<HeroContentConfig>
   offeringOverrides: {
     stringOverrides?: {
@@ -86,7 +87,7 @@ export const ServiceOffering = ({
 
   const renderMainContent = useCallback(() => (
     <VStack className='Layer__service-offering--main'>
-      <div className='Layer__service-offering__responsive-layout'>
+      <div className='Layer__service-offering__layout'>
         <VStack gap={isMobile ? 'md' : 'lg'} pi={isMobile ? 'md' : 'lg'} className='Layer__service-offering__responsive-content'>
           <VStack>
             {!!heroConfig.stringOverrides?.title === false && (
@@ -136,8 +137,9 @@ export const ServiceOffering = ({
             <Button variant='branded' onClick={handleMainCta}>{heroConfig.cta.primary.label}</Button>
           </HStack>
         </VStack>
-        <VStack className='Layer__service-offering__responsive-image'>
+        <VStack className='Layer__service-offering__media-container'>
           <img
+            className='Layer__service-offering__media-image'
             key={`hero-image-${isStackedLayout}`}
             src={heroConfig.mediaUrls.topOfFoldImage}
             alt={`${platform.platformName} Accounting dashboard interface showing financial data and business insights`}
@@ -154,7 +156,7 @@ export const ServiceOffering = ({
             url={calendlyLink}
             onModalClose={closeCalendly}
             open={isCalendlyVisible}
-            rootElement={document.getElementById('root')!}
+            rootElement={document.body}
             LoadingSpinner={() => <></>}
           />
         </HStack>
