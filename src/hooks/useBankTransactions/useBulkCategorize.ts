@@ -9,7 +9,7 @@ import { CategoryUpdateSchema } from '../../schemas/bankTransactions/BankTransac
 
 const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'
 
-export const TransactionCategorizationSchema = Schema.Struct({
+export const CategorizeTransactionRequestSchema = Schema.Struct({
   transactionId: Schema.propertySignature(Schema.UUID).pipe(
     Schema.fromKey('transaction_id'),
   ),
@@ -17,7 +17,7 @@ export const TransactionCategorizationSchema = Schema.Struct({
 })
 
 export const BulkCategorizeRequestSchema = Schema.Struct({
-  transactions: Schema.Array(TransactionCategorizationSchema),
+  transactions: Schema.Array(CategorizeTransactionRequestSchema),
 })
 
 type BulkCategorizeRequest = typeof BulkCategorizeRequestSchema.Type
