@@ -104,7 +104,7 @@ export const BankTransactionRow = ({
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
-  const { setTransactionCategory, setOnlyNewTransactionCategories } = useBankTransactionsCategoryActions()
+  const { setTransactionCategory } = useBankTransactionsCategoryActions()
 
   const openRow = {
     onMouseDown: () => {
@@ -123,13 +123,6 @@ export const BankTransactionRow = ({
       setShowRetry(true)
     }
   }, [bankTransaction.error])
-
-  useEffect(() => {
-    const defaultCategory = getDefaultSelectedCategoryForBankTransaction(bankTransaction)
-    if (defaultCategory) {
-      setOnlyNewTransactionCategories([{ id: bankTransaction.id, category: defaultCategory }])
-    }
-  }, [setOnlyNewTransactionCategories, bankTransaction])
 
   useEffect(() => {
     if (
