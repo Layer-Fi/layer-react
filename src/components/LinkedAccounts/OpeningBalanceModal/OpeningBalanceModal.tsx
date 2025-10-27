@@ -16,7 +16,6 @@ import {
 import { convertToCents } from '../../../utils/format'
 import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
 import { startOfYear } from 'date-fns'
-import { Separator } from '../../Separator/Separator'
 
 type OpeningBalanceModalStringOverrides = {
   title?: string
@@ -128,7 +127,6 @@ function LinkedAccountsOpeningBalanceModalContent({
         )}
         onClose={handleDismiss}
       />
-      <Separator mbe='lg' />
       <VStack>
         <ModalContent>
           <VStack gap='md'>

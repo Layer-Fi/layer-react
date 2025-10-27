@@ -12,7 +12,6 @@ import { useCallback, useState, type ReactNode } from 'react'
 import { SubmitButton } from '../Button'
 import { Awaitable } from '../../types/utility/promises'
 import { APIError } from '../../models/APIError'
-import { Separator } from '../Separator/Separator'
 
 export type BaseConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   title: string
@@ -72,17 +71,14 @@ export function BaseConfirmationModal({
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} role='alertdialog'>
       {({ close }) => (
         <VStack>
-          <VStack>
-            <ModalTitleWithClose
-              heading={(
-                <ModalHeading size='sm'>
-                  {title}
-                </ModalHeading>
-              )}
-              onClose={close}
-            />
-          </VStack>
-          <Separator mbe='md' />
+          <ModalTitleWithClose
+            heading={(
+              <ModalHeading size='sm'>
+                {title}
+              </ModalHeading>
+            )}
+            onClose={close}
+          />
           <VStack gap='md'>
             {description && <ModalDescription>{description}</ModalDescription>}
             {content && <ModalContent>{content}</ModalContent>}
