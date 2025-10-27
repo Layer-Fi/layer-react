@@ -20,7 +20,7 @@ export const AccountSchema = Schema.Struct({
   id: Schema.String,
   name: Schema.String,
   stableName: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('stable_name'),
   ),
   normality: Schema.String,
