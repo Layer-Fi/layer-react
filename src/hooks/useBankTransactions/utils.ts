@@ -73,12 +73,12 @@ type BulkAction = typeof BulkActionSchema.Type
 
 export const buildBulkMatchOrCategorizePayload = (
   selectedIds: Iterable<string>,
-  transactionCategories: Map<string, BankTransactionCategoryComboBoxOption>,
+  transactionCategories: Map<string, BankTransactionCategoryComboBoxOption | null>,
 ): Record<string, BulkAction> => {
   const transactions: Record<string, BulkAction> = {}
 
   for (const transactionId of selectedIds) {
-    const transactionCategory = transactionCategories.get(transactionId)
+    const transactionCategory = transactionCategories.get(transactionId) ?? null
 
     if (!transactionCategory) {
       continue
