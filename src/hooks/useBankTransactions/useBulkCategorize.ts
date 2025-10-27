@@ -1,27 +1,33 @@
+import { Schema } from 'effect'
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
-import { Schema } from 'effect'
 import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
+import { CategoryUpdateSchema } from '../../schemas/bankTransactions/BankTransactionsBulkActions'
 
-const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
+const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'
 
-export const BulkUncategorizeRequestSchema = Schema.Struct({
-  transactionIds: Schema.propertySignature(Schema.Array(Schema.UUID)).pipe(
-    Schema.fromKey('transaction_ids'),
+export const CategorizeTransactionRequestSchema = Schema.Struct({
+  transactionId: Schema.propertySignature(Schema.UUID).pipe(
+    Schema.fromKey('transaction_id'),
   ),
+  categorization: CategoryUpdateSchema,
 })
 
-type BulkUncategorizeRequest = typeof BulkUncategorizeRequestSchema.Type
-type BulkUncategorizeRequestEncoded = typeof BulkUncategorizeRequestSchema.Encoded
+export const BulkCategorizeRequestSchema = Schema.Struct({
+  transactions: Schema.Array(CategorizeTransactionRequestSchema),
+})
 
-const bulkUncategorize = post<
-  { data: unknown },
-  BulkUncategorizeRequestEncoded,
+type BulkCategorizeRequest = typeof BulkCategorizeRequestSchema.Type
+type BulkCategorizeRequestEncoded = typeof BulkCategorizeRequestSchema.Encoded
+
+const bulkCategorize = post<
+  Record<string, unknown>,
+  BulkCategorizeRequestEncoded,
   { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/bulk-uncategorize`)
+>(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/bulk-categorize`)
 
 function buildKey({
   access_token: accessToken,
@@ -37,12 +43,12 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: [BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY],
+      tags: [BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY],
     } as const
   }
 }
 
-export const useBulkUncategorize = () => {
+export const useBulkCategorize = () => {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -55,13 +61,13 @@ export const useBulkUncategorize = () => {
     }),
     (
       { accessToken, apiUrl, businessId },
-      { arg }: { arg: BulkUncategorizeRequest },
-    ) => bulkUncategorize(
+      { arg }: { arg: BulkCategorizeRequest },
+    ) => bulkCategorize(
       apiUrl,
       accessToken,
       {
         params: { businessId },
-        body: Schema.encodeSync(BulkUncategorizeRequestSchema)(arg),
+        body: Schema.encodeSync(BulkCategorizeRequestSchema)(arg),
       },
     ).then(({ data }) => data),
     {

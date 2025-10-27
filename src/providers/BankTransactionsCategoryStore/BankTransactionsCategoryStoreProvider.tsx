@@ -3,13 +3,13 @@ import { createStore, useStore } from 'zustand'
 import type { BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export type BankTransactionsCategoryState = {
-  transactionCategories: Map<string, BankTransactionCategoryComboBoxOption>
+  transactionCategories: Map<string, BankTransactionCategoryComboBoxOption | null>
 }
 
 type BankTransactionsCategoryActions = {
   actions: {
-    setTransactionCategory: (id: string, category: BankTransactionCategoryComboBoxOption) => void
-    setOnlyNewTransactionCategories: (transactionCategories: Array<{ id: string, category: BankTransactionCategoryComboBoxOption }>) => void
+    setTransactionCategory: (id: string, category: BankTransactionCategoryComboBoxOption | null) => void
+    setOnlyNewTransactionCategories: (transactionCategories: Array<{ id: string, category: BankTransactionCategoryComboBoxOption | null }>) => void
 
     clearTransactionCategory: (id: string) => void
     clearMultipleTransactionCategories: (ids: string[]) => void
@@ -21,9 +21,9 @@ type BankTransactionsCategoryStore = BankTransactionsCategoryState & BankTransac
 
 function buildStore() {
   return createStore<BankTransactionsCategoryStore>(set => ({
-    transactionCategories: new Map<string, BankTransactionCategoryComboBoxOption>(),
+    transactionCategories: new Map<string, BankTransactionCategoryComboBoxOption | null>(),
     actions: {
-      setTransactionCategory: (id: string, category: BankTransactionCategoryComboBoxOption): void => {
+      setTransactionCategory: (id: string, category: BankTransactionCategoryComboBoxOption | null): void => {
         set((state) => {
           const newMap = new Map(state.transactionCategories)
           newMap.set(id, category)
@@ -31,7 +31,7 @@ function buildStore() {
         })
       },
 
-      setOnlyNewTransactionCategories: (transactionCategories: Array<{ id: string, category: BankTransactionCategoryComboBoxOption }>): void => {
+      setOnlyNewTransactionCategories: (transactionCategories: Array<{ id: string, category: BankTransactionCategoryComboBoxOption | null }>): void => {
         set((state) => {
           const newMap = new Map(state.transactionCategories)
           let hasChanges = false
@@ -88,7 +88,7 @@ export function useBankTransactionsCategoryActions(): BankTransactionsCategoryAc
   return useStore(store, state => state.actions)
 }
 
-export function useGetBankTransactionCategory(transactionId: string): { selectedCategory: BankTransactionCategoryComboBoxOption | undefined } {
+export function useGetBankTransactionCategory(transactionId: string): { selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined } {
   const store = useBankTransactionsCategoryStore()
 
   const selectedCategory = useStore(store, state => state.transactionCategories.get(transactionId))
@@ -96,7 +96,7 @@ export function useGetBankTransactionCategory(transactionId: string): { selected
   return { selectedCategory }
 }
 
-export function useGetAllBankTransactionsCategories(): { transactionCategories: Map<string, BankTransactionCategoryComboBoxOption> } {
+export function useGetAllBankTransactionsCategories(): { transactionCategories: Map<string, BankTransactionCategoryComboBoxOption | null> } {
   const store = useBankTransactionsCategoryStore()
 
   const transactionCategories = useStore(store, state => state.transactionCategories)

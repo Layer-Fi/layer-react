@@ -1,6 +1,8 @@
 import { filterVisibility } from '../../components/BankTransactions/utils'
 import { BankTransaction, DisplayState } from '../../types/bank_transactions'
 import { AccountItem, NumericRangeFilter } from './types'
+import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, isApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { MatchOrCategorizeTransactionRequestSchema } from './useBulkMatchOrCategorize'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
   const accounts: AccountItem[] = []
@@ -65,4 +67,74 @@ export const applyCategorizationStatusFilter = (
       || (filter === DisplayState.review && tx.recently_categorized)
       || (filter === DisplayState.categorized && tx.recently_categorized),
   )
+}
+
+type MatchOrCategorizeTransaction = typeof MatchOrCategorizeTransactionRequestSchema.Type
+
+export const buildBulkMatchOrCategorizePayload = (
+  selectedIds: Iterable<string>,
+  transactionCategories: Map<string, BankTransactionCategoryComboBoxOption | null>,
+): Record<string, MatchOrCategorizeTransaction> => {
+  const transactions: Record<string, MatchOrCategorizeTransaction> = {}
+
+  for (const transactionId of selectedIds) {
+    const transactionCategory = transactionCategories.get(transactionId) ?? null
+
+    if (!transactionCategory || isPlaceholderAsOption(transactionCategory)) {
+      continue
+    }
+
+    if (isSuggestedMatchAsOption(transactionCategory)) {
+      transactions[transactionId] = {
+        type: 'match',
+        suggestedMatchId: transactionCategory.value,
+      }
+    }
+
+    else if (isSplitAsOption(transactionCategory)) {
+      const splitEntries = transactionCategory.original
+        .map((split) => {
+          if (!split.category || !isCategoryAsOption(split.category) || !isApiCategorizationAsOption(split.category)) {
+            return null
+          }
+          const classification = split.category.classification
+          if (!classification) {
+            return null
+          }
+          return {
+            amount: split.amount,
+            category: classification,
+            tags: split.tags,
+            customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
+            vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
+          }
+        })
+        .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
+
+      if (splitEntries.length > 0) {
+        transactions[transactionId] = {
+          type: 'categorize',
+          categorization: {
+            type: 'Split',
+            entries: splitEntries,
+          },
+        }
+      }
+    }
+
+    else if (isCategoryAsOption(transactionCategory) || isApiCategorizationAsOption(transactionCategory)) {
+      const classification = transactionCategory.classification
+      if (classification) {
+        transactions[transactionId] = {
+          type: 'categorize',
+          categorization: {
+            type: 'Category',
+            category: classification,
+          },
+        }
+      }
+    }
+  }
+
+  return transactions
 }
