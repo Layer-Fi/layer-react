@@ -150,6 +150,9 @@ export const BankTransactionRow = ({
 
     if (isSuggestedMatchAsOption(selectedCategory)) {
       await matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
+
+      // Remove from bulk selection store
+      deselect(bankTransaction.id)
       setOpen(false)
       return
     }
@@ -165,6 +168,9 @@ export const BankTransactionRow = ({
       type: 'Category',
       category: selectedCategory.classificationEncoded,
     })
+
+    // Remove from bulk selection store
+    deselect(bankTransaction.id)
     setOpen(false)
   }
 

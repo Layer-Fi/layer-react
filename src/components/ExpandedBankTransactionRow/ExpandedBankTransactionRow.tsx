@@ -46,6 +46,7 @@ import { ApiCategorizationAsOption } from '../../types/categorizationOption'
 import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { type Split } from '../../types/bank_transactions'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -134,6 +135,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
     } = useBankTransactionsContext()
+
+    const { deselect } = useBulkSelectionActions()
 
     // Hooks for auto-saving tags and customer/vendor in unsplit state
     const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
@@ -419,6 +422,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
             })),
           }),
       )
+
+      // Remove from bulk selection store
+      deselect(bankTransaction.id)
       close()
     }
 
@@ -436,6 +442,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       }
 
       await matchBankTransaction(bankTransaction.id, foundMatch.id)
+
+      // Remove from bulk selection store
+      deselect(bankTransaction.id)
       close()
     }
 

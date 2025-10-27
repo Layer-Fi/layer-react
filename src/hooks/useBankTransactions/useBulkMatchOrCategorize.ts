@@ -58,7 +58,7 @@ const bulkMatchOrCategorize = post<
       match_source: 'API_CONFIRM_MATCH_FROM_COMPONENT',
     })
 
-    return `/v1/businesses/${businessId}/bank-transactions/bulk-match-or-categorize${parameters}`
+    return `/v1/businesses/${businessId}/bank-transactions/bulk-match-or-categorize?${parameters}`
   },
 )
 
