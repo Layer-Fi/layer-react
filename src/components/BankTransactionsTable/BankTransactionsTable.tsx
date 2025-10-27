@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react'
+import { useMemo, useCallback, useEffect } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types/bank_transactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
@@ -10,6 +10,9 @@ import { BankTransactionsLoader } from '../BankTransactionsLoader/BankTransactio
 import { SyncingComponent } from '../SyncingComponent'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
+import { useBankTransactionsCategoryActions } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { BankTransactionCategoryComboBoxOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
@@ -61,6 +64,7 @@ export const BankTransactionsTable = ({
 }: BankTransactionsTableProps) => {
   const { selectedIds } = useSelectedIds()
   const { selectMultiple, deselectMultiple } = useBulkSelectionActions()
+  const { setOnlyNewTransactionCategories } = useBankTransactionsCategoryActions()
 
   const showReceiptColumn =
     (showReceiptUploads
@@ -100,6 +104,21 @@ export const BankTransactionsTable = ({
     selectMultiple,
     deselectMultiple,
   ])
+
+  useEffect(() => {
+    if (!bankTransactions) return
+
+    const defaultCategories = bankTransactions.map(transaction => ({
+      id: transaction.id,
+      category: getDefaultSelectedCategoryForBankTransaction(transaction),
+    }))
+      .filter((row): row is { id: string, category: BankTransactionCategoryComboBoxOption } =>
+        row.category !== null)
+
+    if (defaultCategories.length > 0) {
+      setOnlyNewTransactionCategories(defaultCategories)
+    }
+  }, [bankTransactions, setOnlyNewTransactionCategories])
 
   return (
     <table
