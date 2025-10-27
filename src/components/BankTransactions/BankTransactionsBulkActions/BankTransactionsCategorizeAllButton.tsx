@@ -28,7 +28,11 @@ export const BankTransactionsCategorizeAllButton = () => {
   }, [])
 
   const handleConfirm = useCallback(async () => {
-    if (!selectedCategory || !isCategoryAsOption(selectedCategory) || !isApiCategorizationAsOption(selectedCategory)) {
+    if (!selectedCategory || selectedCategory.classification === null) {
+      return
+    }
+
+    if (!isCategoryAsOption(selectedCategory) && !isApiCategorizationAsOption(selectedCategory)) {
       return
     }
 
@@ -85,7 +89,7 @@ export const BankTransactionsCategorizeAllButton = () => {
         cancelLabel='Cancel'
         confirmDisabled={!selectedCategory}
         errorText='Failed to categorize transactions'
-        closeOnConfirm={true}
+        closeOnConfirm
       />
     </>
   )
