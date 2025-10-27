@@ -112,9 +112,7 @@ export const BankTransactionsTable = ({
       category: getDefaultSelectedCategoryForBankTransaction(transaction),
     }))
 
-    if (defaultCategories.length > 0) {
-      setOnlyNewTransactionCategories(defaultCategories)
-    }
+    setOnlyNewTransactionCategories(defaultCategories)
   }, [bankTransactions, setOnlyNewTransactionCategories])
 
   return (
