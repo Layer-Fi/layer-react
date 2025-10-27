@@ -15,7 +15,7 @@ export function RuleSuggestionHeader({ ruleSuggestion }: { ruleSuggestion: Updat
   switch (ruleSuggestion.type) {
     case 'Create_Categorization_Rule_For_Counterparty':
       return (
-        <ModalHeading size='lg' pie='2xl' className='Layer__suggested-categorization-rule-updates-header'>
+        <ModalHeading size='sm'>
           Always use this category?
         </ModalHeading>
       )
