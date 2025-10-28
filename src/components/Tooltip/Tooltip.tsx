@@ -13,7 +13,7 @@ import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import classNames from 'classnames'
 import { HStack } from '../ui/Stack/Stack'
 
-export type TooltipCapable = {
+export type TooltipCapableComponentProps = {
   withTooltip?: boolean
   tooltipContentWidth?: 'sm' | 'md'
 }

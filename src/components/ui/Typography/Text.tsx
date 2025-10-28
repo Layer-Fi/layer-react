@@ -8,7 +8,7 @@ import {
   Text as ReactAriaText,
 } from 'react-aria-components'
 import './text.scss'
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipCapable } from '../../Tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipCapableComponentProps } from '../../Tooltip'
 import classNames from 'classnames'
 import { useTruncationDetection } from '../../../hooks/useTruncationDetection/useTruncationDetection'
 
@@ -135,7 +135,7 @@ export const P = forwardRef<HTMLParagraphElement, PropsWithChildren<ParagraphPro
 const SPAN_CLASS_NAME = 'Layer__Span'
 type SpanProps = Pick<ComponentPropsWithoutRef<'span'>, 'id' | 'slot'> & TextRenderingProps
 
-export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapable>>(
+export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapableComponentProps>>(
   function Span(props, forwardedRef) {
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
     const { className, tooltipContentWidth = 'md' } = props
