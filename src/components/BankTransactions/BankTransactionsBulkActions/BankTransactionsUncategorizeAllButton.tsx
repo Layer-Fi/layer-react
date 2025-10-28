@@ -38,7 +38,7 @@ export const BankTransactionsUncategorizeAllButton = () => {
         title='Uncategorize all selected transactions?'
         content={(
           <Span>
-            {`This action will uncategorize ${count} selected ${pluralize('transaction', count)}.`}
+            {`This will uncategorize ${count} selected ${pluralize('transaction', count)}.`}
           </Span>
         )}
         onConfirm={handleConfirm}
