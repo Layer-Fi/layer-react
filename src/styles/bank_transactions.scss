@@ -551,10 +551,6 @@
     transition:
       max-height 350ms ease-out,
       opacity 200ms ease-out;
-
-    .Layer__tooltip-trigger {
-      padding: 0;
-    }
   }
 
   .Layer__bank-transaction-list-item__expanded-row {
@@ -639,10 +635,6 @@
   .Layer__bank-transaction-list-item__body__name {
     flex: 1;
     max-width: calc(100% - 120px);
-
-    .Layer__tooltip-trigger {
-      display: flex;
-    }
 
     .Layer__text {
       white-space: nowrap;
@@ -999,10 +991,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 
-    .Layer__tooltip-trigger {
-      display: flex;
-    }
-
     .Layer__expanded-bank-transaction-row__match-table__desc-tooltip {
       text-overflow: ellipsis;
       overflow: hidden;
@@ -1017,10 +1005,6 @@
   align-items: stretch;
   overflow: hidden;
   cursor: pointer;
-
-  .Layer__tooltip-trigger {
-    padding-top: 0;
-  }
 
   & > div {
     display: flex;

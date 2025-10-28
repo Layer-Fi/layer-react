@@ -10,6 +10,12 @@ import { TooltipContext, useTooltip, useTooltipContext } from './useTooltip'
 import { useMergeRefs, FloatingPortal } from '@floating-ui/react'
 import type { Placement } from '@floating-ui/react'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import classNames from 'classnames'
+
+export type TooltipCapable = {
+  withTooltip?: boolean
+  tooltipContentWidth?: 'sm' | 'md'
+}
 
 export interface TooltipOptions {
   initialOpen?: boolean
@@ -34,9 +40,10 @@ export const Tooltip = ({
   )
 }
 
+export type TooltipTriggerProps = { children: ReactNode } & { asChild?: boolean, wordBreak?: 'break-all' }
 export const TooltipTrigger = forwardRef<
   HTMLElement,
-  HTMLProps<HTMLElement> & { asChild?: boolean, wordBreak?: 'break-all' }
+  TooltipTriggerProps
 >(function TooltipTrigger({ children, asChild = false, wordBreak, ...props }, propRef) {
   const context = useTooltipContext()
   const childrenRef = (isValidElement(children) && 'ref' in children)
@@ -72,7 +79,7 @@ export const TooltipTrigger = forwardRef<
   )
 })
 
-type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'md', wordBreak?: 'break-all' }
+type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'sm' | 'md', wordBreak?: 'break-all' }
 export const TooltipContent = forwardRef<
   HTMLDivElement,
   TooltipContentProps
@@ -88,7 +95,7 @@ export const TooltipContent = forwardRef<
     <FloatingPortal>
       <div
         ref={ref}
-        className={className}
+        className={classNames('Layer__tooltip', className)}
         style={{
           ...context.floatingStyles,
         }}

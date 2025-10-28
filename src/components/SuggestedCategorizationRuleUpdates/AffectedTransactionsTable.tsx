@@ -9,7 +9,7 @@ import type { MinimalBankTransaction } from '../../schemas/bankTransactions/base
 import { BankTransactionDirection } from '../../schemas/bankTransactions/base'
 import { VStack } from '../ui/Stack/Stack'
 import './affectedTransactionsTable.scss'
-import { SpanWithTooltip } from '../ui/Typography/TextWithTooltip'
+import { Span } from '../ui/Typography/Text'
 
 const COMPONENT_NAME = 'AffectedTransactionsTable'
 
@@ -66,7 +66,7 @@ export const AffectedTransactionsTable = ({
       id: TransactionColumns.Description,
       header: 'Description',
       cell: row => (
-        <SpanWithTooltip>{row.counterpartyName || row.description || '-'}</SpanWithTooltip>
+        <Span withTooltip>{row.counterpartyName || row.description || '-'}</Span>
       ),
       isRowHeader: true,
     },

@@ -2,8 +2,4 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(10rem, 12rem));
   min-width: 18.5rem;
-
-  .Layer__tooltip-trigger {
-    padding-top: 0;
-  }
 }

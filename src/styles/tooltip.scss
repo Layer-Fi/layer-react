@@ -4,8 +4,12 @@
   width: max-content;
   max-width: calc(100vw - 10px);
 
+  &[data-width='sm'] {
+    max-width: 15rem;
+  }
+
   &[data-width='md'] {
-    max-width: 256px;
+    max-width: 25rem;
   }
 
   &[data-word-break='break-all'] {
@@ -26,11 +30,18 @@
   display: flex;
   flex: 1;
   max-width: 100%;
-  padding-top: 2px;
 
   .Layer__Span {
     overflow: hidden;
     width: 100%;
     text-overflow: ellipsis;
   }
+}
+
+span.Layer__Span.Layer__Span--with-tooltip {
+  border-radius: var(--border-radius-2xs);
+  background: var(--color-base-1000);
+  font-size: var(--text-sm);
+  color: var(--color-base-300);
+  word-break: break-all;
 }

@@ -29,7 +29,6 @@ import { useSizeClass } from '../../hooks/useWindowSize'
 import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { SpanWithTooltip } from '../ui/Typography/TextWithTooltip'
 
 type Props = {
   index: number
@@ -184,9 +183,11 @@ export const BankTransactionListItem = ({
       </span>
       <span className={`${className}__body`}>
         <span className={`${className}__body__name`}>
-          <SpanWithTooltip>
+          <Span withTooltip>
             {bankTransaction.counterparty_name ?? bankTransaction.description}
-          </SpanWithTooltip>
+            {' '}
+            contentabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+          </Span>
         </span>
         <span
           className={`${className}__amount-${

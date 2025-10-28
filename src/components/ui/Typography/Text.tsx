@@ -8,6 +8,8 @@ import {
   Text as ReactAriaText,
 } from 'react-aria-components'
 import './text.scss'
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipCapable } from '../../Tooltip'
+import classNames from 'classnames'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'
@@ -65,6 +67,11 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
 const HEADER_CLASS_NAME = 'Layer__Header'
 type HeaderProps = Pick<ComponentPropsWithoutRef<'header'>, 'id' | 'slot'> & TextRenderingProps
 
+/**
+ * Header represents a header within a Spectrum container.
+ *
+ * See: https://react-spectrum.adobe.com/react-spectrum/Header.html#header
+ */
 export const Header = forwardRef<HTMLElementTagNameMap['header'], PropsWithChildren<HeaderProps & TextStyleProps>>(
   function Header(props, ref) {
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
@@ -124,11 +131,26 @@ export const P = forwardRef<HTMLParagraphElement, PropsWithChildren<ParagraphPro
 )
 
 const SPAN_CLASS_NAME = 'Layer__Span'
+const SPAN_TOOLTIP_CLASS_NAME = 'Layer__Span--with-tooltip'
 type SpanProps = Pick<ComponentPropsWithoutRef<'span'>, 'id' | 'slot'> & TextRenderingProps
 
-export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps>>(
+export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapable>>(
   function Span(props, ref) {
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
+    const { tooltipContentWidth = 'md' } = props
+
+    if (props.withTooltip) {
+      return (
+        <Tooltip>
+          <TooltipTrigger>
+            <span {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={ref}>{children}</span>
+          </TooltipTrigger>
+          <TooltipContent width={tooltipContentWidth}>
+            <span {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, SPAN_TOOLTIP_CLASS_NAME)}>{children}</span>
+          </TooltipContent>
+        </Tooltip>
+      )
+    }
 
     if (renderingProps.nonAria) {
       return (
