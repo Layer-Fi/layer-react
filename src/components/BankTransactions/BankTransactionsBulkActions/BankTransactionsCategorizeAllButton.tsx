@@ -7,11 +7,15 @@ import { useCountSelectedIds, useSelectedIds, useBulkSelectionActions } from '..
 import { BankTransactionCategoryComboBox } from '../../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { isApiCategorizationAsOption, isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { useBulkCategorize } from '../../../hooks/useBankTransactions/useBulkCategorize'
+import pluralize from 'pluralize'
 
-type CategorizeMode = 'categorize' | 'recategorize'
+export enum CategorizationMode {
+  Categorize = 'Categorize',
+  Recategorize = 'Recategorize',
+}
 
 interface BankTransactionsCategorizeAllButtonProps {
-  mode: CategorizeMode
+  mode: CategorizationMode
 }
 
 export const BankTransactionsCategorizeAllButton = ({ mode }: BankTransactionsCategorizeAllButtonProps) => {
@@ -66,12 +70,12 @@ export const BankTransactionsCategorizeAllButton = ({ mode }: BankTransactionsCa
         variant='outlined'
         onClick={handleCategorizeAllClick}
       >
-        {mode === 'categorize' ? 'Set category' : 'Re-categorize all'}
+        {mode === CategorizationMode.Categorize ? 'Set category' : 'Recategorize all'}
       </Button>
       <BaseConfirmationModal
         isOpen={isCategorizeAllModalOpen}
         onOpenChange={handleCategorizeModalClose}
-        title={mode === 'categorize' ? 'Categorize all selected transactions?' : 'Recategorize all selected transactions?'}
+        title={mode === CategorizationMode.Categorize ? 'Categorize all selected transactions?' : 'Recategorize all selected transactions?'}
         content={(
           <VStack gap='xs'>
             <VStack gap='3xs'>
@@ -85,16 +89,19 @@ export const BankTransactionsCategorizeAllButton = ({ mode }: BankTransactionsCa
             </VStack>
             {selectedCategory && isCategoryAsOption(selectedCategory) && (
               <Span>
-                {`This action will ${mode === 'categorize' ? 'categorize' : 'recategorize'} ${count} selected transactions as ${selectedCategory.original.displayName}.`}
+
+                {mode === CategorizationMode.Categorize
+                  ? `This action will categorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`
+                  : `This action will recategorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`}
               </Span>
             )}
           </VStack>
         )}
         onConfirm={handleConfirm}
-        confirmLabel={mode === 'categorize' ? 'Categorize All' : 'Recategorize All'}
+        confirmLabel={mode === CategorizationMode.Categorize ? 'Categorize All' : 'Recategorize All'}
         cancelLabel='Cancel'
         confirmDisabled={!selectedCategory}
-        errorText={mode === 'categorize' ? 'Failed to categorize transactions' : 'Failed to recategorize transactions'}
+        errorText={mode === CategorizationMode.Categorize ? 'Failed to categorize transactions' : 'Failed to recategorize transactions'}
         closeOnConfirm
       />
     </>
