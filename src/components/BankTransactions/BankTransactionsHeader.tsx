@@ -28,6 +28,7 @@ import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
 import { useCountSelectedIds } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BulkActionsModule } from '../BulkActionsModule/BulkActionsModule'
 import { BankTransactionsBulkActions } from './BankTransactionsBulkActions/BankTransactionsBulkActions'
+import { BankTransactionsBulkActionsDropdown } from './BankTransactionsBulkActions/BankTransactionsBulkActionsDropdown'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -223,7 +224,9 @@ export const BankTransactionsHeader = ({
           ? (
             <BulkActionsModule
               slots={{ BulkActions: () => (
-                <BankTransactionsBulkActions />
+                listView
+                  ? <BankTransactionsBulkActionsDropdown />
+                  : <BankTransactionsBulkActions />
               ) }}
             />
           )
