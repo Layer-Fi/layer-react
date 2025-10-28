@@ -418,6 +418,7 @@ const BankTransactionsTableView = ({
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
+              _showBulkSelection={_showBulkSelection}
             />
           </div>
         )
