@@ -29,19 +29,22 @@
 .Layer__tooltip-trigger {
   display: flex;
   flex: 1;
-  max-width: 100%;
+  overflow: hidden;
+}
 
-  .Layer__Span {
-    overflow: hidden;
-    width: 100%;
-    text-overflow: ellipsis;
-  }
+.Layer__tooltip-trigger > .Layer__Span {
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis;
 }
 
 span.Layer__Span.Layer__Span--with-tooltip {
+  display: block;
+  width: 100%;
   border-radius: var(--border-radius-2xs);
   background: var(--color-base-1000);
   font-size: var(--text-sm);
   color: var(--color-base-300);
   word-break: break-all;
+  white-space: normal;
 }

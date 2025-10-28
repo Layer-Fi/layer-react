@@ -29,6 +29,7 @@ import { useSizeClass } from '../../hooks/useWindowSize'
 import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { HStack } from '../ui/Stack/Stack'
 
 type Props = {
   index: number
@@ -145,8 +146,8 @@ export const BankTransactionListItem = ({
 
   return (
     <li className={rowClassName}>
-      <span className={`${className}__heading`}>
-        <div className={`${className}__heading__main`}>
+      <HStack className={`${className}__heading`}>
+        <HStack className={`${className}__heading__main`}>
           <span>
             {formatTime(parseISO(bankTransaction.date), dateFormat)}
           </span>
@@ -166,7 +167,7 @@ export const BankTransactionListItem = ({
 
           {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
 
-        </div>
+        </HStack>
         <div
           onClick={toggleOpen}
           className={classNames(
@@ -180,21 +181,21 @@ export const BankTransactionListItem = ({
             }`}
           />
         </div>
-      </span>
-      <span className={`${className}__body`}>
-        <span className={`${className}__body__name`}>
-          <Span withTooltip>
-            {bankTransaction.counterparty_name ?? bankTransaction.description}
-          </Span>
-        </span>
-        <span
+      </HStack>
+      <HStack className={`${className}__body`}>
+        <Span withTooltip className={`${className}__body__name`}>
+          {bankTransaction.counterparty_name ?? bankTransaction.description}
+          {' '}
+          contentabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+        </Span>
+        <HStack
           className={`${className}__amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
         >
           <MoneySpan amount={bankTransaction.amount} displayPlusSign={isCredit(bankTransaction)} />
-        </span>
-      </span>
+        </HStack>
+      </HStack>
       {!categorizationEnabled && !categorized
         ? (
           <span className={`${className}__processing-info`}>

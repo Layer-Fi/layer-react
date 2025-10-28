@@ -11,6 +11,7 @@ import { useMergeRefs, FloatingPortal } from '@floating-ui/react'
 import type { Placement } from '@floating-ui/react'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import classNames from 'classnames'
+import { HStack } from '../ui/Stack/Stack'
 
 export type TooltipCapable = {
   withTooltip?: boolean
@@ -66,7 +67,7 @@ export const TooltipTrigger = forwardRef<
   }
 
   return (
-    <span
+    <HStack
       ref={ref}
       data-state={context.open ? 'open' : 'closed'}
       className={classNames('Layer__input-tooltip', 'Layer__tooltip-trigger', `Layer__tooltip-trigger--${
@@ -75,7 +76,7 @@ export const TooltipTrigger = forwardRef<
       {...context.getReferenceProps(props)}
     >
       {children}
-    </span>
+    </HStack>
   )
 })
 

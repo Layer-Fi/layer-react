@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useRef, useCallback } from 'react'
 import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import type { Spacing } from '../sharedUITypes'
@@ -10,6 +10,7 @@ import {
 import './text.scss'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipCapable } from '../../Tooltip'
 import classNames from 'classnames'
+import { useTruncationDetection } from '../../../hooks/useTruncationDetection/useTruncationDetection'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'
@@ -22,6 +23,7 @@ export type TextStyleProps = {
   status?: 'error'
   variant?: 'placeholder' | 'subtle' | 'inherit'
   weight?: 'normal' | 'bold'
+  className?: string
 }
 
 type TextRenderingProps = {
@@ -134,15 +136,37 @@ const SPAN_CLASS_NAME = 'Layer__Span'
 type SpanProps = Pick<ComponentPropsWithoutRef<'span'>, 'id' | 'slot'> & TextRenderingProps
 
 export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapable>>(
-  function Span(props, ref) {
+  function Span(props, forwardedRef) {
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
-    const { tooltipContentWidth = 'md' } = props
+    const { className, tooltipContentWidth = 'md' } = props
 
-    if (props.withTooltip) {
+    // Create an internal ref for truncation detection
+    const internalRef = useRef<HTMLSpanElement>(null)
+    const isTruncated = useTruncationDetection(internalRef)
+
+    // Merge internal and forwarded refs
+    const mergedRef = useCallback(
+      (node: HTMLSpanElement | null) => {
+        // Update internal ref
+        ;(internalRef as React.MutableRefObject<HTMLSpanElement | null>).current = node
+
+        // Update forwarded ref
+        if (typeof forwardedRef === 'function') {
+          forwardedRef(node)
+        }
+        else if (forwardedRef) {
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          ;(forwardedRef as React.MutableRefObject<HTMLSpanElement | null>).current = node
+        }
+      },
+      [forwardedRef],
+    )
+
+    if (props.withTooltip && isTruncated) {
       return (
         <Tooltip>
           <TooltipTrigger>
-            <span {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={ref}>{children}</span>
+            <span {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, className)} ref={mergedRef}>{children}</span>
           </TooltipTrigger>
           <TooltipContent width={tooltipContentWidth}>
             <span {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, 'Layer__Span--with-tooltip')}>{children}</span>
@@ -153,14 +177,14 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
 
     if (renderingProps.nonAria) {
       return (
-        <span {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={ref}>
+        <span {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={mergedRef}>
           {children}
         </span>
       )
     }
 
     return (
-      <ReactAriaText {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={ref}>
+      <ReactAriaText {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={mergedRef}>
         {children}
       </ReactAriaText>
     )
