@@ -268,15 +268,6 @@ Date filter mode determines pagination:
 - **Monthly view**: Infinite scroll with intersection observer
 - **Standard view**: Traditional page-based pagination
 
-### Debounced Cache Invalidation
-
-Prevents excessive revalidation during bulk operations:
-
-```typescript
-// 1s debounce, 3s max wait
-const debouncedInvalidate = debounce(invalidate, 1000, { maxWait: 3000 })
-```
-
 ## Key Entry Points
 
 - **Main export**: [src/index.tsx](src/index.tsx)
