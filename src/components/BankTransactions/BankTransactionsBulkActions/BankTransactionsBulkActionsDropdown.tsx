@@ -8,6 +8,7 @@ import { BankTransactionsUncategorizeAllModal } from './BankTransactionsUncatego
 import { CategorizationMode } from './BankTransactionsCategorizeAllButton'
 import { useBankTransactionsContext } from '../../../contexts/BankTransactionsContext'
 import { DisplayState } from '../../../types/bank_transactions'
+import { HStack } from '../../ui/Stack/Stack'
 
 export const BankTransactionsBulkActionsDropdown = () => {
   const { display } = useBankTransactionsContext()
@@ -16,13 +17,13 @@ export const BankTransactionsBulkActionsDropdown = () => {
   const [uncategorizeModalOpen, setUncategorizeModalOpen] = useState(false)
 
   const MenuTriggerButton = () => (
-    <Button variant='outlined'>
+    <Button variant='solid'>
       Bulk Actions
     </Button>
   )
 
   return (
-    <>
+    <HStack pis='md' align='center'>
       <DropdownMenu
         ariaLabel='Bulk actions'
         slots={{ Trigger: MenuTriggerButton }}
@@ -68,6 +69,6 @@ export const BankTransactionsBulkActionsDropdown = () => {
         isOpen={uncategorizeModalOpen}
         onOpenChange={setUncategorizeModalOpen}
       />
-    </>
+    </HStack>
   )
 }
