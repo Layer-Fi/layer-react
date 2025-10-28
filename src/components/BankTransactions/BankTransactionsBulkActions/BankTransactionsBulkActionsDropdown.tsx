@@ -9,6 +9,8 @@ import { CategorizationMode } from './BankTransactionsCategorizeAllButton'
 import { useBankTransactionsContext } from '../../../contexts/BankTransactionsContext'
 import { DisplayState } from '../../../types/bank_transactions'
 import { HStack } from '../../ui/Stack/Stack'
+import { ChevronDown } from 'lucide-react'
+import './BankTransactionsBulkActionsDropdown.scss'
 
 export const BankTransactionsBulkActionsDropdown = () => {
   const { display } = useBankTransactionsContext()
@@ -18,7 +20,14 @@ export const BankTransactionsBulkActionsDropdown = () => {
 
   const MenuTriggerButton = () => (
     <Button variant='solid'>
-      Bulk Actions
+      <HStack
+        gap='md'
+        align='center'
+        className='Layer__bank-transactions__bulk-actions-dropdown'
+      >
+        <Span size='md'>Bulk Actions</Span>
+        <ChevronDown size={16} />
+      </HStack>
     </Button>
   )
 
@@ -28,7 +37,7 @@ export const BankTransactionsBulkActionsDropdown = () => {
         ariaLabel='Bulk actions'
         slots={{ Trigger: MenuTriggerButton }}
         slotProps={{
-          Dialog: { width: '16rem' },
+          Dialog: { width: '8rem' },
         }}
       >
         <MenuList>
