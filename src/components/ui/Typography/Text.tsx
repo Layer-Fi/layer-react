@@ -142,7 +142,7 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
 
     // Create an internal ref for truncation detection
     const internalRef = useRef<HTMLSpanElement>(null)
-    const isTruncated = useTruncationDetection(internalRef)
+    const isTruncated = useTruncationDetection(internalRef, { checkFirstChild: true })
 
     // Merge internal and forwarded refs
     const mergedRef = useCallback(
@@ -162,14 +162,15 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
       [forwardedRef],
     )
 
-    if (props.withTooltip && isTruncated) {
+    if (props.withTooltip) {
+      const dataPropertiesWithEllipsis = { ...dataProperties, ellipsis: true }
       return (
-        <Tooltip>
+        <Tooltip disabled={!isTruncated}>
           <TooltipTrigger>
-            <span {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, className)} ref={mergedRef}>{children}</span>
+            <span {...restProps} {...dataPropertiesWithEllipsis} className={classNames(SPAN_CLASS_NAME, className)} ref={mergedRef}>{children}</span>
           </TooltipTrigger>
           <TooltipContent width={tooltipContentWidth}>
-            <span {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, 'Layer__Span--with-tooltip')}>{children}</span>
+            <span {...restProps} {...dataPropertiesWithEllipsis} className={classNames(SPAN_CLASS_NAME, 'Layer__Span--with-tooltip')}>{children}</span>
           </TooltipContent>
         </Tooltip>
       )

@@ -144,6 +144,8 @@ export const BankTransactionListItem = ({
     isVisible ? 'show' : '',
   )
 
+  const description = bankTransaction.counterparty_name ?? bankTransaction.description
+
   return (
     <li className={rowClassName}>
       <HStack className={`${className}__heading`}>
@@ -184,9 +186,7 @@ export const BankTransactionListItem = ({
       </HStack>
       <HStack className={`${className}__body`}>
         <Span withTooltip className={`${className}__body__name`}>
-          {bankTransaction.counterparty_name ?? bankTransaction.description}
-          {' '}
-          contentabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+          {description}
         </Span>
         <HStack
           className={`${className}__amount-${

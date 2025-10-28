@@ -33,15 +33,13 @@ export function useTruncationDetection(
       return
     }
 
-    // Check for horizontal overflow (handles text-overflow: ellipsis)
-    // Use Math.ceil to account for sub-pixel rounding differences
     const scrollWidth = element.scrollWidth
-    const clientWidth = element.clientWidth
+    const offsetWidth = element.offsetWidth
     const scrollHeight = element.scrollHeight
-    const clientHeight = element.clientHeight
+    const offsetHeight = element.offsetHeight
 
-    const isHorizontallyOverflowing = Math.ceil(scrollWidth) > Math.ceil(clientWidth)
-    const isVerticallyOverflowing = Math.ceil(scrollHeight) > Math.ceil(clientHeight)
+    const isHorizontallyOverflowing = Math.ceil(scrollWidth) > Math.ceil(offsetWidth)
+    const isVerticallyOverflowing = Math.ceil(scrollHeight) > Math.ceil(offsetHeight)
 
     const isOverflowing = isHorizontallyOverflowing || isVerticallyOverflowing
 
@@ -49,14 +47,13 @@ export function useTruncationDetection(
   // eslint-disable-next-line react-hooks/exhaustive-deps -- We need to re-check the truncation when the children change
   }, [elementRef, checkFirstChild, ...dependencies])
 
-  // Create a debounced version of checkTruncation for resize events
+  const DEBOUNCE_TIME_IN_MS = 450
   const debouncedCheckTruncation = useMemo(
-    () => debounce(checkTruncation, 450),
+    () => debounce(checkTruncation, DEBOUNCE_TIME_IN_MS),
     [checkTruncation],
   )
 
   useEffect(() => {
-    // Use requestAnimationFrame to ensure the check happens after styles are applied
     const timeoutId = setTimeout(() => {
       requestAnimationFrame(() => {
         checkTruncation()
