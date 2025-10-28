@@ -21,10 +21,10 @@ export const Textarea = ({
 
   return (
     <Tooltip disabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+      <TooltipTrigger>
         <textarea {...props} className={baseClassName} />
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }

@@ -49,7 +49,7 @@ export const Tab = ({
             </span>
           </label>
         </TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>
+        <TooltipContent>
           {disabledMessage}
         </TooltipContent>
       </Tooltip>

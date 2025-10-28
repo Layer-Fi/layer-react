@@ -45,7 +45,7 @@ export const DatePicker = ({
       <TooltipTrigger>
         <FieldError><TriangleAlert size={18} /></FieldError>
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip' width='md'>
+      <TooltipContent width='md'>
         {errorText}
       </TooltipContent>
     </Tooltip>

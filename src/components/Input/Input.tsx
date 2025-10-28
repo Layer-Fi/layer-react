@@ -24,11 +24,11 @@ export const Input = ({
 
   return (
     <Tooltip disabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+      <TooltipTrigger>
         <input {...props} className={baseClassName} />
         {leftText && <span className='Layer__input-left-text'>{leftText}</span>}
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }

@@ -208,7 +208,7 @@ const ToggleOption = ({
             </span>
           </label>
         </TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>
+        <TooltipContent>
           {disabledMessage}
         </TooltipContent>
       </Tooltip>

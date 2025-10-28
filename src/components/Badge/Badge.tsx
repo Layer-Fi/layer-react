@@ -73,7 +73,7 @@ export const Badge = ({
     return (
       <Tooltip offset={12}>
         <TooltipTrigger>{content}</TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>{tooltip}</TooltipContent>
+        <TooltipContent>{tooltip}</TooltipContent>
       </Tooltip>
     )
   }

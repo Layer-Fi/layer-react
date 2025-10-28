@@ -54,7 +54,7 @@ export const CreatableSelect = <T,>({
 
   return (
     <Tooltip disabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+      <TooltipTrigger>
         <BaseCreatableSelect<T>
           inputId={inputId}
           name={name}
@@ -78,7 +78,7 @@ export const CreatableSelect = <T,>({
           createOptionPosition={createOptionPosition}
         />
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }

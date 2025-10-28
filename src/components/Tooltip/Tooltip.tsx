@@ -69,9 +69,9 @@ export const TooltipTrigger = forwardRef<
     <span
       ref={ref}
       data-state={context.open ? 'open' : 'closed'}
-      className={`Layer__tooltip-trigger Layer__tooltip-trigger--${
+      className={classNames('Layer__input-tooltip', 'Layer__tooltip-trigger', `Layer__tooltip-trigger--${
         context.open ? 'open' : 'closed'
-      }`}
+      }`)}
       {...context.getReferenceProps(props)}
     >
       {children}

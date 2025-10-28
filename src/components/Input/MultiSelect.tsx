@@ -58,7 +58,7 @@ export const MultiSelect = <T,>({
 
   return (
     <Tooltip disabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+      <TooltipTrigger>
         <ReactSelect<T, true>
           inputId={inputId}
           name={name}
@@ -80,7 +80,7 @@ export const MultiSelect = <T,>({
           isMulti={true}
         />
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }

@@ -65,7 +65,7 @@ export const AmountInput = ({
 
   return (
     <Tooltip disabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+      <TooltipTrigger>
         {badge
           ? (
             <div className='Layer__input-with-badge'>
@@ -76,7 +76,7 @@ export const AmountInput = ({
           : currencyInput}
         {leftText && <span className='Layer__input-left-text'>{leftText}</span>}
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }

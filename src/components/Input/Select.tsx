@@ -55,7 +55,7 @@ export const Select = <T,>({
 
   return (
     <Tooltip disabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+      <TooltipTrigger>
         <ReactSelect<T>
           inputId={inputId}
           name={name}
@@ -73,7 +73,7 @@ export const Select = <T,>({
           isDisabled={disabled}
         />
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }
