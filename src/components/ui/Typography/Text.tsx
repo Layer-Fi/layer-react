@@ -140,17 +140,13 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
     const { className, tooltipContentWidth = 'md' } = props
 
-    // Create an internal ref for truncation detection
     const internalRef = useRef<HTMLSpanElement>(null)
     const isTruncated = useTruncationDetection(internalRef, { checkFirstChild: true })
 
-    // Merge internal and forwarded refs
     const mergedRef = useCallback(
       (node: HTMLSpanElement | null) => {
-        // Update internal ref
         ;(internalRef as React.MutableRefObject<HTMLSpanElement | null>).current = node
 
-        // Update forwarded ref
         if (typeof forwardedRef === 'function') {
           forwardedRef(node)
         }
@@ -170,7 +166,7 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
             <span {...restProps} {...dataPropertiesWithEllipsis} className={classNames(SPAN_CLASS_NAME, className)} ref={mergedRef}>{children}</span>
           </TooltipTrigger>
           <TooltipContent width={tooltipContentWidth}>
-            <span {...restProps} {...dataPropertiesWithEllipsis} className={classNames(SPAN_CLASS_NAME, 'Layer__Span--with-tooltip')}>{children}</span>
+            <span {...restProps} {...dataPropertiesWithEllipsis} className={classNames(SPAN_CLASS_NAME, 'Layer__tooltip-content__span')}>{children}</span>
           </TooltipContent>
         </Tooltip>
       )
