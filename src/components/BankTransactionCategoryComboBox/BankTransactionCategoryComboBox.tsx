@@ -162,7 +162,7 @@ export const BankTransactionCategoryComboBox = ({
   [allCategoriesGroup, categoryGroups, matchGroup, suggestedGroup])
 
   const numMatchOptions = matchGroup?.options.length || 0
-  const loadingSuggestions = bankTransaction && numMatchOptions === 0 && isLoadingSuggestions(bankTransaction)
+  const loadingSuggestions = bankTransaction && isLoadingSuggestions(bankTransaction) && selectedValue === null
 
   const placeholder = numMatchOptions > 1
     ? `${numMatchOptions} possible matches...`

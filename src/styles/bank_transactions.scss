@@ -485,7 +485,7 @@
   align-items: start;
   min-width: 40rem;
 
-  .Layer__BankTransactionCategoryComboBox {
+  .Layer__BankTransactionCategoryComboBox__Container {
     grid-area: category;
     max-width: 24.5rem;
   }
@@ -519,9 +519,7 @@
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry__tags {
-  display: flex;
   grid-area: tags;
-  column-gap: var(--spacing-xs);
 }
 
 .Layer__bank-transactions__list {

@@ -2,6 +2,7 @@ import { TagDimensionCombobox } from './TagDimensionCombobox'
 import { Tag } from '../tagSchemas'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import './tagDimensionsGroup.scss'
+import { HStack } from '../../../components/ui/Stack/Stack'
 
 const TAG_DIMENSIONS_GROUP_CSS_PREFIX = 'Layer__TagDimensionsGroup'
 
@@ -11,6 +12,7 @@ export interface TagDimensionsGroupProps {
   showLabels?: boolean
   isReadOnly?: boolean
   isEnabled?: boolean
+  className?: string
 }
 
 export const TagDimensionsGroup = ({
@@ -19,6 +21,7 @@ export const TagDimensionsGroup = ({
   showLabels = false,
   isReadOnly = false,
   isEnabled = true,
+  className,
 }: TagDimensionsGroupProps) => {
   const { accountingConfiguration } = useLayerContext()
 
@@ -38,12 +41,12 @@ export const TagDimensionsGroup = ({
     ) ?? null
   }
 
-  if (!isEnabled) {
+  if (!isEnabled || accountingConfiguration?.platformDisplayTags.length === 0) {
     return null
   }
 
   return (
-    <>
+    <HStack gap='xs' className={className}>
       {(accountingConfiguration?.platformDisplayTags ?? []).map(dimension => (
         <TagDimensionCombobox
           key={dimension.key}
@@ -55,6 +58,6 @@ export const TagDimensionsGroup = ({
           className={`${TAG_DIMENSIONS_GROUP_CSS_PREFIX}__TagComboBox`}
         />
       ))}
-    </>
+    </HStack>
   )
 }

@@ -362,7 +362,7 @@ export function ComboBox<T extends ComboBoxOption>({
   const CustomDropdownIndicatorRef = useRef(buildCustomDropdownIndicator())
 
   return (
-    <VStack gap='3xs' fluid>
+    <VStack gap='3xs' fluid className={className ? `${className}__Container` : undefined}>
       <Select
         inputId={effectiveInputId}
         {...ariaProps}
