@@ -14,9 +14,6 @@ export abstract class BaseComboBoxOption<T> {
   /** Returns the original wrapped value */
   abstract get original(): T
 
-  /** Returns the option type discriminator */
-  abstract get type(): string
-
   /** Returns the display label for the option */
   abstract get label(): string
 

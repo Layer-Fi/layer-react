@@ -564,14 +564,13 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               includeSuggestedMatches={false}
                             />
                             {showTags && (
-                              <div className={`${className}__table-cell--split-entry__tags`}>
-                                <TagDimensionsGroup
-                                  value={split.tags}
-                                  onChange={tags => changeTags(index, tags)}
-                                  showLabels={false}
-                                  isReadOnly={!categorizationEnabled}
-                                />
-                              </div>
+                              <TagDimensionsGroup
+                                value={split.tags}
+                                onChange={tags => changeTags(index, tags)}
+                                showLabels={false}
+                                isReadOnly={!categorizationEnabled}
+                                className={`${className}__table-cell--split-entry__tags`}
+                              />
                             )}
                             {showCustomerVendor && (
                               <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__customer'>
