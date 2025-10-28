@@ -140,19 +140,18 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
     const { className, tooltipContentWidth = 'md' } = props
 
-    const internalRef = useRef<HTMLSpanElement>(null)
+    const internalRef = useRef<HTMLSpanElement | null>(null)
     const isTruncated = useTruncationDetection(internalRef, { checkFirstChild: true })
 
     const mergedRef = useCallback(
       (node: HTMLSpanElement | null) => {
-        ;(internalRef as React.MutableRefObject<HTMLSpanElement | null>).current = node
+        internalRef.current = node
 
         if (typeof forwardedRef === 'function') {
           forwardedRef(node)
         }
         else if (forwardedRef) {
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-          ;(forwardedRef as React.MutableRefObject<HTMLSpanElement | null>).current = node
+          forwardedRef.current = node
         }
       },
       [forwardedRef],

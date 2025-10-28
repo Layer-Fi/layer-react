@@ -1,5 +1,6 @@
 import { useEffect, useState, RefObject, useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
+import useResizeObserver from '@react-hook/resize-observer'
 
 export interface UseTruncationDetectionOptions {
   dependencies?: unknown[]
@@ -53,21 +54,28 @@ export function useTruncationDetection(
     [checkTruncation],
   )
 
+  useResizeObserver(elementRef, debouncedCheckTruncation)
+
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      requestAnimationFrame(() => {
-        checkTruncation()
-      })
-    }, 0)
+    const id = requestAnimationFrame(() => checkTruncation())
+    return () => cancelAnimationFrame(id)
+  }, [checkTruncation])
 
-    window.addEventListener('resize', debouncedCheckTruncation)
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(() => {
+  //     requestAnimationFrame(() => {
+  //       checkTruncation()
+  //     })
+  //   }, 0)
 
-    return () => {
-      clearTimeout(timeoutId)
-      window.removeEventListener('resize', debouncedCheckTruncation)
-      debouncedCheckTruncation.cancel()
-    }
-  }, [elementRef, checkFirstChild, checkTruncation, debouncedCheckTruncation])
+  //   window.addEventListener('resize', debouncedCheckTruncation)
+
+  //   return () => {
+  //     clearTimeout(timeoutId)
+  //     window.removeEventListener('resize', debouncedCheckTruncation)
+  //     debouncedCheckTruncation.cancel()
+  //   }
+  // }, [elementRef, checkFirstChild, checkTruncation, debouncedCheckTruncation])
 
   return isTruncated
 }
