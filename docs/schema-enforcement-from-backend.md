@@ -1,7 +1,7 @@
-## How Schema (Effect) is Used in Your Codebase
+# Schema (Effect) Docs
 
-Based on the code review, here's the pattern your codebase follows:
-
+- This is an example of a well-written API Schema file: `useVoidInvoice.tsx`
+  
 ### 1. **Define Schemas for Backend Data Structures**
 
 Create schema files in `/src/schemas/` that match your backend API responses:
