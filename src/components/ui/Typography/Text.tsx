@@ -131,7 +131,6 @@ export const P = forwardRef<HTMLParagraphElement, PropsWithChildren<ParagraphPro
 )
 
 const SPAN_CLASS_NAME = 'Layer__Span'
-const SPAN_TOOLTIP_CLASS_NAME = 'Layer__Span--with-tooltip'
 type SpanProps = Pick<ComponentPropsWithoutRef<'span'>, 'id' | 'slot'> & TextRenderingProps
 
 export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapable>>(
@@ -146,7 +145,7 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
             <span {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={ref}>{children}</span>
           </TooltipTrigger>
           <TooltipContent width={tooltipContentWidth}>
-            <span {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, SPAN_TOOLTIP_CLASS_NAME)}>{children}</span>
+            <span {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, 'Layer__Span--with-tooltip')}>{children}</span>
           </TooltipContent>
         </Tooltip>
       )
