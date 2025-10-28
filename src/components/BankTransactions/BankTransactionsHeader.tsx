@@ -1,6 +1,7 @@
-import { ChangeEvent, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { DisplayState, type DateRange } from '../../types'
+import type { DateRange } from '../../types/general'
+import { DisplayState } from '../../types/bank_transactions'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { ButtonVariant, DownloadButton as DownloadButtonComponent } from '../Button'
 import { Header } from '../Container'
@@ -16,20 +17,23 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import { useBankTransactionsFiltersContext } from '../../contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import { SearchField } from '../SearchField/SearchField'
-import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
+import { BankTransactionsActions } from '../BankTransactionsActions/BankTransactionsActions'
 import { HStack } from '../ui/Stack/Stack'
 import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
+import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
+import { useCountSelectedIds } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { BulkActionsModule } from '../BulkActionsModule/BulkActionsModule'
+import { BankTransactionsBulkActions } from './BankTransactionsBulkActions/BankTransactionsBulkActions'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
   asWidget?: boolean
   categorizedOnly?: boolean
   categorizeView?: boolean
-  onCategorizationDisplayChange: (event: ChangeEvent<HTMLInputElement>) => void
   mobileComponent?: MobileComponentType
   listView?: boolean
   isDataLoading?: boolean
@@ -38,6 +42,8 @@ export interface BankTransactionsHeaderProps {
   withUploadMenu?: boolean
   showStatusToggle?: boolean
   collapseHeader?: boolean
+  _showCategorizationRules?: boolean
+  _showBulkSelection?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -47,9 +53,10 @@ export interface BankTransactionsHeaderStringOverrides {
 
 type TransactionsSearchProps = {
   slot?: string
+  isDisabled?: boolean
 }
 
-function TransactionsSearch({ slot }: TransactionsSearchProps) {
+function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   const { filters, setFilters } = useBankTransactionsFiltersContext()
 
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
@@ -70,6 +77,7 @@ function TransactionsSearch({ slot }: TransactionsSearchProps) {
       label='Search transactions'
       value={localSearch}
       onChange={handleSearch}
+      isDisabled={isDisabled}
     />
   )
 }
@@ -77,9 +85,11 @@ function TransactionsSearch({ slot }: TransactionsSearchProps) {
 const DownloadButton = ({
   downloadButtonTextOverride,
   iconOnly,
+  disabled,
 }: {
   downloadButtonTextOverride?: string
   iconOnly?: boolean
+  disabled?: boolean
 }) => {
   const { filters } = useBankTransactionsFiltersContext()
 
@@ -105,6 +115,7 @@ const DownloadButton = ({
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
         text={downloadButtonTextOverride ?? 'Download'}
+        disabled={disabled}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>
@@ -116,7 +127,6 @@ export const BankTransactionsHeader = ({
   asWidget,
   categorizedOnly,
   categorizeView = true,
-  onCategorizationDisplayChange,
   mobileComponent,
   listView,
   stringOverrides,
@@ -124,6 +134,8 @@ export const BankTransactionsHeader = ({
   withUploadMenu,
   showStatusToggle,
   collapseHeader,
+  _showCategorizationRules = false,
+  _showBulkSelection = false,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
   const { display } = useBankTransactionsContext()
@@ -138,6 +150,10 @@ export const BankTransactionsHeader = ({
   const setDateRange = useCallback((newRange: DateRange) => {
     setFilters({ dateRange: newRange })
   }, [setFilters])
+
+  const { count } = useCountSelectedIds()
+
+  const showBulkActions = _showBulkSelection && count > 0
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
@@ -176,6 +192,19 @@ export const BankTransactionsHeader = ({
     </div>
   ), [asWidget, business, dateRange, isSyncing, listView, setDateRange, stringOverrides?.header, withDatePicker])
 
+  const onCategorizationDisplayChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFilters({
+      categorizationStatus:
+        event.target.value === 'categorized' // see DisplayState enum
+          ? DisplayState.categorized
+          : event.target.value === 'all' // see DisplayState enum
+            ? DisplayState.all
+            : DisplayState.review,
+    })
+  }
+
   return (
     <Header
       className={classNames(
@@ -188,35 +217,49 @@ export const BankTransactionsHeader = ({
       style={{ top: shiftStickyHeader }}
     >
       {!collapseHeader && headerTopRow}
-      <TransactionsActions>
-        <HStack slot='toggle' justify='center' gap='xs'>
-          {collapseHeader && headerTopRow}
-          {!categorizedOnly && categorizeView && showStatusToggle && (
-            <Toggle
-              name='bank-transaction-display'
-              size={
-                mobileComponent === 'mobileList'
-                  ? ToggleSize.small
-                  : ToggleSize.medium
-              }
-              options={[
-                { label: 'To Review', value: DisplayState.review },
-                { label: 'Categorized', value: DisplayState.categorized },
-              ]}
-              selected={display}
-              onChange={onCategorizationDisplayChange}
+
+      <BankTransactionsActions>
+        {showBulkActions
+          ? (
+            <BulkActionsModule
+              slots={{ BulkActions: () => (
+                <BankTransactionsBulkActions />
+              ) }}
             />
+          )
+          : (
+            <HStack slot='toggle' justify='center' gap='xs'>
+              {collapseHeader && headerTopRow}
+              {!categorizedOnly && categorizeView && showStatusToggle && (
+                <Toggle
+                  name='bank-transaction-display'
+                  size={
+                    mobileComponent === 'mobileList'
+                      ? ToggleSize.small
+                      : ToggleSize.medium
+                  }
+                  options={[
+                    { label: 'To Review', value: DisplayState.review },
+                    { label: 'Categorized', value: DisplayState.categorized },
+                  ]}
+                  selected={display}
+                  onChange={onCategorizationDisplayChange}
+                />
+              )}
+            </HStack>
           )}
-        </HStack>
-        <TransactionsSearch slot='search' />
+        <TransactionsSearch slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
           <DownloadButton
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={listView}
+            disabled={showBulkActions}
           />
-          {withUploadMenu && <BankTransactionsUploadMenu />}
+          {_showCategorizationRules
+            ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} isDisabled={showBulkActions} />
+            : withUploadMenu && <BankTransactionsUploadMenu isDisabled={showBulkActions} />}
         </HStack>
-      </TransactionsActions>
+      </BankTransactionsActions>
     </Header>
   )
 }

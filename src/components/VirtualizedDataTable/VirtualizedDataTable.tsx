@@ -13,6 +13,7 @@ import { Loader } from '../Loader/Loader'
 import type { ColumnConfig, Column } from '../DataTable/DataTable'
 import { Table, TableBody, TableHeader, Column as TableColumn, Row, Cell } from '../ui/Table/Table'
 import { HStack } from '../ui/Stack/Stack'
+import './virtualizedDataTable.scss'
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line unused-imports/no-unused-vars

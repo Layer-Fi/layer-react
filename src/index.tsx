@@ -38,7 +38,7 @@ export { LinkAccounts } from './components/PlatformOnboarding/LinkAccounts'
 export { PlatformOnboarding } from './components/PlatformOnboarding/PlatformOnboarding'
 
 /* --------------------- Banners -------------------------- */
-export { BookkeepingUpsellBar } from './components/UpsellBanner'
+export { BookkeepingUpsellBar } from './components/BookkeepingUpsellBar'
 
 /*
 ======================= Composite Views =======================
@@ -49,6 +49,7 @@ export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWith
 export { GeneralLedgerView } from './views/GeneralLedger'
 export { ProjectProfitabilityView } from './views/ProjectProfitability'
 export { unstable_BillsView } from './views/Bills'
+export { UnifiedReport as unstable_UnifiedReports } from './components/UnifiedReport/UnifiedReport'
 export { Reports } from './views/Reports'
 export { ProfitAndLossView } from './components/ProfitAndLossView'
 export { Invoices } from './components/Invoices/Invoices'
@@ -59,5 +60,6 @@ export { Invoices } from './components/Invoices/Invoices'
 export { LayerProvider } from './providers/LayerProvider'
 export { useLayerContext } from './contexts/LayerContext'
 
-export { DisplayState, Direction } from './types/bank_transactions'
-export { LinkingMetadata, EntityName } from './contexts/InAppLinkContext'
+export { DisplayState } from './types/bank_transactions'
+export { Direction } from './types/general'
+export { type LinkingMetadata, EntityName } from './contexts/InAppLinkContext'

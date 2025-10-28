@@ -5,6 +5,7 @@ import { HStack, VStack } from '../../ui/Stack/Stack'
 import { Heading } from '../../ui/Typography/Heading'
 import { P } from '../../ui/Typography/Text'
 import type { PropsWithChildren } from 'react'
+import './basicLinkedAccount.scss'
 
 const CLASS_NAME = 'Layer__BasicLinkedAccountContainer'
 

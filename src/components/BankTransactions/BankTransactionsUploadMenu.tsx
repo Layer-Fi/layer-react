@@ -8,14 +8,18 @@ import { BankTransactionsUploadModal } from './BankTransactionsUploadModal/BankT
 import { Span } from '../ui/Typography/Text'
 import { Heading } from '../ui/Typography/Heading'
 
-const MenuTriggerButton = () => (
-  <Button variant='outlined' icon>
-    <UploadCloud size={12} />
-  </Button>
-)
+interface BankTransactionsUploadMenuProps {
+  isDisabled?: boolean
+}
 
-export const BankTransactionsUploadMenu = () => {
+export const BankTransactionsUploadMenu = ({ isDisabled }: BankTransactionsUploadMenuProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const MenuTriggerButton = () => (
+    <Button variant='outlined' icon isDisabled={isDisabled}>
+      <UploadCloud size={12} />
+    </Button>
+  )
 
   return (
     <>
@@ -29,7 +33,7 @@ export const BankTransactionsUploadMenu = () => {
         <Heading weight='bold' size='2xs'>Choose how to upload transactions</Heading>
         <MenuList>
           <MenuItem key='upload-txns' onClick={() => setIsModalOpen(true)}>
-            <VStack className='Layer__bank-transactions__header-menu__upload-transactions-icon'>
+            <VStack className='Layer__bank-transactions__header-menu__icon'>
               <UploadCloud size={16} />
             </VStack>
             <Span size='sm'>Upload transactions manually</Span>

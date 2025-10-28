@@ -8,44 +8,21 @@ import { Select } from '../Input/Select'
 import { Textarea } from '../Textarea'
 import { TextWeight, TextSize, Text, ErrorText } from '../Typography'
 import { EditableBill, useBillForm } from './useBillForm'
-import type { Bill, Category } from '../../types'
 import { formatDate } from '../../utils/format'
 import { formatISO, parseISO } from 'date-fns'
 import { Panel } from '../Panel'
 import { BillsSidebar } from './BillsSidebar'
-import { BillTerms } from '../../types/bills'
+import { Bill, BillTerms } from '../../types/bills'
 import { SelectVendor } from '../Vendors/SelectVendor'
-import { CategorySelect, mapCategoryToOption } from '../CategorySelect/CategorySelect'
 import { AmountInput } from '../Input/AmountInput'
 import { getVendorName } from '../../utils/vendors'
 import { DATE_FORMAT_SHORT, DATE_FORMAT_SHORT_PADDED } from '../../config/general'
 import { BillSummary } from './BillSummary'
 import { isBillPaid, isBillUnpaid } from '../../utils/bills'
-import { useCategories } from '../../hooks/categories/useCategories'
 import CloseIcon from '../../icons/CloseIcon'
 import { HStack } from '../ui/Stack/Stack'
 import { notEmpty } from '../../utils/form'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-
-const flattenCategories = (categories: Category[]): Category[] => {
-  return categories.reduce((acc: Category[], category) => {
-    acc.push(category)
-    if (category.subCategories?.length) {
-      acc.push(...flattenCategories(category.subCategories))
-    }
-    return acc
-  }, [])
-}
-
-const findCategoryById = (id: string, categories?: Category[]) => {
-  if (!categories) {
-    return undefined
-  }
-
-  return flattenCategories(categories).find(
-    category => ('id' in category && category.id === id),
-  )
-}
 
 const convertToInputDate = (date?: string) => {
   const d = date ? parseISO(date) : new Date()
@@ -60,7 +37,6 @@ export const BillsDetails = ({
   bill?: Bill
   containerRef: RefObject<HTMLDivElement>
 }) => {
-  const { data: categories } = useCategories()
   const { closeBillDetails } = useBillsContext()
   const { showRecordPaymentForm, recordPaymentForBill } = useBillsRecordPaymentContext()
   const { form, isDirty, submitError, formErrorMap } = useBillForm((bill ? { ...bill } : {}) as EditableBill)
@@ -268,27 +244,8 @@ export const BillsDetails = ({
                       return (
                         <div key={i} className='Layer__bill-details__category-row'>
                           <form.Field name={`line_items[${i}].account_identifier`}>
-                            {(subField) => {
-                              /**
-                               * @TODO after merging new categorize menu, add validation for the Category Select
-                               */
-                              const selectedCategory =
-                                subField.state.value
-                                  ? findCategoryById(subField.state.value.id, categories)
-                                  : undefined
-
-                              return (
-                                <CategorySelect
-                                  value={selectedCategory
-                                    ? mapCategoryToOption(selectedCategory)
-                                    : undefined}
-                                  onChange={e => subField.handleChange(
-                                    { type: 'AccountId', id: e.payload.id },
-                                  )}
-                                  showTooltips={false}
-                                  disabled={disabled}
-                                />
-                              )
+                            {() => {
+                              return null
                             }}
                           </form.Field>
 

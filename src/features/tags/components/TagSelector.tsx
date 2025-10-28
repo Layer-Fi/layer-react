@@ -17,6 +17,7 @@ import { Square } from '../../../components/ui/Square/Square'
 import { Group } from 'react-aria-components'
 import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
 import { getDimensionDisplayName, getTagDisplayNameForDimension, getTagDisplayNameForValue, getTagValueDisplayName, type Tag as TagType, type TagValue } from '../tagSchemas'
+import './tagSelector.scss'
 
 const TAG_SELECTOR_CLASS_NAMES = {
   LAYOUT_GROUP: 'Layer__TagSelectorLayoutGroup',

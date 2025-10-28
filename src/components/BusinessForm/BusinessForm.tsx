@@ -8,6 +8,7 @@ import { USStateSelect } from '../Input/USStateSelect'
 import { PhoneInput } from '../Input/PhoneInput'
 import { isPossiblePhoneNumber } from 'libphonenumber-js'
 import { ErrorText } from '../Typography'
+import './businessForm.scss'
 
 export type BusinessFormStringOverrides = {
   saveButton?: string

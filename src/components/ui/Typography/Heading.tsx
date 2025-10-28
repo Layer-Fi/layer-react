@@ -3,13 +3,14 @@ import { Heading as ReactAriaHeading, HeadingProps as ReactAriaHeadingProps } fr
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import type { Spacing } from '../sharedUITypes'
 import classNames from 'classnames'
+import './heading.scss'
 
 type HeadingDataProps = {
   align?: 'center'
   pbe?: Spacing
   pie?: Spacing
   size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
-  variant?: 'subtle' | 'dark'
+  variant?: 'subtle'
   weight?: 'normal' | 'bold'
   ellipsis?: true
 }

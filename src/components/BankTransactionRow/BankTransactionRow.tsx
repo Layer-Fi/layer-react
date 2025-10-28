@@ -5,11 +5,9 @@ import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
 import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction } from '../../types'
-import { hasSuggestions } from '../../types/categories'
+import { BankTransaction } from '../../types/bank_transactions'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import {
-  getCategorizePayload,
   isCredit,
   isTransferMatch,
 } from '../../utils/bankTransactions'
@@ -21,11 +19,6 @@ import {
 import { isCategorized } from '../BankTransactions/utils'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { CategorySelect } from '../CategorySelect'
-import {
-  mapCategoryToOption,
-  mapSuggestedMatchToOption,
-} from '../CategorySelect/CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '../IconBox'
@@ -35,13 +28,19 @@ import { MatchBadge } from './MatchBadge'
 import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-import type { CategoryWithEntries } from '../../types/bank_transactions'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { VStack } from '../ui/Stack/Stack'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
+import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isSplitCategorizationEncoded, type CategorizationEncoded } from '../../schemas/categorization'
+import { useBankTransactionsCategoryActions } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 type Props = {
   index: number
@@ -55,34 +54,18 @@ type Props = {
   showReceiptUploads: boolean
   showReceiptUploadColumn: boolean
   showTooltips: boolean
+  _showBulkSelection?: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
 }
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
 
-export const extractDescriptionForSplit = (category: CategoryWithEntries | null) => {
-  if (!category || !category.entries) {
+export const extractDescriptionForSplit = (category: CategorizationEncoded | null) => {
+  if (!category || !isSplitCategorizationEncoded(category)) {
     return ''
   }
 
   return category.entries.map(c => c.category.display_name).join(', ')
-}
-
-export const getDefaultSelectedCategory = (
-  bankTransaction: BankTransaction,
-) => {
-  if (bankTransaction.suggested_matches?.[0]) {
-    return mapSuggestedMatchToOption(bankTransaction.suggested_matches?.[0])
-  }
-  if (
-    hasSuggestions(bankTransaction.categorization_flow)
-    && bankTransaction.categorization_flow.suggestions.length > 0
-  ) {
-    return mapCategoryToOption(
-      bankTransaction.categorization_flow.suggestions[0],
-    )
-  }
-  return undefined
 }
 
 let clickTimer = Date.now()
@@ -99,6 +82,7 @@ export const BankTransactionRow = ({
   showReceiptUploads,
   showReceiptUploadColumn,
   showTooltips,
+  _showBulkSelection = false,
   stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -109,13 +93,18 @@ export const BankTransactionRow = ({
     shouldHideAfterCategorize,
   } = useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState(
-    getDefaultSelectedCategory(bankTransaction),
+    getDefaultSelectedCategoryForBankTransaction(bankTransaction),
   )
   const [open, setOpen] = useState(false)
   const toggleOpen = () => {
     setShowRetry(false)
     setOpen(!open)
   }
+
+  const { select, deselect } = useBulkSelectionActions()
+  const isSelected = useIdIsSelected()
+  const isTransactionSelected = isSelected(bankTransaction.id)
+  const { setTransactionCategory } = useBankTransactionsCategoryActions()
 
   const openRow = {
     onMouseDown: () => {
@@ -155,23 +144,33 @@ export const BankTransactionRow = ({
       return
     }
 
-    if (!selectedCategory) {
+    if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
       return
     }
 
-    if (selectedCategory.type === 'match') {
-      await matchBankTransaction(
-        bankTransaction.id,
-        selectedCategory.payload.id,
-      )
+    if (isSuggestedMatchAsOption(selectedCategory)) {
+      await matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
+
+      // Remove from bulk selection store
+      deselect(bankTransaction.id)
       setOpen(false)
       return
     }
 
+    if (isSplitAsOption(selectedCategory)) {
+      // TODO: implement split categorization
+      return
+    }
+
+    if (!selectedCategory.classificationEncoded) return
+
     await categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
-      category: getCategorizePayload(selectedCategory),
+      category: selectedCategory.classificationEncoded,
     })
+
+    // Remove from bulk selection store
+    deselect(bankTransaction.id)
     setOpen(false)
   }
 
@@ -204,6 +203,23 @@ export const BankTransactionRow = ({
   return (
     <>
       <tr className={rowClassName}>
+        {_showBulkSelection && (
+          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
+            <span className='Layer__table-cell-content'>
+              <Checkbox
+                isSelected={isTransactionSelected}
+                onChange={(selected) => {
+                  if (selected) {
+                    select(bankTransaction.id)
+                  }
+                  else {
+                    deselect(bankTransaction.id)
+                  }
+                }}
+              />
+            </span>
+          </td>
+        )}
         <td
           className='Layer__table-cell Layer__bank-transaction-table__date-col'
           {...openRow}
@@ -279,16 +295,15 @@ export const BankTransactionRow = ({
           >
             {categorizationEnabled && !categorized && !open
               ? (
-                <CategorySelect
+                <BankTransactionCategoryComboBox
                   bankTransaction={bankTransaction}
-                  name={`category-${bankTransaction.id}`}
-                  value={selectedCategory}
-                  onChange={(category) => {
-                    setSelectedCategory(category)
+                  selectedValue={selectedCategory}
+                  onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
+                    setSelectedCategory(selectedCategory)
+                    setTransactionCategory(bankTransaction.id, selectedCategory)
                     setShowRetry(false)
                   }}
-                  disabled={bankTransaction.processing}
-                  showTooltips={showTooltips}
+                  isLoading={bankTransaction.processing}
                 />
               )
               : null}
@@ -410,7 +425,7 @@ export const BankTransactionRow = ({
         </td>
       </tr>
       <tr>
-        <td colSpan={6} className='Layer__bank-transaction-row__expanded-td'>
+        <td colSpan={_showBulkSelection ? 7 : 6} className='Layer__bank-transaction-row__expanded-td'>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}

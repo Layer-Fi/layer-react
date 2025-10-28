@@ -6,20 +6,20 @@ export type BulkSelectionState = {
 }
 
 type BulkSelectionActions = {
-  select: (id: string) => void
-  deselect: (id: string) => void
-  selectMultiple: (ids: string[]) => void
-  clearSelection: () => void
+  actions: {
+    select: (id: string) => void
+    deselect: (id: string) => void
+    selectMultiple: (ids: string[]) => void
+    deselectMultiple: (ids: string[]) => void
+    clearSelection: () => void
+  }
 }
 
-type BulkSelectionStore = BulkSelectionState & {
-  actions: BulkSelectionActions
-}
+type BulkSelectionStore = BulkSelectionState & BulkSelectionActions
 
 function buildStore() {
   return createStore<BulkSelectionStore>(set => ({
     selected: new Set<string>(),
-
     actions: {
       select: (id: string) =>
         set(state => ({
@@ -40,8 +40,17 @@ function buildStore() {
           return { selected: newSet }
         }),
 
+      deselectMultiple: (ids: string[]) =>
+        set((state) => {
+          const newSet = new Set(state.selected)
+          ids.forEach(id => newSet.delete(id))
+          return { selected: newSet }
+        }),
+
       clearSelection: () => set({ selected: new Set<string>() }),
+
     },
+
   }))
 }
 
@@ -76,12 +85,7 @@ export function useCountSelectedIds() {
 export function useBulkSelectionActions() {
   const store = useBulkSelectionStore()
 
-  const select = useStore(store, state => state.actions.select)
-  const deselect = useStore(store, state => state.actions.deselect)
-  const selectMultiple = useStore(store, state => state.actions.selectMultiple)
-  const clearSelection = useStore(store, state => state.actions.clearSelection)
-
-  return { select, deselect, selectMultiple, clearSelection }
+  return useStore(store, state => state.actions)
 }
 
 export function useIdIsSelected() {

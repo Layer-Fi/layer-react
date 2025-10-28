@@ -6,6 +6,7 @@ import { OnboardingStep } from '../../types/layer_context'
 import { Container } from '../Container'
 import { ConnectAccount } from './ConnectAccount'
 import { AccountConfirmationStoreProvider } from '../../providers/AccountConfirmationStoreProvider'
+import './onboarding.scss'
 
 const COLLAPSED_STYLE = {
   maxHeight: 0,

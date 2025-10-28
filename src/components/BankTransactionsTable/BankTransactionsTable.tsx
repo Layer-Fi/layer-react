@@ -1,13 +1,17 @@
-import { useMemo } from 'react'
+import { useMemo, useCallback, useEffect } from 'react'
 import { DATE_FORMAT } from '../../config/general'
-import { BankTransaction } from '../../types'
+import { BankTransaction } from '../../types/bank_transactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { BankTransactionRow } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionsStringOverrides,
 } from '../BankTransactions/BankTransactions'
-import { BankTransactionsLoader } from '../BankTransactionsLoader'
+import { BankTransactionsLoader } from '../BankTransactionsLoader/BankTransactionsLoader'
 import { SyncingComponent } from '../SyncingComponent'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { useSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
+import { useBankTransactionsCategoryActions } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
@@ -29,6 +33,7 @@ interface BankTransactionsTableProps {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
+  _showBulkSelection?: boolean
 
   stringOverrides?: BankTransactionsStringOverrides
   isSyncing?: boolean
@@ -48,6 +53,7 @@ export const BankTransactionsTable = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
+  _showBulkSelection = false,
 
   stringOverrides,
   isSyncing = false,
@@ -55,6 +61,10 @@ export const BankTransactionsTable = ({
   lastPage,
   onRefresh,
 }: BankTransactionsTableProps) => {
+  const { selectedIds } = useSelectedIds()
+  const { selectMultiple, deselectMultiple } = useBulkSelectionActions()
+  const { setOnlyNewTransactionCategories } = useBankTransactionsCategoryActions()
+
   const showReceiptColumn =
     (showReceiptUploads
       && bankTransactions?.some(
@@ -67,6 +77,44 @@ export const BankTransactionsTable = ({
     [showReceiptColumn],
   )
 
+  const currentPageIds = useMemo(
+    () => bankTransactions?.map(tx => tx.id) ?? [],
+    [bankTransactions],
+  )
+
+  const selectedCount = useMemo(
+    () => currentPageIds.filter(id => selectedIds.has(id)).length,
+    [currentPageIds, selectedIds],
+  )
+
+  const isAllSelected = selectedCount > 0 && selectedCount === currentPageIds.length
+  const isPartiallySelected = selectedCount > 0 && selectedCount < currentPageIds.length
+
+  const handleHeaderCheckboxChange = useCallback((checked: boolean) => {
+    if (!checked || isPartiallySelected) {
+      deselectMultiple(currentPageIds)
+    }
+    else {
+      selectMultiple(currentPageIds)
+    }
+  }, [
+    currentPageIds,
+    isPartiallySelected,
+    selectMultiple,
+    deselectMultiple,
+  ])
+
+  useEffect(() => {
+    if (!bankTransactions) return
+
+    const defaultCategories = bankTransactions.map(transaction => ({
+      id: transaction.id,
+      category: getDefaultSelectedCategoryForBankTransaction(transaction),
+    }))
+
+    setOnlyNewTransactionCategories(defaultCategories)
+  }, [bankTransactions, setOnlyNewTransactionCategories])
+
   return (
     <table
       width='100%'
@@ -74,6 +122,18 @@ export const BankTransactionsTable = ({
     >
       <thead>
         <tr>
+          {_showBulkSelection && (
+            <th className='Layer__table-header Layer__bank-transactions__checkbox-col' style={{ padding: 0 }}>
+              <span className='Layer__table-cell-content'>
+                <Checkbox
+                  isSelected={isAllSelected}
+                  isIndeterminate={isPartiallySelected}
+                  onChange={handleHeaderCheckboxChange}
+                  aria-label='Select all transactions on this page'
+                />
+              </span>
+            </th>
+          )}
           <th className='Layer__table-header Layer__bank-transactions__date-col'>
             {stringOverrides?.transactionsTable?.dateColumnHeaderText || 'Date'}
           </th>
@@ -111,11 +171,7 @@ export const BankTransactionsTable = ({
             )}
         </tr>
       </thead>
-      {isLoading && page && page === 1
-        ? (
-          <BankTransactionsLoader isLoading={true} showTooltips={showTooltips} />
-        )
-        : null}
+      {isLoading && page && page === 1 && <BankTransactionsLoader />}
       <tbody>
         {!isLoading
           && bankTransactions?.map(
@@ -132,6 +188,7 @@ export const BankTransactionsTable = ({
                 showReceiptUploads={showReceiptUploads}
                 showReceiptUploadColumn={showReceiptColumn}
                 showTooltips={showTooltips}
+                _showBulkSelection={_showBulkSelection}
                 stringOverrides={stringOverrides?.bankTransactionCTAs}
               />
             ),

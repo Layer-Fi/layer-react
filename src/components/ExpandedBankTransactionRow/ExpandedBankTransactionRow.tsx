@@ -11,18 +11,15 @@ import Trash from '../../icons/Trash'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import {
   BankTransaction,
-  SplitCategoryUpdate,
-  SingleCategoryUpdate,
-} from '../../types'
+} from '../../types/bank_transactions'
 import { hasSuggestions } from '../../types/categories'
 import {
-  getCategorizePayload,
   hasMatch,
   hasSuggestedTransferMatches,
 } from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
 import { Tag, makeTagKeyValueFromTag, makeTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
-import { TagDimensionsGroup } from '../Journal/JournalEntryForm/TagDimensionsGroup'
+import { TagDimensionsGroup } from '../../features/tags/components/TagDimensionsGroup'
 import { CustomerVendorSelector } from '../../features/customerVendor/components/CustomerVendorSelector'
 import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
 import { useTagBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
@@ -32,12 +29,6 @@ import { useSetMetadataOnBankTransaction } from '../../features/bankTransactions
 import { SubmitButton, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { Button } from '../ui/Button/Button'
-import { CategorySelect } from '../CategorySelect'
-import {
-  CategoryOption,
-  mapCategoryToExclusionOption,
-  mapCategoryToOption,
-} from '../CategorySelect/CategorySelect'
 import { Input } from '../Input'
 import { MatchForm } from '../MatchForm'
 import { Toggle } from '../Toggle'
@@ -50,6 +41,12 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { useBankTransactionTagVisibility } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import { useBankTransactionCustomerVendorVisibility } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
+import { isSplitCategorizationEncoded, type ClassificationEncoded } from '../../schemas/categorization'
+import { ApiCategorizationAsOption } from '../../types/categorizationOption'
+import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type Split } from '../../types/bank_transactions'
+import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -63,14 +60,6 @@ type Props = {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
-}
-
-type Split = {
-  amount: number
-  inputValue: string
-  category: CategoryOption | undefined
-  tags: readonly Tag[]
-  customerVendor: typeof CustomerVendorSchema.Type | null
 }
 
 type RowState = {
@@ -139,7 +128,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
       showDescriptions,
       showReceiptUploads,
-      showTooltips,
     },
     ref,
   ) => {
@@ -147,6 +135,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
     } = useBankTransactionsContext()
+
+    const { deselect } = useBulkSelectionActions()
 
     // Hooks for auto-saving tags and customer/vendor in unsplit state
     const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
@@ -198,7 +188,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }))
 
     const [rowState, updateRowState] = useState<RowState>({
-      splits: bankTransaction.category?.entries
+      splits: bankTransaction.category && isSplitCategorizationEncoded(bankTransaction.category)
         ? bankTransaction.category?.entries.map((c) => {
           // Use split-specific tags/customer/vendor only (no fallback to transaction-level values when splits exist)
           const splitTags = c.tags?.map(tag => makeTagFromTransactionTag({
@@ -219,27 +209,19 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               ? decodeCustomerVendor({ ...c.vendor, customerVendorType: 'VENDOR' })
               : null
 
-          return c.type === 'ExclusionSplitEntry' && c.category.type === 'ExclusionNested'
-            ? {
-              amount: c.amount || 0,
-              inputValue: formatMoney(c.amount),
-              category: mapCategoryToExclusionOption(c.category),
-              tags: splitTags,
-              customerVendor: splitCustomerVendor,
-            }
-            : {
-              amount: c.amount || 0,
-              inputValue: formatMoney(c.amount),
-              category: mapCategoryToOption(c.category),
-              tags: splitTags,
-              customerVendor: splitCustomerVendor,
-            }
+          return {
+            amount: c.amount || 0,
+            inputValue: formatMoney(c.amount),
+            category: new ApiCategorizationAsOption(c.category),
+            tags: splitTags,
+            customerVendor: splitCustomerVendor,
+          }
         })
         : [
           {
             amount: bankTransaction.amount,
             inputValue: formatMoney(bankTransaction.amount),
-            category: defaultCategory ? mapCategoryToOption(defaultCategory) : undefined,
+            category: defaultCategory ? new ApiCategorizationAsOption(defaultCategory) : null,
             tags: initialTags,
             customerVendor: initialCustomerVendor,
           },
@@ -256,7 +238,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
           {
             amount: 0,
             inputValue: '0.00',
-            category: defaultCategory ? mapCategoryToOption(defaultCategory) : undefined,
+            category: defaultCategory ? new ApiCategorizationAsOption(defaultCategory) : null,
             tags: [],
             customerVendor: initialCustomerVendor,
           },
@@ -338,7 +320,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       setMatchFormError(undefined)
     }
 
-    const changeCategory = (index: number, newValue: CategoryOption) => {
+    const changeCategory = (index: number, newValue: BankTransactionCategoryComboBoxOption | null) => {
+      if (newValue === null) return
+
       rowState.splits[index].category = newValue
       updateRowState({ ...rowState })
       setSplitFormError(undefined)
@@ -425,21 +409,22 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         rowState.splits.length === 1 && rowState?.splits[0].category
           ? ({
             type: 'Category',
-            category: getCategorizePayload(rowState?.splits[0].category),
-          } as SingleCategoryUpdate)
+            category: rowState?.splits[0].category.classificationEncoded as ClassificationEncoded,
+          })
           : ({
             type: 'Split',
             entries: rowState.splits.map(split => ({
-              category: split.category
-                ? getCategorizePayload(split.category)
-                : '',
+              category: split.category?.classificationEncoded as ClassificationEncoded,
               amount: split.amount,
               tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
               customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
               vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
             })),
-          } as SplitCategoryUpdate),
+          }),
       )
+
+      // Remove from bulk selection store
+      deselect(bankTransaction.id)
       close()
     }
 
@@ -457,6 +442,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       }
 
       await matchBankTransaction(bankTransaction.id, foundMatch.id)
+
+      // Remove from bulk selection store
+      deselect(bankTransaction.id)
       close()
     }
 
@@ -567,28 +555,22 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               errorMessage='Negative values are not allowed'
                               className={`${className}__table-cell--split-entry__amount`}
                             />
-                            <CategorySelect
+                            <BankTransactionCategoryComboBox
                               bankTransaction={bankTransaction}
-                              name={`category-${bankTransaction.id}`}
-                              value={split.category}
-                              onChange={value => changeCategory(index, value)}
-                              className='Layer__category-menu--full'
-                              disabled={
-                                bankTransaction.processing
-                                || !categorizationEnabled
-                              }
-                              excludeMatches
-                              showTooltips={showTooltips}
+                              selectedValue={split.category}
+                              onSelectedValueChange={value => changeCategory(index, value)}
+                              isLoading={bankTransaction.processing}
+                              isDisabled={!categorizationEnabled}
+                              includeSuggestedMatches={false}
                             />
                             {showTags && (
-                              <div className={`${className}__table-cell--split-entry__tags`}>
-                                <TagDimensionsGroup
-                                  value={split.tags}
-                                  onChange={tags => changeTags(index, tags)}
-                                  showLabels={false}
-                                  isReadOnly={!categorizationEnabled}
-                                />
-                              </div>
+                              <TagDimensionsGroup
+                                value={split.tags}
+                                onChange={tags => changeTags(index, tags)}
+                                showLabels={false}
+                                isReadOnly={!categorizationEnabled}
+                                className={`${className}__table-cell--split-entry__tags`}
+                              />
                             )}
                             {showCustomerVendor && (
                               <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__customer'>

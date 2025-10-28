@@ -12,7 +12,7 @@
   padding-inline-end: var(--spacing-3xs);
 
   border-radius: var(--input-border-radius);
-  border: 1px solid var(--color-base-300);
+  border: 1px solid var(--border-color);
 
   background-color: var(--color-base-0);
 
@@ -20,6 +20,11 @@
   &[data-focus-visible] {
     border-color: var(--color-base-800);
     outline: 2px solid var(--outline-default);
+  }
+
+  &[data-invalid] {
+    border-color: var(--color-danger);
+    outline: none;
   }
 
   &[data-action-count='2'] {

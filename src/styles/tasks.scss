@@ -1,0 +1,435 @@
+.Layer__tasks {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden auto;
+  max-height: calc(100vh - 2 * var(--spacing-lg));
+}
+
+.Layer__tasks-pending {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--color-base-300);
+
+  .Layer__tasks-pending-header {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 36px;
+    width: 100%;
+  }
+
+  .Layer__tasks-pending-main {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xs);
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .Layer__tasks-pending-bar {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+    padding: var(--spacing-3xs) var(--spacing-xs);
+    border-radius: 8px;
+    background-color: var(--color-base-50);
+    font-weight: 540;
+
+    .mini-chart {
+      transform: rotate(90deg);
+    }
+
+    .Layer__tasks-pending-bar__status--done {
+      color: var(--color-success);
+    }
+
+    .Layer__tasks-pending-bar__status--pending {
+      color: var(--color-warning);
+    }
+  }
+}
+
+.Layer__tasks-header {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  padding: var(--spacing-md);
+  container-type: inline-size;
+}
+
+.Layer__tasks__content {
+  min-height: 0;
+  opacity: 1;
+  transition: opacity 0.2s ease-out;
+}
+
+.Layer__tasks-list {
+  border-top: 1px solid var(--border-color);
+
+  .Layer__tasks-list-item-wrapper {
+    padding: var(--spacing-2xs);
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--color-base-300);
+    }
+
+    .Layer__tasks-list-item {
+      display: flex;
+      flex-direction: column;
+      transition: all 0.1s ease-in-out;
+
+      &:hover,
+      &.Layer__tasks-list-item__expanded {
+        border-radius: 6px;
+        background: var(--color-base-50);
+      }
+
+      .Layer__tasks-list-item__head {
+        display: flex;
+        gap: var(--spacing-xs);
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-md);
+        cursor: pointer;
+
+        .Layer__tasks-list-item__head-info {
+          display: flex;
+          gap: var(--spacing-xs);
+          align-items: center;
+
+          .Layer__tasks-list-item__head-info__status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-3xs);
+            border-radius: 100%;
+          }
+
+          &.Layer__tasks-list-item--completed {
+            color: var(--color-base-500);
+            text-decoration: line-through;
+
+            .Layer__tasks-list-item__head-info__status {
+              color: var(--color-info-success);
+            }
+          }
+
+          &.Layer__tasks-list-item--pending .Layer__tasks-list-item__head-info__status {
+            background: var(--color-info-warning-bg);
+            color: var(--color-info-warning-fg);
+          }
+        }
+      }
+
+      .Layer__tasks-list-item__body {
+        overflow: hidden;
+        height: 0;
+        padding-right: var(--spacing-md);
+        padding-bottom: 0;
+        padding-left: var(--spacing-3xl);
+        margin-left: var(--spacing-3xs);
+        opacity: 0;
+        transition: all 0.2s ease-out;
+
+        .Layer__tasks-list-item__body-info {
+          display: flex;
+          flex-direction: column;
+
+          .Layer__text {
+            margin-bottom: var(--spacing-md);
+          }
+
+          .Layer__tasks-list-item__actions {
+            margin-top: var(--spacing-xs);
+          }
+
+          .Layer__tasks-list__link-list {
+            padding-top: var(--spacing-md);
+          }
+
+          .Layer__tasks-list__link-list-header {
+            font-size: var(--text-sm);
+          }
+
+          .Layer__tasks-list-item__link {
+            font-size: var(--text-sm);
+            color: var(--color-base-900);
+          }
+
+          .Layer__tasks-list__links-list {
+            padding: var(--spacing-3xs) 0 var(--spacing-sm) var(--spacing-md);
+            margin: 0;
+          }
+        }
+
+        &.Layer__tasks-list-item--completed {
+          color: var(--color-base-500);
+        }
+
+        &.Layer__tasks-list-item__body--expanded {
+          height: auto;
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .Layer__tasks-empty-state {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+    text-align: center;
+    color: var(--color-base-500);
+  }
+}
+
+.Layer__tasks-list-item__actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: var(--spacing-sm);
+}
+
+.Layer__tasks-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--color-base-300);
+  background-color: var(--color-base-50);
+}
+
+.Layer__tasks__expand-icon {
+  margin-left: -15px;
+  color: var(--color-base-600);
+  transition: transform 150ms ease-out;
+}
+
+@container (width <= 400px) {
+  .Layer__tasks-component {
+    .Layer__tasks-pending {
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      align-items: stretch;
+
+      .Layer__tasks-pending-bar {
+        justify-content: space-between;
+      }
+    }
+
+    .Layer__badge {
+      white-space: nowrap;
+    }
+  }
+
+  .Layer__tasks-list {
+    .Layer__tasks-list-item-wrapper {
+      .Layer__tasks-list-item {
+        .Layer__tasks-list-item__head {
+          padding: var(--spacing-xs);
+        }
+
+        .Layer__tasks-list-item__body {
+          padding-right: var(--spacing-xs);
+          padding-left: var(--spacing-xs);
+        }
+      }
+    }
+  }
+}
+
+.Layer__tasks-header__notification {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-2xs) var(--spacing-md);
+  background:
+    linear-gradient(
+      0deg,
+      var(--base-transparent-10) 0%,
+      var(--base-transparent-10) 100%
+    ),
+    var(--color-info-warning);
+
+  &[data-status='error'] {
+    background:
+      linear-gradient(
+        0deg,
+        var(--base-transparent-10) 0%,
+        var(--base-transparent-10) 100%
+      ),
+      var(--color-info-error);
+    color: var(--color-info-error-bg);
+  }
+}
+
+.Layer__tasks-header__notification__text {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.Layer__tasks-header__notification__button {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+  padding: var(--spacing-3xs) var(--spacing-xs);
+  border-radius: 4px;
+  border: none;
+  background: var(--color-info-warning-fg);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-info-warning-bg);
+  font-variation-settings: 'wght' var(--font-weight-bold);
+  transition: all 0.12s ease-in-out;
+  white-space: nowrap;
+
+  .Layer__tasks-header__notification[data-status='error'] & {
+    background: var(--color-info-error-fg);
+    color: var(--color-info-error-bg);
+  }
+
+  &:hover {
+    background: var(--color-base-1000);
+  }
+}
+
+.Layer__tasks__badge {
+  display: flex;
+  gap: var(--spacing-3xs);
+  align-items: center;
+  padding: var(--spacing-3xs) var(--border-radius-2xs);
+  border-radius: var(--border-radius-3xs);
+  background: var(--color-info-warning);
+  font-size: var(--text-xs);
+  color: var(--color-info-warning-bg);
+  white-space: nowrap;
+
+  .Layer__tasks__badge__label-short {
+    display: none;
+  }
+
+  @container (width <= 130px) {
+    .Layer__tasks__badge__label {
+      display: none;
+    }
+
+    .Layer__tasks__badge__label-short {
+      display: flex;
+    }
+  }
+
+  &[data-icononly] {
+    gap: 0;
+    height: 16px;
+    width: 16px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .Layer__text {
+    line-height: 10px;
+  }
+
+  .Layer__tasks__badge__icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+  }
+
+  &[data-status='info'] {
+    background: var(--color-info-bg);
+    color: var(--color-info-fg);
+  }
+
+  &[data-status='warning'] {
+    background: var(--color-info-warning);
+    color: var(--color-info-warning-bg);
+  }
+
+  &[data-status='success'] {
+    background: var(--color-info-success-bg);
+    color: var(--color-info-success-fg);
+  }
+
+  &[data-status='error'] {
+    background: var(--color-info-error-bg);
+    color: var(--color-info-error);
+  }
+}
+
+.Layer__tasks-month-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  padding-top: 10px;
+  container-type: inline-size;
+
+  @container (min-width: 680px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @container (max-width: 400px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @container (max-width: 340px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.Layer__tasks-month-selector__month {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  padding: 0 var(--spacing-sm);
+  border-radius: var(--border-radius-xs);
+  box-shadow: 0 1px 2px 0 var(--base-transparent-6), 0 0 0 1px var(--color-base-300);
+  background: var(--color-base-0);
+  cursor: pointer;
+  container-type: inline-size;
+
+  &[data-active] {
+    box-shadow: 0 0 0 1px var(--color-base-800), 0 0 0 3px var(--color-base-300);
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    color: var(--color-base-500);
+  }
+
+  &:hover {
+    box-shadow: 0 0 0 1px var(--color-base-500), 0 0 0 3px var(--color-base-300);
+  }
+
+  .Layer__tasks-month-selector__month__str {
+    min-width: 24px;
+  }
+}

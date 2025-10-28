@@ -17,9 +17,10 @@ import type { OneOf } from '../../../types/utility/oneOf'
 import classNames from 'classnames'
 import { PORTAL_CLASS_NAME } from '../Portal/Portal'
 import Check from '../../../icons/Check'
-import { ChevronDown, Lock, X } from 'lucide-react'
+import { ChevronDown, X } from 'lucide-react'
 import { LoadingSpinner } from '../Loading/LoadingSpinner'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import './comboBox.scss'
 
 const COMBO_BOX_CLASS_NAMES = {
   CONTAINER: 'Layer__ComboBoxContainer',
@@ -53,40 +54,64 @@ type ComboBoxOption = {
   label: string
   value: string
   isDisabled?: boolean
+  isHidden?: boolean
 }
 
-function buildCustomGroupHeading() {
-  return function CustomGroupHeading<T extends ComboBoxOption>({
+type BuildCustomGroupHeadingParameters<T extends ComboBoxOption> = {
+  GroupHeading?: React.FC<{ group: GroupBase<T>, fallback: ReactNode }>
+}
+
+function buildCustomGroupHeading<T extends ComboBoxOption>({
+  GroupHeading,
+}: BuildCustomGroupHeadingParameters<T>) {
+  return function CustomGroupHeading({
     children,
     ...restProps
   }: GroupHeadingProps<T, false, GroupBase<T>>) {
+    const defaultRenderedGroupHeading = useMemo(() => (
+      <Header size='xs' variant='subtle'>
+        {children}
+      </Header>
+    ), [children])
+
+    const content = GroupHeading
+      ? <GroupHeading group={restProps.data} fallback={defaultRenderedGroupHeading} />
+      : defaultRenderedGroupHeading
+
     return (
       <components.GroupHeading
         {...restProps}
         className={COMBO_BOX_CLASS_NAMES.GROUP_HEADING}
       >
-        <Header size='xs'>
-          {children}
-        </Header>
+        {content}
       </components.GroupHeading>
     )
   }
 }
 
-type BuildCustomComboBoxOptionParameters = {
+type BuildCustomComboBoxOptionParameters<T extends ComboBoxOption> = {
   displayDisabledAsSelected?: boolean
+  Option?: React.FC<{ option: T, fallback: ReactNode }>
 }
 
-function buildCustomComboBoxOption({
+function buildCustomComboBoxOption<T extends ComboBoxOption>({
   displayDisabledAsSelected,
-}: BuildCustomComboBoxOptionParameters) {
-  return function CustomComboBoxOption<T extends ComboBoxOption>({
+  Option,
+}: BuildCustomComboBoxOptionParameters<T>) {
+  return function CustomComboBoxOption({
     children,
     ...restProps
   }: OptionProps<T, false, GroupBase<T>>) {
     const { isSelected, isFocused, isDisabled } = restProps
 
     const effectiveIsSelected = isSelected || (displayDisabledAsSelected && isDisabled)
+
+    const defaultRenderedOption = useMemo(() => (
+      <HStack gap='xs' align='center'>
+        <Check size={16} className={COMBO_BOX_CLASS_NAMES.OPTION_CHECK_ICON} />
+        <Span variant='inherit'>{children}</Span>
+      </HStack>
+    ), [children])
 
     return (
       <components.Option
@@ -96,13 +121,12 @@ function buildCustomComboBoxOption({
           isFocused ? `${COMBO_BOX_CLASS_NAMES.OPTION}--focused` : undefined,
           effectiveIsSelected ? `${COMBO_BOX_CLASS_NAMES.OPTION}--selected` : undefined,
           isDisabled ? `${COMBO_BOX_CLASS_NAMES.OPTION}--disabled` : undefined,
+          restProps.data.isHidden ? `${COMBO_BOX_CLASS_NAMES.OPTION}--hidden` : undefined,
         )}
       >
-
-        <Check size={16} className={COMBO_BOX_CLASS_NAMES.OPTION_CHECK_ICON} />
-        <Span weight='bold'>
-          {children}
-        </Span>
+        {Option
+          ? <Option option={restProps.data} fallback={defaultRenderedOption} />
+          : defaultRenderedOption}
       </components.Option>
     )
   }
@@ -148,7 +172,7 @@ function buildCustomDropdownIndicator() {
         {...restProps}
         className={COMBO_BOX_CLASS_NAMES.DROPDOWN_INDICATOR}
       >
-        {isDisabled ? <Lock size={16} /> : <ChevronDown size={16} /> }
+        {!isDisabled && <ChevronDown size={16} />}
       </components.DropdownIndicator>
     )
   }
@@ -170,9 +194,7 @@ function buildCustomNoOptionsMessage({ EmptyMessage }: BuildCustomNoOptionsMessa
       >
         {EmptyMessage
           ?? (
-            <Span weight='bold'>
-              No matching options
-            </Span>
+            <Span>No matching options</Span>
           )}
       </components.NoOptionsMessage>
     )
@@ -257,6 +279,8 @@ type ComboBoxProps<T extends ComboBoxOption> = {
     EmptyMessage?: ReactNode
     ErrorMessage?: ReactNode
     SelectedValue?: ReactNode
+    GroupHeading?: React.FC<{ group: GroupBase<T>, fallback: ReactNode }>
+    Option?: React.FC<{ option: T, fallback: ReactNode }>
   }
 
   inputId?: string
@@ -305,13 +329,12 @@ export function ComboBox<T extends ComboBoxOption>({
   const internalInputId = useId()
   const effectiveInputId = inputId ?? internalInputId
 
-  const CustomGroupHeadingRef = useRef(buildCustomGroupHeading())
-  const CustomComboBoxOption = useMemo(
-    () => (buildCustomComboBoxOption({ displayDisabledAsSelected })),
-    [displayDisabledAsSelected],
-  )
+  const { EmptyMessage, ErrorMessage, SelectedValue, GroupHeading, Option } = slots ?? {}
 
-  const { EmptyMessage, ErrorMessage, SelectedValue } = slots ?? {}
+  const CustomGroupHeading = useMemo(
+    () => buildCustomGroupHeading<T>({ GroupHeading }),
+    [GroupHeading],
+  )
 
   const CustomNoOptionsMessage = useMemo(
     () => buildCustomNoOptionsMessage({ EmptyMessage }),
@@ -327,6 +350,11 @@ export function ComboBox<T extends ComboBoxOption>({
     [SelectedValue],
   )
 
+  const CustomComboBoxOption = useMemo(
+    () => (buildCustomComboBoxOption<T>({ displayDisabledAsSelected, Option })),
+    [displayDisabledAsSelected, Option],
+  )
+
   const CustomMenuPortalRef = useRef(buildCustomMenuPortal())
 
   const CustomClearIndicatorRef = useRef(buildCustomClearIndicator())
@@ -334,7 +362,7 @@ export function ComboBox<T extends ComboBoxOption>({
   const CustomDropdownIndicatorRef = useRef(buildCustomDropdownIndicator())
 
   return (
-    <VStack gap='3xs'>
+    <VStack gap='3xs' fluid className={className ? `${className}__Container` : undefined}>
       <Select
         inputId={effectiveInputId}
         {...ariaProps}
@@ -381,7 +409,7 @@ export function ComboBox<T extends ComboBoxOption>({
         }}
 
         components={{
-          GroupHeading: CustomGroupHeadingRef.current,
+          GroupHeading: CustomGroupHeading,
           Option: CustomComboBoxOption,
 
           Placeholder: CustomPlaceholder,

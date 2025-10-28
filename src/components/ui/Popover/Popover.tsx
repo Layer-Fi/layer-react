@@ -3,6 +3,7 @@ import {
   Popover as ReactAriaPopover,
   PopoverProps as ReactAriaPopoverProps,
 } from 'react-aria-components'
+import './popover.scss'
 
 const POPOVER_CLASS_NAME = 'Layer__Popover'
 const POPOVER_CLASS_NAMES = `Layer__Portal ${POPOVER_CLASS_NAME}`

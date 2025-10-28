@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { FormError, FormErrorWithId } from '../../types'
+import { FormError, FormErrorWithId } from '../../types/general'
 import { BaseSelectOption, DataModel } from '../../types/general'
 import {
   JournalEntry,

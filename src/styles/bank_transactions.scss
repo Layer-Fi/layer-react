@@ -81,6 +81,7 @@
   left: 0;
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-xs);
   align-items: stretch;
   width: 100%;
 }
@@ -114,7 +115,7 @@
   margin-right: 4px;
 }
 
-.Layer__bank-transactions__header-menu__upload-transactions-icon {
+.Layer__bank-transactions__header-menu__icon {
   padding: var(--spacing-3xs);
   border-radius: var(--spacing-3xs);
   background: var(--color-base-200);
@@ -165,23 +166,6 @@
       max-width: var(--width);
       border-left: 1px solid var(--border-color);
       background-color: var(--color-base-0);
-
-      .Layer__bank-transaction-row__actions-disabled {
-        transition: all var(--transition-speed) ease-out;
-        padding-right: var(--spacing-xs);
-        padding-left: 0;
-
-        .Layer__select--is-disabled {
-          cursor: default;
-
-          .Layer__select__control--is-disabled {
-            border: none;
-            box-shadow: none;
-            background-color: var(--color-base-50);
-            cursor: default;
-          }
-        }
-      }
     }
   }
 }
@@ -298,7 +282,7 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   min-width: 40rem;
-  max-width: 64rem;
+  max-width: 76rem;
 }
 
 .Layer__expanded-bank-transaction-row__content-panels {
@@ -308,13 +292,7 @@
 }
 
 .Layer__bank-transaction-form-fields {
-  .Layer__ComboBoxContainer {
-    max-width: 20rem;
-  }
-
-  .Layer__bank-transaction-memo-input-group {
-    max-width: 40rem;
-  }
+  max-width: 40rem;
 }
 
 .Layer__expanded-bank-transaction-row__content-panel {
@@ -412,7 +390,6 @@
 
 .Layer__expanded-bank-transaction-row__splits-inputs {
   display: flex;
-  flex: 1;
   flex-direction: column;
   gap: var(--spacing-xs);
   padding-top: 2px;
@@ -482,8 +459,13 @@
 }
 
 .Layer__bank-transaction-row__expand-button {
-  width: 36px;
-  min-width: 36px;
+  min-width: 2.25rem;
+}
+
+.Layer__bank-transaction-row__expand-button--mobile {
+  width: fit-content;
+  vertical-align: middle;
+  min-width: unset;
 }
 
 .Layer__bank-transaction-row__actions-cell--open {
@@ -498,20 +480,14 @@
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry {
-  display: grid;
-  grid-template-areas:
-    'amount category category button'
-    'customer tags tags .';
-  grid-template-columns: minmax(8rem, 12rem) minmax(12rem, 16rem) 1fr auto;
-
+  display: flex;
   gap: var(--spacing-xs);
-
   align-items: start;
-  max-width: 40rem;
+  min-width: 40rem;
 
-  .Layer__category-menu--full {
+  .Layer__BankTransactionCategoryComboBox__Container {
     grid-area: category;
-    width: 100%;
+    max-width: 24.5rem;
   }
 
   &__amount {
@@ -520,21 +496,30 @@
 
   &__customer {
     grid-area: customer;
+    min-width: 12rem;
   }
 
   &__button {
     grid-area: button;
   }
+
+  @container (max-width: 768px) {
+    display: grid;
+    grid-template-areas: 'amount category button';
+    grid-template-columns: minmax(8rem, 12rem) minmax(12rem, 24.5rem) 2.25rem;
+    max-width: 40rem;
+
+    &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__customer),
+    &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__tags) {
+      grid-template-areas:
+        'amount category button'
+        'customer tags .';
+    }
+  }
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry__tags {
-  display: flex;
   grid-area: tags;
-  gap: var(--spacing-sm);
-
-  .Layer__JournalEntryForm__Field--tag {
-    width: 12rem;
-  }
 }
 
 .Layer__bank-transactions__list {
@@ -564,6 +549,10 @@
     transition:
       max-height 350ms ease-out,
       opacity 200ms ease-out;
+
+    .Layer__tooltip-trigger {
+      padding: 0;
+    }
   }
 
   .Layer__bank-transaction-list-item__expanded-row {
@@ -757,6 +746,14 @@
   max-width: var(--width);
 }
 
+.Layer__bank-transactions__checkbox-col {
+  width: 48px;
+
+  .Layer__table-cell-content {
+    justify-content: center;
+  }
+}
+
 .Layer__bank-transactions__date-col {
   box-sizing: border-box;
   width: 140px;
@@ -798,20 +795,13 @@
       padding-left: var(--spacing-xl);
     }
 
+    .Layer__bank-transactions__checkbox-col + .Layer__table-header.Layer__bank-transactions__date-col {
+      padding-left: var(--spacing-md);
+    }
+
     .Layer__table-header.Layer__table-cell__category-col {
       padding-right: var(--spacing-xl);
       padding-left: var(--spacing-md);
-    }
-  }
-
-  .Layer__bank-transactions__table {
-    .Layer__skeleton-table-body__loader {
-      td:last-child {
-        .Layer__bank-transaction-row__actions-disabled {
-          padding-right: var(--spacing-md);
-          padding-left: var(--spacing-md);
-        }
-      }
     }
   }
 }
@@ -1270,7 +1260,6 @@
 @container (max-width: 600px) {
   .Layer__expanded-bank-transaction-row__splits-inputs {
     display: flex;
-    flex: 1;
     flex-direction: column;
     gap: var(--spacing-xs);
     width: 100%;

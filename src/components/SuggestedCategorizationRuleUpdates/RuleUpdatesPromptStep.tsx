@@ -4,8 +4,7 @@ import { Button } from '../../components/ui/Button/Button'
 import { useWizard } from '../Wizard/Wizard'
 import { CheckboxWithTooltip } from '../ui/Checkbox/Checkbox'
 import { HStack, VStack } from '../ui/Stack/Stack'
-import { Label } from '../ui/Typography/Text'
-import { Separator } from '../Separator/Separator'
+import { Label, Span } from '../ui/Typography/Text'
 import { CreateRuleButton } from './CreateRuleButton'
 import { useRejectCategorizationRulesUpdateSuggestion } from '../../hooks/useCategorizationRules/useRejectCategorizationRulesUpdateSuggestion'
 import { useLayerContext } from '../../contexts/LayerContext'
@@ -39,40 +38,41 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesProm
   }, [addToast, close, dontAskAgain, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
 
   return (
-    <VStack gap='lg'>
-      {ruleSuggestion.suggestionPrompt}
-      <Separator />
-      <HStack gap='sm'>
-        <Button
-          onClick={handleRejectRuleSuggestion}
-          isPending={isMutating}
-          variant='outlined'
-        >
-          No, I`ll decide each time
-        </Button>
-        {ruleSuggestion.transactionsThatWillBeAffected.length === 0
-          ? (
-            <CreateRuleButton
-              newRule={ruleSuggestion.newRule}
-              buttonText='Yes, always categorize'
-            />
-          )
-          : (
-            <Button
-              onPress={() => {
-                void next()
-              }}
-            >
-              Yes, always categorize
-            </Button>
-          )}
-      </HStack>
-      <HStack gap='3xs' justify='center'>
-        <CheckboxWithTooltip id='dont_ask_again' isSelected={dontAskAgain} onChange={(isSelected) => { setDontAskAgain(isSelected) }} />
-        <Label size='sm' htmlFor='dont_ask_again'>
-          Don`t ask me about this again
-        </Label>
-      </HStack>
+    <VStack gap='3xl'>
+      <Span size='md'>{ruleSuggestion.suggestionPrompt}</Span>
+      <VStack gap='sm' align='end'>
+        <HStack gap='sm' justify='end' align='end'>
+          <Button
+            onClick={handleRejectRuleSuggestion}
+            isPending={isMutating}
+            variant='outlined'
+          >
+            No, I`ll decide each time
+          </Button>
+          {ruleSuggestion.transactionsThatWillBeAffected.length === 0
+            ? (
+              <CreateRuleButton
+                newRule={ruleSuggestion.newRule}
+                buttonText='Yes, always categorize'
+              />
+            )
+            : (
+              <Button
+                onPress={() => {
+                  void next()
+                }}
+              >
+                Yes, always categorize
+              </Button>
+            )}
+        </HStack>
+        <HStack gap='3xs' justify='center'>
+          <CheckboxWithTooltip id='dont_ask_again' isSelected={dontAskAgain} onChange={(isSelected) => { setDontAskAgain(isSelected) }} />
+          <Label size='sm' htmlFor='dont_ask_again'>
+            Don`t ask me about this again
+          </Label>
+        </HStack>
+      </VStack>
 
     </VStack>
   )

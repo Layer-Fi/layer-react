@@ -58,11 +58,6 @@
   padding: var(--spacing-xs);
   border-radius: var(--input-border-radius);
   border: 1px solid var(--border-color);
-  border-width: 0;
-  box-shadow:
-    0 0 0 1px var(--input-border-color),
-    0 0 0 2px rgb(0 0 0 / 0%);
-  margin: 1px;
 
   background-color: var(--color-base-0);
   font-size: var(--input-font-size);
@@ -73,9 +68,7 @@
   resize: none;
 
   &.Layer__textarea--error {
-    box-shadow:
-      0 0 0 1px var(--color-base-300),
-      0 0 0 2px var(--color-danger);
+    border-color: var(--color-danger);
   }
 
   &:disabled {
@@ -96,22 +89,16 @@
 .Layer__input {
   box-sizing: border-box;
   position: relative;
+  max-height: 36px;
   padding: 8px;
   border-radius: var(--input-border-radius);
   border: 1px solid var(--border-color);
-  border-width: 0;
-  box-shadow:
-    0 0 0 1px var(--input-border-color),
-    0 0 0 2px rgb(0 0 0 / 0%);
-  margin: 1px;
   font-size: var(--input-font-size);
   line-height: 140%;
   font-family: var(--font-family);
 
   &.Layer__input--error {
-    box-shadow:
-      0 0 0 1px var(--color-base-300),
-      0 0 0 2px var(--color-danger);
+    border: 1px solid var(--color-danger);
   }
 
   &:disabled {
@@ -298,7 +285,6 @@
 
 .Layer__select {
   width: 100%;
-  border-width: 0;
   font-size: var(--input-font-size);
   line-height: 140%;
   font-family: var(--font-family);
@@ -312,10 +298,9 @@
 
   & .Layer__select__control {
     min-height: 36px;
+    max-height: 36px;
     border-radius: var(--input-border-radius);
-    border-width: 0;
-    box-shadow: 0 0 0 1px var(--color-base-300);
-    margin: 1px;
+    border: 1px solid var(--color-base-300);
   }
 
   & .Layer__select__control--is-focused {
@@ -478,44 +463,6 @@
       color: inherit;
     }
   }
-
-  .Layer__select__option-content__match {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-
-    .Layer__select__option-content__match__main-row {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-3xs);
-    }
-
-    .Layer__select__option-content__match__date {
-      font-size: var(--text-sm);
-      color: var(--color-base-600);
-      white-space: nowrap;
-    }
-
-    .Layer__select__option-content__match__description {
-      font-size: var(--text-sm);
-      color: var(--color-base-700);
-    }
-
-    .Layer__select__option-content__match__amount-row {
-      display: flex;
-    }
-
-    .Layer__select__option-content__match__amount {
-      font-size: var(--text-sm);
-      font-weight: var(--font-weight-bold);
-      color: var(--color-base-900);
-    }
-  }
-}
-
-.Layer__select__menu.Layer__select__menu--lg {
-  width: calc(100% + 60px);
-  margin-left: -30px;
 }
 
 .Layer__category-menu.Layer__category-menu--full {

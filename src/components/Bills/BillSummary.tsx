@@ -1,4 +1,4 @@
-import type { Bill } from '../../types'
+import type { Bill } from '../../types/bills'
 import { isBillPaid } from '../../utils/bills'
 import { BillSummaryPaid } from './BillSummaryPaid'
 import { BillSummaryUnpaid } from './BillSummaryUnpaid'

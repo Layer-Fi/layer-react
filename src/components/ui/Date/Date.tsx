@@ -8,8 +8,11 @@ import {
   type DateSegmentProps as ReactAriaDateSegmentProps,
   DateInput as ReactAriaDateInput,
   type DateInputProps as ReactAriaDateInputProps,
+  DatePicker as ReactAriaDatePicker,
+  type DatePickerProps as ReactAriaDatePickerProps,
 } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import './date.scss'
 
 const DATE_FIELD_CLASS_NAME = 'Layer__UI__DateField'
 type DateFieldProps = ReactAriaDateFieldProps<ZonedDateTime> & {
@@ -68,6 +71,21 @@ export const DateSegment = forwardRef<HTMLDivElement, DateSegmentProps>(
         {...restProps}
         {...dataProperties}
         className={DATE_SEGMENT_CLASS_NAME}
+        ref={ref}
+      />
+    )
+  },
+)
+
+const DATE_PICKER_CLASS_NAME = 'Layer__UI__DatePicker'
+type DatePickerProps = Omit<ReactAriaDatePickerProps<ZonedDateTime>, 'className'>
+
+export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
+  function DatePicker(props, ref) {
+    return (
+      <ReactAriaDatePicker
+        {...props}
+        className={DATE_PICKER_CLASS_NAME}
         ref={ref}
       />
     )

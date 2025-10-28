@@ -5,6 +5,7 @@ import {
 } from 'react-aria-components'
 import { forwardRef, type ComponentProps } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import './tagGroup.scss'
 
 const TAG_CLASS_NAMES = {
   GROUP: 'Layer__TagGroup',

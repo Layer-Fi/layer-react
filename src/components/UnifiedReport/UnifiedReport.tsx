@@ -1,17 +1,19 @@
 import { Container } from '../Container'
-import { ReportEnum } from '../../schemas/reports/unifiedReport'
 import { UnifiedReportTable } from './UnifiedReportTable'
 import { UnifiedReportTableHeader } from './UnifiedReportTableHeader'
 import { ExpandableDataTableProvider } from '../ExpandableDataTable/ExpandableDataTableProvider'
+import { UnifiedReportStoreProvider } from '../../providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import './unifiedReport.scss'
 
-type UnifiedReportProps = { report: ReportEnum }
-export const UnifiedReport = ({ report }: UnifiedReportProps) => {
+export const UnifiedReport = () => {
   return (
     <Container name='UnifiedReport'>
-      <ExpandableDataTableProvider>
-        <UnifiedReportTableHeader />
-        <UnifiedReportTable report={report} />
-      </ExpandableDataTableProvider>
+      <UnifiedReportStoreProvider>
+        <ExpandableDataTableProvider>
+          <UnifiedReportTableHeader />
+          <UnifiedReportTable />
+        </ExpandableDataTableProvider>
+      </UnifiedReportStoreProvider>
     </Container>
   )
 }

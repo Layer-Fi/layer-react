@@ -9,7 +9,7 @@ import unusedImportsPlugin from 'eslint-plugin-unused-imports'
 
 export default tsEslint.config(
   {
-    ignores: ['build/**', 'dist/**', 'bin/**', 'node_modules/**'],
+    ignores: ['dist/**', 'node_modules/**', 'vite/**'],
   },
   js.configs.recommended,
   ...tsEslint.configs.recommendedTypeChecked,
@@ -18,7 +18,10 @@ export default tsEslint.config(
   reactPlugin.configs.flat['jsx-runtime'],
   {
     plugins: { 'react-hooks': reactHooksPlugin },
-    rules: reactHooksPlugin.configs.recommended.rules,
+    rules: {
+      ...reactHooksPlugin.configs.recommended.rules,
+      'react-hooks/exhaustive-deps': 'error',
+    },
   },
   {
     plugins: { 'unused-imports': unusedImportsPlugin },
