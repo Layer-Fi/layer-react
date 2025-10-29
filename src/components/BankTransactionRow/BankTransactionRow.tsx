@@ -37,10 +37,9 @@ import { Span } from '../ui/Typography/Text'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSplitCategorizationEncoded, type CategorizationEncoded } from '../../schemas/categorization'
-import { useBankTransactionsCategoryActions } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 type Props = {
   index: number
@@ -92,9 +91,6 @@ export const BankTransactionRow = ({
     match: matchBankTransaction,
     shouldHideAfterCategorize,
   } = useBankTransactionsContext()
-  const [selectedCategory, setSelectedCategory] = useState(
-    getDefaultSelectedCategoryForBankTransaction(bankTransaction),
-  )
   const [open, setOpen] = useState(false)
   const toggleOpen = () => {
     setShowRetry(false)
@@ -112,6 +108,7 @@ export const BankTransactionRow = ({
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
+  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -297,9 +294,8 @@ export const BankTransactionRow = ({
               ? (
                 <BankTransactionCategoryComboBox
                   bankTransaction={bankTransaction}
-                  selectedValue={selectedCategory}
+                  selectedValue={selectedCategory ?? null}
                   onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                    setSelectedCategory(selectedCategory)
                     setTransactionCategory(bankTransaction.id, selectedCategory)
                     setShowRetry(false)
                   }}
