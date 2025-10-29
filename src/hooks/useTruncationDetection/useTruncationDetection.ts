@@ -45,7 +45,9 @@ export function useTruncationDetection(
     const isOverflowing = isHorizontallyOverflowing || isVerticallyOverflowing
 
     setIsTruncated(isOverflowing)
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- We need to re-check the truncation when the children change
+  // Spreading the dependencies causes the linter to not be able to verify that the dependencies are exhaustive.
+  // We need to re-check the truncation when the children change
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elementRef, checkFirstChild, ...dependencies])
 
   const DEBOUNCE_TIME_IN_MS = 450
