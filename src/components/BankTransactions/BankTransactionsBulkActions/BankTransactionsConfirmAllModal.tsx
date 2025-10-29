@@ -28,7 +28,7 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTr
       title='Confirm all suggestions?'
       content={(
         <Span>
-          {`This action will confirm ${count} selected ${pluralize('transaction', count)}.`}
+          {`This will confirm ${count} selected ${pluralize('transaction', count)}.`}
         </Span>
       )}
       onConfirm={handleConfirm}

@@ -1,13 +1,12 @@
 import { HStack } from '../../ui/Stack/Stack'
-import { BankTransactionsConfirmAllButton } from './BankTransactionsConfirmAllButton'
-import { BankTransactionsCategorizeAllButton, CategorizationMode } from './BankTransactionsCategorizeAllButton'
-import { BankTransactionsUncategorizeAllButton } from './BankTransactionsUncategorizeAllButton'
+import { CategorizationMode } from './BankTransactionsCategorizeAllModal'
 import { BankTransactionsCategorizeAllModal } from './BankTransactionsCategorizeAllModal'
 import { BankTransactionsConfirmAllModal } from './BankTransactionsConfirmAllModal'
 import { BankTransactionsUncategorizeAllModal } from './BankTransactionsUncategorizeAllModal'
 import { useBankTransactionsContext } from '../../../contexts/BankTransactionsContext'
 import { DisplayState } from '../../../types/bank_transactions'
 import { useState } from 'react'
+import { Button } from '../../ui/Button/Button'
 
 export const BankTransactionsBulkActions = () => {
   const { display } = useBankTransactionsContext()
@@ -21,24 +20,36 @@ export const BankTransactionsBulkActions = () => {
         {display === DisplayState.review
           ? (
             <>
-              <BankTransactionsCategorizeAllButton
+              <Button
+                variant='solid'
                 onClick={() => setCategorizeModalOpen(true)}
-                mode={CategorizationMode.Categorize}
-              />
-              <BankTransactionsConfirmAllButton
+              >
+                Set category
+              </Button>
+
+              <Button
+                variant='solid'
                 onClick={() => setConfirmModalOpen(true)}
-              />
+              >
+                Confirm all
+              </Button>
             </>
           )
           : (
             <>
-              <BankTransactionsCategorizeAllButton
+              <Button
+                variant='solid'
                 onClick={() => setCategorizeModalOpen(true)}
-                mode={CategorizationMode.Recategorize}
-              />
-              <BankTransactionsUncategorizeAllButton
+              >
+                Recategorize all
+              </Button>
+
+              <Button
+                variant='solid'
                 onClick={() => setUncategorizeModalOpen(true)}
-              />
+              >
+                Uncategorize all
+              </Button>
             </>
           )}
       </HStack>

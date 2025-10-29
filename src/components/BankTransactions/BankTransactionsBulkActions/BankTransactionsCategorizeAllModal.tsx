@@ -7,7 +7,11 @@ import { BankTransactionCategoryComboBox } from '../../BankTransactionCategoryCo
 import { isApiCategorizationAsOption, isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { useBulkCategorize } from '../../../hooks/useBankTransactions/useBulkCategorize'
 import pluralize from 'pluralize'
-import { CategorizationMode } from './BankTransactionsCategorizeAllButton'
+
+export enum CategorizationMode {
+  Categorize = 'Categorize',
+  Recategorize = 'Recategorize',
+}
 
 interface BankTransactionsCategorizeAllModalProps {
   isOpen: boolean
@@ -76,8 +80,8 @@ export const BankTransactionsCategorizeAllModal = ({ isOpen, onOpenChange, mode 
             <Span>
 
               {mode === CategorizationMode.Categorize
-                ? `This action will categorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`
-                : `This action will recategorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`}
+                ? `This will categorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`
+                : `This will recategorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`}
             </Span>
           )}
         </VStack>
