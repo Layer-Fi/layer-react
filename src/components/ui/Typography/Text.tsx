@@ -1,4 +1,4 @@
-import { forwardRef, useRef, useCallback } from 'react'
+import { forwardRef, useRef } from 'react'
 import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import type { Spacing } from '../sharedUITypes'
@@ -11,6 +11,7 @@ import './text.scss'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipCapableComponentProps } from '../../Tooltip'
 import classNames from 'classnames'
 import { useTruncationDetection } from '../../../hooks/useTruncationDetection/useTruncationDetection'
+import { mergeRefs } from 'react-merge-refs'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'
@@ -138,19 +139,7 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
     const internalRef = useRef<HTMLSpanElement | null>(null)
     const isTruncated = useTruncationDetection(internalRef, { checkFirstChild: true })
 
-    const mergedRef = useCallback(
-      (node: HTMLSpanElement | null) => {
-        internalRef.current = node
-
-        if (typeof forwardedRef === 'function') {
-          forwardedRef(node)
-        }
-        else if (forwardedRef) {
-          forwardedRef.current = node
-        }
-      },
-      [forwardedRef],
-    )
+    const mergedRef = mergeRefs([internalRef, forwardedRef])
 
     if (props.withTooltip) {
       const dataPropertiesWithEllipsis = { ...dataProperties, ellipsis: true }
