@@ -101,22 +101,17 @@ export const BankTransactionRow = ({
     setOpen(!open)
   }
 
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
+  const categorized = isCategorized(bankTransaction)
+
+  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
-
-  const openRow = {
-    onMouseDown: () => {
-      clickTimer = Date.now()
-    },
-    onMouseUp: () => {
-      if (Date.now() - clickTimer < 100 && !open) {
-        setShowRetry(false)
-        setOpen(true)
-      }
-    },
-  }
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -174,12 +169,17 @@ export const BankTransactionRow = ({
     setOpen(false)
   }
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-
-  const categorized = isCategorized(bankTransaction)
-
-  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+  const openRow = {
+    onMouseDown: () => {
+      clickTimer = Date.now()
+    },
+    onMouseUp: () => {
+      if (Date.now() - clickTimer < 100 && !open) {
+        setShowRetry(false)
+        setOpen(true)
+      }
+    },
+  }
 
   const className = 'Layer__bank-transaction-row'
   const openClassName = open ? `${className}--expanded` : ''
