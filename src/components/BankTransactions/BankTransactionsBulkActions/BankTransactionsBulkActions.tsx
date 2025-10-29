@@ -12,6 +12,7 @@ export const BankTransactionsBulkActions = () => {
   const { display } = useBankTransactionsContext()
   const [categorizeModalOpen, setCategorizeModalOpen] = useState(false)
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
+  const [recategorizeModalOpen, setRecategorizeModalOpen] = useState(false)
   const [uncategorizeModalOpen, setUncategorizeModalOpen] = useState(false)
 
   return (
@@ -45,13 +46,13 @@ export const BankTransactionsBulkActions = () => {
             <>
               <Button
                 variant='outlined'
-                onClick={() => setCategorizeModalOpen(true)}
+                onClick={() => setRecategorizeModalOpen(true)}
               >
                 Recategorize all
               </Button>
               <BankTransactionsCategorizeAllModal
-                isOpen={categorizeModalOpen}
-                onOpenChange={setCategorizeModalOpen}
+                isOpen={recategorizeModalOpen}
+                onOpenChange={setRecategorizeModalOpen}
                 mode={CategorizationMode.Recategorize}
               />
 
