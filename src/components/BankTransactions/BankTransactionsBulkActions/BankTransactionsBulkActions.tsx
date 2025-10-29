@@ -17,7 +17,7 @@ export const BankTransactionsBulkActions = () => {
 
   return (
     <>
-      <HStack pis='3xl' align='center' gap='sm'>
+      <HStack align='center' gap='xs'>
         {display === DisplayState.review
           ? (
             <>
@@ -25,7 +25,7 @@ export const BankTransactionsBulkActions = () => {
                 variant='outlined'
                 onClick={() => setCategorizeModalOpen(true)}
               >
-                Set category
+                Categorize
               </Button>
               <BankTransactionsCategorizeAllModal
                 isOpen={categorizeModalOpen}
@@ -34,7 +34,7 @@ export const BankTransactionsBulkActions = () => {
               />
 
               <Button variant='solid' onClick={() => setConfirmModalOpen(true)}>
-                Confirm all
+                Confirm
               </Button>
               <BankTransactionsConfirmAllModal
                 isOpen={confirmModalOpen}
@@ -48,7 +48,7 @@ export const BankTransactionsBulkActions = () => {
                 variant='outlined'
                 onClick={() => setRecategorizeModalOpen(true)}
               >
-                Recategorize all
+                Recategorize
               </Button>
               <BankTransactionsCategorizeAllModal
                 isOpen={recategorizeModalOpen}
@@ -60,7 +60,7 @@ export const BankTransactionsBulkActions = () => {
                 variant='solid'
                 onClick={() => setUncategorizeModalOpen(true)}
               >
-                Uncategorize all
+                Uncategorize
               </Button>
               <BankTransactionsUncategorizeAllModal
                 isOpen={uncategorizeModalOpen}
