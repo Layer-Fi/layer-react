@@ -35,12 +35,12 @@ export function useTruncationDetection(
     }
 
     const scrollWidth = element.scrollWidth
-    const offsetWidth = element.offsetWidth
+    const clientWidth = element.clientWidth
     const scrollHeight = element.scrollHeight
-    const offsetHeight = element.offsetHeight
+    const clientHeight = element.clientHeight
 
-    const isHorizontallyOverflowing = Math.ceil(scrollWidth) > Math.ceil(offsetWidth)
-    const isVerticallyOverflowing = Math.ceil(scrollHeight) > Math.ceil(offsetHeight)
+    const isHorizontallyOverflowing = Math.ceil(scrollWidth) > Math.ceil(clientWidth)
+    const isVerticallyOverflowing = Math.ceil(scrollHeight) > Math.ceil(clientHeight)
 
     const isOverflowing = isHorizontallyOverflowing || isVerticallyOverflowing
 
