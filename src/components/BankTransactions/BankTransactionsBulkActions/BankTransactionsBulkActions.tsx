@@ -21,7 +21,7 @@ export const BankTransactionsBulkActions = () => {
           ? (
             <>
               <Button
-                variant='solid'
+                variant='outlined'
                 onClick={() => setCategorizeModalOpen(true)}
               >
                 Set category
@@ -38,7 +38,7 @@ export const BankTransactionsBulkActions = () => {
           : (
             <>
               <Button
-                variant='solid'
+                variant='outlined'
                 onClick={() => setCategorizeModalOpen(true)}
               >
                 Recategorize all
