@@ -61,21 +61,5 @@ export function useTruncationDetection(
     return () => cancelAnimationFrame(id)
   }, [checkTruncation])
 
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     requestAnimationFrame(() => {
-  //       checkTruncation()
-  //     })
-  //   }, 0)
-
-  //   window.addEventListener('resize', debouncedCheckTruncation)
-
-  //   return () => {
-  //     clearTimeout(timeoutId)
-  //     window.removeEventListener('resize', debouncedCheckTruncation)
-  //     debouncedCheckTruncation.cancel()
-  //   }
-  // }, [elementRef, checkFirstChild, checkTruncation, debouncedCheckTruncation])
-
   return isTruncated
 }
