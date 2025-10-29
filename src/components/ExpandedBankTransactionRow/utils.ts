@@ -54,7 +54,7 @@ export const calculateRemoveSplit = (
   }
 }
 
-export const isAlreadyMatched = (bankTransaction?: BankTransaction): string | undefined => {
+export const getBankTransactionMatchId = (bankTransaction?: BankTransaction): string | undefined => {
   if (bankTransaction?.match) {
     const foundMatch = bankTransaction.suggested_matches?.find(
       x =>

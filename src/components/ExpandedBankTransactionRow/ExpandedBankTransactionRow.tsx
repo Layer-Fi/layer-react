@@ -46,7 +46,7 @@ import { type BankTransactionCategoryComboBoxOption } from '../../components/Ban
 import { type Split } from '../../types/bank_transactions'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { calculateAddSplit, calculateRemoveSplit, calculateUpdatedAmounts, getCustomerVendorForBankTransaction, getCustomerVendorForSplitEntry, isAlreadyMatched, validateSplit } from './utils'
+import { calculateAddSplit, calculateRemoveSplit, calculateUpdatedAmounts, getBankTransactionMatchId, getCustomerVendorForBankTransaction, getCustomerVendorForSplitEntry, validateSplit } from './utils'
 import { useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 export type ExpandedRowState = {
@@ -130,7 +130,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           : Purpose.categorize,
     )
     const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
-      isAlreadyMatched(bankTransaction)
+      getBankTransactionMatchId(bankTransaction)
       ?? bankTransaction?.suggested_matches?.[0]?.id,
     )
     const [matchFormError, setMatchFormError] = useState<string | undefined>()
@@ -153,9 +153,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 
     const [expandedRowState, updateExpandedRowState] = useState<ExpandedRowState>({
       splits: bankTransaction.category && isSplitCategorizationEncoded(bankTransaction.category)
-        ? bankTransaction.category?.entries.map((category) => {
+        ? bankTransaction.category?.entries.map((splitEntry) => {
           // Use split-specific tags/customer/vendor only (no fallback to transaction-level values when splits exist)
-          const splitTags = category.tags?.map(tag => makeTagFromTransactionTag({
+          const splitTags = splitEntry.tags?.map(tag => makeTagFromTransactionTag({
             id: tag.id,
             key: tag.key,
             value: tag.value,
@@ -167,12 +167,12 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
             archivedAt: tag.archived_at ? new Date(tag.archived_at) : null,
             _local: tag._local,
           })) ?? []
-          const splitCustomerVendor = getCustomerVendorForSplitEntry(category)
+          const splitCustomerVendor = getCustomerVendorForSplitEntry(splitEntry)
 
           return {
-            amount: category.amount || 0,
-            inputValue: formatMoney(category.amount),
-            category: new ApiCategorizationAsOption(category.category),
+            amount: splitEntry.amount || 0,
+            inputValue: formatMoney(splitEntry.amount),
+            category: new ApiCategorizationAsOption(splitEntry.category),
             tags: splitTags,
             customerVendor: splitCustomerVendor,
           }
@@ -191,7 +191,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     })
 
     const addSplit = () => {
-      updateExpandedRowState(calculateAddSplit(expandedRowState))
+      const newExpandedRowState = calculateAddSplit(expandedRowState)
+      updateExpandedRowState(newExpandedRowState)
       setSplitFormError(undefined)
     }
 
@@ -293,7 +294,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         }
         else if (
           selectedMatchId
-          && selectedMatchId !== isAlreadyMatched(bankTransaction)
+          && selectedMatchId !== getBankTransactionMatchId(bankTransaction)
         ) {
           await onMatchSubmit(selectedMatchId)
           return
