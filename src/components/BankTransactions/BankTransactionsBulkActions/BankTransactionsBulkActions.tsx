@@ -26,13 +26,19 @@ export const BankTransactionsBulkActions = () => {
               >
                 Set category
               </Button>
+              <BankTransactionsCategorizeAllModal
+                isOpen={categorizeModalOpen}
+                onOpenChange={setCategorizeModalOpen}
+                mode={CategorizationMode.Categorize}
+              />
 
-              <Button
-                variant='solid'
-                onClick={() => setConfirmModalOpen(true)}
-              >
+              <Button variant='solid' onClick={() => setConfirmModalOpen(true)}>
                 Confirm all
               </Button>
+              <BankTransactionsConfirmAllModal
+                isOpen={confirmModalOpen}
+                onOpenChange={setConfirmModalOpen}
+              />
             </>
           )
           : (
@@ -43,6 +49,11 @@ export const BankTransactionsBulkActions = () => {
               >
                 Recategorize all
               </Button>
+              <BankTransactionsCategorizeAllModal
+                isOpen={categorizeModalOpen}
+                onOpenChange={setCategorizeModalOpen}
+                mode={CategorizationMode.Recategorize}
+              />
 
               <Button
                 variant='solid'
@@ -50,23 +61,13 @@ export const BankTransactionsBulkActions = () => {
               >
                 Uncategorize all
               </Button>
+              <BankTransactionsUncategorizeAllModal
+                isOpen={uncategorizeModalOpen}
+                onOpenChange={setUncategorizeModalOpen}
+              />
             </>
           )}
       </HStack>
-
-      <BankTransactionsCategorizeAllModal
-        isOpen={categorizeModalOpen}
-        onOpenChange={setCategorizeModalOpen}
-        mode={display === DisplayState.review ? CategorizationMode.Categorize : CategorizationMode.Recategorize}
-      />
-      <BankTransactionsConfirmAllModal
-        isOpen={confirmModalOpen}
-        onOpenChange={setConfirmModalOpen}
-      />
-      <BankTransactionsUncategorizeAllModal
-        isOpen={uncategorizeModalOpen}
-        onOpenChange={setUncategorizeModalOpen}
-      />
     </>
   )
 }
