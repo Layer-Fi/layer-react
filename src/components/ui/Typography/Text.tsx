@@ -69,11 +69,6 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
 const HEADER_CLASS_NAME = 'Layer__Header'
 type HeaderProps = Pick<ComponentPropsWithoutRef<'header'>, 'id' | 'slot'> & TextRenderingProps
 
-/**
- * Header represents a header within a Spectrum container.
- *
- * See: https://react-spectrum.adobe.com/react-spectrum/Header.html#header
- */
 export const Header = forwardRef<HTMLElementTagNameMap['header'], PropsWithChildren<HeaderProps & TextStyleProps>>(
   function Header(props, ref) {
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
