@@ -101,6 +101,13 @@ export const BankTransactionRow = ({
     setOpen(!open)
   }
 
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
+  const categorized = isCategorized(bankTransaction)
+
+  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
@@ -173,13 +180,6 @@ export const BankTransactionRow = ({
       }
     },
   }
-
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-
-  const categorized = isCategorized(bankTransaction)
-
-  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
 
   const className = 'Layer__bank-transaction-row'
   const openClassName = open ? `${className}--expanded` : ''

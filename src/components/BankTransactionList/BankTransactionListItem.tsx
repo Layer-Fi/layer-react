@@ -80,6 +80,15 @@ export const BankTransactionListItem = ({
     setOpen(!open)
   }
 
+  const { isDesktop } = useSizeClass()
+
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
+  const categorized = isCategorized(bankTransaction)
+
+  const { isVisible } = useDelayedVisibility({ delay: index * 80 })
+
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
@@ -140,15 +149,6 @@ export const BankTransactionListItem = ({
     deselect(bankTransaction.id)
     setOpen(false)
   }
-
-  const { isDesktop } = useSizeClass()
-
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-
-  const categorized = isCategorized(bankTransaction)
-
-  const { isVisible } = useDelayedVisibility({ delay: index * 80 })
 
   const className = 'Layer__bank-transaction-list-item'
   const openClassName = open ? `${className}--expanded` : ''
