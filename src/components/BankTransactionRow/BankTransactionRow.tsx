@@ -106,18 +106,6 @@ export const BankTransactionRow = ({
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
 
-  const openRow = {
-    onMouseDown: () => {
-      clickTimer = Date.now()
-    },
-    onMouseUp: () => {
-      if (Date.now() - clickTimer < 100 && !open) {
-        setShowRetry(false)
-        setOpen(true)
-      }
-    },
-  }
-
   useEffect(() => {
     if (bankTransaction.error) {
       setShowRetry(true)
@@ -172,6 +160,18 @@ export const BankTransactionRow = ({
     // Remove from bulk selection store
     deselect(bankTransaction.id)
     setOpen(false)
+  }
+
+  const openRow = {
+    onMouseDown: () => {
+      clickTimer = Date.now()
+    },
+    onMouseUp: () => {
+      if (Date.now() - clickTimer < 100 && !open) {
+        setShowRetry(false)
+        setOpen(true)
+      }
+    },
   }
 
   const bookkeepingStatus = useEffectiveBookkeepingStatus()

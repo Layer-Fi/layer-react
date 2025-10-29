@@ -1,4 +1,3 @@
-import { useMemo, useCallback, useEffect } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types/bank_transactions'
 import {
@@ -6,11 +5,10 @@ import {
 } from '../BankTransactions/BankTransactions'
 import { BankTransactionListItem } from './BankTransactionListItem'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
-import { useSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
-import { useBankTransactionsCategoryActions } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { Span } from '../ui/Typography/Text'
 import { HStack } from '../ui/Stack/Stack'
+import { useBankTransactionsTableCheckboxState } from '../../hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
+import { useUpsertBankTransactionsDefaultCategories } from '../../hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
 
 interface BankTransactionListProps {
   bankTransactions?: BankTransaction[]
@@ -37,47 +35,8 @@ export const BankTransactionList = ({
   showTooltips,
   _showBulkSelection = false,
 }: BankTransactionListProps) => {
-  const { selectedIds } = useSelectedIds()
-  const { selectMultiple, deselectMultiple } = useBulkSelectionActions()
-  const { setOnlyNewTransactionCategories } = useBankTransactionsCategoryActions()
-
-  const currentPageIds = useMemo(
-    () => bankTransactions?.map(tx => tx.id) ?? [],
-    [bankTransactions],
-  )
-
-  const selectedCount = useMemo(
-    () => currentPageIds.filter(id => selectedIds.has(id)).length,
-    [currentPageIds, selectedIds],
-  )
-
-  const isAllSelected = selectedCount > 0 && selectedCount === currentPageIds.length
-  const isPartiallySelected = selectedCount > 0 && selectedCount < currentPageIds.length
-
-  const handleHeaderCheckboxChange = useCallback((checked: boolean) => {
-    if (!checked || isPartiallySelected) {
-      deselectMultiple(currentPageIds)
-    }
-    else {
-      selectMultiple(currentPageIds)
-    }
-  }, [
-    currentPageIds,
-    isPartiallySelected,
-    selectMultiple,
-    deselectMultiple,
-  ])
-
-  useEffect(() => {
-    if (!bankTransactions) return
-
-    const defaultCategories = bankTransactions.map(transaction => ({
-      id: transaction.id,
-      category: getDefaultSelectedCategoryForBankTransaction(transaction),
-    }))
-
-    setOnlyNewTransactionCategories(defaultCategories)
-  }, [bankTransactions, setOnlyNewTransactionCategories])
+  const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
+  useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
   return (
     <>
@@ -91,7 +50,7 @@ export const BankTransactionList = ({
           <Checkbox
             isSelected={isAllSelected}
             isIndeterminate={isPartiallySelected}
-            onChange={handleHeaderCheckboxChange}
+            onChange={onHeaderCheckboxChange}
             aria-label='Select all transactions on this page'
           />
           <Span size='sm' pbs='3xs'>

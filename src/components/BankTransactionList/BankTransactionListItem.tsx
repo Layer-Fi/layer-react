@@ -85,12 +85,6 @@ export const BankTransactionListItem = ({
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-  const { isDesktop } = useSizeClass()
-
-  const { isVisible } = useDelayedVisibility({ delay: index * 80 })
-
   useEffect(() => {
     if (bankTransaction.error) {
       setShowRetry(true)
@@ -135,7 +129,7 @@ export const BankTransactionListItem = ({
       return
     }
 
-    if (selectedCategory.classificationEncoded === null) return
+    if (!selectedCategory.classificationEncoded) return
 
     await categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
@@ -147,7 +141,14 @@ export const BankTransactionListItem = ({
     setOpen(false)
   }
 
+  const { isDesktop } = useSizeClass()
+
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
   const categorized = isCategorized(bankTransaction)
+
+  const { isVisible } = useDelayedVisibility({ delay: index * 80 })
 
   const className = 'Layer__bank-transaction-list-item'
   const openClassName = open ? `${className}--expanded` : ''
