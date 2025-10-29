@@ -4,7 +4,7 @@ import { VStack } from '../../ui/Stack/Stack'
 import { useCallback, useId, useState } from 'react'
 import { useCountSelectedIds, useSelectedIds, useBulkSelectionActions } from '../../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BankTransactionCategoryComboBox } from '../../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { isApiCategorizationAsOption, isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isApiCategorizationAsOption, isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '../../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { useBulkCategorize } from '../../../hooks/useBankTransactions/useBulkCategorize'
 import pluralize from 'pluralize'
 import { CategorizationMode } from './BankTransactionsCategorizeAllButton'
@@ -91,4 +91,3 @@ export const BankTransactionsCategorizeAllModal = ({ isOpen, onOpenChange, mode 
     />
   )
 }
-

@@ -40,4 +40,3 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange }: B
     />
   )
 }
-
