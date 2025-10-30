@@ -24,3 +24,57 @@
   max-width: 100%;
   padding-top: 2px;
 }
+
+/** New Tooltip Styles */
+
+.Layer__UI__tooltip {
+  box-sizing: border-box;
+  z-index: 100;
+  width: max-content;
+  max-width: calc(100vw - 10px);
+
+  &[data-width='sm'] {
+    max-width: 15rem;
+  }
+
+  &[data-width='md'] {
+    max-width: 25rem;
+  }
+
+  &[data-word-break='break-all'] {
+    word-break: break-all;
+  }
+}
+
+.Layer__UI__tooltip .Layer__UI__tooltip-content {
+  box-sizing: border-box;
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  border-radius: var(--border-radius-2xs);
+  background: var(--color-base-1000);
+  font-size: var(--text-sm);
+  color: var(--color-base-300);
+}
+
+.Layer__UI__tooltip-trigger {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.Layer__UI__tooltip-trigger > .Layer__Span {
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+span.Layer__Span.Layer__UI__tooltip-content__span {
+  display: block;
+  width: 100%;
+  border-radius: var(--border-radius-2xs);
+  background: var(--color-base-1000);
+  font-size: var(--text-sm);
+  color: var(--color-base-300);
+  word-break: break-all;
+  white-space: normal;
+}
