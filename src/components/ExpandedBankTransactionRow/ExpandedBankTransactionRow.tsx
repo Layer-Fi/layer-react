@@ -141,7 +141,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 
     useEffect(() => {
       setLocalSplits(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
-    }, [selectedCategory, bankTransaction])
+    }, [selectedCategory, bankTransaction, isOpen])
 
     const addSplit = () => {
       const newSplits = calculateAddSplit(localSplits)
