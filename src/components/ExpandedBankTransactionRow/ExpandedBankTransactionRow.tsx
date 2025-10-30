@@ -140,7 +140,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     const bodyRef = useRef<HTMLSpanElement>(null)
 
     const [localSplits, setLocalSplits] = useState<Split[]>(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
-    const [inputValues, setInputValues] = useState<Record<number, string | undefined>>({})
+    const [inputValues, setInputValues] = useState<Record<number, string>>({})
 
     useEffect(() => {
       setLocalSplits(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
@@ -164,17 +164,15 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 
     const updateAmounts =
       (index: number) => (value?: string) => {
-        if (value !== undefined) {
-          setInputValues(prev => ({ ...prev, [index]: value }))
-        }
+        setInputValues(prev => ({ ...prev, [index]: value ?? '' }))
 
-        if (value === undefined || value === '') {
+        if (!value) {
           return
         }
 
         const trimmedValue = value.endsWith('.') ? value.slice(0, -1) : value
-
         const numericValue = Number(trimmedValue)
+
         if (isNaN(numericValue)) {
           return
         }
@@ -364,6 +362,10 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       close()
     }
 
+    const getInputValue = (index: number, split: Split): string => {
+      return inputValues[index] ?? String(convertFromCents(split.amount) ?? '')
+    }
+
     const bookkeepingStatus = useEffectiveBookkeepingStatus()
     const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
@@ -463,7 +465,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                                 index === 0 || !categorizationEnabled
                               }
                               onChange={updateAmounts(index)}
-                              value={inputValues[index] !== undefined ? inputValues[index] : String(convertFromCents(split.amount) ?? '')}
+                              value={getInputValue(index, split)}
                               onBlur={onBlur}
                               className={`${className}__table-cell--split-entry__amount`}
                               isInvalid={split.amount < 0}
