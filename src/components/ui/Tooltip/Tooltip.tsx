@@ -95,7 +95,7 @@ export const TooltipContent = forwardRef<
     <FloatingPortal>
       <div
         ref={ref}
-        className={classNames('Layer__tooltip', 'Layer__UI__tooltip', className)}
+        className={classNames('Layer__UI__tooltip', className)}
         style={{
           ...context.floatingStyles,
         }}
