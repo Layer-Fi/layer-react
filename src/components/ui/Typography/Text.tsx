@@ -199,5 +199,18 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
         </Tooltip>
       )
     }
+
+    return (
+      <BaseSpan
+        dataProperties={dataProperties}
+        restProps={restProps}
+        hasRef={true}
+        className={className}
+        renderingProps={renderingProps}
+        ref={mergedRef}
+      >
+        {children}
+      </BaseSpan>
+    )
   },
 )
