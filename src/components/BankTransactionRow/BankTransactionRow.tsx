@@ -37,9 +37,10 @@ import { Span } from '../ui/Typography/Text'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSplitCategorizationEncoded, type CategorizationEncoded } from '../../schemas/categorization'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useSaveBankTransactionRow } from '../../hooks/useBankTransactions/useSaveBankTransactionRow'
 
 type Props = {
   index: number
@@ -86,11 +87,7 @@ export const BankTransactionRow = ({
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
-  const {
-    categorize: categorizeBankTransaction,
-    match: matchBankTransaction,
-    shouldHideAfterCategorize,
-  } = useBankTransactionsContext()
+  const { shouldHideAfterCategorize } = useBankTransactionsContext()
   const [open, setOpen] = useState(false)
   const toggleOpen = () => {
     setShowRetry(false)
@@ -109,6 +106,7 @@ export const BankTransactionRow = ({
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
+  const { saveBankTransactionRow } = useSaveBankTransactionRow()
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -136,30 +134,7 @@ export const BankTransactionRow = ({
       return
     }
 
-    if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
-      return
-    }
-
-    if (isSuggestedMatchAsOption(selectedCategory)) {
-      await matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
-
-      // Remove from bulk selection store
-      deselect(bankTransaction.id)
-      setOpen(false)
-      return
-    }
-
-    if (isSplitAsOption(selectedCategory)) {
-      // TODO: implement split categorization
-      return
-    }
-
-    if (!selectedCategory.classificationEncoded) return
-
-    await categorizeBankTransaction(bankTransaction.id, {
-      type: 'Category',
-      category: selectedCategory.classificationEncoded,
-    })
+    await saveBankTransactionRow(selectedCategory, bankTransaction)
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)

@@ -13,7 +13,7 @@ export const MatchFormMobile = ({
   classNamePrefix,
   bankTransaction,
   selectedMatchId,
-  setSelectedMatchId,
+  setSelectedMatch,
   matchFormError,
   readOnly,
 }: MatchFormProps) => {
@@ -37,7 +37,7 @@ export const MatchFormMobile = ({
                 return
               }
 
-              setSelectedMatchId(match.id)
+              setSelectedMatch(match)
             }}
           >
             <div className={`${classNamePrefix}__match-item__col-details`}>
