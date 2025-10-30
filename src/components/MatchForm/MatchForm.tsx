@@ -85,7 +85,7 @@ export const MatchForm = ({
             <div className={`${classNamePrefix}__match-table__desc`}>
               <Text
                 className={`${classNamePrefix}__match-table__desc-tooltip`}
-                withTooltip={TextUseTooltip.whenTruncated}
+                withDeprecatedTooltip={TextUseTooltip.whenTruncated}
                 as='span'
               >
                 {suggestedMatch.details.description}

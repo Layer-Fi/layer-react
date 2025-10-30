@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import { useElementSize } from '../../hooks/useElementSize'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '../Tooltip'
 import classNames from 'classnames'
 import { Span } from '../ui/Typography/Text'
 
@@ -184,8 +184,8 @@ const ToggleOption = ({
 
   if (disabled) {
     return (
-      <Tooltip>
-        <TooltipTrigger>
+      <DeprecatedTooltip>
+        <DeprecatedTooltipTrigger>
           <label
             className={optionClassName}
             data-checked={checked}
@@ -207,11 +207,11 @@ const ToggleOption = ({
               <Span noWrap>{label}</Span>
             </span>
           </label>
-        </TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>
+        </DeprecatedTooltipTrigger>
+        <DeprecatedTooltipContent className='Layer__tooltip'>
           {disabledMessage}
-        </TooltipContent>
-      </Tooltip>
+        </DeprecatedTooltipContent>
+      </DeprecatedTooltip>
     )
   }
 

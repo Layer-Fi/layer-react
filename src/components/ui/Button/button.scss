@@ -41,7 +41,8 @@
     padding-inline: 0;
   }
 
-  &[data-ellipsis] {
+  &[data-ellipsis],
+  &[data-with-tooltip] {
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;

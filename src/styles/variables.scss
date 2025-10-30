@@ -3,12 +3,13 @@
 .Layer__view,
 .Layer__select__menu-portal,
 .Layer__tooltip,
+.Layer__UI__tooltip,
 .Layer__toasts-container,
 .Layer__drawer,
 .Layer__variables,
 .Layer__tasks-component,
 #Layer__datepicker__portal {
-  // Explicit Colors
+  /* Explicit Colors */
   --color-black: #1a1a1a;
   --color-white: white;
   --color-blue: hsl(217deg 100% 92%);
@@ -33,7 +34,7 @@
   --color-light-l: 90%;
   --color-light: hsl(var(--color-light-h) var(--color-light-s) var(--color-light-l));
 
-  // Base Colors
+  /* Base Colors */
   --color-base-0: #fff;
   --color-base-50: hsl(var(--color-dark-h) 1% 98%);
   --color-base-100: hsl(var(--color-dark-h) 1% 94%);
@@ -47,10 +48,10 @@
   --color-base-900: hsl(var(--color-dark-h) 15% 14%);
   --color-base-1000: hsl(var(--color-dark-h) 20% 7%);
 
-  // View Sizing
+  /* View Sizing */
   --max-component-width: 1408px;
 
-  // Transparency
+  /* Transparency */
   --base-transparent-1: hsl(220deg 43% 11% / 1%);
   --base-transparent-2: hsl(220deg 43% 11% / 2%);
   --base-transparent-4: hsl(var(--color-dark-h) var(--color-dark-s) var(--color-dark-l) / 4%);
@@ -75,7 +76,7 @@
    * --fg-brand-accent
    */
 
-  // Other Colors
+  /* Other Colors */
   --color-secondary: var(--color-base);
   --color-success: var(--color-info-success);
   --color-danger: var(--color-info-error);
@@ -85,7 +86,7 @@
   --text-color-secondary: var(--color-base-600);
   --bg-element-focus: var(--color-base-50);
 
-  // Extended Customization
+  /* Extended Customization */
   --font-family: 'InterVariable', 'Inter', sans-serif;
   --font-family-numeric: 'InterVariable', 'Inter', sans-serif;
   --text-2xs: 10px;
@@ -183,10 +184,10 @@
   --chart-indicator-color: var(--color-base-700);
   --z-index-mobile-panel: 106;
 
-  // Transitions
+  /* Transitions */
   --transition-speed: 0.25s;
 
-  // 5. STYLES:
+  /* 5. STYLES: */
   box-sizing: border-box;
   padding: 0;
   border: 0;

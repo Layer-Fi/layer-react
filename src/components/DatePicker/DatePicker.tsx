@@ -10,7 +10,7 @@ import { ZonedDateTime } from '@internationalized/date'
 import { FieldError } from '../ui/Form/Form'
 import { HStack } from '../ui/Stack/Stack'
 import { TriangleAlert } from 'lucide-react'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip/Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '../Tooltip/Tooltip'
 import { useMemo } from 'react'
 
 type DatePickerProps = {
@@ -41,14 +41,14 @@ export const DatePicker = ({
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
   const errorTriangle = useMemo(() => (
-    <Tooltip offset={12}>
-      <TooltipTrigger>
+    <DeprecatedTooltip offset={12}>
+      <DeprecatedTooltipTrigger>
         <FieldError><TriangleAlert size={18} /></FieldError>
-      </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip' width='md'>
+      </DeprecatedTooltipTrigger>
+      <DeprecatedTooltipContent className='Layer__tooltip' width='md'>
         {errorText}
-      </TooltipContent>
-    </Tooltip>
+      </DeprecatedTooltipContent>
+    </DeprecatedTooltip>
   ), [errorText])
 
   return (

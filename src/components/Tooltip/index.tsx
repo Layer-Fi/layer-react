@@ -1,2 +1,2 @@
-export { Tooltip, TooltipTrigger, TooltipContent } from './Tooltip'
+export { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from './Tooltip'
 export { useTooltip } from './useTooltip'

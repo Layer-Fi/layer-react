@@ -15,8 +15,7 @@ import { RetryButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { ErrorText, Text } from '../Typography'
-import { TextUseTooltip } from '../Typography/Text'
+import { ErrorText } from '../Typography'
 import { Assignment } from './Assignment'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
@@ -32,6 +31,7 @@ import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryCombo
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { HStack } from '../ui/Stack/Stack'
 import { useSaveBankTransactionRow } from '../../hooks/useBankTransactions/useSaveBankTransactionRow'
 
 type Props = {
@@ -188,11 +188,11 @@ export const BankTransactionListItem = ({
             />
           </div>
         )}
-        <span className={`${className}__body__name`}>
-          <Text as='span' withTooltip={TextUseTooltip.whenTruncated}>
+        <HStack className={`${className}__body__name`}>
+          <Span withTooltip>
             {bankTransaction.counterparty_name ?? bankTransaction.description}
-          </Text>
-        </span>
+          </Span>
+        </HStack>
         <span
           className={`${className}__amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
