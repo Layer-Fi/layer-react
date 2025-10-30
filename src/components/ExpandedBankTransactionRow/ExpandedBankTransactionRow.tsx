@@ -191,8 +191,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       }
 
     const onBlur = () => {
-      const hasInvalidAmount = localSplits.some(split => split.amount <= 0)
-      if (hasInvalidAmount) {
+      if (!validateSplit(localSplits)) {
         setSplitFormError('Amounts must be greater than $0.00')
         return
       }
