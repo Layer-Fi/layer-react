@@ -96,8 +96,8 @@ export const getLocalSplitStateForExpandedTableRow = (
   }
 
   // Split Category
-  if (coercedSelectedCategory && isSplitAsOption(coercedSelectedCategory)) {
-    return coercedSelectedCategory.original.map((splitEntry) => {
+  if (selectedCategory && isSplitAsOption(selectedCategory)) {
+    return selectedCategory.original.map((splitEntry) => {
       return {
         amount: splitEntry.amount || 0,
         category: splitEntry.category,
