@@ -27,11 +27,12 @@ import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibilit
 import { Span } from '../ui/Typography/Text'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { useSizeClass } from '../../hooks/useWindowSize'
-import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useSaveBankTransactionRow } from '../../hooks/useBankTransactions/useSaveBankTransactionRow'
 
 type Props = {
   index: number
@@ -64,15 +65,12 @@ export const BankTransactionListItem = ({
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
-  const {
-    categorize: categorizeBankTransaction,
-    match: matchBankTransaction,
-    shouldHideAfterCategorize,
-  } = useBankTransactionsContext()
-  const [open, setOpen] = useState(false)
-  const toggleOpen = () => {
+  const { shouldHideAfterCategorize } = useBankTransactionsContext()
+  const { saveBankTransactionRow } = useSaveBankTransactionRow()
+  const [openExpandedRow, setOpenExpandedRow] = useState(false)
+  const toggleExpandedRow = () => {
     setShowRetry(false)
-    setOpen(!open)
+    setOpenExpandedRow(!openExpandedRow)
   }
 
   const { isDesktop } = useSizeClass()
@@ -111,43 +109,20 @@ export const BankTransactionListItem = ({
 
   const save = async () => {
     // Save using form from expanded row when row is open:
-    if (open && expandedRowRef?.current) {
+    if (openExpandedRow && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
       return
     }
 
-    if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
-      return
-    }
-
-    if (isSuggestedMatchAsOption(selectedCategory)) {
-      await matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
-
-      // Remove from bulk selection store
-      deselect(bankTransaction.id)
-      setOpen(false)
-      return
-    }
-
-    if (isSplitAsOption(selectedCategory)) {
-      // TODO: implement split categorization
-      return
-    }
-
-    if (!selectedCategory.classificationEncoded) return
-
-    await categorizeBankTransaction(bankTransaction.id, {
-      type: 'Category',
-      category: selectedCategory.classificationEncoded,
-    })
+    await saveBankTransactionRow(selectedCategory, bankTransaction)
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)
-    setOpen(false)
+    setOpenExpandedRow(false)
   }
 
   const className = 'Layer__bank-transaction-list-item'
-  const openClassName = open ? `${className}--expanded` : ''
+  const openClassName = openExpandedRow ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
     bankTransaction.recently_categorized
@@ -155,7 +130,7 @@ export const BankTransactionListItem = ({
     && shouldHideAfterCategorize()
       ? 'Layer__bank-transaction-row--removing'
       : '',
-    open ? openClassName : '',
+    openExpandedRow ? openClassName : '',
     isVisible ? 'show' : '',
   )
 
@@ -184,7 +159,7 @@ export const BankTransactionListItem = ({
 
         </div>
         <div
-          onClick={toggleOpen}
+          onClick={toggleExpandedRow}
           className={classNames(
             'Layer__bank-transaction-row__expand-button',
             !isDesktop && 'Layer__bank-transaction-row__expand-button--mobile',
@@ -192,7 +167,7 @@ export const BankTransactionListItem = ({
         >
           <ChevronDownFill
             className={`Layer__chevron ${
-              open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+              openExpandedRow ? 'Layer__chevron__up' : 'Layer__chevron__down'
             }`}
           />
         </div>
@@ -237,8 +212,8 @@ export const BankTransactionListItem = ({
         <ExpandedBankTransactionRow
           ref={expandedRowRef}
           bankTransaction={bankTransaction}
-          isOpen={open}
-          close={() => setOpen(false)}
+          isOpen={openExpandedRow}
+          close={() => setOpenExpandedRow(false)}
           categorized={categorized}
           asListItem={true}
           submitBtnText={

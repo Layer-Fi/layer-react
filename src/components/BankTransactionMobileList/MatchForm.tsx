@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
-import { BankTransaction } from '../../types/bank_transactions'
+import { BankTransaction, SuggestedMatch } from '../../types/bank_transactions'
 import {
   hasReceipts,
-  isAlreadyMatched,
   hasSuggestedTransferMatches,
+  getBankTransactionMatchAsSuggestedMatch,
 } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
@@ -32,12 +32,8 @@ export const MatchForm = ({
   const { match: matchBankTransaction, isLoading } =
     useBankTransactionsContext()
 
-  const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
-    isAlreadyMatched(bankTransaction)
-    ?? (bankTransaction.suggested_matches
-      && bankTransaction.suggested_matches?.length > 0
-      ? bankTransaction.suggested_matches[0].id
-      : undefined),
+  const [selectedMatch, setSelectedMatch] = useState<SuggestedMatch | undefined>(
+    getBankTransactionMatchAsSuggestedMatch(bankTransaction),
   )
   const [formError, setFormError] = useState<string | undefined>()
 
@@ -59,14 +55,14 @@ export const MatchForm = ({
       return
     }
 
-    if (!selectedMatchId) {
+    if (!selectedMatch) {
       setFormError('Select an option to match the transaction')
     }
     else if (
-      selectedMatchId
-      && selectedMatchId !== isAlreadyMatched(bankTransaction)
+      selectedMatch
+      && selectedMatch.id !== getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
     ) {
-      await onMatchSubmit(selectedMatchId)
+      await onMatchSubmit(selectedMatch.id)
     }
     return
   }
@@ -80,10 +76,10 @@ export const MatchForm = ({
         classNamePrefix='Layer__bank-transaction-mobile-list-item'
         readOnly={!showCategorization}
         bankTransaction={bankTransaction}
-        selectedMatchId={selectedMatchId}
-        setSelectedMatchId={(id) => {
+        selectedMatchId={selectedMatch?.id}
+        setSelectedMatch={(suggestedMatch) => {
           setFormError(undefined)
-          setSelectedMatchId(id)
+          setSelectedMatch(suggestedMatch)
         }}
       />
       <BankTransactionFormFields
@@ -120,10 +116,10 @@ export const MatchForm = ({
           <Button
             fullWidth={true}
             disabled={
-              !selectedMatchId
+              !selectedMatch
               || isLoading
               || bankTransaction.processing
-              || selectedMatchId === isAlreadyMatched(bankTransaction)
+              || selectedMatch.id === getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
             }
             onClick={() => { void save() }}
           >

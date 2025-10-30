@@ -3,7 +3,6 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import PaperclipIcon from '../../icons/Paperclip'
 import Trash from '../../icons/Trash'
 import {
-  centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
 } from '../../models/Money'
 import { BankTransaction } from '../../types/bank_transactions'
@@ -27,6 +26,7 @@ import { isSplitCategorizationEncoded } from '../../schemas/categorization'
 import { ApiCategorizationAsOption } from '../../types/categorizationOption'
 import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { type Split } from '../../types/bank_transactions'
+import { convertFromCents } from '../../utils/format'
 
 type RowState = {
   splits: Split[]
@@ -89,7 +89,6 @@ export const SplitForm = ({
 
         return {
           amount: c.amount || 0,
-          inputValue: formatMoney(c.amount),
           category: new ApiCategorizationAsOption(c.category),
           tags: splitTags,
           customerVendor: splitCustomerVendor,
@@ -98,7 +97,6 @@ export const SplitForm = ({
       : [
         {
           amount: bankTransaction.amount,
-          inputValue: formatMoney(bankTransaction.amount),
           category: defaultCategory
             ? new ApiCategorizationAsOption(defaultCategory)
             : null,
@@ -107,7 +105,6 @@ export const SplitForm = ({
         },
         {
           amount: 0,
-          inputValue: '0.00',
           category: defaultCategory
             ? new ApiCategorizationAsOption(defaultCategory)
             : null,
@@ -135,7 +132,6 @@ export const SplitForm = ({
     }, 0)
     const remaining = bankTransaction.amount - splitTotal
     newSplits[0].amount = remaining
-    newSplits[0].inputValue = formatMoney(remaining)
 
     updateRowState({
       ...rowState,
@@ -147,7 +143,6 @@ export const SplitForm = ({
   const updateAmounts =
     (rowNumber: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const newAmount = parseMoney(event.target.value) || 0
-      const newDisplaying = event.target.value
       const splitTotal = rowState.splits.reduce((sum, split, index) => {
         const amount =
           index === 0 ? 0 : index === rowNumber ? newAmount : split.amount
@@ -155,17 +150,13 @@ export const SplitForm = ({
       }, 0)
       const remaining = bankTransaction.amount - splitTotal
       rowState.splits[rowNumber].amount = newAmount
-      rowState.splits[rowNumber].inputValue = newDisplaying
       rowState.splits[0].amount = remaining
-      rowState.splits[0].inputValue = formatMoney(remaining)
       updateRowState({ ...rowState })
       setFormError(undefined)
     }
 
   const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     if (event.target.value === '') {
-      const [_, index] = event.target.name.split('-')
-      rowState.splits[parseInt(index)].inputValue = '0.00'
       updateRowState({ ...rowState })
       setFormError(undefined)
     }
@@ -184,7 +175,6 @@ export const SplitForm = ({
         ...rowState.splits,
         {
           amount: 0,
-          inputValue: '0.00',
           category: defaultCategory
             ? new ApiCategorizationAsOption(defaultCategory)
             : null,
@@ -279,7 +269,7 @@ export const SplitForm = ({
                     )}
                     disabled={index === 0}
                     onChange={updateAmounts(index)}
-                    value={split.inputValue}
+                    value={convertFromCents(split.amount)}
                     onBlur={onBlur}
                     isInvalid={split.amount < 0}
                     errorMessage='Negative values are not allowed'

@@ -178,7 +178,10 @@ export class SplitAsOption extends BaseCategorizationOption<Split[]> {
       .join(', ')
   }
 
-  get value() {
+  get value(): string {
+    if (this.internalValue.length == 1) {
+      return this.internalValue[0].category?.value ?? ''
+    }
     return 'split'
   }
 
