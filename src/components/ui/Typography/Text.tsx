@@ -143,7 +143,7 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
     const mergedRef = mergeRefs([internalRef, forwardedRef])
 
     if (props.withTooltip) {
-      const dataPropertiesWithEllipsis = { ...dataProperties, ellipsis: true }
+      const dataPropertiesWithEllipsis = { ...dataProperties }
       return (
         <Tooltip disabled={!isTruncated}>
           <TooltipTrigger>
