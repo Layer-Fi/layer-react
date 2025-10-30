@@ -66,9 +66,7 @@ export const AffectedTransactionsTable = ({
       id: TransactionColumns.Description,
       header: 'Description',
       cell: row => (
-        <Span
-          ellipsis
-        >
+        <Span withTooltip>
           {row.counterpartyName || row.description || '-'}
         </Span>
       ),
