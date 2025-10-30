@@ -1,0 +1,31 @@
+.Layer__UI__tooltip {
+  box-sizing: border-box;
+  z-index: 100;
+  max-width: 25rem;
+  word-break: break-all;
+}
+
+.Layer__UI__tooltip .Layer__UI__tooltip-content {
+  box-sizing: border-box;
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  border-radius: var(--border-radius-2xs);
+  background: var(--color-base-1000);
+  font-size: var(--text-sm);
+  color: var(--color-base-300);
+}
+
+.Layer__UI__tooltip-trigger {
+  width: 100%;
+}
+
+span.Layer__Span.Layer__UI__tooltip-content {
+  display: block;
+  width: 100%;
+  max-width: 25rem;
+  border-radius: var(--border-radius-2xs);
+  background: var(--color-base-1000);
+  font-size: var(--text-sm);
+  color: var(--color-base-300);
+  word-break: break-all;
+  white-space: normal;
+}

@@ -12,6 +12,7 @@ import type { Placement } from '@floating-ui/react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import classNames from 'classnames'
 import { HStack } from '../../ui/Stack/Stack'
+import './tooltip.scss'
 
 export type TooltipCapableComponentProps = {
   withTooltip?: boolean
@@ -70,9 +71,7 @@ export const TooltipTrigger = forwardRef<
     <HStack
       ref={ref}
       data-state={context.open ? 'open' : 'closed'}
-      className={classNames('Layer__UI__input-tooltip', 'Layer__UI__tooltip-trigger', `Layer__UI__tooltip-trigger--${
-        context.open ? 'open' : 'closed'
-      }`)}
+      className={classNames('Layer__UI__tooltip-trigger')}
       {...context.getReferenceProps(props)}
     >
       {children}
