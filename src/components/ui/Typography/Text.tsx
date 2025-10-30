@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useRef } from 'react'
 import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import type { Spacing } from '../sharedUITypes'
@@ -8,6 +8,11 @@ import {
   Text as ReactAriaText,
 } from 'react-aria-components'
 import './text.scss'
+
+import classNames from 'classnames'
+import { useTruncationDetection } from '../../../hooks/useTruncationDetection/useTruncationDetection'
+import { mergeRefs } from 'react-merge-refs'
+import { TooltipCapableComponentProps, TooltipContent, TooltipTrigger, Tooltip } from '../Tooltip/Tooltip'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'
@@ -20,6 +25,7 @@ export type TextStyleProps = {
   status?: 'error'
   variant?: 'placeholder' | 'subtle' | 'inherit'
   weight?: 'normal' | 'bold'
+  className?: string
 }
 
 type TextRenderingProps = {
@@ -126,20 +132,40 @@ export const P = forwardRef<HTMLParagraphElement, PropsWithChildren<ParagraphPro
 const SPAN_CLASS_NAME = 'Layer__Span'
 type SpanProps = Pick<ComponentPropsWithoutRef<'span'>, 'id' | 'slot'> & TextRenderingProps
 
-export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps>>(
-  function Span(props, ref) {
+export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapableComponentProps>>(
+  function Span(props, forwardedRef) {
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
+    const { className, tooltipContentWidth = 'md' } = props
+
+    const internalRef = useRef<HTMLSpanElement | null>(null)
+    const isTruncated = useTruncationDetection(internalRef, { checkFirstChild: true })
+
+    const mergedRef = mergeRefs([internalRef, forwardedRef])
+
+    if (props.withTooltip) {
+      const dataPropertiesWithEllipsis = { ...dataProperties, ellipsis: true }
+      return (
+        <Tooltip disabled={!isTruncated}>
+          <TooltipTrigger>
+            <span {...restProps} {...dataPropertiesWithEllipsis} className={classNames(SPAN_CLASS_NAME, className)} ref={mergedRef}>{children}</span>
+          </TooltipTrigger>
+          <TooltipContent width={tooltipContentWidth}>
+            <span {...restProps} {...dataPropertiesWithEllipsis} className={classNames(SPAN_CLASS_NAME, 'Layer__UI__tooltip-content__span')}>{children}</span>
+          </TooltipContent>
+        </Tooltip>
+      )
+    }
 
     if (renderingProps.nonAria) {
       return (
-        <span {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={ref}>
+        <span {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={mergedRef}>
           {children}
         </span>
       )
     }
 
     return (
-      <ReactAriaText {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={ref}>
+      <ReactAriaText {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={mergedRef}>
         {children}
       </ReactAriaText>
     )

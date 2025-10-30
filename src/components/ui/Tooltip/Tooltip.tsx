@@ -70,7 +70,7 @@ export const TooltipTrigger = forwardRef<
     <HStack
       ref={ref}
       data-state={context.open ? 'open' : 'closed'}
-      className={classNames('Layer__input-tooltip', 'Layer__tooltip-trigger', `Layer__tooltip-trigger--${
+      className={classNames('Layer__UI__input-tooltip', 'Layer__UI__tooltip-trigger', `Layer__UI__tooltip-trigger--${
         context.open ? 'open' : 'closed'
       }`)}
       {...context.getReferenceProps(props)}
@@ -96,14 +96,14 @@ export const TooltipContent = forwardRef<
     <FloatingPortal>
       <div
         ref={ref}
-        className={classNames('Layer__tooltip', className)}
+        className={classNames('Layer__tooltip', 'Layer__UI__tooltip', className)}
         style={{
           ...context.floatingStyles,
         }}
         {...dataProperties}
         {...context.getFloatingProps(props)}
       >
-        <div className='Layer__tooltip-content' style={{ ...context.styles }}>
+        <div className='Layer__UI__tooltip-content' style={{ ...context.styles }}>
           {props.children}
         </div>
       </div>
