@@ -1,4 +1,3 @@
-import { ExpandedRowState } from './ExpandedBankTransactionRow'
 import { BankTransaction, Split } from '../../types/bank_transactions'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { SplitCategorizationEntryEncoded } from '../../schemas/categorization'
@@ -9,10 +8,10 @@ import { Schema } from 'effect/index'
 import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
 import { isSuggestedMatchAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
-export const validateSplit = (expandedRowState: ExpandedRowState): boolean => {
+export const validateSplit = (localSplits: Split[]): boolean => {
   let valid = true
 
-  expandedRowState.splits.forEach((split) => {
+  localSplits.forEach((split) => {
     if (split.amount <= 0) {
       valid = false
     }
@@ -25,8 +24,8 @@ export const validateSplit = (expandedRowState: ExpandedRowState): boolean => {
 }
 
 export const calculateAddSplit = (
-  initialRowState: ExpandedRowState,
-): ExpandedRowState => {
+  initialRowSplits: Split[],
+): Split[] => {
   const newSplit = {
     amount: 0,
     inputValue: '0.00',
@@ -34,29 +33,22 @@ export const calculateAddSplit = (
     tags: [],
     customerVendor: null,
   }
-
-  return {
-    ...initialRowState,
-    splits: [...initialRowState.splits, newSplit],
-  }
+  return [...initialRowSplits, newSplit]
 }
 
 export const calculateRemoveSplit = (
-  initialRowState: ExpandedRowState,
-  { totalAmount, index }: { totalAmount: number, index: number }): ExpandedRowState => {
-  const newSplits = initialRowState.splits.filter((_v, idx) => idx !== index)
+  initialRowSplits: Split[],
+  { totalAmount, index }: { totalAmount: number, index: number }): Split[] => {
+  const newSplits = initialRowSplits.filter((_v, idx) => idx !== index)
   const splitTotal = newSplits.reduce((sum, split, index) => {
     const splitAmount = index === 0 ? 0 : split.amount
     return sum + splitAmount
   }, 0)
   const remaining = totalAmount - splitTotal
-  initialRowState.splits[0].amount = remaining
-  initialRowState.splits[0].inputValue = formatMoney(remaining)
+  newSplits[0].amount = remaining
+  newSplits[0].inputValue = formatMoney(remaining)
 
-  return {
-    ...initialRowState,
-    splits: newSplits,
-  }
+  return newSplits
 }
 
 export const sanitizeNumberInput = (input: string): string => {
@@ -77,27 +69,24 @@ export const sanitizeNumberInput = (input: string): string => {
 }
 
 export const calculateUpdatedAmounts = (
-  initialRowState: ExpandedRowState,
+  initialRowSplits: Split[],
   { index, newAmountInput, totalAmount }: { index: number, newAmountInput: string, totalAmount: number },
-): ExpandedRowState => {
+): Split[] => {
   const newDisplaying = sanitizeNumberInput(newAmountInput)
   const newAmount = Number(newAmountInput) * 100 // cents
-  const splitTotal = initialRowState.splits.reduce((sum, split, index) => {
+  const splitTotal = initialRowSplits.reduce((sum, split, index) => {
     const amount =
         index === 0 ? 0 : index === index ? newAmount : split.amount
     return sum + amount
   }, 0)
 
   const remaining = totalAmount - splitTotal
-  initialRowState.splits[index].amount = newAmount
-  initialRowState.splits[index].inputValue = newDisplaying
-  initialRowState.splits[0].amount = remaining
-  initialRowState.splits[0].inputValue = formatMoney(remaining)
+  initialRowSplits[index].amount = newAmount
+  initialRowSplits[index].inputValue = newDisplaying
+  initialRowSplits[0].amount = remaining
+  initialRowSplits[0].inputValue = formatMoney(remaining)
 
-  return {
-    ...initialRowState,
-    splits: [...initialRowState.splits],
-  }
+  return [...initialRowSplits]
 }
 
 export const getCustomerVendorForSplitEntry = (splitEntry: SplitCategorizationEntryEncoded) => {

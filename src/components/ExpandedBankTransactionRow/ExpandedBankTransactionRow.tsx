@@ -137,11 +137,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     const [splitFormError, setSplitFormError] = useState<string | undefined>()
     const bodyRef = useRef<HTMLSpanElement>(null)
 
-    const [expandedRowState, setExpandedRowState] = useState<ExpandedRowState>({
-      splits: getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction),
-      description: '',
-      file: undefined,
-    })
+    const [localSplits, setLocalSplits] = useState<Split[]>(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
 
     useEffect(() => {
       if (!selectedCategory
@@ -150,22 +146,19 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           || isSplitAsOption(selectedCategory))
       ) return
 
-      setExpandedRowState({
-        ...expandedRowState,
-        splits: getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction),
-      })
-    }, [selectedCategory, bankTransaction, expandedRowState])
+      setLocalSplits(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
+    }, [selectedCategory, bankTransaction])
 
     const addSplit = () => {
-      const newExpandedRowState = calculateAddSplit(expandedRowState)
-      setExpandedRowState(newExpandedRowState)
+      const newSplits = calculateAddSplit(localSplits)
+      setLocalSplits(newSplits)
       setSplitFormError(undefined)
     }
 
     const removeSplit = (index: number) => {
-      const newExpandedRowState = calculateRemoveSplit(expandedRowState, { totalAmount: bankTransaction.amount, index })
+      const newSplits = calculateRemoveSplit(localSplits, { totalAmount: bankTransaction.amount, index })
 
-      setExpandedRowState(newExpandedRowState)
+      setLocalSplits(newSplits)
       setSplitFormError(undefined)
     }
 
@@ -173,16 +166,16 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const newAmountInput = event.target.value
 
-        const newExpandedRowState = calculateUpdatedAmounts(expandedRowState, { index, newAmountInput, totalAmount: bankTransaction.amount })
-        setExpandedRowState(newExpandedRowState)
+        const newSplits = calculateUpdatedAmounts(localSplits, { index, newAmountInput, totalAmount: bankTransaction.amount })
+        setLocalSplits(newSplits)
         setSplitFormError(undefined)
       }
 
     const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
       if (event.target.value === '') {
         const [_, index] = event.target.name.split('-')
-        expandedRowState.splits[parseInt(index)].inputValue = '0.00'
-        setExpandedRowState({ ...expandedRowState })
+        localSplits[parseInt(index)].inputValue = '0.00'
+        setLocalSplits(localSplits)
         setSplitFormError(undefined)
       }
     }
@@ -197,8 +190,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         setTransactionCategory(bankTransaction.id, selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null)
       }
 
-      else if (newPurpose === Purpose.categorize && validateSplit(expandedRowState)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(expandedRowState.splits))
+      else if (newPurpose === Purpose.categorize && validateSplit(localSplits)) {
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
       }
 
       setSplitFormError(undefined)
@@ -208,24 +201,24 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     const changeCategory = (index: number, newCategory: BankTransactionCategoryComboBoxOption | null) => {
       if (newCategory === null) return
 
-      expandedRowState.splits[index].category = newCategory
-      setExpandedRowState({ ...expandedRowState })
+      localSplits[index].category = newCategory
+      setLocalSplits(localSplits)
       setSplitFormError(undefined)
 
       // Auto-save when category / split is valid
-      if (validateSplit(expandedRowState)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(expandedRowState.splits))
+      if (validateSplit(localSplits)) {
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
       }
     }
 
     const changeTags = (index: number, newTags: readonly Tag[]) => {
-      const oldTags = expandedRowState.splits[index].tags
-      expandedRowState.splits[index].tags = newTags
-      setExpandedRowState({ ...expandedRowState })
+      const oldTags = localSplits[index].tags
+      localSplits[index].tags = newTags
+      setLocalSplits(localSplits)
       setSplitFormError(undefined)
 
       // Auto-save tags only when in unsplit state (single split entry)
-      if (expandedRowState.splits.length === 1) {
+      if (localSplits.length === 1) {
         const addedTags = newTags.filter(newTag =>
           !oldTags.some(oldTag => oldTag.key === newTag.key && oldTag.value === newTag.value),
         )
@@ -251,18 +244,18 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       }
 
       // Auto-save when category / split is valid
-      if (validateSplit(expandedRowState)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(expandedRowState.splits))
+      if (validateSplit(localSplits)) {
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
       }
     }
 
     const changeCustomerVendor = (index: number, newCustomerVendor: typeof CustomerVendorSchema.Type | null) => {
-      expandedRowState.splits[index].customerVendor = newCustomerVendor
-      setExpandedRowState({ ...expandedRowState })
+      localSplits[index].customerVendor = newCustomerVendor
+      setLocalSplits(localSplits)
       setSplitFormError(undefined)
 
       // Auto-save customer/vendor only when in unsplit state (single split entry)
-      if (expandedRowState.splits.length === 1) {
+      if (localSplits.length === 1) {
         void setMetadataOnBankTransaction({
           customer: newCustomerVendor?.customerVendorType === 'CUSTOMER' ? newCustomerVendor : null,
           vendor: newCustomerVendor?.customerVendorType === 'VENDOR' ? newCustomerVendor : null,
@@ -270,8 +263,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       }
 
       // Auto-save when category / split is valid
-      if (validateSplit(expandedRowState)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(expandedRowState.splits))
+      if (validateSplit(localSplits)) {
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
       }
     }
 
@@ -292,8 +285,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         return
       }
 
-      if (!validateSplit(expandedRowState)) {
-        if (expandedRowState.splits.length > 1) {
+      if (!validateSplit(localSplits)) {
+        if (localSplits.length > 1) {
           setSplitFormError(
             'Use only positive amounts and select category for each entry',
           )
@@ -306,14 +299,14 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 
       await categorizeBankTransaction(
         bankTransaction.id,
-        expandedRowState.splits.length === 1 && expandedRowState?.splits[0].category
+        localSplits.length === 1 && localSplits[0].category
           ? ({
             type: 'Category',
-            category: expandedRowState?.splits[0].category.classificationEncoded as ClassificationEncoded,
+            category: localSplits[0].category.classificationEncoded as ClassificationEncoded,
           })
           : ({
             type: 'Split',
-            entries: expandedRowState.splits.map((split: Split) => ({
+            entries: localSplits.map((split: Split) => ({
               category: split.category?.classificationEncoded as ClassificationEncoded,
               amount: split.amount,
               tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
@@ -352,7 +345,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
     const effectiveSplits = categorizationEnabled
-      ? expandedRowState.splits
+      ? localSplits
       : []
 
     const className = 'Layer__expanded-bank-transaction-row'
