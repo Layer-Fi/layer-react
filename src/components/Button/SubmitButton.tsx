@@ -3,7 +3,7 @@ import AlertCircle from '../../icons/AlertCircle'
 import CheckCircle from '../../icons/CheckCircle'
 import Loader from '../../icons/Loader'
 import Save from '../../icons/Save'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip'
 import { Button, ButtonProps, ButtonVariant } from './Button'
 import classNames from 'classnames'
 import { RetryButton } from './RetryButton'
@@ -51,12 +51,12 @@ const buildRightIcon = ({
 
   if (error) {
     return (
-      <Tooltip offset={12}>
-        <TooltipTrigger>
+      <DeprecatedTooltip offset={12}>
+        <DeprecatedTooltipTrigger>
           <AlertCircle size={14} />
-        </TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>{error}</TooltipContent>
-      </Tooltip>
+        </DeprecatedTooltipTrigger>
+        <DeprecatedTooltipContent className='Layer__tooltip'>{error}</DeprecatedTooltipContent>
+      </DeprecatedTooltip>
     )
   }
 

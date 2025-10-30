@@ -1,5 +1,5 @@
 import { HTMLProps } from 'react'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip'
 import classNames from 'classnames'
 
 export interface TextareaProps extends HTMLProps<HTMLTextAreaElement> {
@@ -20,11 +20,11 @@ export const Textarea = ({
   )
 
   return (
-    <Tooltip disabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+    <DeprecatedTooltip disabled={!isInvalid || !errorMessage}>
+      <DeprecatedTooltipTrigger className='Layer__input-tooltip'>
         <textarea {...props} className={baseClassName} />
-      </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
-    </Tooltip>
+      </DeprecatedTooltipTrigger>
+      <DeprecatedTooltipContent className='Layer__tooltip'>{errorMessage}</DeprecatedTooltipContent>
+    </DeprecatedTooltip>
   )
 }

@@ -214,7 +214,7 @@ export const BankTransactionListItem = ({
           </div>
         )}
         <span className={`${className}__body__name`}>
-          <Text as='span' withTooltip={TextUseTooltip.whenTruncated}>
+          <Text as='span' withDeprecatedTooltip={TextUseTooltip.whenTruncated}>
             {bankTransaction.counterparty_name ?? bankTransaction.description}
           </Text>
         </span>

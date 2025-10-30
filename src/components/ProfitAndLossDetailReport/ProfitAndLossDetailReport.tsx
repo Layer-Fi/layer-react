@@ -178,7 +178,7 @@ export const ProfitAndLossDetailReport = ({
       cell: row => (
         <Text
           as='span'
-          withTooltip={TextUseTooltip.whenTruncated}
+          withDeprecatedTooltip={TextUseTooltip.whenTruncated}
           ellipsis
         >
           {row.account.name || '-'}
@@ -191,7 +191,7 @@ export const ProfitAndLossDetailReport = ({
       cell: row => (
         <Text
           as='span'
-          withTooltip={TextUseTooltip.whenTruncated}
+          withDeprecatedTooltip={TextUseTooltip.whenTruncated}
           ellipsis
         >
           {row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}

@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { Checkbox as ReactAriaCheckbox, type CheckboxProps as AriaCheckboxProps } from 'react-aria-components'
 import { withRenderProp } from '../../utility/withRenderProp'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../../Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../../Tooltip'
 import classNames from 'classnames'
 import './checkbox.scss'
 
@@ -53,12 +53,12 @@ export function Checkbox({ children, className, variant = 'default', size = 'md'
 export function CheckboxWithTooltip({ tooltip, ...props }: CheckboxWithTooltipProps) {
   return (
     <div className='Layer__checkbox-wrapper'>
-      <Tooltip disabled={!tooltip}>
-        <TooltipTrigger className='Layer__input-tooltip'>
+      <DeprecatedTooltip disabled={!tooltip}>
+        <DeprecatedTooltipTrigger className='Layer__input-tooltip'>
           <Checkbox {...props} />
-        </TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>{tooltip}</TooltipContent>
-      </Tooltip>
+        </DeprecatedTooltipTrigger>
+        <DeprecatedTooltipContent className='Layer__tooltip'>{tooltip}</DeprecatedTooltipContent>
+      </DeprecatedTooltip>
     </div>
   )
 }
