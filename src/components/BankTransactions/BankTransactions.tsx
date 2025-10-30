@@ -45,6 +45,7 @@ import { BulkSelectionStoreProvider } from '../../providers/BulkSelectionStore/B
 import { CategorizationRulesContext, CategorizationRulesProvider } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { CategorizationRulesDrawer } from '../CategorizationRules/CategorizationRulesDrawer'
+import { BankTransactionsCategoryStoreProvider } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -120,7 +121,9 @@ export const BankTransactions = ({
                 <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
                   <InAppLinkProvider renderInAppLink={renderInAppLink}>
                     <BulkSelectionStoreProvider>
-                      <BankTransactionsContent {...props} _showBulkSelection={_showBulkSelection} />
+                      <BankTransactionsCategoryStoreProvider>
+                        <BankTransactionsContent {...props} _showBulkSelection={_showBulkSelection} />
+                      </BankTransactionsCategoryStoreProvider>
                     </BulkSelectionStoreProvider>
                   </InAppLinkProvider>
                 </BankTransactionCustomerVendorVisibilityProvider>
@@ -415,6 +418,7 @@ const BankTransactionsTableView = ({
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
+              _showBulkSelection={_showBulkSelection}
             />
           </div>
         )

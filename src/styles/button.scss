@@ -2,15 +2,10 @@
   box-sizing: border-box;
   position: relative;
   min-height: 36px;
+  max-height: 36px;
   padding: 0 var(--spacing-md);
   border-radius: var(--btn-border-radius);
-  border-width: 0;
-  box-shadow:
-    0 0 0 1px var(--color-base-300),
-    0 1px 1px 0 rgb(0 0 0 / 4%),
-    0 2px 3px 0 rgb(0 0 0 / 4%),
-    0 3px 4px 0 rgb(0 0 0 / 2%),
-    0 4px 5px 0 rgb(0 0 0 / 1%);
+  border: 1px solid var(--color-base-300);
   cursor: pointer;
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
@@ -86,8 +81,8 @@
     }
 
     &.Layer__btn-icon--primary {
-      height: 32px;
-      width: 32px;
+      height: 30px;
+      width: 30px;
       background: var(--btn-bg-color-icon);
     }
   }
@@ -193,7 +188,7 @@
 .Layer__btn-content {
   display: flex;
   align-items: center;
-  padding: 2px;
+  padding-inline: 2px;
   font-size: var(--btn-font-size);
   line-height: 100%;
 }

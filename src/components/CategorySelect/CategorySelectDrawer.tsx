@@ -1,9 +1,9 @@
 import { BusinessCategories } from '../BankTransactionMobileList/BusinessCategories'
 import { Drawer } from '../ui/Modal/Modal'
-import type { Option } from '../BankTransactionMobileList/utils'
+import type { BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 interface CategorySelectDrawerProps {
-  onSelect: (value: Option) => void
+  onSelect: (value: BankTransactionCategoryComboBoxOption | null) => void
   selectedId?: string
   showTooltips: boolean
   isOpen: boolean

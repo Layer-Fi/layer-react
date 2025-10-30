@@ -5,6 +5,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { Schema } from 'effect'
 import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
+
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
 
 export const BulkUncategorizeRequestSchema = Schema.Struct({
@@ -65,6 +66,7 @@ export const useBulkUncategorize = () => {
     ).then(({ data }) => data),
     {
       revalidate: false,
+      throwOnError: true,
     },
   )
 

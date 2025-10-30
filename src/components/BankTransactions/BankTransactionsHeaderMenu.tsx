@@ -73,7 +73,7 @@ export const BankTransactionsHeaderMenu = ({ withUploadMenu, isDisabled }: BankT
           <BankTransactionsHeaderMenuIcon
             menuKey={BankTransactionsHeaderMenuActions.ManageCategorizationRules}
             onClick={toCategorizationRulesTable}
-            icon={<PencilRuler size={16} />}
+            icon={<PencilRuler size={16} strokeWidth={1.25} />}
             label='Manage categorization rules'
           />
         </MenuList>

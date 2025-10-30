@@ -4,6 +4,11 @@ import {
   BankTransactionCTAStringOverrides,
 } from '../BankTransactions/BankTransactions'
 import { BankTransactionListItem } from './BankTransactionListItem'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { Span } from '../ui/Typography/Text'
+import { HStack } from '../ui/Stack/Stack'
+import { useBankTransactionsTableCheckboxState } from '../../hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
+import { useUpsertBankTransactionsDefaultCategories } from '../../hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
 
 interface BankTransactionListProps {
   bankTransactions?: BankTransaction[]
@@ -15,6 +20,7 @@ interface BankTransactionListProps {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
+  _showBulkSelection?: boolean
 }
 
 export const BankTransactionList = ({
@@ -27,27 +33,52 @@ export const BankTransactionList = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
+  _showBulkSelection = false,
 }: BankTransactionListProps) => {
-  return (
-    <ul className='Layer__bank-transactions__list'>
-      {bankTransactions?.map(
-        (bankTransaction: BankTransaction, index: number) => (
-          <BankTransactionListItem
-            key={bankTransaction.id}
-            index={index}
-            dateFormat={DATE_FORMAT}
-            bankTransaction={bankTransaction}
-            editable={editable}
-            removeTransaction={removeTransaction}
-            containerWidth={containerWidth}
-            stringOverrides={stringOverrides}
+  const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
+  useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
+  return (
+    <>
+      {_showBulkSelection && (
+        <HStack
+          gap='md'
+          pi='md'
+          pb='md'
+          className='Layer__bank-transactions__list-header'
+        >
+          <Checkbox
+            isSelected={isAllSelected}
+            isIndeterminate={isPartiallySelected}
+            onChange={onHeaderCheckboxChange}
+            aria-label='Select all transactions on this page'
           />
-        ),
+          <Span size='sm' pbs='3xs'>
+            Select all
+          </Span>
+        </HStack>
       )}
-    </ul>
+      <ul className='Layer__bank-transactions__list'>
+        {bankTransactions?.map(
+          (bankTransaction: BankTransaction, index: number) => (
+            <BankTransactionListItem
+              key={bankTransaction.id}
+              index={index}
+              dateFormat={DATE_FORMAT}
+              bankTransaction={bankTransaction}
+              editable={editable}
+              removeTransaction={removeTransaction}
+              containerWidth={containerWidth}
+              stringOverrides={stringOverrides}
+
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+              _showBulkSelection={_showBulkSelection}
+            />
+          ),
+        )}
+      </ul>
+    </>
   )
 }

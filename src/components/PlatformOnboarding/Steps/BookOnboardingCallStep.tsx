@@ -8,7 +8,6 @@ import { Heading } from '../../ui/Typography/Heading'
 import { Span } from '../../ui/Typography/Text'
 import { useCallback, useState } from 'react'
 import { useCreateCallBooking } from '../../../features/callBookings/api/useCreateCallBookings'
-import { LoadingSpinner } from '../../ui/Loading/LoadingSpinner'
 import { useBookkeepingConfiguration } from '../../../hooks/useBookkeepingConfiguration'
 import { CallBookingPurpose, CallBookingType } from '../../../schemas/callBookings'
 import './bookOnboardingCallStep.scss'
@@ -37,8 +36,8 @@ enum BookOnboardingCallStepState {
   SUCCESS = 'success',
 }
 
-const defaultTitle = 'Schedule an onboarding call with our bookkeeping team to finish your onboarding.'
-const defaultDescription = 'During this call, we will review all of your information, answer any questions you have, and then get you live on bookkeeping!'
+const defaultTitle = 'Schedule an onboarding call with our bookkeeping team to finish your onboarding'
+const defaultDescription = 'During this call we will review your information, answer any questions you have, then get you live on bookkeeping.'
 
 export const BookOnboardingCallStep = ({ title = defaultTitle, description = defaultDescription, onNext }: BookOnboardingCallStepProps) => {
   const { isMobile, isTablet, isDesktop } = useSizeClass()
@@ -113,21 +112,16 @@ export const BookOnboardingCallStep = ({ title = defaultTitle, description = def
     <VStack gap='md' className={className}>
       <Heading size={isDesktop ? 'lg' : 'md'} className='Layer__platform-onboarding__heading'>{title}</Heading>
       <Span variant='subtle'>{description}</Span>
-      <VStack gap='sm' className='Layer__platform-onboarding__error'>
-        {state === BookOnboardingCallStepState.ERROR && (
-          <>
+      {(state === BookOnboardingCallStepState.ERROR || state === BookOnboardingCallStepState.RETRYING)
+        && (
+          <VStack
+            gap='sm'
+            className='Layer__platform-onboarding__error'
+          >
             <Span>Your call was booked successfully, but we encountered some issues recording it on our system. Please try again.</Span>
             <Button variant='solid' style={{ width: 'fit-content' }} onClick={retry}>Retry</Button>
-          </>
+          </VStack>
         )}
-        {state === BookOnboardingCallStepState.RETRYING && (
-          <>
-            <LoadingSpinner size={16} />
-            <Span>Recording your scheduled call...</Span>
-          </>
-        )}
-      </VStack>
-
       {(!isDesktop && state === BookOnboardingCallStepState.INITIAL)
         && <Button variant='branded' style={{ width: 'fit-content' }} onClick={() => openCalendly(calendlyUrl)}>Book a call</Button>}
 

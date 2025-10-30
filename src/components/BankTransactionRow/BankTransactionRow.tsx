@@ -6,10 +6,8 @@ import FileIcon from '../../icons/File'
 import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types/bank_transactions'
-import { hasSuggestions } from '../../types/categories'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import {
-  getCategorizePayload,
   isCredit,
   isTransferMatch,
 } from '../../utils/bankTransactions'
@@ -21,11 +19,6 @@ import {
 import { isCategorized } from '../BankTransactions/utils'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { CategorySelect } from '../CategorySelect'
-import {
-  mapCategoryToOption,
-  mapSuggestedMatchToOption,
-} from '../CategorySelect/CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '../IconBox'
@@ -35,7 +28,6 @@ import { MatchBadge } from './MatchBadge'
 import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-import type { CategoryWithEntries } from '../../types/bank_transactions'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
@@ -44,6 +36,10 @@ import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibilit
 import { Span } from '../ui/Typography/Text'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isSplitCategorizationEncoded, type CategorizationEncoded } from '../../schemas/categorization'
+import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 type Props = {
   index: number
@@ -63,29 +59,12 @@ type Props = {
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
 
-export const extractDescriptionForSplit = (category: CategoryWithEntries | null) => {
-  if (!category || !category.entries) {
+export const extractDescriptionForSplit = (category: CategorizationEncoded | null) => {
+  if (!category || !isSplitCategorizationEncoded(category)) {
     return ''
   }
 
   return category.entries.map(c => c.category.display_name).join(', ')
-}
-
-export const getDefaultSelectedCategory = (
-  bankTransaction: BankTransaction,
-) => {
-  if (bankTransaction.suggested_matches?.[0]) {
-    return mapSuggestedMatchToOption(bankTransaction.suggested_matches?.[0])
-  }
-  if (
-    hasSuggestions(bankTransaction.categorization_flow)
-    && bankTransaction.categorization_flow.suggestions.length > 0
-  ) {
-    return mapCategoryToOption(
-      bankTransaction.categorization_flow.suggestions[0],
-    )
-  }
-  return undefined
 }
 
 let clickTimer = Date.now()
@@ -112,30 +91,24 @@ export const BankTransactionRow = ({
     match: matchBankTransaction,
     shouldHideAfterCategorize,
   } = useBankTransactionsContext()
-  const [selectedCategory, setSelectedCategory] = useState(
-    getDefaultSelectedCategory(bankTransaction),
-  )
   const [open, setOpen] = useState(false)
   const toggleOpen = () => {
     setShowRetry(false)
     setOpen(!open)
   }
 
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
+  const categorized = isCategorized(bankTransaction)
+
+  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
-
-  const openRow = {
-    onMouseDown: () => {
-      clickTimer = Date.now()
-    },
-    onMouseUp: () => {
-      if (Date.now() - clickTimer < 100 && !open) {
-        setShowRetry(false)
-        setOpen(true)
-      }
-    },
-  }
+  const { setTransactionCategory } = useBankTransactionsCategoryActions()
+  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -163,32 +136,47 @@ export const BankTransactionRow = ({
       return
     }
 
-    if (!selectedCategory) {
+    if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
       return
     }
 
-    if (selectedCategory.type === 'match') {
-      await matchBankTransaction(
-        bankTransaction.id,
-        selectedCategory.payload.id,
-      )
+    if (isSuggestedMatchAsOption(selectedCategory)) {
+      await matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
+
+      // Remove from bulk selection store
+      deselect(bankTransaction.id)
       setOpen(false)
       return
     }
 
+    if (isSplitAsOption(selectedCategory)) {
+      // TODO: implement split categorization
+      return
+    }
+
+    if (!selectedCategory.classificationEncoded) return
+
     await categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
-      category: getCategorizePayload(selectedCategory),
+      category: selectedCategory.classificationEncoded,
     })
+
+    // Remove from bulk selection store
+    deselect(bankTransaction.id)
     setOpen(false)
   }
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-
-  const categorized = isCategorized(bankTransaction)
-
-  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+  const openRow = {
+    onMouseDown: () => {
+      clickTimer = Date.now()
+    },
+    onMouseUp: () => {
+      if (Date.now() - clickTimer < 100 && !open) {
+        setShowRetry(false)
+        setOpen(true)
+      }
+    },
+  }
 
   const className = 'Layer__bank-transaction-row'
   const openClassName = open ? `${className}--expanded` : ''
@@ -304,16 +292,14 @@ export const BankTransactionRow = ({
           >
             {categorizationEnabled && !categorized && !open
               ? (
-                <CategorySelect
+                <BankTransactionCategoryComboBox
                   bankTransaction={bankTransaction}
-                  name={`category-${bankTransaction.id}`}
-                  value={selectedCategory}
-                  onChange={(category) => {
-                    setSelectedCategory(category)
+                  selectedValue={selectedCategory ?? null}
+                  onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
+                    setTransactionCategory(bankTransaction.id, selectedCategory)
                     setShowRetry(false)
                   }}
-                  disabled={bankTransaction.processing}
-                  showTooltips={showTooltips}
+                  isLoading={bankTransaction.processing}
                 />
               )
               : null}

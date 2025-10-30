@@ -37,8 +37,6 @@ export interface BookkeepingOverviewProps {
     }
   }
 
-  _showBookACall?: boolean
-
   onClickReconnectAccounts?: () => void
   /**
    * @deprecated Use `stringOverrides.title` instead
@@ -54,7 +52,6 @@ export const BookkeepingOverview = ({
   onClickReconnectAccounts,
   stringOverrides,
   slotProps,
-  _showBookACall,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
@@ -70,7 +67,7 @@ export const BookkeepingOverview = ({
 
   const { data: callBookings, isError, isLoading, isValidating } = useCallBookings(1)
   const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
-  const callBookingVisible = _showBookACall && callBooking && !isLoading && !isValidating && !isError
+  const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
 
   return (
     <ProfitAndLoss asContainer={false}>

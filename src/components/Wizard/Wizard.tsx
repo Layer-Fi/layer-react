@@ -9,6 +9,8 @@ import {
   useState,
 } from 'react'
 import type { Awaitable } from '../../types/utility/promises'
+import { Separator } from '../Separator/Separator'
+import { VStack } from '../ui/Stack/Stack'
 
 function useWizardStep({
   steps,
@@ -94,9 +96,12 @@ export function Wizard({
 
   return (
     <WizardContext.Provider value={contextValue}>
-      {Header}
-      {currentStep}
-      {Footer}
+      <VStack gap='md'>
+        {Header}
+        <Separator />
+        {currentStep}
+        {Footer}
+      </VStack>
     </WizardContext.Provider>
   )
 }

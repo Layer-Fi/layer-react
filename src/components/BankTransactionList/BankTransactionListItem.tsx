@@ -4,18 +4,15 @@ import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
 import { BankTransaction } from '../../types/bank_transactions'
 import {
-  getCategorizePayload,
   hasReceipts,
   isCredit,
 } from '../../utils/bankTransactions'
-import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionCTAStringOverrides,
 } from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { RetryButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { CategorySelect } from '../CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText, Text } from '../Typography'
@@ -30,6 +27,11 @@ import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibilit
 import { Span } from '../ui/Typography/Text'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { useSizeClass } from '../../hooks/useWindowSize'
+import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 type Props = {
   index: number
@@ -43,6 +45,7 @@ type Props = {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
+  _showBulkSelection?: boolean
 }
 
 export const BankTransactionListItem = ({
@@ -57,6 +60,7 @@ export const BankTransactionListItem = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
+  _showBulkSelection = false,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -65,21 +69,26 @@ export const BankTransactionListItem = ({
     match: matchBankTransaction,
     shouldHideAfterCategorize,
   } = useBankTransactionsContext()
-  const [selectedCategory, setSelectedCategory] = useState(
-    getDefaultSelectedCategory(bankTransaction),
-  )
-
   const [open, setOpen] = useState(false)
   const toggleOpen = () => {
     setShowRetry(false)
     setOpen(!open)
   }
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
   const { isDesktop } = useSizeClass()
 
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
+  const categorized = isCategorized(bankTransaction)
+
   const { isVisible } = useDelayedVisibility({ delay: index * 80 })
+
+  const { select, deselect } = useBulkSelectionActions()
+  const isSelected = useIdIsSelected()
+  const isTransactionSelected = isSelected(bankTransaction.id)
+  const { setTransactionCategory } = useBankTransactionsCategoryActions()
+  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -107,22 +116,35 @@ export const BankTransactionListItem = ({
       return
     }
 
-    if (!selectedCategory) {
+    if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
       return
     }
 
-    if (selectedCategory.type === 'match') {
-      await matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
+    if (isSuggestedMatchAsOption(selectedCategory)) {
+      await matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
+
+      // Remove from bulk selection store
+      deselect(bankTransaction.id)
+      setOpen(false)
       return
     }
+
+    if (isSplitAsOption(selectedCategory)) {
+      // TODO: implement split categorization
+      return
+    }
+
+    if (!selectedCategory.classificationEncoded) return
 
     await categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
-      category: getCategorizePayload(selectedCategory),
+      category: selectedCategory.classificationEncoded,
     })
-  }
 
-  const categorized = isCategorized(bankTransaction)
+    // Remove from bulk selection store
+    deselect(bankTransaction.id)
+    setOpen(false)
+  }
 
   const className = 'Layer__bank-transaction-list-item'
   const openClassName = open ? `${className}--expanded` : ''
@@ -176,6 +198,21 @@ export const BankTransactionListItem = ({
         </div>
       </span>
       <span className={`${className}__body`}>
+        {_showBulkSelection && (
+          <div className={`${className}__checkbox`}>
+            <Checkbox
+              isSelected={isTransactionSelected}
+              onChange={(selected) => {
+                if (selected) {
+                  select(bankTransaction.id)
+                }
+                else {
+                  deselect(bankTransaction.id)
+                }
+              }}
+            />
+          </div>
+        )}
         <span className={`${className}__body__name`}>
           <Text as='span' withTooltip={TextUseTooltip.whenTruncated}>
             {bankTransaction.counterparty_name ?? bankTransaction.description}
@@ -219,16 +256,14 @@ export const BankTransactionListItem = ({
       <span className={`${className}__base-row`}>
         {categorizationEnabled && !categorized
           ? (
-            <CategorySelect
+            <BankTransactionCategoryComboBox
               bankTransaction={bankTransaction}
-              name={`category-${bankTransaction.id}`}
-              value={selectedCategory}
-              onChange={(category) => {
+              selectedValue={selectedCategory ?? null}
+              onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
+                setTransactionCategory(bankTransaction.id, selectedCategory)
                 setShowRetry(false)
-                setSelectedCategory(category)
               }}
-              disabled={bankTransaction.processing}
-              showTooltips={showTooltips}
+              isLoading={bankTransaction.processing}
             />
           )
           : null}

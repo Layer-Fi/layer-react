@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react'
+import { useMemo } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types/bank_transactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
@@ -6,10 +6,11 @@ import { BankTransactionRow } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionsStringOverrides,
 } from '../BankTransactions/BankTransactions'
-import { BankTransactionsLoader } from '../BankTransactionsLoader'
+import { BankTransactionsLoader } from '../BankTransactionsLoader/BankTransactionsLoader'
 import { SyncingComponent } from '../SyncingComponent'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
-import { useSelectedIds, useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useBankTransactionsTableCheckboxState } from '../../hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
+import { useUpsertBankTransactionsDefaultCategories } from '../../hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
@@ -59,47 +60,20 @@ export const BankTransactionsTable = ({
   lastPage,
   onRefresh,
 }: BankTransactionsTableProps) => {
-  const { selectedIds } = useSelectedIds()
-  const { selectMultiple, deselectMultiple } = useBulkSelectionActions()
+  const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
+  useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
   const showReceiptColumn =
-    (showReceiptUploads
-      && bankTransactions?.some(
-        transaction => transaction.document_ids?.length > 0,
-      ))
-      ?? false
+  (showReceiptUploads
+    && bankTransactions?.some(
+      transaction => transaction.document_ids?.length > 0,
+    ))
+    ?? false
 
   const showReceiptDataProperties = useMemo(
     () => toDataProperties({ 'show-receipt-upload-column': showReceiptColumn }),
     [showReceiptColumn],
   )
-
-  const currentPageIds = useMemo(
-    () => bankTransactions?.map(tx => tx.id) ?? [],
-    [bankTransactions],
-  )
-
-  const selectedCount = useMemo(
-    () => currentPageIds.filter(id => selectedIds.has(id)).length,
-    [currentPageIds, selectedIds],
-  )
-
-  const isAllSelected = selectedCount > 0 && selectedCount === currentPageIds.length
-  const isPartiallySelected = selectedCount > 0 && selectedCount < currentPageIds.length
-
-  const handleHeaderCheckboxChange = useCallback((checked: boolean) => {
-    if (!checked || isPartiallySelected) {
-      deselectMultiple(currentPageIds)
-    }
-    else {
-      selectMultiple(currentPageIds)
-    }
-  }, [
-    currentPageIds,
-    isPartiallySelected,
-    selectMultiple,
-    deselectMultiple,
-  ])
 
   return (
     <table
@@ -114,7 +88,7 @@ export const BankTransactionsTable = ({
                 <Checkbox
                   isSelected={isAllSelected}
                   isIndeterminate={isPartiallySelected}
-                  onChange={handleHeaderCheckboxChange}
+                  onChange={onHeaderCheckboxChange}
                   aria-label='Select all transactions on this page'
                 />
               </span>
@@ -157,11 +131,7 @@ export const BankTransactionsTable = ({
             )}
         </tr>
       </thead>
-      {isLoading && page && page === 1
-        ? (
-          <BankTransactionsLoader isLoading={true} showTooltips={showTooltips} />
-        )
-        : null}
+      {isLoading && page && page === 1 && <BankTransactionsLoader />}
       <tbody>
         {!isLoading
           && bankTransactions?.map(
