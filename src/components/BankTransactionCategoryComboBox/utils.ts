@@ -1,15 +1,39 @@
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
-import type { NestedCategorization } from '../../schemas/categorization'
+import { type CategorizationEncoded, type NestedCategorization, isSplitCategorizationEncoded } from '../../schemas/categorization'
 import type { BankTransaction, SuggestedMatch } from '../../types/bank_transactions'
 import { CategorizationType, hasSuggestions } from '../../types/categories'
-import { ApiCategorizationAsOption, CategoryAsOption, PlaceholderAsOption, SuggestedMatchAsOption } from '../../types/categorizationOption'
+import { ApiCategorizationAsOption, CategoryAsOption, PlaceholderAsOption, SplitAsOption, SuggestedMatchAsOption } from '../../types/categorizationOption'
 import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'
+import { TransactionTagSchema } from '../../features/tags/tagSchemas'
+import { centsToDollars as formatMoney } from '../../models/Money'
+import { Schema } from 'effect/index'
+import { makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
 
 export enum BankTransactionCategoryComboBoxGroupLabel {
   TRANSFER = 'TRANSFER',
   MATCH = 'MATCH',
   SUGGESTIONS = 'SUGGESTIONS',
   ALL_CATEGORIES = 'ALL CATEGORIES',
+}
+
+export const convertCategorizationToOption = (categorization: CategorizationEncoded): BankTransactionCategoryComboBoxOption => {
+  if (isSplitCategorizationEncoded(categorization)) {
+    const splits = categorization.entries.map(splitEntryEncoded => ({
+      amount: splitEntryEncoded.amount || 0,
+      inputValue: formatMoney(splitEntryEncoded.amount),
+      category: splitEntryEncoded.category ? new ApiCategorizationAsOption(splitEntryEncoded.category) : null,
+      tags: splitEntryEncoded.tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
+      customerVendor: splitEntryEncoded.customer
+        ? decodeCustomerVendor({ ...splitEntryEncoded.customer, customerVendorType: 'CUSTOMER' })
+        : splitEntryEncoded.vendor
+          ? decodeCustomerVendor({ ...splitEntryEncoded.vendor, customerVendorType: 'VENDOR' })
+          : null,
+    }))
+    return new SplitAsOption(splits)
+  }
+
+  return new ApiCategorizationAsOption(categorization)
 }
 
 function getLeafCategories(category: NestedCategorization): NestedCategorization[] {
@@ -66,7 +90,7 @@ export const getSuggestedCategoriesGroup = (bankTransaction: BankTransaction) =>
   if (categorizationFlow?.type === CategorizationType.ASK_FROM_SUGGESTIONS && hasSuggestions(categorizationFlow)) {
     return {
       label: BankTransactionCategoryComboBoxGroupLabel.SUGGESTIONS,
-      options: categorizationFlow.suggestions.map(suggestion => new ApiCategorizationAsOption(suggestion)),
+      options: categorizationFlow.suggestions.map(suggestion => convertCategorizationToOption(suggestion)),
     }
   }
 
@@ -79,7 +103,7 @@ export const getDefaultSelectedCategoryForBankTransaction = (bankTransaction: Ba
   }
 
   if (hasSuggestions(bankTransaction.categorization_flow)) {
-    return new ApiCategorizationAsOption(bankTransaction.categorization_flow.suggestions[0])
+    return convertCategorizationToOption(bankTransaction.categorization_flow.suggestions[0])
   }
 
   return null

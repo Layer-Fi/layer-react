@@ -17,14 +17,13 @@ import {
   hasSuggestedTransferMatches,
 } from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
-import { Tag, makeTagKeyValueFromTag, makeTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
+import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
 import { TagDimensionsGroup } from '../../features/tags/components/TagDimensionsGroup'
 import { CustomerVendorSelector } from '../../features/customerVendor/components/CustomerVendorSelector'
 import { CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
 import { useTagBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
 import { useRemoveTagFromBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
 import { useSetMetadataOnBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
-
 import { SubmitButton, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { Button } from '../ui/Button/Button'
@@ -40,13 +39,12 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { useBankTransactionTagVisibility } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import { useBankTransactionCustomerVendorVisibility } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { isSplitCategorizationEncoded, type ClassificationEncoded } from '../../schemas/categorization'
-import { ApiCategorizationAsOption } from '../../types/categorizationOption'
+import { type ClassificationEncoded } from '../../schemas/categorization'
 import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { type Split } from '../../types/bank_transactions'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { calculateAddSplit, calculateRemoveSplit, calculateUpdatedAmounts, getBankTransactionMatchId, getCustomerVendorForBankTransaction, getCustomerVendorForSplitEntry, validateSplit } from './utils'
+import { calculateAddSplit, calculateRemoveSplit, calculateUpdatedAmounts, getBankTransactionMatchId, getLocalSplitStateForExpandedTableRow, validateSplit } from './utils'
 import { useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 export type ExpandedRowState = {
@@ -137,69 +135,22 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     const [splitFormError, setSplitFormError] = useState<string | undefined>()
     const bodyRef = useRef<HTMLSpanElement>(null)
 
-    const initialCustomerVendor = getCustomerVendorForBankTransaction(bankTransaction)
-
-    const initialTags = bankTransaction.transaction_tags.map(({ id, key, value, dimension_display_name, value_display_name, archived_at, _local }) => makeTag({
-      id,
-      key,
-      value,
-      dimensionDisplayName: dimension_display_name,
-      valueDisplayName: value_display_name,
-      archivedAt: archived_at,
-      _local: {
-        isOptimistic: _local?.isOptimistic ?? false,
-      },
-    }))
-
-    const [expandedRowState, updateExpandedRowState] = useState<ExpandedRowState>({
-      splits: bankTransaction.category && isSplitCategorizationEncoded(bankTransaction.category)
-        ? bankTransaction.category?.entries.map((splitEntry) => {
-          // Use split-specific tags/customer/vendor only (no fallback to transaction-level values when splits exist)
-          const splitTags = splitEntry.tags?.map(tag => makeTagFromTransactionTag({
-            id: tag.id,
-            key: tag.key,
-            value: tag.value,
-            dimensionDisplayName: tag.dimension_display_name,
-            valueDisplayName: tag.value_display_name,
-            createdAt: new Date(tag.created_at),
-            updatedAt: new Date(tag.updated_at),
-            deletedAt: tag.deleted_at ? new Date(tag.deleted_at) : null,
-            archivedAt: tag.archived_at ? new Date(tag.archived_at) : null,
-            _local: tag._local,
-          })) ?? []
-          const splitCustomerVendor = getCustomerVendorForSplitEntry(splitEntry)
-
-          return {
-            amount: splitEntry.amount || 0,
-            inputValue: formatMoney(splitEntry.amount),
-            category: new ApiCategorizationAsOption(splitEntry.category),
-            tags: splitTags,
-            customerVendor: splitCustomerVendor,
-          }
-        })
-        : [
-          {
-            amount: bankTransaction.amount,
-            inputValue: formatMoney(bankTransaction.amount),
-            category: selectedCategory ?? null,
-            tags: initialTags,
-            customerVendor: initialCustomerVendor,
-          },
-        ],
+    const [expandedRowState, setExpandedRowState] = useState<ExpandedRowState>({
+      splits: getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction),
       description: '',
       file: undefined,
     })
 
     const addSplit = () => {
       const newExpandedRowState = calculateAddSplit(expandedRowState)
-      updateExpandedRowState(newExpandedRowState)
+      setExpandedRowState(newExpandedRowState)
       setSplitFormError(undefined)
     }
 
     const removeSplit = (index: number) => {
       const newExpandedRowState = calculateRemoveSplit(expandedRowState, { totalAmount: bankTransaction.amount, index })
 
-      updateExpandedRowState(newExpandedRowState)
+      setExpandedRowState(newExpandedRowState)
       setSplitFormError(undefined)
     }
 
@@ -208,7 +159,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         const newAmountInput = event.target.value
 
         const newExpandedRowState = calculateUpdatedAmounts(expandedRowState, { index, newAmountInput, totalAmount: bankTransaction.amount })
-        updateExpandedRowState(newExpandedRowState)
+        setExpandedRowState(newExpandedRowState)
         setSplitFormError(undefined)
       }
 
@@ -216,7 +167,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       if (event.target.value === '') {
         const [_, index] = event.target.name.split('-')
         expandedRowState.splits[parseInt(index)].inputValue = '0.00'
-        updateExpandedRowState({ ...expandedRowState })
+        setExpandedRowState({ ...expandedRowState })
         setSplitFormError(undefined)
       }
     }
@@ -235,14 +186,14 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       if (newValue === null) return
 
       expandedRowState.splits[index].category = newValue
-      updateExpandedRowState({ ...expandedRowState })
+      setExpandedRowState({ ...expandedRowState })
       setSplitFormError(undefined)
     }
 
     const changeTags = (index: number, newTags: readonly Tag[]) => {
       const oldTags = expandedRowState.splits[index].tags
       expandedRowState.splits[index].tags = newTags
-      updateExpandedRowState({ ...expandedRowState })
+      setExpandedRowState({ ...expandedRowState })
       setSplitFormError(undefined)
 
       // Auto-save tags only when in unsplit state (single split entry)
@@ -274,7 +225,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 
     const changeCustomerVendor = (index: number, newCustomerVendor: typeof CustomerVendorSchema.Type | null) => {
       expandedRowState.splits[index].customerVendor = newCustomerVendor
-      updateExpandedRowState({ ...expandedRowState })
+      setExpandedRowState({ ...expandedRowState })
       setSplitFormError(undefined)
 
       // Auto-save customer/vendor only when in unsplit state (single split entry)

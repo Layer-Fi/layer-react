@@ -1,8 +1,11 @@
 import { ExpandedRowState } from './ExpandedBankTransactionRow'
-import { BankTransaction } from '../../types/bank_transactions'
+import { BankTransaction, Split } from '../../types/bank_transactions'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { SplitCategorizationEntryEncoded } from '../../schemas/categorization'
 import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'
+import { BankTransactionCategoryComboBoxOption, isSplitAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { makeTagFromTransactionTag, TransactionTagSchema } from '../../features/tags/tagSchemas'
+import { Schema } from 'effect/index'
 
 export const validateSplit = (expandedRowState: ExpandedRowState): boolean => {
   let valid = true
@@ -122,4 +125,33 @@ export const getCustomerVendorForBankTransaction = (bankTransaction: BankTransac
     : bankTransaction.vendor
       ? decodeCustomerVendor({ ...bankTransaction.vendor, customerVendorType: 'VENDOR' })
       : null
+}
+
+export const getLocalSplitStateForExpandedTableRow = (
+  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+  bankTransaction: BankTransaction,
+): Split[] => {
+  // Split Category
+  if (selectedCategory && isSplitAsOption(selectedCategory)) {
+    return selectedCategory.original.map((splitEntry) => {
+      return {
+        amount: splitEntry.amount || 0,
+        inputValue: formatMoney(splitEntry.amount),
+        category: splitEntry.category,
+        tags: splitEntry.tags,
+        customerVendor: splitEntry.customerVendor,
+      }
+    })
+  }
+
+  // Single category
+  return [
+    {
+      amount: bankTransaction.amount,
+      inputValue: formatMoney(bankTransaction.amount),
+      category: selectedCategory ?? null,
+      tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
+      customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
+    },
+  ]
 }
