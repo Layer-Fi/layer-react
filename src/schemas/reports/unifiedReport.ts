@@ -1,5 +1,7 @@
 import { Schema, pipe } from 'effect'
 import { LineItemSchema } from '../common/lineItem'
+import { ReportingBasisSchema } from '../common/reportingBasis'
+import { TagFilterParamsSchema } from '../../features/tags/tagSchemas'
 
 export enum ReportEnum {
   BalanceSheet = 'balance-sheet',
@@ -31,6 +33,23 @@ export const UnifiedReportDateQueryParamsSchema = Schema.Union(
   DateRangeQueryParamsSchema,
 )
 export type UnifiedReportDateQueryParams = typeof UnifiedReportDateQueryParamsSchema.Type
+
+export const UnifiedReportFilterParamsSchema = Schema.Struct({
+  reportingBasis: pipe(
+    Schema.propertySignature(Schema.NullOr(ReportingBasisSchema)),
+    Schema.fromKey('reporting_basis'),
+  ),
+})
+export type UnifiedReportFilterParams = typeof UnifiedReportFilterParamsSchema.Type
+
+export const UnifiedReportQueryParamsSchema = Schema.extend(
+  UnifiedReportDateQueryParamsSchema,
+  Schema.extend(
+    UnifiedReportFilterParamsSchema,
+    TagFilterParamsSchema,
+  ),
+)
+export type UnifiedReportQueryParams = typeof UnifiedReportQueryParamsSchema.Type
 
 export const UnifiedReportSchema = Schema.Struct({
   businessId: pipe(

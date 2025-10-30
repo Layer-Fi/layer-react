@@ -126,6 +126,18 @@ export function getTagValueDisplayName(tag: { value: string, displayName?: strin
 export const makeTag = Schema.decodeSync(TagSchema)
 export type Tag = typeof TagSchema.Type
 
+export const TagFilterParamsSchema = Schema.Struct({
+  tagKey: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.NonEmptyTrimmedString)),
+    Schema.fromKey('tag_key'),
+  ),
+  tagValues: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.Array(Schema.NonEmptyTrimmedString))),
+    Schema.fromKey('tag_values'),
+  ),
+})
+export type TagFilterParams = typeof TagFilterParamsSchema.Type
+
 export const TransactionTagSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,

@@ -3,12 +3,19 @@ import { Button } from '../ui/Button/Button'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { ExpandableDataTableContext } from '../ExpandableDataTable/ExpandableDataTableProvider'
 import { DateSelection } from '../DateSelection/DateSelection'
-import { UnifiedReportDateVariant, useUnifiedReportDateVariant } from '../../providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import {
+  UnifiedReportDateVariant,
+  useUnifiedReportDateVariant,
+  useUnifiedReportReportingBasis,
+  useUnifiedReportTags,
+} from '../../providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { DateRangeSelection } from '../DateSelection/DateRangeSelection'
 import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { getActivationDate } from '../../utils/business'
 import { endOfToday, startOfDay } from 'date-fns'
 import { UnifiedReportDownloadButton } from './download/UnifiedReportDownloadButton'
+import { ReportingBasisComboBox } from '../ReportingBasis/ReportingBasisComboBox'
+import { TagDimensionsGroup } from '../../features/tags/components/TagDimensionsGroup'
 import './unifiedReportTableHeader.scss'
 
 export const UnifiedReportTableHeader = () => {
@@ -26,6 +33,8 @@ export const UnifiedReportTableHeader = () => {
   }), [activationDate])
 
   const dateVariant = useUnifiedReportDateVariant()
+  const { reportingBasis, setReportingBasis } = useUnifiedReportReportingBasis()
+  const { tags, setTags } = useUnifiedReportTags()
 
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
   const shouldCollapse = expanded === true
@@ -50,6 +59,14 @@ export const UnifiedReportTableHeader = () => {
           </Button>
           <UnifiedReportDownloadButton />
         </HStack>
+      </HStack>
+      <HStack align='center' className='Layer__UnifiedReport__Filters' pi='md' gap='xs'>
+        <ReportingBasisComboBox
+          value={reportingBasis}
+          onValueChange={setReportingBasis}
+          className='Layer__UnifiedReport__ReportingBasisComboBox'
+        />
+        <TagDimensionsGroup value={tags} onChange={setTags} />
       </HStack>
     </VStack>
   )
