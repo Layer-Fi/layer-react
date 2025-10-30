@@ -35,7 +35,7 @@ const BankTransactionCategoryComboBoxSelectedValue = ({ selectedValue }: BankTra
     )
   }
 
-  if (isSplitAsOption(selectedValue)) {
+  if (isSplitAsOption(selectedValue) && selectedValue.original.length > 1) {
     return (
       <HStack gap='3xs' align='center'>
         <Badge size={BadgeSize.SMALL} icon={<Scissors size={11} />}>

@@ -57,19 +57,6 @@ export const calculateRemoveSplit = (
   }
 }
 
-export const getBankTransactionMatchId = (bankTransaction?: BankTransaction): string | undefined => {
-  if (bankTransaction?.match) {
-    const foundMatch = bankTransaction.suggested_matches?.find(
-      x =>
-        x.details.id === bankTransaction?.match?.details.id
-        || x.details.id === bankTransaction?.match?.bank_transaction.id,
-    )
-    return foundMatch?.id
-  }
-
-  return undefined
-}
-
 export const sanitizeNumberInput = (input: string): string => {
   let sanitized = input.replace(/[^0-9.]/g, '')
 

@@ -1,7 +1,7 @@
 import { DATE_FORMAT } from '../../config/general'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction } from '../../types/bank_transactions'
+import { BankTransaction, SuggestedMatch } from '../../types/bank_transactions'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { isTransferMatch } from '../../utils/bankTransactions'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'
@@ -15,7 +15,7 @@ export interface MatchFormProps {
   classNamePrefix: string
   bankTransaction: BankTransaction
   selectedMatchId?: string
-  setSelectedMatchId: (val?: string) => void
+  setSelectedMatch: (val?: SuggestedMatch) => void
   matchFormError?: string
   readOnly?: boolean
 }
@@ -24,7 +24,7 @@ export const MatchForm = ({
   classNamePrefix,
   bankTransaction,
   selectedMatchId,
-  setSelectedMatchId,
+  setSelectedMatch,
   matchFormError,
   readOnly = false,
 }: MatchFormProps) => {
@@ -74,7 +74,7 @@ export const MatchForm = ({
               if (readOnly === true) {
                 return
               }
-              setSelectedMatchId(suggestedMatch.id)
+              setSelectedMatch(suggestedMatch)
             }}
           >
             <div className={`Layer__nowrap ${classNamePrefix}__match-table__date`}>

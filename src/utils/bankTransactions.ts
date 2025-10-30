@@ -1,6 +1,6 @@
 import { filterVisibility } from '../components/BankTransactions/utils'
 import { DateRange } from '../types/general'
-import { BankTransaction, DisplayState } from '../types/bank_transactions'
+import { BankTransaction, DisplayState, SuggestedMatch } from '../types/bank_transactions'
 import { Direction } from '../types/general'
 import { isWithinInterval, parseISO } from 'date-fns'
 
@@ -14,17 +14,6 @@ export const hasMatch = (bankTransaction?: BankTransaction) => {
 
 export const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === Direction.CREDIT
-
-export const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
-  if (bankTransaction?.match) {
-    const foundMatch = bankTransaction.suggested_matches?.find(
-      x => x.details.id === bankTransaction?.match?.details.id,
-    )
-    return foundMatch?.id
-  }
-
-  return undefined
-}
 
 export const countTransactionsToReview = ({
   transactions,
@@ -67,4 +56,16 @@ export const isTransferMatch = (bankTransaction?: BankTransaction) => {
 
 export const hasSuggestedTransferMatches = (bankTransaction?: BankTransaction) => {
   return bankTransaction?.suggested_matches?.every(x => x.details.type === 'Transfer_Match') ?? false
+}
+
+export const getBankTransactionMatchAsSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
+  if (bankTransaction?.match) {
+    const foundMatch = bankTransaction.suggested_matches?.find(
+      x => x.details.id === bankTransaction?.match?.details.id
+        || x.details.id === bankTransaction?.match?.bank_transaction.id,
+    )
+    return foundMatch
+  }
+
+  return undefined
 }

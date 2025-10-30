@@ -11,6 +11,7 @@ import Trash from '../../icons/Trash'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import {
   BankTransaction,
+  SuggestedMatch,
 } from '../../types/bank_transactions'
 import {
   hasMatch,
@@ -44,8 +45,10 @@ import { type BankTransactionCategoryComboBoxOption } from '../../components/Ban
 import { type Split } from '../../types/bank_transactions'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { calculateAddSplit, calculateRemoveSplit, calculateUpdatedAmounts, getBankTransactionMatchId, getLocalSplitStateForExpandedTableRow, validateSplit } from './utils'
-import { useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { calculateAddSplit, calculateRemoveSplit, calculateUpdatedAmounts, getLocalSplitStateForExpandedTableRow, validateSplit } from './utils'
+import { getBankTransactionMatchAsSuggestedMatch } from '../../utils/bankTransactions'
+import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { SplitAsOption, SuggestedMatchAsOption } from '../../types/categorizationOption'
 
 export type ExpandedRowState = {
   splits: Split[]
@@ -96,7 +99,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       asListItem = false,
       submitBtnText = 'Save',
       containerWidth,
-
       showDescriptions,
       showReceiptUploads,
     },
@@ -106,10 +108,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
     } = useBankTransactionsContext()
-
     const { deselect } = useBulkSelectionActions()
-
     const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
+    const { setTransactionCategory } = useBankTransactionsCategoryActions()
 
     // Hooks for auto-saving tags and customer/vendor in unsplit state
     const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
@@ -127,9 +128,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           ? Purpose.match
           : Purpose.categorize,
     )
-    const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
-      getBankTransactionMatchId(bankTransaction)
-      ?? bankTransaction?.suggested_matches?.[0]?.id,
+    const [selectedMatch, setSelectedMatch] = useState<SuggestedMatch | undefined>(
+      getBankTransactionMatchAsSuggestedMatch(bankTransaction)
+      ?? bankTransaction?.suggested_matches?.[0],
     )
     const [matchFormError, setMatchFormError] = useState<string | undefined>()
     const [splitFormError, setSplitFormError] = useState<string | undefined>()
@@ -173,21 +174,34 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     }
 
     const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setPurpose(
-        event.target.value === 'match'
-          ? Purpose.match
-          : Purpose.categorize,
-      )
+      const newPurpose = event.target.value === 'match'
+        ? Purpose.match
+        : Purpose.categorize
+      setPurpose(newPurpose)
+
+      if (newPurpose === Purpose.match) {
+        setTransactionCategory(bankTransaction.id, selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null)
+      }
+
+      else if (newPurpose === Purpose.categorize && validateSplit(expandedRowState)) {
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(expandedRowState.splits))
+      }
+
       setSplitFormError(undefined)
       setMatchFormError(undefined)
     }
 
-    const changeCategory = (index: number, newValue: BankTransactionCategoryComboBoxOption | null) => {
-      if (newValue === null) return
+    const changeCategory = (index: number, newCategory: BankTransactionCategoryComboBoxOption | null) => {
+      if (newCategory === null) return
 
-      expandedRowState.splits[index].category = newValue
+      expandedRowState.splits[index].category = newCategory
       setExpandedRowState({ ...expandedRowState })
       setSplitFormError(undefined)
+
+      // Auto-save when category / split is valid
+      if (validateSplit(expandedRowState)) {
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(expandedRowState.splits))
+      }
     }
 
     const changeTags = (index: number, newTags: readonly Tag[]) => {
@@ -221,6 +235,11 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           })
         })
       }
+
+      // Auto-save when category / split is valid
+      if (validateSplit(expandedRowState)) {
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(expandedRowState.splits))
+      }
     }
 
     const changeCustomerVendor = (index: number, newCustomerVendor: typeof CustomerVendorSchema.Type | null) => {
@@ -235,19 +254,24 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           vendor: newCustomerVendor?.customerVendorType === 'VENDOR' ? newCustomerVendor : null,
         })
       }
+
+      // Auto-save when category / split is valid
+      if (validateSplit(expandedRowState)) {
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(expandedRowState.splits))
+      }
     }
 
     const save = async () => {
       if (purpose === Purpose.match) {
-        if (!selectedMatchId) {
+        if (!selectedMatch) {
           setMatchFormError('Select an option to match the transaction')
           return
         }
         else if (
-          selectedMatchId
-          && selectedMatchId !== getBankTransactionMatchId(bankTransaction)
+          selectedMatch
+          && selectedMatch.id !== getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
         ) {
-          await onMatchSubmit(selectedMatchId)
+          await onMatchSubmit(selectedMatch.id)
           return
         }
         close()
@@ -376,11 +400,11 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                       <MatchForm
                         classNamePrefix={className}
                         bankTransaction={bankTransaction}
-                        selectedMatchId={selectedMatchId}
+                        selectedMatchId={selectedMatch?.id}
                         readOnly={!categorizationEnabled}
-                        setSelectedMatchId={(id) => {
+                        setSelectedMatch={(suggestedMatch) => {
                           setMatchFormError(undefined)
-                          setSelectedMatchId(id)
+                          setSelectedMatch(suggestedMatch)
                         }}
                         matchFormError={matchFormError}
                       />
