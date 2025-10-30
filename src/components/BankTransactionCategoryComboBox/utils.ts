@@ -97,8 +97,11 @@ export const getSuggestedCategoriesGroup = (bankTransaction: BankTransaction) =>
   return null
 }
 
-export const getDefaultSelectedCategoryForBankTransaction = (bankTransaction: BankTransaction): BankTransactionCategoryComboBoxOption | null => {
-  if (bankTransaction.suggested_matches?.[0]) {
+export const getDefaultSelectedCategoryForBankTransaction = (
+  bankTransaction: BankTransaction,
+  ignoreSuggestedMatches = false,
+): BankTransactionCategoryComboBoxOption | null => {
+  if (!ignoreSuggestedMatches && bankTransaction.suggested_matches?.[0]) {
     return new SuggestedMatchAsOption(bankTransaction.suggested_matches[0])
   }
 

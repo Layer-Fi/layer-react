@@ -3,9 +3,11 @@ import { BankTransaction, Split } from '../../types/bank_transactions'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { SplitCategorizationEntryEncoded } from '../../schemas/categorization'
 import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'
-import { BankTransactionCategoryComboBoxOption, isSplitAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { makeTagFromTransactionTag, TransactionTagSchema } from '../../features/tags/tagSchemas'
 import { Schema } from 'effect/index'
+import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
+import { isSuggestedMatchAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export const validateSplit = (expandedRowState: ExpandedRowState): boolean => {
   let valid = true
@@ -118,9 +120,18 @@ export const getLocalSplitStateForExpandedTableRow = (
   selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
   bankTransaction: BankTransaction,
 ): Split[] => {
+  let coercedSelectedCategory = selectedCategory
+  if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
+    coercedSelectedCategory = null
+  }
+
+  else if (isSuggestedMatchAsOption(selectedCategory)) {
+    coercedSelectedCategory = getDefaultSelectedCategoryForBankTransaction(bankTransaction, true)
+  }
+
   // Split Category
-  if (selectedCategory && isSplitAsOption(selectedCategory)) {
-    return selectedCategory.original.map((splitEntry) => {
+  if (coercedSelectedCategory && isSplitAsOption(coercedSelectedCategory)) {
+    return coercedSelectedCategory.original.map((splitEntry) => {
       return {
         amount: splitEntry.amount || 0,
         inputValue: formatMoney(splitEntry.amount),
@@ -136,7 +147,7 @@ export const getLocalSplitStateForExpandedTableRow = (
     {
       amount: bankTransaction.amount,
       inputValue: formatMoney(bankTransaction.amount),
-      category: selectedCategory ?? null,
+      category: coercedSelectedCategory ?? null,
       tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
       customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
     },

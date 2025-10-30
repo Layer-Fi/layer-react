@@ -3,6 +3,7 @@ import {
   useImperativeHandle,
   useState,
   useRef,
+  useEffect,
 } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
@@ -41,7 +42,7 @@ import { BankTransactionFormFields } from '../../features/bankTransactions/[bank
 import { useBankTransactionTagVisibility } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import { useBankTransactionCustomerVendorVisibility } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { type ClassificationEncoded } from '../../schemas/categorization'
-import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isApiCategorizationAsOption, isCategoryAsOption, isSplitAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { type Split } from '../../types/bank_transactions'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -141,6 +142,19 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       description: '',
       file: undefined,
     })
+
+    useEffect(() => {
+      if (!selectedCategory
+        || !(isCategoryAsOption(selectedCategory)
+          || isApiCategorizationAsOption(selectedCategory)
+          || isSplitAsOption(selectedCategory))
+      ) return
+
+      setExpandedRowState({
+        ...expandedRowState,
+        splits: getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction),
+      })
+    }, [selectedCategory, bankTransaction, expandedRowState])
 
     const addSplit = () => {
       const newExpandedRowState = calculateAddSplit(expandedRowState)
