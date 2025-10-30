@@ -21,7 +21,7 @@ export interface TooltipOptions {
   shift?: { padding?: number }
 }
 
-export const Tooltip = ({
+export const DeprecatedTooltip = ({
   children,
   ...options
 }: { children: ReactNode } & TooltipOptions) => {
@@ -33,7 +33,7 @@ export const Tooltip = ({
   )
 }
 
-export const TooltipTrigger = forwardRef<
+export const DeprecatedTooltipTrigger = forwardRef<
   HTMLElement,
   HTMLProps<HTMLElement> & { asChild?: boolean }
 >(function TooltipTrigger({ children, asChild = false, ...props }, propRef) {
@@ -72,7 +72,7 @@ export const TooltipTrigger = forwardRef<
 
 type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'md' }
 
-export const TooltipContent = forwardRef<
+export const DeprecatedTooltipContent = forwardRef<
   HTMLDivElement,
   TooltipContentProps
 >(function TooltipContent({ className, width, ...props }, propRef) {
