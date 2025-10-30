@@ -27,11 +27,12 @@ import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibilit
 import { Span } from '../ui/Typography/Text'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { useSizeClass } from '../../hooks/useWindowSize'
-import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useSaveBankTransactionRow } from '../../hooks/useBankTransactions/useSaveBankTransactionRow'
 
 type Props = {
   index: number
@@ -64,11 +65,8 @@ export const BankTransactionListItem = ({
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
-  const {
-    categorize: categorizeBankTransaction,
-    match: matchBankTransaction,
-    shouldHideAfterCategorize,
-  } = useBankTransactionsContext()
+  const { shouldHideAfterCategorize } = useBankTransactionsContext()
+  const { saveBankTransactionRow } = useSaveBankTransactionRow()
   const [open, setOpen] = useState(false)
   const toggleOpen = () => {
     setShowRetry(false)
@@ -116,30 +114,7 @@ export const BankTransactionListItem = ({
       return
     }
 
-    if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
-      return
-    }
-
-    if (isSuggestedMatchAsOption(selectedCategory)) {
-      await matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
-
-      // Remove from bulk selection store
-      deselect(bankTransaction.id)
-      setOpen(false)
-      return
-    }
-
-    if (isSplitAsOption(selectedCategory)) {
-      // TODO: implement split categorization
-      return
-    }
-
-    if (!selectedCategory.classificationEncoded) return
-
-    await categorizeBankTransaction(bankTransaction.id, {
-      type: 'Category',
-      category: selectedCategory.classificationEncoded,
-    })
+    await saveBankTransactionRow(selectedCategory, bankTransaction)
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)
