@@ -140,10 +140,12 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     const bodyRef = useRef<HTMLSpanElement>(null)
 
     const [localSplits, setLocalSplits] = useState<Split[]>(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
+    const [inputValues, setInputValues] = useState<Record<number, string | undefined>>({})
 
     useEffect(() => {
       setLocalSplits(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
       setSplitFormError(undefined)
+      setInputValues({})
     }, [selectedCategory, bankTransaction, isOpen])
 
     const addSplit = () => {
@@ -162,8 +164,22 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 
     const updateAmounts =
       (index: number) => (value?: string) => {
-        if (!value) return
-        const newLocalSplits = calculateUpdatedAmounts(localSplits, { index, newAmountInput: value, totalAmount: bankTransaction.amount })
+        if (value !== undefined) {
+          setInputValues(prev => ({ ...prev, [index]: value }))
+        }
+
+        if (value === undefined || value === '') {
+          return
+        }
+
+        const trimmedValue = value.endsWith('.') ? value.slice(0, -1) : value
+
+        const numericValue = Number(trimmedValue)
+        if (isNaN(numericValue)) {
+          return
+        }
+
+        const newLocalSplits = calculateUpdatedAmounts(localSplits, { index, newAmountInput: trimmedValue, totalAmount: bankTransaction.amount })
 
         setLocalSplits(newLocalSplits)
         setSplitFormError(undefined)
@@ -175,11 +191,13 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       }
 
     const onBlur = () => {
-      if (!validateSplit(localSplits)) {
+      const hasInvalidAmount = localSplits.some(split => split.amount <= 0)
+      if (hasInvalidAmount) {
         setSplitFormError('Amounts must be greater than $0.00')
         return
       }
       setSplitFormError(undefined)
+      setInputValues({})
     }
 
     const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -446,7 +464,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                                 index === 0 || !categorizationEnabled
                               }
                               onChange={updateAmounts(index)}
-                              value={convertFromCents(split.amount)}
+                              value={inputValues[index] !== undefined ? inputValues[index] : String(convertFromCents(split.amount) ?? '')}
                               onBlur={onBlur}
                               className={`${className}__table-cell--split-entry__amount`}
                               isInvalid={split.amount < 0}
