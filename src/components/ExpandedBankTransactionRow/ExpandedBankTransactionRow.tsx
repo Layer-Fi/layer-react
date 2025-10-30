@@ -170,7 +170,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 
         // Auto-save when category / split is valid
         if (validateSplit(newLocalSplits)) {
-          setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
+          setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
         }
       }
 
@@ -210,7 +210,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 
       // Auto-save when category / split is valid
       if (validateSplit(newLocalSplits)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
       }
     }
 
@@ -222,7 +222,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       setSplitFormError(undefined)
 
       // Auto-save tags only when in unsplit state (single split entry)
-      if (localSplits.length === 1) {
+      if (newLocalSplits.length === 1) {
         const addedTags = newTags.filter(newTag =>
           !oldTags.some(oldTag => oldTag.key === newTag.key && oldTag.value === newTag.value),
         )
@@ -248,8 +248,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       }
 
       // Auto-save when category / split is valid
-      if (validateSplit(localSplits)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
+      if (validateSplit(newLocalSplits)) {
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
       }
     }
 
@@ -261,7 +261,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       setSplitFormError(undefined)
 
       // Auto-save customer/vendor only when in unsplit state (single split entry)
-      if (localSplits.length === 1) {
+      if (newLocalSplits.length === 1) {
         void setMetadataOnBankTransaction({
           customer: newCustomerVendor?.customerVendorType === 'CUSTOMER' ? newCustomerVendor : null,
           vendor: newCustomerVendor?.customerVendorType === 'VENDOR' ? newCustomerVendor : null,
@@ -269,8 +269,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       }
 
       // Auto-save when category / split is valid
-      if (validateSplit(localSplits)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
+      if (validateSplit(newLocalSplits)) {
+        setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
       }
     }
 
