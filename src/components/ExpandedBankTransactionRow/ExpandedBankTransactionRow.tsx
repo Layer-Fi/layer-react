@@ -50,6 +50,8 @@ import { calculateAddSplit, calculateRemoveSplit, calculateUpdatedAmounts, getLo
 import { getBankTransactionMatchAsSuggestedMatch } from '../../utils/bankTransactions'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { SplitAsOption, SuggestedMatchAsOption } from '../../types/categorizationOption'
+import { AmountInput } from '../Input/AmountInput'
+import { convertFromCents } from '../../utils/format'
 
 export type ExpandedRowState = {
   splits: Split[]
@@ -141,6 +143,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 
     useEffect(() => {
       setLocalSplits(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
+      setSplitFormError(undefined)
     }, [selectedCategory, bankTransaction, isOpen])
 
     const addSplit = () => {
@@ -158,9 +161,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     }
 
     const updateAmounts =
-      (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newAmountInput = event.target.value
-        const newLocalSplits = calculateUpdatedAmounts(localSplits, { index, newAmountInput, totalAmount: bankTransaction.amount })
+      (index: number) => (value?: string) => {
+        if (!value) return
+        const newLocalSplits = calculateUpdatedAmounts(localSplits, { index, newAmountInput: value, totalAmount: bankTransaction.amount })
 
         setLocalSplits(newLocalSplits)
         setSplitFormError(undefined)
@@ -171,15 +174,12 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         }
       }
 
-    const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-      if (event.target.value === '') {
-        const [_, index] = event.target.name.split('-')
-        const newLocalSplits = [...localSplits]
-        newLocalSplits[parseInt(index)].inputValue = '0.00'
-
-        setLocalSplits(newLocalSplits)
-        setSplitFormError(undefined)
+    const onBlur = () => {
+      if (!validateSplit(localSplits)) {
+        setSplitFormError('Amounts must be greater than $0.00')
+        return
       }
+      setSplitFormError(undefined)
     }
 
     const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -440,19 +440,17 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                             className={`${className}__table-cell--split-entry`}
                             key={`split-${index}`}
                           >
-                            <Input
-                              type='text'
+                            <AmountInput
                               name={`split-${index}${asListItem ? '-li' : ''}`}
                               disabled={
                                 index === 0 || !categorizationEnabled
                               }
                               onChange={updateAmounts(index)}
-                              value={split.inputValue}
+                              value={convertFromCents(split.amount)}
                               onBlur={onBlur}
-                              isInvalid={split.amount < 0}
-                              inputMode='numeric'
-                              errorMessage='Negative values are not allowed'
                               className={`${className}__table-cell--split-entry__amount`}
+                              isInvalid={split.amount < 0}
+                              errorMessage='Amounts must be greater than $0.00'
                             />
                             <BankTransactionCategoryComboBox
                               bankTransaction={bankTransaction}

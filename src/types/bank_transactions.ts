@@ -84,7 +84,6 @@ export interface DocumentS3Urls {
 
 export type Split = {
   amount: number
-  inputValue: string
   category: BankTransactionCategoryComboBoxOption | null
   tags: readonly Tag[]
   customerVendor: typeof CustomerVendorSchema.Type | null

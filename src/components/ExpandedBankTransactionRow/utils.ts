@@ -1,5 +1,4 @@
 import { BankTransaction, Split } from '../../types/bank_transactions'
-import { centsToDollars as formatMoney } from '../../models/Money'
 import { SplitCategorizationEntryEncoded } from '../../schemas/categorization'
 import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'
 import { BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -28,7 +27,6 @@ export const calculateAddSplit = (
 ): Split[] => {
   const newSplit = {
     amount: 0,
-    inputValue: '0.00',
     category: null,
     tags: [],
     customerVendor: null,
@@ -46,45 +44,24 @@ export const calculateRemoveSplit = (
   }, 0)
   const remaining = totalAmount - splitTotal
   newSplits[0].amount = remaining
-  newSplits[0].inputValue = formatMoney(remaining)
 
   return newSplits
-}
-
-export const sanitizeNumberInput = (input: string): string => {
-  let sanitized = input.replace(/[^0-9.]/g, '')
-
-  // Ensure there's at most one period
-  const parts = sanitized.split('.')
-  if (parts.length > 2) {
-    sanitized = parts[0] + '.' + parts.slice(1).join('')
-  }
-
-  // Limit to two digits after the decimal point
-  if (parts.length === 2) {
-    sanitized = parts[0] + '.' + parts[1].slice(0, 2)
-  }
-
-  return sanitized
 }
 
 export const calculateUpdatedAmounts = (
   initialRowSplits: Split[],
   { index, newAmountInput, totalAmount }: { index: number, newAmountInput: string, totalAmount: number },
 ): Split[] => {
-  const newDisplaying = sanitizeNumberInput(newAmountInput)
-  const newAmount = Number(newAmountInput) * 100 // cents
-  const splitTotal = initialRowSplits.reduce((sum, split, index) => {
-    const amount =
-        index === 0 ? 0 : index === index ? newAmount : split.amount
+  const newAmount = Number(newAmountInput) * 100
+  const splitTotal = initialRowSplits.reduce((sum, split, idx) => {
+    const amount = idx === 0 ? 0 : idx === index ? newAmount : split.amount
     return sum + amount
   }, 0)
 
   const remaining = totalAmount - splitTotal
+
   initialRowSplits[index].amount = newAmount
-  initialRowSplits[index].inputValue = newDisplaying
   initialRowSplits[0].amount = remaining
-  initialRowSplits[0].inputValue = formatMoney(remaining)
 
   return [...initialRowSplits]
 }
@@ -123,7 +100,6 @@ export const getLocalSplitStateForExpandedTableRow = (
     return coercedSelectedCategory.original.map((splitEntry) => {
       return {
         amount: splitEntry.amount || 0,
-        inputValue: formatMoney(splitEntry.amount),
         category: splitEntry.category,
         tags: splitEntry.tags,
         customerVendor: splitEntry.customerVendor,
@@ -135,7 +111,6 @@ export const getLocalSplitStateForExpandedTableRow = (
   return [
     {
       amount: bankTransaction.amount,
-      inputValue: formatMoney(bankTransaction.amount),
       category: coercedSelectedCategory ?? null,
       tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
       customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
