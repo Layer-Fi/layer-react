@@ -40,6 +40,7 @@ import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryCombo
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSplitCategorizationEncoded, type CategorizationEncoded } from '../../schemas/categorization'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { buildSplitCategorizationRequest } from './utils'
 
 type Props = {
   index: number
@@ -150,16 +151,17 @@ export const BankTransactionRow = ({
     }
 
     if (isSplitAsOption(selectedCategory)) {
-      // TODO: implement split categorization
-      return
+      const splitCategorizationRequest = buildSplitCategorizationRequest(selectedCategory)
+      await categorizeBankTransaction(bankTransaction.id, splitCategorizationRequest)
     }
+    else if (!selectedCategory.classificationEncoded) return
 
-    if (!selectedCategory.classificationEncoded) return
-
-    await categorizeBankTransaction(bankTransaction.id, {
-      type: 'Category',
-      category: selectedCategory.classificationEncoded,
-    })
+    else {
+      await categorizeBankTransaction(bankTransaction.id, {
+        type: 'Category',
+        category: selectedCategory.classificationEncoded,
+      })
+    }
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)

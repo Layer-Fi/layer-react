@@ -299,7 +299,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           })
           : ({
             type: 'Split',
-            entries: expandedRowState.splits.map(split => ({
+            entries: expandedRowState.splits.map((split: Split) => ({
               category: split.category?.classificationEncoded as ClassificationEncoded,
               amount: split.amount,
               tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
