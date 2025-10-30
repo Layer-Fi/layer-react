@@ -6,7 +6,7 @@ import { ChevronRight } from 'lucide-react'
 import UploadCloud from '../../icons/UploadCloud'
 import { BankTransactionsUploadModal } from './BankTransactionsUploadModal/BankTransactionsUploadModal'
 import { Span } from '../ui/Typography/Text'
-import { Heading } from '../ui/Typography/Heading'
+import { ModalHeading, ModalTitleWithClose } from '../ui/Modal/ModalSlots'
 
 interface BankTransactionsUploadMenuProps {
   isDisabled?: boolean
@@ -30,7 +30,7 @@ export const BankTransactionsUploadMenu = ({ isDisabled }: BankTransactionsUploa
           Dialog: { width: '18rem' },
         }}
       >
-        <Heading weight='bold' size='2xs'>Choose how to upload transactions</Heading>
+        <ModalTitleWithClose heading={<ModalHeading weight='bold' size='2xs'>Choose how to upload transactions</ModalHeading>} onClose={() => setIsModalOpen(false)} />
         <MenuList>
           <MenuItem key='upload-txns' onClick={() => setIsModalOpen(true)}>
             <VStack className='Layer__bank-transactions__header-menu__icon'>
