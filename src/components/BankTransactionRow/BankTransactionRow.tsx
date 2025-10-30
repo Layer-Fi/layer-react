@@ -232,7 +232,7 @@ export const BankTransactionRow = ({
           {...openRow}
         >
           <span className='Layer__table-cell-content'>
-            <Span>
+            <Span withTooltip>
               {bankTransaction.counterparty_name ?? bankTransaction.description}
             </Span>
           </span>
