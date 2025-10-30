@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useRef } from 'react'
+import { forwardRef, useRef } from 'react'
 import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import type { Spacing } from '../sharedUITypes'
@@ -13,6 +13,7 @@ import classNames from 'classnames'
 import { useTruncationDetection } from '../../../hooks/useTruncationDetection/useTruncationDetection'
 import { mergeRefs } from 'react-merge-refs'
 import { TooltipCapableComponentProps, TooltipContent, TooltipTrigger, Tooltip } from '../Tooltip/Tooltip'
+import React from 'react'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'
@@ -132,6 +133,32 @@ export const P = forwardRef<HTMLParagraphElement, PropsWithChildren<ParagraphPro
 const SPAN_CLASS_NAME = 'Layer__Span'
 type SpanProps = Pick<ComponentPropsWithoutRef<'span'>, 'id' | 'slot'> & TextRenderingProps
 
+type BaseSpanProps = {
+  dataProperties: Record<string, unknown>
+  restProps: Record<string, unknown>
+  hasRef: boolean
+  className?: string
+  renderingProps: TextRenderingProps
+  children: React.ReactNode
+}
+
+const BaseSpan = forwardRef<HTMLSpanElement, BaseSpanProps>(({ dataProperties, restProps, hasRef, className, renderingProps, children }, ref) => {
+  if (renderingProps.nonAria) {
+    return (
+      <span {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, className)} ref={hasRef ? ref : undefined}>
+        {children}
+      </span>
+    )
+  }
+
+  return (
+    <ReactAriaText {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, className)} ref={hasRef ? ref : undefined}>
+      {children}
+    </ReactAriaText>
+  )
+})
+BaseSpan.displayName = 'BaseSpan'
+
 export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapableComponentProps>>(
   function Span(props, forwardedRef) {
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
@@ -142,31 +169,32 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
 
     const mergedRef = mergeRefs([internalRef, forwardedRef])
 
-    const BaseSpan = useCallback(({ dataProperties, hasRef, className }: { dataProperties: Record<string, unknown>, hasRef: boolean, className?: string }) => {
-      if (renderingProps.nonAria) {
-        return (
-          <span {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, className)} ref={hasRef ? mergedRef : undefined}>
-            {children}
-          </span>
-        )
-      }
-
-      return (
-        <ReactAriaText {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, className)} ref={hasRef ? mergedRef : undefined}>
-          {children}
-        </ReactAriaText>
-      )
-    }, [renderingProps.nonAria, restProps, mergedRef, children])
-
     if (props.withTooltip) {
       const dataPropertiesWithEllipsis = { ...dataProperties, 'data-with-tooltip': true }
       return (
         <Tooltip disabled={!isTruncated}>
           <TooltipTrigger>
-            {BaseSpan({ dataProperties: dataPropertiesWithEllipsis, hasRef: true, className })}
+            <BaseSpan
+              dataProperties={dataPropertiesWithEllipsis}
+              restProps={restProps}
+              hasRef={true}
+              className={className}
+              renderingProps={renderingProps}
+              ref={mergedRef}
+            >
+              {children}
+            </BaseSpan>
           </TooltipTrigger>
           <TooltipContent width={tooltipContentWidth}>
-            {BaseSpan({ dataProperties: dataProperties, hasRef: false, className: 'Layer__UI__tooltip-content--text' })}
+            <BaseSpan
+              dataProperties={dataProperties}
+              restProps={restProps}
+              hasRef={false}
+              className='Layer__UI__tooltip-content--text'
+              renderingProps={renderingProps}
+            >
+              {children}
+            </BaseSpan>
           </TooltipContent>
         </Tooltip>
       )
