@@ -42,6 +42,7 @@ export const BankTransactionList = ({
         gap='md'
         pi='md'
         pb='md'
+        align='center'
         className='Layer__bank-transactions__list-header'
       >
         <Checkbox
@@ -50,7 +51,7 @@ export const BankTransactionList = ({
           onChange={onHeaderCheckboxChange}
           aria-label='Select all transactions on this page'
         />
-        <Span size='sm' pbs='3xs'>
+        <Span size='sm'>
           Select all
         </Span>
       </HStack>
