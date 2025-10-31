@@ -11,6 +11,7 @@ import { BankTransaction } from '../../types/bank_transactions'
 import { Button } from '../ui/Button/Button'
 import { X } from 'lucide-react'
 import './uploadTransactions.scss'
+import { Separator } from '../Separator/Separator'
 
 type UploadTransactionsHeaderProps = {
   currentStep: UploadTransactionsStep
@@ -22,29 +23,32 @@ function UploadTransactionsHeader({ currentStep, isValid, onClose }: UploadTrans
   if (currentStep === UploadTransactionsStep.Confirmation) return null
 
   return (
-    <HStack justify='space-between' align='center'>
-      <VStack>
-        <Heading level={1} size='sm'>
-          {currentStep === UploadTransactionsStep.UploadCsv && 'Upload transactions'}
-          {currentStep === UploadTransactionsStep.ValidateCsv
-            && (isValid
-              ? 'Review transactions'
-              : 'Some transactions couldn\'t be parsed'
-            )}
-        </Heading>
-        <Heading level={2} size='xs' variant='subtle' weight='normal'>
-          {currentStep === UploadTransactionsStep.UploadCsv && 'Import a file of transactions from your bank account or credit card'}
-          {currentStep === UploadTransactionsStep.ValidateCsv
-            && (isValid
-              ? 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.'
-              : 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.'
-            )}
-        </Heading>
-      </VStack>
-      <Button icon variant='outlined' onClick={onClose}>
-        <X size={16} />
-      </Button>
-    </HStack>
+    <VStack>
+      <HStack justify='space-between' align='center'>
+        <VStack>
+          <Heading level={1} size='sm'>
+            {currentStep === UploadTransactionsStep.UploadCsv && 'Upload transactions'}
+            {currentStep === UploadTransactionsStep.ValidateCsv
+              && (isValid
+                ? 'Review transactions'
+                : 'Some transactions couldn\'t be parsed'
+              )}
+          </Heading>
+          <Heading level={2} size='xs' variant='subtle' weight='normal'>
+            {currentStep === UploadTransactionsStep.UploadCsv && 'Import a file of transactions from your bank account or credit card'}
+            {currentStep === UploadTransactionsStep.ValidateCsv
+              && (isValid
+                ? 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.'
+                : 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.'
+              )}
+          </Heading>
+        </VStack>
+        <Button icon variant='outlined' onClick={onClose}>
+          <X size={16} />
+        </Button>
+      </HStack>
+      <Separator mbs='md' />
+    </VStack>
   )
 }
 
