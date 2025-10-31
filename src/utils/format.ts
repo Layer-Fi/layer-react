@@ -159,3 +159,9 @@ export const formatDate = (date?: string | Date, dateFormat: string = DATE_FORMA
     return ''
   }
 }
+
+export const convertCentsToDecimalString = (
+  amount: number,
+): string => {
+  return (Number(amount) / 100).toFixed(2)
+}
