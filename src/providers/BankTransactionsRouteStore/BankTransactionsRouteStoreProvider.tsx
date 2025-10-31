@@ -1,4 +1,4 @@
-import { useState, createContext, useContext, type PropsWithChildren, useMemo, useCallback } from 'react'
+import { useState, createContext, useContext, type PropsWithChildren, useMemo } from 'react'
 import { createStore, useStore } from 'zustand'
 
 export enum BankTransactionsRoute {
@@ -106,17 +106,4 @@ export function BankTransactionsRouteStoreProvider(props: PropsWithChildren) {
       {props.children}
     </BankTransactionsRouteStoreContext.Provider>
   )
-}
-
-export function useAdjustToLastBankTransactionsPageIfNeeded() {
-  const store = useContext(BankTransactionsRouteStoreContext)
-  const currentBankTransactionsPage = useStore(store, state => state.currentBankTransactionsPage)
-  const setCurrentBankTransactionsPage = useStore(store, state => state.actions.setCurrentBankTransactionsPage)
-
-  return useCallback((totalCount: number, pageSize: number) => {
-    const maxPage = Math.ceil(totalCount / pageSize)
-    if (maxPage > 0 && currentBankTransactionsPage > maxPage) {
-      setCurrentBankTransactionsPage(maxPage)
-    }
-  }, [currentBankTransactionsPage, setCurrentBankTransactionsPage])
 }

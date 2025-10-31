@@ -46,7 +46,6 @@ import { CategorizationRulesContext, CategorizationRulesProvider } from '../../c
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { CategorizationRulesDrawer } from '../CategorizationRules/CategorizationRulesDrawer'
 import { BankTransactionsCategoryStoreProvider } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useAdjustToLastBankTransactionsPageIfNeeded } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -260,7 +259,6 @@ const BankTransactionsTableView = ({
   const { ruleSuggestion, setRuleSuggestion } = useContext(CategorizationRulesContext)
 
   const { data: linkedAccounts } = useLinkedAccounts()
-  const adjustLastPageIfNeeded = useAdjustToLastBankTransactionsPageIfNeeded()
 
   const isSyncing = useMemo(
     () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
@@ -275,10 +273,13 @@ const BankTransactionsTableView = ({
   }, [isMonthlyViewMode, isVisible, isLoading, hasMore, fetchMore])
 
   useEffect(() => {
-    if (!isMonthlyViewMode && data) {
-      adjustLastPageIfNeeded(data.length, pageSize)
+    if (isMonthlyViewMode || !data?.length) return
+
+    const maxPage = Math.ceil(data.length / pageSize)
+    if (maxPage > 0 && currentPage > maxPage) {
+      setCurrentPage(maxPage)
     }
-  }, [isMonthlyViewMode, data, pageSize, adjustLastPageIfNeeded])
+  }, [isMonthlyViewMode, data, pageSize, currentPage, setCurrentPage])
 
   const handleRuleSuggestionOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) setRuleSuggestion(null)
