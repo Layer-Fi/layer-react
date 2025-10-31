@@ -84,7 +84,7 @@ export interface BankTransactionsProps {
   collapseHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
-  _showCategorizationRules?: boolean
+  showCategorizationRules?: boolean
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -233,7 +233,7 @@ const BankTransactionsTableView = ({
   hideHeader = false,
   collapseHeader = false,
   stringOverrides,
-  _showCategorizationRules = false,
+  showCategorizationRules = false,
   isMonthlyViewMode,
   categorizationEnabled,
 }: BankTransactionsTableViewProps) => {
@@ -382,7 +382,7 @@ const BankTransactionsTableView = ({
           withUploadMenu={showUploadOptions}
           collapseHeader={collapseHeader}
           showStatusToggle={showStatusToggle}
-          _showCategorizationRules={_showCategorizationRules}
+          showCategorizationRules={showCategorizationRules}
         />
       )}
 
