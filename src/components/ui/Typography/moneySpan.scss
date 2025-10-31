@@ -1,7 +1,5 @@
 .Layer__MoneyText {
-  overflow-x: hidden;
   color: var(--color-base-800);
-  text-overflow: ellipsis;
 
   &[data-bold] {
     font-weight: var(--font-weight-bold);
