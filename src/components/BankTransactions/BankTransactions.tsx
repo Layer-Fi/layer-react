@@ -85,7 +85,6 @@ export interface BankTransactionsProps {
   stringOverrides?: BankTransactionsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
   _showCategorizationRules?: boolean
-  _showBulkSelection?: boolean
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -101,7 +100,6 @@ export const BankTransactions = ({
   applyGlobalDateRange = false,
   mode,
   renderInAppLink,
-  _showBulkSelection = false,
   ...props
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
@@ -122,7 +120,7 @@ export const BankTransactions = ({
                   <InAppLinkProvider renderInAppLink={renderInAppLink}>
                     <BulkSelectionStoreProvider>
                       <BankTransactionsCategoryStoreProvider>
-                        <BankTransactionsContent {...props} _showBulkSelection={_showBulkSelection} />
+                        <BankTransactionsContent {...props} />
                       </BankTransactionsCategoryStoreProvider>
                     </BulkSelectionStoreProvider>
                   </InAppLinkProvider>
@@ -236,7 +234,6 @@ const BankTransactionsTableView = ({
   collapseHeader = false,
   stringOverrides,
   _showCategorizationRules = false,
-  _showBulkSelection = false,
   isMonthlyViewMode,
   categorizationEnabled,
 }: BankTransactionsTableViewProps) => {
@@ -376,7 +373,6 @@ const BankTransactionsTableView = ({
           collapseHeader={collapseHeader}
           showStatusToggle={showStatusToggle}
           _showCategorizationRules={_showCategorizationRules}
-          _showBulkSelection={_showBulkSelection}
         />
       )}
 
@@ -399,7 +395,6 @@ const BankTransactionsTableView = ({
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
-            _showBulkSelection={_showBulkSelection}
           />
         </div>
       )}
@@ -418,7 +413,6 @@ const BankTransactionsTableView = ({
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
-              _showBulkSelection={_showBulkSelection}
             />
           </div>
         )

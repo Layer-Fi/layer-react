@@ -32,7 +32,6 @@ interface BankTransactionsTableProps {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
-  _showBulkSelection?: boolean
 
   stringOverrides?: BankTransactionsStringOverrides
   isSyncing?: boolean
@@ -52,7 +51,6 @@ export const BankTransactionsTable = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-  _showBulkSelection = false,
 
   stringOverrides,
   isSyncing = false,
@@ -82,18 +80,16 @@ export const BankTransactionsTable = ({
     >
       <thead>
         <tr>
-          {_showBulkSelection && (
-            <th className='Layer__table-header Layer__bank-transactions__checkbox-col' style={{ padding: 0 }}>
-              <span className='Layer__table-cell-content'>
-                <Checkbox
-                  isSelected={isAllSelected}
-                  isIndeterminate={isPartiallySelected}
-                  onChange={onHeaderCheckboxChange}
-                  aria-label='Select all transactions on this page'
-                />
-              </span>
-            </th>
-          )}
+          <th className='Layer__table-header Layer__bank-transactions__checkbox-col' style={{ padding: 0 }}>
+            <span className='Layer__table-cell-content'>
+              <Checkbox
+                isSelected={isAllSelected}
+                isIndeterminate={isPartiallySelected}
+                onChange={onHeaderCheckboxChange}
+                aria-label='Select all transactions on this page'
+              />
+            </span>
+          </th>
           <th className='Layer__table-header Layer__bank-transactions__date-col'>
             {stringOverrides?.transactionsTable?.dateColumnHeaderText || 'Date'}
           </th>
@@ -148,7 +144,6 @@ export const BankTransactionsTable = ({
                 showReceiptUploads={showReceiptUploads}
                 showReceiptUploadColumn={showReceiptColumn}
                 showTooltips={showTooltips}
-                _showBulkSelection={_showBulkSelection}
                 stringOverrides={stringOverrides?.bankTransactionCTAs}
               />
             ),

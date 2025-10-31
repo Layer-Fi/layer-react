@@ -46,7 +46,6 @@ type Props = {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
-  _showBulkSelection?: boolean
 }
 
 export const BankTransactionListItem = ({
@@ -61,7 +60,6 @@ export const BankTransactionListItem = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-  _showBulkSelection = false,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -173,21 +171,19 @@ export const BankTransactionListItem = ({
         </div>
       </span>
       <span className={`${className}__body`}>
-        {_showBulkSelection && (
-          <div className={`${className}__checkbox`}>
-            <Checkbox
-              isSelected={isTransactionSelected}
-              onChange={(selected) => {
-                if (selected) {
-                  select(bankTransaction.id)
-                }
-                else {
-                  deselect(bankTransaction.id)
-                }
-              }}
-            />
-          </div>
-        )}
+        <div className={`${className}__checkbox`}>
+          <Checkbox
+            isSelected={isTransactionSelected}
+            onChange={(selected) => {
+              if (selected) {
+                select(bankTransaction.id)
+              }
+              else {
+                deselect(bankTransaction.id)
+              }
+            }}
+          />
+        </div>
         <HStack className={`${className}__body__name`}>
           <Span withTooltip>
             {bankTransaction.counterparty_name ?? bankTransaction.description}
