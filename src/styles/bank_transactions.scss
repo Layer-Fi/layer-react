@@ -681,6 +681,14 @@
   }
 }
 
+.Layer__table .Layer__table-header.Layer__bank-transactions__documents-col {
+  --right-adjust: calc(65ch + 2px);
+}
+
+.Layer__table .Layer__table-header.Layer__table-cell--amount.Layer__table-cell__amount-col {
+  --right-adjust: calc(65ch + 2px);
+}
+
 .Layer__table.Layer__bank-transactions__table .Layer__table-cell__amount-col {
   box-sizing: border-box;
   position: sticky;
@@ -689,7 +697,6 @@
   --right-adjust: 56ch;
 
   right: var(--right-adjust);
-
   width: 130px;
   min-width: 130px;
 
@@ -715,7 +722,7 @@
   box-sizing: border-box;
   position: sticky;
   z-index: 2;
-  right: 56ch;
+  right: var(--right-adjust);
   width: 0;
   min-width: 0;
   max-width: 0;
@@ -759,7 +766,10 @@
 
 .Layer__bank-transactions__tx-col {
   box-sizing: border-box;
-  color: var(--color-base-1000);
+  overflow: hidden;
+  max-width: 40ch;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .Layer__bank-transactions__account-col {
@@ -771,6 +781,9 @@
 
 .Layer__bank-transactions__documents-col {
   box-sizing: border-box;
+
+  --right-adjust: 56ch;
+
   width: 64px;
   min-width: 64px;
   max-width: 64px;
