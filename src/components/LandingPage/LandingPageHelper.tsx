@@ -1,4 +1,4 @@
-import { ServiceOfferingPlatformConfig, ServiceOfferingConfig, ServiceOfferingValueProposition } from './types'
+import { LandingPagePlatformConfig, LandingPageConfig, LandingPageValueProposition } from './types'
 import {
   imageBusinessAccounts,
   imageBusinessOverview,
@@ -8,30 +8,30 @@ import {
   imagePnlOverview,
 } from '../../assets/images'
 import {
-  ServiceOfferingContentID,
-  ServiceOfferingTypesTextContent,
-  ServiceOfferingDefaultTextContent,
+  LandingPageContentID,
+  LandingPageTypesTextContent,
+  LandingPageDefaultTextContent,
   ContentConfig,
   PartialContentConfig,
-  serviceOfferingDefaultContentConfig,
+  landingPageDefaultContentConfig,
 } from './content'
 import { Check } from 'lucide-react'
 
 /**
- * Helper class to create defaults for the service offerings and override them, as well
+ * Helper class to create defaults for the Landing Pages and override them, as well
  * as generate the base content configs.
  @see createBaseAccountingOffer
  @see createBaseBookkeepingOffer
  @see createContentConfig
  */
-export class ServiceOfferingHelper {
+export class LandingPageHelper {
   /**
    * Creates dynamic text by replacing template variables with platform config values
    */
   static makeDynamicText(
-    contentId: ServiceOfferingContentID,
-    textContent: ServiceOfferingTypesTextContent,
-    platformConfig: ServiceOfferingPlatformConfig,
+    contentId: LandingPageContentID,
+    textContent: LandingPageTypesTextContent,
+    platformConfig: LandingPagePlatformConfig,
   ): string {
     const variableMap = {
       platformName: platformConfig.platformName,
@@ -39,7 +39,7 @@ export class ServiceOfferingHelper {
     }
 
     // Try to use the provided text content. If it doesn't exist, we'll use values from the default.
-    const template = textContent[contentId] ?? ServiceOfferingDefaultTextContent[contentId]
+    const template = textContent[contentId] ?? LandingPageDefaultTextContent[contentId]
 
     return this.bindTextValues(template, variableMap)
   }
@@ -47,11 +47,11 @@ export class ServiceOfferingHelper {
   /**
    * Binds template variables in a string with platform configuration values
    */
-  static bindTextValues(template: string, platformConfig: ServiceOfferingPlatformConfig): string
+  static bindTextValues(template: string, platformConfig: LandingPagePlatformConfig): string
   static bindTextValues(template: string, variableMap: Record<string, string>): string
   static bindTextValues(
     template: string,
-    configOrMap: ServiceOfferingPlatformConfig | Record<string, string>,
+    configOrMap: LandingPagePlatformConfig | Record<string, string>,
   ): string {
     let variableMap: Record<string, string>
 
@@ -73,17 +73,17 @@ export class ServiceOfferingHelper {
   }
 
   /**
-   * Generates a `ServiceOfferingConfig` with the default values for offering
+   * Generates a `LandingPageConfig` with the default values for offering
    * Layer's accounting service. Recommended when you want minimal changes for
    * the standard accounting offer.
    *
    * Default settings are set to a base pricing of $299/month, which can be
    * overwritten using `overwriteBaseOffer`.
    *
-   * @see ServiceOfferingHelper.overwriteBaseOffer
+   * @see LandingPageHelper.overwriteBaseOffer
    */
-  static createBaseAccountingOffer(platformConfig: ServiceOfferingPlatformConfig): ServiceOfferingConfig {
-    const accountingValueProps: ServiceOfferingValueProposition[] = [
+  static createBaseAccountingOffer(platformConfig: LandingPagePlatformConfig): LandingPageConfig {
+    const accountingValueProps: LandingPageValueProposition[] = [
       {
         icon: <img src={imageBusinessAccounts} alt='Business bank accounts and credit cards connection icon' />,
         title: 'Connect your business accounts',
@@ -124,17 +124,17 @@ export class ServiceOfferingHelper {
   }
 
   /**
-   * Generates a `ServiceOfferingConfig` with the default values for offering
+   * Generates a `LandingPageConfig` with the default values for offering
    * Layer's bookkeeping service. Recommended when you want minimal changes for
    * the standard bookkeeping offer.
    *
    * Default settings are set to a base pricing of $599/month, which can be
    * overwritten using `overwriteBaseOffer`.
    *
-   * @see ServiceOfferingHelper.overwriteBaseOffer
+   * @see LandingPageHelper.overwriteBaseOffer
    */
-  static createBaseBookkeepingOffer(platformConfig: ServiceOfferingPlatformConfig): ServiceOfferingConfig {
-    const bookkeepingValueProps: ServiceOfferingValueProposition[] = [
+  static createBaseBookkeepingOffer(platformConfig: LandingPagePlatformConfig): LandingPageConfig {
+    const bookkeepingValueProps: LandingPageValueProposition[] = [
       {
         icon: <img src={imageScheduleBookkeeperMeeting} alt='Calendar scheduling icon for bookkeeper consultation' />,
         title: 'Schedule a call with your Bookkeeper',
@@ -177,16 +177,16 @@ export class ServiceOfferingHelper {
   /**
    * Use an existing base offer and overwrite portions of its content.
    *
-   * When you want to create your own config, you can create your own `ServiceOfferingConfig`.
+   * When you want to create your own config, you can create your own `LandingPageConfig`.
    *
-   * @see ServiceOfferingHelper.createBaseAccountingOffer
-   * @see ServiceOfferingHelper.createBaseBookkeepingOffer
-   * @see ServiceOfferingConfig
+   * @see LandingPageHelper.createBaseAccountingOffer
+   * @see LandingPageHelper.createBaseBookkeepingOffer
+   * @see LandingPageConfig
    */
   static overwriteBaseOffer(
-    defaults: ServiceOfferingConfig,
-    partial: Partial<ServiceOfferingConfig>,
-  ): ServiceOfferingConfig {
+    defaults: LandingPageConfig,
+    partial: Partial<LandingPageConfig>,
+  ): LandingPageConfig {
     return {
       badge: partial.badge ?? defaults.badge,
       title: partial.title ?? defaults.title,
@@ -203,28 +203,28 @@ export class ServiceOfferingHelper {
    * Creates a ContentConfig with the default config content provided for Layer's
    * accounting and bookkeeping offerings.
    *
-   * @see serviceOfferingDefaultContentConfig - contains the default text content for the ServiceOffering component.
+   * @see LandingPageDefaultContentConfig - contains the default text content for the LandingPage component.
    */
   static createContentConfig(config: PartialContentConfig): ContentConfig {
     // Process config array to handle partial configs
     const processedConfig = config.config.map((item, index) => {
-      // If it's already a complete ServiceOfferingConfig, return as is
+      // If it's already a complete LandingPageConfig, return as is
       if ('badge' in item && 'title' in item && 'description' in item && 'features' in item
         && 'pricing' in item && 'unit' in item && 'cta' in item && 'valueProposition' in item) {
-        return item as ServiceOfferingConfig
+        return item as LandingPageConfig
       }
 
       // If it's a partial config, we need defaults to merge with
       // For now, throw an error if no defaults are available
-      throw new Error(`Partial ServiceOffering config at index ${index} requires a default config to merge with. Please provide complete ServiceOffering configs or use a merge helper.`)
+      throw new Error(`Partial LandingPage config at index ${index} requires a default config to merge with. Please provide complete LandingPage configs or use a merge helper.`)
     })
 
     return {
       textContent: {
-        ...ServiceOfferingDefaultTextContent,
+        ...LandingPageDefaultTextContent,
         ...config.textContent,
       },
-      features: config.features ?? serviceOfferingDefaultContentConfig.features,
+      features: config.features ?? landingPageDefaultContentConfig.features,
       config: processedConfig,
     }
   }

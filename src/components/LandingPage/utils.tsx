@@ -1,4 +1,4 @@
-import { HeroContentConfig, ServiceOfferingCardConfig, DeepPartial } from './types'
+import { HeroContentConfig, LandingPageCardConfig, DeepPartial } from './types'
 import { merge } from 'lodash'
 
 /**
@@ -15,14 +15,14 @@ export function mergeHeroContentConfig(
 }
 
 /**
- * Merges service offering config overrides with defaults.
+ * Merges Landing Page config overrides with defaults.
  * @param defaults The default configuration (must be complete)
  * @param overrides The partial overrides to merge
- * @returns A merged ServiceOfferingCardConfig object with all keys required
+ * @returns A merged LandingPageCardConfig object with all keys required
  */
-export function mergeServiceOfferingConfig(
-  defaults: ServiceOfferingCardConfig,
-  overrides: DeepPartial<ServiceOfferingCardConfig>,
-): ServiceOfferingCardConfig {
+export function mergeLandingPageConfig(
+  defaults: LandingPageCardConfig,
+  overrides: DeepPartial<LandingPageCardConfig>,
+): LandingPageCardConfig {
   return merge(defaults, overrides)
 }

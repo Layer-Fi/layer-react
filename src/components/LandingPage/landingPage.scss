@@ -1,4 +1,8 @@
-.Layer__service-offering {
+body .calendly-overlay .calendly-popup {
+  max-height: 1024px;
+}
+
+.Layer__LandingPage {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -11,7 +15,7 @@
   background: var(--color-white);
 }
 
-.Layer__service-offering__calendly-container {
+.Layer__LandingPage__calendly-container {
   overflow: hidden;
   max-height: 0;
   margin: 0;
@@ -31,14 +35,14 @@
   }
 }
 
-// Service Offering Options Component
-.Layer__service-offering-options {
+// Landing Page Options Component
+.Layer__LandingPage-options {
   max-width: 1200px;
   padding: var(--spacing-xl) var(--spacing-lg);
   margin: 0 auto;
 }
 
-.Layer__service-offering-options__grid {
+.Layer__LandingPage-options__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-2xl);
@@ -50,7 +54,7 @@
   }
 }
 
-.Layer__service-offering-options__card {
+.Layer__LandingPage-options__card {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -63,23 +67,23 @@
   overflow-wrap: break-word;
 }
 
-.Layer__service-offering-options__feature-check {
+.Layer__LandingPage-options__feature-check {
   color: var(--fg-subtle);
 }
 
 // Layout configurations for different offer positions
-.Layer__service-offering__content {
+.Layer__LandingPage__content {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xl);
 }
 
-.Layer__service-offering__offers {
+.Layer__LandingPage__offers {
   width: 100%;
   background-color: transparent;
 }
 
-.Layer__service-offering__layout {
+.Layer__LandingPage__layout {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -94,7 +98,7 @@
   }
 }
 
-.Layer__service-offering__responsive-content {
+.Layer__LandingPage__responsive-content {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2xl);
@@ -104,7 +108,7 @@
   }
 }
 
-.Layer__service-offering__media-container {
+.Layer__LandingPage__media-container {
   display: flex;
   align-items: center;
   justify-content: center;

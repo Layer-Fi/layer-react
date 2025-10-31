@@ -33,7 +33,7 @@ export { Journal } from './components/Journal'
 export { Tasks } from './components/Tasks/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
-export { ServiceOffering } from './components/ServiceOffering/ServiceOffering'
+export { LandingPage } from './components/LandingPage/LandingPage'
 export { LinkAccounts } from './components/PlatformOnboarding/LinkAccounts'
 export { PlatformOnboarding } from './components/PlatformOnboarding/PlatformOnboarding'
 
