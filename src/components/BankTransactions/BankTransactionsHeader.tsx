@@ -135,7 +135,7 @@ export const BankTransactionsHeader = ({
   showStatusToggle,
   collapseHeader,
   _showCategorizationRules = false,
-  _showBulkSelection = false,
+
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
   const { display } = useBankTransactionsContext()
@@ -153,7 +153,7 @@ export const BankTransactionsHeader = ({
 
   const { count } = useCountSelectedIds()
 
-  const showBulkActions = _showBulkSelection && count > 0
+  const showBulkActions = count > 0
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
