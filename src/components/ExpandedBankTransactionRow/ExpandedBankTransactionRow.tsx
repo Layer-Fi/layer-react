@@ -160,7 +160,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       setSplitFormError(undefined)
 
       // Auto-save when category / split is valid
-      if (validateSplit(newSplits)) {
+      if (isSplitsValid(newSplits)) {
         setTransactionCategory(bankTransaction.id, new SplitAsOption(newSplits))
       }
     }
