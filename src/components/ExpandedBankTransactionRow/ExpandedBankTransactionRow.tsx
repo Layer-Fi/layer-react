@@ -16,7 +16,6 @@ import {
 } from '../../types/bank_transactions'
 import {
   hasMatch,
-  hasSuggestedTransferMatches,
 } from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
 import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
@@ -386,7 +385,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                         },
                         {
                           value: 'match',
-                          label: hasSuggestedTransferMatches(bankTransaction) ? 'Transfer' : 'Match',
+                          label: 'Match',
                           disabled: !hasMatch(bankTransaction),
                           disabledMessage:
                         'We could not find matching transactions',
