@@ -1,24 +1,24 @@
 import { ReactNode } from 'react'
 
 /**
- * A Link acts as a call-to-action for users interacting with the ServiceOffering component.
- @see ServiceOffering
+ * A Link acts as a call-to-action for users interacting with the LandingPage component.
+ * @see LandingPage
  */
-export type ServiceOfferingLink = {
+export type LandingPageLink = {
   /** Text label displayed for the link. */
   label: string
   /** Destination for the link. If calendly URL, opens a Calendly modal. Otherwise, opens a new tab. */
   url: string
 }
 
-export type ServiceOfferingFeature = string | { description: string, icon: ReactNode }
+export type LandingPageFeature = string | { description: string, icon: ReactNode }
 
 /**
- * The ServiceOfferingValueProposition holds on to data that populates the value proposition
+ * The LandingPageValueProposition holds on to data that populates the value proposition
  * section.
- @see ServiceOffering
+ * @see LandingPage
  */
-export type ServiceOfferingValueProposition = {
+export type LandingPageValueProposition = {
   /** A visual icon or graphic element that represents this value proposition (e.g., SVG icon, emoji, or React component) */
   icon: ReactNode
   /** A short, compelling headline that summarizes the key benefit or feature */
@@ -28,18 +28,18 @@ export type ServiceOfferingValueProposition = {
 }
 
 /**
- * The ServiceOfferingConfig holds on to data that populates the offerings section.
- * @see ServiceOffering
+ * The LandingPageConfig holds on to data that populates the offerings section.
+ * @see LandingPage
  */
-export type ServiceOfferingConfig = {
+export type LandingPageConfig = {
   /** A small label/tag displayed prominently on the service card (e.g., "Most Popular", "Recommended") */
   badge: string
-  /** The main heading that identifies the service offering (e.g., "Full-Service Bookkeeping", "Self-Service Accounting") */
+  /** The main heading that identifies the Landing Page (e.g., "Full-Service Bookkeeping", "Self-Service Accounting") */
   title: string
   /** A brief summary explaining what this service package includes and who it's for */
   description: string
   /** A list of key benefits, capabilities, or included services that customers get with this offering */
-  features: ServiceOfferingFeature[]
+  features: LandingPageFeature[]
   /** The cost display for this service (e.g., "$299", or empty string for "Contact Us"). If left as an empty string, will not render any text. */
   pricing: string
   /** The billing frequency or unit of measurement shown after the price (e.g., "/month", "/user", "/year").
@@ -48,42 +48,42 @@ export type ServiceOfferingConfig = {
   /** The call-to-action button configuration with label text and destination URL. The CTAs
    * supports Calendly links for booking an appointment. If not a Calendly link, a new tab
    * will be opened in visiting the link. */
-  cta: ServiceOfferingLink
+  cta: LandingPageLink
   /**
    * An array of detailed selling points with icons, titles, and descriptions that highlight the unique benefits of this service.
    *
    * The defaults contain three value propositions each for accounting and bookkeeping.
    * */
-  valueProposition: ServiceOfferingValueProposition[]
+  valueProposition: LandingPageValueProposition[]
 }
 
 /**
- * The ServiceOffering config defines the main CTA link and an optional learn more link.
+ * The LandingPage config defines the main CTA link and an optional learn more link.
  *
  * The main call-to-action usually points to a Calendly booking link, while the learn more
  * link points to an informational page about the offers.
- @see ServiceOffering
+ @see LandingPage
  */
-export type ServiceOfferingLinks = {
+export type LandingPageLinks = {
   /**
      * Main CTA link on the top-of-fold component.
      */
-  main: ServiceOfferingLink
+  main: LandingPageLink
   /**
      * Enables the learn more button, which allows a platform to link to a learn more page.
      *
      * If unspecified, the learn more button is not rendered.
      */
-  learnMore?: ServiceOfferingLink
+  learnMore?: LandingPageLink
 }
 
 /**
  * The PlatformConfig holds on to the name of the platform integrating with Layer, the primary
- * top-of-fold image shown on the ServiceOffering component, and the name of the platform's
+ * top-of-fold image shown on the LandingPage component, and the name of the platform's
  * niche or industry.
- @see ServiceOffering
+ @see LandingPage
  */
-export interface ServiceOfferingPlatformConfig {
+export interface LandingPagePlatformConfig {
   /**
      * The platform/brand name displayed throughout the component (e.g., "Shopify", "WooCommerce").
      * Used in titles, descriptions, and feature text to customize the content.
@@ -97,7 +97,7 @@ export interface ServiceOfferingPlatformConfig {
      * In cases where the industry name substitution does not work well for the value
      * propositions or features, we recommended you overwrite the value propositions directly.
      *
-    @see ServiceOfferingValueProposition
+    @see LandingPageValueProposition
      */
   industry: string
 }
@@ -112,7 +112,7 @@ export type DeepPartial<T> = {
 }
 
 /**
- * Configuration for the hero/main content section of the service offering page
+ * Configuration for the hero/main content section of the Landing Page page
  */
 export type HeroContentConfig = {
   stringOverrides: {
@@ -127,15 +127,15 @@ export type HeroContentConfig = {
     topOfFoldImage: string
   }
   cta: {
-    primary: ServiceOfferingLink
-    secondary: ServiceOfferingLink
+    primary: LandingPageLink
+    secondary: LandingPageLink
   }
 }
 
 /**
- * Configuration for individual service offering cards (accounting or bookkeeping)
+ * Configuration for individual Landing Page cards (accounting or bookkeeping)
  */
-export type ServiceOfferingCardConfig = {
+export type LandingPageCardConfig = {
   offerType: 'accounting' | 'bookkeeping'
   stringOverrides: {
     badge: string
@@ -148,7 +148,7 @@ export type ServiceOfferingCardConfig = {
     offerImage: string
   }
   cta: {
-    primary: ServiceOfferingLink
+    primary: LandingPageLink
   }
   showStartingAtLabel: boolean
 }

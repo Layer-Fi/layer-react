@@ -1,5 +1,5 @@
 import { imagePartnerAccountingImage } from '../../assets/images'
-import { HeroContentConfig, ServiceOfferingCardConfig, ServiceOfferingConfig } from './types'
+import { HeroContentConfig, LandingPageCardConfig, LandingPageConfig } from './types'
 
 import { ReactNode } from 'react'
 
@@ -9,20 +9,20 @@ export type CoreValueProposition = {
   text: string
 }
 
-export type ServiceOfferingTypesTextContent = Record<ServiceOfferingContentID, string>
+export type LandingPageTypesTextContent = Record<LandingPageContentID, string>
 
 /**
- * The ServiceOfferingContentID is an enum of all the different kinds of text used on the base service offer configs
- * for the various service offerings.
+ * The LandingPageContentID is an enum of all the different kinds of text used on the base service offer configs
+ * for the various Landing Pages.
  *
- * In general, there are 3 sections on the ServiceOffering page component: (1) Top-of-the-fold main content section,
- * (2) Core value proposition content section, (3) Service offering content section.
+ * In general, there are 3 sections on the LandingPage page component: (1) Top-of-the-fold main content section,
+ * (2) Core value proposition content section, (3) Landing Page content section.
  *
  * Using these enums as keys allows you to overwrite specific textual content on the different sections defined on the base configs.
- @see ServiceOfferingHelper.createBaseAccountingOffer
- @see ServiceOfferingHelper.createBaseBookkeepingOffer
+ * @see LandingPageHelper.createBaseAccountingOffer
+ * @see LandingPageHelper.createBaseBookkeepingOffer
  */
-export enum ServiceOfferingContentID {
+export enum LandingPageContentID {
   /**
    * The top most header text on section 1, top-of-the-fold main content section.
    *
@@ -31,7 +31,7 @@ export enum ServiceOfferingContentID {
    */
   title,
   /**
-   * The text below the top most header text on the ServiceOffering page.
+   * The text below the top most header text on the LandingPage page.
    */
   subtitle,
   /**
@@ -55,42 +55,42 @@ export enum ServiceOfferingContentID {
    */
   valuePropositionTitle,
   /**
-   * The title for the service offerings section (section 3).
+   * The title for the Landing Pages section (section 3).
    */
   offersTitle,
 }
 
-export const ServiceOfferingDefaultTextContent: ServiceOfferingTypesTextContent = {
-  [ServiceOfferingContentID.title]: '', // When left blank, uses a dark and grayed out color
-  [ServiceOfferingContentID.subtitle]: 'Track your business finances, right within {platformName}.',
-  [ServiceOfferingContentID.headline1]: 'All your finances in one place',
-  [ServiceOfferingContentID.headline1Desc]: 'Directly integrated with your {platformName} data, so you can see your business performance and profit in real-time.',
-  [ServiceOfferingContentID.headline2]: 'Built for {industry}',
-  [ServiceOfferingContentID.headline2Desc]: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
-  [ServiceOfferingContentID.valuePropositionTitle]: 'Self-service accounting to understand your business health',
-  [ServiceOfferingContentID.offersTitle]: 'Use {platformName} Accounting yourself, or let our team of experts handle bookkeeping for you',
+export const LandingPageDefaultTextContent: LandingPageTypesTextContent = {
+  [LandingPageContentID.title]: '', // When left blank, uses a dark and grayed out color
+  [LandingPageContentID.subtitle]: 'Track your business finances, right within {platformName}.',
+  [LandingPageContentID.headline1]: 'All your finances in one place',
+  [LandingPageContentID.headline1Desc]: 'Directly integrated with your {platformName} data, so you can see your business performance and profit in real-time.',
+  [LandingPageContentID.headline2]: 'Built for {industry}',
+  [LandingPageContentID.headline2Desc]: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
+  [LandingPageContentID.valuePropositionTitle]: 'Self-service accounting to understand your business health',
+  [LandingPageContentID.offersTitle]: 'Use {platformName} Accounting yourself, or let our team of experts handle bookkeeping for you',
 }
 
 export interface ContentConfig {
-  textContent?: ServiceOfferingTypesTextContent
+  textContent?: LandingPageTypesTextContent
   features?: CoreValueProposition[]
-  config: ServiceOfferingConfig[]
+  config: LandingPageConfig[]
 }
 
 /** Partial configuration type for overriding defaults */
 export type PartialContentConfig = {
-  textContent?: Partial<ServiceOfferingTypesTextContent>
+  textContent?: Partial<LandingPageTypesTextContent>
   features?: CoreValueProposition[]
-  config: (ServiceOfferingConfig | Partial<ServiceOfferingConfig>)[]
+  config: (LandingPageConfig | Partial<LandingPageConfig>)[]
 }
 
 /**
  * Provided default content configuration, which defines defaults for textual content
- * on the ServiceOffering.
- @see ServiceOffering
+ * on the LandingPage.
+ * @see LandingPage
  */
-export const serviceOfferingDefaultContentConfig: Omit<ContentConfig, 'config'> = {
-  textContent: ServiceOfferingDefaultTextContent,
+export const landingPageDefaultContentConfig: Omit<ContentConfig, 'config'> = {
+  textContent: LandingPageDefaultTextContent,
   features: [
     {
       icon: <></>,
@@ -129,7 +129,7 @@ export const DefaultHeroContentConfig: HeroContentConfig = {
   },
 }
 
-export const DefaultAccountingOfferingConfig: ServiceOfferingCardConfig = {
+export const DefaultAccountingOfferingConfig: LandingPageCardConfig = {
   offerType: 'accounting',
   stringOverrides: {
     badge: 'Easy to use software',
@@ -150,7 +150,7 @@ export const DefaultAccountingOfferingConfig: ServiceOfferingCardConfig = {
   showStartingAtLabel: false,
 }
 
-export const DefaultBookkeepingOfferingConfig: ServiceOfferingCardConfig = {
+export const DefaultBookkeepingOfferingConfig: LandingPageCardConfig = {
   offerType: 'bookkeeping',
   stringOverrides: {
     badge: 'A complete bookkeeping service',

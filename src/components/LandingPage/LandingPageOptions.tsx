@@ -4,28 +4,28 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
 import { Badge } from '../Badge'
 import { BadgeSize, BadgeVariant } from '../Badge/Badge'
-import { ServiceOfferingCardConfig, ServiceOfferingPlatformConfig } from './types'
+import { LandingPageCardConfig, LandingPagePlatformConfig } from './types'
 import { isCalendlyLink } from '../../hooks/useCalendly/useCalendly'
-import { ServiceOfferingHelper } from './ServiceOfferingHelper'
+import { LandingPageHelper } from './LandingPageHelper'
 import { Check } from 'lucide-react'
 import classNames from 'classnames'
 import { useCallback, useMemo } from 'react'
 import { Separator } from '../Separator/Separator'
-export interface ServiceOfferingOptionsProps {
+export interface LandingPageOptionsProps {
   type: 'accounting' | 'bookkeeping'
-  platformConfig: ServiceOfferingPlatformConfig
-  config: ServiceOfferingCardConfig
+  platformConfig: LandingPagePlatformConfig
+  config: LandingPageCardConfig
   openCalendly: (link: string) => void
   className: string
 }
 
-export const ServiceOfferingOffer = ({
+export const LandingPageOffer = ({
   type,
   platformConfig,
   config,
   openCalendly,
   className,
-}: ServiceOfferingOptionsProps) => {
+}: LandingPageOptionsProps) => {
   const handleCtaClick = useCallback(() => {
     if (isCalendlyLink(config.cta.primary)) {
       openCalendly(config.cta.primary.url)
@@ -52,29 +52,29 @@ export const ServiceOfferingOffer = ({
 
   return (
     <div className={baseClassName}>
-      <VStack pb='lg' pi='lg' gap='md' className='Layer__service-offering-options__card'>
+      <VStack pb='lg' pi='lg' gap='md' className='Layer__LandingPage-options__card'>
         <VStack gap='md'>
           <HStack>
             <Badge size={BadgeSize.SMALL} variant={badgeVariant}>
-              {ServiceOfferingHelper.bindTextValues(config.stringOverrides.badge, platformConfig)}
+              {LandingPageHelper.bindTextValues(config.stringOverrides.badge, platformConfig)}
             </Badge>
           </HStack>
           <Heading size='sm'>
-            {ServiceOfferingHelper.bindTextValues(config.stringOverrides.title, platformConfig)}
+            {LandingPageHelper.bindTextValues(config.stringOverrides.title, platformConfig)}
           </Heading>
           <P variant='subtle'>
-            {ServiceOfferingHelper.bindTextValues(config.stringOverrides.subtitle, platformConfig)}
+            {LandingPageHelper.bindTextValues(config.stringOverrides.subtitle, platformConfig)}
           </P>
         </VStack>
         <Separator />
-        <VStack className='Layer__service-offering-options__features' gap='sm'>
-          <VStack className='Layer__service-offering-options__features-list' gap='sm'>
+        <VStack className='Layer__LandingPage-options__features' gap='sm'>
+          <VStack className='Layer__LandingPage-options__features-list' gap='sm'>
             {features.map((f, i) => {
               return (
                 <HStack key={i} gap='xs'>
-                  <Check size={14} className='Layer__service-offering-options__feature-check' />
+                  <Check size={14} className='Layer__LandingPage-options__feature-check' />
                   <Span size='sm' variant='subtle'>
-                    {ServiceOfferingHelper.bindTextValues(f, platformConfig)}
+                    {LandingPageHelper.bindTextValues(f, platformConfig)}
                   </Span>
                 </HStack>
               )
