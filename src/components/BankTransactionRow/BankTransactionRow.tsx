@@ -54,6 +54,7 @@ type Props = {
   showReceiptUploads: boolean
   showReceiptUploadColumn: boolean
   showTooltips: boolean
+  _showBulkSelection?: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
 }
 
@@ -81,6 +82,7 @@ export const BankTransactionRow = ({
   showReceiptUploads,
   showReceiptUploadColumn,
   showTooltips,
+  _showBulkSelection = false,
   stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -173,21 +175,23 @@ export const BankTransactionRow = ({
   return (
     <>
       <tr className={rowClassName}>
-        <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
-          <span className='Layer__table-cell-content'>
-            <Checkbox
-              isSelected={isTransactionSelected}
-              onChange={(selected) => {
-                if (selected) {
-                  select(bankTransaction.id)
-                }
-                else {
-                  deselect(bankTransaction.id)
-                }
-              }}
-            />
-          </span>
-        </td>
+        {_showBulkSelection && (
+          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
+            <span className='Layer__table-cell-content'>
+              <Checkbox
+                isSelected={isTransactionSelected}
+                onChange={(selected) => {
+                  if (selected) {
+                    select(bankTransaction.id)
+                  }
+                  else {
+                    deselect(bankTransaction.id)
+                  }
+                }}
+              />
+            </span>
+          </td>
+        )}
         <td
           className='Layer__table-cell Layer__bank-transaction-table__date-col'
           {...openRow}
@@ -392,7 +396,7 @@ export const BankTransactionRow = ({
         </td>
       </tr>
       <tr>
-        <td colSpan={7} className='Layer__bank-transaction-row__expanded-td'>
+        <td colSpan={_showBulkSelection ? 7 : 6} className='Layer__bank-transaction-row__expanded-td'>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}

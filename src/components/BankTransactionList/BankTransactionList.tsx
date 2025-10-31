@@ -20,6 +20,7 @@ interface BankTransactionListProps {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
+  _showBulkSelection?: boolean
 }
 
 export const BankTransactionList = ({
@@ -32,28 +33,31 @@ export const BankTransactionList = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
+  _showBulkSelection = false,
 }: BankTransactionListProps) => {
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
   return (
     <>
-      <HStack
-        gap='md'
-        pi='md'
-        pb='md'
-        className='Layer__bank-transactions__list-header'
-      >
-        <Checkbox
-          isSelected={isAllSelected}
-          isIndeterminate={isPartiallySelected}
-          onChange={onHeaderCheckboxChange}
-          aria-label='Select all transactions on this page'
-        />
-        <Span size='sm' pbs='3xs'>
-          Select all
-        </Span>
-      </HStack>
+      {_showBulkSelection && (
+        <HStack
+          gap='md'
+          pi='md'
+          pb='md'
+          className='Layer__bank-transactions__list-header'
+        >
+          <Checkbox
+            isSelected={isAllSelected}
+            isIndeterminate={isPartiallySelected}
+            onChange={onHeaderCheckboxChange}
+            aria-label='Select all transactions on this page'
+          />
+          <Span size='sm' pbs='3xs'>
+            Select all
+          </Span>
+        </HStack>
+      )}
       <ul className='Layer__bank-transactions__list'>
         {bankTransactions?.map(
           (bankTransaction: BankTransaction, index: number) => (
@@ -70,6 +74,7 @@ export const BankTransactionList = ({
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
+              _showBulkSelection={_showBulkSelection}
             />
           ),
         )}
