@@ -193,13 +193,13 @@ export const BankTransactionListItem = ({
             {bankTransaction.counterparty_name ?? bankTransaction.description}
           </Span>
         </HStack>
-        <HStack
-          className={`${className}__amount-${
+        <MoneySpan
+          className={`Layer__bank-transaction-list-item__amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
-        >
-          <MoneySpan amount={bankTransaction.amount} displayPlusSign={isCredit(bankTransaction)} />
-        </HStack>
+          amount={bankTransaction.amount}
+          displayPlusSign={isCredit(bankTransaction)}
+        />
       </HStack>
       {!categorizationEnabled && !categorized
         ? (
