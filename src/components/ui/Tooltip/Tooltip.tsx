@@ -71,7 +71,7 @@ export const TooltipTrigger = forwardRef<
     <HStack
       ref={ref}
       data-state={context.open ? 'open' : 'closed'}
-      className={classNames('Layer__UI__tooltip-trigger')}
+      className='Layer__UI__tooltip-trigger'
       {...context.getReferenceProps(props)}
     >
       {children}
