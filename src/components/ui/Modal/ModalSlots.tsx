@@ -38,20 +38,24 @@ export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalClo
 
 type ModalTitleWithCloseProps = {
   heading: ReactElement
+  description?: ReactElement
   onClose?: () => void
 }
 
 export const ModalTitleWithClose = forwardRef<
   HTMLElementTagNameMap['div'],
   ModalTitleWithCloseProps
->(function ModalTitleWithClose({ heading, onClose }, ref) {
+>(function ModalTitleWithClose({ heading, description, onClose }, ref) {
   return (
     <VStack>
       <div
         className='Layer__ModalTitleWithClose'
         ref={ref}
       >
-        {heading}
+        <VStack gap='xs' slot='title'>
+          {heading}
+          {description}
+        </VStack>
         <Button
           icon
           variant='outlined'
