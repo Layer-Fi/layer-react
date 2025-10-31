@@ -280,7 +280,7 @@ const BankTransactionsTableView = ({
     if (maxPage > 0 && currentPage > maxPage) {
       setCurrentPage(maxPage)
     }
-  }, [isMonthlyViewMode, data, pageSize, currentPage, setCurrentPage])
+  }, [isMonthlyViewMode, data?.length, pageSize, currentPage, setCurrentPage])
 
   const handleRuleSuggestionOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) setRuleSuggestion(null)
