@@ -55,7 +55,10 @@ export const isTransferMatch = (bankTransaction?: BankTransaction) => {
 }
 
 export const hasSuggestedTransferMatches = (bankTransaction?: BankTransaction) => {
-  return bankTransaction?.suggested_matches?.every(x => x.details.type === 'Transfer_Match') ?? false
+  return (
+    (bankTransaction?.suggested_matches?.length ?? 0) > 0
+    && bankTransaction?.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
+  )
 }
 
 export const getBankTransactionMatchAsSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {

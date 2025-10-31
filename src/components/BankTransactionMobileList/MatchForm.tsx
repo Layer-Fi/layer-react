@@ -4,7 +4,6 @@ import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction, SuggestedMatch } from '../../types/bank_transactions'
 import {
   hasReceipts,
-  hasSuggestedTransferMatches,
   getBankTransactionMatchAsSuggestedMatch,
 } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
@@ -70,7 +69,7 @@ export const MatchForm = ({
   return (
     <div>
       <Text weight={TextWeight.bold} size={TextSize.sm}>
-        {hasSuggestedTransferMatches(bankTransaction) ? 'Find transfer' : 'Find match'}
+        Find match
       </Text>
       <MatchFormMobile
         classNamePrefix='Layer__bank-transaction-mobile-list-item'
@@ -125,7 +124,7 @@ export const MatchForm = ({
           >
             {isLoading || bankTransaction.processing
               ? 'Saving...'
-              : hasSuggestedTransferMatches(bankTransaction) ? 'Approve transfer' : 'Approve match'}
+              : 'Approve match'}
           </Button>
         )}
       </div>

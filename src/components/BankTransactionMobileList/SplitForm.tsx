@@ -27,6 +27,8 @@ import { ApiCategorizationAsOption } from '../../types/categorizationOption'
 import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { type Split } from '../../types/bank_transactions'
 import { convertFromCents } from '../../utils/format'
+import { getSplitsErrorMessage, isSplitsValid } from '../ExpandedBankTransactionRow/utils'
+import { HStack } from '../ui/Stack/Stack'
 
 type RowState = {
   splits: Split[]
@@ -186,31 +188,10 @@ export const SplitForm = ({
     setFormError(undefined)
   }
 
-  const validateSplit = (splitData: RowState) => {
-    let valid = true
-
-    splitData.splits.forEach((split) => {
-      if (split.amount <= 0) {
-        valid = false
-      }
-      else if (!split.category) {
-        valid = false
-      }
-    })
-
-    return valid
-  }
-
   const save = async () => {
-    if (!validateSplit(rowState)) {
-      if (rowState.splits.length > 1) {
-        setFormError(
-          'Use only positive amounts and select category for each entry',
-        )
-      }
-      else {
-        setFormError('Category is required')
-      }
+    const splits = rowState.splits
+    if (!isSplitsValid(splits)) {
+      setFormError(getSplitsErrorMessage(splits))
       return
     }
 
@@ -337,7 +318,7 @@ export const SplitForm = ({
           </Button>
         )}
       </div>
-      {formError && <ErrorText>{formError}</ErrorText>}
+      {formError && <HStack pb='sm'><ErrorText>{formError}</ErrorText></HStack>}
       {bankTransaction.error && showRetry
         ? (
           <ErrorText>

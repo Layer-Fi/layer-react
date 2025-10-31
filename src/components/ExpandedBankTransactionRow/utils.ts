@@ -6,20 +6,35 @@ import { makeTagFromTransactionTag, TransactionTagSchema } from '../../features/
 import { Schema } from 'effect/index'
 import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
 import { isSuggestedMatchAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import _ from 'lodash'
 
-export const validateSplit = (localSplits: Split[]): boolean => {
-  let valid = true
+export enum ValidateSplitError {
+  AmountsMustBeGreaterThanZero = 'All splits must have an amount greater than $0.00',
+  CategoryIsRequired = 'All splits must have a category',
+}
 
-  localSplits.forEach((split) => {
+export const isSplitsValid = (localSplits: Split[]): boolean => {
+  return validateSplit(localSplits)
+    .reduce((acc, splitError) => acc && splitError === undefined, true)
+}
+
+export const getSplitsErrorMessage = (localSplits: Split[]): string => {
+  return _.uniqBy(validateSplit(localSplits), error => error?.toString()).filter(Boolean).join(', ')
+}
+
+export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undefined)[] => {
+  const errors = localSplits.map((split) => {
     if (split.amount <= 0) {
-      valid = false
+      return ValidateSplitError.AmountsMustBeGreaterThanZero
     }
-    else if (!split.category) {
-      valid = false
-    }
-  })
 
-  return valid
+    if (!split.category) {
+      return ValidateSplitError.CategoryIsRequired
+    }
+
+    return undefined
+  })
+  return _.uniqBy(errors, error => error?.toString())
 }
 
 export const calculateAddSplit = (
