@@ -272,6 +272,16 @@ const BankTransactionsTableView = ({
     }
   }, [isMonthlyViewMode, isVisible, isLoading, hasMore, fetchMore])
 
+  // Adjust current page to last page if total page count < current page
+  useEffect(() => {
+    if (isMonthlyViewMode || !data?.length || pageSize <= 0) return
+
+    const maxPage = Math.ceil(data.length / pageSize)
+    if (maxPage > 0 && currentPage > maxPage) {
+      setCurrentPage(maxPage)
+    }
+  }, [isMonthlyViewMode, data?.length, pageSize, currentPage, setCurrentPage])
+
   const handleRuleSuggestionOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) setRuleSuggestion(null)
   }, [setRuleSuggestion])
