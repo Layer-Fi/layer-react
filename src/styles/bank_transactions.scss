@@ -459,7 +459,15 @@
 }
 
 .Layer__bank-transaction-row__expand-button {
-  min-width: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+  width: 2.25rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .Layer__bank-transaction-row__expand-button--mobile {
@@ -646,7 +654,7 @@
 
   .Layer__bank-transaction-list-item__body__name {
     flex: 1;
-    max-width: calc(100% - 120px);
+    width: 100%;
 
     .Layer__tooltip-trigger {
       display: flex;

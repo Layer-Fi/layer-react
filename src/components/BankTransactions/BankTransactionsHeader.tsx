@@ -222,9 +222,7 @@ export const BankTransactionsHeader = ({
         {showBulkActions
           ? (
             <BulkActionsModule
-              slots={{ BulkActions: () => (
-                <BankTransactionsBulkActions />
-              ) }}
+              slots={{ BulkActions: BankTransactionsBulkActions }}
             />
           )
           : (

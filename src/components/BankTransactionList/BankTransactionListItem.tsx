@@ -138,9 +138,9 @@ export const BankTransactionListItem = ({
     <li className={rowClassName}>
       <span className={`${className}__heading`}>
         <div className={`${className}__heading__main`}>
-          <span>
+          <Span ellipsis size='sm'>
             {formatTime(parseISO(bankTransaction.date), dateFormat)}
-          </span>
+          </Span>
 
           <span className={`${className}__heading-separator`} />
 
