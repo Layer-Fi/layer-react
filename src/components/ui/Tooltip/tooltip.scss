@@ -17,5 +17,6 @@
 }
 
 .Layer__UI__tooltip-trigger {
-  max-width: calc(100% - 5rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
