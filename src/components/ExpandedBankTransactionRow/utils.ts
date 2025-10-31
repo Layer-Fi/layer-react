@@ -19,7 +19,7 @@ export const isSplitsValid = (localSplits: Split[]): boolean => {
 }
 
 export const getSplitsErrorMessage = (localSplits: Split[]): string => {
-  return _.uniqBy(validateSplit(localSplits), error => error?.toString()).filter(Boolean).join(', ')
+  return _.uniqBy(validateSplit(localSplits), error => error?.toString()).filter(Boolean)[0] || ''
 }
 
 export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undefined)[] => {

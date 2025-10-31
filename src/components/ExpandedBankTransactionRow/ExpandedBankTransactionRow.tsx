@@ -50,8 +50,8 @@ import { getBankTransactionMatchAsSuggestedMatch } from '../../utils/bankTransac
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { SplitAsOption, SuggestedMatchAsOption } from '../../types/categorizationOption'
 import { AmountInput } from '../Input/AmountInput'
-import { convertFromCents } from '../../utils/format'
 import { HStack } from '../ui/Stack/Stack'
+import { convertCentsToDecimalString } from '../../utils/format'
 
 export type ExpandedRowState = {
   splits: Split[]
@@ -162,7 +162,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       setSplitFormError(undefined)
 
       // Auto-save when category / split is valid
-      if (validateSplit(newSplits)) {
+      if (isSplitsValid(newSplits)) {
         setTransactionCategory(bankTransaction.id, new SplitAsOption(newSplits))
       }
     }
@@ -193,13 +193,21 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         }
       }
 
-    const onBlur = () => {
+    const onBlurSplitAmount = () => {
       if (!isSplitsValid(localSplits)) {
         setSplitFormError(getSplitsErrorMessage(localSplits))
         return
       }
       setSplitFormError(undefined)
       setInputValues({})
+    }
+
+    const onChangeSplitCategory = () => {
+      if (!isSplitsValid(localSplits)) {
+        setSplitFormError(getSplitsErrorMessage(localSplits))
+        return
+      }
+      setSplitFormError(undefined)
     }
 
     const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -364,7 +372,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     }
 
     const getInputValue = (index: number, split: Split): string => {
-      return inputValues[index] ?? convertFromCents(split.amount)?.toString() ?? ''
+      return inputValues[index] ?? convertCentsToDecimalString(split.amount)
     }
 
     const bookkeepingStatus = useEffectiveBookkeepingStatus()
@@ -467,15 +475,17 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                               }
                               onChange={updateAmounts(index)}
                               value={getInputValue(index, split)}
-                              onBlur={onBlur}
+                              onBlur={onBlurSplitAmount}
                               className={`${className}__table-cell--split-entry__amount`}
                               isInvalid={split.amount < 0}
-                              errorMessage='Amounts must be greater than $0.00'
                             />
                             <BankTransactionCategoryComboBox
                               bankTransaction={bankTransaction}
                               selectedValue={split.category}
-                              onSelectedValueChange={value => changeCategory(index, value)}
+                              onSelectedValueChange={(value) => {
+                                changeCategory(index, value)
+                                onChangeSplitCategory()
+                              }}
                               isLoading={bankTransaction.processing}
                               isDisabled={!categorizationEnabled}
                               includeSuggestedMatches={false}
