@@ -52,7 +52,7 @@ export const ModalTitleWithClose = forwardRef<
         className='Layer__ModalTitleWithClose'
         ref={ref}
       >
-        <VStack gap='xs'>
+        <VStack gap='xs' slot='title'>
           {heading}
           {description}
         </VStack>
