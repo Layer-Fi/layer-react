@@ -70,7 +70,7 @@ export const MatchForm = ({
   return (
     <div>
       <Text weight={TextWeight.bold} size={TextSize.sm}>
-        {hasSuggestedTransferMatches(bankTransaction) ? 'Find transfer' : 'Find match'}
+        Find match
       </Text>
       <MatchFormMobile
         classNamePrefix='Layer__bank-transaction-mobile-list-item'
