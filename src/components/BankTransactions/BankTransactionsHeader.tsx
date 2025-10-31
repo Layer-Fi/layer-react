@@ -42,8 +42,7 @@ export interface BankTransactionsHeaderProps {
   withUploadMenu?: boolean
   showStatusToggle?: boolean
   collapseHeader?: boolean
-  _showCategorizationRules?: boolean
-  _showBulkSelection?: boolean
+  showCategorizationRules?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -134,7 +133,7 @@ export const BankTransactionsHeader = ({
   withUploadMenu,
   showStatusToggle,
   collapseHeader,
-  _showCategorizationRules = false,
+  showCategorizationRules = false,
 
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
@@ -253,7 +252,7 @@ export const BankTransactionsHeader = ({
             iconOnly={listView}
             disabled={showBulkActions}
           />
-          {_showCategorizationRules
+          {showCategorizationRules
             ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} isDisabled={showBulkActions} />
             : withUploadMenu && <BankTransactionsUploadMenu isDisabled={showBulkActions} />}
         </HStack>
