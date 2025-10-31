@@ -4,9 +4,11 @@ import { decodeCustomerVendor } from '../../features/customerVendor/customerVend
 import { BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { makeTagFromTransactionTag, TransactionTagSchema } from '../../features/tags/tagSchemas'
 import { Schema } from 'effect/index'
-import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
+import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
 import { isSuggestedMatchAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import _ from 'lodash'
+import { isApiCategorizationAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isSplitCategorizationEncoded } from '../../schemas/categorization'
 
 export enum ValidateSplitError {
   AmountsMustBeGreaterThanZero = 'All splits must have an amount greater than $0.00',
@@ -110,9 +112,13 @@ export const getLocalSplitStateForExpandedTableRow = (
     coercedSelectedCategory = getDefaultSelectedCategoryForBankTransaction(bankTransaction, true)
   }
 
+  else if (isApiCategorizationAsOption(selectedCategory) && isSplitCategorizationEncoded(selectedCategory.original)) {
+    coercedSelectedCategory = convertApiCategorizationToCategoryOrSplitAsOption(selectedCategory.original)
+  }
+
   // Split Category
-  if (selectedCategory && isSplitAsOption(selectedCategory)) {
-    return selectedCategory.original.map((splitEntry) => {
+  if (coercedSelectedCategory && isSplitAsOption(coercedSelectedCategory)) {
+    return coercedSelectedCategory.original.map((splitEntry) => {
       return {
         amount: splitEntry.amount || 0,
         category: splitEntry.category,
@@ -121,7 +127,6 @@ export const getLocalSplitStateForExpandedTableRow = (
       }
     })
   }
-
   // Single category
   return [
     {
