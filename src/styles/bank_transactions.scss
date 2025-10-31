@@ -283,6 +283,10 @@
   gap: var(--spacing-sm);
   min-width: 40rem;
   max-width: 76rem;
+
+  @container (max-width: 768px) {
+    min-width: 30rem;
+  }
 }
 
 .Layer__expanded-bank-transaction-row__content-panels {
@@ -514,8 +518,9 @@
   @container (max-width: 768px) {
     display: grid;
     grid-template-areas: 'amount category button';
-    grid-template-columns: minmax(8rem, 12rem) minmax(12rem, 24.5rem) 2.25rem;
-    max-width: 40rem;
+    grid-template-columns: 12rem minmax(12rem, 24.5rem) 2.25rem;
+    min-width: 27.5rem;
+    max-width: min(40rem, 100%);
 
     &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__customer),
     &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__tags) {
