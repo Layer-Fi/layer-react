@@ -274,7 +274,7 @@ const BankTransactionsTableView = ({
 
   // Adjust current page to last page if total page count < current page
   useEffect(() => {
-    if (isMonthlyViewMode || !data?.length) return
+    if (isMonthlyViewMode || !data?.length || pageSize <= 0) return
 
     const maxPage = Math.ceil(data.length / pageSize)
     if (maxPage > 0 && currentPage > maxPage) {
