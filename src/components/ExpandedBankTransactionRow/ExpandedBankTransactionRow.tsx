@@ -46,12 +46,13 @@ import { type BankTransactionCategoryComboBoxOption } from '../../components/Ban
 import { type Split } from '../../types/bank_transactions'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { calculateAddSplit, calculateRemoveSplit, calculateUpdatedAmounts, getLocalSplitStateForExpandedTableRow, validateSplit } from './utils'
+import { calculateAddSplit, calculateRemoveSplit, calculateUpdatedAmounts, getLocalSplitStateForExpandedTableRow, getSplitsErrorMessage, isSplitsValid } from './utils'
 import { getBankTransactionMatchAsSuggestedMatch } from '../../utils/bankTransactions'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { SplitAsOption, SuggestedMatchAsOption } from '../../types/categorizationOption'
 import { AmountInput } from '../Input/AmountInput'
 import { convertFromCents } from '../../utils/format'
+import { HStack } from '../ui/Stack/Stack'
 
 export type ExpandedRowState = {
   splits: Split[]
@@ -169,14 +170,14 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         setSplitFormError(undefined)
 
         // Auto-save when category / split is valid
-        if (validateSplit(newLocalSplits)) {
+        if (isSplitsValid(newLocalSplits)) {
           setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
         }
       }
 
     const onBlur = () => {
-      if (!validateSplit(localSplits)) {
-        setSplitFormError('Amounts must be greater than $0.00')
+      if (!isSplitsValid(localSplits)) {
+        setSplitFormError(getSplitsErrorMessage(localSplits))
         return
       }
       setSplitFormError(undefined)
@@ -192,7 +193,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         setTransactionCategory(bankTransaction.id, selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null)
       }
 
-      else if (newPurpose === Purpose.categorize && validateSplit(localSplits)) {
+      else if (newPurpose === Purpose.categorize && isSplitsValid(localSplits)) {
         setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
       }
 
@@ -209,8 +210,11 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       setSplitFormError(undefined)
 
       // Auto-save when category / split is valid
-      if (validateSplit(newLocalSplits)) {
+      if (isSplitsValid(newLocalSplits)) {
         setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
+      }
+      else {
+        setSplitFormError(getSplitsErrorMessage(localSplits))
       }
     }
 
@@ -248,7 +252,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       }
 
       // Auto-save when category / split is valid
-      if (validateSplit(newLocalSplits)) {
+      if (isSplitsValid(newLocalSplits)) {
         setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
       }
     }
@@ -269,7 +273,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       }
 
       // Auto-save when category / split is valid
-      if (validateSplit(newLocalSplits)) {
+      if (isSplitsValid(newLocalSplits)) {
         setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
       }
     }
@@ -291,15 +295,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         return
       }
 
-      if (!validateSplit(localSplits)) {
-        if (localSplits.length > 1) {
-          setSplitFormError(
-            'Use only positive amounts and select category for each entry',
-          )
-        }
-        else {
-          setSplitFormError('Category is required')
-        }
+      if (!isSplitsValid(localSplits)) {
+        setSplitFormError(getSplitsErrorMessage(localSplits))
         return
       }
 
@@ -493,7 +490,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                           </div>
                         ))}
                       </div>
-                      {splitFormError && <ErrorText>{splitFormError}</ErrorText>}
+                      {splitFormError && <HStack pb='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
                       <div className={`${className}__total-and-btns`}>
                         {effectiveSplits.length > 1 && (
                           <Input
