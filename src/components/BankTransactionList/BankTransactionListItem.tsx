@@ -121,10 +121,9 @@ export const BankTransactionListItem = ({
     setOpenExpandedRow(false)
   }
 
-  const className = 'Layer__bank-transaction-list-item'
-  const openClassName = openExpandedRow ? `${className}--expanded` : ''
+  const openClassName = openExpandedRow ? 'Layer__bank-transaction-list-item--expanded' : ''
   const rowClassName = classNames(
-    className,
+    'Layer__bank-transaction-list-item',
     bankTransaction.recently_categorized
     && editable
     && shouldHideAfterCategorize()
@@ -136,13 +135,13 @@ export const BankTransactionListItem = ({
 
   return (
     <li className={rowClassName}>
-      <span className={`${className}__heading`}>
-        <div className={`${className}__heading__main`}>
+      <span className='Layer__bank-transaction-list-item__heading'>
+        <div className='Layer__bank-transaction-list-item__heading__main'>
           <Span ellipsis size='sm'>
             {formatTime(parseISO(bankTransaction.date), dateFormat)}
           </Span>
 
-          <span className={`${className}__heading-separator`} />
+          <span className='Layer__bank-transaction-list-item__heading-separator' />
 
           {bankTransaction.account_institution?.name && (
             <Span ellipsis size='sm'>
@@ -172,23 +171,23 @@ export const BankTransactionListItem = ({
           />
         </div>
       </span>
-      <HStack className={`${className}__body`}>
-        {_showBulkSelection && (
-          <div className={`${className}__checkbox`}>
-            <Checkbox
-              isSelected={isTransactionSelected}
-              onChange={(selected) => {
-                if (selected) {
-                  select(bankTransaction.id)
-                }
-                else {
-                  deselect(bankTransaction.id)
-                }
-              }}
-            />
-          </div>
-        )}
-        <HStack className={`${className}__body__name`}>
+      <HStack className='Layer__bank-transaction-list-item__body'>
+        <HStack gap='sm' className='Layer__bank-transaction-list-item__body__name'>
+          {_showBulkSelection && (
+            <div className='Layer__bank-transaction-list-item__checkbox'>
+              <Checkbox
+                isSelected={isTransactionSelected}
+                onChange={(selected) => {
+                  if (selected) {
+                    select(bankTransaction.id)
+                  }
+                  else {
+                    deselect(bankTransaction.id)
+                  }
+                }}
+              />
+            </div>
+          )}
           <Span withTooltip>
             {bankTransaction.counterparty_name ?? bankTransaction.description}
           </Span>
@@ -203,12 +202,12 @@ export const BankTransactionListItem = ({
       </HStack>
       {!categorizationEnabled && !categorized
         ? (
-          <span className={`${className}__processing-info`}>
+          <span className='Layer__bank-transaction-list-item__processing-info'>
             <BankTransactionProcessingInfo />
           </span>
         )
         : null}
-      <span className={`${className}__expanded-row`}>
+      <span className='Layer__bank-transaction-list-item__expanded-row'>
         <ExpandedBankTransactionRow
           ref={expandedRowRef}
           bankTransaction={bankTransaction}
@@ -228,7 +227,7 @@ export const BankTransactionListItem = ({
           showTooltips={showTooltips}
         />
       </span>
-      <span className={`${className}__base-row`}>
+      <span className='Layer__bank-transaction-list-item__base-row'>
         {categorizationEnabled && !categorized
           ? (
             <BankTransactionCategoryComboBox
