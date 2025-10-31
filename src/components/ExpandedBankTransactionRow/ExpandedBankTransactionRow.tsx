@@ -363,7 +363,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     }
 
     const getInputValue = (index: number, split: Split): string => {
-      return inputValues[index] ?? String(convertFromCents(split.amount) ?? '')
+      return inputValues[index] ?? convertFromCents(split.amount)?.toString() ?? ''
     }
 
     const bookkeepingStatus = useEffectiveBookkeepingStatus()
