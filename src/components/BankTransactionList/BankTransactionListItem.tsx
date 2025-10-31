@@ -172,7 +172,7 @@ export const BankTransactionListItem = ({
           />
         </div>
       </span>
-      <span className={`${className}__body`}>
+      <HStack className={`${className}__body`}>
         {_showBulkSelection && (
           <div className={`${className}__checkbox`}>
             <Checkbox
@@ -193,14 +193,14 @@ export const BankTransactionListItem = ({
             {bankTransaction.counterparty_name ?? bankTransaction.description}
           </Span>
         </HStack>
-        <span
+        <HStack
           className={`${className}__amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
         >
           <MoneySpan amount={bankTransaction.amount} displayPlusSign={isCredit(bankTransaction)} />
-        </span>
-      </span>
+        </HStack>
+      </HStack>
       {!categorizationEnabled && !categorized
         ? (
           <span className={`${className}__processing-info`}>
