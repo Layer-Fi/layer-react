@@ -202,14 +202,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       setInputValues({})
     }
 
-    const onChangeSplitCategory = () => {
-      if (!isSplitsValid(localSplits)) {
-        setSplitFormError(getSplitsErrorMessage(localSplits))
-        return
-      }
-      setSplitFormError(undefined)
-    }
-
     const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
       const newPurpose = event.target.value === 'match'
         ? Purpose.match
@@ -239,6 +231,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       // Auto-save when category / split is valid
       if (isSplitsValid(newLocalSplits)) {
         setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
+        setSplitFormError(undefined)
       }
       else {
         setSplitFormError(getSplitsErrorMessage(localSplits))
@@ -484,7 +477,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                               selectedValue={split.category}
                               onSelectedValueChange={(value) => {
                                 changeCategory(index, value)
-                                onChangeSplitCategory()
                               }}
                               isLoading={bankTransaction.processing}
                               isDisabled={!categorizationEnabled}
