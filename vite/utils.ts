@@ -23,8 +23,10 @@ export function buildExternalDeps(opts?: {
 
   if (mode !== 'cjs' || bundleForCjs.size === 0) return externals
 
+  const matchesPkgOrSubpath = (re: RegExp, n: string) => re.test(n) || re.test(`${n}/`)
+
   const matchesAnyBundled = (re: RegExp) =>
-    Array.from(bundleForCjs).some((name) => re.test(name) || re.test(`${name}/x`))
+     Array.from(bundleForCjs).some((name) => matchesPkgOrSubpath(re, name))
 
   return externals.filter((re) => !matchesAnyBundled(re))
 }
