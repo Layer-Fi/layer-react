@@ -11,6 +11,8 @@ import { SyncingComponent } from '../SyncingComponent'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBankTransactionsTableCheckboxState } from '../../hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '../../hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
+import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
@@ -61,6 +63,9 @@ export const BankTransactionsTable = ({
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
   const showReceiptColumn =
   (showReceiptUploads
     && bankTransactions?.some(
@@ -80,16 +85,18 @@ export const BankTransactionsTable = ({
     >
       <thead>
         <tr>
-          <th className='Layer__table-header Layer__bank-transactions__checkbox-col' style={{ padding: 0 }}>
-            <span className='Layer__table-cell-content'>
-              <Checkbox
-                isSelected={isAllSelected}
-                isIndeterminate={isPartiallySelected}
-                onChange={onHeaderCheckboxChange}
-                aria-label='Select all transactions on this page'
-              />
-            </span>
-          </th>
+          {categorizationEnabled && (
+            <th className='Layer__table-header Layer__bank-transactions__checkbox-col' style={{ padding: 0 }}>
+              <span className='Layer__table-cell-content'>
+                <Checkbox
+                  isSelected={isAllSelected}
+                  isIndeterminate={isPartiallySelected}
+                  onChange={onHeaderCheckboxChange}
+                  aria-label='Select all transactions on this page'
+                />
+              </span>
+            </th>
+          )}
           <th className='Layer__table-header Layer__bank-transactions__date-col'>
             {stringOverrides?.transactionsTable?.dateColumnHeaderText || 'Date'}
           </th>

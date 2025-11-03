@@ -171,19 +171,21 @@ export const BankTransactionsListItem = ({
       </span>
       <HStack className='Layer__bank-transaction-list-item__body'>
         <HStack gap='sm' className='Layer__bank-transaction-list-item__body__name'>
-          <div className='Layer__bank-transaction-list-item__checkbox'>
-            <Checkbox
-              isSelected={isTransactionSelected}
-              onChange={(selected) => {
-                if (selected) {
-                  select(bankTransaction.id)
-                }
-                else {
-                  deselect(bankTransaction.id)
-                }
-              }}
-            />
-          </div>
+          {categorizationEnabled && (
+            <div className='Layer__bank-transaction-list-item__checkbox'>
+              <Checkbox
+                isSelected={isTransactionSelected}
+                onChange={(selected) => {
+                  if (selected) {
+                    select(bankTransaction.id)
+                  }
+                  else {
+                    deselect(bankTransaction.id)
+                  }
+                }}
+              />
+            </div>
+          )}
           <Span withTooltip>
             {bankTransaction.counterparty_name ?? bankTransaction.description}
           </Span>

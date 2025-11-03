@@ -9,6 +9,8 @@ import { Span } from '../ui/Typography/Text'
 import { HStack } from '../ui/Stack/Stack'
 import { useBankTransactionsTableCheckboxState } from '../../hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '../../hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
+import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 
 interface BankTransactionsListProps {
   bankTransactions?: BankTransaction[]
@@ -36,25 +38,30 @@ export const BankTransactionsList = ({
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
   return (
     <>
-      <HStack
-        gap='md'
-        pi='md'
-        pb='md'
-        align='center'
-        className='Layer__bank-transactions__list-header'
-      >
-        <Checkbox
-          isSelected={isAllSelected}
-          isIndeterminate={isPartiallySelected}
-          onChange={onHeaderCheckboxChange}
-          aria-label='Select all transactions on this page'
-        />
-        <Span size='sm'>
-          Select all
-        </Span>
-      </HStack>
+      {categorizationEnabled && (
+        <HStack
+          gap='md'
+          pi='md'
+          pb='md'
+          align='center'
+          className='Layer__bank-transactions__list-header'
+        >
+          <Checkbox
+            isSelected={isAllSelected}
+            isIndeterminate={isPartiallySelected}
+            onChange={onHeaderCheckboxChange}
+            aria-label='Select all transactions on this page'
+          />
+          <Span size='sm'>
+            Select all
+          </Span>
+        </HStack>
+      )}
       <ul className='Layer__bank-transactions__list'>
         {bankTransactions?.map(
           (bankTransaction: BankTransaction, index: number) => (

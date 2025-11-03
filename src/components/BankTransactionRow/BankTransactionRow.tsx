@@ -170,24 +170,28 @@ export const BankTransactionRow = ({
     [showReceiptUploadColumn],
   )
 
+  const colSpan = categorizationEnabled ? 7 : 6
+
   return (
     <>
       <tr className={rowClassName}>
-        <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
-          <span className='Layer__table-cell-content'>
-            <Checkbox
-              isSelected={isTransactionSelected}
-              onChange={(selected) => {
-                if (selected) {
-                  select(bankTransaction.id)
-                }
-                else {
-                  deselect(bankTransaction.id)
-                }
-              }}
-            />
-          </span>
-        </td>
+        {categorizationEnabled && (
+          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
+            <span className='Layer__table-cell-content'>
+              <Checkbox
+                isSelected={isTransactionSelected}
+                onChange={(selected) => {
+                  if (selected) {
+                    select(bankTransaction.id)
+                  }
+                  else {
+                    deselect(bankTransaction.id)
+                  }
+                }}
+              />
+            </span>
+          </td>
+        )}
         <td
           className='Layer__table-cell Layer__bank-transaction-table__date-col'
           {...openRow}
@@ -392,7 +396,7 @@ export const BankTransactionRow = ({
         </td>
       </tr>
       <tr>
-        <td colSpan={7} className='Layer__bank-transaction-row__expanded-td'>
+        <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}
