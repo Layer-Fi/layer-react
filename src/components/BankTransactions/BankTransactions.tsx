@@ -11,8 +11,8 @@ import { useElementSize } from '../../hooks/useElementSize'
 import { useIsVisible } from '../../hooks/useIsVisible'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { BankTransaction, DisplayState } from '../../types/bank_transactions'
-import { BankTransactionList } from '../BankTransactionList'
-import { BankTransactionMobileList } from '../BankTransactionMobileList/BankTransactionMobileList'
+import { BankTransactionsList } from '../BankTransactionsList/BankTransactionsList'
+import { BankTransactionsMobileList } from '../BankTransactionsMobileList/BankTransactionsMobileList'
 import {
   BankTransactionsTable,
   type BankTransactionsTableStringOverrides,
@@ -413,7 +413,7 @@ const BankTransactionsTableView = ({
         ? (
           <div className='Layer__bank-transactions__list-wrapper'>
             {rulesSuggestionModal}
-            <BankTransactionList
+            <BankTransactionsList
               bankTransactions={bankTransactions}
               editable={editable}
               removeTransaction={removeTransaction}
@@ -431,7 +431,7 @@ const BankTransactionsTableView = ({
       {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
         ? (
           <>
-            <BankTransactionMobileList
+            <BankTransactionsMobileList
               bankTransactions={bankTransactions}
               editable={editable}
               removeTransaction={removeTransaction}
