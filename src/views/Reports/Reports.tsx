@@ -8,7 +8,7 @@ import { ProfitAndLossDownloadButtonStringOverrides } from '../../components/Pro
 import { ProfitAndLossTableStringOverrides } from '../../components/ProfitAndLossTable/ProfitAndLossTableComponent'
 import { StatementOfCashFlow as EmbeddedStatementOfCashFlow } from '../../components/StatementOfCashFlow'
 import { StatementOfCashFlowStringOverrides } from '../../components/StatementOfCashFlow/StatementOfCashFlow'
-import { Toggle } from '../../components/Toggle'
+import { Toggle } from '../../components/Toggle/Toggle'
 import { View } from '../../components/View'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { View as ViewType } from '../../types/general'
