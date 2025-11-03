@@ -6,7 +6,7 @@ import { get } from '../../../../api/layer/authenticated_http'
 import type { JournalEntry } from '../../../../types/journal'
 import { useGlobalCacheActions } from '../../../../utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { toDefinedSearchParameters } from '../../../../utils/request/toDefinedSearchParameters'
 
 export const LIST_LEDGER_ENTRIES_TAG_KEY = '#list-ledger-entries'

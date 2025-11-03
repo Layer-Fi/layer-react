@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useProfitAndLossReportCacheActions } from './useProfitAndLossReport'
 import { useProfitAndLossSummariesCacheActions } from './useProfitAndLossSummaries'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 
 const INVALIDATE_DEBOUNCE_OPTIONS = {
   wait: 1000,

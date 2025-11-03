@@ -5,7 +5,7 @@ import { getBankTransactions, type GetBankTransactionsReturn } from '../../api/l
 import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'
 import type { BankTransaction } from '../../types/bank_transactions'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
 

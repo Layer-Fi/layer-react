@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {

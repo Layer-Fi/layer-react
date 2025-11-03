@@ -1,5 +1,5 @@
 import { useEffect, useState, RefObject, useCallback, useMemo } from 'react'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import useResizeObserver from '@react-hook/resize-observer'
 
 export interface UseTruncationDetectionOptions {

@@ -6,7 +6,7 @@ import { makeTagFromTransactionTag, TransactionTagSchema } from '../../features/
 import { Schema } from 'effect/index'
 import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
 import { isSuggestedMatchAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import _ from 'lodash'
+import { uniqBy } from 'lodash-es'
 import { isApiCategorizationAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSplitCategorizationEncoded } from '../../schemas/categorization'
 
@@ -21,7 +21,7 @@ export const isSplitsValid = (localSplits: Split[]): boolean => {
 }
 
 export const getSplitsErrorMessage = (localSplits: Split[]): string => {
-  return _.uniqBy(validateSplit(localSplits), error => error?.toString()).filter(Boolean)[0] || ''
+  return uniqBy(validateSplit(localSplits), error => error?.toString()).filter(Boolean)[0] || ''
 }
 
 export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undefined)[] => {
@@ -36,7 +36,7 @@ export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undef
 
     return undefined
   })
-  return _.uniqBy(errors, error => error?.toString())
+  return uniqBy(errors, error => error?.toString())
 }
 
 export const calculateAddSplit = (

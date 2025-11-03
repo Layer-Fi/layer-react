@@ -1,5 +1,5 @@
 import { HeroContentConfig, LandingPageCardConfig, DeepPartial } from './types'
-import { merge } from 'lodash'
+import { merge } from 'lodash-es'
 
 /**
  * Merges hero content config overrides with defaults.

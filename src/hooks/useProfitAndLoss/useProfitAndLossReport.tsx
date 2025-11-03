@@ -6,7 +6,7 @@ import useSWR, { type SWRResponse } from 'swr'
 import { Schema } from 'effect'
 import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { ProfitAndLoss, ProfitAndLossReportRequestParams, ProfitAndLossReportSchema } from './schemas'
 
 export const PNL_REPORT_TAG_KEY = '#profit-and-loss-report'
