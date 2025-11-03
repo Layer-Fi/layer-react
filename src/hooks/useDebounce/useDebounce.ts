@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 
 const DEFAULT_WAIT = 300
 const DEFAULT_MAX_WAIT = 2 * DEFAULT_WAIT

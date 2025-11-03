@@ -11,6 +11,11 @@ export default defineConfig(({ mode, command }) => {
   const isCJS = mode === 'cjs'
   const isWatch = command === 'build' && process.argv.includes('--watch')
 
+  const externalDeps = buildExternalDeps({
+    mode: isCJS ? 'cjs' : 'esm',
+    bundleForCjs: ['lodash-es', 'react-merge-refs'],
+  })
+
   return {
     publicDir: false,
 
@@ -55,7 +60,7 @@ export default defineConfig(({ mode, command }) => {
           fileName: () => 'index.cjs',
         },
       rollupOptions: {
-        external: buildExternalDeps(),
+        external: externalDeps,
         output: {
           dir: path.resolve(__dirname, `../${OUT_DIR}/${mode}`),
           entryFileNames: isESM

@@ -6,7 +6,7 @@ import { get } from '../../../../../api/layer/authenticated_http'
 import { LedgerAccountLineItem, LedgerAccountLineItems } from '../../../../../types/ledger_accounts'
 import { useGlobalCacheActions } from '../../../../../utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { toDefinedSearchParameters } from '../../../../../utils/request/toDefinedSearchParameters'
 
 export const LIST_LEDGER_ACCOUNT_LINES_TAG_KEY = '#list-ledger-account-lines'

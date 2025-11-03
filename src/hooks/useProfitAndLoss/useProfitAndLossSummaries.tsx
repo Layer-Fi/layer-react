@@ -7,7 +7,7 @@ import { Schema } from 'effect'
 import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { type ProfitAndLossSummaries, ProfitAndLossSummariesSchema, ProfitAndLossSummariesRequestParams } from './schemas'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 
 export const PNL_SUMMARIES_TAG_KEY = '#profit-and-loss-summaries'
 
