@@ -21,12 +21,12 @@ import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionProcessingInfo } from './BankTransactionProcessingInfo'
+import { BankTransactionsProcessingInfo } from './BankTransactionsProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { useSizeClass } from '../../hooks/useWindowSize'
-import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategoryComboBoxOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -34,7 +34,7 @@ import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } fro
 import { HStack } from '../ui/Stack/Stack'
 import { useSaveBankTransactionRow } from '../../hooks/useBankTransactions/useSaveBankTransactionRow'
 
-type Props = {
+type BankTransactionsListItemProps = {
   index: number
   dateFormat: string
   bankTransaction: BankTransaction
@@ -48,7 +48,7 @@ type Props = {
   showTooltips: boolean
 }
 
-export const BankTransactionListItem = ({
+export const BankTransactionsListItem = ({
   index,
   dateFormat,
   bankTransaction,
@@ -60,7 +60,7 @@ export const BankTransactionListItem = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-}: Props) => {
+}: BankTransactionsListItemProps) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
@@ -199,7 +199,7 @@ export const BankTransactionListItem = ({
       {!categorizationEnabled && !categorized
         ? (
           <span className='Layer__bank-transaction-list-item__processing-info'>
-            <BankTransactionProcessingInfo />
+            <BankTransactionsProcessingInfo />
           </span>
         )
         : null}

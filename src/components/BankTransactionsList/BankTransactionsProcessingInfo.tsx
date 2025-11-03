@@ -2,7 +2,7 @@ import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger }
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 
-export const BankTransactionProcessingInfo = () => (
+export const BankTransactionsProcessingInfo = () => (
   <DeprecatedTooltip offset={12}>
     <DeprecatedTooltipTrigger><BookkeepingStatus status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER} text='Processing' /></DeprecatedTooltipTrigger>
     <DeprecatedTooltipContent className='Layer__tooltip' width='md'>

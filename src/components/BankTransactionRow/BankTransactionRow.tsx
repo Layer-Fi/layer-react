@@ -30,7 +30,7 @@ import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
+import { BankTransactionsProcessingInfo } from '../BankTransactionsList/BankTransactionsProcessingInfo'
 import { VStack } from '../ui/Stack/Stack'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
@@ -374,7 +374,7 @@ export const BankTransactionRow = ({
               )
               : null}
             {!categorizationEnabled && !categorized
-              ? <VStack pis='xs' fluid><BankTransactionProcessingInfo /></VStack>
+              ? <VStack pis='xs' fluid><BankTransactionsProcessingInfo /></VStack>
               : null}
             <IconButton
               onClick={toggleOpen}

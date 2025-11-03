@@ -11,19 +11,19 @@ import { isCategorized } from '../BankTransactions/utils'
 import { CloseButton } from '../Button'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'
 import { Text } from '../Typography'
-import { BankTransactionMobileForms } from './BankTransactionMobileForms'
+import { BankTransactionMobileForms } from './BankTransactionsMobileForms'
 import { TransactionToOpenContext } from './TransactionToOpenContext'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
+import { BankTransactionsProcessingInfo } from '../BankTransactionsList/BankTransactionsProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/bankTransactions/match'
 import { Span } from '../ui/Typography/Text'
 
-export interface BankTransactionMobileListItemProps {
+export interface BankTransactionsMobileListItemProps {
   index: number
   bankTransaction: BankTransaction
   editable: boolean
@@ -64,7 +64,7 @@ const getAssignedValue = (
   return bankTransaction.category?.display_name
 }
 
-export const BankTransactionMobileListItem = ({
+export const BankTransactionsMobileListItem = ({
   index,
   bankTransaction,
   removeTransaction,
@@ -75,7 +75,7 @@ export const BankTransactionMobileListItem = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-}: BankTransactionMobileListItemProps) => {
+}: BankTransactionsMobileListItemProps) => {
   const {
     transactionIdToOpen,
     setTransactionIdToOpen,
@@ -225,7 +225,7 @@ export const BankTransactionMobileListItem = ({
             </Text>
             {categorized && fullAccountName}
             {!categorizationEnabled && !categorized
-              ? <BankTransactionProcessingInfo />
+              ? <BankTransactionsProcessingInfo />
               : null}
           </div>
           <div className={`${className}__heading__amount`}>

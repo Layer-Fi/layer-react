@@ -3,14 +3,14 @@ import { BankTransaction } from '../../types/bank_transactions'
 import {
   BankTransactionCTAStringOverrides,
 } from '../BankTransactions/BankTransactions'
-import { BankTransactionListItem } from './BankTransactionListItem'
+import { BankTransactionsListItem } from './BankTransactionsListItem'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { Span } from '../ui/Typography/Text'
 import { HStack } from '../ui/Stack/Stack'
 import { useBankTransactionsTableCheckboxState } from '../../hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '../../hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
 
-interface BankTransactionListProps {
+interface BankTransactionsListProps {
   bankTransactions?: BankTransaction[]
   editable: boolean
   containerWidth: number
@@ -22,7 +22,7 @@ interface BankTransactionListProps {
   showTooltips: boolean
 }
 
-export const BankTransactionList = ({
+export const BankTransactionsList = ({
   bankTransactions,
   editable,
   removeTransaction,
@@ -32,7 +32,7 @@ export const BankTransactionList = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-}: BankTransactionListProps) => {
+}: BankTransactionsListProps) => {
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
@@ -58,7 +58,7 @@ export const BankTransactionList = ({
       <ul className='Layer__bank-transactions__list'>
         {bankTransactions?.map(
           (bankTransaction: BankTransaction, index: number) => (
-            <BankTransactionListItem
+            <BankTransactionsListItem
               key={bankTransaction.id}
               index={index}
               dateFormat={DATE_FORMAT}

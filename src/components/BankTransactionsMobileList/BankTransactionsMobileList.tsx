@@ -1,11 +1,11 @@
 import { BankTransaction } from '../../types/bank_transactions'
-import { BankTransactionMobileListItem } from './BankTransactionMobileListItem'
+import { BankTransactionsMobileListItem } from './BankTransactionsMobileListItem'
 import {
   useTransactionToOpen,
   TransactionToOpenContext,
 } from './TransactionToOpenContext'
 
-export interface BankTransactionMobileListProps {
+export interface BankTransactionsMobileListProps {
   bankTransactions?: BankTransaction[]
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
@@ -16,7 +16,7 @@ export interface BankTransactionMobileListProps {
   showTooltips: boolean
 }
 
-export const BankTransactionMobileList = ({
+export const BankTransactionsMobileList = ({
   bankTransactions,
   removeTransaction,
   editable,
@@ -25,7 +25,7 @@ export const BankTransactionMobileList = ({
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-}: BankTransactionMobileListProps) => {
+}: BankTransactionsMobileListProps) => {
   const transactionToOpenContextData = useTransactionToOpen()
 
   return (
@@ -33,7 +33,7 @@ export const BankTransactionMobileList = ({
       <ul className='Layer__bank-transactions__mobile-list'>
         {bankTransactions?.map(
           (bankTransaction: BankTransaction, index: number) => (
-            <BankTransactionMobileListItem
+            <BankTransactionsMobileListItem
               key={bankTransaction.id}
               index={index}
               bankTransaction={bankTransaction}
