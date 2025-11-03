@@ -4,7 +4,7 @@ import { ChartOfAccountsStringOverrides } from '../../components/ChartOfAccounts
 import { Journal } from '../../components/Journal'
 import { JournalStringOverrides } from '../../components/Journal/Journal'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
-import { Toggle } from '../../components/Toggle'
+import { Toggle } from '../../components/Toggle/Toggle'
 import { View } from '../../components/View'
 import { LinkingMetadata } from '../../contexts/InAppLinkContext'
 

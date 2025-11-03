@@ -8,7 +8,7 @@ import {
   ProfitAndLossSummaries,
   ProfitAndLossSummariesStringOverrides,
 } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { Toggle } from '../../components/Toggle'
+import { Toggle } from '../../components/Toggle/Toggle'
 import { View } from '../../components/View'
 import { OnboardingStep } from '../../types/layer_context'
 import type { Variants } from '../../utils/styleUtils/sizeVariants'
