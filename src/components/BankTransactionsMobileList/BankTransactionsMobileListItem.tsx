@@ -22,6 +22,9 @@ import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibilit
 import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/bankTransactions/match'
 import { Span } from '../ui/Typography/Text'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { HStack } from '../ui/Stack/Stack'
+import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -30,6 +33,7 @@ export interface BankTransactionsMobileListItemProps {
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
   isFirstItem?: boolean
+  bulkActionsEnabled?: boolean
 
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -71,6 +75,7 @@ export const BankTransactionsMobileListItem = ({
   editable,
   initialLoad,
   isFirstItem = false,
+  bulkActionsEnabled = false,
 
   showDescriptions,
   showReceiptUploads,
@@ -192,6 +197,10 @@ export const BankTransactionsMobileListItem = ({
 
   const categorized = isCategorized(bankTransaction)
 
+  const { select, deselect } = useBulkSelectionActions()
+  const isSelected = useIdIsSelected()
+  const isTransactionSelected = isSelected(bankTransaction.id)
+
   const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
 
   const className = 'Layer__bank-transaction-mobile-list-item'
@@ -213,9 +222,26 @@ export const BankTransactionsMobileListItem = ({
       >
         <div className={`${className}__heading__content`} ref={headingRowRef}>
           <div className={`${className}__heading__main`}>
-            <Text as='span' className={`${className}__heading__tx-name`}>
-              {bankTransaction.counterparty_name ?? bankTransaction.description}
-            </Text>
+            <HStack gap='sm' align='center'>
+              {categorizationEnabled && bulkActionsEnabled && (
+                <div className={`${className}__checkbox`}>
+                  <Checkbox
+                    isSelected={isTransactionSelected}
+                    onChange={(selected) => {
+                      if (selected) {
+                        select(bankTransaction.id)
+                      }
+                      else {
+                        deselect(bankTransaction.id)
+                      }
+                    }}
+                  />
+                </div>
+              )}
+              <Text as='span' className={`${className}__heading__tx-name`}>
+                {bankTransaction.counterparty_name ?? bankTransaction.description}
+              </Text>
+            </HStack>
             <Text as='span' className={`${className}__heading__account-name`}>
               {categorized && bankTransaction.categorization_status
                 ? getAssignedValue(bankTransaction, renderInAppLink)
