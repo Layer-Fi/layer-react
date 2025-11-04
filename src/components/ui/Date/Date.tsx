@@ -48,7 +48,7 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
       <ReactAriaDateInput
         {...dataProperties}
         {...restProps}
-        className={classNames(DATE_INPUT_CLASS_NAME)}
+        className={DATE_INPUT_CLASS_NAME}
         ref={ref}
       />
     )
