@@ -6,9 +6,7 @@ import './switch.scss'
 
 const CLASS_NAME = 'Layer__Switch'
 
-type SwitchProps = Omit<ReactAriaSwitchProps, 'className'> & {
-  className?: string
-}
+type SwitchProps = Omit<ReactAriaSwitchProps, 'className'>
 
 export const Switch = forwardRef<
   HTMLLabelElement,
