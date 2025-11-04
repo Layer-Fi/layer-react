@@ -37,7 +37,7 @@ export const MonthPicker = ({
     setPopoverOpen(false)
   }, [onChange])
 
-  const inputValue = formatTime(date.toDate(), 'MMM yyyy')
+  const inputValue = formatTime(date.toDate(), 'MMMM yyyy')
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
     <DialogTrigger isOpen={isPopoverOpen} onOpenChange={setPopoverOpen}>
