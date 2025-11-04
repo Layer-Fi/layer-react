@@ -25,7 +25,7 @@
 
   &[data-selected] {
     [slot='indicator'] {
-      border-color: var(--color-black);
+      border-color: var(--color-base-1000);
       background: var(--color-black);
 
       &::before {
