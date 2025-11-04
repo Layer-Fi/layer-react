@@ -224,6 +224,7 @@ export const BankTransactionsMobileListItem = ({
           {categorizationEnabled && bulkActionsEnabled && (
             <VStack align='center' pie='xs'>
               <Checkbox
+                size='md'
                 isSelected={isTransactionSelected}
                 onChange={(selected) => {
                   if (selected) {

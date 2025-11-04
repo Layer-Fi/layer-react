@@ -29,22 +29,23 @@ export const BankTransactionsMobileBulkActionsHeader = ({
   return (
     <HStack
       gap='md'
-      pi='md'
+      pi='lg'
       pb='md'
       justify='space-between'
       align='center'
       className='Layer__bank-transactions__mobile-bulk-actions-header'
     >
-      <HStack gap='sm' align='center'>
+      <HStack gap='sm' align='center' pi='xs'>
         {bulkActionsEnabled && (
           <>
             <Checkbox
+              size='md'
               isSelected={isAllSelected}
               isIndeterminate={isPartiallySelected}
               onChange={onHeaderCheckboxChange}
               aria-label='Select all transactions on this page'
             />
-            <Span size='sm'>
+            <Span size='md'>
               Select all
             </Span>
           </>
@@ -55,7 +56,7 @@ export const BankTransactionsMobileBulkActionsHeader = ({
         onChange={onBulkActionsToggle}
         aria-label='Toggle bulk actions'
       >
-        <Span size='sm' noWrap>
+        <Span size='md' noWrap>
           Bulk Actions
         </Span>
       </Switch>
