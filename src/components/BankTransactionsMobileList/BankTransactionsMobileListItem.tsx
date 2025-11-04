@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useEffect, useRef, useState, useMemo, type ChangeEvent } from 'react'
+import React, { ReactNode, useContext, useEffect, useRef, useState, useMemo, type ChangeEvent } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
@@ -176,6 +176,29 @@ export const BankTransactionsMobileListItem = ({
     setHeight(0)
   }
 
+  const checkboxContainerRef = useRef<HTMLDivElement>(null)
+
+  const handleRowClick = (event: React.MouseEvent) => {
+    // Check if click is already on checkbox
+    if (checkboxContainerRef.current?.contains(event.target as Node)) {
+      return
+    }
+
+    // Toggle selection if bulk actions enabled
+    if (bulkActionsEnabled) {
+      if (isTransactionSelected) {
+        deselect(bankTransaction.id)
+      }
+      else {
+        select(bankTransaction.id)
+      }
+      return
+    }
+
+    // Else, expand row
+    toggleOpen()
+  }
+
   useEffect(() => {
     if (
       editable
@@ -216,13 +239,13 @@ export const BankTransactionsMobileListItem = ({
     <li ref={itemRef} className={rowClassName} data-item={bankTransaction.id}>
       <span
         className={`${className}__heading`}
-        onClick={toggleOpen}
+        onClick={handleRowClick}
         role='button'
         style={{ height: headingHeight }}
       >
         <div className={`${className}__heading__content`} ref={headingRowRef}>
           {categorizationEnabled && bulkActionsEnabled && (
-            <VStack align='center' pie='xs'>
+            <VStack align='center' pie='xs' ref={checkboxContainerRef}>
               <Checkbox
                 size='md'
                 isSelected={isTransactionSelected}
