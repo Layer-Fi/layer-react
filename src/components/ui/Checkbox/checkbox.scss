@@ -30,10 +30,12 @@
 
   &[data-size='md'] [slot='checkbox'] {
     --size: 1.25rem;
+    --checkbox-radius: 5px;
   }
 
   &[data-size='lg'] [slot='checkbox'] {
     --size: 1.5rem;
+    --checkbox-radius: var(--border-radius-2xs);
   }
 
   svg {
