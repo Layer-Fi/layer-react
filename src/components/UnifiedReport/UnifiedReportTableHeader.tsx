@@ -5,20 +5,13 @@ import { ExpandableDataTableContext } from '../ExpandableDataTable/ExpandableDat
 import { DateSelection } from '../DateSelection/DateSelection'
 import { UnifiedReportDateVariant, useUnifiedReportDateVariant } from '../../providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { DateRangeSelection } from '../DateSelection/DateRangeSelection'
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import { getActivationDate } from '../../utils/business'
-import { endOfToday, startOfDay } from 'date-fns'
+import { endOfToday } from 'date-fns'
 import { UnifiedReportDownloadButton } from './download/UnifiedReportDownloadButton'
 import './unifiedReportTableHeader.scss'
+import { useBusinessActivationDate } from '../../hooks/business/useBusinessActivationDate'
 
 export const UnifiedReportTableHeader = () => {
-  const { business } = useLayerContext()
-  const activationDate = useMemo(() => {
-    const rawActivationDate = getActivationDate(business)
-    if (!rawActivationDate) return null
-
-    return startOfDay(rawActivationDate)
-  }, [business])
+  const activationDate = useBusinessActivationDate()
 
   const dateParams = useMemo(() => ({
     minDate: activationDate,

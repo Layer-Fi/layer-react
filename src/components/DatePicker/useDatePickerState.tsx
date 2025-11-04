@@ -12,8 +12,8 @@ type UseDatePickerStateArgs = {
 
 export const useDatePickerState = ({ date, setDate, minDate = null, maxDate = null }: UseDatePickerStateArgs) => {
   const dateZdt = useMemo(() => convertDateToZonedDateTime(date), [date])
-  const minDateZdt = useMemo(() => convertDateToZonedDateTime(minDate), [minDate])
-  const maxDateZdt = useMemo(() => convertDateToZonedDateTime(maxDate), [maxDate])
+  const minDateZdt = useMemo(() => minDate ? convertDateToZonedDateTime(minDate) : null, [minDate])
+  const maxDateZdt = useMemo(() => maxDate ? convertDateToZonedDateTime(maxDate) : null, [maxDate])
 
   const [localDate, setLocalDate] = useState<ZonedDateTime | null>(dateZdt)
   const isInitialDateInvalid = getIsDateInvalid(dateZdt, { minDate: minDateZdt, maxDate: maxDateZdt })
