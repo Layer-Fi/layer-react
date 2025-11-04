@@ -2,7 +2,6 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  font-size: var(--text-md);
 
   [slot='indicator'] {
     display: flex;
