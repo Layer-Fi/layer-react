@@ -14,7 +14,6 @@ export const Switch = forwardRef<
 >((
   {
     children,
-    className,
     ...props
   },
   ref,
@@ -22,7 +21,7 @@ export const Switch = forwardRef<
   return (
     <ReactAriaSwitch
       {...props}
-      className={classNames(CLASS_NAME, className)}
+      className={SWITCH_CLASS_NAME}
       ref={ref}
     >
       {withRenderProp(children, node => (
