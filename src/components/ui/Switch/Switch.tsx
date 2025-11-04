@@ -4,7 +4,7 @@ import { withRenderProp } from '../../utility/withRenderProp'
 import { forwardRef } from 'react'
 import './switch.scss'
 
-const CLASS_NAME = 'Layer__Switch'
+const SWITCH_CLASS_NAME = 'Layer__Switch'
 
 type SwitchProps = Omit<ReactAriaSwitchProps, 'className'>
 
