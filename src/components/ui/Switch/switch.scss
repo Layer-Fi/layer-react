@@ -4,4 +4,47 @@
   gap: 0.571rem;
   align-items: center;
   font-size: 1.143rem;
+  color: var(--fg-default);
+  forced-color-adjust: none;
+
+  [slot='indicator'] {
+    height: 18px;
+    width: 2.2rem;
+    border-radius: 1rem;
+    border: 2px solid var(--outline-default);
+    background: var(--bg-default);
+    transition: all 200ms;
+
+    &::before {
+      display: block;
+      height: 14px;
+      width: 1rem;
+      border-radius: 16px;
+      background: var(--color-black);
+      content: '';
+      transition: all 200ms;
+    }
+  }
+
+  &[data-selected] {
+    [slot='indicator'] {
+      border-color: var(--color-black);
+      background: var(--color-black);
+
+      &::before {
+        background: var(--color-white);
+        transform: translateX(100%);
+      }
+    }
+
+    &[data-pressed] [slot='indicator'] {
+      border-color: var(--color-black);
+      background: var(--color-black);
+    }
+  }
+
+  &[data-focus-visible] [slot='indicator'] {
+    outline: 2px solid var(--outline-active);
+    outline-offset: 2px;
+  }
 }
