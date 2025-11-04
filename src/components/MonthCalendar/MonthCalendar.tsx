@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useCallback, useState } from 'react'
 import {
   GridList,
   GridListItem,
@@ -26,13 +26,13 @@ export function MonthCalendar({
   const maxYear = maxDate?.year ?? null
   const [year, setYear] = useState(() => date?.year ?? new Date().getFullYear())
 
-  function clampYear(y: number) {
+  const clampYear = useCallback((y: number) => {
     if (minYear != null && y < minYear) return minYear
     if (maxYear != null && y > maxYear) return maxYear
     return y
-  }
+  }, [minYear, maxYear])
 
-  function isMonthDisabled(month: number): boolean {
+  const isMonthDisabled = useCallback((month: number): boolean => {
     const date = new CalendarDate(year, month, 1)
 
     if (minDate) {
@@ -46,29 +46,29 @@ export function MonthCalendar({
     }
 
     return false
-  }
+  }, [year, minDate, maxDate])
 
-  function selectMonth(m: number) {
+  const selectMonth = useCallback((m: number) => {
     if (isMonthDisabled(m)) return
     const nextDate = new Date(year, m - 1, 1)
     const zonedNext = fromDate(nextDate, getLocalTimeZone())
     onChange(zonedNext)
-  }
+  }, [year, isMonthDisabled, onChange])
 
   const isPrevYearDisabled = minYear != null && year <= minYear
   const isNextYearDisabled = maxYear != null && year >= maxYear
 
-  function goToPreviousYear() {
+  const goToPreviousYear = useCallback(() => {
     if (!isPrevYearDisabled) {
       setYear((y: number) => clampYear(y - 1))
     }
-  }
+  }, [isPrevYearDisabled, clampYear])
 
-  function goToNextYear() {
+  const goToNextYear = useCallback(() => {
     if (!isNextYearDisabled) {
       setYear((y: number) => clampYear(y + 1))
     }
-  }
+  }, [isNextYearDisabled, clampYear])
 
   return (
     <VStack>
@@ -100,9 +100,10 @@ export function MonthCalendar({
         selectionMode='single'
         selectedKeys={date ? new Set([date.month]) : new Set()}
         onSelectionChange={(keys) => {
-          const k = [...(keys as Set<React.Key>)][0]
-          if (typeof k === 'number') selectMonth(k)
-          else if (typeof k === 'string') selectMonth(parseInt(k))
+          const selectedKey = [...keys][0]
+          if (typeof selectedKey === 'number') {
+            selectMonth(selectedKey)
+          }
         }}
         className='Layer__MonthCalendar__MonthGrid'
       >
@@ -110,11 +111,11 @@ export function MonthCalendar({
           <GridListItem
             id={m.key}
             key={m.key}
-            textValue={m.label}
+            textValue={m.abbreviation}
             className='Layer__MonthCalendar__MonthGridItem'
             isDisabled={isMonthDisabled(m.key)}
           >
-            {m.label}
+            {m.abbreviation}
           </GridListItem>
         ))}
       </GridList>

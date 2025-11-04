@@ -11,4 +11,4 @@ export const MONTHS = [
   'October',
   'November',
   'December',
-].map((label, i) => ({ key: i + 1, label: label.slice(0, 3) }))
+].map((label, i) => ({ key: i + 1, label, abbreviation: label.slice(0, 3) }))
