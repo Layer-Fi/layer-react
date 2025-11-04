@@ -23,8 +23,8 @@ import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkCo
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/bankTransactions/match'
 import { Span } from '../ui/Typography/Text'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
-import { HStack } from '../ui/Stack/Stack'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { VStack } from '../ui/Stack/Stack'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -221,27 +221,25 @@ export const BankTransactionsMobileListItem = ({
         style={{ height: headingHeight }}
       >
         <div className={`${className}__heading__content`} ref={headingRowRef}>
+          {categorizationEnabled && bulkActionsEnabled && (
+            <VStack align='center' pie='xs'>
+              <Checkbox
+                isSelected={isTransactionSelected}
+                onChange={(selected) => {
+                  if (selected) {
+                    select(bankTransaction.id)
+                  }
+                  else {
+                    deselect(bankTransaction.id)
+                  }
+                }}
+              />
+            </VStack>
+          )}
           <div className={`${className}__heading__main`}>
-            <HStack gap='sm' align='center'>
-              {categorizationEnabled && bulkActionsEnabled && (
-                <div className={`${className}__checkbox`}>
-                  <Checkbox
-                    isSelected={isTransactionSelected}
-                    onChange={(selected) => {
-                      if (selected) {
-                        select(bankTransaction.id)
-                      }
-                      else {
-                        deselect(bankTransaction.id)
-                      }
-                    }}
-                  />
-                </div>
-              )}
-              <Text as='span' className={`${className}__heading__tx-name`}>
-                {bankTransaction.counterparty_name ?? bankTransaction.description}
-              </Text>
-            </HStack>
+            <Text as='span' className={`${className}__heading__tx-name`}>
+              {bankTransaction.counterparty_name ?? bankTransaction.description}
+            </Text>
             <Text as='span' className={`${className}__heading__account-name`}>
               {categorized && bankTransaction.categorization_status
                 ? getAssignedValue(bankTransaction, renderInAppLink)
