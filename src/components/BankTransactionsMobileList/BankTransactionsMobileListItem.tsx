@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useRef, useState, useMemo, type ChangeEvent } from 'react'
+import React, { useContext, useEffect, useRef, useState, useMemo, type ChangeEvent } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
@@ -6,7 +6,6 @@ import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types/bank_transactions'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
-import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import { isCategorized } from '../BankTransactions/utils'
 import { CloseButton } from '../Button'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'
@@ -19,12 +18,11 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionsProcessingInfo } from '../BankTransactionsList/BankTransactionsProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
-import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/bankTransactions/match'
 import { Span } from '../ui/Typography/Text'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '../ui/Stack/Stack'
+import { useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -48,26 +46,6 @@ export enum Purpose {
 
 const DATE_FORMAT = 'LLL d'
 
-const getAssignedValue = (
-  bankTransaction: BankTransaction,
-  renderInAppLink?: (details: LinkingMetadata) => ReactNode,
-) => {
-  if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
-    return extractDescriptionForSplit(bankTransaction.category)
-  }
-
-  if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
-    if (renderInAppLink && bankTransaction.match?.details) {
-      const matchDetails = bankTransaction.match.details ? decodeMatchDetails(bankTransaction.match.details) : undefined
-      const inAppLink = matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : undefined
-      if (inAppLink) return inAppLink
-    }
-    return bankTransaction.match?.details?.description
-  }
-
-  return bankTransaction.category?.display_name
-}
-
 export const BankTransactionsMobileListItem = ({
   index,
   bankTransaction,
@@ -88,7 +66,6 @@ export const BankTransactionsMobileListItem = ({
   } = useContext(TransactionToOpenContext)
 
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
-  const { renderInAppLink } = useInAppLinkContext()
 
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),
@@ -224,6 +201,8 @@ export const BankTransactionsMobileListItem = ({
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
 
+  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
+
   const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
 
   const className = 'Layer__bank-transaction-mobile-list-item'
@@ -265,13 +244,14 @@ export const BankTransactionsMobileListItem = ({
               {bankTransaction.counterparty_name ?? bankTransaction.description}
             </Text>
             <Text as='span' className={`${className}__heading__account-name`}>
-              {categorized && bankTransaction.categorization_status
-                ? getAssignedValue(bankTransaction, renderInAppLink)
-                : null}
-              {!categorized && fullAccountName}
+              {fullAccountName}
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
             </Text>
-            {categorized && fullAccountName}
+            {selectedCategory && (
+              <Span size='md' variant='subtle'>
+                {selectedCategory.label}
+              </Span>
+            )}
             {!categorizationEnabled && !categorized
               ? <BankTransactionsProcessingInfo />
               : null}
