@@ -13,8 +13,8 @@ type CheckboxVariant = 'default' | 'success' | 'error'
 type CheckboxSize = 'sm' | 'md' | 'lg'
 
 const CHECK_SIZE = {
-  sm: 10,
-  md: 12,
+  sm: 12,
+  md: 14,
   lg: 16,
 }
 
@@ -28,7 +28,7 @@ type CheckboxWithTooltipProps = CheckboxProps & {
   tooltip?: string
 }
 
-export function Checkbox({ children, className, variant = 'default', size = 'md', isIndeterminate, ...props }: CheckboxProps) {
+export function Checkbox({ children, className, variant = 'default', size = 'sm', isIndeterminate, ...props }: CheckboxProps) {
   const dataProperties = useMemo(() => toDataProperties({
     size,
     variant,
