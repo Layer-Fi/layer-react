@@ -10,7 +10,13 @@ import './checkbox.scss'
 const CLASS_NAME = 'Layer__Checkbox'
 
 type CheckboxVariant = 'default' | 'success' | 'error'
-type CheckboxSize = 'md' | 'lg'
+type CheckboxSize = 'sm' | 'md' | 'lg'
+
+const CHECK_SIZE = {
+  sm: 12,
+  md: 14,
+  lg: 16,
+}
 
 type CheckboxProps = Omit<AriaCheckboxProps, 'className'> & {
   className?: string
@@ -22,7 +28,7 @@ type CheckboxWithTooltipProps = CheckboxProps & {
   tooltip?: string
 }
 
-export function Checkbox({ children, className, variant = 'default', size = 'md', isIndeterminate, ...props }: CheckboxProps) {
+export function Checkbox({ children, className, variant = 'default', size = 'sm', isIndeterminate, ...props }: CheckboxProps) {
   const dataProperties = useMemo(() => toDataProperties({
     size,
     variant,
@@ -40,8 +46,8 @@ export function Checkbox({ children, className, variant = 'default', size = 'md'
         <>
           <div slot='checkbox'>
             {isIndeterminate
-              ? <Minus size={size === 'lg' ? 16 : 12} />
-              : <Check size={size === 'lg' ? 16 : 12} />}
+              ? <Minus size={CHECK_SIZE[size]} />
+              : <Check size={CHECK_SIZE[size]} />}
           </div>
           {node}
         </>
