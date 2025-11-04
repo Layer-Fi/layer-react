@@ -9,13 +9,13 @@ import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTr
 import { Button, ButtonVariant } from '../Button'
 import { FileInput } from '../Input'
 import { ErrorText } from '../Typography'
-import { getAssignedValue } from './utils'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawer } from '../CategorySelect/CategorySelectDrawer'
 import { CategorizationType } from '../../types/categories'
 import { ApiCategorizationAsOption } from '../../types/categorizationOption'
 import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 type DisplayOption = {
   label: string
@@ -45,9 +45,10 @@ export const BusinessForm = ({
 
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()
-  const [selectedCategory, setSelectedCategory] = useState<BankTransactionCategoryComboBoxOption | null>(
-    getAssignedValue(bankTransaction),
-  )
+
+  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
+  const { setTransactionCategory } = useBankTransactionsCategoryActions()
+
   const [showRetry, setShowRetry] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
@@ -104,10 +105,10 @@ export const BusinessForm = ({
         selectedCategory
         && option.value === selectedCategory.value
       ) {
-        setSelectedCategory(null)
+        setTransactionCategory(bankTransaction.id, null)
       }
       else {
-        setSelectedCategory(option)
+        setTransactionCategory(bankTransaction.id, option)
       }
     }
   }
@@ -209,7 +210,7 @@ export const BusinessForm = ({
           : null}
       </div>
       <CategorySelectDrawer
-        onSelect={setSelectedCategory}
+        onSelect={category => setTransactionCategory(bankTransaction.id, category)}
         selectedId={selectedCategory?.value}
         showTooltips={showTooltips}
         isOpen={isDrawerOpen}

@@ -25,7 +25,6 @@ import { Span } from '../ui/Typography/Text'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '../ui/Stack/Stack'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -225,9 +224,6 @@ export const BankTransactionsMobileListItem = ({
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
 
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
-  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-
   const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
 
   const className = 'Layer__bank-transaction-mobile-list-item'
@@ -338,10 +334,6 @@ export const BankTransactionsMobileListItem = ({
               isOpen={open}
               purpose={purpose}
               bankTransaction={bankTransaction}
-
-              selectedCategory={selectedCategory}
-              onCategoryChange={(category) => setTransactionCategory(bankTransaction.id, category)}
-
               showCategorization={categorizationEnabled}
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
