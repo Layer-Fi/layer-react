@@ -7,6 +7,10 @@
   grid-template-columns: repeat(3, 4.5rem);
   gap: var(--spacing-3xs);
   padding: var(--spacing-xs);
+
+  &--mobile {
+    grid-template-columns: repeat(3, 6rem);
+  }
 }
 
 .Layer__MonthCalendar__MonthGridItem {
@@ -42,5 +46,10 @@
 
   &[data-hovered]:not([data-disabled], [data-selected]) {
     background-color: var(--button-bg-ghost-hovered);
+  }
+
+  &--mobile {
+    block-size: 2.5rem;
+    inline-size: 6rem;
   }
 }

@@ -6,10 +6,12 @@ import { Dialog, DialogTrigger } from 'react-aria-components'
 import { HStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
 import { MonthCalendar } from '../MonthCalendar/MonthCalendar'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState, type PropsWithChildren } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import { Input } from '../ui/Input/Input'
 import { format as formatTime } from 'date-fns'
+import { Modal } from '../ui/Modal/Modal'
+import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
 import './monthPicker.scss'
 
 type MonthPickerProps = {
@@ -31,6 +33,7 @@ export const MonthPicker = ({
 }: MonthPickerProps) => {
   const triggerRef = useRef(null)
   const [isPopoverOpen, setPopoverOpen] = useState(false)
+  const { isMobile } = useSizeClass()
 
   const onChangeMonth = useCallback((val: ZonedDateTime) => {
     onChange(val)
@@ -39,6 +42,29 @@ export const MonthPicker = ({
 
   const inputValue = formatTime(date.toDate(), 'MMMM yyyy')
   const additionalAriaProps = !showLabel && { 'aria-label': label }
+
+  const ResponsiveOverlay = useCallback(({ children }: PropsWithChildren) =>
+      isMobile ? (
+        <Modal
+          flexBlock
+          flexInline
+          variant='mobile-popover'
+          isDismissable
+        >
+          {children}
+        </Modal>
+      ) : (
+        <Popover
+          triggerRef={triggerRef}
+          placement='bottom left'
+          className='Layer__MonthPicker__Popover'
+        >
+          {children}
+        </Popover>
+      ),
+    [isMobile, triggerRef],
+  )
+
   return (
     <DialogTrigger isOpen={isPopoverOpen} onOpenChange={setPopoverOpen}>
       {showLabel && <Label>{label}</Label>}
@@ -50,15 +76,17 @@ export const MonthPicker = ({
           </Button>
         </HStack>
       </InputGroup>
-      <Popover
-        triggerRef={triggerRef}
-        placement='bottom left'
-        className='Layer__MonthPicker__Popover'
-      >
+      <ResponsiveOverlay>
         <Dialog>
-          <MonthCalendar date={date} onChange={onChangeMonth} minDate={minDate} maxDate={maxDate} />
+          <MonthCalendar
+            date={date}
+            onChange={onChangeMonth}
+            minDate={minDate}
+            maxDate={maxDate}
+            variant={isMobile ? 'mobile' : undefined}
+          />
         </Dialog>
-      </Popover>
+      </ResponsiveOverlay>
     </DialogTrigger>
   )
 }

@@ -10,17 +10,21 @@ import { Button } from '../ui/Button/Button'
 import { Heading } from '../ui/Typography/Heading'
 import { MONTHS } from './utils'
 import './monthCalendar.scss'
+import type { View } from '../../types/general'
+import classNames from 'classnames'
 
 export function MonthCalendar({
   date,
   onChange,
   minDate,
   maxDate,
+  variant
 }: {
   date: ZonedDateTime | null
   onChange: (val: ZonedDateTime) => void
   minDate?: ZonedDateTime | null
   maxDate?: ZonedDateTime | null
+  variant?: View
 }) {
   const minYear = minDate?.year ?? null
   const maxYear = maxDate?.year ?? null
@@ -105,14 +109,20 @@ export function MonthCalendar({
             selectMonth(selectedKey)
           }
         }}
-        className='Layer__MonthCalendar__MonthGrid'
+        className={classNames(
+          'Layer__MonthCalendar__MonthGrid',
+          variant === 'mobile' && 'Layer__MonthCalendar__MonthGrid--mobile',
+        )}
       >
         {MONTHS.map(m => (
           <GridListItem
             id={m.key}
             key={m.key}
             textValue={m.abbreviation}
-            className='Layer__MonthCalendar__MonthGridItem'
+            className={classNames(
+              'Layer__MonthCalendar__MonthGridItem',
+              variant === 'mobile' && 'Layer__MonthCalendar__MonthGridItem--mobile',
+            )}
             isDisabled={isMonthDisabled(m.key)}
           >
             {m.abbreviation}
