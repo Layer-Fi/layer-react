@@ -29,8 +29,11 @@
   }
 
   &[data-size='lg'] [slot='checkbox'] {
-    --size: 1.5rem;
-    --checkbox-radius: var(--border-radius-2xs);
+    --size: 1.25rem;
+  }
+
+  &[data-size='sm'] [slot='checkbox'] {
+    --size: 0.875rem;
   }
 
   svg {
