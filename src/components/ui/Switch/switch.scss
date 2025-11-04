@@ -1,15 +1,12 @@
 .Layer__Switch {
-  position: relative;
   display: flex;
-  gap: 0.571rem;
+  gap: 8px;
   align-items: center;
-  font-size: 1.143rem;
-  color: var(--fg-default);
-  forced-color-adjust: none;
+  font-size: var(--text-md);
 
   [slot='indicator'] {
     height: 18px;
-    width: 2.2rem;
+    width: 36px;
     border-radius: 1rem;
     border: 2px solid var(--outline-default);
     background: var(--bg-default);
@@ -36,15 +33,5 @@
         transform: translateX(100%);
       }
     }
-
-    &[data-pressed] [slot='indicator'] {
-      border-color: var(--color-black);
-      background: var(--color-black);
-    }
-  }
-
-  &[data-focus-visible] [slot='indicator'] {
-    outline: 2px solid var(--outline-active);
-    outline-offset: 2px;
   }
 }
