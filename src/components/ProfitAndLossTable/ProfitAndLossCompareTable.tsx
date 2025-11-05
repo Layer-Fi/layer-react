@@ -6,7 +6,7 @@ import {
   getComparisonValue,
   mergeComparisonLineItemsAtDepth,
 } from '../../utils/profitAndLossComparisonUtils'
-import { Loader } from '../Loader'
+import { Loader } from '../Loader/Loader'
 import { Table, TableBody, TableHead, TableRow, TableCell } from '../Table'
 import { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
 import classNames from 'classnames'

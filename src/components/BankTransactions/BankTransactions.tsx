@@ -19,7 +19,7 @@ import {
 } from '../BankTransactionsTable/BankTransactionsTable'
 import { Container } from '../Container/Container'
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary'
-import { Loader } from '../Loader'
+import { Loader } from '../Loader/Loader'
 import { Pagination } from '../Pagination/Pagination'
 import {
   BankTransactionsHeader,

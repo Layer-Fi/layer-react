@@ -1,7 +1,7 @@
 import { Button } from '../../Button/Button'
 import { useContext } from 'react'
 import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext/LinkedAccountsContext'
-import { Loader } from '../../Loader'
+import { Loader } from '../../Loader/Loader'
 import { DataState, DataStateStatus } from '../../DataState/DataState'
 import LinkIcon from '../../../icons/Link'
 import { ConditionalList } from '../../utility/ConditionalList'

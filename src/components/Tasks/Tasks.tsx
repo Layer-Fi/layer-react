@@ -1,4 +1,4 @@
-import { Loader } from '../Loader'
+import { Loader } from '../Loader/Loader'
 import { TasksHeader } from './TasksHeader'
 import { TasksList } from './TasksList'
 import { TasksPending } from './TasksPending'

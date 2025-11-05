@@ -1,6 +1,6 @@
 import { IconButton } from '../Button/IconButton'
 import RefreshCcw from '../../icons/RefreshCcw'
-import { SmallLoader } from '../Loader'
+import { SmallLoader } from '../Loader/SmallLoader'
 import classNames from 'classnames'
 
 interface SyncingComponentProps {

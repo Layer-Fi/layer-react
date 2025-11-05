@@ -8,7 +8,7 @@
 export { Onboarding } from './components/Onboarding/Onboarding'
 
 /* ------------------ Bank Accounts & Transactions ------------------ */
-export { LinkedAccounts } from './components/LinkedAccounts'
+export { LinkedAccounts } from './components/LinkedAccounts/LinkedAccounts'
 export { BankTransactions } from './components/BankTransactions/BankTransactions'
 export { Integrations } from './components/Integrations/Integrations'
 

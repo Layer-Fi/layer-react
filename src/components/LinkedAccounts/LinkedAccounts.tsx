@@ -4,7 +4,7 @@ import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider/L
 import { Container } from '../Container/Container'
 import { Header } from '../Container/Header'
 import { DataState, DataStateStatus } from '../DataState/DataState'
-import { Loader } from '../Loader'
+import { Loader } from '../Loader/Loader'
 import { Heading, HeadingSize } from '../Typography'
 import { LinkedAccountsContent } from './LinkedAccountsContent'
 import { OpeningBalanceModal } from './OpeningBalanceModal/OpeningBalanceModal'

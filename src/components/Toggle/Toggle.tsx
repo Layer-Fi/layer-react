@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import { useElementSize } from '../../hooks/useElementSize/useElementSize'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '../Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip/Tooltip'
 import classNames from 'classnames'
 import { Span } from '../ui/Typography/Text'
 

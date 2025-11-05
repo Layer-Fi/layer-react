@@ -11,7 +11,7 @@ import { ChartOfAccountsDatePicker } from '../ChartOfAccountsDatePicker/ChartOfA
 import { ChartOfAccountsFormStringOverrides } from '../ChartOfAccountsForm/ChartOfAccountsForm'
 import { ChartOfAccountsSidebar } from '../ChartOfAccountsSidebar/ChartOfAccountsSidebar'
 import { DataState, DataStateStatus } from '../DataState/DataState'
-import { Loader } from '../Loader'
+import { Loader } from '../Loader/Loader'
 import { Panel } from '../Panel/Panel'
 import { Heading, HeadingSize } from '../Typography'
 import { ChartOfAccountsTable } from './ChartOfAccountsTable'
