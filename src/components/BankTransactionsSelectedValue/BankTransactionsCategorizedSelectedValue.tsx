@@ -20,7 +20,7 @@ export const BankTransactionsCategorizedSelectedValue = ({
   className,
 }: BankTransactionsCategorizedSelectedValueProps) => {
   return (
-    <Span align='center' ellipsis size='sm' className={className}>
+    <Span ellipsis size='sm' className={className}>
       {bankTransaction.categorization_status === CategorizationStatus.SPLIT && (
         <>
           <Badge
