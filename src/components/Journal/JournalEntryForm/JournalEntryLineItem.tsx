@@ -1,7 +1,7 @@
+import { Button } from '../../ui/Button/Button'
 import classNames from 'classnames'
 import { X } from 'lucide-react'
 import { VStack } from '../../ui/Stack/Stack'
-import { Button } from '../../ui/Button/Button'
 import type { AppForm } from '../../../features/forms/hooks/useForm'
 import type { JournalEntryForm } from './journalEntryFormSchemas'
 import './journalEntryLineItem.scss'

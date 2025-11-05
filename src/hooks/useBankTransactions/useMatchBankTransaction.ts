@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { matchBankTransaction, type GetBankTransactionsReturn, type MatchBankTransactionBody } from '../../api/layer/bankTransactions'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../useAuth'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'

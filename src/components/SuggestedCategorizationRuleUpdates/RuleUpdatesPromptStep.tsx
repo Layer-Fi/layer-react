@@ -1,13 +1,13 @@
+import { Button } from '../../components/ui/Button/Button'
 import { useCallback, useState } from 'react'
 import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
-import { Button } from '../../components/ui/Button/Button'
 import { useWizard } from '../Wizard/Wizard'
 import { CheckboxWithTooltip } from '../ui/Checkbox/Checkbox'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Label, Span } from '../ui/Typography/Text'
 import { CreateRuleButton } from './CreateRuleButton'
 import { useRejectCategorizationRulesUpdateSuggestion } from '../../hooks/useCategorizationRules/useRejectCategorizationRulesUpdateSuggestion'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 
 interface RuleUpdatesPromptStepProps {
   close: () => void

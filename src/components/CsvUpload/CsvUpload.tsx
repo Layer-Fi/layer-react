@@ -1,3 +1,4 @@
+import { Button } from '../ui/Button/Button'
 import { useCallback, useRef, useState } from 'react'
 import { FileRejection, useDropzone } from 'react-dropzone'
 import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
@@ -7,7 +8,6 @@ import classNames from 'classnames'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { FileSpreadsheet } from 'lucide-react'
 import CloseIcon from '../../icons/CloseIcon'
-import { Button } from '../ui/Button/Button'
 import './csvUpload.scss'
 
 const VALID_EXTENSIONS = ['.csv']

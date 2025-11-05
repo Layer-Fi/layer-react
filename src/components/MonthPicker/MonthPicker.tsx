@@ -1,5 +1,5 @@
-import ChevronDown from '../../icons/ChevronDown'
 import { Button } from '../ui/Button/Button'
+import ChevronDown from '../../icons/ChevronDown'
 import { InputGroup } from '../ui/Input/InputGroup'
 import { Dialog, DialogTrigger } from 'react-aria-components'
 import { HStack } from '../ui/Stack/Stack'

@@ -1,6 +1,6 @@
+import { Button, ButtonVariant } from '../Button/Button'
 import { useCallback } from 'react'
 import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
-import { Button, ButtonVariant } from '../Button/Button'
 import { useWizard } from '../Wizard/Wizard'
 import { UploadTransactionsStep } from './types'
 import { Separator } from '../Separator/Separator'

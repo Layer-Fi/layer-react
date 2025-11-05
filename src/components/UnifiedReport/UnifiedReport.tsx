@@ -1,4 +1,4 @@
-import { Container } from '../Container'
+import { Container } from '../Container/Container'
 import { UnifiedReportTable } from './UnifiedReportTable'
 import { UnifiedReportTableHeader } from './UnifiedReportTableHeader'
 import { ExpandableDataTableProvider } from '../ExpandableDataTable/ExpandableDataTableProvider'

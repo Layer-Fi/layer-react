@@ -1,6 +1,6 @@
-import DownloadCloud from '../../icons/DownloadCloud'
-import { Button, ButtonProps, ButtonVariant } from './Button'
 import { RetryButton } from './RetryButton'
+import DownloadCloud from '../../icons/DownloadCloud'
+import { ButtonProps, Button, ButtonVariant } from './Button'
 
 interface DownloadButtonProps {
   onClick?: () => void | Promise<void>

@@ -1,4 +1,4 @@
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
 import { get } from '../../../api/layer/authenticated_http'
 import useSWR, { type SWRResponse } from 'swr'

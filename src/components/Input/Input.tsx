@@ -1,5 +1,5 @@
 import { HTMLProps } from 'react'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip/Tooltip'
 import classNames from 'classnames'
 
 export interface InputProps extends HTMLProps<HTMLInputElement> {

@@ -1,3 +1,4 @@
+import { Button } from '../../../components/ui/Button/Button'
 import {
   useCallback,
   useId,
@@ -7,7 +8,6 @@ import {
 import { Label, Span } from '../../../components/ui/Typography/Text'
 import { useTagDimensions } from '../api/useTagDimensions'
 import { VStack } from '../../../components/ui/Stack/Stack'
-import { Button } from '../../../components/ui/Button/Button'
 import { X } from 'lucide-react'
 import { Tag, TagGroup, TagList } from '../../../components/ui/TagGroup/TagGroup'
 import { useFlattenedTagValues } from '../useFlattenedTagValues'

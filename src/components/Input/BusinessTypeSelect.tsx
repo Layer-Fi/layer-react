@@ -1,5 +1,5 @@
-import { ENTITY_TYPES, EntityType } from '../../types/business'
 import { Select } from './Select'
+import { ENTITY_TYPES, EntityType } from '../../types/business'
 
 export const findSelectOption = (options: typeof ENTITY_TYPES, value?: EntityType) => {
   if (!value) {

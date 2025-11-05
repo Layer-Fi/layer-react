@@ -1,5 +1,6 @@
+import { Select } from '../Input/Select'
+import { MultiSelect } from '../Input/MultiSelect'
 import { useContext, useMemo } from 'react'
-import { MultiSelect, Select } from '../Input'
 import type { StylesConfig } from 'react-select'
 import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TagComparisonOption } from '../../types/profit_and_loss'

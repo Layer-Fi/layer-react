@@ -1,5 +1,5 @@
 import { post } from '../../api/layer/authenticated_http'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../useAuth'
 import useSWRMutation from 'swr/mutation'
 import { useCallback } from 'react'

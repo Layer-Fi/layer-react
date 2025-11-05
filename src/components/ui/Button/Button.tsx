@@ -1,5 +1,6 @@
+import { Button as ReactAriaButton } from 'react-aria-components'
 import { forwardRef, type PropsWithChildren } from 'react'
-import { Button as ReactAriaButton, type ButtonProps } from 'react-aria-components'
+import { type ButtonProps } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import { withRenderProp } from '../../utility/withRenderProp'
 import { LoadingSpinner } from '../Loading/LoadingSpinner'

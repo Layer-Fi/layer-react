@@ -1,5 +1,5 @@
 import useSWRMutation from 'swr/mutation'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
 import type { S3PresignedUrl } from '../../../types/general'
 import type { Awaitable } from '../../../types/utility/promises'

@@ -1,1 +1,0 @@
-export { JournalEntryDetails } from './JournalEntryDetails'

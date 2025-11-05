@@ -1,5 +1,5 @@
 import { InputGroup } from '../../Input/InputGroup'
-import { Textarea } from '../../Textarea'
+import { Textarea } from '../../Textarea/Textarea'
 import { BankTransaction } from '../../../types/bank_transactions'
 import { useBankTransactionMemo } from './useBankTransactionMemo'
 

@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { TagFilterInput } from '../../types/tags'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import {
   CategoryUpdate,
 } from '../../types/categories'
@@ -11,7 +11,7 @@ import {
 } from '../../types/bank_transactions'
 import { Direction } from '../../types/general'
 import { DataModel } from '../../types/general'
-import { useLinkedAccounts } from '../useLinkedAccounts'
+import { useLinkedAccounts } from '../useLinkedAccounts/useLinkedAccounts'
 import {
   BankTransactionFilters,
 } from './types'

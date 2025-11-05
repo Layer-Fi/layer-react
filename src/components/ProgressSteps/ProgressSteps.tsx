@@ -1,4 +1,4 @@
-import { Text, TextSize } from '../Typography'
+import { Text, TextSize } from '../Typography/Text'
 import Check from '../../icons/Check'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import './progressSteps.scss'

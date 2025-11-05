@@ -1,4 +1,4 @@
-import { HeaderCol } from '../Header'
+import { HeaderCol } from '../Header/HeaderCol'
 import { Button } from '../ui/Button/Button'
 import { Span } from '../ui/Typography/Text'
 import { HStack, VStack } from '../ui/Stack/Stack'

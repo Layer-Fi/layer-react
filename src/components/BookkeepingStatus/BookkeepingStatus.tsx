@@ -1,5 +1,5 @@
-import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { Text, TextSize } from '../Typography/Text'
+import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { getBookkeepingStatusConfig } from './utils'
 import './bookkeepingStatus.scss'

@@ -1,1 +1,0 @@
-export { SkeletonLoader } from './SkeletonLoader'

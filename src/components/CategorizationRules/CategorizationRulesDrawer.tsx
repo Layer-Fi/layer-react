@@ -1,6 +1,6 @@
+import { Heading } from '../ui/Typography/Heading'
 import { useCallback } from 'react'
 import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
-import { Heading } from '../ui/Typography/Heading'
 import { HStack } from '../ui/Stack/Stack'
 import { useBankTransactionsNavigation } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import BackArrow from '../../icons/BackArrow'

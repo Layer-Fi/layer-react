@@ -1,5 +1,5 @@
 import { ChangeEvent, ReactNode, useEffect, useState } from 'react'
-import { useElementSize } from '../../hooks/useElementSize'
+import { useElementSize } from '../../hooks/useElementSize/useElementSize'
 import { Tab } from './Tab'
 import classNames from 'classnames'
 import { HStack } from '../ui/Stack/Stack'

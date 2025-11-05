@@ -5,7 +5,7 @@ import { ApiCustomJournalEntryWithEntry, UpsertJournalEntrySchema, type JournalE
 import { useUpsertJournalEntry, UpsertJournalEntryMode } from './useUpsertJournalEntry'
 import { Schema } from 'effect'
 import { convertJournalEntryFormToParams, getJournalEntryFormDefaultValues, getJournalEntryFormInitialValues, validateJournalEntryForm } from './formUtils'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 
 type onSuccessFn = (journalEntry: ApiCustomJournalEntryWithEntry) => void
 type UseJournalEntryFormProps =

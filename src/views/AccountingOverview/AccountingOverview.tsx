@@ -1,7 +1,9 @@
+import { HeaderRow } from '../../components/Header/HeaderRow'
+import { HeaderCol } from '../../components/Header/HeaderCol'
+import { Header } from '../../components/Header/Header'
 import { ReactNode, useState } from 'react'
-import { Container } from '../../components/Container'
-import { Header, HeaderCol, HeaderRow } from '../../components/Header'
-import { Onboarding } from '../../components/Onboarding'
+import { Container } from '../../components/Container/Container'
+import { Onboarding } from '../../components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import {
@@ -9,7 +11,7 @@ import {
   ProfitAndLossSummariesStringOverrides,
 } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Toggle } from '../../components/Toggle/Toggle'
-import { View } from '../../components/View'
+import { View } from '../../components/View/View'
 import { OnboardingStep } from '../../types/layer_context'
 import type { Variants } from '../../utils/styleUtils/sizeVariants'
 import { TagOption } from '../ProjectProfitability/ProjectProfitability'

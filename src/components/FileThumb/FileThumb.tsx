@@ -1,9 +1,9 @@
+import { Text, TextSize } from '../Typography/Text'
+import { IconButton } from '../Button/IconButton'
 import DownloadCloud from '../../icons/DownloadCloud'
 import EyeIcon from '../../icons/Eye'
 import LoaderIcon from '../../icons/Loader'
 import TrashIcon from '../../icons/Trash'
-import { IconButton } from '../Button'
-import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 import './fileThumb.scss'
 
