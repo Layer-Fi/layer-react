@@ -1,6 +1,12 @@
 .Layer__DateRangeSelection {
   display: grid;
   grid-template-columns: 9rem repeat(2, minmax(10rem, 12rem));
+  gap: var(--spacing-xs);
+
+  &--mobile {
+    grid-template-columns: 8rem repeat(2, minmax(6.75rem, 10rem));
+    gap: var(--spacing-3xs);
+  }
 
   .Layer__tooltip-trigger {
     padding-top: 0;

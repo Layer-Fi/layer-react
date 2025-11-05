@@ -18,7 +18,7 @@ export function MonthCalendar({
   onChange,
   minDate,
   maxDate,
-  variant
+  variant,
 }: {
   date: ZonedDateTime | null
   onChange: (val: ZonedDateTime) => void

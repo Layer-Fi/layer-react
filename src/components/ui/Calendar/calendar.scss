@@ -12,10 +12,18 @@
   width: 2rem;
 
   border-radius: var(--border-radius-3xs);
-  font-size: var(--text-sm);
 
+  font-size: var(--text-sm);
   line-height: 2rem;
   text-align: center;
+
+  &[data-size='md'] {
+    height: 2.75rem;
+    width: 2.75rem;
+
+    font-size: var(--text-md);
+    line-height: 2.75rem;
+  }
 }
 
 .Layer__UI__CalendarCell {

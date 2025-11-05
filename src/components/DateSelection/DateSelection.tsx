@@ -4,6 +4,8 @@ import { DateSelectionComboBox } from './DateSelectionComboBox'
 import { DatePicker } from '../DatePicker/DatePicker'
 import { useGlobalDate, useGlobalDateActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useDatePickerState } from '../DatePicker/useDatePickerState'
+import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
+import classNames from 'classnames'
 import './dateSelection.scss'
 
 type DateSelectionProps = {
@@ -14,6 +16,7 @@ type DateSelectionProps = {
 export const DateSelection = ({ minDate, maxDate }: DateSelectionProps) => {
   const { date } = useGlobalDate()
   const { setDate: setGlobalDate } = useGlobalDateActions()
+  const { value } = useSizeClass()
 
   const setDate = useCallback((date: Date) => {
     setGlobalDate({ date })
@@ -27,7 +30,10 @@ export const DateSelection = ({ minDate, maxDate }: DateSelectionProps) => {
   })
 
   return (
-    <HStack gap='xs' className='Layer__DateSelection'>
+    <HStack className={classNames('Layer__DateSelection', {
+      'Layer__DateSelection--mobile': value === 'mobile',
+    })}
+    >
       <DateSelectionComboBox />
       <DatePicker
         label='Effective Date'

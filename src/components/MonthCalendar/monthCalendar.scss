@@ -9,7 +9,7 @@
   padding: var(--spacing-xs);
 
   &--mobile {
-    grid-template-columns: repeat(3, 6rem);
+    grid-template-columns: repeat(3, 6.5rem);
   }
 }
 
@@ -49,7 +49,8 @@
   }
 
   &--mobile {
-    block-size: 2.5rem;
-    inline-size: 6rem;
+    block-size: 2.75rem;
+    inline-size: 6.5rem;
+    font-size: var(--text-md);
   }
 }
