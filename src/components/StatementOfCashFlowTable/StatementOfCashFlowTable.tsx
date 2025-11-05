@@ -1,9 +1,13 @@
+import { TableCell } from '../TableCell/TableCell'
+import { TableRow } from '../TableRow/TableRow'
+import { TableBody } from '../TableBody/TableBody'
+import { TableHead } from '../TableHead/TableHead'
+import { Table } from '../Table/Table'
 import { Fragment, ReactNode } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow/useTableExpandRow'
 import { StatementOfCashFlow } from '../../types/statement_of_cash_flow'
 import { LineItem } from '../../types/line_item'
 import { TableCellAlign } from '../../types/table'
-import { Table, TableHead, TableBody, TableRow, TableCell } from '../Table'
 
 type StatementOfCashFlowRowProps = {
   name: string

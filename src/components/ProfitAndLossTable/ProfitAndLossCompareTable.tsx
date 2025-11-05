@@ -1,3 +1,8 @@
+import { TableCell } from '../TableCell/TableCell'
+import { TableRow } from '../TableRow/TableRow'
+import { TableHead } from '../TableHead/TableHead'
+import { TableBody } from '../TableBody/TableBody'
+import { Table } from '../Table/Table'
 import { Fragment, useContext, useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow/useTableExpandRow'
 import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
@@ -7,7 +12,6 @@ import {
   mergeComparisonLineItemsAtDepth,
 } from '../../utils/profitAndLossComparisonUtils'
 import { Loader } from '../Loader/Loader'
-import { Table, TableBody, TableHead, TableRow, TableCell } from '../Table'
 import { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
 import classNames from 'classnames'
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'

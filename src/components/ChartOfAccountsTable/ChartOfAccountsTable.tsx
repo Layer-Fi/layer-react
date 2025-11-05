@@ -1,3 +1,8 @@
+import { TableRow } from '../TableRow/TableRow/../TableRow'
+import { TableHead } from '../TableHead/TableHead/../TableHead'
+import { TableCell } from '../TableCell/TableCell/../TableCell'
+import { TableBody } from '../TableBody/TableBody'
+import { Table } from '../Table/Table'
 import { Button as UIButton } from '../ui/Button/Button'
 import { Button, ButtonVariant } from '../Button/Button'
 import { Fragment, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
@@ -10,10 +15,6 @@ import {
   type AugmentedLedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { View } from '../../types/general'
-import { Table, TableBody } from '../Table'
-import { TableCell } from '../TableCell/TableCell'
-import { TableHead } from '../TableHead/TableHead'
-import { TableRow } from '../TableRow/TableRow'
 import { TableCellAlign } from '../../types/table'
 import {
   ChartOfAccountsTableStringOverrides,
