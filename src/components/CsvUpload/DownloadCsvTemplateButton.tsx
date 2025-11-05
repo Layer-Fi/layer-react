@@ -1,4 +1,4 @@
-import { Button, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button/Button'
 import { type PropsWithChildren } from 'react'
 import { FileDownIcon } from 'lucide-react'
 

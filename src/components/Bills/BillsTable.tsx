@@ -1,5 +1,5 @@
 import { IconButton } from '../Button/IconButton'
-import { ButtonVariant } from '../Button'
+import { ButtonVariant } from '../Button/Button'
 import { Fragment } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { TableProvider } from '../../contexts/TableContext/TableContext'

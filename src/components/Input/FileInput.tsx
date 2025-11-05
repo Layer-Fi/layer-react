@@ -1,6 +1,6 @@
 import { ButtonVariant } from '../Button/Button'
 import { TextButton } from '../Button/TextButton'
-import { Button } from '../Button'
+import { Button } from '../Button/Button'
 import { useRef, ChangeEvent } from 'react'
 import UploadCloud from '../../icons/UploadCloud'
 

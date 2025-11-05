@@ -1,4 +1,4 @@
-import { Button, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button/Button'
 import { ReactNode } from 'react'
 import AlertOctagon from '../../icons/AlertOctagon'
 import CheckCircle from '../../icons/CheckCircle'

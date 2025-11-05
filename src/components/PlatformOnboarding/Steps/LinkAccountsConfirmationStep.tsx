@@ -1,4 +1,4 @@
-import { Button, ButtonVariant } from '../../Button'
+import { Button, ButtonVariant } from '../../Button/Button'
 import { useContext } from 'react'
 import { HStack, VStack } from '../../ui/Stack/Stack'
 import { Heading } from '../../ui/Typography/Heading'

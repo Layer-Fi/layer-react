@@ -1,4 +1,4 @@
-import { Button as ReactAriaButton } from 'react-aria-components/Button'
+import { Button as ReactAriaButton } from 'react-aria-components'
 import { forwardRef, type PropsWithChildren } from 'react'
 import { type ButtonProps } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'

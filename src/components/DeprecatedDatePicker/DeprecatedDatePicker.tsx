@@ -1,4 +1,4 @@
-import { Button, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button/Button'
 import { useMemo, useRef, useState, type FC } from 'react'
 import * as RDP from 'react-datepicker'
 import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'

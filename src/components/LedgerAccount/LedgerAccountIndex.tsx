@@ -1,3 +1,6 @@
+import { HeaderRow } from '../Header/HeaderRow'
+import { HeaderCol } from '../Header/HeaderCol'
+import { Header } from '../Header/Header'
 import { BackButton } from '../Button/BackButton'
 import {
   RefObject,
@@ -9,7 +12,6 @@ import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext/Ledg
 import { centsToDollars } from '../../models/Money'
 import { View } from '../../types/general'
 import { DataState, DataStateStatus } from '../DataState/DataState'
-import { Header, HeaderCol, HeaderRow } from '../Header'
 import { LedgerAccountEntryDetails } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { LedgerAccountEntryDetailsStringOverrides } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { Loader } from '../Loader'

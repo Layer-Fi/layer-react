@@ -1,4 +1,4 @@
-import { Button, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button/Button'
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { FileInput } from '../Input'

@@ -1,4 +1,4 @@
-import { Button } from '../../Button'
+import { Button } from '../../Button/Button'
 import { useContext } from 'react'
 import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Loader } from '../../Loader'

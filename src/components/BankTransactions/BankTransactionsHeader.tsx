@@ -1,5 +1,5 @@
 import { DownloadButton as DownloadButtonComponent } from '../Button/DownloadButton'
-import { ButtonVariant } from '../Button'
+import { ButtonVariant } from '../Button/Button'
 import { useCallback, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import type { DateRange } from '../../types/general'

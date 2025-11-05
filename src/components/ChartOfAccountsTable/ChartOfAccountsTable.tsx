@@ -1,5 +1,5 @@
 import { Button as UIButton } from '../ui/Button/Button'
-import { Button, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button/Button'
 import { Fragment, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext/LedgerAccountsContext'

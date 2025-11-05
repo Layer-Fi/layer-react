@@ -1,5 +1,5 @@
 import { Link } from '../Button/Link'
-import { Button, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button/Button'
 import CoffeeIcon from '../../icons/Coffee'
 import { IconBox } from '../IconBox/IconBox'
 import { Text, TextSize, TextWeight } from '../Typography'

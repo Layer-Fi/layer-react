@@ -1,4 +1,4 @@
-import { Button } from '../Button'
+import { Button } from '../Button/Button'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'

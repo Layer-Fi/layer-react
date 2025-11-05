@@ -1,4 +1,4 @@
-import { Button } from '../Button'
+import { Button } from '../Button/Button'
 import { useContext, useMemo } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { useBankTransactionsFilters } from '../../contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'

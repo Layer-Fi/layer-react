@@ -1,5 +1,5 @@
 import { SubmitButton } from '../Button/SubmitButton'
-import { Button, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button/Button'
 import { useCallback, useEffect, FormEvent } from 'react'
 import { notEmpty } from '../../utils/form'
 import { Input, InputGroup, Select } from '../Input'
