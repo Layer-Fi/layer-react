@@ -1,3 +1,6 @@
+import { Select } from '../Input/Select'
+import { InputGroup } from '../Input/InputGroup'
+import { Input } from '../Input/Input'
 import { HeaderRow } from '../Header/HeaderRow'
 import { HeaderCol } from '../Header/HeaderCol'
 import { Header } from '../Header/Header'
@@ -7,7 +10,6 @@ import { Button, ButtonVariant } from '../Button/Button'
 import { useContext, useMemo } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
-import { Input, InputGroup, Select } from '../Input'
 import { Heading, HeadingSize, Text, TextSize, TextWeight } from '../Typography'
 import {
   LEDGER_ACCOUNT_SUBTYPES,

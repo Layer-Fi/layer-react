@@ -1,3 +1,4 @@
+import { FileInput } from '../Input/FileInput'
 import { Button } from '../Button/Button'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
@@ -7,7 +8,6 @@ import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransac
 import { hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { FileInput } from '../Input'
 import { ErrorText } from '../Typography'
 import { PersonalCategories } from './constants'
 import classNames from 'classnames'

@@ -1,6 +1,7 @@
+import { InputGroup } from '../Input/InputGroup'
+import { Input } from '../Input/Input'
 import { SubmitButton } from '../Button/SubmitButton'
 import { notEmpty, validateEmailFormat } from '../../utils/form'
-import { Input, InputGroup } from '../Input'
 import { useBusinessForm } from './useBusinessForm'
 import { FormSection } from '../Input/FormSection'
 import { BusinessTypeSelect } from '../Input/BusinessTypeSelect'

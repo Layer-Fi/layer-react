@@ -1,3 +1,4 @@
+import { Input } from '../Input/Input'
 import { Button } from '../ui/Button/Button'
 import { TextButton } from '../Button/TextButton'
 import {
@@ -28,7 +29,6 @@ import { useTagBankTransaction } from '../../features/bankTransactions/[bankTran
 import { useRemoveTagFromBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
 import { useSetMetadataOnBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
 import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
-import { Input } from '../Input'
 import { MatchForm } from '../MatchForm'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'
 import { Text, ErrorText, TextSize } from '../Typography'

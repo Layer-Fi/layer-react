@@ -1,3 +1,5 @@
+import { Input } from '../Input/Input'
+import { FileInput } from '../Input/FileInput'
 import { TextButton } from '../Button/TextButton'
 import { Button, ButtonVariant } from '../Button/Button'
 import { useEffect, useRef, useState } from 'react'
@@ -18,7 +20,6 @@ import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransact
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
 import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'
-import { FileInput, Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'

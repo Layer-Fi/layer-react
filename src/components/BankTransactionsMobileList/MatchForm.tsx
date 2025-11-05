@@ -1,3 +1,4 @@
+import { FileInput } from '../Input/FileInput'
 import { Button } from '../Button/Button'
 import { useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
@@ -9,7 +10,6 @@ import {
 } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { FileInput } from '../Input'
 import { MatchFormMobile } from '../MatchForm'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
