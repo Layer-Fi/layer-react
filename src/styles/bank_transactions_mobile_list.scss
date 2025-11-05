@@ -75,38 +75,12 @@
   padding: var(--spacing-sm);
 }
 
-.Layer__bank-transaction-mobile-list-item__heading__main {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--spacing-4xs);
-}
-
-.Layer__bank-transaction-mobile-list-item__heading__row {
-  display: flex;
-  gap: var(--spacing-xs);
-  align-items: center;
-  justify-content: space-between;
-}
-
-.Layer__bank-transaction-mobile-list-item__heading__category {
-  display: flex;
-  border-radius: var(--border-radius-xs);
-  background-color: var(--color-base-300);
-}
-
 .Layer__bank-transaction-mobile-list-item__heading__account-name {
   color: var(--color-base-500);
 }
 
 .Layer__bank-transaction-mobile-list-item__categorized-name {
   color: var(--color-base-500);
-}
-
-.Layer__bank-transaction-mobile-list-item__heading__date {
-  font-size: 12px;
-  color: var(--color-base-500);
-  white-space: nowrap;
 }
 
 .Layer__bank-transaction-mobile-list-item__value {
