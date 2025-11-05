@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react'
 import { BalanceSheet as EmbeddedBalanceSheet } from '../../components/BalanceSheet/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
-import { Container } from '../../components/Container'
+import { Container } from '../../components/Container/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossDownloadButtonStringOverrides } from '../../components/ProfitAndLossDownloadButton/types'

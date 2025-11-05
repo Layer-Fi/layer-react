@@ -11,7 +11,7 @@ import { P, Span } from '../ui/Typography/Text'
 import { Heading } from '../ui/Typography/Heading'
 import { VStack } from '../ui/Stack/Stack'
 import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { Container } from '../Container'
+import { Container } from '../Container/Container'
 import { CallBookingPurpose, useCallBookings } from '../../features/callBookings/api/useCallBookings'
 import { useMemo } from 'react'
 

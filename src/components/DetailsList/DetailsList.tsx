@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Header } from '../Container'
+import { Header } from '../Container/Header'
 import { Heading, HeadingSize } from '../Typography'
 import classNames from 'classnames'
 

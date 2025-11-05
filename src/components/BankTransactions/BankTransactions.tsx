@@ -17,7 +17,7 @@ import {
   BankTransactionsTable,
   type BankTransactionsTableStringOverrides,
 } from '../BankTransactionsTable/BankTransactionsTable'
-import { Container } from '../Container'
+import { Container } from '../Container/Container'
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination/Pagination'

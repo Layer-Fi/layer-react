@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { PopupModal } from 'react-calendly'
 import classNames from 'classnames'
-import { Container } from '../../components/Container'
+import { Container } from '../../components/Container/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'

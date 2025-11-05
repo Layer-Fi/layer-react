@@ -9,7 +9,7 @@ import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker/BalanceSheetDa
 import { BalanceSheetExpandAllButton } from '../BalanceSheetExpandAllButton/BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '../BalanceSheetTable/BalanceSheetTable'
 import { BalanceSheetTableStringOverrides } from '../BalanceSheetTable/BalanceSheetTable'
-import { Container } from '../Container'
+import { Container } from '../Container/Container'
 import { Loader } from '../Loader'
 import { View } from '../View/View'
 import { BALANCE_SHEET_ROWS } from './constants'

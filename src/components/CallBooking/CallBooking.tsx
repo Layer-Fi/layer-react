@@ -1,7 +1,7 @@
 import { Link } from '../ui/Link/Link'
 import { Button } from '../ui/Button/Button'
 import { Link as LinkIcon } from 'lucide-react'
-import { Container } from '../Container'
+import { Container } from '../Container/Container'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
 import { Span } from '../ui/Typography/Text'

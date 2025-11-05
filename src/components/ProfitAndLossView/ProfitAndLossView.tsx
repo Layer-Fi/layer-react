@@ -1,5 +1,5 @@
 import { RefObject, useContext, useRef } from 'react'
-import { Container } from '../Container'
+import { Container } from '../Container/Container'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Panel } from '../Panel/Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'

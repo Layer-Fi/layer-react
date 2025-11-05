@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts/useLinkedAccounts'
-import { Header } from '../Container'
+import { Header } from '../Container/Header'
 import { SyncingBadge } from '../SyncingBadge/SyncingBadge'
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import { useActiveBookkeepingPeriod } from '../../hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
