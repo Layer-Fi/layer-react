@@ -17,7 +17,6 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionsProcessingInfo } from '../BankTransactionsList/BankTransactionsProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
-import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '../ui/Stack/Stack'
 import { useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
@@ -27,6 +26,8 @@ import { Badge, BadgeSize } from '../Badge/Badge'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import { parseISO, format as formatTime } from 'date-fns'
+import { HStack } from '../ui/Stack/Stack'
+import { BankTransactionsMobileListItemCheckbox } from './BankTransactionsMobileListItemCheckbox'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -226,24 +227,109 @@ export const BankTransactionsMobileListItem = ({
         role='button'
         style={{ height: headingHeight }}
       >
-        <div className={`${className}__heading__content`} ref={headingRowRef}>
-          {categorizationEnabled && bulkActionsEnabled && (
-            <VStack align='center' pie='xs' ref={checkboxContainerRef}>
-              <Checkbox
-                size='md'
-                isSelected={isTransactionSelected}
-                onChange={(selected) => {
-                  if (selected) {
-                    select(bankTransaction.id)
-                  }
-                  else {
-                    deselect(bankTransaction.id)
-                  }
-                }}
-              />
+        <HStack
+          ref={headingRowRef}
+          gap='md'
+          justify='space-between'
+          className='Layer__bank-transaction-mobile-list-item__heading__content'
+        >
+          {/* Left Side: Checkbox + Content */}
+          <HStack gap='md' fluid>
+            {/* Bulk Action Checkboxes */}
+            <BankTransactionsMobileListItemCheckbox
+              bulkActionsEnabled={bulkActionsEnabled}
+              bankTransaction={bankTransaction}
+              checkboxContainerRef={checkboxContainerRef}
+            />
+
+            {/* Left Side Content */}
+            <VStack
+              align='start'
+              gap='md'
+              fluid
+            >
+              <div className={`${className}__heading__main`}>
+                <div className={`${className}__heading__row`}>
+                  <Span>
+                    {bankTransaction.counterparty_name ?? bankTransaction.description}
+                  </Span>
+                  <Span size='md'>
+                    {isCredit(bankTransaction) ? '+' : ''}
+                    <MoneySpan
+                      amount={bankTransaction.amount}
+                    />
+                  </Span>
+                </div>
+                <div className={`${className}__heading__row`}>
+                  <Span size='sm'>
+                    {fullAccountName}
+                  </Span>
+                  {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
+
+                </div>
+                {!categorizationEnabled && !categorized
+                  ? <BankTransactionsProcessingInfo />
+                  : null}
+              </div>
+
+              {/* Transaction Category */}
+              <div className={`${className}__heading__row ${className}__heading__row--category`}>
+                <div style={{ display: 'flex', gap: 'var(--spacing-3xs)', alignItems: 'center' }}>
+                  {categorized
+                    ? (
+                      <>
+                        {bankTransaction.categorization_status === CategorizationStatus.SPLIT && (
+                          <>
+                            <Badge
+                              size={BadgeSize.SMALL}
+                              icon={<Scissors size={11} />}
+                            >
+                              Split
+                            </Badge>
+                            <Span size='sm' ellipsis>
+                              {extractDescriptionForSplit(bankTransaction.category)}
+                            </Span>
+                          </>
+                        )}
+                        {bankTransaction.categorization_status === CategorizationStatus.MATCHED
+                          && bankTransaction.match && (
+                          <>
+                            <MatchBadge
+                              classNamePrefix={className}
+                              bankTransaction={bankTransaction}
+                              dateFormat={DATE_FORMAT}
+                              text={isTransferMatch(bankTransaction) ? 'Transfer' : 'Match'}
+                            />
+                            <Span size='sm' ellipsis>
+                              {`${formatTime(
+                                parseISO(bankTransaction.match.bank_transaction.date),
+                                DATE_FORMAT,
+                              )}, ${bankTransaction.match?.details?.description}`}
+                            </Span>
+                          </>
+                        )}
+                        {bankTransaction.categorization_status !== CategorizationStatus.MATCHED
+                          && bankTransaction.categorization_status !== CategorizationStatus.SPLIT && (
+                          <Span size='sm'>
+                            {bankTransaction.category?.display_name}
+                          </Span>
+                        )}
+                      </>
+                    )
+                    : (
+                      <Span size='sm'>
+                        {selectedCategory?.label ?? 'No category selected'}
+                      </Span>
+                    )}
+                </div>
+              </div>
             </VStack>
-          )}
-          <div className={`${className}__heading__main`}>
+          </HStack>
+
+          {/* Right Side Content */}
+          <VStack align='end' gap='md'>
+
+            {/* Amount */}
             <div className={`${className}__heading__row`}>
               <Span>
                 {bankTransaction.counterparty_name ?? bankTransaction.description}
@@ -255,75 +341,18 @@ export const BankTransactionsMobileListItem = ({
                 />
               </Span>
             </div>
-            <div className={`${className}__heading__row`}>
-              <Span size='sm'>
-                {fullAccountName}
-              </Span>
-              {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
-              <DateTime
-                value={bankTransaction.date}
-                dateFormat={DATE_FORMAT}
-                onlyDate
-                slotProps={{
-                  Date: { size: 'sm', variant: 'subtle' },
-                }}
-              />
-            </div>
-            <div className={`${className}__heading__row`}>
-              <div style={{ display: 'flex', gap: 'var(--spacing-3xs)', alignItems: 'center' }}>
-                {categorized
-                  ? (
-                    <>
-                      {bankTransaction.categorization_status === CategorizationStatus.SPLIT && (
-                        <>
-                          <Badge
-                            size={BadgeSize.SMALL}
-                            icon={<Scissors size={11} />}
-                          >
-                            Split
-                          </Badge>
-                          <Span size='sm' ellipsis>
-                            {extractDescriptionForSplit(bankTransaction.category)}
-                          </Span>
-                        </>
-                      )}
-                      {bankTransaction.categorization_status === CategorizationStatus.MATCHED
-                        && bankTransaction.match && (
-                        <>
-                          <MatchBadge
-                            classNamePrefix={className}
-                            bankTransaction={bankTransaction}
-                            dateFormat={DATE_FORMAT}
-                            text={isTransferMatch(bankTransaction) ? 'Transfer' : 'Match'}
-                          />
-                          <Span size='sm' ellipsis>
-                            {`${formatTime(
-                              parseISO(bankTransaction.match.bank_transaction.date),
-                              DATE_FORMAT,
-                            )}, ${bankTransaction.match?.details?.description}`}
-                          </Span>
-                        </>
-                      )}
-                      {bankTransaction.categorization_status !== CategorizationStatus.MATCHED
-                        && bankTransaction.categorization_status !== CategorizationStatus.SPLIT && (
-                        <Span size='sm'>
-                          {bankTransaction.category?.display_name}
-                        </Span>
-                      )}
-                    </>
-                  )
-                  : (
-                    <Span size='sm'>
-                      {selectedCategory?.label ?? 'No category selected'}
-                    </Span>
-                  )}
-              </div>
-            </div>
-            {!categorizationEnabled && !categorized
-              ? <BankTransactionsProcessingInfo />
-              : null}
-          </div>
-        </div>
+
+            {/* Date */}
+            <DateTime
+              value={bankTransaction.date}
+              dateFormat={DATE_FORMAT}
+              onlyDate
+              slotProps={{
+                Date: { size: 'sm', variant: 'subtle' },
+              }}
+            />
+          </VStack>
+        </HStack>
       </span>
       <div
         className={`${className}__expanded-row`}

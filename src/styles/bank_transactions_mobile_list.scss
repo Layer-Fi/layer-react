@@ -70,10 +70,7 @@
 
 .Layer__bank-transaction-mobile-list-item__heading__content {
   box-sizing: border-box;
-  display: flex;
   gap: var(--spacing-xs);
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
   padding: var(--spacing-sm);
 }
@@ -90,6 +87,12 @@
   gap: var(--spacing-xs);
   align-items: center;
   justify-content: space-between;
+}
+
+.Layer__bank-transaction-mobile-list-item__heading__category {
+  display: flex;
+  border-radius: var(--border-radius-xs);
+  background-color: var(--color-base-300);
 }
 
 .Layer__bank-transaction-mobile-list-item__heading__account-name {
