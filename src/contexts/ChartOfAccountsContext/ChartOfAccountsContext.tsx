@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
+import { useChartOfAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 export type ChartOfAccountsContextType = ReturnType<typeof useChartOfAccounts>

@@ -1,6 +1,6 @@
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { JournalContext } from '../../contexts/JournalContext/JournalContext'
-import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
+import { useChartOfAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { useJournal } from '../../hooks/useJournal/useJournal'
 import { Container } from '../Container/Container'

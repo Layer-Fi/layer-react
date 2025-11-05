@@ -1,7 +1,7 @@
 import { ReactNode, useContext } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext/LedgerAccountsContext'
-import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
+import { useChartOfAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { useLedgerAccounts } from '../../hooks/useLedgerAccounts/useLedgerAccounts'
 import { ChartOfAccountsTableWithPanel, ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
