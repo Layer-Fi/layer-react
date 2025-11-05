@@ -1,6 +1,6 @@
 import { Schema } from 'effect/index'
 import { Button } from '../../components/ui/Button/Button'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { useCreateCategorizationRule } from '../../hooks/useCategorizationRules/useCreateCategorizationRule'
 import { CreateCategorizationRule, CreateCategorizationRuleSchema } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { useWizard } from '../Wizard/Wizard'

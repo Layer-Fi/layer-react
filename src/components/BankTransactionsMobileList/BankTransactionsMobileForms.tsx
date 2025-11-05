@@ -1,4 +1,4 @@
-import { ReceiptsProvider } from '../../providers/ReceiptsProvider'
+import { ReceiptsProvider } from '../../providers/ReceiptsProvider/ReceiptsProvider'
 import { BankTransaction } from '../../types/bank_transactions'
 import { Purpose } from './BankTransactionsMobileListItem'
 import { BusinessForm } from './BusinessForm'

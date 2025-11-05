@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
 import Trash from '../../icons/Trash'
 import {
@@ -12,7 +12,7 @@ import {
   hasSuggestions,
 } from '../../types/categories'
 import { hasReceipts } from '../../utils/bankTransactions'
-import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
 import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'

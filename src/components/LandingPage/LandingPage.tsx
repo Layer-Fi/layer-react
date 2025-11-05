@@ -11,7 +11,7 @@ import { DefaultHeroContentConfig, DefaultAccountingOfferingConfig, DefaultBookk
 import { HeroContentConfig, LandingPageCardConfig, DeepPartial, LandingPageLink, LandingPagePlatformConfig as LandingPagePlatformConfig } from './types'
 import { LandingPageHelper } from './LandingPageHelper'
 import { isCalendlyLink, useCalendly } from '../../hooks/useCalendly/useCalendly'
-import { View } from '../View'
+import { View } from '../View/View'
 import { mergeHeroContentConfig, mergeLandingPageConfig } from './utils'
 import { useSizeClass, useWindowSize } from '../../hooks/useWindowSize/useWindowSize'
 import './landingPage.scss'

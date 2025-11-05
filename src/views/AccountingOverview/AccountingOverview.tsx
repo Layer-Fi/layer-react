@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react'
 import { Container } from '../../components/Container'
 import { Header, HeaderCol, HeaderRow } from '../../components/Header'
-import { Onboarding } from '../../components/Onboarding'
+import { Onboarding } from '../../components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import {
@@ -9,7 +9,7 @@ import {
   ProfitAndLossSummariesStringOverrides,
 } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Toggle } from '../../components/Toggle/Toggle'
-import { View } from '../../components/View'
+import { View } from '../../components/View/View'
 import { OnboardingStep } from '../../types/layer_context'
 import type { Variants } from '../../utils/styleUtils/sizeVariants'
 import { TagOption } from '../ProjectProfitability/ProjectProfitability'

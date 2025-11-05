@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTable'
 import { type ColumnConfig } from '../DataTable/DataTable'
-import { DateTime } from '../DateTime'
+import { DateTime } from '../DateTime/DateTime'
 import { TextSize, TextWeight } from '../Typography'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { DataState, DataStateStatus } from '../DataState/DataState'

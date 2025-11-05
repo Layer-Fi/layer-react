@@ -1,4 +1,4 @@
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'

@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 import { useCallback } from 'react'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'

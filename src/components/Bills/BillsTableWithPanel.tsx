@@ -3,16 +3,16 @@ import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/Bi
 import { BillsSidebar } from './BillsSidebar'
 import { Button, IconButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
-import { Panel } from '../Panel'
+import { Panel } from '../Panel/Panel'
 import { Toggle } from '../Toggle/Toggle'
 import { BillsTable } from './BillsTable'
 import CloseIcon from '../../icons/CloseIcon'
 import { BillStatusFilter } from '../../hooks/useBills'
 import { SelectVendor } from '../Vendors/SelectVendor'
-import { useSizeClass } from '../../hooks/useWindowSize'
+import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
 import { BillsList } from './BillsList'
-import { Pagination } from '../Pagination'
-import { DataState, DataStateStatus } from '../DataState'
+import { Pagination } from '../Pagination/Pagination'
+import { DataState, DataStateStatus } from '../DataState/DataState'
 
 export type BillsTableStringOverrides = {
   componentTitle?: string

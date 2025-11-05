@@ -1,5 +1,5 @@
 import { Fragment, ReactNode, useEffect } from 'react'
-import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow/useTableExpandRow'
 import { TableCellAlign } from '../../types/table'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { useEffectOnMount } from '../../hooks/useEffectOnMount/useEffectOnMount'

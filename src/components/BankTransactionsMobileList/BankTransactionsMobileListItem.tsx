@@ -1,6 +1,6 @@
 import { ReactNode, useContext, useEffect, useRef, useState, useMemo, type ChangeEvent } from 'react'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import { useElementSize } from '../../hooks/useElementSize'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
+import { useElementSize } from '../../hooks/useElementSize/useElementSize'
 import FileIcon from '../../icons/File'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types/bank_transactions'

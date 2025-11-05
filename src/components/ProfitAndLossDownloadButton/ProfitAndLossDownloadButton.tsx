@@ -4,7 +4,7 @@ import { ProfitAndLossFullReportDownloadButton } from './ProfitAndLossFullReport
 import { type ProfitAndLossDownloadButtonStringOverrides } from './types'
 import type { MoneyFormat } from '../../types/general'
 import { ProfitAndLossDetailLinesDownloadButton } from './ProfitAndLossDetailLinesDownloadButton'
-import { useSizeClass } from '../../hooks/useWindowSize'
+import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
 
 type ProfitAndLossDownloadButtonProps = {
   stringOverrides?: ProfitAndLossDownloadButtonStringOverrides

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { ActionableList } from '../ActionableList'
+import { ActionableList } from '../ActionableList/ActionableList'
 import { flattenCategories, type CategoryGroup } from './utils'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { HStack, VStack } from '../ui/Stack/Stack'

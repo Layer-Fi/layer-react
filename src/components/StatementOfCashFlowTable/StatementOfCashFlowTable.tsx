@@ -1,5 +1,5 @@
 import { Fragment, ReactNode } from 'react'
-import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow/useTableExpandRow'
 import { StatementOfCashFlow } from '../../types/statement_of_cash_flow'
 import { LineItem } from '../../types/line_item'
 import { TableCellAlign } from '../../types/table'

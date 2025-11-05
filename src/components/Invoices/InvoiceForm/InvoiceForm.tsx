@@ -16,7 +16,7 @@ import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } 
 import { type ZonedDateTime, toCalendarDate, fromDate } from '@internationalized/date'
 import { withForceUpdate } from '../../../features/forms/components/FormBigDecimalField'
 import { type InvoiceFormState, EMPTY_LINE_ITEM, getAdditionalTags, getSelectedTag, INVOICE_MECE_TAG_DIMENSION } from './formUtils'
-import { DataState, DataStateStatus } from '../../DataState'
+import { DataState, DataStateStatus } from '../../DataState/DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
 import { useInvoiceDetail } from '../../../providers/InvoicesRouteStore/InvoicesRouteStoreProvider'

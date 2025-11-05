@@ -1,1 +1,0 @@
-export { ViewHeader } from './ViewHeader'

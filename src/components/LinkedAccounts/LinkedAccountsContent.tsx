@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
+import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext/LinkedAccountsContext'
 import PlusIcon from '../../icons/PlusIcon'
 import { Text, TextSize } from '../Typography'
 import { LinkedAccountItemThumb } from './LinkedAccountItemThumb'

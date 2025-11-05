@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { Container, Header } from '../Container'
-import { DataState, DataStateStatus } from '../DataState'
+import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Loader } from '../Loader'
 import { Heading, HeadingSize } from '../Typography'
 import { IntegrationsContent } from './IntegrationsContent'

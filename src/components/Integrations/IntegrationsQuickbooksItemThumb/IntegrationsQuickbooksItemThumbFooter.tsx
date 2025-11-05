@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { BadgeLoader } from '../../BadgeLoader'
+import { BadgeLoader } from '../../BadgeLoader/BadgeLoader'
 import { HStack, Spacer, VStack } from '../../ui/Stack/Stack'
 import { Text, TextSize } from '../../Typography'
 import { QuickbooksContext } from '../../../contexts/QuickbooksContext/QuickbooksContext'

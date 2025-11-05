@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { DATE_FORMAT } from '../../config/general'
-import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
+import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types/general'
 import { View } from '../../types/general'

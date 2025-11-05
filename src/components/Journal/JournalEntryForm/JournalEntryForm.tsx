@@ -4,7 +4,7 @@ import { useJournalNavigation } from '../../../providers/JournalStore/JournalSto
 import { Form } from '../../ui/Form/Form'
 import { HStack, VStack } from '../../ui/Stack/Stack'
 import { JournalEntryLineItemsTable } from './JournalEntryLineItemsTable'
-import { DataState, DataStateStatus } from '../../DataState'
+import { DataState, DataStateStatus } from '../../DataState/DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
 import { flattenValidationErrors } from '../../../utils/form'

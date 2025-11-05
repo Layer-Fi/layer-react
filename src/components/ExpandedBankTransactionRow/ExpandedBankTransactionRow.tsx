@@ -5,7 +5,7 @@ import {
   useRef,
   useEffect,
 } from 'react'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
@@ -17,7 +17,7 @@ import {
 import {
   hasMatch,
 } from '../../utils/bankTransactions'
-import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
+import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
 import { TagDimensionsGroup } from '../../features/tags/components/TagDimensionsGroup'
 import { CustomerVendorSelector } from '../../features/customerVendor/components/CustomerVendorSelector'

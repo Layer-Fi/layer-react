@@ -1,4 +1,4 @@
-import { useLayerContext } from '../contexts/LayerContext'
+import { useLayerContext } from '../contexts/LayerContext/LayerContext'
 import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
 import { useAuth } from './useAuth'
 import { Layer } from '../api/layer'

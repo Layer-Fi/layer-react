@@ -1,11 +1,11 @@
 import { ReactNode, useState } from 'react'
-import { ChartOfAccounts } from '../../components/ChartOfAccounts'
+import { ChartOfAccounts } from '../../components/ChartOfAccounts/ChartOfAccounts'
 import { ChartOfAccountsStringOverrides } from '../../components/ChartOfAccounts/ChartOfAccounts'
-import { Journal } from '../../components/Journal'
+import { Journal } from '../../components/Journal/Journal'
 import { JournalStringOverrides } from '../../components/Journal/Journal'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle/Toggle'
-import { View } from '../../components/View'
+import { View } from '../../components/View/View'
 import { LinkingMetadata } from '../../contexts/InAppLinkContext'
 
 export interface GeneralLedgerStringOverrides {

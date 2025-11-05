@@ -1,11 +1,11 @@
 import { useContext } from 'react'
-import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider'
+import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { LinkAccountsConfirmationStep } from './Steps/LinkAccountsConfirmationStep'
 import { LinkAccountsLinkStep } from './Steps/LinkAccountsLinkStep'
 import { Wizard } from '../Wizard/Wizard'
 import { Heading } from '../ui/Typography/Heading'
 import { getAccountsNeedingConfirmation } from '../../hooks/useLinkedAccounts/useLinkedAccounts'
-import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
+import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext/LinkedAccountsContext'
 import type { Awaitable } from '../../types/utility/promises'
 import './linkAccounts.scss'
 

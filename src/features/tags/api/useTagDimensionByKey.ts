@@ -1,7 +1,7 @@
 import useSWR, { type SWRResponse } from 'swr'
 import { useAuth } from '../../../hooks/useAuth'
 import { useEnvironment } from '../../../providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { get } from '../../../api/layer/authenticated_http'
 import { Schema } from 'effect'
 import { TagDimensionSchema, type TagDimension } from '../tagSchemas'

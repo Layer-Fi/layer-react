@@ -1,5 +1,5 @@
 import { RefObject } from 'react'
-import { ChartOfAccountsForm } from '../ChartOfAccountsForm'
+import { ChartOfAccountsForm } from '../ChartOfAccountsForm/ChartOfAccountsForm'
 import { ChartOfAccountsFormStringOverrides } from '../ChartOfAccountsForm/ChartOfAccountsForm'
 
 export const ChartOfAccountsSidebar = ({

@@ -1,1 +1,0 @@
-export { BadgeLoader } from './BadgeLoader'

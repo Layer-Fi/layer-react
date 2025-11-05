@@ -1,6 +1,6 @@
-import { Badge, BadgeVariant } from '../Badge'
+import { Badge, BadgeVariant } from '../Badge/Badge'
 import { BadgeSize } from '../Badge/Badge'
-import { BadgeLoader } from '../BadgeLoader'
+import { BadgeLoader } from '../BadgeLoader/BadgeLoader'
 import { SearchField, type SearchFieldProps } from '../SearchField/SearchField'
 import { Button } from '../ui/Button/Button'
 import { HStack, VStack } from '../ui/Stack/Stack'

@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, type FC } from 'react'
 import * as RDP from 'react-datepicker'
-import { useSizeClass } from '../../hooks/useWindowSize'
+import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
 import { Button, ButtonVariant } from '../Button'

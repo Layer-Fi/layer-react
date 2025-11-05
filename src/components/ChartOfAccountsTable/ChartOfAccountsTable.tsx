@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
-import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
+import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { TableProvider } from '../../contexts/TableContext/TableContext'
 import Edit2 from '../../icons/Edit2'
 import {
@@ -11,9 +11,9 @@ import { View } from '../../types/general'
 import { Button, ButtonVariant } from '../Button'
 import { Button as UIButton } from '../ui/Button/Button'
 import { Table, TableBody } from '../Table'
-import { TableCell } from '../TableCell'
-import { TableHead } from '../TableHead'
-import { TableRow } from '../TableRow'
+import { TableCell } from '../TableCell/TableCell'
+import { TableHead } from '../TableHead/TableHead'
+import { TableRow } from '../TableRow/TableRow'
 import { TableCellAlign } from '../../types/table'
 import {
   ChartOfAccountsTableStringOverrides,
@@ -27,7 +27,7 @@ import { DataState, DataStateStatus } from '../DataState/DataState'
 import { filterAccounts, getMatchedTextIndices } from './utils/utils'
 import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
 import { LedgerBalancesSchemaType, NestedLedgerAccountType } from '../../schemas/generalLedger/ledgerAccount'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { asMutable } from '../../utils/asMutable'
 
 const highlightMatch = ({ text, query, isMatching }: { text: string, query: string, isMatching?: boolean }): ReactNode => {

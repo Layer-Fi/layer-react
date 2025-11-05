@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison'
+import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison/useProfitAndLossComparison'
 import { S3PresignedUrl } from '../../types/general'
 
 export const ProfitAndLossComparisonContext = createContext<ReturnType<typeof useProfitAndLossComparison>>({

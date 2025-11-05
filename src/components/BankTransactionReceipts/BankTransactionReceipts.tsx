@@ -1,8 +1,8 @@
 import { forwardRef, useImperativeHandle } from 'react'
 import { useReceiptsContext } from '../../contexts/ReceiptsContext/ReceiptsContext'
-import { ReceiptsProvider } from '../../providers/ReceiptsProvider'
+import { ReceiptsProvider } from '../../providers/ReceiptsProvider/ReceiptsProvider'
 import { BankTransaction } from '../../types/bank_transactions'
-import { FileThumb } from '../FileThumb'
+import { FileThumb } from '../FileThumb/FileThumb'
 import { FileInput } from '../Input'
 import { Text, TextSize } from '../Typography'
 

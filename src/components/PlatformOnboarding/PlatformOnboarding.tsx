@@ -6,7 +6,7 @@ import { WelcomeStep, WelcomeStepFooter } from './Steps/WelcomeStep'
 import { SummaryStep } from './Steps/SummaryStep'
 import { BusinessInfoStep } from './Steps/BusinessInfoStep'
 import { BookOnboardingCallStep } from './Steps/BookOnboardingCallStep'
-import { useBookkeepingConfiguration } from '../../hooks/useBookkeepingConfiguration'
+import { useBookkeepingConfiguration } from '../../hooks/useBookkeepingConfiguration/useBookkeepingConfiguration'
 import './platformOnboarding.scss'
 
 enum PlatformOnboardingStep {

@@ -1,6 +1,6 @@
 import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
 import { Schema } from 'effect'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
 import { get } from '../../../api/layer/authenticated_http'
 import { toDefinedSearchParameters } from '../../../utils/request/toDefinedSearchParameters'

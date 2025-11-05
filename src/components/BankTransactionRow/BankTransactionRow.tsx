@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
@@ -12,16 +12,16 @@ import {
   isTransferMatch,
 } from '../../utils/bankTransactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-import { Badge } from '../Badge'
+import { Badge } from '../Badge/Badge'
 import {
   BankTransactionCTAStringOverrides,
 } from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
+import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { IconBox } from '../IconBox'
+import { IconBox } from '../IconBox/IconBox'
 import { Text } from '../Typography'
 import { TextSize } from '../Typography/Text'
 import { MatchBadge } from './MatchBadge'

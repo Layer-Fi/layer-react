@@ -1,5 +1,5 @@
 import { useContext, useMemo } from 'react'
-import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'

@@ -1,5 +1,5 @@
 import { Fragment, useContext, useEffect } from 'react'
-import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow/useTableExpandRow'
 import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
 import {
   generateComparisonPeriods,

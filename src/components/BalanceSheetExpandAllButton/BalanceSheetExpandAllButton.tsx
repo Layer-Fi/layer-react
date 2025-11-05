@@ -1,4 +1,4 @@
-import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow/useTableExpandRow'
 import { View } from '../../types/general'
 import { ExpandCollapseButton } from '../Button'
 

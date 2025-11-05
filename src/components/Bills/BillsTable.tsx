@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
-import { TableProvider } from '../../contexts/TableContext'
+import { TableProvider } from '../../contexts/TableContext/TableContext'
 import { Bill } from '../../types/bills'
 import ChevronRight from '../../icons/ChevronRight'
 import { TableCellAlign } from '../../types/table'

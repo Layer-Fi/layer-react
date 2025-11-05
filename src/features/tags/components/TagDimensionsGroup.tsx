@@ -1,6 +1,6 @@
 import { TagDimensionCombobox } from './TagDimensionCombobox'
 import { Tag } from '../tagSchemas'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import './tagDimensionsGroup.scss'
 import { HStack } from '../../../components/ui/Stack/Stack'
 

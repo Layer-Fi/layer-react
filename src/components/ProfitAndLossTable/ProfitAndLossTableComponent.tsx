@@ -1,5 +1,5 @@
 import { Fragment, useContext } from 'react'
-import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow/useTableExpandRow'
 import { TableCellAlign } from '../../types/table'
 import { Loader } from '../Loader'
 import { Table, TableBody, TableCell, TableRow } from '../Table'

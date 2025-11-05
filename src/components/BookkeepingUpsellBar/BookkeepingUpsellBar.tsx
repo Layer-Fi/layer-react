@@ -1,6 +1,6 @@
 import CoffeeIcon from '../../icons/Coffee'
 import { Button, ButtonVariant, Link } from '../Button'
-import { IconBox } from '../IconBox'
+import { IconBox } from '../IconBox/IconBox'
 import { Text, TextSize, TextWeight } from '../Typography'
 import './bookkeepingUpsellBar.scss'
 

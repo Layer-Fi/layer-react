@@ -1,6 +1,6 @@
 import useSWRMutation from 'swr/mutation'
 import { useAuth } from '../useAuth'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { createChildAccount } from '../../api/layer/chart_of_accounts'
 import { useSWRConfig } from 'swr'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'

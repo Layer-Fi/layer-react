@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { useJournal } from '../../hooks/useJournal'
+import { useJournal } from '../../hooks/useJournal/useJournal'
 
 export type JournalContextType = ReturnType<typeof useJournal>
 export const JournalContext = createContext<JournalContextType>({

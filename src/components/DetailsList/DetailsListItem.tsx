@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { SkeletonLoader } from '../SkeletonLoader'
+import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader'
 import { Text, TextSize, TextWeight } from '../Typography'
 
 export interface DetailsListItemProps {

@@ -1,7 +1,7 @@
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 import { useAuth } from '../../../useAuth'
-import { useLayerContext } from '../../../../contexts/LayerContext'
+import { useLayerContext } from '../../../../contexts/LayerContext/LayerContext'
 import { submitUserResponseForTask } from '../../../../api/layer/tasks'
 import { withSWRKeyTags } from '../../../../utils/swr/withSWRKeyTags'
 import { BOOKKEEPING_PERIODS_TAG_KEY } from '../useBookkeepingPeriods'

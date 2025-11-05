@@ -4,11 +4,11 @@ import { BankTransactions } from '../../components/BankTransactions/BankTransact
 import { Container } from '../../components/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle/Toggle'
-import { View } from '../../components/View'
+import { View } from '../../components/View/View'
 import { PnlTagFilter } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { MoneyFormat } from '../../types/general'
 import { DisplayState } from '../../types/bank_transactions'
-import { AccountingOverview } from '../AccountingOverview'
+import { AccountingOverview } from '../AccountingOverview/AccountingOverview'
 import type { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import './projectProfitability.scss'
 

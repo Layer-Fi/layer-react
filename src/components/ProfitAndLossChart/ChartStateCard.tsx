@@ -1,5 +1,5 @@
 import BarChart2Icon from '../../icons/BarChart2'
-import { IconBox } from '../IconBox'
+import { IconBox } from '../IconBox/IconBox'
 import { Text, TextSize, TextWeight } from '../Typography'
 
 export const ChartStateCard = () => {

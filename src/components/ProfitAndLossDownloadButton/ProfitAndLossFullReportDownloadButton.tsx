@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { MoneyFormat } from '../../types/general'
 import { DownloadButton as DownloadButtonComponent } from '../Button'
 import { useAuth } from '../../hooks/useAuth'

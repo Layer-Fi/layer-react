@@ -1,6 +1,6 @@
 import { Bills } from '../components/Bills/Bills'
 import { HeaderRow, HeaderCol } from '../components/Header'
-import { View } from '../components/View'
+import { View } from '../components/View/View'
 import { BillsProvider } from '../contexts/BillsContext'
 import { BillsDatePicker } from '../components/Bills/BillsDatePicker'
 

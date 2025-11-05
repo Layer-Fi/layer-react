@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'

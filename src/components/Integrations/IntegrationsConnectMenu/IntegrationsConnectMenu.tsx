@@ -7,7 +7,7 @@ import Cog from '../../../icons/Cog'
 import { Button } from '../../ui/Button/Button'
 import { Spacer } from '../../ui/Stack/Stack'
 import { QuickbooksContext } from '../../../contexts/QuickbooksContext/QuickbooksContext'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { Span } from '../../ui/Typography/Text'
 import { Heading } from '../../ui/Typography/Heading'
 

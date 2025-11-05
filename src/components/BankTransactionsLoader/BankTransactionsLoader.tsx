@@ -1,4 +1,4 @@
-import { SkeletonTableLoader } from '../SkeletonTableLoader'
+import { SkeletonTableLoader } from '../SkeletonTableLoader/SkeletonTableLoader'
 
 export const BankTransactionsLoader = () => {
   return (
