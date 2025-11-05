@@ -226,15 +226,14 @@ export const BankTransactionsMobileListItem = ({
           justify='space-between'
           className='Layer__bank-transaction-mobile-list-item__heading__content'
         >
-          {/* Left Side: Checkbox + Content */}
           <HStack gap='md' fluid>
+
             <BankTransactionsMobileListItemCheckbox
               bulkActionsEnabled={bulkActionsEnabled}
               bankTransaction={bankTransaction}
               checkboxContainerRef={checkboxContainerRef}
             />
 
-            {/* Left Side Content */}
             <VStack
               align='start'
               gap='3xs'
@@ -253,17 +252,14 @@ export const BankTransactionsMobileListItem = ({
                 ? <BankTransactionsProcessingInfo />
                 : null}
 
-              {/* Transaction Category */}
               <BankTransactionsMobileListItemCategory
                 bankTransaction={bankTransaction}
               />
             </VStack>
           </HStack>
 
-          {/* Right Side Content */}
           <VStack align='end' gap='3xs'>
 
-            {/* Amount */}
             <Span size='md'>
               {isCredit(bankTransaction) ? '+' : ''}
               <MoneySpan
@@ -271,7 +267,6 @@ export const BankTransactionsMobileListItem = ({
               />
             </Span>
 
-            {/* Date */}
             <DateTime
               value={bankTransaction.date}
               dateFormat={DATE_FORMAT}

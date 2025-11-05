@@ -3,16 +3,12 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import AlertCircle from '../../icons/AlertCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
-import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types/bank_transactions'
-import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import {
   isCredit,
-  isTransferMatch,
 } from '../../utils/bankTransactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-import { Badge } from '../Badge'
 import {
   BankTransactionCTAStringOverrides,
 } from '../BankTransactions/BankTransactions'
@@ -24,8 +20,6 @@ import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactio
 import { IconBox } from '../IconBox'
 import { Text } from '../Typography'
 import { TextSize } from '../Typography/Text'
-import { MatchBadge } from './MatchBadge'
-import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
@@ -41,6 +35,7 @@ import { type BankTransactionCategoryComboBoxOption } from '../../components/Ban
 import { isSplitCategorizationEncoded, type CategorizationEncoded } from '../../schemas/categorization'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useSaveBankTransactionRow } from '../../hooks/useBankTransactions/useSaveBankTransactionRow'
+import { BankTransactionsCategorizedSelectedValue } from '../BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 
 type Props = {
   index: number
@@ -280,53 +275,10 @@ export const BankTransactionRow = ({
               : null}
             {categorized && !open
               ? (
-                <Text as='span' className={`${className}__category-text`}>
-                  {bankTransaction.categorization_status
-                    === CategorizationStatus.SPLIT && (
-                    <>
-                      <Badge
-                        icon={<Scissors size={11} />}
-                        tooltip={(
-                          <SplitTooltipDetails
-                            classNamePrefix={className}
-                            category={bankTransaction.category}
-                          />
-                        )}
-                      >
-                        Split
-                      </Badge>
-                      <span className={`${className}__category-text__text`}>
-                        {extractDescriptionForSplit(bankTransaction.category)}
-                      </span>
-                    </>
-                  )}
-                  {bankTransaction?.categorization_status
-                    === CategorizationStatus.MATCHED
-                    && bankTransaction?.match && (
-                    <>
-                      <MatchBadge
-                        classNamePrefix={className}
-                        bankTransaction={bankTransaction}
-                        dateFormat={dateFormat}
-                        text={isTransferMatch(bankTransaction) ? 'Transfer' : 'Match'}
-                      />
-                      <span className={`${className}__category-text__text`}>
-                        {`${formatTime(
-                          parseISO(bankTransaction.match.bank_transaction.date),
-                          dateFormat,
-                        )}, ${bankTransaction.match?.details?.description}`}
-                      </span>
-                    </>
-                  )}
-                  {bankTransaction?.categorization_status
-                    !== CategorizationStatus.MATCHED
-                    && bankTransaction?.categorization_status
-                    !== CategorizationStatus.SPLIT && (
-                    <span className={`${className}__category-text__text`}>
-                      {bankTransaction?.category?.display_name}
-                    </span>
-                  )}
-                </Text>
+                <BankTransactionsCategorizedSelectedValue
+                  bankTransaction={bankTransaction}
+                  className={className}
+                />
               )
               : null}
             {categorizationEnabled && !categorized && !open && showRetry
