@@ -29,7 +29,7 @@ import { useTagBankTransaction } from '../../features/bankTransactions/[bankTran
 import { useRemoveTagFromBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
 import { useSetMetadataOnBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
 import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
-import { MatchForm } from '../MatchForm'
+import { MatchForm } from '../MatchForm/MatchForm'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'
 import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
