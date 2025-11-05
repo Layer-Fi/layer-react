@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useRef, useState, useMemo, type ChangeEve
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
+import Scissors from '../../icons/Scissors'
 import { BankTransaction } from '../../types/bank_transactions'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
-import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
+import { hasMatch, hasReceipts, isCredit, isTransferMatch } from '../../utils/bankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { CloseButton } from '../Button'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'
@@ -22,6 +23,10 @@ import { VStack } from '../ui/Stack/Stack'
 import { useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { DateTime } from '../DateTime'
+import { Badge, BadgeSize } from '../Badge/Badge'
+import { MatchBadge } from '../BankTransactionRow/MatchBadge'
+import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
+import { parseISO, format as formatTime } from 'date-fns'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -243,11 +248,12 @@ export const BankTransactionsMobileListItem = ({
               <Span>
                 {bankTransaction.counterparty_name ?? bankTransaction.description}
               </Span>
-              <MoneySpan
-                size='md'
-                displayPlusSign={isCredit(bankTransaction)}
-                amount={bankTransaction.amount}
-              />
+              <Span size='md'>
+                {isCredit(bankTransaction) ? '+' : ''}
+                <MoneySpan
+                  amount={bankTransaction.amount}
+                />
+              </Span>
             </div>
             <div className={`${className}__heading__row`}>
               <Span size='sm'>
@@ -257,12 +263,61 @@ export const BankTransactionsMobileListItem = ({
               <DateTime
                 value={bankTransaction.date}
                 dateFormat={DATE_FORMAT}
+                onlyDate
+                slotProps={{
+                  Date: { size: 'sm', variant: 'subtle' },
+                }}
               />
             </div>
             <div className={`${className}__heading__row`}>
-              <Span size='sm'>
-                {selectedCategory?.label ?? 'No category selected'}
-              </Span>
+              <div style={{ display: 'flex', gap: 'var(--spacing-3xs)', alignItems: 'center' }}>
+                {categorized
+                  ? (
+                    <>
+                      {bankTransaction.categorization_status === CategorizationStatus.SPLIT && (
+                        <>
+                          <Badge
+                            size={BadgeSize.SMALL}
+                            icon={<Scissors size={11} />}
+                          >
+                            Split
+                          </Badge>
+                          <Span size='sm' ellipsis>
+                            {extractDescriptionForSplit(bankTransaction.category)}
+                          </Span>
+                        </>
+                      )}
+                      {bankTransaction.categorization_status === CategorizationStatus.MATCHED
+                        && bankTransaction.match && (
+                        <>
+                          <MatchBadge
+                            classNamePrefix={className}
+                            bankTransaction={bankTransaction}
+                            dateFormat={DATE_FORMAT}
+                            text={isTransferMatch(bankTransaction) ? 'Transfer' : 'Match'}
+                          />
+                          <Span size='sm' ellipsis>
+                            {`${formatTime(
+                              parseISO(bankTransaction.match.bank_transaction.date),
+                              DATE_FORMAT,
+                            )}, ${bankTransaction.match?.details?.description}`}
+                          </Span>
+                        </>
+                      )}
+                      {bankTransaction.categorization_status !== CategorizationStatus.MATCHED
+                        && bankTransaction.categorization_status !== CategorizationStatus.SPLIT && (
+                        <Span size='sm'>
+                          {bankTransaction.category?.display_name}
+                        </Span>
+                      )}
+                    </>
+                  )
+                  : (
+                    <Span size='sm'>
+                      {selectedCategory?.label ?? 'No category selected'}
+                    </Span>
+                  )}
+              </div>
             </div>
             {!categorizationEnabled && !categorized
               ? <BankTransactionsProcessingInfo />
