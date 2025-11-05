@@ -1,13 +1,10 @@
+import { RetryButton } from '../Button/RetryButton'
+import { IconButton } from '../Button/IconButton'
+import { CloseButton } from '../Button/CloseButton'
+import { Button, ButtonVariant } from '../Button'
 import { FormEvent, useMemo } from 'react'
 import { DATE_FORMAT_SHORT } from '../../config/general'
 import { useBillsRecordPaymentContext } from '../../contexts/BillsContext'
-import {
-  Button,
-  ButtonVariant,
-  CloseButton,
-  IconButton,
-  RetryButton,
-} from '../Button'
 import { Header } from '../Container'
 import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
 import { HeaderRow, HeaderCol } from '../Header'

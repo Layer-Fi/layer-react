@@ -1,3 +1,4 @@
+import { CloseButton } from '../Button/CloseButton'
 import { ReactNode, useContext, useEffect, useRef, useState, useMemo, type ChangeEvent } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize/useElementSize'
@@ -8,7 +9,6 @@ import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransac
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import { isCategorized } from '../BankTransactions/utils'
-import { CloseButton } from '../Button'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'
 import { Text } from '../Typography'
 import { BankTransactionMobileForms } from './BankTransactionsMobileForms'

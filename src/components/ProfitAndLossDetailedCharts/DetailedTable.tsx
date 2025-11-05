@@ -1,3 +1,4 @@
+import { Button } from '../ui/Button/Button'
 import { DEFAULT_CHART_COLOR_TYPE } from '../../config/charts'
 import {
   Scope,
@@ -9,7 +10,6 @@ import { SortDirection } from '../../types/general'
 import { formatPercent } from '../../utils/format'
 import classNames from 'classnames'
 import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
-import { Button } from '../ui/Button/Button'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 
 export interface DetailedTableStringOverrides {

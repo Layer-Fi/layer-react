@@ -1,3 +1,5 @@
+import { TextButton } from '../Button/TextButton'
+import { Button, ButtonVariant } from '../Button'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
@@ -16,7 +18,6 @@ import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransact
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
 import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'
-import { Button, ButtonVariant, TextButton } from '../Button'
 import { FileInput, Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'

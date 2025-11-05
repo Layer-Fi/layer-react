@@ -1,3 +1,4 @@
+import { Button } from '../../ui/Button/Button'
 import { HStack } from '../../ui/Stack/Stack'
 import { CategorizationMode } from './BankTransactionsCategorizeAllModal'
 import { BankTransactionsCategorizeAllModal } from './BankTransactionsCategorizeAllModal'
@@ -6,7 +7,6 @@ import { BankTransactionsUncategorizeAllModal } from './BankTransactionsUncatego
 import { useBankTransactionsContext } from '../../../contexts/BankTransactionsContext/BankTransactionsContext'
 import { DisplayState } from '../../../types/bank_transactions'
 import { useState } from 'react'
-import { Button } from '../../ui/Button/Button'
 
 export const BankTransactionsBulkActions = () => {
   const { display } = useBankTransactionsContext()

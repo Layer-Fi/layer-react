@@ -1,5 +1,5 @@
-import { HeaderCol } from '../Header'
 import { Button } from '../ui/Button/Button'
+import { HeaderCol } from '../Header'
 import { Span } from '../ui/Typography/Text'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import ChevronRight from '../../icons/ChevronRight'

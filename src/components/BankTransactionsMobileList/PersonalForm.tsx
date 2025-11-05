@@ -1,3 +1,4 @@
+import { Button } from '../Button'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
@@ -6,7 +7,6 @@ import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransac
 import { hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { Button } from '../Button'
 import { FileInput } from '../Input'
 import { ErrorText } from '../Typography'
 import { PersonalCategories } from './constants'

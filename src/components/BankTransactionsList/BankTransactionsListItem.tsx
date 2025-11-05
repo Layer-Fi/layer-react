@@ -1,3 +1,4 @@
+import { RetryButton } from '../Button/RetryButton'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
@@ -11,8 +12,7 @@ import {
   BankTransactionCTAStringOverrides,
 } from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
-import { RetryButton, SubmitButton } from '../Button'
-import { SubmitAction } from '../Button/SubmitButton'
+import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText } from '../Typography'

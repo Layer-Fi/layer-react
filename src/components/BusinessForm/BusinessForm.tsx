@@ -1,7 +1,7 @@
+import { SubmitButton } from '../Button/SubmitButton'
 import { notEmpty, validateEmailFormat } from '../../utils/form'
 import { Input, InputGroup } from '../Input'
 import { useBusinessForm } from './useBusinessForm'
-import { SubmitButton } from '../Button'
 import { FormSection } from '../Input/FormSection'
 import { BusinessTypeSelect } from '../Input/BusinessTypeSelect'
 import { USStateSelect } from '../Input/USStateSelect'

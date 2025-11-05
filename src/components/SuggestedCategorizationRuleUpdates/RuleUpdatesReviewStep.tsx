@@ -1,5 +1,5 @@
-import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { Button } from '../../components/ui/Button/Button'
+import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { Separator } from '../Separator/Separator'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { useWizard } from '../Wizard/Wizard'

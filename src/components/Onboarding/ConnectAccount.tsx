@@ -1,3 +1,4 @@
+import { Button } from '../Button'
 import { useContext, useMemo } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { useBankTransactionsFilters } from '../../contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
@@ -14,7 +15,6 @@ import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { ActionableRow } from '../ActionableRow/ActionableRow'
 import { Badge, BadgeVariant } from '../Badge/Badge'
 import { BadgeSize } from '../Badge/Badge'
-import { Button } from '../Button'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Text } from '../Typography'
 

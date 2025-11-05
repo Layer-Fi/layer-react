@@ -1,3 +1,4 @@
+import { Button } from '../Button'
 import { useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
@@ -8,7 +9,6 @@ import {
 } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { Button } from '../Button'
 import { FileInput } from '../Input'
 import { MatchFormMobile } from '../MatchForm'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'

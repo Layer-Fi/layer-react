@@ -1,5 +1,5 @@
-import { ReactNode } from 'react'
 import { BackButton } from '../Button/BackButton'
+import { ReactNode } from 'react'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import classNames from 'classnames'
 import { createPortal } from 'react-dom'

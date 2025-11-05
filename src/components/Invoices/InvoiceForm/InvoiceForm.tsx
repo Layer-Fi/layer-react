@@ -1,3 +1,4 @@
+import { Button } from '../../ui/Button/Button'
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, type PropsWithChildren } from 'react'
 import classNames from 'classnames'
 import { useInvoiceForm, type InvoiceFormType } from './useInvoiceForm'
@@ -5,7 +6,6 @@ import type { Invoice } from '../../../features/invoices/invoiceSchemas'
 import { UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
 import { Form } from '../../ui/Form/Form'
 import { HStack, VStack } from '../../ui/Stack/Stack'
-import { Button } from '../../ui/Button/Button'
 import { Plus, Trash } from 'lucide-react'
 import { BigDecimal as BD } from 'effect'
 import { CustomerSelector } from '../../../features/customers/components/CustomerSelector'
@@ -352,7 +352,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                  * momentarily undefined as they re-render due to re-indexing. Thus, we use indices here for now.
                  * See here for more information: https://github.com/TanStack/form/issues/1518.
                  */
-                <InvoiceFormLineItemRow key={index} form={form} index={index} isReadOnly={isReadOnly} onDeleteLine={() => field.removeValue(index)} />
+                (<InvoiceFormLineItemRow key={index} form={form} index={index} isReadOnly={isReadOnly} onDeleteLine={() => field.removeValue(index)} />)
               ))}
               {!isReadOnly
                 && (

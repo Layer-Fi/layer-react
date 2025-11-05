@@ -1,6 +1,6 @@
+import { Button } from '../../Button/Button'
 import DocumentIcon from '../../../icons/Document'
 import TrendingUpIcon from '../../../icons/TrendingUp'
-import { Button } from '../../Button/Button'
 import { Heading, HeadingSize, Text } from '../../Typography'
 import { HStack, VStack } from '../../ui/Stack/Stack'
 

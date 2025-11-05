@@ -1,7 +1,7 @@
+import { Button, ButtonVariant } from '../Button/Button'
 import { useState, useMemo } from 'react'
 import { LinkAccounts } from './LinkAccounts'
 import { ProgressSteps } from '../ProgressSteps/ProgressSteps'
-import { Button, ButtonVariant } from '../Button/Button'
 import { WelcomeStep, WelcomeStepFooter } from './Steps/WelcomeStep'
 import { SummaryStep } from './Steps/SummaryStep'
 import { BusinessInfoStep } from './Steps/BusinessInfoStep'

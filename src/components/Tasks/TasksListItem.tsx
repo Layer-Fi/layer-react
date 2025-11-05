@@ -1,6 +1,6 @@
+import { Button, ButtonVariant } from '../Button'
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import ChevronDownFill from '../../icons/ChevronDownFill'
-import { Button, ButtonVariant } from '../Button'
 import { FileInput } from '../Input'
 import { Textarea } from '../Textarea/Textarea'
 import { Text, TextSize } from '../Typography'

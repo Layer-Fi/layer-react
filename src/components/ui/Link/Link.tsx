@@ -1,5 +1,6 @@
+import { Link as ReactAriaLink } from 'react-aria-components/Link'
 import { forwardRef, type PropsWithChildren } from 'react'
-import { Link as ReactAriaLink, type LinkProps as ReactAriaLinkProps } from 'react-aria-components'
+import { type LinkProps as ReactAriaLinkProps } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import './link.scss'
 

@@ -35,7 +35,7 @@ export const useBookkeepingYearsStatus = () => {
       .sort((a, b) => b.year - a.year)
   }, [activationDate, data])
 
-  const earliestIncompletePeriod = useMemo(() => [...data ?? []]
+  const earliestIncompletePeriod = useMemo(() => [...(data ?? [])]
     .sort((a, b) => {
       if (a.year === b.year) {
         return b.month - a.month

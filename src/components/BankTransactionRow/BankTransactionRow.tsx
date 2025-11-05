@@ -1,3 +1,5 @@
+import { RetryButton } from '../Button/RetryButton'
+import { IconButton } from '../Button/IconButton'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
@@ -17,8 +19,7 @@ import {
   BankTransactionCTAStringOverrides,
 } from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
-import { SubmitButton, IconButton, RetryButton } from '../Button'
-import { SubmitAction } from '../Button/SubmitButton'
+import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '../IconBox/IconBox'

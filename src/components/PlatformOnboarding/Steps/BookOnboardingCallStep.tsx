@@ -1,7 +1,7 @@
+import { Button } from '../../ui/Button/Button'
 import { InlineWidget as CalendlyInlineWidget, PopupModal } from 'react-calendly'
 import { useSizeClass } from '../../../hooks/useWindowSize/useWindowSize'
 import { useCalendly } from '../../../hooks/useCalendly/useCalendly'
-import { Button } from '../../ui/Button/Button'
 import classNames from 'classnames'
 import { VStack } from '../../ui/Stack/Stack'
 import { Heading } from '../../ui/Typography/Heading'

@@ -1,3 +1,5 @@
+import { Button } from '../ui/Button/Button'
+import { TextButton } from '../Button/TextButton'
 import {
   forwardRef,
   useImperativeHandle,
@@ -25,9 +27,7 @@ import { CustomerVendorSchema } from '../../features/customerVendor/customerVend
 import { useTagBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
 import { useRemoveTagFromBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
 import { useSetMetadataOnBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
-import { SubmitButton, TextButton } from '../Button'
-import { SubmitAction } from '../Button/SubmitButton'
-import { Button } from '../ui/Button/Button'
+import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
 import { Input } from '../Input'
 import { MatchForm } from '../MatchForm'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'

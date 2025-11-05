@@ -1,5 +1,5 @@
+import { IconButton } from '../Button/IconButton'
 import RefreshCcw from '../../icons/RefreshCcw'
-import { IconButton } from '../Button'
 import { SmallLoader } from '../Loader'
 import classNames from 'classnames'
 

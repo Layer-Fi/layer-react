@@ -1,6 +1,6 @@
+import { Button } from '../../components/ui/Button/Button'
 import { useCallback, useState } from 'react'
 import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
-import { Button } from '../../components/ui/Button/Button'
 import { useWizard } from '../Wizard/Wizard'
 import { CheckboxWithTooltip } from '../ui/Checkbox/Checkbox'
 import { HStack, VStack } from '../ui/Stack/Stack'
