@@ -85,37 +85,25 @@
   gap: var(--spacing-4xs);
 }
 
-.Layer__bank-transaction-mobile-list-item__heading__account-name {
+.Layer__bank-transaction-mobile-list-item__heading__row {
   display: flex;
-  gap: var(--spacing-3xs);
+  gap: var(--spacing-xs);
   align-items: center;
-  color: var(--color-base-500);
+  justify-content: space-between;
+}
 
-  svg {
-    padding-top: 1px;
-    padding-left: 2px;
-  }
+.Layer__bank-transaction-mobile-list-item__heading__account-name {
+  color: var(--color-base-500);
 }
 
 .Layer__bank-transaction-mobile-list-item__categorized-name {
   color: var(--color-base-500);
 }
 
-.Layer__bank-transaction-mobile-list-item__heading__amount {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-3xs);
-  align-items: flex-end;
-  font-size: 14px;
-}
-
 .Layer__bank-transaction-mobile-list-item__heading__date {
   font-size: 12px;
   color: var(--color-base-500);
-}
-
-.Layer__bank-transaction-mobile-list-item__amount-credit {
-  color: var(--color-info-success);
+  white-space: nowrap;
 }
 
 .Layer__bank-transaction-mobile-list-item__value {

@@ -2,18 +2,15 @@ import React, { useContext, useEffect, useRef, useState, useMemo, type ChangeEve
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
-import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types/bank_transactions'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { CloseButton } from '../Button'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'
-import { Text } from '../Typography'
 import { BankTransactionMobileForms } from './BankTransactionsMobileForms'
 import { TransactionToOpenContext } from './TransactionToOpenContext'
 import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionsProcessingInfo } from '../BankTransactionsList/BankTransactionsProcessingInfo'
@@ -23,6 +20,8 @@ import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '../ui/Stack/Stack'
 import { useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { MoneySpan } from '../ui/Typography/MoneySpan'
+import { DateTime } from '../DateTime'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -240,34 +239,34 @@ export const BankTransactionsMobileListItem = ({
             </VStack>
           )}
           <div className={`${className}__heading__main`}>
-            <Text as='span' className={`${className}__heading__tx-name`}>
-              {bankTransaction.counterparty_name ?? bankTransaction.description}
-            </Text>
-            <Text as='span' className={`${className}__heading__account-name`}>
-              {fullAccountName}
-              {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
-            </Text>
-            {selectedCategory && (
-              <Span size='md' variant='subtle'>
-                {selectedCategory.label}
+            <div className={`${className}__heading__row`}>
+              <Span>
+                {bankTransaction.counterparty_name ?? bankTransaction.description}
               </Span>
-            )}
+              <MoneySpan
+                size='md'
+                displayPlusSign={isCredit(bankTransaction)}
+                amount={bankTransaction.amount}
+              />
+            </div>
+            <div className={`${className}__heading__row`}>
+              <Span size='sm'>
+                {fullAccountName}
+              </Span>
+              {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
+              <DateTime
+                value={bankTransaction.date}
+                dateFormat={DATE_FORMAT}
+              />
+            </div>
+            <div className={`${className}__heading__row`}>
+              <Span size='sm'>
+                {selectedCategory?.label ?? 'No category selected'}
+              </Span>
+            </div>
             {!categorizationEnabled && !categorized
               ? <BankTransactionsProcessingInfo />
               : null}
-          </div>
-          <div className={`${className}__heading__amount`}>
-            <span
-              className={`${className}__amount-${
-                isCredit(bankTransaction) ? 'credit' : 'debit'
-              }`}
-            >
-              {isCredit(bankTransaction) ? '+$' : ' $'}
-              {formatMoney(bankTransaction.amount)}
-            </span>
-            <span className={`${className}__heading__date`}>
-              {formatTime(parseISO(bankTransaction.date), DATE_FORMAT)}
-            </span>
           </div>
         </div>
       </span>
