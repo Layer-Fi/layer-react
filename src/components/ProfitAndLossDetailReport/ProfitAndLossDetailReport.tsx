@@ -5,7 +5,7 @@ import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntr
 import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTable'
 import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
 import { type ColumnConfig } from '../DataTable/DataTable'
-import { Badge } from '../Badge'
+import { Badge } from '../Badge/Badge'
 import { DateTime } from '../DateTime'
 import { Text, TextUseTooltip } from '../Typography/Text'
 import { TextSize, TextWeight } from '../Typography'

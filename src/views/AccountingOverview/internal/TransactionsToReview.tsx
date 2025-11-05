@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo } from 'react'
-import { Badge } from '../../../components/Badge'
+import { Badge } from '../../../components/Badge/Badge'
 import { BadgeSize, BadgeVariant } from '../../../components/Badge/Badge'
 import { BadgeLoader } from '../../../components/BadgeLoader'
 import { IconButton } from '../../../components/Button'

@@ -12,7 +12,7 @@ import {
   isTransferMatch,
 } from '../../utils/bankTransactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-import { Badge } from '../Badge'
+import { Badge } from '../Badge/Badge'
 import {
   BankTransactionCTAStringOverrides,
 } from '../BankTransactions/BankTransactions'

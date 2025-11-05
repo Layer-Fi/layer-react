@@ -1,5 +1,4 @@
-import { Badge, BadgeVariant } from '../Badge'
-import { BadgeSize } from '../Badge/Badge'
+import { Badge, BadgeSize, BadgeVariant } from '../Badge/Badge'
 import { BadgeLoader } from '../BadgeLoader'
 import { SearchField, type SearchFieldProps } from '../SearchField/SearchField'
 import { Button } from '../ui/Button/Button'

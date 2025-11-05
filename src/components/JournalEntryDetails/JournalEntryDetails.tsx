@@ -8,7 +8,7 @@ import { decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } fr
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
-import { Badge, BadgeVariant } from '../Badge'
+import { Badge, BadgeVariant } from '../Badge/Badge'
 import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
