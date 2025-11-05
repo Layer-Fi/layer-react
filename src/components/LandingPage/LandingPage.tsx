@@ -1,9 +1,9 @@
+import { Heading } from '../ui/Typography/Heading'
 import { Button } from '../ui/Button/Button'
 import { useMemo, useCallback } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { LandingPageOffer } from './LandingPageOptions'
-import { Heading } from '../ui/Typography/Heading'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 

@@ -1,3 +1,4 @@
+import { Text } from '../Typography/Text'
 import { Button } from '../Button/Button'
 import { useContext, useMemo } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext/LinkedAccountsContext'
@@ -16,7 +17,6 @@ import { ActionableRow } from '../ActionableRow/ActionableRow'
 import { Badge, BadgeVariant } from '../Badge/Badge'
 import { BadgeSize } from '../Badge/Badge'
 import { DataState, DataStateStatus } from '../DataState/DataState'
-import { Text } from '../Typography'
 
 export interface ConnectAccountProps {
   onboardingStep: OnboardingStep

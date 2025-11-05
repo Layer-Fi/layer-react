@@ -1,7 +1,7 @@
+import { Heading } from '../ui/Typography/Heading'
 import { Button } from '../ui/Button/Button'
 import { P, Span } from '../ui/Typography/Text'
 import { HStack, VStack } from '../ui/Stack/Stack'
-import { Heading } from '../ui/Typography/Heading'
 import { Badge } from '../Badge/Badge'
 import { BadgeSize, BadgeVariant } from '../Badge/Badge'
 import { LandingPageCardConfig, LandingPagePlatformConfig } from './types'

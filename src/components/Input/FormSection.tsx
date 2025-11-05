@@ -1,5 +1,5 @@
+import { Text, TextSize, TextWeight } from '../Typography/Text'
 import { ReactNode } from 'react'
-import { Text, TextSize, TextWeight } from '../Typography'
 import { VStack } from '../ui/Stack/Stack'
 
 type FormSectionProps = {

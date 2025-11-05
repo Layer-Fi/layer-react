@@ -1,3 +1,4 @@
+import { ErrorText } from '../Typography/ErrorText'
 import { FileInput } from '../Input/FileInput'
 import { Button } from '../Button/Button'
 import { useEffect, useRef, useState } from 'react'
@@ -8,7 +9,6 @@ import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransac
 import { hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { ErrorText } from '../Typography'
 import { PersonalCategories } from './constants'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'

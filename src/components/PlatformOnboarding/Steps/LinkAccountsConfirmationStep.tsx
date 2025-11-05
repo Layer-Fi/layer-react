@@ -1,7 +1,7 @@
+import { Heading } from '../../ui/Typography/Heading'
 import { Button, ButtonVariant } from '../../Button/Button'
 import { useContext } from 'react'
 import { HStack, VStack } from '../../ui/Stack/Stack'
-import { Heading } from '../../ui/Typography/Heading'
 import { P } from '../../ui/Typography/Text'
 import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { ConditionalList } from '../../utility/ConditionalList'

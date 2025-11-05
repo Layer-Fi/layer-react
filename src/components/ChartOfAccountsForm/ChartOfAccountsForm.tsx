@@ -1,3 +1,5 @@
+import { Text, TextSize, TextWeight } from '../Typography/Text'
+import { Heading, HeadingSize } from '../Typography/Heading'
 import { Select } from '../Input/Select'
 import { InputGroup } from '../Input/InputGroup'
 import { Input } from '../Input/Input'
@@ -10,7 +12,6 @@ import { Button, ButtonVariant } from '../Button/Button'
 import { useContext, useMemo } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
-import { Heading, HeadingSize, Text, TextSize, TextWeight } from '../Typography'
 import {
   LEDGER_ACCOUNT_SUBTYPES,
   LEDGER_ACCOUNT_SUBTYPES_FOR_TYPE,

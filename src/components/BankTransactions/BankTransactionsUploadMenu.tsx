@@ -1,3 +1,4 @@
+import { Heading } from '../ui/Typography/Heading'
 import { Button } from '../ui/Button/Button'
 import { useState } from 'react'
 import { DropdownMenu, MenuList, MenuItem } from '../ui/DropdownMenu/DropdownMenu'
@@ -6,7 +7,6 @@ import { ChevronRight } from 'lucide-react'
 import UploadCloud from '../../icons/UploadCloud'
 import { BankTransactionsUploadModal } from './BankTransactionsUploadModal/BankTransactionsUploadModal'
 import { Span } from '../ui/Typography/Text'
-import { Heading } from '../ui/Typography/Heading'
 
 interface BankTransactionsUploadMenuProps {
   isDisabled?: boolean

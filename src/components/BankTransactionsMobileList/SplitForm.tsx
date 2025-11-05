@@ -1,3 +1,5 @@
+import { Text, TextSize, TextWeight } from '../Typography/Text'
+import { ErrorText } from '../Typography/ErrorText'
 import { Input } from '../Input/Input'
 import { FileInput } from '../Input/FileInput'
 import { TextButton } from '../Button/TextButton'
@@ -20,7 +22,6 @@ import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransact
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
 import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'
-import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawerWithTrigger } from '../CategorySelect/CategorySelectDrawerWithTrigger'

@@ -1,10 +1,10 @@
+import { Text, TextSize } from '../Typography/Text'
 import { FileInput } from '../Input/FileInput'
 import { forwardRef, useImperativeHandle } from 'react'
 import { useReceiptsContext } from '../../contexts/ReceiptsContext/ReceiptsContext'
 import { ReceiptsProvider } from '../../providers/ReceiptsProvider/ReceiptsProvider'
 import { BankTransaction } from '../../types/bank_transactions'
 import { FileThumb } from '../FileThumb/FileThumb'
-import { Text, TextSize } from '../Typography'
 
 const MAX_RECEIPTS_COUNT = 10
 

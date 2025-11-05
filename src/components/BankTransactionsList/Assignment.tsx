@@ -1,3 +1,4 @@
+import { Text } from '../Typography/Text'
 import { DATE_FORMAT } from '../../config/general'
 import Scissors from '../../icons/Scissors'
 import { BankTransaction } from '../../types/bank_transactions'
@@ -7,7 +8,6 @@ import { Badge } from '../Badge/Badge'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { SplitTooltipDetails } from '../BankTransactionRow/SplitTooltipDetails'
-import { Text } from '../Typography'
 import { parseISO, format as formatTime } from 'date-fns'
 
 export interface AssignmentProps {

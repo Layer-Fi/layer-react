@@ -1,3 +1,4 @@
+import { Heading, HeadingSize } from '../Typography/Heading'
 import { HeaderRow } from '../Header/HeaderRow'
 import { HeaderCol } from '../Header/HeaderCol'
 import { Header } from '../Header/Header'
@@ -13,7 +14,6 @@ import { ChartOfAccountsSidebar } from '../ChartOfAccountsSidebar/ChartOfAccount
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Loader } from '../Loader/Loader'
 import { Panel } from '../Panel/Panel'
-import { Heading, HeadingSize } from '../Typography'
 import { ChartOfAccountsTable } from './ChartOfAccountsTable'
 import { AccountBalancesDownloadButton } from '../ChartOfAccounts/download/AccountBalancesDownloadButton'
 import { HStack } from '../ui/Stack/Stack'

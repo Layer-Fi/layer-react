@@ -1,6 +1,6 @@
+import { Heading } from '../../ui/Typography/Heading'
 import { Button } from '../../ui/Button/Button'
 import { VStack, HStack } from '../../ui/Stack/Stack'
-import { Heading } from '../../ui/Typography/Heading'
 import { JournalEntryLineItem } from './JournalEntryLineItem'
 import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccount'
 import type { AppForm } from '../../../features/forms/hooks/useForm'

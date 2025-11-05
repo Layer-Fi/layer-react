@@ -1,5 +1,5 @@
+import { Heading, HeadingSize } from '../../components/Typography/Heading'
 import { useMemo } from 'react'
-import { Heading, HeadingSize } from '../../components/Typography'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts/useLinkedAccounts'
 import { Header } from '../Container/Header'
 import { SyncingBadge } from '../SyncingBadge/SyncingBadge'

@@ -1,6 +1,6 @@
+import { Text, TextSize } from '../Typography/Text'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import SmileIcon from '../../icons/SmileIcon'
-import { Text, TextSize } from '../Typography'
 import { TasksListItem } from './TasksListItem'
 import { Pagination } from '../Pagination/Pagination'
 import { TasksListMobile } from './TasksListMobile'

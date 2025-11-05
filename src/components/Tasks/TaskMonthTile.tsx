@@ -1,4 +1,4 @@
-import { Text, TextSize } from '../Typography'
+import { Text, TextSize } from '../Typography/Text'
 import { TaskStatusBadge } from './TaskStatusBadge'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { MonthData } from './types'

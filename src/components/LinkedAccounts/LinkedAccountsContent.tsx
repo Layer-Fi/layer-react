@@ -1,7 +1,7 @@
+import { Text, TextSize } from '../Typography/Text'
 import { useContext } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext/LinkedAccountsContext'
 import PlusIcon from '../../icons/PlusIcon'
-import { Text, TextSize } from '../Typography'
 import { LinkedAccountItemThumb } from './LinkedAccountItemThumb'
 import classNames from 'classnames'
 import { LinkedAccountsConfirmationModal } from '../LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'

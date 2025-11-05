@@ -1,3 +1,4 @@
+import { Text, TextSize, TextWeight } from '../Typography/Text'
 import { HeaderRow } from '../Header/HeaderRow'
 import { HeaderCol } from '../Header/HeaderCol'
 import { Header } from '../Header/Header'
@@ -17,7 +18,6 @@ import { LedgerAccountEntryDetailsStringOverrides } from '../LedgerAccountEntryD
 import { Loader } from '../Loader/Loader'
 import { Pagination } from '../Pagination/Pagination'
 import { Panel } from '../Panel/Panel'
-import { Text, TextSize, TextWeight } from '../Typography'
 import { LedgerAccountRow } from './LedgerAccountRow'
 import classNames from 'classnames'
 import { LedgerAccountNodeType } from '../../types/chart_of_accounts'

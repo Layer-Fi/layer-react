@@ -1,3 +1,5 @@
+import { ErrorText } from '../Typography/ErrorText'
+import { Text, TextSize } from '../Typography/Text'
 import { Input } from '../Input/Input'
 import { Button } from '../ui/Button/Button'
 import { TextButton } from '../Button/TextButton'
@@ -31,7 +33,6 @@ import { useSetMetadataOnBankTransaction } from '../../features/bankTransactions
 import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
 import { MatchForm } from '../MatchForm/MatchForm'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'
-import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'

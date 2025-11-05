@@ -1,3 +1,4 @@
+import { Heading, HeadingSize } from '../Typography/Heading'
 import { HeaderRow } from '../Header/HeaderRow'
 import { HeaderCol } from '../Header/HeaderCol'
 import { Header } from '../Header/Header'
@@ -12,7 +13,6 @@ import { JournalSidebar } from '../JournalSidebar/JournalSidebar'
 import { Loader } from '../Loader/Loader'
 import { Pagination } from '../Pagination/Pagination'
 import { Panel } from '../Panel/Panel'
-import { Heading, HeadingSize } from '../Typography'
 import { JournalTable } from './JournalTable'
 import { JournalEntriesDownloadButton } from '../Journal/download/JournalEntriesDownloadButton'
 

@@ -1,3 +1,5 @@
+import { Text, TextSize, TextWeight } from '../Typography/Text'
+import { ErrorText } from '../Typography/ErrorText'
 import { FileInput } from '../Input/FileInput'
 import { Button } from '../Button/Button'
 import { useRef, useState } from 'react'
@@ -11,7 +13,6 @@ import {
 import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { MatchFormMobile } from '../MatchForm/MatchFormMobile'
-import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 

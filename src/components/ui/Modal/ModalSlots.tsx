@@ -1,7 +1,7 @@
+import { Heading } from '../Typography/Heading'
 import { Button } from '../Button/Button'
 import { forwardRef, type ComponentProps, type PropsWithChildren, type ReactElement } from 'react'
 import { X } from 'lucide-react'
-import { Heading } from '../Typography/Heading'
 import { P } from '../Typography/Text'
 import classNames from 'classnames'
 import './modalSlots.scss'

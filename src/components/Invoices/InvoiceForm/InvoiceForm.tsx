@@ -1,3 +1,4 @@
+import { TextSize } from '../../Typography/Text'
 import { Button } from '../../ui/Button/Button'
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, type PropsWithChildren } from 'react'
 import classNames from 'classnames'
@@ -18,7 +19,6 @@ import { withForceUpdate } from '../../../features/forms/components/FormBigDecim
 import { type InvoiceFormState, EMPTY_LINE_ITEM, getAdditionalTags, getSelectedTag, INVOICE_MECE_TAG_DIMENSION } from './formUtils'
 import { DataState, DataStateStatus } from '../../DataState/DataState'
 import { AlertTriangle } from 'lucide-react'
-import { TextSize } from '../../Typography'
 import { useInvoiceDetail } from '../../../providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { flattenValidationErrors } from '../../../utils/form'
 import { type Tag } from '../../../features/tags/tagSchemas'
