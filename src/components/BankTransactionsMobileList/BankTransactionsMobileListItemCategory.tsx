@@ -8,26 +8,32 @@ import { BankTransactionsCategorizedSelectedValue } from '../BankTransactionsSel
 
 export interface BankTransactionsMobileListItemCategoryProps {
   bankTransaction: BankTransaction
+  className?: string
 }
 
 export const BankTransactionsMobileListItemCategory = ({
   bankTransaction,
+  className,
 }: BankTransactionsMobileListItemCategoryProps) => {
   const categorized = isCategorized(bankTransaction)
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
   const selectedValue = useMemo(() => {
-    return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedCategory ?? null} />
-  }, [selectedCategory])
+    return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedCategory ?? null} className={className} />
+  }, [selectedCategory, className])
 
   if (categorized) {
     return (
-      <BankTransactionsCategorizedSelectedValue bankTransaction={bankTransaction} />
+      <BankTransactionsCategorizedSelectedValue bankTransaction={bankTransaction} className={className} />
     )
   }
 
   return (
-    <Span size='sm'>
-      {selectedValue ?? 'No category selected'}
-    </Span>
+    selectedCategory
+      ? selectedValue
+      : (
+        <Span ellipsis className={className} size='sm'>
+          No category selected
+        </Span>
+      )
   )
 }

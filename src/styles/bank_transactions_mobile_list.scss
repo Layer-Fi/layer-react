@@ -9,6 +9,7 @@
 
 .Layer__bank-transaction-mobile-list-item {
   box-sizing: border-box;
+  width: 95%;
   padding: 0;
   border-radius: var(--border-radius-sm);
   box-shadow:
@@ -64,15 +65,18 @@
 
 .Layer__bank-transaction-mobile-list-item__heading {
   box-sizing: border-box;
-  display: block;
   width: 100%;
 }
 
 .Layer__bank-transaction-mobile-list-item__heading__content {
   box-sizing: border-box;
   gap: var(--spacing-xs);
-  width: 100%;
   padding: var(--spacing-sm);
+}
+
+.Layer__bank-transaction-mobile-list-item__heading__content__left {
+  overflow: hidden;
+  min-width: 0;
 }
 
 .Layer__bank-transaction-mobile-list-item__heading__account-name {

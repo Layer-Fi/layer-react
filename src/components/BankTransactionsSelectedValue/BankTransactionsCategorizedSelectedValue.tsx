@@ -12,13 +12,15 @@ import { DATE_FORMAT } from '../../config/general'
 
 type BankTransactionsCategorizedSelectedValueProps = {
   bankTransaction: BankTransaction
+  className?: string
 }
 
 export const BankTransactionsCategorizedSelectedValue = ({
   bankTransaction,
+  className,
 }: BankTransactionsCategorizedSelectedValueProps) => {
   return (
-    <Span align='center' ellipsis>
+    <Span align='center' ellipsis size='sm' className={className}>
       {bankTransaction.categorization_status === CategorizationStatus.SPLIT && (
         <>
           <Badge

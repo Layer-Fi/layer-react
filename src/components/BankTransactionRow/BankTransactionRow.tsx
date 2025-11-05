@@ -277,7 +277,6 @@ export const BankTransactionRow = ({
               ? (
                 <BankTransactionsCategorizedSelectedValue
                   bankTransaction={bankTransaction}
-                  className={className}
                 />
               )
               : null}

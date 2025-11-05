@@ -5,7 +5,6 @@ import FileIcon from '../../icons/File'
 import { BankTransaction } from '../../types/bank_transactions'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
-import { isCategorized } from '../BankTransactions/utils'
 import { CloseButton } from '../Button'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'
 import { BankTransactionMobileForms } from './BankTransactionsMobileForms'
@@ -13,7 +12,6 @@ import { TransactionToOpenContext } from './TransactionToOpenContext'
 import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionsProcessingInfo } from '../BankTransactionsList/BankTransactionsProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { Span } from '../ui/Typography/Text'
 import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -23,6 +21,7 @@ import { DateTime } from '../DateTime'
 import { HStack } from '../ui/Stack/Stack'
 import { BankTransactionsMobileListItemCheckbox } from './BankTransactionsMobileListItemCheckbox'
 import { BankTransactionsMobileListItemCategory } from './BankTransactionsMobileListItemCategory'
+import './bankTransactionsMobileListItem.scss'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -194,9 +193,6 @@ export const BankTransactionsMobileListItem = ({
 
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-
-  const categorized = isCategorized(bankTransaction)
-
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
@@ -214,20 +210,20 @@ export const BankTransactionsMobileListItem = ({
 
   return (
     <li ref={itemRef} className={rowClassName} data-item={bankTransaction.id}>
-      <span
-        className={`${className}__heading`}
+      <div
         onClick={handleRowClick}
         role='button'
-        style={{ height: headingHeight }}
+        style={{
+          height: headingHeight,
+        }}
       >
-        <HStack
+        <VStack
           ref={headingRowRef}
-          gap='md'
-          justify='space-between'
-          className='Layer__bank-transaction-mobile-list-item__heading__content'
         >
-          <HStack gap='md' fluid>
-
+          <HStack
+            gap='md'
+            justify='space-between'
+          >
             <BankTransactionsMobileListItemCheckbox
               bulkActionsEnabled={bulkActionsEnabled}
               bankTransaction={bankTransaction}
@@ -237,47 +233,54 @@ export const BankTransactionsMobileListItem = ({
             <VStack
               align='start'
               gap='3xs'
-              fluid
+              className='Layer__bank-transaction-mobile-list-item__heading__content__left'
+              pi='md'
+              pb='md'
             >
-              <Span>
+              <Span ellipsis>
                 {bankTransaction.counterparty_name ?? bankTransaction.description}
               </Span>
-              <Span size='sm'>
+              <Span size='sm' ellipsis>
                 {fullAccountName}
                 {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
               </Span>
 
               {/* TODO: CHECK HOW THIS LOOKS DO NOT LET JIM MERGE WITHOUT TESTING THIS */}
-              {!categorizationEnabled && !categorized
-                ? <BankTransactionsProcessingInfo />
-                : null}
+              {/* {!categorizationEnabled && !categorized
+              ? <BankTransactionsProcessingInfo />
+              : null} */}
+            </VStack>
 
-              <BankTransactionsMobileListItemCategory
-                bankTransaction={bankTransaction}
+            <VStack
+              align='end'
+              gap='3xs'
+              pi='md'
+              pb='md'
+            >
+
+              <Span size='md'>
+                {isCredit(bankTransaction) ? '+' : ''}
+                <MoneySpan
+                  amount={bankTransaction.amount}
+                />
+              </Span>
+
+              <DateTime
+                value={bankTransaction.date}
+                dateFormat={DATE_FORMAT}
+                onlyDate
+                slotProps={{
+                  Date: { size: 'sm', variant: 'subtle' },
+                }}
               />
             </VStack>
           </HStack>
-
-          <VStack align='end' gap='3xs'>
-
-            <Span size='md'>
-              {isCredit(bankTransaction) ? '+' : ''}
-              <MoneySpan
-                amount={bankTransaction.amount}
-              />
-            </Span>
-
-            <DateTime
-              value={bankTransaction.date}
-              dateFormat={DATE_FORMAT}
-              onlyDate
-              slotProps={{
-                Date: { size: 'sm', variant: 'subtle' },
-              }}
-            />
-          </VStack>
-        </HStack>
-      </span>
+          <BankTransactionsMobileListItemCategory
+            bankTransaction={bankTransaction}
+            className={`${className}__category`}
+          />
+        </VStack>
+      </div>
       <div
         className={`${className}__expanded-row`}
         style={{ height: !open || removeAnim ? 0 : height }}
