@@ -1,4 +1,4 @@
-import { View } from '../../components/View'
+import { View } from '../View/View'
 import { InvoiceRoute, useInvoiceRouteState } from '../../providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { InvoiceDetail } from './InvoiceDetail/InvoiceDetail'
 import { InvoiceOverview } from './InvoiceOverview/InvoiceOverview'

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { TableProvider } from '../../contexts/TableContext'
+import { TableProvider } from '../../contexts/TableContext/TableContext'
 import { ProfitAndLossCompareTable } from './ProfitAndLossCompareTable'
 import {
   ProfitAndLossTableComponent,

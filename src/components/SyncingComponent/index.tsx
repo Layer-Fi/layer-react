@@ -1,1 +1,0 @@
-export { SyncingComponent } from './SyncingComponent'

@@ -1,4 +1,4 @@
-import { TextButton } from '../Button'
+import { TextButton } from '../Button/TextButton'
 import {
   endOfMonth,
   endOfQuarter,

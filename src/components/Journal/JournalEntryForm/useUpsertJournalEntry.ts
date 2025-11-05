@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../../api/layer/authenticated_http'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
 import { UpsertJournalEntrySchema, JournalEntryReturnSchema, type JournalEntryReturn } from './journalEntryFormSchemas'
 import { Schema } from 'effect'

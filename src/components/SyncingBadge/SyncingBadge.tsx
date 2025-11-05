@@ -1,5 +1,5 @@
 import Loader from '../../icons/Loader'
-import { Badge, BadgeVariant } from '../Badge'
+import { Badge, BadgeVariant } from '../Badge/Badge'
 import { BadgeSize } from '../Badge/Badge'
 
 export const SyncingBadge = () => {

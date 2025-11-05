@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import type { Variants } from '../../../utils/styleUtils/sizeVariants'
-import { SkeletonLoader } from '../../SkeletonLoader'
+import { SkeletonLoader } from '../../SkeletonLoader/SkeletonLoader'
 import { MoneySpan } from '../../ui/Typography/MoneySpan'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import { ProfitAndLossSummariesHeading } from './ProfitAndLossSummariesHeading'

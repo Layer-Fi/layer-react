@@ -1,14 +1,14 @@
 import { RefObject, useContext, useRef } from 'react'
-import { Container } from '../Container'
-import { DataState, DataStateStatus } from '../DataState'
-import { Panel } from '../Panel'
+import { Container } from '../Container/Container'
+import { DataState, DataStateStatus } from '../DataState/DataState'
+import { Panel } from '../Panel/Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
-import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
+import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossTableStringOverrides } from '../ProfitAndLossTable/ProfitAndLossTableComponent'
 import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { ProfitAndLossTable } from '../ProfitAndLossTable'
+import { ProfitAndLossTableWithProvider } from '../ProfitAndLossTable/ProfitAndLossTableWithProvider'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 
 const COMPONENT_NAME = 'profit-and-loss'
@@ -111,7 +111,7 @@ const Components = ({
         </div>
       )}
       {!hideTable && (
-        <ProfitAndLossTable
+        <ProfitAndLossTableWithProvider
           stringOverrides={stringOverrides?.profitAndLossTable}
         />
       )}

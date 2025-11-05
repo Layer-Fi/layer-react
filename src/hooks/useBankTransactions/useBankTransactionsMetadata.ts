@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../useAuth'
 import { getBankTransactionMetadata } from '../../api/layer/bankTransactions'
 import { BankTransaction } from '../../types/bank_transactions'

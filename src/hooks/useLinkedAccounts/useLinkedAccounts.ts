@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { DataModel, LoadedStatus } from '../../types/general'
 import { LinkedAccount, AccountSource } from '../../types/linked_accounts'
 import { useAuth } from '../useAuth'

@@ -1,5 +1,5 @@
-import ChevronDown from '../../icons/ChevronDown'
 import { Button } from '../ui/Button/Button'
+import ChevronDown from '../../icons/ChevronDown'
 import { InputGroup } from '../ui/Input/InputGroup'
 import { Popover } from '../ui/Popover/Popover'
 import { Dialog, DialogTrigger } from 'react-aria-components'

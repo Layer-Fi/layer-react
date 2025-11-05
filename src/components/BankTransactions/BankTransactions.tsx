@@ -3,13 +3,13 @@ import { ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useStat
 import { BREAKPOINTS } from '../../config/general'
 import {
   useBankTransactionsContext,
-} from '../../contexts/BankTransactionsContext'
+} from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '../../contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { BankTransactionsProvider } from '../../providers/BankTransactionsProvider/BankTransactionsProvider'
 import { BankTransactionFilters, BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
-import { useElementSize } from '../../hooks/useElementSize'
-import { useIsVisible } from '../../hooks/useIsVisible'
-import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
+import { useElementSize } from '../../hooks/useElementSize/useElementSize'
+import { useIsVisible } from '../../hooks/useIsVisible/useIsVisible'
+import { useLinkedAccounts } from '../../hooks/useLinkedAccounts/useLinkedAccounts'
 import { BankTransaction, DisplayState } from '../../types/bank_transactions'
 import { BankTransactionsList } from '../BankTransactionsList/BankTransactionsList'
 import { BankTransactionsMobileList } from '../BankTransactionsMobileList/BankTransactionsMobileList'
@@ -17,10 +17,10 @@ import {
   BankTransactionsTable,
   type BankTransactionsTableStringOverrides,
 } from '../BankTransactionsTable/BankTransactionsTable'
-import { Container } from '../Container'
-import { ErrorBoundary } from '../ErrorBoundary'
-import { Loader } from '../Loader'
-import { Pagination } from '../Pagination'
+import { Container } from '../Container/Container'
+import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary'
+import { Loader } from '../Loader/Loader'
+import { Pagination } from '../Pagination/Pagination'
 import {
   BankTransactionsHeader,
   BankTransactionsHeaderStringOverrides,

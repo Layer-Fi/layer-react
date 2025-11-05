@@ -1,5 +1,5 @@
 import useSWR, { type SWRResponse } from 'swr'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useCallback, useMemo } from 'react'

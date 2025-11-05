@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import InboxIcon from '../../icons/Inbox'
-import { DataState, DataStateStatus } from '../DataState'
+import { DataState, DataStateStatus } from '../DataState/DataState'
 import { SearchX } from 'lucide-react'
 
 type BankTransactionsTableEmptyStatesProps = {

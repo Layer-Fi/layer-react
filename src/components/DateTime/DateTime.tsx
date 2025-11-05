@@ -1,5 +1,5 @@
+import { Text } from '../Typography/Text'
 import { DATE_FORMAT, TIME_FORMAT } from '../../config/general'
-import { Text } from '../Typography'
 import { parseISO, format as formatTime } from 'date-fns'
 import { Span, TextStyleProps } from '../ui/Typography/Text'
 import './dateTime.scss'

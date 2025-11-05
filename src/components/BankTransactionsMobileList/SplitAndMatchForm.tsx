@@ -1,7 +1,7 @@
+import { TextButton } from '../Button/TextButton'
 import { useState } from 'react'
 import { BankTransaction } from '../../types/bank_transactions'
 import { hasMatch } from '../../utils/bankTransactions'
-import { TextButton } from '../Button'
 import { MatchForm } from './MatchForm'
 import { SplitForm } from './SplitForm'
 

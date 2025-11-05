@@ -1,12 +1,9 @@
+import { Text as ReactAriaText } from 'react-aria-components'
 import { forwardRef, useRef } from 'react'
 import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import type { Spacing } from '../sharedUITypes'
-import {
-  Header as ReactAriaHeader,
-  Label as ReactAriaLabel,
-  Text as ReactAriaText,
-} from 'react-aria-components'
+import { Header as ReactAriaHeader, Label as ReactAriaLabel } from 'react-aria-components'
 import './text.scss'
 
 import classNames from 'classnames'

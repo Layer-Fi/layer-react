@@ -7,7 +7,7 @@ import {
   BankTransactionsStringOverrides,
 } from '../BankTransactions/BankTransactions'
 import { BankTransactionsLoader } from '../BankTransactionsLoader/BankTransactionsLoader'
-import { SyncingComponent } from '../SyncingComponent'
+import { SyncingComponent } from '../SyncingComponent/SyncingComponent'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { useBankTransactionsTableCheckboxState } from '../../hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '../../hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'

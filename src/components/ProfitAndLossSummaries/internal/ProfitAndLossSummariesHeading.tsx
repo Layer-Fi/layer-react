@@ -1,6 +1,6 @@
+import { Heading } from '../../ui/Typography/Heading'
 import type { PropsWithChildren } from 'react'
 import type { Variants } from '../../../utils/styleUtils/sizeVariants'
-import { Heading } from '../../ui/Typography/Heading'
 
 export function ProfitAndLossSummariesHeading({
   variants,

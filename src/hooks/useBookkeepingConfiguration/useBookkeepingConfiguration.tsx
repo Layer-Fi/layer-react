@@ -9,7 +9,7 @@ import {
   BookkeepingStatus,
   TransactionTaggingStrategy,
 } from '../../schemas/bookkeepingConfiguration'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 
 export type { BookkeepingConfiguration }
 export { BookkeepingStatus, TransactionTaggingStrategy }

@@ -1,10 +1,10 @@
+import { Button } from '../../ui/Button/Button'
 import { useContext, useMemo, useState } from 'react'
 import { Modal } from '../../ui/Modal/Modal'
 import { ModalHeading, ModalActions, ModalContent, ModalTitleWithClose } from '../../ui/Modal/ModalSlots'
-import { Button } from '../../ui/Button/Button'
 import { VStack } from '../../ui/Stack/Stack'
-import { useLinkedAccounts } from '../../../hooks/useLinkedAccounts'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { useLinkedAccounts } from '../../../hooks/useLinkedAccounts/useLinkedAccounts'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { LinkedAccount } from '../../../types/linked_accounts'
 import { getActivationDate } from '../../../utils/business'
 import { AccountFormBox, AccountFormBoxData } from '../AccountFormBox/AccountFormBox'
@@ -14,7 +14,7 @@ import {
   useBulkSetOpeningBalanceAndDate,
 } from './useUpdateOpeningBalanceAndDate'
 import { convertToCents } from '../../../utils/format'
-import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
+import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { startOfYear } from 'date-fns'
 
 type OpeningBalanceModalStringOverrides = {

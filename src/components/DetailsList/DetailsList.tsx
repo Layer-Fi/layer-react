@@ -1,6 +1,6 @@
+import { Heading, HeadingSize } from '../Typography/Heading'
 import { ReactNode } from 'react'
-import { Header } from '../Container'
-import { Heading, HeadingSize } from '../Typography'
+import { Header } from '../Container/Header'
 import classNames from 'classnames'
 
 export interface DetailsListProps {

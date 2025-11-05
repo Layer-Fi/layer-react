@@ -1,6 +1,6 @@
 import useSWRInfinite from 'swr/infinite'
 import { useAuth } from '../useAuth'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { getBankTransactions, type GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
 import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'

@@ -1,1 +1,0 @@
-export { FileThumb } from './FileThumb'
