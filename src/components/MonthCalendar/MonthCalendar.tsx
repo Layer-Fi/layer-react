@@ -9,9 +9,9 @@ import { CalendarDate, getLocalTimeZone, ZonedDateTime, fromDate } from '@intern
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { MONTHS } from './utils'
-import './monthCalendar.scss'
 import type { View } from '../../types/general'
 import classNames from 'classnames'
+import './monthCalendar.scss'
 
 export function MonthCalendar({
   date,
