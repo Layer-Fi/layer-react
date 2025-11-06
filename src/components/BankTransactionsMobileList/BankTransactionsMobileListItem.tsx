@@ -242,10 +242,12 @@ export const BankTransactionsMobileListItem = ({
                 <Span ellipsis>
                   {bankTransaction.counterparty_name ?? bankTransaction.description}
                 </Span>
-                <Span size='sm' ellipsis>
-                  {fullAccountName}
+                <HStack gap='2xs' align='center'>
+                  <Span size='sm' ellipsis>
+                    {fullAccountName}
+                  </Span>
                   {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
-                </Span>
+                </HStack>
 
                 {/* TODO: CHECK HOW THIS LOOKS DO NOT LET JIM MERGE WITHOUT TESTING THIS */}
                 {/* {!categorizationEnabled && !categorized
