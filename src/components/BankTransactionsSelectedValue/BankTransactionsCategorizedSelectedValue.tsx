@@ -1,12 +1,10 @@
-import { parseISO, format as formatTime } from 'date-fns'
 import Scissors from '@icons/Scissors'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { isTransferMatch } from '@utils/bankTransactions'
-import { Badge } from '@components/Badge'
+import { Badge } from '@components/Badge/Badge'
 import { Span } from '@ui/Typography/Text'
 import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
-import { DATE_FORMAT } from '@config/general'
 import { HStack } from '@ui/Stack/Stack'
 import { BadgeSize } from '@components/Badge/Badge'
 import MinimizeTwo from '@icons/MinimizeTwo'
@@ -27,10 +25,7 @@ export const BankTransactionsCategorizedSelectedValue = ({
           {isTransferMatch(bankTransaction) ? 'Transfer' : 'Match'}
         </Badge>
         <Span ellipsis size='sm'>
-          {`${formatTime(
-            parseISO(bankTransaction.match.bank_transaction.date),
-            DATE_FORMAT,
-          )}, ${bankTransaction.match?.details?.description}`}
+          {bankTransaction.match?.details?.description}
         </Span>
       </HStack>
     )
