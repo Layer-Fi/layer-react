@@ -8,8 +8,6 @@ import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategoriz
 import { Switch } from '@ui/Switch/Switch'
 import './bankTransactionsMobileBulkActionsHeader.scss'
 
-const CLASS_NAME = 'Layer__BankTransactionsMobileBulkActionsHeader'
-
 interface BankTransactionsMobileBulkActionsHeaderProps {
   bankTransactions?: BankTransaction[]
   bulkActionsEnabled: boolean
@@ -40,7 +38,7 @@ export const BankTransactionsMobileBulkActionsHeader = ({
       <HStack
         align='center'
         pi='xs'
-        className={`${CLASS_NAME}__checkbox-container`}
+        className='Layer__BankTransactionsMobileBulkActionsHeader__checkbox-container'
       >
         {bulkActionsEnabled && (
           <>
