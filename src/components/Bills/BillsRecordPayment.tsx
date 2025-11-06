@@ -13,7 +13,6 @@ import { FormEvent, useMemo } from 'react'
 import { DATE_FORMAT_SHORT } from '@config/general'
 import { useBillsRecordPaymentContext } from '@contexts/BillsContext'
 import { Header } from '@components/Container/Header'
-import { DeprecatedDatePicker } from '@components/DeprecatedDatePicker/DeprecatedDatePicker'
 import { StaticValue } from '@components/Input/StaticValue'
 import { Bill, BillPaymentMethod, BillPaymentMethods } from '@internal-types/bills'
 import CloseIcon from '@icons/CloseIcon'
@@ -63,8 +62,6 @@ export const BillsRecordPayment = ({
     removeBillByIndex,
     recordPayment,
     closeRecordPayment,
-    paymentDate,
-    setPaymentDate,
     paymentMethod,
     setPaymentMethod,
     vendor,
@@ -113,18 +110,6 @@ export const BillsRecordPayment = ({
             inline={true}
           >
             <StaticValue>{vendor && getVendorName(vendor)}</StaticValue>
-          </InputGroup>
-
-          <InputGroup
-            label='Payment date'
-            className='Layer__bills__record-payment__date'
-            inline={true}
-          >
-            <DeprecatedDatePicker
-              selected={paymentDate}
-              onChange={date => setPaymentDate(date as Date)}
-              displayMode='dayPicker'
-            />
           </InputGroup>
 
           <InputGroup
