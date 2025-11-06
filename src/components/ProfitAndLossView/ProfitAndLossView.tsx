@@ -9,7 +9,7 @@ import { ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLoss
 import { ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { ProfitAndLossTableWithProvider } from '@components/ProfitAndLossTable/ProfitAndLossTableWithProvider'
-import { ProfitAndLossDatePicker } from '@components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
+import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 const COMPONENT_NAME = 'profit-and-loss'
 
@@ -97,7 +97,7 @@ const Components = ({
           <div
             className={`Layer__${COMPONENT_NAME}__chart_with_summaries__summary-col`}
           >
-            <ProfitAndLossDatePicker />
+            <GlobalMonthPicker />
             <ProfitAndLoss.Summaries
               actionable
               stringOverrides={stringOverrides?.profitAndLossSummaries}

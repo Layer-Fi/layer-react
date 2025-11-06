@@ -11,10 +11,10 @@ import { STATEMENT_OF_CASH_FLOW_ROWS } from '@components/StatementOfCashFlow/con
 import { CashflowStatementDownloadButton } from '@components/StatementOfCashFlow/download/CashflowStatementDownloadButton'
 import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { StatementOfCashFlowDatePicker } from '@components/StatementOfCashFlow/datePicker/StatementOfCashFlowDatePicker'
 import { useStatementOfCashFlow } from '@hooks/useStatementOfCashFlow/useStatementOfCashFlow'
 import { ReportKey, ReportsModeStoreProvider, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { getInitialDateRangePickerMode } from '@providers/GlobalDateStore/useGlobalDateRangePicker'
+import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -48,9 +48,7 @@ type StatementOfCashFlowViewProps = TimeRangePickerConfig & {
 
 const StatementOfCashFlowView = ({
   stringOverrides,
-  allowedDatePickerModes,
-  defaultDatePickerMode,
-  customDateRanges,
+  dateSelectionMode = 'full',
 }: StatementOfCashFlowViewProps) => {
   const displayMode = useReportModeWithFallback(ReportKey.StatementOfCashFlows, 'monthPicker')
   const dateRange = useGlobalDateRange({ displayMode })
@@ -66,11 +64,7 @@ const StatementOfCashFlowView = ({
           <Header>
             <HeaderRow>
               <HeaderCol>
-                <StatementOfCashFlowDatePicker
-                  allowedDatePickerModes={allowedDatePickerModes}
-                  defaultDatePickerMode={defaultDatePickerMode}
-                  customDateRanges={customDateRanges}
-                />
+                <CombinedDateRangeSelection mode={dateSelectionMode} />
               </HeaderCol>
               <HeaderCol>
                 <CashflowStatementDownloadButton

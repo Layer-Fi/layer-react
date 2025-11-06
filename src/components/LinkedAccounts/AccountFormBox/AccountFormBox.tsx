@@ -1,23 +1,25 @@
 import { Text, TextSize } from '@components/Typography/Text'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { InputGroup } from '@components/Input/InputGroup'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { LinkedAccount } from '@internal-types/linked_accounts'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { AmountInput } from '@components/Input/AmountInput'
-import { DeprecatedDatePicker } from '@components/DeprecatedDatePicker/DeprecatedDatePicker'
-import { isEqual, startOfDay } from 'date-fns'
+import { endOfDay } from 'date-fns'
 import CheckCircle from '@icons/CheckCircle'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './accountFormBox.scss'
+import { DatePicker } from '@components/DatePicker/DatePicker'
+import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 
 export type AccountFormBoxData = {
   account: LinkedAccount
   isConfirmed: boolean
-  openingDate?: Date
+  openingDate: Date
   openingBalance?: string
   saved?: boolean
+  isDateInvalid?: boolean
 }
 
 type AccountFormProps = {
@@ -45,6 +47,29 @@ export const AccountFormBox = ({
       confirmed: value.isConfirmed,
     })
   ), [isSaved, value.isConfirmed])
+
+  const maxDate = useMemo(() => endOfDay(new Date()), [])
+  const passedDate = useMemo(() => value.openingDate, [value.openingDate])
+
+  const {
+    localDate: date,
+    onChange: onChangeDate,
+    maxDateZdt,
+    isInvalid: isDateInvalid,
+    errorText: dateErrorText,
+    onBlur: onBlurDate,
+  } = useDatePickerState({
+    date: passedDate,
+    maxDate,
+    setDate: date => onChange({ ...value, openingDate: date, isDateInvalid: false }),
+  })
+
+  // Update parent with isDateInvalid state whenever it changes
+  useEffect(() => {
+    if (value.isDateInvalid !== isDateInvalid) {
+      onChange({ ...value, isDateInvalid })
+    }
+  }, [isDateInvalid, onChange, value])
 
   return (
     <div {...dataProps} className={CLASS_NAME}>
@@ -89,16 +114,16 @@ export const AccountFormBox = ({
         </div>
         <div className={`${CLASS_NAME}__details-col__inputs`}>
           <InputGroup label='Opening date'>
-            <DeprecatedDatePicker
-              displayMode='dayPicker'
-              onChange={(v) => {
-                if (!value.openingDate || !isEqual(value.openingDate, v as Date)) {
-                  onChange({ ...value, openingDate: (v as Date) })
-                }
-              }}
-              selected={value.openingDate ?? startOfDay(new Date())}
-              currentDateOption={false}
-              disabled={!disableConfirmExclude && !value.isConfirmed}
+            <DatePicker
+              label='Opening date'
+              showLabel={false}
+              date={date}
+              onChange={onChangeDate}
+              onBlur={onBlurDate}
+              maxDate={maxDateZdt}
+              isDisabled={!disableConfirmExclude && !value.isConfirmed}
+              isInvalid={isDateInvalid}
+              errorText={dateErrorText}
             />
           </InputGroup>
           <InputGroup label='Opening balance'>

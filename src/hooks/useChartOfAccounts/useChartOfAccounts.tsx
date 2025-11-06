@@ -2,20 +2,20 @@ import { useState } from 'react'
 import { Layer } from '@api/layer'
 import { NORMALITY_OPTIONS } from '@components/ChartOfAccountsForm/constants'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { FormError, DateRange } from '@internal-types/general'
+import { FormError } from '@internal-types/general'
 import type { Direction } from '@internal-types/general'
 import {
   NewAccount,
   EditAccount,
 } from '@internal-types/chart_of_accounts'
 import { BaseSelectOption } from '@internal-types/general'
-import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useDeleteAccountFromLedger } from '@features/ledger/accounts/[ledgerAccountId]/api/useDeleteLedgerAccount'
 import { NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { useLedgerBalances, useLedgerBalancesCacheActions } from '@hooks/useLedgerBalances/useLedgerBalances'
 import { useLedgerEntriesCacheActions } from '@features/ledger/entries/api/useListLedgerEntries'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
@@ -142,26 +142,15 @@ export const flattenAccounts = (
     .flat()
     .filter(id => id)
 
-export const useChartOfAccounts = (
-  { withDates, startDate: initialStartDate, endDate: initialEndDate }: Props = {
-    withDates: false,
-    startDate: startOfMonth(new Date()),
-    endDate: endOfMonth(new Date()),
-  },
-) => {
+export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'monthPicker' })
 
   const [form, setForm] = useState<ChartOfAccountsForm | undefined>()
   const [sendingForm, setSendingForm] = useState(false)
   const [apiError, setApiError] = useState<string | undefined>(undefined)
-  const [startDate, setStartDate] = useState(
-    initialStartDate ?? startOfMonth(Date.now()),
-  )
-  const [endDate, setEndDate] = useState(
-    initialEndDate ?? endOfMonth(Date.now()),
-  )
   const { trigger: originalTrigger } = useDeleteAccountFromLedger()
   const { data, isLoading, isValidating, isError, mutate } = useLedgerBalances(withDates, startDate, endDate)
   const { invalidateLedgerBalances } = useLedgerBalancesCacheActions()
@@ -387,19 +376,6 @@ export const useChartOfAccounts = (
       errors,
     })
   }
-
-  const changeDateRange = ({
-    startDate: newStartDate,
-    endDate: newEndDate,
-  }: Partial<DateRange>) => {
-    if (newStartDate) {
-      setStartDate(newStartDate)
-    }
-    if (newEndDate) {
-      setEndDate(newEndDate)
-    }
-  }
-
   const refetch = async () => {
     void invalidateLedgerBalances()
     void forceReloadLedgerEntries()
@@ -422,7 +398,5 @@ export const useChartOfAccounts = (
     cancelForm,
     changeFormData,
     submitForm,
-    dateRange: { startDate, endDate },
-    changeDateRange,
   }
 }

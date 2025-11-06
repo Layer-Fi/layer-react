@@ -5,10 +5,11 @@ import { Header } from '@components/Container/Header'
 import { SyncingBadge } from '@components/SyncingBadge/SyncingBadge'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
-import { ProfitAndLossDatePicker } from '@components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 import { ProfitAndLossDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
 import { HStack } from '@ui/Stack/Stack'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
+import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
+
 import './profitAndLossHeader.scss'
 
 interface ProfitAndLossHeaderStringOverrides {
@@ -26,6 +27,7 @@ export interface ProfitAndLossHeaderProps {
   withDatePicker?: boolean
   withDownloadButton?: boolean
   withStatus?: boolean
+  dateSelectionMode?: 'month' | 'full'
 }
 
 export const ProfitAndLossHeader = ({
@@ -36,6 +38,7 @@ export const ProfitAndLossHeader = ({
   withDownloadButton,
   withStatus = true,
   stringOverrides,
+  dateSelectionMode = 'full',
 }: ProfitAndLossHeaderProps) => {
   const { data: linkedAccounts } = useLinkedAccounts()
 
@@ -61,7 +64,7 @@ export const ProfitAndLossHeader = ({
         )}
       </span>
       <HStack gap='xs'>
-        {withDatePicker && <ProfitAndLossDatePicker />}
+        {withDatePicker && <CombinedDateRangeSelection mode={dateSelectionMode} />}
         {withDownloadButton && <ProfitAndLossDownloadButton stringOverrides={stringOverrides?.downloadButton} />}
       </HStack>
     </Header>

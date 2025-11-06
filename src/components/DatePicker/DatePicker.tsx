@@ -19,6 +19,7 @@ type DatePickerProps = {
   errorText?: string | null
   onBlur?: () => void
   onChange: (date: ZonedDateTime | null) => void
+  isDisabled?: boolean
 }
 
 export const DatePicker = ({
@@ -31,6 +32,7 @@ export const DatePicker = ({
   errorText,
   onBlur,
   onChange,
+  isDisabled,
 }: DatePickerProps) => {
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   const { value } = useSizeClass()
@@ -46,6 +48,7 @@ export const DatePicker = ({
       {...additionalAriaProps}
       isOpen={isPopoverOpen}
       onOpenChange={setPopoverOpen}
+      isDisabled={isDisabled}
     >
       {showLabel && <Label>{label}</Label>}
       <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} />

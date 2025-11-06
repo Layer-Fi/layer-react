@@ -1,6 +1,5 @@
 import { createContext } from 'react'
 import { useChartOfAccounts } from '@hooks/useChartOfAccounts/useChartOfAccounts'
-import { endOfMonth, startOfMonth } from 'date-fns'
 
 export type ChartOfAccountsContextType = ReturnType<typeof useChartOfAccounts>
 export const ChartOfAccountsContext = createContext<ChartOfAccountsContextType>(
@@ -20,10 +19,5 @@ export const ChartOfAccountsContext = createContext<ChartOfAccountsContextType>(
     cancelForm: () => {},
     changeFormData: () => {},
     submitForm: () => {},
-    dateRange: {
-      startDate: startOfMonth(new Date()),
-      endDate: endOfMonth(new Date()),
-    },
-    changeDateRange: () => {},
   },
 )

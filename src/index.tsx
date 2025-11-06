@@ -14,9 +14,8 @@ export { Integrations } from './components/Integrations/Integrations'
 
 /* ------------------ Reporting ------------------ */
 export { ProfitAndLoss } from './components/ProfitAndLoss/ProfitAndLoss'
-/* Profit and loss contains 6 sub-components:
+/* Profit and loss contains 5 sub-components:
  * - Chart
- * - DatePicker
  * - Summaries
  * - DetailedCharts
  * - Header
