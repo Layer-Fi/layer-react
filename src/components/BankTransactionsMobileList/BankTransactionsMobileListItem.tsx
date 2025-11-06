@@ -49,6 +49,26 @@ export enum Purpose {
 
 const DATE_FORMAT = 'LLL d'
 
+const getAssignedValue = (
+  bankTransaction: BankTransaction,
+  renderInAppLink?: (details: LinkingMetadata) => ReactNode,
+) => {
+  if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
+    return extractDescriptionForSplit(bankTransaction.category)
+  }
+
+  if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
+    if (renderInAppLink && bankTransaction.match?.details) {
+      const matchDetails = bankTransaction.match.details ? decodeMatchDetails(bankTransaction.match.details) : undefined
+      const inAppLink = matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : undefined
+      if (inAppLink) return inAppLink
+    }
+    return bankTransaction.match?.details?.description
+  }
+
+  return bankTransaction.category?.display_name
+}
+
 export const BankTransactionsMobileListItem = ({
   index,
   bankTransaction,
@@ -94,26 +114,6 @@ export const BankTransactionsMobileListItem = ({
   const [open, setOpen] = useState(isFirstItem)
   const [height, setHeight] = useState(0)
   const [headingHeight, setHeadingHeight] = useState(63)
-
-  const getAssignedValue = (
-    bankTransaction: BankTransaction,
-    renderInAppLink?: (details: LinkingMetadata) => ReactNode,
-  ) => {
-    if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
-      return extractDescriptionForSplit(bankTransaction.category)
-    }
-
-    if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
-      if (renderInAppLink && bankTransaction.match?.details) {
-        const matchDetails = bankTransaction.match.details ? decodeMatchDetails(bankTransaction.match.details) : undefined
-        const inAppLink = matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : undefined
-        if (inAppLink) return inAppLink
-      }
-      return bankTransaction.match?.details?.description
-    }
-
-    return bankTransaction.category?.display_name
-  }
 
   const openNext = () => {
     if (editable && itemRef.current && itemRef.current.nextSibling) {
