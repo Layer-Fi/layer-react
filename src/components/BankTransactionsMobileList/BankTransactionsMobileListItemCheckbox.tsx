@@ -32,7 +32,7 @@ export const BankTransactionsMobileListItemCheckbox = ({
   }
 
   return (
-    <VStack align='center' pie='xs' ref={ref}>
+    <VStack align='start' pis='md' pie='2xs' ref={ref}>
       <Checkbox
         size='md'
         isSelected={isTransactionSelected}

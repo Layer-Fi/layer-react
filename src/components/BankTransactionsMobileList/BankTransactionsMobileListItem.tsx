@@ -223,33 +223,36 @@ export const BankTransactionsMobileListItem = ({
           <HStack
             gap='md'
             justify='space-between'
+            align='center'
           >
-            <BankTransactionsMobileListItemCheckbox
-              bulkActionsEnabled={bulkActionsEnabled}
-              bankTransaction={bankTransaction}
-              checkboxContainerRef={checkboxContainerRef}
-            />
+            <HStack align='center'>
+              <BankTransactionsMobileListItemCheckbox
+                bulkActionsEnabled={bulkActionsEnabled}
+                bankTransaction={bankTransaction}
+                checkboxContainerRef={checkboxContainerRef}
+              />
 
-            <VStack
-              align='start'
-              gap='3xs'
-              className='Layer__bank-transaction-mobile-list-item__heading__content__left'
-              pi='md'
-              pb='md'
-            >
-              <Span ellipsis>
-                {bankTransaction.counterparty_name ?? bankTransaction.description}
-              </Span>
-              <Span size='sm' ellipsis>
-                {fullAccountName}
-                {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
-              </Span>
+              <VStack
+                align='start'
+                gap='3xs'
+                className='Layer__bank-transaction-mobile-list-item__heading__content__left'
+                pi='md'
+                pb='md'
+              >
+                <Span ellipsis>
+                  {bankTransaction.counterparty_name ?? bankTransaction.description}
+                </Span>
+                <Span size='sm' ellipsis>
+                  {fullAccountName}
+                  {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
+                </Span>
 
-              {/* TODO: CHECK HOW THIS LOOKS DO NOT LET JIM MERGE WITHOUT TESTING THIS */}
-              {/* {!categorizationEnabled && !categorized
+                {/* TODO: CHECK HOW THIS LOOKS DO NOT LET JIM MERGE WITHOUT TESTING THIS */}
+                {/* {!categorizationEnabled && !categorized
               ? <BankTransactionsProcessingInfo />
               : null} */}
-            </VStack>
+              </VStack>
+            </HStack>
 
             <VStack
               align='end'
