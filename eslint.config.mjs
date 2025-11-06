@@ -10,7 +10,7 @@ import pluginImport from 'eslint-plugin-import'
 
 export default tsEslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'vite/**'],
+    ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**'],
   },
   js.configs.recommended,
   ...tsEslint.configs.recommendedTypeChecked,
