@@ -36,5 +36,9 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
     )
   }
 
-  return <Span ellipsis size={size} className={className}>{label}</Span>
+  return (
+    <HStack gap='xs' align='center' className={className}>
+      <Span ellipsis size={size} className={className}>{label}</Span>
+    </HStack>
+  )
 }
