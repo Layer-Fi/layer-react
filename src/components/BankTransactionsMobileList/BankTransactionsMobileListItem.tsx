@@ -224,6 +224,7 @@ export const BankTransactionsMobileListItem = ({
             gap='md'
             justify='space-between'
             align='center'
+            pie='md'
           >
             <HStack align='center'>
               <BankTransactionsMobileListItemCheckbox
@@ -259,15 +260,16 @@ export const BankTransactionsMobileListItem = ({
             <VStack
               align='end'
               gap='3xs'
-              pi='md'
               pb='sm'
             >
-              <Span size='md'>
-                {isCredit(bankTransaction) ? '+' : ''}
+              <HStack>
+                <Span size='md'>
+                  {isCredit(bankTransaction) ? '+' : ''}
+                </Span>
                 <MoneySpan
                   amount={bankTransaction.amount}
                 />
-              </Span>
+              </HStack>
 
               <DateTime
                 value={bankTransaction.date}
