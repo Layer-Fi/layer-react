@@ -6,6 +6,9 @@ import { useBankTransactionsTableCheckboxState } from '../../hooks/useBankTransa
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { Switch } from '../ui/Switch/Switch'
+import './bankTransactionsMobileBulkActionsHeader.scss'
+
+const CLASS_NAME = 'Layer__BankTransactionsMobileBulkActionsHeader'
 
 interface BankTransactionsMobileBulkActionsHeaderProps {
   bankTransactions?: BankTransaction[]
@@ -33,9 +36,12 @@ export const BankTransactionsMobileBulkActionsHeader = ({
       pb='md'
       justify='space-between'
       align='center'
-      className='Layer__bank-transactions__mobile-bulk-actions-header'
     >
-      <HStack gap='sm' align='center' pi='xs'>
+      <HStack
+        align='center'
+        pi='xs'
+        className={`${CLASS_NAME}__checkbox-container`}
+      >
         {bulkActionsEnabled && (
           <>
             <Checkbox
@@ -45,7 +51,9 @@ export const BankTransactionsMobileBulkActionsHeader = ({
               onChange={onHeaderCheckboxChange}
               aria-label='Select all transactions on this page'
             />
-            <Span size='md'>
+            <Span
+              size='md'
+            >
               Select all
             </Span>
           </>
