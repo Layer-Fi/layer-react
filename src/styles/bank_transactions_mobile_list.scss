@@ -60,25 +60,6 @@
   text-align: center;
 }
 
-.Layer__bank-transaction-mobile-list-item__heading {
-  box-sizing: border-box;
-  width: 100%;
-}
-
-.Layer__bank-transaction-mobile-list-item__heading__content {
-  box-sizing: border-box;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm);
-}
-
-.Layer__bank-transaction-mobile-list-item__heading__account-name {
-  color: var(--color-base-500);
-}
-
-.Layer__bank-transaction-mobile-list-item__categorized-name {
-  color: var(--color-base-500);
-}
-
 .Layer__bank-transaction-mobile-list-item__value {
   box-sizing: border-box;
   display: flex;

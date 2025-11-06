@@ -269,7 +269,7 @@ export const BankTransactionsMobileListItem = ({
                 <Span ellipsis>
                   {bankTransaction.counterparty_name ?? bankTransaction.description}
                 </Span>
-                <Span className='Layer__bankTransactionsMobileListItem__getAssignedValue'>
+                <Span className='Layer__bankTransactionsMobileListItem__categorizedValue'>
                   {categorized && bankTransaction.categorization_status
                     ? getAssignedValue(bankTransaction, renderInAppLink)
                     : null}
