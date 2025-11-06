@@ -18,10 +18,12 @@ type DisplayData = {
 type BankTransactionsSelectedValueProps =
   | {
     bankTransaction: BankTransaction
+    size?: 'sm' | 'md'
     className?: string
   }
   | {
     selectedValue: BankTransactionCategoryComboBoxOption | null
+    size?: 'sm' | 'md'
     className?: string
   }
 
@@ -70,7 +72,7 @@ const normalizeFromSelectedValue = (selectedValue: BankTransactionCategoryComboB
 }
 
 export const BankTransactionsSelectedValue = (props: BankTransactionsSelectedValueProps) => {
-  const { className } = props
+  const { className, size = 'md' } = props
 
   const displayData = 'bankTransaction' in props
     ? normalizeFromBankTransaction(props.bankTransaction)
@@ -84,7 +86,7 @@ export const BankTransactionsSelectedValue = (props: BankTransactionsSelectedVal
         <Badge size={BadgeSize.SMALL} icon={<MinimizeTwo size={11} />}>
           {displayData.type === 'transfer' ? 'Transfer' : 'Match'}
         </Badge>
-        <Span ellipsis size='sm'>{displayData.label}</Span>
+        <Span ellipsis size={size}>{displayData.label}</Span>
       </HStack>
     )
   }
@@ -95,10 +97,10 @@ export const BankTransactionsSelectedValue = (props: BankTransactionsSelectedVal
         <Badge size={BadgeSize.SMALL} icon={<Scissors size={11} />}>
           Split
         </Badge>
-        <Span ellipsis size='sm'>{displayData.label}</Span>
+        <Span ellipsis size={size}>{displayData.label}</Span>
       </HStack>
     )
   }
 
-  return <Span ellipsis size='sm' className={className}>{displayData.label}</Span>
+  return <Span ellipsis size={size} className={className}>{displayData.label}</Span>
 }

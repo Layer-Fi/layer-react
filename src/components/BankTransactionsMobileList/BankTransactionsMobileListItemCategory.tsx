@@ -21,6 +21,7 @@ export const BankTransactionsMobileListItemCategory = ({
       <BankTransactionsSelectedValue
         bankTransaction={bankTransaction}
         className={className}
+        size='sm'
       />
     )
   }
@@ -31,6 +32,7 @@ export const BankTransactionsMobileListItemCategory = ({
         <BankTransactionsSelectedValue
           selectedValue={selectedCategory ?? null}
           className={className}
+          size='sm'
         />
       )
       : (

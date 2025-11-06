@@ -36,6 +36,7 @@ import { isSplitCategorizationEncoded, type CategorizationEncoded } from '@schem
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { BankTransactionsSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsSelectedValue'
+import { HStack } from '@ui/Stack/Stack'
 
 type Props = {
   index: number
@@ -257,9 +258,7 @@ export const BankTransactionRow = ({
             `${className}__actions-cell--${open ? 'open' : 'close'}`,
           )}
         >
-          <span
-            className={`${className}__actions-container Layer__table-cell-content`}
-          >
+          <HStack pi='md' gap='md'>
             {categorizationEnabled && !categorized && !open
               ? (
                 <BankTransactionCategoryComboBox
@@ -343,7 +342,7 @@ export const BankTransactionRow = ({
                 />
               )}
             />
-          </span>
+          </HStack>
         </td>
       </tr>
       <tr>

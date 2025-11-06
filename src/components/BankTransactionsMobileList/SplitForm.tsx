@@ -51,7 +51,7 @@ export const SplitForm = ({
 
   const {
     localSplits,
-    splitFormError: formError,
+    splitFormError,
     addSplit,
     removeSplit,
     updateSplitAmount,
@@ -140,6 +140,7 @@ export const SplitForm = ({
                 Add new split
               </TextButton>
             </div>
+            {splitFormError && <HStack pbe='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
           </>
         )
         : null}
@@ -183,7 +184,6 @@ export const SplitForm = ({
           </Button>
         )}
       </div>
-      {formError && <HStack pb='sm'><ErrorText>{formError}</ErrorText></HStack>}
       {bankTransaction.error && showRetry
         ? (
           <ErrorText>
