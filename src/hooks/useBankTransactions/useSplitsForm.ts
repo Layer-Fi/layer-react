@@ -33,6 +33,7 @@ export interface UseSplitsFormReturn {
   setSplitFormError: (error: string | undefined) => void
   getInputValueForSplitAtIndex: (index: number, split: Split) => string
   validateSplitsForm: () => boolean
+  saveLocalSplitsToCategoryStore: (splits: Split[]) => void
 }
 
 export const useSplitsForm = ({
@@ -166,5 +167,6 @@ export const useSplitsForm = ({
     setSplitFormError,
     getInputValueForSplitAtIndex,
     validateSplitsForm,
+    saveLocalSplitsToCategoryStore,
   }
 }
