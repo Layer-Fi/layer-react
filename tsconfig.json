@@ -101,7 +101,25 @@
       "es2022",
       "dom",
       "dom.iterable"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@api/*": ["src/api/*"],
+      "@components/*": ["src/components/*"],
+      "@ui/*": ["src/components/ui/*"],
+      "@contexts/*": ["src/contexts/*"],
+      "@features/*": ["src/features/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@providers/*": ["src/providers/*"],
+      "@utils/*": ["src/utils/*"],
+      "@internal-types/*": ["src/types/*"],
+      "@schemas/*": ["src/schemas/*"],
+      "@views/*": ["src/views/*"],
+      "@config/*": ["src/config/*"],
+      "@icons/*": ["src/icons/*"],
+      "@assets/*": ["src/assets/*"],
+    },
   },
   "include": [
     "src/**/*"
