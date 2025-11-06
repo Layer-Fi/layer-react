@@ -74,6 +74,8 @@ const normalizeFromSelectedValue = (selectedValue: BankTransactionCategoryComboB
 export const BankTransactionsSelectedValue = (props: BankTransactionsSelectedValueProps) => {
   const { className, size = 'md' } = props
 
+  const badgeSize = size === 'sm' ? BadgeSize.SMALL : BadgeSize.MEDIUM
+
   const displayData = 'bankTransaction' in props
     ? normalizeFromBankTransaction(props.bankTransaction)
     : normalizeFromSelectedValue('selectedValue' in props ? props.selectedValue : null)
@@ -83,7 +85,7 @@ export const BankTransactionsSelectedValue = (props: BankTransactionsSelectedVal
   if (displayData.type === 'match' || displayData.type === 'transfer') {
     return (
       <HStack gap='xs' align='center' className={className}>
-        <Badge size={BadgeSize.SMALL} icon={<MinimizeTwo size={11} />}>
+        <Badge size={badgeSize} icon={<MinimizeTwo size={11} />}>
           {displayData.type === 'transfer' ? 'Transfer' : 'Match'}
         </Badge>
         <Span ellipsis size={size}>{displayData.label}</Span>
@@ -94,7 +96,7 @@ export const BankTransactionsSelectedValue = (props: BankTransactionsSelectedVal
   if (displayData.type === 'split') {
     return (
       <HStack gap='xs' align='center' className={className}>
-        <Badge size={BadgeSize.SMALL} icon={<Scissors size={11} />}>
+        <Badge size={badgeSize} icon={<Scissors size={11} />}>
           Split
         </Badge>
         <Span ellipsis size={size}>{displayData.label}</Span>
