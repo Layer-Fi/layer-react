@@ -2,8 +2,7 @@ import { BankTransaction } from '@internal-types/bank_transactions'
 import { isCategorized } from '@components/BankTransactions/utils'
 import { Span } from '@ui/Typography/Text'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
-import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
+import { BankTransactionsSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsSelectedValue'
 
 export interface BankTransactionsMobileListItemCategoryProps {
   bankTransaction: BankTransaction
@@ -16,19 +15,24 @@ export const BankTransactionsMobileListItemCategory = ({
 }: BankTransactionsMobileListItemCategoryProps) => {
   const categorized = isCategorized(bankTransaction)
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-  const selectedValue = () => (
-    <BankTransactionsUncategorizedSelectedValue selectedValue={selectedCategory ?? null} className={className} />
-  )
 
   if (categorized) {
     return (
-      <BankTransactionsCategorizedSelectedValue bankTransaction={bankTransaction} className={className} />
+      <BankTransactionsSelectedValue
+        bankTransaction={bankTransaction}
+        className={className}
+      />
     )
   }
 
   return (
     selectedCategory
-      ? selectedValue()
+      ? (
+        <BankTransactionsSelectedValue
+          selectedValue={selectedCategory ?? null}
+          className={className}
+        />
+      )
       : (
         <Span ellipsis className={className} size='sm'>
           No category selected

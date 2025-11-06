@@ -35,7 +35,7 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import { isSplitCategorizationEncoded, type CategorizationEncoded } from '@schemas/categorization'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
-import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
+import { BankTransactionsSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsSelectedValue'
 
 type Props = {
   index: number
@@ -275,7 +275,7 @@ export const BankTransactionRow = ({
               : null}
             {categorized && !open
               ? (
-                <BankTransactionsCategorizedSelectedValue
+                <BankTransactionsSelectedValue
                   bankTransaction={bankTransaction}
                 />
               )

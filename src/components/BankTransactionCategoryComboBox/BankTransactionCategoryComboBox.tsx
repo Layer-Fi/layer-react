@@ -12,7 +12,7 @@ import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import type { GroupBase } from 'react-select'
-import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
+import { BankTransactionsSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsSelectedValue'
 import './bankTransactionCategoryComboBox.scss'
 
 type BankTransactionCategoryComboBoxOptionProps = {
@@ -137,7 +137,7 @@ export const BankTransactionCategoryComboBox = ({
       : 'Categorize or match...'
 
   const SelectedValue = useMemo(() => {
-    return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} />
+    return <BankTransactionsSelectedValue selectedValue={selectedValue} />
   }, [selectedValue])
 
   return (

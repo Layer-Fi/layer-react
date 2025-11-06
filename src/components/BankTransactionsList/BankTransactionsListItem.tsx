@@ -16,8 +16,7 @@ import { isCategorized } from '@components/BankTransactions/utils'
 import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { SaveHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
-import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
+import { BankTransactionsSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsSelectedValue'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
@@ -242,13 +241,13 @@ export const BankTransactionsListItem = ({
           : null}
         {categorized
           ? (
-            <BankTransactionsCategorizedSelectedValue
+            <BankTransactionsSelectedValue
               bankTransaction={bankTransaction}
             />
           )
           : selectedCategory
             ? (
-              <BankTransactionsUncategorizedSelectedValue
+              <BankTransactionsSelectedValue
                 selectedValue={selectedCategory}
               />
             )
