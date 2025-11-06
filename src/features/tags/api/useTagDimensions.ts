@@ -1,10 +1,10 @@
 import useSWR, { type SWRResponse } from 'swr'
-import { useAuth } from '../../../hooks/useAuth'
-import { useEnvironment } from '../../../providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
-import { get } from '../../../api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { get } from '@api/layer/authenticated_http'
 import { Schema } from 'effect'
-import { TagDimensionSchema } from '../tagSchemas'
+import { TagDimensionSchema } from '@features/tags/tagSchemas'
 
 export const TAG_DIMENSIONS_TAG_KEY = '#tag-dimensions'
 

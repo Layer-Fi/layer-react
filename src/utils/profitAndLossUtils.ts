@@ -1,6 +1,6 @@
-import type { ProfitAndLoss } from '../hooks/useProfitAndLoss/schemas'
-import { SidebarScope } from '../hooks/useProfitAndLoss/useProfitAndLoss'
-import type { LineItem } from '../schemas/common/lineItem'
+import type { ProfitAndLoss } from '@hooks/useProfitAndLoss/schemas'
+import { SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import type { LineItem } from '@schemas/common/lineItem'
 
 export type PnlChartLineItem = LineItem & {
   type: string

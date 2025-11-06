@@ -1,9 +1,9 @@
 import { Schema, pipe } from 'effect'
-import { Direction } from '../../types/general'
-import { LedgerEntrySourceSchema } from '../../schemas/generalLedger/ledgerEntrySource'
-import { AccountSchema } from '../../schemas/generalLedger/ledgerAccount'
+import { Direction } from '@internal-types/general'
+import { LedgerEntrySourceSchema } from '@schemas/generalLedger/ledgerEntrySource'
+import { AccountSchema } from '@schemas/generalLedger/ledgerAccount'
 
-import { LineItemSchema } from '../../schemas/common/lineItem'
+import { LineItemSchema } from '@schemas/common/lineItem'
 
 export const TagFilterSchema = Schema.Struct({
   key: Schema.String,

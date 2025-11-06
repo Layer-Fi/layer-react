@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import type { Awaitable } from '../../types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/promises'
 
 type Cleanup = () => Awaitable<void>
 type OnMount = () => Awaitable<void | Cleanup>

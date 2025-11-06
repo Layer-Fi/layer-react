@@ -7,8 +7,8 @@ import ReactSelect, {
   StylesConfig,
   components,
 } from 'react-select'
-import ChevronDownFill from '../../icons/ChevronDownFill'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip/Tooltip'
+import ChevronDownFill from '@icons/ChevronDownFill'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
 
 export interface SelectProps<T> {

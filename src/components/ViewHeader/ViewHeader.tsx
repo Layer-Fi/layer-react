@@ -1,4 +1,4 @@
-import { Heading } from '../Typography/Heading'
+import { Heading } from '@components/Typography/Heading'
 import { ReactNode } from 'react'
 import classNames from 'classnames'
 

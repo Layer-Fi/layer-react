@@ -1,5 +1,5 @@
 import { HTMLProps } from 'react'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip/Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
 
 export interface TextareaProps extends HTMLProps<HTMLTextAreaElement> {

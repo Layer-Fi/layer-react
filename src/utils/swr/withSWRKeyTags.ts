@@ -1,4 +1,4 @@
-import { isStringArray } from '../array/isStringArray'
+import { isStringArray } from '@utils/array/isStringArray'
 
 export function withSWRKeyTags(key: unknown, predicate: (tags: ReadonlyArray<string>) => boolean) {
   if (typeof key !== 'object' || key === null || !('tags' in key)) {

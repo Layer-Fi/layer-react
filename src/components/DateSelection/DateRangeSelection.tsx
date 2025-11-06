@@ -1,8 +1,8 @@
-import { HStack } from '../ui/Stack/Stack'
-import { DateSelectionComboBox } from './DateSelectionComboBox'
-import { DatePicker } from '../DatePicker/DatePicker'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useDatePickerState } from '../DatePicker/useDatePickerState'
+import { HStack } from '@ui/Stack/Stack'
+import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
+import { DatePicker } from '@components/DatePicker/DatePicker'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 import { useEffect } from 'react'
 import './dateRangeSelection.scss'
 

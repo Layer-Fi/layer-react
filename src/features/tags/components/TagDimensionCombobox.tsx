@@ -1,10 +1,10 @@
 import { useCallback, useId, useMemo } from 'react'
-import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
-import { VStack } from '../../../components/ui/Stack/Stack'
-import { Label } from '../../../components//ui/Typography/Text'
-import { useTagDimensionByKey } from '../api/useTagDimensionByKey'
-import { type TagValueDefinition, type Tag } from '../tagSchemas'
-import { FallbackWithSkeletonLoader } from '../../../components/SkeletonLoader/SkeletonLoader'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
+import { useTagDimensionByKey } from '@features/tags/api/useTagDimensionByKey'
+import { type TagValueDefinition, type Tag } from '@features/tags/tagSchemas'
+import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
 class TagValueDefinitionAsOption {
   private tagValueDefinition: TagValueDefinition

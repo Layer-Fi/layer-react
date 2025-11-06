@@ -1,12 +1,12 @@
-import { type Invoice, InvoiceStatus } from '../../../features/invoices/invoiceSchemas'
-import { unsafeAssertUnreachable } from '../../../utils/switch/assertUnreachable'
-import { Badge, BadgeVariant, BadgeSize } from '../../Badge/Badge'
-import { HStack, VStack } from '../../ui/Stack/Stack'
-import { Span } from '../../ui/Typography/Text'
-import { getDueDifference } from '../../../utils/time/timeUtils'
+import { type Invoice, InvoiceStatus } from '@features/invoices/invoiceSchemas'
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { Badge, BadgeVariant, BadgeSize } from '@components/Badge/Badge'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+import { getDueDifference } from '@utils/time/timeUtils'
 import pluralize from 'pluralize'
-import AlertCircle from '../../../icons/AlertCircle'
-import CheckCircle from '../../../icons/CheckCircle'
+import AlertCircle from '@icons/AlertCircle'
+import CheckCircle from '@icons/CheckCircle'
 
 const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }) => {
   const badgeSize = inline ? BadgeSize.EXTRA_SMALL : BadgeSize.SMALL

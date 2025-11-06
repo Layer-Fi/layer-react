@@ -1,11 +1,11 @@
 import { getMonth, getYear, startOfMonth, startOfYear, subMonths, subYears } from 'date-fns'
-import { DateRange } from '../../types/general'
-import { range } from '../../utils/array/range'
-import { isArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
-import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ProfitAndLossComparisonTags, TagComparisonOption } from '../../types/profit_and_loss'
-import { toLocalDateString } from '../../utils/time/timeUtils'
-import { ReadonlyArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
+import { DateRange } from '@internal-types/general'
+import { range } from '@utils/array/range'
+import { isArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
+import { DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { ProfitAndLossComparisonTags, TagComparisonOption } from '@internal-types/profit_and_loss'
+import { toLocalDateString } from '@utils/time/timeUtils'
+import { ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
 
 export function prepareFiltersBody(compareOptions: TagComparisonOption[]): ReadonlyArrayWithAtLeastOne<ProfitAndLossComparisonTags> | undefined {
   const noneFilters = compareOptions.filter(

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ZonedDateTime } from '@internationalized/date'
-import { getIsDateInvalid } from './utils'
-import { convertDateToZonedDateTime } from '../../utils/time/timeUtils'
+import { getIsDateInvalid } from '@components/DatePicker/utils'
+import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 
 type UseDatePickerStateArgs = {
   date: Date

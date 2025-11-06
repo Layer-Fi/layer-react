@@ -3,9 +3,9 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 import {
   BankTransactionFilters,
   BankTransactionsDateFilterMode,
-} from '../../hooks/useBankTransactions/types'
-import { DisplayState } from '../../types/bank_transactions'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+} from '@hooks/useBankTransactions/types'
+import { DisplayState } from '@internal-types/bank_transactions'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type useBankTransactionsFiltersParams = {
   scope?: DisplayState

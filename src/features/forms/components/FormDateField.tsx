@@ -1,11 +1,11 @@
 import { useState, useEffect, type PropsWithChildren, useCallback } from 'react'
-import { useFieldContext } from '../hooks/useForm'
-import { Label } from '../../../components/ui/Typography/Text'
-import { DateField, DateInput, DateSegment } from '../../../components/ui/Date/Date'
-import { FieldError } from '../../../components/ui/Form/Form'
-import type { CommonFormFieldProps } from '../types'
+import { useFieldContext } from '@features/forms/hooks/useForm'
+import { Label } from '@ui/Typography/Text'
+import { DateField, DateInput, DateSegment } from '@ui/Date/Date'
+import { FieldError } from '@ui/Form/Form'
+import type { CommonFormFieldProps } from '@features/forms/types'
 import type { ZonedDateTime } from '@internationalized/date'
-import { InputGroup } from '../../../components/ui/Input/InputGroup'
+import { InputGroup } from '@ui/Input/InputGroup'
 
 export type FormDateFieldProps = CommonFormFieldProps
 export function FormDateField({

@@ -4,7 +4,7 @@ import {
   ReactNode,
   useRef,
 } from 'react'
-import { ButtonJustify, ButtonVariant } from './Button'
+import { ButtonJustify, ButtonVariant } from '@components/Button/Button'
 import classNames from 'classnames'
 
 export interface LinkProps extends LinkHTMLAttributes<HTMLAnchorElement> {

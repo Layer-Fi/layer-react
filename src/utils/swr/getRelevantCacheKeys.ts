@@ -1,5 +1,5 @@
 import { type Cache } from 'swr'
-import { withSWRKeyTags } from './withSWRKeyTags'
+import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 
 type GetRelevantCacheKeysParameters = {
   cache: Cache<unknown>

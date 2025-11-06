@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
-import { ButtonProps } from '../Button/Button'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip/Tooltip'
+import { ButtonProps } from '@components/Button/Button'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
 import './badge.scss'
 

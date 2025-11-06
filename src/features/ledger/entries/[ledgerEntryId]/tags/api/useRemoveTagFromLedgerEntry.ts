@@ -1,10 +1,10 @@
 import useSWRMutation from 'swr/mutation'
-import { useAuth } from '../../../../../../hooks/useAuth'
-import { useLayerContext } from '../../../../../../contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useCallback } from 'react'
-import { post } from '../../../../../../api/layer/authenticated_http'
-import { useLedgerEntriesCacheActions, useLedgerEntriesOptimisticUpdater } from '../../../api/useListLedgerEntries'
-import { usePnlDetailLinesInvalidator } from '../../../../../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import { post } from '@api/layer/authenticated_http'
+import { useLedgerEntriesCacheActions, useLedgerEntriesOptimisticUpdater } from '@features/ledger/entries/api/useListLedgerEntries'
+import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 
 const REMOVE_TAG_FROM_LEDGER_ENTRY_TAG_KEY = '#remove-tag-from-ledger-entry'
 

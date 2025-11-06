@@ -1,6 +1,6 @@
 import { useState, createContext, type PropsWithChildren, useContext } from 'react'
 import { createStore, useStore } from 'zustand'
-import type { DatePickerMode, DateRangePickerMode } from '../GlobalDateStore/GlobalDateStoreProvider'
+import type { DatePickerMode, DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export enum ReportKey {
   ProfitAndLoss = 'ProfitAndLoss',

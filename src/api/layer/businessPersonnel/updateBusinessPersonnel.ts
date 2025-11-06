@@ -1,5 +1,5 @@
-import { post } from '../authenticated_http'
-import type { BusinessPersonnel, PersonnelRole, RawBusinessPersonnel } from '../../../hooks/businessPersonnel/types'
+import { post } from '@api/layer/authenticated_http'
+import type { BusinessPersonnel, PersonnelRole, RawBusinessPersonnel } from '@hooks/businessPersonnel/types'
 
 export type UpdateBusinessPersonnelBody = {
   id: string

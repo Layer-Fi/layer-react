@@ -1,16 +1,16 @@
 import { useContext, useMemo, type ReactNode } from 'react'
-import type { Variants } from '../../utils/styleUtils/sizeVariants'
+import type { Variants } from '@utils/styleUtils/sizeVariants'
 import {
   ProfitAndLossSummariesList,
   ProfitAndLossSummariesListItem,
-} from './internal/ProfitAndLossSummariesList'
+} from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesList'
 import {
   ProfitAndLossSummariesMiniChart,
   toMiniChartData,
-} from './internal/ProfitAndLossSummariesMiniChart'
-import { ProfitAndLossSummariesSummary } from './internal/ProfitAndLossSummariesSummary'
-import { TransactionsToReview } from '../../views/AccountingOverview/internal/TransactionsToReview'
-import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
+} from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesMiniChart'
+import { ProfitAndLossSummariesSummary } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesSummary'
+import { TransactionsToReview } from '@views/AccountingOverview/internal/TransactionsToReview'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string

@@ -1,10 +1,10 @@
-import { useAuth } from '../useAuth'
+import { useAuth } from '@hooks/useAuth'
 import useSWRMutation from 'swr/mutation'
-import { postWithFormData } from '../../api/layer/authenticated_http'
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import { CUSTOM_ACCOUNTS_TAG_KEY } from './useCustomAccounts'
-import type { CustomAccountTransactionRow, RawCustomTransaction } from './types'
-import type { PreviewCsv } from '../../components/CsvUpload/types'
+import { postWithFormData } from '@api/layer/authenticated_http'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/customAccounts/useCustomAccounts'
+import type { CustomAccountTransactionRow, RawCustomTransaction } from '@hooks/customAccounts/types'
+import type { PreviewCsv } from '@components/CsvUpload/types'
 import { APIError } from '../../models/APIError'
 
 type CustomAccountParseCsvArgs = {

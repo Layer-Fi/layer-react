@@ -1,9 +1,9 @@
-import { TextButton } from '../Button/TextButton'
+import { TextButton } from '@components/Button/TextButton'
 import { useState } from 'react'
-import { BankTransaction } from '../../types/bank_transactions'
-import { hasMatch } from '../../utils/bankTransactions'
-import { MatchForm } from './MatchForm'
-import { SplitForm } from './SplitForm'
+import { BankTransaction } from '@internal-types/bank_transactions'
+import { hasMatch } from '@utils/bankTransactions'
+import { MatchForm } from '@components/BankTransactionsMobileList/MatchForm'
+import { SplitForm } from '@components/BankTransactionsMobileList/SplitForm'
 
 interface SplitAndMatchFormProps {
   bankTransaction: BankTransaction

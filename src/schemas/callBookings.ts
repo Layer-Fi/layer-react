@@ -1,6 +1,6 @@
-import { PaginatedResponseMetaSchema } from '../types/utility/pagination'
+import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { Schema, pipe } from 'effect'
-import { createTransformedEnumSchema } from './utils'
+import { createTransformedEnumSchema } from '@schemas/utils'
 
 // Enums matching the frontend types
 export enum CallBookingState {

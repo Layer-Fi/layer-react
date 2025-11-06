@@ -1,5 +1,5 @@
-import { Toggle, ToggleSize } from '../../Toggle/Toggle'
-import type { DatePickerMode, DateRangePickerMode } from '../../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
+import type { DatePickerMode, DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import './deprecatedDatePickerModeSelector.scss'
 
 export type UnifiedPickerMode = DatePickerMode | DateRangePickerMode

@@ -1,7 +1,7 @@
-import type { TransactionTagEncoded, Tag } from '../features/tags/tagSchemas'
-import { LedgerEntrySourceType } from '../schemas/generalLedger/ledgerEntrySource'
-import { LedgerEntryDirection, SingleChartAccountEncodedType } from '../schemas/generalLedger/ledgerAccount'
-import { AccountIdentifierPayloadObject } from './categories'
+import type { TransactionTagEncoded, Tag } from '@features/tags/tagSchemas'
+import { LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
+import { LedgerEntryDirection, SingleChartAccountEncodedType } from '@schemas/generalLedger/ledgerAccount'
+import { AccountIdentifierPayloadObject } from '@internal-types/categories'
 
 export interface JournalEntry {
   id: string

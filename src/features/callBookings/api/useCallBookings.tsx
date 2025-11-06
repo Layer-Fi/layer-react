@@ -1,20 +1,20 @@
 import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
 import { Schema } from 'effect'
-import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
-import { useAuth } from '../../../hooks/useAuth'
-import { get } from '../../../api/layer/authenticated_http'
-import { toDefinedSearchParameters } from '../../../utils/request/toDefinedSearchParameters'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { get } from '@api/layer/authenticated_http'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import {
   CallBookingState,
   CallBookingType,
   CallBookingPurpose,
   ListCallBookingsResponseSchema,
-} from '../../../schemas/callBookings'
+} from '@schemas/callBookings'
 import type {
   CallBooking,
   ListCallBookingsResponse,
   CreateCallBookingBody,
-} from '../../../schemas/callBookings'
+} from '@schemas/callBookings'
 
 export type { CallBooking, CreateCallBookingBody }
 export { CallBookingState, CallBookingType, CallBookingPurpose }

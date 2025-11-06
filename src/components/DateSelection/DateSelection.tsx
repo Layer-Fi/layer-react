@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
-import { HStack } from '../ui/Stack/Stack'
-import { DateSelectionComboBox } from './DateSelectionComboBox'
-import { DatePicker } from '../DatePicker/DatePicker'
-import { useGlobalDate, useGlobalDateActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useDatePickerState } from '../DatePicker/useDatePickerState'
+import { HStack } from '@ui/Stack/Stack'
+import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
+import { DatePicker } from '@components/DatePicker/DatePicker'
+import { useGlobalDate, useGlobalDateActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 import './dateSelection.scss'
 
 type DateSelectionProps = {

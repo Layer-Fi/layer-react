@@ -1,5 +1,5 @@
 import { Schema, pipe } from 'effect'
-import { LineItemSchema } from '../common/lineItem'
+import { LineItemSchema } from '@schemas/common/lineItem'
 
 export enum ReportEnum {
   BalanceSheet = 'balance-sheet',

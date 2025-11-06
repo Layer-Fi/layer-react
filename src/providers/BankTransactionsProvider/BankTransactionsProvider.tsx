@@ -1,10 +1,10 @@
 import { ReactNode } from 'react'
-import { BankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
-import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
+import { BankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useAugmentedBankTransactions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
 import {
   BankTransactionsFiltersContext,
-} from '../../contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { useBankTransactionsFilters, useBankTransactionsFiltersParams } from '../../contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
+} from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { useBankTransactionsFilters, useBankTransactionsFiltersParams } from '@contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
 
 interface BankTransactionsProviderProps extends useBankTransactionsFiltersParams {
   children: ReactNode

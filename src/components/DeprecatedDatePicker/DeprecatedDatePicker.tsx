@@ -1,17 +1,17 @@
-import { Button, ButtonVariant } from '../Button/Button'
+import { Button, ButtonVariant } from '@components/Button/Button'
 import { useMemo, useRef, useState, type FC } from 'react'
 import * as RDP from 'react-datepicker'
-import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
-import ChevronLeft from '../../icons/ChevronLeft'
-import ChevronRight from '../../icons/ChevronRight'
-import { CustomDateRange, DeprecatedDatePickerOptions } from './DeprecatedDatePickerOptions'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import ChevronLeft from '@icons/ChevronLeft'
+import ChevronRight from '@icons/ChevronRight'
+import { CustomDateRange, DeprecatedDatePickerOptions } from '@components/DeprecatedDatePicker/DeprecatedDatePickerOptions'
 import type {
   UnifiedPickerMode,
   DeprecatedDatePickerModeSelectorProps,
-} from './ModeSelector/DeprecatedDatePickerModeSelector'
+} from '@components/DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
 import classNames from 'classnames'
 import { endOfDay, endOfMonth, endOfYear, getYear } from 'date-fns'
-import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import './deprecatedDatePicker.scss'
 
 /**

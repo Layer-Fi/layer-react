@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes } from 'react'
-import CloseIcon from '../../icons/CloseIcon'
+import CloseIcon from '@icons/CloseIcon'
 import classNames from 'classnames'
 
 type CloseButtonProps = {

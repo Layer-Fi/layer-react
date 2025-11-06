@@ -1,11 +1,11 @@
 import { Schema } from 'effect'
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
-import { post } from '../../api/layer/authenticated_http'
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import { useAuth } from '../useAuth'
-import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
-import { CategoryUpdateSchema } from '../../schemas/bankTransactions/BankTransactionsBulkActions'
+import { post } from '@api/layer/authenticated_http'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
+import { CategoryUpdateSchema } from '@schemas/bankTransactions/BankTransactionsBulkActions'
 
 const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'
 

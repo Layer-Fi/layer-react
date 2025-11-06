@@ -1,26 +1,26 @@
-import { TableCell } from '../TableCell/TableCell'
-import { TableRow } from '../TableRow/TableRow'
-import { TableHead } from '../TableHead/TableHead'
-import { TableBody } from '../TableBody/TableBody'
-import { Table } from '../Table/Table'
+import { TableCell } from '@components/TableCell/TableCell'
+import { TableRow } from '@components/TableRow/TableRow'
+import { TableHead } from '@components/TableHead/TableHead'
+import { TableBody } from '@components/TableBody/TableBody'
+import { Table } from '@components/Table/Table'
 import { Fragment, useContext, useEffect } from 'react'
-import { useTableExpandRow } from '../../hooks/useTableExpandRow/useTableExpandRow'
-import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
+import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
+import { ProfitAndLossComparisonPnl } from '@internal-types/profit_and_loss'
 import {
   generateComparisonPeriods,
   getComparisonValue,
   mergeComparisonLineItemsAtDepth,
-} from '../../utils/profitAndLossComparisonUtils'
-import { Loader } from '../Loader/Loader'
-import { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
+} from '@utils/profitAndLossComparisonUtils'
+import { Loader } from '@components/Loader/Loader'
+import { ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
 import classNames from 'classnames'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
-import { HStack } from '../ui/Stack/Stack'
-import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
-import { LineItem } from '../../schemas/common/lineItem'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
+import { HStack } from '@ui/Stack/Stack'
+import { ReportKey, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
+import { LineItem } from '@schemas/common/lineItem'
 
 interface ProfitAndLossCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides

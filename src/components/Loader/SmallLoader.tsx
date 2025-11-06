@@ -1,4 +1,4 @@
-import LoaderIcon from '../../icons/Loader'
+import LoaderIcon from '@icons/Loader'
 
 export interface SmallLoaderProps {
   size?: number

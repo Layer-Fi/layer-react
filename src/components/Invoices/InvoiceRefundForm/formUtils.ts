@@ -1,9 +1,9 @@
-import { type Invoice } from '../../../features/invoices/invoiceSchemas'
-import { convertBigDecimalToCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
+import { type Invoice } from '@features/invoices/invoiceSchemas'
+import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 import { formatDate, startOfToday } from 'date-fns'
 import { getLocalTimeZone, fromDate, toCalendarDate, today } from '@internationalized/date'
-import { DATE_FORMAT_SHORT } from '../../../config/general'
-import type { InvoiceRefundForm } from './invoiceRefundFormSchemas'
+import { DATE_FORMAT_SHORT } from '@config/general'
+import type { InvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/invoiceRefundFormSchemas'
 
 export const getInvoiceRefundFormDefaultValues = (invoice: Invoice): InvoiceRefundForm => {
   const completedAt = fromDate(startOfToday(), getLocalTimeZone())

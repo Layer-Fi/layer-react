@@ -1,6 +1,6 @@
-import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
-import { useGlobalDate, useGlobalDateActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { DeprecatedDatePicker } from '@components/DeprecatedDatePicker/DeprecatedDatePicker'
+import { useGlobalDate, useGlobalDateActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { ReportKey, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 export function BalanceSheetDatePicker() {
   const { date } = useGlobalDate()

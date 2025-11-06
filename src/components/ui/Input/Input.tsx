@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
 import { Input as ReactAriaInput, InputProps as ReactAriaInputProps } from 'react-aria-components'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './input.scss'
 
 const INPUT_CLASS_NAME = 'Layer__UI__Input'

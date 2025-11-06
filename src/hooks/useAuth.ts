@@ -1,8 +1,8 @@
 import useSWR from 'swr'
-import { EnvironmentConfigs, type Environment } from '../providers/Environment/environmentConfigs'
-import type { OAuthResponse } from '../types/authentication'
-import { useAuthInput } from '../providers/AuthInputProvider'
-import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
+import { EnvironmentConfigs, type Environment } from '@providers/Environment/environmentConfigs'
+import type { OAuthResponse } from '@internal-types/authentication'
+import { useAuthInput } from '@providers/AuthInputProvider'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 
 type ClientSpecificOptions = {
   appId: string

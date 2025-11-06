@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
-import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
+import { SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { formatPercent } from '../../utils/format'
-import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
-import { mapTypesToColors } from './DetailedTable'
+import { formatPercent } from '@utils/format'
+import { ProfitAndLossDatePicker } from '@components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
+import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
 import classNames from 'classnames'
 import {
   PieChart,
@@ -14,7 +14,7 @@ import {
   Text as ChartText,
 } from 'recharts'
 import { PolarViewBox } from 'recharts/types/util/types'
-import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
+import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 
 interface DetailedChartProps {
   filteredData: PnlChartLineItem[]

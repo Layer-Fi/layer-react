@@ -1,8 +1,8 @@
 import useSWRMutation from 'swr/mutation'
-import { useAuth } from '../useAuth'
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import { getBankTransactionsExcel } from '../../api/layer/bankTransactions'
-import type { UseBankTransactionsOptions } from './useBankTransactions'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getBankTransactionsExcel } from '@api/layer/bankTransactions'
+import type { UseBankTransactionsOptions } from '@hooks/useBankTransactions/useBankTransactions'
 
 function buildKey({
   access_token: accessToken,

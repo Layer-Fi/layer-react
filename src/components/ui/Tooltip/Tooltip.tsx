@@ -6,12 +6,12 @@ import {
   cloneElement,
   type Ref,
 } from 'react'
-import { TooltipContext, useTooltip, useTooltipContext } from '../../Tooltip/useTooltip'
+import { TooltipContext, useTooltip, useTooltipContext } from '@components/Tooltip/useTooltip'
 import { useMergeRefs, FloatingPortal } from '@floating-ui/react'
 import type { Placement } from '@floating-ui/react'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import classNames from 'classnames'
-import { HStack } from '../../ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
 import './tooltip.scss'
 
 export type TooltipCapableComponentProps = {

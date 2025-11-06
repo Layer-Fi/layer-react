@@ -1,7 +1,7 @@
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import { useAuth } from '../../hooks/useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { Layer } from '../../api/layer'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { Layer } from '@api/layer'
 import useSWR from 'swr'
 
 function buildKey({

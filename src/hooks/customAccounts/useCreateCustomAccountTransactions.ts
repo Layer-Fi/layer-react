@@ -1,10 +1,10 @@
 import useSWRMutation from 'swr/mutation'
-import { post } from '../../api/layer/authenticated_http'
-import type { RawCustomTransaction } from './types'
-import { useAuth } from '../useAuth'
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import { CUSTOM_ACCOUNTS_TAG_KEY } from './useCustomAccounts'
-import { BankTransaction } from '../../types/bank_transactions'
+import { post } from '@api/layer/authenticated_http'
+import type { RawCustomTransaction } from '@hooks/customAccounts/types'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/customAccounts/useCustomAccounts'
+import { BankTransaction } from '@internal-types/bank_transactions'
 import { APIError } from '../../models/APIError'
 
 type CreateCustomAccountTransactionsBody = {

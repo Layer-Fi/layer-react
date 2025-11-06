@@ -11,7 +11,7 @@ import {
   DatePicker as ReactAriaDatePicker,
   type DatePickerProps as ReactAriaDatePickerProps,
 } from 'react-aria-components'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './date.scss'
 
 const DATE_FIELD_CLASS_NAME = 'Layer__UI__DateField'

@@ -1,10 +1,10 @@
-import { Text, TextSize } from '../../Typography/Text'
+import { Text, TextSize } from '@components/Typography/Text'
 import { useContext } from 'react'
-import { BadgeLoader } from '../../BadgeLoader/BadgeLoader'
-import { HStack, Spacer, VStack } from '../../ui/Stack/Stack'
-import { QuickbooksContext } from '../../../contexts/QuickbooksContext/QuickbooksContext'
+import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
+import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import { format, isValid } from 'date-fns'
-import { QuickbooksConnectionSyncUiState } from './utils'
+import { QuickbooksConnectionSyncUiState } from '@components/Integrations/IntegrationsQuickbooksItemThumb/utils'
 
 const formatLastSyncedAt = (datetime: string) => {
   const parsed = new Date(datetime)

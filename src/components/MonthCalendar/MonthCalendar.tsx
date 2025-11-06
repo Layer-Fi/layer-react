@@ -1,5 +1,5 @@
-import { Heading } from '../ui/Typography/Heading'
-import { Button } from '../ui/Button/Button'
+import { Heading } from '@ui/Typography/Heading'
+import { Button } from '@ui/Button/Button'
 import { useCallback, useState } from 'react'
 import {
   GridList,
@@ -7,8 +7,8 @@ import {
 } from 'react-aria-components'
 import { CalendarDate, getLocalTimeZone, ZonedDateTime, fromDate } from '@internationalized/date'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { HStack, VStack } from '../ui/Stack/Stack'
-import { MONTHS } from './utils'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { MONTHS } from '@components/MonthCalendar/utils'
 import './monthCalendar.scss'
 
 export function MonthCalendar({

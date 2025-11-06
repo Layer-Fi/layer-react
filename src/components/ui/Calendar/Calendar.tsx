@@ -15,7 +15,7 @@ import {
   CalendarHeaderCell as ReactAriaCalendarHeaderCell,
   type CalendarHeaderCellProps as ReactAriaCalendarHeaderCellProps,
 } from 'react-aria-components'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './calendar.scss'
 
 const CALENDAR_CLASS_NAME = 'Layer__UI__Calendar'

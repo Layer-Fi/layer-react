@@ -1,4 +1,4 @@
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import classNames from 'classnames'
 import './toast.scss'
 

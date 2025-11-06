@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext } from 'react'
-import { useBills } from '../hooks/useBills'
-import { useBillsRecordPayment } from '../components/Bills/useBillsRecordPayment'
+import { useBills } from '@hooks/useBills'
+import { useBillsRecordPayment } from '@components/Bills/useBillsRecordPayment'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 type BillsProviderProps = {

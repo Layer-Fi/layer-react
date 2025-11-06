@@ -6,12 +6,12 @@ import {
   type FormValidateOrFn,
   type FormAsyncValidateOrFn,
 } from '@tanstack/react-form'
-import { BaseFormTextField } from '../components/BaseFormTextField'
-import { FormBigDecimalField } from '../components/FormBigDecimalField'
-import { FormCheckboxField } from '../components/FormCheckboxField'
-import { FormDateField } from '../components/FormDateField'
-import { FormTextAreaField } from '../components/FormTextAreaField'
-import { FormTextField } from '../components/FormTextField'
+import { BaseFormTextField } from '@features/forms/components/BaseFormTextField'
+import { FormBigDecimalField } from '@features/forms/components/FormBigDecimalField'
+import { FormCheckboxField } from '@features/forms/components/FormCheckboxField'
+import { FormDateField } from '@features/forms/components/FormDateField'
+import { FormTextAreaField } from '@features/forms/components/FormTextAreaField'
+import { FormTextField } from '@features/forms/components/FormTextField'
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts()

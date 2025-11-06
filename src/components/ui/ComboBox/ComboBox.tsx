@@ -10,16 +10,16 @@ import Select, {
   type NoticeProps,
   type SingleValueProps,
 } from 'react-select'
-import { HStack, VStack } from '../Stack/Stack'
-import { Header, P, Span } from '../Typography/Text'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Header, P, Span } from '@ui/Typography/Text'
 import { useId, useMemo, useRef, type ComponentProps, type ReactNode } from 'react'
-import type { OneOf } from '../../../types/utility/oneOf'
+import type { OneOf } from '@internal-types/utility/oneOf'
 import classNames from 'classnames'
-import { PORTAL_CLASS_NAME } from '../Portal/Portal'
-import Check from '../../../icons/Check'
+import { PORTAL_CLASS_NAME } from '@ui/Portal/Portal'
+import Check from '@icons/Check'
 import { ChevronDown, X } from 'lucide-react'
-import { LoadingSpinner } from '../Loading/LoadingSpinner'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './comboBox.scss'
 
 const COMBO_BOX_CLASS_NAMES = {

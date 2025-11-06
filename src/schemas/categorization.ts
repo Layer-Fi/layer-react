@@ -1,8 +1,8 @@
 import { Schema, pipe } from 'effect'
-import { AccountIdentifierSchema, type AccountIdentifier } from './accountIdentifier'
-import { TransactionTagSchema } from '../features/tags/tagSchemas'
-import { CustomerSchema } from './customer'
-import { VendorSchema } from './vendor'
+import { AccountIdentifierSchema, type AccountIdentifier } from '@schemas/accountIdentifier'
+import { TransactionTagSchema } from '@features/tags/tagSchemas'
+import { CustomerSchema } from '@schemas/customer'
+import { VendorSchema } from '@schemas/vendor'
 
 export const BaseCategorizationSchema = Schema.Struct({
   id: Schema.String,

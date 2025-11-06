@@ -1,7 +1,7 @@
-import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
-import { Drawer } from '../ui/Modal/Modal'
-import { VStack } from '../ui/Stack/Stack'
-import { RuleSuggestionHeader, SuggestedCategorizationRuleUpdates } from './SuggestedCategorizationRuleUpdates'
+import { UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { Drawer } from '@ui/Modal/Modal'
+import { VStack } from '@ui/Stack/Stack'
+import { RuleSuggestionHeader, SuggestedCategorizationRuleUpdates } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
 
 interface SuggestedCategorizationRuleUpdatesDrawerProps {
   isOpen: boolean

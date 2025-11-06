@@ -6,10 +6,10 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { useElementSize } from '../../hooks/useElementSize/useElementSize'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip/Tooltip'
+import { useElementSize } from '@hooks/useElementSize/useElementSize'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
-import { Span } from '../ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 
 export interface Option {
   label: string

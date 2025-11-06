@@ -1,15 +1,15 @@
-import { Text } from '../Typography/Text'
+import { Text } from '@components/Typography/Text'
 import { useCallback, useEffect, useMemo, useState, type FunctionComponent } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import { useLinkedAccounts } from '../../hooks/useLinkedAccounts/useLinkedAccounts'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import {
   ProfitAndLossSummaryData,
   useProfitAndLossLTM,
-} from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
+} from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
-import { isDateAllowedToBrowse } from '../../utils/business'
-import { ChartStateCard } from './ChartStateCard'
-import { Indicator } from './Indicator'
+import { isDateAllowedToBrowse } from '@utils/business'
+import { ChartStateCard } from '@components/ProfitAndLossChart/ChartStateCard'
+import { Indicator } from '@components/ProfitAndLossChart/Indicator'
 import classNames from 'classnames'
 import {
   add,
@@ -40,8 +40,8 @@ import { Props as LegendProps } from 'recharts/types/component/DefaultLegendCont
 import {
   useGlobalDateRange,
   useGlobalDateRangeActions,
-} from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+} from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { ReportKey, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 const getChartWindow = ({
   chartWindow,

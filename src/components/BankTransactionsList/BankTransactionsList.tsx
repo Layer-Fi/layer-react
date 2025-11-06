@@ -1,16 +1,16 @@
-import { DATE_FORMAT } from '../../config/general'
-import { BankTransaction } from '../../types/bank_transactions'
+import { DATE_FORMAT } from '@config/general'
+import { BankTransaction } from '@internal-types/bank_transactions'
 import {
   BankTransactionCTAStringOverrides,
-} from '../BankTransactions/BankTransactions'
-import { BankTransactionsListItem } from './BankTransactionsListItem'
-import { Checkbox } from '../ui/Checkbox/Checkbox'
-import { Span } from '../ui/Typography/Text'
-import { HStack } from '../ui/Stack/Stack'
-import { useBankTransactionsTableCheckboxState } from '../../hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
-import { useUpsertBankTransactionsDefaultCategories } from '../../hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
-import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
-import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
+} from '@components/BankTransactions/BankTransactions'
+import { BankTransactionsListItem } from '@components/BankTransactionsList/BankTransactionsListItem'
+import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { Span } from '@ui/Typography/Text'
+import { HStack } from '@ui/Stack/Stack'
+import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
+import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 
 interface BankTransactionsListProps {
   bankTransactions?: BankTransaction[]

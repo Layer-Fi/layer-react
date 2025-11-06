@@ -1,5 +1,5 @@
 import { Switch as ReactAriaSwitch, type SwitchProps as ReactAriaSwitchProps } from 'react-aria-components'
-import { withRenderProp } from '../../utility/withRenderProp'
+import { withRenderProp } from '@components/utility/withRenderProp'
 import { forwardRef } from 'react'
 import './switch.scss'
 

@@ -9,7 +9,7 @@ import {
   Row,
   CellContext,
 } from '@tanstack/react-table'
-import { PreviewCsv, PreviewRow } from './types'
+import { PreviewCsv, PreviewRow } from '@components/CsvUpload/types'
 import { useVirtualizer, VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 
 const ROW_HEIGHT = 52

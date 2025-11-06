@@ -1,8 +1,8 @@
 import { useState, createContext, useContext, type PropsWithChildren } from 'react'
 import { createStore, useStore } from 'zustand'
-import { ReportEnum, type DateQueryParams, type DateRangeQueryParams } from '../../schemas/reports/unifiedReport'
-import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
-import { useGlobalDate, useGlobalDateRange } from '../GlobalDateStore/GlobalDateStoreProvider'
+import { ReportEnum, type DateQueryParams, type DateRangeQueryParams } from '@schemas/reports/unifiedReport'
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 type UnifiedReportStoreShape = { report: ReportEnum }
 

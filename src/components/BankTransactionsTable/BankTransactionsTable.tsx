@@ -1,18 +1,18 @@
 import { useMemo } from 'react'
-import { DATE_FORMAT } from '../../config/general'
-import { BankTransaction } from '../../types/bank_transactions'
-import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-import { BankTransactionRow } from '../BankTransactionRow/BankTransactionRow'
+import { DATE_FORMAT } from '@config/general'
+import { BankTransaction } from '@internal-types/bank_transactions'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { BankTransactionRow } from '@components/BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionsStringOverrides,
-} from '../BankTransactions/BankTransactions'
-import { BankTransactionsLoader } from '../BankTransactionsLoader/BankTransactionsLoader'
-import { SyncingComponent } from '../SyncingComponent/SyncingComponent'
-import { Checkbox } from '../ui/Checkbox/Checkbox'
-import { useBankTransactionsTableCheckboxState } from '../../hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
-import { useUpsertBankTransactionsDefaultCategories } from '../../hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
-import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
-import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
+} from '@components/BankTransactions/BankTransactions'
+import { BankTransactionsLoader } from '@components/BankTransactionsLoader/BankTransactionsLoader'
+import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
+import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
+import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string

@@ -1,4 +1,4 @@
-import { TextButton } from '../Button/TextButton'
+import { TextButton } from '@components/Button/TextButton'
 import {
   endOfMonth,
   endOfQuarter,

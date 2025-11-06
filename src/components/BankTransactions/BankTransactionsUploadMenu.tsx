@@ -1,12 +1,12 @@
-import { Heading } from '../ui/Typography/Heading'
-import { Button } from '../ui/Button/Button'
+import { Heading } from '@ui/Typography/Heading'
+import { Button } from '@ui/Button/Button'
 import { useState } from 'react'
-import { DropdownMenu, MenuList, MenuItem } from '../ui/DropdownMenu/DropdownMenu'
-import { Spacer, VStack } from '../ui/Stack/Stack'
+import { DropdownMenu, MenuList, MenuItem } from '@ui/DropdownMenu/DropdownMenu'
+import { Spacer, VStack } from '@ui/Stack/Stack'
 import { ChevronRight } from 'lucide-react'
-import UploadCloud from '../../icons/UploadCloud'
-import { BankTransactionsUploadModal } from './BankTransactionsUploadModal/BankTransactionsUploadModal'
-import { Span } from '../ui/Typography/Text'
+import UploadCloud from '@icons/UploadCloud'
+import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
+import { Span } from '@ui/Typography/Text'
 
 interface BankTransactionsUploadMenuProps {
   isDisabled?: boolean

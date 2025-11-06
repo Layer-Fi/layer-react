@@ -1,5 +1,5 @@
-import type { EmailAddress, PhoneNumber } from '../../types/utility/branded'
-import type { EnumWithUnknownValues } from '../../types/utility/enumWithUnknownValues'
+import type { EmailAddress, PhoneNumber } from '@internal-types/utility/branded'
+import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 
 type RawEmailAddressEntity = {
   id: string

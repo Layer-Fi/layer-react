@@ -9,10 +9,10 @@ import {
   flexRender,
   type RowData,
 } from '@tanstack/react-table'
-import { Loader } from '../Loader/Loader'
-import type { ColumnConfig, Column } from '../DataTable/DataTable'
-import { Table, TableBody, TableHeader, Column as TableColumn, Row, Cell } from '../ui/Table/Table'
-import { HStack } from '../ui/Stack/Stack'
+import { Loader } from '@components/Loader/Loader'
+import type { ColumnConfig, Column } from '@components/DataTable/DataTable'
+import { Table, TableBody, TableHeader, Column as TableColumn, Row, Cell } from '@ui/Table/Table'
+import { HStack } from '@ui/Stack/Stack'
 import './virtualizedDataTable.scss'
 
 declare module '@tanstack/react-table' {

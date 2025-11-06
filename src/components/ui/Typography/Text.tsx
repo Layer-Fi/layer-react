@@ -1,15 +1,15 @@
 import { Text as ReactAriaText } from 'react-aria-components'
 import { forwardRef, useRef } from 'react'
 import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
-import type { Spacing } from '../sharedUITypes'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import type { Spacing } from '@ui/sharedUITypes'
 import { Header as ReactAriaHeader, Label as ReactAriaLabel } from 'react-aria-components'
 import './text.scss'
 
 import classNames from 'classnames'
-import { useTruncationDetection } from '../../../hooks/useTruncationDetection/useTruncationDetection'
+import { useTruncationDetection } from '@hooks/useTruncationDetection/useTruncationDetection'
 import { mergeRefs } from 'react-merge-refs'
-import { TooltipCapableComponentProps, TooltipContent, TooltipTrigger, Tooltip } from '../Tooltip/Tooltip'
+import { TooltipCapableComponentProps, TooltipContent, TooltipTrigger, Tooltip } from '@ui/Tooltip/Tooltip'
 import React from 'react'
 
 export type TextStyleProps = {

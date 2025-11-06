@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip/Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 
 export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange'> {
   onChange?: (value?: string) => void

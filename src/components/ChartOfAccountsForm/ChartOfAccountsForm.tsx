@@ -1,25 +1,25 @@
-import { Text, TextSize, TextWeight } from '../Typography/Text'
-import { Heading, HeadingSize } from '../Typography/Heading'
-import { Select } from '../Input/Select'
-import { InputGroup } from '../Input/InputGroup'
-import { Input } from '../Input/Input'
-import { HeaderRow } from '../Header/HeaderRow'
-import { HeaderCol } from '../Header/HeaderCol'
-import { Header } from '../Header/Header'
-import { SubmitButton } from '../Button/SubmitButton'
-import { RetryButton } from '../Button/RetryButton'
-import { Button, ButtonVariant } from '../Button/Button'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { Heading, HeadingSize } from '@components/Typography/Heading'
+import { Select } from '@components/Input/Select'
+import { InputGroup } from '@components/Input/InputGroup'
+import { Input } from '@components/Input/Input'
+import { HeaderRow } from '@components/Header/HeaderRow'
+import { HeaderCol } from '@components/Header/HeaderCol'
+import { Header } from '@components/Header/Header'
+import { SubmitButton } from '@components/Button/SubmitButton'
+import { RetryButton } from '@components/Button/RetryButton'
+import { Button, ButtonVariant } from '@components/Button/Button'
 import { useContext, useMemo } from 'react'
-import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
-import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
+import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
+import { flattenAccounts } from '@hooks/useChartOfAccounts/useChartOfAccounts'
 import {
   LEDGER_ACCOUNT_SUBTYPES,
   LEDGER_ACCOUNT_SUBTYPES_FOR_TYPE,
   LEDGER_ACCOUNT_TYPES,
   NORMALITY_OPTIONS,
-} from './constants'
-import { useParentOptions } from './useParentOptions'
-import { convertCentsToCurrency } from '../../utils/format'
+} from '@components/ChartOfAccountsForm/constants'
+import { useParentOptions } from '@components/ChartOfAccountsForm/useParentOptions'
+import { convertCentsToCurrency } from '@utils/format'
 
 export interface ChartOfAccountsFormStringOverrides {
   editModeHeader?: string
