@@ -22,7 +22,8 @@ import { HStack } from '@ui/Stack/Stack'
 import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
 import { BankTransactionsMobileListItemCategory } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCategory'
 import './bankTransactionsMobileListItem.scss'
-
+import { isCategorized } from '@components/BankTransactions/utils'
+import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 export interface BankTransactionsMobileListItemProps {
   index: number
   bankTransaction: BankTransaction
@@ -65,6 +66,7 @@ export const BankTransactionsMobileListItem = ({
   } = useContext(TransactionToOpenContext)
 
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
+  const categorized = isCategorized(bankTransaction)
 
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),
@@ -250,10 +252,11 @@ export const BankTransactionsMobileListItem = ({
                   {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
                 </HStack>
 
-                {/* TODO: CHECK HOW THIS LOOKS DO NOT LET JIM MERGE WITHOUT TESTING THIS */}
-                {/* {!categorizationEnabled && !categorized
-              ? <BankTransactionsProcessingInfo />
-              : null} */}
+                {!categorizationEnabled && !categorized
+                  ? (
+                    <BankTransactionsProcessingInfo />
+                  )
+                  : null}
               </VStack>
             </HStack>
 
