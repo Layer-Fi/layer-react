@@ -16,7 +16,7 @@ export const BankTransactionsUncategorizedSelectedValue = ({ selectedValue, clas
 
   if (isSuggestedMatchAsOption(selectedValue)) {
     return (
-      <HStack gap='3xs' align='center' className={className}>
+      <HStack gap='xs' align='center' className={className}>
         <Badge size={BadgeSize.SMALL} icon={<MinimizeTwo size={11} />}>
           {selectedValue.original.details.type === 'Transfer_Match' ? 'Transfer' : 'Match'}
         </Badge>
@@ -27,7 +27,7 @@ export const BankTransactionsUncategorizedSelectedValue = ({ selectedValue, clas
 
   if (isSplitAsOption(selectedValue) && selectedValue.original.length > 1) {
     return (
-      <HStack gap='3xs' align='center' className={className}>
+      <HStack gap='xs' align='center' className={className}>
         <Badge size={BadgeSize.SMALL} icon={<Scissors size={11} />}>
           Split
         </Badge>
