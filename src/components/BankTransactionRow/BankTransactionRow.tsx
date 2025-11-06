@@ -37,6 +37,7 @@ import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } fro
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { BankTransactionsSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsSelectedValue'
 import { HStack } from '@ui/Stack/Stack'
+import './bankTransactionRow.scss'
 
 type Props = {
   index: number
@@ -258,91 +259,133 @@ export const BankTransactionRow = ({
             `${className}__actions-cell--${open ? 'open' : 'close'}`,
           )}
         >
-          <HStack pi='md' gap='md'>
-            {categorizationEnabled && !categorized && !open
-              ? (
-                <BankTransactionCategoryComboBox
-                  bankTransaction={bankTransaction}
-                  selectedValue={selectedCategory ?? null}
-                  onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                    setTransactionCategory(bankTransaction.id, selectedCategory)
-                    setShowRetry(false)
-                  }}
-                  isLoading={bankTransaction.processing}
-                />
-              )
-              : null}
-            {categorized && !open
-              ? (
-                <BankTransactionsSelectedValue
-                  bankTransaction={bankTransaction}
-                />
-              )
-              : null}
-            {categorizationEnabled && !categorized && !open && showRetry
-              ? (
-                <RetryButton
-                  onClick={() => {
-                    if (!bankTransaction.processing) {
-                      void save()
-                    }
-                  }}
-                  className='Layer__bank-transaction__retry-btn'
-                  processing={bankTransaction.processing}
-                  error='Approval failed. Check connection and retry in few seconds.'
-                >
-                  Retry
-                </RetryButton>
-              )
-              : null}
-            {open && bankTransaction.error
-              ? (
-                <Text
-                  as='span'
-                  size={TextSize.md}
-                  className='Layer__unsaved-info'
-                >
-                  <span>Unsaved</span>
-                  <AlertCircle size={12} />
-                </Text>
-              )
-              : null}
-            {(!categorized && categorizationEnabled && (open || (!open && !showRetry)))
-              || (categorizationEnabled && categorized && open)
-              ? (
-                <SubmitButton
-                  onClick={() => {
-                    if (!bankTransaction.processing) {
-                      void save()
-                    }
-                  }}
-                  className='Layer__bank-transaction__submit-btn'
-                  processing={bankTransaction.processing}
+          {open
+            ? (
+              <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
+                { bankTransaction.error
+                  ? (
+                    <Text
+                      as='span'
+                      size={TextSize.md}
+                      className='Layer__unsaved-info'
+                    >
+                      <span>Unsaved</span>
+                      <AlertCircle size={12} />
+                    </Text>
+                  )
+                  : null}
+                {categorizationEnabled
+                  ? (
+                    <SubmitButton
+                      onClick={() => {
+                        if (!bankTransaction.processing) {
+                          void save()
+                        }
+                      }}
+                      className='Layer__bank-transaction__submit-btn'
+                      processing={bankTransaction.processing}
+                      active={open}
+                      action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+                    >
+                      {categorized
+                        ? stringOverrides?.updateButtonText || 'Update'
+                        : stringOverrides?.approveButtonText || 'Confirm'}
+                    </SubmitButton>
+                  )
+                  : null}
+                {!categorizationEnabled && !categorized
+                  ? <VStack><BankTransactionsProcessingInfo /></VStack>
+                  : null}
+                <IconButton
+                  onClick={toggleOpen}
+                  className='Layer__bank-transaction-row__expand-button'
                   active={open}
-                  action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-                >
-                  {categorized
-                    ? stringOverrides?.updateButtonText || 'Update'
-                    : stringOverrides?.approveButtonText || 'Confirm'}
-                </SubmitButton>
-              )
-              : null}
-            {!categorizationEnabled && !categorized
-              ? <VStack pis='xs' fluid><BankTransactionsProcessingInfo /></VStack>
-              : null}
-            <IconButton
-              onClick={toggleOpen}
-              className='Layer__bank-transaction-row__expand-button'
-              active={open}
-              icon={(
-                <ChevronDownFill
-                  className={`Layer__chevron ${
-                    open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                  }`}
+                  icon={(
+                    <ChevronDownFill
+                      className={`Layer__chevron ${
+                        open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                      }`}
+                    />
+                  )}
                 />
-              )}
-            />
-          </HStack>
+              </HStack>
+            )
+            : (
+              <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
+                {categorizationEnabled && !categorized
+                  ? (
+                    <BankTransactionCategoryComboBox
+                      bankTransaction={bankTransaction}
+                      selectedValue={selectedCategory ?? null}
+                      onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
+                        setTransactionCategory(bankTransaction.id, selectedCategory)
+                        setShowRetry(false)
+                      }}
+                      isLoading={bankTransaction.processing}
+                    />
+                  )
+                  : null}
+                {categorized
+                  ? (
+                    <BankTransactionsSelectedValue
+                      bankTransaction={bankTransaction}
+                      className='Layer__bank-transaction-row__category'
+                    />
+                  )
+                  : null}
+                {categorizationEnabled && !categorized && showRetry
+                  ? (
+                    <RetryButton
+                      onClick={() => {
+                        if (!bankTransaction.processing) {
+                          void save()
+                        }
+                      }}
+                      className='Layer__bank-transaction__retry-btn'
+                      processing={bankTransaction.processing}
+                      error='Approval failed. Check connection and retry in few seconds.'
+                    >
+                      Retry
+                    </RetryButton>
+                  )
+                  : null}
+                {!categorized && categorizationEnabled && !showRetry
+                  ? (
+                    <SubmitButton
+                      onClick={() => {
+                        if (!bankTransaction.processing) {
+                          void save()
+                        }
+                      }}
+                      className='Layer__bank-transaction__submit-btn'
+                      processing={bankTransaction.processing}
+                      active={open}
+                      action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+                    >
+                      {categorized
+                        ? stringOverrides?.updateButtonText || 'Update'
+                        : stringOverrides?.approveButtonText || 'Confirm'}
+                    </SubmitButton>
+                  )
+                  : null}
+                {!categorizationEnabled && !categorized
+                  ? <VStack pis='xs' fluid><BankTransactionsProcessingInfo /></VStack>
+                  : null}
+                <IconButton
+                  onClick={toggleOpen}
+                  className='Layer__bank-transaction-row__expand-button'
+                  active={open}
+                  icon={(
+                    <ChevronDownFill
+                      className={`Layer__chevron ${
+                        open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                      }`}
+                    />
+                  )}
+                />
+              </HStack>
+            )}
+
         </td>
       </tr>
       <tr>
