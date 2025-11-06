@@ -1,6 +1,5 @@
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { Input } from '@components/Input/Input'
 import { FileInput } from '@components/Input/FileInput'
 import { TextButton } from '@components/Button/TextButton'
 import { Button, ButtonVariant } from '@components/Button/Button'
@@ -8,31 +7,20 @@ import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import Trash from '@icons/Trash'
-import {
-  dollarsToCents as parseMoney,
-} from '@models/Money'
 import { BankTransaction } from '@internal-types/bank_transactions'
-import {
-  SingleCategoryUpdate,
-  SplitCategoryUpdate,
-  hasSuggestions,
-} from '@internal-types/categories'
 import { hasReceipts } from '@utils/bankTransactions'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { makeTagKeyValueFromTag } from '@features/tags/tagSchemas'
-import { decodeCustomerVendor } from '@features/customerVendor/customerVendorSchemas'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
-import { ApiCategorizationAsOption, SplitAsOption } from '@internal-types/categorizationOption'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { type Split } from '@internal-types/bank_transactions'
-import { convertFromCents } from '@utils/format'
 import { getSplitsErrorMessage, isSplitsValid } from '@components/ExpandedBankTransactionRow/utils'
 import { HStack } from '@ui/Stack/Stack'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { getLocalSplitStateForExpandedTableRow } from '@components/ExpandedBankTransactionRow/utils'
+import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
+import { AmountInput } from '@components/Input/AmountInput'
+import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
+import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
 interface SplitFormProps {
   bankTransaction: BankTransaction
@@ -57,18 +45,24 @@ export const SplitForm = ({
   } = useBankTransactionsContext()
 
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
-
-  const [localSplits, setLocalSplits] = useState<Split[]>(
-    getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction),
-  )
-  const [formError, setFormError] = useState<string | undefined>()
   const [showRetry, setShowRetry] = useState(false)
 
-  useEffect(() => {
-    setLocalSplits(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
-    setFormError(undefined)
-  }, [selectedCategory, bankTransaction])
+  const { deselect } = useBulkSelectionActions()
+
+  const {
+    localSplits,
+    splitFormError: formError,
+    addSplit,
+    removeSplit,
+    updateSplitAmount,
+    changeCategoryForSplitAtIndex,
+    getInputValueForSplitAtIndex,
+    setSplitFormError,
+    onBlurSplitAmount,
+  } = useSplitsForm({
+    bankTransaction,
+    selectedCategory,
+  })
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -76,116 +70,22 @@ export const SplitForm = ({
     }
   }, [bankTransaction.error])
 
-  const removeSplit = (index: number) => {
-    const newSplits = localSplits.filter((_v, idx) => idx !== index)
-    const splitTotal = newSplits.reduce((sum, split, index) => {
-      const amount = index === 0 ? 0 : split.amount
-      return sum + amount
-    }, 0)
-    const remaining = bankTransaction.amount - splitTotal
-    newSplits[0].amount = remaining
-
-    setLocalSplits(newSplits)
-    setFormError(undefined)
-
-    // Auto-save when category / split is valid
-    if (isSplitsValid(newSplits)) {
-      setTransactionCategory(bankTransaction.id, new SplitAsOption(newSplits))
-    }
-  }
-
-  const updateAmounts =
-    (rowNumber: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newAmount = parseMoney(event.target.value) || 0
-      const splitTotal = localSplits.reduce((sum, split, index) => {
-        const amount =
-          index === 0 ? 0 : index === rowNumber ? newAmount : split.amount
-        return sum + amount
-      }, 0)
-      const remaining = bankTransaction.amount - splitTotal
-      const newSplits = [...localSplits]
-      newSplits[rowNumber].amount = newAmount
-      newSplits[0].amount = remaining
-      setLocalSplits(newSplits)
-      setFormError(undefined)
-
-      // Auto-save when category / split is valid
-      if (isSplitsValid(newSplits)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(newSplits))
-      }
-    }
-
-  const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    if (event.target.value === '') {
-      setFormError(undefined)
-    }
-  }
-
-  const changeCategory = (index: number, newValue: BankTransactionCategoryComboBoxOption | null) => {
-    if (newValue === null) return
-
-    const newSplits = [...localSplits]
-    newSplits[index].category = newValue
-    setLocalSplits(newSplits)
-    setFormError(undefined)
-
-    // Auto-save when category / split is valid
-    if (isSplitsValid(newSplits)) {
-      setTransactionCategory(bankTransaction.id, new SplitAsOption(newSplits))
-    }
-  }
-
-  const addSplit = () => {
-    const defaultCategory =
-      bankTransaction.category
-      || (hasSuggestions(bankTransaction.categorization_flow)
-        && bankTransaction.categorization_flow?.suggestions?.[0])
-
-    const initialCustomerVendor = bankTransaction.customer
-      ? decodeCustomerVendor({ ...bankTransaction.customer, customerVendorType: 'CUSTOMER' })
-      : bankTransaction.vendor
-        ? decodeCustomerVendor({ ...bankTransaction.vendor, customerVendorType: 'VENDOR' })
-        : null
-
-    setLocalSplits([
-      ...localSplits,
-      {
-        amount: 0,
-        category: defaultCategory
-          ? new ApiCategorizationAsOption(defaultCategory)
-          : null,
-        tags: [],
-        customerVendor: initialCustomerVendor,
-      },
-    ])
-    setFormError(undefined)
-  }
-
   const save = async () => {
     if (!isSplitsValid(localSplits)) {
-      setFormError(getSplitsErrorMessage(localSplits))
+      setSplitFormError(getSplitsErrorMessage(localSplits))
       return
     }
 
+    const categorizationRequest = buildCategorizeBankTransactionPayloadForSplit(localSplits)
+
     await categorizeBankTransaction(
       bankTransaction.id,
-      localSplits.length === 1 && localSplits[0].category
-        ? ({
-          type: 'Category',
-          category: localSplits[0].category?.classificationEncoded,
-        } as SingleCategoryUpdate)
-        : ({
-          type: 'Split',
-          entries: localSplits.map(split => ({
-            category: split.category?.classificationEncoded,
-            amount: split.amount,
-            tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
-            customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
-            vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
-          })),
-        } as SplitCategoryUpdate),
-      true,
+      categorizationRequest,
     )
+
+    // Remove from bulk selection store
+    deselect(bankTransaction.id)
+    close()
   }
 
   return (
@@ -209,24 +109,17 @@ export const SplitForm = ({
                   <div className='Layer__bank-transactions__table-cell--split-entry__right-col'>
                     <CategorySelectDrawerWithTrigger
                       value={split.category}
-                      onChange={value => changeCategory(index, value)}
+                      onChange={value => changeCategoryForSplitAtIndex(index, value)}
                       showTooltips={showTooltips}
                     />
                   </div>
-                  <Input
-                    type='text'
+                  <AmountInput
                     name={`split-${index}`}
-                    className={classNames(
-                      'Layer__split-amount-input',
-                      index === 0 && 'Layer__split-amount-input--first',
-                    )}
-                    disabled={index === 0}
-                    onChange={updateAmounts(index)}
-                    value={convertFromCents(split.amount)}
-                    onBlur={onBlur}
+                    disabled={index === 0 || !showCategorization}
+                    onChange={updateSplitAmount(index)}
+                    value={getInputValueForSplitAtIndex(index, split)}
+                    onBlur={onBlurSplitAmount}
                     isInvalid={split.amount < 0}
-                    errorMessage='Negative values are not allowed'
-                    inputMode='numeric'
                   />
                   {index > 0 && (
                     <Button
