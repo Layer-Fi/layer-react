@@ -6,6 +6,7 @@ import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import stylisticPlugin from '@stylistic/eslint-plugin'
 import tsEslint from 'typescript-eslint'
 import unusedImportsPlugin from 'eslint-plugin-unused-imports'
+import pluginImport from 'eslint-plugin-import'
 
 export default tsEslint.config(
   {
@@ -85,6 +86,13 @@ export default tsEslint.config(
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
       'no-restricted-imports': ['error', { patterns: ['*.css'] }],
+    },
+  },
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    plugins: { import: pluginImport },
+    rules: {
+      'import/no-relative-parent-imports': 'error',
     },
   },
 )
