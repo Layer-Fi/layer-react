@@ -1,10 +1,10 @@
-import { BankTransaction } from '../../types/bank_transactions'
-import { isCategorized } from '../BankTransactions/utils'
-import { Span } from '../ui/Typography/Text'
-import { useGetBankTransactionCategory } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { BankTransaction } from '@internal-types/bank_transactions'
+import { isCategorized } from '@components/BankTransactions/utils'
+import { Span } from '@ui/Typography/Text'
+import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useMemo } from 'react'
-import { BankTransactionsUncategorizedSelectedValue } from '../BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
-import { BankTransactionsCategorizedSelectedValue } from '../BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
+import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
+import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 
 export interface BankTransactionsMobileListItemCategoryProps {
   bankTransaction: BankTransaction

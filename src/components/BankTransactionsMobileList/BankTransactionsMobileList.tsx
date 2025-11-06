@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
-import { BankTransaction } from '../../types/bank_transactions'
-import { BankTransactionsMobileListItem } from './BankTransactionsMobileListItem'
+import { BankTransaction } from '@internal-types/bank_transactions'
+import { BankTransactionsMobileListItem } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
 import {
   useTransactionToOpen,
   TransactionToOpenContext,
-} from './TransactionToOpenContext'
-import { BankTransactionsMobileBulkActionsHeader } from './BankTransactionsMobileBulkActionsHeader'
-import { useBulkSelectionActions } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
+} from '@components/BankTransactionsMobileList/TransactionToOpenContext'
+import { BankTransactionsMobileBulkActionsHeader } from '@components/BankTransactionsMobileList/BankTransactionsMobileBulkActionsHeader'
+import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
 export interface BankTransactionsMobileListProps {
   bankTransactions?: BankTransaction[]

@@ -1,10 +1,10 @@
-import { BankTransactionCategoryComboBoxOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isSuggestedMatchAsOption, isSplitAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { HStack } from '../ui/Stack/Stack'
-import { Badge, BadgeSize } from '../Badge/Badge'
-import MinimizeTwo from '../../icons/MinimizeTwo'
-import Scissors from '../../icons/Scissors'
-import { Span } from '../ui/Typography/Text'
+import { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isSuggestedMatchAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { HStack } from '@ui/Stack/Stack'
+import { Badge, BadgeSize } from '@components/Badge/Badge'
+import MinimizeTwo from '@icons/MinimizeTwo'
+import Scissors from '@icons/Scissors'
+import { Span } from '@ui/Typography/Text'
 
 type BankTransactionsUncategorizedSelectedValueProps = {
   selectedValue: BankTransactionCategoryComboBoxOption | null
