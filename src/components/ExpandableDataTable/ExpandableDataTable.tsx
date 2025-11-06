@@ -6,10 +6,10 @@ import {
   getExpandedRowModel,
   type Row,
 } from '@tanstack/react-table'
-import { DataTable, type Column, type ColumnConfig, type DataTableProps } from '../DataTable/DataTable'
-import { HStack } from '../ui/Stack/Stack'
-import { ExpandButton } from '../ExpandButton/ExpandButton'
-import { ExpandableDataTableContext } from './ExpandableDataTableProvider'
+import { DataTable, type Column, type ColumnConfig, type DataTableProps } from '@components/DataTable/DataTable'
+import { HStack } from '@ui/Stack/Stack'
+import { ExpandButton } from '@components/ExpandButton/ExpandButton'
+import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 
 type ExpandableDataTableProps<TData, TColumns extends string> = Omit<DataTableProps<TData, TColumns>, 'columnConfig'> & {
   columnConfig: ColumnConfig<Row<TData>, TColumns>

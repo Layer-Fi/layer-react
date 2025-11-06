@@ -1,7 +1,7 @@
-import type { Bill } from '../../types/bills'
-import { isBillPaid } from '../../utils/bills'
-import { BillSummaryPaid } from './BillSummaryPaid'
-import { BillSummaryUnpaid } from './BillSummaryUnpaid'
+import type { Bill } from '@internal-types/bills'
+import { isBillPaid } from '@utils/bills'
+import { BillSummaryPaid } from '@components/Bills/BillSummaryPaid'
+import { BillSummaryUnpaid } from '@components/Bills/BillSummaryUnpaid'
 
 type BillSummaryProps = {
   bill: Bill

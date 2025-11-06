@@ -1,18 +1,18 @@
 import { useMemo } from 'react'
-import { BankTransactionMemo } from '../../../../components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
-import { VStack } from '../../../../components/ui/Stack/Stack'
-import type { BankTransaction } from '../../../../types/bank_transactions'
-import { BankTransactionCustomerVendorSelector } from '../customerVendor/components/BankTransactionCustomerVendorSelector'
-import { useBankTransactionCustomerVendorVisibility } from '../customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { useBankTransactionTagVisibility } from '../tags/components/BankTransactionTagVisibilityProvider'
-import { TagDimensionsGroup } from '../../../tags/components/TagDimensionsGroup'
-import { makeTag, Tag } from '../../../tags/tagSchemas'
+import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { VStack } from '@ui/Stack/Stack'
+import type { BankTransaction } from '@internal-types/bank_transactions'
+import { BankTransactionCustomerVendorSelector } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorSelector'
+import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
+import { useBankTransactionTagVisibility } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
+import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
+import { makeTag, Tag } from '@features/tags/tagSchemas'
 import {
   useEffectiveBookkeepingStatus,
   BookkeepingStatus,
-} from '../../../../hooks/bookkeeping/useBookkeepingStatus'
-import { useTagBankTransaction } from '../tags/api/useTagBankTransaction'
-import { useRemoveTagFromBankTransaction } from '../tags/api/useRemoveTagFromBankTransaction'
+} from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
+import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
 
 type BankTransactionFormFieldProps = {
   bankTransaction: Pick<

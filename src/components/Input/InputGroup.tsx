@@ -1,4 +1,4 @@
-import { Text, TextSize } from '../Typography/Text'
+import { Text, TextSize } from '@components/Typography/Text'
 import { ReactNode } from 'react'
 import classNames from 'classnames'
 

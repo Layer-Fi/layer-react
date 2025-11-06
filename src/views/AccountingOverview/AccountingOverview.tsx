@@ -1,22 +1,22 @@
-import { HeaderRow } from '../../components/Header/HeaderRow'
-import { HeaderCol } from '../../components/Header/HeaderCol'
-import { Header } from '../../components/Header/Header'
+import { HeaderRow } from '@components/Header/HeaderRow'
+import { HeaderCol } from '@components/Header/HeaderCol'
+import { Header } from '@components/Header/Header'
 import { ReactNode, useState } from 'react'
-import { Container } from '../../components/Container/Container'
-import { Onboarding } from '../../components/Onboarding/Onboarding'
-import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
-import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { Container } from '@components/Container/Container'
+import { Onboarding } from '@components/Onboarding/Onboarding'
+import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
+import { ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import {
   ProfitAndLossSummaries,
   ProfitAndLossSummariesStringOverrides,
-} from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { Toggle } from '../../components/Toggle/Toggle'
-import { View } from '../../components/View/View'
-import { OnboardingStep } from '../../types/layer_context'
-import type { Variants } from '../../utils/styleUtils/sizeVariants'
-import { TagOption } from '../ProjectProfitability/ProjectProfitability'
+} from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { Toggle } from '@components/Toggle/Toggle'
+import { View } from '@components/View/View'
+import { OnboardingStep } from '@internal-types/layer_context'
+import type { Variants } from '@utils/styleUtils/sizeVariants'
+import { TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 import classNames from 'classnames'
-import { ProfitAndLossDatePicker } from '../../components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
+import { ProfitAndLossDatePicker } from '@components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 
 interface AccountingOverviewStringOverrides {
   header?: string

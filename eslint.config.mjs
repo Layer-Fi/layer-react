@@ -6,10 +6,11 @@ import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import stylisticPlugin from '@stylistic/eslint-plugin'
 import tsEslint from 'typescript-eslint'
 import unusedImportsPlugin from 'eslint-plugin-unused-imports'
+import pluginImport from 'eslint-plugin-import'
 
 export default tsEslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'vite/**'],
+    ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**'],
   },
   js.configs.recommended,
   ...tsEslint.configs.recommendedTypeChecked,
@@ -85,6 +86,34 @@ export default tsEslint.config(
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
       'no-restricted-imports': ['error', { patterns: ['*.css'] }],
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx,js,jsx}'],
+    plugins: { import: pluginImport },
+    settings: { 'import/resolver': { typescript: true, node: true } },
+    rules: {
+      'import/no-relative-parent-imports': [
+        'error',
+        { ignore: [
+          '@api/',
+          '@components/',
+          '@ui/',
+          '@contexts/',
+          '@features/',
+          '@hooks/',
+          '@providers/',
+          '@utils/',
+          '@internal-types/',
+          '@schemas/',
+          '@views/',
+          '@config/',
+          '@icons/',
+          '@assets/',
+          '@models/',
+        ],
+        },
+      ],
     },
   },
 )

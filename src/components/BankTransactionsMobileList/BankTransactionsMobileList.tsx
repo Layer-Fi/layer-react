@@ -1,9 +1,9 @@
-import { BankTransaction } from '../../types/bank_transactions'
-import { BankTransactionsMobileListItem } from './BankTransactionsMobileListItem'
+import { BankTransaction } from '@internal-types/bank_transactions'
+import { BankTransactionsMobileListItem } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
 import {
   useTransactionToOpen,
   TransactionToOpenContext,
-} from './TransactionToOpenContext'
+} from '@components/BankTransactionsMobileList/TransactionToOpenContext'
 
 export interface BankTransactionsMobileListProps {
   bankTransactions?: BankTransaction[]

@@ -1,5 +1,5 @@
-import { Modal, ModalProps } from '../../ui/Modal/Modal'
-import { UploadTransactions } from '../../UploadTransactions/UploadTransactions'
+import { Modal, ModalProps } from '@ui/Modal/Modal'
+import { UploadTransactions } from '@components/UploadTransactions/UploadTransactions'
 
 type BankTransactionsUploadModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'>
 export function BankTransactionsUploadModal({ isOpen, onOpenChange }: BankTransactionsUploadModalProps) {

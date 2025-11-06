@@ -13,8 +13,8 @@ import {
   type ListBoxSectionProps as ReactAriaListBoxSectionProps,
 } from 'react-aria-components'
 import { mergeRefs } from '@react-aria/utils'
-import { Header } from '../Typography/Text'
-import { useStopClickEventsRefCallback } from '../../../hooks/ref/useStopClickEventsRef'
+import { Header } from '@ui/Typography/Text'
+import { useStopClickEventsRefCallback } from '@hooks/ref/useStopClickEventsRef'
 import './listBox.scss'
 
 const LIST_BOX_CLASS_NAME = 'Layer__ListBox'

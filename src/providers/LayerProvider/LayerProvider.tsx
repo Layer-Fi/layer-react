@@ -1,13 +1,13 @@
 import { PropsWithChildren, useState } from 'react'
-import { LayerError } from '../../models/ErrorHandler'
-import { BusinessProvider } from '../../providers/BusinessProvider/BusinessProvider'
-import { LayerThemeConfig } from '../../types/layer_context'
+import { LayerError } from '@models/ErrorHandler'
+import { BusinessProvider } from '@providers/BusinessProvider/BusinessProvider'
+import { LayerThemeConfig } from '@internal-types/layer_context'
 import { SWRConfig } from 'swr'
-import type { Environment } from '../Environment/environmentConfigs'
-import { AuthInputProvider } from '../AuthInputProvider'
-import { EnvironmentInputProvider } from '../Environment/EnvironmentInputProvider'
-import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
-import { GlobalDateStoreProvider } from '../GlobalDateStore/GlobalDateStoreProvider'
+import type { Environment } from '@providers/Environment/environmentConfigs'
+import { AuthInputProvider } from '@providers/AuthInputProvider'
+import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInputProvider'
+import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
+import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type EventCallbacks = {
   onTransactionCategorized?: (bankTransactionId: string) => void

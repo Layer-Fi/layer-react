@@ -1,4 +1,4 @@
-import { LandingPagePlatformConfig, LandingPageConfig, LandingPageValueProposition } from './types'
+import { LandingPagePlatformConfig, LandingPageConfig, LandingPageValueProposition } from '@components/LandingPage/types'
 import {
   imageBusinessAccounts,
   imageBusinessOverview,
@@ -6,7 +6,7 @@ import {
   imageBookkeeperInquiries,
   imageScheduleBookkeeperMeeting,
   imagePnlOverview,
-} from '../../assets/images'
+} from '@assets/images'
 import {
   LandingPageContentID,
   LandingPageTypesTextContent,
@@ -14,7 +14,7 @@ import {
   ContentConfig,
   PartialContentConfig,
   landingPageDefaultContentConfig,
-} from './content'
+} from '@components/LandingPage/content'
 import { Check } from 'lucide-react'
 
 /**

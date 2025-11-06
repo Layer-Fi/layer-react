@@ -1,7 +1,7 @@
 import { Link as ReactAriaLink } from 'react-aria-components'
 import { forwardRef, type PropsWithChildren } from 'react'
 import { type LinkProps as ReactAriaLinkProps } from 'react-aria-components'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './link.scss'
 
 const LINK_CLASS_NAME = 'Layer__UI__Link'

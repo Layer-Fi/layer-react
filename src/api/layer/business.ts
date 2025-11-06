@@ -1,5 +1,5 @@
-import type { Business } from '../../types/business'
-import { get, put } from './authenticated_http'
+import type { Business } from '@internal-types/business'
+import { get, put } from '@api/layer/authenticated_http'
 
 export type UpdateBusinessBody = Partial<Business>
 

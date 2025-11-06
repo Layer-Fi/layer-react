@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { useBookkeepingPeriods } from './useBookkeepingPeriods'
-import { useGlobalDate } from '../../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export function useActiveBookkeepingPeriod() {
   const { date } = useGlobalDate()

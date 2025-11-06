@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { format, getMonth, getYear, set } from 'date-fns'
-import { MonthData } from './types'
-import { TaskMonthTile } from './TaskMonthTile'
-import { getCompletedTasks } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { MonthData } from '@components/Tasks/types'
+import { TaskMonthTile } from '@components/Tasks/TaskMonthTile'
+import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 function useActiveYearBookkeepingPeriods() {
   const { date } = useGlobalDate()

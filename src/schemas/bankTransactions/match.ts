@@ -1,5 +1,5 @@
 import { Schema, pipe } from 'effect'
-import { EntityName, LinkingMetadata } from '../../contexts/InAppLinkContext'
+import { EntityName, LinkingMetadata } from '@contexts/InAppLinkContext'
 
 export const MatchAdjustmentSchema = Schema.Struct({
   amount: Schema.Number,

@@ -1,13 +1,13 @@
-import { BankTransaction } from '../../types/bank_transactions'
-import { BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isPlaceholderAsOption, isSuggestedMatchAsOption, isSplitAsOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { BankTransaction } from '@internal-types/bank_transactions'
+import { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isPlaceholderAsOption, isSuggestedMatchAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { useCallback, useMemo } from 'react'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
-import { CategoryUpdate } from '../../types/categories'
-import { ClassificationEncoded } from '../../schemas/categorization'
-import { makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
-import { type Split } from '../../types/bank_transactions'
-import { SplitAsOption } from '../../types/categorizationOption'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { CategoryUpdate } from '@internal-types/categories'
+import { ClassificationEncoded } from '@schemas/categorization'
+import { makeTagKeyValueFromTag } from '@features/tags/tagSchemas'
+import { type Split } from '@internal-types/bank_transactions'
+import { SplitAsOption } from '@internal-types/categorizationOption'
 
 const buildSplitCategorizationRequest = (selectedCategory: SplitAsOption): CategoryUpdate => {
   return {

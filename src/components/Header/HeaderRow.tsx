@@ -1,6 +1,6 @@
 import { CSSProperties, ReactNode } from 'react'
 import classNames from 'classnames'
-import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
 interface HeaderRowProps {
   className?: string

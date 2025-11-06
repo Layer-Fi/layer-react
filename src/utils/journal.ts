@@ -1,6 +1,6 @@
-import { LedgerAccountLineItem, LedgerAccountsEntry } from '../types/ledger_accounts'
-import { AccountIdentifierPayloadObject } from '../types/categories'
-import { JournalEntry, JournalEntryLineItem } from '../types/journal'
+import { LedgerAccountLineItem, LedgerAccountsEntry } from '@internal-types/ledger_accounts'
+import { AccountIdentifierPayloadObject } from '@internal-types/categories'
+import { JournalEntry, JournalEntryLineItem } from '@internal-types/journal'
 
 export const getAccountIdentifierPayload = (
   journalLineItem: JournalEntryLineItem,

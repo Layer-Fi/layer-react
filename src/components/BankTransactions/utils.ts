@@ -1,5 +1,5 @@
-import { BankTransaction, DisplayState } from '../../types/bank_transactions'
-import { CategorizedCategories, ReviewCategories } from './constants'
+import { BankTransaction, DisplayState } from '@internal-types/bank_transactions'
+import { CategorizedCategories, ReviewCategories } from '@components/BankTransactions/constants'
 
 export const filterVisibility = (
   scope: DisplayState,

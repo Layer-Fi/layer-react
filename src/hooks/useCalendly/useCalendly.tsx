@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { LandingPageLink } from '../../components/LandingPage/types'
+import { LandingPageLink } from '@components/LandingPage/types'
 
 interface CalendlyPayload {
   event: {

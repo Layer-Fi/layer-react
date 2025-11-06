@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext } from 'react'
-import { useVendors } from '../hooks/useVendors'
+import { useVendors } from '@hooks/useVendors'
 
 type VendorsProviderProps = {
   children: ReactNode

@@ -1,8 +1,8 @@
-import { Button } from '../../ui/Button/Button'
-import DownloadCloud from '../../../icons/DownloadCloud'
-import InvisibleDownload, { useInvisibleDownload } from '../../utility/InvisibleDownload'
-import { useUnifiedReportDownload } from './useUnifiedReportDownload'
-import RefreshCcw from '../../../icons/RefreshCcw'
+import { Button } from '@ui/Button/Button'
+import DownloadCloud from '@icons/DownloadCloud'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
+import { useUnifiedReportDownload } from '@components/UnifiedReport/download/useUnifiedReportDownload'
+import RefreshCcw from '@icons/RefreshCcw'
 
 export function UnifiedReportDownloadButton() {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()

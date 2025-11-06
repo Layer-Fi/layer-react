@@ -1,9 +1,9 @@
 import { Schema, pipe } from 'effect'
-import { CustomerSchema } from '../../schemas/customer'
-import { InvoiceTermsValues } from '../../components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { ZonedDateTimeFromSelf } from '../../schemas/common/zonedDateTimeFromSelf'
-import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '../tags/tagSchemas'
-import { AccountIdentifierSchema } from '../../schemas/accountIdentifier'
+import { CustomerSchema } from '@schemas/customer'
+import { InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
+import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
+import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '@features/tags/tagSchemas'
+import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
 
 export enum InvoiceStatus {
   Voided = 'VOIDED',

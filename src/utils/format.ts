@@ -1,5 +1,5 @@
 import { parseISO, format as formatDateFns } from 'date-fns'
-import { DATE_FORMAT } from '../config/general'
+import { DATE_FORMAT } from '@config/general'
 
 /**
  * Capitalize first letter of the given text.

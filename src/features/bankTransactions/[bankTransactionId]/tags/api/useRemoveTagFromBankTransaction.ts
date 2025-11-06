@@ -1,9 +1,9 @@
 import useSWRMutation from 'swr/mutation'
-import { useAuth } from '../../../../../hooks/useAuth'
-import { useLayerContext } from '../../../../../contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useCallback } from 'react'
-import { del } from '../../../../../api/layer/authenticated_http'
-import { useBankTransactionsGlobalCacheActions } from '../../../../../hooks/useBankTransactions/useBankTransactions'
+import { del } from '@api/layer/authenticated_http'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 
 const REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY = '#remove-tag-from-bank-transaction'
 

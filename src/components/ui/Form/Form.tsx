@@ -7,8 +7,8 @@ import {
   type TextFieldProps as ReactAriaTextFieldProps,
   type FieldErrorProps as ReactAriaFieldErrorProps,
 } from 'react-aria-components'
-import { withRenderProp } from '../../utility/withRenderProp'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { withRenderProp } from '@components/utility/withRenderProp'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import classNames from 'classnames'
 import './form.scss'
 

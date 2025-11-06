@@ -1,10 +1,10 @@
-import { type Invoice } from '../../../features/invoices/invoiceSchemas'
-import { type DedicatedInvoicePaymentForm } from '../../../features/invoices/invoicePaymentSchemas'
+import { type Invoice } from '@features/invoices/invoiceSchemas'
+import { type DedicatedInvoicePaymentForm } from '@features/invoices/invoicePaymentSchemas'
 import { BigDecimal as BD } from 'effect'
-import { convertBigDecimalToCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
+import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 import { formatDate, startOfToday } from 'date-fns'
 import { getLocalTimeZone, fromDate, toCalendarDate, today } from '@internationalized/date'
-import { DATE_FORMAT_SHORT } from '../../../config/general'
+import { DATE_FORMAT_SHORT } from '@config/general'
 
 export const getInvoicePaymentFormDefaultValues = (invoice: Invoice): DedicatedInvoicePaymentForm => {
   const paidAt = fromDate(startOfToday(), getLocalTimeZone())

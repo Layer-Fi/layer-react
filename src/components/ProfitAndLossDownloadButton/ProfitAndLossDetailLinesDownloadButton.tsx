@@ -1,11 +1,11 @@
-import { DownloadButton } from '../Button/DownloadButton'
+import { DownloadButton } from '@components/Button/DownloadButton'
 import { useContext } from 'react'
-import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
-import { useProfitAndLossDetailLinesExport } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLinesExport'
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import type { S3PresignedUrl } from '../../types/general'
-import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
-import type { ProfitAndLossDownloadButtonStringOverrides } from './types'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
+import { useProfitAndLossDetailLinesExport } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLinesExport'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import type { S3PresignedUrl } from '@internal-types/general'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
 
 type ProfitAndLossDetailLinesDownloadButtonProps = {
   pnlStructureLineItemName: string

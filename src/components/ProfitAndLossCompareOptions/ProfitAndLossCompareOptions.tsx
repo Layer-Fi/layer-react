@@ -1,11 +1,11 @@
-import { Select } from '../Input/Select'
-import { MultiSelect } from '../Input/MultiSelect'
+import { Select } from '@components/Input/Select'
+import { MultiSelect } from '@components/Input/MultiSelect'
 import { useContext, useMemo } from 'react'
 import type { StylesConfig } from 'react-select'
-import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { TagComparisonOption } from '../../types/profit_and_loss'
-import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
+import { DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { TagComparisonOption } from '@internal-types/profit_and_loss'
+import { ReportKey, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 
 const selectStyles = {
   valueContainer: (styles) => {

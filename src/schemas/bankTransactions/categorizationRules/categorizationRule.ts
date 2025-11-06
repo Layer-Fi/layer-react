@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect/index'
-import { BankTransactionCounterpartySchema, MinimalBankTransactionSchema } from '../base'
-import { AccountIdentifierSchema } from '../../accountIdentifier'
+import { BankTransactionCounterpartySchema, MinimalBankTransactionSchema } from '@schemas/bankTransactions/base'
+import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
 
 export enum BankTransactionType {
   REVENUE = 'REVENUE',

@@ -1,5 +1,5 @@
 import type { SWRConfiguration } from 'swr'
-import { compareWithStableHash } from './compareWithStableHash'
+import { compareWithStableHash } from '@utils/swr/compareWithStableHash'
 
 export const DEFAULT_SWR_CONFIG = {
   refreshInterval: 10 * 60 * 1000, // 10 minutes

@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState, useRef } from 'react'
 import { useStore, revalidateLogic } from '@tanstack/react-form'
-import { useRawAppForm } from '../../../features/forms/hooks/useForm'
-import { UpsertInvoiceSchema, type Invoice, type InvoiceForm } from '../../../features/invoices/invoiceSchemas'
-import { useUpsertInvoice, UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
+import { useRawAppForm } from '@features/forms/hooks/useForm'
+import { UpsertInvoiceSchema, type Invoice, type InvoiceForm } from '@features/invoices/invoiceSchemas'
+import { useUpsertInvoice, UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
 import { Schema } from 'effect'
 import {
   computeAdditionalDiscount,
@@ -11,9 +11,9 @@ import {
   computeSubtotal,
   computeTaxableSubtotal,
   computeTaxes,
-} from './totalsUtils'
-import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, getInvoiceFormInitialValues, validateInvoiceForm } from './formUtils'
-import { useInvoicesContext } from '../../../contexts/InvoicesContext/InvoicesContext'
+} from '@components/Invoices/InvoiceForm/totalsUtils'
+import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, getInvoiceFormInitialValues, validateInvoiceForm } from '@components/Invoices/InvoiceForm/formUtils'
+import { useInvoicesContext } from '@contexts/InvoicesContext/InvoicesContext'
 import {
   type FormValidateOrFn,
   type FormAsyncValidateOrFn,

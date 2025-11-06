@@ -1,6 +1,6 @@
 import { useContext } from 'react'
-import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
-import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
+import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
+import { DeprecatedDatePicker } from '@components/DeprecatedDatePicker/DeprecatedDatePicker'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 export const ChartOfAccountsDatePicker = () => {

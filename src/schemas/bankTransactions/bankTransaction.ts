@@ -1,11 +1,11 @@
 import { pipe, Schema } from 'effect/index'
-import { ClassificationSchema } from '../categorization'
-import { MatchSchema, SuggestedMatchSchema } from './match'
-import { CustomerSchema } from '../customer'
-import { VendorSchema } from '../vendor'
-import { TransactionTagSchema } from '../../features/tags/tagSchemas'
-import { UpdateCategorizationRulesSuggestionSchema } from './categorizationRules/categorizationRule'
-import { BankTransactionDirectionSchema } from './base'
+import { ClassificationSchema } from '@schemas/categorization'
+import { MatchSchema, SuggestedMatchSchema } from '@schemas/bankTransactions/match'
+import { CustomerSchema } from '@schemas/customer'
+import { VendorSchema } from '@schemas/vendor'
+import { TransactionTagSchema } from '@features/tags/tagSchemas'
+import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
 
 export enum CategorizationStatus {
   PENDING = 'PENDING',

@@ -1,4 +1,4 @@
-import { IconSvgProps } from './types'
+import { IconSvgProps } from '@icons/types'
 
 const Scissors = ({ size = 11, ...props }: IconSvgProps) => (
   <svg

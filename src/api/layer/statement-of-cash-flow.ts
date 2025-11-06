@@ -1,7 +1,7 @@
-import type { S3PresignedUrl } from '../../types/general'
-import type { StatementOfCashFlow } from '../../types/statement_of_cash_flow'
-import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
-import { get } from './authenticated_http'
+import type { S3PresignedUrl } from '@internal-types/general'
+import type { StatementOfCashFlow } from '@internal-types/statement_of_cash_flow'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { get } from '@api/layer/authenticated_http'
 
 type GetStatementOfCashFlowParams = {
   businessId: string

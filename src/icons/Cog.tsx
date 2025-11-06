@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import { IconSvgProps } from './types'
+import { IconSvgProps } from '@icons/types'
 
 const Cog = ({ size = 12, ...props }: IconSvgProps) => {
   const id = useId()

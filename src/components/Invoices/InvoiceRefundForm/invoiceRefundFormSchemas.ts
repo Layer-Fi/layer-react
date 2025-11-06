@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
-import { ZonedDateTimeFromSelf } from '../../../schemas/common/zonedDateTimeFromSelf'
-import { PaymentMethodSchema } from '../../../components/PaymentMethod/schemas'
+import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
+import { PaymentMethodSchema } from '@components/PaymentMethod/schemas'
 
 export const InvoiceRefundFormSchema = Schema.Struct({
   amount: Schema.BigDecimal,

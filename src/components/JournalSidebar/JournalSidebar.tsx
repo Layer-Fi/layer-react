@@ -1,6 +1,6 @@
 import { RefObject, useContext } from 'react'
-import { JournalContext } from '../../contexts/JournalContext/JournalContext'
-import { JournalEntryDetails } from '../JournalEntryDetails/JournalEntryDetails'
+import { JournalContext } from '@contexts/JournalContext/JournalContext'
+import { JournalEntryDetails } from '@components/JournalEntryDetails/JournalEntryDetails'
 
 export const JournalSidebar = ({
   parentRef: _parentRef,

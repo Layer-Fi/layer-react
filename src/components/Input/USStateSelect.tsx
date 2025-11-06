@@ -1,6 +1,6 @@
-import { Select } from './Select'
-import { BaseSelectOption } from '../../types/general'
-import { US_STATES, USState } from '../../types/location'
+import { Select } from '@components/Input/Select'
+import { BaseSelectOption } from '@internal-types/general'
+import { US_STATES, USState } from '@internal-types/location'
 
 export const findSelectOption = (options: BaseSelectOption[], selected?: string) => {
   if (!selected) {

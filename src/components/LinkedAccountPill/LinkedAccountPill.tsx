@@ -1,8 +1,8 @@
-import AlertCircle from '../../icons/AlertCircle'
+import AlertCircle from '@icons/AlertCircle'
 import { MenuTrigger, Popover } from 'react-aria-components'
-import { Pill } from '../ui/Pill/Pill'
-import { Menu, MenuItem } from '../ui/Menu/Menu'
-import { Span } from '../ui/Typography/Text'
+import { Pill } from '@ui/Pill/Pill'
+import { Menu, MenuItem } from '@ui/Menu/Menu'
+import { Span } from '@ui/Typography/Text'
 import { useState } from 'react'
 
 type LinkedAccountPillProps = {

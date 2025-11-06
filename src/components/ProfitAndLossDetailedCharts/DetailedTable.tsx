@@ -1,16 +1,16 @@
-import { Button } from '../ui/Button/Button'
-import { DEFAULT_CHART_COLOR_TYPE } from '../../config/charts'
+import { Button } from '@ui/Button/Button'
+import { DEFAULT_CHART_COLOR_TYPE } from '@config/charts'
 import {
   Scope,
   SidebarScope,
   ProfitAndLossFilters,
-} from '../../hooks/useProfitAndLoss/useProfitAndLoss'
-import SortArrows from '../../icons/SortArrows'
-import { SortDirection } from '../../types/general'
-import { formatPercent } from '../../utils/format'
+} from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import SortArrows from '@icons/SortArrows'
+import { SortDirection } from '@internal-types/general'
+import { formatPercent } from '@utils/format'
 import classNames from 'classnames'
-import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
-import { MoneySpan } from '../ui/Typography/MoneySpan'
+import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
 
 export interface DetailedTableStringOverrides {
   categoryColumnHeader?: string

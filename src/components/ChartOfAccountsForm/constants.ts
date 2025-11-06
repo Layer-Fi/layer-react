@@ -1,5 +1,5 @@
-import { Direction } from '../../types/general'
-import { BaseSelectOption } from '../../types/general'
+import { Direction } from '@internal-types/general'
+import { BaseSelectOption } from '@internal-types/general'
 
 export const LEDGER_ACCOUNT_TYPES: BaseSelectOption[] = [
   {

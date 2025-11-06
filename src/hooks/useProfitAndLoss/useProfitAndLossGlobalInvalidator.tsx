@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
-import { useProfitAndLossReportCacheActions } from './useProfitAndLossReport'
-import { useProfitAndLossSummariesCacheActions } from './useProfitAndLossSummaries'
+import { useProfitAndLossReportCacheActions } from '@hooks/useProfitAndLoss/useProfitAndLossReport'
+import { useProfitAndLossSummariesCacheActions } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
 import { debounce } from 'lodash-es'
 
 const INVALIDATE_DEBOUNCE_OPTIONS = {

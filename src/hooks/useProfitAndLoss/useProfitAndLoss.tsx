@@ -1,20 +1,20 @@
 import { useCallback, useMemo, useState } from 'react'
 import {
   SortDirection,
-} from '../../types/general'
-import { ReportingBasis } from '../../types/general'
+} from '@internal-types/general'
+import { ReportingBasis } from '@internal-types/general'
 import {
   collectExpensesItems,
   collectRevenueItems,
   applyShare,
   type PnlChartLineItem,
-} from '../../utils/profitAndLossUtils'
-import { useProfitAndLossReport } from './useProfitAndLossReport'
+} from '@utils/profitAndLossUtils'
+import { useProfitAndLossReport } from '@hooks/useProfitAndLoss/useProfitAndLossReport'
 import {
   useGlobalDateRange,
-} from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import type { BreadcrumbItem } from '../../components/DetailReportBreadcrumb/DetailReportBreadcrumb'
+} from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { ReportKey, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import type { BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 
 export type Scope = 'expenses' | 'revenue'
 

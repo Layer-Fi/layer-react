@@ -1,8 +1,8 @@
 import useSWRMutation from 'swr/mutation'
-import { Layer } from '../../../api/layer'
-import type { Awaitable } from '../../../types/utility/promises'
-import { useAuth } from '../../../hooks/useAuth'
-import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
+import { Layer } from '@api/layer'
+import type { Awaitable } from '@internal-types/utility/promises'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type OpeningBalanceData = { accountId: string, openingDate?: Date, openingBalance?: number }
 

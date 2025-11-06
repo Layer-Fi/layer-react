@@ -1,9 +1,9 @@
-import { BankTransaction } from '../../types/bank_transactions'
-import { hasSuggestions } from '../../types/categories'
-import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
-import { CategoryAsOption, ApiCategorizationAsOption } from '../../types/categorizationOption'
-import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import type { NestedCategorization } from '../../schemas/categorization'
+import { BankTransaction } from '@internal-types/bank_transactions'
+import { hasSuggestions } from '@internal-types/categories'
+import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { CategoryAsOption, ApiCategorizationAsOption } from '@internal-types/categorizationOption'
+import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import type { NestedCategorization } from '@schemas/categorization'
 
 export interface CategoryGroup {
   label: string

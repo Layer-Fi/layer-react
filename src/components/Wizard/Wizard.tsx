@@ -8,8 +8,8 @@ import {
   useMemo,
   useState,
 } from 'react'
-import type { Awaitable } from '../../types/utility/promises'
-import { VStack } from '../ui/Stack/Stack'
+import type { Awaitable } from '@internal-types/utility/promises'
+import { VStack } from '@ui/Stack/Stack'
 
 function useWizardStep({
   steps,

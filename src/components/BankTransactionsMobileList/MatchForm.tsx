@@ -1,20 +1,20 @@
-import { Text, TextSize, TextWeight } from '../Typography/Text'
-import { ErrorText } from '../Typography/ErrorText'
-import { FileInput } from '../Input/FileInput'
-import { Button } from '../Button/Button'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { ErrorText } from '@components/Typography/ErrorText'
+import { FileInput } from '@components/Input/FileInput'
+import { Button } from '@components/Button/Button'
 import { useRef, useState } from 'react'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
-import PaperclipIcon from '../../icons/Paperclip'
-import { BankTransaction, SuggestedMatch } from '../../types/bank_transactions'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import PaperclipIcon from '@icons/Paperclip'
+import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
 import {
   hasReceipts,
   getBankTransactionMatchAsSuggestedMatch,
-} from '../../utils/bankTransactions'
-import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { MatchFormMobile } from '../MatchForm/MatchFormMobile'
+} from '@utils/bankTransactions'
+import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
 import classNames from 'classnames'
-import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 export const MatchForm = ({
   bankTransaction,

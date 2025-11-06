@@ -1,4 +1,4 @@
-import { Business } from '../types/business'
+import { Business } from '@internal-types/business'
 import { differenceInCalendarMonths, parseISO, startOfMonth } from 'date-fns'
 
 export const getActivationDate = (business?: Business) => {

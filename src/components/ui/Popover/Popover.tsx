@@ -3,7 +3,7 @@ import {
   Popover as ReactAriaPopover,
   PopoverProps as ReactAriaPopoverProps,
 } from 'react-aria-components'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './popover.scss'
 
 const POPOVER_CLASS_NAME = 'Layer__Popover'

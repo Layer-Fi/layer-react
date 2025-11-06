@@ -1,8 +1,8 @@
-import { Text, TextSize, TextWeight } from '../Typography/Text'
-import { Link } from '../Button/Link'
-import { Button, ButtonVariant } from '../Button/Button'
-import CoffeeIcon from '../../icons/Coffee'
-import { IconBox } from '../IconBox/IconBox'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { Link } from '@components/Button/Link'
+import { Button, ButtonVariant } from '@components/Button/Button'
+import CoffeeIcon from '@icons/Coffee'
+import { IconBox } from '@components/IconBox/IconBox'
 import './bookkeepingUpsellBar.scss'
 
 interface BookkeepingUpsellBarProps {

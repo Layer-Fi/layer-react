@@ -1,7 +1,7 @@
 import { ReactNode, useRef, useState, useEffect } from 'react'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip/Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
-import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
 export enum TextSize {
   lg = 'lg',

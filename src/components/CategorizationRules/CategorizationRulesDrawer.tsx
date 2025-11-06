@@ -1,10 +1,10 @@
-import { Heading } from '../ui/Typography/Heading'
+import { Heading } from '@ui/Typography/Heading'
 import { useCallback } from 'react'
-import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
-import { HStack } from '../ui/Stack/Stack'
-import { useBankTransactionsNavigation } from '../../providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
-import BackArrow from '../../icons/BackArrow'
-import { CategorizationRulesTable } from './CategorizationRulesTable/CategorizationRulesTable'
+import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
+import { HStack } from '@ui/Stack/Stack'
+import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import BackArrow from '@icons/BackArrow'
+import { CategorizationRulesTable } from '@components/CategorizationRules/CategorizationRulesTable/CategorizationRulesTable'
 
 const CategorizationRulesDrawerHeader = () => {
   return (

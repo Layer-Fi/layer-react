@@ -1,4 +1,4 @@
-import { LinkedAccount } from '../../types/linked_accounts'
+import { LinkedAccount } from '@internal-types/linked_accounts'
 
 export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
   {

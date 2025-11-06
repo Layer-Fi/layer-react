@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { DataModel } from '../../types/general'
-import { useProfitAndLossGlobalInvalidator } from '../useProfitAndLoss/useProfitAndLossGlobalInvalidator'
+import { DataModel } from '@internal-types/general'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 
 type UseDataSync = () => {
   touch: (model: DataModel) => void

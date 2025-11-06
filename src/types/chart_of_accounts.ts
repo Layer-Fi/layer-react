@@ -1,5 +1,5 @@
-import { Direction } from './general'
-import { NestedLedgerAccountType } from '../schemas/generalLedger/ledgerAccount'
+import { Direction } from '@internal-types/general'
+import { NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 
 export type AugmentedLedgerAccountBalance = NestedLedgerAccountType & { isMatching?: true }
 

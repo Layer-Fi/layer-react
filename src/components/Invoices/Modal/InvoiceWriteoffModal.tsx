@@ -1,7 +1,7 @@
-import { ModalProps } from '../../ui/Modal/Modal'
-import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
-import type { Invoice } from '../../../features/invoices/invoiceSchemas'
-import { updateInvoiceWithWriteoff, useWriteoffInvoice } from '../../../features/invoices/api/useWriteoffInvoice'
+import { ModalProps } from '@ui/Modal/Modal'
+import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
+import type { Invoice } from '@features/invoices/invoiceSchemas'
+import { updateInvoiceWithWriteoff, useWriteoffInvoice } from '@features/invoices/api/useWriteoffInvoice'
 import { useCallback } from 'react'
 
 type InvoiceWriteoffModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {

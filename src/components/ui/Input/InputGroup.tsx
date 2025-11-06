@@ -3,7 +3,7 @@ import {
   Group as ReactAriaGroup,
   type GroupProps as ReactAriaGroupProps,
 } from 'react-aria-components'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import classNames from 'classnames'
 
 import './inputGroup.scss'

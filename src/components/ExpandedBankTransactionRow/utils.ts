@@ -1,14 +1,14 @@
-import { BankTransaction, Split } from '../../types/bank_transactions'
-import { SplitCategorizationEntryEncoded } from '../../schemas/categorization'
-import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'
-import { BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { makeTagFromTransactionTag, TransactionTagSchema } from '../../features/tags/tagSchemas'
+import { BankTransaction, Split } from '@internal-types/bank_transactions'
+import { SplitCategorizationEntryEncoded } from '@schemas/categorization'
+import { decodeCustomerVendor } from '@features/customerVendor/customerVendorSchemas'
+import { BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { makeTagFromTransactionTag, TransactionTagSchema } from '@features/tags/tagSchemas'
 import { Schema } from 'effect/index'
-import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
-import { isSuggestedMatchAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
+import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { uniqBy } from 'lodash-es'
-import { isApiCategorizationAsOption } from '../BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isSplitCategorizationEncoded } from '../../schemas/categorization'
+import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isSplitCategorizationEncoded } from '@schemas/categorization'
 
 export enum ValidateSplitError {
   AmountsMustBeGreaterThanZero = 'All splits must have an amount greater than $0.00',

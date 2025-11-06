@@ -1,5 +1,5 @@
 import { Schema } from 'effect'
-import type { SuggestedMatch, Split } from './bank_transactions'
+import type { SuggestedMatch, Split } from '@internal-types/bank_transactions'
 import {
   ClassificationSchema,
   makeExclusion,
@@ -7,10 +7,10 @@ import {
   type Classification,
   type ClassificationEncoded,
   type NestedCategorization,
-} from '../schemas/categorization'
-import { makeAccountId, makeStableName } from '../schemas/accountIdentifier'
-import { unsafeAssertUnreachable } from '../utils/switch/assertUnreachable'
-import { BaseComboBoxOption } from '../components/ui/ComboBox/baseComboBoxOption'
+} from '@schemas/categorization'
+import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { BaseComboBoxOption } from '@ui/ComboBox/baseComboBoxOption'
 
 export enum CategorizationOption {
   Category = 'Category',
