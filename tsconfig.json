@@ -104,7 +104,6 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
       "@api/*": ["src/api/*"],
       "@components/*": ["src/components/*"],
       "@ui/*": ["src/components/ui/*"],

@@ -89,10 +89,31 @@ export default tsEslint.config(
     },
   },
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['**/*.{ts,tsx,js,jsx}'],
     plugins: { import: pluginImport },
+    settings: { 'import/resolver': { typescript: true, node: true } },
     rules: {
-      'import/no-relative-parent-imports': 'error',
+      'import/no-relative-parent-imports': [
+        'error',
+        { ignore: [
+          '@api/',
+          '@components/',
+          '@ui/',
+          '@contexts/',
+          '@features/',
+          '@hooks/',
+          '@providers/',
+          '@utils/',
+          '@internal-types/',
+          '@schemas/',
+          '@views/',
+          '@config/',
+          '@icons/',
+          '@assets/',
+          '@models/',
+        ],
+        },
+      ],
     },
   },
 )
