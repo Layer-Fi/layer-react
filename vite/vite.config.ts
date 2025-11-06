@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tsConfigPaths from 'vite-tsconfig-paths'
 import dts from 'vite-plugin-dts'
 import path from 'node:path'
 import { bundleCss } from './plugins/bundleCss'
@@ -21,6 +22,7 @@ export default defineConfig(({ mode, command }) => {
 
     plugins: [
       react(),
+      tsConfigPaths(),
       isESM
         ? dts({
           entryRoot: 'src',
