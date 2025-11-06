@@ -74,6 +74,10 @@
   &[data-flex-block] {
     block-size: auto;
   }
+
+  &[data-flex-inline] {
+    inline-size: auto;
+  }
 }
 
 .Layer__Dialog {
@@ -100,6 +104,10 @@
   &[data-variant='mobile-drawer'] {
     padding: 0;
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
+  }
+
+  &[data-variant='mobile-popover'] {
+    padding: 0;
   }
 }
 

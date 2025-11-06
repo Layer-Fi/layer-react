@@ -6,13 +6,15 @@ import { Calendar, CalendarCell, CalendarGrid, CalendarGridBody, CalendarGridHea
 import { HStack } from '@ui/Stack/Stack'
 import { type ZonedDateTime } from '@internationalized/date'
 import './dateCalendar.scss'
+import type { View } from '@internal-types/general'
 
 type DateCalendarProps = {
   minDate?: ZonedDateTime | null
   maxDate?: ZonedDateTime | null
+  variant?: View
 }
 
-export const DateCalendar = ({ minDate, maxDate }: DateCalendarProps) => {
+export const DateCalendar = ({ minDate, maxDate, variant }: DateCalendarProps) => {
   return (
     <Calendar minValue={minDate} maxValue={maxDate}>
       <HStack align='center' justify='space-between' pb='xs' pi='xs' className='Layer__DateCalendar__Header'>
@@ -28,13 +30,13 @@ export const DateCalendar = ({ minDate, maxDate }: DateCalendarProps) => {
         <CalendarGrid>
           <CalendarGridHeader>
             {day => (
-              <CalendarHeaderCell>
+              <CalendarHeaderCell size={variant === 'mobile' ? 'md' : 'sm'}>
                 {day}
               </CalendarHeaderCell>
             )}
           </CalendarGridHeader>
           <CalendarGridBody>
-            {date => <CalendarCell date={date} />}
+            {date => <CalendarCell date={date} size={variant === 'mobile' ? 'md' : 'sm'} />}
           </CalendarGridBody>
         </CalendarGrid>
       </HStack>

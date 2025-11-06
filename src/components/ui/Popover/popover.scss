@@ -7,16 +7,7 @@
 
   background: var(--color-base-0);
 
-  &[data-trigger='ComboBox'] {
-    inline-size:
-      clamp(
-        min(var(--trigger-width), 90svi),
-        calc(var(--trigger-width) * 1.5),
-        min(80ch, 90svi),
-      );
-  }
-
-  &[data-trigger='DatePicker'] {
-    inline-size: unset;
+  &[data-flex-inline] {
+    inline-size: auto;
   }
 }

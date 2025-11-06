@@ -9,6 +9,8 @@ import { CalendarDate, getLocalTimeZone, ZonedDateTime, fromDate } from '@intern
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MONTHS } from '@components/MonthCalendar/utils'
+import type { View } from '@internal-types/general'
+import classNames from 'classnames'
 import './monthCalendar.scss'
 
 export function MonthCalendar({
@@ -16,11 +18,13 @@ export function MonthCalendar({
   onChange,
   minDate,
   maxDate,
+  variant,
 }: {
   date: ZonedDateTime | null
   onChange: (val: ZonedDateTime) => void
   minDate?: ZonedDateTime | null
   maxDate?: ZonedDateTime | null
+  variant?: View
 }) {
   const minYear = minDate?.year ?? null
   const maxYear = maxDate?.year ?? null
@@ -105,14 +109,20 @@ export function MonthCalendar({
             selectMonth(selectedKey)
           }
         }}
-        className='Layer__MonthCalendar__MonthGrid'
+        className={classNames(
+          'Layer__MonthCalendar__MonthGrid',
+          variant === 'mobile' && 'Layer__MonthCalendar__MonthGrid--mobile',
+        )}
       >
         {MONTHS.map(m => (
           <GridListItem
             id={m.key}
             key={m.key}
             textValue={m.abbreviation}
-            className='Layer__MonthCalendar__MonthGridItem'
+            className={classNames(
+              'Layer__MonthCalendar__MonthGridItem',
+              variant === 'mobile' && 'Layer__MonthCalendar__MonthGridItem--mobile',
+            )}
             isDisabled={isMonthDisabled(m.key)}
           >
             {m.abbreviation}

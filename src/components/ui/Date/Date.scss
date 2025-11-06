@@ -16,6 +16,12 @@
   }
 }
 
+.Layer__UI__DateInput {
+  &[data-pointer-events='none'] {
+    pointer-events: none;
+  }
+}
+
 .Layer__UI__DatePicker {
   .Layer__UI__FieldError {
     padding-block-start: 0;
