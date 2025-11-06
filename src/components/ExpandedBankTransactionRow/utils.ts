@@ -99,9 +99,9 @@ export const getCustomerVendorForBankTransaction = (bankTransaction: BankTransac
       : null
 }
 
-export const getLocalSplitStateForExpandedTableRow = (
-  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+export const getLocalSplitStateForExpandedTransaction = (
   bankTransaction: BankTransaction,
+  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
 ): Split[] => {
   let coercedSelectedCategory = selectedCategory
   if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
