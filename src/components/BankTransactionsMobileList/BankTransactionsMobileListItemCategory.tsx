@@ -2,7 +2,8 @@ import { BankTransaction } from '@internal-types/bank_transactions'
 import { isCategorized } from '@components/BankTransactions/utils'
 import { Span } from '@ui/Typography/Text'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { BankTransactionsSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsSelectedValue'
+import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
+import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
 
 export interface BankTransactionsMobileListItemCategoryProps {
   bankTransaction: BankTransaction
@@ -18,7 +19,7 @@ export const BankTransactionsMobileListItemCategory = ({
 
   if (categorized) {
     return (
-      <BankTransactionsSelectedValue
+      <BankTransactionsCategorizedSelectedValue
         bankTransaction={bankTransaction}
         className={className}
         size='sm'
@@ -29,7 +30,7 @@ export const BankTransactionsMobileListItemCategory = ({
   return (
     selectedCategory
       ? (
-        <BankTransactionsSelectedValue
+        <BankTransactionsUncategorizedSelectedValue
           selectedValue={selectedCategory ?? null}
           className={className}
           size='sm'
