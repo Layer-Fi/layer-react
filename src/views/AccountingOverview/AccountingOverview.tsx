@@ -16,7 +16,7 @@ import { OnboardingStep } from '@internal-types/layer_context'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 import classNames from 'classnames'
-import { ProfitAndLossDatePicker } from '@components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
+import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 interface AccountingOverviewStringOverrides {
   header?: string
@@ -80,7 +80,7 @@ export const AccountingOverview = ({
           <Header>
             <HeaderRow>
               <HeaderCol>
-                <ProfitAndLossDatePicker />
+                <GlobalMonthPicker />
               </HeaderCol>
             </HeaderRow>
           </Header>

@@ -8,7 +8,6 @@ import { RefObject, useContext, useState } from 'react'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import PlusIcon from '@icons/Plus'
 import { View } from '@internal-types/general'
-import { ChartOfAccountsDatePicker } from '@components/ChartOfAccountsDatePicker/ChartOfAccountsDatePicker'
 import { ChartOfAccountsFormStringOverrides } from '@components/ChartOfAccountsForm/ChartOfAccountsForm'
 import { ChartOfAccountsSidebar } from '@components/ChartOfAccountsSidebar/ChartOfAccountsSidebar'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
@@ -19,6 +18,7 @@ import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/downl
 import { HStack } from '@ui/Stack/Stack'
 import { SearchField } from '@components/SearchField/SearchField'
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 const COMPONENT_NAME = 'chart-of-accounts'
 export type ExpandActionState = undefined | 'expanded' | 'collapsed'
@@ -93,7 +93,7 @@ export const ChartOfAccountsTableWithPanel = ({
               {withDateControl || withExpandAllButton
                 ? (
                   <HStack align='center' gap='xs'>
-                    {withDateControl && <ChartOfAccountsDatePicker />}
+                    {withDateControl && <GlobalMonthPicker />}
                     {withExpandAllButton && (
                       <ExpandCollapseButton
                         iconOnly={view === 'mobile'}

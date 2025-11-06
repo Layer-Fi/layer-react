@@ -2,17 +2,12 @@ import { Heading, HeadingSize } from '@components/Typography/Heading'
 import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
 import { ButtonVariant } from '@components/Button/Button'
 import { useCallback, useMemo, useState } from 'react'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import type { DateRange } from '@internal-types/general'
 import { DisplayState } from '@internal-types/bank_transactions'
-import { getEarliestDateToBrowse } from '@utils/business'
 import { Header } from '@components/Container/Header'
-import { DeprecatedDatePicker } from '@components/DeprecatedDatePicker/DeprecatedDatePicker'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
 import { MobileComponentType } from '@components/BankTransactions/constants'
 import classNames from 'classnames'
-import { endOfMonth, startOfMonth } from 'date-fns'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useDebounce } from '@hooks/useDebounce/useDebounce'
@@ -28,6 +23,11 @@ import { BankTransactionsHeaderMenu } from '@components/BankTransactions/BankTra
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
+import { MonthPicker } from '@components/MonthPicker/MonthPicker'
+import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
+import type { ZonedDateTime } from '@internationalized/date'
+import { endOfMonth, startOfMonth } from 'date-fns'
+import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -136,7 +136,7 @@ export const BankTransactionsHeader = ({
   showCategorizationRules = false,
 
 }: BankTransactionsHeaderProps) => {
-  const { business } = useLayerContext()
+  const activationDate = useBusinessActivationDate()
   const { display } = useBankTransactionsContext()
   const {
     setFilters,
@@ -145,9 +145,15 @@ export const BankTransactionsHeader = ({
   } = useBankTransactionsFiltersContext()
 
   const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
-  const dateRange = filters?.dateRange
-  const setDateRange = useCallback((newRange: DateRange) => {
-    setFilters({ dateRange: newRange })
+  const monthPickerDate = filters?.dateRange ? convertDateToZonedDateTime(filters.dateRange.startDate) : null
+  const setDateRange = useCallback((newMonth: ZonedDateTime) => {
+    const newMonthAsDate = newMonth.toDate()
+    setFilters({
+      dateRange: {
+        startDate: startOfMonth(newMonthAsDate),
+        endDate: endOfMonth(newMonthAsDate),
+      },
+    })
   }, [setFilters])
 
   const { count } = useCountSelectedIds()
@@ -171,25 +177,27 @@ export const BankTransactionsHeader = ({
           />
         )}
       </div>
-      {withDatePicker && dateRange
-        ? (
-          <DeprecatedDatePicker
-            displayMode='monthPicker'
-            selected={dateRange.startDate}
-            onChange={(date) => {
-              if (!Array.isArray(date)) {
-                setDateRange({
-                  startDate: startOfMonth(date),
-                  endDate: endOfMonth(date),
-                })
-              }
-            }}
-            minDate={getEarliestDateToBrowse(business)}
-          />
-        )
-        : null}
+      {withDatePicker && monthPickerDate && (
+        <MonthPicker
+          label='Select a month'
+          showLabel={false}
+          date={monthPickerDate}
+          onChange={setDateRange}
+          minDate={activationDate ? convertDateToZonedDateTime(activationDate) : null}
+          maxDate={convertDateToZonedDateTime(new Date())}
+        />
+      )}
     </div>
-  ), [asWidget, business, dateRange, isSyncing, listView, setDateRange, stringOverrides?.header, withDatePicker])
+  ), [
+    activationDate,
+    asWidget,
+    isSyncing,
+    listView,
+    monthPickerDate,
+    setDateRange,
+    stringOverrides?.header,
+    withDatePicker,
+  ])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,

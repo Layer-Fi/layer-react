@@ -4,12 +4,26 @@ import type { MoneyFormat } from '@internal-types/general'
 
 export type TimeRangePickerConfig = {
   /**
-   * @deprecated Use `defaultDatePickerMode` instead
+   * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
    */
   datePickerMode?: DateRangePickerMode
+
+  /**
+   * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
+   */
   defaultDatePickerMode?: DateRangePickerMode
 
+  /**
+   * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
+   */
   allowedDatePickerModes?: ReadonlyArray<DateRangePickerMode>
-  csvMoneyFormat?: MoneyFormat
+
+  /**
+   * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
+   */
   customDateRanges?: CustomDateRange[]
+
+  dateSelectionMode?: 'month' | 'full'
+
+  csvMoneyFormat?: MoneyFormat
 }

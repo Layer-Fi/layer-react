@@ -5,7 +5,6 @@ import { PropsWithChildren } from 'react'
 import { TableProvider } from '@contexts/TableContext/TableContext'
 import { useBalanceSheet } from '@hooks/balanceSheet/useBalanceSheet'
 import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
-import { BalanceSheetDatePicker } from '@components/BalanceSheetDatePicker/BalanceSheetDatePicker'
 import { BalanceSheetExpandAllButton } from '@components/BalanceSheetExpandAllButton/BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '@components/BalanceSheetTable/BalanceSheetTable'
 import { BalanceSheetTableStringOverrides } from '@components/BalanceSheetTable/BalanceSheetTable'
@@ -16,6 +15,7 @@ import { BALANCE_SHEET_ROWS } from '@components/BalanceSheet/constants'
 import { BalanceSheetDownloadButton } from '@components/BalanceSheet/download/BalanceSheetDownloadButton'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { ReportsModeStoreProvider } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 
 export interface BalanceSheetStringOverrides {
   balanceSheetTable?: BalanceSheetTableStringOverrides
@@ -25,6 +25,7 @@ export type BalanceSheetViewProps = PropsWithChildren<{
   withExpandAllButton?: boolean
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
+  dateSelectionMode?: 'month' | 'full'
 }>
 
 export type BalanceSheetProps = PropsWithChildren<{
@@ -57,6 +58,7 @@ const BalanceSheetView = ({
   withExpandAllButton = true,
   asWidget = false,
   stringOverrides,
+  dateSelectionMode = 'full',
 }: BalanceSheetViewProps) => {
   const { date: effectiveDate } = useGlobalDate()
   const { data, isLoading } = useBalanceSheet({ effectiveDate })
@@ -73,7 +75,7 @@ const BalanceSheetView = ({
               <Header>
                 <HeaderRow>
                   <HeaderCol>
-                    <BalanceSheetDatePicker />
+                    <CombinedDateSelection mode={dateSelectionMode} />
                   </HeaderCol>
                   {withExpandAllButton && (
                     <HeaderCol>
@@ -112,7 +114,7 @@ const BalanceSheetView = ({
           <Header>
             <HeaderRow>
               <HeaderCol>
-                <BalanceSheetDatePicker />
+                <CombinedDateSelection mode={dateSelectionMode} />
               </HeaderCol>
               <HeaderCol>
                 {withExpandAllButton && (

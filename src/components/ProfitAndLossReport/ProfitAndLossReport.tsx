@@ -11,10 +11,10 @@ import { ProfitAndLossDetailReport } from '@components/ProfitAndLossDetailReport
 import { InAppLinkProvider, LinkingMetadata } from '@contexts/InAppLinkContext'
 import { ProfitAndLossTableWithProvider } from '@components/ProfitAndLossTable/ProfitAndLossTableWithProvider'
 import { ProfitAndLossCompareOptions } from '@components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
-import { ProfitAndLossDatePicker } from '@components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 import { ProfitAndLossDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -32,10 +32,7 @@ export type SelectedLineItem = {
 
 export const ProfitAndLossReport = ({
   stringOverrides,
-  allowedDatePickerModes,
-  datePickerMode,
-  defaultDatePickerMode,
-  customDateRanges,
+  dateSelectionMode = 'full',
   csvMoneyFormat,
   view,
   renderInAppLink,
@@ -82,12 +79,7 @@ export const ProfitAndLossReport = ({
       <Header>
         <HeaderRow>
           <HeaderCol>
-            <ProfitAndLossDatePicker
-              allowedDatePickerModes={allowedDatePickerModes}
-              datePickerMode={datePickerMode}
-              defaultDatePickerMode={defaultDatePickerMode}
-              customDateRanges={customDateRanges}
-            />
+            <CombinedDateRangeSelection mode={dateSelectionMode} />
             {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions />}
           </HeaderCol>
           <HeaderCol>
@@ -108,11 +100,8 @@ export const ProfitAndLossReport = ({
       </Header>
     )
   }, [
-    allowedDatePickerModes,
     csvMoneyFormat,
-    customDateRanges,
-    datePickerMode,
-    defaultDatePickerMode,
+    dateSelectionMode,
     hideHeader,
     stringOverrides?.downloadButton,
     useComparisonPnl,

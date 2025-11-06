@@ -26,4 +26,8 @@
   .Layer__UI__FieldError {
     padding-block-start: 0;
   }
+
+  &[data-disabled] {
+    color: var(--color-base-500);
+  }
 }

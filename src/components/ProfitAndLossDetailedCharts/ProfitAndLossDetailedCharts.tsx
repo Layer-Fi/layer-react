@@ -5,7 +5,6 @@ import { useCallback, useContext, useState } from 'react'
 import { SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import XIcon from '@icons/X'
 import { humanizeTitle } from '@utils/profitAndLossUtils'
-import { ProfitAndLossDatePicker } from '@components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 import { DetailedChart } from '@components/ProfitAndLossDetailedCharts/DetailedChart'
 import { DetailedTable, DetailedTableStringOverrides } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
 import { Filters } from '@components/ProfitAndLossDetailedCharts/Filters'
@@ -15,6 +14,7 @@ import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDe
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 export interface ProfitAndLossDetailedChartsStringOverrides {
   detailedTableStringOverrides?: DetailedTableStringOverrides
@@ -76,7 +76,7 @@ export const ProfitAndLossDetailedCharts = ({
           <Text size={TextSize.sm} className='date'>
             {format(dateRange.startDate, 'LLLL, y')}
           </Text>
-          {showDatePicker && <ProfitAndLossDatePicker />}
+          {showDatePicker && <GlobalMonthPicker />}
         </div>
         {!hideClose && (
           <Button

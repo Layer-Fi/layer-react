@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import { centsToDollars as formatMoney } from '@models/Money'
 import { formatPercent } from '@utils/format'
-import { ProfitAndLossDatePicker } from '@components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
 import classNames from 'classnames'
 import {
@@ -15,6 +14,7 @@ import {
 } from 'recharts'
 import { PolarViewBox } from 'recharts/types/util/types'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
+import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 interface DetailedChartProps {
   filteredData: PnlChartLineItem[]
@@ -60,7 +60,7 @@ export const DetailedChart = ({
   return (
     <div className='chart-field'>
       <div className='header--tablet'>
-        {showDatePicker && <ProfitAndLossDatePicker />}
+        {showDatePicker && <GlobalMonthPicker />}
       </div>
 
       <div className='chart-container'>

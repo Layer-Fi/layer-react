@@ -87,6 +87,7 @@ function LinkedAccountsOpeningBalanceModalContent({
       accountId: x.account.id,
       openingDate: x.openingDate,
       openingBalance: convertToCents(x.openingBalance)?.toString(),
+      isDateInvalid: x.isDateInvalid,
     })) as OpeningBalanceData[],
     {
       onSuccess: async (responses) => {
