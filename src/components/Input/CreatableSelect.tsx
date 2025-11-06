@@ -6,7 +6,7 @@ import {
 } from 'react-select'
 import BaseCreatableSelect, { type CreatableProps } from 'react-select/creatable'
 import ChevronDownFill from '../../icons/ChevronDownFill'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '../Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip/Tooltip'
 import classNames from 'classnames'
 import { type SelectProps } from './Select'
 

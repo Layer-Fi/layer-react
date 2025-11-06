@@ -7,7 +7,7 @@ import { isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } 
 import { Header, Span } from '../ui/Typography/Text'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { DateTime } from '../DateTime'
+import { DateTime } from '../DateTime/DateTime'
 import { MoneySpan } from '../ui/Typography/MoneySpan'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/bankTransactions/match'
 import { LoadingSpinner } from '../ui/Loading/LoadingSpinner'

@@ -1,6 +1,6 @@
+import { Button, ButtonVariant } from '../Button/Button'
 import { CopyIcon } from 'lucide-react'
 import { HStack } from '../ui/Stack/Stack'
-import { Button, ButtonVariant } from '../Button/Button'
 import classNames from 'classnames'
 
 const copyTextToClipboard = (text: string) => {

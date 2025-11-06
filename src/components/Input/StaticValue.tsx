@@ -1,5 +1,4 @@
-import { Text } from '../Typography'
-import { TextProps } from '../Typography/Text'
+import { TextProps, Text } from '../Typography/Text'
 import classNames from 'classnames'
 
 export type StaticValueProps = TextProps

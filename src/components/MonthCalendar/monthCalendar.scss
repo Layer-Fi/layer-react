@@ -1,0 +1,56 @@
+.Layer__MonthCalendar__Header {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.Layer__MonthCalendar__MonthGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 4.5rem);
+  gap: var(--spacing-3xs);
+  padding: var(--spacing-xs);
+
+  &--mobile {
+    grid-template-columns: repeat(3, 6.5rem);
+  }
+}
+
+.Layer__MonthCalendar__MonthGridItem {
+  display: grid;
+  justify-self: center;
+
+  block-size: 2rem;
+  inline-size: 4.5rem;
+  border-radius: var(--border-radius-2xs);
+  font-size: var(--text-sm);
+
+  text-align: center;
+  color: var(--button-fg-ghost);
+  place-items: center;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &[data-focus-visible] {
+    outline: 1px auto -webkit-focus-ring-color;
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    color: var(--button-fg-disabled);
+  }
+
+  &[data-selected] {
+    background-color: var(--color-base-900);
+    color: var(--color-base-0);
+  }
+
+  &[data-hovered]:not([data-disabled], [data-selected]) {
+    background-color: var(--button-bg-ghost-hovered);
+  }
+
+  &--mobile {
+    block-size: 2.75rem;
+    inline-size: 6.5rem;
+    font-size: var(--text-md);
+  }
+}

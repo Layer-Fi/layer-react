@@ -6,7 +6,7 @@ import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchPa
 import { useAuth } from '../useAuth'
 import { useSelectedIds } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useGetAllBankTransactionsCategories } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
 import { buildBulkMatchOrCategorizePayload } from './utils'
 import { CategoryUpdateSchema } from '../../schemas/bankTransactions/BankTransactionsBulkActions'

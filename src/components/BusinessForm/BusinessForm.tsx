@@ -1,13 +1,14 @@
+import { ErrorText } from '../Typography/ErrorText'
+import { InputGroup } from '../Input/InputGroup'
+import { Input } from '../Input/Input'
+import { SubmitButton } from '../Button/SubmitButton'
 import { notEmpty, validateEmailFormat } from '../../utils/form'
-import { Input, InputGroup } from '../Input'
 import { useBusinessForm } from './useBusinessForm'
-import { SubmitButton } from '../Button'
 import { FormSection } from '../Input/FormSection'
 import { BusinessTypeSelect } from '../Input/BusinessTypeSelect'
 import { USStateSelect } from '../Input/USStateSelect'
 import { PhoneInput } from '../Input/PhoneInput'
 import { isPossiblePhoneNumber } from 'libphonenumber-js'
-import { ErrorText } from '../Typography'
 import './businessForm.scss'
 
 export type BusinessFormStringOverrides = {

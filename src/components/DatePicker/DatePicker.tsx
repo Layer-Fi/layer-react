@@ -1,17 +1,12 @@
-import ChevronDown from '../../icons/ChevronDown'
 import { DateCalendar } from '../DateCalendar/DateCalendar'
-import { Button } from '../ui/Button/Button'
-import { DatePicker as BaseDatePicker, DateInput, DateSegment } from '../ui/Date/Date'
-import { InputGroup } from '../ui/Input/InputGroup'
+import { DatePicker as BaseDatePicker } from '../ui/Date/Date'
 import { Label } from '../ui/Typography/Text'
-import { Popover } from '../ui/Popover/Popover'
 import { Dialog } from 'react-aria-components'
 import { ZonedDateTime } from '@internationalized/date'
-import { FieldError } from '../ui/Form/Form'
-import { HStack } from '../ui/Stack/Stack'
-import { TriangleAlert } from 'lucide-react'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '../Tooltip/Tooltip'
-import { useMemo } from 'react'
+import { ResponsivePopover } from '../ResponsivePopover/ResponsivePopover'
+import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
+import { DatePickerInput } from './DatePickerInput'
+import { useState } from 'react'
 
 type DatePickerProps = {
   label: string
@@ -28,7 +23,6 @@ type DatePickerProps = {
 
 export const DatePicker = ({
   label,
-  isReadOnly,
   showLabel = true,
   date,
   minDate,
@@ -39,17 +33,8 @@ export const DatePicker = ({
   onChange,
 }: DatePickerProps) => {
   const additionalAriaProps = !showLabel && { 'aria-label': label }
-
-  const errorTriangle = useMemo(() => (
-    <DeprecatedTooltip offset={12}>
-      <DeprecatedTooltipTrigger>
-        <FieldError><TriangleAlert size={18} /></FieldError>
-      </DeprecatedTooltipTrigger>
-      <DeprecatedTooltipContent className='Layer__tooltip' width='md'>
-        {errorText}
-      </DeprecatedTooltipContent>
-    </DeprecatedTooltip>
-  ), [errorText])
+  const { value } = useSizeClass()
+  const [isPopoverOpen, setPopoverOpen] = useState(false)
 
   return (
     <BaseDatePicker
@@ -59,24 +44,16 @@ export const DatePicker = ({
       onChange={onChange}
       isInvalid={isInvalid}
       {...additionalAriaProps}
+      isOpen={isPopoverOpen}
+      onOpenChange={setPopoverOpen}
     >
       {showLabel && <Label>{label}</Label>}
-      <InputGroup slot='input' isInvalid={!!errorText}>
-        <DateInput inset>
-          {segment => <DateSegment isReadOnly={isReadOnly} segment={segment} />}
-        </DateInput>
-        <HStack gap='3xs' align='center'>
-          {errorText && errorTriangle}
-          <Button icon inset variant='ghost'>
-            <ChevronDown size={20} />
-          </Button>
-        </HStack>
-      </InputGroup>
-      <Popover>
+      <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} />
+      <ResponsivePopover>
         <Dialog>
-          <DateCalendar minDate={minDate} maxDate={maxDate} />
+          <DateCalendar minDate={minDate} maxDate={maxDate} variant={value} />
         </Dialog>
-      </Popover>
+      </ResponsivePopover>
     </BaseDatePicker>
   )
 }

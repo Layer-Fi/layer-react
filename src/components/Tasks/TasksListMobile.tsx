@@ -1,6 +1,6 @@
+import { TextButton } from '../Button/TextButton'
 import { Button } from '../Button/Button'
 import { MobilePanel } from '../MobilePanel/MobilePanel'
-import { TextButton } from '../Button'
 import { useState } from 'react'
 import { TasksListItem } from './TasksListItem'
 import { Pagination } from '../Pagination/Pagination'

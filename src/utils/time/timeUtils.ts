@@ -17,4 +17,4 @@ export function isZonedDateTime(val: unknown): val is ZonedDateTime {
   return val instanceof ZonedDateTime
 }
 
-export const convertDateToZonedDateTime = (date: Date | null) => date ? fromDate(date, getLocalTimeZone()) : null
+export const convertDateToZonedDateTime = (date: Date) => fromDate(date, getLocalTimeZone())

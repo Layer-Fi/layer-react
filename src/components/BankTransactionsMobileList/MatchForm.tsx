@@ -1,17 +1,18 @@
+import { Text, TextSize, TextWeight } from '../Typography/Text'
+import { ErrorText } from '../Typography/ErrorText'
+import { FileInput } from '../Input/FileInput'
+import { Button } from '../Button/Button'
 import { useRef, useState } from 'react'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction, SuggestedMatch } from '../../types/bank_transactions'
 import {
   hasReceipts,
   getBankTransactionMatchAsSuggestedMatch,
 } from '../../utils/bankTransactions'
-import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { Button } from '../Button'
-import { FileInput } from '../Input'
-import { MatchFormMobile } from '../MatchForm'
-import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
+import { MatchFormMobile } from '../MatchForm/MatchFormMobile'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 

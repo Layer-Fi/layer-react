@@ -1,9 +1,9 @@
+import { Button } from '../Button/Button'
 import {
   SearchField as ReactAriaSearchField,
   type SearchFieldProps as ReactAriaSearchFieldProps,
   Input as ReactAriaInput,
 } from 'react-aria-components'
-import { Button } from '../Button/Button'
 import X from '../../../icons/X'
 import './minimalSearchField.scss'
 

@@ -1,5 +1,5 @@
 import useSWRInfinite from 'swr/infinite'
-import { useLayerContext } from '../../../../contexts/LayerContext'
+import { useLayerContext } from '../../../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../../../../hooks/useAuth'
 import { useEnvironment } from '../../../../providers/Environment/EnvironmentInputProvider'
 import { get } from '../../../../api/layer/authenticated_http'

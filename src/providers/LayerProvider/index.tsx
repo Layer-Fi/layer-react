@@ -1,1 +1,0 @@
-export { LayerProvider } from './LayerProvider'

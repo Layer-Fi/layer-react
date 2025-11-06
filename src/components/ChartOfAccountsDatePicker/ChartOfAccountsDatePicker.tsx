@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
 import { endOfMonth, startOfMonth } from 'date-fns'
 

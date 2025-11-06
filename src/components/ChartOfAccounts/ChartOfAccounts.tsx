@@ -1,13 +1,12 @@
 import { ReactNode, useContext } from 'react'
-import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
-import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
-import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
+import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext/LedgerAccountsContext'
+import { useChartOfAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
-import { useLedgerAccounts } from '../../hooks/useLedgerAccounts'
-import { ChartOfAccountsTable } from '../ChartOfAccountsTable'
-import { ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
-import { Container } from '../Container'
-import { LedgerAccount } from '../LedgerAccount'
+import { useLedgerAccounts } from '../../hooks/useLedgerAccounts/useLedgerAccounts'
+import { ChartOfAccountsTableWithPanel, ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
+import { Container } from '../Container/Container'
+import { LedgerAccount } from '../LedgerAccount/LedgerAccountIndex'
 import { LedgerAccountStringOverrides } from '../LedgerAccount/LedgerAccountIndex'
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
 
@@ -67,7 +66,7 @@ const ChartOfAccountsContent = ({
           />
         )
         : (
-          <ChartOfAccountsTable
+          <ChartOfAccountsTableWithPanel
             asWidget={asWidget}
             withDateControl={withDateControl}
             withExpandAllButton={withExpandAllButton}

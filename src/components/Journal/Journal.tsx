@@ -1,11 +1,10 @@
-import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
-import { JournalContext } from '../../contexts/JournalContext'
-import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext/ChartOfAccountsContext'
+import { JournalContext } from '../../contexts/JournalContext/JournalContext'
+import { useChartOfAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
-import { useJournal } from '../../hooks/useJournal'
-import { Container } from '../Container'
-import { JournalTable } from '../JournalTable'
-import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
+import { useJournal } from '../../hooks/useJournal/useJournal'
+import { Container } from '../Container/Container'
+import { JournalTableWithPanel, JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
 import { JournalStoreProvider, useJournalRouteState, JournalRoute } from '../../providers/JournalStore/JournalStoreProvider'
 import { ReactNode } from 'react'
@@ -63,7 +62,7 @@ const JournalTableView = ({
 
   return (
     <Container name='journal' ref={containerRef} asWidget={asWidget}>
-      <JournalTable
+      <JournalTableWithPanel
         view={view}
         containerRef={containerRef}
         stringOverrides={stringOverrides?.journalTable}

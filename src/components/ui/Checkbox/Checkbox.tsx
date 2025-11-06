@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { Checkbox as ReactAriaCheckbox, type CheckboxProps as AriaCheckboxProps } from 'react-aria-components'
 import { withRenderProp } from '../../utility/withRenderProp'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../../Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../../Tooltip/Tooltip'
 import classNames from 'classnames'
 import './checkbox.scss'
 

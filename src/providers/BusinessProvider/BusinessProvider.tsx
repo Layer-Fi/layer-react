@@ -1,8 +1,8 @@
 import { PropsWithChildren, useReducer, useEffect, Reducer, useMemo, useCallback } from 'react'
 import { Layer } from '../../api/layer'
 import { ToastProps, ToastsContainer } from '../../components/Toast/Toast'
-import { LayerContext } from '../../contexts/LayerContext'
-import { useDataSync } from '../../hooks/useDataSync'
+import { LayerContext } from '../../contexts/LayerContext/LayerContext'
+import { useDataSync } from '../../hooks/useDataSync/useDataSync'
 import { errorHandler, LayerError } from '../../models/ErrorHandler'
 import {
   ColorConfig,

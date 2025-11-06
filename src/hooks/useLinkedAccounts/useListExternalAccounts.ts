@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { listExternalAccounts } from '../../api/layer/linked_accounts'

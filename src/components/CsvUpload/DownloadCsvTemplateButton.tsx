@@ -1,5 +1,5 @@
+import { Button, ButtonVariant } from '../Button/Button'
 import { type PropsWithChildren } from 'react'
-import { Button, ButtonVariant } from '../Button'
 import { FileDownIcon } from 'lucide-react'
 
 interface DownloadCsvTemplateButtonProps<T> {

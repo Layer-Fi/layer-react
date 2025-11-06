@@ -1,3 +1,8 @@
+import { ErrorText } from '../Typography/ErrorText'
+import { Text, TextSize } from '../Typography/Text'
+import { Input } from '../Input/Input'
+import { Button } from '../ui/Button/Button'
+import { TextButton } from '../Button/TextButton'
 import {
   forwardRef,
   useImperativeHandle,
@@ -5,7 +10,7 @@ import {
   useRef,
   useEffect,
 } from 'react'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
@@ -17,7 +22,7 @@ import {
 import {
   hasMatch,
 } from '../../utils/bankTransactions'
-import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
+import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
 import { TagDimensionsGroup } from '../../features/tags/components/TagDimensionsGroup'
 import { CustomerVendorSelector } from '../../features/customerVendor/components/CustomerVendorSelector'
@@ -25,13 +30,9 @@ import { CustomerVendorSchema } from '../../features/customerVendor/customerVend
 import { useTagBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
 import { useRemoveTagFromBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
 import { useSetMetadataOnBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
-import { SubmitButton, TextButton } from '../Button'
-import { SubmitAction } from '../Button/SubmitButton'
-import { Button } from '../ui/Button/Button'
-import { Input } from '../Input'
-import { MatchForm } from '../MatchForm'
+import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
+import { MatchForm } from '../MatchForm/MatchForm'
 import { Toggle, ToggleSize } from '../Toggle/Toggle'
-import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'

@@ -1,3 +1,5 @@
+import { TextSize } from '../../Typography/Text'
+import { Button } from '../../ui/Button/Button'
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, type PropsWithChildren } from 'react'
 import classNames from 'classnames'
 import { useInvoiceForm, type InvoiceFormType } from './useInvoiceForm'
@@ -5,7 +7,6 @@ import type { Invoice } from '../../../features/invoices/invoiceSchemas'
 import { UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
 import { Form } from '../../ui/Form/Form'
 import { HStack, VStack } from '../../ui/Stack/Stack'
-import { Button } from '../../ui/Button/Button'
 import { Plus, Trash } from 'lucide-react'
 import { BigDecimal as BD } from 'effect'
 import { CustomerSelector } from '../../../features/customers/components/CustomerSelector'
@@ -16,9 +17,8 @@ import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } 
 import { type ZonedDateTime, toCalendarDate, fromDate } from '@internationalized/date'
 import { withForceUpdate } from '../../../features/forms/components/FormBigDecimalField'
 import { type InvoiceFormState, EMPTY_LINE_ITEM, getAdditionalTags, getSelectedTag, INVOICE_MECE_TAG_DIMENSION } from './formUtils'
-import { DataState, DataStateStatus } from '../../DataState'
+import { DataState, DataStateStatus } from '../../DataState/DataState'
 import { AlertTriangle } from 'lucide-react'
-import { TextSize } from '../../Typography'
 import { useInvoiceDetail } from '../../../providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { flattenValidationErrors } from '../../../utils/form'
 import { type Tag } from '../../../features/tags/tagSchemas'
@@ -352,7 +352,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                  * momentarily undefined as they re-render due to re-indexing. Thus, we use indices here for now.
                  * See here for more information: https://github.com/TanStack/form/issues/1518.
                  */
-                <InvoiceFormLineItemRow key={index} form={form} index={index} isReadOnly={isReadOnly} onDeleteLine={() => field.removeValue(index)} />
+                (<InvoiceFormLineItemRow key={index} form={form} index={index} isReadOnly={isReadOnly} onDeleteLine={() => field.removeValue(index)} />)
               ))}
               {!isReadOnly
                 && (

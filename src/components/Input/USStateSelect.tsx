@@ -1,6 +1,6 @@
+import { Select } from './Select'
 import { BaseSelectOption } from '../../types/general'
 import { US_STATES, USState } from '../../types/location'
-import { Select } from './Select'
 
 export const findSelectOption = (options: BaseSelectOption[], selected?: string) => {
   if (!selected) {

@@ -1,6 +1,6 @@
+import { Text, TextSize, TextWeight } from '../Typography/Text'
 import AlertCircle from '../../icons/AlertCircle'
 import Clock from '../../icons/Clock'
-import { Text, TextSize, TextWeight } from '../Typography/Text'
 import CheckCircle from '../../icons/CheckCircle'
 import { BookkeepingPeriod, BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import pluralize from 'pluralize'

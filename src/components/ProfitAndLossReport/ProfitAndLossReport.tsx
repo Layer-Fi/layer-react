@@ -1,13 +1,15 @@
+import { HeaderRow } from '../Header/HeaderRow'
+import { HeaderCol } from '../Header/HeaderCol'
+import { Header } from '../Header/Header'
 import { ReactNode, useCallback, useContext, useMemo } from 'react'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
-import { Header, HeaderCol, HeaderRow } from '../Header'
-import { View } from '../View'
+import { View } from '../View/View'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { ProfitAndLossDetailReport } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
-import { ProfitAndLossTable } from '../ProfitAndLossTable'
+import { ProfitAndLossTableWithProvider } from '../ProfitAndLossTable/ProfitAndLossTableWithProvider'
 import { ProfitAndLossCompareOptions } from '../ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 import { ProfitAndLossDownloadButton } from '../ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
@@ -130,7 +132,7 @@ export const ProfitAndLossReport = ({
             />
           )
           : (
-            <ProfitAndLossTable
+            <ProfitAndLossTableWithProvider
               asContainer={false}
               stringOverrides={stringOverrides?.profitAndLoss?.table}
               onLineItemClick={handleLineItemClick}

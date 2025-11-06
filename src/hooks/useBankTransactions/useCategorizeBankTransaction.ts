@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { categorizeBankTransaction, type GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import type { CategoryUpdate } from '../../types/categories'
 import { useAuth } from '../useAuth'
 import { useSWRConfig } from 'swr'

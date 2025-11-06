@@ -4,8 +4,8 @@ import {
 } from '../../components/BankTransactions/BankTransactions'
 import { BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
 import { MobileComponentType } from '../../components/BankTransactions/constants'
-import { LinkedAccounts } from '../../components/LinkedAccounts'
-import { View } from '../../components/View'
+import { LinkedAccounts } from '../../components/LinkedAccounts/LinkedAccounts'
+import { View } from '../../components/View/View'
 import { LinkingMetadata } from '../../contexts/InAppLinkContext'
 import { ReactNode } from 'react'
 

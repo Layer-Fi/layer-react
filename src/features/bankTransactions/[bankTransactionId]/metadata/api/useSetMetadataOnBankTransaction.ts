@@ -1,6 +1,6 @@
 import useSWRMutation from 'swr/mutation'
 import { useAuth } from '../../../../../hooks/useAuth'
-import { useLayerContext } from '../../../../../contexts/LayerContext'
+import { useLayerContext } from '../../../../../contexts/LayerContext/LayerContext'
 import { patch } from '../../../../../api/layer/authenticated_http'
 import { useCallback } from 'react'
 import { useBankTransactionsGlobalCacheActions } from '../../../../../hooks/useBankTransactions/useBankTransactions'

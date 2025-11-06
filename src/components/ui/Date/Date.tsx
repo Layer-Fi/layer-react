@@ -38,17 +38,18 @@ export const DateField = forwardRef<HTMLDivElement, DateFieldProps>(
 const DATE_INPUT_CLASS_NAME = 'Layer__UI__DateInput'
 type DateInputProps = Omit<ReactAriaDateInputProps, 'className'> & {
   inset?: true
+  pointerEvents?: 'none'
 }
 
 export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
-  function DateInput({ inset, ...restProps }, ref) {
-    const dataProperties = toDataProperties({ inset })
+  function DateInput({ inset, pointerEvents, ...restProps }, ref) {
+    const dataProperties = toDataProperties({ inset, 'pointer-events': pointerEvents })
 
     return (
       <ReactAriaDateInput
         {...dataProperties}
         {...restProps}
-        className={classNames(DATE_INPUT_CLASS_NAME)}
+        className={DATE_INPUT_CLASS_NAME}
         ref={ref}
       />
     )

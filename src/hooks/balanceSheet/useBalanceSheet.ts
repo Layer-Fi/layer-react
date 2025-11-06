@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { getBalanceSheet } from '../../api/layer/balance_sheet'
 import { endOfDay } from 'date-fns'
 
