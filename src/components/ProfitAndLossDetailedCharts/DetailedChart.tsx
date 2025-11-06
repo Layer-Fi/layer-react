@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
-import { centsToDollars as formatMoney } from '../../models/Money'
+import { centsToDollars as formatMoney } from '@models/Money'
 import { formatPercent } from '@utils/format'
 import { ProfitAndLossDatePicker } from '@components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/DetailedTable'

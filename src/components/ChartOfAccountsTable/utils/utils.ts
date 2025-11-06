@@ -1,4 +1,4 @@
-import { centsToDollars, centsToDollarsWithoutCommas } from '../../../models/Money'
+import { centsToDollars, centsToDollarsWithoutCommas } from '@models/Money'
 import type { AugmentedLedgerAccountBalance } from '@internal-types/chart_of_accounts'
 import { convertCentsToCurrency } from '@utils/format'
 import { NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'

@@ -119,6 +119,7 @@
       "@config/*": ["src/config/*"],
       "@icons/*": ["src/icons/*"],
       "@assets/*": ["src/assets/*"],
+      "@models/*": ["src/models/*"],
     },
   },
   "include": [

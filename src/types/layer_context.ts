@@ -1,6 +1,6 @@
 import { ToastProps } from '@components/Toast/Toast'
 import type { EventCallbacks } from '@providers/LayerProvider/LayerProvider'
-import { LayerError } from '../models/ErrorHandler'
+import { LayerError } from '@models/ErrorHandler'
 import { AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { DateRange } from '@internal-types/general'
 import { Business } from '@internal-types/business'

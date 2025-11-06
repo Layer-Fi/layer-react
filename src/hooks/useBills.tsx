@@ -10,7 +10,7 @@ import useSWRInfinite from 'swr/infinite'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { Layer } from '@api/layer'
 import type { GetBillsReturn } from '@api/layer/bills'
-import { APIError } from '../models/APIError'
+import { APIError } from '@models/APIError'
 
 export type BillStatusFilter = 'PAID' | 'UNPAID'
 

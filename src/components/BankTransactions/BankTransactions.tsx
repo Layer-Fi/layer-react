@@ -27,7 +27,7 @@ import {
 } from '@components/BankTransactions/BankTransactionsHeader'
 import { BankTransactionsTableEmptyStates } from '@components/BankTransactions/BankTransactionsTableEmptyState'
 import { MobileComponentType } from '@components/BankTransactions/constants'
-import type { LayerError } from '../../models/ErrorHandler'
+import type { LayerError } from '@models/ErrorHandler'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 import { LegacyModeProvider, type BankTransactionsMode } from '@providers/LegacyModeProvider/LegacyModeProvider'

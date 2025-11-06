@@ -5,7 +5,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/customAccounts/useCustomAccounts'
 import type { CustomAccountTransactionRow, RawCustomTransaction } from '@hooks/customAccounts/types'
 import type { PreviewCsv } from '@components/CsvUpload/types'
-import { APIError } from '../../models/APIError'
+import { APIError } from '@models/APIError'
 
 type CustomAccountParseCsvArgs = {
   file: File

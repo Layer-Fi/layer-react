@@ -1,6 +1,7 @@
+// eslint-disable-next-line import/no-relative-parent-imports
 import pkg from '../../../package.json'
-import { APIError, APIErrorMessage } from '../../models/APIError'
-import { reportError } from '../../models/ErrorHandler'
+import { APIError, APIErrorMessage } from '@models/APIError'
+import { reportError } from '@models/ErrorHandler'
 import type { ParameterValues } from '@utils/request/toDefinedSearchParameters'
 
 const CUSTOM_PREFIX = 'Layer-'

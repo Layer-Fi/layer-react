@@ -1,7 +1,7 @@
 import { Text, TextSize } from '@components/Typography/Text'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import LoaderIcon from '@icons/Loader'
-import { centsToDollars as formatMoney } from '../../models/Money'
+import { centsToDollars as formatMoney } from '@models/Money'
 import { LinkedAccount } from '@internal-types/linked_accounts'
 import classNames from 'classnames'
 

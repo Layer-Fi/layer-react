@@ -4,7 +4,7 @@ import { ReactNode, useContext, useEffect, useRef, useState, useMemo, type Chang
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useElementSize } from '@hooks/useElementSize/useElementSize'
 import FileIcon from '@icons/File'
-import { centsToDollars as formatMoney } from '../../models/Money'
+import { centsToDollars as formatMoney } from '@models/Money'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasMatch, hasReceipts, isCredit } from '@utils/bankTransactions'

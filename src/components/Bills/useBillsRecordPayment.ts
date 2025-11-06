@@ -7,7 +7,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import useSWRMutation from 'swr/mutation'
-import { APIError } from '../../models/APIError'
+import { APIError } from '@models/APIError'
 import { useBillsContext } from '@contexts/BillsContext'
 
 export type BillsRecordPaymentFormRecord = {

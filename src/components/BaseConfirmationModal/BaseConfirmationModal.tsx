@@ -11,7 +11,7 @@ import {
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { useCallback, useState, type ReactNode } from 'react'
 import { Awaitable } from '@internal-types/utility/promises'
-import { APIError } from '../../models/APIError'
+import { APIError } from '@models/APIError'
 
 export type BaseConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   title: string

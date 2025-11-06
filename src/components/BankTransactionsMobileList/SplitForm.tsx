@@ -10,7 +10,7 @@ import PaperclipIcon from '@icons/Paperclip'
 import Trash from '@icons/Trash'
 import {
   dollarsToCents as parseMoney,
-} from '../../models/Money'
+} from '@models/Money'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import {
   SingleCategoryUpdate,

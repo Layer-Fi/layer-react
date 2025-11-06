@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
-import { centsToDollars } from '../../models/Money'
+import { centsToDollars } from '@models/Money'
 import { View } from '@internal-types/general'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { LedgerAccountEntryDetails } from '@components/LedgerAccountEntryDetails/LedgerAccountEntryDetails'

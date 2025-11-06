@@ -6,7 +6,7 @@ import {
   ProfitAndLossSummaryData,
   useProfitAndLossLTM,
 } from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
-import { centsToDollars } from '../../models/Money'
+import { centsToDollars } from '@models/Money'
 import { isDateAllowedToBrowse } from '@utils/business'
 import { ChartStateCard } from '@components/ProfitAndLossChart/ChartStateCard'
 import { Indicator } from '@components/ProfitAndLossChart/Indicator'

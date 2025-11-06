@@ -14,7 +14,7 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import AlertCircle from '@icons/AlertCircle'
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
-import { centsToDollars as formatMoney } from '../../models/Money'
+import { centsToDollars as formatMoney } from '@models/Money'
 import {
   BankTransaction,
   SuggestedMatch,
