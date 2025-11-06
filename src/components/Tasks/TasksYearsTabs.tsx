@@ -4,7 +4,7 @@ import { useBookkeepingYearsStatus } from '@hooks/bookkeeping/periods/useBookkee
 import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { getMonth } from 'date-fns'
-import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 
 export const TasksYearsTabs = () => {
   const { date } = useGlobalDate()
