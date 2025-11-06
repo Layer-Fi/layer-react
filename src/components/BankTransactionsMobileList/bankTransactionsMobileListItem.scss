@@ -1,7 +1,16 @@
-.Layer__bank-transaction-mobile-list-item__category {
+.Layer__bankTransactionsMobileListItem__category {
   padding-block: var(--spacing-xs);
   padding-inline: var(--spacing-md);
   border-radius: 0 0 var(--border-radius-sm) var(--border-radius-sm);
   border-top: 1px solid var(--color-base-400);
   background-color: var(--color-base-100);
+}
+
+.Layer__bankTransactionsMobileListItem__getAssignedValue {
+  color: var(--color-base-500);
+}
+
+.Layer__bankTransactionsMobileListItem__headingContentLeft {
+  overflow: hidden;
+  min-width: 0;
 }

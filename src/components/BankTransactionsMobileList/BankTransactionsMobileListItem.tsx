@@ -1,5 +1,5 @@
 import { CloseButton } from '@components/Button/CloseButton'
-import { useContext, useEffect, useRef, useState, useMemo, type ChangeEvent } from 'react'
+import { useContext, useEffect, useRef, useState, useMemo, type ChangeEvent, type ReactNode } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useElementSize } from '@hooks/useElementSize/useElementSize'
 import FileIcon from '@icons/File'
@@ -15,15 +15,18 @@ import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategoriz
 import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
 import { Span } from '@ui/Typography/Text'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { VStack } from '@ui/Stack/Stack'
+import { VStack, HStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { DateTime } from '@components/DateTime/DateTime'
-import { HStack } from '@ui/Stack/Stack'
 import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
 import { BankTransactionsMobileListItemCategory } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCategory'
-import './bankTransactionsMobileListItem.scss'
 import { isCategorized } from '@components/BankTransactions/utils'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
+import { useInAppLinkContext, type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { decodeMatchDetails, convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
+import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
+import './bankTransactionsMobileListItem.scss'
+
 export interface BankTransactionsMobileListItemProps {
   index: number
   bankTransaction: BankTransaction
@@ -91,6 +94,26 @@ export const BankTransactionsMobileListItem = ({
   const [open, setOpen] = useState(isFirstItem)
   const [height, setHeight] = useState(0)
   const [headingHeight, setHeadingHeight] = useState(63)
+
+  const getAssignedValue = (
+    bankTransaction: BankTransaction,
+    renderInAppLink?: (details: LinkingMetadata) => ReactNode,
+  ) => {
+    if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
+      return extractDescriptionForSplit(bankTransaction.category)
+    }
+
+    if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
+      if (renderInAppLink && bankTransaction.match?.details) {
+        const matchDetails = bankTransaction.match.details ? decodeMatchDetails(bankTransaction.match.details) : undefined
+        const inAppLink = matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : undefined
+        if (inAppLink) return inAppLink
+      }
+      return bankTransaction.match?.details?.description
+    }
+
+    return bankTransaction.category?.display_name
+  }
 
   const openNext = () => {
     if (editable && itemRef.current && itemRef.current.nextSibling) {
@@ -198,6 +221,7 @@ export const BankTransactionsMobileListItem = ({
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
+  const { renderInAppLink } = useInAppLinkContext()
 
   const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
 
@@ -238,12 +262,17 @@ export const BankTransactionsMobileListItem = ({
               <VStack
                 align='start'
                 gap='3xs'
-                className='Layer__bank-transaction-mobile-list-item__heading__content__left'
+                className='Layer__bankTransactionsMobileListItem__headingContentLeft'
                 pi='md'
                 pb='sm'
               >
                 <Span ellipsis>
                   {bankTransaction.counterparty_name ?? bankTransaction.description}
+                </Span>
+                <Span className='Layer__bankTransactionsMobileListItem__getAssignedValue'>
+                  {categorized && bankTransaction.categorization_status
+                    ? getAssignedValue(bankTransaction, renderInAppLink)
+                    : null}
                 </Span>
                 <HStack gap='2xs' align='center'>
                   <Span size='sm' ellipsis>
@@ -286,7 +315,7 @@ export const BankTransactionsMobileListItem = ({
           </HStack>
           <BankTransactionsMobileListItemCategory
             bankTransaction={bankTransaction}
-            className={`${className}__category`}
+            className='Layer__bankTransactionsMobileListItem__category'
           />
         </VStack>
       </div>
