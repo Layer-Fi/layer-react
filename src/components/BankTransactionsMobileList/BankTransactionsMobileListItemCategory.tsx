@@ -2,7 +2,6 @@ import { BankTransaction } from '@internal-types/bank_transactions'
 import { isCategorized } from '@components/BankTransactions/utils'
 import { Span } from '@ui/Typography/Text'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useMemo } from 'react'
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 
@@ -17,9 +16,9 @@ export const BankTransactionsMobileListItemCategory = ({
 }: BankTransactionsMobileListItemCategoryProps) => {
   const categorized = isCategorized(bankTransaction)
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-  const selectedValue = useMemo(() => {
-    return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedCategory ?? null} className={className} />
-  }, [selectedCategory, className])
+  const selectedValue = () => (
+    <BankTransactionsUncategorizedSelectedValue selectedValue={selectedCategory ?? null} className={className} />
+  )
 
   if (categorized) {
     return (
@@ -29,7 +28,7 @@ export const BankTransactionsMobileListItemCategory = ({
 
   return (
     selectedCategory
-      ? selectedValue
+      ? selectedValue()
       : (
         <Span ellipsis className={className} size='sm'>
           No category selected
