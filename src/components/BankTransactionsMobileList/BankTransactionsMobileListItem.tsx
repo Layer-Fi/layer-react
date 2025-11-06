@@ -237,7 +237,7 @@ export const BankTransactionsMobileListItem = ({
                 gap='3xs'
                 className='Layer__bank-transaction-mobile-list-item__heading__content__left'
                 pi='md'
-                pb='md'
+                pb='sm'
               >
                 <Span ellipsis>
                   {bankTransaction.counterparty_name ?? bankTransaction.description}
@@ -260,9 +260,8 @@ export const BankTransactionsMobileListItem = ({
               align='end'
               gap='3xs'
               pi='md'
-              pb='md'
+              pb='sm'
             >
-
               <Span size='md'>
                 {isCredit(bankTransaction) ? '+' : ''}
                 <MoneySpan
