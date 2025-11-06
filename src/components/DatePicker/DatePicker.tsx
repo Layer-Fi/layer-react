@@ -1,11 +1,11 @@
-import { DateCalendar } from '../DateCalendar/DateCalendar'
-import { DatePicker as BaseDatePicker } from '../ui/Date/Date'
-import { Label } from '../ui/Typography/Text'
+import { DateCalendar } from '@components/DateCalendar/DateCalendar'
+import { DatePicker as BaseDatePicker } from '@ui/Date/Date'
+import { Label } from '@ui/Typography/Text'
 import { Dialog } from 'react-aria-components'
 import { ZonedDateTime } from '@internationalized/date'
-import { ResponsivePopover } from '../ResponsivePopover/ResponsivePopover'
-import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
-import { DatePickerInput } from './DatePickerInput'
+import { ResponsivePopover } from '@components/ResponsivePopover/ResponsivePopover'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { DatePickerInput } from '@components/DatePicker/DatePickerInput'
 import { useState } from 'react'
 
 type DatePickerProps = {

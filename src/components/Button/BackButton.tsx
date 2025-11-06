@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes } from 'react'
-import BackArrow from '../../icons/BackArrow'
+import BackArrow from '@icons/BackArrow'
 import classNames from 'classnames'
 
 type BackButtonProps = {

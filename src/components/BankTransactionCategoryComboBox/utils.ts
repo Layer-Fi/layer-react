@@ -1,13 +1,13 @@
-import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
-import { type CategorizationEncoded, type NestedCategorization, isSplitCategorizationEncoded } from '../../schemas/categorization'
-import type { BankTransaction, SuggestedMatch } from '../../types/bank_transactions'
-import { CategorizationType, hasSuggestions } from '../../types/categories'
-import { ApiCategorizationAsOption, CategoryAsOption, PlaceholderAsOption, SplitAsOption, SuggestedMatchAsOption } from '../../types/categorizationOption'
-import { type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { decodeCustomerVendor } from '../../features/customerVendor/customerVendorSchemas'
-import { TransactionTagSchema } from '../../features/tags/tagSchemas'
+import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { type CategorizationEncoded, type NestedCategorization, isSplitCategorizationEncoded } from '@schemas/categorization'
+import type { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
+import { CategorizationType, hasSuggestions } from '@internal-types/categories'
+import { ApiCategorizationAsOption, CategoryAsOption, PlaceholderAsOption, SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { decodeCustomerVendor } from '@features/customerVendor/customerVendorSchemas'
+import { TransactionTagSchema } from '@features/tags/tagSchemas'
 import { Schema } from 'effect/index'
-import { makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
+import { makeTagFromTransactionTag } from '@features/tags/tagSchemas'
 
 export enum BankTransactionCategoryComboBoxGroupLabel {
   TRANSFER = 'TRANSFER',

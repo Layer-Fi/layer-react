@@ -1,5 +1,5 @@
 import { Schema, pipe } from 'effect'
-import { PaymentMethodSchema } from '../../components/PaymentMethod/schemas'
+import { PaymentMethodSchema } from '@components/PaymentMethod/schemas'
 
 export enum CustomerRefundStatus {
   Paid = 'PAID',

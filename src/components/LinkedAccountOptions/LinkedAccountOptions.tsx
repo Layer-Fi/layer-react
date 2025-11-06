@@ -1,5 +1,5 @@
-import MoreVertical from '../../icons/MoreVertical'
-import { HoverMenu, HoverMenuProps } from '../HoverMenu/HoverMenu'
+import MoreVertical from '@icons/MoreVertical'
+import { HoverMenu, HoverMenuProps } from '@components/HoverMenu/HoverMenu'
 import classNames from 'classnames'
 
 interface LinkedAccountOptionsProps extends HoverMenuProps {

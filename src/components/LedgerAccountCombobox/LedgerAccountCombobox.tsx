@@ -1,11 +1,11 @@
 import { useCallback, useId, useMemo } from 'react'
-import { ComboBox } from '../ui/ComboBox/ComboBox'
-import { VStack } from '../ui/Stack/Stack'
-import { Label } from '../ui/Typography/Text'
-import { getLeafCategories } from '../../types/categories'
-import { ClassificationEquivalence, type CategoriesListMode, type Classification } from '../../schemas/categorization'
-import { useCategories } from '../../hooks/categories/useCategories'
-import { CategoryAsOption } from '../../types/categorizationOption'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
+import { getLeafCategories } from '@internal-types/categories'
+import { ClassificationEquivalence, type CategoriesListMode, type Classification } from '@schemas/categorization'
+import { useCategories } from '@hooks/categories/useCategories'
+import { CategoryAsOption } from '@internal-types/categorizationOption'
 
 type LedgerAccountComboboxProps = {
   label: string

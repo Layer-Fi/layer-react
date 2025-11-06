@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import { getEarliestDateToBrowse } from '../../utils/business'
-import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
-import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
-import { DeprecatedDatePickerModeSelector } from '../DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
-import { getAllowedDateRangePickerModes, getInitialDateRangePickerMode, useGlobalDateRangePicker } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
-import { ReportKey, useReportModeActions, useReportModeStore, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import { type DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getEarliestDateToBrowse } from '@utils/business'
+import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
+import { DeprecatedDatePicker } from '@components/DeprecatedDatePicker/DeprecatedDatePicker'
+import { DeprecatedDatePickerModeSelector } from '@components/DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
+import { getAllowedDateRangePickerModes, getInitialDateRangePickerMode, useGlobalDateRangePicker } from '@providers/GlobalDateStore/useGlobalDateRangePicker'
+import { ReportKey, useReportModeActions, useReportModeStore, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { type DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
 

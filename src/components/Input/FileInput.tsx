@@ -1,8 +1,8 @@
-import { ButtonVariant } from '../Button/Button'
-import { TextButton } from '../Button/TextButton'
-import { Button } from '../Button/Button'
+import { ButtonVariant } from '@components/Button/Button'
+import { TextButton } from '@components/Button/TextButton'
+import { Button } from '@components/Button/Button'
 import { useRef, ChangeEvent } from 'react'
-import UploadCloud from '../../icons/UploadCloud'
+import UploadCloud from '@icons/UploadCloud'
 
 export interface FileInputProps {
   text?: string

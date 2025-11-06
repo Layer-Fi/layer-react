@@ -1,6 +1,6 @@
-import { DownloadButton } from '../../Button/DownloadButton'
-import InvisibleDownload, { useInvisibleDownload } from '../../utility/InvisibleDownload'
-import { useAccountBalancesDownload } from './useAccountBalancesDownload'
+import { DownloadButton } from '@components/Button/DownloadButton'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
+import { useAccountBalancesDownload } from '@components/ChartOfAccounts/download/useAccountBalancesDownload'
 
 type AccountBalancesDownloadButtonProps = {
   startCutoff?: Date

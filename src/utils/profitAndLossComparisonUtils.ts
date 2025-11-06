@@ -1,6 +1,6 @@
-import { DateRangePickerMode } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { format, subMonths, subYears } from 'date-fns'
-import { LineItem } from '../schemas/common/lineItem'
+import { LineItem } from '@schemas/common/lineItem'
 
 export const generateComparisonPeriods = (
   startDate: Date, numberOfPeriods: number, rangeDisplayMode: DateRangePickerMode,

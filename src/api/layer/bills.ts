@@ -1,6 +1,6 @@
-import type { Metadata } from '../../types/api'
-import { Bill, BillLineItem, BillPayment, SalesTax } from '../../types/bills'
-import { get, post } from './authenticated_http'
+import type { Metadata } from '@internal-types/api'
+import { Bill, BillLineItem, BillPayment, SalesTax } from '@internal-types/bills'
+import { get, post } from '@api/layer/authenticated_http'
 
 export type GetBillsReturn = {
   data?: Bill[]

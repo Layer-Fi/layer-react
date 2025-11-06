@@ -1,5 +1,5 @@
 import { createContext, useMemo, useState, type PropsWithChildren } from 'react'
-import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
+import { UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 
 export interface CategorizationRulesContextType {
   ruleSuggestion: UpdateCategorizationRulesSuggestion | null

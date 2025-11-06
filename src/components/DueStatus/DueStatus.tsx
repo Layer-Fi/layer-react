@@ -1,7 +1,7 @@
-import { Text, TextSize, TextWeight } from '../Typography/Text'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import { useMemo } from 'react'
 import { parseISO, differenceInDays } from 'date-fns'
-import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './dueStatus.scss'
 
 export interface DueStatusProps {

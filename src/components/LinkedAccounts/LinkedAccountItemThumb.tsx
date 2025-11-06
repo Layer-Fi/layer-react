@@ -1,12 +1,12 @@
 import { useContext, useState } from 'react'
-import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext/LinkedAccountsContext'
-import { LinkedAccount } from '../../types/linked_accounts'
-import { LinkedAccountOptions } from '../LinkedAccountOptions/LinkedAccountOptions'
-import { LinkedAccountThumb } from '../LinkedAccountThumb/LinkedAccountThumb'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import type { HoverMenuProps } from '../HoverMenu/HoverMenu'
-import { LinkedAccountPill } from '../LinkedAccountPill/LinkedAccountPill'
-import { UnlinkAccountConfirmationModal } from './UnlinkAccountConfirmationModal/UnlinkAccountConfirmationModal'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { LinkedAccount } from '@internal-types/linked_accounts'
+import { LinkedAccountOptions } from '@components/LinkedAccountOptions/LinkedAccountOptions'
+import { LinkedAccountThumb } from '@components/LinkedAccountThumb/LinkedAccountThumb'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import type { HoverMenuProps } from '@components/HoverMenu/HoverMenu'
+import { LinkedAccountPill } from '@components/LinkedAccountPill/LinkedAccountPill'
+import { UnlinkAccountConfirmationModal } from '@components/LinkedAccounts/UnlinkAccountConfirmationModal/UnlinkAccountConfirmationModal'
 
 function accountNeedsUniquenessConfirmation({
   notifications,

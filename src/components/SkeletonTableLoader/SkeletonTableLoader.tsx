@@ -1,4 +1,4 @@
-import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader'
+import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
 interface SkeletonTableLoaderProps {
   rows: number

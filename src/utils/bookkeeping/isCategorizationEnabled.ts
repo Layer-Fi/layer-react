@@ -1,5 +1,5 @@
-import { BookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
-import { safeAssertUnreachable } from '../switch/assertUnreachable'
+import { BookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 
 export function isCategorizationEnabledForStatus(status: BookkeepingStatus) {
   switch (status) {

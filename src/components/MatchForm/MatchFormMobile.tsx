@@ -1,14 +1,14 @@
-import { ErrorText } from '../Typography/ErrorText'
-import { Text, TextSize } from '../Typography/Text'
-import { MONTH_DAY_FORMAT } from '../../config/general'
-import CheckIcon from '../../icons/Check'
-import { centsToDollars as formatMoney } from '../../models/Money'
-import { MatchFormProps } from './MatchForm'
+import { ErrorText } from '@components/Typography/ErrorText'
+import { Text, TextSize } from '@components/Typography/Text'
+import { MONTH_DAY_FORMAT } from '@config/general'
+import CheckIcon from '@icons/Check'
+import { centsToDollars as formatMoney } from '@models/Money'
+import { MatchFormProps } from '@components/MatchForm/MatchForm'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/bankTransactions/match'
-import { HStack } from '../ui/Stack/Stack'
+import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
+import { HStack } from '@ui/Stack/Stack'
 
 export const MatchFormMobile = ({
   classNamePrefix,

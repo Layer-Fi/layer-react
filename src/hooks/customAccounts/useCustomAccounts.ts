@@ -1,8 +1,8 @@
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import { useAuth } from '../useAuth'
-import { get } from '../../api/layer/authenticated_http'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { get } from '@api/layer/authenticated_http'
 import useSWR from 'swr'
-import { mapRawCustomAccountToCustomAccount, type RawCustomAccount } from './types'
+import { mapRawCustomAccountToCustomAccount, type RawCustomAccount } from '@hooks/customAccounts/types'
 
 export const CUSTOM_ACCOUNTS_TAG_KEY = '#custom-accounts'
 

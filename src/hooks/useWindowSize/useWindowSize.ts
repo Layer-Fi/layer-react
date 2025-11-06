@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect, useMemo } from 'react'
-import { BREAKPOINTS } from '../../config/general'
+import { BREAKPOINTS } from '@config/general'
 
 export const useWindowSize = () => {
   const [size, setSize] = useState([0, 0])

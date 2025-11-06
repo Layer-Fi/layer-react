@@ -1,30 +1,30 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { TagFilterInput } from '../../types/tags'
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
+import { TagFilterInput } from '@internal-types/tags'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import {
   CategoryUpdate,
-} from '../../types/categories'
-import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
+} from '@internal-types/categories'
+import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import {
   DisplayState,
   BankTransaction,
-} from '../../types/bank_transactions'
-import { Direction } from '../../types/general'
-import { DataModel } from '../../types/general'
-import { useLinkedAccounts } from '../useLinkedAccounts/useLinkedAccounts'
+} from '@internal-types/bank_transactions'
+import { Direction } from '@internal-types/general'
+import { DataModel } from '@internal-types/general'
+import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import {
   BankTransactionFilters,
-} from './types'
+} from '@hooks/useBankTransactions/types'
 import {
   applyAccountFilter,
   applyAmountFilter,
   applyCategorizationStatusFilter,
-} from './utils'
-import { useBankTransactions, type UseBankTransactionsOptions } from './useBankTransactions'
-import { useCategorizeBankTransaction } from './useCategorizeBankTransaction'
-import { useMatchBankTransaction } from './useMatchBankTransaction'
-import { decodeRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
-import { CategorizationRulesContext } from '../../contexts/CategorizationRulesContext/CategorizationRulesContext'
+} from '@hooks/useBankTransactions/utils'
+import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/useBankTransactions/useBankTransactions'
+import { useCategorizeBankTransaction } from '@hooks/useBankTransactions/useCategorizeBankTransaction'
+import { useMatchBankTransaction } from '@hooks/useBankTransactions/useMatchBankTransaction'
+import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000

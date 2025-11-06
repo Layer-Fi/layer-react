@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react'
-import LoaderIcon from '../../icons/Loader'
+import LoaderIcon from '@icons/Loader'
 
 type LoaderProps = PropsWithChildren<{
   size?: number

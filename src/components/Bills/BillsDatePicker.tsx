@@ -1,5 +1,5 @@
-import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
-import { useBillsContext } from '../../contexts/BillsContext'
+import { DeprecatedDatePicker } from '@components/DeprecatedDatePicker/DeprecatedDatePicker'
+import { useBillsContext } from '@contexts/BillsContext'
 
 export const BillsDatePicker = () => {
   const { dateRange, setDateRange } = useBillsContext()

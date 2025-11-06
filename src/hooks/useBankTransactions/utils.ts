@@ -1,8 +1,8 @@
-import { filterVisibility } from '../../components/BankTransactions/utils'
-import { BankTransaction, DisplayState } from '../../types/bank_transactions'
-import { AccountItem, NumericRangeFilter } from './types'
-import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, isApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { MatchOrCategorizeTransactionRequestSchema } from './useBulkMatchOrCategorize'
+import { filterVisibility } from '@components/BankTransactions/utils'
+import { BankTransaction, DisplayState } from '@internal-types/bank_transactions'
+import { AccountItem, NumericRangeFilter } from '@hooks/useBankTransactions/types'
+import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, isApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { MatchOrCategorizeTransactionRequestSchema } from '@hooks/useBankTransactions/useBulkMatchOrCategorize'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
   const accounts: AccountItem[] = []

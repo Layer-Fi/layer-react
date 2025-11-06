@@ -1,4 +1,4 @@
-import { IconSvgProps } from './types'
+import { IconSvgProps } from '@icons/types'
 
 const MoreVertical = ({ size = 18, ...props }: IconSvgProps) => {
   return (

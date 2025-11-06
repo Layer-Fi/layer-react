@@ -1,7 +1,7 @@
-import { useVendorsContext, VendorsProvider } from '../../contexts/VendorsContext'
-import { Vendor } from '../../types/vendors'
-import { getVendorName } from '../../utils/vendors'
-import { Select } from '../Input/Select'
+import { useVendorsContext, VendorsProvider } from '@contexts/VendorsContext'
+import { Vendor } from '@internal-types/vendors'
+import { getVendorName } from '@utils/vendors'
+import { Select } from '@components/Input/Select'
 
 type SelectVendorProps = {
   value: Vendor | null

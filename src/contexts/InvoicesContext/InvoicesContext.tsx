@@ -1,6 +1,6 @@
 import React, { createContext, useContext, type PropsWithChildren } from 'react'
-import type { Awaitable } from '../../types/utility/promises'
-import { InvoicesRouteStoreProvider } from '../../providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import type { Awaitable } from '@internal-types/utility/promises'
+import { InvoicesRouteStoreProvider } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 
 type InvoicesContextProps = PropsWithChildren<{
   onSendInvoice?: (invoiceId: string) => Awaitable<void>

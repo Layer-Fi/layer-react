@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Bill, BillPayment, BillPaymentMethod } from '../../types/bills'
-import { Vendor } from '../../types/vendors'
-import { convertFromCents, convertToCents } from '../../utils/format'
-import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
-import { useAuth } from '../../hooks/useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { Bill, BillPayment, BillPaymentMethod } from '@internal-types/bills'
+import { Vendor } from '@internal-types/vendors'
+import { convertFromCents, convertToCents } from '@utils/format'
+import { Layer } from '@api/layer'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import useSWRMutation from 'swr/mutation'
-import { APIError } from '../../models/APIError'
-import { useBillsContext } from '../../contexts/BillsContext'
+import { APIError } from '@models/APIError'
+import { useBillsContext } from '@contexts/BillsContext'
 
 export type BillsRecordPaymentFormRecord = {
   bill?: Bill

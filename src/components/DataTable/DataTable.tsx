@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Loader } from '../Loader/Loader'
+import { Loader } from '@components/Loader/Loader'
 import {
   Table,
   TableHeader,
@@ -7,7 +7,7 @@ import {
   Column,
   Cell,
   Row,
-} from '../ui/Table/Table'
+} from '@ui/Table/Table'
 import './dataTable.scss'
 
 export type Column<TData, K> = {

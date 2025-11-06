@@ -1,12 +1,12 @@
-import { Heading } from '../ui/Typography/Heading'
-import { Button } from '../ui/Button/Button'
-import ChevronLeft from '../../icons/ChevronLeft'
-import ChevronRight from '../../icons/ChevronRight'
-import { Calendar, CalendarCell, CalendarGrid, CalendarGridBody, CalendarGridHeader, CalendarHeaderCell } from '../ui/Calendar/Calendar'
-import { HStack } from '../ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { Button } from '@ui/Button/Button'
+import ChevronLeft from '@icons/ChevronLeft'
+import ChevronRight from '@icons/ChevronRight'
+import { Calendar, CalendarCell, CalendarGrid, CalendarGridBody, CalendarGridHeader, CalendarHeaderCell } from '@ui/Calendar/Calendar'
+import { HStack } from '@ui/Stack/Stack'
 import { type ZonedDateTime } from '@internationalized/date'
 import './dateCalendar.scss'
-import type { View } from '../../types/general'
+import type { View } from '@internal-types/general'
 
 type DateCalendarProps = {
   minDate?: ZonedDateTime | null

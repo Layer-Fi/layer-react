@@ -6,7 +6,7 @@ import {
   ModalOverlay as ReactAriaModalOverlay,
   type ModalOverlayProps,
 } from 'react-aria-components'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './modal.scss'
 
 type ModalSize = 'md' | 'lg' | 'xl'

@@ -1,5 +1,5 @@
 import { formatISO } from 'date-fns'
-import { isStringArray } from '../array/isStringArray'
+import { isStringArray } from '@utils/array/isStringArray'
 
 function toSnakeCase(input: string) {
   const segments = input

@@ -1,8 +1,8 @@
 import { Schema, pipe } from 'effect'
-import { CustomerSchema } from '../customer'
-import { VendorSchema } from '../vendor'
-import { LedgerEntrySourceSchema } from './ledgerEntrySource'
-import { LedgerAccountSchema, LedgerEntryDirectionSchema, NestedLedgerAccountSchema } from './ledgerAccount'
+import { CustomerSchema } from '@schemas/customer'
+import { VendorSchema } from '@schemas/vendor'
+import { LedgerEntrySourceSchema } from '@schemas/generalLedger/ledgerEntrySource'
+import { LedgerAccountSchema, LedgerEntryDirectionSchema, NestedLedgerAccountSchema } from '@schemas/generalLedger/ledgerAccount'
 
 export enum ClassifierAgent {
   Sms = 'SMS',

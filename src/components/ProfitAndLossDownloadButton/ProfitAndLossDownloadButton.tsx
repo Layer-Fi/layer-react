@@ -1,10 +1,10 @@
 import { useContext } from 'react'
-import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { ProfitAndLossFullReportDownloadButton } from './ProfitAndLossFullReportDownloadButton'
-import { type ProfitAndLossDownloadButtonStringOverrides } from './types'
-import type { MoneyFormat } from '../../types/general'
-import { ProfitAndLossDetailLinesDownloadButton } from './ProfitAndLossDetailLinesDownloadButton'
-import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossFullReportDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossFullReportDownloadButton'
+import { type ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
+import type { MoneyFormat } from '@internal-types/general'
+import { ProfitAndLossDetailLinesDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDetailLinesDownloadButton'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 
 type ProfitAndLossDownloadButtonProps = {
   stringOverrides?: ProfitAndLossDownloadButtonStringOverrides

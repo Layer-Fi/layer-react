@@ -1,5 +1,5 @@
-import { centsToDollars as formatMoney } from '../../models/Money'
-import { isSplitCategorizationEncoded, type CategorizationEncoded } from '../../schemas/categorization'
+import { centsToDollars as formatMoney } from '@models/Money'
+import { isSplitCategorizationEncoded, type CategorizationEncoded } from '@schemas/categorization'
 
 export const SplitTooltipDetails = ({
   classNamePrefix,

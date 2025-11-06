@@ -1,4 +1,4 @@
-import { QuickbooksConnectionLastSyncStatus, StatusOfQuickbooksConnection } from '../../../types/quickbooks'
+import { QuickbooksConnectionLastSyncStatus, StatusOfQuickbooksConnection } from '@internal-types/quickbooks'
 
 export enum QuickbooksConnectionSyncUiState {
   Syncing = 'Syncing',

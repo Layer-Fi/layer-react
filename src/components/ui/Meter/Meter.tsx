@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import { Meter as ReactAriaMeter, MeterProps as ReactAriaMeterProps } from 'react-aria-components'
-import { Label, Span } from '../Typography/Text'
-import { HStack, VStack } from '../Stack/Stack'
+import { Label, Span } from '@ui/Typography/Text'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import classNames from 'classnames'
 import './meter.scss'
 

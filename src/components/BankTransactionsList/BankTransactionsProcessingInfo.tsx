@@ -1,6 +1,6 @@
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '../Tooltip/Tooltip'
-import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
-import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
+import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
+import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 
 export const BankTransactionsProcessingInfo = () => (
   <DeprecatedTooltip offset={12}>

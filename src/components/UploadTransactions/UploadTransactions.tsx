@@ -1,14 +1,14 @@
-import { Heading } from '../ui/Typography/Heading'
+import { Heading } from '@ui/Typography/Heading'
 import { useCallback, useState } from 'react'
-import { Wizard } from '../Wizard/Wizard'
-import { type AccountOption, UploadTransactionsUploadCsvStep } from './UploadTransactionsUploadCsvStep'
-import { UploadTransactionsValidateCsvStep } from './UploadTransactionsValidateCsvStep'
-import { type CustomAccountParseCsvResponse } from '../../hooks/customAccounts/useCustomAccountParseCsv'
-import { UploadTransactionsConfirmationStep } from './UploadTransactionsConfirmationStep'
-import { UploadTransactionsStep } from './types'
-import { BankTransaction } from '../../types/bank_transactions'
+import { Wizard } from '@components/Wizard/Wizard'
+import { type AccountOption, UploadTransactionsUploadCsvStep } from '@components/UploadTransactions/UploadTransactionsUploadCsvStep'
+import { UploadTransactionsValidateCsvStep } from '@components/UploadTransactions/UploadTransactionsValidateCsvStep'
+import { type CustomAccountParseCsvResponse } from '@hooks/customAccounts/useCustomAccountParseCsv'
+import { UploadTransactionsConfirmationStep } from '@components/UploadTransactions/UploadTransactionsConfirmationStep'
+import { UploadTransactionsStep } from '@components/UploadTransactions/types'
+import { BankTransaction } from '@internal-types/bank_transactions'
 import './uploadTransactions.scss'
-import { ModalTitleWithClose } from '../ui/Modal/ModalSlots'
+import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 
 type UploadTransactionsHeaderProps = {
   currentStep: UploadTransactionsStep

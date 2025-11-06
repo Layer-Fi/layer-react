@@ -5,10 +5,10 @@ import {
   components,
 } from 'react-select'
 import BaseCreatableSelect, { type CreatableProps } from 'react-select/creatable'
-import ChevronDownFill from '../../icons/ChevronDownFill'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '../Tooltip/Tooltip'
+import ChevronDownFill from '@icons/ChevronDownFill'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
-import { type SelectProps } from './Select'
+import { type SelectProps } from '@components/Input/Select'
 
 export interface CreatableSelectProps<T> extends Omit<SelectProps<T>, 'value' | 'onChange'> {
   value?: T | null

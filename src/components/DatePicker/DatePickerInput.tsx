@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
-import ChevronDown from '../../icons/ChevronDown'
-import { Button } from '../ui/Button/Button'
-import { DateInput, DateSegment } from '../ui/Date/Date'
-import { InputGroup } from '../ui/Input/InputGroup'
-import { HStack } from '../ui/Stack/Stack'
-import { FieldError } from '../ui/Form/Form'
+import ChevronDown from '@icons/ChevronDown'
+import { Button } from '@ui/Button/Button'
+import { DateInput, DateSegment } from '@ui/Date/Date'
+import { InputGroup } from '@ui/Input/InputGroup'
+import { HStack } from '@ui/Stack/Stack'
+import { FieldError } from '@ui/Form/Form'
 import { TriangleAlert } from 'lucide-react'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '../Tooltip/Tooltip'
-import type { View } from '../../types/general'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
+import type { View } from '@internal-types/general'
 
 type DatePickerInputProps = {
   errorText?: string | null

@@ -1,5 +1,5 @@
-import { imagePartnerAccountingImage } from '../../assets/images'
-import { HeroContentConfig, LandingPageCardConfig, LandingPageConfig } from './types'
+import { imagePartnerAccountingImage } from '@assets/images'
+import { HeroContentConfig, LandingPageCardConfig, LandingPageConfig } from '@components/LandingPage/types'
 
 import { ReactNode } from 'react'
 

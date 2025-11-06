@@ -1,5 +1,5 @@
 import { forwardRef } from 'react'
-import { withRenderProp } from '../../utility/withRenderProp'
+import { withRenderProp } from '@components/utility/withRenderProp'
 
 import {
   Cell as ReactAriaCell,
@@ -16,7 +16,7 @@ import {
   type TableProps,
 } from 'react-aria-components'
 import classNames, { type Argument } from 'classnames'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './table.scss'
 
 enum TableComponent {

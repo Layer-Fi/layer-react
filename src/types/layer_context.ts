@@ -1,10 +1,10 @@
-import { ToastProps } from '../components/Toast/Toast'
-import type { EventCallbacks } from '../providers/LayerProvider/LayerProvider'
-import { LayerError } from '../models/ErrorHandler'
-import { AccountingConfigurationSchemaType } from '../schemas/accountingConfiguration'
-import { DateRange } from './general'
-import { Business } from '../types/business'
-import { DataModel } from './general'
+import { ToastProps } from '@components/Toast/Toast'
+import type { EventCallbacks } from '@providers/LayerProvider/LayerProvider'
+import { LayerError } from '@models/ErrorHandler'
+import { AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
+import { DateRange } from '@internal-types/general'
+import { Business } from '@internal-types/business'
+import { DataModel } from '@internal-types/general'
 
 export type LayerContextValues = {
   businessId: string

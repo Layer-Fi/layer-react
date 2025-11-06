@@ -4,12 +4,12 @@ import {
   isDateRangePickerMode,
   useGlobalDateRange,
   useGlobalDateRangeActions,
-} from './GlobalDateStoreProvider'
+} from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import {
   DEFAULT_ALLOWED_PICKER_MODES,
   type UnifiedPickerMode,
-} from '../../components/DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
-import { getArrayWithAtLeastOneOrFallback, type ReadonlyArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
+} from '@components/DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
+import { getArrayWithAtLeastOneOrFallback, type ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
 
 export const getAllowedDateRangePickerModes = ({
   allowedDatePickerModes,

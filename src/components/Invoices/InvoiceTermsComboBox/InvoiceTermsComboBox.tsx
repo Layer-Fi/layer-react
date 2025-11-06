@@ -1,9 +1,9 @@
 import { useCallback, useId } from 'react'
-import { ComboBox } from '../../ui/ComboBox/ComboBox'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { ZonedDateTime } from '@internationalized/date'
 import { differenceInDays, startOfDay } from 'date-fns'
-import { HStack } from '../../ui/Stack/Stack'
-import { Label } from '../../ui/Typography/Text'
+import { HStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
 
 export enum InvoiceTermsValues {
   Net10 = 'Net10',

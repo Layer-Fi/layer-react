@@ -1,4 +1,4 @@
-import { TableProps } from '../../types/table'
+import { TableProps } from '@internal-types/table'
 import classNames from 'classnames'
 
 export const Table = ({

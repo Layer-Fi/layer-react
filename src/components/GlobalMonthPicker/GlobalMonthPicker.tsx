@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { endOfToday, startOfDay } from 'date-fns'
-import { useGlobalDate, useGlobalDateRangeActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { convertDateToZonedDateTime } from '../../utils/time/timeUtils'
-import { useBusinessActivationDate } from '../../hooks/business/useBusinessActivationDate'
-import { MonthPicker } from '../MonthPicker/MonthPicker'
+import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
+import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
+import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { type ZonedDateTime } from '@internationalized/date'
 
 export const GlobalMonthPicker = () => {

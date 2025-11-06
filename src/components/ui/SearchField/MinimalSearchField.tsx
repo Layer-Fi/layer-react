@@ -1,10 +1,10 @@
-import { Button } from '../Button/Button'
+import { Button } from '@ui/Button/Button'
 import {
   SearchField as ReactAriaSearchField,
   type SearchFieldProps as ReactAriaSearchFieldProps,
   Input as ReactAriaInput,
 } from 'react-aria-components'
-import X from '../../../icons/X'
+import X from '@icons/X'
 import './minimalSearchField.scss'
 
 const CLASS_NAME = 'Layer__MinimalSearchField'

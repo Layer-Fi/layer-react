@@ -1,5 +1,5 @@
 import { useMemo, useState, createContext, useContext } from 'react'
-import { TooltipOptions } from './Tooltip'
+import { TooltipOptions } from '@components/Tooltip/Tooltip'
 import {
   useFloating,
   autoUpdate,

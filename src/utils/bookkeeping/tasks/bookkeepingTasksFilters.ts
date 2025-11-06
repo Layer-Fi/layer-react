@@ -1,4 +1,4 @@
-import type { RawTask, TasksStatus } from '../../../types/tasks'
+import type { RawTask, TasksStatus } from '@internal-types/tasks'
 
 export function isIncompleteTask<T extends Pick<RawTask, 'status'>>(
   task: T,

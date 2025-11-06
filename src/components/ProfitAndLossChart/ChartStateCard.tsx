@@ -1,6 +1,6 @@
-import { Text, TextSize, TextWeight } from '../Typography/Text'
-import BarChart2Icon from '../../icons/BarChart2'
-import { IconBox } from '../IconBox/IconBox'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import BarChart2Icon from '@icons/BarChart2'
+import { IconBox } from '@components/IconBox/IconBox'
 
 export const ChartStateCard = () => {
   return (

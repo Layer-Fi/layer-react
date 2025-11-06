@@ -1,4 +1,4 @@
-import { LineItem } from './line_item'
+import { LineItem } from '@internal-types/line_item'
 
 export interface BalanceSheet {
   business_id: string

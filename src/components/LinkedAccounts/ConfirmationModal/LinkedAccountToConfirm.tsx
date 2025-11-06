@@ -1,7 +1,7 @@
-import type { LinkedAccount } from '../../../types/linked_accounts'
-import { VStack } from '../../ui/Stack/Stack'
-import { Checkbox } from '../../ui/Checkbox/Checkbox'
-import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '../BasicLinkedAccount/BasicLinkedAccount'
+import type { LinkedAccount } from '@internal-types/linked_accounts'
+import { VStack } from '@ui/Stack/Stack'
+import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '@components/LinkedAccounts/BasicLinkedAccount/BasicLinkedAccount'
 
 type LinkedAccountConfirmationProps = {
   account: LinkedAccount

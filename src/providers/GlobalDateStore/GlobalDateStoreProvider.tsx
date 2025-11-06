@@ -9,9 +9,9 @@ import {
 } from 'date-fns'
 import { useState, createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 import { createStore, useStore } from 'zustand'
-import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
-import { useStoreWithDateSelected } from '../../utils/zustand/useStoreWithDateSelected'
-import type { UnifiedPickerMode } from '../../components/DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
+import type { UnifiedPickerMode } from '@components/DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
 
 const _DATE_PICKER_MODES = [
   'dayPicker',

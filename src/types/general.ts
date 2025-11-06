@@ -1,4 +1,4 @@
-import type { EnumWithUnknownValues } from './utility/enumWithUnknownValues'
+import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 
 export type SortDirection = 'asc' | 'desc'
 

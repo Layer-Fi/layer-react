@@ -1,7 +1,7 @@
-import { Text } from '../Typography/Text'
+import { Text } from '@components/Typography/Text'
 import { useEffect, useState } from 'react'
-import AlertOctagon from '../../icons/AlertOctagon'
-import { BankTransaction } from '../../types/bank_transactions'
+import AlertOctagon from '@icons/AlertOctagon'
+import { BankTransaction } from '@internal-types/bank_transactions'
 
 interface APIErrorNotificationsProps {
   bankTransaction: BankTransaction

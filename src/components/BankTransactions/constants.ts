@@ -1,4 +1,4 @@
-import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
+import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 
 export type MobileComponentType = 'regularList' | 'mobileList'
 

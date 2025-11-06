@@ -1,5 +1,5 @@
-import type { StatusOfQuickbooksConnection } from '../../types/quickbooks'
-import { get, post } from './authenticated_http'
+import type { StatusOfQuickbooksConnection } from '@internal-types/quickbooks'
+import { get, post } from '@api/layer/authenticated_http'
 
 export const syncFromQuickbooks = post<
   Record<string, unknown>,

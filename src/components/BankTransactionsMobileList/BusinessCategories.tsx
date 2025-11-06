@@ -1,14 +1,14 @@
-import { Button } from '../ui/Button/Button'
+import { Button } from '@ui/Button/Button'
 import { useCallback, useMemo, useState } from 'react'
-import { ActionableList } from '../ActionableList/ActionableList'
-import { flattenCategories, type CategoryGroup } from './utils'
-import { useCategories } from '../../hooks/categories/useCategories'
-import { HStack, VStack } from '../ui/Stack/Stack'
-import { SearchField } from '../SearchField/SearchField'
+import { ActionableList } from '@components/ActionableList/ActionableList'
+import { flattenCategories, type CategoryGroup } from '@components/BankTransactionsMobileList/utils'
+import { useCategories } from '@hooks/categories/useCategories'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { SearchField } from '@components/SearchField/SearchField'
 import { ChevronLeft } from 'lucide-react'
-import { ModalHeading } from '../ui/Modal/ModalSlots'
-import type { CategoryAsOption } from '../../types/categorizationOption'
-import type { BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { ModalHeading } from '@ui/Modal/ModalSlots'
+import type { CategoryAsOption } from '@internal-types/categorizationOption'
+import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export interface BusinessCategoriesProps {
   select: (category: BankTransactionCategoryComboBoxOption | null) => void

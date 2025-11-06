@@ -1,9 +1,9 @@
 import { useState, createContext, useContext, useMemo, type PropsWithChildren } from 'react'
 import { createStore, useStore } from 'zustand'
-import type { Invoice } from '../../features/invoices/invoiceSchemas'
-import { ALL_OPTION, type InvoiceStatusOption } from '../../components/Invoices/InvoiceTable/InvoiceTable'
-import type { InvoiceFormMode } from '../../components/Invoices/InvoiceForm/InvoiceForm'
-import { UpsertInvoiceMode } from '../../features/invoices/api/useUpsertInvoice'
+import type { Invoice } from '@features/invoices/invoiceSchemas'
+import { ALL_OPTION, type InvoiceStatusOption } from '@components/Invoices/InvoiceTable/InvoiceTable'
+import type { InvoiceFormMode } from '@components/Invoices/InvoiceForm/InvoiceForm'
+import { UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
 
 export type InvoiceTableFilters = {
   status: InvoiceStatusOption
