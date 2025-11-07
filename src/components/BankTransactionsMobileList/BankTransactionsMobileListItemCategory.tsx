@@ -21,7 +21,7 @@ export const BankTransactionsMobileListItemCategory = ({
       <BankTransactionsCategorizedSelectedValue
         bankTransaction={bankTransaction}
         className='Layer__bankTransactionsMobileListItemCategory'
-        size='sm'
+        slotProps={{ Label: { size: 'sm' } }}
       />
     )
   }
@@ -32,7 +32,7 @@ export const BankTransactionsMobileListItemCategory = ({
         <BankTransactionsUncategorizedSelectedValue
           selectedValue={selectedCategory ?? null}
           className='Layer__bankTransactionsMobileListItemCategory'
-          size='sm'
+          slotProps={{ Label: { size: 'sm' } }}
         />
       )
       : (

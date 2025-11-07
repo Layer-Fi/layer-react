@@ -6,15 +6,19 @@ import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankT
 
 type BankTransactionsCategorizedSelectedValueProps = {
   bankTransaction: BankTransaction
-  size?: 'sm' | 'md'
   className?: string
+  slotProps?: {
+    Label?: {
+      size?: 'sm' | 'md'
+    }
+  }
 }
 
 export const BankTransactionsCategorizedSelectedValue = (props: BankTransactionsCategorizedSelectedValueProps) => {
-  const { bankTransaction, size = 'md', className } = props
+  const { bankTransaction, className, slotProps } = props
 
   const baseSelectedValue = normalizeFromBankTransaction(bankTransaction)
-  return <BankTransactionsBaseSelectedValue {...baseSelectedValue} slotProps={{ Label: { size } }} className={className} />
+  return <BankTransactionsBaseSelectedValue {...baseSelectedValue} slotProps={slotProps} className={className} />
 }
 
 const normalizeFromBankTransaction = (bankTransaction: BankTransaction): BankTransactionsBaseSelectedValueProps => {
