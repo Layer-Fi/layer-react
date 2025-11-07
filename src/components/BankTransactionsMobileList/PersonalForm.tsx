@@ -116,10 +116,10 @@ export const PersonalForm = ({
               onClick={save}
             >
               {isLoading || bankTransaction.processing
-                ? 'Saving...'
+                ? 'Confirming...'
                 : alreadyAssigned
-                  ? 'Saved as Personal'
-                  : 'Categorize as Personal'}
+                  ? 'Confirmed'
+                  : 'Confirm'}
             </Button>
           )
           : null}

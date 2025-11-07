@@ -176,14 +176,14 @@ export const SplitForm = ({
             onClick={() => void save()}
             disabled={isLoading || bankTransaction.processing}
           >
-            {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
+            {isLoading || bankTransaction.processing ? 'Confirming...' : 'Confirm'}
           </Button>
         )}
       </div>
       {bankTransaction.error && showRetry
         ? (
           <ErrorText>
-            Approval failed. Check connection and retry in few seconds.
+            Confirmation failed. Check connection and retry in few seconds.
           </ErrorText>
         )
         : null}
