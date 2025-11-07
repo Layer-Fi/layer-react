@@ -206,11 +206,12 @@ export const BankTransactionsMobileListItem = ({
 
   return (
     <li ref={itemRef} className={rowClassName} data-item={bankTransaction.id}>
-      <div
-        onClick={handleRowClick}
-        role='button'
-      >
-        <VStack>
+
+      <VStack>
+        <div
+          onClick={handleRowClick}
+          role='button'
+        >
           <HStack
             gap='md'
             justify='space-between'
@@ -278,24 +279,26 @@ export const BankTransactionsMobileListItem = ({
               />
             </VStack>
           </HStack>
-          { open
-            ? (
-              <BankTransactionsMobileListItemExpandedRow
-                bankTransaction={bankTransaction}
-                showCategorization={categorizationEnabled}
-                showDescriptions={showDescriptions}
-                showReceiptUploads={showReceiptUploads}
-                showTooltips={showTooltips}
-              />
-            )
-            : (
+          {!open
+            && (
               <BankTransactionsMobileListItemCategory
                 bankTransaction={bankTransaction}
               />
             )}
+        </div>
+        { open
+          && (
+            <BankTransactionsMobileListItemExpandedRow
+              bankTransaction={bankTransaction}
+              showCategorization={categorizationEnabled}
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+            />
+          )}
 
-        </VStack>
-      </div>
+      </VStack>
+
     </li>
   )
 }
