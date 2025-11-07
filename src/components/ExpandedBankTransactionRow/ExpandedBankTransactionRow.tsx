@@ -42,7 +42,6 @@ import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransa
 import { type Split } from '@internal-types/bank_transactions'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { getSplitsErrorMessage, isSplitsValid } from '@components/ExpandedBankTransactionRow/utils'
 import { getBankTransactionMatchAsSuggestedMatch } from '@utils/bankTransactions'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
@@ -138,6 +137,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     const {
       localSplits,
       splitFormError,
+      isValid,
       addSplit,
       removeSplit,
       updateSplitAmount,
@@ -158,7 +158,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         setTransactionCategory(bankTransaction.id, selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null)
       }
 
-      else if (newPurpose === Purpose.categorize && isSplitsValid(localSplits)) {
+      else if (newPurpose === Purpose.categorize && isValid) {
         setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
       }
 
@@ -225,10 +225,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         return
       }
 
-      if (!isSplitsValid(localSplits)) {
-        setSplitFormError(getSplitsErrorMessage(localSplits))
-        return
-      }
+      if (!isValid) return
 
       const categorizationRequest = buildCategorizeBankTransactionPayloadForSplit(localSplits)
 

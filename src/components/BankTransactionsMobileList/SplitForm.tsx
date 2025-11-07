@@ -14,7 +14,6 @@ import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceip
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
-import { getSplitsErrorMessage, isSplitsValid } from '@components/ExpandedBankTransactionRow/utils'
 import { HStack } from '@ui/Stack/Stack'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
@@ -52,12 +51,12 @@ export const SplitForm = ({
   const {
     localSplits,
     splitFormError,
+    isValid,
     addSplit,
     removeSplit,
     updateSplitAmount,
     changeCategoryForSplitAtIndex,
     getInputValueForSplitAtIndex,
-    setSplitFormError,
     onBlurSplitAmount,
   } = useSplitsForm({
     bankTransaction,
@@ -71,10 +70,7 @@ export const SplitForm = ({
   }, [bankTransaction.error])
 
   const save = async () => {
-    if (!isSplitsValid(localSplits)) {
-      setSplitFormError(getSplitsErrorMessage(localSplits))
-      return
-    }
+    if (!isValid) return
 
     const categorizationRequest = buildCategorizeBankTransactionPayloadForSplit(localSplits)
 
