@@ -146,7 +146,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       onBlurSplitAmount,
       getInputValueForSplitAtIndex,
       setSplitFormError,
-      saveLocalSplitsToCategoryStore,
     } = useSplitsForm({ bankTransaction, selectedCategory, isOpen })
 
     const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,7 +195,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           })
         })
       }
-      saveLocalSplitsToCategoryStore(localSplits)
     }
 
     const changeCustomerVendor = (index: number, newCustomerVendor: typeof CustomerVendorSchema.Type | null) => {
@@ -208,8 +206,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           vendor: newCustomerVendor?.customerVendorType === 'VENDOR' ? newCustomerVendor : null,
         })
       }
-
-      saveLocalSplitsToCategoryStore(localSplits)
     }
 
     const save = async () => {
