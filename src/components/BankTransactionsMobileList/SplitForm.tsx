@@ -176,7 +176,7 @@ export const SplitForm = ({
             onClick={() => void save()}
             disabled={isLoading || bankTransaction.processing}
           >
-            {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
+            {isLoading || bankTransaction.processing ? 'Confirming...' : 'Confirm'}
           </Button>
         )}
       </div>
