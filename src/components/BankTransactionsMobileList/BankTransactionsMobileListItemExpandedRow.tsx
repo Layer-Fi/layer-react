@@ -6,7 +6,6 @@ import { BankTransactionMobileForms } from '@components/BankTransactionsMobileLi
 import { hasMatch } from '@utils/bankTransactions'
 import { Purpose } from './BankTransactionsMobileListItem'
 import { HStack, VStack } from '@components/ui/Stack/Stack'
-import './bankTransactionsMobileListItemExpandedRow.scss'
 
 export interface BankTransactionsMobileListItemExpandedRowProps {
   bankTransaction: BankTransaction
