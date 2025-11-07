@@ -282,7 +282,6 @@ export const BankTransactionsMobileListItem = ({
             ? (
               <BankTransactionsMobileListItemExpandedRow
                 bankTransaction={bankTransaction}
-                onClose={close}
                 showCategorization={categorizationEnabled}
                 showDescriptions={showDescriptions}
                 showReceiptUploads={showReceiptUploads}

@@ -7,6 +7,24 @@ import { hasMatch } from '@utils/bankTransactions'
 import { Purpose } from './BankTransactionsMobileListItem'
 import { HStack, VStack } from '@components/ui/Stack/Stack'
 
+const PURPOSE_TOGGLE_OPTIONS = [
+  {
+    value: 'business',
+    label: 'Business',
+    style: { minWidth: 84 },
+  },
+  {
+    value: 'personal',
+    label: 'Personal',
+    style: { minWidth: 84 },
+  },
+  {
+    value: 'more',
+    label: 'More',
+    style: { minWidth: 84 },
+  },
+]
+
 export interface BankTransactionsMobileListItemExpandedRowProps {
   bankTransaction: BankTransaction
   showCategorization?: boolean
@@ -36,23 +54,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
               <Toggle
                 name={`purpose-${bankTransaction.id}`}
                 size={ToggleSize.medium}
-                options={[
-                  {
-                    value: 'business',
-                    label: 'Business',
-                    style: { minWidth: 84 },
-                  },
-                  {
-                    value: 'personal',
-                    label: 'Personal',
-                    style: { minWidth: 84 },
-                  },
-                  {
-                    value: 'more',
-                    label: 'More',
-                    style: { minWidth: 84 },
-                  },
-                ]}
+                options={PURPOSE_TOGGLE_OPTIONS}
                 selected={purpose}
                 onChange={onChangePurpose}
               />
