@@ -1,13 +1,9 @@
-import { CloseButton } from '@components/Button/CloseButton'
-import { useContext, useEffect, useRef, useState, useMemo, type ChangeEvent, type ReactNode } from 'react'
+import { useContext, useEffect, useRef, useState, useMemo, type ReactNode } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useElementSize } from '@hooks/useElementSize/useElementSize'
 import FileIcon from '@icons/File'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { hasMatch, hasReceipts, isCredit } from '@utils/bankTransactions'
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
-import { BankTransactionMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
+import { hasReceipts, isCredit } from '@utils/bankTransactions'
 import { TransactionToOpenContext } from '@components/BankTransactionsMobileList/TransactionToOpenContext'
 import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
@@ -25,6 +21,7 @@ import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList
 import { useInAppLinkContext, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { decodeMatchDetails, convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
+import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 import './bankTransactionsMobileListItem.scss'
 
 export interface BankTransactionsMobileListItemProps {
@@ -90,29 +87,9 @@ export const BankTransactionsMobileListItem = ({
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
   const categorized = isCategorized(bankTransaction)
 
-  const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
-    setHeight(height),
-  )
-  const headingRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) => {
-    setHeadingHeight(height)
-  })
   const itemRef = useRef<HTMLLIElement>(null)
 
-  const [removeAnim, setRemoveAnim] = useState(false)
-  const [purpose, setPurpose] = useState<Purpose>(
-    bankTransaction.category
-      ? bankTransaction.category.type === 'Exclusion'
-        ? Purpose.personal
-        : bankTransaction.categorization_status === CategorizationStatus.SPLIT
-          ? Purpose.more
-          : Purpose.business
-      : hasMatch(bankTransaction)
-        ? Purpose.more
-        : Purpose.business,
-  )
   const [open, setOpen] = useState(isFirstItem)
-  const [height, setHeight] = useState(0)
-  const [headingHeight, setHeadingHeight] = useState(63)
 
   const openNext = () => {
     if (editable && itemRef.current && itemRef.current.nextSibling) {
@@ -148,10 +125,12 @@ export const BankTransactionsMobileListItem = ({
   }, [bankTransaction.id, clearTransactionIdToOpen, transactionIdToOpen])
 
   useEffect(() => {
-    if (!removeAnim && bankTransaction.recently_categorized) {
+    if (bankTransaction.recently_categorized) {
       if (editable && shouldHideAfterCategorize()) {
-        setRemoveAnim(true)
-        openNext()
+        setTimeout(() => {
+          removeTransaction(bankTransaction)
+          openNext()
+        }, 300)
       }
       else {
         close()
@@ -165,15 +144,11 @@ export const BankTransactionsMobileListItem = ({
   ])
 
   const toggleOpen = () => {
-    if (open) {
-      setHeight(0)
-    }
     setOpen(!open)
   }
 
   const close = () => {
     setOpen(false)
-    setHeight(0)
   }
 
   const checkboxContainerRef = useRef<HTMLDivElement>(null)
@@ -212,9 +187,6 @@ export const BankTransactionsMobileListItem = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
-  const onChangePurpose = (event: ChangeEvent<HTMLInputElement>) =>
-    setPurpose(event.target.value as Purpose)
-
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
   const { select, deselect } = useBulkSelectionActions()
@@ -228,7 +200,6 @@ export const BankTransactionsMobileListItem = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    removeAnim ? 'Layer__bank-transaction-row--removing' : '',
     open ? openClassName : '',
     isVisible ? 'show' : '',
   )
@@ -238,13 +209,8 @@ export const BankTransactionsMobileListItem = ({
       <div
         onClick={handleRowClick}
         role='button'
-        style={{
-          height: headingHeight,
-        }}
       >
-        <VStack
-          ref={headingRowRef}
-        >
+        <VStack>
           <HStack
             gap='md'
             justify='space-between'
@@ -312,61 +278,24 @@ export const BankTransactionsMobileListItem = ({
               />
             </VStack>
           </HStack>
-          <BankTransactionsMobileListItemCategory
-            bankTransaction={bankTransaction}
-          />
+          { open
+            ? (
+              <BankTransactionsMobileListItemExpandedRow
+                bankTransaction={bankTransaction}
+                onClose={close}
+                showCategorization={categorizationEnabled}
+                showDescriptions={showDescriptions}
+                showReceiptUploads={showReceiptUploads}
+                showTooltips={showTooltips}
+              />
+            )
+            : (
+              <BankTransactionsMobileListItemCategory
+                bankTransaction={bankTransaction}
+              />
+            )}
+
         </VStack>
-      </div>
-      <div
-        className={`${className}__expanded-row`}
-        style={{ height: !open || removeAnim ? 0 : height }}
-      >
-        {open && (
-          <div
-            className={`${className}__expanded-row__content`}
-            ref={formRowRef}
-          >
-            {categorizationEnabled
-              ? (
-                <div className={`${className}__toggle-row`}>
-                  <Toggle
-                    name={`purpose-${bankTransaction.id}`}
-                    size={ToggleSize.xsmall}
-                    options={[
-                      {
-                        value: 'business',
-                        label: 'Business',
-                        style: { minWidth: 84 },
-                      },
-                      {
-                        value: 'personal',
-                        label: 'Personal',
-                        style: { minWidth: 84 },
-                      },
-                      {
-                        value: 'more',
-                        label: 'More',
-                        style: { minWidth: 84 },
-                      },
-                    ]}
-                    selected={purpose}
-                    onChange={onChangePurpose}
-                  />
-                  <CloseButton onClick={() => close()} />
-                </div>
-              )
-              : null}
-            <BankTransactionMobileForms
-              isOpen={open}
-              purpose={purpose}
-              bankTransaction={bankTransaction}
-              showCategorization={categorizationEnabled}
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showTooltips={showTooltips}
-            />
-          </div>
-        )}
       </div>
     </li>
   )
