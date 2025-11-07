@@ -3,24 +3,7 @@ import { BankTransactionCategoryComboBoxOption } from '@components/BankTransacti
 import { isPlaceholderAsOption, isSuggestedMatchAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { useCallback, useMemo } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { CategoryUpdate } from '@internal-types/categories'
-import { ClassificationEncoded } from '@schemas/categorization'
-import { makeTagKeyValueFromTag } from '@features/tags/tagSchemas'
-import { type Split } from '@internal-types/bank_transactions'
-import { SplitAsOption } from '@internal-types/categorizationOption'
-
-const buildSplitCategorizationRequest = (selectedCategory: SplitAsOption): CategoryUpdate => {
-  return {
-    type: 'Split',
-    entries: selectedCategory.original.map((split: Split) => ({
-      category: split.category?.classificationEncoded as ClassificationEncoded,
-      amount: split.amount,
-      tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
-      customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
-      vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
-    })),
-  }
-}
+import { buildCategorizeBankTransactionPayloadForSplit } from './utils'
 
 type UseSaveBankTransactionRowResult = {
   saveBankTransactionRow: (selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined, bankTransaction: BankTransaction) => Promise<void>
@@ -45,7 +28,7 @@ export const useSaveBankTransactionRow = (): UseSaveBankTransactionRowResult => 
     }
 
     if (isSplitAsOption(selectedCategory)) {
-      const splitCategorizationRequest = buildSplitCategorizationRequest(selectedCategory)
+      const splitCategorizationRequest = buildCategorizeBankTransactionPayloadForSplit(selectedCategory.original)
       return categorizeBankTransaction(bankTransaction.id, splitCategorizationRequest)
     }
 

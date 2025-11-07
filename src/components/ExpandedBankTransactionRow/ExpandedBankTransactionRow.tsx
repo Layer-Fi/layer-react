@@ -8,7 +8,6 @@ import {
   useImperativeHandle,
   useState,
   useRef,
-  useEffect,
 } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '@icons/AlertCircle'
@@ -23,7 +22,7 @@ import {
   hasMatch,
 } from '@utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { Tag, makeTagKeyValueFromTag } from '@features/tags/tagSchemas'
+import { Tag } from '@features/tags/tagSchemas'
 import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
 import { CustomerVendorSelector } from '@features/customerVendor/components/CustomerVendorSelector'
 import { CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
@@ -40,18 +39,16 @@ import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategoriz
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { useBankTransactionTagVisibility } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { type ClassificationEncoded } from '@schemas/categorization'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { type Split } from '@internal-types/bank_transactions'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { calculateAddSplit, calculateRemoveSplit, calculateUpdatedAmounts, getLocalSplitStateForExpandedTableRow, getSplitsErrorMessage, isSplitsValid } from '@components/ExpandedBankTransactionRow/utils'
 import { getBankTransactionMatchAsSuggestedMatch } from '@utils/bankTransactions'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { AmountInput } from '@components/Input/AmountInput'
 import { HStack } from '@ui/Stack/Stack'
-import { convertCentsToDecimalString } from '@utils/format'
+import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
+import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 
 export type ExpandedRowState = {
   splits: Split[]
@@ -114,7 +111,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
     const { deselect } = useBulkSelectionActions()
     const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
     const { setTransactionCategory } = useBankTransactionsCategoryActions()
-
     // Hooks for auto-saving tags and customer/vendor in unsplit state
     const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
     const { trigger: removeTagFromBankTransaction } = useRemoveTagFromBankTransaction({ bankTransactionId: bankTransaction.id })
@@ -136,71 +132,21 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       ?? bankTransaction?.suggested_matches?.[0],
     )
     const [matchFormError, setMatchFormError] = useState<string | undefined>()
-    const [splitFormError, setSplitFormError] = useState<string | undefined>()
     const bodyRef = useRef<HTMLSpanElement>(null)
 
-    const [localSplits, setLocalSplits] = useState<Split[]>(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
-    const [inputValues, setInputValues] = useState<Record<number, string>>({})
-
-    useEffect(() => {
-      setLocalSplits(getLocalSplitStateForExpandedTableRow(selectedCategory, bankTransaction))
-      setSplitFormError(undefined)
-      setInputValues({})
-    }, [selectedCategory, bankTransaction, isOpen])
-
-    const addSplit = () => {
-      const newSplits = calculateAddSplit(localSplits)
-
-      setLocalSplits(newSplits)
-      setSplitFormError(undefined)
-    }
-
-    const removeSplit = (index: number) => {
-      const newSplits = calculateRemoveSplit(localSplits, { totalAmount: bankTransaction.amount, index })
-
-      setLocalSplits(newSplits)
-      setSplitFormError(undefined)
-
-      // Auto-save when category / split is valid
-      if (isSplitsValid(newSplits)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(newSplits))
-      }
-    }
-
-    const updateAmounts =
-      (index: number) => (value?: string) => {
-        setInputValues(prev => ({ ...prev, [index]: value ?? '' }))
-
-        if (!value) {
-          return
-        }
-
-        const trimmedValue = value.endsWith('.') ? value.slice(0, -1) : value
-        const numericValue = Number(trimmedValue)
-
-        if (isNaN(numericValue)) {
-          return
-        }
-
-        const newLocalSplits = calculateUpdatedAmounts(localSplits, { index, newAmountInput: trimmedValue, totalAmount: bankTransaction.amount })
-
-        setLocalSplits(newLocalSplits)
-        setSplitFormError(undefined)
-
-        // Auto-save when category / split is valid
-        if (isSplitsValid(newLocalSplits)) {
-          setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
-        }
-      }
-
-    const onBlurSplitAmount = () => {
-      if (!isSplitsValid(localSplits)) {
-        setSplitFormError(getSplitsErrorMessage(localSplits))
-        return
-      }
-      setSplitFormError(undefined)
-      setInputValues({})
-    }
+    const {
+      localSplits,
+      splitFormError,
+      isValid,
+      addSplit,
+      removeSplit,
+      updateSplitAmount,
+      changeCategoryForSplitAtIndex,
+      updateSplitAtIndex,
+      onBlurSplitAmount,
+      getInputValueForSplitAtIndex,
+      setSplitFormError,
+    } = useSplitsForm({ bankTransaction, selectedCategory, isOpen })
 
     const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
       const newPurpose = event.target.value === 'match'
@@ -212,7 +158,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         setTransactionCategory(bankTransaction.id, selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null)
       }
 
-      else if (newPurpose === Purpose.categorize && isSplitsValid(localSplits)) {
+      else if (newPurpose === Purpose.categorize && isValid) {
         setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
       }
 
@@ -220,33 +166,12 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       setMatchFormError(undefined)
     }
 
-    const changeCategory = (index: number, newCategory: BankTransactionCategoryComboBoxOption | null) => {
-      if (newCategory === null) return
-
-      localSplits[index].category = newCategory
-      const newLocalSplits = [...localSplits]
-      setLocalSplits(newLocalSplits)
-      setSplitFormError(undefined)
-
-      // Auto-save when category / split is valid
-      if (isSplitsValid(newLocalSplits)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
-        setSplitFormError(undefined)
-      }
-      else {
-        setSplitFormError(getSplitsErrorMessage(localSplits))
-      }
-    }
-
     const changeTags = (index: number, newTags: readonly Tag[]) => {
       const oldTags = localSplits[index].tags
-      localSplits[index].tags = newTags
-      const newLocalSplits = [...localSplits]
-      setLocalSplits(newLocalSplits)
-      setSplitFormError(undefined)
+      updateSplitAtIndex(index, split => ({ ...split, tags: newTags }))
 
       // Auto-save tags only when in unsplit state (single split entry)
-      if (newLocalSplits.length === 1) {
+      if (localSplits.length === 1) {
         const addedTags = newTags.filter(newTag =>
           !oldTags.some(oldTag => oldTag.key === newTag.key && oldTag.value === newTag.value),
         )
@@ -270,31 +195,16 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           })
         })
       }
-
-      // Auto-save when category / split is valid
-      if (isSplitsValid(newLocalSplits)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
-      }
     }
 
     const changeCustomerVendor = (index: number, newCustomerVendor: typeof CustomerVendorSchema.Type | null) => {
-      localSplits[index].customerVendor = newCustomerVendor
-      const newLocalSplits = [...localSplits]
-
-      setLocalSplits(newLocalSplits)
-      setSplitFormError(undefined)
-
+      updateSplitAtIndex(index, split => ({ ...split, customerVendor: newCustomerVendor }))
       // Auto-save customer/vendor only when in unsplit state (single split entry)
-      if (newLocalSplits.length === 1) {
+      if (localSplits.length === 1) {
         void setMetadataOnBankTransaction({
           customer: newCustomerVendor?.customerVendorType === 'CUSTOMER' ? newCustomerVendor : null,
           vendor: newCustomerVendor?.customerVendorType === 'VENDOR' ? newCustomerVendor : null,
         })
-      }
-
-      // Auto-save when category / split is valid
-      if (isSplitsValid(newLocalSplits)) {
-        setTransactionCategory(bankTransaction.id, new SplitAsOption(newLocalSplits))
       }
     }
 
@@ -315,28 +225,13 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         return
       }
 
-      if (!isSplitsValid(localSplits)) {
-        setSplitFormError(getSplitsErrorMessage(localSplits))
-        return
-      }
+      if (!isValid) return
+
+      const categorizationRequest = buildCategorizeBankTransactionPayloadForSplit(localSplits)
 
       await categorizeBankTransaction(
         bankTransaction.id,
-        localSplits.length === 1 && localSplits[0].category
-          ? ({
-            type: 'Category',
-            category: localSplits[0].category.classificationEncoded as ClassificationEncoded,
-          })
-          : ({
-            type: 'Split',
-            entries: localSplits.map((split: Split) => ({
-              category: split.category?.classificationEncoded as ClassificationEncoded,
-              amount: split.amount,
-              tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
-              customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
-              vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
-            })),
-          }),
+        categorizationRequest,
       )
 
       // Remove from bulk selection store
@@ -344,7 +239,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       close()
     }
 
-    // Call this save action after clicking save in parent component:
+    // This will allow the parent BankTransactionRow / ListItem / MobileListItem to call the save function from this component.
     useImperativeHandle(ref, () => ({
       save,
     }))
@@ -362,10 +257,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       // Remove from bulk selection store
       deselect(bankTransaction.id)
       close()
-    }
-
-    const getInputValue = (index: number, split: Split): string => {
-      return inputValues[index] ?? convertCentsToDecimalString(split.amount)
     }
 
     const bookkeepingStatus = useEffectiveBookkeepingStatus()
@@ -466,8 +357,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                               disabled={
                                 index === 0 || !categorizationEnabled
                               }
-                              onChange={updateAmounts(index)}
-                              value={getInputValue(index, split)}
+                              onChange={updateSplitAmount(index)}
+                              value={getInputValueForSplitAtIndex(index, split)}
                               onBlur={onBlurSplitAmount}
                               className={`${className}__table-cell--split-entry__amount`}
                               isInvalid={split.amount < 0}
@@ -476,7 +367,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                               bankTransaction={bankTransaction}
                               selectedValue={split.category}
                               onSelectedValueChange={(value) => {
-                                changeCategory(index, value)
+                                changeCategoryForSplitAtIndex(index, value)
                               }}
                               isLoading={bankTransaction.processing}
                               isDisabled={!categorizationEnabled}

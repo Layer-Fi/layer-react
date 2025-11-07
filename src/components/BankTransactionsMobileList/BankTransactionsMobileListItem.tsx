@@ -1,27 +1,31 @@
-import { Text } from '@components/Typography/Text'
 import { CloseButton } from '@components/Button/CloseButton'
-import { ReactNode, useContext, useEffect, useRef, useState, useMemo, type ChangeEvent } from 'react'
+import { useContext, useEffect, useRef, useState, useMemo, type ChangeEvent, type ReactNode } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useElementSize } from '@hooks/useElementSize/useElementSize'
 import FileIcon from '@icons/File'
-import { centsToDollars as formatMoney } from '@models/Money'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasMatch, hasReceipts, isCredit } from '@utils/bankTransactions'
-import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
-import { isCategorized } from '@components/BankTransactions/utils'
 import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
 import { BankTransactionMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
 import { TransactionToOpenContext } from '@components/BankTransactionsMobileList/TransactionToOpenContext'
 import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
-import { LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { Span } from '@ui/Typography/Text'
+import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { VStack, HStack } from '@ui/Stack/Stack'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { DateTime } from '@components/DateTime/DateTime'
+import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
+import { BankTransactionsMobileListItemCategory } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCategory'
+import { isCategorized } from '@components/BankTransactions/utils'
+import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
+import { useInAppLinkContext, type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { decodeMatchDetails, convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
+import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
+import './bankTransactionsMobileListItem.scss'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -30,6 +34,7 @@ export interface BankTransactionsMobileListItemProps {
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
   isFirstItem?: boolean
+  bulkActionsEnabled?: boolean
 
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -71,7 +76,7 @@ export const BankTransactionsMobileListItem = ({
   editable,
   initialLoad,
   isFirstItem = false,
-
+  bulkActionsEnabled = false,
   showDescriptions,
   showReceiptUploads,
   showTooltips,
@@ -83,7 +88,7 @@ export const BankTransactionsMobileListItem = ({
   } = useContext(TransactionToOpenContext)
 
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
-  const { renderInAppLink } = useInAppLinkContext()
+  const categorized = isCategorized(bankTransaction)
 
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),
@@ -171,6 +176,29 @@ export const BankTransactionsMobileListItem = ({
     setHeight(0)
   }
 
+  const checkboxContainerRef = useRef<HTMLDivElement>(null)
+
+  const handleRowClick = (event: React.MouseEvent) => {
+    // Check if click is already on checkbox
+    if (checkboxContainerRef.current?.contains(event.target as Node)) {
+      return
+    }
+
+    // Toggle selection if bulk actions enabled
+    if (bulkActionsEnabled) {
+      if (isTransactionSelected) {
+        deselect(bankTransaction.id)
+      }
+      else {
+        select(bankTransaction.id)
+      }
+      return
+    }
+
+    // Else, expand row
+    toggleOpen()
+  }
+
   useEffect(() => {
     if (
       editable
@@ -189,8 +217,10 @@ export const BankTransactionsMobileListItem = ({
 
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-
-  const categorized = isCategorized(bankTransaction)
+  const { select, deselect } = useBulkSelectionActions()
+  const isSelected = useIdIsSelected()
+  const isTransactionSelected = isSelected(bankTransaction.id)
+  const { renderInAppLink } = useInAppLinkContext()
 
   const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
 
@@ -205,44 +235,88 @@ export const BankTransactionsMobileListItem = ({
 
   return (
     <li ref={itemRef} className={rowClassName} data-item={bankTransaction.id}>
-      <span
-        className={`${className}__heading`}
-        onClick={toggleOpen}
+      <div
+        onClick={handleRowClick}
         role='button'
-        style={{ height: headingHeight }}
+        style={{
+          height: headingHeight,
+        }}
       >
-        <div className={`${className}__heading__content`} ref={headingRowRef}>
-          <div className={`${className}__heading__main`}>
-            <Text as='span' className={`${className}__heading__tx-name`}>
-              {bankTransaction.counterparty_name ?? bankTransaction.description}
-            </Text>
-            <Text as='span' className={`${className}__heading__account-name`}>
-              {categorized && bankTransaction.categorization_status
-                ? getAssignedValue(bankTransaction, renderInAppLink)
-                : null}
-              {!categorized && fullAccountName}
-              {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
-            </Text>
-            {categorized && fullAccountName}
-            {!categorizationEnabled && !categorized
-              ? <BankTransactionsProcessingInfo />
-              : null}
-          </div>
-          <div className={`${className}__heading__amount`}>
-            <span
-              className={`${className}__amount-${
-                isCredit(bankTransaction) ? 'credit' : 'debit'
-              }`}
+        <VStack
+          ref={headingRowRef}
+        >
+          <HStack
+            gap='md'
+            justify='space-between'
+            align='center'
+            pie='md'
+          >
+            <HStack align='center'>
+              <BankTransactionsMobileListItemCheckbox
+                bulkActionsEnabled={bulkActionsEnabled}
+                bankTransaction={bankTransaction}
+                checkboxContainerRef={checkboxContainerRef}
+              />
+
+              <VStack
+                align='start'
+                gap='3xs'
+                className='Layer__bankTransactionsMobileListItem__headingContentLeft'
+                pi='md'
+                pb='sm'
+              >
+                <Span ellipsis>
+                  {bankTransaction.counterparty_name ?? bankTransaction.description}
+                </Span>
+                <Span className='Layer__bankTransactionsMobileListItem__categorizedValue'>
+                  {categorized && bankTransaction.categorization_status
+                    ? getAssignedValue(bankTransaction, renderInAppLink)
+                    : null}
+                </Span>
+                <HStack gap='2xs' align='center'>
+                  <Span size='sm' ellipsis>
+                    {fullAccountName}
+                  </Span>
+                  {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
+                </HStack>
+
+                {!categorizationEnabled && !categorized
+                  ? (
+                    <BankTransactionsProcessingInfo />
+                  )
+                  : null}
+              </VStack>
+            </HStack>
+
+            <VStack
+              align='end'
+              gap='3xs'
+              pb='sm'
             >
-              {isCredit(bankTransaction) ? '+$' : ' $'}
-              {formatMoney(bankTransaction.amount)}
-            </span>
-            <span className={`${className}__heading__date`}>
-              {formatTime(parseISO(bankTransaction.date), DATE_FORMAT)}
-            </span>
-          </div>
-        </div>
-      </span>
+              <HStack>
+                <Span size='md'>
+                  {isCredit(bankTransaction) ? '+' : ''}
+                </Span>
+                <MoneySpan
+                  amount={bankTransaction.amount}
+                />
+              </HStack>
+
+              <DateTime
+                value={bankTransaction.date}
+                dateFormat={DATE_FORMAT}
+                onlyDate
+                slotProps={{
+                  Date: { size: 'sm', variant: 'subtle' },
+                }}
+              />
+            </VStack>
+          </HStack>
+          <BankTransactionsMobileListItemCategory
+            bankTransaction={bankTransaction}
+          />
+        </VStack>
+      </div>
       <div
         className={`${className}__expanded-row`}
         style={{ height: !open || removeAnim ? 0 : height }}
@@ -286,7 +360,6 @@ export const BankTransactionsMobileListItem = ({
               isOpen={open}
               purpose={purpose}
               bankTransaction={bankTransaction}
-
               showCategorization={categorizationEnabled}
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
