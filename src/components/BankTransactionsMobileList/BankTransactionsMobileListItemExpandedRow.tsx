@@ -28,7 +28,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
     setPurpose(event.target.value as Purpose)
 
   return (
-    <div className='$Layer__bank-transaction-mobile-list-item__expanded-row'>
+    <div className='Layer__bank-transaction-mobile-list-item__expanded-row'>
       <VStack pb='md' justify='space-between' align='center'>
         {showCategorization
           ? (
