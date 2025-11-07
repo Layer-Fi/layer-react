@@ -15,7 +15,7 @@ export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactio
   if (!selectedValue) return null
 
   const baseSelectedValue = normalizeFromSelectedValue(selectedValue)
-  return <BankTransactionsBaseSelectedValue {...baseSelectedValue} size={size} className={className} />
+  return <BankTransactionsBaseSelectedValue {...baseSelectedValue} slotProps={{ Label: { size } }} className={className} />
 }
 
 const normalizeFromSelectedValue = (selectedValue: BankTransactionCategoryComboBoxOption): BankTransactionsBaseSelectedValueProps => {

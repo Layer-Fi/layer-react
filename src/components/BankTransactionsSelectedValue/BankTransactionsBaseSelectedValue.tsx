@@ -7,12 +7,16 @@ import Scissors from '@icons/Scissors'
 export type BankTransactionsBaseSelectedValueProps = {
   type: 'match' | 'transfer' | 'split' | 'category'
   label: string
-  size?: 'sm' | 'md'
   className?: string
+  slotProps?: {
+    Label?: {
+      size?: 'sm' | 'md'
+    }
+  }
 }
 
 export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSelectedValueProps) => {
-  const { type, size = 'md', className, label } = props
+  const { type, className, label, slotProps } = props
 
   if (type === 'match' || type === 'transfer') {
     return (
@@ -20,7 +24,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
         <Badge size={BadgeSize.SMALL} icon={<MinimizeTwo size={11} />}>
           {type === 'transfer' ? 'Transfer' : 'Match'}
         </Badge>
-        <Span ellipsis size={size}>{label}</Span>
+        <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
     )
   }
@@ -31,14 +35,14 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
         <Badge size={BadgeSize.SMALL} icon={<Scissors size={11} />}>
           Split
         </Badge>
-        <Span ellipsis size={size}>{label}</Span>
+        <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
     )
   }
 
   return (
     <HStack gap='xs' align='center' className={className}>
-      <Span ellipsis size={size} className={className}>{label}</Span>
+      <Span ellipsis size={slotProps?.Label?.size ?? 'md'} className={className}>{label}</Span>
     </HStack>
   )
 }
