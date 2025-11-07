@@ -238,21 +238,22 @@ export const BankTransactionsListItem = ({
               }}
               isLoading={bankTransaction.processing}
             />
+
           )
-          : null}
-        {categorized
-          ? (
-            <BankTransactionsCategorizedSelectedValue
-              bankTransaction={bankTransaction}
-            />
-          )
-          : selectedCategory
+          : categorized
             ? (
-              <BankTransactionsUncategorizedSelectedValue
-                selectedValue={selectedCategory}
+              <BankTransactionsCategorizedSelectedValue
+                bankTransaction={bankTransaction}
               />
             )
-            : null}
+            : selectedCategory
+              ? (
+                <BankTransactionsUncategorizedSelectedValue
+                  selectedValue={selectedCategory}
+                />
+              )
+              : null}
+
         {categorizationEnabled && !categorized && !showRetry
           ? (
             <SubmitButton
