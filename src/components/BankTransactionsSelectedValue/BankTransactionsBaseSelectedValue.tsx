@@ -42,7 +42,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
 
   return (
     <HStack gap='xs' align='center' className={className}>
-      <Span ellipsis size={slotProps?.Label?.size ?? 'md'} className={className}>{label}</Span>
+      <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
     </HStack>
   )
 }
