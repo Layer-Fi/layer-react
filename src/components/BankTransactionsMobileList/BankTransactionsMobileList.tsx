@@ -58,7 +58,6 @@ export const BankTransactionsMobileList = ({
               initialLoad={initialLoad}
               isFirstItem={index == 0}
               bulkActionsEnabled={bulkActionsEnabled}
-
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}

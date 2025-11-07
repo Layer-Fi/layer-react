@@ -77,7 +77,6 @@ export const BankTransactionsMobileListItem = ({
   initialLoad,
   isFirstItem = false,
   bulkActionsEnabled = false,
-
   showDescriptions,
   showReceiptUploads,
   showTooltips,
@@ -315,7 +314,6 @@ export const BankTransactionsMobileListItem = ({
           </HStack>
           <BankTransactionsMobileListItemCategory
             bankTransaction={bankTransaction}
-            className='Layer__bankTransactionsMobileListItem__category'
           />
         </VStack>
       </div>
