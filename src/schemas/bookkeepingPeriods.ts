@@ -33,10 +33,17 @@ enum TasksResponseType {
   UPLOAD_DOCUMENT = 'UPLOAD_DOCUMENT',
 }
 
+export enum BookkeepingPeriodScale {
+  MONTHLY = 'MONTHLY',
+  ANNUALLY = 'ANNUALLY',
+  ONGOING = 'ONGOING',
+}
+
 const BookkeepingPeriodStatusSchema = Schema.Enums(BookkeepingPeriodStatus)
 const DocumentTypeSchema = Schema.Enums(DocumentType)
 const TasksStatusSchema = Schema.Enums(TasksStatus)
 const TasksResponseTypeSchema = Schema.Enums(TasksResponseType)
+const BookkeepingPeriodScaleSchema = Schema.Enums(BookkeepingPeriodScale)
 
 const TransformedBookkeepingPeriodStatusSchema = createTransformedEnumSchema(
   BookkeepingPeriodStatusSchema,
@@ -147,12 +154,12 @@ export type Task = typeof TaskSchema.Type
 
 const BookkeepingPeriodSchema = Schema.Struct({
   id: Schema.UUID,
-
-  month: Schema.Number,
-
-  year: Schema.Number,
+  month: Schema.Number.pipe(Schema.filter(n => n >= 0 && n <= 12)),
+  year: Schema.Number.pipe(Schema.filter(n => n >= 0)),
 
   status: TransformedBookkeepingPeriodStatusSchema,
+
+  scale: Schema.NullishOr(BookkeepingPeriodScaleSchema),
 
   tasks: Schema.Array(TaskSchema),
 })
