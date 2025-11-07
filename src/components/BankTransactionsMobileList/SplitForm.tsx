@@ -183,7 +183,7 @@ export const SplitForm = ({
       {bankTransaction.error && showRetry
         ? (
           <ErrorText>
-            Confirmation failed. Check connection and retry in few seconds.
+            Approval failed. Check connection and retry in few seconds.
           </ErrorText>
         )
         : null}
