@@ -1,0 +1,96 @@
+name: Daily npm audit
+
+on:
+  schedule:
+    - cron: '0 16 * * *'   # daily at 08:00 UTC (adjust to your preferred time)
+  workflow_dispatch: {}   # manual run option
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit --json > audit.json || true
+
+      - name: Create/update daily vulnerability issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const audit = JSON.parse(fs.readFileSync('audit.json', 'utf8'));
+            if (!audit || !audit.vulnerabilities) {
+              console.log('No vulnerability data available.');
+              return;
+            }
+            // Convert vulnerabilities into an array and pick ones above threshold
+            const vulns = Object.entries(audit.vulnerabilities)
+              .map(([name, info]) => ({ name, ...info }))
+              // only keep moderate+ (customize severity threshold)
+              .filter(v => ['moderate', 'high', 'critical'].includes(v.severity));
+            if (vulns.length === 0) {
+              console.log('No moderate+ vulnerabilities found.');
+              return;
+            }
+
+            // Build issue body
+            let body = `Automated daily npm audit report — found **${vulns.length}** vulnerabilities.\n\n`;
+            body += "| package | severity | via | title |\n";
+            body += "|---|---:|---|---|\n";
+            for (const v of vulns.slice(0, 50)) { // limit to 50 entries
+              const via = Array.isArray(v.via) ? v.via.map(x=> (typeof x === 'string' ? x : x.title || x.name)).join(", ") : v.via;
+              body += `| ${v.name} | ${v.severity} | ${via} | ${v.title || ''} |\n`;
+            }
+            body += `\n\nFull audit JSON attached to the issue.`;
+
+            // Try to find an existing "Daily npm audit" issue to update
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'automated-vuln-report',
+              state: 'open'
+            });
+
+            if (issues.data && issues.data.length > 0) {
+              const issueNumber = issues.data[0].number;
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: body
+              });
+              console.log(`Appended comment to issue #${issueNumber}`);
+            } else {
+              const newIssue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `Daily npm audit — ${new Date().toISOString().slice(0,10)}`,
+                body: body,
+                labels: ['automated-vuln-report']
+              });
+              console.log(`Created issue #${newIssue.data.number}`);
+            }
+      - name: Send Slack notification
+        if: ${{ success() && secrets.SLACK_WEBHOOK }}
+        run: |
+          jq -r '.vulnerabilities | to_entries | length' audit.json > /tmp/count.txt || true
+          COUNT=$(cat /tmp/count.txt || echo 0)
+          if [ "$COUNT" -gt "0" ]; then
+            PAYLOAD=$(jq -n --arg c "$COUNT" --arg repo "${{ github.repository }}" '{text: ("[" + $repo + "] npm audit found " + $c + " vulnerabilities — see GitHub issues for details.")}')
+            curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK"
+          else
+            echo "No vulnerabilities to report to Slack."
+          fi
+
+        
