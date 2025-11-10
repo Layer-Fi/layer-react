@@ -82,8 +82,12 @@ jobs:
               console.log(`Created issue #${newIssue.data.number}`);
             }
       - name: Send Slack notification
-        if: ${{ success() && secrets.SLACK_WEBHOOK != '' }}
+        if: ${{ success() }}
         run: |
+          if [ -z "${{ secrets.SLACK_WEBHOOK }}" ]; then
+            echo "ERROR: SLACK_WEBHOOK secret not configured."
+            exit 1
+          fi
           jq -r '.vulnerabilities | to_entries | length' audit.json > /tmp/count.txt || true
           COUNT=$(cat /tmp/count.txt || echo 0)
           if [ "$COUNT" -gt "0" ]; then
@@ -93,4 +97,4 @@ jobs:
             echo "No vulnerabilities to report to Slack."
           fi
 
-        
+
