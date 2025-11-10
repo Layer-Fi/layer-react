@@ -15,7 +15,7 @@ import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceip
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
 import classNames from 'classnames'
 import { Span } from '@components/ui/Typography/Text'
-import { VStack } from '@components/ui/Stack/Stack'
+import { VStack, HStack } from '@components/ui/Stack/Stack'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 interface BankTransactionsMobileListMatchFormProps {
@@ -72,7 +72,7 @@ export const BankTransactionsMobileListMatchForm = ({
   }
 
   return (
-    <VStack pi='md'>
+    <VStack pi='lg' pbs='lg' gap='sm'>
       <Span size='sm' weight='bold'>
         Find Match
       </Span>
@@ -108,7 +108,7 @@ export const BankTransactionsMobileListMatchForm = ({
           />
         )}
       </div>
-      <div className='Layer__bank-transaction-mobile-list-item__actions'>
+      <HStack pi='3xl' gap='md'>
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
@@ -133,7 +133,7 @@ export const BankTransactionsMobileListMatchForm = ({
               : 'Approve match'}
           </Button>
         )}
-      </div>
+      </HStack>
       {formError && <ErrorText>{formError}</ErrorText>}
       {showRetry
         ? (

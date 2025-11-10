@@ -12,7 +12,7 @@ import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceip
 import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
-import { VStack } from '@components/ui/Stack/Stack'
+import { VStack, HStack } from '@components/ui/Stack/Stack'
 
 interface BankTransactionsMobileListPersonalFormProps {
   bankTransaction: BankTransaction
@@ -78,7 +78,7 @@ export const BankTransactionsMobileListPersonalForm = ({
   const alreadyAssigned = isAlreadyAssigned(bankTransaction)
 
   return (
-    <VStack>
+    <VStack pi='lg' pbs='lg'>
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
@@ -102,7 +102,7 @@ export const BankTransactionsMobileListPersonalForm = ({
           />
         )}
       </div>
-      <div className='Layer__bank-transaction-mobile-list-item__actions'>
+      <HStack pi='3xl' gap='md'>
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
@@ -114,7 +114,7 @@ export const BankTransactionsMobileListPersonalForm = ({
         {showCategorization
           ? (
             <Button
-              fullWidth={true}
+              fullWidth
               disabled={alreadyAssigned || isLoading || bankTransaction.processing}
               onClick={save}
             >
@@ -126,7 +126,7 @@ export const BankTransactionsMobileListPersonalForm = ({
             </Button>
           )
           : null}
-      </div>
+      </HStack>
       {bankTransaction.error && showRetry
         ? (
           <ErrorText>

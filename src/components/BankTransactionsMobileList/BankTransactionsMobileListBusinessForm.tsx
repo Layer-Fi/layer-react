@@ -16,6 +16,7 @@ import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption } from '@internal-types/categorizationOption'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { HStack } from '@components/ui/Stack/Stack'
 
 type DisplayOption = {
   label: string
@@ -26,7 +27,7 @@ type DisplayOption = {
   asLink?: boolean
 }
 
-interface BankTransactionsMobileListBusinessFormProps {
+interface BusinessFormProps {
   bankTransaction: BankTransaction
   showCategorization?: boolean
   showDescriptions: boolean
@@ -34,13 +35,13 @@ interface BankTransactionsMobileListBusinessFormProps {
   showTooltips: boolean
 }
 
-export const BankTransactionsMobileListBusinessForm = ({
+export const BusinessForm = ({
   bankTransaction,
   showCategorization,
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-}: BankTransactionsMobileListBusinessFormProps) => {
+}: BusinessFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const { categorize: categorizeBankTransaction, isLoading } =
@@ -165,7 +166,7 @@ export const BankTransactionsMobileListBusinessForm = ({
             />
           )}
         </div>
-        <div className='Layer__bank-transaction-mobile-list-item__actions'>
+        <HStack pi='3xl' gap='md'>
           {showReceiptUploads && (
             <FileInput
               onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
@@ -200,7 +201,7 @@ export const BankTransactionsMobileListBusinessForm = ({
               </Button>
             )
             : null}
-        </div>
+        </HStack>
         {bankTransaction.error && showRetry
           ? (
             <ErrorText>

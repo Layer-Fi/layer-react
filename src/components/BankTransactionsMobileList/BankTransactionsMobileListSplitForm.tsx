@@ -14,12 +14,12 @@ import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceip
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
-import { HStack } from '@ui/Stack/Stack'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { AmountInput } from '@components/Input/AmountInput'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { HStack } from '@components/ui/Stack/Stack'
 
 interface BankTransactionsMobileListSplitFormProps {
   bankTransaction: BankTransaction
@@ -163,7 +163,7 @@ export const BankTransactionsMobileListSplitForm = ({
           />
         )}
       </div>
-      <div className='Layer__bank-transaction-mobile-list-item__actions'>
+      <HStack pi='3xl' gap='md'>
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
@@ -181,7 +181,7 @@ export const BankTransactionsMobileListSplitForm = ({
             {isLoading || bankTransaction.processing ? 'Confirming...' : 'Confirm'}
           </Button>
         )}
-      </div>
+      </HStack>
       {bankTransaction.error && showRetry
         ? (
           <ErrorText>

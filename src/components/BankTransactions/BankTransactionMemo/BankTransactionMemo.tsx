@@ -12,7 +12,6 @@ export const BankTransactionMemo = ({ bankTransactionId }: { bankTransactionId: 
         {field => (
           <InputGroup
             name='memo'
-            label='Description'
           >
             <Textarea
               name='memo'

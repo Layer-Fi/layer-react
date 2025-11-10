@@ -1157,9 +1157,6 @@
 }
 
 .Layer__bank-transaction-mobile-list-item__actions--with-receipts {
-  padding: var(--spacing-md) 0;
-  border-top: 1px solid var(--border-color);
-
   & .Layer__file-upload {
     display: flex;
     flex-direction: column;
@@ -1173,7 +1170,7 @@
 
 .Layer__bank-transaction-mobile-list-item__actions {
   display: flex;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md);
 }
 
 @container (max-width: 714px) {
