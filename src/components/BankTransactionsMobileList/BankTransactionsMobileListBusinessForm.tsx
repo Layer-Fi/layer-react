@@ -147,6 +147,8 @@ export const BankTransactionsMobileListBusinessForm = ({
         <BankTransactionFormFields
           bankTransaction={bankTransaction}
           showDescriptions={showDescriptions}
+          hideCustomerVendor
+          hideTags
         />
         <div
           className={classNames(
