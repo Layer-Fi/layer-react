@@ -2,7 +2,7 @@ import { useState, type ChangeEvent } from 'react'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
-import { BankTransactionMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
+import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
 import { hasMatch } from '@utils/bankTransactions'
 import { Purpose } from './BankTransactionsMobileListItem'
 import { HStack, VStack } from '@components/ui/Stack/Stack'
@@ -61,7 +61,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
             </HStack>
           )
           : null}
-        <BankTransactionMobileForms
+        <BankTransactionsMobileForms
           purpose={purpose}
           bankTransaction={bankTransaction}
           showCategorization={showCategorization}
