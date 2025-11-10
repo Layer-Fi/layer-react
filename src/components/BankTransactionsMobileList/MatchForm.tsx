@@ -16,14 +16,17 @@ import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
 import classNames from 'classnames'
 import { Span } from '@components/ui/Typography/Text'
 import { VStack } from '@components/ui/Stack/Stack'
+import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 export const MatchForm = ({
   bankTransaction,
   showReceiptUploads,
+  showDescriptions,
   showCategorization,
 }: {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
+  showDescriptions?: boolean
   showCategorization?: boolean
 }) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
@@ -79,6 +82,12 @@ export const MatchForm = ({
           setFormError(undefined)
           setSelectedMatch(suggestedMatch)
         }}
+      />
+      <BankTransactionFormFields
+        bankTransaction={bankTransaction}
+        showDescriptions={showDescriptions}
+        hideCustomerVendor
+        hideTags
       />
       <div
         className={classNames(

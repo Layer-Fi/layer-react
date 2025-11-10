@@ -11,9 +11,13 @@ import { BankTransactionReceipts } from '@components/BankTransactionReceipts/Ban
 import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
 import classNames from 'classnames'
+import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+import { VStack } from '@components/ui/Stack/Stack'
+
 interface PersonalFormProps {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
+  showDescriptions?: boolean
   showCategorization?: boolean
 }
 
@@ -36,6 +40,7 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 export const PersonalForm = ({
   bankTransaction,
   showReceiptUploads,
+  showDescriptions,
   showCategorization,
 }: PersonalFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
@@ -73,7 +78,13 @@ export const PersonalForm = ({
   const alreadyAssigned = isAlreadyAssigned(bankTransaction)
 
   return (
-    <div className='Layer__bank-transaction-mobile-list-item__personal-form'>
+    <VStack>
+      <BankTransactionFormFields
+        bankTransaction={bankTransaction}
+        showDescriptions={showDescriptions}
+        hideCustomerVendor
+        hideTags
+      />
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',
@@ -111,7 +122,7 @@ export const PersonalForm = ({
                 ? 'Confirming...'
                 : alreadyAssigned
                   ? 'Confirmed'
-                  : 'Confirm'}
+                  : 'Mark as Personal'}
             </Button>
           )
           : null}
@@ -123,6 +134,6 @@ export const PersonalForm = ({
           </ErrorText>
         )
         : null}
-    </div>
+    </VStack>
   )
 }

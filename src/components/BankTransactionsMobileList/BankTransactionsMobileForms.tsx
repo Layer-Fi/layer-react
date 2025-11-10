@@ -22,6 +22,7 @@ export const BankTransactionMobileForms = ({
   showTooltips,
   showCategorization,
   showReceiptUploads,
+  showDescriptions,
   isOpen,
 }: BankTransactionMobileFormsProps) => {
   const getContent = () => {
@@ -33,6 +34,7 @@ export const BankTransactionMobileForms = ({
             showCategorization={showCategorization}
             showTooltips={showTooltips}
             showReceiptUploads={showReceiptUploads}
+            showDescriptions={showDescriptions}
           />
         )
       case Purpose.personal:
@@ -40,6 +42,7 @@ export const BankTransactionMobileForms = ({
           <PersonalForm
             bankTransaction={bankTransaction}
             showReceiptUploads={showReceiptUploads}
+            showDescriptions={showDescriptions}
             showCategorization={showCategorization}
           />
         )
@@ -50,6 +53,7 @@ export const BankTransactionMobileForms = ({
             showCategorization={showCategorization}
             showTooltips={showTooltips}
             showReceiptUploads={showReceiptUploads}
+            showDescriptions={showDescriptions}
           />
         )
       default:

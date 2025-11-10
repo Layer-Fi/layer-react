@@ -10,6 +10,7 @@ import { ActionableList } from '@components/ActionableList/ActionableList'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import classNames from 'classnames'
+import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption } from '@internal-types/categorizationOption'
@@ -28,6 +29,7 @@ type DisplayOption = {
 interface BusinessFormProps {
   bankTransaction: BankTransaction
   showCategorization?: boolean
+  showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
 }
@@ -35,6 +37,7 @@ interface BusinessFormProps {
 export const BusinessForm = ({
   bankTransaction,
   showCategorization,
+  showDescriptions,
   showReceiptUploads,
   showTooltips,
 }: BusinessFormProps) => {
@@ -141,6 +144,10 @@ export const BusinessForm = ({
             />
           )
           : null}
+        <BankTransactionFormFields
+          bankTransaction={bankTransaction}
+          showDescriptions={showDescriptions}
+        />
         <div
           className={classNames(
             'Layer__bank-transaction-mobile-list-item__receipts',

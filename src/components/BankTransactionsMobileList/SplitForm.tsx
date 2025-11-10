@@ -12,6 +12,7 @@ import { hasReceipts } from '@utils/bankTransactions'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import classNames from 'classnames'
+import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { HStack } from '@ui/Stack/Stack'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
@@ -25,6 +26,7 @@ interface SplitFormProps {
   showTooltips: boolean
   showCategorization?: boolean
   showReceiptUploads?: boolean
+  showDescriptions?: boolean
 }
 
 export const SplitForm = ({
@@ -32,6 +34,7 @@ export const SplitForm = ({
   showTooltips,
   showCategorization,
   showReceiptUploads,
+  showDescriptions,
 }: SplitFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
@@ -137,6 +140,12 @@ export const SplitForm = ({
           </>
         )
         : null}
+      <BankTransactionFormFields
+        bankTransaction={bankTransaction}
+        showDescriptions={showDescriptions}
+        hideCustomerVendor
+        hideTags
+      />
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',
