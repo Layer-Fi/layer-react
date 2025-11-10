@@ -1,4 +1,3 @@
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { FileInput } from '@components/Input/FileInput'
 import { Button } from '@components/Button/Button'
@@ -8,12 +7,15 @@ import PaperclipIcon from '@icons/Paperclip'
 import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
 import {
   hasReceipts,
+  getBankTransactionFirstSuggestedMatch,
   getBankTransactionMatchAsSuggestedMatch,
 } from '@utils/bankTransactions'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
 import classNames from 'classnames'
+import { Span } from '@components/ui/Typography/Text'
+import { VStack } from '@components/ui/Stack/Stack'
 
 export const MatchForm = ({
   bankTransaction,
@@ -30,7 +32,7 @@ export const MatchForm = ({
     useBankTransactionsContext()
 
   const [selectedMatch, setSelectedMatch] = useState<SuggestedMatch | undefined>(
-    getBankTransactionMatchAsSuggestedMatch(bankTransaction),
+    getBankTransactionFirstSuggestedMatch(bankTransaction),
   )
   const [formError, setFormError] = useState<string | undefined>()
 
@@ -65,12 +67,11 @@ export const MatchForm = ({
   }
 
   return (
-    <div>
-      <Text weight={TextWeight.bold} size={TextSize.sm}>
-        Find match
-      </Text>
+    <VStack pi='md'>
+      <Span size='sm' weight='bold'>
+        Find Match
+      </Span>
       <MatchFormMobile
-        classNamePrefix='Layer__bank-transaction-mobile-list-item'
         readOnly={!showCategorization}
         bankTransaction={bankTransaction}
         selectedMatchId={selectedMatch?.id}
@@ -130,6 +131,6 @@ export const MatchForm = ({
           </ErrorText>
         )
         : null}
-    </div>
+    </VStack>
   )
 }

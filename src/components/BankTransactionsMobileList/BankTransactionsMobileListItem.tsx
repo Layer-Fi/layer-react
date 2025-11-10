@@ -12,8 +12,6 @@ import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
 import { Span } from '@ui/Typography/Text'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack, HStack } from '@ui/Stack/Stack'
-import { MoneySpan } from '@ui/Typography/MoneySpan'
-import { DateTime } from '@components/DateTime/DateTime'
 import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
 import { BankTransactionsMobileListItemCategory } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCategory'
 import { isCategorized } from '@components/BankTransactions/utils'
@@ -23,6 +21,7 @@ import { decodeMatchDetails, convertMatchDetailsToLinkingMetadata } from '@schem
 import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 import './bankTransactionsMobileListItem.scss'
+import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -43,8 +42,6 @@ export enum Purpose {
   personal = 'personal',
   more = 'more',
 }
-
-const DATE_FORMAT = 'LLL d'
 
 const getAssignedValue = (
   bankTransaction: BankTransaction,
@@ -206,11 +203,12 @@ export const BankTransactionsMobileListItem = ({
 
   return (
     <li ref={itemRef} className={rowClassName} data-item={bankTransaction.id}>
-      <div
-        onClick={handleRowClick}
-        role='button'
-      >
-        <VStack>
+
+      <VStack>
+        <div
+          onClick={handleRowClick}
+          role='button'
+        >
           <HStack
             gap='md'
             justify='space-between'
@@ -254,48 +252,37 @@ export const BankTransactionsMobileListItem = ({
               </VStack>
             </HStack>
 
-            <VStack
-              align='end'
-              gap='3xs'
-              pb='sm'
-            >
-              <HStack>
-                <Span size='md'>
-                  {isCredit(bankTransaction) ? '+' : ''}
-                </Span>
-                <MoneySpan
-                  amount={bankTransaction.amount}
-                />
-              </HStack>
-
-              <DateTime
-                value={bankTransaction.date}
-                dateFormat={DATE_FORMAT}
-                onlyDate
-                slotProps={{
-                  Date: { size: 'sm', variant: 'subtle' },
-                }}
-              />
-            </VStack>
+            <BankTransactionsAmountDate
+              amount={bankTransaction.amount}
+              date={bankTransaction.date}
+              slotProps={{
+                MoneySpan: {
+                  size: 'md',
+                  displayPlusSign: isCredit(bankTransaction),
+                },
+              }}
+            />
           </HStack>
-          { open
-            ? (
-              <BankTransactionsMobileListItemExpandedRow
-                bankTransaction={bankTransaction}
-                showCategorization={categorizationEnabled}
-                showDescriptions={showDescriptions}
-                showReceiptUploads={showReceiptUploads}
-                showTooltips={showTooltips}
-              />
-            )
-            : (
+          {!open
+            && (
               <BankTransactionsMobileListItemCategory
                 bankTransaction={bankTransaction}
               />
             )}
+        </div>
+        { open
+          && (
+            <BankTransactionsMobileListItemExpandedRow
+              bankTransaction={bankTransaction}
+              showCategorization={categorizationEnabled}
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+            />
+          )}
 
-        </VStack>
-      </div>
+      </VStack>
+
     </li>
   )
 }

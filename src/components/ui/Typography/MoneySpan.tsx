@@ -17,14 +17,14 @@ const MoneySpan = forwardRef<HTMLSpanElement, MoneyTextProps>(
   ({ amount, bold, size, displayPlusSign, className, ...restProps }, ref) => {
     const dataProperties = toDataProperties({
       bold,
-      positive: amount >= 0,
-      negative: amount < 0,
+      'positive': amount >= 0,
+      'negative': amount < 0,
       size,
+      'display-plus-sign': displayPlusSign,
     })
 
     return (
       <span {...restProps} {...dataProperties} className={classNames(CLASS_NAME, className)} ref={ref}>
-        {displayPlusSign && '+'}
         {formatMoney(Math.abs(amount))}
       </span>
     )

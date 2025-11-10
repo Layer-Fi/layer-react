@@ -419,25 +419,6 @@
   }
 }
 
-.Layer__bank-transaction-row__table-cell--amount-credit,
-.Layer__bank-transaction-list-item__amount-credit {
-  justify-content: flex-end;
-  color: var(--text-color-transaction-credit);
-
-  .Layer__table-cell-content {
-    justify-content: flex-end;
-  }
-}
-
-.Layer__bank-transaction-row__table-cell--amount-debit,
-.Layer__bank-transaction-list-item__amount-debit {
-  justify-content: flex-end;
-
-  .Layer__table-cell-content {
-    justify-content: flex-end;
-  }
-}
-
 .Layer__expanded-bank-transaction-row__description {
   padding: 0 var(--spacing-md);
 
@@ -1144,14 +1125,6 @@
   color: var(--color-base-500);
 }
 
-.Layer__bank-transaction-mobile-list-item__match-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin: var(--spacing-md) 0;
-}
-
 .Layer__bank-transaction-mobile-list-item__match-item {
   display: flex;
   gap: var(--spacing-sm);
@@ -1164,24 +1137,11 @@
     color: var(--color-base-500);
   }
 
-  .Layer__bank-transaction-mobile-list-item__match-item__col-details {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
   .Layer__bank-transaction-mobile-list-item__match-item__heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-  }
-
-  .Layer__bank-transaction-mobile-list-item__match-item__details {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    color: var(--color-base-500);
   }
 
   .Layer__bank-transaction-mobile-list-item__match-item__col-status {
