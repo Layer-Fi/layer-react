@@ -21,7 +21,7 @@ import { AmountInput } from '@components/Input/AmountInput'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
-interface SplitFormProps {
+interface BankTransactionsMobileListSplitFormProps {
   bankTransaction: BankTransaction
   showTooltips: boolean
   showCategorization?: boolean
@@ -29,13 +29,13 @@ interface SplitFormProps {
   showDescriptions?: boolean
 }
 
-export const SplitForm = ({
+export const BankTransactionsMobileListSplitForm = ({
   bankTransaction,
   showTooltips,
   showCategorization,
   showReceiptUploads,
   showDescriptions,
-}: SplitFormProps) => {
+}: BankTransactionsMobileListSplitFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {

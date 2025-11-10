@@ -10,7 +10,7 @@ import { ModalHeading } from '@ui/Modal/ModalSlots'
 import type { CategoryAsOption } from '@internal-types/categorizationOption'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
-export interface BusinessCategoriesProps {
+export interface BankTransactionsMobileListBusinessCategoriesProps {
   select: (category: BankTransactionCategoryComboBoxOption | null) => void
   selectedId?: string
   showTooltips: boolean
@@ -20,11 +20,11 @@ const isGroup = (item: CategoryGroup | CategoryAsOption): item is CategoryGroup 
   return 'categories' in item
 }
 
-export const BusinessCategories = ({
+export const BankTransactionsMobileListBusinessCategories = ({
   select,
   selectedId,
   showTooltips,
-}: BusinessCategoriesProps) => {
+}: BankTransactionsMobileListBusinessCategoriesProps) => {
   const { data: categories } = useCategories()
   const [query, setQuery] = useState('')
 

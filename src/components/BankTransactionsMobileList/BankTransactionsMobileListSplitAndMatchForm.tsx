@@ -2,10 +2,10 @@ import { TextButton } from '@components/Button/TextButton'
 import { useState } from 'react'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { hasMatch } from '@utils/bankTransactions'
-import { MatchForm } from '@components/BankTransactionsMobileList/MatchForm'
-import { SplitForm } from '@components/BankTransactionsMobileList/SplitForm'
+import { BankTransactionsMobileListMatchForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListMatchForm'
+import { BankTransactionsMobileListSplitForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListSplitForm'
 
-interface SplitAndMatchFormProps {
+interface BankTransactionsMobileListSplitAndMatchFormProps {
   bankTransaction: BankTransaction
   showTooltips: boolean
   showCategorization?: boolean
@@ -18,13 +18,13 @@ enum Purpose {
   match = 'match',
 }
 
-export const SplitAndMatchForm = ({
+export const BankTransactionsMobileListSplitAndMatchForm = ({
   bankTransaction,
   showTooltips,
   showReceiptUploads,
   showDescriptions,
   showCategorization,
-}: SplitAndMatchFormProps) => {
+}: BankTransactionsMobileListSplitAndMatchFormProps) => {
   const anyMatch = hasMatch(bankTransaction)
   const [formType, setFormType] = useState(
     bankTransaction.category
@@ -37,7 +37,7 @@ export const SplitAndMatchForm = ({
   return (
     <div className='Layer__bank-transaction-mobile-list-item__split-and-match-form'>
       {formType === Purpose.categorize && (
-        <SplitForm
+        <BankTransactionsMobileListSplitForm
           bankTransaction={bankTransaction}
           showTooltips={showTooltips}
           showReceiptUploads={showReceiptUploads}
@@ -46,7 +46,7 @@ export const SplitAndMatchForm = ({
         />
       )}
       {formType === Purpose.match && (
-        <MatchForm
+        <BankTransactionsMobileListMatchForm
           bankTransaction={bankTransaction}
           showReceiptUploads={showReceiptUploads}
           showDescriptions={showDescriptions}

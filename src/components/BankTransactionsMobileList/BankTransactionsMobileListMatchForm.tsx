@@ -18,17 +18,19 @@ import { Span } from '@components/ui/Typography/Text'
 import { VStack } from '@components/ui/Stack/Stack'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
-export const MatchForm = ({
-  bankTransaction,
-  showReceiptUploads,
-  showDescriptions,
-  showCategorization,
-}: {
+interface BankTransactionsMobileListMatchFormProps {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
   showDescriptions?: boolean
   showCategorization?: boolean
-}) => {
+}
+
+export const BankTransactionsMobileListMatchForm = ({
+  bankTransaction,
+  showReceiptUploads,
+  showDescriptions,
+  showCategorization,
+}: BankTransactionsMobileListMatchFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const { match: matchBankTransaction, isLoading } =

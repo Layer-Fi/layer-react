@@ -26,7 +26,7 @@ type DisplayOption = {
   asLink?: boolean
 }
 
-interface BusinessFormProps {
+interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
   showCategorization?: boolean
   showDescriptions: boolean
@@ -34,13 +34,13 @@ interface BusinessFormProps {
   showTooltips: boolean
 }
 
-export const BusinessForm = ({
+export const BankTransactionsMobileListBusinessForm = ({
   bankTransaction,
   showCategorization,
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-}: BusinessFormProps) => {
+}: BankTransactionsMobileListBusinessFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const { categorize: categorizeBankTransaction, isLoading } =

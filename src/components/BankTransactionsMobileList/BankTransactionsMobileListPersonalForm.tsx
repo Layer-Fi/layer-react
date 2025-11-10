@@ -14,7 +14,7 @@ import classNames from 'classnames'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { VStack } from '@components/ui/Stack/Stack'
 
-interface PersonalFormProps {
+interface BankTransactionsMobileListPersonalFormProps {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
   showDescriptions?: boolean
@@ -37,12 +37,12 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
   )
 }
 
-export const PersonalForm = ({
+export const BankTransactionsMobileListPersonalForm = ({
   bankTransaction,
   showReceiptUploads,
   showDescriptions,
   showCategorization,
-}: PersonalFormProps) => {
+}: BankTransactionsMobileListPersonalFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const { categorize: categorizeBankTransaction, isLoading } =
