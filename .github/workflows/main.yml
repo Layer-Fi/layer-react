@@ -88,7 +88,7 @@ jobs:
           COUNT=$(cat /tmp/count.txt || echo 0)
           if [ "$COUNT" -gt "0" ]; then
             PAYLOAD=$(jq -n --arg c "$COUNT" --arg repo "${{ github.repository }}" '{text: ("[" + $repo + "] npm audit found " + $c + " vulnerabilities — see GitHub issues for details.")}')
-            curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK"
+            curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "${{ secrets.SLACK_WEBHOOK }}"
           else
             echo "No vulnerabilities to report to Slack."
           fi
