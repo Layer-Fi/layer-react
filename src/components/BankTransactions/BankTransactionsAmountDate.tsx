@@ -1,6 +1,5 @@
 import { HStack, VStack } from '@components/ui/Stack/Stack'
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
-import { Span } from '@components/ui/Typography/Text'
 import { DateTime } from '@components/DateTime/DateTime'
 
 const DATE_FORMAT = 'LLL d'
@@ -23,12 +22,10 @@ export const BankTransactionsAmountDate = ({ amount, date, plusSign, slotProps }
       pb='sm'
     >
       <HStack>
-        <Span {...slotProps?.amount}>
-          {plusSign ? '+' : ''}
-        </Span>
         <MoneySpan
           amount={amount}
           size={slotProps?.amount?.size}
+          displayPlusSign={plusSign}
         />
       </HStack>
 

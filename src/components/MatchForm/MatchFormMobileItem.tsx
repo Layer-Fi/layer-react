@@ -24,7 +24,7 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
           slot='selection'
           variant='round'
         />
-        <Span pbs='sm' size='sm'>
+        <Span ellipsis pbs='sm' size='sm'>
           {match.details.description}
         </Span>
         <BankTransactionsAmountDate

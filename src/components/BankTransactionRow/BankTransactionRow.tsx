@@ -6,7 +6,6 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import AlertCircle from '@icons/AlertCircle'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import FileIcon from '@icons/File'
-import { centsToDollars as formatMoney } from '@models/Money'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import {
   isCredit,
@@ -38,6 +37,7 @@ import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBan
 import { HStack } from '@ui/Stack/Stack'
 import './bankTransactionRow.scss'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
+import { MoneySpan } from '@components/ui/Typography/MoneySpan'
 
 type Props = {
   index: number
@@ -234,10 +234,11 @@ export const BankTransactionRow = ({
           {...openRow}
           {...showReceiptDataProperties}
         >
-          <span className='Layer__table-cell-content'>
-            {isCredit(bankTransaction) ? '+$' : ' $'}
-            {formatMoney(bankTransaction.amount)}
-          </span>
+          <MoneySpan
+            amount={bankTransaction.amount}
+            displayPlusSign={isCredit(bankTransaction)}
+            className='Layer__table-cell-content'
+          />
         </td>
         <td
           className='Layer__table-cell Layer__bank-transactions__documents-col'
