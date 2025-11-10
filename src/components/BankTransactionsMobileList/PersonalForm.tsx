@@ -11,12 +11,9 @@ import { BankTransactionReceipts } from '@components/BankTransactionReceipts/Ban
 import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
 import classNames from 'classnames'
-import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
-
 interface PersonalFormProps {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
-  showDescriptions?: boolean
   showCategorization?: boolean
 }
 
@@ -39,7 +36,6 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 export const PersonalForm = ({
   bankTransaction,
   showReceiptUploads,
-  showDescriptions,
   showCategorization,
 }: PersonalFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
@@ -78,10 +74,6 @@ export const PersonalForm = ({
 
   return (
     <div className='Layer__bank-transaction-mobile-list-item__personal-form'>
-      <BankTransactionFormFields
-        bankTransaction={bankTransaction}
-        showDescriptions={showDescriptions}
-      />
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',

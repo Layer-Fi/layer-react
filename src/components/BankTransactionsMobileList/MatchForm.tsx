@@ -14,17 +14,14 @@ import { BankTransactionReceipts } from '@components/BankTransactionReceipts/Ban
 import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
 import classNames from 'classnames'
-import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 export const MatchForm = ({
   bankTransaction,
   showReceiptUploads,
-  showDescriptions,
   showCategorization,
 }: {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
-  showDescriptions?: boolean
   showCategorization?: boolean
 }) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
@@ -81,10 +78,6 @@ export const MatchForm = ({
           setFormError(undefined)
           setSelectedMatch(suggestedMatch)
         }}
-      />
-      <BankTransactionFormFields
-        bankTransaction={bankTransaction}
-        showDescriptions={showDescriptions}
       />
       <div
         className={classNames(
