@@ -1,7 +1,7 @@
 import { ErrorText } from '@components/Typography/ErrorText'
 import { FileInput } from '@components/Input/FileInput'
 import { Button } from '@components/Button/Button'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
@@ -36,6 +36,13 @@ export const MatchForm = ({
   const [selectedMatch, setSelectedMatch] = useState<SuggestedMatch | undefined>(
     getBankTransactionMatchAsSuggestedMatch(bankTransaction),
   )
+
+  useEffect(() => {
+    if (showCategorization && !selectedMatch && bankTransaction.suggested_matches?.[0]) {
+      setSelectedMatch(bankTransaction.suggested_matches[0])
+    }
+  }, [bankTransaction.suggested_matches, selectedMatch, showCategorization])
+
   const [formError, setFormError] = useState<string | undefined>()
 
   const showRetry = Boolean(bankTransaction.error)
