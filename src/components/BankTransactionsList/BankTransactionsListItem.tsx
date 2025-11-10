@@ -23,7 +23,6 @@ import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategoriz
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
 import { Span } from '@ui/Typography/Text'
-import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
