@@ -3,7 +3,7 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import FileIcon from '@icons/File'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { hasReceipts, isCredit } from '@utils/bankTransactions'
+import { hasReceipts } from '@utils/bankTransactions'
 import { TransactionToOpenContext } from '@components/BankTransactionsMobileList/TransactionToOpenContext'
 import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
@@ -12,8 +12,6 @@ import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
 import { Span } from '@ui/Typography/Text'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack, HStack } from '@ui/Stack/Stack'
-import { MoneySpan } from '@ui/Typography/MoneySpan'
-import { DateTime } from '@components/DateTime/DateTime'
 import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
 import { BankTransactionsMobileListItemCategory } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCategory'
 import { isCategorized } from '@components/BankTransactions/utils'
@@ -23,6 +21,7 @@ import { decodeMatchDetails, convertMatchDetailsToLinkingMetadata } from '@schem
 import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 import './bankTransactionsMobileListItem.scss'
+import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -43,8 +42,6 @@ export enum Purpose {
   personal = 'personal',
   more = 'more',
 }
-
-const DATE_FORMAT = 'LLL d'
 
 const getAssignedValue = (
   bankTransaction: BankTransaction,
@@ -255,29 +252,9 @@ export const BankTransactionsMobileListItem = ({
               </VStack>
             </HStack>
 
-            <VStack
-              align='end'
-              gap='3xs'
-              pb='sm'
-            >
-              <HStack>
-                <Span size='md'>
-                  {isCredit(bankTransaction) ? '+' : ''}
-                </Span>
-                <MoneySpan
-                  amount={bankTransaction.amount}
-                />
-              </HStack>
-
-              <DateTime
-                value={bankTransaction.date}
-                dateFormat={DATE_FORMAT}
-                onlyDate
-                slotProps={{
-                  Date: { size: 'sm', variant: 'subtle' },
-                }}
-              />
-            </VStack>
+            <BankTransactionsAmountDate
+              bankTransaction={bankTransaction}
+            />
           </HStack>
           {!open
             && (
