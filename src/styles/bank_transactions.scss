@@ -419,25 +419,6 @@
   }
 }
 
-.Layer__bank-transaction-row__table-cell--amount-credit,
-.Layer__bank-transaction-list-item__amount-credit {
-  justify-content: flex-end;
-  color: var(--text-color-transaction-credit);
-
-  .Layer__table-cell-content {
-    justify-content: flex-end;
-  }
-}
-
-.Layer__bank-transaction-row__table-cell--amount-debit,
-.Layer__bank-transaction-list-item__amount-debit {
-  justify-content: flex-end;
-
-  .Layer__table-cell-content {
-    justify-content: flex-end;
-  }
-}
-
 .Layer__expanded-bank-transaction-row__description {
   padding: 0 var(--spacing-md);
 

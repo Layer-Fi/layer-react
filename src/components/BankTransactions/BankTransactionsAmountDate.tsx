@@ -7,14 +7,13 @@ const DATE_FORMAT = 'LLL d'
 interface BankTransactionsAmountDateProps {
   amount: number
   date: string
-  plusSign?: boolean
   slotProps?: {
-    amount?: { size: 'sm' | 'md' }
-    date?: { size: 'xs' | 'sm' }
+    MoneySpan?: { size?: 'sm' | 'md', displayPlusSign?: boolean }
+    DateTime?: { size?: 'xs' | 'sm' }
   }
 }
 
-export const BankTransactionsAmountDate = ({ amount, date, plusSign, slotProps }: BankTransactionsAmountDateProps) => {
+export const BankTransactionsAmountDate = ({ amount, date, slotProps }: BankTransactionsAmountDateProps) => {
   return (
     <VStack
       align='end'
@@ -24,8 +23,7 @@ export const BankTransactionsAmountDate = ({ amount, date, plusSign, slotProps }
       <HStack>
         <MoneySpan
           amount={amount}
-          size={slotProps?.amount?.size}
-          displayPlusSign={plusSign}
+          {...slotProps?.MoneySpan}
         />
       </HStack>
 
@@ -34,7 +32,11 @@ export const BankTransactionsAmountDate = ({ amount, date, plusSign, slotProps }
         dateFormat={DATE_FORMAT}
         onlyDate
         slotProps={{
-          Date: { size: slotProps?.date?.size ?? 'sm', variant: 'subtle' },
+          Date: {
+            variant: 'subtle',
+            size: 'sm',
+            ...slotProps?.DateTime,
+          },
         }}
       />
     </VStack>

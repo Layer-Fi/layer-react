@@ -34,6 +34,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
+import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 
 type BankTransactionsListItemProps = {
   index: number
@@ -191,12 +192,13 @@ export const BankTransactionsListItem = ({
             {bankTransaction.counterparty_name ?? bankTransaction.description}
           </Span>
         </HStack>
-        <MoneySpan
-          className={`Layer__bank-transaction-list-item__amount-${
-            isCredit(bankTransaction) ? 'credit' : 'debit'
-          }`}
+        <BankTransactionsAmountDate
           amount={bankTransaction.amount}
-          displayPlusSign={isCredit(bankTransaction)}
+          date={bankTransaction.date}
+          slotProps={{
+            MoneySpan: { size: 'md', displayPlusSign: isCredit(bankTransaction) },
+            DateTime: { size: 'sm' },
+          }}
         />
       </HStack>
       {!categorizationEnabled && !categorized

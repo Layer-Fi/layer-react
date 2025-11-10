@@ -255,7 +255,12 @@ export const BankTransactionsMobileListItem = ({
             <BankTransactionsAmountDate
               amount={bankTransaction.amount}
               date={bankTransaction.date}
-              plusSign={isCredit(bankTransaction)}
+              slotProps={{
+                MoneySpan: {
+                  size: 'md',
+                  displayPlusSign: isCredit(bankTransaction),
+                },
+              }}
             />
           </HStack>
           {!open

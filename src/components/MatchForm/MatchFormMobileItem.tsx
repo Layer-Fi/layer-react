@@ -30,10 +30,9 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
         <BankTransactionsAmountDate
           amount={match.details.amount}
           date={match.details.date}
-          plusSign={isCredit(bankTransaction)}
           slotProps={{
-            amount: { size: 'sm' },
-            date: { size: 'xs' },
+            MoneySpan: { size: 'sm', displayPlusSign: isCredit(bankTransaction) },
+            DateTime: { size: 'xs' },
           }}
         />
         <HStack>
