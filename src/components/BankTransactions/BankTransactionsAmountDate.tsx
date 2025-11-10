@@ -9,9 +9,13 @@ const DATE_FORMAT = 'LLL d'
 
 interface BankTransactionsAmountDateProps {
   bankTransaction: BankTransaction
+  slotProps?: {
+    amount?: { size: 'sm' | 'md' }
+    date?: { size: 'xs' | 'sm' }
+  }
 }
 
-export const BankTransactionsAmountDate = ({ bankTransaction }: BankTransactionsAmountDateProps) => {
+export const BankTransactionsAmountDate = ({ bankTransaction, slotProps }: BankTransactionsAmountDateProps) => {
   return (
     <VStack
       align='end'
@@ -19,11 +23,12 @@ export const BankTransactionsAmountDate = ({ bankTransaction }: BankTransactions
       pb='sm'
     >
       <HStack>
-        <Span size='md'>
+        <Span {...slotProps?.amount}>
           {isCredit(bankTransaction) ? '+' : ''}
         </Span>
         <MoneySpan
           amount={bankTransaction.amount}
+          size={slotProps?.amount?.size}
         />
       </HStack>
 
@@ -32,7 +37,7 @@ export const BankTransactionsAmountDate = ({ bankTransaction }: BankTransactions
         dateFormat={DATE_FORMAT}
         onlyDate
         slotProps={{
-          Date: { size: 'sm', variant: 'subtle' },
+          Date: { size: slotProps?.date?.size ?? 'sm', variant: 'subtle' },
         }}
       />
     </VStack>

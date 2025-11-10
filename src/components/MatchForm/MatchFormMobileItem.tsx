@@ -18,17 +18,20 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
       key={match.id}
       textValue={match.details.description}
     >
-      <HStack gap='md' pi='md'>
+      <HStack gap='md' pis='md'>
         <Checkbox
           slot='selection'
           variant='round'
-          size='md'
         />
-        <Span pbs='sm'>
+        <Span pbs='sm' size='sm'>
           {match.details.description}
         </Span>
         <BankTransactionsAmountDate
           bankTransaction={bankTransaction}
+          slotProps={{
+            amount: { size: 'sm' },
+            date: { size: 'xs' },
+          }}
         />
         <HStack>
           {inAppLink}
