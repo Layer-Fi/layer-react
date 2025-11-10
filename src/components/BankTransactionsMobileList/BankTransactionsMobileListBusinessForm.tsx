@@ -16,7 +16,7 @@ import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption } from '@internal-types/categorizationOption'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { HStack } from '@components/ui/Stack/Stack'
+import { HStack, VStack } from '@components/ui/Stack/Stack'
 
 type DisplayOption = {
   label: string
@@ -27,7 +27,7 @@ type DisplayOption = {
   asLink?: boolean
 }
 
-interface BusinessFormProps {
+interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
   showCategorization?: boolean
   showDescriptions: boolean
@@ -35,13 +35,13 @@ interface BusinessFormProps {
   showTooltips: boolean
 }
 
-export const BusinessForm = ({
+export const BankTransactionsMobileListBusinessForm = ({
   bankTransaction,
   showCategorization,
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-}: BusinessFormProps) => {
+}: BankTransactionsMobileListBusinessFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const { categorize: categorizeBankTransaction, isLoading } =
@@ -134,17 +134,16 @@ export const BusinessForm = ({
 
   return (
     <>
-      <div className='Layer__bank-transaction-mobile-list-item__business-form'>
+      <VStack pi='lg' pbs='lg'>
         {showCategorization
-          ? (
+          && (
             <ActionableList<BankTransactionCategoryComboBoxOption | { type: 'SELECT_CATEGORY' }>
               options={options}
               onClick={onCategorySelect}
               selectedId={selectedCategory?.value}
               showDescriptions={showTooltips}
             />
-          )
-          : null}
+          )}
         <BankTransactionFormFields
           bankTransaction={bankTransaction}
           showDescriptions={showDescriptions}
@@ -176,7 +175,7 @@ export const BusinessForm = ({
             />
           )}
           {options.length === 0
-            ? (
+            && (
               <Button
                 onClick={() => { setIsDrawerOpen(true) }}
                 fullWidth={true}
@@ -184,10 +183,9 @@ export const BusinessForm = ({
               >
                 Select category
               </Button>
-            )
-            : null}
+            )}
           {showCategorization && options.length > 0
-            ? (
+            && (
               <Button
                 onClick={save}
                 disabled={
@@ -199,8 +197,7 @@ export const BusinessForm = ({
                   ? 'Confirming...'
                   : 'Confirm'}
               </Button>
-            )
-            : null}
+            )}
         </HStack>
         {bankTransaction.error && showRetry
           ? (
@@ -209,7 +206,7 @@ export const BusinessForm = ({
             </ErrorText>
           )
           : null}
-      </div>
+      </VStack>
       <CategorySelectDrawer
         onSelect={category => setTransactionCategory(bankTransaction.id, category)}
         selectedId={selectedCategory?.value}
@@ -218,5 +215,6 @@ export const BusinessForm = ({
         onOpenChange={setIsDrawerOpen}
       />
     </>
+
   )
 }
