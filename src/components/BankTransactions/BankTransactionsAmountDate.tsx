@@ -1,21 +1,21 @@
 import { HStack, VStack } from '@components/ui/Stack/Stack'
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
 import { Span } from '@components/ui/Typography/Text'
-import { BankTransaction } from '@internal-types/bank_transactions'
-import { isCredit } from '@utils/bankTransactions'
 import { DateTime } from '@components/DateTime/DateTime'
 
 const DATE_FORMAT = 'LLL d'
 
 interface BankTransactionsAmountDateProps {
-  bankTransaction: BankTransaction
+  amount: number
+  date: string
+  plusSign?: boolean
   slotProps?: {
     amount?: { size: 'sm' | 'md' }
     date?: { size: 'xs' | 'sm' }
   }
 }
 
-export const BankTransactionsAmountDate = ({ bankTransaction, slotProps }: BankTransactionsAmountDateProps) => {
+export const BankTransactionsAmountDate = ({ amount, date, plusSign, slotProps }: BankTransactionsAmountDateProps) => {
   return (
     <VStack
       align='end'
@@ -24,16 +24,16 @@ export const BankTransactionsAmountDate = ({ bankTransaction, slotProps }: BankT
     >
       <HStack>
         <Span {...slotProps?.amount}>
-          {isCredit(bankTransaction) ? '+' : ''}
+          {plusSign ? '+' : ''}
         </Span>
         <MoneySpan
-          amount={bankTransaction.amount}
+          amount={amount}
           size={slotProps?.amount?.size}
         />
       </HStack>
 
       <DateTime
-        value={bankTransaction.date}
+        value={date}
         dateFormat={DATE_FORMAT}
         onlyDate
         slotProps={{

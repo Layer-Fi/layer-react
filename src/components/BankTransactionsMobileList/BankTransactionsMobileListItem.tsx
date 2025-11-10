@@ -3,7 +3,7 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import FileIcon from '@icons/File'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { hasReceipts } from '@utils/bankTransactions'
+import { hasReceipts, isCredit } from '@utils/bankTransactions'
 import { TransactionToOpenContext } from '@components/BankTransactionsMobileList/TransactionToOpenContext'
 import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
@@ -253,7 +253,9 @@ export const BankTransactionsMobileListItem = ({
             </HStack>
 
             <BankTransactionsAmountDate
-              bankTransaction={bankTransaction}
+              amount={bankTransaction.amount}
+              date={bankTransaction.date}
+              plusSign={isCredit(bankTransaction)}
             />
           </HStack>
           {!open

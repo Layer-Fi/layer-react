@@ -4,6 +4,7 @@ import { GridListItem } from 'react-aria-components'
 import { Checkbox } from '@components/ui/Checkbox/Checkbox'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
+import { isCredit } from '@utils/bankTransactions'
 
 interface MatchFormMobileItemProps {
   match: SuggestedMatch
@@ -27,7 +28,9 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
           {match.details.description}
         </Span>
         <BankTransactionsAmountDate
-          bankTransaction={bankTransaction}
+          amount={match.details.amount}
+          date={match.details.date}
+          plusSign={isCredit(bankTransaction)}
           slotProps={{
             amount: { size: 'sm' },
             date: { size: 'xs' },
