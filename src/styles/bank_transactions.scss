@@ -1144,14 +1144,6 @@
   color: var(--color-base-500);
 }
 
-.Layer__bank-transaction-mobile-list-item__match-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin: var(--spacing-md) 0;
-}
-
 .Layer__bank-transaction-mobile-list-item__match-item {
   display: flex;
   gap: var(--spacing-sm);
@@ -1164,24 +1156,11 @@
     color: var(--color-base-500);
   }
 
-  .Layer__bank-transaction-mobile-list-item__match-item__col-details {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
   .Layer__bank-transaction-mobile-list-item__match-item__heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-  }
-
-  .Layer__bank-transaction-mobile-list-item__match-item__details {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    color: var(--color-base-500);
   }
 
   .Layer__bank-transaction-mobile-list-item__match-item__col-status {

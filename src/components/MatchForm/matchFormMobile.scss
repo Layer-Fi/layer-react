@@ -1,0 +1,9 @@
+.Layer__MatchFormMobile {
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  margin-block: var(--spacing-md);
+
+  [data-selected] {
+    background: var(--color-base-100);
+  }
+}
