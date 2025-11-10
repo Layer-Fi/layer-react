@@ -1,11 +1,11 @@
 import { ReceiptsProvider } from '@providers/ReceiptsProvider/ReceiptsProvider'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { Purpose } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
-import { BusinessForm } from '@components/BankTransactionsMobileList/BusinessForm'
-import { PersonalForm } from '@components/BankTransactionsMobileList/PersonalForm'
-import { SplitAndMatchForm } from '@components/BankTransactionsMobileList/SplitAndMatchForm'
+import { BankTransactionsMobileListBusinessForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListBusinessForm'
+import { BankTransactionsMobileListPersonalForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListPersonalForm'
+import { BankTransactionsMobileListSplitAndMatchForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListSplitAndMatchForm'
 
-interface BankTransactionMobileFormsProps {
+interface BankTransactionsMobileFormsProps {
   isOpen?: boolean
   purpose: Purpose
   bankTransaction: BankTransaction
@@ -16,7 +16,7 @@ interface BankTransactionMobileFormsProps {
   showTooltips: boolean
 }
 
-export const BankTransactionMobileForms = ({
+export const BankTransactionsMobileForms = ({
   purpose,
   bankTransaction,
   showTooltips,
@@ -24,12 +24,12 @@ export const BankTransactionMobileForms = ({
   showReceiptUploads,
   showDescriptions,
   isOpen,
-}: BankTransactionMobileFormsProps) => {
+}: BankTransactionsMobileFormsProps) => {
   const getContent = () => {
     switch (purpose) {
       case Purpose.business:
         return (
-          <BusinessForm
+          <BankTransactionsMobileListBusinessForm
             bankTransaction={bankTransaction}
             showCategorization={showCategorization}
             showTooltips={showTooltips}
@@ -39,7 +39,7 @@ export const BankTransactionMobileForms = ({
         )
       case Purpose.personal:
         return (
-          <PersonalForm
+          <BankTransactionsMobileListPersonalForm
             bankTransaction={bankTransaction}
             showReceiptUploads={showReceiptUploads}
             showDescriptions={showDescriptions}
@@ -48,7 +48,7 @@ export const BankTransactionMobileForms = ({
         )
       case Purpose.more:
         return (
-          <SplitAndMatchForm
+          <BankTransactionsMobileListSplitAndMatchForm
             bankTransaction={bankTransaction}
             showCategorization={showCategorization}
             showTooltips={showTooltips}

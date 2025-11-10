@@ -1,4 +1,4 @@
-import { BusinessCategories } from '@components/BankTransactionsMobileList/BusinessCategories'
+import { BankTransactionsMobileListBusinessCategories } from '@components/BankTransactionsMobileList/BankTransactionsMobileListBusinessCategories'
 import { Drawer } from '@ui/Modal/Modal'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
@@ -20,7 +20,7 @@ export const CategorySelectDrawer = ({
   return (
     <Drawer isOpen={isOpen} onOpenChange={onOpenChange} variant='mobile-drawer' isDismissable>
       {({ close }) => (
-        <BusinessCategories
+        <BankTransactionsMobileListBusinessCategories
           select={(option) => {
             onSelect(option)
             close()
