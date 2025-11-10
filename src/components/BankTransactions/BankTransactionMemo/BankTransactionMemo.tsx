@@ -11,7 +11,6 @@ export const BankTransactionMemo = ({ bankTransactionId }: { bankTransactionId: 
       <form.Field name='memo'>
         {field => (
           <InputGroup
-            className='Layer__bank-transaction-memo-input-group'
             name='memo'
             label='Description'
           >

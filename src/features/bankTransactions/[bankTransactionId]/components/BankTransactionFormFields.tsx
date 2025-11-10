@@ -90,7 +90,7 @@ export function BankTransactionFormFields({
   }
 
   return (
-    <VStack pi='md' pbe='lg' gap='md' className='Layer__bank-transaction-form-fields'>
+    <VStack pi='md' pbe='lg' gap='md'>
       {showCustomerVendor && !hideCustomerVendor
         ? <BankTransactionCustomerVendorSelector bankTransaction={bankTransaction} />
         : null}

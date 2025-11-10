@@ -47,7 +47,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
 
   return (
     <div className='Layer__bank-transaction-mobile-list-item__expanded-row'>
-      <VStack pb='md' justify='space-between' align='center'>
+      <VStack pb='md' justify='space-between'>
         {showCategorization
           ? (
             <HStack align='center' justify='space-between'>
