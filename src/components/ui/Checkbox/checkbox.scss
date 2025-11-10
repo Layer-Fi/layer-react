@@ -87,6 +87,25 @@
     }
   }
 
+  &[data-variant='round'] {
+    [slot='checkbox'] {
+      border-radius: 50%;
+      border: 0.5px solid var(--color-base-400);
+      background-color: white;
+    }
+  }
+
+  &[data-selected][data-variant='round'] {
+    [slot='checkbox'] {
+      border: 1px solid var(--color-info-success);
+      background-color: var(--color-info-success-bg);
+
+      svg {
+        color: var(--color-info-success);
+      }
+    }
+  }
+
   &[data-selected][data-readonly] {
     [slot='checkbox'] {
       border-color: var(--fg-subtle);
