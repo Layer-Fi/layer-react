@@ -1,6 +1,6 @@
 import { DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { format, subMonths, subYears } from 'date-fns'
-import { LineItem } from '@schemas/common/lineItem'
+import { type LineItemEncoded } from '@schemas/common/lineItem'
 
 export const generateComparisonPeriods = (
   startDate: Date, numberOfPeriods: number, rangeDisplayMode: DateRangePickerMode,
@@ -36,7 +36,7 @@ const generateComparisonYears = (
 export const getComparisonValue = (
   name: string,
   depth: number,
-  cellData: string | number | LineItem,
+  cellData: string | number | LineItemEncoded,
 ): string | number => {
   if (depth === 0) {
     if (typeof cellData === 'string' || typeof cellData === 'number') {
@@ -49,9 +49,9 @@ export const getComparisonValue = (
   else if (
     typeof cellData === 'object'
     && cellData !== null
-    && 'lineItems' in cellData
+    && 'line_items' in cellData
   ) {
-    for (const item of cellData.lineItems || []) {
+    for (const item of cellData.line_items || []) {
       const result = getComparisonLineItemValue(item, name, depth)
       if (result !== '') {
         return result
@@ -63,17 +63,17 @@ export const getComparisonValue = (
 }
 
 const getComparisonLineItemValue = (
-  lineItem: LineItem,
+  lineItem: LineItemEncoded,
   name: string,
   depth: number,
 ): string | number => {
   if (depth === 1) {
-    if (lineItem.displayName === name) {
+    if (lineItem.display_name === name) {
       return lineItem.value !== undefined ? lineItem.value : ''
     }
   }
-  else if (lineItem.lineItems && lineItem.lineItems.length > 0) {
-    for (const childLineItem of lineItem.lineItems) {
+  else if (lineItem.line_items && lineItem.line_items.length > 0) {
+    for (const childLineItem of lineItem.line_items) {
       const result = getComparisonLineItemValue(childLineItem, name, depth - 1)
       if (result !== '') {
         return result
@@ -85,27 +85,29 @@ const getComparisonLineItemValue = (
 }
 
 export const mergeComparisonLineItemsAtDepth = (
-  lineItems: LineItem[],
-): LineItem[] => {
-  const map = new Map<string, LineItem>()
+  lineItems: LineItemEncoded[],
+): LineItemEncoded[] => {
+  const map = new Map<string, LineItemEncoded>()
 
-  const mergeItems = (items: LineItem[]) => {
+  const mergeItems = (items: LineItemEncoded[]) => {
     items.forEach((item) => {
-      if (!map.has(item.displayName)) {
-        map.set(item.displayName, { ...item, lineItems: [] })
+      if (!map.has(item.display_name)) {
+        map.set(item.display_name, { ...item, line_items: [] })
       }
 
-      const existingItem = map.get(item.displayName)!
+      let existingItem = map.get(item.display_name)!
 
-      if (item.lineItems) {
-        existingItem.lineItems = mergeComparisonLineItemsAtDepth([
-          ...(existingItem.lineItems || []),
-          ...item.lineItems,
+      if (item.line_items) {
+        const existingItemChildren = mergeComparisonLineItemsAtDepth([
+          ...(existingItem.line_items || []),
+          ...item.line_items,
         ])
+
+        existingItem = { ...existingItem, line_items: existingItemChildren }
       }
 
       if (item.value !== undefined) {
-        map.set(item.displayName, { ...existingItem, value: item.value })
+        map.set(item.display_name, { ...existingItem, value: item.value })
       }
     })
   }
