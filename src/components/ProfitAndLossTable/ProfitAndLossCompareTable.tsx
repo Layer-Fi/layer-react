@@ -20,7 +20,7 @@ import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStat
 import { HStack } from '@ui/Stack/Stack'
 import { ReportKey, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
-import { LineItem } from '@schemas/common/lineItem'
+import { LineItemEncoded } from '@schemas/common/lineItem'
 
 interface ProfitAndLossCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
@@ -79,10 +79,10 @@ export const ProfitAndLossCompareTable = ({
     rowKey: string,
     depth: number,
     rowDisplayName: string,
-    lineItem?: LineItem,
-    data?: (string | number | LineItem)[],
+    lineItem?: LineItemEncoded,
+    data?: (string | number | LineItemEncoded)[],
   ): React.ReactNode => {
-    const rowData: (string | number | boolean | LineItem | null | undefined)[] =
+    const rowData: (string | number | boolean | LineItemEncoded | null | undefined)[] =
       data ? data : []
 
     if (!lineItem) {
@@ -100,14 +100,14 @@ export const ProfitAndLossCompareTable = ({
       }
 
       const mergedLineItems = mergeComparisonLineItemsAtDepth(
-        rowData as LineItem[],
+        rowData as LineItemEncoded[],
       )[0]
 
       lineItem = 'display_name' in mergedLineItems ? mergedLineItems : undefined
     }
 
     const expandable =
-      lineItem?.lineItems && lineItem.lineItems.length > 0 ? true : false
+      lineItem?.line_items && lineItem.line_items.length > 0 ? true : false
     const expanded = expandable ? isOpen(rowKey) : true
 
     return (
@@ -121,26 +121,26 @@ export const ProfitAndLossCompareTable = ({
           handleExpand={() => setIsOpen(rowKey)}
         >
           <TableCell primary withExpandIcon={expandable}>
-            {lineItem ? lineItem.displayName : rowDisplayName}
+            {lineItem ? lineItem.display_name : rowDisplayName}
           </TableCell>
           {rowData.map((cell, i) => (
             <TableCell key={'compare-value' + i} isCurrency>
               {getComparisonValue(
-                lineItem ? lineItem.displayName : rowDisplayName,
+                lineItem ? lineItem.display_name : rowDisplayName,
                 depth,
-                cell as string | number | LineItem,
+                cell as string | number | LineItemEncoded,
               )}
             </TableCell>
           ))}
         </TableRow>
-        {expanded && lineItem?.lineItems
-          ? lineItem.lineItems.map(child =>
+        {expanded && lineItem?.line_items
+          ? lineItem.line_items.map(child =>
             renderRow(
-              child.displayName,
+              child.display_name,
               depth + 1,
-              child.displayName,
+              child.display_name,
               child,
-              rowData as (string | number | LineItem)[],
+              rowData as (string | number | LineItemEncoded)[],
             ),
           )
           : null}
