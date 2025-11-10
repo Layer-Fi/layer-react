@@ -42,7 +42,7 @@ import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransa
 import { type Split } from '@internal-types/bank_transactions'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { getBankTransactionMatchAsSuggestedMatch } from '@utils/bankTransactions'
+import { getBankTransactionFirstSuggestedMatch, getBankTransactionMatchAsSuggestedMatch } from '@utils/bankTransactions'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { AmountInput } from '@components/Input/AmountInput'
@@ -128,8 +128,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           : Purpose.categorize,
     )
     const [selectedMatch, setSelectedMatch] = useState<SuggestedMatch | undefined>(
-      getBankTransactionMatchAsSuggestedMatch(bankTransaction)
-      ?? bankTransaction?.suggested_matches?.[0],
+      getBankTransactionFirstSuggestedMatch(bankTransaction),
     )
     const [matchFormError, setMatchFormError] = useState<string | undefined>()
     const bodyRef = useRef<HTMLSpanElement>(null)

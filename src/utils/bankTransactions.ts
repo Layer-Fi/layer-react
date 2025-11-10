@@ -72,3 +72,7 @@ export const getBankTransactionMatchAsSuggestedMatch = (bankTransaction?: BankTr
 
   return undefined
 }
+
+export const getBankTransactionFirstSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
+  return getBankTransactionMatchAsSuggestedMatch(bankTransaction) ?? bankTransaction?.suggested_matches?.[0]
+}

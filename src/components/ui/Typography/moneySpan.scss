@@ -21,4 +21,8 @@
   &[data-negative]::before {
     content: '-$';
   }
+
+  &[data-display-plus-sign]::before {
+    content: '+$';
+  }
 }
