@@ -1,4 +1,3 @@
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { FileInput } from '@components/Input/FileInput'
 import { Button } from '@components/Button/Button'
@@ -15,6 +14,8 @@ import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceip
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+import { Span } from '@components/ui/Typography/Text'
+import { VStack } from '@components/ui/Stack/Stack'
 
 export const MatchForm = ({
   bankTransaction,
@@ -68,10 +69,10 @@ export const MatchForm = ({
   }
 
   return (
-    <div>
-      <Text weight={TextWeight.bold} size={TextSize.sm}>
-        Find match
-      </Text>
+    <VStack pi='md'>
+      <Span size='sm' weight='bold'>
+        Find Match
+      </Span>
       <MatchFormMobile
         classNamePrefix='Layer__bank-transaction-mobile-list-item'
         readOnly={!showCategorization}
@@ -137,6 +138,6 @@ export const MatchForm = ({
           </ErrorText>
         )
         : null}
-    </div>
+    </VStack>
   )
 }
