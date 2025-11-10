@@ -81,7 +81,6 @@ export const MatchForm = ({
         Find Match
       </Span>
       <MatchFormMobile
-        classNamePrefix='Layer__bank-transaction-mobile-list-item'
         readOnly={!showCategorization}
         bankTransaction={bankTransaction}
         selectedMatchId={selectedMatch?.id}

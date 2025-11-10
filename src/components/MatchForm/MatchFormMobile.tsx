@@ -2,11 +2,19 @@ import {
   GridList,
 } from 'react-aria-components'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { MatchFormProps } from '@components/MatchForm/MatchForm'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { MatchFormMobileItem } from './MatchFormMobileItem'
 import './matchFormMobile.scss'
+import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
+
+export interface MatchFormMobileProps {
+  bankTransaction: BankTransaction
+  selectedMatchId?: string
+  setSelectedMatch: (val?: SuggestedMatch) => void
+  matchFormError?: string
+  readOnly?: boolean
+}
 
 export const MatchFormMobile = ({
   bankTransaction,
@@ -14,7 +22,7 @@ export const MatchFormMobile = ({
   setSelectedMatch,
   matchFormError,
   readOnly,
-}: MatchFormProps) => {
+}: MatchFormMobileProps) => {
   const { renderInAppLink } = useInAppLinkContext()
   const suggestedMatches = bankTransaction.suggested_matches
 
