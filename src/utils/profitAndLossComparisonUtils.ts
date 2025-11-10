@@ -89,29 +89,33 @@ export const mergeComparisonLineItemsAtDepth = (
 ): LineItemEncoded[] => {
   const map = new Map<string, LineItemEncoded>()
 
-  const mergeItems = (items: LineItemEncoded[]) => {
-    items.forEach((item) => {
-      if (!map.has(item.display_name)) {
-        map.set(item.display_name, { ...item, line_items: [] })
-      }
+  for (const item of lineItems) {
+    const key = item.display_name
 
-      let existingItem = map.get(item.display_name)!
+    // Initialize once per key; normalize children to [] for easier merging later
+    const existing =
+      map.get(key)
+      ?? { ...item, line_items: item.line_items ?? [] }
 
-      if (item.line_items) {
-        const existingItemChildren = mergeComparisonLineItemsAtDepth([
-          ...(existingItem.line_items || []),
-          ...item.line_items,
-        ])
+    let next = existing
 
-        existingItem = { ...existingItem, line_items: existingItemChildren }
-      }
+    // If this occurrence has children, merge them with any existing children
+    if (item.line_items && item.line_items.length > 0) {
+      const mergedChildren = mergeComparisonLineItemsAtDepth([
+        ...(existing.line_items ?? []),
+        ...item.line_items,
+      ])
+      next = { ...next, line_items: mergedChildren }
+    }
 
-      if (item.value !== undefined) {
-        map.set(item.display_name, { ...existingItem, value: item.value })
-      }
-    })
+    // If this occurrence specifies a value, override it
+    if (item.value !== undefined) {
+      next = { ...next, value: item.value }
+    }
+
+    // Write the updated object back into the map
+    map.set(key, next)
   }
 
-  mergeItems(lineItems)
   return Array.from(map.values())
 }
