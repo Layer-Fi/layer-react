@@ -1,0 +1,53 @@
+import { GridList } from 'react-aria-components'
+import { BusinessFormMobileItem, BusinessFormMobileItemOption } from './BusinessFormMobileItem'
+import { getOptionId } from './utils'
+import { VStack } from '@components/ui/Stack/Stack'
+import { Span } from '@components/ui/Typography/Text'
+import './businessFormMobile.scss'
+
+interface BusinessFormMobileProps {
+  options: BusinessFormMobileItemOption[]
+  selectedId?: string
+  showDescriptions?: boolean
+  onSelect: (option: BusinessFormMobileItemOption) => void
+  readOnly?: boolean
+}
+
+export const BusinessFormMobile = ({
+  options,
+  selectedId,
+  showDescriptions,
+  onSelect,
+  readOnly,
+}: BusinessFormMobileProps) => {
+  return (
+    <VStack gap='sm'>
+      <Span size='sm' weight='bold'>
+        Select Category
+      </Span>
+      <GridList
+        aria-label='Select a category'
+        selectionMode='single'
+        selectedKeys={selectedId ? new Set([selectedId]) : new Set()}
+        onSelectionChange={(keys) => {
+          if (readOnly) return
+
+          const selectedKey = [...keys][0]
+          const selectedOption = options.find(opt => getOptionId(opt.value) === selectedKey)
+          if (selectedOption) {
+            onSelect(selectedOption)
+          }
+        }}
+        className='Layer__BusinessFormMobile'
+      >
+        {options.map(option => (
+          <BusinessFormMobileItem
+            key={getOptionId(option.value)}
+            option={option}
+            showDescriptions={showDescriptions}
+          />
+        ))}
+      </GridList>
+    </VStack>
+  )
+}

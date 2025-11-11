@@ -36,20 +36,10 @@
     margin-top: 0;
     margin-bottom: 0;
 
-    .Layer__bank-transaction-mobile-list-item__expanded-row {
-      transition: all 380ms ease-out;
-      height: 0 !important;
-    }
-
     .Layer__bank-transaction-mobile-list-item__heading {
       transition: height 180ms ease-out;
       height: 0 !important;
     }
-  }
-
-  .Layer__bank-transaction-mobile-list-item__expanded-row {
-    overflow: hidden;
-    transition: all 180ms ease-out;
   }
 }
 

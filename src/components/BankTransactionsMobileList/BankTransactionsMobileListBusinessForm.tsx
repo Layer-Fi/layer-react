@@ -6,7 +6,7 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import PaperclipIcon from '@icons/Paperclip'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { hasReceipts } from '@utils/bankTransactions'
-import { ActionableList } from '@components/ActionableList/ActionableList'
+import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import classNames from 'classnames'
@@ -14,18 +14,12 @@ import { BankTransactionFormFields } from '@features/bankTransactions/[bankTrans
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption } from '@internal-types/categorizationOption'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { HStack, VStack } from '@components/ui/Stack/Stack'
+import { BusinessFormMobileItemOption } from '@components/BusinessForm/BusinessFormMobileItem'
+import { isSelectCategoryOption, getOptionId } from '@components/BusinessForm/utils'
 
-type DisplayOption = {
-  label: string
-  id: string
-  description?: string
-  value: BankTransactionCategoryComboBoxOption | { type: 'SELECT_CATEGORY' }
-  secondary?: boolean
-  asLink?: boolean
-}
+type DisplayOption = BusinessFormMobileItemOption
 
 interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
@@ -65,30 +59,22 @@ export const BankTransactionsMobileListBusinessForm = ({
         ? bankTransaction.categorization_flow.suggestions.map((x) => {
           const opt = new ApiCategorizationAsOption(x)
           return {
-            label: opt.label,
-            id: opt.value,
-            description: x.description ?? undefined,
             value: opt,
           }
         })
         : []
 
-    if (selectedCategory && !options.find(x => x.id === selectedCategory.value)) {
+    if (selectedCategory && !options.find(x => getOptionId(x.value) === selectedCategory.value)) {
       options.unshift({
-        label: selectedCategory.label,
-        id: selectedCategory.value,
         value: selectedCategory,
       })
     }
 
     if (options.length) {
       options.push({
-        label: 'See all categories',
-        id: 'SELECT_CATEGORY',
         value: {
           type: 'SELECT_CATEGORY',
         },
-        secondary: true,
         asLink: true,
       })
     }
@@ -97,7 +83,7 @@ export const BankTransactionsMobileListBusinessForm = ({
   }, [bankTransaction, selectedCategory])
 
   const onCategorySelect = (category: DisplayOption) => {
-    if ('type' in category.value && category.value.type === 'SELECT_CATEGORY') {
+    if (isSelectCategoryOption(category.value)) {
       setIsDrawerOpen(true)
     }
     else {
@@ -134,12 +120,12 @@ export const BankTransactionsMobileListBusinessForm = ({
 
   return (
     <>
-      <VStack pi='lg' pbs='lg'>
+      <VStack gap='sm'>
         {showCategorization
           && (
-            <ActionableList<BankTransactionCategoryComboBoxOption | { type: 'SELECT_CATEGORY' }>
+            <BusinessFormMobile
               options={options}
-              onClick={onCategorySelect}
+              onSelect={onCategorySelect}
               selectedId={selectedCategory?.value}
               showDescriptions={showTooltips}
             />

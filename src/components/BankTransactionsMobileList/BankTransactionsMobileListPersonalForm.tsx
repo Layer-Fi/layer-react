@@ -78,7 +78,7 @@ export const BankTransactionsMobileListPersonalForm = ({
   const alreadyAssigned = isAlreadyAssigned(bankTransaction)
 
   return (
-    <VStack pi='lg' pbs='lg'>
+    <VStack pbs='lg'>
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}

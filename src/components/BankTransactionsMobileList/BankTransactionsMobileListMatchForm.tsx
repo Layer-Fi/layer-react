@@ -72,7 +72,7 @@ export const BankTransactionsMobileListMatchForm = ({
   }
 
   return (
-    <VStack pi='lg' pbs='lg' gap='sm'>
+    <VStack pbs='lg' gap='sm'>
       <Span size='sm' weight='bold'>
         Find Match
       </Span>
