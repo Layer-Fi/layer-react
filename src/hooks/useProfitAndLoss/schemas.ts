@@ -182,7 +182,7 @@ export const ProfitAndLossReportSchema = Schema.Struct({
   taxes: LineItemSchema,
 
   customLineItems: pipe(
-    Schema.propertySignature(Schema.NullOr(LineItemSchema)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Array(LineItemSchema))),
     Schema.fromKey('custom_line_items'),
   ),
 
