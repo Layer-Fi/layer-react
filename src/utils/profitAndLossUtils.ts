@@ -1,3 +1,4 @@
+import { DetailedChartStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import type { ProfitAndLoss } from '@hooks/useProfitAndLoss/schemas'
 import { SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import type { LineItem } from '@schemas/common/lineItem'
@@ -46,12 +47,12 @@ export const collectRevenueItems = (data: ProfitAndLoss): PnlChartLineItem[] => 
   return revenueItems
 }
 
-export const humanizeTitle = (sidebarView: SidebarScope) => {
+export const humanizeTitle = (sidebarView: SidebarScope, overrides: DetailedChartStringOverrides | undefined) => {
   switch (sidebarView) {
     case 'expenses':
-      return 'Expenses'
+      return overrides?.expenseChartHeader || 'Expenses'
     case 'revenue':
-      return 'Revenue'
+      return overrides?.revenueChartHeader || 'Revenue'
     default:
       return 'Profit & Loss'
   }

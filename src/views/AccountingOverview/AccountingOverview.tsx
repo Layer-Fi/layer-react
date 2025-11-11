@@ -19,6 +19,7 @@ import classNames from 'classnames'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 interface AccountingOverviewStringOverrides {
+  title?: string
   header?: string
   profitAndLoss?: {
     detailedCharts?: ProfitAndLossDetailedChartsStringOverrides
@@ -27,6 +28,9 @@ interface AccountingOverviewStringOverrides {
 }
 
 export interface AccountingOverviewProps {
+  /**
+   * @deprecated Use `stringOverrides.title` instead
+   */
   title?: string
   showTitle?: boolean
   enableOnboarding?: boolean
@@ -74,7 +78,7 @@ export const AccountingOverview = ({
       }
     >
       <View
-        title={title}
+        title={stringOverrides?.title || title}
         showHeader={showTitle}
         header={(
           <Header>

@@ -16,7 +16,13 @@ import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAnd
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
+export interface DetailedChartStringOverrides {
+  expenseChartHeader?: string
+  revenueChartHeader?: string
+}
+
 export interface ProfitAndLossDetailedChartsStringOverrides {
+  detailedChartStringOverrides?: DetailedChartStringOverrides
   detailedTableStringOverrides?: DetailedTableStringOverrides
   detailReportStringOverrides?: ProfitAndLossDetailReportProps['stringOverrides']
 }
@@ -71,7 +77,7 @@ export const ProfitAndLossDetailedCharts = ({
       <header className='Layer__profit-and-loss-detailed-charts__header'>
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(theScope)}
+            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides)}
           </Text>
           <Text size={TextSize.sm} className='date'>
             {format(dateRange.startDate, 'LLLL, y')}
@@ -94,7 +100,7 @@ export const ProfitAndLossDetailedCharts = ({
         )}
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(theScope)}
+            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides)}
           </Text>
           <Text size={TextSize.sm} className='date'>
             {format(dateRange.startDate, 'LLLL, y')}
