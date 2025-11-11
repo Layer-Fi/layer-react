@@ -93,17 +93,6 @@
   }
 }
 
-.Layer__bank-transaction-mobile-list-item__switch-form-btns {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-sm) 0;
-
-  & > .Layer__text-btn {
-    color: var(--color-base-1000);
-  }
-}
-
 .Layer__bank-transaction-mobile-list-item__categories_list-container {
   height: 100%;
   padding-inline: var(--spacing-sm);
