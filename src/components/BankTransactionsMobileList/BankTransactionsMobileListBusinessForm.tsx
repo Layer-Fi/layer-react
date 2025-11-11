@@ -120,7 +120,7 @@ export const BankTransactionsMobileListBusinessForm = ({
 
   return (
     <>
-      <VStack gap='sm'>
+      <VStack pbs='lg' gap='sm'>
         {showCategorization
           && (
             <BusinessFormMobile

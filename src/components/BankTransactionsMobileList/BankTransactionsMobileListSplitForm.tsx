@@ -1,8 +1,7 @@
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { FileInput } from '@components/Input/FileInput'
-import { TextButton } from '@components/Button/TextButton'
-import { Button, ButtonVariant } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
@@ -19,7 +18,8 @@ import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { AmountInput } from '@components/Input/AmountInput'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { HStack } from '@components/ui/Stack/Stack'
+import { HStack, VStack } from '@components/ui/Stack/Stack'
+import Scissors from '@icons/Scissors'
 
 interface BankTransactionsMobileListSplitFormProps {
   bankTransaction: BankTransaction
@@ -63,6 +63,14 @@ export const BankTransactionsMobileListSplitForm = ({
     selectedCategory,
   })
 
+  const effectiveSplits = showCategorization
+    ? localSplits
+    : []
+
+  const addSplitButtonText = effectiveSplits.length > 1
+    ? 'Add new split'
+    : 'Split'
+
   useEffect(() => {
     if (bankTransaction.error) {
       setShowRetry(true)
@@ -85,17 +93,13 @@ export const BankTransactionsMobileListSplitForm = ({
   }
 
   return (
-    <div>
+    <VStack pbs='lg' gap='sm'>
       {showCategorization
-        ? (
-          <>
+        && (
+          <VStack gap='sm'>
             <Text weight={TextWeight.bold} size={TextSize.sm}>
               Split transaction
             </Text>
-            <div className='Layer__bank-transactions__table-cell__header'>
-              <Text size={TextSize.sm}>Category</Text>
-              <Text size={TextSize.sm}>Amount</Text>
-            </div>
             <div className='Layer__bank-transactions__splits-inputs'>
               {localSplits.map((split, index) => (
                 <div
@@ -117,29 +121,27 @@ export const BankTransactionsMobileListSplitForm = ({
                     onBlur={onBlurSplitAmount}
                     isInvalid={split.amount < 0}
                   />
-                  {index > 0 && (
-                    <Button
-                      className='Layer__bank-transactions__table-cell--split-entry__merge-btn'
-                      onClick={() => removeSplit(index)}
-                      rightIcon={<Trash size={16} />}
-                      variant={ButtonVariant.secondary}
-                      iconOnly={true}
-                    />
-                  )}
+                  <Button
+                    onClick={() => removeSplit(index)}
+                    variant='outlined'
+                    icon
+                    isDisabled={index == 0}
+                  >
+                    <Trash size={16} />
+                  </Button>
                 </div>
               ))}
-              <TextButton
+              <Button
                 onClick={addSplit}
-                disabled={isLoading}
-                className='Layer__add-new-split'
+                variant='outlined'
               >
-                Add new split
-              </TextButton>
+                <Scissors size={14} />
+                {addSplitButtonText}
+              </Button>
             </div>
             {splitFormError && <HStack pbe='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
-          </>
-        )
-        : null}
+          </VStack>
+        )}
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
@@ -174,11 +176,14 @@ export const BankTransactionsMobileListSplitForm = ({
         )}
         {showCategorization && (
           <Button
-            fullWidth={true}
-            onClick={() => void save()}
-            disabled={isLoading || bankTransaction.processing}
+            fullWidth
+            onClick={() => {
+              if (!bankTransaction.processing) {
+                void save()
+              }
+            }}
           >
-            {isLoading || bankTransaction.processing ? 'Confirming...' : 'Confirm'}
+            {bankTransaction.processing || isLoading ? 'Confirming...' : 'Confirm'}
           </Button>
         )}
       </HStack>
@@ -189,6 +194,6 @@ export const BankTransactionsMobileListSplitForm = ({
           </ErrorText>
         )
         : null}
-    </div>
+    </VStack>
   )
 }
