@@ -216,13 +216,15 @@ export const ProfitAndLossTableComponent = ({
             rowIndex: 8,
           })}
         {data.customLineItems
-          && renderLineItem({
-            lineItem: data.customLineItems,
-            depth: 0,
-            rowKey: 'other_activity',
-            rowIndex: 9,
-            showValue: false,
-          })}
+          && data.customLineItems.map((customLineItem, index) =>
+            renderLineItem({
+              lineItem: customLineItem,
+              depth: 0,
+              rowKey: `custom_line_item_${index}`,
+              rowIndex: 9 + index,
+              showValue: false,
+            }),
+          )}
       </TableBody>
     </Table>
   )
