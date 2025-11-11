@@ -11,7 +11,6 @@ import { useState, createContext, type PropsWithChildren, useContext, useMemo } 
 import { createStore, useStore } from 'zustand'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
-import type { UnifiedPickerMode } from '@components/DeprecatedDatePicker/ModeSelector/DeprecatedDatePickerModeSelector'
 
 const _DATE_PICKER_MODES = [
   'dayPicker',
@@ -25,6 +24,8 @@ const _RANGE_PICKER_MODES = [
   'yearPicker',
 ] as const
 export type DateRangePickerMode = typeof _RANGE_PICKER_MODES[number]
+
+type UnifiedPickerMode = DatePickerMode | DateRangePickerMode
 
 export const isDateRangePickerMode = (mode: string): mode is DateRangePickerMode => {
   return _RANGE_PICKER_MODES.includes(mode as DateRangePickerMode)

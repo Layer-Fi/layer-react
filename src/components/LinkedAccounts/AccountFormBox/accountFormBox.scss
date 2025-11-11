@@ -70,17 +70,6 @@
     .Layer__input {
       width: 100%;
     }
-
-    .Layer__datepicker {
-      width: 100%;
-    }
-
-    .react-datepicker__input-container {
-      input {
-        width: calc(100% - 2px);
-        max-width: unset;
-      }
-    }
   }
 
   @container (max-width: 440px) {
