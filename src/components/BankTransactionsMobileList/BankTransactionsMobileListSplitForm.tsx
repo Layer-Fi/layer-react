@@ -187,7 +187,7 @@ export const BankTransactionsMobileListSplitForm = ({
                 void save()
               }
             }}
-            isDisabled={isLoading || bankTransaction.processing}
+            isDisabled={isLoading || bankTransaction.processing || !isValid}
           >
             {bankTransaction.processing || isLoading ? 'Confirming...' : 'Confirm'}
           </Button>
