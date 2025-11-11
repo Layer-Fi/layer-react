@@ -120,7 +120,7 @@ export const BankTransactionsMobileListBusinessForm = ({
 
   return (
     <>
-      <VStack pbs='lg' gap='sm'>
+      <VStack gap='sm'>
         {showCategorization
           && (
             <BusinessFormMobile
@@ -153,7 +153,7 @@ export const BankTransactionsMobileListBusinessForm = ({
             />
           )}
         </div>
-        <HStack pi='3xl' gap='md'>
+        <HStack gap='md'>
           {showReceiptUploads && (
             <FileInput
               onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}

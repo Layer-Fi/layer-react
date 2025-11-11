@@ -97,7 +97,7 @@ export const BankTransactionsMobileListMatchForm = ({
           label='Receipts'
         />
       )}
-      <HStack pi='3xl' gap='md'>
+      <HStack gap='md'>
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}

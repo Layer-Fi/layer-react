@@ -78,7 +78,7 @@ export const BankTransactionsMobileListPersonalForm = ({
   const alreadyAssigned = isAlreadyAssigned(bankTransaction)
 
   return (
-    <VStack pbs='lg'>
+    <VStack pbs='lg' gap='sm'>
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
@@ -102,7 +102,7 @@ export const BankTransactionsMobileListPersonalForm = ({
           />
         )}
       </div>
-      <HStack pi='3xl' gap='md'>
+      <HStack gap='md'>
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
