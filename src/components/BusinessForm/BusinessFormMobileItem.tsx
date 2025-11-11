@@ -15,7 +15,6 @@ export interface BusinessFormMobileItemOption {
 
 interface BusinessFormMobileItemProps {
   option: BusinessFormMobileItemOption
-  showDescriptions?: boolean
 }
 
 export const BusinessFormMobileItem = ({
