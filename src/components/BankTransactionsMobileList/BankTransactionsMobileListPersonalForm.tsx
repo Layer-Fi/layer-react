@@ -1,6 +1,6 @@
 import { ErrorText } from '@components/Typography/ErrorText'
 import { FileInput } from '@components/Input/FileInput'
-import { Button } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
@@ -112,20 +112,23 @@ export const BankTransactionsMobileListPersonalForm = ({
           />
         )}
         {showCategorization
-          ? (
+          && (
             <Button
               fullWidth
-              disabled={alreadyAssigned || isLoading || bankTransaction.processing}
-              onClick={save}
+              onClick={() => {
+                if (!bankTransaction.processing) {
+                  void save()
+                }
+              }}
+              isDisabled={alreadyAssigned || isLoading || bankTransaction.processing}
             >
-              {isLoading || bankTransaction.processing
+              {bankTransaction.processing || isLoading
                 ? 'Confirming...'
                 : alreadyAssigned
                   ? 'Confirmed'
                   : 'Mark as Personal'}
             </Button>
-          )
-          : null}
+          )}
       </HStack>
       {bankTransaction.error && showRetry
         ? (

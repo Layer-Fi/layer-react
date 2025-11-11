@@ -1,6 +1,6 @@
 import { ErrorText } from '@components/Typography/ErrorText'
 import { FileInput } from '@components/Input/FileInput'
-import { Button, ButtonVariant } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
@@ -166,8 +166,9 @@ export const BankTransactionsMobileListBusinessForm = ({
             && (
               <Button
                 onClick={() => { setIsDrawerOpen(true) }}
-                fullWidth={true}
-                variant={ButtonVariant.secondary}
+                isDisabled={!selectedCategory || isLoading || bankTransaction.processing}
+                fullWidth
+                variant='outlined'
               >
                 Select category
               </Button>
@@ -175,13 +176,14 @@ export const BankTransactionsMobileListBusinessForm = ({
           {showCategorization && options.length > 0
             && (
               <Button
-                onClick={save}
-                disabled={
-                  !selectedCategory || isLoading || bankTransaction.processing
-                }
-                fullWidth={true}
+                onClick={() => {
+                  if (!bankTransaction.processing) {
+                    void save()
+                  }
+                }}
+                fullWidth
               >
-                {isLoading || bankTransaction.processing
+                {bankTransaction.processing || isLoading
                   ? 'Confirming...'
                   : 'Confirm'}
               </Button>

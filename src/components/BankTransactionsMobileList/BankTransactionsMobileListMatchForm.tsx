@@ -1,6 +1,6 @@
 import { ErrorText } from '@components/Typography/ErrorText'
 import { FileInput } from '@components/Input/FileInput'
-import { Button } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
 import { useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
@@ -119,8 +119,8 @@ export const BankTransactionsMobileListMatchForm = ({
         )}
         {showCategorization && (
           <Button
-            fullWidth={true}
-            disabled={
+            fullWidth
+            isDisabled={
               !selectedMatch
               || isLoading
               || bankTransaction.processing

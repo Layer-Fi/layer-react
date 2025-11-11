@@ -182,18 +182,18 @@ export const BankTransactionsMobileListSplitForm = ({
                 void save()
               }
             }}
+            isDisabled={isLoading || bankTransaction.processing}
           >
             {bankTransaction.processing || isLoading ? 'Confirming...' : 'Confirm'}
           </Button>
         )}
       </HStack>
-      {bankTransaction.error && showRetry
-        ? (
+      {(bankTransaction.error && showRetry)
+        && (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.
           </ErrorText>
-        )
-        : null}
+        )}
     </VStack>
   )
 }
