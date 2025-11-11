@@ -52,7 +52,7 @@ export interface AccountingOverviewProps {
 type PnlToggleOption = 'revenue' | 'expenses'
 
 export const AccountingOverview = ({
-  title = 'Accounting Overview',
+  title = 'Accounting overview',
   showTitle = true,
   enableOnboarding = false,
   onboardingStepOverride = undefined,
