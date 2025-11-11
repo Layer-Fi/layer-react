@@ -28,6 +28,9 @@ interface AccountingOverviewStringOverrides {
 }
 
 export interface AccountingOverviewProps {
+  /**
+   * @deprecated Use `stringOverrides.title` instead
+   */
   title?: string
   showTitle?: boolean
   enableOnboarding?: boolean
@@ -49,6 +52,7 @@ export interface AccountingOverviewProps {
 type PnlToggleOption = 'revenue' | 'expenses'
 
 export const AccountingOverview = ({
+  title = 'Accounting Overview',
   showTitle = true,
   enableOnboarding = false,
   onboardingStepOverride = undefined,
@@ -56,7 +60,6 @@ export const AccountingOverview = ({
   middleBanner,
   chartColorsList,
   stringOverrides,
-  title = stringOverrides?.title || 'Accounting overview',
   tagFilter = undefined,
   slotProps,
 }: AccountingOverviewProps) => {
@@ -75,7 +78,7 @@ export const AccountingOverview = ({
       }
     >
       <View
-        title={title}
+        title={stringOverrides?.title || title}
         showHeader={showTitle}
         header={(
           <Header>
