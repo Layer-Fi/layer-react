@@ -15,7 +15,7 @@ import { View as ViewType } from '@internal-types/general'
 import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
 import { ProfitAndLossCompareConfig } from '@internal-types/profit_and_loss'
 import { ReportKey, ReportsModeStoreProvider, type ReportModes } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import { getInitialDateRangePickerMode } from '@providers/GlobalDateStore/utils'
+import { getInitialDateRangePickerMode } from '@providers/GlobalDateStore/datePickerUtils'
 import { ProfitAndLossReport as EmbeddedProfitAndLossReport } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { LinkingMetadata } from '@contexts/InAppLinkContext'
 
