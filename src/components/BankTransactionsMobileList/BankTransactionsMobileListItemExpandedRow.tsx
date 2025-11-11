@@ -46,7 +46,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
     setPurpose(event.target.value as Purpose)
 
   return (
-    <VStack pi='lg' pbs='lg' pb='md'>
+    <VStack pi='md' gap='md' pbe='md'>
       {showCategorization
         && (
           <Toggle

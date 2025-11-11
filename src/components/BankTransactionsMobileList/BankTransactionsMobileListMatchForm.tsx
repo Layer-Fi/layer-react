@@ -6,14 +6,12 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import PaperclipIcon from '@icons/Paperclip'
 import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
 import {
-  hasReceipts,
   getBankTransactionFirstSuggestedMatch,
   getBankTransactionMatchAsSuggestedMatch,
 } from '@utils/bankTransactions'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
-import classNames from 'classnames'
 import { Span } from '@components/ui/Typography/Text'
 import { VStack, HStack } from '@components/ui/Stack/Stack'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
@@ -72,7 +70,7 @@ export const BankTransactionsMobileListMatchForm = ({
   }
 
   return (
-    <VStack pbs='lg' gap='sm'>
+    <VStack gap='sm'>
       <Span size='sm' weight='bold'>
         Find Match
       </Span>
@@ -91,23 +89,14 @@ export const BankTransactionsMobileListMatchForm = ({
         hideCustomerVendor
         hideTags
       />
-      <div
-        className={classNames(
-          'Layer__bank-transaction-mobile-list-item__receipts',
-          hasReceipts(bankTransaction)
-            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
-            : undefined,
-        )}
-      >
-        {showReceiptUploads && (
-          <BankTransactionReceipts
-            ref={receiptsRef}
-            floatingActions={false}
-            hideUploadButtons={true}
-            label='Receipts'
-          />
-        )}
-      </div>
+      {showReceiptUploads && (
+        <BankTransactionReceipts
+          ref={receiptsRef}
+          floatingActions={false}
+          hideUploadButtons={true}
+          label='Receipts'
+        />
+      )}
       <HStack pi='3xl' gap='md'>
         {showReceiptUploads && (
           <FileInput
@@ -136,12 +125,11 @@ export const BankTransactionsMobileListMatchForm = ({
       </HStack>
       {formError && <ErrorText>{formError}</ErrorText>}
       {showRetry
-        ? (
+        && (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.
           </ErrorText>
-        )
-        : null}
+        )}
     </VStack>
   )
 }

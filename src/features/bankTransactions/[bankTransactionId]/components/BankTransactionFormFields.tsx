@@ -91,28 +91,25 @@ export function BankTransactionFormFields({
   }
 
   return (
-    <VStack pbe='md' gap='md'>
+    <VStack gap='md'>
       {showCustomerVendor && !hideCustomerVendor
-        ? <BankTransactionCustomerVendorSelector bankTransaction={bankTransaction} />
-        : null}
+        && <BankTransactionCustomerVendorSelector bankTransaction={bankTransaction} />}
       {showTags && !hideTags
-        ? (
+        && (
           <TagDimensionsGroup
             value={selectedTags}
             onChange={handleTagsChange}
             showLabels={true}
             isReadOnly={isReadOnly}
           />
-        )
-        : null}
+        )}
       {showDescriptions
-        ? (
+        && (
           <VStack gap='sm'>
             <Span size='sm' weight='bold'>Description</Span>
             <BankTransactionMemo bankTransactionId={bankTransaction.id} />
           </VStack>
-        )
-        : null}
+        )}
     </VStack>
   )
 }

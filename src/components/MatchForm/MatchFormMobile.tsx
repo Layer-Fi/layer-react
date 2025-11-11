@@ -55,9 +55,7 @@ export const MatchFormMobile = ({
           />
         )
       })}
-
       {matchFormError && <ErrorText>{matchFormError}</ErrorText>}
-
     </GridList>
   )
 }

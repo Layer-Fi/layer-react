@@ -2,7 +2,7 @@ import ChevronDown from '@icons/ChevronDown'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { useState } from 'react'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { Button, ButtonSize } from '@components/ui/Button/Button'
+import { Button } from '@components/ui/Button/Button'
 import { HStack, Spacer } from '@components/ui/Stack/Stack'
 import { Span } from '@components/ui/Typography/Text'
 
@@ -11,10 +11,9 @@ type Props = {
   onChange: (newValue: BankTransactionCategoryComboBoxOption | null) => void
   disabled?: boolean
   showTooltips: boolean
-  size?: ButtonSize
 }
 
-export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips, size }: Props) => {
+export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips }: Props) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   return (
@@ -22,7 +21,6 @@ export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips,
       <Button
         flex
         fullWidth
-        size={size}
         aria-label='Select category'
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
