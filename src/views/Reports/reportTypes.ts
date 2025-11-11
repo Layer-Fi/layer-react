@@ -1,6 +1,5 @@
-import type { CustomDateRange } from '@components/DeprecatedDatePicker/DeprecatedDatePickerOptions'
-import type { DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import type { MoneyFormat } from '@internal-types/general'
+import type { DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type TimeRangePickerConfig = {
   /**
@@ -21,7 +20,7 @@ export type TimeRangePickerConfig = {
   /**
    * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
    */
-  customDateRanges?: CustomDateRange[]
+  customDateRanges?: unknown
 
   dateSelectionMode?: 'month' | 'full'
 
