@@ -103,7 +103,7 @@
     "pluralize": "^8.0.0",
     "react-aria-components": "^1.8.0",
     "react-calendly": "^4.4.0",
-    "react-currency-input-field": "^3.10.0",
+    "react-currency-input-field": "^4.0.3",
     "react-dropzone": "^14.3.8",
     "react-merge-refs": "^3.0.2",
     "react-plaid-link": "^4.0.1",
