@@ -19,6 +19,7 @@ import classNames from 'classnames'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 interface AccountingOverviewStringOverrides {
+  title?: string
   header?: string
   profitAndLoss?: {
     detailedCharts?: ProfitAndLossDetailedChartsStringOverrides
@@ -48,7 +49,6 @@ export interface AccountingOverviewProps {
 type PnlToggleOption = 'revenue' | 'expenses'
 
 export const AccountingOverview = ({
-  title = 'Accounting overview',
   showTitle = true,
   enableOnboarding = false,
   onboardingStepOverride = undefined,
@@ -56,6 +56,7 @@ export const AccountingOverview = ({
   middleBanner,
   chartColorsList,
   stringOverrides,
+  title = stringOverrides?.title || 'Accounting overview',
   tagFilter = undefined,
   slotProps,
 }: AccountingOverviewProps) => {
