@@ -121,9 +121,9 @@ function preparePeriodsBodyForDateRange(dateRange: DateRange) {
 export function preparePeriodsBody(
   dateRange: DateRange,
   comparePeriods: number,
-  comparsionPeriodMode: DateGroupBy | null,
+  comparisonPeriodMode: DateGroupBy | null,
 ) {
-  switch (comparsionPeriodMode) {
+  switch (comparisonPeriodMode) {
     case DateGroupBy.Year:
       return preparePeriodsBodyForYears(dateRange, comparePeriods)
     case DateGroupBy.Month:
