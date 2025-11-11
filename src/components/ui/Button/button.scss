@@ -149,6 +149,10 @@
   &[data-full-width] {
     inline-size: 100%;
   }
+
+  &[data-flex] {
+    display: flex;
+  }
 }
 
 .Layer__ButtonTransparentContent {

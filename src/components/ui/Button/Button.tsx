@@ -43,6 +43,7 @@ const Button = forwardRef<
     variant?: ButtonVariant
     fullWidth?: boolean
     isDisabled?: boolean
+    flex?: boolean
   }
 >((
   {
@@ -54,6 +55,7 @@ const Button = forwardRef<
     variant = 'solid',
     fullWidth = false,
     isDisabled = false,
+    flex = false,
     ...restProps
   },
   ref,
@@ -66,6 +68,7 @@ const Button = forwardRef<
     size,
     variant,
     'full-width': fullWidth,
+    flex,
   })
 
   return (
