@@ -1,12 +1,12 @@
 import { ReactNode, useState } from 'react'
-import { BalanceSheet as EmbeddedBalanceSheet } from '@components/BalanceSheet/BalanceSheet'
+import { BalanceSheet } from '@components/BalanceSheet/BalanceSheet'
 import { BalanceSheetStringOverrides } from '@components/BalanceSheet/BalanceSheet'
 import { Container } from '@components/Container/Container'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
 import { ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
-import { StatementOfCashFlow as EmbeddedStatementOfCashFlow } from '@components/StatementOfCashFlow/StatementOfCashFlow'
+import { StatementOfCashFlow } from '@components/StatementOfCashFlow/StatementOfCashFlow'
 import { StatementOfCashFlowStringOverrides } from '@components/StatementOfCashFlow/StatementOfCashFlow'
 import { Toggle } from '@components/Toggle/Toggle'
 import { View } from '@components/View/View'
@@ -14,9 +14,7 @@ import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize
 import { View as ViewType } from '@internal-types/general'
 import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
 import { ProfitAndLossCompareConfig } from '@internal-types/profit_and_loss'
-import { ReportKey, ReportsModeStoreProvider, type ReportModes } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import { getInitialDateRangePickerMode } from '@providers/GlobalDateStore/datePickerUtils'
-import { ProfitAndLossReport as EmbeddedProfitAndLossReport } from '@components/ProfitAndLossReport/ProfitAndLossReport'
+import { ProfitAndLossReport } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { LinkingMetadata } from '@contexts/InAppLinkContext'
 
 type ViewBreakpoint = ViewType | undefined
@@ -96,15 +94,6 @@ export const Reports = ({
       ? 'Reports'
       : options.find(option => (option.value === enabledReports[0]))?.label
 
-  const initialModeForProfitAndLoss = profitAndLossConfig ? getInitialDateRangePickerMode(profitAndLossConfig) : 'monthPicker'
-  const initialModeForStatementOfCashFlows = statementOfCashFlowConfig ? getInitialDateRangePickerMode(statementOfCashFlowConfig) : 'monthPicker'
-
-  const initialModes: ReportModes = {
-    [ReportKey.ProfitAndLoss]: initialModeForProfitAndLoss,
-    [ReportKey.BalanceSheet]: 'dayPicker',
-    [ReportKey.StatementOfCashFlows]: initialModeForStatementOfCashFlows,
-  }
-
   return (
     <View
       title={stringOverrides?.title || title || defaultTitle}
@@ -121,18 +110,16 @@ export const Reports = ({
         </div>
       )}
       <Container name='reports' ref={containerRef}>
-        <ReportsModeStoreProvider initialModes={initialModes} resetPnLModeToDefaultOnMount={false}>
-          <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig} withReportsModeProvider={false}>
-            <ReportsPanel
-              openReport={activeTab}
-              stringOverrides={stringOverrides}
-              profitAndLossConfig={profitAndLossConfig}
-              statementOfCashFlowConfig={statementOfCashFlowConfig}
-              view={view}
-              renderInAppLink={renderInAppLink}
-            />
-          </ProfitAndLoss>
-        </ReportsModeStoreProvider>
+        <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
+          <ReportsPanel
+            openReport={activeTab}
+            stringOverrides={stringOverrides}
+            profitAndLossConfig={profitAndLossConfig}
+            statementOfCashFlowConfig={statementOfCashFlowConfig}
+            view={view}
+            renderInAppLink={renderInAppLink}
+          />
+        </ProfitAndLoss>
       </Container>
     </View>
   )
@@ -149,7 +136,7 @@ const ReportsPanel = ({
   return (
     <>
       {openReport === 'profitAndLoss' && (
-        <EmbeddedProfitAndLossReport
+        <ProfitAndLossReport
           stringOverrides={stringOverrides}
           view={view}
           renderInAppLink={renderInAppLink}
@@ -157,10 +144,10 @@ const ReportsPanel = ({
         />
       )}
       {openReport === 'balanceSheet' && (
-        <EmbeddedBalanceSheet stringOverrides={stringOverrides?.balanceSheet} />
+        <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} />
       )}
       {openReport === 'statementOfCashFlow' && (
-        <EmbeddedStatementOfCashFlow
+        <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
           {...statementOfCashFlowConfig}
         />

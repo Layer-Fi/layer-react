@@ -6,21 +6,9 @@
   background-color: white;
 }
 
-.Layer__compare__options {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: center;
-  justify-content: flex-start;
-
-  .Layer__input-tooltip {
+.Layer__ProfitAndLoss__TagMultiSelect {
+  :is(.Layer__input-tooltip:has(&)) {
     flex: 1;
-  }
-
-  .Layer__compare__switch__options {
-    display: flex;
-    gap: var(--spacing-md);
-    align-items: center;
-    justify-content: center;
   }
 }
 
@@ -482,19 +470,17 @@
   color: var(--text-color-secondary);
 }
 
-.Layer__compare__controls__wrapper {
-  display: flex;
-  flex-grow: 1;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-  align-items: center;
-  justify-content: space-between;
-}
-
 .Layer__compare__table__wrapper {
   .Layer__table__wrapper {
     overflow: auto;
     max-width: 100%;
+  }
+
+  .Layer__profit-and-loss-compare-table__sticky-cell {
+    position: sticky;
+    z-index: 1;
+    left: 0;
+    background-color: inherit;
   }
 
   .Layer__table tr td:last-child .Layer__table-cell-content,

@@ -6,10 +6,8 @@ export const ProfitAndLossComparisonContext = createContext<ReturnType<typeof us
   data: undefined,
   isLoading: true,
   isValidating: false,
-  isPeriodsSelectEnabled: true,
   compareModeActive: false,
   comparePeriods: 0,
-  setComparePeriods: () => {},
   compareOptions: [],
   selectedCompareOptions: [],
   setSelectedCompareOptions: function (): void {
@@ -22,4 +20,6 @@ export const ProfitAndLossComparisonContext = createContext<ReturnType<typeof us
     throw new Error('Function not implemented.')
   },
   comparisonConfig: undefined,
+  comparisonPeriodMode: null,
+  setComparisonPeriodMode: () => {},
 })

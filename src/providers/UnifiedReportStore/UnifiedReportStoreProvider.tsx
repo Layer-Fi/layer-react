@@ -40,7 +40,7 @@ export function useUnifiedReportDateVariant(): UnifiedReportDateVariant {
 export function useUnifiedReportWithDateParams(): UnifiedReportWithDateParams {
   const store = useContext(UnifiedReportStoreContext)
   const { date: effectiveDate } = useGlobalDate()
-  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'dayRangePicker' })
+  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'full' })
 
   const report = useStore(store, state => state.report)
   const dateVariant = reportToDateVariantMap[report]

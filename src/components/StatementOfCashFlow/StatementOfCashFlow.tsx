@@ -12,8 +12,6 @@ import { CashflowStatementDownloadButton } from '@components/StatementOfCashFlow
 import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useStatementOfCashFlow } from '@hooks/useStatementOfCashFlow/useStatementOfCashFlow'
-import { ReportKey, ReportsModeStoreProvider, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import { getInitialDateRangePickerMode } from '@providers/GlobalDateStore/datePickerUtils'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
@@ -24,16 +22,6 @@ export interface StatementOfCashFlowStringOverrides {
 
 export type StatementOfCashFlowProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
-}
-
-export const StandaloneStatementOfCashFlow = (props: StatementOfCashFlowProps) => {
-  const initialModeForStatementOfCashFlows = getInitialDateRangePickerMode(props)
-
-  return (
-    <ReportsModeStoreProvider initialModes={{ StatementOfCashFlows: initialModeForStatementOfCashFlows }}>
-      <StatementOfCashFlow {...props} />
-    </ReportsModeStoreProvider>
-  )
 }
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
@@ -50,8 +38,7 @@ const StatementOfCashFlowView = ({
   stringOverrides,
   dateSelectionMode = 'full',
 }: StatementOfCashFlowViewProps) => {
-  const displayMode = useReportModeWithFallback(ReportKey.StatementOfCashFlows, 'monthPicker')
-  const dateRange = useGlobalDateRange({ displayMode })
+  const dateRange = useGlobalDateRange({ displayMode: dateSelectionMode })
   const { data, isLoading } = useStatementOfCashFlow(dateRange)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 

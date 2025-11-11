@@ -1,36 +1,49 @@
-import { DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { format, subMonths, subYears } from 'date-fns'
 import { type LineItemEncoded } from '@schemas/common/lineItem'
+import { DateGroupBy } from '@components/DateSelection/DateGroupByComboBox'
 
-export const generateComparisonPeriods = (
-  startDate: Date, numberOfPeriods: number, rangeDisplayMode: DateRangePickerMode,
-) => {
-  switch (rangeDisplayMode) {
-    case 'yearPicker':
-      return generateComparisonYears(startDate, numberOfPeriods)
+export type ComparisonPeriodParams = { endDate: Date, numberOfPeriods: number } & (
+  | { mode: Exclude<DateGroupBy, DateGroupBy.AllTime> }
+  | { mode: DateGroupBy.AllTime | null, startDate: Date }
+)
+export const generateComparisonPeriods = (params: ComparisonPeriodParams) => {
+  switch (params.mode) {
+    case DateGroupBy.Year:
+      return generateComparisonYears(params.endDate, params.numberOfPeriods)
+    case DateGroupBy.Month:
+      return generateComparisonMonths(params.endDate, params.numberOfPeriods)
     default:
-      return generateComparisonMonths(startDate, numberOfPeriods)
+      return generateComparisonDateRange(params.startDate, params.endDate)
   }
 }
 
 const generateComparisonMonths = (
-  startDate: number | Date,
+  endDate: number | Date,
   numberOfMonths: number,
 ) => {
   return Array.from({ length: numberOfMonths }, (_, index) => {
-    const currentMonth = subMonths(startDate, numberOfMonths - index - 1)
-    return { date: currentMonth, label: format(currentMonth, 'MMM') }
+    const currentMonth = subMonths(endDate, numberOfMonths - index - 1)
+    return { date: currentMonth, label: format(currentMonth, 'MMM yyyy') }
   })
 }
 
 const generateComparisonYears = (
-  startDate: number | Date,
+  endDate: number | Date,
   numberOfYears: number,
 ) => {
   return Array.from({ length: numberOfYears }, (_, index) => {
-    const currentMonth = subYears(startDate, numberOfYears - index - 1)
+    const currentMonth = subYears(endDate, numberOfYears - index - 1)
     return { date: currentMonth, label: format(currentMonth, 'yyyy') }
   })
+}
+
+const generateComparisonDateRange = (
+  startDate: Date,
+  endDate: Date,
+) => {
+  const label = `${format(startDate, 'MMM d, yyyy')} - ${format(endDate, 'MMM d, yyyy')}`
+
+  return [{ date: startDate, endDate, label }]
 }
 
 export const getComparisonValue = (

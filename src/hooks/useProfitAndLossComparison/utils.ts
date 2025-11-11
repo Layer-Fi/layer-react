@@ -2,10 +2,10 @@ import { getMonth, getYear, startOfMonth, startOfYear, subMonths, subYears } fro
 import { DateRange } from '@internal-types/general'
 import { range } from '@utils/array/range'
 import { isArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
-import { DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { ProfitAndLossComparisonTags, TagComparisonOption } from '@internal-types/profit_and_loss'
 import { toLocalDateString } from '@utils/time/timeUtils'
 import { ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
+import { DateGroupBy } from '@components/DateSelection/DateGroupByComboBox'
 
 export function prepareFiltersBody(compareOptions: TagComparisonOption[]): ReadonlyArrayWithAtLeastOne<ProfitAndLossComparisonTags> | undefined {
   const noneFilters = compareOptions.filter(
@@ -54,10 +54,10 @@ export function prepareFiltersBody(compareOptions: TagComparisonOption[]): Reado
 }
 
 function preparePeriodsBodyForMonths(dateRange: DateRange, comparePeriods: number) {
-  const adjustedStartDate = startOfMonth(dateRange.startDate)
+  const adjustedEndDate = startOfMonth(dateRange.endDate)
 
   const rawPeriods = range(0, comparePeriods).map((index) => {
-    const currentPeriod = subMonths(adjustedStartDate, index)
+    const currentPeriod = subMonths(adjustedEndDate, index)
 
     return {
       year: getYear(currentPeriod),
@@ -84,10 +84,10 @@ function preparePeriodsBodyForMonths(dateRange: DateRange, comparePeriods: numbe
 }
 
 function preparePeriodsBodyForYears(dateRange: DateRange, comparePeriods: number) {
-  const adjustedStartDate = startOfYear(dateRange.startDate)
+  const adjustedEndDate = startOfYear(dateRange.endDate)
 
   const rawPeriods = range(0, comparePeriods).map((index) => {
-    const currentPeriod = subYears(adjustedStartDate, index)
+    const currentPeriod = subYears(adjustedEndDate, index)
 
     return {
       year: getYear(currentPeriod),
@@ -121,13 +121,14 @@ function preparePeriodsBodyForDateRange(dateRange: DateRange) {
 export function preparePeriodsBody(
   dateRange: DateRange,
   comparePeriods: number,
-  rangeDisplayMode: DateRangePickerMode,
+  comparsionPeriodMode: DateGroupBy | null,
 ) {
-  switch (rangeDisplayMode) {
-    case 'yearPicker':
+  switch (comparsionPeriodMode) {
+    case DateGroupBy.Year:
       return preparePeriodsBodyForYears(dateRange, comparePeriods)
-    case 'monthPicker':
+    case DateGroupBy.Month:
       return preparePeriodsBodyForMonths(dateRange, comparePeriods)
+    case DateGroupBy.AllTime:
     default:
       return preparePeriodsBodyForDateRange(dateRange)
   }

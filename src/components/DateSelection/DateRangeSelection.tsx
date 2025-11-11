@@ -14,7 +14,7 @@ type DateRangeSelectionProps = {
 }
 
 export const DateRangeSelection = ({ minDate, maxDate }: DateRangeSelectionProps) => {
-  const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDateRange({ displayMode: 'dayRangePicker' })
+  const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDateRange({ displayMode: 'full' })
   const { setDateRange: setGlobalDateRange } = useGlobalDateRangeActions()
   const { value } = useSizeClass()
 

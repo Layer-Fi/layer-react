@@ -1,35 +1,18 @@
 import {
   endOfDay,
   endOfMonth,
-  endOfYear,
   min,
   max,
   startOfMonth,
-  startOfYear,
 } from 'date-fns'
 import { useState, createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 import { createStore, useStore } from 'zustand'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
 
-const _DATE_PICKER_MODES = [
-  'dayPicker',
-] as const
-export type DatePickerMode = typeof _DATE_PICKER_MODES[number]
-
-const _RANGE_PICKER_MODES = [
-  'dayRangePicker',
-  'monthPicker',
-  'monthRangePicker',
-  'yearPicker',
-] as const
-export type DateRangePickerMode = typeof _RANGE_PICKER_MODES[number]
-
-type UnifiedPickerMode = DatePickerMode | DateRangePickerMode
-
-export const isDateRangePickerMode = (mode: string): mode is DateRangePickerMode => {
-  return _RANGE_PICKER_MODES.includes(mode as DateRangePickerMode)
-}
+export type DateRangePickerMode = 'full' | 'month'
+export type DatePickerMode = 'date'
+export type UnifiedPickerMode = DateRangePickerMode | DatePickerMode
 
 export function clampToAfterActivationDate(date: Date | number, activationDate: Date) {
   return max([date, activationDate])
@@ -40,25 +23,17 @@ export function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new 
 }
 
 const RANGE_MODE_LOOKUP = {
-  dayPicker: {
+  date: {
     getStartDate: ({ startDate }: { startDate: Date }) => startOfMonth(startDate),
     getEndDate: ({ endDate }: { endDate: Date }) => clampToPresentOrPast(endOfDay(endDate)),
   },
-  dayRangePicker: {
+  full: {
     getStartDate: ({ startDate }: { startDate: Date }) => startDate,
     getEndDate: ({ endDate }: { endDate: Date }) => clampToPresentOrPast(endOfDay(endDate)),
   },
-  monthPicker: {
+  month: {
     getStartDate: ({ startDate }: { startDate: Date }) => startOfMonth(startDate),
     getEndDate: ({ endDate }: { endDate: Date }) => clampToPresentOrPast(endOfMonth(endDate)),
-  },
-  monthRangePicker: {
-    getStartDate: ({ startDate }: { startDate: Date }) => startOfMonth(startDate),
-    getEndDate: ({ endDate }: { endDate: Date }) => clampToPresentOrPast(endOfMonth(endDate)),
-  },
-  yearPicker: {
-    getStartDate: ({ startDate }: { startDate: Date }) => startOfYear(startDate),
-    getEndDate: ({ endDate }: { endDate: Date }) => clampToPresentOrPast(endOfYear(endDate)),
   },
 } satisfies Record<
   UnifiedPickerMode,
@@ -96,8 +71,6 @@ type GlobalDateActions = {
   setDate: (options: { date: Date }) => DateRange
   setDateRange: (options: { startDate: Date, endDate: Date }) => DateRange
   setMonth: (options: { startDate: Date }) => DateRange
-  setMonthRange: (options: { startDate: Date, endDate: Date }) => DateRange
-  setYear: (options: { startDate: Date }) => DateRange
 
   setMonthByPeriod: (options: { monthNumber: number, yearNumber: number }) => DateRange
 }
@@ -114,32 +87,20 @@ function buildStore() {
     }
 
     const setDate = ({ date }: { date: Date }): DateRange => {
-      const s = RANGE_MODE_LOOKUP.dayPicker.getStartDate({ startDate: date })
-      const e = RANGE_MODE_LOOKUP.dayPicker.getEndDate({ endDate: date })
+      const s = RANGE_MODE_LOOKUP.date.getStartDate({ startDate: date })
+      const e = RANGE_MODE_LOOKUP.date.getEndDate({ endDate: date })
       return apply({ startDate: s, endDate: e })
     }
 
     const setDateRange = withCorrectedRange(({ startDate, endDate }): DateRange => {
-      const s = RANGE_MODE_LOOKUP.dayRangePicker.getStartDate({ startDate })
-      const e = RANGE_MODE_LOOKUP.dayRangePicker.getEndDate({ endDate })
+      const s = RANGE_MODE_LOOKUP.full.getStartDate({ startDate })
+      const e = RANGE_MODE_LOOKUP.full.getEndDate({ endDate })
       return apply({ startDate: s, endDate: e })
     })
 
     const setMonth = ({ startDate }: { startDate: Date }): DateRange => {
-      const s = RANGE_MODE_LOOKUP.monthPicker.getStartDate({ startDate })
-      const e = RANGE_MODE_LOOKUP.monthPicker.getEndDate({ endDate: startDate })
-      return apply({ startDate: s, endDate: e })
-    }
-
-    const setMonthRange = withCorrectedRange(({ startDate, endDate }): DateRange => {
-      const s = RANGE_MODE_LOOKUP.monthRangePicker.getStartDate({ startDate })
-      const e = RANGE_MODE_LOOKUP.monthRangePicker.getEndDate({ endDate })
-      return apply({ startDate: s, endDate: e })
-    })
-
-    const setYear = ({ startDate }: { startDate: Date }): DateRange => {
-      const s = RANGE_MODE_LOOKUP.yearPicker.getStartDate({ startDate })
-      const e = RANGE_MODE_LOOKUP.yearPicker.getEndDate({ endDate: startDate })
+      const s = RANGE_MODE_LOOKUP.month.getStartDate({ startDate })
+      const e = RANGE_MODE_LOOKUP.month.getEndDate({ endDate: startDate })
       return apply({ startDate: s, endDate: e })
     }
 
@@ -149,16 +110,12 @@ function buildStore() {
       displayMode,
     }: { startDate: Date, endDate: Date, displayMode: UnifiedPickerMode }): DateRange => {
       switch (displayMode) {
-        case 'dayPicker':
+        case 'date':
           return setDate({ date: endDate })
-        case 'dayRangePicker':
+        case 'full':
           return setDateRange({ startDate, endDate })
-        case 'monthPicker':
+        case 'month':
           return setMonth({ startDate })
-        case 'monthRangePicker':
-          return setMonthRange({ startDate, endDate })
-        case 'yearPicker':
-          return setYear({ startDate })
         default:
           unsafeAssertUnreachable({
             value: displayMode,
@@ -175,8 +132,6 @@ function buildStore() {
         setRangeWithExplicitDisplayMode,
         setDateRange,
         setMonth,
-        setMonthRange,
-        setYear,
 
         setMonthByPeriod: ({ monthNumber, yearNumber }) => {
           const effectiveMonthNumber = Math.min(Math.max(monthNumber, 1), 12)
@@ -241,15 +196,11 @@ export function useGlobalDateRangeActions() {
 
   const setDateRange = useStore(store, ({ actions: { setDateRange } }) => setDateRange)
   const setMonth = useStore(store, ({ actions: { setMonth } }) => setMonth)
-  const setMonthRange = useStore(store, ({ actions: { setMonthRange } }) => setMonthRange)
-  const setYear = useStore(store, ({ actions: { setYear } }) => setYear)
 
   return {
     setRangeWithExplicitDisplayMode,
     setDateRange,
     setMonth,
-    setMonthRange,
-    setYear,
   }
 }
 

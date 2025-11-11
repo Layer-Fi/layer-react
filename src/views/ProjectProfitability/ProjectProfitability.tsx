@@ -26,7 +26,11 @@ export interface ProjectProfitabilityProps {
   valueOptions: TagOption[]
   showTitle?: boolean
   stringOverrides?: ProjectsStringOverrides
-  datePickerMode?: DateRangePickerMode
+  /**
+   * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
+   */
+  datePickerMode?: unknown
+  dateSelectionMode?: DateRangePickerMode
   csvMoneyFormat?: MoneyFormat
 }
 
@@ -34,7 +38,7 @@ export const ProjectProfitabilityView = ({
   valueOptions,
   showTitle,
   stringOverrides,
-  datePickerMode = 'monthPicker',
+  dateSelectionMode = 'month',
   csvMoneyFormat = 'DOLLAR_STRING',
 }: ProjectProfitabilityProps) => {
   const [activeTab, setActiveTab] = useState<ProjectTab>('overview')
@@ -142,7 +146,7 @@ export const ProjectProfitabilityView = ({
             <ProfitAndLoss asContainer={false} tagFilter={pnlTagFilter}>
               <ProfitAndLoss.Report
                 stringOverrides={stringOverrides}
-                datePickerMode={datePickerMode}
+                dateSelectionMode={dateSelectionMode}
                 csvMoneyFormat={csvMoneyFormat}
               />
             </ProfitAndLoss>
