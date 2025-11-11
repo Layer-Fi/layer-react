@@ -13,7 +13,7 @@ import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useStatementOfCashFlow } from '@hooks/useStatementOfCashFlow/useStatementOfCashFlow'
 import { ReportKey, ReportsModeStoreProvider, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import { getInitialDateRangePickerMode } from '@providers/GlobalDateStore/utils'
+import { getInitialDateRangePickerMode } from '@providers/GlobalDateStore/datePickerUtils'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'

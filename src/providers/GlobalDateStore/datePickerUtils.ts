@@ -3,7 +3,7 @@ import { getArrayWithAtLeastOneOrFallback, type ReadonlyArrayWithAtLeastOne } fr
 
 export const DEFAULT_ALLOWED_PICKER_MODES = ['monthPicker'] as const
 
-export const getAllowedDateRangePickerModes = ({
+const getAllowedDateRangePickerModes = ({
   allowedDatePickerModes,
   defaultDatePickerMode,
 }: {
