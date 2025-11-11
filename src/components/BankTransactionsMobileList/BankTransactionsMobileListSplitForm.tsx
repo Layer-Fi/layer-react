@@ -20,6 +20,7 @@ import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTra
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { HStack, VStack } from '@components/ui/Stack/Stack'
 import Scissors from '@icons/Scissors'
+import './bankTransactionsMobileListSplitForm.scss'
 
 interface BankTransactionsMobileListSplitFormProps {
   bankTransaction: BankTransaction
@@ -100,19 +101,19 @@ export const BankTransactionsMobileListSplitForm = ({
             <Text weight={TextWeight.bold} size={TextSize.sm}>
               Split transaction
             </Text>
-            <div className='Layer__bank-transactions__splits-inputs'>
+            <VStack gap='sm'>
               {localSplits.map((split, index) => (
-                <div
-                  className='Layer__bank-transactions__table-cell--split-entry'
+                <HStack
                   key={`split-${index}`}
+                  gap='xs'
+                  align='center'
+                  justify='space-between'
                 >
-                  <div className='Layer__bank-transactions__table-cell--split-entry__right-col'>
-                    <CategorySelectDrawerWithTrigger
-                      value={split.category}
-                      onChange={value => changeCategoryForSplitAtIndex(index, value)}
-                      showTooltips={showTooltips}
-                    />
-                  </div>
+                  <CategorySelectDrawerWithTrigger
+                    value={split.category}
+                    onChange={value => changeCategoryForSplitAtIndex(index, value)}
+                    showTooltips={showTooltips}
+                  />
                   <AmountInput
                     name={`split-${index}`}
                     disabled={index === 0 || !showCategorization}
@@ -120,6 +121,7 @@ export const BankTransactionsMobileListSplitForm = ({
                     value={getInputValueForSplitAtIndex(index, split)}
                     onBlur={onBlurSplitAmount}
                     isInvalid={split.amount < 0}
+                    className='Layer__BankTransactionsMobileSplitForm__AmountInput'
                   />
                   <Button
                     onClick={() => removeSplit(index)}
@@ -129,8 +131,11 @@ export const BankTransactionsMobileListSplitForm = ({
                   >
                     <Trash size={16} />
                   </Button>
-                </div>
+
+                </HStack>
               ))}
+            </VStack>
+            <HStack justify='end'>
               <Button
                 onClick={addSplit}
                 variant='outlined'
@@ -138,7 +143,7 @@ export const BankTransactionsMobileListSplitForm = ({
                 <Scissors size={14} />
                 {addSplitButtonText}
               </Button>
-            </div>
+            </HStack>
             {splitFormError && <HStack pbe='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
           </VStack>
         )}

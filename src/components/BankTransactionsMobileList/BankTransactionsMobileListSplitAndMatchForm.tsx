@@ -35,7 +35,7 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
   )
 
   return (
-    <div className='Layer__bank-transaction-mobile-list-item__split-and-match-form'>
+    <>
       {formType === Purpose.categorize && (
         <BankTransactionsMobileListSplitForm
           bankTransaction={bankTransaction}
@@ -71,6 +71,6 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
           </div>
         )
         : null}
-    </div>
+    </>
   )
 }
