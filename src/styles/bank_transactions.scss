@@ -475,7 +475,7 @@
 .Layer__expanded-bank-transaction-row__table-cell--split-entry {
   display: flex;
   gap: var(--spacing-xs);
-  align-items: start;
+  align-items: flex-start;
   min-width: 40rem;
 
   .Layer__BankTransactionCategoryComboBox__Container {
