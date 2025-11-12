@@ -6,28 +6,3 @@
     background: var(--color-base-100);
   }
 }
-
-.Layer__BusinessFormMobileItem {
-  cursor: pointer;
-  font-size: 0.75rem;
-
-  &.Layer__BusinessFormMobileItem--secondary {
-    color: var(--color-base-500);
-
-    &.Layer__BusinessFormMobileItem--as-link:hover {
-      color: var(--color-base-1000);
-    }
-  }
-
-  .Layer__BusinessFormMobileItem__content {
-    max-width: 36ch;
-  }
-
-  .Layer__BusinessFormMobileItem__description {
-    color: var(--color-base-500);
-  }
-
-  .Layer__BusinessFormMobileItem__link-icon {
-    flex-shrink: 0;
-  }
-}

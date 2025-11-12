@@ -4,6 +4,7 @@ import { getOptionId } from './utils'
 import { VStack } from '@components/ui/Stack/Stack'
 import { Span } from '@components/ui/Typography/Text'
 import './businessFormMobile.scss'
+import { useCallback } from 'react'
 
 interface BusinessFormMobileProps {
   options: BusinessFormMobileItemOption[]
@@ -19,6 +20,16 @@ export const BusinessFormMobile = ({
   onSelect,
   readOnly,
 }: BusinessFormMobileProps) => {
+  const handleSelectionChange = useCallback((keys: Set<string | number> | 'all') => {
+    if (readOnly) return
+
+    const selectedKey = [...keys][0]
+    const selectedOption = options.find(opt => getOptionId(opt.value) === selectedKey)
+    if (selectedOption) {
+      onSelect(selectedOption)
+    }
+  }, [options, onSelect, readOnly])
+
   return (
     <VStack gap='sm'>
       <Span size='sm' weight='bold'>
@@ -28,15 +39,7 @@ export const BusinessFormMobile = ({
         aria-label='Select a category'
         selectionMode='single'
         selectedKeys={selectedId ? new Set([selectedId]) : new Set()}
-        onSelectionChange={(keys) => {
-          if (readOnly) return
-
-          const selectedKey = [...keys][0]
-          const selectedOption = options.find(opt => getOptionId(opt.value) === selectedKey)
-          if (selectedOption) {
-            onSelect(selectedOption)
-          }
-        }}
+        onSelectionChange={handleSelectionChange}
         className='Layer__BusinessFormMobile'
       >
         {options.map(option => (
