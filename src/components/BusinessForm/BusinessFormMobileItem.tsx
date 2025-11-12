@@ -4,9 +4,8 @@ import { GridListItem } from 'react-aria-components'
 import { Checkbox } from '@components/ui/Checkbox/Checkbox'
 import ChevronRight from '@icons/ChevronRight'
 import { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { getOptionId, getOptionLabel } from './utils'
 
-export type BusinessFormOptionValue = BankTransactionCategoryComboBoxOption | { type: 'SELECT_CATEGORY' }
+export type BusinessFormOptionValue = BankTransactionCategoryComboBoxOption
 
 export interface BusinessFormMobileItemOption {
   value: BusinessFormOptionValue
@@ -20,8 +19,8 @@ interface BusinessFormMobileItemProps {
 export const BusinessFormMobileItem = ({
   option,
 }: BusinessFormMobileItemProps) => {
-  const value = getOptionId(option.value)
-  const label = getOptionLabel(option.value)
+  const value = option.value.value
+  const label = option.value.label
 
   return (
     <GridListItem

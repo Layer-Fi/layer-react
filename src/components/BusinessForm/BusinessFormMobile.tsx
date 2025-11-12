@@ -1,6 +1,5 @@
 import { GridList } from 'react-aria-components'
 import { BusinessFormMobileItem, BusinessFormMobileItemOption } from './BusinessFormMobileItem'
-import { getOptionId } from './utils'
 import { VStack } from '@components/ui/Stack/Stack'
 import { Span } from '@components/ui/Typography/Text'
 import './businessFormMobile.scss'
@@ -24,7 +23,7 @@ export const BusinessFormMobile = ({
     if (readOnly) return
 
     const selectedKey = [...keys][0]
-    const selectedOption = options.find(opt => getOptionId(opt.value) === selectedKey)
+    const selectedOption = options.find(opt => opt.value.value === selectedKey)
     if (selectedOption) {
       onSelect(selectedOption)
     }
@@ -44,7 +43,7 @@ export const BusinessFormMobile = ({
       >
         {options.map(option => (
           <BusinessFormMobileItem
-            key={getOptionId(option.value)}
+            key={option.value.value}
             option={option}
           />
         ))}

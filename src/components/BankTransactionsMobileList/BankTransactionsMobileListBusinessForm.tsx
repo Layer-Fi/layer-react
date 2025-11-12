@@ -13,11 +13,19 @@ import classNames from 'classnames'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { CategorizationType } from '@internal-types/categories'
-import { ApiCategorizationAsOption } from '@internal-types/categorizationOption'
+import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { HStack, VStack } from '@components/ui/Stack/Stack'
-import { BusinessFormMobileItemOption } from '@components/BusinessForm/BusinessFormMobileItem'
-import { isSelectCategoryOption, getOptionId } from '@components/BusinessForm/utils'
+import { type BusinessFormMobileItemOption, type BusinessFormOptionValue } from '@components/BusinessForm/BusinessFormMobileItem'
+import { isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+
+const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
+
+export const isSelectCategoryOption = (
+  value: BusinessFormOptionValue,
+): boolean => {
+  return isPlaceholderAsOption(value) && value.value === SELECT_CATEGORY_VALUE
+}
 
 type DisplayOption = BusinessFormMobileItemOption
 
@@ -64,7 +72,7 @@ export const BankTransactionsMobileListBusinessForm = ({
         })
         : []
 
-    if (selectedCategory && !options.find(x => getOptionId(x.value) === selectedCategory.value)) {
+    if (selectedCategory && !options.find(x => x.value.value === selectedCategory.value)) {
       options.unshift({
         value: selectedCategory,
       })
@@ -72,9 +80,10 @@ export const BankTransactionsMobileListBusinessForm = ({
 
     if (options.length) {
       options.push({
-        value: {
-          type: 'SELECT_CATEGORY',
-        },
+        value: new PlaceholderAsOption({
+          label: 'Show all categories',
+          value: 'SELECT_CATEGORY',
+        }),
         asLink: true,
       })
     }
