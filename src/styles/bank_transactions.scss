@@ -192,6 +192,16 @@
   background-color: var(--bg-element-focus);
 }
 
+.Layer__expanded-bank-transaction-row {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background-color: var(--bg-element-focus);
+  transition:
+    background-color var(--transition-speed) ease-in-out,
+    height var(--transition-speed) ease-in-out;
+}
+
 .Layer__bank-transaction-row:hover,
 .Layer__bank-transaction-row:hover .Layer__table-cell,
 .Layer__bank-transaction-list-item:hover {
@@ -224,6 +234,14 @@
       display: none;
     }
   }
+}
+
+.Layer__expanded-bank-transaction-row .Layer__expanded-bank-transaction-row__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  overflow: hidden;
+  transition: height var(--transition-speed) ease-in-out;
 }
 
 .Layer__bank-transaction-list-item__category-text,
@@ -354,6 +372,14 @@
       max-height: 25px;
       white-space: nowrap;
     }
+  }
+}
+
+.Layer__expanded-bank-transaction-row__content-toggle {
+  padding: var(--spacing-sm) var(--spacing-md);
+
+  .Layer__toggle-option {
+    width: 110px;
   }
 }
 
@@ -1235,6 +1261,54 @@
 
     .Layer__input {
       max-width: 100%;
+    }
+  }
+}
+
+@container (max-width: 500px) {
+  .Layer__expanded-bank-transaction-row__content-toggle .Layer__toggle-option input + span {
+    font-size: var(--text-xs);
+  }
+
+  .Layer__bank-transaction-list-item__expanded-row {
+    input,
+    .Layer__category-menu {
+      font-size: var(--text-xs);
+    }
+
+    .Layer__select .Layer__select__control {
+      min-height: 32px;
+    }
+
+    .Layer__select__indicator {
+      padding: var(--spacing-3xs);
+    }
+
+    .Layer__expanded-bank-transaction-row__table-cell--split-entry__merge-btn {
+      height: 32px;
+      min-height: 32px;
+      width: 32px;
+
+      svg {
+        height: 14px;
+        width: 14px;
+      }
+    }
+
+    .Layer__expanded-bank-transaction-row__file-upload,
+    .Layer__expanded-bank-transaction-row__total-and-btns {
+      .Layer__btn {
+        min-height: 32px;
+      }
+
+      .Layer__btn-text {
+        font-size: var(--text-xs);
+      }
+
+      .Layer__btn-icon {
+        height: 12px;
+        width: 12px;
+      }
     }
   }
 }
