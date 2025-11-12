@@ -207,7 +207,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       }
     }
 
-    const save = async () => {
+    const save = () => {
       if (purpose === Purpose.match) {
         if (!selectedMatch) {
           setMatchFormError('Select an option to match the transaction')
@@ -217,7 +217,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           selectedMatch
           && selectedMatch.id !== getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
         ) {
-          await onMatchSubmit(selectedMatch.id)
+          void onMatchSubmit(selectedMatch.id)
           return
         }
         close()
@@ -228,7 +228,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 
       const categorizationRequest = buildCategorizeBankTransactionPayloadForSplit(localSplits)
 
-      await categorizeBankTransaction(
+      void categorizeBankTransaction(
         bankTransaction.id,
         categorizationRequest,
       )
@@ -476,11 +476,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                         </Text>
                       )}
                     <SubmitButton
-                      onClick={() => {
-                        if (!bankTransaction.processing) {
-                          void save()
-                        }
-                      }}
+                      onClick={save}
                       className='Layer__bank-transaction__submit-btn'
                       processing={bankTransaction.processing}
                       active={true}
