@@ -11,6 +11,10 @@ export interface TagComparisonOption {
 export interface ProfitAndLossCompareConfig {
   tagComparisonOptions: TagComparisonOption[]
   defaultTagFilter: TagComparisonOption
+
+  /**
+   * @deprecated This is a deprecated property - the number of periods to compare is derived from the date range.
+   */
   defaultPeriods?: number
 }
 

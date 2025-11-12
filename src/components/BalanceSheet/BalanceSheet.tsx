@@ -14,7 +14,6 @@ import { View } from '@components/View/View'
 import { BALANCE_SHEET_ROWS } from '@components/BalanceSheet/constants'
 import { BalanceSheetDownloadButton } from '@components/BalanceSheet/download/BalanceSheetDownloadButton'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ReportsModeStoreProvider } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 
 export interface BalanceSheetStringOverrides {
@@ -32,17 +31,10 @@ export type BalanceSheetProps = PropsWithChildren<{
   effectiveDate?: Date
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
+  dateSelectionMode?: 'month' | 'full'
 }>
 
 const COMPONENT_NAME = 'balance-sheet'
-
-export const StandaloneBalanceSheet = (props: BalanceSheetProps) => {
-  return (
-    <ReportsModeStoreProvider initialModes={{ BalanceSheet: 'dayPicker' }}>
-      <BalanceSheet {...props} />
-    </ReportsModeStoreProvider>
-  )
-}
 
 export const BalanceSheet = (props: BalanceSheetProps) => {
   return (

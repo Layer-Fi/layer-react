@@ -13,14 +13,12 @@ import {
 } from '@utils/profitAndLossComparisonUtils'
 import { Loader } from '@components/Loader/Loader'
 import { ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
-import classNames from 'classnames'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { HStack } from '@ui/Stack/Stack'
-import { ReportKey, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { LineItemEncoded } from '@schemas/common/lineItem'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 interface ProfitAndLossCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
@@ -29,17 +27,16 @@ interface ProfitAndLossCompareTableProps {
 export const ProfitAndLossCompareTable = ({
   stringOverrides,
 }: ProfitAndLossCompareTableProps) => {
+  const { dateRange, displayMode } = useContext(ProfitAndLossContext)
   const {
     data: comparisonData,
     isLoading,
     comparePeriods,
     selectedCompareOptions,
+    comparisonPeriodMode,
   } = useContext(ProfitAndLossComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
   const { data: bookkeepingPeriods } = useBookkeepingPeriods()
-
-  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
@@ -48,16 +45,14 @@ export const ProfitAndLossCompareTable = ({
 
   if (isLoading || comparisonData === undefined) {
     return (
-      <div
-        className={classNames('Layer__profit-and-loss-table__loader-container')}
-      >
+      <div className='Layer__profit-and-loss-table__loader-container'>
         <Loader />
       </div>
     )
   }
 
   const getBookkeepingPeriodStatus = (date: Date) => {
-    if (!bookkeepingPeriods || rangeDisplayMode !== 'monthPicker') {
+    if (!bookkeepingPeriods || displayMode !== 'month') {
       return
     }
 
@@ -120,7 +115,12 @@ export const ProfitAndLossCompareTable = ({
           variant={expandable ? 'expandable' : 'default'}
           handleExpand={() => setIsOpen(rowKey)}
         >
-          <TableCell primary withExpandIcon={expandable}>
+          <TableCell
+            primary
+            withExpandIcon={expandable}
+            nowrap
+            className='Layer__profit-and-loss-compare-table__sticky-cell'
+          >
             {lineItem ? lineItem.display_name : rowDisplayName}
           </TableCell>
           {rowData.map((cell, i) => (
@@ -153,7 +153,10 @@ export const ProfitAndLossCompareTable = ({
       <TableHead>
         {selectedCompareOptions && selectedCompareOptions.length > 1 && (
           <TableRow rowKey=''>
-            <TableCell isHeaderCell />
+            <TableCell
+              isHeaderCell
+              className='Layer__profit-and-loss-compare-table__sticky-cell'
+            />
             {selectedCompareOptions.map((option, i) => (
               <Fragment key={option.displayName + '-' + i}>
                 <TableCell key={option.displayName + '-' + i} primary isHeaderCell>
@@ -171,16 +174,19 @@ export const ProfitAndLossCompareTable = ({
       <TableBody>
         {comparePeriods && (
           <TableRow rowKey=''>
-            <TableCell isHeaderCell />
+            <TableCell
+              isHeaderCell
+              className='Layer__profit-and-loss-compare-table__sticky-cell'
+            />
             {selectedCompareOptions && selectedCompareOptions.length > 0
               ? (
                 selectedCompareOptions.map((option, i) => (
                   <Fragment key={option.displayName + '-' + i}>
-                    {generateComparisonPeriods(
-                      dateRange.startDate,
-                      comparePeriods,
-                      rangeDisplayMode,
-                    ).map((month, index) => (
+                    {generateComparisonPeriods({
+                      numberOfPeriods: comparePeriods,
+                      mode: comparisonPeriodMode,
+                      ...dateRange,
+                    }).map((month, index) => (
                       <TableCell key={option.displayName + '-' + index} isHeaderCell>
                         <HStack gap='2xs'>
                           {month.label}
@@ -194,11 +200,11 @@ export const ProfitAndLossCompareTable = ({
               )
               : (
                 <Fragment key='total-1'>
-                  {generateComparisonPeriods(
-                    dateRange.startDate,
-                    comparePeriods,
-                    rangeDisplayMode,
-                  ).map((month, index) => (
+                  {generateComparisonPeriods({
+                    numberOfPeriods: comparePeriods,
+                    mode: comparisonPeriodMode,
+                    ...dateRange,
+                  }).map((month, index) => (
                     <TableCell key={'total-' + index + '-cell'} isHeaderCell>
                       {month.label}
                     </TableCell>

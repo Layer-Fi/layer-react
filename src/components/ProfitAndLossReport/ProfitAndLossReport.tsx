@@ -1,7 +1,7 @@
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { Header } from '@components/Header/Header'
-import { ReactNode, useCallback, useContext, useMemo } from 'react'
+import { ReactNode, useCallback, useContext, useEffect, useMemo } from 'react'
 import { View as ViewType } from '@internal-types/general'
 import { ReportsStringOverrides } from '@views/Reports/Reports'
 import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
@@ -38,8 +38,12 @@ export const ProfitAndLossReport = ({
   renderInAppLink,
   hideHeader,
 }: ProfitAndLossReportProps) => {
-  const { selectedLineItem, setSelectedLineItem } = useContext(ProfitAndLossContext)
+  const { selectedLineItem, setSelectedLineItem, setDisplayMode } = useContext(ProfitAndLossContext)
   const { comparisonConfig } = useContext(ProfitAndLossComparisonContext)
+
+  useEffect(() => {
+    setDisplayMode(dateSelectionMode)
+  }, [dateSelectionMode, setDisplayMode])
 
   const breadcrumbIndexMap = useMemo(() => {
     if (!selectedLineItem) return {}

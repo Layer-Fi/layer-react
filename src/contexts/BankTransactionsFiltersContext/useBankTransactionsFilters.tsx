@@ -22,7 +22,7 @@ export const useBankTransactionsFilters = (
       ? BankTransactionsDateFilterMode.MonthlyView
       : undefined
 
-  const globalDateRange = useGlobalDateRange({ displayMode: 'monthPicker' })
+  const globalDateRange = useGlobalDateRange({ displayMode: 'full' })
 
   const defaultDateRange = {
     startDate: startOfMonth(new Date()),

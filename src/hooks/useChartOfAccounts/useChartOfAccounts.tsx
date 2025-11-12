@@ -146,7 +146,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
-  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'monthPicker' })
+  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'month' })
 
   const [form, setForm] = useState<ChartOfAccountsForm | undefined>()
   const [sendingForm, setSendingForm] = useState(false)

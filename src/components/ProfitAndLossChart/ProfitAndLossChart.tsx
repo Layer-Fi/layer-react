@@ -41,7 +41,6 @@ import {
   useGlobalDateRange,
   useGlobalDateRangeActions,
 } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ReportKey, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 const getChartWindow = ({
   chartWindow,
@@ -152,11 +151,8 @@ export const ProfitAndLossChart = ({
 
   const { getColor, business } = useLayerContext()
 
-  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
+  const dateRange = useGlobalDateRange({ displayMode: 'month' })
   const { setMonth } = useGlobalDateRangeActions()
-
-  const showIndicator = rangeDisplayMode === 'monthPicker'
 
   const [customCursorSize, setCustomCursorSize] = useState({
     width: 0,
@@ -710,18 +706,14 @@ export const ProfitAndLossChart = ({
             xAxisId='revenue'
             stackId='revenue'
           >
-            {showIndicator
-              ? (
-                <LabelList
-                  content={(
-                    <Indicator
-                      setCustomCursorSize={(width, height, x) => setCustomCursorSize({ width, height, x })}
-                      customCursorSize={customCursorSize}
-                    />
-                  )}
+            <LabelList
+              content={(
+                <Indicator
+                  setCustomCursorSize={(width, height, x) => setCustomCursorSize({ width, height, x })}
+                  customCursorSize={customCursorSize}
                 />
-              )
-              : null}
+              )}
+            />
             {dataOrPlaceholderData.map((entry) => {
               return (
                 <Cell
