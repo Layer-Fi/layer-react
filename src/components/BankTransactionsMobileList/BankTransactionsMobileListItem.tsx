@@ -184,6 +184,12 @@ export const BankTransactionsMobileListItem = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
+  useEffect(() => {
+    if (bulkActionsEnabled) {
+      close()
+    }
+  }, [bulkActionsEnabled])
+
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
   const { select, deselect } = useBulkSelectionActions()

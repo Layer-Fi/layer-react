@@ -1,22 +1,20 @@
 import { ErrorText } from '@components/Typography/ErrorText'
 import { FileInput } from '@components/Input/FileInput'
-import { Button } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
 import { useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
 import {
-  hasReceipts,
   getBankTransactionFirstSuggestedMatch,
   getBankTransactionMatchAsSuggestedMatch,
 } from '@utils/bankTransactions'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
-import classNames from 'classnames'
-import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { Span } from '@components/ui/Typography/Text'
-import { VStack } from '@components/ui/Stack/Stack'
+import { VStack, HStack } from '@components/ui/Stack/Stack'
+import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 interface BankTransactionsMobileListMatchFormProps {
   bankTransaction: BankTransaction
@@ -54,7 +52,7 @@ export const BankTransactionsMobileListMatchForm = ({
     await matchBankTransaction(bankTransaction.id, foundMatch.id, true)
   }
 
-  const save = async () => {
+  const save = () => {
     if (!showCategorization) {
       return
     }
@@ -62,17 +60,18 @@ export const BankTransactionsMobileListMatchForm = ({
     if (!selectedMatch) {
       setFormError('Select an option to match the transaction')
     }
-    else if (
+
+    if (
       selectedMatch
       && selectedMatch.id !== getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
     ) {
-      await onMatchSubmit(selectedMatch.id)
+      void onMatchSubmit(selectedMatch.id)
     }
     return
   }
 
   return (
-    <VStack pi='md'>
+    <VStack gap='sm'>
       <Span size='sm' weight='bold'>
         Find Match
       </Span>
@@ -88,25 +87,18 @@ export const BankTransactionsMobileListMatchForm = ({
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
+        hideCustomerVendor
+        hideTags
       />
-      <div
-        className={classNames(
-          'Layer__bank-transaction-mobile-list-item__receipts',
-          hasReceipts(bankTransaction)
-            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
-            : undefined,
-        )}
-      >
-        {showReceiptUploads && (
-          <BankTransactionReceipts
-            ref={receiptsRef}
-            floatingActions={false}
-            hideUploadButtons={true}
-            label='Receipts'
-          />
-        )}
-      </div>
-      <div className='Layer__bank-transaction-mobile-list-item__actions'>
+      {showReceiptUploads && (
+        <BankTransactionReceipts
+          ref={receiptsRef}
+          floatingActions={false}
+          hideUploadButtons={true}
+          label='Receipts'
+        />
+      )}
+      <HStack gap='md'>
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
@@ -117,29 +109,28 @@ export const BankTransactionsMobileListMatchForm = ({
         )}
         {showCategorization && (
           <Button
-            fullWidth={true}
-            disabled={
+            fullWidth
+            isDisabled={
               !selectedMatch
               || isLoading
               || bankTransaction.processing
               || selectedMatch.id === getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
             }
-            onClick={() => { void save() }}
+            onClick={save}
           >
             {isLoading || bankTransaction.processing
               ? 'Saving...'
               : 'Approve match'}
           </Button>
         )}
-      </div>
+      </HStack>
       {formError && <ErrorText>{formError}</ErrorText>}
       {showRetry
-        ? (
+        && (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.
           </ErrorText>
-        )
-        : null}
+        )}
     </VStack>
   )
 }

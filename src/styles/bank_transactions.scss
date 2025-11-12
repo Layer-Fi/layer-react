@@ -295,10 +295,6 @@
   flex-direction: row;
 }
 
-.Layer__bank-transaction-form-fields {
-  max-width: 40rem;
-}
-
 .Layer__expanded-bank-transaction-row__content-panel {
   box-sizing: border-box;
   display: flex;
@@ -1161,9 +1157,6 @@
 }
 
 .Layer__bank-transaction-mobile-list-item__actions--with-receipts {
-  padding: var(--spacing-md) 0;
-  border-top: 1px solid var(--border-color);
-
   & .Layer__file-upload {
     display: flex;
     flex-direction: column;
@@ -1177,7 +1170,7 @@
 
 .Layer__bank-transaction-mobile-list-item__actions {
   display: flex;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md);
 }
 
 @container (max-width: 714px) {
