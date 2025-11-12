@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import { getMonthNameFromNumber } from '@utils/date'
 import { TextStatus } from '@components/Typography/Text'
 import AlertCircle from '@icons/AlertCircle'

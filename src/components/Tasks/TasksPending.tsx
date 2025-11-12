@@ -1,18 +1,36 @@
+import { useMemo } from 'react'
 import { Text, TextSize } from '@components/Typography/Text'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
 import { Cell, Pie, PieChart } from 'recharts'
 import { TASKS_CHARTS_COLORS } from '@config/charts'
-import { format } from 'date-fns'
+import { format, getYear } from 'date-fns'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import classNames from 'classnames'
 import { BookkeepingStatusDescription } from '@components/BookkeepingStatus/BookkeepingStatusDescription'
 import { getCompletedTasks, getIncompleteTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { BookkeepingPeriodScale } from '@schemas/bookkeepingPeriods'
+import { useContext } from 'react'
+import { TasksScaleContext } from '@components/Tasks/TasksScaleContext'
 
 export const TasksPending = () => {
   const { date } = useGlobalDate()
   const { activePeriod } = useActiveBookkeepingPeriod()
+  const scaleContext = useContext(TasksScaleContext)
+  const selectedScale = scaleContext?.selectedScale ?? null
+
+  const title = useMemo(() => {
+    if (selectedScale === BookkeepingPeriodScale.ANNUALLY) {
+      return `${getYear(date)} Tasks`
+    }
+
+    if (selectedScale === BookkeepingPeriodScale.ONGOING) {
+      return 'Ongoing Tasks'
+    }
+
+    return format(date, 'MMMM yyyy')
+  }, [date, selectedScale])
 
   const totalTaskCount = activePeriod?.tasks?.length ?? 0
   const completedTaskCount = getCompletedTasks(activePeriod?.tasks ?? []).length
@@ -35,10 +53,12 @@ export const TasksPending = () => {
       : 'Layer__tasks-pending-bar__status--pending',
   )
 
+  const isOngoing = selectedScale === BookkeepingPeriodScale.ONGOING
+
   return (
-    <div className='Layer__tasks-pending'>
+    <div className={`Layer__tasks-pending ${isOngoing ? 'Layer__tasks-pending--no-border' : ''}`}>
       <div className='Layer__tasks-pending-header'>
-        <Heading size={HeadingSize.secondary}>{format(date, 'MMMM yyyy')}</Heading>
+        <Heading size={HeadingSize.secondary}>{title}</Heading>
         {activePeriod?.tasks && activePeriod.tasks.length > 0
           ? (
             <div className='Layer__tasks-pending-bar'>
