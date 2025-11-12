@@ -42,7 +42,6 @@ const Button = forwardRef<
     size?: ButtonSize
     variant?: ButtonVariant
     fullWidth?: boolean
-    isDisabled?: boolean
     flex?: boolean
   }
 >((
@@ -54,7 +53,6 @@ const Button = forwardRef<
     size = 'md',
     variant = 'solid',
     fullWidth = false,
-    isDisabled = false,
     flex = false,
     ...restProps
   },
@@ -77,7 +75,6 @@ const Button = forwardRef<
       {...dataProperties}
       className={BUTTON_CLASS_NAMES.DEFAULT}
       ref={ref}
-      isDisabled={isDisabled}
     >
       {withRenderProp(children, (node) => {
         if (isPending) {
