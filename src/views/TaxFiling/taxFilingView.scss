@@ -1,0 +1,21 @@
+.Layer__tax-filing {
+  max-width: 85rem;
+
+  @media (width <= 1024px) {
+    max-width: 50rem;
+  }
+
+  .Layer__input-group,
+ .Layer__UI__DatePicker,
+ .Layer__separator {
+    max-width: 40rem;
+
+    @media (width <= 1024px) {
+      width: 100%;
+    }
+  }
+
+  .Layer__input {
+    width: 100%;
+  }
+}
