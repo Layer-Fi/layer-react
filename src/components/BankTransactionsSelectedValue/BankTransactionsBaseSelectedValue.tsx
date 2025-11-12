@@ -5,7 +5,7 @@ import { Span } from '@components/ui/Typography/Text'
 import Scissors from '@icons/Scissors'
 
 export type BankTransactionsBaseSelectedValueProps = {
-  type: 'match' | 'transfer' | 'split' | 'category'
+  type: 'match' | 'transfer' | 'split' | 'category' | 'placeholder'
   label: string
   className?: string
   slotProps?: {
@@ -17,6 +17,14 @@ export type BankTransactionsBaseSelectedValueProps = {
 
 export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSelectedValueProps) => {
   const { type, className, label, slotProps } = props
+
+  if (type === 'placeholder') {
+    return (
+      <HStack gap='xs' align='center' className={className}>
+        <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
+      </HStack>
+    )
+  }
 
   if (type === 'match' || type === 'transfer') {
     return (
