@@ -4,12 +4,20 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { getActivationDate } from '@utils/business'
 import { getYear } from 'date-fns'
 import { isIncompleteTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { BookkeepingPeriodScale } from '@schemas/bookkeepingPeriods'
 
 export const useBookkeepingYearsStatus = () => {
   const { business } = useLayerContext()
   const activationDate = getActivationDate(business)
 
   const { data, isLoading } = useBookkeepingPeriods()
+
+  const ongoingPeriod = useMemo(() => {
+    return data?.find(period => period.scale === BookkeepingPeriodScale.ONGOING)
+  }, [data])
+
+  const ongoingTasks = ongoingPeriod?.tasks ?? []
+  const ongoingIncompleteCount = ongoingTasks.filter(task => isIncompleteTask(task)).length
 
   const yearStatuses = useMemo(() => {
     const startYear = getYear(activationDate ?? new Date())
@@ -18,15 +26,15 @@ export const useBookkeepingYearsStatus = () => {
 
     return Array.from({ length: count }, (_, index) => ({ year: startYear + index }))
       .map(({ year }) => {
-        const tasks = data
+        const yearTasks = data
           ?.filter(period => period.year === year)
           .reduce((acc, period) => acc.concat(period.tasks), [] as Array<UserVisibleTask>)
 
-        const unresolvedTaskCount = tasks?.filter(task => isIncompleteTask(task)).length
+        const unresolvedTaskCount = yearTasks?.filter(task => isIncompleteTask(task)).length ?? 0
 
         return {
           year,
-          tasks,
+          tasks: yearTasks ?? [],
           unresolvedTasks: unresolvedTaskCount,
           completed: unresolvedTaskCount === 0,
         }
@@ -53,5 +61,7 @@ export const useBookkeepingYearsStatus = () => {
     anyPreviousYearIncomplete,
     earliestIncompletePeriod,
     isLoading,
+    ongoingPeriod,
+    ongoingIncompleteCount,
   }
 }

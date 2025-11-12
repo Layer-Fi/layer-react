@@ -12,7 +12,7 @@ export enum BookkeepingPeriodStatus {
   CLOSED_COMPLETE = 'CLOSED_COMPLETE',
 }
 
-enum DocumentType {
+export enum DocumentType {
   RECEIPT = 'RECEIPT',
   BANK_STATEMENT = 'BANK_STATEMENT',
   LOAN_STATEMENT = 'LOAN_STATEMENT',
@@ -21,14 +21,14 @@ enum DocumentType {
   OTHER = 'OTHER',
 }
 
-enum TasksStatus {
+export enum TasksStatus {
   TODO = 'TODO',
   USER_MARKED_COMPLETED = 'USER_MARKED_COMPLETED',
   COMPLETED = 'COMPLETED',
   ARCHIVED = 'ARCHIVED',
 }
 
-enum TasksResponseType {
+export enum TasksResponseType {
   FREE_RESPONSE = 'FREE_RESPONSE',
   UPLOAD_DOCUMENT = 'UPLOAD_DOCUMENT',
 }
@@ -173,4 +173,3 @@ export const ListBookkeepingPeriodsResponseSchema = Schema.Struct({
 })
 
 export type ListBookkeepingPeriodsResponse = typeof ListBookkeepingPeriodsResponseSchema.Type
-

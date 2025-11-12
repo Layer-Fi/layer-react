@@ -4,7 +4,7 @@ import SmileIcon from '@icons/SmileIcon'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
 import { Pagination } from '@components/Pagination/Pagination'
 import { TasksListMobile } from '@components/Tasks/TasksListMobile'
-import { isCompletedTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { isCompletedTask, isIncompleteTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
 import { usePaginatedList } from '@hooks/array/usePaginatedList'
 import { VStack } from '@ui/Stack/Stack'
@@ -65,10 +65,10 @@ export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
     }
   }, [])
 
-  const sortedTasks = useMemo(() => {
+  const sortedTasks = useMemo((): UserVisibleTask[] => {
     const tasksInPeriod = activePeriod?.tasks ?? []
 
-    return tasksInPeriod
+    return [...tasksInPeriod]
       .sort((taskA, taskB) => {
         if (isCompletedTask(taskA) && isIncompleteTask(taskB)) {
           return 1

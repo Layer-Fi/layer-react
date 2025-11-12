@@ -11,15 +11,12 @@ import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepin
 import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
 import {
-  BookkeepingPeriodStatus,
-  BookkeepingPeriod,
+  ListBookkeepingPeriodsResponse,
   ListBookkeepingPeriodsResponseSchema,
 } from '@schemas/bookkeepingPeriods'
 
-export type { BookkeepingPeriod, BookkeepingPeriodStatus }
-
 const getBookkeepingPeriods = get<
-  Record<string, unknown>,
+  ListBookkeepingPeriodsResponse,
   { businessId: string }
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/bookkeeping/periods`
@@ -46,6 +43,17 @@ function buildKey({
       tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
     } as const
   }
+
+  if (businessId) {
+    return {
+      accessToken: '',
+      apiUrl: '',
+      businessId,
+      tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
+    } as const
+  }
+
+  return null
 }
 
 export function useBookkeepingPeriods() {
@@ -66,18 +74,25 @@ export function useBookkeepingPeriods() {
       accessToken,
       { params: { businessId } },
     )()
-      .then(data =>
-        Schema
-          .decodeUnknownPromise(ListBookkeepingPeriodsResponseSchema)(data)
-          .then(({ data: { periods } }) =>
-            periods
-              .map(period => ({
-                ...period,
-                tasks: getUserVisibleTasks(period.tasks),
-              }))
-              .filter(period => isActiveBookkeepingPeriod(period)),
-          ),
+      .then(Schema.decodeUnknownPromise(ListBookkeepingPeriodsResponseSchema))
+      .then(({ data: { periods } }) =>
+        periods
+          .map(period => ({
+            ...period,
+            tasks: getUserVisibleTasks(period.tasks),
+          }))
+          .filter(period => isActiveBookkeepingPeriod(period)),
       ),
+    // () =>
+    //   Promise.resolve(MOCK_BOOKKEEPING_PERIODS_RESPONSE)
+    //     .then(({ data: { periods } }) =>
+    //       periods
+    //         .map(period => ({
+    //           ...period,
+    //           tasks: getUserVisibleTasks(period.tasks),
+    //         }))
+    //         .filter(period => isActiveBookkeepingPeriod(period)),
+    //     )),
   )
 
   return new Proxy(swrResponse, {
