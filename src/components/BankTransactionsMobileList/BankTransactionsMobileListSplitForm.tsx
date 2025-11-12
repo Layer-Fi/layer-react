@@ -2,7 +2,7 @@ import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { FileInput } from '@components/Input/FileInput'
 import { Button } from '@ui/Button/Button'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import Trash from '@icons/Trash'
@@ -21,6 +21,7 @@ import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelec
 import { HStack, VStack } from '@components/ui/Stack/Stack'
 import Scissors from '@icons/Scissors'
 import './bankTransactionsMobileListSplitForm.scss'
+import { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 interface BankTransactionsMobileListSplitFormProps {
   bankTransaction: BankTransaction
@@ -78,12 +79,12 @@ export const BankTransactionsMobileListSplitForm = ({
     }
   }, [bankTransaction.error])
 
-  const save = async () => {
+  const save = () => {
     if (!isValid) return
 
     const categorizationRequest = buildCategorizeBankTransactionPayloadForSplit(localSplits)
 
-    await categorizeBankTransaction(
+    void categorizeBankTransaction(
       bankTransaction.id,
       categorizationRequest,
     )
@@ -92,6 +93,10 @@ export const BankTransactionsMobileListSplitForm = ({
     deselect(bankTransaction.id)
     close()
   }
+
+  const handleCategoryChange = useCallback((index: number) => (value: BankTransactionCategoryComboBoxOption | null) => {
+    changeCategoryForSplitAtIndex(index, value)
+  }, [changeCategoryForSplitAtIndex])
 
   return (
     <VStack pbs='lg' gap='sm'>
@@ -111,7 +116,7 @@ export const BankTransactionsMobileListSplitForm = ({
                 >
                   <CategorySelectDrawerWithTrigger
                     value={split.category}
-                    onChange={value => changeCategoryForSplitAtIndex(index, value)}
+                    onChange={handleCategoryChange(index)}
                     showTooltips={showTooltips}
                   />
                   <AmountInput
@@ -182,11 +187,7 @@ export const BankTransactionsMobileListSplitForm = ({
         {showCategorization && (
           <Button
             fullWidth
-            onClick={() => {
-              if (!bankTransaction.processing) {
-                void save()
-              }
-            }}
+            onClick={save}
             isDisabled={isLoading || bankTransaction.processing || !isValid}
           >
             {bankTransaction.processing || isLoading ? 'Confirming...' : 'Confirm'}

@@ -176,11 +176,7 @@ export const BankTransactionsMobileListBusinessForm = ({
           {showCategorization && options.length > 0
             && (
               <Button
-                onClick={() => {
-                  if (!bankTransaction.processing) {
-                    void save()
-                  }
-                }}
+                onClick={save}
                 fullWidth
               >
                 {bankTransaction.processing || isLoading

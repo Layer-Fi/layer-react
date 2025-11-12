@@ -52,7 +52,7 @@ export const BankTransactionsMobileListMatchForm = ({
     await matchBankTransaction(bankTransaction.id, foundMatch.id, true)
   }
 
-  const save = async () => {
+  const save = () => {
     if (!showCategorization) {
       return
     }
@@ -60,11 +60,12 @@ export const BankTransactionsMobileListMatchForm = ({
     if (!selectedMatch) {
       setFormError('Select an option to match the transaction')
     }
-    else if (
+
+    if (
       selectedMatch
       && selectedMatch.id !== getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
     ) {
-      await onMatchSubmit(selectedMatch.id)
+      void onMatchSubmit(selectedMatch.id)
     }
     return
   }
@@ -115,7 +116,7 @@ export const BankTransactionsMobileListMatchForm = ({
               || bankTransaction.processing
               || selectedMatch.id === getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
             }
-            onClick={() => { void save() }}
+            onClick={save}
           >
             {isLoading || bankTransaction.processing
               ? 'Saving...'

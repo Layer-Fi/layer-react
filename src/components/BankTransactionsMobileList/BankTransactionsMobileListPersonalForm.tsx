@@ -115,11 +115,7 @@ export const BankTransactionsMobileListPersonalForm = ({
           && (
             <Button
               fullWidth
-              onClick={() => {
-                if (!bankTransaction.processing) {
-                  void save()
-                }
-              }}
+              onClick={save}
               isDisabled={alreadyAssigned || isLoading || bankTransaction.processing}
             >
               {bankTransaction.processing || isLoading
