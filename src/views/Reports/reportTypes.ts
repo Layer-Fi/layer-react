@@ -5,24 +5,24 @@ export type TimeRangePickerConfig = {
   /**
    * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
    */
-  datePickerMode?: DateRangePickerMode
+  datePickerMode?: unknown
 
   /**
    * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
    */
-  defaultDatePickerMode?: DateRangePickerMode
+  defaultDatePickerMode?: unknown
 
   /**
    * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
    */
-  allowedDatePickerModes?: ReadonlyArray<DateRangePickerMode>
+  allowedDatePickerModes?: unknown
 
   /**
    * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
    */
   customDateRanges?: unknown
 
-  dateSelectionMode?: 'month' | 'full'
+  dateSelectionMode?: DateRangePickerMode
 
   csvMoneyFormat?: MoneyFormat
 }

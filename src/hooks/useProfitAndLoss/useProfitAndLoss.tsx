@@ -12,8 +12,8 @@ import {
 import { useProfitAndLossReport } from '@hooks/useProfitAndLoss/useProfitAndLossReport'
 import {
   useGlobalDateRange,
+  type DateRangePickerMode,
 } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ReportKey, useReportModeWithFallback } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import type { BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 
 export type Scope = 'expenses' | 'revenue'
@@ -47,8 +47,8 @@ export type ProfitAndLossFilters = Record<
 >
 
 export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLossOptions) => {
-  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
+  const [displayMode, setDisplayMode] = useState<DateRangePickerMode>('month')
+  const dateRange = useGlobalDateRange({ displayMode })
 
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
@@ -204,5 +204,7 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
     dateRange,
     selectedLineItem,
     setSelectedLineItem,
+    setDisplayMode,
+    displayMode,
   }
 }

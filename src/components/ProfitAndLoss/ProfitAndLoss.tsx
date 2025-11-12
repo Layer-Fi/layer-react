@@ -9,11 +9,10 @@ import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLo
 import { ProfitAndLossReport } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { ProfitAndLossSummaries } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossCompareConfig } from '@internal-types/profit_and_loss'
-import { ReportsModeStoreProvider } from '@providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 
-type Props = PropsWithChildren & {
+type Props = PropsWithChildren<{
   tagFilter?: {
     key: string
     values: string[]
@@ -21,10 +20,9 @@ type Props = PropsWithChildren & {
   comparisonConfig?: ProfitAndLossCompareConfig
   reportingBasis?: ReportingBasis
   asContainer?: boolean
-  withReportsModeProvider?: boolean
-}
+}>
 
-const ProfitAndLossWithoutReportsModeProvider = ({
+const ProfitAndLoss = ({
   children,
   tagFilter,
   comparisonConfig,
@@ -47,19 +45,6 @@ const ProfitAndLossWithoutReportsModeProvider = ({
       </ProfitAndLossComparisonContext.Provider>
     </ProfitAndLossContext.Provider>
   )
-}
-
-const ProfitAndLossWithReportsModeProvider = (props: Props) => {
-  return (
-    <ReportsModeStoreProvider initialModes={{ ProfitAndLoss: 'monthPicker' }}>
-      <ProfitAndLossWithoutReportsModeProvider {...props} />
-    </ReportsModeStoreProvider>
-  )
-}
-
-const ProfitAndLoss = ({ withReportsModeProvider = true, ...restProps }: Props) => {
-  if (withReportsModeProvider) return <ProfitAndLossWithReportsModeProvider {...restProps} />
-  return <ProfitAndLossWithoutReportsModeProvider {...restProps} />
 }
 
 ProfitAndLoss.Chart = ProfitAndLossChart
