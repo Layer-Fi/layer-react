@@ -174,7 +174,6 @@ export const BankTransactionsMobileListBusinessForm = ({
             && (
               <Button
                 onClick={() => { setIsDrawerOpen(true) }}
-                isDisabled={!selectedCategory || isLoading || bankTransaction.processing}
                 fullWidth
                 variant='outlined'
               >
@@ -186,6 +185,7 @@ export const BankTransactionsMobileListBusinessForm = ({
               <Button
                 onClick={save}
                 fullWidth
+                isDisabled={!selectedCategory || isLoading || bankTransaction.processing}
               >
                 {bankTransaction.processing || isLoading
                   ? 'Confirming...'
