@@ -1,10 +1,10 @@
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { isCategorized } from '@components/BankTransactions/utils'
-import { Span } from '@ui/Typography/Text'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
 import './bankTransactionsMobileListItemCategory.scss'
+import { BankTransactionsBaseSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 
 export interface BankTransactionsMobileListItemCategoryProps {
   bankTransaction: BankTransaction
@@ -36,9 +36,12 @@ export const BankTransactionsMobileListItemCategory = ({
         />
       )
       : (
-        <Span ellipsis className='Layer__bankTransactionsMobileListItemCategory' size='sm'>
-          No category selected
-        </Span>
+        <BankTransactionsBaseSelectedValue
+          type='placeholder'
+          label='No category selected'
+          className='Layer__bankTransactionsMobileListItemCategory'
+          slotProps={{ Label: { size: 'sm' } }}
+        />
       )
   )
 }
