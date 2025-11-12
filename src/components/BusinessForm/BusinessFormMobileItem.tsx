@@ -4,6 +4,7 @@ import { GridListItem } from 'react-aria-components'
 import { Checkbox } from '@components/ui/Checkbox/Checkbox'
 import ChevronRight from '@icons/ChevronRight'
 import { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import './businessFormMobileItem.scss'
 
 export type BusinessFormOptionValue = BankTransactionCategoryComboBoxOption
 
@@ -27,6 +28,7 @@ export const BusinessFormMobileItem = ({
       id={value}
       key={value}
       textValue={label}
+      className='Layer__BusinessFormMobileItem'
     >
       <HStack gap='md' pi='md' pb='sm'>
         {!option.asLink && (

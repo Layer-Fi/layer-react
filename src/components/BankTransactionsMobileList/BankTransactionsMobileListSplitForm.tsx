@@ -99,7 +99,7 @@ export const BankTransactionsMobileListSplitForm = ({
   }, [changeCategoryForSplitAtIndex])
 
   return (
-    <VStack pbs='lg' gap='sm'>
+    <VStack gap='sm'>
       {showCategorization
         && (
           <VStack gap='sm'>
