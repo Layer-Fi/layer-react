@@ -32,7 +32,7 @@ export const BusinessFormMobile = ({
   return (
     <VStack gap='sm'>
       <Span size='sm' weight='bold'>
-        Select Category
+        Select category
       </Span>
       <GridList
         aria-label='Select a category'
