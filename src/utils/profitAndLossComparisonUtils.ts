@@ -1,6 +1,7 @@
 import { format, subMonths, subYears } from 'date-fns'
 import { type LineItemEncoded } from '@schemas/common/lineItem'
 import { DateGroupBy } from '@components/DateSelection/DateGroupByComboBox'
+import { DATE_FORMAT } from '@config/general'
 
 export type ComparisonPeriodParams = { endDate: Date, numberOfPeriods: number } & (
   | { mode: Exclude<DateGroupBy, DateGroupBy.AllTime> }
@@ -41,7 +42,7 @@ const generateComparisonDateRange = (
   startDate: Date,
   endDate: Date,
 ) => {
-  const label = `${format(startDate, 'MMM d, yyyy')} - ${format(endDate, 'MMM d, yyyy')}`
+  const label = `${format(startDate, DATE_FORMAT)} - ${format(endDate, DATE_FORMAT)}`
 
   return [{ date: startDate, endDate, label }]
 }
