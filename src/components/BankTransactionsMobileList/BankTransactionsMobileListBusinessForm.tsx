@@ -127,7 +127,6 @@ export const BankTransactionsMobileListBusinessForm = ({
               options={options}
               onSelect={onCategorySelect}
               selectedId={selectedCategory?.value}
-              showDescriptions={showTooltips}
             />
           )}
         <BankTransactionFormFields

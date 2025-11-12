@@ -16,7 +16,6 @@ interface BusinessFormMobileProps {
 export const BusinessFormMobile = ({
   options,
   selectedId,
-  showDescriptions,
   onSelect,
   readOnly,
 }: BusinessFormMobileProps) => {
@@ -44,7 +43,6 @@ export const BusinessFormMobile = ({
           <BusinessFormMobileItem
             key={getOptionId(option.value)}
             option={option}
-            showDescriptions={showDescriptions}
           />
         ))}
       </GridList>
