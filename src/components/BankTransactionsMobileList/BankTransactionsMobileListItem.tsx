@@ -15,7 +15,7 @@ import { Span } from '@ui/Typography/Text'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack, HStack } from '@ui/Stack/Stack'
 import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
-import { BankTransactionsMobileListItemCategory } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCategory'
+import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { isCategorized } from '@components/BankTransactions/utils'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { useInAppLinkContext, type LinkingMetadata } from '@contexts/InAppLinkContext'
@@ -273,8 +273,9 @@ export const BankTransactionsMobileListItem = ({
           </HStack>
           {!open
             && (
-              <BankTransactionsMobileListItemCategory
+              <BankTransactionsListItemCategory
                 bankTransaction={bankTransaction}
+                mobile
               />
             )}
         </div>

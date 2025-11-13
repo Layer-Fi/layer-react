@@ -39,7 +39,6 @@ import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransa
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
 import { AnimatePresence } from 'motion/react'
 import './bankTransactionRow.scss'
-import { Separator } from '@components/Separator/Separator'
 import { ExpandableContent } from '@components/ui/ExpandableContent/ExpandableContent'
 
 type Props = {
@@ -396,7 +395,6 @@ export const BankTransactionRow = ({
           <AnimatePresence initial={false}>
             {open && (
               <ExpandableContent key={`expanded-${bankTransaction.id}`}>
-                <Separator />
                 <ExpandedBankTransactionRow
                   ref={expandedRowRef}
                   bankTransaction={bankTransaction}
