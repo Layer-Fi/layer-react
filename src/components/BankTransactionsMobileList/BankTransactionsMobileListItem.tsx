@@ -1,5 +1,7 @@
 import { useContext, useEffect, useRef, useState, useMemo, type ReactNode } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { AnimatePresence } from 'motion/react'
+import { ExpandableContent } from '@components/ui/ExpandableContent/ExpandableContent'
 import FileIcon from '@icons/File'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
@@ -276,16 +278,19 @@ export const BankTransactionsMobileListItem = ({
               />
             )}
         </div>
-        { open
-          && (
-            <BankTransactionsMobileListItemExpandedRow
-              bankTransaction={bankTransaction}
-              showCategorization={categorizationEnabled}
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showTooltips={showTooltips}
-            />
+        <AnimatePresence initial={false}>
+          {open && (
+            <ExpandableContent key={`expanded-${bankTransaction.id}`}>
+              <BankTransactionsMobileListItemExpandedRow
+                bankTransaction={bankTransaction}
+                showCategorization={categorizationEnabled}
+                showDescriptions={showDescriptions}
+                showReceiptUploads={showReceiptUploads}
+                showTooltips={showTooltips}
+              />
+            </ExpandableContent>
           )}
+        </AnimatePresence>
 
       </VStack>
 

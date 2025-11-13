@@ -2,6 +2,8 @@ import { ErrorText } from '@components/Typography/ErrorText'
 import { RetryButton } from '@components/Button/RetryButton'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { AnimatePresence } from 'motion/react'
+import { ExpandableContent } from '@components/ui/ExpandableContent/ExpandableContent'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import FileIcon from '@icons/File'
 import { BankTransaction } from '@internal-types/bank_transactions'
@@ -205,24 +207,30 @@ export const BankTransactionsListItem = ({
         )
         : null}
       <span className='Layer__bank-transaction-list-item__expanded-row'>
-        <ExpandedBankTransactionRow
-          ref={expandedRowRef}
-          bankTransaction={bankTransaction}
-          isOpen={openExpandedRow}
-          close={() => setOpenExpandedRow(false)}
-          categorized={categorized}
-          asListItem={true}
-          submitBtnText={
-            categorized
-              ? stringOverrides?.updateButtonText || 'Update'
-              : stringOverrides?.approveButtonText || 'Approve'
-          }
-          containerWidth={containerWidth}
+        <AnimatePresence initial={false}>
+          {openExpandedRow && (
+            <ExpandableContent key={`expanded-${bankTransaction.id}`}>
+              <ExpandedBankTransactionRow
+                ref={expandedRowRef}
+                bankTransaction={bankTransaction}
+                isOpen={openExpandedRow}
+                close={() => setOpenExpandedRow(false)}
+                categorized={categorized}
+                asListItem={true}
+                submitBtnText={
+                  categorized
+                    ? stringOverrides?.updateButtonText || 'Update'
+                    : stringOverrides?.approveButtonText || 'Approve'
+                }
+                containerWidth={containerWidth}
 
-          showDescriptions={showDescriptions}
-          showReceiptUploads={showReceiptUploads}
-          showTooltips={showTooltips}
-        />
+                showDescriptions={showDescriptions}
+                showReceiptUploads={showReceiptUploads}
+                showTooltips={showTooltips}
+              />
+            </ExpandableContent>
+          )}
+        </AnimatePresence>
       </span>
       <span className='Layer__bank-transaction-list-item__base-row'>
         {categorizationEnabled && !categorized
