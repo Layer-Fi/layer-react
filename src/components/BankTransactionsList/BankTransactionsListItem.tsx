@@ -200,12 +200,11 @@ export const BankTransactionsListItem = ({
         />
       </HStack>
       {!categorizationEnabled && !categorized
-        ? (
+        && (
           <span className='Layer__bank-transaction-list-item__processing-info'>
             <BankTransactionsProcessingInfo />
           </span>
-        )
-        : null}
+        )}
       <span className='Layer__bank-transaction-list-item__expanded-row'>
         <AnimatePresence initial={false}>
           {openExpandedRow && (
@@ -261,7 +260,7 @@ export const BankTransactionsListItem = ({
               : null}
 
         {categorizationEnabled && !categorized && !showRetry
-          ? (
+          && (
             <SubmitButton
               onClick={() => {
                 if (!bankTransaction.processing) {
@@ -276,10 +275,9 @@ export const BankTransactionsListItem = ({
                 ? stringOverrides?.approveButtonText || 'Approve'
                 : stringOverrides?.updateButtonText || 'Update'}
             </SubmitButton>
-          )
-          : null}
+          )}
         {categorizationEnabled && !categorized && showRetry
-          ? (
+          && (
             <RetryButton
               onClick={() => {
                 if (!bankTransaction.processing) {
@@ -292,16 +290,14 @@ export const BankTransactionsListItem = ({
             >
               Retry
             </RetryButton>
-          )
-          : null}
+          )}
       </span>
       {bankTransaction.error && showRetry
-        ? (
+        && (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.
           </ErrorText>
-        )
-        : null}
+        )}
     </li>
   )
 }
