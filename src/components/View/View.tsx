@@ -11,6 +11,7 @@ export interface ViewProps {
   showHeader?: boolean
   header?: ReactNode
   headerControls?: ReactNode // @deprecated
+  headerActions?: ReactNode
   type?: 'default' | 'panel'
   withSidebar?: boolean
   sidebar?: ReactNode
@@ -26,6 +27,7 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
       children,
       headerControls,
       header,
+      headerActions,
       type,
       withSidebar = false,
       sidebar,
@@ -56,6 +58,7 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
             className={classNames(
               headerControls ? 'Layer__view-header--paddings' : undefined,
             )}
+            headerActions={headerActions}
           >
             {header ?? headerControls}
           </ViewHeader>

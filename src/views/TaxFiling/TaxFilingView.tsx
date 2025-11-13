@@ -1,10 +1,14 @@
-import { useReducer, useEffect, useState } from 'react'
+import { useReducer, useEffect, useState, useCallback } from 'react'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { Toggle } from '@components/Toggle/Toggle'
 import { View } from '@components/View/View'
 import { Container } from '@components/Container/Container'
 import { SubmitButton } from '@components/Button/SubmitButton'
 import { VStack, HStack } from '@ui/Stack/Stack'
+import { ComboBox } from '@components/ui/ComboBox/ComboBox'
+import { Button } from '@ui/Button/Button'
+import { DropdownMenu, MenuList, MenuItem } from '@ui/DropdownMenu/DropdownMenu'
+import MoreVertical from '@icons/MoreVertical'
 import { TaxFilingGeneralInformation } from './TaxFilingGeneralInformation'
 import { TaxFilingProfile } from './TaxFilingProfile'
 import { TaxEstimate } from './TaxEstimate'
@@ -19,6 +23,17 @@ interface TaxFilingViewProps {
   onNavigateToBankTransactions?: () => void
 }
 
+type YearOption = {
+  label: string
+  value: string
+}
+
+const yearOptions: YearOption[] = [
+  { label: '2025', value: '2025' },
+  { label: '2024', value: '2024' },
+  { label: '2023', value: '2023' },
+]
+
 export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewProps = {}) => {
   const [isOnboarded, setIsOnboarded] = useState(true)
   const [activeTab, setActiveTab] = useState<'overview' | 'tax-estimates' | 'tax-payments' | 'tax-profile'>('overview')
@@ -26,6 +41,7 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
   const [federalSectionExpanded, setFederalSectionExpanded] = useState(false)
   const [stateSectionExpanded, setStateSectionExpanded] = useState(false)
   const [paymentsSectionExpanded, setPaymentsSectionExpanded] = useState(false)
+  const [selectedYear, setSelectedYear] = useState<YearOption | null>(yearOptions[0])
 
   useEffect(() => {
     if (!isOnboarded) {
@@ -113,9 +129,43 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
     setPaymentsSectionExpanded(expanded)
   }
 
+  const MenuTrigger = useCallback(() => {
+    return (
+      <Button icon variant='outlined'>
+        <MoreVertical size={14} />
+      </Button>
+    )
+  }, [])
+
   return (
     <ProfitAndLoss asContainer={false}>
-      <View title='Tax Filing' showHeader={true}>
+      <View
+        title='Tax Filing'
+        showHeader={true}
+        headerActions={(
+          <HStack gap='sm' align='center' className='Layer__tax-filing-view__header-actions'>
+            <ComboBox
+              selectedValue={selectedYear}
+              onSelectedValueChange={setSelectedYear}
+              options={yearOptions}
+              isClearable={false}
+              isSearchable={false}
+            />
+            <DropdownMenu
+              ariaLabel='Tax filing options'
+              slots={{ Trigger: MenuTrigger }}
+              slotProps={{ Dialog: { width: 200 } }}
+              variant='compact'
+            >
+              <MenuList>
+                <MenuItem>
+                  Tax Profile
+                </MenuItem>
+              </MenuList>
+            </DropdownMenu>
+          </HStack>
+        )}
+      >
         <Toggle
           key={`tax-filing-toggle-${isOnboarded}-${activeTab}`}
           name='tax-filing-tabs'

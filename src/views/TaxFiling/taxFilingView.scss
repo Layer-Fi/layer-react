@@ -1,5 +1,5 @@
 .Layer__tax-filing {
-  max-width: 85rem;
+  max-width: 1460px;
 
   @media (width <= 1024px) {
     max-width: 50rem;
@@ -24,4 +24,9 @@
 .Layer__tax-estimate__details-container {
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--color-base-300);
+}
+
+.Layer__tax-filing-view__header-actions {
+  width: auto;
+  min-width: 8rem;
 }
