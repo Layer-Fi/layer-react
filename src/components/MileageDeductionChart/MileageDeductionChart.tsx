@@ -9,7 +9,6 @@ import {
   CartesianGrid,
   Tooltip,
   Cell,
-  ReferenceLine,
   Rectangle,
 } from 'recharts'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -29,10 +28,10 @@ interface MileageYear {
 }
 
 interface MileageDeductionChartProps {
-  data?: {
+  data: {
     years: MileageYear[]
   }
-  selectedYear?: number
+  selectedYear: number
   onMonthClick?: (year: number, month: number) => void
 }
 
@@ -40,31 +39,9 @@ const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
 const BAR_SIZE = 20
 const CURSOR_MARGIN = 12
 
-const SAMPLE_DATA = {
-  years: [
-    {
-      year: 2025,
-      months: [
-        { month: 1, miles: 298, estimatedDeduction: 1923 },
-        { month: 2, miles: 0, estimatedDeduction: 0 },
-        { month: 3, miles: 456, estimatedDeduction: 2945 },
-        { month: 4, miles: 789, estimatedDeduction: 5095 },
-        { month: 5, miles: 234, estimatedDeduction: 1511 },
-        { month: 6, miles: 0, estimatedDeduction: 0 },
-        { month: 7, miles: 612, estimatedDeduction: 3952 },
-        { month: 8, miles: 891, estimatedDeduction: 5754 },
-        { month: 9, miles: 345, estimatedDeduction: 2227 },
-        { month: 10, miles: 1523, estimatedDeduction: 9823 },
-        { month: 11, miles: 678, estimatedDeduction: 4378 },
-        { month: 12, miles: 423, estimatedDeduction: 2730 },
-      ],
-    },
-  ],
-}
-
 export const MileageDeductionChart = ({
-  data = SAMPLE_DATA,
-  selectedYear = 2025,
+  data,
+  selectedYear,
   onMonthClick,
 }: MileageDeductionChartProps) => {
   const { getColor } = useLayerContext()
@@ -97,7 +74,9 @@ export const MileageDeductionChart = ({
         <div className='Layer__chart__tooltip-list'>
           <li>
             <span className='Layer__chart__tooltip-label'>
-              {data.monthName} {selectedYear}
+              {data.monthName}
+              {' '}
+              {selectedYear}
             </span>
           </li>
           <li>
@@ -109,7 +88,8 @@ export const MileageDeductionChart = ({
           <li>
             <span className='Layer__chart__tooltip-label'>Deduction:</span>
             <span className='Layer__chart__tooltip-value positive'>
-              ${centsToDollars(data.deduction)}
+              $
+              {centsToDollars(data.deduction)}
             </span>
           </li>
         </div>
@@ -155,7 +135,7 @@ export const MileageDeductionChart = ({
 
   return (
     <VStack className='Layer__mileage-chart' align='center' justify='center'>
-      <ResponsiveContainer width='100%' height={300} >
+      <ResponsiveContainer width='100%' height={300}>
         <ComposedChart
           data={chartData}
           margin={CHART_MARGIN}
@@ -165,7 +145,6 @@ export const MileageDeductionChart = ({
             stroke={getColor(200)?.hex ?? '#f0f0f0'}
             strokeDasharray='5 5'
           />
-
 
           <YAxis
             tick={CustomizedYTick}
@@ -202,4 +181,3 @@ export const MileageDeductionChart = ({
     </VStack>
   )
 }
-

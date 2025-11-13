@@ -218,11 +218,10 @@ export const MileageTrackingStats = () => {
           </VStack>
         </VStack>
 
-        <VStack fluid justify='end' >
+        <VStack fluid justify='end'>
           <MileageDeductionChart data={chartData} selectedYear={selectedYear} />
         </VStack>
       </HStack>
     </Container>
   )
 }
-
