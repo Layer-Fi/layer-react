@@ -17,7 +17,7 @@ import { reducer, initialState } from './store'
 
 export const TaxFilingView = () => {
   const [isOnboarded, setIsOnboarded] = useState(true)
-  const [activeTab, setActiveTab] = useState<'overview' | 'tax-estimates' | 'tax-calculations' | 'tax-profile'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'tax-estimates' | 'tax-payments' | 'tax-profile'>('overview')
   const [taxFilingDetails, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
@@ -64,8 +64,8 @@ export const TaxFilingView = () => {
               disabledMessage: 'Please complete your tax profile first',
             },
             {
-              value: 'tax-calculations',
-              label: 'Tax Calculations',
+              value: 'tax-payments',
+              label: 'Tax Payments',
               disabled: !isOnboarded,
               disabledMessage: 'Please complete your tax profile first',
             },
@@ -94,7 +94,7 @@ export const TaxFilingView = () => {
             </VStack>
           )}
 
-          {activeTab === 'tax-calculations' && (
+          {activeTab === 'tax-payments' && (
             <VStack gap='md' pb='lg' pi='lg'>
               <TaxPayments
                 taxEstimateAnnualProjectionProps={{
