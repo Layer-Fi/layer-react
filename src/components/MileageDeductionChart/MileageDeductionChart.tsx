@@ -1,0 +1,204 @@
+import { useMemo, type FunctionComponent } from 'react'
+import { format } from 'date-fns'
+import {
+  ResponsiveContainer,
+  ComposedChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Cell,
+  ReferenceLine,
+  Rectangle,
+} from 'recharts'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { centsToDollars } from '@models/Money'
+import './mileageDeductionChart.scss'
+
+interface MileageMonth {
+  month: number
+  miles: number
+  estimatedDeduction: number
+}
+
+interface MileageYear {
+  year: number
+  months: MileageMonth[]
+}
+
+interface MileageDeductionChartProps {
+  data?: {
+    years: MileageYear[]
+  }
+  selectedYear?: number
+  onMonthClick?: (year: number, month: number) => void
+}
+
+const CHART_MARGIN = { top: 20, right: 20, bottom: 20, left: 20 }
+const BAR_SIZE = 20
+const CURSOR_MARGIN = 12
+
+const SAMPLE_DATA = {
+  years: [
+    {
+      year: 2025,
+      months: [
+        { month: 1, miles: 298, estimatedDeduction: 1923 },
+        { month: 2, miles: 0, estimatedDeduction: 0 },
+        { month: 3, miles: 456, estimatedDeduction: 2945 },
+        { month: 4, miles: 789, estimatedDeduction: 5095 },
+        { month: 5, miles: 234, estimatedDeduction: 1511 },
+        { month: 6, miles: 0, estimatedDeduction: 0 },
+        { month: 7, miles: 612, estimatedDeduction: 3952 },
+        { month: 8, miles: 891, estimatedDeduction: 5754 },
+        { month: 9, miles: 345, estimatedDeduction: 2227 },
+        { month: 10, miles: 1523, estimatedDeduction: 9823 },
+        { month: 11, miles: 678, estimatedDeduction: 4378 },
+        { month: 12, miles: 423, estimatedDeduction: 2730 },
+      ],
+    },
+  ],
+}
+
+export const MileageDeductionChart = ({
+  data = SAMPLE_DATA,
+  selectedYear = 2025,
+  onMonthClick,
+}: MileageDeductionChartProps) => {
+  const { getColor } = useLayerContext()
+
+  const chartData = useMemo(() => {
+    const yearData = data.years.find(y => y.year === selectedYear)
+    if (!yearData) return []
+
+    return Array.from({ length: 12 }, (_, i) => {
+      const monthData = yearData.months.find(m => m.month === i + 1)
+      return {
+        month: i + 1,
+        monthName: format(new Date(selectedYear, i, 1), 'MMM'),
+        deduction: monthData?.estimatedDeduction || 0,
+        miles: monthData?.miles || 0,
+      }
+    })
+  }, [data, selectedYear])
+
+  const formatYAxis = (value: number) => {
+    return `$${(value / 100).toLocaleString()}`
+  }
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (!active || !payload?.[0]) return null
+
+    const data = payload[0].payload
+    return (
+      <div className='Layer__chart__tooltip'>
+        <div className='Layer__chart__tooltip-list'>
+          <li>
+            <span className='Layer__chart__tooltip-label'>
+              {data.monthName} {selectedYear}
+            </span>
+          </li>
+          <li>
+            <span className='Layer__chart__tooltip-label'>Miles:</span>
+            <span className='Layer__chart__tooltip-value'>
+              {data.miles.toLocaleString()}
+            </span>
+          </li>
+          <li>
+            <span className='Layer__chart__tooltip-label'>Deduction:</span>
+            <span className='Layer__chart__tooltip-value positive'>
+              ${centsToDollars(data.deduction)}
+            </span>
+          </li>
+        </div>
+      </div>
+    )
+  }
+
+  const CustomizedYTick = ({
+    payload,
+    ...restProps
+  }: {
+    payload: { value: number }
+  }) => {
+    return (
+      <text {...restProps} className='Layer__chart_y-axis-tick'>
+        <tspan dy='0.355em'>{formatYAxis(payload.value)}</tspan>
+      </text>
+    )
+  }
+
+  const handleBarClick = (data: any) => {
+    if (onMonthClick) {
+      onMonthClick(selectedYear, data.month)
+    }
+  }
+
+  const CustomizedCursor: FunctionComponent<any> = ({ points, height }: any) => {
+    const boxWidth = BAR_SIZE + (2 * CURSOR_MARGIN)
+
+    return (
+      <Rectangle
+        fill='#F7F8FA'
+        stroke='none'
+        x={points[0].x - boxWidth / 2}
+        y={CHART_MARGIN.top}
+        width={boxWidth}
+        height={height || 0}
+        radius={6}
+        className='Layer__chart__tooltip-cursor'
+      />
+    )
+  }
+
+  return (
+    <div className='Layer__mileage-chart'>
+      <ResponsiveContainer width='100%' height={300} className='Layer__chart-container'>
+        <ComposedChart
+          data={chartData}
+          margin={CHART_MARGIN}
+        >
+          <CartesianGrid
+            vertical={false}
+            stroke={getColor(200)?.hex ?? '#f0f0f0'}
+            strokeDasharray='5 5'
+          />
+
+
+          <YAxis
+            tick={CustomizedYTick}
+            domain={[0, 'auto']}
+          />
+
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={<CustomizedCursor />}
+            animationDuration={100}
+            animationEasing='ease-out'
+          />
+
+          <Bar
+            dataKey='deduction'
+            barSize={BAR_SIZE}
+            radius={[2, 2, 0, 0]}
+            className='Layer__mileage-chart__bar--deduction'
+            onClick={handleBarClick}
+            cursor={onMonthClick ? 'pointer' : 'default'}
+          >
+            {chartData.map((_entry, index) => (
+              <Cell key={`cell-${index}`} />
+            ))}
+          </Bar>
+
+          <XAxis
+            dataKey='monthName'
+            tickLine={false}
+            tick={{ fontSize: 12 }}
+          />
+        </ComposedChart>
+      </ResponsiveContainer>
+    </div>
+  )
+}
+
