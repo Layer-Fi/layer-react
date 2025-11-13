@@ -1,74 +1,46 @@
-.Layer__tax-estimate__income-stream {
-  position: relative;
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  min-height: 80px;
-  max-width: 200px;
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-xs);
-  border: 1px solid var(--color-base-300);
+.Layer__tax-estimate__overview {
   background: var(--color-base-0);
 }
 
-.Layer__tax-estimate__income-stream__remove {
-  position: absolute;
-  top: var(--spacing-xs);
-  right: var(--spacing-xs);
-  height: auto;
-  width: auto;
-  min-width: auto;
-  padding: var(--spacing-3xs);
+.Layer__tax-estimate__breakdown {
+  width: 100%;
 }
 
-.Layer__tax-estimate__add-stream-link {
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: inherit;
-  font-family: inherit;
-  color: var(--color-primary);
-  text-decoration: underline;
+.Layer__tax-estimate__due-date {
+  margin-top: var(--spacing-sm);
+}
 
-  &:hover {
-    color: var(--color-primary-dark);
+.Layer__tax-estimate__tax-row {
+  padding: var(--spacing-lg);
+}
+
+.Layer__tax-estimate__description-button {
+  display: inline-block;
+
+  .Layer__UI__Button {
+    height: auto;
+    min-height: auto;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--text-xs);
   }
 }
 
-.Layer__tax-estimate__period-hint {
-  margin-left: var(--spacing-2xs);
-}
-
-.Layer__tax-estimate__total {
-  padding-top: var(--spacing-md);
-  border-top: 1px solid var(--color-base-200);
+.Layer__tax-estimate__row-label {
+  height: 2rem;
   margin-top: var(--spacing-xs);
 }
 
-.Layer__tax-estimate__tabs .Layer__tabs-option-content {
-  flex-direction: column;
-  gap: var(--spacing-3xs);
-  align-items: center;
-  line-height: 1.2;
-  text-align: center;
-  white-space: pre-line;
-}
+.Layer__tax-estimate__quarter-item {
+  padding: var(--spacing-sm);
+  cursor: pointer;
 
-.Layer__tax-estimate__period-selector-item {
-  .Layer__ComboBoxContainer {
-    width: 100%;
-    min-width: 120px;
-    max-width: fit-content;
+  &:hover {
+    background: var(--color-base-50);
   }
 }
 
-.Layer__tax-estimate__period-selector {
-  gap: var(--spacing-md);
-  max-width: 10rem;
-}
-
-.Layer__tax-filing .Layer__P {
-  max-width: 100%;
+.Layer__tax-estimate__overview-total {
+  width: 15rem;
+  padding: var(--spacing-lg);
+  border-right: 1px solid var(--color-base-300);
 }

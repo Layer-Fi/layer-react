@@ -9,13 +9,15 @@ import { UserCircle, CheckCircle } from 'lucide-react'
 import { TaxFilingGeneralInformation } from './TaxFilingGeneralInformation'
 import { TaxFilingProfile } from './TaxFilingProfile'
 import { TaxEstimate } from './TaxEstimate'
+import { TaxCalculations } from './TaxCalculations'
 import './taxFilingView.scss'
 import { Separator } from '@components/Separator/Separator'
 import { reducer, initialState } from './store'
 
 export const TaxFilingView = () => {
-  const [isOnboarded, setIsOnboarded] = useState(false)
-  const [activeTab, setActiveTab] = useState('tax-profile')
+  const [isOnboarded, setIsOnboarded] = useState(true)
+  const [activeTab, setActiveTab] = useState<'tax-estimates' | 'tax-calculations' | 'tax-profile'>('tax-estimates')
+  const [calculationType, setCalculationType] = useState<'federal' | 'state'>('federal')
   const [taxFilingDetails, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
@@ -29,6 +31,11 @@ export const TaxFilingView = () => {
     requestAnimationFrame(() => {
       setActiveTab('tax-estimates')
     })
+  }
+
+  const handleNavigateToTaxCalculations = (type: 'federal' | 'state') => {
+    setCalculationType(type)
+    setActiveTab('tax-calculations')
   }
 
   const { general_information, profile } = taxFilingDetails
@@ -58,6 +65,12 @@ export const TaxFilingView = () => {
               disabledMessage: 'Please complete your tax profile first',
             },
             {
+              value: 'tax-calculations',
+              label: 'Tax Calculations',
+              disabled: !isOnboarded,
+              disabledMessage: 'Please complete your tax profile first',
+            },
+            {
               value: 'tax-profile',
               label: 'Tax Profile',
               leftIcon: isOnboarded
@@ -66,13 +79,19 @@ export const TaxFilingView = () => {
             },
           ]}
           selected={activeTab}
-          onChange={opt => setActiveTab(opt.target.value)}
+          onChange={opt => setActiveTab(opt.target.value as typeof activeTab)}
         />
 
         <Container name='tax-filing'>
           {activeTab === 'tax-estimates' && (
             <VStack gap='md' pb='lg' pi='lg'>
-              <TaxEstimate />
+              <TaxEstimate onNavigateToTaxCalculations={handleNavigateToTaxCalculations} />
+            </VStack>
+          )}
+
+          {activeTab === 'tax-calculations' && (
+            <VStack gap='md' pb='lg' pi='lg'>
+              <TaxCalculations type={calculationType} />
             </VStack>
           )}
 

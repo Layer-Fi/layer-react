@@ -6,8 +6,8 @@
   }
 
   .Layer__input-group,
- .Layer__UI__DatePicker,
- .Layer__separator {
+  .Layer__UI__DatePicker,
+  .Layer__separator {
     max-width: 40rem;
 
     @media (width <= 1024px) {
@@ -18,4 +18,16 @@
   .Layer__input {
     width: 100%;
   }
+
+  .Layer__tax-estimate__breakdown {
+    .Layer__separator {
+      max-width: 100%;
+    }
+  }
+}
+
+.Layer__tax-estimate__overview-container,
+ .Layer__tax-estimate__details-container {
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-base-300);
 }

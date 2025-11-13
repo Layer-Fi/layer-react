@@ -1,24 +1,12 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { VStack, HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
-import { P, Span, Label } from '@ui/Typography/Text'
-import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { Tabs } from '@components/Tabs/Tabs'
+import { Span } from '@ui/Typography/Text'
 import { Button } from '@ui/Button/Button'
-import { X } from 'lucide-react'
+import { ChevronDown, Download } from 'lucide-react'
 import { convertNumberToCurrency } from '@utils/format'
 import './taxEstimate.scss'
-
-type IncomeStreamType = 'self-employed' | 'business' | 'investment' | 'ordinary'
-type PeriodType = 'quarterly' | 'yearly'
-type TabType = 'overview' | 'self-employed' | 'ordinary'
-
-interface IncomeStream {
-  type: IncomeStreamType
-  label: string
-  form: string
-  isActive: boolean
-}
+import { TaxEstimateAnnualProjection } from './TaxEstimateAnnualProjection'
 
 interface QuarterlyEstimate {
   quarter: string
@@ -26,218 +14,94 @@ interface QuarterlyEstimate {
 }
 
 interface TaxEstimateProps {
-  incomeStreams?: IncomeStream[]
+  projectedTaxesOwed?: number
+  taxesDueDate?: Date
+  federalTaxesOwed?: number
+  federalTaxesPaid?: number
+  stateTaxesOwed?: number
+  stateTaxesPaid?: number
+  quarterlyEstimates?: QuarterlyEstimate[]
+  onNavigateToTaxCalculations?: (type: 'federal' | 'state') => void
 }
-
-const defaultIncomeStreams: IncomeStream[] = [
-  { type: 'self-employed', label: 'Self-employed income', form: 'Form 1099', isActive: true },
-  { type: 'business', label: 'Business income', form: 'Form K1', isActive: false },
-  { type: 'investment', label: 'Investment income', form: '', isActive: false },
-  { type: 'ordinary', label: 'Ordinary income', form: 'Form W2', isActive: true },
-]
-
-type PeriodOption = {
-  label: string
-  value: PeriodType
-}
-
-const periodOptions: PeriodOption[] = [
-  { value: 'quarterly', label: 'Quarterly' },
-  { value: 'yearly', label: 'Yearly' },
-]
-
-type YearOption = {
-  label: string
-  value: string
-}
-
-const yearOptions: YearOption[] = [
-  { value: '2024', label: '2024' },
-  { value: '2023', label: '2023' },
-  { value: '2022', label: '2022' },
-]
 
 const defaultQuarterlyEstimates: QuarterlyEstimate[] = [
-  { quarter: 'Q1 2024', amount: 800.00 },
-  { quarter: 'Q2 2024', amount: 800.00 },
-  { quarter: 'Q3 2024', amount: 800.00 },
-  { quarter: 'Q4 2024', amount: 800.00 },
+  { quarter: 'Q1', amount: 945.52 },
+  { quarter: 'Q2', amount: 6654.00 },
+  { quarter: 'Q3', amount: 4649.00 },
+  { quarter: 'Q4', amount: 6199.00 },
 ]
 
-export const TaxEstimate = ({ incomeStreams: initialIncomeStreams = defaultIncomeStreams }: TaxEstimateProps) => {
-  const [periodType, setPeriodType] = useState<PeriodType>('quarterly')
-  const [activeTab, setActiveTab] = useState<TabType>('overview')
-  const [selectedYear, setSelectedYear] = useState('2024')
-  const [incomeStreams, setIncomeStreams] = useState<IncomeStream[]>(initialIncomeStreams)
+const defaultProjectedTaxesOwed = 18448.00
+const defaultFederalTaxesOwed = 14816.00
+const defaultFederalTaxesPaid = 150.00
+const defaultStateTaxesOwed = 3782.00
+const defaultStateTaxesPaid = 0.00
+const defaultTaxesDueDate = new Date('2022-01-17')
 
-  const relevantStreams = useMemo(() => incomeStreams.filter(s => s.isActive), [incomeStreams])
-  const irrelevantStreams = useMemo(() => incomeStreams.filter(s => !s.isActive), [incomeStreams])
-
-  const handleAddStream = (type: IncomeStreamType) => {
-    setIncomeStreams(streams => streams.map(s => s.type === type ? { ...s, isActive: true } : s))
-  }
-
-  const handleRemoveStream = (type: IncomeStreamType) => {
-    setIncomeStreams(streams => streams.map(s => s.type === type ? { ...s, isActive: false } : s))
-  }
-
-  const quarterlyEstimates = defaultQuarterlyEstimates
-  const totalEstimate = quarterlyEstimates.reduce((sum, q) => sum + q.amount, 0)
+export const TaxEstimate = ({
+  projectedTaxesOwed = defaultProjectedTaxesOwed,
+  taxesDueDate = defaultTaxesDueDate,
+  federalTaxesOwed = defaultFederalTaxesOwed,
+  federalTaxesPaid = defaultFederalTaxesPaid,
+  stateTaxesOwed = defaultStateTaxesOwed,
+  stateTaxesPaid = defaultStateTaxesPaid,
+  quarterlyEstimates = defaultQuarterlyEstimates,
+  onNavigateToTaxCalculations,
+}: TaxEstimateProps) => {
+  const [selectedYear] = useState('2021')
 
   return (
     <VStack gap='lg' fluid>
-      <VStack gap='xs' fluid>
-        <Heading size='lg'>Relevant taxable income streams</Heading>
-        <P variant='subtle' size='sm'>
-          Based on your tax profile, these are the income streams included in your calculation.
-        </P>
-      </VStack>
-
-      {relevantStreams.length > 0 && (
-        <HStack gap='md' justify='center' fluid>
-          {relevantStreams.map(stream => (
-            <div
-              key={stream.type}
-              className='Layer__tax-estimate__income-stream Layer__tax-estimate__income-stream--active'
-            >
-              <div className='Layer__tax-estimate__income-stream__remove'>
-                <Button
-                  variant='ghost'
-                  icon
-                  onPress={() => handleRemoveStream(stream.type)}
-                  aria-label={`Remove ${stream.label}`}
-                >
-                  <X size={16} />
-                </Button>
-              </div>
-              <VStack gap='xs'>
-                <Span weight='bold' size='sm'>
-                  {stream.label}
-                </Span>
-                {stream.form && (
-                  <Span variant='subtle' size='xs'>
-                    (
-                    {stream.form}
-                    )
-                  </Span>
-                )}
-              </VStack>
-            </div>
-          ))}
-        </HStack>
-      )}
-
-      {irrelevantStreams.length > 0 && (
-        <VStack gap='xs' fluid>
-          <P variant='subtle' size='sm'>
-            Based on your accounting data and tax profile, the following income streams were not included in your calculation.
-          </P>
-          <P variant='subtle' size='sm'>
-            Feel free to add them back if relevant.
+      <HStack justify='space-between' align='center' fluid>
+        <VStack>
+          <Heading size='lg'>Annual Taxes</Heading>
+          <Span size='md' variant='subtle'>
+            Projected for Year
             {' '}
-            {irrelevantStreams.map((stream, index) => (
-              <span key={stream.type}>
-                {index > 0 && ', '}
-                <button
-                  type='button'
-                  className='Layer__tax-estimate__add-stream-link'
-                  onClick={() => handleAddStream(stream.type)}
-                >
-                  {stream.label}
-                  {stream.form && ` (${stream.form})`}
-                </button>
-              </span>
-            ))}
-            .
-          </P>
+            {selectedYear}
+          </Span>
         </VStack>
-      )}
+      </HStack>
+      <VStack gap='md' fluid className='Layer__tax-estimate__overview'>
+        <TaxEstimateAnnualProjection
+          projectedTaxesOwed={projectedTaxesOwed}
+          taxesDueDate={taxesDueDate}
+          federalTaxesOwed={federalTaxesOwed}
+          federalTaxesPaid={federalTaxesPaid}
+          stateTaxesOwed={stateTaxesOwed}
+          stateTaxesPaid={stateTaxesPaid}
+          onNavigateToTaxCalculations={onNavigateToTaxCalculations}
+        />
 
-      <VStack gap='md' fluid>
-        <HStack gap='md' align='center' className='Layer__tax-estimate__period-selector'>
-          <VStack gap='xs' className='Layer__tax-estimate__period-selector-item'>
-            <Label size='sm'>Period</Label>
-            <ComboBox
-              options={periodOptions}
-              onSelectedValueChange={option => setPeriodType(option?.value || 'quarterly')}
-              selectedValue={periodOptions.find(opt => opt.value === periodType) || null}
-              isSearchable={false}
-              isClearable={false}
-            />
-          </VStack>
-          {periodType === 'quarterly' && (
-            <VStack gap='xs' className='Layer__tax-estimate__period-selector-item'>
-              <Label size='sm'>Year</Label>
-              <ComboBox
-                options={yearOptions}
-                onSelectedValueChange={option => setSelectedYear(option?.value || '2024')}
-                selectedValue={yearOptions.find(opt => opt.value === selectedYear) || null}
-                isSearchable={false}
-                isClearable={false}
-              />
-            </VStack>
-          )}
-        </HStack>
+        <VStack gap='md' fluid className='Layer__tax-estimate__details-container'>
+          <HStack justify='space-between' align='end' pb='lg' pi='lg'>
+            <Heading size='md'>Payments</Heading>
+            <HStack gap='md'>
+              <Button variant='ghost' onPress={() => {}}>
+                Tax Forms
+                <Download size={16} />
+              </Button>
+              <Button variant='solid' onPress={() => {}}>
+                Record Payment
+              </Button>
+            </HStack>
+          </HStack>
 
-        <div className='Layer__tax-estimate__tabs'>
-          <Tabs
-            name='tax-estimate-tabs'
-            options={[
-              { value: 'overview', label: 'Overview' },
-              { value: 'self-employed', label: 'Self employed income (1099)' },
-              { value: 'ordinary', label: 'Ordinary income (W2)' },
-            ]}
-            selected={activeTab}
-            onChange={e => setActiveTab(e.target.value as TabType)}
-          />
-        </div>
+          <VStack gap='sm' fluid>
+            {quarterlyEstimates.map(estimate => (
+              <HStack key={estimate.quarter} justify='space-between' align='center' fluid className='Layer__tax-estimate__quarter-item'>
+                <HStack gap='md' align='center'>
+                  <ChevronDown size={24} fontWeight='bold' />
+                  <Span size='xl' weight='bold'>{estimate.quarter}</Span>
 
-        {activeTab === 'overview' && (
-          <VStack gap='md' fluid>
-            <Heading size='md'>
-              Tax Estimates:
-              {selectedYear}
-            </Heading>
-            <VStack gap='sm' fluid>
-              {periodType === 'quarterly' && quarterlyEstimates.map(estimate => (
-                <HStack key={estimate.quarter} justify='space-between' fluid>
-                  <Span size='sm'>
-                    {estimate.quarter}
-                    {estimate.quarter === 'Q1 2024' && (
-                      <Span variant='subtle' size='xs' className='Layer__tax-estimate__period-hint'>
-                        {' '}
-                        (clicking this sets period selector)
-                      </Span>
-                    )}
-                  </Span>
-                  <Span size='sm' weight='bold'>
-                    {convertNumberToCurrency(estimate.amount)}
-                  </Span>
                 </HStack>
-              ))}
-              <HStack justify='space-between' fluid className='Layer__tax-estimate__total'>
-                <Span size='md' weight='bold'>
-                  Total tax estimate
-                </Span>
-                <Span size='md' weight='bold'>
-                  {convertNumberToCurrency(totalEstimate)}
+                <Span size='md'>
+                  {convertNumberToCurrency(estimate.amount)}
                 </Span>
               </HStack>
-            </VStack>
+            ))}
           </VStack>
-        )}
-
-        {activeTab === 'self-employed' && (
-          <VStack gap='md' fluid>
-            <P variant='subtle'>Self employed income content will go here.</P>
-          </VStack>
-        )}
-
-        {activeTab === 'ordinary' && (
-          <VStack gap='md' fluid>
-            <P variant='subtle'>Ordinary income content will go here.</P>
-          </VStack>
-        )}
+        </VStack>
       </VStack>
     </VStack>
   )
