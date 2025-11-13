@@ -9,7 +9,7 @@ import { UserCircle, CheckCircle } from 'lucide-react'
 import { TaxFilingGeneralInformation } from './TaxFilingGeneralInformation'
 import { TaxFilingProfile } from './TaxFilingProfile'
 import { TaxEstimate } from './TaxEstimate'
-import { TaxCalculations } from './TaxCalculations'
+import { TaxPayments } from './TaxPayments'
 import { TaxFilingOverview } from './TaxFilingOverview'
 import './taxFilingView.scss'
 import { Separator } from '@components/Separator/Separator'
@@ -18,7 +18,6 @@ import { reducer, initialState } from './store'
 export const TaxFilingView = () => {
   const [isOnboarded, setIsOnboarded] = useState(true)
   const [activeTab, setActiveTab] = useState<'overview' | 'tax-estimates' | 'tax-calculations' | 'tax-profile'>('overview')
-  const [calculationType, setCalculationType] = useState<'federal' | 'state'>('federal')
   const [taxFilingDetails, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
@@ -32,11 +31,6 @@ export const TaxFilingView = () => {
     requestAnimationFrame(() => {
       setActiveTab('tax-estimates')
     })
-  }
-
-  const handleNavigateToTaxCalculations = (type: 'federal' | 'state') => {
-    setCalculationType(type)
-    setActiveTab('tax-calculations')
   }
 
   const { general_information, profile } = taxFilingDetails
@@ -96,13 +90,28 @@ export const TaxFilingView = () => {
 
           {activeTab === 'tax-estimates' && (
             <VStack gap='md' pb='lg' pi='lg'>
-              <TaxEstimate onNavigateToTaxCalculations={handleNavigateToTaxCalculations} />
+              <TaxEstimate />
             </VStack>
           )}
 
           {activeTab === 'tax-calculations' && (
             <VStack gap='md' pb='lg' pi='lg'>
-              <TaxCalculations type={calculationType} />
+              <TaxPayments
+                taxEstimateAnnualProjectionProps={{
+                  projectedTaxesOwed: 10000,
+                  taxesDueDate: new Date(),
+                  federalTaxesOwed: 10000,
+                  federalTaxesPaid: 10000,
+                  stateTaxesOwed: 10000,
+                  stateTaxesPaid: 10000,
+                }}
+                quarterlyEstimates={[
+                  { quarter: 'Q1', amount: 10000 },
+                  { quarter: 'Q2', amount: 10000 },
+                  { quarter: 'Q3', amount: 10000 },
+                  { quarter: 'Q4', amount: 10000 },
+                ]}
+              />
             </VStack>
           )}
 
@@ -145,7 +154,7 @@ export const TaxFilingView = () => {
                   onClick={handleSave}
                   disabled={!isFormValid}
                 >
-                  Save and redirect to quarterly estimates
+                  Save and redirect to tax estimates
                 </SubmitButton>
               </HStack>
             </VStack>

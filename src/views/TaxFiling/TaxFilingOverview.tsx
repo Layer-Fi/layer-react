@@ -134,7 +134,7 @@ export const TaxFilingOverview = () => {
         <HStack gap='md' align='center'>
           <Heading size='xl'>{convertNumberToCurrency(taxableProfit)}</Heading>
           <HStack gap='xs' align='center'>
-            <AlertTriangle size={24} />
+            <AlertTriangle size={16} style={{ color: 'var(--fg-subtle)' }} />
             <Span size='sm' variant='subtle'>Excludes pending transactions</Span>
           </HStack>
         </HStack>

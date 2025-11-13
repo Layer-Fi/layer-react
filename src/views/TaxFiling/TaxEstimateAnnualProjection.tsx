@@ -6,7 +6,7 @@ import { convertNumberToCurrency } from '@utils/format'
 import { Separator } from '@components/Separator/Separator'
 import './taxEstimate.scss'
 
-interface TaxEstimateAnnualProjectionProps {
+export interface TaxEstimateAnnualProjectionProps {
   projectedTaxesOwed: number
   taxesDueDate: Date
   federalTaxesOwed: number
