@@ -121,6 +121,10 @@ export const BankTransactionsListItem = ({
     setOpenExpandedRow(false)
   }
 
+  const handleSave = () => {
+    void save()
+  }
+
   const openClassName = openExpandedRow ? 'Layer__bank-transaction-list-item--expanded' : ''
   const rowClassName = classNames(
     'Layer__bank-transaction-list-item',
@@ -244,11 +248,8 @@ export const BankTransactionsListItem = ({
           {!showRetry
             && (
               <SubmitButton
-                onClick={() => {
-                  if (!bankTransaction.processing) {
-                    void save()
-                  }
-                }}
+                disabled={bankTransaction.processing}
+                onClick={handleSave}
                 className='Layer__bank-transaction__submit-btn'
                 processing={bankTransaction.processing}
                 action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
@@ -261,11 +262,7 @@ export const BankTransactionsListItem = ({
           {showRetry
             && (
               <RetryButton
-                onClick={() => {
-                  if (!bankTransaction.processing) {
-                    void save()
-                  }
-                }}
+                onClick={handleSave}
                 className='Layer__bank-transaction__retry-btn'
                 processing={bankTransaction.processing}
                 error='Approval failed. Check connection and retry in few seconds.'
