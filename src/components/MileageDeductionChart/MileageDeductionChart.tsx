@@ -155,7 +155,7 @@ export const MileageDeductionChart = ({
 
   return (
     <VStack className='Layer__mileage-chart' align='center' justify='center'>
-      <ResponsiveContainer width='100%' height={300} className='Layer__chart-container'>
+      <ResponsiveContainer width='100%' height={300} >
         <ComposedChart
           data={chartData}
           margin={CHART_MARGIN}

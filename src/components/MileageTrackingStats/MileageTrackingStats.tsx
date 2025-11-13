@@ -169,51 +169,47 @@ export const MileageTrackingStats = () => {
       </Header>
 
       <HStack className={`${CLASS_NAME}__Content`} gap='lg'>
-        <VStack className={`${CLASS_NAME}__Cards`} gap='md'>
+        <VStack className={`${CLASS_NAME}__Cards`} gap='md' justify='center'>
           <VStack className={`${CLASS_NAME}__Card`} gap='3xs'>
-            <Span size='sm'>Total Deduction</Span>
-            <MoneySpan amount={selectedYearData?.estimatedDeduction ?? 0} size='lg' bold />
-          </VStack>
-
-          <VStack className={`${CLASS_NAME}__Card`} gap='3xs'>
-            <Span size='sm'>Total Miles</Span>
-            <Span size='lg' weight='bold'>
-              {(selectedYearData?.miles ?? 0).toLocaleString()}
-            </Span>
-            <HStack gap='md'>
-              <VStack gap='3xs'>
-                <Span size='xs' variant='subtle'>Business</Span>
-                <Span size='sm'>
-                  {(selectedYearData?.businessMiles ?? 0).toLocaleString()}
-                </Span>
-              </VStack>
-              <VStack gap='3xs'>
-                <Span size='xs' variant='subtle'>Personal</Span>
-                <Span size='sm'>
-                  {(selectedYearData?.personalMiles ?? 0).toLocaleString()}
-                </Span>
-              </VStack>
+            <HStack justify='space-between' align='center'>
+              <Span size='md'>Total Deduction</Span>
+              <MoneySpan amount={selectedYearData?.estimatedDeduction ?? 0} size='lg' bold />
             </HStack>
           </VStack>
 
           <VStack className={`${CLASS_NAME}__Card`} gap='3xs'>
-            <Span size='sm'>Trips</Span>
-            <Span size='lg' weight='bold'>
-              {(selectedYearData?.trips ?? 0).toLocaleString()}
-            </Span>
-            <HStack gap='md'>
-              <VStack gap='3xs'>
-                <Span size='xs' variant='subtle'>Business</Span>
-                <Span size='sm'>
-                  {(selectedYearData?.businessTrips ?? 0).toLocaleString()}
-                </Span>
-              </VStack>
-              <VStack gap='3xs'>
-                <Span size='xs' variant='subtle'>Personal</Span>
-                <Span size='sm'>
-                  {(selectedYearData?.personalTrips ?? 0).toLocaleString()}
-                </Span>
-              </VStack>
+            <HStack justify='space-between' align='center'>
+              <Span size='md'>Total Miles</Span>
+              <Span size='lg' weight='bold'>
+                {(selectedYearData?.miles ?? 0).toLocaleString()}
+              </Span>
+            </HStack>
+            <HStack justify='space-between' align='center' gap='xs'>
+              <Span size='xs' variant='subtle'>
+                Business: {(selectedYearData?.businessMiles ?? 0).toLocaleString()}
+              </Span>
+              <Span size='xs' variant='subtle'>•</Span>
+              <Span size='xs' variant='subtle'>
+                Personal: {(selectedYearData?.personalMiles ?? 0).toLocaleString()}
+              </Span>
+            </HStack>
+          </VStack>
+
+          <VStack className={`${CLASS_NAME}__Card`} gap='3xs'>
+            <HStack justify='space-between' align='center'>
+              <Span size='md'>Trips</Span>
+              <Span size='lg' weight='bold'>
+                {(selectedYearData?.trips ?? 0).toLocaleString()}
+              </Span>
+            </HStack>
+            <HStack justify='space-between' align='center'>
+              <Span size='xs' variant='subtle'>
+                Business: {(selectedYearData?.businessTrips ?? 0).toLocaleString()}
+              </Span>
+              <Span size='xs' variant='subtle'>•</Span>
+              <Span size='xs' variant='subtle'>
+                Personal: {(selectedYearData?.personalTrips ?? 0).toLocaleString()}
+              </Span>
             </HStack>
           </VStack>
         </VStack>
