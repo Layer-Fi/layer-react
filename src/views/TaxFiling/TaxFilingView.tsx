@@ -10,13 +10,14 @@ import { TaxFilingGeneralInformation } from './TaxFilingGeneralInformation'
 import { TaxFilingProfile } from './TaxFilingProfile'
 import { TaxEstimate } from './TaxEstimate'
 import { TaxCalculations } from './TaxCalculations'
+import { TaxFilingOverview } from './TaxFilingOverview'
 import './taxFilingView.scss'
 import { Separator } from '@components/Separator/Separator'
 import { reducer, initialState } from './store'
 
 export const TaxFilingView = () => {
   const [isOnboarded, setIsOnboarded] = useState(true)
-  const [activeTab, setActiveTab] = useState<'tax-estimates' | 'tax-calculations' | 'tax-profile'>('tax-estimates')
+  const [activeTab, setActiveTab] = useState<'overview' | 'tax-estimates' | 'tax-calculations' | 'tax-profile'>('overview')
   const [calculationType, setCalculationType] = useState<'federal' | 'state'>('federal')
   const [taxFilingDetails, dispatch] = useReducer(reducer, initialState)
 
@@ -59,6 +60,10 @@ export const TaxFilingView = () => {
           name='tax-filing-tabs'
           options={[
             {
+              value: 'overview',
+              label: 'Overview',
+            },
+            {
               value: 'tax-estimates',
               label: 'Tax Estimates',
               disabled: !isOnboarded,
@@ -83,6 +88,12 @@ export const TaxFilingView = () => {
         />
 
         <Container name='tax-filing'>
+          {activeTab === 'overview' && (
+            <VStack gap='md' pb='lg' pi='lg'>
+              <TaxFilingOverview />
+            </VStack>
+          )}
+
           {activeTab === 'tax-estimates' && (
             <VStack gap='md' pb='lg' pi='lg'>
               <TaxEstimate onNavigateToTaxCalculations={handleNavigateToTaxCalculations} />

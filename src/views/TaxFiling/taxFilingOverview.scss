@@ -1,0 +1,42 @@
+.Layer__tax-filing-overview__section {
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-base-300);
+  background: var(--color-base-0);
+}
+
+.Layer__tax-filing-overview__label {
+  flex-shrink: 0;
+  width: 20ch;
+}
+
+.Layer__tax-filing-overview__bar-container {
+  position: relative;
+  flex: 1 1 0;
+  overflow: hidden;
+  height: 0.5rem;
+  min-width: 0;
+  border-radius: var(--border-radius-xs);
+  background: var(--color-base-200);
+}
+
+.Layer__tax-filing-overview__bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  min-width: 0;
+  border-radius: var(--border-radius-xs);
+}
+
+.Layer__tax-filing-overview__bar--income {
+  background: var(--color-success, #10b981);
+}
+
+.Layer__tax-filing-overview__bar--deductions {
+  background: var(--color-info, #06b6d4);
+}
+
+.Layer__tax-filing-overview__item {
+  height: 3rem;
+}
