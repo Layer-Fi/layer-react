@@ -229,6 +229,8 @@ export const BankTransactionsListItem = ({
                 showDescriptions={showDescriptions}
                 showReceiptUploads={showReceiptUploads}
                 showTooltips={showTooltips}
+
+                showLeftPadding={false}
               />
             </ExpandableContent>
           )}
