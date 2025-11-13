@@ -46,7 +46,7 @@ export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOver
 export { AccountingOverview } from './views/AccountingOverview/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
-export { TaxFilingView } from './views/TaxFiling/TaxFilingView'
+export { TaxFilingView as unstable_TaxFilingView } from './views/TaxFiling/TaxFilingView'
 export { ProjectProfitabilityView } from './views/ProjectProfitability/ProjectProfitability'
 export { unstable_BillsView } from './views/Bills'
 export { UnifiedReport as unstable_UnifiedReports } from './components/UnifiedReport/UnifiedReport'
