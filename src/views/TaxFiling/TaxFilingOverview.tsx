@@ -3,55 +3,61 @@ import { VStack, HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { Button, ButtonVariant } from '@ui/Button/Button'
-import { ChevronDown, AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Download } from 'lucide-react'
 import { convertNumberToCurrency } from '@utils/format'
 import './taxFilingOverview.scss'
 
-export const TaxFilingOverview = () => {
+interface TaxFilingOverviewProps {
+  onNavigateToBankTransactions?: () => void
+}
+
+export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOverviewProps = {}) => {
   const incomeBarRef = useRef<HTMLDivElement>(null)
   const deductionsBarRef = useRef<HTMLDivElement>(null)
+  const yearForTaxFiling = 2025
 
   const todoItems = [
     {
-      label: 'Categorize $264,640.00 of potential deductions',
+      label: `Categorize ${convertNumberToCurrency(2100)} of potential deductions`,
       buttonLabel: 'Review',
       variant: 'solid' as ButtonVariant,
-      onPress: () => {},
+      icon: null,
+      onPress: () => {
+        onNavigateToBankTransactions?.()
+      },
     },
     {
-      label: 'Categorize $120,477.00 of deposits',
+      label: `Categorize ${convertNumberToCurrency(4925)} of deposits`,
       buttonLabel: 'Review',
       variant: 'solid' as ButtonVariant,
-      onPress: () => {},
+      icon: null,
+      onPress: () => {
+        onNavigateToBankTransactions?.()
+      },
     },
     {
-      label: 'Match bank transactions to invoices to recognize income',
-      buttonLabel: 'Match',
-      variant: 'outlined' as ButtonVariant,
-      onPress: () => {},
-    },
-    {
-      label: 'File with [Name of Tax Provider Software]',
-      buttonLabel: 'Start taxes',
+      label: 'Export your tax packet',
+      buttonLabel: 'Export',
+      icon: <Download size={16} />,
       variant: 'outlined' as ButtonVariant,
       onPress: () => {},
     },
   ]
 
   const deadlines = [
-    { date: 'Jan 15', label: 'Q4 estimated tax due ($XX,XXX.00)' },
-    { date: 'Apr 15', label: '2025 annual income taxes due', hasFileButton: true },
-    { date: 'Apr 15', label: 'Q1 estimated tax due ($XX,XXX.00)' },
-    { date: 'Jun 16', label: 'Q2 estimated tax due ($XX,XXX.00)' },
-    { date: 'Sep 15', label: 'Q3 estimated tax due ($XX,XXX.00)' },
+    { date: 'Apr 15, 2025', label: `Q1 estimated tax due (${convertNumberToCurrency(7856.88)})` },
+    { date: 'Jul 15, 2025', label: `Q2 estimated tax due (${convertNumberToCurrency(7856.88)})` },
+    { date: 'Oct 15, 2025', label: `Q3 estimated tax due (${convertNumberToCurrency(7856.88)})` },
+    { date: 'Jan 15, 2026', label: `Q4 estimated tax due (${convertNumberToCurrency(7856.86)})` },
+    { date: 'Apr 15, 2026', label: `Annual income taxes due (${convertNumberToCurrency(0)})`, hasFileButton: true },
   ]
+  // Quarterly total: 7856.88 × 3 + 7856.86 = 31,427.50 ✓
 
-  const taxableProfit = 108668
-  const income = 119114
-  const deductions = 10445
-  const total = income + deductions
-  const incomePercentage = (income / total) * 100
-  const deductionsPercentage = (deductions / total) * 100
+  const taxableIncome = 110000.00 // Same as defaultTaxableIncome
+  const income = 160000.00 // 75000 + 85000
+  const deductions = 50000.00 // Matching federal deductions + AGI deductions
+  const incomePercentage = (income / (income + deductions)) * 100
+  const deductionsPercentage = (deductions / (income + deductions)) * 100
 
   useEffect(() => {
     if (incomeBarRef.current) {
@@ -64,13 +70,13 @@ export const TaxFilingOverview = () => {
 
   return (
     <VStack gap='xl' fluid>
-      <HStack gap='lg' align='start' fluid>
+      <HStack gap='lg' fluid>
         <VStack gap='lg' fluid className='Layer__tax-filing-overview__section'>
           <VStack gap='md'>
             <Heading size='md'>
               Tax Preparations for
               {' '}
-              {new Date().getFullYear()}
+              {yearForTaxFiling}
             </Heading>
             <VStack gap='md'>
               {todoItems.map((item, index) => (
@@ -80,7 +86,7 @@ export const TaxFilingOverview = () => {
                   </HStack>
                   <Button variant={item.variant} onPress={item.onPress}>
                     {item.buttonLabel}
-                    <ChevronDown size={16} />
+                    {item.icon}
                   </Button>
                 </HStack>
               ))}
@@ -95,7 +101,7 @@ export const TaxFilingOverview = () => {
               {' '}
               for
               {' '}
-              {new Date().getFullYear()}
+              {yearForTaxFiling}
             </Heading>
             <VStack gap='sm'>
               {deadlines.map((deadline, index) => (
@@ -106,8 +112,8 @@ export const TaxFilingOverview = () => {
                   </HStack>
                   {deadline.hasFileButton && (
                     <Button variant='outlined' size='md' onPress={() => {}}>
-                      Start taxes
-                      <ChevronDown size={16} />
+                      Export
+                      <Download size={16} />
                     </Button>
                   )}
                 </HStack>
@@ -120,11 +126,11 @@ export const TaxFilingOverview = () => {
       <VStack gap='md' fluid className='Layer__Stack Layer__tax-filing-overview__section'>
         <HStack justify='space-between' align='center' fluid>
           <VStack gap='xs'>
-            <Heading size='md'>Taxable Profit</Heading>
+            <Heading size='md'>Taxable Income</Heading>
             <Span size='sm' variant='subtle'>
-              Taxable profit estimate to date for Year
+              Taxable income estimate to date for Year
               {' '}
-              {new Date().getFullYear()}
+              {yearForTaxFiling}
             </Span>
           </VStack>
           <HStack gap='sm' align='center'>
@@ -132,7 +138,7 @@ export const TaxFilingOverview = () => {
           </HStack>
         </HStack>
         <HStack gap='md' align='center'>
-          <Heading size='xl'>{convertNumberToCurrency(taxableProfit)}</Heading>
+          <Heading size='xl'>{convertNumberToCurrency(taxableIncome)}</Heading>
           <HStack gap='xs' align='center'>
             <AlertTriangle size={16} style={{ color: 'var(--fg-subtle)' }} />
             <Span size='sm' variant='subtle'>Excludes pending transactions</Span>

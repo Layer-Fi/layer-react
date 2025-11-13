@@ -18,8 +18,11 @@ interface AdjustedGrossIncomeSectionProps {
 export const AdjustedGrossIncomeSection = ({
   items,
 }: AdjustedGrossIncomeSectionProps) => {
+  const totalItem = items.find(item => item.isTotal)
+  const totalAmount = totalItem?.amount
+
   return (
-    <TaxEstimateDetailSection title='Adjusted Gross Income'>
+    <TaxEstimateDetailSection title='Adjusted Gross Income' totalAmount={totalAmount}>
       <div className='Layer__tax-estimate__agi-table'>
         <Table borderCollapse='collapse'>
           <TableHead>

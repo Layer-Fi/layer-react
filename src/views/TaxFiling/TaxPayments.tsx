@@ -3,49 +3,48 @@ import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { convertNumberToCurrency } from '@utils/format'
 import { Download } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Button } from '@ui/Button/Button'
+import { DropdownMenu, MenuList, MenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { TaxEstimateAnnualProjection, type TaxEstimateAnnualProjectionProps } from './TaxEstimateAnnualProjection'
 import { TaxEstimateDetailSection } from './TaxEstimateDetailSection'
+import { taxEstimateDefaults } from './defaults'
 
-interface QuarterlyEstimate {
+interface QuarterlyAmount {
   quarter: string
   amount: number
 }
 
-const defaultQuarterlyEstimates: QuarterlyEstimate[] = [
-  { quarter: 'Q1', amount: 945.52 },
-  { quarter: 'Q2', amount: 6654.00 },
-  { quarter: 'Q3', amount: 4649.00 },
-  { quarter: 'Q4', amount: 6199.00 },
-]
-
-const defaultProjectedTaxesOwed = 18448.00
-const defaultFederalTaxesOwed = 14816.00
-const defaultFederalTaxesPaid = 150.00
-const defaultStateTaxesOwed = 3782.00
-const defaultStateTaxesPaid = 0.00
-const defaultTaxesDueDate = new Date('2022-01-17')
-
-const defaultTaxEstimateAnnualProjectionProps: TaxEstimateAnnualProjectionProps = {
-  projectedTaxesOwed: defaultProjectedTaxesOwed,
-  taxesDueDate: defaultTaxesDueDate,
-  federalTaxesOwed: defaultFederalTaxesOwed,
-  federalTaxesPaid: defaultFederalTaxesPaid,
-  stateTaxesOwed: defaultStateTaxesOwed,
-  stateTaxesPaid: defaultStateTaxesPaid,
-}
-
 interface TaxPaymentsProps {
   taxEstimateAnnualProjectionProps?: TaxEstimateAnnualProjectionProps
-  quarterlyEstimates?: QuarterlyEstimate[]
+  quarterlyPayments?: QuarterlyAmount[]
+  paymentsSectionExpanded?: boolean
+  onPaymentsSectionExpandedChange?: (expanded: boolean) => void
 }
 
 export const TaxPayments = ({
-  taxEstimateAnnualProjectionProps = defaultTaxEstimateAnnualProjectionProps,
-  quarterlyEstimates = defaultQuarterlyEstimates,
+  taxEstimateAnnualProjectionProps = {
+    projectedTaxesOwed: taxEstimateDefaults.projectedTaxesOwed,
+    taxesDueDate: taxEstimateDefaults.taxesDueDate,
+    federalTaxesOwed: taxEstimateDefaults.federalTaxesOwed,
+    federalTaxesPaid: taxEstimateDefaults.federalTaxesPaid,
+    stateTaxesOwed: taxEstimateDefaults.stateTaxesOwed,
+    stateTaxesPaid: taxEstimateDefaults.stateTaxesPaid,
+  },
+  quarterlyPayments = taxEstimateDefaults.quarterlyPayments,
+  paymentsSectionExpanded,
+  onPaymentsSectionExpandedChange,
 }: TaxPaymentsProps = {}) => {
-  const [selectedYear] = useState('2021')
+  const [selectedYear] = useState(taxEstimateDefaults.year)
+
+  const Trigger = useCallback(() => {
+    return (
+      <Button variant='ghost' onPress={() => {}}>
+        Tax Forms
+        <Download size={16} />
+      </Button>
+    )
+  }, [])
 
   return (
     <VStack gap='lg' fluid>
@@ -68,23 +67,41 @@ export const TaxPayments = ({
           <VStack gap='sm' fluid>
             <TaxEstimateDetailSection
               title='Payments'
+              expanded={paymentsSectionExpanded}
+              onExpandedChange={onPaymentsSectionExpandedChange}
               headerActions={(
                 <HStack gap='md'>
-                  <Button variant='ghost' onPress={() => {}}>
-                    Schedule C
-                    <Download size={16} />
-                  </Button>
+                  <DropdownMenu
+                    ariaLabel='Tax forms'
+                    slots={{ Trigger }}
+                    slotProps={{ Dialog: { width: 300 } }}
+                  >
+                    <MenuList>
+                      <MenuItem onClick={() => {}}>
+                        Schedule C
+                        <Download size={16} />
+                      </MenuItem>
+                      <MenuItem>
+                        Tax Packet
+                        <Download size={16} />
+                      </MenuItem>
+                      <MenuItem>
+                        Tax Payment History
+                        <Download size={16} />
+                      </MenuItem>
+                    </MenuList>
+                  </DropdownMenu>
                   <Button variant='solid' onPress={() => {}}>
                     Record Payment
                   </Button>
                 </HStack>
               )}
             >
-              {quarterlyEstimates.map(estimate => (
-                <HStack key={estimate.quarter} justify='space-between' align='center' fluid className='Layer__tax-estimate__quarter-item'>
-                  <Span size='md'>{estimate.quarter}</Span>
+              {quarterlyPayments.map(payment => (
+                <HStack gap='lg' pbs='sm' pbe='sm' key={payment.quarter} justify='space-between' align='center' fluid>
+                  <Span size='md'>{payment.quarter}</Span>
                   <Span size='md'>
-                    {convertNumberToCurrency(estimate.amount)}
+                    {convertNumberToCurrency(payment.amount)}
                   </Span>
                 </HStack>
               ))}

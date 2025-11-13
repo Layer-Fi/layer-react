@@ -13,7 +13,10 @@ export interface TaxEstimateAnnualProjectionProps {
   federalTaxesPaid: number
   stateTaxesOwed: number
   stateTaxesPaid: number
-  onNavigateToTaxCalculations?: (type: 'federal' | 'state') => void
+  onFederalTaxesOwedClick?: () => void
+  onFederalTaxesPaidClick?: () => void
+  onStateTaxesOwedClick?: () => void
+  onStateTaxesPaidClick?: () => void
 }
 
 export const TaxEstimateAnnualProjection = ({
@@ -23,16 +26,13 @@ export const TaxEstimateAnnualProjection = ({
   federalTaxesPaid,
   stateTaxesOwed,
   stateTaxesPaid,
-  onNavigateToTaxCalculations,
+  onFederalTaxesOwedClick,
+  onFederalTaxesPaidClick,
+  onStateTaxesOwedClick,
+  onStateTaxesPaidClick,
 }: TaxEstimateAnnualProjectionProps) => {
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-  }
-
-  const handleTaxCalculationsClick = (type: 'federal' | 'state') => {
-    if (onNavigateToTaxCalculations) {
-      onNavigateToTaxCalculations(type)
-    }
   }
 
   return (
@@ -64,58 +64,28 @@ export const TaxEstimateAnnualProjection = ({
             <VStack gap='xs' justify='center' align='center'>
               <Heading size='lg' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(federalTaxesOwed)}</Heading>
               <Span size='sm' variant='subtle'>
-                {onNavigateToTaxCalculations
-                  ? (
-                    <Button
-                      variant='outlined'
-                      size='md'
-                      inset
-                      onPress={() => {
-                        handleTaxCalculationsClick('federal')
-                      }}
-                    >
-                      Taxes Owed
-                    </Button>
-                  )
-                  : (
-                    <Button
-                      variant='outlined'
-                      size='md'
-                      inset
-                      isDisabled
-                    >
-                      Taxes Owed
-                    </Button>
-                  )}
+                <Button
+                  variant='outlined'
+                  size='md'
+                  inset
+                  onPress={onFederalTaxesOwedClick}
+                >
+                  Taxes Owed
+                </Button>
               </Span>
             </VStack>
             <Span size='xl' variant='subtle'>-</Span>
             <VStack gap='xs' justify='center' align='center'>
               <Heading size='lg' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(federalTaxesPaid)}</Heading>
               <Span size='sm' variant='subtle'>
-                {onNavigateToTaxCalculations
-                  ? (
-                    <Button
-                      variant='outlined'
-                      size='md'
-                      inset
-                      onPress={() => {
-                        handleTaxCalculationsClick('federal')
-                      }}
-                    >
-                      Taxes Paid
-                    </Button>
-                  )
-                  : (
-                    <Button
-                      variant='outlined'
-                      size='md'
-                      inset
-                      isDisabled
-                    >
-                      Taxes Paid
-                    </Button>
-                  )}
+                <Button
+                  variant='outlined'
+                  size='md'
+                  inset
+                  onPress={onFederalTaxesPaidClick}
+                >
+                  Taxes Paid
+                </Button>
               </Span>
             </VStack>
           </HStack>
@@ -137,58 +107,28 @@ export const TaxEstimateAnnualProjection = ({
             <VStack gap='xs' justify='center' align='center'>
               <Heading size='lg' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(stateTaxesOwed)}</Heading>
               <Span size='sm' variant='subtle'>
-                {onNavigateToTaxCalculations
-                  ? (
-                    <Button
-                      variant='outlined'
-                      size='md'
-                      inset
-                      onPress={() => {
-                        handleTaxCalculationsClick('state')
-                      }}
-                    >
-                      Taxes Owed
-                    </Button>
-                  )
-                  : (
-                    <Button
-                      variant='outlined'
-                      size='md'
-                      inset
-                      isDisabled
-                    >
-                      Taxes Owed
-                    </Button>
-                  )}
+                <Button
+                  variant='outlined'
+                  size='md'
+                  inset
+                  onPress={onStateTaxesOwedClick}
+                >
+                  Taxes Owed
+                </Button>
               </Span>
             </VStack>
             <Span size='xl' variant='subtle'>-</Span>
             <VStack gap='xs' justify='center' align='center'>
               <Heading size='lg' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(stateTaxesPaid)}</Heading>
               <Span size='sm' variant='subtle'>
-                {onNavigateToTaxCalculations
-                  ? (
-                    <Button
-                      variant='outlined'
-                      size='md'
-                      inset
-                      onPress={() => {
-                        handleTaxCalculationsClick('state')
-                      }}
-                    >
-                      Taxes Paid
-                    </Button>
-                  )
-                  : (
-                    <Button
-                      variant='outlined'
-                      size='md'
-                      inset
-                      isDisabled
-                    >
-                      Taxes Paid
-                    </Button>
-                  )}
+                <Button
+                  variant='outlined'
+                  size='md'
+                  inset
+                  onPress={onStateTaxesPaidClick}
+                >
+                  Taxes Paid
+                </Button>
               </Span>
             </VStack>
           </HStack>

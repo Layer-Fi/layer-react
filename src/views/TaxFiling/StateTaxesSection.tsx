@@ -13,13 +13,25 @@ import type { FederalTaxItem } from './TaxEstimate'
 
 interface StateTaxesSectionProps {
   items: FederalTaxItem[]
+  expanded?: boolean
+  onExpandedChange?: (expanded: boolean) => void
 }
 
 export const StateTaxesSection = ({
   items,
+  expanded,
+  onExpandedChange,
 }: StateTaxesSectionProps) => {
+  const totalItem = items.find(item => item.isTotal)
+  const totalAmount = totalItem?.amount
+
   return (
-    <TaxEstimateDetailSection title='State Taxes'>
+    <TaxEstimateDetailSection
+      title='State Taxes'
+      totalAmount={totalAmount}
+      expanded={expanded}
+      onExpandedChange={onExpandedChange}
+    >
       <div className='Layer__tax-estimate__state-taxes-table'>
         <Table borderCollapse='collapse'>
           <TableHead>

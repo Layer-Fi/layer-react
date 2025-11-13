@@ -14,11 +14,19 @@ import { TaxFilingOverview } from './TaxFilingOverview'
 import './taxFilingView.scss'
 import { Separator } from '@components/Separator/Separator'
 import { reducer, initialState } from './store'
+import { taxEstimateDefaults } from './defaults'
 
-export const TaxFilingView = () => {
+interface TaxFilingViewProps {
+  onNavigateToBankTransactions?: () => void
+}
+
+export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewProps = {}) => {
   const [isOnboarded, setIsOnboarded] = useState(true)
   const [activeTab, setActiveTab] = useState<'overview' | 'tax-estimates' | 'tax-payments' | 'tax-profile'>('overview')
   const [taxFilingDetails, dispatch] = useReducer(reducer, initialState)
+  const [federalSectionExpanded, setFederalSectionExpanded] = useState(false)
+  const [stateSectionExpanded, setStateSectionExpanded] = useState(false)
+  const [paymentsSectionExpanded, setPaymentsSectionExpanded] = useState(false)
 
   useEffect(() => {
     if (!isOnboarded) {
@@ -45,6 +53,66 @@ export const TaxFilingView = () => {
     && general_information.phonePersonal !== ''
     && general_information.dateOfBirth !== null
     && general_information.ssn !== ''
+
+  const handleFederalTaxesOwedClick = () => {
+    setActiveTab('tax-estimates')
+    requestAnimationFrame(() => {
+      setStateSectionExpanded(false)
+      setPaymentsSectionExpanded(false)
+      setFederalSectionExpanded(true)
+    })
+  }
+
+  const handleFederalTaxesPaidClick = () => {
+    setActiveTab('tax-payments')
+    requestAnimationFrame(() => {
+      setFederalSectionExpanded(false)
+      setStateSectionExpanded(false)
+      setPaymentsSectionExpanded(true)
+    })
+  }
+
+  const handleStateTaxesOwedClick = () => {
+    setActiveTab('tax-estimates')
+    requestAnimationFrame(() => {
+      setFederalSectionExpanded(false)
+      setPaymentsSectionExpanded(false)
+      setStateSectionExpanded(true)
+    })
+  }
+
+  const handleStateTaxesPaidClick = () => {
+    setActiveTab('tax-payments')
+    requestAnimationFrame(() => {
+      setFederalSectionExpanded(false)
+      setStateSectionExpanded(false)
+      setPaymentsSectionExpanded(true)
+    })
+  }
+
+  const handleFederalSectionExpandedChange = (expanded: boolean) => {
+    if (expanded) {
+      setStateSectionExpanded(false)
+      setPaymentsSectionExpanded(false)
+    }
+    setFederalSectionExpanded(expanded)
+  }
+
+  const handleStateSectionExpandedChange = (expanded: boolean) => {
+    if (expanded) {
+      setFederalSectionExpanded(false)
+      setPaymentsSectionExpanded(false)
+    }
+    setStateSectionExpanded(expanded)
+  }
+
+  const handlePaymentsSectionExpandedChange = (expanded: boolean) => {
+    if (expanded) {
+      setFederalSectionExpanded(false)
+      setStateSectionExpanded(false)
+    }
+    setPaymentsSectionExpanded(expanded)
+  }
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -84,13 +152,22 @@ export const TaxFilingView = () => {
         <Container name='tax-filing'>
           {activeTab === 'overview' && (
             <VStack gap='md' pb='lg' pi='lg'>
-              <TaxFilingOverview />
+              <TaxFilingOverview onNavigateToBankTransactions={onNavigateToBankTransactions} />
             </VStack>
           )}
 
           {activeTab === 'tax-estimates' && (
             <VStack gap='md' pb='lg' pi='lg'>
-              <TaxEstimate />
+              <TaxEstimate
+                onFederalTaxesOwedClick={handleFederalTaxesOwedClick}
+                onFederalTaxesPaidClick={handleFederalTaxesPaidClick}
+                onStateTaxesOwedClick={handleStateTaxesOwedClick}
+                onStateTaxesPaidClick={handleStateTaxesPaidClick}
+                federalSectionExpanded={federalSectionExpanded}
+                onFederalSectionExpandedChange={handleFederalSectionExpandedChange}
+                stateSectionExpanded={stateSectionExpanded}
+                onStateSectionExpandedChange={handleStateSectionExpandedChange}
+              />
             </VStack>
           )}
 
@@ -98,19 +175,25 @@ export const TaxFilingView = () => {
             <VStack gap='md' pb='lg' pi='lg'>
               <TaxPayments
                 taxEstimateAnnualProjectionProps={{
-                  projectedTaxesOwed: 10000,
-                  taxesDueDate: new Date(),
-                  federalTaxesOwed: 10000,
-                  federalTaxesPaid: 10000,
-                  stateTaxesOwed: 10000,
-                  stateTaxesPaid: 10000,
+                  projectedTaxesOwed: taxEstimateDefaults.projectedTaxesOwed,
+                  taxesDueDate: taxEstimateDefaults.taxesDueDate,
+                  federalTaxesOwed: taxEstimateDefaults.federalTaxesOwed,
+                  federalTaxesPaid: taxEstimateDefaults.federalTaxesPaid,
+                  stateTaxesOwed: taxEstimateDefaults.stateTaxesOwed,
+                  stateTaxesPaid: taxEstimateDefaults.stateTaxesPaid,
+                  onFederalTaxesOwedClick: handleFederalTaxesOwedClick,
+                  onFederalTaxesPaidClick: handleFederalTaxesPaidClick,
+                  onStateTaxesOwedClick: handleStateTaxesOwedClick,
+                  onStateTaxesPaidClick: handleStateTaxesPaidClick,
                 }}
-                quarterlyEstimates={[
-                  { quarter: 'Q1', amount: 10000 },
-                  { quarter: 'Q2', amount: 10000 },
-                  { quarter: 'Q3', amount: 10000 },
-                  { quarter: 'Q4', amount: 10000 },
+                quarterlyPayments={[
+                  { quarter: 'Q1', amount: taxEstimateDefaults.quarterlyPayments[0].amount },
+                  { quarter: 'Q2', amount: taxEstimateDefaults.quarterlyPayments[1].amount },
+                  { quarter: 'Q3', amount: taxEstimateDefaults.quarterlyPayments[2].amount },
+                  { quarter: 'Q4', amount: taxEstimateDefaults.quarterlyPayments[3].amount },
                 ]}
+                paymentsSectionExpanded={paymentsSectionExpanded}
+                onPaymentsSectionExpandedChange={handlePaymentsSectionExpandedChange}
               />
             </VStack>
           )}
