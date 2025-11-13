@@ -1,5 +1,4 @@
 import { Table } from '@components/Table/Table'
-import { TableHead } from '@components/TableHead/TableHead'
 import { TableBody } from '@components/TableBody/TableBody'
 import { TableRow } from '@components/TableRow/TableRow'
 import { TableCell } from '@components/TableCell/TableCell'
@@ -25,12 +24,6 @@ export const AdjustedGrossIncomeSection = ({
     <TaxEstimateDetailSection title='Adjusted Gross Income' totalAmount={totalAmount}>
       <div className='Layer__tax-estimate__agi-table'>
         <Table borderCollapse='collapse'>
-          <TableHead>
-            <TableRow isHeadRow rowKey='agi-header'>
-              <TableCell isHeaderCell>Label</TableCell>
-              <TableCell isHeaderCell align={TableCellAlign.RIGHT}>Amount</TableCell>
-            </TableRow>
-          </TableHead>
           <TableBody>
             {items.map((item) => {
               if (item.isSeparator) {

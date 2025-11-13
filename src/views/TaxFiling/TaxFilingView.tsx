@@ -5,7 +5,6 @@ import { View } from '@components/View/View'
 import { Container } from '@components/Container/Container'
 import { SubmitButton } from '@components/Button/SubmitButton'
 import { VStack, HStack } from '@ui/Stack/Stack'
-import { UserCircle, CheckCircle } from 'lucide-react'
 import { TaxFilingGeneralInformation } from './TaxFilingGeneralInformation'
 import { TaxFilingProfile } from './TaxFilingProfile'
 import { TaxEstimate } from './TaxEstimate'
@@ -137,13 +136,13 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
               disabled: !isOnboarded,
               disabledMessage: 'Please complete your tax profile first',
             },
-            {
-              value: 'tax-profile',
-              label: 'Tax Profile',
-              leftIcon: isOnboarded
-                ? <CheckCircle size={16} />
-                : <UserCircle size={16} />,
-            },
+            // {
+            //   value: 'tax-profile',
+            //   label: 'Tax Profile',
+            //   leftIcon: isOnboarded
+            //     ? <CheckCircle size={16} />
+            //     : <UserCircle size={16} />,
+            // },
           ]}
           selected={activeTab}
           onChange={opt => setActiveTab(opt.target.value as typeof activeTab)}

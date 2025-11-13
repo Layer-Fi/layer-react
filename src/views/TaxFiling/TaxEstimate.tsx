@@ -55,13 +55,13 @@ export interface FederalTaxItem {
 }
 
 const defaultAdjustedGrossIncomeItems: AdjustedGrossIncomeItem[] = [
-  { id: 'business-income', label: 'Business Income', amount: 75000.00 },
-  { id: 'w2-income', label: 'W-2 Income', amount: 85000.00 },
-  { id: 'deductible-expenses', label: 'Deductible Expenses', amount: -15000.00, isDeduction: true },
-  { id: 'deductible-mileage', label: 'Deductible Mileage Expenses', amount: -2500.00, isDeduction: true },
-  { id: 'self-employment-deduction', label: 'Self-Employment Deduction', amount: -5500.00, isDeduction: true },
-  { id: 'qualified-tip-deduction', label: 'Qualified Tip Deduction', amount: -1200.00, isDeduction: true },
-  { id: 'qualified-overtime-deduction', label: 'Qualified Overtime Deduction', amount: -800.00, isDeduction: true },
+  { id: 'business-income', label: 'Business Income', amount: taxEstimateDefaults.businessIncome },
+  // { id: 'w2-income', label: 'W-2 Income', amount: 85000.00 },
+  { id: 'deductible-expenses', label: 'Deductible Expenses', amount: -taxEstimateDefaults.deductibleExpenses, isDeduction: true },
+  { id: 'deductible-mileage', label: 'Deductible Mileage Expenses', amount: -taxEstimateDefaults.deductibleMileage, isDeduction: true },
+  { id: 'self-employment-deduction', label: 'Self-Employment Deduction', amount: -taxEstimateDefaults.selfEmploymentDeduction, isDeduction: true },
+  { id: 'qualified-tip-deduction', label: 'Qualified Tip Deduction', amount: -taxEstimateDefaults.qualifiedTipDeduction, isDeduction: true },
+  { id: 'qualified-overtime-deduction', label: 'Qualified Overtime Deduction', amount: -taxEstimateDefaults.qualifiedOvertimeDeduction, isDeduction: true },
 ]
 
 export const TaxEstimate = ({
@@ -90,7 +90,7 @@ export const TaxEstimate = ({
   const federalTaxItems: FederalTaxItem[] = [
     { id: 'agi', label: 'Adjusted Gross Income', amount: taxEstimateDefaults.adjustedGrossIncome },
     { id: 'federal-deductions', label: 'Federal Deductions', amount: -taxEstimateDefaults.federalDeductions, isDeduction: true },
-    { id: 'business-deduction', label: 'Business Income Deduction (0.00%)', amount: -taxEstimateDefaults.businessIncomeDeduction, isDeduction: true },
+    { id: 'business-deduction', label: 'Business Income Deduction (1.26%)', amount: -taxEstimateDefaults.businessIncomeDeduction, isDeduction: true },
     { id: 'taxable-income', label: '= Taxable Income', amount: taxEstimateDefaults.taxableIncome, isSubtotal: true },
     { id: 'federal-rate', label: 'x Federal Tax Rate', amount: taxEstimateDefaults.federalTaxRate },
     { id: 'federal-estimate', label: 'Federal Tax Estimate (Owed)', amount: taxEstimateDefaults.federalTaxEstimate, isOwed: true, formula: '= Taxable Income x Federal Tax Rate' },
@@ -106,7 +106,7 @@ export const TaxEstimate = ({
     { id: 'federal-estimate-row', label: 'Federal Tax Estimate (Owed)', amount: taxEstimateDefaults.federalTaxEstimate, isOwed: true, formula: '= Taxable Income x Federal Tax Rate' },
     { id: 'ss-estimate-row', label: '+ Social Security Tax Estimate (Owed)', amount: taxEstimateDefaults.socialSecurityTaxEstimate, isOwed: true, formula: '= Taxable Social Security Income x Social Security Tax Rate' },
     { id: 'medicare-estimate-row', label: '+ Medicare Tax Estimate (Owed)', amount: taxEstimateDefaults.medicareTaxEstimate, isOwed: true, formula: '= Taxable Medicare Income x Medicare Tax Rate' },
-    { id: 'w2-withholding', label: '- Amount Applied from Federal W-2 Withholding', amount: -taxEstimateDefaults.federalTaxesPaid, isDeduction: true },
+    // { id: 'w2-withholding', label: '- Amount Applied from Federal W-2 Withholding', amount: -taxEstimateDefaults.federalTaxesPaid, isDeduction: true },
     { id: 'total-federal', label: 'Total Federal Tax Estimate', amount: taxEstimateDefaults.federalTaxesOwed, isTotal: true, isOwed: true, formula: '= Federal Tax Estimate + Social Security Tax Estimate + Medicare Tax Estimate' },
   ]
 
@@ -118,7 +118,7 @@ export const TaxEstimate = ({
     { id: 'state-estimate', label: 'State Tax Estimate (Owed)', amount: taxEstimateDefaults.stateTaxEstimate, isOwed: true, formula: '= Taxable Income x State Tax Rate' },
     { id: 'separator-1', label: '', isSeparator: true },
     { id: 'state-estimate-row', label: 'State Tax Estimate (Owed)', amount: taxEstimateDefaults.stateTaxEstimate, isOwed: true, formula: '= Taxable Income x State Tax Rate' },
-    { id: 'w2-withholding', label: '- Amount Applied from State W-2 Withholding', amount: -taxEstimateDefaults.stateTaxesPaid, isDeduction: true },
+    // { id: 'w2-withholding', label: '- Amount Applied from State W-2 Withholding', amount: -taxEstimateDefaults.stateTaxesPaid, isDeduction: true },
     { id: 'total-state', label: 'Total State Tax Estimate', amount: taxEstimateDefaults.stateTaxesOwed, isTotal: true, isOwed: true },
   ]
 
@@ -126,11 +126,12 @@ export const TaxEstimate = ({
     <VStack gap='lg' fluid>
       <HStack justify='space-between' align='center' fluid>
         <VStack>
-          <Heading size='lg'>Annual Taxes</Heading>
+          <Heading size='lg'>Projected Annual Taxes</Heading>
           <Span size='md' variant='subtle'>
-            Projected for Year
+            These are the projected annual taxes for Year
             {' '}
             {selectedYear}
+            , based on your income and qualified deductions.
           </Span>
         </VStack>
       </HStack>

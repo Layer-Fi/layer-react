@@ -52,11 +52,11 @@ export const TaxPayments = ({
         <VStack>
           <Heading size='lg'>Tax Payments</Heading>
           <Span size='md' variant='subtle'>
-            All federal and state taxes for year
+            These are the projected federal and state tax payments for Year
             {' '}
             {selectedYear}
             {' '}
-            payments will be displayed here.
+            , as categorized in your bank transactions.
           </Span>
         </VStack>
       </HStack>
