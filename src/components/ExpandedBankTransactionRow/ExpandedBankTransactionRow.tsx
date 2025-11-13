@@ -50,6 +50,7 @@ import { AmountInput } from '@components/Input/AmountInput'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
+import './expandedBankTransactionRow.scss'
 
 export type ExpandedRowState = {
   splits: Split[]
@@ -446,7 +447,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
                   </div>
                 </div>
               </div>
-              <VStack pis='md'>
+              <VStack pis='md' className='Layer__ExpandedBankTransactionRow__Description'>
                 <BankTransactionFormFields
                   bankTransaction={bankTransaction}
                   showDescriptions={showDescriptions}

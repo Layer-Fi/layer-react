@@ -35,9 +35,9 @@ import { isSplitCategorizationEncoded, type CategorizationEncoded } from '@schem
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { HStack } from '@ui/Stack/Stack'
-import './bankTransactionRow.scss'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
+import './bankTransactionRow.scss'
 
 type Props = {
   index: number
@@ -234,11 +234,13 @@ export const BankTransactionRow = ({
           {...openRow}
           {...showReceiptDataProperties}
         >
-          <MoneySpan
-            amount={bankTransaction.amount}
-            displayPlusSign={isCredit(bankTransaction)}
-            className='Layer__table-cell-content'
-          />
+          <HStack align='end'>
+            <MoneySpan
+              amount={bankTransaction.amount}
+              displayPlusSign={isCredit(bankTransaction)}
+              className='Layer__table-cell-content'
+            />
+          </HStack>
         </td>
         <td
           className='Layer__table-cell Layer__bank-transactions__documents-col'
