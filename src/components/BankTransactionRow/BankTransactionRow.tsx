@@ -37,7 +37,10 @@ import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBan
 import { HStack } from '@ui/Stack/Stack'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
+import { AnimatePresence } from 'motion/react'
 import './bankTransactionRow.scss'
+import { Separator } from '@components/Separator/Separator'
+import { ExpandableContent } from '@components/ui/ExpandableContent/ExpandableContent'
 
 type Props = {
   index: number
@@ -266,7 +269,7 @@ export const BankTransactionRow = ({
             ? (
               <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
                 { bankTransaction.error
-                  ? (
+                  && (
                     <Text
                       as='span'
                       size={TextSize.md}
@@ -275,10 +278,9 @@ export const BankTransactionRow = ({
                       <span>Unsaved</span>
                       <AlertCircle size={12} />
                     </Text>
-                  )
-                  : null}
+                  )}
                 {categorizationEnabled
-                  ? (
+                  && (
                     <SubmitButton
                       onClick={() => {
                         if (!bankTransaction.processing) {
@@ -294,11 +296,12 @@ export const BankTransactionRow = ({
                         ? stringOverrides?.updateButtonText || 'Update'
                         : stringOverrides?.approveButtonText || 'Confirm'}
                     </SubmitButton>
-                  )
-                  : null}
-                {!categorizationEnabled && !categorized
-                  ? <VStack><BankTransactionsProcessingInfo /></VStack>
-                  : null}
+                  )}
+                {!categorizationEnabled && !categorized && (
+                  <VStack>
+                    <BankTransactionsProcessingInfo />
+                  </VStack>
+                )}
                 <IconButton
                   onClick={toggleOpen}
                   className='Layer__bank-transaction-row__expand-button'
@@ -316,7 +319,7 @@ export const BankTransactionRow = ({
             : (
               <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
                 {categorizationEnabled && !categorized
-                  ? (
+                  && (
                     <BankTransactionCategoryComboBox
                       bankTransaction={bankTransaction}
                       selectedValue={selectedCategory ?? null}
@@ -326,18 +329,16 @@ export const BankTransactionRow = ({
                       }}
                       isLoading={bankTransaction.processing}
                     />
-                  )
-                  : null}
+                  )}
                 {categorized
-                  ? (
+                  && (
                     <BankTransactionsCategorizedSelectedValue
                       bankTransaction={bankTransaction}
                       className='Layer__bank-transaction-row__category'
                     />
-                  )
-                  : null}
+                  )}
                 {categorizationEnabled && !categorized && showRetry
-                  ? (
+                  && (
                     <RetryButton
                       onClick={() => {
                         if (!bankTransaction.processing) {
@@ -350,10 +351,9 @@ export const BankTransactionRow = ({
                     >
                       Retry
                     </RetryButton>
-                  )
-                  : null}
+                  )}
                 {!categorized && categorizationEnabled && !showRetry
-                  ? (
+                  && (
                     <SubmitButton
                       onClick={() => {
                         if (!bankTransaction.processing) {
@@ -369,11 +369,12 @@ export const BankTransactionRow = ({
                         ? stringOverrides?.updateButtonText || 'Update'
                         : stringOverrides?.approveButtonText || 'Confirm'}
                     </SubmitButton>
-                  )
-                  : null}
-                {!categorizationEnabled && !categorized
-                  ? <VStack pis='xs' fluid><BankTransactionsProcessingInfo /></VStack>
-                  : null}
+                  )}
+                {!categorizationEnabled && !categorized && (
+                  <VStack pis='xs' fluid>
+                    <BankTransactionsProcessingInfo />
+                  </VStack>
+                )}
                 <IconButton
                   onClick={toggleOpen}
                   className='Layer__bank-transaction-row__expand-button'
@@ -388,22 +389,28 @@ export const BankTransactionRow = ({
                 />
               </HStack>
             )}
-
         </td>
       </tr>
       <tr>
         <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
-          <ExpandedBankTransactionRow
-            ref={expandedRowRef}
-            bankTransaction={bankTransaction}
-            categorized={categorized}
-            isOpen={open}
-            close={() => setOpen(false)}
-            containerWidth={containerWidth}
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-          />
+          <AnimatePresence initial={false}>
+            {open && (
+              <ExpandableContent key={`expanded-${bankTransaction.id}`}>
+                <Separator />
+                <ExpandedBankTransactionRow
+                  ref={expandedRowRef}
+                  bankTransaction={bankTransaction}
+                  categorized={categorized}
+                  isOpen={open}
+                  close={() => setOpen(false)}
+                  containerWidth={containerWidth}
+                  showDescriptions={showDescriptions}
+                  showReceiptUploads={showReceiptUploads}
+                  showTooltips={showTooltips}
+                />
+              </ExpandableContent>
+            )}
+          </AnimatePresence>
         </td>
       </tr>
     </>

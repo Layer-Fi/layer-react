@@ -36,7 +36,6 @@ import { APIErrorNotifications } from '@components/ExpandedBankTransactionRow/AP
 import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { Separator } from '@components/Separator/Separator'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { useBankTransactionTagVisibility } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
@@ -277,8 +276,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       >
         {isOpen && (
           <span className={`${className}__wrapper`} ref={bodyRef}>
-            <Separator />
-            <VStack pis='md'>
+            <VStack pis='md' pbs='sm'>
               {categorizationEnabled
                 && (
                   <HStack pi='md' pbe='md' pbs='3xs'>
