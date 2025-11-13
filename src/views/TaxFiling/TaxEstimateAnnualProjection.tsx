@@ -37,19 +37,19 @@ export const TaxEstimateAnnualProjection = ({
 
   return (
     <HStack fluid className='Layer__tax-estimate__overview-container'>
-      <VStack gap='xs' justify='center' align='center' className='Layer__tax-estimate__overview-total'>
+      <VStack gap='xs' justify='center' align='center' pb='lg' pi='lg' className='Layer__tax-estimate__overview-total'>
         <Span size='md' weight='bold'>
           Projected Taxes Owed
         </Span>
         <Heading size='lg' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(projectedTaxesOwed)}</Heading>
-        <VStack gap='xs' className='Layer__tax-estimate__due-date'>
+        <VStack gap='xs' pbs='sm'>
           <Span size='sm' variant='subtle'>Taxes Due</Span>
           <Span size='sm'>{formatDate(taxesDueDate)}</Span>
         </VStack>
       </VStack>
 
-      <VStack align='start' className='Layer__tax-estimate__breakdown'>
-        <VStack gap='2xl' align='start' className='Layer__tax-estimate__tax-row'>
+      <VStack align='start' fluid>
+        <VStack gap='2xl' align='start' pb='lg' pi='lg'>
           <Span size='md' variant='subtle'>
             Federal & self-employed taxes
           </Span>
@@ -92,7 +92,7 @@ export const TaxEstimateAnnualProjection = ({
 
         </VStack>
         <Separator />
-        <VStack gap='2xl' align='start' className='Layer__tax-estimate__tax-row'>
+        <VStack gap='2xl' align='start' pb='lg' pi='lg'>
           <Span size='md' variant='subtle'>
             State taxes
           </Span>

@@ -2,29 +2,6 @@
   background: var(--color-base-0);
 }
 
-.Layer__tax-estimate__breakdown {
-  width: 100%;
-}
-
-.Layer__tax-estimate__due-date {
-  margin-top: var(--spacing-sm);
-}
-
-.Layer__tax-estimate__tax-row {
-  padding: var(--spacing-lg);
-}
-
-.Layer__tax-estimate__description-button {
-  display: inline-block;
-
-  .Layer__UI__Button {
-    height: auto;
-    min-height: auto;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--text-xs);
-  }
-}
-
 .Layer__tax-estimate__row-label {
   height: 2rem;
   margin-top: var(--spacing-xs);
@@ -39,17 +16,8 @@
   }
 }
 
-.Layer__tax-estimate__section-content {
-  padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
-}
-
-.Layer__tax-estimate__quarter-item {
-  padding: var(--spacing-sm);
-}
-
 .Layer__tax-estimate__overview-total {
   width: 15rem;
-  padding: var(--spacing-lg);
   border-right: 1px solid var(--color-base-300);
 }
 
@@ -71,21 +39,9 @@
   padding-left: var(--spacing-xl);
 }
 
-.Layer__tax-estimate__cell-right {
-  justify-content: flex-end;
-  text-align: right;
-}
-
 .Layer__tax-estimate__separator-row {
   padding: var(--spacing-sm) 0;
   border-bottom: 1px solid var(--color-base-300);
-}
-
-.Layer__tax-estimate__agi-total-row {
-  .Layer__table-cell {
-    padding-top: var(--spacing-lg);
-    border-bottom: none;
-  }
 }
 
 .Layer__tax-estimate__agi-total-label,

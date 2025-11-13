@@ -71,7 +71,7 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
   return (
     <VStack gap='xl' fluid>
       <HStack gap='lg' fluid>
-        <VStack gap='lg' fluid className='Layer__tax-filing-overview__section'>
+        <VStack gap='lg' fluid pb='lg' pi='lg' className='Layer__tax-filing-overview__section'>
           <VStack gap='md'>
             <Heading size='md'>
               Tax Preparations for
@@ -94,7 +94,7 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
           </VStack>
         </VStack>
 
-        <VStack gap='lg' fluid className='Layer__tax-filing-overview__section'>
+        <VStack gap='lg' fluid pb='lg' pi='lg' className='Layer__tax-filing-overview__section'>
           <VStack gap='md'>
             <Heading size='md'>
               Your Federal Tax Deadlines
@@ -123,7 +123,7 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
         </VStack>
       </HStack>
 
-      <VStack gap='md' fluid className='Layer__Stack Layer__tax-filing-overview__section'>
+      <VStack gap='md' fluid pb='lg' pi='lg' className='Layer__Stack Layer__tax-filing-overview__section'>
         <HStack justify='space-between' align='center' fluid>
           <VStack gap='xs'>
             <Heading size='md'>Taxable Income</Heading>
