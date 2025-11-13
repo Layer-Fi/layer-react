@@ -234,13 +234,13 @@ export const BankTransactionRow = ({
           {...openRow}
           {...showReceiptDataProperties}
         >
-          <HStack align='end'>
+          <VStack align='end'>
             <MoneySpan
               amount={bankTransaction.amount}
               displayPlusSign={isCredit(bankTransaction)}
               className='Layer__table-cell-content'
             />
-          </HStack>
+          </VStack>
         </td>
         <td
           className='Layer__table-cell Layer__bank-transactions__documents-col'
