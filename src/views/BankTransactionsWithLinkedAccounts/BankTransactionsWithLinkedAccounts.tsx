@@ -9,6 +9,7 @@ import { View } from '@components/View/View'
 import { LinkingMetadata } from '@contexts/InAppLinkContext'
 import { ReactNode } from 'react'
 import { MileageDeductionChart } from '@components/MileageDeductionChart/MileageDeductionChart'
+import { MileageTrackingStats } from '@components/MileageTrackingStats'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {
   title?: string
@@ -66,7 +67,7 @@ export const BankTransactionsWithLinkedAccounts = ({
       title={stringOverrides?.title || title || 'Bank transactions'}
       showHeader={showTitle}
     >
-      <MileageDeductionChart />
+      <MileageTrackingStats />
       <LinkedAccounts
         elevated={elevatedLinkedAccounts}
         showLedgerBalance={showLedgerBalance}

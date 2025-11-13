@@ -15,6 +15,7 @@ import {
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { centsToDollars } from '@models/Money'
 import './mileageDeductionChart.scss'
+import { VStack } from '@components/ui/Stack/Stack'
 
 interface MileageMonth {
   month: number
@@ -35,7 +36,7 @@ interface MileageDeductionChartProps {
   onMonthClick?: (year: number, month: number) => void
 }
 
-const CHART_MARGIN = { top: 20, right: 20, bottom: 20, left: 20 }
+const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
 const BAR_SIZE = 20
 const CURSOR_MARGIN = 12
 
@@ -153,7 +154,7 @@ export const MileageDeductionChart = ({
   }
 
   return (
-    <div className='Layer__mileage-chart'>
+    <VStack className='Layer__mileage-chart' align='center' justify='center'>
       <ResponsiveContainer width='100%' height={300} className='Layer__chart-container'>
         <ComposedChart
           data={chartData}
@@ -198,7 +199,7 @@ export const MileageDeductionChart = ({
           />
         </ComposedChart>
       </ResponsiveContainer>
-    </div>
+    </VStack>
   )
 }
 
