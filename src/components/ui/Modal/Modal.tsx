@@ -8,7 +8,7 @@ import {
 } from 'react-aria-components'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './modal.scss'
-import { MotionContent } from '@components/ui/MotionContent/MotionContent'
+import { AnimatedContent } from '@components/ui/AnimatedContent/AnimatedContent'
 
 type ModalSize = 'md' | 'lg' | 'xl'
 type ModalVariant = 'center' | 'drawer' | 'mobile-drawer' | 'mobile-popover'
@@ -152,17 +152,17 @@ export function Drawer({
 
   const wrappedModalContent = isMobileDrawer
     ? (
-      <MotionContent variant='slideUp' className='Layer__ModalContentSlideUpMotionContent'>
+      <AnimatedContent variant='slideUp' className='Layer__ModalContentSlideUpMotionContent'>
         {modalContent}
-      </MotionContent>
+      </AnimatedContent>
     )
     : modalContent
 
   const overlayContent = shouldUseFadeOverlay
     ? (
-      <MotionContent variant='fade' isOpen={isOpen} className='Layer__ModalContentFadeMotionContent'>
+      <AnimatedContent variant='fade' isOpen={isOpen} className='Layer__ModalContentFadeMotionContent'>
         {wrappedModalContent}
-      </MotionContent>
+      </AnimatedContent>
     )
     : wrappedModalContent
 

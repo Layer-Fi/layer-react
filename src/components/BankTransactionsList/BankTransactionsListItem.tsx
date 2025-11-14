@@ -33,7 +33,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
-import { MotionContent } from '@components/ui/MotionContent/MotionContent'
+import { AnimatedContent } from '@components/ui/AnimatedContent/AnimatedContent'
 
 type BankTransactionsListItemProps = {
   index: number
@@ -208,7 +208,7 @@ export const BankTransactionsListItem = ({
           </span>
         )}
       <span className='Layer__bank-transaction-list-item__expanded-row'>
-        <MotionContent variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
+        <AnimatedContent variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}
@@ -229,7 +229,7 @@ export const BankTransactionsListItem = ({
 
             showLeftPadding={false}
           />
-        </MotionContent>
+        </AnimatedContent>
       </span>
       {!openExpandedRow && categorizationEnabled && !categorized && (
         <HStack pi='md' gap='md' pb='md'>

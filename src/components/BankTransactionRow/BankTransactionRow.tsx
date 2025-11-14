@@ -38,7 +38,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
 import './bankTransactionRow.scss'
-import { MotionContent } from '@components/ui/MotionContent/MotionContent'
+import { AnimatedContent } from '@components/ui/AnimatedContent/AnimatedContent'
 
 type Props = {
   index: number
@@ -316,7 +316,7 @@ export const BankTransactionRow = ({
             )
             : (
               <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
-                <MotionContent
+                <AnimatedContent
                   variant='fade'
                   isOpen={categorizationEnabled && !categorized}
                   className='Layer__BankTransactionRow__CategoryComboBoxMotionContent'
@@ -332,7 +332,7 @@ export const BankTransactionRow = ({
                     }}
                     isLoading={bankTransaction.processing}
                   />
-                </MotionContent>
+                </AnimatedContent>
                 {categorized
                   && (
                     <BankTransactionsCategorizedSelectedValue
@@ -396,7 +396,7 @@ export const BankTransactionRow = ({
       </tr>
       <tr>
         <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
-          <MotionContent variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+          <AnimatedContent variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
             <ExpandedBankTransactionRow
               ref={expandedRowRef}
               bankTransaction={bankTransaction}
@@ -408,7 +408,7 @@ export const BankTransactionRow = ({
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
             />
-          </MotionContent>
+          </AnimatedContent>
         </td>
       </tr>
     </>
