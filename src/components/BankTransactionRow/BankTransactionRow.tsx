@@ -37,7 +37,6 @@ import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBan
 import { HStack } from '@ui/Stack/Stack'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
-import { AnimatePresence, motion } from 'motion/react'
 import './bankTransactionRow.scss'
 import { MotionContent } from '@components/ui/MotionContent/MotionContent'
 
@@ -317,28 +316,23 @@ export const BankTransactionRow = ({
             )
             : (
               <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
-                <AnimatePresence mode='wait'>
-                  {categorizationEnabled && !categorized && (
-                    <motion.div
-                      key='category-combobox'
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className='Layer__BankTransactionRow__CategoryComboBoxMotionContent'
-                    >
-                      <BankTransactionCategoryComboBox
-                        bankTransaction={bankTransaction}
-                        selectedValue={selectedCategory ?? null}
-                        onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                          setTransactionCategory(bankTransaction.id, selectedCategory)
-                          setShowRetry(false)
-                        }}
-                        isLoading={bankTransaction.processing}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <MotionContent
+                  variant='fade'
+                  isOpen={categorizationEnabled && !categorized}
+                  className='Layer__BankTransactionRow__CategoryComboBoxMotionContent'
+                  slotProps={{ AnimatePresence: { mode: 'wait' } }}
+                  key='category-combobox'
+                >
+                  <BankTransactionCategoryComboBox
+                    bankTransaction={bankTransaction}
+                    selectedValue={selectedCategory ?? null}
+                    onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
+                      setTransactionCategory(bankTransaction.id, selectedCategory)
+                      setShowRetry(false)
+                    }}
+                    isLoading={bankTransaction.processing}
+                  />
+                </MotionContent>
                 {categorized
                   && (
                     <BankTransactionsCategorizedSelectedValue

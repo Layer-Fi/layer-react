@@ -2,13 +2,14 @@ import { AnimatePresence, motion, type HTMLMotionProps } from 'motion/react'
 import type { ReactNode } from 'react'
 
 type AnimationVariant = 'fade' | 'slideUp' | 'expand'
+type AnimatePresenceMode = 'sync' | 'wait' | 'popLayout'
 
 type MotionContentProps = Omit<HTMLMotionProps<'div'>, 'initial' | 'animate' | 'exit' | 'transition' | 'variants'> & {
   children: ReactNode
   variant: AnimationVariant
   isOpen?: boolean
   slotProps?: {
-    AnimatePresence?: { initial?: boolean }
+    AnimatePresence?: { initial?: boolean, mode?: AnimatePresenceMode }
   }
   key?: string | number
 }
