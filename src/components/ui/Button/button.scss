@@ -145,6 +145,14 @@
     background-color: var(--bg-brand-accent, var(--color-accent));
     color: var(--fg-brand-accent, var(--color-primary));
   }
+
+  &[data-full-width] {
+    inline-size: 100%;
+  }
+
+  &[data-flex] {
+    display: flex;
+  }
 }
 
 .Layer__ButtonTransparentContent {

@@ -3,9 +3,10 @@ import { Badge, BadgeSize } from '@components/Badge/Badge'
 import MinimizeTwo from '@icons/MinimizeTwo'
 import { Span } from '@components/ui/Typography/Text'
 import Scissors from '@icons/Scissors'
+import { Layers2Icon } from 'lucide-react'
 
 export type BankTransactionsBaseSelectedValueProps = {
-  type: 'match' | 'transfer' | 'split' | 'category'
+  type: 'match' | 'transfer' | 'split' | 'category' | 'placeholder'
   label: string
   className?: string
   slotProps?: {
@@ -17,6 +18,14 @@ export type BankTransactionsBaseSelectedValueProps = {
 
 export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSelectedValueProps) => {
   const { type, className, label, slotProps } = props
+
+  if (type === 'placeholder') {
+    return (
+      <HStack gap='xs' align='center' className={className}>
+        <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
+      </HStack>
+    )
+  }
 
   if (type === 'match' || type === 'transfer') {
     return (
@@ -42,6 +51,9 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
 
   return (
     <HStack gap='xs' align='center' className={className}>
+      <Badge size={BadgeSize.SMALL} icon={<Layers2Icon size={11} />}>
+        Category
+      </Badge>
       <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
     </HStack>
   )

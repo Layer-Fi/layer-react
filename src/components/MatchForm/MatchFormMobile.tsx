@@ -5,8 +5,8 @@ import { ErrorText } from '@components/Typography/ErrorText'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { MatchFormMobileItem } from './MatchFormMobileItem'
-import './matchFormMobile.scss'
 import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
+import './matchFormMobile.scss'
 
 export interface MatchFormMobileProps {
   bankTransaction: BankTransaction
@@ -55,9 +55,7 @@ export const MatchFormMobile = ({
           />
         )
       })}
-
       {matchFormError && <ErrorText>{matchFormError}</ErrorText>}
-
     </GridList>
   )
 }

@@ -36,20 +36,10 @@
     margin-top: 0;
     margin-bottom: 0;
 
-    .Layer__bank-transaction-mobile-list-item__expanded-row {
-      transition: all 380ms ease-out;
-      height: 0 !important;
-    }
-
     .Layer__bank-transaction-mobile-list-item__heading {
       transition: height 180ms ease-out;
       height: 0 !important;
     }
-  }
-
-  .Layer__bank-transaction-mobile-list-item__expanded-row {
-    overflow: hidden;
-    transition: all 180ms ease-out;
   }
 }
 
@@ -95,88 +85,11 @@
   padding: var(--spacing-4xs) var(--spacing-sm);
 }
 
-.Layer__bank-transaction-mobile-list-item__form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--spacing-sm);
-}
-
-.Layer__bank-transaction-mobile-list-item__personal-form {
-  width: 100%;
-  padding: var(--spacing-md) 0 var(--spacing-xs) 0;
-}
-
 .Layer__bank-transaction-mobile-list-item__business-form {
   width: 100%;
 
   .Layer__actionable-list {
     margin-bottom: var(--spacing-md);
-  }
-}
-
-.Layer__bank-transaction-mobile-list-item__split-and-match-form {
-  width: 100%;
-
-  .Layer__bank-transactions__table-cell__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding-top: var(--spacing-xs);
-    color: var(--color-base-500);
-  }
-
-  .Layer__bank-transactions__table-cell--split-entry__right-col {
-    width: 100%;
-  }
-
-  .Layer__bank-transactions__splits-inputs {
-    padding: var(--spacing-sm) 0;
-
-    .Layer__bank-transactions__table-cell--split-entry {
-      box-sizing: border-box;
-      display: flex;
-      flex: 1;
-      gap: var(--spacing-xs);
-      align-items: center;
-      width: 100%;
-      padding-bottom: var(--spacing-xs);
-    }
-  }
-
-  .Layer__split-amount-input {
-    width: 112px;
-
-    &.Layer__split-amount-input--first {
-      width: 156px;
-    }
-  }
-
-  .Layer__bank-transactions__table-cell--split-entry__merge-btn {
-    height: 36px;
-    width: 36px;
-  }
-
-  .Layer__select__control {
-    width: 100%;
-    min-width: 150px;
-    font-size: 12px;
-  }
-
-  .Layer__add-new-split {
-    color: var(--color-base-1000);
-  }
-}
-
-.Layer__bank-transaction-mobile-list-item__switch-form-btns {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-sm) 0;
-
-  & > .Layer__text-btn {
-    color: var(--color-base-1000);
   }
 }
 

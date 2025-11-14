@@ -1,23 +1,12 @@
 .Layer__ModalOverlay {
   position: fixed;
-  z-index: 100;
+  z-index: 1001;
   inset: 0;
   display: grid;
   height: var(--visual-viewport-height);
 
   background: rgb(0 0 0 / 50%);
   place-items: center;
-
-  &[data-variant='drawer'],
-  &[data-variant='mobile-drawer'] {
-    &[data-entering] {
-      animation: drawer-darken 300ms;
-    }
-
-    &[data-exiting] {
-      animation: drawer-darken 300ms reverse ease-in;
-    }
-  }
 
   &[data-variant='drawer'] {
     place-items: end;
@@ -61,14 +50,6 @@
     inline-size: 100%;
 
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
-
-    &[data-entering] {
-      animation: mobile-drawer-slide 200ms;
-    }
-
-    &[data-exiting] {
-      animation: mobile-drawer-slide 200ms reverse ease-in;
-    }
   }
 
   &[data-flex-block] {
@@ -121,22 +102,13 @@
   }
 }
 
-@keyframes drawer-darken {
-  from {
-    background: rgb(0 0 0 / 0%);
-  }
-
-  to {
-    background: rgb(0 0 0 / 50%);
-  }
+.Layer__ModalContentFadeMotionContent {
+  display: contents;
+  height: 100%;
+  width: 100%;
 }
 
-@keyframes mobile-drawer-slide {
-  from {
-    transform: translateY(100%);
-  }
-
-  to {
-    transform: translateY(0);
-  }
+.Layer__ModalContentSlideUpMotionContent {
+  height: 100%;
+  width: 100%;
 }

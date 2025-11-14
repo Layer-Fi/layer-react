@@ -5,6 +5,7 @@ import { Checkbox } from '@components/ui/Checkbox/Checkbox'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
 import { isCredit } from '@utils/bankTransactions'
+import './matchFormMobileItem.scss'
 
 interface MatchFormMobileItemProps {
   match: SuggestedMatch
@@ -19,14 +20,17 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
       key={match.id}
       textValue={match.details.description}
     >
-      <HStack gap='md' pis='md'>
-        <Checkbox
-          slot='selection'
-          variant='round'
-        />
-        <Span ellipsis pbs='sm' size='sm'>
-          {match.details.description}
-        </Span>
+      <HStack pi='md' gap='md' justify='space-between'>
+        <HStack align='center'>
+          <Checkbox
+            slot='selection'
+            variant='round'
+            className='Layer__MatchFormMobileItem__Checkbox'
+          />
+          <Span size='sm'>
+            {match.details.description}
+          </Span>
+        </HStack>
         <BankTransactionsAmountDate
           amount={match.details.amount}
           date={match.details.date}
@@ -35,9 +39,7 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
             DateTime: { size: 'xs' },
           }}
         />
-        <HStack>
-          {inAppLink}
-        </HStack>
+        {inAppLink}
       </HStack>
     </GridListItem>
   )

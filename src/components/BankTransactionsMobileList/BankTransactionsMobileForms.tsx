@@ -63,9 +63,7 @@ export const BankTransactionsMobileForms = ({
 
   return (
     <ReceiptsProvider bankTransaction={bankTransaction} isActive={isOpen}>
-      <div className='Layer__bank-transaction-mobile-list-item__form-container'>
-        {getContent()}
-      </div>
+      {getContent()}
     </ReceiptsProvider>
   )
 }

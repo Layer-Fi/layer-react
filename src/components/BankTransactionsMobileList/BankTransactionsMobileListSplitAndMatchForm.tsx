@@ -35,7 +35,7 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
   )
 
   return (
-    <div className='Layer__bank-transaction-mobile-list-item__split-and-match-form'>
+    <>
       {formType === Purpose.categorize && (
         <BankTransactionsMobileListSplitForm
           bankTransaction={bankTransaction}
@@ -53,24 +53,19 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
           showCategorization={showCategorization}
         />
       )}
-      {showCategorization && anyMatch && formType === Purpose.match
-        ? (
-          <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
+      {showCategorization && anyMatch && (
+        formType === Purpose.match
+          ? (
             <TextButton onClick={() => setFormType(Purpose.categorize)}>
               or split transaction
             </TextButton>
-          </div>
-        )
-        : null}
-      {showCategorization && anyMatch && formType === Purpose.categorize
-        ? (
-          <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
+          )
+          : (
             <TextButton onClick={() => setFormType(Purpose.match)}>
               or find match
             </TextButton>
-          </div>
-        )
-        : null}
-    </div>
+          )
+      )}
+    </>
   )
 }

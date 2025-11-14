@@ -1,6 +1,6 @@
 import { ErrorText } from '@components/Typography/ErrorText'
 import { FileInput } from '@components/Input/FileInput'
-import { Button } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
@@ -12,6 +12,7 @@ import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceip
 import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+import { VStack, HStack } from '@components/ui/Stack/Stack'
 
 interface BankTransactionsMobileListPersonalFormProps {
   bankTransaction: BankTransaction
@@ -77,10 +78,12 @@ export const BankTransactionsMobileListPersonalForm = ({
   const alreadyAssigned = isAlreadyAssigned(bankTransaction)
 
   return (
-    <div className='Layer__bank-transaction-mobile-list-item__personal-form'>
+    <VStack gap='sm'>
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
+        hideCustomerVendor
+        hideTags
       />
       <div
         className={classNames(
@@ -99,7 +102,7 @@ export const BankTransactionsMobileListPersonalForm = ({
           />
         )}
       </div>
-      <div className='Layer__bank-transaction-mobile-list-item__actions'>
+      <HStack gap='md'>
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
@@ -109,21 +112,20 @@ export const BankTransactionsMobileListPersonalForm = ({
           />
         )}
         {showCategorization
-          ? (
+          && (
             <Button
-              fullWidth={true}
-              disabled={alreadyAssigned || isLoading || bankTransaction.processing}
+              fullWidth
               onClick={save}
+              isDisabled={alreadyAssigned || isLoading || bankTransaction.processing}
             >
-              {isLoading || bankTransaction.processing
+              {bankTransaction.processing || isLoading
                 ? 'Confirming...'
                 : alreadyAssigned
                   ? 'Confirmed'
-                  : 'Confirm'}
+                  : 'Mark as Personal'}
             </Button>
-          )
-          : null}
-      </div>
+          )}
+      </HStack>
       {bankTransaction.error && showRetry
         ? (
           <ErrorText>
@@ -131,6 +133,6 @@ export const BankTransactionsMobileListPersonalForm = ({
           </ErrorText>
         )
         : null}
-    </div>
+    </VStack>
   )
 }

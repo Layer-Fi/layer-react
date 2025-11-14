@@ -13,6 +13,7 @@ import {
 } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
+import { Span } from '@components/ui/Typography/Text'
 
 type BankTransactionFormFieldProps = {
   bankTransaction: Pick<
@@ -90,23 +91,25 @@ export function BankTransactionFormFields({
   }
 
   return (
-    <VStack pi='md' pbe='lg' gap='md' className='Layer__bank-transaction-form-fields'>
+    <VStack gap='md'>
       {showCustomerVendor && !hideCustomerVendor
-        ? <BankTransactionCustomerVendorSelector bankTransaction={bankTransaction} />
-        : null}
+        && <BankTransactionCustomerVendorSelector bankTransaction={bankTransaction} />}
       {showTags && !hideTags
-        ? (
+        && (
           <TagDimensionsGroup
             value={selectedTags}
             onChange={handleTagsChange}
             showLabels={true}
             isReadOnly={isReadOnly}
           />
-        )
-        : null}
+        )}
       {showDescriptions
-        ? <BankTransactionMemo bankTransactionId={bankTransaction.id} />
-        : null}
+        && (
+          <VStack gap='sm'>
+            <Span size='sm' weight='bold'>Description</Span>
+            <BankTransactionMemo bankTransactionId={bankTransaction.id} />
+          </VStack>
+        )}
     </VStack>
   )
 }

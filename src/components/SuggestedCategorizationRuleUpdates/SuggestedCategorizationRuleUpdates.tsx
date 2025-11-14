@@ -9,6 +9,7 @@ import './suggestedCategorizationRuleUpdates.scss'
 type SuggestedCategorizationRuleUpdatesProps = {
   close: () => void
   ruleSuggestion: UpdateCategorizationRulesSuggestion
+  mobile?: boolean
 }
 
 export function RuleSuggestionHeader({ ruleSuggestion }: { ruleSuggestion: UpdateCategorizationRulesSuggestion }) {

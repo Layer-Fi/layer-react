@@ -24,7 +24,6 @@ export const BankTransactionsMobileList = ({
   removeTransaction,
   editable,
   initialLoad,
-
   showDescriptions,
   showReceiptUploads,
   showTooltips,

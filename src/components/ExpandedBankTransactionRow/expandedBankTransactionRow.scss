@@ -1,0 +1,9 @@
+.Layer__ExpandedBankTransactionRow__Description {
+  width: 55%;
+}
+
+@container (max-width: 760px) {
+  .Layer__ExpandedBankTransactionRow__Description {
+    width: 95%;
+  }
+}
