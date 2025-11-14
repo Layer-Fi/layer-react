@@ -476,7 +476,7 @@
 
   .Layer__BankTransactionCategoryComboBox__Container {
     grid-area: category;
-    max-width: 17.5rem;
+    max-width: 24.5rem;
   }
 
   &__amount {
@@ -824,10 +824,10 @@
       width: 50px;
       background:
         linear-gradient(
-          90deg,
-          rgb(255 255 255 / 0%) 0%,
-          rgb(255 255 255 / 100%) 120%
-        );
+90deg,
+        rgb(255 255 255 / 0%) 0%,
+        rgb(255 255 255 / 100%) 120%
+);
       content: '';
     }
   }
