@@ -6,7 +6,10 @@ import {
   ModalOverlay as ReactAriaModalOverlay,
   type ModalOverlayProps,
 } from 'react-aria-components'
+import { AnimatePresence } from 'motion/react'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { SlideUpContent } from '@ui/SlideUpContent/SlideUpContent'
+import { FadeOverlay } from '@ui/FadeOverlay/FadeOverlay'
 import './modal.scss'
 
 type ModalSize = 'md' | 'lg' | 'xl'
@@ -138,13 +141,36 @@ export function Drawer({
   isDismissable = false,
   role,
 }: DrawerProps) {
+  const isMobileDrawer = variant === 'mobile-drawer'
+  const shouldUseFadeOverlay = variant === 'drawer' || isMobileDrawer
+
+  const modalContent = (
+    <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
+      <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
+        {children}
+      </Dialog>
+    </InternalModal>
+  )
+
+  const wrappedModalContent = isMobileDrawer ? (
+    <SlideUpContent style={{ width: '100%', height: '100%' }}>
+      {modalContent}
+    </SlideUpContent>
+  ) : modalContent
+
+  const overlayContent = shouldUseFadeOverlay ? (
+    <AnimatePresence>
+      {isOpen && (
+        <FadeOverlay style={{ width: '100%', height: '100%', display: 'contents' }}>
+          {wrappedModalContent}
+        </FadeOverlay>
+      )}
+    </AnimatePresence>
+  ) : wrappedModalContent
+
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
-      <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
-          {children}
-        </Dialog>
-      </InternalModal>
+      {overlayContent}
     </ModalOverlay>
   )
 }
