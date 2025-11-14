@@ -24,21 +24,19 @@ export const AnimatedContent = ({
 }: AnimatedContentProps) => {
   const config = variants[variant]
 
-  if (isOpen !== undefined) {
-    return (
-      <AnimatePresence {...slotProps.AnimatePresence}>
-        {isOpen && (
-          <motion.div
-            initial={config.initial}
-            animate={config.animate}
-            exit={config.exit}
-            transition={config.transition}
-            {...props}
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    )
-  }
+  return (
+    <AnimatePresence {...slotProps.AnimatePresence}>
+      {isOpen && (
+        <motion.div
+          initial={config.initial}
+          animate={config.animate}
+          exit={config.exit}
+          transition={config.transition}
+          {...props}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
 }
