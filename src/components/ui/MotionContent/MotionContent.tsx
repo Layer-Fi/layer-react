@@ -20,7 +20,7 @@ const animations = {
     initial: { y: '100%' },
     animate: { y: 0 },
     exit: { y: '100%' },
-    transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] as const },
+    transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] as const },
   },
   expand: {
     initial: { height: 0, opacity: 0 },

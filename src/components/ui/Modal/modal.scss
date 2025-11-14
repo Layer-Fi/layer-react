@@ -101,3 +101,14 @@
     transform: translateX(0);
   }
 }
+
+.Layer__ModalContentFadeMotionContent {
+  height: 100%;
+  width: 100%;
+}
+
+.Layer__ModalContentSlideUpMotionContent {
+  display: contents;
+  height: 100%;
+  width: 100%;
+}

@@ -153,7 +153,7 @@ export function Drawer({
 
   const wrappedModalContent = isMobileDrawer
     ? (
-      <MotionContent variant='slideUp' style={{ width: '100%', height: '100%' }}>
+      <MotionContent variant='slideUp' className='Layer__ModalContentSlideUpMotionContent'>
         {modalContent}
       </MotionContent>
     )
@@ -163,7 +163,7 @@ export function Drawer({
     ? (
       <AnimatePresence>
         {isOpen && (
-          <MotionContent variant='fade' style={{ width: '100%', height: '100%', display: 'contents' }}>
+          <MotionContent variant='fade' className='Layer__ModalContentFadeMotionContent'>
             {wrappedModalContent}
           </MotionContent>
         )}

@@ -325,7 +325,7 @@ export const BankTransactionRow = ({
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.25 }}
-                      style={{ flex: '1 0 auto' }}
+                      className='Layer__BankTransactionRow__CategoryComboBoxMotionContent'
                     >
                       <BankTransactionCategoryComboBox
                         bankTransaction={bankTransaction}
