@@ -20,15 +20,17 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
       key={match.id}
       textValue={match.details.description}
     >
-      <HStack pi='md'>
-        <Checkbox
-          slot='selection'
-          variant='round'
-          className='Layer__MatchFormMobileItem__Checkbox'
-        />
-        <Span pbs='sm' size='sm'>
-          {match.details.description}
-        </Span>
+      <HStack pi='md' gap='md' justify='space-between'>
+        <HStack align='center'>
+          <Checkbox
+            slot='selection'
+            variant='round'
+            className='Layer__MatchFormMobileItem__Checkbox'
+          />
+          <Span size='sm'>
+            {match.details.description}
+          </Span>
+        </HStack>
         <BankTransactionsAmountDate
           amount={match.details.amount}
           date={match.details.date}
@@ -37,9 +39,7 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
             DateTime: { size: 'xs' },
           }}
         />
-        <HStack>
-          {inAppLink}
-        </HStack>
+        {inAppLink}
       </HStack>
     </GridListItem>
   )
