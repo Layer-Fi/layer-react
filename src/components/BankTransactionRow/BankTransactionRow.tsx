@@ -402,23 +402,19 @@ export const BankTransactionRow = ({
       </tr>
       <tr>
         <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
-          <AnimatePresence initial={false}>
-            {open && (
-              <MotionContent variant='expand' key={`expanded-${bankTransaction.id}`}>
-                <ExpandedBankTransactionRow
-                  ref={expandedRowRef}
-                  bankTransaction={bankTransaction}
-                  categorized={categorized}
-                  isOpen={open}
-                  close={() => setOpen(false)}
-                  containerWidth={containerWidth}
-                  showDescriptions={showDescriptions}
-                  showReceiptUploads={showReceiptUploads}
-                  showTooltips={showTooltips}
-                />
-              </MotionContent>
-            )}
-          </AnimatePresence>
+          <MotionContent variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+            <ExpandedBankTransactionRow
+              ref={expandedRowRef}
+              bankTransaction={bankTransaction}
+              categorized={categorized}
+              isOpen={open}
+              close={() => setOpen(false)}
+              containerWidth={containerWidth}
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+            />
+          </MotionContent>
         </td>
       </tr>
     </>

@@ -2,7 +2,6 @@ import { ErrorText } from '@components/Typography/ErrorText'
 import { RetryButton } from '@components/Button/RetryButton'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { AnimatePresence } from 'motion/react'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import FileIcon from '@icons/File'
 import { BankTransaction } from '@internal-types/bank_transactions'
@@ -209,32 +208,28 @@ export const BankTransactionsListItem = ({
           </span>
         )}
       <span className='Layer__bank-transaction-list-item__expanded-row'>
-        <AnimatePresence initial={false}>
-          {openExpandedRow && (
-            <MotionContent variant='expand' key={`expanded-${bankTransaction.id}`}>
-              <ExpandedBankTransactionRow
-                ref={expandedRowRef}
-                bankTransaction={bankTransaction}
-                isOpen={openExpandedRow}
-                close={() => setOpenExpandedRow(false)}
-                categorized={categorized}
-                asListItem={true}
-                submitBtnText={
-                  categorized
-                    ? stringOverrides?.updateButtonText || 'Update'
-                    : stringOverrides?.approveButtonText || 'Approve'
-                }
-                containerWidth={containerWidth}
+        <MotionContent variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
+          <ExpandedBankTransactionRow
+            ref={expandedRowRef}
+            bankTransaction={bankTransaction}
+            isOpen={openExpandedRow}
+            close={() => setOpenExpandedRow(false)}
+            categorized={categorized}
+            asListItem={true}
+            submitBtnText={
+              categorized
+                ? stringOverrides?.updateButtonText || 'Update'
+                : stringOverrides?.approveButtonText || 'Approve'
+            }
+            containerWidth={containerWidth}
 
-                showDescriptions={showDescriptions}
-                showReceiptUploads={showReceiptUploads}
-                showTooltips={showTooltips}
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
 
-                showLeftPadding={false}
-              />
-            </MotionContent>
-          )}
-        </AnimatePresence>
+            showLeftPadding={false}
+          />
+        </MotionContent>
       </span>
       {!openExpandedRow && categorizationEnabled && !categorized && (
         <HStack pi='md' gap='md' pb='md'>

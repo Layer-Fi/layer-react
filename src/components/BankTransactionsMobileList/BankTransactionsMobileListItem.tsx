@@ -1,6 +1,5 @@
 import { useContext, useEffect, useRef, useState, useMemo, type ReactNode } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { AnimatePresence } from 'motion/react'
 import FileIcon from '@icons/File'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
@@ -279,19 +278,15 @@ export const BankTransactionsMobileListItem = ({
               />
             )}
         </div>
-        <AnimatePresence initial={false}>
-          {open && (
-            <MotionContent variant='expand' key={`expanded-${bankTransaction.id}`}>
-              <BankTransactionsMobileListItemExpandedRow
-                bankTransaction={bankTransaction}
-                showCategorization={categorizationEnabled}
-                showDescriptions={showDescriptions}
-                showReceiptUploads={showReceiptUploads}
-                showTooltips={showTooltips}
-              />
-            </MotionContent>
-          )}
-        </AnimatePresence>
+        <MotionContent variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+          <BankTransactionsMobileListItemExpandedRow
+            bankTransaction={bankTransaction}
+            showCategorization={categorizationEnabled}
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
+          />
+        </MotionContent>
 
       </VStack>
 

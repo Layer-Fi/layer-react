@@ -1,4 +1,4 @@
-import { motion, type HTMLMotionProps } from 'motion/react'
+import { AnimatePresence, motion, type HTMLMotionProps } from 'motion/react'
 import type { ReactNode } from 'react'
 
 type AnimationVariant = 'fade' | 'slideUp' | 'expand'
@@ -6,6 +6,10 @@ type AnimationVariant = 'fade' | 'slideUp' | 'expand'
 type MotionContentProps = Omit<HTMLMotionProps<'div'>, 'initial' | 'animate' | 'exit' | 'transition' | 'variants'> & {
   children: ReactNode
   variant: AnimationVariant
+  isOpen?: boolean
+  slotProps?: {
+    AnimatePresence?: { initial?: boolean }
+  }
   key?: string | number
 }
 
@@ -33,18 +37,30 @@ const animations = {
   },
 }
 
-export const MotionContent = ({ children, variant, ...props }: MotionContentProps) => {
+export const MotionContent = ({
+  children,
+  variant,
+  isOpen,
+  slotProps = { AnimatePresence: { initial: false } },
+  ...props
+}: MotionContentProps) => {
   const config = animations[variant]
 
-  return (
-    <motion.div
-      initial={config.initial}
-      animate={config.animate}
-      exit={config.exit}
-      transition={config.transition}
-      {...props}
-    >
-      {children}
-    </motion.div>
-  )
+  if (isOpen !== undefined) {
+    return (
+      <AnimatePresence {...slotProps.AnimatePresence}>
+        {isOpen && (
+          <motion.div
+            initial={config.initial}
+            animate={config.animate}
+            exit={config.exit}
+            transition={config.transition}
+            {...props}
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    )
+  }
 }

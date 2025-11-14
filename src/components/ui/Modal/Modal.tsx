@@ -6,7 +6,6 @@ import {
   ModalOverlay as ReactAriaModalOverlay,
   type ModalOverlayProps,
 } from 'react-aria-components'
-import { AnimatePresence } from 'motion/react'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './modal.scss'
 import { MotionContent } from '@components/ui/MotionContent/MotionContent'
@@ -161,13 +160,9 @@ export function Drawer({
 
   const overlayContent = shouldUseFadeOverlay
     ? (
-      <AnimatePresence>
-        {isOpen && (
-          <MotionContent variant='fade' className='Layer__ModalContentFadeMotionContent'>
-            {wrappedModalContent}
-          </MotionContent>
-        )}
-      </AnimatePresence>
+      <MotionContent variant='fade' isOpen={isOpen} className='Layer__ModalContentFadeMotionContent'>
+        {wrappedModalContent}
+      </MotionContent>
     )
     : wrappedModalContent
 
