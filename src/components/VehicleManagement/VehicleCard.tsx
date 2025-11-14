@@ -1,0 +1,47 @@
+import { Car } from 'lucide-react'
+import { type Vehicle } from '@schemas/vehicle'
+import { VStack, HStack } from '@ui/Stack/Stack'
+import { Card } from '@components/Card/Card'
+import { Span } from '@ui/Typography/Text'
+import { Heading } from '@ui/Typography/Heading'
+import { getVehicleDisplayName } from '@features/vehicles/util'
+import { Button } from '@ui/Button/Button'
+import './vehicleCard.scss'
+
+interface VehicleCardProps {
+  vehicle: Vehicle
+  onEdit: (vehicle: Vehicle) => void
+}
+
+const VEHICLE_CARD_FIELDS = [
+  { label: 'Make', key: 'make' as const },
+  { label: 'Model', key: 'model' as const },
+  { label: 'Year', key: 'year' as const },
+  { label: 'License plate', key: 'licensePlate' as const },
+  { label: 'VIN', key: 'vin' as const },
+  { label: 'Description', key: 'description' as const },
+]
+
+export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
+  return (
+    <Card className='Layer__VehicleCard'>
+      <VStack gap='md' pi='md' pb='md'>
+        <HStack justify='space-between' align='center'>
+          <Heading size='sm' ellipsis>{getVehicleDisplayName(vehicle)}</Heading>
+          <Car size={20} className='Layer__VehicleCard__icon' />
+        </HStack>
+        <VStack gap='xs'>
+          {VEHICLE_CARD_FIELDS.map(({ label, key }) => (
+            <HStack key={key} justify='space-between' gap='md'>
+              <Span size='sm' variant='subtle'>{label}</Span>
+              <Span size='sm' weight='bold' withTooltip>{vehicle[key] || '-'}</Span>
+            </HStack>
+          ))}
+        </VStack>
+        <Button variant='text' onPress={() => onEdit(vehicle)}>
+          Edit vehicle
+        </Button>
+      </VStack>
+    </Card>
+  )
+}

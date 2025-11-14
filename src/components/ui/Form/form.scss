@@ -6,7 +6,8 @@
 }
 
 .Layer__UI__TextField,
-.Layer__UI__DateField {
+.Layer__UI__DateField,
+.Layer__UI__NumberField {
   display: grid;
 
   grid-template-areas:
