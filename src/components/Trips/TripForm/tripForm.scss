@@ -1,0 +1,27 @@
+.Layer__TripForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  max-width: 44rem;
+  padding-inline: var(--spacing-lg);
+
+  .Layer__TripForm__FormError {
+    padding-block: var(--spacing-xs);
+  }
+
+  .Layer__TripForm__Field__Vehicle,
+  .Layer__TripForm__Field__TripDate,
+  .Layer__TripForm__Field__Distance,
+  .Layer__TripForm__Field__Purpose,
+  .Layer__TripForm__Field__StartAddress,
+  .Layer__TripForm__Field__EndAddress,
+  .Layer__TripForm__Field__Description {
+    grid-template-columns: 10rem auto;
+    width: 100%;
+  }
+
+  .Layer__TripForm__Submit {
+    align-items: flex-end;
+    padding-top: 1rem;
+  }
+}
