@@ -62,7 +62,6 @@ export function VehicleSelector({
   const combinedClassName = classNames(
     'Layer__VehicleSelector',
     inline && 'Layer__VehicleSelector--inline',
-    className,
   )
 
   const { data, isLoading, isError } = useListVehicles()
@@ -131,6 +130,7 @@ export function VehicleSelector({
         isLoading={isLoadingWithoutFallback}
         isReadOnly={isReadOnly}
         isSearchable
+        className={className}
         {...additionalAriaProps}
       />
     </VStack>
