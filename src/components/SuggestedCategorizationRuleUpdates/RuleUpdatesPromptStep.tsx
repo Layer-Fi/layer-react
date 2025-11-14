@@ -8,6 +8,7 @@ import { Label, Span } from '@ui/Typography/Text'
 import { CreateRuleButton } from '@components/SuggestedCategorizationRuleUpdates/CreateRuleButton'
 import { useRejectCategorizationRulesUpdateSuggestion } from '@hooks/useCategorizationRules/useRejectCategorizationRulesUpdateSuggestion'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 
 interface RuleUpdatesPromptStepProps {
   close: () => void
@@ -17,6 +18,7 @@ interface RuleUpdatesPromptStepProps {
 export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesPromptStepProps) {
   const { next } = useWizard()
   const { addToast } = useLayerContext()
+  const { isMobile } = useSizeClass()
   const [dontAskAgain, setDontAskAgain] = useState(false)
   const { trigger: rejectRuleSuggestion, isMutating } = useRejectCategorizationRulesUpdateSuggestion()
   const handleRejectRuleSuggestion = useCallback(() => {
@@ -38,7 +40,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesProm
   }, [addToast, close, dontAskAgain, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
 
   return (
-    <VStack gap='3xl'>
+    <VStack gap={isMobile ? 'md' : '3xl'}>
       <Span size='md'>{ruleSuggestion.suggestionPrompt}</Span>
       <VStack gap='sm' align='end'>
         <HStack gap='sm' justify='end' align='end'>
