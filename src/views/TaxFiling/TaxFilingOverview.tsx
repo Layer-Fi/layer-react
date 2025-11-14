@@ -1,11 +1,15 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useMemo, useState } from 'react'
 import { VStack, HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import { Button, ButtonVariant } from '@ui/Button/Button'
 import { AlertTriangle, Download } from 'lucide-react'
-import { convertNumberToCurrency } from '@utils/format'
+import { convertNumberToCurrency, formatPercent } from '@utils/format'
 import { format } from 'date-fns'
+import { PieChart, Pie, Cell, ResponsiveContainer, Label, Text as ChartText } from 'recharts'
+import { PolarViewBox } from 'recharts/types/util/types'
+import classNames from 'classnames'
 import './taxFilingOverview.scss'
 import { taxEstimateDefaults } from './defaults'
 
@@ -17,15 +21,9 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
   const totalIncomeBarRef = useRef<HTMLDivElement>(null)
   const incomeBarRef = useRef<HTMLDivElement>(null)
   const deductionsBarRef = useRef<HTMLDivElement>(null)
-  const federalBarRef = useRef<HTMLDivElement>(null)
-  const selfEmployedBarRef = useRef<HTMLDivElement>(null)
-  const stateBarRef = useRef<HTMLDivElement>(null)
   const totalIncomeAmountRef = useRef<HTMLSpanElement>(null)
   const taxableIncomeAmountRef = useRef<HTMLSpanElement>(null)
   const deductionsAmountRef = useRef<HTMLSpanElement>(null)
-  const federalAmountRef = useRef<HTMLSpanElement>(null)
-  const selfEmployedAmountRef = useRef<HTMLSpanElement>(null)
-  const stateAmountRef = useRef<HTMLSpanElement>(null)
   const yearForTaxFiling = 2025
 
   const todoItems = [
@@ -81,10 +79,20 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
   const selfEmployedTaxesOwed = taxEstimateDefaults.selfEmploymentDeduction
   const stateTaxesOwed = taxEstimateDefaults.stateTaxesOwed
   const totalTaxesOwed = federalTaxesOwed + selfEmployedTaxesOwed + stateTaxesOwed
-  const federalPercentage = (federalTaxesOwed / totalTaxesOwed) * 100
-  const selfEmployedPercentage = (selfEmployedTaxesOwed / totalTaxesOwed) * 100
-  const statePercentage = (stateTaxesOwed / totalTaxesOwed) * 100
   const taxesDueDate = taxEstimateDefaults.taxesDueDate
+
+  const [hoveredItem, setHoveredItem] = useState<string | undefined>()
+
+  const pieChartData = useMemo(() => [
+    { name: 'Federal', value: federalTaxesOwed, color: '#3b82f6' },
+    { name: 'State', value: stateTaxesOwed, color: '#10b981' },
+    { name: 'Self-Employed', value: selfEmployedTaxesOwed, color: '#f97316' },
+  ].map(x => ({
+    ...x,
+    value: x.value > 0 ? x.value : 0,
+  })), [federalTaxesOwed, stateTaxesOwed, selfEmployedTaxesOwed])
+
+  const noValue = pieChartData.length === 0 || !pieChartData.find(x => x.value !== 0)
 
   useEffect(() => {
     if (totalIncomeBarRef.current) {
@@ -95,18 +103,6 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
     }
     if (deductionsBarRef.current) {
       deductionsBarRef.current.style.width = `${deductionsPercentage}%`
-    }
-    if (federalBarRef.current) {
-      federalBarRef.current.style.width = `${federalPercentage}%`
-      federalBarRef.current.style.left = '0'
-    }
-    if (selfEmployedBarRef.current) {
-      selfEmployedBarRef.current.style.width = `${selfEmployedPercentage}%`
-      selfEmployedBarRef.current.style.left = '0'
-    }
-    if (stateBarRef.current) {
-      stateBarRef.current.style.width = `${statePercentage}%`
-      stateBarRef.current.style.left = '0'
     }
     if (totalIncomeAmountRef.current) {
       totalIncomeAmountRef.current.style.left = '100%'
@@ -120,88 +116,81 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
       deductionsAmountRef.current.style.left = `${deductionsPercentage}%`
       deductionsAmountRef.current.style.transform = 'translateX(-50%)'
     }
-    if (federalAmountRef.current) {
-      federalAmountRef.current.style.left = `${federalPercentage}%`
-      federalAmountRef.current.style.transform = 'translateX(-50%)'
-    }
-    if (selfEmployedAmountRef.current) {
-      selfEmployedAmountRef.current.style.left = `${selfEmployedPercentage}%`
-      selfEmployedAmountRef.current.style.transform = 'translateX(-50%)'
-    }
-    if (stateAmountRef.current) {
-      stateAmountRef.current.style.left = `${statePercentage}%`
-      stateAmountRef.current.style.transform = 'translateX(-50%)'
-    }
-  }, [deductionsPercentage, taxableIncomePercentage, federalPercentage, selfEmployedPercentage, statePercentage])
+  }, [deductionsPercentage, taxableIncomePercentage])
 
   return (
     <VStack gap='xl' fluid>
       <HStack gap='lg' fluid>
-        <VStack gap='md' fluid pb='lg' pi='lg' className='Layer__Stack Layer__tax-filing-overview__section'>
-          <HStack justify='space-between'>
-            <VStack gap='xs'>
-              <Heading size='md'>Taxable Income</Heading>
-              <Span size='sm' variant='subtle'>
+        <VStack fluid className='Layer__Stack Layer__tax-filing-overview__section'>
+          <header className='Layer__tax-filing-overview__header'>
+            <div className='Layer__tax-filing-overview__head'>
+              <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
+                Taxable Income
+              </Text>
+              <Text size={TextSize.sm} className='date'>
                 Taxable income estimate to date for Year
                 {' '}
                 {yearForTaxFiling}
-              </Span>
+              </Text>
+            </div>
+          </header>
+          <VStack gap='md' pb='lg' pi='lg'>
+            <HStack gap='md' align='center' pbe='lg' fluid>
+              <Heading size='lg'>{convertNumberToCurrency(taxableIncome)}</Heading>
+              <HStack gap='xs' align='center'>
+                <AlertTriangle size={16} style={{ color: 'var(--fg-subtle)' }} />
+                <Span size='sm' variant='subtle'>Excludes pending transactions</Span>
+              </HStack>
+            </HStack>
+            <VStack gap='lg'>
+              <HStack gap='md' align='center' fluid>
+                <Span size='lg' className='Layer__tax-filing-overview__label'>
+                  Total Income
+                </Span>
+                <HStack
+                  fluid
+                  className='Layer__tax-filing-overview__bar-container Layer__tax-filing-overview__bar-container--with-label'
+                >
+                  <HStack
+                    ref={totalIncomeBarRef}
+                    className='Layer__tax-filing-overview__bar Layer__tax-filing-overview__bar--total-income'
+                  />
+                  <Span ref={totalIncomeAmountRef} size='sm' variant='subtle' className='Layer__tax-filing-overview__bar-amount'>
+                    {convertNumberToCurrency(income)}
+                  </Span>
+                </HStack>
+              </HStack>
+              <HStack gap='md' align='center' fluid>
+                <Span size='lg' className='Layer__tax-filing-overview__label'>
+                  Deductions
+                </Span>
+                <HStack
+                  fluid
+                  className='Layer__tax-filing-overview__bar-container Layer__tax-filing-overview__bar-container--with-label'
+                >
+                  <HStack
+                    ref={deductionsBarRef}
+                    className='Layer__tax-filing-overview__bar Layer__tax-filing-overview__bar--deductions'
+                  />
+                  <Span ref={deductionsAmountRef} size='sm' variant='subtle' className='Layer__tax-filing-overview__bar-amount'>
+                    {convertNumberToCurrency(deductions)}
+                  </Span>
+                </HStack>
+              </HStack>
             </VStack>
-            <HStack gap='sm' align='center'>
-
-            </HStack>
-          </HStack>
-          <HStack gap='md' align='center' pbe='lg' fluid>
-            <Heading size='lg'>{convertNumberToCurrency(taxableIncome)}</Heading>
-            <HStack gap='xs' align='center'>
-              <AlertTriangle size={16} style={{ color: 'var(--fg-subtle)' }} />
-              <Span size='sm' variant='subtle'>Excludes pending transactions</Span>
-            </HStack>
-          </HStack>
-          <VStack gap='lg'>
-            <HStack gap='md' align='center' fluid>
-              <Span size='lg' className='Layer__tax-filing-overview__label'>
-                Total Income
-              </Span>
-              <HStack
-                fluid
-                className='Layer__tax-filing-overview__bar-container Layer__tax-filing-overview__bar-container--with-label'
-              >
-                <HStack
-                  ref={totalIncomeBarRef}
-                  className='Layer__tax-filing-overview__bar Layer__tax-filing-overview__bar--total-income'
-                />
-                <Span ref={totalIncomeAmountRef} size='sm' variant='subtle' className='Layer__tax-filing-overview__bar-amount'>
-                  {convertNumberToCurrency(income)}
-                </Span>
-              </HStack>
-            </HStack>
-            <HStack gap='md' align='center' fluid>
-              <Span size='lg' className='Layer__tax-filing-overview__label'>
-                Deductions
-              </Span>
-              <HStack
-                fluid
-                className='Layer__tax-filing-overview__bar-container Layer__tax-filing-overview__bar-container--with-label'
-              >
-                <HStack
-                  ref={deductionsBarRef}
-                  className='Layer__tax-filing-overview__bar Layer__tax-filing-overview__bar--deductions'
-                />
-                <Span ref={deductionsAmountRef} size='sm' variant='subtle' className='Layer__tax-filing-overview__bar-amount'>
-                  {convertNumberToCurrency(deductions)}
-                </Span>
-              </HStack>
-            </HStack>
           </VStack>
         </VStack>
-        <VStack gap='lg' fluid pb='lg' pi='lg' className='Layer__tax-filing-overview__section'>
-          <VStack gap='md'>
-            <Heading size='md'>
-              Tax Preparations for
-              {' '}
-              {yearForTaxFiling}
-            </Heading>
+        <VStack fluid className='Layer__tax-filing-overview__section'>
+          <header className='Layer__tax-filing-overview__header'>
+            <div className='Layer__tax-filing-overview__head'>
+              <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
+                Tax Preparations for
+                {' '}
+                {yearForTaxFiling}
+              </Text>
+            </div>
+          </header>
+          <VStack gap='md' pb='lg' pi='lg'>
             <VStack gap='sm'>
               {todoItems.map((item, index) => (
                 <HStack key={index} gap='md' align='center' justify='space-between' fluid>
@@ -220,13 +209,18 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
 
       </HStack>
       <HStack gap='lg' fluid>
-        <VStack gap='lg' fluid pb='lg' pi='lg' className='Layer__tax-filing-overview__section'>
-          <VStack gap='lg'>
-            <Heading size='md'>
-              Estimated Taxes for
-              {yearForTaxFiling}
-            </Heading>
-            <HStack gap='xl' align='start' pbe='md' fluid>
+        <VStack fluid className='Layer__tax-filing-overview__section'>
+          <header className='Layer__tax-filing-overview__header'>
+            <div className='Layer__tax-filing-overview__head'>
+              <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
+                Estimated Taxes for
+                {' '}
+                {yearForTaxFiling}
+              </Text>
+            </div>
+          </header>
+          <VStack>
+            <HStack gap='xl' align='start' pbs='md' pi='md' fluid>
               <VStack gap='xs'>
                 <Span size='sm' variant='subtle'>Total Owed</Span>
                 <Heading size='lg'>{convertNumberToCurrency(totalTaxesOwed)}</Heading>
@@ -236,71 +230,330 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
                 <Heading size='lg'>{format(taxesDueDate, 'MMMM d')}</Heading>
               </VStack>
             </HStack>
-            <VStack gap='lg'>
-              <HStack gap='md' align='center' fluid>
-                <Span size='lg' className='Layer__tax-filing-overview__label'>
-                  Federal
-                </Span>
-                <HStack
-                  fluid
-                  className='Layer__tax-filing-overview__bar-container Layer__tax-filing-overview__bar-container--with-label'
-                >
-                  <HStack
-                    ref={federalBarRef}
-                    className='Layer__tax-filing-overview__bar Layer__tax-filing-overview__bar--federal'
-                  />
-                  <Span ref={federalAmountRef} size='sm' variant='subtle' className='Layer__tax-filing-overview__bar-amount'>
-                    {convertNumberToCurrency(federalTaxesOwed)}
-                  </Span>
-                </HStack>
-              </HStack>
+            <VStack>
+              <div className='Layer__tax-filing-overview__chart-container'>
+                <ResponsiveContainer>
+                  <PieChart>
+                    <defs>
+                      <pattern
+                        id='layer-pie-stripe-pattern'
+                        x='0'
+                        y='0'
+                        width='4'
+                        height='4'
+                        patternTransform='rotate(45)'
+                        patternUnits='userSpaceOnUse'
+                      >
+                        <rect width='4' height='4' opacity={0.16} />
+                        <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
+                      </pattern>
+                      <pattern
+                        id='layer-pie-dots-pattern'
+                        x='0'
+                        y='0'
+                        width='3'
+                        height='3'
+                        patternUnits='userSpaceOnUse'
+                      >
+                        <rect width='3' height='3' opacity={0.46} className='bg' />
+                        <rect width='1' height='1' opacity={0.56} />
+                      </pattern>
+                    </defs>
+                    {!noValue
+                      ? (
+                        <Pie
+                          data={pieChartData}
+                          dataKey='value'
+                          nameKey='name'
+                          cx='50%'
+                          cy='50%'
+                          innerRadius='91%'
+                          outerRadius='100%'
+                          paddingAngle={0.5}
+                          fill='#8884d8'
+                          animationDuration={200}
+                          animationEasing='ease-in-out'
+                        >
+                          {pieChartData.map((entry, index) => {
+                            let fill: string | undefined = entry.color
+                            let active = true
+                            if (hoveredItem && entry.name !== hoveredItem) {
+                              active = false
+                              fill = undefined
+                            }
 
-              <HStack gap='md' align='center' fluid>
-                <Span size='lg' className='Layer__tax-filing-overview__label'>
-                  State
-                </Span>
-                <HStack
-                  fluid
-                  className='Layer__tax-filing-overview__bar-container Layer__tax-filing-overview__bar-container--with-label'
-                >
-                  <HStack
-                    ref={stateBarRef}
-                    className='Layer__tax-filing-overview__bar Layer__tax-filing-overview__bar--state'
-                  />
-                  <Span ref={stateAmountRef} size='sm' variant='subtle' className='Layer__tax-filing-overview__bar-amount'>
-                    {convertNumberToCurrency(stateTaxesOwed)}
-                  </Span>
-                </HStack>
-              </HStack>
-              <HStack gap='md' align='center' fluid>
-                <Span size='lg' className='Layer__tax-filing-overview__label'>
-                  Self-Employed
-                </Span>
-                <HStack
-                  fluid
-                  className='Layer__tax-filing-overview__bar-container Layer__tax-filing-overview__bar-container--with-label'
-                >
-                  <HStack
-                    ref={selfEmployedBarRef}
-                    className='Layer__tax-filing-overview__bar Layer__tax-filing-overview__bar--self-employed'
-                  />
-                  <Span ref={selfEmployedAmountRef} size='sm' variant='subtle' className='Layer__tax-filing-overview__bar-amount'>
-                    {convertNumberToCurrency(selfEmployedTaxesOwed)}
-                  </Span>
-                </HStack>
-              </HStack>
+                            return (
+                              <Cell
+                                key={`cell-${index}`}
+                                className={classNames(
+                                  'Layer__profit-and-loss-detailed-charts__pie',
+                                  hoveredItem && active ? 'active' : 'inactive',
+                                )}
+                                fill={fill}
+                                onMouseEnter={() => setHoveredItem(entry.name)}
+                                onMouseLeave={() => setHoveredItem(undefined)}
+                              />
+                            )
+                          })}
+                          <Label
+                            position='center'
+                            value='Total'
+                            className='pie-center-label-title'
+                            content={(props) => {
+                              const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                                cx: 0,
+                                cy: 0,
+                              }
+                              const positioningProps = {
+                                x: cx,
+                                y: (cy || 0) - 15,
+                                textAnchor: 'middle' as
+                                | 'start'
+                                | 'middle'
+                                | 'end'
+                                | 'inherit',
+                                verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
+                              }
+
+                              let text = 'Total'
+
+                              if (hoveredItem) {
+                                text = hoveredItem
+                              }
+
+                              return (
+                                <ChartText
+                                  {...positioningProps}
+                                  className='pie-center-label__title'
+                                >
+                                  {text}
+                                </ChartText>
+                              )
+                            }}
+                          />
+
+                          <Label
+                            position='center'
+                            value='Total'
+                            className='pie-center-label-title'
+                            content={(props) => {
+                              const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                                cx: 0,
+                                cy: 0,
+                              }
+                              const positioningProps = {
+                                x: cx,
+                                y: (cy || 0) + 5,
+                                textAnchor: 'middle' as
+                                | 'start'
+                                | 'middle'
+                                | 'end'
+                                | 'inherit',
+                                verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
+                              }
+
+                              let value = totalTaxesOwed
+                              if (hoveredItem) {
+                                value = pieChartData.find(
+                                  x => x.name === hoveredItem,
+                                )?.value ?? 0
+                              }
+
+                              return (
+                                <ChartText
+                                  {...positioningProps}
+                                  className='pie-center-label__value'
+                                >
+                                  {convertNumberToCurrency(value)}
+                                </ChartText>
+                              )
+                            }}
+                          />
+
+                          <Label
+                            position='center'
+                            value='Total'
+                            className='pie-center-label-title'
+                            content={(props) => {
+                              const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                                cx: 0,
+                                cy: 0,
+                              }
+                              const positioningProps = {
+                                x: cx,
+                                y: (cy || 0) + 25,
+                                height: 20,
+                                textAnchor: 'middle' as
+                                | 'start'
+                                | 'middle'
+                                | 'end'
+                                | 'inherit',
+                                verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
+                              }
+
+                              if (hoveredItem) {
+                                const item = pieChartData.find(
+                                  x => x.name === hoveredItem,
+                                )
+                                const positiveTotal = pieChartData.reduce((sum, x) => sum + x.value, 0)
+
+                                const value = item?.value ?? 0
+                                const share = value > 0 ? value / positiveTotal : 0
+                                return (
+                                  <ChartText
+                                    {...positioningProps}
+                                    className='pie-center-label__share'
+                                  >
+                                    {`${formatPercent(share)}%`}
+                                  </ChartText>
+                                )
+                              }
+
+                              return null
+                            }}
+                          />
+                        </Pie>
+                      )
+                      : null}
+
+                    {noValue
+                      ? (
+                        <Pie
+                          data={[{ name: 'Total', value: 1 }]}
+                          dataKey='value'
+                          nameKey='name'
+                          cx='50%'
+                          cy='50%'
+                          innerRadius='91%'
+                          outerRadius='100%'
+                          paddingAngle={0}
+                          fill='#F8F8FA'
+                          animationDuration={200}
+                          animationEasing='ease-in-out'
+                        >
+                          <Label
+                            position='center'
+                            value='Total'
+                            className='pie-center-label-title'
+                            content={(props) => {
+                              const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                                cx: 0,
+                                cy: 0,
+                              }
+                              const positioningProps = {
+                                x: cx,
+                                y: (cy || 0) - 15,
+                                textAnchor: 'middle' as
+                                | 'start'
+                                | 'middle'
+                                | 'end'
+                                | 'inherit',
+                                verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
+                              }
+
+                              return (
+                                <ChartText
+                                  {...positioningProps}
+                                  className='pie-center-label__title'
+                                >
+                                  Total
+                                </ChartText>
+                              )
+                            }}
+                          />
+
+                          <Label
+                            position='center'
+                            value='Total'
+                            className='pie-center-label-title'
+                            content={(props) => {
+                              const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                                cx: 0,
+                                cy: 0,
+                              }
+                              const positioningProps = {
+                                x: cx,
+                                y: (cy || 0) + 5,
+                                textAnchor: 'middle' as
+                                | 'start'
+                                | 'middle'
+                                | 'end'
+                                | 'inherit',
+                                verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
+                              }
+
+                              return (
+                                <ChartText
+                                  {...positioningProps}
+                                  className='pie-center-label__value'
+                                >
+                                  {convertNumberToCurrency(totalTaxesOwed)}
+                                </ChartText>
+                              )
+                            }}
+                          />
+                        </Pie>
+                      )
+                      : null}
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className='Layer__tax-filing-overview__table-container'>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Tax Category</th>
+                      <th className='value-col'>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pieChartData.map((entry, index) => (
+                      <tr
+                        key={`tax-category-${index}`}
+                        className={classNames(
+                          'Layer__profit-and-loss-detailed-table__row',
+                          hoveredItem && hoveredItem === entry.name
+                            ? 'active'
+                            : '',
+                        )}
+                        onMouseEnter={() => setHoveredItem(entry.name)}
+                        onMouseLeave={() => setHoveredItem(undefined)}
+                      >
+                        <td className='category-col'>
+                          <span className='Layer__tax-filing-overview__category-cell'>
+                            <div
+                              className='Layer__tax-filing-overview__category-indicator'
+                              style={{
+                                background: entry.color,
+                              }}
+                            />
+                            {entry.name}
+                          </span>
+                        </td>
+                        <td className='value-col'>
+                          {convertNumberToCurrency(entry.value)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </VStack>
           </VStack>
         </VStack>
-        <VStack gap='lg' fluid pb='lg' pi='lg' className='Layer__tax-filing-overview__section'>
-          <VStack gap='md'>
-            <Heading size='md'>
-              Your Federal Tax Deadlines
-              {' '}
-              for
-              {' '}
-              {yearForTaxFiling}
-            </Heading>
+        <VStack fluid className='Layer__tax-filing-overview__section'>
+          <header className='Layer__tax-filing-overview__header'>
+            <div className='Layer__tax-filing-overview__head'>
+              <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
+                Your Federal Tax Deadlines
+                {' '}
+                for
+                {' '}
+                {yearForTaxFiling}
+              </Text>
+            </div>
+          </header>
+          <VStack gap='md' pb='lg' pi='lg'>
             <VStack gap='sm'>
               {deadlines.map((deadline, index) => (
                 <HStack key={index} gap='xl' align='center' justify='space-between' fluid>
