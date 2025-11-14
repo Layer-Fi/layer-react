@@ -43,6 +43,7 @@ export type VehicleSelectorProps = {
   inline?: boolean
 
   className?: string
+  containerClassName?: string
   showLabel?: boolean
 }
 
@@ -57,11 +58,13 @@ export function VehicleSelector({
   inline,
 
   className,
+  containerClassName,
   showLabel = true,
 }: VehicleSelectorProps) {
   const combinedClassName = classNames(
     'Layer__VehicleSelector',
     inline && 'Layer__VehicleSelector--inline',
+    containerClassName,
   )
 
   const { data, isLoading, isError } = useListVehicles()

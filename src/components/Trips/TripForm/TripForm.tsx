@@ -60,7 +60,7 @@ export const TripForm = (props: TripFormProps) => {
             onSelectedVehicleChange={field.handleChange}
             isReadOnly={isReadOnly}
             inline
-            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Vehicle`}
+            containerClassName={`${TRIP_FORM_FIELD_CSS_PREFIX}__Vehicle`}
           />
         )}
       </form.Field>
