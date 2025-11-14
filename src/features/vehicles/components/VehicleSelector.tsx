@@ -4,15 +4,15 @@ import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { P } from '@ui/Typography/Text'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { type VehicleEncoded } from '@schemas/vehicle'
+import { type Vehicle } from '@schemas/vehicle'
 import classNames from 'classnames'
 import { getVehicleDisplayName } from '@features/vehicles/util'
 import './vehicleSelector.scss'
 
 class VehicleAsOption {
-  private internalVehicle: VehicleEncoded
+  private internalVehicle: Vehicle
 
-  constructor(vehicle: VehicleEncoded) {
+  constructor(vehicle: Vehicle) {
     this.internalVehicle = vehicle
   }
 
@@ -34,8 +34,8 @@ class VehicleAsOption {
 }
 
 export type VehicleSelectorProps = {
-  selectedVehicle: VehicleEncoded | null
-  onSelectedVehicleChange: (vehicle: VehicleEncoded | null) => void
+  selectedVehicle: Vehicle | null
+  onSelectedVehicleChange: (vehicle: Vehicle | null) => void
 
   placeholder?: string
 

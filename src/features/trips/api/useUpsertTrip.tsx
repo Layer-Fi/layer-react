@@ -4,8 +4,8 @@ import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 import { post, patch } from '@api/layer/authenticated_http'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useAuth } from '@hooks/useAuth'
-import { TripSchema } from '@schemas/trip'
-import { Schema, Effect, pipe } from 'effect'
+import { TripSchema, type UpsertTripEncoded } from '@schemas/trip'
+import { Schema, Effect } from 'effect'
 import { useTripsGlobalCacheActions } from '@features/trips/api/useListTrips'
 
 const UPSERT_TRIP_TAG_KEY = '#upsert-trip'
@@ -15,30 +15,7 @@ export enum UpsertTripMode {
   Update = 'Update',
 }
 
-// Request body schema for creating/updating trips
-export const UpsertTripSchema = Schema.Struct({
-  vehicleId: pipe(
-    Schema.propertySignature(Schema.UUID),
-    Schema.fromKey('vehicle_id'),
-  ),
-  tripDate: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('trip_date'),
-  ),
-  distance: Schema.BigDecimal,
-  purpose: Schema.String,
-  startAddress: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('start_address'),
-  ),
-  endAddress: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('end_address'),
-  ),
-  description: Schema.NullishOr(Schema.String),
-})
-
-type UpsertTripBody = typeof UpsertTripSchema.Encoded
+type UpsertTripBody = UpsertTripEncoded
 
 const createTrip = post<
   UpsertTripReturn,
@@ -74,12 +51,11 @@ function buildKey({
   }
 }
 
-// eslint-disable-next-line unused-imports/no-unused-vars
 const UpsertTripReturnSchema = Schema.Struct({
   data: TripSchema,
 })
 
-type UpsertTripReturn = typeof UpsertTripReturnSchema.Encoded
+type UpsertTripReturn = typeof UpsertTripReturnSchema.Type
 
 type UpsertTripSWRMutationResponse =
     SWRMutationResponse<UpsertTripReturn, unknown, Key, UpsertTripBody>
@@ -194,7 +170,7 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
         apiUrl,
         accessToken,
         body,
-      })
+      }).then(Schema.decodeUnknownPromise(UpsertTripReturnSchema))
     },
     {
       revalidate: false,

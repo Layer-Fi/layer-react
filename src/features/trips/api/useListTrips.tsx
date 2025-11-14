@@ -1,7 +1,7 @@
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useAuth } from '@hooks/useAuth'
 import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
-import { TripSchema, type TripEncoded } from '@schemas/trip'
+import { TripSchema, type Trip } from '@schemas/trip'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useCallback } from 'react'
 import { Schema, pipe } from 'effect'
@@ -16,7 +16,6 @@ export type ListTripsFilterParams = {
   purpose?: string
 }
 
-// eslint-disable-next-line unused-imports/no-unused-vars
 const ListTripsResponseSchema = Schema.Struct({
   data: Schema.Array(TripSchema),
   meta: Schema.Struct({
@@ -29,7 +28,7 @@ const ListTripsResponseSchema = Schema.Struct({
     }),
   }),
 })
-type ListTripsResponse = typeof ListTripsResponseSchema.Encoded
+type ListTripsResponse = typeof ListTripsResponseSchema.Type
 
 class ListTripsSWRResponse {
   private swrResponse: SWRInfiniteResponse<ListTripsResponse>
@@ -96,7 +95,7 @@ function keyLoader(
 }
 
 const listTrips = get<
-  ListTripsResponse,
+  typeof ListTripsResponseSchema.Encoded,
   { businessId: string, cursor?: string, limit?: number, query?: string, vehicleId?: string, purpose?: string }
 >(({ businessId, cursor, limit, query, vehicleId, purpose }) => {
   const parameters = toDefinedSearchParameters({
@@ -136,7 +135,7 @@ export function useListTrips(filterParams: ListTripsFilterParams = {}) {
           purpose,
         },
       },
-    )(),
+    )().then(Schema.decodeUnknownPromise(ListTripsResponseSchema)),
     {
       keepPreviousData: true,
       revalidateFirstPage: false,
@@ -147,13 +146,13 @@ export function useListTrips(filterParams: ListTripsFilterParams = {}) {
   return new ListTripsSWRResponse(swrResponse)
 }
 
-const withUpdatedTrip = (updated: TripEncoded) =>
-  (trip: TripEncoded): TripEncoded => trip.id === updated.id ? updated : trip
+const withUpdatedTrip = (updated: Trip) =>
+  (trip: Trip): Trip => trip.id === updated.id ? updated : trip
 
 export function useTripsGlobalCacheActions() {
   const { patchCache, forceReload } = useGlobalCacheActions()
 
-  const patchTripByKey = useCallback((updatedTrip: TripEncoded) =>
+  const patchTripByKey = useCallback((updatedTrip: Trip) =>
     patchCache<ListTripsResponse[] | ListTripsResponse | undefined>(
       tags => tags.includes(LIST_TRIPS_TAG_KEY),
       (currentData) => {

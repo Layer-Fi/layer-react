@@ -1,8 +1,7 @@
 import { TextSize } from '@components/Typography/Text'
 import { Button } from '@ui/Button/Button'
 import React, { useCallback } from 'react'
-import type { TripEncoded } from '@schemas/trip'
-import { TripPurpose } from '@schemas/trip'
+import { type Trip, TripPurpose } from '@schemas/trip'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
@@ -17,9 +16,9 @@ const TRIP_FORM_CSS_PREFIX = 'Layer__TripForm'
 const TRIP_FORM_FIELD_CSS_PREFIX = `${TRIP_FORM_CSS_PREFIX}__Field`
 
 export type TripFormProps = {
-  trip?: TripEncoded
+  trip?: Trip
   isReadOnly?: boolean
-  onSuccess: (trip: TripEncoded) => void
+  onSuccess: (trip: Trip) => void
 }
 
 export const TripForm = (props: TripFormProps) => {

@@ -1,18 +1,19 @@
 import { useCallback, useMemo, useState, useRef } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { useAppForm } from '@features/forms/hooks/useForm'
-import { type TripEncoded } from '@schemas/trip'
-import { type TripForm, getTripFormDefaultValues, validateTripForm, convertTripFormToParams } from '@components/Trips/TripForm/formUtils'
+import { UpsertTripSchema, type Trip, type TripForm } from '@schemas/trip'
+import { getTripFormDefaultValues, validateTripForm, convertTripFormToUpsertTrip } from '@components/Trips/TripForm/formUtils'
 import { useUpsertTrip, UpsertTripMode } from '@features/trips/api/useUpsertTrip'
+import { Schema } from 'effect'
 
-type onSuccessFn = (trip: TripEncoded) => void
-type UseTripFormProps = { onSuccess: onSuccessFn, trip?: TripEncoded }
+type onSuccessFn = (trip: Trip) => void
+type UseTripFormProps = { onSuccess: onSuccessFn, trip?: Trip }
 
 export const useTripForm = (props: UseTripFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, trip } = props
 
-  const upsertTrip = useUpsertTrip(
+  const { trigger: upsertTrip } = useUpsertTrip(
     trip
       ? { mode: UpsertTripMode.Update, tripId: trip.id }
       : { mode: UpsertTripMode.Create },
@@ -23,8 +24,9 @@ export const useTripForm = (props: UseTripFormProps) => {
 
   const onSubmit = useCallback(async ({ value }: { value: TripForm }) => {
     try {
-      const tripParams = convertTripFormToParams(value)
-      const result = await upsertTrip.trigger(tripParams)
+      const tripParams = convertTripFormToUpsertTrip(value)
+      const upsertTripRequest = Schema.encodeUnknownSync(UpsertTripSchema)(tripParams)
+      const result = await upsertTrip(upsertTripRequest)
 
       setSubmitError(undefined)
       onSuccess(result.data)

@@ -1,7 +1,7 @@
 import { Button } from '@ui/Button/Button'
 import { useMemo, useState, useCallback } from 'react'
 import { useListTrips } from '@features/trips/api/useListTrips'
-import { type TripEncoded, type TripPurpose } from '@schemas/trip'
+import { type Trip, type TripPurpose } from '@schemas/trip'
 import { formatDate } from '@utils/format'
 import type { ColumnConfig } from '@components/DataTable/DataTable'
 import { PaginatedTable } from '@components/PaginatedDataTable/PaginatedDataTable'
@@ -18,7 +18,7 @@ import { VStack, HStack } from '@ui/Stack/Stack'
 import { formatDistance, getPurposeLabel } from './utils'
 import './tripsTable.scss'
 import { getVehicleDisplayName } from '@features/vehicles/util'
-import { type VehicleEncoded } from '@schemas/vehicle'
+import { type Vehicle } from '@schemas/vehicle'
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
 import { VehicleSelector } from '@features/vehicles/components/VehicleSelector'
 import { TripPurposeToggle, TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
@@ -35,11 +35,11 @@ enum TripColumns {
   Expand = 'Expand',
 }
 
-const getColumnConfig = (onSelectTrip: (trip: TripEncoded) => void): ColumnConfig<TripEncoded, TripColumns> => ({
+const getColumnConfig = (onSelectTrip: (trip: Trip) => void): ColumnConfig<Trip, TripColumns> => ({
   [TripColumns.TripDate]: {
     id: TripColumns.TripDate,
     header: 'Date',
-    cell: row => formatDate(new Date(row.trip_date)),
+    cell: row => formatDate(row.tripDate),
   },
   [TripColumns.Vehicle]: {
     id: TripColumns.Vehicle,
@@ -65,12 +65,12 @@ const getColumnConfig = (onSelectTrip: (trip: TripEncoded) => void): ColumnConfi
         <Span ellipsis size='sm' withTooltip>
           <strong>Start:</strong>
           {' '}
-          {row.start_address || '—'}
+          {row.startAddress || '—'}
         </Span>
         <Span ellipsis size='sm' withTooltip>
           <strong>End:</strong>
           {' '}
-          {row.end_address || '—'}
+          {row.endAddress || '—'}
         </Span>
       </VStack>
     ),
@@ -92,8 +92,8 @@ const getColumnConfig = (onSelectTrip: (trip: TripEncoded) => void): ColumnConfi
 
 export const TripsTable = () => {
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
-  const [selectedTrip, setSelectedTrip] = useState<TripEncoded | null>(null)
-  const [selectedVehicle, setSelectedVehicle] = useState<VehicleEncoded | null>(null)
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null)
   const [purposeFilter, setPurposeFilter] = useState<TripPurposeFilterValue>(TripPurposeFilterValue.All)
 
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
@@ -121,7 +121,7 @@ export const TripsTable = () => {
   const trips = useMemo(() => data?.flatMap(({ data }) => data), [data])
 
   const paginationMeta = data?.[data.length - 1]?.meta.pagination
-  const hasMore = paginationMeta?.has_more
+  const hasMore = paginationMeta?.hasMore
 
   const fetchMore = useCallback(() => {
     if (hasMore) {
@@ -129,7 +129,7 @@ export const TripsTable = () => {
     }
   }, [hasMore, setSize, size])
 
-  const onSelectTrip = useCallback((trip: TripEncoded) => {
+  const onSelectTrip = useCallback((trip: Trip) => {
     setSelectedTrip(trip)
     setIsTripDrawerOpen(true)
   }, [])
@@ -139,7 +139,7 @@ export const TripsTable = () => {
     setIsTripDrawerOpen(true)
   }, [])
 
-  const onTripSuccess = useCallback((trip: TripEncoded) => {
+  const onTripSuccess = useCallback((trip: Trip) => {
     setIsTripDrawerOpen(false)
     setSelectedTrip(null)
     void trip
@@ -253,7 +253,7 @@ export const TripsTable = () => {
             </VStack>
             <TripForm
               trip={selectedTrip ?? undefined}
-              onSuccess={(trip: TripEncoded) => {
+              onSuccess={(trip: Trip) => {
                 onTripSuccess(trip)
                 close()
               }}
