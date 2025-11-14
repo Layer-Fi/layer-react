@@ -29,7 +29,7 @@ export function RuleSuggestionHeader({ ruleSuggestion }: { ruleSuggestion: Updat
   }
 }
 
-export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion, mobile }: SuggestedCategorizationRuleUpdatesProps) {
+export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesProps) {
   const hasTransactions = ruleSuggestion.transactionsThatWillBeAffected.length > 0
 
   return (
@@ -40,7 +40,7 @@ export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion, mobi
         onComplete={close}
         onStepChange={undefined}
       >
-        <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} close={close} mobile={mobile} />
+        <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} close={close} />
         {hasTransactions && <RuleUpdatesReviewStep ruleSuggestion={ruleSuggestion} />}
       </Wizard>
     </section>

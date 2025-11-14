@@ -19,7 +19,7 @@ export const SuggestedCategorizationRuleUpdatesDrawer = ({
       {({ close }) => (
         <VStack pi='sm' pb='sm'>
           <RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />
-          <SuggestedCategorizationRuleUpdates ruleSuggestion={ruleSuggestion} close={close} mobile />
+          <SuggestedCategorizationRuleUpdates ruleSuggestion={ruleSuggestion} close={close} />
         </VStack>
       )}
     </Drawer>
