@@ -79,15 +79,13 @@ export const BankTransactionsMobileListBusinessForm = ({
       value: category,
     }))
 
-    if (options.length) {
-      options.push({
-        value: new PlaceholderAsOption({
-          label: 'Show all categories',
-          value: 'SELECT_CATEGORY',
-        }),
-        asLink: true,
-      })
-    }
+    options.push({
+      value: new PlaceholderAsOption({
+        label: 'Show all categories',
+        value: 'SELECT_CATEGORY',
+      }),
+      asLink: true,
+    })
 
     return options
   }, [sessionCategories])
@@ -183,17 +181,7 @@ export const BankTransactionsMobileListBusinessForm = ({
               icon={<PaperclipIcon />}
             />
           )}
-          {options.length === 0
-            && (
-              <Button
-                onClick={() => { setIsDrawerOpen(true) }}
-                fullWidth
-                variant='outlined'
-              >
-                Select category
-              </Button>
-            )}
-          {showCategorization && options.length > 0
+          {showCategorization && sessionCategories.size > 0
             && (
               <Button
                 onClick={save}
