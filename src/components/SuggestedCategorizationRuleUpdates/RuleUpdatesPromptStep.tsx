@@ -12,9 +12,10 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 interface RuleUpdatesPromptStepProps {
   close: () => void
   ruleSuggestion: UpdateCategorizationRulesSuggestion
+  mobile?: boolean
 }
 
-export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesPromptStepProps) {
+export function RuleUpdatesPromptStep({ ruleSuggestion, close, mobile }: RuleUpdatesPromptStepProps) {
   const { next } = useWizard()
   const { addToast } = useLayerContext()
   const [dontAskAgain, setDontAskAgain] = useState(false)
@@ -38,7 +39,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesProm
   }, [addToast, close, dontAskAgain, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
 
   return (
-    <VStack gap='3xl'>
+    <VStack gap={mobile ? 'md' : '3xl'}>
       <Span size='md'>{ruleSuggestion.suggestionPrompt}</Span>
       <VStack gap='sm' align='end'>
         <HStack gap='sm' justify='end' align='end'>
