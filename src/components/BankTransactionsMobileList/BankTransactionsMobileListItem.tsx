@@ -1,7 +1,6 @@
 import { useContext, useEffect, useRef, useState, useMemo, type ReactNode } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { AnimatePresence } from 'motion/react'
-import { ExpandableContent } from '@components/ui/ExpandableContent/ExpandableContent'
 import FileIcon from '@icons/File'
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
@@ -24,6 +23,7 @@ import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankT
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 import './bankTransactionsMobileListItem.scss'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
+import { MotionContent } from '@components/ui/MotionContent/MotionContent'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -281,7 +281,7 @@ export const BankTransactionsMobileListItem = ({
         </div>
         <AnimatePresence initial={false}>
           {open && (
-            <ExpandableContent key={`expanded-${bankTransaction.id}`}>
+            <MotionContent variant='expand' key={`expanded-${bankTransaction.id}`}>
               <BankTransactionsMobileListItemExpandedRow
                 bankTransaction={bankTransaction}
                 showCategorization={categorizationEnabled}
@@ -289,7 +289,7 @@ export const BankTransactionsMobileListItem = ({
                 showReceiptUploads={showReceiptUploads}
                 showTooltips={showTooltips}
               />
-            </ExpandableContent>
+            </MotionContent>
           )}
         </AnimatePresence>
 

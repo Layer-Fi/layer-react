@@ -39,7 +39,7 @@ import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransa
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
 import { AnimatePresence, motion } from 'motion/react'
 import './bankTransactionRow.scss'
-import { ExpandableContent } from '@components/ui/ExpandableContent/ExpandableContent'
+import { MotionContent } from '@components/ui/MotionContent/MotionContent'
 
 type Props = {
   index: number
@@ -404,7 +404,7 @@ export const BankTransactionRow = ({
         <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
           <AnimatePresence initial={false}>
             {open && (
-              <ExpandableContent key={`expanded-${bankTransaction.id}`}>
+              <MotionContent variant='expand' key={`expanded-${bankTransaction.id}`}>
                 <ExpandedBankTransactionRow
                   ref={expandedRowRef}
                   bankTransaction={bankTransaction}
@@ -416,7 +416,7 @@ export const BankTransactionRow = ({
                   showReceiptUploads={showReceiptUploads}
                   showTooltips={showTooltips}
                 />
-              </ExpandableContent>
+              </MotionContent>
             )}
           </AnimatePresence>
         </td>

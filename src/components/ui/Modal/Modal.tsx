@@ -8,9 +8,8 @@ import {
 } from 'react-aria-components'
 import { AnimatePresence } from 'motion/react'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { SlideUpContent } from '@ui/SlideUpContent/SlideUpContent'
-import { FadeOverlay } from '@ui/FadeOverlay/FadeOverlay'
 import './modal.scss'
+import { MotionContent } from '@components/ui/MotionContent/MotionContent'
 
 type ModalSize = 'md' | 'lg' | 'xl'
 type ModalVariant = 'center' | 'drawer' | 'mobile-drawer' | 'mobile-popover'
@@ -152,21 +151,25 @@ export function Drawer({
     </InternalModal>
   )
 
-  const wrappedModalContent = isMobileDrawer ? (
-    <SlideUpContent style={{ width: '100%', height: '100%' }}>
-      {modalContent}
-    </SlideUpContent>
-  ) : modalContent
+  const wrappedModalContent = isMobileDrawer
+    ? (
+      <MotionContent variant='slideUp' style={{ width: '100%', height: '100%' }}>
+        {modalContent}
+      </MotionContent>
+    )
+    : modalContent
 
-  const overlayContent = shouldUseFadeOverlay ? (
-    <AnimatePresence>
-      {isOpen && (
-        <FadeOverlay style={{ width: '100%', height: '100%', display: 'contents' }}>
-          {wrappedModalContent}
-        </FadeOverlay>
-      )}
-    </AnimatePresence>
-  ) : wrappedModalContent
+  const overlayContent = shouldUseFadeOverlay
+    ? (
+      <AnimatePresence>
+        {isOpen && (
+          <MotionContent variant='fade' style={{ width: '100%', height: '100%', display: 'contents' }}>
+            {wrappedModalContent}
+          </MotionContent>
+        )}
+      </AnimatePresence>
+    )
+    : wrappedModalContent
 
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>

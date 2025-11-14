@@ -3,7 +3,6 @@ import { RetryButton } from '@components/Button/RetryButton'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { AnimatePresence } from 'motion/react'
-import { ExpandableContent } from '@components/ui/ExpandableContent/ExpandableContent'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import FileIcon from '@icons/File'
 import { BankTransaction } from '@internal-types/bank_transactions'
@@ -35,6 +34,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
+import { MotionContent } from '@components/ui/MotionContent/MotionContent'
 
 type BankTransactionsListItemProps = {
   index: number
@@ -211,7 +211,7 @@ export const BankTransactionsListItem = ({
       <span className='Layer__bank-transaction-list-item__expanded-row'>
         <AnimatePresence initial={false}>
           {openExpandedRow && (
-            <ExpandableContent key={`expanded-${bankTransaction.id}`}>
+            <MotionContent variant='expand' key={`expanded-${bankTransaction.id}`}>
               <ExpandedBankTransactionRow
                 ref={expandedRowRef}
                 bankTransaction={bankTransaction}
@@ -232,7 +232,7 @@ export const BankTransactionsListItem = ({
 
                 showLeftPadding={false}
               />
-            </ExpandableContent>
+            </MotionContent>
           )}
         </AnimatePresence>
       </span>
