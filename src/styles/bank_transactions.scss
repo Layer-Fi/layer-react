@@ -553,9 +553,6 @@
 
   .Layer__bank-transaction-list-item__expanded-row {
     overflow: hidden;
-    max-height: 0;
-    padding: 0;
-    transition: all var(--transition-speed) ease-out;
   }
 
   & > .Layer__text--error {

@@ -38,6 +38,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
 import './bankTransactionRow.scss'
+import { AnimatedContent } from '@components/ui/AnimatedContent/AnimatedContent'
 
 type Props = {
   index: number
@@ -266,7 +267,7 @@ export const BankTransactionRow = ({
             ? (
               <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
                 { bankTransaction.error
-                  ? (
+                  && (
                     <Text
                       as='span'
                       size={TextSize.md}
@@ -275,10 +276,9 @@ export const BankTransactionRow = ({
                       <span>Unsaved</span>
                       <AlertCircle size={12} />
                     </Text>
-                  )
-                  : null}
+                  )}
                 {categorizationEnabled
-                  ? (
+                  && (
                     <SubmitButton
                       onClick={() => {
                         if (!bankTransaction.processing) {
@@ -294,11 +294,12 @@ export const BankTransactionRow = ({
                         ? stringOverrides?.updateButtonText || 'Update'
                         : stringOverrides?.approveButtonText || 'Confirm'}
                     </SubmitButton>
-                  )
-                  : null}
-                {!categorizationEnabled && !categorized
-                  ? <VStack><BankTransactionsProcessingInfo /></VStack>
-                  : null}
+                  )}
+                {!categorizationEnabled && !categorized && (
+                  <VStack>
+                    <BankTransactionsProcessingInfo />
+                  </VStack>
+                )}
                 <IconButton
                   onClick={toggleOpen}
                   className='Layer__bank-transaction-row__expand-button'
@@ -315,29 +316,32 @@ export const BankTransactionRow = ({
             )
             : (
               <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
-                {categorizationEnabled && !categorized
-                  ? (
-                    <BankTransactionCategoryComboBox
-                      bankTransaction={bankTransaction}
-                      selectedValue={selectedCategory ?? null}
-                      onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                        setTransactionCategory(bankTransaction.id, selectedCategory)
-                        setShowRetry(false)
-                      }}
-                      isLoading={bankTransaction.processing}
-                    />
-                  )
-                  : null}
+                <AnimatedContent
+                  variant='fade'
+                  isOpen={categorizationEnabled && !categorized}
+                  className='Layer__BankTransactionRow__CategoryComboBoxMotionContent'
+                  slotProps={{ AnimatePresence: { mode: 'wait' } }}
+                  key='category-combobox'
+                >
+                  <BankTransactionCategoryComboBox
+                    bankTransaction={bankTransaction}
+                    selectedValue={selectedCategory ?? null}
+                    onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
+                      setTransactionCategory(bankTransaction.id, selectedCategory)
+                      setShowRetry(false)
+                    }}
+                    isLoading={bankTransaction.processing}
+                  />
+                </AnimatedContent>
                 {categorized
-                  ? (
+                  && (
                     <BankTransactionsCategorizedSelectedValue
                       bankTransaction={bankTransaction}
                       className='Layer__bank-transaction-row__category'
                     />
-                  )
-                  : null}
+                  )}
                 {categorizationEnabled && !categorized && showRetry
-                  ? (
+                  && (
                     <RetryButton
                       onClick={() => {
                         if (!bankTransaction.processing) {
@@ -350,10 +354,9 @@ export const BankTransactionRow = ({
                     >
                       Retry
                     </RetryButton>
-                  )
-                  : null}
+                  )}
                 {!categorized && categorizationEnabled && !showRetry
-                  ? (
+                  && (
                     <SubmitButton
                       onClick={() => {
                         if (!bankTransaction.processing) {
@@ -369,11 +372,12 @@ export const BankTransactionRow = ({
                         ? stringOverrides?.updateButtonText || 'Update'
                         : stringOverrides?.approveButtonText || 'Confirm'}
                     </SubmitButton>
-                  )
-                  : null}
-                {!categorizationEnabled && !categorized
-                  ? <VStack pis='xs' fluid><BankTransactionsProcessingInfo /></VStack>
-                  : null}
+                  )}
+                {!categorizationEnabled && !categorized && (
+                  <VStack pis='xs' fluid>
+                    <BankTransactionsProcessingInfo />
+                  </VStack>
+                )}
                 <IconButton
                   onClick={toggleOpen}
                   className='Layer__bank-transaction-row__expand-button'
@@ -388,22 +392,23 @@ export const BankTransactionRow = ({
                 />
               </HStack>
             )}
-
         </td>
       </tr>
       <tr>
         <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
-          <ExpandedBankTransactionRow
-            ref={expandedRowRef}
-            bankTransaction={bankTransaction}
-            categorized={categorized}
-            isOpen={open}
-            close={() => setOpen(false)}
-            containerWidth={containerWidth}
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-          />
+          <AnimatedContent variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+            <ExpandedBankTransactionRow
+              ref={expandedRowRef}
+              bankTransaction={bankTransaction}
+              categorized={categorized}
+              isOpen={open}
+              close={() => setOpen(false)}
+              containerWidth={containerWidth}
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+            />
+          </AnimatedContent>
         </td>
       </tr>
     </>
