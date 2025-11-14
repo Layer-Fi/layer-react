@@ -1,14 +1,20 @@
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@ui/Tooltip/Tooltip'
 import { convertNumberToCurrency } from '@utils/format'
 import { Download } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuList, MenuItem } from '@ui/DropdownMenu/DropdownMenu'
-import { TaxEstimateAnnualProjection, type TaxEstimateAnnualProjectionProps } from './TaxEstimateAnnualProjection'
-import { TaxEstimateDetailSection } from './TaxEstimateDetailSection'
+import { Table } from '@components/Table/Table'
+import { TableBody } from '@components/TableBody/TableBody'
+import { TableHead } from '@components/TableHead/TableHead'
+import { TableRow } from '@components/TableRow/TableRow'
+import { TableCell } from '@components/TableCell/TableCell'
+import { TableCellAlign } from '@internal-types/table'
 import { taxEstimateDefaults } from './defaults'
+import { useMemo } from 'react'
 
 interface QuarterlyAmount {
   quarter: string
@@ -16,26 +22,46 @@ interface QuarterlyAmount {
 }
 
 interface TaxPaymentsProps {
-  taxEstimateAnnualProjectionProps?: TaxEstimateAnnualProjectionProps
   quarterlyPayments?: QuarterlyAmount[]
+  quarterlyEstimates?: QuarterlyAmount[]
   paymentsSectionExpanded?: boolean
   onPaymentsSectionExpandedChange?: (expanded: boolean) => void
+  onNavigateToBankTransactions?: () => void
 }
 
 export const TaxPayments = ({
-  taxEstimateAnnualProjectionProps = {
-    projectedTaxesOwed: taxEstimateDefaults.projectedTaxesOwed,
-    taxesDueDate: taxEstimateDefaults.taxesDueDate,
-    federalTaxesOwed: taxEstimateDefaults.federalTaxesOwed,
-    federalTaxesPaid: taxEstimateDefaults.federalTaxesPaid,
-    stateTaxesOwed: taxEstimateDefaults.stateTaxesOwed,
-    stateTaxesPaid: taxEstimateDefaults.stateTaxesPaid,
-  },
   quarterlyPayments = taxEstimateDefaults.quarterlyPayments,
-  paymentsSectionExpanded,
-  onPaymentsSectionExpandedChange,
+  quarterlyEstimates = taxEstimateDefaults.quarterlyEstimates,
+  paymentsSectionExpanded: _paymentsSectionExpanded,
+  onPaymentsSectionExpandedChange: _onPaymentsSectionExpandedChange,
+  onNavigateToBankTransactions = () => {},
 }: TaxPaymentsProps = {}) => {
   const [selectedYear] = useState(taxEstimateDefaults.year)
+
+  const quarterlyData = useMemo(() => {
+    const estimatesMap = new Map(quarterlyEstimates.map(e => [e.quarter, e.amount]))
+    const paymentsMap = new Map(quarterlyPayments.map(p => [p.quarter, p.amount]))
+
+    let prevTotal = 0
+
+    return quarterlyPayments.map((payment) => {
+      const quarter = payment.quarter
+      const owed = estimatesMap.get(quarter) || 0
+      const paid = paymentsMap.get(quarter) || 0
+      const rolledOver = prevTotal
+      const total = rolledOver + owed - paid
+
+      prevTotal = total
+
+      return {
+        quarter,
+        rolledOver,
+        owed,
+        paid,
+        total,
+      }
+    })
+  }, [quarterlyPayments, quarterlyEstimates])
 
   const Trigger = useCallback(() => {
     return (
@@ -52,60 +78,117 @@ export const TaxPayments = ({
         <VStack>
           <Heading size='lg'>Tax Payments</Heading>
           <Span size='md' variant='subtle'>
-            These are the projected federal and state tax payments for Year
+            These are your federal and state tax payments for Year
             {' '}
             {selectedYear}
-            {' '}
-            , as categorized in your bank transactions.
+            .
           </Span>
         </VStack>
+        <HStack gap='md'>
+          <DropdownMenu
+            ariaLabel='Tax forms'
+            slots={{ Trigger }}
+            slotProps={{ Dialog: { width: 300 } }}
+          >
+            <MenuList>
+              <MenuItem onClick={() => {}}>
+                Schedule C
+                <Download size={16} />
+              </MenuItem>
+              <MenuItem>
+                Tax Packet
+                <Download size={16} />
+              </MenuItem>
+              <MenuItem>
+                Tax Payment History
+                <Download size={16} />
+              </MenuItem>
+            </MenuList>
+          </DropdownMenu>
+          <Button variant='solid' onPress={() => {}}>
+            Record Payment
+          </Button>
+        </HStack>
       </HStack>
       <VStack gap='md' fluid className='Layer__tax-estimate__overview'>
-        <TaxEstimateAnnualProjection {...taxEstimateAnnualProjectionProps} />
-
         <VStack gap='md' fluid className='Layer__tax-estimate__details-container'>
           <VStack gap='sm' fluid>
-            <TaxEstimateDetailSection
-              title='Payments'
-              expanded={paymentsSectionExpanded}
-              onExpandedChange={onPaymentsSectionExpandedChange}
-              headerActions={(
-                <HStack gap='md'>
-                  <DropdownMenu
-                    ariaLabel='Tax forms'
-                    slots={{ Trigger }}
-                    slotProps={{ Dialog: { width: 300 } }}
-                  >
-                    <MenuList>
-                      <MenuItem onClick={() => {}}>
-                        Schedule C
-                        <Download size={16} />
-                      </MenuItem>
-                      <MenuItem>
-                        Tax Packet
-                        <Download size={16} />
-                      </MenuItem>
-                      <MenuItem>
-                        Tax Payment History
-                        <Download size={16} />
-                      </MenuItem>
-                    </MenuList>
-                  </DropdownMenu>
-                  <Button variant='solid' onPress={() => {}}>
-                    Record Payment
-                  </Button>
-                </HStack>
-              )}
-            >
-              {quarterlyPayments.map(payment => (
-                <HStack gap='lg' pbs='sm' pbe='sm' key={payment.quarter} justify='space-between' align='center' fluid>
-                  <Span size='md'>{payment.quarter}</Span>
-                  <Span size='md'>
-                    {convertNumberToCurrency(payment.amount)}
-                  </Span>
-                </HStack>
-              ))}
-            </TaxEstimateDetailSection>
+            <div className='Layer__tax-estimate__payments-table'>
+              <Table>
+                <TableHead>
+                  <TableRow isHeadRow rowKey='payments-header'>
+                    <TableCell isHeaderCell>
+                      Quarter
+                    </TableCell>
+                    <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
+                      Rolled Over from Previous Quarter
+                    </TableCell>
+                    <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
+                      Owed This Quarter
+                    </TableCell>
+                    <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
+                      Total Paid
+                    </TableCell>
+                    <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
+                      Total
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {quarterlyData.map(data => (
+                    <TableRow
+                      key={data.quarter}
+                      rowKey={data.quarter}
+                    >
+                      <TableCell>
+                        <Span size='md'>{data.quarter}</Span>
+                      </TableCell>
+                      <TableCell align={TableCellAlign.RIGHT}>
+                        <Span size='md'>
+                          {convertNumberToCurrency(data.rolledOver)}
+                        </Span>
+                      </TableCell>
+                      <TableCell align={TableCellAlign.RIGHT}>
+                        <Span size='md'>
+                          {convertNumberToCurrency(data.owed)}
+                        </Span>
+                      </TableCell>
+                      <TableCell align={TableCellAlign.RIGHT}>
+                        <Button variant='text' onPress={() => onNavigateToBankTransactions?.()}>
+                          {convertNumberToCurrency(data.paid)}
+                        </Button>
+                      </TableCell>
+                      <TableCell align={TableCellAlign.RIGHT}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Span size='md'>
+                              {convertNumberToCurrency(data.total)}
+                            </Span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <Span size='sm' className='Layer__UI__tooltip-content--text'>
+                              {convertNumberToCurrency(data.rolledOver)}
+                              {' '}
+                              +
+                              {' '}
+                              {convertNumberToCurrency(data.owed)}
+                              {' '}
+                              -
+                              {' '}
+                              {convertNumberToCurrency(data.paid)}
+                              {' '}
+                              =
+                              {' '}
+                              {convertNumberToCurrency(data.total)}
+                            </Span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </VStack>
         </VStack>
       </VStack>

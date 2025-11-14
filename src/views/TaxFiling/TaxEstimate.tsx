@@ -8,6 +8,7 @@ import { StateTaxesSection } from './StateTaxesSection'
 import { TaxEstimateAnnualProjection } from './TaxEstimateAnnualProjection'
 import './taxEstimate.scss'
 import { taxEstimateDefaults } from './defaults'
+import { Separator } from '@components/Separator/Separator'
 
 interface TaxEstimateProps {
   projectedTaxesOwed?: number
@@ -128,7 +129,7 @@ export const TaxEstimate = ({
         <VStack>
           <Heading size='lg'>Projected Annual Taxes</Heading>
           <Span size='md' variant='subtle'>
-            These are the projected annual taxes for Year
+            These are your tax estimates for Year
             {' '}
             {selectedYear}
             , based on your income and qualified deductions.
@@ -150,13 +151,15 @@ export const TaxEstimate = ({
         />
 
         <VStack gap='md' fluid className='Layer__tax-estimate__details-container'>
-          <VStack gap='sm' fluid>
+          <VStack fluid>
             <AdjustedGrossIncomeSection items={agiItems} />
+            <Separator />
             <FederalTaxesSection
               items={federalTaxItems}
               expanded={federalSectionExpanded}
               onExpandedChange={onFederalSectionExpandedChange}
             />
+            <Separator />
             <StateTaxesSection
               items={stateTaxItems}
               expanded={stateSectionExpanded}

@@ -43,7 +43,7 @@ export const TaxEstimateDetailSection = ({
   }
 
   return (
-    <VStack gap='sm' fluid>
+    <VStack fluid>
       <div
         className='Layer__tax-estimate__section-item'
         onClick={handleToggle}
@@ -79,7 +79,7 @@ export const TaxEstimateDetailSection = ({
         </HStack>
       </div>
       {isExpanded && (
-        <VStack gap='sm' fluid pbs='lg' pbe='lg' pis='lg' pie='lg'>
+        <VStack gap='sm' fluid>
           {children}
         </VStack>
       )}

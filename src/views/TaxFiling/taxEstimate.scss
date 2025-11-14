@@ -11,8 +11,8 @@
   padding: var(--spacing-lg);
   cursor: pointer;
 
-  &:hover {
-    background: var(--color-base-50);
+  &:last-child {
+    border-bottom: none;
   }
 }
 
@@ -23,7 +23,8 @@
 
 .Layer__tax-estimate__agi-table,
 .Layer__tax-estimate__federal-taxes-table,
-.Layer__tax-estimate__state-taxes-table {
+.Layer__tax-estimate__state-taxes-table,
+.Layer__tax-estimate__payments-table {
   width: 100%;
 
   .Layer__table-row {

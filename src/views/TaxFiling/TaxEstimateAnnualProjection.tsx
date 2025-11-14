@@ -63,9 +63,9 @@ export const TaxEstimateAnnualProjection = ({
             <Span size='xl' variant='subtle'>=</Span>
             <VStack gap='xs' justify='center' align='center'>
               <Heading size='lg' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(federalTaxesOwed)}</Heading>
-              <Span size='sm' variant='subtle'>
+              <Span size='sm' variant='subtle' className='Layer__tax-estimate__row-label'>
                 <Button
-                  variant='outlined'
+                  variant='text'
                   size='md'
                   inset
                   onPress={onFederalTaxesOwedClick}
@@ -77,9 +77,9 @@ export const TaxEstimateAnnualProjection = ({
             <Span size='xl' variant='subtle'>-</Span>
             <VStack gap='xs' justify='center' align='center'>
               <Heading size='lg' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(federalTaxesPaid)}</Heading>
-              <Span size='sm' variant='subtle'>
+              <Span size='sm' variant='subtle' className='Layer__tax-estimate__row-label'>
                 <Button
-                  variant='outlined'
+                  variant='text'
                   size='md'
                   inset
                   onPress={onFederalTaxesPaidClick}
@@ -106,9 +106,9 @@ export const TaxEstimateAnnualProjection = ({
             <Span size='xl' variant='subtle'>=</Span>
             <VStack gap='xs' justify='center' align='center'>
               <Heading size='lg' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(stateTaxesOwed)}</Heading>
-              <Span size='sm' variant='subtle'>
+              <Span size='sm' variant='subtle' className='Layer__tax-estimate__row-label'>
                 <Button
-                  variant='outlined'
+                  variant='text'
                   size='md'
                   inset
                   onPress={onStateTaxesOwedClick}
@@ -120,9 +120,9 @@ export const TaxEstimateAnnualProjection = ({
             <Span size='xl' variant='subtle'>-</Span>
             <VStack gap='xs' justify='center' align='center'>
               <Heading size='lg' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(stateTaxesPaid)}</Heading>
-              <Span size='sm' variant='subtle'>
+              <Span size='sm' variant='subtle' className='Layer__tax-estimate__row-label'>
                 <Button
-                  variant='outlined'
+                  variant='text'
                   size='md'
                   inset
                   onPress={onStateTaxesPaidClick}

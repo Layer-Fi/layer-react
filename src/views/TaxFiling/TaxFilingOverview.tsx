@@ -178,23 +178,6 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
             </HStack>
             <HStack gap='md' align='center' fluid>
               <Span size='lg' className='Layer__tax-filing-overview__label'>
-                Taxable Income
-              </Span>
-              <HStack
-                fluid
-                className='Layer__tax-filing-overview__bar-container Layer__tax-filing-overview__bar-container--with-label'
-              >
-                <HStack
-                  ref={incomeBarRef}
-                  className='Layer__tax-filing-overview__bar Layer__tax-filing-overview__bar--income'
-                />
-                <Span ref={taxableIncomeAmountRef} size='sm' variant='subtle' className='Layer__tax-filing-overview__bar-amount'>
-                  {convertNumberToCurrency(taxableIncome)}
-                </Span>
-              </HStack>
-            </HStack>
-            <HStack gap='md' align='center' fluid>
-              <Span size='lg' className='Layer__tax-filing-overview__label'>
                 Deductions
               </Span>
               <HStack
@@ -239,8 +222,11 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
       <HStack gap='lg' fluid>
         <VStack gap='lg' fluid pb='lg' pi='lg' className='Layer__tax-filing-overview__section'>
           <VStack gap='lg'>
-            <Heading size='md'>Taxes</Heading>
-            <HStack gap='xl' align='start' pbe='lg' fluid>
+            <Heading size='md'>
+              Estimated Taxes for
+              {yearForTaxFiling}
+            </Heading>
+            <HStack gap='xl' align='start' pbe='md' fluid>
               <VStack gap='xs'>
                 <Span size='sm' variant='subtle'>Total Owed</Span>
                 <Heading size='lg'>{convertNumberToCurrency(totalTaxesOwed)}</Heading>

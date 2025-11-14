@@ -223,26 +223,21 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
           {activeTab === 'tax-payments' && (
             <VStack gap='md' pb='lg' pi='lg'>
               <TaxPayments
-                taxEstimateAnnualProjectionProps={{
-                  projectedTaxesOwed: taxEstimateDefaults.projectedTaxesOwed,
-                  taxesDueDate: taxEstimateDefaults.taxesDueDate,
-                  federalTaxesOwed: taxEstimateDefaults.federalTaxesOwed,
-                  federalTaxesPaid: taxEstimateDefaults.federalTaxesPaid,
-                  stateTaxesOwed: taxEstimateDefaults.stateTaxesOwed,
-                  stateTaxesPaid: taxEstimateDefaults.stateTaxesPaid,
-                  onFederalTaxesOwedClick: handleFederalTaxesOwedClick,
-                  onFederalTaxesPaidClick: handleFederalTaxesPaidClick,
-                  onStateTaxesOwedClick: handleStateTaxesOwedClick,
-                  onStateTaxesPaidClick: handleStateTaxesPaidClick,
-                }}
                 quarterlyPayments={[
                   { quarter: 'Q1', amount: taxEstimateDefaults.quarterlyPayments[0].amount },
                   { quarter: 'Q2', amount: taxEstimateDefaults.quarterlyPayments[1].amount },
                   { quarter: 'Q3', amount: taxEstimateDefaults.quarterlyPayments[2].amount },
                   { quarter: 'Q4', amount: taxEstimateDefaults.quarterlyPayments[3].amount },
                 ]}
+                quarterlyEstimates={[
+                  { quarter: 'Q1', amount: taxEstimateDefaults.quarterlyEstimates[0].amount },
+                  { quarter: 'Q2', amount: taxEstimateDefaults.quarterlyEstimates[1].amount },
+                  { quarter: 'Q3', amount: taxEstimateDefaults.quarterlyEstimates[2].amount },
+                  { quarter: 'Q4', amount: taxEstimateDefaults.quarterlyEstimates[3].amount },
+                ]}
                 paymentsSectionExpanded={paymentsSectionExpanded}
                 onPaymentsSectionExpandedChange={handlePaymentsSectionExpandedChange}
+                onNavigateToBankTransactions={onNavigateToBankTransactions}
               />
             </VStack>
           )}
