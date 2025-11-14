@@ -174,11 +174,11 @@ export const TripsTable = () => {
 
   const HeaderActions = useCallback(() => (
     <HStack gap='xs'>
-      <TripsTableHeaderMenu />
       <Button onPress={onRecordTrip}>
         Record Trip
         <Plus size={16} />
       </Button>
+      <TripsTableHeaderMenu />
     </HStack>
   ), [onRecordTrip])
 

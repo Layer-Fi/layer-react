@@ -1,10 +1,10 @@
 import { View } from '@components/View/View'
-import { TripsTable } from '@components/TripsTable/TripsTable'
+import { Trips } from '@components/Trips/Trips'
 
 export const unstable_MileageTracking = ({ showTitle = true }: { showTitle?: boolean }) => {
   return (
     <View title='Mileage Tracking' showHeader={showTitle}>
-      <TripsTable />
+      <Trips />
     </View>
   )
 }
