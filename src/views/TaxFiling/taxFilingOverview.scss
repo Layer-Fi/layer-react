@@ -69,102 +69,12 @@
   background: var(--color-info-success);
 }
 
-.Layer__tax-filing-overview__bar--income {
-  background: var(--color-info-success-bg);
-}
-
 .Layer__tax-filing-overview__bar--deductions {
   background: var(--color-info-bg);
 }
 
-.Layer__tax-filing-overview__bar--federal {
-  background: #3b82f6;
-}
-
-.Layer__tax-filing-overview__bar--self-employed {
-  background: #f97316;
-}
-
-.Layer__tax-filing-overview__bar--state {
-  background: #10b981;
-}
-
-.Layer__tax-filing-overview__legend-dot {
-  height: 0.5rem;
-  width: 0.5rem;
-  border-radius: 50%;
-}
-
-.Layer__tax-filing-overview__legend-dot--federal {
-  background: #3b82f6;
-}
-
-.Layer__tax-filing-overview__legend-dot--self-employed {
-  background: #f97316;
-}
-
-.Layer__tax-filing-overview__legend-dot--state {
-  background: #10b981;
-}
-
 .Layer__tax-filing-overview__item {
   height: 3rem;
-}
-
-.Layer__tax-filing-overview__waterfall-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: var(--spacing-md) 0;
-}
-
-.Layer__tax-filing-overview__waterfall-row {
-  align-items: flex-end;
-  overflow-x: auto;
-  width: 100%;
-  max-width: 100%;
-}
-
-.Layer__tax-filing-overview__waterfall-label {
-  min-width: fit-content;
-  text-align: center;
-}
-
-.Layer__tax-filing-overview__waterfall-bar {
-  height: 4rem;
-  min-width: 2rem;
-  border-radius: var(--border-radius-xs);
-  transition: width 0.3s ease;
-}
-
-.Layer__tax-filing-overview__waterfall-bar--income {
-  background: var(--color-success, #10b981);
-}
-
-.Layer__tax-filing-overview__waterfall-bar--deductions {
-  height: 1.25rem;
-  background: var(--color-error, #ef4444);
-}
-
-.Layer__tax-filing-overview__waterfall-bar--taxable-income {
-  background: var(--color-info, #06b6d4);
-}
-
-.Layer__tax-filing-overview__waterfall-connector {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 4rem;
-  min-width: 3rem;
-  padding: 0 var(--spacing-xs);
-}
-
-.Layer__tax-filing-overview__waterfall-connector-line {
-  flex: 1;
-  min-height: 0.5rem;
-  width: 2px;
-  background: var(--color-base-300);
 }
 
 .Layer__tax-filing-overview__chart-container {
