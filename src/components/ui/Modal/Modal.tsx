@@ -152,7 +152,12 @@ export function Drawer({
 
   const wrappedModalContent = isMobileDrawer
     ? (
-      <AnimatedContent variant='slideUp' className='Layer__ModalContentSlideUpMotionContent'>
+      <AnimatedContent
+        variant='slideUp'
+        isOpen={isOpen}
+        className='Layer__ModalContentSlideUpMotionContent'
+        slotProps={{ AnimatePresence: { initial: true } }}
+      >
         {modalContent}
       </AnimatedContent>
     )
