@@ -22,6 +22,7 @@ import { type Vehicle } from '@schemas/vehicle'
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
 import { VehicleSelector } from '@features/vehicles/components/VehicleSelector'
 import { TripPurposeToggle, TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
+import { TripsTableHeaderMenu } from './TripsTableHeaderMenu'
 
 const COMPONENT_NAME = 'TripsTable'
 
@@ -171,11 +172,14 @@ export const TripsTable = () => {
     />
   ), [selectedVehicle, setSelectedVehicle])
 
-  const RecordTripButton = useCallback(() => (
-    <Button onPress={onRecordTrip}>
-      Record Trip
-      <Plus size={16} />
-    </Button>
+  const HeaderActions = useCallback(() => (
+    <HStack gap='xs'>
+      <TripsTableHeaderMenu />
+      <Button onPress={onRecordTrip}>
+        Record Trip
+        <Plus size={16} />
+      </Button>
+    </HStack>
   ), [onRecordTrip])
 
   const TripsTableEmptyState = () => (
@@ -212,7 +216,7 @@ export const TripsTable = () => {
         <DataTableHeader
           name='Trips'
           slots={{
-            HeaderActions: RecordTripButton,
+            HeaderActions,
             HeaderFilters,
           }}
           slotProps={{

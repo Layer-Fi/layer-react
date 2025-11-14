@@ -1,13 +1,9 @@
-import { Button } from '@ui/Button/Button'
-import { ReactNode, useCallback, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
-import { MenuIcon } from 'lucide-react'
-import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
-import { Span } from '@ui/Typography/Text'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
-import { Spacer, VStack } from '@ui/Stack/Stack'
 import UploadCloud from '@icons/UploadCloud'
-import { ChevronRight, PencilRuler } from 'lucide-react'
+import { PencilRuler } from 'lucide-react'
+import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
 
 interface BankTransactionsHeaderMenuProps {
   withUploadMenu?: boolean
@@ -19,65 +15,39 @@ enum BankTransactionsHeaderMenuActions {
   ManageCategorizationRules = 'ManageCategorizationRules',
 }
 
-interface BankTransactionsHeaderMenuIconProps {
-  menuKey: BankTransactionsHeaderMenuActions
-  onClick: () => void
-  icon: ReactNode
-  label: string
-}
-
-const BankTransactionsHeaderMenuIcon = ({
-  menuKey,
-  onClick,
-  icon,
-  label,
-}: BankTransactionsHeaderMenuIconProps) => {
-  return (
-    <MenuItem key={menuKey} onClick={onClick}>
-      <VStack className='Layer__bank-transactions__header-menu__icon'>
-        {icon}
-      </VStack>
-      <Span size='sm'>{label}</Span>
-      <Spacer />
-      <ChevronRight size={12} />
-    </MenuItem>
-  )
-}
-
 export const BankTransactionsHeaderMenu = ({ withUploadMenu, isDisabled }: BankTransactionsHeaderMenuProps) => {
   const { toCategorizationRulesTable } = useBankTransactionsNavigation()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const Trigger = useCallback(() => {
-    return (
-      <Button icon variant='outlined' isDisabled={isDisabled}>
-        <MenuIcon size={14} />
-      </Button>
-    )
-  }, [isDisabled])
+
+  const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
+    const items: DataTableHeaderMenuItem[] = []
+
+    if (withUploadMenu) {
+      items.push({
+        key: BankTransactionsHeaderMenuActions.UploadTransactions,
+        onClick: () => setIsModalOpen(true),
+        icon: <UploadCloud size={16} />,
+        label: 'Upload transactions manually',
+      })
+    }
+
+    items.push({
+      key: BankTransactionsHeaderMenuActions.ManageCategorizationRules,
+      onClick: toCategorizationRulesTable,
+      icon: <PencilRuler size={16} strokeWidth={1.25} />,
+      label: 'Manage categorization rules',
+    })
+
+    return items
+  }, [withUploadMenu, toCategorizationRulesTable])
+
   return (
     <>
-      <DropdownMenu
+      <DataTableHeaderMenu
         ariaLabel='Additional bank transactions actions'
-        slots={{ Trigger }}
-        slotProps={{ Dialog: { width: 250 } }}
-      >
-        <MenuList>
-          {withUploadMenu && (
-            <BankTransactionsHeaderMenuIcon
-              menuKey={BankTransactionsHeaderMenuActions.UploadTransactions}
-              onClick={() => setIsModalOpen(true)}
-              icon={<UploadCloud size={16} />}
-              label='Upload transactions manually'
-            />
-          )}
-          <BankTransactionsHeaderMenuIcon
-            menuKey={BankTransactionsHeaderMenuActions.ManageCategorizationRules}
-            onClick={toCategorizationRulesTable}
-            icon={<PencilRuler size={16} strokeWidth={1.25} />}
-            label='Manage categorization rules'
-          />
-        </MenuList>
-      </DropdownMenu>
+        items={menuItems}
+        isDisabled={isDisabled}
+      />
       {isModalOpen && <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />}
     </>
   )
