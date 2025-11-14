@@ -26,7 +26,7 @@ export const StateTaxesSection = ({
 
   return (
     <TaxEstimateDetailSection
-      title='State Taxes'
+      title='Estimated State Taxes'
       totalAmount={totalAmount}
       expanded={expanded}
       onExpandedChange={onExpandedChange}

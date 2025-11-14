@@ -91,7 +91,7 @@ export const TaxEstimate = ({
   const federalTaxItems: FederalTaxItem[] = [
     { id: 'agi', label: 'Adjusted Gross Income', amount: taxEstimateDefaults.adjustedGrossIncome },
     { id: 'federal-deductions', label: 'Federal Deductions', amount: -taxEstimateDefaults.federalDeductions, isDeduction: true },
-    { id: 'business-deduction', label: 'Business Income Deduction (1.26%)', amount: -taxEstimateDefaults.businessIncomeDeduction, isDeduction: true },
+    { id: 'business-deduction', label: 'Business Income Deduction (20.00%)', amount: -taxEstimateDefaults.businessIncomeDeduction, isDeduction: true },
     { id: 'taxable-income', label: '= Taxable Income', amount: taxEstimateDefaults.taxableIncome, isSubtotal: true },
     { id: 'federal-rate', label: 'x Federal Tax Rate', amount: taxEstimateDefaults.federalTaxRate },
     { id: 'federal-estimate', label: 'Federal Tax Estimate (Owed)', amount: taxEstimateDefaults.federalTaxEstimate, isOwed: true, formula: '= Taxable Income x Federal Tax Rate' },
@@ -113,8 +113,8 @@ export const TaxEstimate = ({
 
   const stateTaxItems: FederalTaxItem[] = [
     { id: 'agi', label: 'Adjusted Gross Income', amount: taxEstimateDefaults.adjustedGrossIncome },
-    { id: 'state-deductions', label: 'State Deductions', amount: -taxEstimateDefaults.stateDeductions, isDeduction: true },
-    { id: 'state-taxable-income', label: '= Taxable Income', amount: taxEstimateDefaults.stateTaxableIncome, isSubtotal: true },
+    { id: 'state-deductions', label: 'State Deductions & Exemptions', amount: -taxEstimateDefaults.stateDeductions, isDeduction: true },
+    { id: 'state-taxable-income', label: 'State Taxable Income', amount: taxEstimateDefaults.stateTaxableIncome, isSubtotal: true },
     { id: 'state-rate', label: 'x State Tax Rate', amount: taxEstimateDefaults.stateTaxRate },
     { id: 'state-estimate', label: 'State Tax Estimate (Owed)', amount: taxEstimateDefaults.stateTaxEstimate, isOwed: true, formula: '= Taxable Income x State Tax Rate' },
     { id: 'separator-1', label: '', isSeparator: true },
@@ -127,12 +127,9 @@ export const TaxEstimate = ({
     <VStack gap='lg' fluid>
       <HStack justify='space-between' align='center' fluid>
         <VStack>
-          <Heading size='lg'>Projected Annual Taxes</Heading>
+          <Heading size='lg'>Estimated Taxes</Heading>
           <Span size='md' variant='subtle'>
-            These are your tax estimates for Year
-            {' '}
-            {selectedYear}
-            , based on your income and qualified deductions.
+            Calculated based on your categorized transactions and tracked mileage.
           </Span>
         </VStack>
       </HStack>

@@ -21,7 +21,7 @@ export const AdjustedGrossIncomeSection = ({
   const totalAmount = totalItem?.amount
 
   return (
-    <TaxEstimateDetailSection title='Adjusted Gross Income' totalAmount={totalAmount}>
+    <TaxEstimateDetailSection title='Taxable Business Income' totalAmount={totalAmount}>
       <div className='Layer__tax-estimate__agi-table'>
         <Table borderCollapse='collapse'>
           <TableBody>

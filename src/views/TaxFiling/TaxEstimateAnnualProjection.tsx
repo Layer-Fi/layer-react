@@ -38,13 +38,13 @@ export const TaxEstimateAnnualProjection = ({
   return (
     <HStack fluid className='Layer__tax-estimate__overview-container'>
       <VStack gap='xs' justify='center' align='center' pb='lg' pi='lg' className='Layer__tax-estimate__overview-total'>
-        <Span size='md' weight='bold'>
+        <Span size='lg' weight='bold'>
           Projected Taxes Owed
         </Span>
-        <Heading size='lg' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(projectedTaxesOwed)}</Heading>
+        <Heading size='xl' className='Layer__tax-estimate__projected-amount'>{convertNumberToCurrency(projectedTaxesOwed)}</Heading>
         <VStack gap='xs' pbs='sm'>
-          <Span size='sm' variant='subtle'>Taxes Due</Span>
-          <Span size='sm'>{formatDate(taxesDueDate)}</Span>
+          <Span size='md' variant='subtle'>Taxes Due</Span>
+          <Span size='md'>{formatDate(taxesDueDate)}</Span>
         </VStack>
       </VStack>
 

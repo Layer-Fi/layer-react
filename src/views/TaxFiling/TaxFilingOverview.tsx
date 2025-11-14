@@ -12,6 +12,7 @@ import { PolarViewBox } from 'recharts/types/util/types'
 import classNames from 'classnames'
 import './taxFilingOverview.scss'
 import { taxEstimateDefaults } from './defaults'
+import { Separator } from '@components/Separator/Separator'
 
 interface TaxFilingOverviewProps {
   onNavigateToBankTransactions?: () => void
@@ -55,13 +56,13 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
   ]
 
   const deadlines = [
-    { date: 'Apr 15, 2025', label: `Q1 estimated tax due (${convertNumberToCurrency(7856.88)})` },
-    { date: 'Jul 15, 2025', label: `Q2 estimated tax due (${convertNumberToCurrency(7856.88)})` },
-    { date: 'Oct 15, 2025', label: `Q3 estimated tax due (${convertNumberToCurrency(7856.88)})` },
-    { date: 'Jan 15, 2026', label: `Q4 estimated tax due (${convertNumberToCurrency(7856.86)})` },
-    { date: 'Apr 15, 2026', label: `Annual income taxes due (${convertNumberToCurrency(0)})`, hasFileButton: true },
+    { date: 'Apr 15, 2025', label: `Q1 estimated tax due (${convertNumberToCurrency(945.52)})` },
+    { date: 'Jul 15, 2025', label: `Q2 estimated tax due (${convertNumberToCurrency(6654.00)})` },
+    { date: 'Oct 15, 2025', label: `Q3 estimated tax due (${convertNumberToCurrency(4649.00)})` },
+    { date: 'Jan 15, 2026', label: `Q4 estimated tax due (${convertNumberToCurrency(6199.00)})` },
+    { date: 'Apr 15, 2026', label: `Annual income taxes due (${convertNumberToCurrency(0)})` },
   ]
-  // Quarterly total: 7856.88 × 3 + 7856.86 = 31,427.50 ✓
+  // Quarterly total: 945.52 + 6654.00 + 4649.00 + 6199.00 = 18,447.52 ✓
 
   const taxableIncome = taxEstimateDefaults.taxableIncome
   const income = taxEstimateDefaults.businessIncome
@@ -76,7 +77,7 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
   const taxableIncomePercentage = (taxableIncome / income) * 100
 
   const federalTaxesOwed = taxEstimateDefaults.federalTaxesOwed
-  const selfEmployedTaxesOwed = taxEstimateDefaults.selfEmploymentDeduction
+  const selfEmployedTaxesOwed = 0
   const stateTaxesOwed = taxEstimateDefaults.stateTaxesOwed
   const totalTaxesOwed = federalTaxesOwed + selfEmployedTaxesOwed + stateTaxesOwed
   const taxesDueDate = taxEstimateDefaults.taxesDueDate
@@ -125,7 +126,9 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
           <header className='Layer__tax-filing-overview__header'>
             <div className='Layer__tax-filing-overview__head'>
               <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-                Taxable Income
+                Taxable income estimate for
+                {' '}
+                {yearForTaxFiling}
               </Text>
               <Text size={TextSize.sm} className='date'>
                 Taxable income estimate to date for Year
@@ -184,24 +187,25 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
           <header className='Layer__tax-filing-overview__header'>
             <div className='Layer__tax-filing-overview__head'>
               <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-                Tax Preparations for
-                {' '}
-                {yearForTaxFiling}
+                Tax Checklist
               </Text>
             </div>
           </header>
           <VStack gap='md' pb='lg' pi='lg'>
-            <VStack gap='sm'>
+            <VStack>
               {todoItems.map((item, index) => (
-                <HStack key={index} gap='md' align='center' justify='space-between' fluid>
-                  <HStack gap='sm' align='center' fluid className='Layer__tax-filing-overview__item'>
-                    <Span size='md'>{item.label}</Span>
+                <>
+                  <HStack key={index} gap='md' align='center' justify='space-between' fluid>
+                    <HStack gap='sm' align='center' fluid className='Layer__tax-filing-overview__item'>
+                      <Span size='md'>{item.label}</Span>
+                    </HStack>
+                    <Button variant={item.variant} onPress={item.onPress}>
+                      {item.buttonLabel}
+                      {item.icon}
+                    </Button>
                   </HStack>
-                  <Button variant={item.variant} onPress={item.onPress}>
-                    {item.buttonLabel}
-                    {item.icon}
-                  </Button>
-                </HStack>
+                  {index !== todoItems.length - 1 && <Separator />}
+                </>
               ))}
             </VStack>
           </VStack>
@@ -554,20 +558,17 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
             </div>
           </header>
           <VStack gap='md' pb='lg' pi='lg'>
-            <VStack gap='sm'>
+            <VStack>
               {deadlines.map((deadline, index) => (
-                <HStack key={index} gap='xl' align='center' justify='space-between' fluid>
-                  <HStack gap='md' align='center' className='Layer__tax-filing-overview__item'>
-                    <Span size='md' weight='bold' variant='subtle'>{deadline.date}</Span>
-                    <Span size='md'>{deadline.label}</Span>
+                <>
+                  <HStack key={index} gap='xl' align='center' justify='space-between' fluid>
+                    <HStack gap='md' align='center' className='Layer__tax-filing-overview__item'>
+                      <Span size='md' weight='bold' variant='subtle'>{deadline.date}</Span>
+                      <Span size='md'>{deadline.label}</Span>
+                    </HStack>
                   </HStack>
-                  {deadline.hasFileButton && (
-                    <Button variant='outlined' size='md' onPress={() => {}}>
-                      Export
-                      <Download size={16} />
-                    </Button>
-                  )}
-                </HStack>
+                  {index !== deadlines.length - 1 && <Separator />}
+                </>
               ))}
             </VStack>
           </VStack>

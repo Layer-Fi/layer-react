@@ -140,7 +140,7 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
   return (
     <ProfitAndLoss asContainer={false}>
       <View
-        title='Tax Filing'
+        title='Taxes'
         showHeader={true}
         headerActions={(
           <HStack gap='sm' align='center' className='Layer__tax-filing-view__header-actions'>
@@ -176,13 +176,13 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
             },
             {
               value: 'tax-estimates',
-              label: 'Tax Estimates',
+              label: 'Estimates',
               disabled: !isOnboarded,
               disabledMessage: 'Please complete your tax profile first',
             },
             {
               value: 'tax-payments',
-              label: 'Tax Payments',
+              label: 'Payments',
               disabled: !isOnboarded,
               disabledMessage: 'Please complete your tax profile first',
             },
