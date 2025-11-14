@@ -76,7 +76,7 @@ export const MileageTrackingStats = () => {
         <Header>
           <HeaderRow>
             <HeaderCol>
-              <Heading level={2} size='md'>Mileage Tracking</Heading>
+              <Heading level={2} size='md'>Overview</Heading>
             </HeaderCol>
           </HeaderRow>
         </Header>
@@ -93,7 +93,7 @@ export const MileageTrackingStats = () => {
         <Header>
           <HeaderRow>
             <HeaderCol>
-              <Heading level={2} size='md'>Mileage Tracking</Heading>
+              <Heading level={2} size='md'>Overview</Heading>
             </HeaderCol>
           </HeaderRow>
         </Header>
@@ -107,7 +107,7 @@ export const MileageTrackingStats = () => {
       <Header>
         <HeaderRow>
           <HeaderCol>
-            <Heading level={2} size='md'>Mileage Tracking</Heading>
+            <Heading level={2} size='md'>Overview</Heading>
           </HeaderCol>
           <HeaderCol>
             <div className={`${CLASS_NAME}__YearSelector`}>
@@ -153,6 +153,12 @@ export const MileageTrackingStats = () => {
                   {(selectedYearData?.personalMiles ?? 0).toLocaleString()}
                 </Span>
               </VStack>
+              <VStack gap='3xs'>
+                <Span size='xs' variant='subtle'>Uncategorized</Span>
+                <Span size='sm'>
+                  {(selectedYearData?.uncategorizedMiles ?? 0).toLocaleString()}
+                </Span>
+              </VStack>
             </HStack>
           </VStack>
 
@@ -172,6 +178,12 @@ export const MileageTrackingStats = () => {
                 <Span size='xs' variant='subtle'>Personal</Span>
                 <Span size='sm'>
                   {(selectedYearData?.personalTrips ?? 0).toLocaleString()}
+                </Span>
+              </VStack>
+              <VStack gap='3xs'>
+                <Span size='xs' variant='subtle'>Uncategorized</Span>
+                <Span size='sm'>
+                  {(selectedYearData?.uncategorizedTrips ?? 0).toLocaleString()}
                 </Span>
               </VStack>
             </HStack>

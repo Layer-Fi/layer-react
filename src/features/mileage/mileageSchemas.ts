@@ -1,27 +1,39 @@
 import { Schema, pipe } from 'effect'
 
+// Schema that converts dollar string to cents (number)
+// e.g., "79683.8000" -> 7968380
+const DollarStringToCentsSchema = Schema.transform(
+  Schema.NumberFromString,
+  Schema.Number,
+  {
+    strict: true,
+    decode: (dollars) => Math.round(dollars * 100),
+    encode: (cents) => cents / 100,
+  },
+)
+
 export const MileageMonthSchema = Schema.Struct({
   month: Schema.Number,
 
-  miles: Schema.Number,
+  miles: Schema.NumberFromString,
 
   businessMiles: pipe(
-    Schema.propertySignature(Schema.Number),
+    Schema.propertySignature(Schema.NumberFromString),
     Schema.fromKey('business_miles'),
   ),
 
   personalMiles: pipe(
-    Schema.propertySignature(Schema.Number),
+    Schema.propertySignature(Schema.NumberFromString),
     Schema.fromKey('personal_miles'),
   ),
 
   uncategorizedMiles: pipe(
-    Schema.propertySignature(Schema.Number),
+    Schema.propertySignature(Schema.NumberFromString),
     Schema.fromKey('uncategorized_miles'),
   ),
 
   estimatedDeduction: pipe(
-    Schema.propertySignature(Schema.Number),
+    Schema.propertySignature(DollarStringToCentsSchema),
     Schema.fromKey('estimated_deduction'),
   ),
 
@@ -43,7 +55,7 @@ export const MileageMonthSchema = Schema.Struct({
   ),
 
   deductionRate: pipe(
-    Schema.propertySignature(Schema.Number),
+    Schema.propertySignature(Schema.NumberFromString),
     Schema.fromKey('deduction_rate'),
   ),
 })
@@ -52,25 +64,25 @@ export type MileageMonth = typeof MileageMonthSchema.Type
 export const MileageYearSchema = Schema.Struct({
   year: Schema.Number,
 
-  miles: Schema.Number,
+  miles: Schema.NumberFromString,
 
   businessMiles: pipe(
-    Schema.propertySignature(Schema.Number),
+    Schema.propertySignature(Schema.NumberFromString),
     Schema.fromKey('business_miles'),
   ),
 
   personalMiles: pipe(
-    Schema.propertySignature(Schema.Number),
+    Schema.propertySignature(Schema.NumberFromString),
     Schema.fromKey('personal_miles'),
   ),
 
   uncategorizedMiles: pipe(
-    Schema.propertySignature(Schema.Number),
+    Schema.propertySignature(Schema.NumberFromString),
     Schema.fromKey('uncategorized_miles'),
   ),
 
   estimatedDeduction: pipe(
-    Schema.propertySignature(Schema.Number),
+    Schema.propertySignature(DollarStringToCentsSchema),
     Schema.fromKey('estimated_deduction'),
   ),
 
