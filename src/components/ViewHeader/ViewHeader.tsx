@@ -6,9 +6,10 @@ export interface ViewHeaderProps {
   title?: string
   className?: string
   children?: ReactNode
+  headerActions?: ReactNode
 }
 
-export const ViewHeader = ({ title, className, children }: ViewHeaderProps) => {
+export const ViewHeader = ({ title, className, children, headerActions }: ViewHeaderProps) => {
   return (
     <div className={classNames('Layer__view-header', className)}>
       <div className='Layer__view-header__content'>
@@ -17,6 +18,9 @@ export const ViewHeader = ({ title, className, children }: ViewHeaderProps) => {
         )}
         {children && (
           <div className='Layer__view-header__children'>{children}</div>
+        )}
+        {headerActions && (
+          <div className='Layer__view-header__actions'>{headerActions}</div>
         )}
       </div>
     </div>

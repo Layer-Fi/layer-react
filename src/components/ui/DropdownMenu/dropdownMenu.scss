@@ -42,12 +42,16 @@
   border-radius: var(--border-radius-3xs);
   border: 1px solid var(--border-color);
 
-  cursor: pointer;
   transition: background-color 0.1s ease-in-out;
 
-  &:hover,
-  &:focus-visible {
+  &:hover:not([data-disabled]),
+  &:focus-visible:not([data-disabled]) {
     background-color: var(--color-base-50);
+    cursor: pointer;
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
   }
 
   &[data-variant='compact'] {
