@@ -1,0 +1,16 @@
+.Layer__VehicleCard {
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow:
+      0 8px 16px 0 var(--base-transparent-8),
+      0 4px 8px 0 var(--base-transparent-6),
+      0 0 0 1px var(--base-transparent-4);
+  }
+
+  .Layer__VehicleCard__icon {
+    min-height: 20px;
+    min-width: 20px;
+    color: var(--color-base-400);
+  }
+}

@@ -1,0 +1,25 @@
+.Layer__VehicleForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  width: 100%;
+
+  .Layer__VehicleForm__FormError {
+    padding: var(--spacing-sm);
+  }
+
+  .Layer__VehicleForm__Submit {
+    align-items: flex-end;
+    padding-top: 1rem;
+  }
+
+  .Layer__VehicleForm__Field__Make,
+  .Layer__VehicleForm__Field__Model,
+  .Layer__VehicleForm__Field__Year,
+  .Layer__VehicleForm__Field__LicensePlate,
+  .Layer__VehicleForm__Field__Vin,
+  .Layer__VehicleForm__Field__Description {
+    grid-template-columns: 10rem auto;
+    width: 100%;
+  }
+}

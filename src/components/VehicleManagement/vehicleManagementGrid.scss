@@ -1,0 +1,10 @@
+.Layer__VehicleManagementGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+
+  @media (width <= 768px) {
+    grid-template-columns: 1fr;
+  }
+}
