@@ -1,28 +1,28 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import UploadCloud from '@icons/UploadCloud'
-import { PencilRuler } from 'lucide-react'
+import { PencilRuler, MenuIcon } from 'lucide-react'
 import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
 
 interface BankTransactionsHeaderMenuProps {
-  withUploadMenu?: boolean
+  actions: BankTransactionsHeaderMenuActions[]
   isDisabled?: boolean
 }
 
-enum BankTransactionsHeaderMenuActions {
+export enum BankTransactionsHeaderMenuActions {
   UploadTransactions = 'UploadTransactions',
   ManageCategorizationRules = 'ManageCategorizationRules',
 }
 
-export const BankTransactionsHeaderMenu = ({ withUploadMenu, isDisabled }: BankTransactionsHeaderMenuProps) => {
+export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransactionsHeaderMenuProps) => {
   const { toCategorizationRulesTable } = useBankTransactionsNavigation()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
     const items: DataTableHeaderMenuItem[] = []
 
-    if (withUploadMenu) {
+    if (actions.includes(BankTransactionsHeaderMenuActions.UploadTransactions)) {
       items.push({
         key: BankTransactionsHeaderMenuActions.UploadTransactions,
         onClick: () => setIsModalOpen(true),
@@ -31,15 +31,28 @@ export const BankTransactionsHeaderMenu = ({ withUploadMenu, isDisabled }: BankT
       })
     }
 
-    items.push({
-      key: BankTransactionsHeaderMenuActions.ManageCategorizationRules,
-      onClick: toCategorizationRulesTable,
-      icon: <PencilRuler size={16} strokeWidth={1.25} />,
-      label: 'Manage categorization rules',
-    })
+    if (actions.includes(BankTransactionsHeaderMenuActions.ManageCategorizationRules)) {
+      items.push({
+        key: BankTransactionsHeaderMenuActions.ManageCategorizationRules,
+        onClick: toCategorizationRulesTable,
+        icon: <PencilRuler size={16} strokeWidth={1.25} />,
+        label: 'Manage categorization rules',
+      })
+    }
 
     return items
-  }, [withUploadMenu, toCategorizationRulesTable])
+  }, [actions, toCategorizationRulesTable])
+
+  const Icon = useCallback(() => {
+    if (actions.length === 1 && actions[0] === BankTransactionsHeaderMenuActions.UploadTransactions) {
+      return <UploadCloud size={16} />
+    }
+    return <MenuIcon size={14} />
+  }, [actions])
+
+  if (menuItems.length === 0) {
+    return null
+  }
 
   return (
     <>
@@ -47,6 +60,7 @@ export const BankTransactionsHeaderMenu = ({ withUploadMenu, isDisabled }: BankT
         ariaLabel='Additional bank transactions actions'
         items={menuItems}
         isDisabled={isDisabled}
+        slots={{ Icon }}
       />
       {isModalOpen && <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />}
     </>

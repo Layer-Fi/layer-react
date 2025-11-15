@@ -14,7 +14,7 @@ export const TripsTableHeaderMenu = () => {
     {
       key: TripsTableHeaderMenuActions.ManageVehicles,
       onClick: toVehicleManagement,
-      icon: <Car size={16} strokeWidth={1.25} />,
+      icon: <Car size={20} strokeWidth={1.25} />,
       label: 'Manage vehicles',
     },
   ], [toVehicleManagement])

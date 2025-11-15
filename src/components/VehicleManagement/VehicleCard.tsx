@@ -26,7 +26,7 @@ export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
   return (
     <Card className='Layer__VehicleCard'>
       <VStack gap='md' pi='md' pb='md'>
-        <HStack justify='space-between' align='center'>
+        <HStack justify='space-between' align='center' gap='md'>
           <Heading size='sm' ellipsis>{getVehicleDisplayName(vehicle)}</Heading>
           <Car size={20} className='Layer__VehicleCard__icon' />
         </HStack>

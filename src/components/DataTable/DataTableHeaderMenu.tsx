@@ -4,6 +4,7 @@ import { MenuIcon, ChevronRight } from 'lucide-react'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Span } from '@ui/Typography/Text'
 import { Spacer, VStack } from '@ui/Stack/Stack'
+import './dataTableHeaderMenu.scss'
 
 export interface DataTableHeaderMenuItem {
   key: string
@@ -16,6 +17,9 @@ interface DataTableHeaderMenuProps {
   ariaLabel: string
   items: DataTableHeaderMenuItem[]
   isDisabled?: boolean
+  slots?: {
+    Icon?: React.FC
+  }
 }
 
 interface DataTableHeaderMenuItemProps {
@@ -27,7 +31,7 @@ const DataTableHeaderMenuItemComponent = ({
 }: DataTableHeaderMenuItemProps) => {
   return (
     <MenuItem key={item.key} onClick={item.onClick}>
-      <VStack className='Layer__data-table__header-menu__icon'>
+      <VStack className='Layer__DataTableHeaderMenu__Icon'>
         {item.icon}
       </VStack>
       <Span size='sm'>{item.label}</Span>
@@ -37,14 +41,14 @@ const DataTableHeaderMenuItemComponent = ({
   )
 }
 
-export const DataTableHeaderMenu = ({ ariaLabel, items, isDisabled }: DataTableHeaderMenuProps) => {
+export const DataTableHeaderMenu = ({ ariaLabel, items, isDisabled, slots }: DataTableHeaderMenuProps) => {
   const Trigger = useCallback(() => {
     return (
       <Button icon variant='outlined' isDisabled={isDisabled}>
-        <MenuIcon size={14} />
+        {slots?.Icon ? <slots.Icon /> : <MenuIcon size={14} />}
       </Button>
     )
-  }, [isDisabled])
+  }, [isDisabled, slots])
 
   return (
     <DropdownMenu
@@ -60,4 +64,3 @@ export const DataTableHeaderMenu = ({ ariaLabel, items, isDisabled }: DataTableH
     </DropdownMenu>
   )
 }
-

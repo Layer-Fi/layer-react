@@ -9,6 +9,8 @@
   }
 
   .Layer__VehicleCard__icon {
+    min-height: 20px;
+    min-width: 20px;
     color: var(--color-base-400);
   }
 }
