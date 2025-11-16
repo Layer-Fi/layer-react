@@ -15,6 +15,10 @@
   padding: var(--spacing-md);
   border-top: 1px solid var(--color-base-300);
 
+  &--no-border {
+    border-top: none;
+  }
+
   .Layer__tasks-pending-header {
     box-sizing: border-box;
     display: flex;
@@ -425,11 +429,50 @@
     color: var(--color-base-500);
   }
 
-  &:hover {
+  &:hover:not([data-disabled]) {
     box-shadow: 0 0 0 1px var(--color-base-500), 0 0 0 3px var(--color-base-300);
   }
 
   .Layer__tasks-month-selector__month__str {
     min-width: 24px;
+  }
+}
+
+.Layer__tasks-scale-selector {
+  box-sizing: border-box;
+  display: flex;
+  gap: var(--spacing-xs);
+  width: 100%;
+  padding: 0 var(--spacing-md);
+
+  &__option {
+    box-sizing: border-box;
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+    justify-content: space-between;
+    min-height: 32px;
+    width: 100%;
+    padding: 0 var(--spacing-sm);
+    border-radius: var(--border-radius-xs);
+    box-shadow: 0 1px 2px 0 var(--base-transparent-6), 0 0 0 1px var(--color-base-300);
+    background: var(--color-base-0);
+    cursor: pointer;
+
+    > *:first-child {
+      flex-shrink: 0;
+    }
+
+    > *:last-child {
+      flex-shrink: 0;
+    }
+
+    &--active {
+      box-shadow: 0 0 0 1px var(--color-base-800), 0 0 0 3px var(--color-base-300);
+    }
+
+    &:hover {
+      box-shadow: 0 0 0 1px var(--color-base-500), 0 0 0 3px var(--color-base-300);
+    }
   }
 }

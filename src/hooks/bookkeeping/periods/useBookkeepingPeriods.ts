@@ -1,4 +1,5 @@
 import useSWR from 'swr'
+import { Schema } from 'effect'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useAuth } from '@hooks/useAuth'
 import { get } from '@api/layer/authenticated_http'
@@ -6,55 +7,16 @@ import {
   BOOKKEEPING_TAG_KEY,
   useBookkeepingStatus,
 } from '@hooks/bookkeeping/useBookkeepingStatus'
-import type { RawTask } from '@internal-types/tasks'
-import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
 import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
-
-export enum BookkeepingPeriodStatus {
-  BOOKKEEPING_NOT_ACTIVE = 'BOOKKEEPING_NOT_ACTIVE',
-  NOT_STARTED = 'NOT_STARTED',
-  IN_PROGRESS_AWAITING_BOOKKEEPER = 'IN_PROGRESS_AWAITING_BOOKKEEPER',
-  IN_PROGRESS_AWAITING_CUSTOMER = 'IN_PROGRESS_AWAITING_CUSTOMER',
-  CLOSING_IN_REVIEW = 'CLOSING_IN_REVIEW',
-  CLOSED_OPEN_TASKS = 'CLOSED_OPEN_TASKS',
-  CLOSED_COMPLETE = 'CLOSED_COMPLETE',
-}
-const BOOKKEEPING_PERIOD_STATUSES: string[] = Object.values(BookkeepingPeriodStatus)
-
-type RawBookkeepingPeriodStatus = EnumWithUnknownValues<BookkeepingPeriodStatus>
-
-function isBookkeepingPeriodStatus(status: RawBookkeepingPeriodStatus): status is BookkeepingPeriodStatus {
-  return BOOKKEEPING_PERIOD_STATUSES.includes(status)
-}
-
-function constrainToKnownBookkeepingPeriodStatus(status: RawBookkeepingPeriodStatus): BookkeepingPeriodStatus {
-  if (isBookkeepingPeriodStatus(status)) {
-    return status
-  }
-
-  return BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE
-}
-
-export type BookkeepingPeriod = Omit<RawBookkeepingPeriod, 'status'> & {
-  status: BookkeepingPeriodStatus
-}
-
-type RawBookkeepingPeriod = {
-  id: string
-  month: number
-  year: number
-  status: RawBookkeepingPeriodStatus
-  tasks: ReadonlyArray<RawTask>
-}
+import {
+  ListBookkeepingPeriodsResponse,
+  ListBookkeepingPeriodsResponseSchema,
+} from '@schemas/bookkeepingPeriods'
 
 const getBookkeepingPeriods = get<
-  {
-    data: {
-      periods: ReadonlyArray<RawBookkeepingPeriod>
-    }
-  },
+  ListBookkeepingPeriodsResponse,
   { businessId: string }
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/bookkeeping/periods`
@@ -81,6 +43,17 @@ function buildKey({
       tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
     } as const
   }
+
+  if (businessId) {
+    return {
+      accessToken: '',
+      apiUrl: '',
+      businessId,
+      tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
+    } as const
+  }
+
+  return null
 }
 
 export function useBookkeepingPeriods() {
@@ -101,16 +74,25 @@ export function useBookkeepingPeriods() {
       accessToken,
       { params: { businessId } },
     )()
-      .then(
-        ({ data: { periods } }) =>
-          periods
-            .map(period => ({
-              ...period,
-              status: constrainToKnownBookkeepingPeriodStatus(period.status),
-              tasks: getUserVisibleTasks(period.tasks),
-            }))
-            .filter(period => isActiveBookkeepingPeriod(period)),
+      .then(Schema.decodeUnknownPromise(ListBookkeepingPeriodsResponseSchema))
+      .then(({ data: { periods } }) =>
+        periods
+          .map(period => ({
+            ...period,
+            tasks: getUserVisibleTasks(period.tasks),
+          }))
+          .filter(period => isActiveBookkeepingPeriod(period)),
       ),
+    // () =>
+    //   Promise.resolve(MOCK_BOOKKEEPING_PERIODS_RESPONSE)
+    //     .then(({ data: { periods } }) =>
+    //       periods
+    //         .map(period => ({
+    //           ...period,
+    //           tasks: getUserVisibleTasks(period.tasks),
+    //         }))
+    //         .filter(period => isActiveBookkeepingPeriod(period)),
+    //     )),
   )
 
   return new Proxy(swrResponse, {

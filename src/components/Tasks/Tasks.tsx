@@ -14,6 +14,8 @@ import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeeping
 import { Container } from '@components/Container/Container'
 import { CallBookingPurpose, useCallBookings } from '@features/callBookings/api/useCallBookings'
 import { useMemo } from 'react'
+import { TasksScaleSelector } from '@components/Tasks/TasksScaleSelector'
+import { TasksScaleProvider } from '@components/Tasks/TasksScaleContext'
 
 const TasksOnboardingEmptyState = () => {
   return (
@@ -81,34 +83,37 @@ export function Tasks({
           <TasksOnboardingEmptyState />
         )}
         {tasksState === 'active' && (
-          <ConditionalBlock
-            data={data}
-            isLoading={isLoading}
-            Loading={(
-              <TasksEmptyContainer>
-                <Loader />
-              </TasksEmptyContainer>
-            )}
-            Inactive={(
-              <TasksEmptyContainer>
-                <VStack gap='sm' align='center'>
-                  <Heading size='xs' level={4}>
-                    Not Enrolled in Bookkeeping
-                  </Heading>
-                  <P>If you believe this is an error, please contact support.</P>
-                </VStack>
-              </TasksEmptyContainer>
-            )}
-          >
-            {() => (
-              <>
-                <TasksYearsTabs />
-                <TasksMonthSelector />
-                <TasksPending />
-                <TasksList mobile={mobile} />
-              </>
-            )}
-          </ConditionalBlock>
+          <TasksScaleProvider>
+            <ConditionalBlock
+              data={data}
+              isLoading={isLoading}
+              Loading={(
+                <TasksEmptyContainer>
+                  <Loader />
+                </TasksEmptyContainer>
+              )}
+              Inactive={(
+                <TasksEmptyContainer>
+                  <VStack gap='sm' align='center'>
+                    <Heading size='xs' level={4}>
+                      Not Enrolled in Bookkeeping
+                    </Heading>
+                    <P>If you believe this is an error, please contact support.</P>
+                  </VStack>
+                </TasksEmptyContainer>
+              )}
+            >
+              {() => (
+                <>
+                  <TasksYearsTabs />
+                  <TasksScaleSelector />
+                  <TasksMonthSelector />
+                  <TasksPending />
+                  <TasksList mobile={mobile} />
+                </>
+              )}
+            </ConditionalBlock>
+          </TasksScaleProvider>
         )}
       </VStack>
     </Container>

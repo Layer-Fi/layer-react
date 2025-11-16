@@ -3,8 +3,11 @@ import { format, getMonth, getYear, set } from 'date-fns'
 import { MonthData } from '@components/Tasks/types'
 import { TaskMonthTile } from '@components/Tasks/TaskMonthTile'
 import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingPeriodStatus, BookkeepingPeriodScale } from '@schemas/bookkeepingPeriods'
+import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useContext } from 'react'
+import { TasksScaleContext } from '@components/Tasks/TasksScaleContext'
 
 function useActiveYearBookkeepingPeriods() {
   const { date } = useGlobalDate()
@@ -22,6 +25,9 @@ function useActiveYearBookkeepingPeriods() {
 function TasksMonthSelector() {
   const { date } = useGlobalDate()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
+  const scaleContext = useContext(TasksScaleContext)
+  const setSelectedScale = scaleContext?.setSelectedScale
+  const selectedScale = scaleContext?.selectedScale ?? null
 
   const { periodsInActiveYear } = useActiveYearBookkeepingPeriods()
 
@@ -61,18 +67,25 @@ function TasksMonthSelector() {
     })
   }, [periodsInActiveYear, activeYear])
 
+  if (selectedScale === BookkeepingPeriodScale.ONGOING) {
+    return null
+  }
+
   return (
     <div className='Layer__tasks-month-selector'>
       {monthsData?.map((monthData, idx) => {
         return (
           <TaskMonthTile
             key={idx}
-            onClick={() => setMonthByPeriod({
-              yearNumber: monthData.year,
-              monthNumber: monthData.month,
-            })}
+            onClick={() => {
+              setSelectedScale?.(null)
+              setMonthByPeriod({
+                yearNumber: monthData.year,
+                monthNumber: monthData.month,
+              })
+            }}
             data={monthData}
-            active={monthData.month === activeMonthNumber}
+            active={selectedScale === null && !monthData.disabled && monthData.month === activeMonthNumber}
             disabled={monthData.disabled}
           />
         )
