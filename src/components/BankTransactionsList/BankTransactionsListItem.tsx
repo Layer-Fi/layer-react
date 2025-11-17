@@ -1,5 +1,4 @@
 import { ErrorText } from '@components/Typography/ErrorText'
-import { RetryButton } from '@components/Button/RetryButton'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
@@ -242,30 +241,21 @@ export const BankTransactionsListItem = ({
             }}
             isLoading={bankTransaction.processing}
           />
-          {showRetry
-            ? (
-              <RetryButton
-                onClick={handleSave}
-                className='Layer__bank-transaction__retry-btn'
-                processing={bankTransaction.processing}
-                error='Approval failed. Check connection and retry in few seconds.'
-              >
-                Retry
-              </RetryButton>
-            )
-            : (
-              <SubmitButton
-                disabled={bankTransaction.processing}
-                onClick={handleSave}
-                className='Layer__bank-transaction__submit-btn'
-                processing={bankTransaction.processing}
-                action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-              >
-                {!categorized
-                  ? stringOverrides?.approveButtonText || 'Approve'
-                  : stringOverrides?.updateButtonText || 'Update'}
-              </SubmitButton>
-            )}
+          <SubmitButton
+            disabled={bankTransaction.processing}
+            onClick={handleSave}
+            className={showRetry ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
+            processing={bankTransaction.processing}
+            action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+            withRetry={true}
+            error={showRetry ? 'Approval failed. Check connection and retry in few seconds.' : undefined}
+          >
+            {showRetry
+              ? 'Retry'
+              : (!categorized
+                ? stringOverrides?.approveButtonText || 'Approve'
+                : stringOverrides?.updateButtonText || 'Update')}
+          </SubmitButton>
         </HStack>
       )}
       {!openExpandedRow && categorizationEnabled && categorized && (
@@ -275,9 +265,11 @@ export const BankTransactionsListItem = ({
       )}
       {bankTransaction.error && showRetry
         && (
-          <ErrorText>
-            Approval failed. Check connection and retry in few seconds.
-          </ErrorText>
+          <HStack pis='md' pbe='md'>
+            <ErrorText>
+              Approval failed. Check connection and retry in few seconds.
+            </ErrorText>
+          </HStack>
         )}
     </li>
   )
