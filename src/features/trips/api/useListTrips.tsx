@@ -129,7 +129,7 @@ export function useListTrips(filterParams: ListTripsFilterParams = {}) {
         params: {
           businessId,
           cursor,
-          limit: 20,
+          limit: 200,
           query,
           vehicleId,
           purpose,
