@@ -5,7 +5,7 @@ import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
 import { hasMatch } from '@utils/bankTransactions'
 import { Purpose } from './BankTransactionsMobileListItem'
-import { HStack, VStack } from '@components/ui/Stack/Stack'
+import { VStack } from '@components/ui/Stack/Stack'
 
 const PURPOSE_TOGGLE_OPTIONS = [
   {
@@ -46,31 +46,27 @@ export const BankTransactionsMobileListItemExpandedRow = ({
     setPurpose(event.target.value as Purpose)
 
   return (
-    <div className='Layer__bank-transaction-mobile-list-item__expanded-row'>
-      <VStack pb='md' justify='space-between' align='center'>
-        {showCategorization
-          ? (
-            <HStack align='center' justify='space-between'>
-              <Toggle
-                name={`purpose-${bankTransaction.id}`}
-                size={ToggleSize.medium}
-                options={PURPOSE_TOGGLE_OPTIONS}
-                selected={purpose}
-                onChange={onChangePurpose}
-              />
-            </HStack>
-          )
-          : null}
-        <BankTransactionsMobileForms
-          purpose={purpose}
-          bankTransaction={bankTransaction}
-          showCategorization={showCategorization}
-          showDescriptions={showDescriptions}
-          showReceiptUploads={showReceiptUploads}
-          showTooltips={showTooltips}
-        />
-      </VStack>
-    </div>
+    <VStack pi='md' gap='md' pbe='md'>
+      {showCategorization
+        && (
+          <Toggle
+            name={`purpose-${bankTransaction.id}`}
+            size={ToggleSize.medium}
+            options={PURPOSE_TOGGLE_OPTIONS}
+            selected={purpose}
+            onChange={onChangePurpose}
+          />
+        )}
+      <BankTransactionsMobileForms
+        purpose={purpose}
+        bankTransaction={bankTransaction}
+        showCategorization={showCategorization}
+        showDescriptions={showDescriptions}
+        showReceiptUploads={showReceiptUploads}
+        showTooltips={showTooltips}
+      />
+    </VStack>
+
   )
 }
 

@@ -13,7 +13,7 @@ import { Span } from '@ui/Typography/Text'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack, HStack } from '@ui/Stack/Stack'
 import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
-import { BankTransactionsMobileListItemCategory } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCategory'
+import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { isCategorized } from '@components/BankTransactions/utils'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { useInAppLinkContext, type LinkingMetadata } from '@contexts/InAppLinkContext'
@@ -22,6 +22,7 @@ import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankT
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 import './bankTransactionsMobileListItem.scss'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
+import { AnimatedPresenceDiv } from '@components/ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -184,6 +185,12 @@ export const BankTransactionsMobileListItem = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
+  useEffect(() => {
+    if (bulkActionsEnabled) {
+      close()
+    }
+  }, [bulkActionsEnabled])
+
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
   const { select, deselect } = useBulkSelectionActions()
@@ -265,21 +272,21 @@ export const BankTransactionsMobileListItem = ({
           </HStack>
           {!open
             && (
-              <BankTransactionsMobileListItemCategory
+              <BankTransactionsListItemCategory
                 bankTransaction={bankTransaction}
+                mobile
               />
             )}
         </div>
-        { open
-          && (
-            <BankTransactionsMobileListItemExpandedRow
-              bankTransaction={bankTransaction}
-              showCategorization={categorizationEnabled}
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showTooltips={showTooltips}
-            />
-          )}
+        <AnimatedPresenceDiv variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+          <BankTransactionsMobileListItemExpandedRow
+            bankTransaction={bankTransaction}
+            showCategorization={categorizationEnabled}
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
+          />
+        </AnimatedPresenceDiv>
 
       </VStack>
 

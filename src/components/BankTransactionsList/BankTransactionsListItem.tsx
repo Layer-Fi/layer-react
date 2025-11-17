@@ -1,5 +1,4 @@
 import { ErrorText } from '@components/Typography/ErrorText'
-import { RetryButton } from '@components/Button/RetryButton'
 import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
@@ -31,9 +30,9 @@ import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelecti
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
-import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
-import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
-import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
+import { MoneySpan } from '@components/ui/Typography/MoneySpan'
+import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
+import { AnimatedPresenceDiv } from '@components/ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 
 type BankTransactionsListItemProps = {
   index: number
@@ -120,6 +119,10 @@ export const BankTransactionsListItem = ({
     setOpenExpandedRow(false)
   }
 
+  const handleSave = () => {
+    void save()
+  }
+
   const openClassName = openExpandedRow ? 'Layer__bank-transaction-list-item--expanded' : ''
   const rowClassName = classNames(
     'Layer__bank-transaction-list-item',
@@ -191,112 +194,83 @@ export const BankTransactionsListItem = ({
             {bankTransaction.counterparty_name ?? bankTransaction.description}
           </Span>
         </HStack>
-        <BankTransactionsAmountDate
+        <MoneySpan
           amount={bankTransaction.amount}
-          date={bankTransaction.date}
-          slotProps={{
-            MoneySpan: { size: 'md', displayPlusSign: isCredit(bankTransaction) },
-            DateTime: { size: 'sm' },
-          }}
+          displayPlusSign={isCredit(bankTransaction)}
+          size='md'
         />
       </HStack>
       {!categorizationEnabled && !categorized
-        ? (
+        && (
           <span className='Layer__bank-transaction-list-item__processing-info'>
             <BankTransactionsProcessingInfo />
           </span>
-        )
-        : null}
+        )}
       <span className='Layer__bank-transaction-list-item__expanded-row'>
-        <ExpandedBankTransactionRow
-          ref={expandedRowRef}
-          bankTransaction={bankTransaction}
-          isOpen={openExpandedRow}
-          close={() => setOpenExpandedRow(false)}
-          categorized={categorized}
-          asListItem={true}
-          submitBtnText={
-            categorized
-              ? stringOverrides?.updateButtonText || 'Update'
-              : stringOverrides?.approveButtonText || 'Approve'
-          }
-          containerWidth={containerWidth}
+        <AnimatedPresenceDiv variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
+          <ExpandedBankTransactionRow
+            ref={expandedRowRef}
+            bankTransaction={bankTransaction}
+            isOpen={openExpandedRow}
+            close={() => setOpenExpandedRow(false)}
+            categorized={categorized}
+            asListItem={true}
+            submitBtnText={
+              categorized
+                ? stringOverrides?.updateButtonText || 'Update'
+                : stringOverrides?.approveButtonText || 'Approve'
+            }
+            containerWidth={containerWidth}
 
-          showDescriptions={showDescriptions}
-          showReceiptUploads={showReceiptUploads}
-          showTooltips={showTooltips}
-        />
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
+
+            variant='list'
+          />
+        </AnimatedPresenceDiv>
       </span>
-      <span className='Layer__bank-transaction-list-item__base-row'>
-        {categorizationEnabled && !categorized
-          ? (
-            <BankTransactionCategoryComboBox
-              bankTransaction={bankTransaction}
-              selectedValue={selectedCategory ?? null}
-              onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                setTransactionCategory(bankTransaction.id, selectedCategory)
-                setShowRetry(false)
-              }}
-              isLoading={bankTransaction.processing}
-            />
-
-          )
-          : categorized
-            ? (
-              <BankTransactionsCategorizedSelectedValue
-                bankTransaction={bankTransaction}
-              />
-            )
-            : selectedCategory
-              ? (
-                <BankTransactionsUncategorizedSelectedValue
-                  selectedValue={selectedCategory}
-                />
-              )
-              : null}
-
-        {categorizationEnabled && !categorized && !showRetry
-          ? (
-            <SubmitButton
-              onClick={() => {
-                if (!bankTransaction.processing) {
-                  void save()
-                }
-              }}
-              className='Layer__bank-transaction__submit-btn'
-              processing={bankTransaction.processing}
-              action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-            >
-              {!categorized
+      {!openExpandedRow && categorizationEnabled && !categorized && (
+        <HStack pi='md' gap='md' pb='md'>
+          <BankTransactionCategoryComboBox
+            bankTransaction={bankTransaction}
+            selectedValue={selectedCategory ?? null}
+            onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
+              setTransactionCategory(bankTransaction.id, selectedCategory)
+              setShowRetry(false)
+            }}
+            isLoading={bankTransaction.processing}
+          />
+          <SubmitButton
+            disabled={bankTransaction.processing}
+            onClick={handleSave}
+            className={showRetry ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
+            processing={bankTransaction.processing}
+            action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+            withRetry={true}
+            error={showRetry ? 'Approval failed. Check connection and retry in few seconds.' : undefined}
+          >
+            {showRetry
+              ? 'Retry'
+              : (!categorized
                 ? stringOverrides?.approveButtonText || 'Approve'
-                : stringOverrides?.updateButtonText || 'Update'}
-            </SubmitButton>
-          )
-          : null}
-        {categorizationEnabled && !categorized && showRetry
-          ? (
-            <RetryButton
-              onClick={() => {
-                if (!bankTransaction.processing) {
-                  void save()
-                }
-              }}
-              className='Layer__bank-transaction__retry-btn'
-              processing={bankTransaction.processing}
-              error='Approval failed. Check connection and retry in few seconds.'
-            >
-              Retry
-            </RetryButton>
-          )
-          : null}
-      </span>
+                : stringOverrides?.updateButtonText || 'Update')}
+          </SubmitButton>
+        </HStack>
+      )}
+      {!openExpandedRow && categorizationEnabled && categorized && (
+        <BankTransactionsListItemCategory
+          bankTransaction={bankTransaction}
+        />
+      )}
       {bankTransaction.error && showRetry
-        ? (
-          <ErrorText>
-            Approval failed. Check connection and retry in few seconds.
-          </ErrorText>
-        )
-        : null}
+        && (
+          <HStack pis='md' pbe='md'>
+            <ErrorText>
+              Approval failed. Check connection and retry in few seconds.
+            </ErrorText>
+          </HStack>
+        )}
     </li>
   )
 }
