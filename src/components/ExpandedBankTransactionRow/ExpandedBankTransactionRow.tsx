@@ -90,10 +90,10 @@ type ExpandedBankTransactionRowProps = {
   showReceiptUploads: boolean
   showTooltips: boolean
 
-  showLeftPadding?: boolean
+  variant?: 'list' | 'row'
 }
 
-const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactionRowProps>(
+export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactionRowProps>(
   (
     {
       bankTransaction,
@@ -105,7 +105,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       containerWidth,
       showDescriptions,
       showReceiptUploads,
-      showLeftPadding = true,
+      variant = 'row',
     },
     ref,
   ) => {
@@ -282,7 +282,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           <>
             <Separator />
             <span className={`${className}__wrapper`} ref={bodyRef}>
-              <VStack pis={showLeftPadding ? 'md' : undefined} pbs='sm'>
+              <VStack pis={variant === 'row' ? 'md' : undefined} pbs='sm'>
                 {categorizationEnabled
                   && (
                     <HStack pi='md' pbe='md' pbs='3xs'>
@@ -513,5 +513,3 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 )
 
 ExpandedBankTransactionRow.displayName = 'ExpandedBankTransactionRow'
-
-export { ExpandedBankTransactionRow }
