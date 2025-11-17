@@ -296,7 +296,7 @@ export const BankTransactionRow = ({
                     </SubmitButton>
                   )}
                 {!categorizationEnabled && !categorized && (
-                  <VStack>
+                  <VStack pis='lg' fluid>
                     <BankTransactionsProcessingInfo />
                   </VStack>
                 )}
