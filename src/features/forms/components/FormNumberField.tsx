@@ -1,56 +1,55 @@
-import { useState, useEffect, type PropsWithChildren, useCallback } from 'react'
+import { useCallback, type PropsWithChildren } from 'react'
 import { useFieldContext } from '@features/forms/hooks/useForm'
+import { InputGroup } from '@ui/Input/InputGroup'
+import { Input } from '@ui/Input/Input'
+import { NumberField } from '@ui/NumberField/NumberField'
 import { Label } from '@ui/Typography/Text'
-import { DateField, DateInput, DateSegment } from '@ui/Date/Date'
 import { FieldError } from '@ui/Form/Form'
 import type { CommonFormFieldProps } from '@features/forms/types'
-import type { DateValue } from '@internationalized/date'
-import { InputGroup } from '@ui/Input/InputGroup'
 
-export type FormDateFieldProps = CommonFormFieldProps
-export function FormDateField<T extends DateValue>({
+export type FormNumberFieldProps = CommonFormFieldProps & {
+  minValue?: number
+  maxValue?: number
+}
+
+export function FormNumberField({
   label,
   className,
   inline = false,
   showLabel = true,
   showFieldError = true,
   isReadOnly = false,
-}: PropsWithChildren<FormDateFieldProps>) {
-  const field = useFieldContext<T | null>()
+  minValue,
+  maxValue,
+}: PropsWithChildren<FormNumberFieldProps>) {
+  const field = useFieldContext<number>()
 
   const { name, state, handleChange, handleBlur } = field
   const { meta, value } = state
   const { errors, isValid } = meta
-  const [localDate, setLocalDate] = useState<T | null>(value)
 
-  useEffect(() => {
-    setLocalDate(value)
-  }, [value])
-
-  const onChange = useCallback((newValue: DateValue | null) => {
-    setLocalDate(newValue as T | null)
-  }, [])
-
-  const onBlur = useCallback(() => {
-    handleChange(localDate)
-    handleBlur()
-  }, [handleBlur, handleChange, localDate])
+  const onChange = useCallback((newValue: number) => {
+    handleChange(newValue)
+  }, [handleChange])
 
   const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
   const shouldShowErrorMessage = showFieldError && errorMessage
 
   const additionalAriaProps = !showLabel && { 'aria-label': label }
+
   return (
-    <DateField<T>
+    <NumberField
       name={name}
-      granularity='day'
-      value={localDate}
+      value={value}
       isInvalid={!isValid}
       inline={inline}
       className={className}
       onChange={onChange}
-      onBlur={onBlur}
+      onBlur={handleBlur}
       isReadOnly={isReadOnly}
+      minValue={minValue}
+      maxValue={maxValue}
+      formatOptions={{ useGrouping: false }}
       {...additionalAriaProps}
     >
       {showLabel && (
@@ -64,11 +63,9 @@ export function FormDateField<T extends DateValue>({
         </Label>
       )}
       <InputGroup slot='input'>
-        <DateInput inset>
-          {segment => <DateSegment isReadOnly={isReadOnly} segment={segment} />}
-        </DateInput>
+        <Input inset />
       </InputGroup>
       {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
-    </DateField>
+    </NumberField>
   )
 }
