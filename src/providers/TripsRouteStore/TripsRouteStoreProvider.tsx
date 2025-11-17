@@ -67,4 +67,3 @@ export function TripsRouteStoreProvider(props: PropsWithChildren) {
     </TripsRouteStoreContext.Provider>
   )
 }
-

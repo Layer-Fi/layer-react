@@ -1,6 +1,6 @@
 import { Schema, pipe } from 'effect'
 import { VehicleSchema } from '@schemas/vehicle'
-import { ZonedDateTimeFromSelf } from './common/zonedDateTimeFromSelf'
+import { CalendarDateFromSelf, CalendarDateSchema } from './common/calendarDateFromSelf'
 
 export enum TripPurpose {
   Unreviewed = 'UNREVIEWED',
@@ -37,7 +37,7 @@ export const TripSchema = Schema.Struct({
   distance: Schema.BigDecimal,
 
   tripDate: pipe(
-    Schema.propertySignature(Schema.Date),
+    Schema.propertySignature(CalendarDateSchema),
     Schema.fromKey('trip_date'),
   ),
 
@@ -76,7 +76,7 @@ export type TripEncoded = typeof TripSchema.Encoded
 
 export const TripFormSchema = Schema.Struct({
   vehicle: Schema.NullOr(VehicleSchema),
-  tripDate: Schema.NullOr(ZonedDateTimeFromSelf),
+  tripDate: Schema.NullOr(CalendarDateFromSelf),
   distance: Schema.BigDecimal,
   purpose: TripPurposeSchema,
   startAddress: Schema.String,
@@ -92,7 +92,7 @@ export const UpsertTripSchema = Schema.Struct({
     Schema.fromKey('vehicle_id'),
   ),
   tripDate: pipe(
-    Schema.propertySignature(Schema.Date),
+    Schema.propertySignature(CalendarDateSchema),
     Schema.fromKey('trip_date'),
   ),
   distance: Schema.BigDecimal,

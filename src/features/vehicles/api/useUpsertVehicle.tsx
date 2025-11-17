@@ -55,9 +55,10 @@ function buildKey({
 const UpsertVehicleReturnSchema = Schema.Struct({
   data: VehicleSchema,
 })
-
 type UpsertVehicleReturn = typeof UpsertVehicleReturnSchema.Type
-type UpsertVehicleReturnEncoded = typeof UpsertVehicleReturnSchema.Encoded
+
+type UpsertVehicleSWRMutationResponse =
+  SWRMutationResponse<UpsertVehicleReturn, unknown, Key, UpsertVehicleBody>
 
 type RequestArgs = {
   apiUrl: string
@@ -184,9 +185,9 @@ export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
 }
 
 class UpsertVehicleSWRResponse {
-  private swrResponse: SWRMutationResponse<UpsertVehicleReturn, Error, Key, UpsertVehicleBody>
+  private swrResponse: UpsertVehicleSWRMutationResponse
 
-  constructor(swrResponse: SWRMutationResponse<UpsertVehicleReturn, Error, Key, UpsertVehicleBody>) {
+  constructor(swrResponse: UpsertVehicleSWRMutationResponse) {
     this.swrResponse = swrResponse
   }
 
@@ -206,4 +207,3 @@ class UpsertVehicleSWRResponse {
     return this.swrResponse.error
   }
 }
-

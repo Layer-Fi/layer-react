@@ -10,6 +10,7 @@ import { useTripForm } from '@components/Trips/TripForm/useTripForm'
 import { flattenValidationErrors } from '@utils/form'
 import { TripPurposeComboBox } from '@components/Trips/TripPurposeComboBox/TripPurposeComboBox'
 import { VehicleSelector } from '@features/vehicles/components/VehicleSelector'
+import { CalendarDate } from '@internationalized/date'
 import './tripForm.scss'
 
 const TRIP_FORM_CSS_PREFIX = 'Layer__TripForm'
@@ -51,7 +52,6 @@ export const TripForm = (props: TripFormProps) => {
           }
         }}
       </form.Subscribe>
-
       <form.Field name='vehicle'>
         {field => (
           <VehicleSelector
@@ -63,14 +63,12 @@ export const TripForm = (props: TripFormProps) => {
           />
         )}
       </form.Field>
-
       <form.AppField name='tripDate'>
-        {field => <field.FormDateField label='Trip date' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__TripDate`} isReadOnly={isReadOnly} />}
+        {field => <field.FormDateField<CalendarDate> label='Trip date' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__TripDate`} isReadOnly={isReadOnly} />}
       </form.AppField>
       <form.AppField name='distance'>
         {field => <field.FormBigDecimalField label='Distance (miles)' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Distance`} isReadOnly={isReadOnly} maxDecimalPlaces={1} />}
       </form.AppField>
-
       <form.Field name='purpose'>
         {field => (
           <TripPurposeComboBox
@@ -92,7 +90,6 @@ export const TripForm = (props: TripFormProps) => {
           <field.FormTextAreaField label='Description' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Description`} isReadOnly={isReadOnly} />
         )}
       </form.AppField>
-
       <VStack justify='end' className={`${TRIP_FORM_CSS_PREFIX}__Submit`}>
         <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
           {([canSubmit, isSubmitting]) => (

@@ -2,7 +2,7 @@ import { Button } from '@ui/Button/Button'
 import { useMemo, useState, useCallback } from 'react'
 import { useListTrips } from '@features/trips/api/useListTrips'
 import { type Trip, type TripPurpose } from '@schemas/trip'
-import { formatDate } from '@utils/format'
+import { formatCalendarDate } from '@utils/time/timeUtils'
 import type { ColumnConfig } from '@components/DataTable/DataTable'
 import { PaginatedTable } from '@components/PaginatedDataTable/PaginatedDataTable'
 import { Span } from '@ui/Typography/Text'
@@ -16,13 +16,13 @@ import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { TripForm } from '@components/Trips/TripForm/TripForm'
 import { VStack, HStack } from '@ui/Stack/Stack'
 import { formatDistance, getPurposeLabel } from './utils'
-import './tripsTable.scss'
 import { getVehicleDisplayName } from '@features/vehicles/util'
 import { type Vehicle } from '@schemas/vehicle'
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
 import { VehicleSelector } from '@features/vehicles/components/VehicleSelector'
 import { TripPurposeToggle, TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
 import { TripsTableHeaderMenu } from './TripsTableHeaderMenu'
+import './tripsTable.scss'
 
 const COMPONENT_NAME = 'TripsTable'
 
@@ -40,7 +40,7 @@ const getColumnConfig = (onSelectTrip: (trip: Trip) => void): ColumnConfig<Trip,
   [TripColumns.TripDate]: {
     id: TripColumns.TripDate,
     header: 'Date',
-    cell: row => formatDate(row.tripDate),
+    cell: row => formatCalendarDate(row.tripDate),
   },
   [TripColumns.Vehicle]: {
     id: TripColumns.Vehicle,
@@ -138,12 +138,6 @@ export const TripsTable = () => {
   const onRecordTrip = useCallback(() => {
     setSelectedTrip(null)
     setIsTripDrawerOpen(true)
-  }, [])
-
-  const onTripSuccess = useCallback((trip: Trip) => {
-    setIsTripDrawerOpen(false)
-    setSelectedTrip(null)
-    void trip
   }, [])
 
   const paginationProps = useMemo(() => {
@@ -257,8 +251,8 @@ export const TripsTable = () => {
             </VStack>
             <TripForm
               trip={selectedTrip ?? undefined}
-              onSuccess={(trip: Trip) => {
-                onTripSuccess(trip)
+              onSuccess={() => {
+                setSelectedTrip(null)
                 close()
               }}
             />

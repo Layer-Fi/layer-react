@@ -1,15 +1,15 @@
 import { type Trip, type TripForm, TripPurpose } from '@schemas/trip'
 import { BigDecimal as BD } from 'effect'
-import { getLocalTimeZone, fromDate, toCalendarDate, today } from '@internationalized/date'
+import { getLocalTimeZone, today } from '@internationalized/date'
 import { BIG_DECIMAL_ZERO } from '@utils/bigDecimalUtils'
 
 export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
   if (trip) {
     return {
       vehicle: trip.vehicle,
-      tripDate: fromDate(trip.tripDate, 'UTC'),
+      tripDate: trip.tripDate,
       distance: trip.distance,
-      purpose: trip.purpose as TripPurpose,
+      purpose: trip.purpose,
       startAddress: trip.startAddress || '',
       endAddress: trip.endAddress || '',
       description: trip.description || '',
@@ -18,7 +18,7 @@ export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
 
   return {
     vehicle: null,
-    tripDate: fromDate(new Date(), getLocalTimeZone()),
+    tripDate: today(getLocalTimeZone()),
     distance: BIG_DECIMAL_ZERO,
     purpose: TripPurpose.Unreviewed,
     startAddress: '',
@@ -40,7 +40,7 @@ export const validateTripForm = ({ trip }: { trip: TripForm }) => {
     errors.push({ tripDate: 'Trip date is a required field.' })
   }
 
-  if (tripDate && toCalendarDate(tripDate).compare(today(getLocalTimeZone())) > 0) {
+  if (tripDate && tripDate.compare(today(getLocalTimeZone())) > 0) {
     errors.push({ tripDate: 'Trip date cannot be in the future.' })
   }
 
@@ -58,7 +58,7 @@ export const validateTripForm = ({ trip }: { trip: TripForm }) => {
 export const convertTripFormToUpsertTrip = (form: TripForm): unknown => {
   return {
     vehicleId: form.vehicle?.id,
-    tripDate: form.tripDate ? toCalendarDate(form.tripDate).toDate('UTC') : null,
+    tripDate: form.tripDate,
     distance: form.distance,
     purpose: form.purpose,
     startAddress: form.startAddress.trim() || null,

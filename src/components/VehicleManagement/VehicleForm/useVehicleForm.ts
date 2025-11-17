@@ -58,4 +58,3 @@ export const useVehicleForm = (props: UseVehicleFormProps) => {
     { form, submitError }),
   [form, submitError])
 }
-

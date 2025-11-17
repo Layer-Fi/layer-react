@@ -53,4 +53,3 @@ export const convertVehicleFormToUpsertVehicle = (form: VehicleForm): unknown =>
     description: form.description.trim() || null,
   }
 }
-
