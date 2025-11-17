@@ -1,5 +1,5 @@
 import { Button } from '@ui/Button/Button'
-import { useMemo, useState, useCallback } from 'react'
+import { useMemo, useState, useCallback, useEffect } from 'react'
 import { useListTrips } from '@features/trips/api/useListTrips'
 import { type Trip, type TripPurpose } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
@@ -22,6 +22,7 @@ import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
 import { VehicleSelector } from '@features/vehicles/components/VehicleSelector'
 import { TripPurposeToggle, TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
 import { TripsTableHeaderMenu } from './TripsTableHeaderMenu'
+import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import './tripsTable.scss'
 
 const COMPONENT_NAME = 'TripsTable'
@@ -61,25 +62,31 @@ const getColumnConfig = (onSelectTrip: (trip: Trip) => void): ColumnConfig<Trip,
   [TripColumns.Address]: {
     id: TripColumns.Address,
     header: 'Address',
-    cell: row => (
-      <VStack gap='3xs' overflow='auto'>
-        <Span ellipsis size='sm' withTooltip>
-          <strong>Start:</strong>
-          {' '}
-          {row.startAddress || '—'}
-        </Span>
-        <Span ellipsis size='sm' withTooltip>
-          <strong>End:</strong>
-          {' '}
-          {row.endAddress || '—'}
-        </Span>
-      </VStack>
-    ),
+    cell: (row) => {
+      return (
+        <VStack gap='3xs' overflow='auto'>
+          {row.startAddress && (
+            <Span ellipsis size='sm' withTooltip>
+              <strong>Start:</strong>
+              {' '}
+              {row.startAddress}
+            </Span>
+          )}
+          {row.endAddress && (
+            <Span ellipsis size='sm' withTooltip>
+              <strong>End:</strong>
+              {' '}
+              {row.endAddress}
+            </Span>
+          )}
+        </VStack>
+      )
+    },
   },
   [TripColumns.Description]: {
     id: TripColumns.Description,
     header: 'Description',
-    cell: row => <Span ellipsis withTooltip>{row.description || '—'}</Span>,
+    cell: row => <Span ellipsis withTooltip>{row.description}</Span>,
   },
   [TripColumns.Expand]: {
     id: TripColumns.Expand,
@@ -94,10 +101,15 @@ const getColumnConfig = (onSelectTrip: (trip: Trip) => void): ColumnConfig<Trip,
 export const TripsTable = () => {
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
-  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null)
-  const [purposeFilter, setPurposeFilter] = useState<TripPurposeFilterValue>(TripPurposeFilterValue.All)
 
-  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
+  const { tableFilters, setTableFilters } = useTripsTableFilters()
+  const { query, selectedVehicle, purposeFilter } = tableFilters
+
+  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: query })
+
+  useEffect(() => {
+    setTableFilters({ query: searchQuery })
+  }, [searchQuery, setTableFilters])
 
   const filterParams = useMemo(() => {
     const params: { query?: string, vehicleId?: string, purpose?: string } = {}
@@ -148,23 +160,31 @@ export const TripsTable = () => {
     }
   }, [fetchMore, hasMore])
 
+  const handlePurposeFilterChange = useCallback((newPurposeFilter: TripPurposeFilterValue) => {
+    setTableFilters({ purposeFilter: newPurposeFilter })
+  }, [setTableFilters])
+
+  const handleVehicleChange = useCallback((newVehicle: Vehicle | null) => {
+    setTableFilters({ selectedVehicle: newVehicle })
+  }, [setTableFilters])
+
   const PurposeToggle = useCallback(() => (
     <TripPurposeToggle
       selected={purposeFilter}
-      onChange={setPurposeFilter}
+      onChange={handlePurposeFilterChange}
     />
-  ), [purposeFilter, setPurposeFilter])
+  ), [purposeFilter, handlePurposeFilterChange])
 
   const VehicleFilter = useCallback(() => (
     <VehicleSelector
       selectedVehicle={selectedVehicle}
-      onSelectedVehicleChange={setSelectedVehicle}
+      onSelectedVehicleChange={handleVehicleChange}
       placeholder='All vehicles'
       showLabel={false}
       className='Layer__TripsTable__VehicleSelector'
       inline
     />
-  ), [selectedVehicle, setSelectedVehicle])
+  ), [selectedVehicle, handleVehicleChange])
 
   const HeaderActions = useCallback(() => (
     <HStack gap='xs'>

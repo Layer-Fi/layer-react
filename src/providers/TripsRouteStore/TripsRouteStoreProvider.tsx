@@ -1,5 +1,13 @@
-import { useState, createContext, useContext, type PropsWithChildren } from 'react'
+import { useState, createContext, useContext, useMemo, type PropsWithChildren } from 'react'
 import { createStore, useStore } from 'zustand'
+import type { Vehicle } from '@schemas/vehicle'
+import { TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
+
+export type TripsTableFilters = {
+  query: string
+  selectedVehicle: Vehicle | null
+  purposeFilter: TripPurposeFilterValue
+}
 
 export enum TripsRoute {
   TripsTable = 'TripsTable',
@@ -12,6 +20,8 @@ type TripsRouteState = TripsTableRouteState | VehicleManagementRouteState
 
 type TripsRouteStoreShape = {
   routeState: TripsRouteState
+  tableFilters: TripsTableFilters
+  setTableFilters: (patchFilters: Partial<TripsTableFilters>) => void
   navigate: {
     toTripsTable: () => void
     toVehicleManagement: () => void
@@ -21,6 +31,12 @@ type TripsRouteStoreShape = {
 const TripsRouteStoreContext = createContext(
   createStore<TripsRouteStoreShape>(() => ({
     routeState: { route: TripsRoute.TripsTable },
+    tableFilters: {
+      query: '',
+      selectedVehicle: null,
+      purposeFilter: TripPurposeFilterValue.All,
+    },
+    setTableFilters: () => {},
     navigate: {
       toTripsTable: () => {},
       toVehicleManagement: () => {},
@@ -33,6 +49,14 @@ export function useTripsRouteState() {
   return useStore(store, state => state.routeState)
 }
 
+export function useTripsTableFilters() {
+  const store = useContext(TripsRouteStoreContext)
+  const tableFilters = useStore(store, state => state.tableFilters)
+  const setTableFilters = useStore(store, state => state.setTableFilters)
+
+  return useMemo(() => ({ tableFilters, setTableFilters }), [tableFilters, setTableFilters])
+}
+
 export function useTripsNavigation() {
   const store = useContext(TripsRouteStoreContext)
   return useStore(store, state => state.navigate)
@@ -42,6 +66,19 @@ export function TripsRouteStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<TripsRouteStoreShape>(set => ({
       routeState: { route: TripsRoute.TripsTable },
+      tableFilters: {
+        query: '',
+        selectedVehicle: null,
+        purposeFilter: TripPurposeFilterValue.All,
+      },
+      setTableFilters: (patchFilters: Partial<TripsTableFilters>) => {
+        set(state => ({
+          tableFilters: {
+            ...state.tableFilters,
+            ...patchFilters,
+          },
+        }))
+      },
       navigate: {
         toVehicleManagement: () => {
           set(() => ({
