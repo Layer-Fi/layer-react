@@ -10,6 +10,7 @@ type SuggestedCategorizationRuleUpdatesProps = {
   close: () => void
   ruleSuggestion: UpdateCategorizationRulesSuggestion
   mobile?: boolean
+  isDrawer?: boolean
 }
 
 export function RuleSuggestionHeader({ ruleSuggestion }: { ruleSuggestion: UpdateCategorizationRulesSuggestion }) {
@@ -29,7 +30,7 @@ export function RuleSuggestionHeader({ ruleSuggestion }: { ruleSuggestion: Updat
   }
 }
 
-export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesProps) {
+export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion, isDrawer }: SuggestedCategorizationRuleUpdatesProps) {
   const hasTransactions = ruleSuggestion.transactionsThatWillBeAffected.length > 0
 
   return (
@@ -40,7 +41,7 @@ export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: Su
         onComplete={close}
         onStepChange={undefined}
       >
-        <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} close={close} />
+        <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} close={close} isDrawer={isDrawer} />
         {hasTransactions && <RuleUpdatesReviewStep ruleSuggestion={ruleSuggestion} />}
       </Wizard>
     </section>
