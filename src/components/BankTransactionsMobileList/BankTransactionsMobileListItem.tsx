@@ -22,7 +22,7 @@ import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankT
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 import './bankTransactionsMobileListItem.scss'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
-import { AnimatedPresenceDiv } from '@components/ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
+import { AnimatedContent } from '@components/ui/AnimatedContent/AnimatedContent'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -278,7 +278,7 @@ export const BankTransactionsMobileListItem = ({
               />
             )}
         </div>
-        <AnimatedPresenceDiv variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+        <AnimatedContent variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
           <BankTransactionsMobileListItemExpandedRow
             bankTransaction={bankTransaction}
             showCategorization={categorizationEnabled}
@@ -286,7 +286,7 @@ export const BankTransactionsMobileListItem = ({
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
           />
-        </AnimatedPresenceDiv>
+        </AnimatedContent>
 
       </VStack>
 

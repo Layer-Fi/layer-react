@@ -5,7 +5,7 @@ import { variants } from './variants'
 type AnimationVariant = 'fade' | 'slideUp' | 'expand'
 type AnimatePresenceMode = 'sync' | 'wait' | 'popLayout'
 
-type AnimatedPresenceDivProps = Omit<HTMLMotionProps<'div'>, 'initial' | 'animate' | 'exit' | 'transition' | 'variants'> & {
+type AnimatedContentProps = Omit<HTMLMotionProps<'div'>, 'initial' | 'animate' | 'exit' | 'transition' | 'variants'> & {
   children: ReactNode
   variant: AnimationVariant
   isOpen?: boolean
@@ -15,13 +15,13 @@ type AnimatedPresenceDivProps = Omit<HTMLMotionProps<'div'>, 'initial' | 'animat
   key?: string | number
 }
 
-export const AnimatedPresenceDiv = ({
+export const AnimatedContent = ({
   children,
   variant,
   isOpen,
   slotProps = { AnimatePresence: { initial: false } },
   ...props
-}: AnimatedPresenceDivProps) => {
+}: AnimatedContentProps) => {
   const config = variants[variant]
 
   return (

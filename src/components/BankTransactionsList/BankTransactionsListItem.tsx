@@ -33,7 +33,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { MoneySpan } from '@components/ui/Typography/MoneySpan'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
-import { AnimatedPresenceDiv } from '@components/ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
+import { AnimatedContent } from '@components/ui/AnimatedContent/AnimatedContent'
 
 type BankTransactionsListItemProps = {
   index: number
@@ -208,7 +208,7 @@ export const BankTransactionsListItem = ({
           </span>
         )}
       <span className='Layer__bank-transaction-list-item__expanded-row'>
-        <AnimatedPresenceDiv variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
+        <AnimatedContent variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}
@@ -227,9 +227,9 @@ export const BankTransactionsListItem = ({
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
 
-            variant='list'
+            showLeftPadding={false}
           />
-        </AnimatedPresenceDiv>
+        </AnimatedContent>
       </span>
       {!openExpandedRow && categorizationEnabled && !categorized && (
         <HStack pi='md' gap='md' pb='md'>
@@ -242,18 +242,8 @@ export const BankTransactionsListItem = ({
             }}
             isLoading={bankTransaction.processing}
           />
-          {showRetry
-            ? (
-              <RetryButton
-                onClick={handleSave}
-                className='Layer__bank-transaction__retry-btn'
-                processing={bankTransaction.processing}
-                error='Approval failed. Check connection and retry in few seconds.'
-              >
-                Retry
-              </RetryButton>
-            )
-            : (
+          {!showRetry
+            && (
               <SubmitButton
                 disabled={bankTransaction.processing}
                 onClick={handleSave}
@@ -265,6 +255,17 @@ export const BankTransactionsListItem = ({
                   ? stringOverrides?.approveButtonText || 'Approve'
                   : stringOverrides?.updateButtonText || 'Update'}
               </SubmitButton>
+            )}
+          {showRetry
+            && (
+              <RetryButton
+                onClick={handleSave}
+                className='Layer__bank-transaction__retry-btn'
+                processing={bankTransaction.processing}
+                error='Approval failed. Check connection and retry in few seconds.'
+              >
+                Retry
+              </RetryButton>
             )}
         </HStack>
       )}
