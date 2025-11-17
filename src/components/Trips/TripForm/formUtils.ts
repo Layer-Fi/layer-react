@@ -20,7 +20,7 @@ export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
     vehicle: null,
     tripDate: today(getLocalTimeZone()),
     distance: BIG_DECIMAL_ZERO,
-    purpose: TripPurpose.Unreviewed,
+    purpose: TripPurpose.Business,
     startAddress: '',
     endAddress: '',
     description: '',
