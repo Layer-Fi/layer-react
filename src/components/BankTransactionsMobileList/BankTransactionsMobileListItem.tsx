@@ -250,12 +250,6 @@ export const BankTransactionsMobileListItem = ({
                   </Span>
                   {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
                 </HStack>
-
-                {!categorizationEnabled && !categorized
-                  ? (
-                    <BankTransactionsProcessingInfo />
-                  )
-                  : null}
               </VStack>
             </HStack>
 
@@ -270,13 +264,20 @@ export const BankTransactionsMobileListItem = ({
               }}
             />
           </HStack>
-          {!open
-            && (
-              <BankTransactionsListItemCategory
-                bankTransaction={bankTransaction}
-                mobile
-              />
-            )}
+          {!open && (
+            !categorizationEnabled && !categorized
+              ? (
+                <span className='Layer__bank-transaction-list-item__processing-info'>
+                  <BankTransactionsProcessingInfo />
+                </span>
+              )
+              : (
+                <BankTransactionsListItemCategory
+                  bankTransaction={bankTransaction}
+                  mobile
+                />
+              )
+          )}
         </div>
         <AnimatedPresenceDiv variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
           <BankTransactionsMobileListItemExpandedRow
