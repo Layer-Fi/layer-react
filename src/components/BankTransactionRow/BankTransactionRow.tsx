@@ -18,9 +18,11 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import AlertCircle from '@icons/AlertCircle'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import FileIcon from '@icons/File'
+import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { VStack } from '@ui/Stack/Stack'
 import { HStack } from '@ui/Stack/Stack'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -37,8 +39,6 @@ import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionR
 import { type SaveHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '@components/IconBox/IconBox'
 import { Text, TextSize } from '@components/Typography/Text'
-import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
-import { MoneySpan } from '@ui/Typography/MoneySpan'
 
 import './bankTransactionRow.scss'
 

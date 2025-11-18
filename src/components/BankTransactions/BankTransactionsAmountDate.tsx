@@ -1,6 +1,6 @@
-import { DateTime } from '@components/DateTime/DateTime'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { DateTime } from '@components/DateTime/DateTime'
 
 const DATE_FORMAT = 'LLL d'
 

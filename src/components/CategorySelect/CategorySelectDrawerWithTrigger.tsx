@@ -1,11 +1,11 @@
 import { useState } from 'react'
 
 import ChevronDown from '@icons/ChevronDown'
-import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { Button } from '@ui/Button/Button'
 import { HStack, Spacer } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 
 type Props = {
   value: BankTransactionCategoryComboBoxOption | null

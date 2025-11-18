@@ -12,6 +12,7 @@ import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelecti
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
 import FileIcon from '@icons/File'
+import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
@@ -22,7 +23,6 @@ import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList
 import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 import { TransactionToOpenContext } from '@components/BankTransactionsMobileList/TransactionToOpenContext'
-import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 
 import './bankTransactionsMobileListItem.scss'
 

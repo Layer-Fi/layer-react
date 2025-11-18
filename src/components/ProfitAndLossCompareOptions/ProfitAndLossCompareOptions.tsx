@@ -4,9 +4,9 @@ import type { StylesConfig } from 'react-select'
 import { type TagComparisonOption } from '@internal-types/profit_and_loss'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { HStack } from '@ui/Stack/Stack'
 import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
 import { MultiSelect } from '@components/Input/MultiSelect'
-import { HStack } from '@ui/Stack/Stack'
 
 const selectStyles = {
   valueContainer: (styles) => {
