@@ -11,7 +11,7 @@
 - Do not use in-line styling aside from existing props.
 - Avoid adding unnecessary css classes and use existing props when possible.
 - When creating css, make a .scss file with the same name as the .ts or .tsx file and directly import the .scss file. Do not use any index.ts files.
-- Prefer to use multiples of 4 (e.g. 8, 16, 24, 32, 240) for px/rem values, and the design system spacing scale (`--spacing-xs: 8px`, `--spacing-md: 16px`, etc.) when appropriate.
+- Use the design system spacing scale (`--spacing-xs: 8px`, `--spacing-md: 16px`, etc.) when appropriate.
 
 #### CSS Component Scoping
 
@@ -27,7 +27,7 @@ All component styles are scoped under class prefixes:
 This codebase uses **three different state management patterns** that work together:
 
 1. **SWR for server state** (data fetching, caching, revalidation)
-   - Custom hooks like `useBankTransactions`, `useProfitAndLoss`
+   - Custom hooks like `useBankTransactions`, `useProfitAndLossReport`
    - Tag-based cache invalidation system (see "Cache Invalidation Pattern" below)
    - Global cache actions: `invalidate()`, `optimisticUpdate()`, `forceReload()`
 
@@ -87,6 +87,35 @@ export const getBankTransactions = get<ReturnType, ParamsType>(
 const fetcher = getBankTransactions(apiUrl, accessToken, { params })
 useSWR(key, fetcher)
 ```
+
+### URL Search Parameters Pattern
+
+Use `toDefinedSearchParameters` to build type-safe URL query strings:
+
+```typescript
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
+
+// In API function
+const parameters = toDefinedSearchParameters({
+  cursor,            // Strings passed as-is
+  categorized,       // Booleans converted to strings
+  startDate,         // Dates formatted to ISO date strings (YYYY-MM-DD)
+  sortBy,            // camelCase keys converted to snake_case
+  limit,             // Numbers converted to strings
+  tagValues,         // String arrays expanded to multiple params
+  optional: null,    // null/undefined values omitted from output
+})
+
+// Returns URLSearchParams ready for API URLs
+return `/v1/businesses/${businessId}/endpoint?${parameters}`
+```
+
+**Key features:**
+- Automatically filters out `null`/`undefined` values
+- Converts camelCase keys to snake_case (e.g., `startDate` → `start_date`)
+- Formats Date objects to ISO date strings (`YYYY-MM-DD`)
+- Handles arrays by creating multiple parameters with the same key
+- Type-safe: only accepts `Date | string | string[] | number | boolean | null | undefined`
 
 ### Feature Visibility Toggles
 

@@ -6,4 +6,3 @@
 - Don't use lowercase `<span>`. Instead, use `Span` from `../ui/Typography/Text`.
 - Use `<HStack>` and `<VStack>` from `../ui/Stack/Stack` instead of defining a div with css classes.
 - Try to build on top of our existing components in `../ui` instead of creating new ones.
-- Prefer to use multiples of 4 (e.g. 8, 16, 24, 32, 240) for px/rem values, and use rem over px when appropriate.

@@ -289,6 +289,7 @@ const listCallBookings = get<Record<string, unknown>, ListCallBookingsParams>(
 )
 
 // Define request body types (use snake_case to match backend)
+// The request body can also be a schema
 type CreateCallBookingBody = {
   external_id: string
   purpose: CallBookingPurpose
