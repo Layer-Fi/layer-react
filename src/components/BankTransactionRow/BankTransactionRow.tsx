@@ -142,9 +142,9 @@ export const BankTransactionRow = ({
       clickTimer = Date.now()
     },
     onMouseUp: () => {
-      if (Date.now() - clickTimer < 100 && !open) {
+      if (Date.now() - clickTimer < 100) {
         setShowRetry(false)
-        setOpen(true)
+        toggleOpen()
       }
     },
   }
