@@ -8,21 +8,30 @@ import { Span } from '@ui/Typography/Text'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@ui/Tooltip/Tooltip'
 import { convertNumberToCurrency } from '@utils/format'
 import { TaxEstimateDetailSection } from './TaxEstimateDetailSection'
-import type { AdjustedGrossIncomeItem } from './TaxEstimate'
+import type { FederalTaxItem } from './TaxEstimateSummary'
 
-interface AdjustedGrossIncomeSectionProps {
-  items: AdjustedGrossIncomeItem[]
+interface FederalTaxesSectionProps {
+  items: FederalTaxItem[]
+  expanded?: boolean
+  onExpandedChange?: (expanded: boolean) => void
 }
 
-export const AdjustedGrossIncomeSection = ({
+export const FederalTaxesSection = ({
   items,
-}: AdjustedGrossIncomeSectionProps) => {
+  expanded,
+  onExpandedChange,
+}: FederalTaxesSectionProps) => {
   const totalItem = items.find(item => item.isTotal)
   const totalAmount = totalItem?.amount
 
   return (
-    <TaxEstimateDetailSection title='Taxable Business Income' totalAmount={totalAmount}>
-      <div className='Layer__tax-estimate__agi-table'>
+    <TaxEstimateDetailSection
+      title='Estimated Federal Taxes'
+      totalAmount={totalAmount}
+      expanded={expanded}
+      onExpandedChange={onExpandedChange}
+    >
+      <div className='Layer__tax-estimate__federal-taxes-table'>
         <Table borderCollapse='collapse'>
           <TableBody>
             {items.map((item) => {
@@ -36,6 +45,13 @@ export const AdjustedGrossIncomeSection = ({
                   </TableRow>
                 )
               }
+              const isRate = item.label.includes('Rate')
+              const displayAmount = isRate
+                ? `${(item.amount! * 100).toFixed(2)}%`
+                : item.amount !== undefined
+                  ? convertNumberToCurrency(item.amount)
+                  : ''
+
               return (
                 <TableRow
                   key={item.id}
@@ -44,14 +60,14 @@ export const AdjustedGrossIncomeSection = ({
                   <TableCell className={item.isDeduction ? 'Layer__tax-estimate__deduction-item' : ''}>
                     {item.isTotal
                       ? (
-                        <Span size='md' className='Layer__tax-estimate__agi-total-label'>
+                        <Span size='md' className={item.isOwed ? 'Layer__tax-estimate__owed-label' : ''}>
                           {item.label}
                         </Span>
                       )
                       : (
                         <Span
                           size='md'
-                          className={item.isDeduction ? 'Layer__tax-estimate__deduction-item' : ''}
+                          className={item.isOwed ? 'Layer__tax-estimate__owed-label' : item.isDeduction ? 'Layer__tax-estimate__deduction-item' : ''}
                         >
                           {item.label}
                         </Span>
@@ -59,7 +75,7 @@ export const AdjustedGrossIncomeSection = ({
                   </TableCell>
                   <TableCell
                     align={TableCellAlign.RIGHT}
-                    className={item.isTotal ? 'Layer__tax-estimate__agi-total-amount' : ''}
+                    className={item.isTotal || item.isOwed ? 'Layer__tax-estimate__owed-amount' : ''}
                   >
                     {item.isTotal
                       ? (
@@ -67,8 +83,8 @@ export const AdjustedGrossIncomeSection = ({
                           ? (
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <Heading size='md' className='Layer__tax-estimate__agi-total-amount'>
-                                  {convertNumberToCurrency(item.amount)}
+                                <Heading size='md' className='Layer__tax-estimate__owed-amount'>
+                                  {displayAmount}
                                 </Heading>
                               </TooltipTrigger>
                               <TooltipContent>
@@ -77,8 +93,8 @@ export const AdjustedGrossIncomeSection = ({
                             </Tooltip>
                           )
                           : (
-                            <Heading size='md' className='Layer__tax-estimate__agi-total-amount'>
-                              {convertNumberToCurrency(item.amount)}
+                            <Heading size='md' className='Layer__tax-estimate__owed-amount'>
+                              {displayAmount}
                             </Heading>
                           )
                       )
@@ -87,8 +103,8 @@ export const AdjustedGrossIncomeSection = ({
                           ? (
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <Span size='md'>
-                                  {convertNumberToCurrency(item.amount)}
+                                <Span size='md' className={item.isOwed ? 'Layer__tax-estimate__owed-amount' : ''}>
+                                  {displayAmount}
                                 </Span>
                               </TooltipTrigger>
                               <TooltipContent>
@@ -97,8 +113,8 @@ export const AdjustedGrossIncomeSection = ({
                             </Tooltip>
                           )
                           : (
-                            <Span size='md'>
-                              {convertNumberToCurrency(item.amount)}
+                            <Span size='md' className={item.isOwed ? 'Layer__tax-estimate__owed-amount' : ''}>
+                              {displayAmount}
                             </Span>
                           )
                       )}

@@ -40,7 +40,7 @@ const canadianProvincesOptions: BaseSelectOption[] = [
   { value: 'YT', label: 'Yukon' },
 ]
 
-export interface TaxFilingProfileProps {
+export interface TaxEstimateProfileProps {
   workDescription: WorkDescription | null
   filingStatus: FilingStatus | null
   locationType: LocationType
@@ -53,7 +53,7 @@ export interface TaxFilingProfileProps {
   onCanadianProvinceChange: (value: string | null) => void
 }
 
-export const TaxFilingProfile = ({
+export const TaxEstimateProfile = ({
   workDescription,
   filingStatus,
   locationType,
@@ -64,7 +64,7 @@ export const TaxFilingProfile = ({
   onLocationTypeChange,
   onUsStateChange,
   onCanadianProvinceChange,
-}: TaxFilingProfileProps) => {
+}: TaxEstimateProfileProps) => {
   return (
     <VStack gap='md'>
       <Heading size='lg'>Tax Profile</Heading>

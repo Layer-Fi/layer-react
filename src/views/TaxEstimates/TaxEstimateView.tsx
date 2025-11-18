@@ -9,17 +9,17 @@ import { ComboBox } from '@components/ui/ComboBox/ComboBox'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuList, MenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import MoreVertical from '@icons/MoreVertical'
-import { TaxFilingGeneralInformation } from './TaxFilingGeneralInformation'
-import { TaxFilingProfile } from './TaxFilingProfile'
-import { TaxEstimate } from './TaxEstimate'
+import { TaxEstimateGeneralInformation } from './TaxEstimateGeneralInformation'
+import { TaxEstimateProfile } from './TaxEstimateProfile'
+import { TaxEstimateSummary } from './TaxEstimateSummary'
 import { TaxPayments } from './TaxPayments'
-import { TaxFilingOverview } from './TaxFilingOverview'
-import './taxFilingView.scss'
+import { TaxEstimateOverview } from './TaxEstimateOverview'
+import './taxEstimateView.scss'
 import { Separator } from '@components/Separator/Separator'
 import { reducer, initialState } from './store'
 import { taxEstimateDefaults } from './defaults'
 
-interface TaxFilingViewProps {
+interface TaxEstimateViewProps {
   onNavigateToBankTransactions?: () => void
 }
 
@@ -34,10 +34,10 @@ const yearOptions: YearOption[] = [
   { label: '2023', value: '2023' },
 ]
 
-export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewProps = {}) => {
+export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateViewProps = {}) => {
   const [isOnboarded, setIsOnboarded] = useState(true)
   const [activeTab, setActiveTab] = useState<'overview' | 'tax-estimates' | 'tax-payments' | 'tax-profile'>('overview')
-  const [taxFilingDetails, dispatch] = useReducer(reducer, initialState)
+  const [taxEstimateDetails, dispatch] = useReducer(reducer, initialState)
   const [federalSectionExpanded, setFederalSectionExpanded] = useState(false)
   const [stateSectionExpanded, setStateSectionExpanded] = useState(false)
   const [paymentsSectionExpanded, setPaymentsSectionExpanded] = useState(false)
@@ -56,7 +56,7 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
     })
   }
 
-  const { general_information, profile } = taxFilingDetails
+  const { general_information, profile } = taxEstimateDetails
 
   const isFormValid = profile.workDescription !== null
     && profile.filingStatus !== null
@@ -143,7 +143,7 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
         title='Taxes'
         showHeader={true}
         headerActions={(
-          <HStack gap='sm' align='center' className='Layer__tax-filing-view__header-actions'>
+          <HStack gap='sm' align='center' className='Layer__tax-estimate-view__header-actions'>
             <ComboBox
               selectedValue={selectedYear}
               onSelectedValueChange={setSelectedYear}
@@ -167,8 +167,8 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
         )}
       >
         <Toggle
-          key={`tax-filing-toggle-${isOnboarded}-${activeTab}`}
-          name='tax-filing-tabs'
+          key={`tax-estimate-toggle-${isOnboarded}-${activeTab}`}
+          name='tax-estimate-tabs'
           options={[
             {
               value: 'overview',
@@ -198,16 +198,16 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
           onChange={opt => setActiveTab(opt.target.value as typeof activeTab)}
         />
 
-        <Container name='tax-filing'>
+        <Container name='tax-estimate'>
           {activeTab === 'overview' && (
             <VStack gap='md' pb='lg' pi='lg'>
-              <TaxFilingOverview onNavigateToBankTransactions={onNavigateToBankTransactions} />
+              <TaxEstimateOverview onNavigateToBankTransactions={onNavigateToBankTransactions} />
             </VStack>
           )}
 
           {activeTab === 'tax-estimates' && (
             <VStack gap='md' pb='lg' pi='lg'>
-              <TaxEstimate
+              <TaxEstimateSummary
                 onFederalTaxesOwedClick={handleFederalTaxesOwedClick}
                 onFederalTaxesPaidClick={handleFederalTaxesPaidClick}
                 onStateTaxesOwedClick={handleStateTaxesOwedClick}
@@ -244,7 +244,7 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
 
           {activeTab === 'tax-profile' && (
             <VStack gap='md' pb='lg' pi='lg'>
-              <TaxFilingGeneralInformation
+              <TaxEstimateGeneralInformation
                 address1={general_information.address1}
                 address2={general_information.address2}
                 city={general_information.city}
@@ -263,7 +263,7 @@ export const TaxFilingView = ({ onNavigateToBankTransactions }: TaxFilingViewPro
                 onSsnChange={value => dispatch({ type: 'SET_SSN', payload: value })}
               />
               <Separator mbe='lg' mbs='md' />
-              <TaxFilingProfile
+              <TaxEstimateProfile
                 workDescription={profile.workDescription}
                 filingStatus={profile.filingStatus}
                 locationType={profile.locationType}

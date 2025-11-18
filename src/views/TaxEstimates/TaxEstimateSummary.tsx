@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { VStack, HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
@@ -10,7 +9,7 @@ import './taxEstimate.scss'
 import { taxEstimateDefaults } from './defaults'
 import { Separator } from '@components/Separator/Separator'
 
-interface TaxEstimateProps {
+interface TaxEstimateSummaryProps {
   projectedTaxesOwed?: number
   taxesDueDate?: Date
   federalTaxesOwed?: number
@@ -65,7 +64,7 @@ const defaultAdjustedGrossIncomeItems: AdjustedGrossIncomeItem[] = [
   { id: 'qualified-overtime-deduction', label: 'Qualified Overtime Deduction', amount: -taxEstimateDefaults.qualifiedOvertimeDeduction, isDeduction: true },
 ]
 
-export const TaxEstimate = ({
+export const TaxEstimateSummary = ({
   projectedTaxesOwed = taxEstimateDefaults.projectedTaxesOwed,
   taxesDueDate = taxEstimateDefaults.taxesDueDate,
   federalTaxesOwed = taxEstimateDefaults.federalTaxesOwed,
@@ -80,9 +79,7 @@ export const TaxEstimate = ({
   onFederalSectionExpandedChange,
   stateSectionExpanded,
   onStateSectionExpandedChange,
-}: TaxEstimateProps) => {
-  const [selectedYear] = useState(taxEstimateDefaults.year)
-
+}: TaxEstimateSummaryProps) => {
   const agiItems: AdjustedGrossIncomeItem[] = [
     ...defaultAdjustedGrossIncomeItems,
     { id: 'total', label: 'Adjusted Gross Income', amount: taxEstimateDefaults.adjustedGrossIncome, isTotal: true },

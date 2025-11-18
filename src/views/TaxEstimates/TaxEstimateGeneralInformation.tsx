@@ -11,7 +11,7 @@ import { endOfToday } from 'date-fns'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { Heading } from '@components/ui/Typography/Heading'
 
-export interface TaxFilingGeneralInformationProps {
+export interface TaxEstimateGeneralInformationProps {
   address1: string
   address2: string
   city: string
@@ -30,7 +30,7 @@ export interface TaxFilingGeneralInformationProps {
   onSsnChange: (value: string) => void
 }
 
-export const TaxFilingGeneralInformation = ({
+export const TaxEstimateGeneralInformation = ({
   address1,
   address2,
   city,
@@ -47,7 +47,7 @@ export const TaxFilingGeneralInformation = ({
   onPhonePersonalChange,
   onDateOfBirthChange,
   onSsnChange,
-}: TaxFilingGeneralInformationProps) => {
+}: TaxEstimateGeneralInformationProps) => {
   const maxDate = useMemo(() => endOfToday(), [])
   const maxDateZdt = useMemo(() => convertDateToZonedDateTime(maxDate), [maxDate])
 

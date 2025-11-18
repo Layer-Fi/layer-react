@@ -1,11 +1,11 @@
-.Layer__tax-filing-overview__section {
+.Layer__tax-estimate-overview__section {
   align-self: stretch;
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--color-base-300);
   background: var(--color-base-0);
 }
 
-.Layer__tax-filing-overview__header {
+.Layer__tax-estimate-overview__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -14,7 +14,7 @@
   box-shadow: 0 -1px 0 0 var(--color-base-300) inset;
 }
 
-.Layer__tax-filing-overview__head {
+.Layer__tax-estimate-overview__head {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4xs);
@@ -32,12 +32,12 @@
   }
 }
 
-.Layer__tax-filing-overview__label {
+.Layer__tax-estimate-overview__label {
   flex-shrink: 0;
   width: 20ch;
 }
 
-.Layer__tax-filing-overview__bar-container {
+.Layer__tax-estimate-overview__bar-container {
   position: relative;
   overflow: hidden;
   height: 0.75rem;
@@ -46,17 +46,17 @@
   background: var(--color-base-200);
 }
 
-.Layer__tax-filing-overview__bar-container--with-label {
+.Layer__tax-estimate-overview__bar-container--with-label {
   overflow: visible;
 }
 
-.Layer__tax-filing-overview__bar-amount {
+.Layer__tax-estimate-overview__bar-amount {
   position: absolute;
   top: -1.5rem;
   white-space: nowrap;
 }
 
-.Layer__tax-filing-overview__bar {
+.Layer__tax-estimate-overview__bar {
   position: absolute;
   top: 0;
   left: 0;
@@ -65,19 +65,19 @@
   border-radius: var(--border-radius-xs);
 }
 
-.Layer__tax-filing-overview__bar--total-income {
+.Layer__tax-estimate-overview__bar--total-income {
   background: var(--color-info-success);
 }
 
-.Layer__tax-filing-overview__bar--deductions {
+.Layer__tax-estimate-overview__bar--deductions {
   background: var(--color-info-bg);
 }
 
-.Layer__tax-filing-overview__item {
+.Layer__tax-estimate-overview__item {
   height: 4rem;
 }
 
-.Layer__tax-filing-overview__chart-container {
+.Layer__tax-estimate-overview__chart-container {
   box-sizing: border-box;
   height: 280px;
   width: 100%;
@@ -107,7 +107,7 @@
   }
 }
 
-.Layer__tax-filing-overview__table-container {
+.Layer__tax-estimate-overview__table-container {
   padding: var(--spacing-md);
   padding-top: var(--spacing-2xs);
 
@@ -139,13 +139,13 @@
     }
   }
 
-  .Layer__tax-filing-overview__category-cell {
+  .Layer__tax-estimate-overview__category-cell {
     display: flex;
     gap: var(--spacing-xs);
     align-items: center;
   }
 
-  .Layer__tax-filing-overview__category-indicator {
+  .Layer__tax-estimate-overview__category-indicator {
     flex-shrink: 0;
     height: 12px;
     width: 12px;

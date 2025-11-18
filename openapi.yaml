@@ -1,0 +1,739 @@
+openapi: 3.0.3
+info:
+  title: Layer Tax Estimates API
+  description: API for managing tax estimates, payments, and profiles for businesses
+  version: 1.0.0
+  contact:
+    name: Layer API Support
+    url: https://layer.co
+
+servers:
+  - url: https://api.layerfi.com
+    description: Production server
+  - url: https://sandbox.layerfi.com
+    description: Sandbox server
+
+security:
+  - BearerAuth: []
+
+paths:
+  /v1/businesses/{businessId}/taxes/estimates:
+    get:
+      summary: Get tax estimates for a business
+      description: Retrieves calculated tax estimates based on categorized transactions and tracked mileage for a specific tax year
+      operationId: getTaxEstimates
+      tags:
+        - Tax Estimates
+      parameters:
+        - $ref: "#/components/parameters/BusinessId"
+        - $ref: "#/components/parameters/Year"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TaxEstimate"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/businesses/{businessId}/taxes/overview:
+    get:
+      summary: Get tax overview
+      description: Retrieves high-level tax overview including income estimate, deductions, and estimated taxes
+      operationId: getTaxOverview
+      tags:
+        - Tax Overview
+      parameters:
+        - $ref: "#/components/parameters/BusinessId"
+        - $ref: "#/components/parameters/Year"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TaxOverview"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/businesses/{businessId}/taxes/checklist:
+    get:
+      summary: Get tax checklist
+      description: Retrieves a checklist of tax-related tasks and their completion status
+      operationId: getTaxChecklist
+      tags:
+        - Tax Checklist
+      parameters:
+        - $ref: "#/components/parameters/BusinessId"
+        - $ref: "#/components/parameters/Year"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TaxChecklist"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/businesses/{businessId}/taxes/payments:
+    get:
+      summary: Get tax payments
+      description: Retrieves federal and state tax payment history for a specific year
+      operationId: getTaxPayments
+      tags:
+        - Tax Payments
+      parameters:
+        - $ref: "#/components/parameters/BusinessId"
+        - $ref: "#/components/parameters/Year"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TaxPayments"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/businesses/{businessId}/taxes/profile:
+    get:
+      summary: Get tax profile
+      description: Retrieves the tax profile for a business including filing status, work description, and location
+      operationId: getTaxProfile
+      tags:
+        - Tax Profile
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TaxProfile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    post:
+      summary: Create tax profile
+      description: Creates a new tax profile for a business during onboarding
+      operationId: createTaxProfile
+      tags:
+        - Tax Profile
+      parameters:
+        - $ref: "#/components/parameters/BusinessId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaxProfileInput"
+      responses:
+        "201":
+          description: Tax profile created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TaxProfile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    patch:
+      summary: Update tax profile
+      description: Updates an existing tax profile for a business
+      operationId: updateTaxProfile
+      tags:
+        - Tax Profile
+      parameters:
+        - $ref: "#/components/parameters/BusinessId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaxProfileInput"
+      responses:
+        "200":
+          description: Tax profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TaxProfile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/businesses/{businessId}/taxes/export:
+    post:
+      summary: Export tax documents
+      description: Exports tax-related documents in various formats (tax packet, Schedule C, payment history)
+      operationId: exportTaxDocuments
+      tags:
+        - Tax Export
+      parameters:
+        - $ref: "#/components/parameters/BusinessId"
+        - name: type
+          in: query
+          required: true
+          description: Type of export to generate
+          schema:
+            type: string
+            enum:
+              - tax-packet
+              - schedule-c
+              - payment-history
+        - $ref: "#/components/parameters/Year"
+      responses:
+        "200":
+          description: Export created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/ExportUrl"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    BusinessId:
+      name: businessId
+      in: path
+      required: true
+      description: Unique identifier for the business
+      schema:
+        type: string
+        format: uuid
+
+    Year:
+      name: year
+      in: query
+      required: false
+      description: Tax year (defaults to current year)
+      schema:
+        type: integer
+        example: 2025
+
+  schemas:
+    TaxEstimate:
+      type: object
+      properties:
+        projected_taxes_owed:
+          type: number
+          format: double
+          description: Total projected taxes owed (federal + state)
+          example: 27376.65
+        taxes_due_date:
+          type: string
+          format: date
+          description: Date when taxes are due
+          example: "2026-04-15"
+        federal_taxes:
+          $ref: "#/components/schemas/FederalTaxes"
+        state_taxes:
+          $ref: "#/components/schemas/StateTaxes"
+        taxable_business_income:
+          $ref: "#/components/schemas/TaxableBusinessIncome"
+        quarterly_estimates:
+          type: array
+          description: Quarterly tax payment estimates
+          items:
+            $ref: "#/components/schemas/QuarterlyEstimate"
+
+    FederalTaxes:
+      type: object
+      properties:
+        total:
+          type: number
+          format: double
+          description: Total federal taxes owed
+          example: 22836.54
+        taxes_owed:
+          type: number
+          format: double
+          description: Federal taxes owed
+          example: 22836.54
+        taxes_paid:
+          type: number
+          format: double
+          description: Federal taxes paid
+          example: 0.00
+        breakdown:
+          type: object
+          properties:
+            adjusted_gross_income:
+              type: number
+              format: double
+              example: 93187.00
+            standard_deduction:
+              type: number
+              format: double
+              example: 15750.00
+            qbi_deduction:
+              type: number
+              format: double
+              description: Qualified Business Income deduction
+              example: 15471.00
+            taxable_income:
+              type: number
+              format: double
+              example: 61966.00
+            income_tax:
+              type: number
+              format: double
+              example: 8682.00
+            social_security_tax:
+              type: number
+              format: double
+              example: 11472.11
+            medicare_tax:
+              type: number
+              format: double
+              example: 2682.49
+
+    StateTaxes:
+      type: object
+      properties:
+        total:
+          type: number
+          format: double
+          description: Total state taxes owed
+          example: 4540.11
+        taxes_owed:
+          type: number
+          format: double
+          description: State taxes owed
+          example: 4540.11
+        taxes_paid:
+          type: number
+          format: double
+          description: State taxes paid
+          example: 0.00
+        breakdown:
+          type: object
+          properties:
+            taxable_income:
+              type: number
+              format: double
+              example: 87647.00
+            state_tax_estimate:
+              type: number
+              format: double
+              example: 4540.11
+
+    TaxableBusinessIncome:
+      type: object
+      properties:
+        business_income:
+          type: number
+          format: double
+          description: Total revenue from business operations (Year-to-Date)
+          example: 109000.00
+        deductible_expenses:
+          type: number
+          format: double
+          description: Business expenses that can be deducted
+          example: -8735.00
+        deductible_mileage_expenses:
+          type: number
+          format: double
+          description: Deductible mileage expenses
+          example: -0.00
+        self_employment_deduction:
+          type: number
+          format: double
+          description: Self-employment tax deduction
+          example: -7078.00
+        qualified_tip_deduction:
+          type: number
+          format: double
+          description: Qualified tip deduction
+          example: -0.00
+        qualified_overtime_deduction:
+          type: number
+          format: double
+          description: Qualified overtime deduction
+          example: -0.00
+        adjusted_gross_income:
+          type: number
+          format: double
+          description: Income after deductions
+          example: 93187.00
+      description: Breakdown of business income and deductions
+
+    QuarterlyEstimate:
+      type: object
+      properties:
+        quarter:
+          type: string
+          enum: [Q1, Q2, Q3, Q4]
+          description: Tax quarter
+        amount:
+          type: number
+          format: double
+          description: Estimated tax amount for the quarter
+          example: 945.52
+        due_date:
+          type: string
+          format: date
+          description: Due date for the quarterly payment
+          example: "2025-04-15"
+
+    TaxOverview:
+      type: object
+      properties:
+        taxable_income_estimate:
+          type: number
+          format: double
+          description: Estimated taxable income for the year
+          example: 61966.00
+        excludes_pending_transactions:
+          type: boolean
+          description: Whether pending transactions are excluded from the estimate
+          example: true
+        total_income:
+          type: number
+          format: double
+          example: 109000.00
+        deductions:
+          type: number
+          format: double
+          example: 47034.00
+        estimated_taxes:
+          type: object
+          properties:
+            total_owed:
+              type: number
+              format: double
+              example: 27376.65
+            taxes_due_date:
+              type: string
+              format: date
+              example: "2026-04-15"
+            federal:
+              type: number
+              format: double
+              example: 22836.54
+            state:
+              type: number
+              format: double
+              example: 4540.11
+        deadlines:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxDeadline"
+
+    TaxDeadline:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2025-04-15"
+        description:
+          type: string
+          example: "Q1 estimated tax due"
+        amount:
+          type: number
+          format: double
+          example: 945.52
+
+    TaxChecklist:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChecklistItem"
+
+    ChecklistItem:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "categorize-deductions"
+        description:
+          type: string
+          example: "Categorize $2,100.00 of potential deductions"
+        amount:
+          type: number
+          format: double
+          example: 2100.00
+        status:
+          type: string
+          description: Status of the task. "pending" means there's an action the user can do, and action_url is specified. "completed" means there is no urgent action to be done; action_url can be specified or left empty.
+          enum: [pending, completed]
+          example: "pending"
+        action_url:
+          type: string
+          description: URL to navigate to complete the task
+          example: "/bank-transactions?filter=uncategorized"
+
+    TaxPayments:
+      type: object
+      properties:
+        quarters:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuarterlyPayment"
+
+    QuarterlyPayment:
+      type: object
+      properties:
+        quarter:
+          type: string
+          enum: [Q1, Q2, Q3, Q4]
+        rolled_over_from_previous_quarter:
+          type: number
+          format: double
+          description: Amount carried over from the previous quarter
+          example: 0.00
+        owed_this_quarter:
+          type: number
+          format: double
+          description: Amount owed for the current quarter
+          example: 945.52
+        total_paid:
+          type: number
+          format: double
+          description: Total amount paid for the quarter
+          example: 150.00
+        total:
+          type: number
+          format: double
+          description: Total amount for the quarter
+          example: 795.52
+
+    TaxProfile:
+      type: object
+      properties:
+        general_information:
+          $ref: "#/components/schemas/GeneralInformation"
+        profile:
+          $ref: "#/components/schemas/ProfileDetails"
+
+    GeneralInformation:
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: "John"
+        last_name:
+          type: string
+          example: "Doe"
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        phone_personal:
+          type: string
+          example: "+1-555-123-4567"
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+          example: "1985-06-15"
+        ssn:
+          type: string
+          description: Social Security Number (last 4 digits or full)
+          example: "****5678"
+
+    ProfileDetails:
+      type: object
+      properties:
+        work_description:
+          type: string
+          nullable: true
+          example: "Software Consultant"
+        filing_status:
+          type: string
+          nullable: true
+          enum:
+            - single
+            - married_filing_jointly
+            - married_filing_separately
+            - head_of_household
+            - qualifying_widow
+          example: "single"
+        us_state:
+          type: string
+          nullable: true
+          description: US state code
+          example: "CA"
+        canadian_province:
+          type: string
+          nullable: true
+          description: Canadian province code
+          example: null
+
+    TaxProfileInput:
+      type: object
+      properties:
+        general_information:
+          type: object
+          properties:
+            first_name:
+              type: string
+            last_name:
+              type: string
+            email:
+              type: string
+              format: email
+            phone_personal:
+              type: string
+            date_of_birth:
+              type: string
+              format: date
+              nullable: true
+            ssn:
+              type: string
+        profile:
+          type: object
+          properties:
+            work_description:
+              type: string
+              nullable: true
+            filing_status:
+              type: string
+              nullable: true
+              enum:
+                - single
+                - married_filing_jointly
+                - married_filing_separately
+                - head_of_household
+                - qualifying_widow
+            us_state:
+              type: string
+              nullable: true
+            canadian_province:
+              type: string
+              nullable: true
+
+    ExportUrl:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the exported document
+          example: "https://s3.amazonaws.com/layer-exports/tax-packet-2025.pdf?..."
+        expires_at:
+          type: string
+          format: date-time
+          description: Expiration time for the download URL
+          example: "2025-11-18T23:59:59Z"
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: "Business not found"
+            code:
+              type: string
+              description: Error code for programmatic handling
+              example: "BUSINESS_NOT_FOUND"
+            details:
+              type: object
+              description: Additional error details
+              additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              message: "Invalid year parameter"
+              code: "INVALID_PARAMETER"
+
+    Unauthorized:
+      description: Unauthorized - Invalid or missing authentication token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              message: "Authentication required"
+              code: "UNAUTHORIZED"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              message: "Business not found"
+              code: "BUSINESS_NOT_FOUND"
+
+tags:
+  - name: Tax Estimates
+    description: Operations related to tax estimates calculations
+  - name: Tax Overview
+    description: High-level tax overview and summaries
+  - name: Tax Checklist
+    description: Tax-related tasks and checklist items
+  - name: Tax Payments
+    description: Tax payment history and tracking
+  - name: Tax Profile
+    description: Tax profile management and configuration
+  - name: Tax Export
+    description: Export tax documents and reports

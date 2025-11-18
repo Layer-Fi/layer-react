@@ -10,15 +10,15 @@ import { format } from 'date-fns'
 import { PieChart, Pie, Cell, ResponsiveContainer, Label, Text as ChartText } from 'recharts'
 import { PolarViewBox } from 'recharts/types/util/types'
 import classNames from 'classnames'
-import './taxFilingOverview.scss'
+import './taxEstimateOverview.scss'
 import { taxEstimateDefaults } from './defaults'
 import { Separator } from '@components/Separator/Separator'
 
-interface TaxFilingOverviewProps {
+interface TaxEstimateOverviewProps {
   onNavigateToBankTransactions?: () => void
 }
 
-export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOverviewProps = {}) => {
+export const TaxEstimateOverview = ({ onNavigateToBankTransactions }: TaxEstimateOverviewProps = {}) => {
   const totalIncomeBarRef = useRef<HTMLDivElement>(null)
   const incomeBarRef = useRef<HTMLDivElement>(null)
   const deductionsBarRef = useRef<HTMLDivElement>(null)
@@ -122,9 +122,9 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
   return (
     <VStack gap='xl' fluid>
       <HStack gap='lg' fluid>
-        <VStack fluid className='Layer__Stack Layer__tax-filing-overview__section'>
-          <header className='Layer__tax-filing-overview__header'>
-            <div className='Layer__tax-filing-overview__head'>
+        <VStack fluid className='Layer__Stack Layer__tax-estimate-overview__section'>
+          <header className='Layer__tax-estimate-overview__header'>
+            <div className='Layer__tax-estimate-overview__head'>
               <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
                 Taxable income estimate for
                 {' '}
@@ -147,35 +147,35 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
             </HStack>
             <VStack gap='lg'>
               <HStack gap='md' align='center' fluid>
-                <Span size='lg' className='Layer__tax-filing-overview__label'>
+                <Span size='lg' className='Layer__tax-estimate-overview__label'>
                   Total Income
                 </Span>
                 <HStack
                   fluid
-                  className='Layer__tax-filing-overview__bar-container Layer__tax-filing-overview__bar-container--with-label'
+                  className='Layer__tax-estimate-overview__bar-container Layer__tax-estimate-overview__bar-container--with-label'
                 >
                   <HStack
                     ref={totalIncomeBarRef}
-                    className='Layer__tax-filing-overview__bar Layer__tax-filing-overview__bar--total-income'
+                    className='Layer__tax-estimate-overview__bar Layer__tax-estimate-overview__bar--total-income'
                   />
-                  <Span ref={totalIncomeAmountRef} size='sm' variant='subtle' className='Layer__tax-filing-overview__bar-amount'>
+                  <Span ref={totalIncomeAmountRef} size='sm' variant='subtle' className='Layer__tax-estimate-overview__bar-amount'>
                     {convertNumberToCurrency(income)}
                   </Span>
                 </HStack>
               </HStack>
               <HStack gap='md' align='center' fluid>
-                <Span size='lg' className='Layer__tax-filing-overview__label'>
+                <Span size='lg' className='Layer__tax-estimate-overview__label'>
                   Deductions
                 </Span>
                 <HStack
                   fluid
-                  className='Layer__tax-filing-overview__bar-container Layer__tax-filing-overview__bar-container--with-label'
+                  className='Layer__tax-estimate-overview__bar-container Layer__tax-estimate-overview__bar-container--with-label'
                 >
                   <HStack
                     ref={deductionsBarRef}
-                    className='Layer__tax-filing-overview__bar Layer__tax-filing-overview__bar--deductions'
+                    className='Layer__tax-estimate-overview__bar Layer__tax-estimate-overview__bar--deductions'
                   />
-                  <Span ref={deductionsAmountRef} size='sm' variant='subtle' className='Layer__tax-filing-overview__bar-amount'>
+                  <Span ref={deductionsAmountRef} size='sm' variant='subtle' className='Layer__tax-estimate-overview__bar-amount'>
                     {convertNumberToCurrency(deductions)}
                   </Span>
                 </HStack>
@@ -183,9 +183,9 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
             </VStack>
           </VStack>
         </VStack>
-        <VStack fluid className='Layer__tax-filing-overview__section'>
-          <header className='Layer__tax-filing-overview__header'>
-            <div className='Layer__tax-filing-overview__head'>
+        <VStack fluid className='Layer__tax-estimate-overview__section'>
+          <header className='Layer__tax-estimate-overview__header'>
+            <div className='Layer__tax-estimate-overview__head'>
               <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
                 Tax Checklist
               </Text>
@@ -196,7 +196,7 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
               {todoItems.map((item, index) => (
                 <>
                   <HStack key={index} gap='md' align='center' justify='space-between' fluid>
-                    <HStack gap='sm' align='center' fluid className='Layer__tax-filing-overview__item'>
+                    <HStack gap='sm' align='center' fluid className='Layer__tax-estimate-overview__item'>
                       <Span size='md'>{item.label}</Span>
                     </HStack>
                     <Button variant={item.variant} onPress={item.onPress}>
@@ -213,9 +213,9 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
 
       </HStack>
       <HStack gap='lg' fluid>
-        <VStack fluid className='Layer__tax-filing-overview__section'>
-          <header className='Layer__tax-filing-overview__header'>
-            <div className='Layer__tax-filing-overview__head'>
+        <VStack fluid className='Layer__tax-estimate-overview__section'>
+          <header className='Layer__tax-estimate-overview__header'>
+            <div className='Layer__tax-estimate-overview__head'>
               <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
                 Estimated Taxes for
                 {' '}
@@ -235,7 +235,7 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
               </VStack>
             </HStack>
             <VStack>
-              <div className='Layer__tax-filing-overview__chart-container'>
+              <div className='Layer__tax-estimate-overview__chart-container'>
                 <ResponsiveContainer>
                   <PieChart>
                     <defs>
@@ -502,7 +502,7 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
                   </PieChart>
                 </ResponsiveContainer>
               </div>
-              <div className='Layer__tax-filing-overview__table-container'>
+              <div className='Layer__tax-estimate-overview__table-container'>
                 <table>
                   <thead>
                     <tr>
@@ -524,9 +524,9 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
                         onMouseLeave={() => setHoveredItem(undefined)}
                       >
                         <td className='category-col'>
-                          <span className='Layer__tax-filing-overview__category-cell'>
+                          <span className='Layer__tax-estimate-overview__category-cell'>
                             <div
-                              className='Layer__tax-filing-overview__category-indicator'
+                              className='Layer__tax-estimate-overview__category-indicator'
                               style={{
                                 background: entry.color,
                               }}
@@ -545,9 +545,9 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
             </VStack>
           </VStack>
         </VStack>
-        <VStack fluid className='Layer__tax-filing-overview__section'>
-          <header className='Layer__tax-filing-overview__header'>
-            <div className='Layer__tax-filing-overview__head'>
+        <VStack fluid className='Layer__tax-estimate-overview__section'>
+          <header className='Layer__tax-estimate-overview__header'>
+            <div className='Layer__tax-estimate-overview__head'>
               <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
                 Your Federal Tax Deadlines
                 {' '}
@@ -562,7 +562,7 @@ export const TaxFilingOverview = ({ onNavigateToBankTransactions }: TaxFilingOve
               {deadlines.map((deadline, index) => (
                 <>
                   <HStack key={index} gap='xl' align='center' justify='space-between' fluid>
-                    <HStack gap='md' align='center' className='Layer__tax-filing-overview__item'>
+                    <HStack gap='md' align='center' className='Layer__tax-estimate-overview__item'>
                       <Span size='md' weight='bold' variant='subtle'>{deadline.date}</Span>
                       <Span size='md'>{deadline.label}</Span>
                     </HStack>

@@ -8,7 +8,7 @@ import { Span } from '@ui/Typography/Text'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@ui/Tooltip/Tooltip'
 import { convertNumberToCurrency } from '@utils/format'
 import { TaxEstimateDetailSection } from './TaxEstimateDetailSection'
-import type { FederalTaxItem } from './TaxEstimate'
+import type { FederalTaxItem } from './TaxEstimateSummary'
 
 interface StateTaxesSectionProps {
   items: FederalTaxItem[]
