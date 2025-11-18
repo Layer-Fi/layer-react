@@ -258,7 +258,7 @@ export const BankTransactionsListItem = ({
           </SubmitButton>
         </HStack>
       )}
-      {!openExpandedRow && categorizationEnabled && categorized && (
+      {!openExpandedRow && categorized && (
         <BankTransactionsListItemCategory
           bankTransaction={bankTransaction}
         />
