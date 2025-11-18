@@ -31,8 +31,6 @@ export const TaxEstimateOverview = ({ onNavigateToBankTransactions }: TaxEstimat
   const { data: taxOverviewData } = useTaxOverview({ useMockData: true })
   const { data: taxChecklistData } = useTaxChecklist({ useMockData: true })
 
-  console.log('taxChecklistData', taxChecklistData)
-
   const todoItems = (taxChecklistData?.data.items ?? []).map(item => ({
     label: item.description,
     buttonLabel: item.status === ChecklistStatus.PENDING ? 'Review' : 'Completed',
