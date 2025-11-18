@@ -1,6 +1,5 @@
 import { Schema, pipe } from 'effect'
 
-// Federal Taxes Breakdown Schema
 const FederalTaxesBreakdownSchema = Schema.Struct({
   adjustedGrossIncome: pipe(
     Schema.propertySignature(Schema.Number),
@@ -34,7 +33,6 @@ const FederalTaxesBreakdownSchema = Schema.Struct({
 
 export type FederalTaxesBreakdown = typeof FederalTaxesBreakdownSchema.Type
 
-// Federal Taxes Schema
 const FederalTaxesSchema = Schema.Struct({
   total: Schema.Number,
   taxesOwed: pipe(
@@ -50,7 +48,6 @@ const FederalTaxesSchema = Schema.Struct({
 
 export type FederalTaxes = typeof FederalTaxesSchema.Type
 
-// State Taxes Breakdown Schema
 const StateTaxesBreakdownSchema = Schema.Struct({
   taxableIncome: pipe(
     Schema.propertySignature(Schema.Number),
@@ -64,7 +61,6 @@ const StateTaxesBreakdownSchema = Schema.Struct({
 
 export type StateTaxesBreakdown = typeof StateTaxesBreakdownSchema.Type
 
-// State Taxes Schema
 const StateTaxesSchema = Schema.Struct({
   total: Schema.Number,
   taxesOwed: pipe(
@@ -80,7 +76,6 @@ const StateTaxesSchema = Schema.Struct({
 
 export type StateTaxes = typeof StateTaxesSchema.Type
 
-// Taxable Business Income Schema
 const TaxableBusinessIncomeSchema = Schema.Struct({
   businessIncome: pipe(
     Schema.propertySignature(Schema.Number),
@@ -114,7 +109,6 @@ const TaxableBusinessIncomeSchema = Schema.Struct({
 
 export type TaxableBusinessIncome = typeof TaxableBusinessIncomeSchema.Type
 
-// Quarterly Estimate Schema
 export enum Quarter {
   Q1 = 'Q1',
   Q2 = 'Q2',
@@ -135,7 +129,6 @@ const QuarterlyEstimateSchema = Schema.Struct({
 
 export type QuarterlyEstimate = typeof QuarterlyEstimateSchema.Type
 
-// Tax Estimate Schema
 const TaxEstimateSchema = Schema.Struct({
   projectedTaxesOwed: pipe(
     Schema.propertySignature(Schema.Number),
@@ -171,7 +164,6 @@ export const TaxEstimateResponseSchema = Schema.Struct({
 
 export type TaxEstimateResponse = typeof TaxEstimateResponseSchema.Type
 
-// Tax Deadline Schema
 const TaxDeadlineSchema = Schema.Struct({
   date: Schema.String,
   description: Schema.String,
@@ -180,7 +172,6 @@ const TaxDeadlineSchema = Schema.Struct({
 
 export type TaxDeadline = typeof TaxDeadlineSchema.Type
 
-// Estimated Taxes Schema
 const EstimatedTaxesSchema = Schema.Struct({
   totalOwed: pipe(
     Schema.propertySignature(Schema.Number),
@@ -194,7 +185,6 @@ const EstimatedTaxesSchema = Schema.Struct({
   state: Schema.Number,
 })
 
-// Tax Overview Schema
 const TaxOverviewSchema = Schema.Struct({
   taxableIncomeEstimate: pipe(
     Schema.propertySignature(Schema.Number),
@@ -224,7 +214,6 @@ export const TaxOverviewResponseSchema = Schema.Struct({
 
 export type TaxOverviewResponse = typeof TaxOverviewResponseSchema.Type
 
-// Checklist Item Schema
 export enum ChecklistStatus {
   PENDING = 'pending',
   COMPLETED = 'completed',
@@ -245,7 +234,6 @@ const ChecklistItemSchema = Schema.Struct({
 
 export type ChecklistItem = typeof ChecklistItemSchema.Type
 
-// Tax Checklist Schema
 const TaxChecklistSchema = Schema.Struct({
   items: Schema.Array(ChecklistItemSchema),
 })
@@ -258,7 +246,6 @@ export const TaxChecklistResponseSchema = Schema.Struct({
 
 export type TaxChecklistResponse = typeof TaxChecklistResponseSchema.Type
 
-// Quarterly Payment Schema
 const QuarterlyPaymentSchema = Schema.Struct({
   quarter: QuarterSchema,
   rolledOverFromPreviousQuarter: pipe(
@@ -278,7 +265,6 @@ const QuarterlyPaymentSchema = Schema.Struct({
 
 export type QuarterlyPayment = typeof QuarterlyPaymentSchema.Type
 
-// Tax Payments Schema
 const TaxPaymentsSchema = Schema.Struct({
   quarters: Schema.Array(QuarterlyPaymentSchema),
 })
@@ -291,7 +277,6 @@ export const TaxPaymentsResponseSchema = Schema.Struct({
 
 export type TaxPaymentsResponse = typeof TaxPaymentsResponseSchema.Type
 
-// Filing Status Enum
 export enum FilingStatus {
   SINGLE = 'single',
   MARRIED_FILING_JOINTLY = 'married_filing_jointly',
@@ -302,7 +287,6 @@ export enum FilingStatus {
 
 const FilingStatusSchema = Schema.Enums(FilingStatus)
 
-// General Information Schema
 const GeneralInformationSchema = Schema.Struct({
   firstName: pipe(
     Schema.propertySignature(Schema.String),
@@ -326,7 +310,6 @@ const GeneralInformationSchema = Schema.Struct({
 
 export type GeneralInformation = typeof GeneralInformationSchema.Type
 
-// Profile Details Schema
 const ProfileDetailsSchema = Schema.Struct({
   workDescription: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
@@ -348,7 +331,6 @@ const ProfileDetailsSchema = Schema.Struct({
 
 export type ProfileDetails = typeof ProfileDetailsSchema.Type
 
-// Tax Profile Schema
 const TaxProfileSchema = Schema.Struct({
   generalInformation: pipe(
     Schema.propertySignature(GeneralInformationSchema),
@@ -365,7 +347,6 @@ export const TaxProfileResponseSchema = Schema.Struct({
 
 export type TaxProfileResponse = typeof TaxProfileResponseSchema.Type
 
-// Export URL Schema
 const ExportUrlSchema = Schema.Struct({
   url: Schema.String,
   expiresAt: pipe(
