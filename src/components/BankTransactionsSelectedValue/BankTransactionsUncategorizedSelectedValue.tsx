@@ -6,7 +6,7 @@ import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/ban
 type BankTransactionsUncategorizedSelectedValueProps = {
   selectedValue: BankTransactionCategoryComboBoxOption | null
   className?: string
-  showBadge?: boolean
+  showCategoryBadge?: boolean
   slotProps?: {
     Label?: {
       size?: 'sm' | 'md'
@@ -15,12 +15,12 @@ type BankTransactionsUncategorizedSelectedValueProps = {
 }
 
 export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactionsUncategorizedSelectedValueProps) => {
-  const { selectedValue, className, slotProps, showBadge } = props
+  const { selectedValue, className, slotProps, showCategoryBadge } = props
 
   if (!selectedValue) return null
 
   const baseSelectedValue = normalizeFromSelectedValue(selectedValue)
-  return <BankTransactionsBaseSelectedValue {...baseSelectedValue} slotProps={slotProps} className={className} showBadge={showBadge} />
+  return <BankTransactionsBaseSelectedValue {...baseSelectedValue} slotProps={slotProps} className={className} showCategoryBadge={showCategoryBadge} />
 }
 
 const normalizeFromSelectedValue = (selectedValue: BankTransactionCategoryComboBoxOption): BankTransactionsBaseSelectedValueProps => {

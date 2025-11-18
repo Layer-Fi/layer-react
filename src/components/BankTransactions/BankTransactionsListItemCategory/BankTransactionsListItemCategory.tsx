@@ -27,7 +27,7 @@ export const BankTransactionsListItemCategory = ({
         bankTransaction={bankTransaction}
         className={className}
         slotProps={{ Label: { size: 'sm' } }}
-        showBadge={mobile}
+        showCategoryBadge={mobile}
       />
     )
   }
@@ -39,7 +39,7 @@ export const BankTransactionsListItemCategory = ({
           selectedValue={selectedCategory ?? null}
           className={className}
           slotProps={{ Label: { size: 'sm' } }}
-          showBadge={mobile}
+          showCategoryBadge={mobile}
         />
       )
       : (
@@ -48,7 +48,7 @@ export const BankTransactionsListItemCategory = ({
           label='No category selected'
           className={className}
           slotProps={{ Label: { size: 'sm' } }}
-          showBadge={mobile}
+          showCategoryBadge={mobile}
         />
       )
   )

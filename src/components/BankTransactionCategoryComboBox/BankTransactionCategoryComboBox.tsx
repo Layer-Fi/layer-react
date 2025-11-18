@@ -137,7 +137,7 @@ export const BankTransactionCategoryComboBox = ({
       : 'Categorize or match...'
 
   const SelectedValue = useMemo(() => {
-    return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} showBadge={false} />
+    return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} showCategoryBadge={false} />
   }, [selectedValue])
 
   return (
