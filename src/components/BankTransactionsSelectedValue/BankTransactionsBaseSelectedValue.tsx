@@ -9,11 +9,9 @@ export type BankTransactionsBaseSelectedValueProps = {
   type: 'match' | 'transfer' | 'split' | 'category' | 'placeholder'
   label: string
   showCategoryBadge?: boolean
+  isCategorized?: boolean
   className?: string
   slotProps?: {
-    CategoryBadge?: {
-      label?: string
-    }
     Label?: {
       size?: 'sm' | 'md'
     }
@@ -21,7 +19,7 @@ export type BankTransactionsBaseSelectedValueProps = {
 }
 
 export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSelectedValueProps) => {
-  const { type, className, label, slotProps, showCategoryBadge = false } = props
+  const { type, className, label, slotProps, showCategoryBadge = false, isCategorized = true } = props
 
   if (type === 'placeholder') {
     return (
@@ -57,7 +55,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
     <HStack gap='xs' align='center' className={className}>
       {showCategoryBadge && (
         <Badge size={BadgeSize.SMALL} icon={<Layers2Icon size={11} />}>
-          {slotProps?.CategoryBadge?.label ?? 'Category'}
+          {isCategorized ? 'Category' : 'Suggested category'}
         </Badge>
       )}
       <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>

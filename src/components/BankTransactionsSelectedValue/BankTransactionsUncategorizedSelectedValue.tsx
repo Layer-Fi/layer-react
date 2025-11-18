@@ -8,9 +8,6 @@ type BankTransactionsUncategorizedSelectedValueProps = {
   className?: string
   showCategoryBadge?: boolean
   slotProps?: {
-    CategoryBadge?: {
-      label?: string
-    }
     Label?: {
       size?: 'sm' | 'md'
     }
@@ -18,12 +15,20 @@ type BankTransactionsUncategorizedSelectedValueProps = {
 }
 
 export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactionsUncategorizedSelectedValueProps) => {
-  const { selectedValue, className, slotProps = {}, showCategoryBadge } = props
+  const { selectedValue, className, slotProps, showCategoryBadge } = props
 
   if (!selectedValue) return null
 
   const baseSelectedValue = normalizeFromSelectedValue(selectedValue)
-  return <BankTransactionsBaseSelectedValue {...baseSelectedValue} slotProps={slotProps} className={className} showCategoryBadge={showCategoryBadge} />
+  return (
+    <BankTransactionsBaseSelectedValue
+      {...baseSelectedValue}
+      slotProps={slotProps}
+      className={className}
+      showCategoryBadge={showCategoryBadge}
+      isCategorized={false}
+    />
+  )
 }
 
 const normalizeFromSelectedValue = (selectedValue: BankTransactionCategoryComboBoxOption): BankTransactionsBaseSelectedValueProps => {
