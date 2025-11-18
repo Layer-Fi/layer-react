@@ -217,12 +217,12 @@ export const BankTransactionsMobileListItem = ({
           role='button'
         >
           <HStack
-            gap='md'
+            gap='lg'
             justify='space-between'
             align='center'
             pie='md'
           >
-            <HStack align='center'>
+            <HStack align='center' overflow='hidden'>
               <BankTransactionsMobileListItemCheckbox
                 bulkActionsEnabled={bulkActionsEnabled}
                 bankTransaction={bankTransaction}
