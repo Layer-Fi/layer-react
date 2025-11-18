@@ -262,6 +262,7 @@ export const BankTransactionRow = ({
             `${className}__actions-cell`,
             `${className}__actions-cell--${open ? 'open' : 'close'}`,
           )}
+          {...openRow}
         >
           {open
             ? (
