@@ -7,6 +7,7 @@ import stylisticPlugin from '@stylistic/eslint-plugin'
 import tsEslint from 'typescript-eslint'
 import unusedImportsPlugin from 'eslint-plugin-unused-imports'
 import pluginImport from 'eslint-plugin-import'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 export default tsEslint.config(
   {
@@ -114,6 +115,57 @@ export default tsEslint.config(
         ],
         },
       ],
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': ['error', {
+        prefer: 'type-imports',
+        fixStyle: 'inline-type-imports',
+      }],
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx,js,jsx}'],
+    plugins: { 'simple-import-sort': simpleImportSort },
+    rules: {
+      'simple-import-sort/imports': ['error', {
+        groups: [
+          [
+            // React + react-dom (types + values)
+            '^(?:type:)?react(?:$|/)', '^(?:type:)?react-dom(?:$|/)',
+
+            // Node + externals
+            '^(?:type:)?node:', '^(?:type:)?@?\\w',
+
+            // Root alias (@/)
+            '^(?:type:)?@/$', '^(?:type:)?@/(?!.*\\.(s?css)$)',
+
+            // Your alias buckets (types + values)
+            '^(?:type:)?(@internal-types/|@schemas/|@models)',
+            '^(?:type:)?@config/',
+            '^(?:type:)?@api/',
+            '^(?:type:)?(@providers/|@contexts/)',
+            '^(?:type:)?@hooks/',
+            '^(?:type:)?@utils/',
+            '^(?:type:)?@icons/',
+            '^(?:type:)?@ui/',
+            '^(?:type:)?@features/',
+            '^(?:type:)?@components/(?!ui/)',
+            '^(?:type:)?@views/',
+            '^(?:type:)?@assets/',
+
+            // Relative (exclude styles)
+            '^(?:type:)?\\.{1,2}/(?!.*\\.(s?css)$)',
+          ],
+
+          // Styles last, then side-effects
+          ['.*\\.s?css$'],
+          ['^\\u0000'],
+        ],
+      }],
+      'simple-import-sort/exports': 'error',
     },
   },
 )
