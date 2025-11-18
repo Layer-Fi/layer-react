@@ -25,6 +25,7 @@ function buildKey({
 }) {
   if (accessToken && apiUrl) {
     return {
+      method: 'tax-payments',
       accessToken,
       apiUrl,
       businessId,

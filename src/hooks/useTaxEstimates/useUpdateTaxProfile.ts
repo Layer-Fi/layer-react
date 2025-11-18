@@ -15,6 +15,7 @@ function buildKey({
 }) {
   if (accessToken && apiUrl) {
     return {
+      method: 'update-tax-profile',
       accessToken,
       apiUrl,
       businessId,

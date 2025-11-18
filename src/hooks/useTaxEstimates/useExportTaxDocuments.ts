@@ -19,6 +19,7 @@ function buildKey({
 }) {
   if (accessToken && apiUrl) {
     return {
+      method: 'export-tax-documents',
       accessToken,
       apiUrl,
       businessId,
