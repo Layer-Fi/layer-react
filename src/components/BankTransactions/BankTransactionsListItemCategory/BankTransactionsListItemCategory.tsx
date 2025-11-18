@@ -1,9 +1,10 @@
-import { BankTransaction } from '@internal-types/bank_transactions'
-import { isCategorized } from '@components/BankTransactions/utils'
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { isCategorized } from '@components/BankTransactions/utils'
+import { BankTransactionsBaseSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
-import { BankTransactionsBaseSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
+
 import './bankTransactionsListItemCategory.scss'
 
 export interface BankTransactionsListItemCategoryProps {

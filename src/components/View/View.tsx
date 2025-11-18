@@ -1,9 +1,10 @@
-import { forwardRef, ReactNode } from 'react'
-import { ViewHeader } from '@components/ViewHeader/ViewHeader'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { parseStylesFromThemeConfig } from '@utils/colors'
-import { Panel } from '@components/Panel/Panel'
+import { forwardRef, type ReactNode } from 'react'
 import classNames from 'classnames'
+
+import { parseStylesFromThemeConfig } from '@utils/colors'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { Panel } from '@components/Panel/Panel'
+import { ViewHeader } from '@components/ViewHeader/ViewHeader'
 
 export interface ViewProps {
   children: ReactNode

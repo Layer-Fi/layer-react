@@ -1,8 +1,9 @@
-import { del } from '@api/layer/authenticated_http'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
-import useSWRMutation from 'swr/mutation'
 import { useCallback } from 'react'
+import useSWRMutation from 'swr/mutation'
+
+import { del } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const REJECT_CATEGORIZATION_RULE_SUGGESTION_TAG = '#reject-categorization-rule-suggestion'
 

@@ -1,14 +1,15 @@
 import { Schema } from 'effect'
 import useSWR, { type SWRResponse } from 'swr'
-import { get } from '@api/layer/authenticated_http'
-import { useAuth } from '@hooks/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+
 import {
-  BookkeepingConfiguration,
+  type BookkeepingConfiguration,
   BookkeepingConfigurationResponseSchema,
   BookkeepingStatus,
   TransactionTaggingStrategy,
 } from '@schemas/bookkeepingConfiguration'
+import { get } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type { BookkeepingConfiguration }

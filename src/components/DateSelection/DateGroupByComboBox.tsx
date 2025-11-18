@@ -1,5 +1,7 @@
 import { useCallback } from 'react'
+
 import { ComboBox } from '@ui/ComboBox/ComboBox'
+
 import './dateGroupByComboBox.scss'
 
 type DateGroupByOption = {

@@ -1,11 +1,13 @@
 import { Car } from 'lucide-react'
+
 import { type Vehicle } from '@schemas/vehicle'
-import { VStack, HStack } from '@ui/Stack/Stack'
-import { Card } from '@components/Card/Card'
-import { Span } from '@ui/Typography/Text'
-import { Heading } from '@ui/Typography/Heading'
-import { getVehicleDisplayName } from '@features/vehicles/util'
 import { Button } from '@ui/Button/Button'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { Span } from '@ui/Typography/Text'
+import { Card } from '@components/Card/Card'
+import { getVehicleDisplayName } from '@features/vehicles/util'
+
 import './vehicleCard.scss'
 
 interface VehicleCardProps {

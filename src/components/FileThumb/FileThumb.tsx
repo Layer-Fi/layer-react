@@ -1,10 +1,12 @@
-import { Text, TextSize } from '@components/Typography/Text'
-import { IconButton } from '@components/Button/IconButton'
+import classNames from 'classnames'
+
 import DownloadCloud from '@icons/DownloadCloud'
 import EyeIcon from '@icons/Eye'
 import LoaderIcon from '@icons/Loader'
 import TrashIcon from '@icons/Trash'
-import classNames from 'classnames'
+import { IconButton } from '@components/Button/IconButton'
+import { Text, TextSize } from '@components/Typography/Text'
+
 import './fileThumb.scss'
 
 type FileThumbProps = {

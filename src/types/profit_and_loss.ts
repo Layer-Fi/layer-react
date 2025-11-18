@@ -1,7 +1,7 @@
 import type { ReportingBasis } from '@internal-types/general'
-import { ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
+import { type TagViewConfig } from '@internal-types/tags'
 import { type LineItemEncoded } from '@schemas/common/lineItem'
-import { TagViewConfig } from '@internal-types/tags'
+import { type ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
 
 export interface TagComparisonOption {
   displayName: string

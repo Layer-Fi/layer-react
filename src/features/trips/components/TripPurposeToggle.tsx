@@ -1,6 +1,7 @@
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
-import { TripPurpose } from '@schemas/trip'
 import { useMemo } from 'react'
+
+import { TripPurpose } from '@schemas/trip'
+import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
 
 export enum TripPurposeFilterValue {
   All = 'ALL',

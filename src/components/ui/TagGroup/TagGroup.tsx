@@ -1,10 +1,12 @@
+import { type ComponentProps, forwardRef } from 'react'
 import {
+  Tag as ReactAriaTag,
   TagGroup as ReactAriaTagGroup,
   TagList as ReactAriaTagList,
-  Tag as ReactAriaTag,
 } from 'react-aria-components'
-import { forwardRef, type ComponentProps } from 'react'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+
 import './tagGroup.scss'
 
 const TAG_CLASS_NAMES = {

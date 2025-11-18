@@ -1,6 +1,10 @@
-import { useEffect, useState, useCallback } from 'react'
-import { BankTransaction, Split } from '@internal-types/bank_transactions'
-import { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { useCallback, useEffect, useState } from 'react'
+
+import { type BankTransaction, type Split } from '@internal-types/bank_transactions'
+import { SplitAsOption } from '@internal-types/categorizationOption'
+import { convertCentsToDecimalString } from '@utils/format'
+import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import {
   calculateAddSplit,
   calculateRemoveSplit,
@@ -9,9 +13,6 @@ import {
   getSplitsErrorMessage,
   isSplitsValid,
 } from '@components/ExpandedBankTransactionRow/utils'
-import { convertCentsToDecimalString } from '@utils/format'
-import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { SplitAsOption } from '@internal-types/categorizationOption'
 
 interface UseSplitsFormOptions {
   bankTransaction: BankTransaction

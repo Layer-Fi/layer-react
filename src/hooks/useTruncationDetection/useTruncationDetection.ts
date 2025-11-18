@@ -1,6 +1,6 @@
-import { useEffect, useState, RefObject, useCallback, useMemo } from 'react'
-import { debounce } from 'lodash-es'
+import { type RefObject, useCallback, useEffect, useMemo, useState } from 'react'
 import useResizeObserver from '@react-hook/resize-observer'
+import { debounce } from 'lodash-es'
 
 export interface UseTruncationDetectionOptions {
   dependencies?: unknown[]

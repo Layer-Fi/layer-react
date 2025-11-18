@@ -1,4 +1,4 @@
-import { IconSvgProps } from '@icons/types'
+import { type IconSvgProps } from '@icons/types'
 
 const Collapse = ({ ...props }: IconSvgProps) => (
   <svg

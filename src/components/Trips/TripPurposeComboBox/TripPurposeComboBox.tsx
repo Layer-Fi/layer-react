@@ -1,10 +1,12 @@
 import { useCallback, useId } from 'react'
+import classNames from 'classnames'
+
+import { TripPurpose } from '@schemas/trip'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { TripPurpose } from '@schemas/trip'
 import { getPurposeLabel } from '@components/TripsTable/utils'
-import classNames from 'classnames'
+
 import './tripPurposeComboBox.scss'
 
 type TripPurposeOption = {

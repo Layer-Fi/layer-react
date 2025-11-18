@@ -1,10 +1,12 @@
-import { Heading } from '@ui/Typography/Heading'
-import InstitutionIcon from '@icons/InstitutionIcon'
+import type { PropsWithChildren } from 'react'
+
 import type { LinkedAccount } from '@internal-types/linked_accounts'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import InstitutionIcon from '@icons/InstitutionIcon'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
-import type { PropsWithChildren } from 'react'
+
 import './basicLinkedAccount.scss'
 
 const CLASS_NAME = 'Layer__BasicLinkedAccountContainer'

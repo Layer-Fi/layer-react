@@ -1,10 +1,11 @@
 import {
-  startOfDay, endOfDay,
-  startOfMonth, endOfMonth, addMonths, subMonths,
-  startOfQuarter, endOfQuarter, addQuarters, subQuarters,
-  startOfYear, endOfYear, addYears, subYears,
-  isEqual,
+  addMonths, addQuarters, addYears, endOfDay,
+  endOfMonth, endOfQuarter, endOfYear, isEqual,
+  startOfDay, startOfMonth, startOfQuarter, startOfYear, subMonths,
+  subQuarters,
+  subYears,
 } from 'date-fns'
+
 import { clampToAfterActivationDate, clampToPresentOrPast, type DateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export enum Period {

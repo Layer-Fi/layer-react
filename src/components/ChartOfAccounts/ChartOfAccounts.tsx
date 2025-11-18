@@ -1,14 +1,15 @@
-import { ReactNode, useContext } from 'react'
-import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
-import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
+import { type ReactNode, useContext } from 'react'
+
 import { useChartOfAccounts } from '@hooks/useChartOfAccounts/useChartOfAccounts'
 import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
 import { useLedgerAccounts } from '@hooks/useLedgerAccounts/useLedgerAccounts'
-import { ChartOfAccountsTableWithPanel, ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
+import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
+import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
+import { type ChartOfAccountsTableStringOverrides, ChartOfAccountsTableWithPanel } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
 import { Container } from '@components/Container/Container'
 import { LedgerAccount } from '@components/LedgerAccount/LedgerAccountIndex'
-import { LedgerAccountStringOverrides } from '@components/LedgerAccount/LedgerAccountIndex'
-import { InAppLinkProvider, LinkingMetadata } from '@contexts/InAppLinkContext'
+import { type LedgerAccountStringOverrides } from '@components/LedgerAccount/LedgerAccountIndex'
 
 export interface ChartOfAccountsStringOverrides {
   chartOfAccountsTable?: ChartOfAccountsTableStringOverrides

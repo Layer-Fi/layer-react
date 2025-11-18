@@ -1,6 +1,7 @@
-import { ButtonHTMLAttributes } from 'react'
-import CloseIcon from '@icons/CloseIcon'
+import { type ButtonHTMLAttributes } from 'react'
 import classNames from 'classnames'
+
+import CloseIcon from '@icons/CloseIcon'
 
 type CloseButtonProps = {
   textOnly?: boolean

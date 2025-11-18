@@ -1,8 +1,10 @@
-import { forwardRef, type ComponentPropsWithoutRef } from 'react'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { centsToDollars as formatMoney } from '@models/Money'
-import './moneySpan.scss'
+import { type ComponentPropsWithoutRef, forwardRef } from 'react'
 import classNames from 'classnames'
+
+import { centsToDollars as formatMoney } from '@models/Money'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+
+import './moneySpan.scss'
 
 const CLASS_NAME = 'Layer__MoneyText'
 

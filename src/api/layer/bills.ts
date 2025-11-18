@@ -1,5 +1,5 @@
 import type { Metadata } from '@internal-types/api'
-import { Bill, BillLineItem, BillPayment, SalesTax } from '@internal-types/bills'
+import { type Bill, type BillLineItem, type BillPayment, type SalesTax } from '@internal-types/bills'
 import { get, post } from '@api/layer/authenticated_http'
 
 export type GetBillsReturn = {

@@ -1,7 +1,8 @@
 import { type PropsWithChildren, type RefObject } from 'react'
+
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { Modal } from '@ui/Modal/Modal'
 import { Popover } from '@ui/Popover/Popover'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 
 type ResponsivePopoverProps = PropsWithChildren<{
   triggerRef?: RefObject<HTMLElement>

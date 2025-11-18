@@ -1,6 +1,7 @@
-import { HTMLProps } from 'react'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
+import { type HTMLProps } from 'react'
 import classNames from 'classnames'
+
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface InputProps extends HTMLProps<HTMLInputElement> {
   isInvalid?: boolean

@@ -1,14 +1,15 @@
-import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
-import { JournalContext } from '@contexts/JournalContext/JournalContext'
+import { type ReactNode } from 'react'
+
 import { useChartOfAccounts } from '@hooks/useChartOfAccounts/useChartOfAccounts'
 import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
 import { useJournal } from '@hooks/useJournal/useJournal'
+import { JournalRoute, JournalStoreProvider, useJournalRouteState } from '@providers/JournalStore/JournalStoreProvider'
+import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
+import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { Container } from '@components/Container/Container'
-import { JournalTableWithPanel, JournalTableStringOverrides } from '@components/JournalTable/JournalTableWithPanel'
-import { InAppLinkProvider, LinkingMetadata } from '@contexts/InAppLinkContext'
-import { JournalStoreProvider, useJournalRouteState, JournalRoute } from '@providers/JournalStore/JournalStoreProvider'
-import { ReactNode } from 'react'
 import { JournalEntryDrawer } from '@components/Journal/JournalEntryDrawer/JournalEntryDrawer'
+import { type JournalTableStringOverrides, JournalTableWithPanel } from '@components/JournalTable/JournalTableWithPanel'
 
 export interface JournalStringOverrides {
   journalTable?: JournalTableStringOverrides

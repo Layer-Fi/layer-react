@@ -1,14 +1,15 @@
-import useSWRMutation from 'swr/mutation'
-import { useAuth } from '@hooks/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
+import useSWRMutation from 'swr/mutation'
+
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { BUSINESS_PERSONNEL_TAG_KEY } from '@hooks/businessPersonnel/useBusinessPersonnel'
 import {
   updateBusinessPersonnel,
   type UpdateBusinessPersonnelBody,
 } from '@api/layer/businessPersonnel/updateBusinessPersonnel'
-import { useCallback } from 'react'
+import { BUSINESS_PERSONNEL_TAG_KEY } from '@hooks/businessPersonnel/useBusinessPersonnel'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 function buildKey({
   access_token: accessToken,

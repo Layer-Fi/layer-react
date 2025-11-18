@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Layer } from '@api/layer'
-import { DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { format as formatTime, parseISO } from 'date-fns'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type Awaitable } from '@internal-types/utility/promises'
 import { DATE_FORMAT } from '@config/general'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { BankTransaction } from '@internal-types/bank_transactions'
 import { hasReceipts } from '@utils/bankTransactions'
-import { parseISO, format as formatTime } from 'date-fns'
+import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { Awaitable } from '@internal-types/utility/promises'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { type DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 
 export interface UseReceiptsProps {
   bankTransaction: BankTransaction

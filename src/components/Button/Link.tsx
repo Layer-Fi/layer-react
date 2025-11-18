@@ -1,11 +1,12 @@
 import {
-  HTMLAttributeAnchorTarget,
-  LinkHTMLAttributes,
-  ReactNode,
+  type HTMLAttributeAnchorTarget,
+  type LinkHTMLAttributes,
+  type ReactNode,
   useRef,
 } from 'react'
-import { ButtonJustify, ButtonVariant } from '@components/Button/Button'
 import classNames from 'classnames'
+
+import { type ButtonJustify, ButtonVariant } from '@components/Button/Button'
 
 export interface LinkProps extends LinkHTMLAttributes<HTMLAnchorElement> {
   variant?: ButtonVariant

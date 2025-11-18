@@ -1,12 +1,13 @@
-import { ReactNode } from 'react'
-import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { getMonthNameFromNumber } from '@utils/date'
-import { TextStatus } from '@components/Typography/Text'
-import AlertCircle from '@icons/AlertCircle'
-import Clock from '@icons/Clock'
-import CheckCircle from '@icons/CheckCircle'
-import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { type ReactNode } from 'react'
 import pluralize from 'pluralize'
+
+import { getMonthNameFromNumber } from '@utils/date'
+import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import AlertCircle from '@icons/AlertCircle'
+import CheckCircle from '@icons/CheckCircle'
+import Clock from '@icons/Clock'
+import { type TextStatus } from '@components/Typography/Text'
 
 type InternalStatusConfig = {
   label: string

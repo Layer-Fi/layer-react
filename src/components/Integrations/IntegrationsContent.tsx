@@ -1,6 +1,7 @@
 import { useContext } from 'react'
-import { IntegrationsQuickbooksItemThumb } from '@components/Integrations/IntegrationsQuickbooksItemThumb/IntegrationsQuickbooksItemThumb'
+
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
+import { IntegrationsQuickbooksItemThumb } from '@components/Integrations/IntegrationsQuickbooksItemThumb/IntegrationsQuickbooksItemThumb'
 
 export const IntegrationsContent = () => {
   const { quickbooksConnectionStatus } = useContext(QuickbooksContext)

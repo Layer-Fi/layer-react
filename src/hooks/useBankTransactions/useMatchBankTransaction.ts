@@ -1,14 +1,15 @@
 import { useCallback } from 'react'
-import { matchBankTransaction, type GetBankTransactionsReturn, type MatchBankTransactionBody } from '@api/layer/bankTransactions'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
 import { useSWRConfig } from 'swr'
-import useSWRMutation from 'swr/mutation'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
+import useSWRMutation from 'swr/mutation'
+
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { type GetBankTransactionsReturn, matchBankTransaction, type MatchBankTransactionBody } from '@api/layer/bankTransactions'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/bookkeeping/useBankAccounts'
+import { useAuth } from '@hooks/useAuth'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExternalAccounts'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const MATCH_BANK_TRANSACTION_TAG = '#match-bank-transaction'
 

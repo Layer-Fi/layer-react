@@ -1,20 +1,22 @@
 import {
-  forwardRef,
   type ComponentProps,
   type ForwardedRef,
+  forwardRef,
   type Ref,
 } from 'react'
+import { mergeRefs } from '@react-aria/utils'
 import {
   ListBox as ReactAriaListBox,
-  type ListBoxProps as ReactAriaListBoxProps,
   ListBoxItem as ReactAriaListBoxItem,
   type ListBoxItemProps as ReactAriaListBoxItemProps,
+  type ListBoxProps as ReactAriaListBoxProps,
   ListBoxSection as ReactAriaListBoxSection,
   type ListBoxSectionProps as ReactAriaListBoxSectionProps,
 } from 'react-aria-components'
-import { mergeRefs } from '@react-aria/utils'
-import { Header } from '@ui/Typography/Text'
+
 import { useStopClickEventsRefCallback } from '@hooks/ref/useStopClickEventsRef'
+import { Header } from '@ui/Typography/Text'
+
 import './listBox.scss'
 
 const LIST_BOX_CLASS_NAME = 'Layer__ListBox'

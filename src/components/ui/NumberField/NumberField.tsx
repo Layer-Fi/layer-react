@@ -4,6 +4,7 @@ import {
   NumberField as ReactAriaNumberField,
   type NumberFieldProps as ReactAriaNumberFieldProps,
 } from 'react-aria-components'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
 const NUMBER_FIELD_CLASS_NAME = 'Layer__UI__NumberField'

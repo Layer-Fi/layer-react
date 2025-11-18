@@ -1,16 +1,17 @@
-import { PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
+
+import { type ReportingBasis } from '@internal-types/general'
+import { type ProfitAndLossCompareConfig } from '@internal-types/profit_and_loss'
 import { useProfitAndLoss } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import { useProfitAndLossComparison } from '@hooks/useProfitAndLossComparison/useProfitAndLossComparison'
-import { ReportingBasis } from '@internal-types/general'
+import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { Container } from '@components/Container/Container'
 import { ProfitAndLossChart } from '@components/ProfitAndLossChart/ProfitAndLossChart'
 import { ProfitAndLossDetailedCharts } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossReport } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { ProfitAndLossSummaries } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { ProfitAndLossCompareConfig } from '@internal-types/profit_and_loss'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 
 type Props = PropsWithChildren<{
   tagFilter?: {

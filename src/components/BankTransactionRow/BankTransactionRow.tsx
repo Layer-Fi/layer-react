@@ -1,44 +1,46 @@
-import { TextSize, Text } from '@components/Typography/Text'
-import { RetryButton } from '@components/Button/RetryButton'
-import { IconButton } from '@components/Button/IconButton'
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
+import classNames from 'classnames'
+import { format as formatTime, parseISO } from 'date-fns'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type CategorizationEncoded, isSplitCategorizationEncoded } from '@schemas/categorization'
+import {
+  isCredit,
+} from '@utils/bankTransactions'
+import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
+import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
+import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '@icons/AlertCircle'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import FileIcon from '@icons/File'
-import { BankTransaction } from '@internal-types/bank_transactions'
-import {
-  isCredit,
-} from '@utils/bankTransactions'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import {
-  BankTransactionCTAStringOverrides,
-} from '@components/BankTransactions/BankTransactions'
-import { isCategorized } from '@components/BankTransactions/utils'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
-import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { SaveHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { IconBox } from '@components/IconBox/IconBox'
-import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
-import { VStack } from '@ui/Stack/Stack'
-import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
-import { Span } from '@ui/Typography/Text'
+import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { VStack } from '@ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isSplitCategorizationEncoded, type CategorizationEncoded } from '@schemas/categorization'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
-import { HStack } from '@ui/Stack/Stack'
+import {
+  type BankTransactionCTAStringOverrides,
+} from '@components/BankTransactions/BankTransactions'
+import { isCategorized } from '@components/BankTransactions/utils'
+import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
-import { MoneySpan } from '@components/ui/Typography/MoneySpan'
+import { IconButton } from '@components/Button/IconButton'
+import { RetryButton } from '@components/Button/RetryButton'
+import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
+import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { type SaveHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { IconBox } from '@components/IconBox/IconBox'
+import { Text, TextSize } from '@components/Typography/Text'
+
 import './bankTransactionRow.scss'
-import { AnimatedPresenceDiv } from '@components/ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 
 type Props = {
   index: number
@@ -118,7 +120,7 @@ export const BankTransactionRow = ({
         removeTransaction(bankTransaction)
       }, 300)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
   const save = async () => {
@@ -153,8 +155,8 @@ export const BankTransactionRow = ({
   const rowClassName = classNames(
     className,
     bankTransaction.recently_categorized
-    && editable
-    && shouldHideAfterCategorize()
+      && editable
+      && shouldHideAfterCategorize()
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
@@ -225,9 +227,8 @@ export const BankTransactionRow = ({
           </span>
         </td>
         <td
-          className={`Layer__table-cell Layer__table-cell__amount-col Layer__bank-transactions__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${
-            isCredit(bankTransaction) ? 'credit' : 'debit'
-          }`}
+          className={`Layer__table-cell Layer__table-cell__amount-col Layer__bank-transactions__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${isCredit(bankTransaction) ? 'credit' : 'debit'
+            }`}
           {...showReceiptDataProperties}
         >
           <VStack align='end'>
@@ -261,7 +262,7 @@ export const BankTransactionRow = ({
           {open
             ? (
               <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
-                { bankTransaction.error
+                {bankTransaction.error
                   && (
                     <Text
                       as='span'
@@ -301,9 +302,8 @@ export const BankTransactionRow = ({
                   active={open}
                   icon={(
                     <ChevronDownFill
-                      className={`Layer__chevron ${
-                        open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                      }`}
+                      className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                        }`}
                     />
                   )}
                 />
@@ -379,9 +379,8 @@ export const BankTransactionRow = ({
                   active={open}
                   icon={(
                     <ChevronDownFill
-                      className={`Layer__chevron ${
-                        open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                      }`}
+                      className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                        }`}
                     />
                   )}
                 />

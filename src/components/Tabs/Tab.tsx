@@ -1,5 +1,6 @@
-import { ChangeEvent, ReactNode } from 'react'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
+import { type ChangeEvent, type ReactNode } from 'react'
+
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 interface TabProps {
   checked: boolean

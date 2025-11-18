@@ -1,6 +1,6 @@
+import { useBalanceSheetDownload } from '@components/BalanceSheet/download/useBalanceSheetDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
-import { useBalanceSheetDownload } from '@components/BalanceSheet/download/useBalanceSheetDownload'
 
 type BalanceSheetDownloadButtonProps = {
   effectiveDate: Date

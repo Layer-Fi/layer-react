@@ -1,7 +1,8 @@
-import { Text, TextSize } from '@components/Typography/Text'
-import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { type BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { getBookkeepingStatusConfig } from '@components/BookkeepingStatus/utils'
+import { Text, TextSize } from '@components/Typography/Text'
+
 import './bookkeepingStatus.scss'
 
 type BookkeepingStatusProps = {

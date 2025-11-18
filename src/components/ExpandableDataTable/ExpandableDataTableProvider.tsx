@@ -1,5 +1,5 @@
+import { createContext, type PropsWithChildren, useMemo, useState } from 'react'
 import type { ExpandedState } from '@tanstack/react-table'
-import { createContext, useMemo, useState, type PropsWithChildren } from 'react'
 
 export interface ExpandableDataTableContextType {
   expanded: ExpandedState

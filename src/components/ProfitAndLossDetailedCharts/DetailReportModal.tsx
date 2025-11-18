@@ -1,7 +1,7 @@
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { Drawer } from '@ui/Modal/Modal'
 import { ProfitAndLossDetailReport, type ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
-import { Drawer } from '@ui/Modal/Modal'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 
 export interface DetailReportModalProps {
   isOpen: boolean

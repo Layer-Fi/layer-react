@@ -1,5 +1,6 @@
-import { HeroContentConfig, LandingPageCardConfig, DeepPartial } from '@components/LandingPage/types'
 import { merge } from 'lodash-es'
+
+import { type DeepPartial, type HeroContentConfig, type LandingPageCardConfig } from '@components/LandingPage/types'
 
 /**
  * Merges hero content config overrides with defaults.

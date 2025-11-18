@@ -1,7 +1,7 @@
+import { type BankTransaction } from '@internal-types/bank_transactions'
+import { useBankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/useBankTransactionMemo'
 import { InputGroup } from '@components/Input/InputGroup'
 import { Textarea } from '@components/Textarea/Textarea'
-import { BankTransaction } from '@internal-types/bank_transactions'
-import { useBankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/useBankTransactionMemo'
 
 export const BankTransactionMemo = ({ bankTransactionId }: { bankTransactionId: BankTransaction['id'] }) => {
   const form = useBankTransactionMemo({ bankTransactionId })

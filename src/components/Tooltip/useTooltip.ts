@@ -1,18 +1,19 @@
-import { useMemo, useState, createContext, useContext } from 'react'
-import { TooltipOptions } from '@components/Tooltip/Tooltip'
+import { createContext, useContext, useMemo, useState } from 'react'
 import {
-  useFloating,
   autoUpdate,
-  offset,
   flip,
+  offset,
   shift,
-  useHover,
-  useFocus,
   useDismiss,
-  useRole,
+  useFloating,
+  useFocus,
+  useHover,
   useInteractions,
+  useRole,
   useTransitionStyles,
 } from '@floating-ui/react'
+
+import { type TooltipOptions } from '@components/Tooltip/Tooltip'
 
 export type ContextType = ReturnType<typeof useTooltip> | null
 

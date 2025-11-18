@@ -1,19 +1,20 @@
-import { ErrorText } from '@components/Typography/ErrorText'
-import { FileInput } from '@components/Input/FileInput'
-import { Button } from '@ui/Button/Button'
 import { useRef, useState } from 'react'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import PaperclipIcon from '@icons/Paperclip'
-import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
+
+import { type BankTransaction, type SuggestedMatch } from '@internal-types/bank_transactions'
 import {
   getBankTransactionFirstSuggestedMatch,
   getBankTransactionMatchAsSuggestedMatch,
 } from '@utils/bankTransactions'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import PaperclipIcon from '@icons/Paperclip'
+import { Button } from '@ui/Button/Button'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { FileInput } from '@components/Input/FileInput'
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
-import { Span } from '@components/ui/Typography/Text'
-import { VStack, HStack } from '@components/ui/Stack/Stack'
+import { ErrorText } from '@components/Typography/ErrorText'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 interface BankTransactionsMobileListMatchFormProps {

@@ -1,16 +1,17 @@
-import { Text as ReactAriaText } from 'react-aria-components'
 import { forwardRef, useRef } from 'react'
-import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import type { Spacing } from '@ui/sharedUITypes'
-import { Header as ReactAriaHeader, Label as ReactAriaLabel } from 'react-aria-components'
-import './text.scss'
-
 import classNames from 'classnames'
-import { useTruncationDetection } from '@hooks/useTruncationDetection/useTruncationDetection'
+import type React from 'react'
+import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react'
+import { Text as ReactAriaText } from 'react-aria-components'
+import { Header as ReactAriaHeader, Label as ReactAriaLabel } from 'react-aria-components'
 import { mergeRefs } from 'react-merge-refs'
-import { TooltipCapableComponentProps, TooltipContent, TooltipTrigger, Tooltip } from '@ui/Tooltip/Tooltip'
-import React from 'react'
+
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { useTruncationDetection } from '@hooks/useTruncationDetection/useTruncationDetection'
+import type { Spacing } from '@ui/sharedUITypes'
+import { Tooltip, type TooltipCapableComponentProps, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
+
+import './text.scss'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'

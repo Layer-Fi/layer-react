@@ -1,8 +1,10 @@
-import { Button } from '@ui/Button/Button'
 import type { PropsWithChildren } from 'react'
-import { Container } from '@components/Container/Container'
+
 import BackArrow from '@icons/BackArrow'
+import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
+import { Container } from '@components/Container/Container'
+
 import './baseDetailView.scss'
 
 export type BaseDetailViewProps = PropsWithChildren<{

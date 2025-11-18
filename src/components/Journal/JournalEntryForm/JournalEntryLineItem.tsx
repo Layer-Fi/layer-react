@@ -1,14 +1,16 @@
-import { Button } from '@ui/Button/Button'
 import classNames from 'classnames'
 import { X } from 'lucide-react'
+
+import { CategoriesListMode, type Classification, isClassificationAccountIdentifier } from '@schemas/categorization'
+import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
-import type { AppForm } from '@features/forms/hooks/useForm'
-import type { JournalEntryForm } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
-import './journalEntryLineItem.scss'
-import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
-import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
 import { DebitCreditPill } from '@components/DebitCreditPill/DebitCreditPill'
-import { CategoriesListMode, isClassificationAccountIdentifier, type Classification } from '@schemas/categorization'
+import type { JournalEntryForm } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
+import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
+import type { AppForm } from '@features/forms/hooks/useForm'
+import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
+
+import './journalEntryLineItem.scss'
 import './journalEntryLineItem.scss'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'

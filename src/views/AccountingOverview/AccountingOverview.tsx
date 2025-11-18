@@ -1,22 +1,23 @@
-import { HeaderRow } from '@components/Header/HeaderRow'
-import { HeaderCol } from '@components/Header/HeaderCol'
-import { Header } from '@components/Header/Header'
-import { ReactNode, useState } from 'react'
+import { type ReactNode, useState } from 'react'
+import classNames from 'classnames'
+
+import { type OnboardingStep } from '@internal-types/layer_context'
+import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { Container } from '@components/Container/Container'
+import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
+import { Header } from '@components/Header/Header'
+import { HeaderCol } from '@components/Header/HeaderCol'
+import { HeaderRow } from '@components/Header/HeaderRow'
 import { Onboarding } from '@components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import { ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import {
   ProfitAndLossSummaries,
-  ProfitAndLossSummariesStringOverrides,
+  type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Toggle } from '@components/Toggle/Toggle'
 import { View } from '@components/View/View'
-import { OnboardingStep } from '@internal-types/layer_context'
-import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { TagOption } from '@views/ProjectProfitability/ProjectProfitability'
-import classNames from 'classnames'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
+import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
 interface AccountingOverviewStringOverrides {
   title?: string

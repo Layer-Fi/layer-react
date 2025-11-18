@@ -1,5 +1,7 @@
-import { useContext, useMemo, type ReactNode } from 'react'
+import { type ReactNode, useContext, useMemo } from 'react'
+
 import type { Variants } from '@utils/styleUtils/sizeVariants'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import {
   ProfitAndLossSummariesList,
   ProfitAndLossSummariesListItem,
@@ -10,7 +12,6 @@ import {
 } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesMiniChart'
 import { ProfitAndLossSummariesSummary } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesSummary'
 import { TransactionsToReview } from '@views/AccountingOverview/internal/TransactionsToReview'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string

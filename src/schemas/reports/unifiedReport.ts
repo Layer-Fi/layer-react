@@ -1,4 +1,5 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
+
 import { LineItemSchema } from '@schemas/common/lineItem'
 
 export enum ReportEnum {

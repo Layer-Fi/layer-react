@@ -1,11 +1,12 @@
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
-import AlertCircle from '@icons/AlertCircle'
-import Clock from '@icons/Clock'
-import CheckCircle from '@icons/CheckCircle'
-import { BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import pluralize from 'pluralize'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import AlertCircle from '@icons/AlertCircle'
+import CheckCircle from '@icons/CheckCircle'
+import Clock from '@icons/Clock'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 type TaskStatusBadgeProps = {
   status: BookkeepingPeriod['status']

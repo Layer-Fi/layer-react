@@ -1,8 +1,10 @@
+import classNames from 'classnames'
 import { Search } from 'lucide-react'
+
+import { InputGroup } from '@ui/Input/InputGroup'
 import { MinimalSearchField } from '@ui/SearchField/MinimalSearchField'
 import { VStack } from '@ui/Stack/Stack'
-import { InputGroup } from '@ui/Input/InputGroup'
-import classNames from 'classnames'
+
 import './searchField.scss'
 
 const CLASS_NAME = 'Layer__SearchField'

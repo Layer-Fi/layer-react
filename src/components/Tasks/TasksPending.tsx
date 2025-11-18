@@ -1,14 +1,15 @@
-import { Text, TextSize } from '@components/Typography/Text'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
-import { Cell, Pie, PieChart } from 'recharts'
-import { TASKS_CHARTS_COLORS } from '@config/charts'
-import { format } from 'date-fns'
-import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import classNames from 'classnames'
-import { BookkeepingStatusDescription } from '@components/BookkeepingStatus/BookkeepingStatusDescription'
+import { format } from 'date-fns'
+import { Cell, Pie, PieChart } from 'recharts'
+
+import { TASKS_CHARTS_COLORS } from '@config/charts'
 import { getCompletedTasks, getIncompleteTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
+import { BookkeepingStatusDescription } from '@components/BookkeepingStatus/BookkeepingStatusDescription'
+import { Heading, HeadingSize } from '@components/Typography/Heading'
+import { Text, TextSize } from '@components/Typography/Text'
 
 export const TasksPending = () => {
   const { date } = useGlobalDate()

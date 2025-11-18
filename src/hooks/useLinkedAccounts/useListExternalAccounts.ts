@@ -1,8 +1,9 @@
 import useSWR from 'swr'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+import { listExternalAccounts } from '@api/layer/linked_accounts'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { listExternalAccounts } from '@api/layer/linked_accounts'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const EXTERNAL_ACCOUNTS_TAG_KEY = '#external-accounts'
 

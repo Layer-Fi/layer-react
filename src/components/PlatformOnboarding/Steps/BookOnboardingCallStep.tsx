@@ -1,15 +1,17 @@
-import { Heading } from '@ui/Typography/Heading'
-import { Button } from '@ui/Button/Button'
-import { InlineWidget as CalendlyInlineWidget, PopupModal } from 'react-calendly'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
-import { useCalendly } from '@hooks/useCalendly/useCalendly'
-import classNames from 'classnames'
-import { VStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
 import { useCallback, useState } from 'react'
-import { useCreateCallBooking } from '@features/callBookings/api/useCreateCallBookings'
-import { useBookkeepingConfiguration } from '@hooks/useBookkeepingConfiguration/useBookkeepingConfiguration'
+import classNames from 'classnames'
+import { InlineWidget as CalendlyInlineWidget, PopupModal } from 'react-calendly'
+
 import { CallBookingPurpose, CallBookingType } from '@schemas/callBookings'
+import { useBookkeepingConfiguration } from '@hooks/useBookkeepingConfiguration/useBookkeepingConfiguration'
+import { useCalendly } from '@hooks/useCalendly/useCalendly'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { Button } from '@ui/Button/Button'
+import { VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { Span } from '@ui/Typography/Text'
+import { useCreateCallBooking } from '@features/callBookings/api/useCreateCallBookings'
+
 import './bookOnboardingCallStep.scss'
 
 interface CalendlyPayload {

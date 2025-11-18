@@ -1,6 +1,6 @@
-import { BankTransactionsMobileListBusinessCategories } from '@components/BankTransactionsMobileList/BankTransactionsMobileListBusinessCategories'
 import { Drawer } from '@ui/Modal/Modal'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { BankTransactionsMobileListBusinessCategories } from '@components/BankTransactionsMobileList/BankTransactionsMobileListBusinessCategories'
 
 interface CategorySelectDrawerProps {
   onSelect: (value: BankTransactionCategoryComboBoxOption | null) => void

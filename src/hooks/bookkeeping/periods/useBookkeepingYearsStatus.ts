@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
+import { getYear } from 'date-fns'
+
+import { isIncompleteTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { getActivationDate } from '@utils/business'
 import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { getActivationDate } from '@utils/business'
-import { getYear } from 'date-fns'
-import { isIncompleteTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 export const useBookkeepingYearsStatus = () => {
   const { business } = useLayerContext()

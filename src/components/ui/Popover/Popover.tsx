@@ -1,9 +1,11 @@
 import { forwardRef } from 'react'
 import {
   Popover as ReactAriaPopover,
-  PopoverProps as ReactAriaPopoverProps,
+  type PopoverProps as ReactAriaPopoverProps,
 } from 'react-aria-components'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+
 import './popover.scss'
 
 const POPOVER_CLASS_NAME = 'Layer__Popover'

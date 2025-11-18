@@ -1,6 +1,6 @@
-import { LinkedAccounts, PublicToken } from '@internal-types/linked_accounts'
-import { get, post } from '@api/layer/authenticated_http'
+import { type LinkedAccounts, type PublicToken } from '@internal-types/linked_accounts'
 import type { OneOf } from '@internal-types/utility/oneOf'
+import { get, post } from '@api/layer/authenticated_http'
 
 export const syncConnection = post<
   Record<string, unknown>,

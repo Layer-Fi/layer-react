@@ -1,10 +1,11 @@
 import { getMonth, getYear, startOfMonth, startOfYear, subMonths, subYears } from 'date-fns'
-import { DateRange } from '@internal-types/general'
-import { range } from '@utils/array/range'
+
+import { type DateRange } from '@internal-types/general'
+import { type ProfitAndLossComparisonTags, type TagComparisonOption } from '@internal-types/profit_and_loss'
 import { isArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
-import { ProfitAndLossComparisonTags, TagComparisonOption } from '@internal-types/profit_and_loss'
+import { type ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
+import { range } from '@utils/array/range'
 import { toLocalDateString } from '@utils/time/timeUtils'
-import { ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
 import { DateGroupBy } from '@components/DateSelection/DateGroupByComboBox'
 
 export function prepareFiltersBody(compareOptions: TagComparisonOption[]): ReadonlyArrayWithAtLeastOne<ProfitAndLossComparisonTags> | undefined {

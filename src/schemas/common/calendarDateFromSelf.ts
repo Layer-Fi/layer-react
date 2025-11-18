@@ -1,6 +1,6 @@
-import { Schema } from 'effect'
 import { CalendarDate } from '@internationalized/date'
 import { parseDate } from '@internationalized/date'
+import { Schema } from 'effect'
 
 export const CalendarDateFromSelf = Schema.declare(
   (input: unknown): input is CalendarDate => input instanceof CalendarDate,

@@ -1,13 +1,15 @@
-import { Button } from '@ui/Button/Button'
 import { useCallback, useRef, useState } from 'react'
-import { FileRejection, useDropzone } from 'react-dropzone'
+import classNames from 'classnames'
+import { FileSpreadsheet } from 'lucide-react'
+import { type FileRejection, useDropzone } from 'react-dropzone'
+
+import CloseIcon from '@icons/CloseIcon'
+import UploadCloud from '@icons/UploadCloud'
+import { Button } from '@ui/Button/Button'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
-import UploadCloud from '@icons/UploadCloud'
-import classNames from 'classnames'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { FileSpreadsheet } from 'lucide-react'
-import CloseIcon from '@icons/CloseIcon'
+
 import './csvUpload.scss'
 
 const VALID_EXTENSIONS = ['.csv']

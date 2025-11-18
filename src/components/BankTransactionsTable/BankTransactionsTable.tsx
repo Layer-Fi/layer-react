@@ -1,18 +1,19 @@
 import { useMemo } from 'react'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { DATE_FORMAT } from '@config/general'
-import { BankTransaction } from '@internal-types/bank_transactions'
+import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
+import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
+import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { BankTransactionRow } from '@components/BankTransactionRow/BankTransactionRow'
 import {
-  BankTransactionsStringOverrides,
+  type BankTransactionsStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsLoader } from '@components/BankTransactionsLoader/BankTransactionsLoader'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
-import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
-import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string

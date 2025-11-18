@@ -1,4 +1,5 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
+
 import { TagDimensionSchema } from '@features/tags/tagSchemas'
 
 export enum ReportingBasis {

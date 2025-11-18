@@ -1,10 +1,11 @@
 import { useRef } from 'react'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { VStack } from '@ui/Stack/Stack'
-import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { BankTransaction } from '@internal-types/bank_transactions'
+import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { VStack } from '@ui/Stack/Stack'
 
 export interface BankTransactionsMobileListItemCheckboxProps {
   bulkActionsEnabled: boolean

@@ -1,5 +1,6 @@
-import { useState, createContext, useContext, useMemo, type PropsWithChildren } from 'react'
+import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
+
 import type { Vehicle } from '@schemas/vehicle'
 import { TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
 

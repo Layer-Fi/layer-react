@@ -1,14 +1,15 @@
-import { Heading } from '@ui/Typography/Heading'
-import { Button } from '@ui/Button/Button'
 import { useCallback, useMemo, useRef, useState } from 'react'
+import { Save } from 'lucide-react'
+
+import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
+import BackArrow from '@icons/BackArrow'
+import X from '@icons/X'
+import { Button } from '@ui/Button/Button'
+import { HStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { JournalEntryForm, type JournalEntryFormState } from '@components/Journal/JournalEntryForm/JournalEntryForm'
-import { HStack } from '@ui/Stack/Stack'
-import { Save } from 'lucide-react'
-import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
-import X from '@icons/X'
-import BackArrow from '@icons/BackArrow'
-import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
 
 export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true }: { showTags?: boolean, showCustomerVendor?: boolean }) => {
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)

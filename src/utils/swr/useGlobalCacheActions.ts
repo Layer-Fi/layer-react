@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useSWRConfig } from 'swr'
+
 import { getRelevantCacheKeys } from '@utils/swr/getRelevantCacheKeys'
 
 type PredicateFn = (tags: ReadonlyArray<string>) => boolean

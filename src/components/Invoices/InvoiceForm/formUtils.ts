@@ -1,6 +1,8 @@
-import { InvoiceFormLineItemEquivalence, type Invoice, type InvoiceForm, type InvoiceFormLineItem, type InvoiceLineItem } from '@features/invoices/invoiceSchemas'
+import { fromDate, getLocalTimeZone, toCalendarDate } from '@internationalized/date'
+import { startOfToday } from 'date-fns'
 import { BigDecimal as BD } from 'effect'
-import { BIG_DECIMAL_ZERO, BIG_DECIMAL_ONE, convertCentsToBigDecimal, safeDivide, convertBigDecimalToCents } from '@utils/bigDecimalUtils'
+
+import { BIG_DECIMAL_ONE, BIG_DECIMAL_ZERO, convertBigDecimalToCents, convertCentsToBigDecimal, safeDivide } from '@utils/bigDecimalUtils'
 import {
   computeAdditionalDiscount,
   computeRawTaxableSubtotal,
@@ -9,9 +11,8 @@ import {
   computeTaxes,
   getGrandTotalFromInvoice,
 } from '@components/Invoices/InvoiceForm/totalsUtils'
-import { startOfToday } from 'date-fns'
-import { getLocalTimeZone, fromDate, toCalendarDate } from '@internationalized/date'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
+import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@features/invoices/invoiceSchemas'
 import { makeTagFromTransactionTag, makeTagKeyValueFromTag, type Tag } from '@features/tags/tagSchemas'
 
 export const INVOICE_MECE_TAG_DIMENSION = 'Job'

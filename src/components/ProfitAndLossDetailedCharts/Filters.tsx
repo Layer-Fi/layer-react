@@ -1,12 +1,13 @@
-import { Text, TextSize } from '@components/Typography/Text'
 import Select, { components } from 'react-select'
+
+import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import {
-  Scope,
-  SidebarScope,
-  ProfitAndLossFilters,
+  type ProfitAndLossFilters,
+  type Scope,
+  type SidebarScope,
 } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import ChevronDown from '@icons/ChevronDown'
-import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
+import { Text, TextSize } from '@components/Typography/Text'
 
 export interface FiltersProps {
   filteredData: PnlChartLineItem[]

@@ -1,12 +1,13 @@
-import useSWRMutation from 'swr/mutation'
-import { useAuth } from '@hooks/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { patch } from '@api/layer/authenticated_http'
 import { useCallback } from 'react'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
+import useSWRMutation from 'swr/mutation'
+
+import { type CustomerSchema, encodeCustomer } from '@schemas/customer'
 import { encodeVendor, type VendorSchema } from '@schemas/vendor'
-import { encodeCustomer, type CustomerSchema } from '@schemas/customer'
+import { patch } from '@api/layer/authenticated_http'
 import { useMinMutatingMutation } from '@hooks/mutation/useMinMutatingMutation'
+import { useAuth } from '@hooks/useAuth'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY = '#set-metadata-on-bank-transaction'
 

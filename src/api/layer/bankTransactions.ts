@@ -1,14 +1,14 @@
 import {
-  BankTransactionMatch,
-  BankTransactionMetadata,
-  DocumentS3Urls,
   type BankTransaction,
+  type BankTransactionMatch,
+  type BankTransactionMetadata,
+  type DocumentS3Urls,
 } from '@internal-types/bank_transactions'
 import type { CategoryUpdate } from '@internal-types/categories'
-import { FileMetadata } from '@internal-types/file_upload'
-import { S3PresignedUrl } from '@internal-types/general'
+import { type FileMetadata } from '@internal-types/file_upload'
+import { type S3PresignedUrl } from '@internal-types/general'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { get, put, postWithFormData, post } from '@api/layer/authenticated_http'
+import { get, post, postWithFormData, put } from '@api/layer/authenticated_http'
 
 export type GetBankTransactionsReturn = {
   data: ReadonlyArray<BankTransaction>
