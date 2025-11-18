@@ -2,6 +2,7 @@ import { APIError, type APIErrorMessage } from '@models/APIError'
 import { reportError } from '@models/ErrorHandler'
 import type { ParameterValues } from '@utils/request/toDefinedSearchParameters'
 
+// eslint-disable-next-line import/no-relative-parent-imports
 import pkg from '../../../package.json'
 
 const CUSTOM_PREFIX = 'Layer-'
