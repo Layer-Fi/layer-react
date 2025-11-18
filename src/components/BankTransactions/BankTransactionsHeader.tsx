@@ -17,9 +17,8 @@ import { HStack } from '@ui/Stack/Stack'
 import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
-import { BankTransactionsUploadMenu } from '@components/BankTransactions/BankTransactionsUploadMenu'
 import { BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
-import { BankTransactionsHeaderMenu } from '@components/BankTransactions/BankTransactionsHeaderMenu'
+import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
@@ -212,6 +211,17 @@ export const BankTransactionsHeader = ({
     })
   }
 
+  const headerMenuActions = useMemo(() => {
+    const actions: BankTransactionsHeaderMenuActions[] = []
+    if (withUploadMenu) {
+      actions.push(BankTransactionsHeaderMenuActions.UploadTransactions)
+    }
+    if (showCategorizationRules) {
+      actions.push(BankTransactionsHeaderMenuActions.ManageCategorizationRules)
+    }
+    return actions
+  }, [withUploadMenu, showCategorizationRules])
+
   return (
     <Header
       className={classNames(
@@ -260,9 +270,7 @@ export const BankTransactionsHeader = ({
             iconOnly={listView}
             disabled={showBulkActions}
           />
-          {showCategorizationRules
-            ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} isDisabled={showBulkActions} />
-            : withUploadMenu && <BankTransactionsUploadMenu isDisabled={showBulkActions} />}
+          <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
         </HStack>
       </BankTransactionsActions>
     </Header>

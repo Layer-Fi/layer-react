@@ -1,8 +1,4 @@
-import { BankTransaction } from '@internal-types/bank_transactions'
-import { hasSuggestions } from '@internal-types/categories'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { CategoryAsOption, ApiCategorizationAsOption } from '@internal-types/categorizationOption'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { CategoryAsOption } from '@internal-types/categorizationOption'
 import type { NestedCategorization } from '@schemas/categorization'
 
 export interface CategoryGroup {
@@ -39,31 +35,4 @@ export const flattenCategories = (categories: NestedCategorization[]): Array<Cat
 
     return leafCategories.map(cat => new CategoryAsOption(cat))
   })
-}
-
-export const getAssignedValue = (
-  bankTransaction: BankTransaction,
-): BankTransactionCategoryComboBoxOption | null => {
-  if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED
-    || bankTransaction?.categorization_status === CategorizationStatus.SPLIT
-  ) {
-    return null
-  }
-
-  if (
-    bankTransaction.category
-    && bankTransaction.category.type != 'Exclusion'
-  ) {
-    return new ApiCategorizationAsOption(bankTransaction.category)
-  }
-
-  if (hasSuggestions(bankTransaction.categorization_flow)) {
-    const firstSuggestion = (
-      bankTransaction.categorization_flow
-    ).suggestions[0]
-    return new ApiCategorizationAsOption(firstSuggestion)
-  }
-
-  return null
 }

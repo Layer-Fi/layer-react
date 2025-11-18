@@ -35,7 +35,7 @@ export const DataTableHeader = ({ name, count, slotProps = {}, slots = {} }: Dat
 
   return (
     <VStack>
-      <HStack justify='space-between' align='center' className='Layer__DataTableHeader__Header'>
+      <HStack justify='space-between' align='center' gap='xs' className='Layer__DataTableHeader__Header'>
         <HStack pis='md' align='center' gap='xl'>
           <HStack align='center' gap='sm'>
             <Span weight='bold' size='md'>{name}</Span>

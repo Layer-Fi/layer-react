@@ -1,0 +1,37 @@
+.Layer__TripsTable {
+  overflow: hidden;
+  width: clamp(61rem, 100%, 1406px);
+}
+
+.Layer__TripsTable__VehicleSelector {
+  width: 12rem;
+}
+
+.Layer__TripsTable__SearchField {
+  width: 15rem;
+}
+
+.Layer__UI__Table__TripsTable {
+  table-layout: fixed;
+  width: 100%;
+
+  .Layer__UI__Table-Row,
+  .Layer__UI__Table-TableHeader > tr {
+    display: grid;
+    grid-template-columns:
+      minmax(8rem, 10%)
+      minmax(8rem, 15%)
+      minmax(6rem, 10%)
+      minmax(8rem, 10%)
+      minmax(12rem, 25%)
+      minmax(12rem, 30%)
+      3.75rem;
+  }
+
+  .Layer__UI__Table-Column__TripsTable,
+  .Layer__UI__Table-Cell__TripsTable {
+    &--Distance {
+      justify-content: flex-end;
+    }
+  }
+}
