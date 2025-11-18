@@ -2,7 +2,7 @@ import useSWRMutation from 'swr/mutation'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { createTaxProfile, type TaxProfileInput } from '@api/layer/taxEstimates'
-import { useTaxEstimatesGlobalCacheActions } from './useTaxEstimates'
+import { useTaxEstimatesGlobalCacheActions, TAX_ESTIMATES_TAG_KEY } from './useTaxEstimates'
 
 function buildKey({
   access_token: accessToken,
@@ -15,10 +15,10 @@ function buildKey({
 }) {
   if (accessToken && apiUrl) {
     return {
-      method: 'create-tax-profile',
       accessToken,
       apiUrl,
       businessId,
+      tags: [`${TAX_ESTIMATES_TAG_KEY}#create-tax-profile`],
     } as const
   }
 }

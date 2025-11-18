@@ -25,12 +25,11 @@ function buildKey({
 }) {
   if (accessToken && apiUrl) {
     return {
-      method: 'tax-payments',
       accessToken,
       apiUrl,
       businessId,
       year,
-      tags: [TAX_ESTIMATES_TAG_KEY],
+      tags: [`${TAX_ESTIMATES_TAG_KEY}#payments`],
     } as const
   }
 }

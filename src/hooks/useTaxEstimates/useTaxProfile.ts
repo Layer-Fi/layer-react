@@ -21,11 +21,10 @@ function buildKey({
 }) {
   if (accessToken && apiUrl) {
     return {
-      method: 'tax-profile',
       accessToken,
       apiUrl,
       businessId,
-      tags: [TAX_ESTIMATES_TAG_KEY],
+      tags: [`${TAX_ESTIMATES_TAG_KEY}#profile`],
     } as const
   }
 }

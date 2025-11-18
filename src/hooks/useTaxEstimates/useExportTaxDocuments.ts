@@ -2,6 +2,7 @@ import useSWRMutation from 'swr/mutation'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { exportTaxDocuments } from '@api/layer/taxEstimates'
+import { TAX_ESTIMATES_TAG_KEY } from './useTaxEstimates'
 
 type ExportTaxDocumentsParams = {
   type: 'tax-packet' | 'schedule-c' | 'payment-history'
@@ -19,10 +20,10 @@ function buildKey({
 }) {
   if (accessToken && apiUrl) {
     return {
-      method: 'export-tax-documents',
       accessToken,
       apiUrl,
       businessId,
+      tags: [`${TAX_ESTIMATES_TAG_KEY}#export-tax-documents`],
     } as const
   }
 }
