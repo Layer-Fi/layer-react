@@ -1,4 +1,4 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
 
 const VendorStatusSchema = Schema.Literal(
   'ACTIVE',

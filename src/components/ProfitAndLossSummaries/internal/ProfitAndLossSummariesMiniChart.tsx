@@ -1,13 +1,14 @@
-import type { ProfitAndLoss } from '@hooks/useProfitAndLoss/schemas'
-import type { Scope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import { Cell, Pie, PieChart } from 'recharts'
+
 import {
   collectExpensesItems,
   collectRevenueItems,
   type PnlChartLineItem,
 } from '@utils/profitAndLossUtils'
-import { Variants } from '@utils/styleUtils/sizeVariants'
+import { type Variants } from '@utils/styleUtils/sizeVariants'
+import type { ProfitAndLoss } from '@hooks/useProfitAndLoss/schemas'
+import type { Scope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
-import { PieChart, Pie, Cell } from 'recharts'
 
 const CHART_PLACEHOLDER: Array<PnlChartLineItem> = [{
   name: 'placeholder',

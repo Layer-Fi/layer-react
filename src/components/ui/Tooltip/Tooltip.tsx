@@ -1,17 +1,19 @@
 import {
-  ReactNode,
-  forwardRef,
-  HTMLProps,
-  isValidElement,
   cloneElement,
+  forwardRef,
+  type HTMLProps,
+  isValidElement,
+  type ReactNode,
   type Ref,
 } from 'react'
-import { TooltipContext, useTooltip, useTooltipContext } from '@components/Tooltip/useTooltip'
-import { useMergeRefs, FloatingPortal } from '@floating-ui/react'
 import type { Placement } from '@floating-ui/react'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { FloatingPortal, useMergeRefs } from '@floating-ui/react'
 import classNames from 'classnames'
+
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { HStack } from '@ui/Stack/Stack'
+import { TooltipContext, useTooltip, useTooltipContext } from '@components/Tooltip/useTooltip'
+
 import './tooltip.scss'
 
 export type TooltipCapableComponentProps = {

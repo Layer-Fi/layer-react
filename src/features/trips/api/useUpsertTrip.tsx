@@ -1,11 +1,12 @@
 import { useCallback } from 'react'
+import { Effect, Schema } from 'effect'
 import type { Key } from 'swr'
 import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
-import { post, patch } from '@api/layer/authenticated_http'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
+
 import { TripSchema, type UpsertTripEncoded } from '@schemas/trip'
-import { Schema, Effect } from 'effect'
+import { patch, post } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useTripsGlobalCacheActions } from '@features/trips/api/useListTrips'
 
 const UPSERT_TRIP_TAG_KEY = '#upsert-trip'

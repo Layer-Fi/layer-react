@@ -1,7 +1,8 @@
 import { format, subMonths, subYears } from 'date-fns'
+
 import { type LineItemEncoded } from '@schemas/common/lineItem'
-import { DateGroupBy } from '@components/DateSelection/DateGroupByComboBox'
 import { DATE_FORMAT } from '@config/general'
+import { DateGroupBy } from '@components/DateSelection/DateGroupByComboBox'
 
 export type ComparisonPeriodParams = { endDate: Date, numberOfPeriods: number } & (
   | { mode: Exclude<DateGroupBy, DateGroupBy.AllTime> }

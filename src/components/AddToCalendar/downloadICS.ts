@@ -1,4 +1,4 @@
-import { generateIcsCalendar, IcsCalendar } from 'ts-ics'
+import { generateIcsCalendar, type IcsCalendar } from 'ts-ics'
 
 export function prepareIcsFilename(title: string) {
   return title.replace(/[^a-z0-9]/gi, '_').toLowerCase().trim()

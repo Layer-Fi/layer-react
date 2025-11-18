@@ -1,12 +1,14 @@
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
-import { Button, ButtonVariant } from '@components/Button/Button'
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
+import classNames from 'classnames'
+
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import AlertOctagon from '@icons/AlertOctagon'
 import CheckCircle from '@icons/CheckCircle'
 import Loader from '@icons/Loader'
 import RefreshCcw from '@icons/RefreshCcw'
-import classNames from 'classnames'
-import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { Button, ButtonVariant } from '@components/Button/Button'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+
 import './dataState.scss'
 
 export enum DataStateStatus {

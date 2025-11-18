@@ -1,14 +1,15 @@
-import { Text } from '@components/Typography/Text'
-import { DATE_FORMAT } from '@config/general'
-import Scissors from '@icons/Scissors'
-import { BankTransaction } from '@internal-types/bank_transactions'
+import { format as formatTime, parseISO } from 'date-fns'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { DATE_FORMAT } from '@config/general'
 import { isTransferMatch } from '@utils/bankTransactions'
+import Scissors from '@icons/Scissors'
 import { Badge } from '@components/Badge/Badge'
 import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
 import { MatchBadge } from '@components/BankTransactionRow/MatchBadge'
 import { SplitTooltipDetails } from '@components/BankTransactionRow/SplitTooltipDetails'
-import { parseISO, format as formatTime } from 'date-fns'
+import { Text } from '@components/Typography/Text'
 
 export interface AssignmentProps {
   bankTransaction: BankTransaction

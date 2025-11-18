@@ -1,12 +1,13 @@
+import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import {
   endOfDay,
   endOfMonth,
-  min,
   max,
+  min,
   startOfMonth,
 } from 'date-fns'
-import { useState, createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 import { createStore, useStore } from 'zustand'
+
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
 

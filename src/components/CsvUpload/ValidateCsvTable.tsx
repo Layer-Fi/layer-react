@@ -1,16 +1,17 @@
 import { useMemo, useRef } from 'react'
-import classNames from 'classnames'
 import {
-  useReactTable,
+  type CellContext,
+  type ColumnDef,
+  flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  flexRender,
-  ColumnDef,
-  Row,
-  CellContext,
+  type Row,
+  useReactTable,
 } from '@tanstack/react-table'
-import { PreviewCsv, PreviewRow } from '@components/CsvUpload/types'
-import { useVirtualizer, VirtualItem, Virtualizer } from '@tanstack/react-virtual'
+import { useVirtualizer, type VirtualItem, type Virtualizer } from '@tanstack/react-virtual'
+import classNames from 'classnames'
+
+import { type PreviewCsv, type PreviewRow } from '@components/CsvUpload/types'
 
 const ROW_HEIGHT = 52
 const MAX_NUM_ROWS = 8

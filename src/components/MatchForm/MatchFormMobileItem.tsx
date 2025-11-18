@@ -1,10 +1,12 @@
+import { GridListItem } from 'react-aria-components'
+
+import { type BankTransaction, type SuggestedMatch } from '@internal-types/bank_transactions'
+import { isCredit } from '@utils/bankTransactions'
+import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
+import { Checkbox } from '@components/ui/Checkbox/Checkbox'
 import { HStack } from '@components/ui/Stack/Stack'
 import { Span } from '@components/ui/Typography/Text'
-import { GridListItem } from 'react-aria-components'
-import { Checkbox } from '@components/ui/Checkbox/Checkbox'
-import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
-import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
-import { isCredit } from '@utils/bankTransactions'
+
 import './matchFormMobileItem.scss'
 
 interface MatchFormMobileItemProps {

@@ -1,7 +1,8 @@
-import { CSSProperties, ReactNode, forwardRef } from 'react'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { parseStylesFromThemeConfig } from '@utils/colors'
+import { type CSSProperties, forwardRef, type ReactNode } from 'react'
 import classNames from 'classnames'
+
+import { parseStylesFromThemeConfig } from '@utils/colors'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export interface ContainerProps {
   name: string

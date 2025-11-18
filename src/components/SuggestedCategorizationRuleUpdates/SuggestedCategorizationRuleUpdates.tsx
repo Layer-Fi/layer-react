@@ -1,9 +1,10 @@
-import { Wizard } from '@components/Wizard/Wizard'
-import { UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { ModalHeading } from '@ui/Modal/ModalSlots'
 import { RuleUpdatesPromptStep } from '@components/SuggestedCategorizationRuleUpdates/RuleUpdatesPromptStep'
 import { RuleUpdatesReviewStep } from '@components/SuggestedCategorizationRuleUpdates/RuleUpdatesReviewStep'
-import { ModalHeading } from '@ui/Modal/ModalSlots'
+import { Wizard } from '@components/Wizard/Wizard'
+
 import './suggestedCategorizationRuleUpdates.scss'
 
 type SuggestedCategorizationRuleUpdatesProps = {

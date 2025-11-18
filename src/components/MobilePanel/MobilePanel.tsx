@@ -1,8 +1,10 @@
-import { BackButton } from '@components/Button/BackButton'
-import { ReactNode } from 'react'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import classNames from 'classnames'
+import { type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
+import classNames from 'classnames'
+
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { BackButton } from '@components/Button/BackButton'
+
 import './mobilePanel.scss'
 
 export type MobilePanelProps = {

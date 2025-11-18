@@ -1,10 +1,11 @@
-import { Text, TextSize } from '@components/Typography/Text'
 import { useContext } from 'react'
+import classNames from 'classnames'
+
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import PlusIcon from '@icons/PlusIcon'
-import { LinkedAccountItemThumb } from '@components/LinkedAccounts/LinkedAccountItemThumb'
-import classNames from 'classnames'
 import { LinkedAccountsConfirmationModal } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
+import { LinkedAccountItemThumb } from '@components/LinkedAccounts/LinkedAccountItemThumb'
+import { Text, type TextSize } from '@components/Typography/Text'
 
 interface LinkedAccountsDataProps {
   asWidget?: boolean

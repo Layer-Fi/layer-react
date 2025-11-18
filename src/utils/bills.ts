@@ -1,4 +1,4 @@
-import { Bill, BillStatus, PAID_STATUS, UNPAID_STATUSES } from '@internal-types/bills'
+import { type Bill, type BillStatus, PAID_STATUS, UNPAID_STATUSES } from '@internal-types/bills'
 
 export const isBillPaid = (status?: Bill['status']) => PAID_STATUS === status
 

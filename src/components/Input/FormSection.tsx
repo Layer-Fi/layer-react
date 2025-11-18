@@ -1,6 +1,7 @@
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
+
 import { VStack } from '@ui/Stack/Stack'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 type FormSectionProps = {
   title?: string

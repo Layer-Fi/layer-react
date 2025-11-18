@@ -1,14 +1,15 @@
-import { ReactNode, useCallback } from 'react'
+import { type ReactNode, useCallback } from 'react'
+import classNames from 'classnames'
 import {
-  DropdownIndicatorProps,
-  GroupBase,
   components,
+  type DropdownIndicatorProps,
+  type GroupBase,
 } from 'react-select'
 import BaseCreatableSelect, { type CreatableProps } from 'react-select/creatable'
+
 import ChevronDownFill from '@icons/ChevronDownFill'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
-import classNames from 'classnames'
 import { type SelectProps } from '@components/Input/Select'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface CreatableSelectProps<T> extends Omit<SelectProps<T>, 'value' | 'onChange'> {
   value?: T | null

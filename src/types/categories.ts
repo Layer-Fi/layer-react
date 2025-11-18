@@ -1,5 +1,5 @@
-import { AccountIdentifier, AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName } from '@schemas/accountIdentifier'
-import { CategorizationEncoded as ApiCategorization, type ClassificationEncoded, type NestedCategorization } from '@schemas/categorization'
+import { type AccountIdentifier, AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName } from '@schemas/accountIdentifier'
+import { type CategorizationEncoded as ApiCategorization, type ClassificationEncoded, type NestedCategorization } from '@schemas/categorization'
 
 export enum CategorizationType {
   AUTO = 'AUTO',

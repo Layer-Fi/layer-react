@@ -1,6 +1,7 @@
-import { Heading } from '@components/Typography/Heading'
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import classNames from 'classnames'
+
+import { Heading } from '@components/Typography/Heading'
 
 export interface ViewHeaderProps {
   title?: string

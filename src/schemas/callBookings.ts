@@ -1,5 +1,6 @@
+import { pipe, Schema } from 'effect'
+
 import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
-import { Schema, pipe } from 'effect'
 import { createTransformedEnumSchema } from '@schemas/utils'
 
 // Enums matching the frontend types

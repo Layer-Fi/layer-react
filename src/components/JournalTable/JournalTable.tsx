@@ -1,28 +1,29 @@
-import { TableRow } from '@components/TableRow/TableRow'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableBody } from '@components/TableBody/TableBody'
-import { Table } from '@components/Table/Table'
 import { Fragment, useContext, useLayoutEffect } from 'react'
-import { DATE_FORMAT } from '@config/general'
-import { JournalContext } from '@contexts/JournalContext/JournalContext'
-import { TableProvider } from '@contexts/TableContext/TableContext'
-import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
+import { format as formatTime, parseISO } from 'date-fns'
+
+import { type View } from '@internal-types/general'
 import {
-  JournalEntry,
-  JournalEntryLine,
-  JournalEntryLineItem,
+  type JournalEntry,
+  type JournalEntryLine,
+  type JournalEntryLineItem,
 } from '@internal-types/journal'
-import { View } from '@internal-types/general'
 import { TableCellAlign } from '@internal-types/table'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { DATE_FORMAT } from '@config/general'
 import { humanizeEnum } from '@utils/format'
 import { entryNumber } from '@utils/journal'
-import { JournalTableStringOverrides } from '@components/JournalTable/JournalTableWithPanel'
-import { parseISO, format as formatTime } from 'date-fns'
+import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
+import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { Span } from '@ui/Typography/Text'
+import { TableProvider } from '@contexts/TableContext/TableContext'
 import { HStack } from '@ui/Stack/Stack'
-import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { Span } from '@ui/Typography/Text'
+import { type JournalTableStringOverrides } from '@components/JournalTable/JournalTableWithPanel'
+import { Table } from '@components/Table/Table'
+import { TableBody } from '@components/TableBody/TableBody'
+import { TableCell } from '@components/TableCell/TableCell'
+import { TableHead } from '@components/TableHead/TableHead'
+import { TableRow } from '@components/TableRow/TableRow'
 
 const accountName = (
   row: JournalEntry | JournalEntryLine | JournalEntryLineItem,

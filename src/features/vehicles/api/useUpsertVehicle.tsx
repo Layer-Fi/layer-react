@@ -1,13 +1,15 @@
 import { useCallback } from 'react'
+import { Effect, Schema } from 'effect'
 import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
-import { post, patch } from '@api/layer/authenticated_http'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
-import { VehicleSchema, type UpsertVehicleEncoded } from '@schemas/vehicle'
-import { Schema, Effect } from 'effect'
-import { VEHICLES_TAG_KEY } from './useListVehicles'
 import { useSWRConfig } from 'swr'
+import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+
+import { type UpsertVehicleEncoded, VehicleSchema } from '@schemas/vehicle'
+import { patch, post } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+import { VEHICLES_TAG_KEY } from './useListVehicles'
 
 const UPSERT_VEHICLE_TAG_KEY = '#upsert-vehicle'
 

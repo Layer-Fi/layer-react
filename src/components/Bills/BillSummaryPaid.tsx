@@ -1,7 +1,7 @@
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import type { Bill } from '@internal-types/bills'
-import { convertFromCents, convertNumberToCurrency, formatDate } from '@utils/format'
 import { DATE_FORMAT_SHORT } from '@config/general'
+import { convertFromCents, convertNumberToCurrency, formatDate } from '@utils/format'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 type BillSummaryPaidProps = {
   bill: Bill

@@ -1,6 +1,8 @@
-import { Switch as ReactAriaSwitch, type SwitchProps as ReactAriaSwitchProps } from 'react-aria-components'
-import { withRenderProp } from '@components/utility/withRenderProp'
 import { forwardRef } from 'react'
+import { Switch as ReactAriaSwitch, type SwitchProps as ReactAriaSwitchProps } from 'react-aria-components'
+
+import { withRenderProp } from '@components/utility/withRenderProp'
+
 import './switch.scss'
 
 const SWITCH_CLASS_NAME = 'Layer__Switch'

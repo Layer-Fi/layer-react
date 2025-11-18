@@ -1,5 +1,7 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
+
 import { VehicleSchema } from '@schemas/vehicle'
+
 import { CalendarDateFromSelf, CalendarDateSchema } from './common/calendarDateFromSelf'
 
 export enum TripPurpose {

@@ -1,6 +1,8 @@
-import { forwardRef, type ComponentProps } from 'react'
+import { type ComponentProps, forwardRef } from 'react'
 import { TextArea as ReactAriaTextArea } from 'react-aria-components'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+
 import './textArea.scss'
 
 const TEXTAREA_CLASS_NAME = 'Layer__UI__TextArea'

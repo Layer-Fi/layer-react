@@ -1,4 +1,4 @@
-import { Modal, ModalProps } from '@ui/Modal/Modal'
+import { Modal, type ModalProps } from '@ui/Modal/Modal'
 import { UploadTransactions } from '@components/UploadTransactions/UploadTransactions'
 
 type BankTransactionsUploadModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'>

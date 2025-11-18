@@ -1,10 +1,11 @@
 import { Button } from '@ui/Button/Button'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeSize } from '@components/Badge/Badge'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
 import { SearchField, type SearchFieldProps } from '@components/SearchField/SearchField'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
+
 import './dataTableHeader.scss'
 
 interface CountProps {

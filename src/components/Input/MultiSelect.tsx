@@ -1,15 +1,16 @@
 import { useCallback } from 'react'
-import ReactSelect, {
-  DropdownIndicatorProps,
-  GroupBase,
-  MultiValue,
-  OptionsOrGroups,
-  StylesConfig,
-  components,
-} from 'react-select'
-import ChevronDownFill from '@icons/ChevronDownFill'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
+import ReactSelect, {
+  components,
+  type DropdownIndicatorProps,
+  type GroupBase,
+  type MultiValue,
+  type OptionsOrGroups,
+  type StylesConfig,
+} from 'react-select'
+
+import ChevronDownFill from '@icons/ChevronDownFill'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface SelectProps<T> {
   name?: string

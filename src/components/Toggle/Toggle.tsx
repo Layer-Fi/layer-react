@@ -1,15 +1,16 @@
 import {
-  CSSProperties,
-  ChangeEvent,
-  ReactNode,
+  type ChangeEvent,
+  type CSSProperties,
+  type ReactNode,
   useEffect,
   useMemo,
   useState,
 } from 'react'
-import { useElementSize } from '@hooks/useElementSize/useElementSize'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
+
+import { useElementSize } from '@hooks/useElementSize/useElementSize'
 import { Span } from '@ui/Typography/Text'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface Option {
   label: string

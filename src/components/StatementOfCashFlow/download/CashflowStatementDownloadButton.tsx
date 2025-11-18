@@ -1,6 +1,6 @@
 import { DownloadButton } from '@components/Button/DownloadButton'
-import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 import { useCashflowStatementDownload } from '@components/StatementOfCashFlow/download/useCashflowStatementDownload'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type CashflowStatementDownloadButtonProps = {
   startDate: Date

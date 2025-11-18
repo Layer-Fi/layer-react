@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { useStore } from '@tanstack/react-form'
-import { useForm } from '@features/forms/hooks/useForm'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { USStateCode } from '@internal-types/location'
-import { EntityType } from '@internal-types/business'
+
+import { type EntityType } from '@internal-types/business'
+import { type USStateCode } from '@internal-types/location'
+import { useUpdateBusiness } from '@hooks/business/useUpdateBusiness'
+import { type BusinessPersonnel } from '@hooks/businessPersonnel/types'
 import { useBusinessPersonnel } from '@hooks/businessPersonnel/useBusinessPersonnel'
 import { useCreateBusinessPersonnel } from '@hooks/businessPersonnel/useCreateBusinessPersonnel'
-import { BusinessPersonnel } from '@hooks/businessPersonnel/types'
 import { useUpdateBusinessPersonnel } from '@hooks/businessPersonnel/useUpdateBusinessPersonnel'
-import { useUpdateBusiness } from '@hooks/business/useUpdateBusiness'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useForm } from '@features/forms/hooks/useForm'
 
 type BusinessFormData = {
   full_name?: string

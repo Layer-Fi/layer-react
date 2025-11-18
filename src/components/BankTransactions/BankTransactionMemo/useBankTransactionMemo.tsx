@@ -1,5 +1,6 @@
 import { useForm } from '@tanstack/react-form'
-import { BankTransaction } from '@internal-types/bank_transactions'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { useBankTransactionMetadata } from '@hooks/useBankTransactions/useBankTransactionsMetadata'
 import { useUpdateBankTransactionMetadata } from '@hooks/useBankTransactions/useUpdateBankTransactionMetadata'
 

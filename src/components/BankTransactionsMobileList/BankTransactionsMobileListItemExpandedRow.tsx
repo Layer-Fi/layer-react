@@ -1,11 +1,13 @@
-import { useState, type ChangeEvent } from 'react'
-import { BankTransaction } from '@internal-types/bank_transactions'
+import { type ChangeEvent, useState } from 'react'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
-import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
 import { hasMatch } from '@utils/bankTransactions'
-import { Purpose } from './BankTransactionsMobileListItem'
+import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
+import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
 import { VStack } from '@components/ui/Stack/Stack'
+
+import { Purpose } from './BankTransactionsMobileListItem'
 
 const PURPOSE_TOGGLE_OPTIONS = [
   {

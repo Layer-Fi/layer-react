@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+
 import { range } from '@utils/helpers'
 
 export enum Dots {

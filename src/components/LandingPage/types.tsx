@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 
 /**
  * A Link acts as a call-to-action for users interacting with the LandingPage component.

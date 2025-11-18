@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react'
+
 import './bankTransactionsActions.scss'
 
 const CLASS_NAME = 'Layer__BankTransactionsActions'

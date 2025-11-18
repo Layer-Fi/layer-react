@@ -1,15 +1,4 @@
-import { Text } from '@components/Typography/Text'
-import { useCallback, useEffect, useMemo, useState, type FunctionComponent } from 'react'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
-import {
-  ProfitAndLossSummaryData,
-  useProfitAndLossLTM,
-} from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
-import { centsToDollars } from '@models/Money'
-import { isDateAllowedToBrowse } from '@utils/business'
-import { ChartStateCard } from '@components/ProfitAndLossChart/ChartStateCard'
-import { Indicator } from '@components/ProfitAndLossChart/Indicator'
+import { type FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import {
   add,
@@ -20,27 +9,39 @@ import {
   sub,
 } from 'date-fns'
 import {
-  XAxis,
-  Cell,
   Bar,
-  LabelList,
   CartesianGrid,
+  Cell,
+  ComposedChart,
+  LabelList,
   Legend,
+  Line,
+  Rectangle,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
-  TooltipProps,
-  Rectangle,
+  type TooltipProps,
+  XAxis,
   YAxis,
-  Line,
-  ComposedChart,
-  ReferenceLine,
 } from 'recharts'
-import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
-import { Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
+import { type CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
+import { type Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
+
+import { centsToDollars } from '@models/Money'
+import { isDateAllowedToBrowse } from '@utils/business'
+import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import {
+  type ProfitAndLossSummaryData,
+  useProfitAndLossLTM,
+} from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
 import {
   useGlobalDateRange,
   useGlobalDateRangeActions,
 } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { ChartStateCard } from '@components/ProfitAndLossChart/ChartStateCard'
+import { Indicator } from '@components/ProfitAndLossChart/Indicator'
+import { Text } from '@components/Typography/Text'
 
 const getChartWindow = ({
   chartWindow,

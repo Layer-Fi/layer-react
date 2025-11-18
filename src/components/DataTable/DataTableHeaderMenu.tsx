@@ -1,9 +1,11 @@
+import { type ReactNode, useCallback } from 'react'
+import { ChevronRight, MenuIcon } from 'lucide-react'
+
 import { Button } from '@ui/Button/Button'
-import { ReactNode, useCallback } from 'react'
-import { MenuIcon, ChevronRight } from 'lucide-react'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
-import { Span } from '@ui/Typography/Text'
 import { Spacer, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+
 import './dataTableHeaderMenu.scss'
 
 export interface DataTableHeaderMenuItem {

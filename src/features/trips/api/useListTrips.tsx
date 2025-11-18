@@ -1,12 +1,13 @@
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
-import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
-import { TripSchema, type Trip } from '@schemas/trip'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useCallback } from 'react'
-import { Schema, pipe } from 'effect'
-import { get } from '@api/layer/authenticated_http'
+import { pipe, Schema } from 'effect'
+import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
+
+import { type Trip, TripSchema } from '@schemas/trip'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { get } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const LIST_TRIPS_TAG_KEY = '#list-trips'
 

@@ -1,13 +1,15 @@
 import { useMemo } from 'react'
-import { Loader } from '@components/Loader/Loader'
+
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  Column,
   Cell,
+  Column,
   Row,
+  Table,
+  TableBody,
+  TableHeader,
 } from '@ui/Table/Table'
+import { Loader } from '@components/Loader/Loader'
+
 import './dataTable.scss'
 
 export type Column<TData, K> = {

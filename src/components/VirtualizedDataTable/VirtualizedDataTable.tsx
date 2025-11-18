@@ -1,18 +1,20 @@
-import { useRef, useMemo } from 'react'
-import classNames from 'classnames'
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { useMemo, useRef } from 'react'
 import {
-  useReactTable,
-  getCoreRowModel,
-  getSortedRowModel,
   createColumnHelper,
   flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
   type RowData,
+  useReactTable,
 } from '@tanstack/react-table'
-import { Loader } from '@components/Loader/Loader'
-import type { ColumnConfig, Column } from '@components/DataTable/DataTable'
-import { Table, TableBody, TableHeader, Column as TableColumn, Row, Cell } from '@ui/Table/Table'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import classNames from 'classnames'
+
 import { HStack } from '@ui/Stack/Stack'
+import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
+import type { Column, ColumnConfig } from '@components/DataTable/DataTable'
+import { Loader } from '@components/Loader/Loader'
+
 import './virtualizedDataTable.scss'
 
 declare module '@tanstack/react-table' {

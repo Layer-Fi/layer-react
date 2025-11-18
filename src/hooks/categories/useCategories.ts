@@ -1,10 +1,11 @@
-import useSWR from 'swr'
 import { Schema } from 'effect'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
+import useSWR from 'swr'
+
+import { type CategoriesListMode, CategoryListSchema, type NestedCategorization } from '@schemas/categorization'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { get } from '@api/layer/authenticated_http'
-import { CategoryListSchema, type CategoriesListMode, type NestedCategorization } from '@schemas/categorization'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const CATEGORIES_TAG_KEY = '#categories'
 

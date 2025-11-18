@@ -1,4 +1,5 @@
-import { parseISO, format as formatDateFns } from 'date-fns'
+import { format as formatDateFns, parseISO } from 'date-fns'
+
 import { DATE_FORMAT } from '@config/general'
 
 /**

@@ -1,19 +1,20 @@
 import { useMemo } from 'react'
-import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
-import { VStack } from '@ui/Stack/Stack'
+
 import type { BankTransaction } from '@internal-types/bank_transactions'
+import {
+  BookkeepingStatus,
+  useEffectiveBookkeepingStatus,
+} from '@hooks/bookkeeping/useBookkeepingStatus'
+import { VStack } from '@ui/Stack/Stack'
+import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { Span } from '@components/ui/Typography/Text'
 import { BankTransactionCustomerVendorSelector } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorSelector'
 import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
+import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
+import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
 import { useBankTransactionTagVisibility } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
-import { makeTag, Tag } from '@features/tags/tagSchemas'
-import {
-  useEffectiveBookkeepingStatus,
-  BookkeepingStatus,
-} from '@hooks/bookkeeping/useBookkeepingStatus'
-import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
-import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
-import { Span } from '@components/ui/Typography/Text'
+import { makeTag, type Tag } from '@features/tags/tagSchemas'
 
 type BankTransactionFormFieldProps = {
   bankTransaction: Pick<

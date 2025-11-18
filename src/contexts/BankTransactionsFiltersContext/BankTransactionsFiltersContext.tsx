@@ -1,7 +1,8 @@
 import { createContext, useContext } from 'react'
+
 import {
-  BankTransactionFilters,
-  BankTransactionsDateFilterMode,
+  type BankTransactionFilters,
+  type BankTransactionsDateFilterMode,
 } from '@hooks/useBankTransactions/types'
 
 export type BankTransactionsFiltersContextType = {

@@ -1,4 +1,4 @@
-import { Schema, Effect, pipe, ParseResult } from 'effect'
+import { Effect, type ParseResult, pipe, Schema } from 'effect'
 
 const lineItemFields = {
   name: Schema.String,

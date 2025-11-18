@@ -1,6 +1,7 @@
-import { type Trip, type TripForm, TripPurpose } from '@schemas/trip'
-import { BigDecimal as BD } from 'effect'
 import { getLocalTimeZone, today } from '@internationalized/date'
+import { BigDecimal as BD } from 'effect'
+
+import { type Trip, type TripForm, TripPurpose } from '@schemas/trip'
 import { BIG_DECIMAL_ZERO } from '@utils/bigDecimalUtils'
 
 export const getTripFormDefaultValues = (trip?: Trip): TripForm => {

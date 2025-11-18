@@ -1,12 +1,14 @@
-import { Heading } from '@ui/Typography/Heading'
-import { Button } from '@ui/Button/Button'
-import { forwardRef, type ComponentProps, type PropsWithChildren, type ReactElement } from 'react'
-import { X } from 'lucide-react'
-import { P } from '@ui/Typography/Text'
+import { type ComponentProps, forwardRef, type PropsWithChildren, type ReactElement } from 'react'
 import classNames from 'classnames'
-import './modalSlots.scss'
+import { X } from 'lucide-react'
+
+import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { P } from '@ui/Typography/Text'
 import { Separator } from '@components/Separator/Separator'
+
+import './modalSlots.scss'
 
 const MODAL_CLOSE_BUTTON_CLASS_NAME = 'Layer__ModalCloseButton'
 

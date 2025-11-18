@@ -1,7 +1,8 @@
-import ChevronDownFill from '@icons/ChevronDownFill'
-import { centsToDollars } from '@models/Money'
-import { TableCellProps } from '@internal-types/table'
 import classNames from 'classnames'
+
+import { type TableCellProps } from '@internal-types/table'
+import { centsToDollars } from '@models/Money'
+import ChevronDownFill from '@icons/ChevronDownFill'
 
 export const TableCell = ({
   children,

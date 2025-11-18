@@ -1,6 +1,8 @@
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
+
 import type { Awaitable } from '@internal-types/utility/promises'
+
 import './hoverMenu.scss'
 
 export type HoverMenuProps = {

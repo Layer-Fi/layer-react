@@ -1,9 +1,10 @@
-import { AccountingConfigurationSchemaType, AccountingConfigurationSchema } from '@schemas/accountingConfiguration'
+import { Schema } from 'effect/index'
+import useSWR, { type SWRResponse } from 'swr'
+
+import { AccountingConfigurationSchema, type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import useSWR, { type SWRResponse } from 'swr'
-import { Schema } from 'effect/index'
 
 export const ACCOUNTING_CONFIGURATION_TAG_KEY = '#accounting-configuration'
 

@@ -1,12 +1,14 @@
-import { HStack } from '@ui/Stack/Stack'
-import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
-import { DatePicker } from '@components/DatePicker/DatePicker'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 import { useEffect } from 'react'
-import './dateRangeSelection.scss'
 import classNames from 'classnames'
+
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { HStack } from '@ui/Stack/Stack'
+import { DatePicker } from '@components/DatePicker/DatePicker'
+import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
+import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
+
+import './dateRangeSelection.scss'
 
 type DateRangeSelectionProps = {
   minDate?: Date | null

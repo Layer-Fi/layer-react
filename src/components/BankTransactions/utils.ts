@@ -1,4 +1,4 @@
-import { BankTransaction, DisplayState } from '@internal-types/bank_transactions'
+import { type BankTransaction, DisplayState } from '@internal-types/bank_transactions'
 import { CategorizedCategories, ReviewCategories } from '@components/BankTransactions/constants'
 
 export const filterVisibility = (

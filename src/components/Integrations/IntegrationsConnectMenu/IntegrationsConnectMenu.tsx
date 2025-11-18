@@ -1,14 +1,15 @@
-import { Heading } from '@ui/Typography/Heading'
-import { Button } from '@ui/Button/Button'
 import { useCallback, useContext, useState } from 'react'
-import { DropdownMenu, MenuList, MenuItem } from '@ui/DropdownMenu/DropdownMenu'
-import QuickbooksIcon from '@icons/QuickbooksIcon'
-import LinkIcon from '@icons/Link'
+
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import CheckIcon from '@icons/Check'
 import Cog from '@icons/Cog'
+import LinkIcon from '@icons/Link'
+import QuickbooksIcon from '@icons/QuickbooksIcon'
+import { Button } from '@ui/Button/Button'
+import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Spacer } from '@ui/Stack/Stack'
-import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 
 const MenuTriggerButton = () => (

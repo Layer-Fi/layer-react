@@ -1,9 +1,11 @@
+import { GridListItem } from 'react-aria-components'
+
+import ChevronRight from '@icons/ChevronRight'
+import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { Checkbox } from '@components/ui/Checkbox/Checkbox'
 import { HStack } from '@components/ui/Stack/Stack'
 import { Span } from '@components/ui/Typography/Text'
-import { GridListItem } from 'react-aria-components'
-import { Checkbox } from '@components/ui/Checkbox/Checkbox'
-import ChevronRight from '@icons/ChevronRight'
-import { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+
 import './businessFormMobileItem.scss'
 
 export type BusinessFormOptionValue = BankTransactionCategoryComboBoxOption

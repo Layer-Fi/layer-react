@@ -1,6 +1,7 @@
 import useSWRMutation from 'swr/mutation'
-import { Layer } from '@api/layer'
+
 import type { Awaitable } from '@internal-types/utility/promises'
+import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

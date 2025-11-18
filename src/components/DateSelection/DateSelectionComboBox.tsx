@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react'
+
+import { getActivationDate } from '@utils/business'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { DatePreset, presetForDateRange, rangeForPreset } from '@components/DateSelection/utils'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { getActivationDate } from '@utils/business'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type DateSelectionOption = {
   label: string

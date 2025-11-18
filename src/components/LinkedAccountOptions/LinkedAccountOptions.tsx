@@ -1,6 +1,7 @@
-import MoreVertical from '@icons/MoreVertical'
-import { HoverMenu, HoverMenuProps } from '@components/HoverMenu/HoverMenu'
 import classNames from 'classnames'
+
+import MoreVertical from '@icons/MoreVertical'
+import { HoverMenu, type HoverMenuProps } from '@components/HoverMenu/HoverMenu'
 
 interface LinkedAccountOptionsProps extends HoverMenuProps {
   showLedgerBalance?: boolean

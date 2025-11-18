@@ -1,4 +1,4 @@
-import { TripsRouteStoreProvider, useTripsRouteState, TripsRoute } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
+import { TripsRoute, TripsRouteStoreProvider, useTripsRouteState } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { TripsTable } from '@components/TripsTable/TripsTable'
 import { VehicleManagementDetail } from '@components/VehicleManagement/VehicleManagementDetail'
 

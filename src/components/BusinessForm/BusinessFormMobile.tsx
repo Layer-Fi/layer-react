@@ -1,9 +1,12 @@
+import { useCallback } from 'react'
 import { GridList } from 'react-aria-components'
-import { BusinessFormMobileItem, BusinessFormMobileItemOption } from './BusinessFormMobileItem'
+
 import { VStack } from '@components/ui/Stack/Stack'
 import { Span } from '@components/ui/Typography/Text'
+
 import './businessFormMobile.scss'
-import { useCallback } from 'react'
+
+import { BusinessFormMobileItem, type BusinessFormMobileItemOption } from './BusinessFormMobileItem'
 
 interface BusinessFormMobileProps {
   options: BusinessFormMobileItemOption[]

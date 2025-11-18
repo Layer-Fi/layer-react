@@ -1,7 +1,9 @@
-import { Text } from '@components/Typography/Text'
-import { IconButton } from '@components/Button/IconButton'
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
+
 import ChevronRightIcon from '@icons/ChevronRight'
+import { IconButton } from '@components/Button/IconButton'
+import { Text } from '@components/Typography/Text'
+
 import './actionableRow.scss'
 
 interface ActionableRowProps {

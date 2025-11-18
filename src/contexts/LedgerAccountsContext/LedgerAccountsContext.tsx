@@ -1,5 +1,6 @@
 import { createContext } from 'react'
-import { useLedgerAccounts } from '@hooks/useLedgerAccounts/useLedgerAccounts'
+
+import { type useLedgerAccounts } from '@hooks/useLedgerAccounts/useLedgerAccounts'
 
 export type LedgerAccountsContextType = ReturnType<typeof useLedgerAccounts>
 export const LedgerAccountsContext = createContext<LedgerAccountsContextType>({

@@ -1,16 +1,17 @@
-import { Heading } from '@ui/Typography/Heading'
 import { useCallback, useState } from 'react'
-import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { Plus } from 'lucide-react'
+
+import { type Vehicle } from '@schemas/vehicle'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
-import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
 import { Button } from '@ui/Button/Button'
-import { Plus } from 'lucide-react'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleForm'
-import { type Vehicle } from '@schemas/vehicle'
+import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
 
 interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void

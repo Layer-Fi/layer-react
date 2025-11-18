@@ -1,10 +1,11 @@
-import { MultiSelect } from '@components/Input/MultiSelect'
 import { useContext } from 'react'
 import type { StylesConfig } from 'react-select'
-import { TagComparisonOption } from '@internal-types/profit_and_loss'
+
+import { type TagComparisonOption } from '@internal-types/profit_and_loss'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
-import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
+import { MultiSelect } from '@components/Input/MultiSelect'
 import { HStack } from '@components/ui/Stack/Stack'
 
 const selectStyles = {

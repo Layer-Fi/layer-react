@@ -1,6 +1,6 @@
+import { BillsProvider } from '@contexts/BillsContext'
 import { Bills } from '@components/Bills/Bills'
 import { View } from '@components/View/View'
-import { BillsProvider } from '@contexts/BillsContext'
 
 export type BillsStringOverrides = {
   title?: string

@@ -1,17 +1,19 @@
-import { Text, TextSize } from '@components/Typography/Text'
-import { ErrorText } from '@components/Typography/ErrorText'
-import { InputGroup } from '@components/Input/InputGroup'
 import { useEffect, useMemo } from 'react'
-import { LinkedAccount } from '@internal-types/linked_accounts'
+import { endOfDay } from 'date-fns'
+
+import { type LinkedAccount } from '@internal-types/linked_accounts'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import CheckCircle from '@icons/CheckCircle'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { AmountInput } from '@components/Input/AmountInput'
-import { endOfDay } from 'date-fns'
-import CheckCircle from '@icons/CheckCircle'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import './accountFormBox.scss'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
+import { AmountInput } from '@components/Input/AmountInput'
+import { InputGroup } from '@components/Input/InputGroup'
+import { ErrorText } from '@components/Typography/ErrorText'
+import { Text, TextSize } from '@components/Typography/Text'
+
+import './accountFormBox.scss'
 
 export type AccountFormBoxData = {
   account: LinkedAccount

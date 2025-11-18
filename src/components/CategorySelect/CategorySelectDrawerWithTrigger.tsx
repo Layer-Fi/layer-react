@@ -1,7 +1,8 @@
-import ChevronDown from '@icons/ChevronDown'
-import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { useState } from 'react'
+
+import ChevronDown from '@icons/ChevronDown'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { Button } from '@components/ui/Button/Button'
 import { HStack, Spacer } from '@components/ui/Stack/Stack'
 import { Span } from '@components/ui/Typography/Text'

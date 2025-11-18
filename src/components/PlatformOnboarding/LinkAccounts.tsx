@@ -1,12 +1,14 @@
-import { Heading } from '@ui/Typography/Heading'
 import { useContext } from 'react'
+
+import type { Awaitable } from '@internal-types/utility/promises'
+import { getAccountsNeedingConfirmation } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { Heading } from '@ui/Typography/Heading'
 import { LinkAccountsConfirmationStep } from '@components/PlatformOnboarding/Steps/LinkAccountsConfirmationStep'
 import { LinkAccountsLinkStep } from '@components/PlatformOnboarding/Steps/LinkAccountsLinkStep'
 import { Wizard } from '@components/Wizard/Wizard'
-import { getAccountsNeedingConfirmation } from '@hooks/useLinkedAccounts/useLinkedAccounts'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
-import type { Awaitable } from '@internal-types/utility/promises'
+
 import './linkAccounts.scss'
 
 type LinkAccountsProps = {

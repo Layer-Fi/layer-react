@@ -1,9 +1,11 @@
-import { Button as ReactAriaButton } from 'react-aria-components'
 import { forwardRef, type PropsWithChildren } from 'react'
+import { Button as ReactAriaButton } from 'react-aria-components'
 import { type ButtonProps } from 'react-aria-components'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { withRenderProp } from '@components/utility/withRenderProp'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
+import { withRenderProp } from '@components/utility/withRenderProp'
+
 import './button.scss'
 
 const BUTTON_CLASS_NAMES = {

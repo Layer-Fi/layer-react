@@ -1,5 +1,7 @@
 import { forwardRef, type PropsWithChildren } from 'react'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+
 import './square.scss'
 
 const CLASS_NAME = 'Layer__Square'

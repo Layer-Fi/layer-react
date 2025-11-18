@@ -1,6 +1,6 @@
 import {
-  ButtonHTMLAttributes,
-  ReactNode,
+  type ButtonHTMLAttributes,
+  type ReactNode,
 } from 'react'
 import classNames from 'classnames'
 

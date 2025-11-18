@@ -1,11 +1,13 @@
-import { Button } from '@ui/Button/Button'
 import { useCallback, useContext } from 'react'
-import { HStack } from '@ui/Stack/Stack'
-import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
-import { DateSelection } from '@components/DateSelection/DateSelection'
+
 import { UnifiedReportDateVariant, useUnifiedReportDateVariant } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { Button } from '@ui/Button/Button'
+import { HStack } from '@ui/Stack/Stack'
 import { DateRangeSelection } from '@components/DateSelection/DateRangeSelection'
+import { DateSelection } from '@components/DateSelection/DateSelection'
+import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { UnifiedReportDownloadButton } from '@components/UnifiedReport/download/UnifiedReportDownloadButton'
+
 import './unifiedReportTableHeader.scss'
 
 export const UnifiedReportTableHeader = () => {

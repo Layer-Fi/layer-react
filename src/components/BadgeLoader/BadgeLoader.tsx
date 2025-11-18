@@ -1,8 +1,9 @@
-import { ReactNode } from 'react'
-import LoaderIcon from '@icons/Loader'
-import CheckIcon from '@icons/Check'
-import XIcon from '@icons/X'
+import { type ReactNode } from 'react'
+
 import AlertCircle from '@icons/AlertCircle'
+import CheckIcon from '@icons/Check'
+import LoaderIcon from '@icons/Loader'
+import XIcon from '@icons/X'
 export interface BadgeLoaderProps {
   children?: ReactNode
   size?: number

@@ -1,18 +1,19 @@
-import { ErrorText } from '@components/Typography/ErrorText'
-import { FileInput } from '@components/Input/FileInput'
-import { Button } from '@ui/Button/Button'
 import { useEffect, useRef, useState } from 'react'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import PaperclipIcon from '@icons/Paperclip'
-import { BankTransaction } from '@internal-types/bank_transactions'
+import classNames from 'classnames'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasReceipts, isCredit } from '@utils/bankTransactions'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import PaperclipIcon from '@icons/Paperclip'
+import { Button } from '@ui/Button/Button'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
-import classNames from 'classnames'
+import { FileInput } from '@components/Input/FileInput'
+import { ErrorText } from '@components/Typography/ErrorText'
+import { HStack, VStack } from '@components/ui/Stack/Stack'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
-import { VStack, HStack } from '@components/ui/Stack/Stack'
 
 interface BankTransactionsMobileListPersonalFormProps {
   bankTransaction: BankTransaction

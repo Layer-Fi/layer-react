@@ -1,8 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
+import { MenuIcon, PencilRuler } from 'lucide-react'
+
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
-import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import UploadCloud from '@icons/UploadCloud'
-import { PencilRuler, MenuIcon } from 'lucide-react'
+import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
 
 interface BankTransactionsHeaderMenuProps {
