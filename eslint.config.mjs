@@ -133,36 +133,50 @@ export default tsEslint.config(
       'simple-import-sort/imports': ['error', {
         groups: [
           [
-            // React + react-dom (types + values)
-            '^(?:type:)?react(?:$|/)', '^(?:type:)?react-dom(?:$|/)',
+            // React + react-dom
+            '^(?:type:)?react(?:$|/)',
+            '^(?:type:)?react-dom(?:$|/)',
 
-            // Node + externals
-            '^(?:type:)?node:', '^(?:type:)?@?\\w',
+            // Node + external dependencies
+            '^(?:type:)?node:',
+            '^(?:type:)?@?\\w',
+          ],
+          [
+            // Domain & data contracts
+            '^(?:type:)?@internal-types/',
+            '^(?:type:)?@schemas/',
+            '^(?:type:)?@models/',
 
-            // Root alias (@/)
-            '^(?:type:)?@/$', '^(?:type:)?@/(?!.*\\.(s?css)$)',
-
-            // Your alias buckets (types + values)
-            '^(?:type:)?(@internal-types/|@schemas/|@models)',
+            // App/environment configuration
             '^(?:type:)?@config/',
-            '^(?:type:)?@api/',
-            '^(?:type:)?(@providers/|@contexts/)',
-            '^(?:type:)?@hooks/',
+
+            // Cross-cutting helpers (used by api, hooks, components, etc.)
             '^(?:type:)?@utils/',
+
+            // Data layer: API definitions, then hooks that consume them
+            '^(?:type:)?@api/',
+            '^(?:type:)?@hooks/',
+
+            // App wiring & global state (can depend on hooks/api)
+            '^(?:type:)?@providers/',
+            '^(?:type:)?@contexts/',
+
+            // Design system primitives
             '^(?:type:)?@icons/',
             '^(?:type:)?@ui/',
+
+            // Reusable and feature-level UI
+            '^(?:type:)?@components/',
             '^(?:type:)?@features/',
-            '^(?:type:)?@components/(?!ui/)',
             '^(?:type:)?@views/',
+
+            // Static resources
             '^(?:type:)?@assets/',
-
-            // Relative (exclude styles)
-            '^(?:type:)?\\.{1,2}/(?!.*\\.(s?css)$)',
           ],
-
-          // Styles last, then side-effects
-          ['.*\\.s?css$'],
-          ['^\\u0000'],
+          [
+            // Styles
+            '.*\\.s?css$',
+          ],
         ],
       }],
       'simple-import-sort/exports': 'error',
