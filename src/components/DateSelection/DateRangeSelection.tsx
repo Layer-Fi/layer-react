@@ -1,10 +1,12 @@
-import { HStack } from '../ui/Stack/Stack'
-import { DateSelectionComboBox } from './DateSelectionComboBox'
-import { DatePicker } from '../DatePicker/DatePicker'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useDatePickerState } from '../DatePicker/useDatePickerState'
+import { HStack } from '@ui/Stack/Stack'
+import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
+import { DatePicker } from '@components/DatePicker/DatePicker'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 import { useEffect } from 'react'
 import './dateRangeSelection.scss'
+import classNames from 'classnames'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 
 type DateRangeSelectionProps = {
   minDate?: Date | null
@@ -12,8 +14,9 @@ type DateRangeSelectionProps = {
 }
 
 export const DateRangeSelection = ({ minDate, maxDate }: DateRangeSelectionProps) => {
-  const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDateRange({ displayMode: 'dayRangePicker' })
+  const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDateRange({ displayMode: 'full' })
   const { setDateRange: setGlobalDateRange } = useGlobalDateRangeActions()
+  const { value } = useSizeClass()
 
   const {
     localDate: localStartDate,
@@ -52,7 +55,10 @@ export const DateRangeSelection = ({ minDate, maxDate }: DateRangeSelectionProps
   }, [startDateInvalid, endDateInvalid, localStartDate, localEndDate, setGlobalDateRange])
 
   return (
-    <HStack gap='xs' className='Layer__DateRangeSelection'>
+    <HStack className={classNames('Layer__DateRangeSelection', {
+      'Layer__DateRangeSelection--mobile': value === 'mobile',
+    })}
+    >
       <DateSelectionComboBox />
       <DatePicker
         label='Start Date'

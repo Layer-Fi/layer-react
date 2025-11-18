@@ -1,10 +1,11 @@
-import { useContext, useMemo } from 'react'
-import { MultiSelect, Select } from '../Input'
+import { MultiSelect } from '@components/Input/MultiSelect'
+import { useContext } from 'react'
 import type { StylesConfig } from 'react-select'
-import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { TagComparisonOption } from '../../types/profit_and_loss'
-import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
+import { TagComparisonOption } from '@internal-types/profit_and_loss'
+import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
+import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { HStack } from '@components/ui/Stack/Stack'
 
 const selectStyles = {
   valueContainer: (styles) => {
@@ -15,48 +16,17 @@ const selectStyles = {
   },
 } satisfies StylesConfig<TagComparisonOption, true>
 
-function buildCompareOptions(rangeDisplayMode: DateRangePickerMode) {
-  switch (rangeDisplayMode) {
-    case 'monthPicker':
-      return [
-        { value: 1, label: 'This month' },
-        { value: 2, label: 'Last 2 months' },
-        { value: 3, label: 'Last 3 months' },
-      ]
-    case 'yearPicker':
-      return [
-        { value: 1, label: 'This year' },
-        { value: 2, label: 'Last 2 years' },
-        { value: 3, label: 'Last 3 years' },
-      ]
-    default:
-      return [
-        { value: 1, label: 'This period' },
-        { value: 2, label: 'Last 2 periods' },
-        { value: 3, label: 'Last 3 periods' },
-      ]
-  }
-}
-
 export const ProfitAndLossCompareOptions = () => {
   const {
-    setComparePeriods,
     setSelectedCompareOptions,
-    isPeriodsSelectEnabled,
-    comparePeriods,
     compareOptions,
     selectedCompareOptions,
     comparisonConfig,
+    comparisonPeriodMode,
+    setComparisonPeriodMode,
   } = useContext(ProfitAndLossComparisonContext)
 
-  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-
-  const periods = useMemo<number>(
-    () => comparePeriods !== 0 ? comparePeriods : 1,
-    [comparePeriods],
-  )
-
-  const timeComparisonOptions = buildCompareOptions(rangeDisplayMode)
+  const { displayMode } = useContext(ProfitAndLossContext)
 
   const tagComparisonSelectOptions = compareOptions.map(
     (tagComparisonOption) => {
@@ -72,18 +42,10 @@ export const ProfitAndLossCompareOptions = () => {
   }
 
   return (
-    <div className='Layer__compare__options'>
-      <Select
-        options={timeComparisonOptions}
-        onChange={e => setComparePeriods(e && e.value ? e.value : 1)}
-        value={
-          timeComparisonOptions.find(
-            option => option.value === periods,
-          )
-        }
-        placeholder={rangeDisplayMode === 'yearPicker' ? 'Compare years' : 'Compare months'}
-        disabled={!isPeriodsSelectEnabled}
-      />
+    <HStack align='center' gap='xs'>
+      {displayMode === 'full' && (
+        <DateGroupByComboBox value={comparisonPeriodMode} onValueChange={setComparisonPeriodMode} />
+      )}
       <MultiSelect
         options={tagComparisonSelectOptions}
         onChange={values => setSelectedCompareOptions(values)}
@@ -99,7 +61,8 @@ export const ProfitAndLossCompareOptions = () => {
         })}
         placeholder='Select views'
         styles={selectStyles}
+        className='Layer__ProfitAndLoss__TagMultiSelect'
       />
-    </div>
+    </HStack>
   )
 }

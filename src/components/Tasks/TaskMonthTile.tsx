@@ -1,7 +1,7 @@
-import { Text, TextSize } from '../Typography'
-import { TaskStatusBadge } from './TaskStatusBadge'
-import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-import { MonthData } from './types'
+import { Text, TextSize } from '@components/Typography/Text'
+import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { MonthData } from '@components/Tasks/types'
 
 export type TaskMonthTileProps = {
   data: MonthData

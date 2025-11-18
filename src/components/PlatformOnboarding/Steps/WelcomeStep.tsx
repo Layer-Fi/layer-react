@@ -1,8 +1,9 @@
-import DocumentIcon from '../../../icons/Document'
-import TrendingUpIcon from '../../../icons/TrendingUp'
-import { Button } from '../../Button/Button'
-import { Heading, HeadingSize, Text } from '../../Typography'
-import { HStack, VStack } from '../../ui/Stack/Stack'
+import { Text } from '@components/Typography/Text'
+import { Heading, HeadingSize } from '@components/Typography/Heading'
+import { Button } from '@components/Button/Button'
+import DocumentIcon from '@icons/Document'
+import TrendingUpIcon from '@icons/TrendingUp'
+import { HStack, VStack } from '@ui/Stack/Stack'
 
 type WelcomeStepProps = {
   onNext: () => void

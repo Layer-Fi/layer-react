@@ -1,4 +1,4 @@
-import { USStateCode } from './location'
+import { USStateCode } from '@internal-types/location'
 
 export interface Business {
   id: string

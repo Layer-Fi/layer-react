@@ -1,6 +1,6 @@
 import { RefObject } from 'react'
-import { ChartOfAccountsForm } from '../ChartOfAccountsForm'
-import { ChartOfAccountsFormStringOverrides } from '../ChartOfAccountsForm/ChartOfAccountsForm'
+import { ChartOfAccountsForm } from '@components/ChartOfAccountsForm/ChartOfAccountsForm'
+import { ChartOfAccountsFormStringOverrides } from '@components/ChartOfAccountsForm/ChartOfAccountsForm'
 
 export const ChartOfAccountsSidebar = ({
   parentRef: _parentRef,

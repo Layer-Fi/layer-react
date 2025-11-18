@@ -15,7 +15,7 @@ import {
   CalendarHeaderCell as ReactAriaCalendarHeaderCell,
   type CalendarHeaderCellProps as ReactAriaCalendarHeaderCellProps,
 } from 'react-aria-components'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './calendar.scss'
 
 const CALENDAR_CLASS_NAME = 'Layer__UI__Calendar'
@@ -68,13 +68,18 @@ export const CalendarGridBody = forwardRef<HTMLTableSectionElement, CalendarGrid
 )
 
 const CALENDAR_CELL_CLASS_NAME = 'Layer__UI__CalendarCell'
-type CalendarCellProps = ReactAriaCalendarCellProps
+type CalendarCellProps = ReactAriaCalendarCellProps & {
+  size?: 'sm' | 'md'
+}
 
 export const CalendarCell = forwardRef<HTMLTableCellElement, CalendarCellProps>(
-  function CalendarCell({ className, ...restProps }, ref) {
+  function CalendarCell({ className, size = 'sm', ...restProps }, ref) {
+    const dataProperties = toDataProperties({ size })
+
     return (
       <ReactAriaCalendarCell
         {...restProps}
+        {...dataProperties}
         className={classNames(CALENDAR_CELL_CLASS_NAME, className)}
         ref={ref}
       />
@@ -98,13 +103,18 @@ export const CalendarGridHeader = forwardRef<HTMLTableSectionElement, CalendarGr
 )
 
 const CALENDAR_HEADER_CELL_CLASS_NAME = 'Layer__UI__CalendarHeaderCell'
-type CalendarHeaderCellProps = ReactAriaCalendarHeaderCellProps
+type CalendarHeaderCellProps = ReactAriaCalendarHeaderCellProps & {
+  size?: 'sm' | 'md'
+}
 
 export const CalendarHeaderCell = forwardRef<HTMLTableCellElement, CalendarHeaderCellProps>(
-  function CalendarHeaderCell({ className, ...restProps }, ref) {
+  function CalendarHeaderCell({ className, size = 'sm', ...restProps }, ref) {
+    const dataProperties = toDataProperties({ size })
+
     return (
       <ReactAriaCalendarHeaderCell
         {...restProps}
+        {...dataProperties}
         className={classNames(CALENDAR_HEADER_CELL_CLASS_NAME, className)}
         ref={ref}
       />

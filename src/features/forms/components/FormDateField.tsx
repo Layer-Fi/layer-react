@@ -1,14 +1,14 @@
 import { useState, useEffect, type PropsWithChildren, useCallback } from 'react'
-import { useFieldContext } from '../hooks/useForm'
-import { Label } from '../../../components/ui/Typography/Text'
-import { DateField, DateInput, DateSegment } from '../../../components/ui/Date/Date'
-import { FieldError } from '../../../components/ui/Form/Form'
-import type { CommonFormFieldProps } from '../types'
-import type { ZonedDateTime } from '@internationalized/date'
-import { InputGroup } from '../../../components/ui/Input/InputGroup'
+import { useFieldContext } from '@features/forms/hooks/useForm'
+import { Label } from '@ui/Typography/Text'
+import { DateField, DateInput, DateSegment } from '@ui/Date/Date'
+import { FieldError } from '@ui/Form/Form'
+import type { CommonFormFieldProps } from '@features/forms/types'
+import type { DateValue } from '@internationalized/date'
+import { InputGroup } from '@ui/Input/InputGroup'
 
 export type FormDateFieldProps = CommonFormFieldProps
-export function FormDateField({
+export function FormDateField<T extends DateValue>({
   label,
   className,
   inline = false,
@@ -16,16 +16,20 @@ export function FormDateField({
   showFieldError = true,
   isReadOnly = false,
 }: PropsWithChildren<FormDateFieldProps>) {
-  const field = useFieldContext<ZonedDateTime | null>()
+  const field = useFieldContext<T | null>()
 
   const { name, state, handleChange, handleBlur } = field
   const { meta, value } = state
   const { errors, isValid } = meta
-  const [localDate, setLocalDate] = useState(value)
+  const [localDate, setLocalDate] = useState<T | null>(value)
 
   useEffect(() => {
     setLocalDate(value)
   }, [value])
+
+  const onChange = useCallback((newValue: DateValue | null) => {
+    setLocalDate(newValue as T | null)
+  }, [])
 
   const onBlur = useCallback(() => {
     handleChange(localDate)
@@ -37,14 +41,14 @@ export function FormDateField({
 
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
-    <DateField
+    <DateField<T>
       name={name}
       granularity='day'
       value={localDate}
       isInvalid={!isValid}
       inline={inline}
       className={className}
-      onChange={setLocalDate}
+      onChange={onChange}
       onBlur={onBlur}
       isReadOnly={isReadOnly}
       {...additionalAriaProps}

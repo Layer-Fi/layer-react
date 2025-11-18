@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
-import { useBookkeepingPeriods } from './useBookkeepingPeriods'
-import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
-import { getActivationDate } from '../../../utils/business'
+import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getActivationDate } from '@utils/business'
 import { getYear } from 'date-fns'
-import { isIncompleteTask, type UserVisibleTask } from '../../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { isIncompleteTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 export const useBookkeepingYearsStatus = () => {
   const { business } = useLayerContext()
@@ -35,7 +35,7 @@ export const useBookkeepingYearsStatus = () => {
       .sort((a, b) => b.year - a.year)
   }, [activationDate, data])
 
-  const earliestIncompletePeriod = useMemo(() => [...data ?? []]
+  const earliestIncompletePeriod = useMemo(() => [...(data ?? [])]
     .sort((a, b) => {
       if (a.year === b.year) {
         return b.month - a.month

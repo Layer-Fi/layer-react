@@ -1,15 +1,15 @@
+import { Text } from '@components/Typography/Text'
 import { useCallback, useEffect, useMemo, useState, type FunctionComponent } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import {
   ProfitAndLossSummaryData,
   useProfitAndLossLTM,
-} from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
-import { centsToDollars } from '../../models/Money'
-import { isDateAllowedToBrowse } from '../../utils/business'
-import { Text } from '../Typography'
-import { ChartStateCard } from './ChartStateCard'
-import { Indicator } from './Indicator'
+} from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
+import { centsToDollars } from '@models/Money'
+import { isDateAllowedToBrowse } from '@utils/business'
+import { ChartStateCard } from '@components/ProfitAndLossChart/ChartStateCard'
+import { Indicator } from '@components/ProfitAndLossChart/Indicator'
 import classNames from 'classnames'
 import {
   add,
@@ -40,8 +40,7 @@ import { Props as LegendProps } from 'recharts/types/component/DefaultLegendCont
 import {
   useGlobalDateRange,
   useGlobalDateRangeActions,
-} from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+} from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 const getChartWindow = ({
   chartWindow,
@@ -152,11 +151,8 @@ export const ProfitAndLossChart = ({
 
   const { getColor, business } = useLayerContext()
 
-  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
+  const dateRange = useGlobalDateRange({ displayMode: 'month' })
   const { setMonth } = useGlobalDateRangeActions()
-
-  const showIndicator = rangeDisplayMode === 'monthPicker'
 
   const [customCursorSize, setCustomCursorSize] = useState({
     width: 0,
@@ -710,18 +706,14 @@ export const ProfitAndLossChart = ({
             xAxisId='revenue'
             stackId='revenue'
           >
-            {showIndicator
-              ? (
-                <LabelList
-                  content={(
-                    <Indicator
-                      setCustomCursorSize={(width, height, x) => setCustomCursorSize({ width, height, x })}
-                      customCursorSize={customCursorSize}
-                    />
-                  )}
+            <LabelList
+              content={(
+                <Indicator
+                  setCustomCursorSize={(width, height, x) => setCustomCursorSize({ width, height, x })}
+                  customCursorSize={customCursorSize}
                 />
-              )
-              : null}
+              )}
+            />
             {dataOrPlaceholderData.map((entry) => {
               return (
                 <Cell

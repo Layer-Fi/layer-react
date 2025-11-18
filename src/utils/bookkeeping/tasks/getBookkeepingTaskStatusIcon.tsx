@@ -1,6 +1,6 @@
-import AlertCircle from '../../../icons/AlertCircle'
-import Check from '../../../icons/Check'
-import type { RawTask } from '../../../types/tasks'
+import AlertCircle from '@icons/AlertCircle'
+import Check from '@icons/Check'
+import type { RawTask } from '@internal-types/tasks'
 
 const STATUS_TO_ICON_MAP = {
   TODO: {

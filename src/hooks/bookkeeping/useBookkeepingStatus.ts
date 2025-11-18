@@ -1,9 +1,9 @@
 import useSWR from 'swr'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { useAuth } from '../useAuth'
-import { get } from '../../api/layer/authenticated_http'
-import type { EnumWithUnknownValues } from '../../types/utility/enumWithUnknownValues'
-import { useLegacyMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { get } from '@api/layer/authenticated_http'
+import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
+import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 
 export enum BookkeepingStatus {
   NOT_PURCHASED = 'NOT_PURCHASED',

@@ -1,4 +1,4 @@
-import { Text, TextSize } from '../Typography'
+import { Text, TextSize } from '@components/Typography/Text'
 
 export const TasksHeader = ({
   tasksHeader = 'Bookkeeping Tasks',

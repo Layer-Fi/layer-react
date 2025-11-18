@@ -1,12 +1,12 @@
 import useSWRMutation from 'swr/mutation'
-import { useAuth } from '../useAuth'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import {
   updateBusiness,
   type UpdateBusinessBody,
-} from '../../api/layer/business'
+} from '@api/layer/business'
 import { useSWRConfig } from 'swr'
-import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
+import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { useCallback } from 'react'
 
 export const BUSINESS_TAG_KEY = 'business'

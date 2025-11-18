@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tsConfigPaths from 'vite-tsconfig-paths'
 import dts from 'vite-plugin-dts'
 import path from 'node:path'
 import { bundleCss } from './plugins/bundleCss'
@@ -11,11 +12,17 @@ export default defineConfig(({ mode, command }) => {
   const isCJS = mode === 'cjs'
   const isWatch = command === 'build' && process.argv.includes('--watch')
 
+  const externalDeps = buildExternalDeps({
+    mode: isCJS ? 'cjs' : 'esm',
+    bundleForCjs: ['lodash-es', 'react-merge-refs'],
+  })
+
   return {
     publicDir: false,
 
     plugins: [
       react(),
+      tsConfigPaths(),
       isESM
         ? dts({
           entryRoot: 'src',
@@ -55,7 +62,7 @@ export default defineConfig(({ mode, command }) => {
           fileName: () => 'index.cjs',
         },
       rollupOptions: {
-        external: buildExternalDeps(),
+        external: externalDeps,
         output: {
           dir: path.resolve(__dirname, `../${OUT_DIR}/${mode}`),
           entryFileNames: isESM

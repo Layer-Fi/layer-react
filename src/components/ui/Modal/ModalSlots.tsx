@@ -1,12 +1,12 @@
+import { Heading } from '@ui/Typography/Heading'
+import { Button } from '@ui/Button/Button'
 import { forwardRef, type ComponentProps, type PropsWithChildren, type ReactElement } from 'react'
 import { X } from 'lucide-react'
-import { Button } from '../Button/Button'
-import { Heading } from '../Typography/Heading'
-import { P } from '../Typography/Text'
+import { P } from '@ui/Typography/Text'
 import classNames from 'classnames'
 import './modalSlots.scss'
-import { VStack } from '../Stack/Stack'
-import { Separator } from '../../Separator/Separator'
+import { VStack } from '@ui/Stack/Stack'
+import { Separator } from '@components/Separator/Separator'
 
 const MODAL_CLOSE_BUTTON_CLASS_NAME = 'Layer__ModalCloseButton'
 
@@ -38,20 +38,24 @@ export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalClo
 
 type ModalTitleWithCloseProps = {
   heading: ReactElement
+  description?: ReactElement
   onClose?: () => void
 }
 
 export const ModalTitleWithClose = forwardRef<
   HTMLElementTagNameMap['div'],
   ModalTitleWithCloseProps
->(function ModalTitleWithClose({ heading, onClose }, ref) {
+>(function ModalTitleWithClose({ heading, description, onClose }, ref) {
   return (
     <VStack>
       <div
         className='Layer__ModalTitleWithClose'
         ref={ref}
       >
-        {heading}
+        <VStack gap='xs' slot='title'>
+          {heading}
+          {description}
+        </VStack>
         <Button
           icon
           variant='outlined'

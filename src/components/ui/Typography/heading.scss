@@ -14,7 +14,8 @@
     color: var(--fg-subtle);
   }
 
-  &[data-ellipsis] {
+  &[data-ellipsis],
+  &[data-with-tooltip] {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

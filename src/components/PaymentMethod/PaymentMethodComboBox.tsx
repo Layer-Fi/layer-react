@@ -1,8 +1,8 @@
 import { useCallback, useId } from 'react'
-import { ComboBox } from '../ui/ComboBox/ComboBox'
-import { HStack } from '../ui/Stack/Stack'
-import { Label } from '../ui/Typography/Text'
-import { PaymentMethod } from './schemas'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { HStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
+import { PaymentMethod } from '@components/PaymentMethod/schemas'
 import classNames from 'classnames'
 import './paymentMethodComboBox.scss'
 

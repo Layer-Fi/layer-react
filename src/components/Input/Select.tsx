@@ -6,8 +6,8 @@ import ReactSelect, {
   OptionsOrGroups,
   components,
 } from 'react-select'
-import ChevronDownFill from '../../icons/ChevronDownFill'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
+import ChevronDownFill from '@icons/ChevronDownFill'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
 
 export interface SelectProps<T> {
@@ -54,8 +54,8 @@ export const Select = <T,>({
   ), [])
 
   return (
-    <Tooltip disabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+    <DeprecatedTooltip disabled={!isInvalid || !errorMessage}>
+      <DeprecatedTooltipTrigger className='Layer__input-tooltip'>
         <ReactSelect<T>
           inputId={inputId}
           name={name}
@@ -72,8 +72,8 @@ export const Select = <T,>({
           isLoading={isLoading}
           isDisabled={disabled}
         />
-      </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
-    </Tooltip>
+      </DeprecatedTooltipTrigger>
+      <DeprecatedTooltipContent className='Layer__tooltip'>{errorMessage}</DeprecatedTooltipContent>
+    </DeprecatedTooltip>
   )
 }

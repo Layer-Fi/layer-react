@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import Select, { Options } from 'react-select'
-import { BankTransactions } from '../../components/BankTransactions/BankTransactions'
-import { Container } from '../../components/Container'
-import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
-import { Toggle } from '../../components/Toggle'
-import { View } from '../../components/View'
-import { PnlTagFilter } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
-import { MoneyFormat } from '../../types/general'
-import { DisplayState } from '../../types/bank_transactions'
-import { AccountingOverview } from '../AccountingOverview'
-import type { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { BankTransactions } from '@components/BankTransactions/BankTransactions'
+import { Container } from '@components/Container/Container'
+import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
+import { Toggle } from '@components/Toggle/Toggle'
+import { View } from '@components/View/View'
+import { PnlTagFilter } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import { MoneyFormat } from '@internal-types/general'
+import { DisplayState } from '@internal-types/bank_transactions'
+import { AccountingOverview } from '@views/AccountingOverview/AccountingOverview'
+import type { DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import './projectProfitability.scss'
 
 export type TagOption = {
@@ -26,7 +26,11 @@ export interface ProjectProfitabilityProps {
   valueOptions: TagOption[]
   showTitle?: boolean
   stringOverrides?: ProjectsStringOverrides
-  datePickerMode?: DateRangePickerMode
+  /**
+   * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
+   */
+  datePickerMode?: unknown
+  dateSelectionMode?: DateRangePickerMode
   csvMoneyFormat?: MoneyFormat
 }
 
@@ -34,7 +38,7 @@ export const ProjectProfitabilityView = ({
   valueOptions,
   showTitle,
   stringOverrides,
-  datePickerMode = 'monthPicker',
+  dateSelectionMode = 'month',
   csvMoneyFormat = 'DOLLAR_STRING',
 }: ProjectProfitabilityProps) => {
   const [activeTab, setActiveTab] = useState<ProjectTab>('overview')
@@ -142,7 +146,7 @@ export const ProjectProfitabilityView = ({
             <ProfitAndLoss asContainer={false} tagFilter={pnlTagFilter}>
               <ProfitAndLoss.Report
                 stringOverrides={stringOverrides}
-                datePickerMode={datePickerMode}
+                dateSelectionMode={dateSelectionMode}
                 csvMoneyFormat={csvMoneyFormat}
               />
             </ProfitAndLoss>

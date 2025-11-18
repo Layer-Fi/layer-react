@@ -1,5 +1,5 @@
 import { Schema, pipe } from 'effect'
-import { TagDimensionSchema } from '../features/tags/tagSchemas'
+import { TagDimensionSchema } from '@features/tags/tagSchemas'
 
 export enum ReportingBasis {
   Accrual = 'ACCRUAL',

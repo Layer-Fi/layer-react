@@ -6,10 +6,10 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { useElementSize } from '../../hooks/useElementSize'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
+import { useElementSize } from '@hooks/useElementSize/useElementSize'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
-import { Span } from '../ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 
 export interface Option {
   label: string
@@ -184,8 +184,8 @@ const ToggleOption = ({
 
   if (disabled) {
     return (
-      <Tooltip>
-        <TooltipTrigger>
+      <DeprecatedTooltip>
+        <DeprecatedTooltipTrigger>
           <label
             className={optionClassName}
             data-checked={checked}
@@ -207,11 +207,11 @@ const ToggleOption = ({
               <Span noWrap>{label}</Span>
             </span>
           </label>
-        </TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>
+        </DeprecatedTooltipTrigger>
+        <DeprecatedTooltipContent className='Layer__tooltip'>
           {disabledMessage}
-        </TooltipContent>
-      </Tooltip>
+        </DeprecatedTooltipContent>
+      </DeprecatedTooltip>
     )
   }
 

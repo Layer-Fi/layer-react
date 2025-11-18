@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode, useRef } from 'react'
-import LoaderIcon from '../../icons/Loader'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
+import LoaderIcon from '@icons/Loader'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
 
 export enum ButtonVariant {
@@ -124,14 +124,14 @@ export const Button = ({
     >
       {tooltip
         ? (
-          <Tooltip offset={12}>
-            <TooltipTrigger>{content}</TooltipTrigger>
+          <DeprecatedTooltip offset={12}>
+            <DeprecatedTooltipTrigger>{content}</DeprecatedTooltipTrigger>
             {tooltip && (
-              <TooltipContent className='Layer__tooltip'>
+              <DeprecatedTooltipContent className='Layer__tooltip'>
                 {tooltip}
-              </TooltipContent>
+              </DeprecatedTooltipContent>
             )}
-          </Tooltip>
+          </DeprecatedTooltip>
         )
         : (
           content

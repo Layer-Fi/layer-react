@@ -1,14 +1,14 @@
-import type { CustomerSchema } from '../schemas/customer'
-import type { VendorSchema } from '../schemas/vendor'
-import { MatchDetailsType } from '../schemas/bankTransactions/match'
-import { Categorization } from './categories'
-import { CategorizationStatus } from '../schemas/bankTransactions/bankTransaction'
-import { S3PresignedUrl, type Direction } from './general'
-import type { Tag, TransactionTagEncoded } from '../features/tags/tagSchemas'
-import { UpdateCategorizationRulesSuggestionSchema } from '../schemas/bankTransactions/categorizationRules/categorizationRule'
-import type { CategorizationEncoded } from '../schemas/categorization'
-import type { CustomerVendorSchema } from '../features/customerVendor/customerVendorSchemas'
-import type { BankTransactionCategoryComboBoxOption } from '../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import type { CustomerSchema } from '@schemas/customer'
+import type { VendorSchema } from '@schemas/vendor'
+import { MatchDetailsType } from '@schemas/bankTransactions/match'
+import { Categorization } from '@internal-types/categories'
+import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { S3PresignedUrl, type Direction } from '@internal-types/general'
+import type { Tag, TransactionTagEncoded } from '@features/tags/tagSchemas'
+import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import type { CategorizationEncoded } from '@schemas/categorization'
+import type { CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
+import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export enum BankTransactionMatchType {
   CONFIRM_MATCH = 'Confirm_Match',
@@ -84,7 +84,6 @@ export interface DocumentS3Urls {
 
 export type Split = {
   amount: number
-  inputValue: string
   category: BankTransactionCategoryComboBoxOption | null
   tags: readonly Tag[]
   customerVendor: typeof CustomerVendorSchema.Type | null

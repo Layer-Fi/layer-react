@@ -1,26 +1,26 @@
+import { ErrorText } from '@components/Typography/ErrorText'
+import { TextSize, Text } from '@components/Typography/Text'
+import { Heading, HeadingSize } from '@components/Typography/Heading'
+import { Select } from '@components/Input/Select'
+import { InputGroup } from '@components/Input/InputGroup'
+import { HeaderCol } from '@components/Header/HeaderCol'
+import { HeaderRow } from '@components/Header/HeaderRow'
+import { RetryButton } from '@components/Button/RetryButton'
+import { IconButton } from '@components/Button/IconButton'
+import { CloseButton } from '@components/Button/CloseButton'
+import { Button, ButtonVariant } from '@components/Button/Button'
 import { FormEvent, useMemo } from 'react'
-import { DATE_FORMAT_SHORT } from '../../config/general'
-import { useBillsRecordPaymentContext } from '../../contexts/BillsContext'
-import {
-  Button,
-  ButtonVariant,
-  CloseButton,
-  IconButton,
-  RetryButton,
-} from '../Button'
-import { Header } from '../Container'
-import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
-import { HeaderRow, HeaderCol } from '../Header'
-import { InputGroup, Select } from '../Input'
-import { StaticValue } from '../Input/StaticValue'
-import { Heading, HeadingSize, TextSize, Text, ErrorText } from '../Typography'
-import { Bill, BillPaymentMethod, BillPaymentMethods } from '../../types/bills'
-import CloseIcon from '../../icons/CloseIcon'
+import { DATE_FORMAT_SHORT } from '@config/general'
+import { useBillsRecordPaymentContext } from '@contexts/BillsContext'
+import { Header } from '@components/Container/Header'
+import { StaticValue } from '@components/Input/StaticValue'
+import { Bill, BillPaymentMethod, BillPaymentMethods } from '@internal-types/bills'
+import CloseIcon from '@icons/CloseIcon'
 import { parseISO, format as formatTime } from 'date-fns'
-import { convertCentsToCurrency, convertFromCents, convertNumberToCurrency, convertToCents } from '../../utils/format'
-import { getVendorName } from '../../utils/vendors'
-import { AmountInput } from '../Input/AmountInput'
-import { useUnpaidBillsByVendor } from './useUnpaidBillsByVendor'
+import { convertCentsToCurrency, convertFromCents, convertNumberToCurrency, convertToCents } from '@utils/format'
+import { getVendorName } from '@utils/vendors'
+import { AmountInput } from '@components/Input/AmountInput'
+import { useUnpaidBillsByVendor } from '@components/Bills/useUnpaidBillsByVendor'
 
 const buildLabel = (bill: Bill, amount?: string | null) => {
   const amountNumber = amount !== undefined ? Number(amount) : 0
@@ -62,8 +62,6 @@ export const BillsRecordPayment = ({
     removeBillByIndex,
     recordPayment,
     closeRecordPayment,
-    paymentDate,
-    setPaymentDate,
     paymentMethod,
     setPaymentMethod,
     vendor,
@@ -112,18 +110,6 @@ export const BillsRecordPayment = ({
             inline={true}
           >
             <StaticValue>{vendor && getVendorName(vendor)}</StaticValue>
-          </InputGroup>
-
-          <InputGroup
-            label='Payment date'
-            className='Layer__bills__record-payment__date'
-            inline={true}
-          >
-            <DeprecatedDatePicker
-              selected={paymentDate}
-              onChange={date => setPaymentDate(date as Date)}
-              displayMode='dayPicker'
-            />
           </InputGroup>
 
           <InputGroup

@@ -1,7 +1,8 @@
+import { Button as ReactAriaButton } from 'react-aria-components'
 import { forwardRef } from 'react'
-import { Button as ReactAriaButton, type ButtonProps } from 'react-aria-components'
-import { withRenderProp } from '../../utility/withRenderProp'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { type ButtonProps } from 'react-aria-components'
+import { withRenderProp } from '@components/utility/withRenderProp'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './pill.scss'
 
 type PillStatus = 'error'

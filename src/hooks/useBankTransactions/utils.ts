@@ -1,8 +1,11 @@
-import { filterVisibility } from '../../components/BankTransactions/utils'
-import { BankTransaction, DisplayState } from '../../types/bank_transactions'
-import { AccountItem, NumericRangeFilter } from './types'
-import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, isApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { MatchOrCategorizeTransactionRequestSchema } from './useBulkMatchOrCategorize'
+import { filterVisibility } from '@components/BankTransactions/utils'
+import { BankTransaction, DisplayState, Split } from '@internal-types/bank_transactions'
+import { AccountItem, NumericRangeFilter } from '@hooks/useBankTransactions/types'
+import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, isApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { MatchOrCategorizeTransactionRequestSchema } from '@hooks/useBankTransactions/useBulkMatchOrCategorize'
+import { CategoryUpdate } from '@internal-types/categories'
+import { makeTagKeyValueFromTag } from '@features/tags/tagSchemas'
+import { ClassificationEncoded } from '@schemas/categorization'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
   const accounts: AccountItem[] = []
@@ -137,4 +140,24 @@ export const buildBulkMatchOrCategorizePayload = (
   }
 
   return transactions
+}
+
+export const buildCategorizeBankTransactionPayloadForSplit = (
+  splits: Split[],
+): CategoryUpdate => {
+  return splits.length === 1 && splits[0].category
+    ? ({
+      type: 'Category',
+      category: splits[0].category.classificationEncoded as ClassificationEncoded,
+    })
+    : ({
+      type: 'Split',
+      entries: splits.map(split => ({
+        category: split.category?.classificationEncoded as ClassificationEncoded,
+        amount: split.amount,
+        tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
+        customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
+        vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
+      })),
+    })
 }

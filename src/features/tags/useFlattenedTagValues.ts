@@ -1,6 +1,6 @@
-import { makeTagValue, TagDimensionSchema } from './tagSchemas'
+import { makeTagValue, TagDimensionSchema } from '@features/tags/tagSchemas'
 import { useMemo } from 'react'
-import type { useTagDimensions } from './api/useTagDimensions'
+import type { useTagDimensions } from '@features/tags/api/useTagDimensions'
 
 function flattenDimensionsToValues(dimensions: ReadonlyArray<typeof TagDimensionSchema.Type>) {
   return dimensions.flatMap(({ id: dimensionId, key: dimensionKey, definedValues, displayName: dimensionDisplayName }) => {

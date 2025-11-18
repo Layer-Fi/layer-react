@@ -1,9 +1,9 @@
 import useSWRMutation from 'swr/mutation'
-import { useLayerContext } from '../../../contexts/LayerContext'
-import { useAuth } from '../../../hooks/useAuth'
-import type { S3PresignedUrl } from '../../../types/general'
-import type { Awaitable } from '../../../types/utility/promises'
-import { getLedgerAccountBalancesCSV } from '../../../api/layer/chart_of_accounts'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import type { S3PresignedUrl } from '@internal-types/general'
+import type { Awaitable } from '@internal-types/utility/promises'
+import { getLedgerAccountBalancesCSV } from '@api/layer/chart_of_accounts'
 
 function buildKey({
   access_token: accessToken,

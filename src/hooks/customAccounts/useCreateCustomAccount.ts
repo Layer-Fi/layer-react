@@ -1,14 +1,14 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
-import { post } from '../../api/layer/authenticated_http'
-import { type RawCustomAccount, mapRawCustomAccountToCustomAccount } from './types'
-import { useAuth } from '../useAuth'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { post } from '@api/layer/authenticated_http'
+import { type RawCustomAccount, mapRawCustomAccountToCustomAccount } from '@hooks/customAccounts/types'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useSWRConfig } from 'swr'
-import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
-import { CUSTOM_ACCOUNTS_TAG_KEY } from './useCustomAccounts'
-import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
-import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
+import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/customAccounts/useCustomAccounts'
+import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/bookkeeping/useBankAccounts'
+import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExternalAccounts'
 
 type CreateCustomAccountBody = Pick<
   RawCustomAccount,

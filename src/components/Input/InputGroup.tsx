@@ -1,5 +1,5 @@
+import { Text, TextSize } from '@components/Typography/Text'
 import { ReactNode } from 'react'
-import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 
 export interface InputGroupProps {

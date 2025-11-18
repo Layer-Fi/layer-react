@@ -1,1 +1,0 @@
-export { JournalSidebar } from './JournalSidebar'

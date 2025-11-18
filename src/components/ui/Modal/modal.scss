@@ -8,17 +8,6 @@
   background: rgb(0 0 0 / 50%);
   place-items: center;
 
-  &[data-variant='drawer'],
-  &[data-variant='mobile-drawer'] {
-    &[data-entering] {
-      animation: drawer-darken 300ms;
-    }
-
-    &[data-exiting] {
-      animation: drawer-darken 300ms reverse ease-in;
-    }
-  }
-
   &[data-variant='drawer'] {
     place-items: end;
   }
@@ -61,18 +50,14 @@
     inline-size: 100%;
 
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
-
-    &[data-entering] {
-      animation: mobile-drawer-slide 200ms;
-    }
-
-    &[data-exiting] {
-      animation: mobile-drawer-slide 200ms reverse ease-in;
-    }
   }
 
   &[data-flex-block] {
     block-size: auto;
+  }
+
+  &[data-flex-inline] {
+    inline-size: auto;
   }
 }
 
@@ -101,6 +86,10 @@
     padding: 0;
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
   }
+
+  &[data-variant='mobile-popover'] {
+    padding: 0;
+  }
 }
 
 @keyframes drawer-slide {
@@ -113,22 +102,13 @@
   }
 }
 
-@keyframes drawer-darken {
-  from {
-    background: rgb(0 0 0 / 0%);
-  }
-
-  to {
-    background: rgb(0 0 0 / 50%);
-  }
+.Layer__ModalContentFadeMotionContent {
+  display: contents;
+  height: 100%;
+  width: 100%;
 }
 
-@keyframes mobile-drawer-slide {
-  from {
-    transform: translateY(100%);
-  }
-
-  to {
-    transform: translateY(0);
-  }
+.Layer__ModalContentSlideUpMotionContent {
+  height: 100%;
+  width: 100%;
 }

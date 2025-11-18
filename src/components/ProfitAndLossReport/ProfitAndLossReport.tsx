@@ -1,18 +1,20 @@
-import { ReactNode, useCallback, useContext, useMemo } from 'react'
-import { View as ViewType } from '../../types/general'
-import { ReportsStringOverrides } from '../../views/Reports/Reports'
-import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
-import { Header, HeaderCol, HeaderRow } from '../Header'
-import { View } from '../View'
-import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
-import { ProfitAndLossDetailReport } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
-import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
-import { ProfitAndLossTable } from '../ProfitAndLossTable'
-import { ProfitAndLossCompareOptions } from '../ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
-import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
-import { ProfitAndLossDownloadButton } from '../ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
-import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
-import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { HeaderRow } from '@components/Header/HeaderRow'
+import { HeaderCol } from '@components/Header/HeaderCol'
+import { Header } from '@components/Header/Header'
+import { ReactNode, useCallback, useContext, useEffect, useMemo } from 'react'
+import { View as ViewType } from '@internal-types/general'
+import { ReportsStringOverrides } from '@views/Reports/Reports'
+import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
+import { View } from '@components/View/View'
+import { BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
+import { ProfitAndLossDetailReport } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
+import { InAppLinkProvider, LinkingMetadata } from '@contexts/InAppLinkContext'
+import { ProfitAndLossTableWithProvider } from '@components/ProfitAndLossTable/ProfitAndLossTableWithProvider'
+import { ProfitAndLossCompareOptions } from '@components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
+import { ProfitAndLossDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
+import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -30,17 +32,18 @@ export type SelectedLineItem = {
 
 export const ProfitAndLossReport = ({
   stringOverrides,
-  allowedDatePickerModes,
-  datePickerMode,
-  defaultDatePickerMode,
-  customDateRanges,
+  dateSelectionMode = 'full',
   csvMoneyFormat,
   view,
   renderInAppLink,
   hideHeader,
 }: ProfitAndLossReportProps) => {
-  const { selectedLineItem, setSelectedLineItem } = useContext(ProfitAndLossContext)
+  const { selectedLineItem, setSelectedLineItem, setDisplayMode } = useContext(ProfitAndLossContext)
   const { comparisonConfig } = useContext(ProfitAndLossComparisonContext)
+
+  useEffect(() => {
+    setDisplayMode(dateSelectionMode)
+  }, [dateSelectionMode, setDisplayMode])
 
   const breadcrumbIndexMap = useMemo(() => {
     if (!selectedLineItem) return {}
@@ -80,12 +83,7 @@ export const ProfitAndLossReport = ({
       <Header>
         <HeaderRow>
           <HeaderCol>
-            <ProfitAndLossDatePicker
-              allowedDatePickerModes={allowedDatePickerModes}
-              datePickerMode={datePickerMode}
-              defaultDatePickerMode={defaultDatePickerMode}
-              customDateRanges={customDateRanges}
-            />
+            <CombinedDateRangeSelection mode={dateSelectionMode} />
             {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions />}
           </HeaderCol>
           <HeaderCol>
@@ -106,11 +104,8 @@ export const ProfitAndLossReport = ({
       </Header>
     )
   }, [
-    allowedDatePickerModes,
     csvMoneyFormat,
-    customDateRanges,
-    datePickerMode,
-    defaultDatePickerMode,
+    dateSelectionMode,
     hideHeader,
     stringOverrides?.downloadButton,
     useComparisonPnl,
@@ -130,7 +125,7 @@ export const ProfitAndLossReport = ({
             />
           )
           : (
-            <ProfitAndLossTable
+            <ProfitAndLossTableWithProvider
               asContainer={false}
               stringOverrides={stringOverrides?.profitAndLoss?.table}
               onLineItemClick={handleLineItemClick}

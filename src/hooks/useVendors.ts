@@ -1,9 +1,9 @@
-import { useLayerContext } from '../contexts/LayerContext'
-import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
-import { useAuth } from './useAuth'
-import { Layer } from '../api/layer'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useAuth } from '@hooks/useAuth'
+import { Layer } from '@api/layer'
 import useSWR from 'swr'
-import { Vendor } from '../types/vendors'
+import { Vendor } from '@internal-types/vendors'
 
 type UseVendors = () => {
   data: Vendor[]

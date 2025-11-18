@@ -1,5 +1,5 @@
-import { DocumentType } from './file_upload'
-import { S3PresignedUrl } from './general'
+import { DocumentType } from '@internal-types/file_upload'
+import { S3PresignedUrl } from '@internal-types/general'
 
 type Document = {
   document_type: DocumentType

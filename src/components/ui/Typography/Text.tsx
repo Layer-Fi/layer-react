@@ -1,13 +1,16 @@
-import { forwardRef } from 'react'
+import { Text as ReactAriaText } from 'react-aria-components'
+import { forwardRef, useRef } from 'react'
 import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
-import type { Spacing } from '../sharedUITypes'
-import {
-  Header as ReactAriaHeader,
-  Label as ReactAriaLabel,
-  Text as ReactAriaText,
-} from 'react-aria-components'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import type { Spacing } from '@ui/sharedUITypes'
+import { Header as ReactAriaHeader, Label as ReactAriaLabel } from 'react-aria-components'
 import './text.scss'
+
+import classNames from 'classnames'
+import { useTruncationDetection } from '@hooks/useTruncationDetection/useTruncationDetection'
+import { mergeRefs } from 'react-merge-refs'
+import { TooltipCapableComponentProps, TooltipContent, TooltipTrigger, Tooltip } from '@ui/Tooltip/Tooltip'
+import React from 'react'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'
@@ -20,6 +23,7 @@ export type TextStyleProps = {
   status?: 'error'
   variant?: 'placeholder' | 'subtle' | 'inherit'
   weight?: 'normal' | 'bold'
+  className?: string
 }
 
 type TextRenderingProps = {
@@ -126,22 +130,78 @@ export const P = forwardRef<HTMLParagraphElement, PropsWithChildren<ParagraphPro
 const SPAN_CLASS_NAME = 'Layer__Span'
 type SpanProps = Pick<ComponentPropsWithoutRef<'span'>, 'id' | 'slot'> & TextRenderingProps
 
-export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps>>(
-  function Span(props, ref) {
-    const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
+type BaseSpanProps = {
+  dataProperties: Record<string, unknown>
+  restProps: Record<string, unknown>
+  hasRef: boolean
+  className?: string
+  renderingProps: TextRenderingProps
+  children: React.ReactNode
+}
 
-    if (renderingProps.nonAria) {
+const BaseSpan = forwardRef<HTMLSpanElement, BaseSpanProps>(({ dataProperties, restProps, hasRef, className, renderingProps, children }, ref) => {
+  if (renderingProps.nonAria) {
+    return (
+      <span {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, className)} ref={hasRef ? ref : undefined}>
+        {children}
+      </span>
+    )
+  }
+
+  return (
+    <ReactAriaText {...restProps} {...dataProperties} className={classNames(SPAN_CLASS_NAME, className)} ref={hasRef ? ref : undefined}>
+      {children}
+    </ReactAriaText>
+  )
+})
+BaseSpan.displayName = 'BaseSpan'
+
+export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapableComponentProps>>(
+  function Span(props, forwardedRef) {
+    const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
+    const { className, tooltipContentWidth = 'md' } = props
+
+    const internalRef = useRef<HTMLSpanElement | null>(null)
+    const isTruncated = useTruncationDetection(internalRef, { checkFirstChild: true })
+
+    const mergedRef = mergeRefs([internalRef, forwardedRef])
+
+    if (props.withTooltip) {
+      const dataPropertiesWithEllipsis = { ...dataProperties, 'data-with-tooltip': true }
       return (
-        <span {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={ref}>
-          {children}
-        </span>
+        <Tooltip disabled={!isTruncated}>
+          <TooltipTrigger>
+            <BaseSpan
+              dataProperties={dataPropertiesWithEllipsis}
+              restProps={restProps}
+              hasRef={true}
+              className={className}
+              renderingProps={renderingProps}
+              ref={mergedRef}
+            >
+              {children}
+            </BaseSpan>
+          </TooltipTrigger>
+          <TooltipContent width={tooltipContentWidth}>
+            <span className='Layer__UI__tooltip-content--text'>
+              {children}
+            </span>
+          </TooltipContent>
+        </Tooltip>
       )
     }
 
     return (
-      <ReactAriaText {...restProps} {...dataProperties} className={SPAN_CLASS_NAME} ref={ref}>
+      <BaseSpan
+        dataProperties={dataProperties}
+        restProps={restProps}
+        hasRef={true}
+        className={className}
+        renderingProps={renderingProps}
+        ref={mergedRef}
+      >
         {children}
-      </ReactAriaText>
+      </BaseSpan>
     )
   },
 )

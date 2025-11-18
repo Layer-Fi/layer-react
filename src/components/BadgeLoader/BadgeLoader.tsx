@@ -1,8 +1,8 @@
 import { ReactNode } from 'react'
-import LoaderIcon from '../../icons/Loader'
-import CheckIcon from '../../icons/Check'
-import XIcon from '../../icons/X'
-import AlertCircle from '../../icons/AlertCircle'
+import LoaderIcon from '@icons/Loader'
+import CheckIcon from '@icons/Check'
+import XIcon from '@icons/X'
+import AlertCircle from '@icons/AlertCircle'
 export interface BadgeLoaderProps {
   children?: ReactNode
   size?: number

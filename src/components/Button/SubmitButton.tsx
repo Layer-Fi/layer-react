@@ -1,12 +1,12 @@
+import { RetryButton } from '@components/Button/RetryButton'
 import { ButtonHTMLAttributes } from 'react'
-import AlertCircle from '../../icons/AlertCircle'
-import CheckCircle from '../../icons/CheckCircle'
-import Loader from '../../icons/Loader'
-import Save from '../../icons/Save'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
-import { Button, ButtonProps, ButtonVariant } from './Button'
+import AlertCircle from '@icons/AlertCircle'
+import CheckCircle from '@icons/CheckCircle'
+import Loader from '@icons/Loader'
+import Save from '@icons/Save'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
+import { ButtonProps, Button, ButtonVariant } from '@components/Button/Button'
 import classNames from 'classnames'
-import { RetryButton } from './RetryButton'
 import { UploadCloud } from 'lucide-react'
 
 export interface SubmitButtonProps
@@ -51,12 +51,12 @@ const buildRightIcon = ({
 
   if (error) {
     return (
-      <Tooltip offset={12}>
-        <TooltipTrigger>
+      <DeprecatedTooltip offset={12}>
+        <DeprecatedTooltipTrigger>
           <AlertCircle size={14} />
-        </TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>{error}</TooltipContent>
-      </Tooltip>
+        </DeprecatedTooltipTrigger>
+        <DeprecatedTooltipContent className='Layer__tooltip'>{error}</DeprecatedTooltipContent>
+      </DeprecatedTooltip>
     )
   }
 

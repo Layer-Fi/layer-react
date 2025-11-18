@@ -1,22 +1,22 @@
 import { useState } from 'react'
 import { PopupModal } from 'react-calendly'
 import classNames from 'classnames'
-import { Container } from '../../components/Container'
-import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
-import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { Tasks, TasksStringOverrides } from '../../components/Tasks/Tasks'
-import { Toggle } from '../../components/Toggle'
-import { View } from '../../components/View'
-import { useWindowSize } from '../../hooks/useWindowSize'
-import { Variants } from '../../utils/styleUtils/sizeVariants'
-import { BookkeepingProfitAndLossSummariesContainer } from './internal/BookkeepingProfitAndLossSummariesContainer'
-import { useKeepInMobileViewport } from './useKeepInMobileViewport'
-import { VStack } from '../../components/ui/Stack/Stack'
-import { CallBooking } from '../../components/CallBooking/CallBooking'
-import { type CallBooking as CallBookingData } from '../../schemas/callBookings'
-import { useCalendly } from '../../hooks/useCalendly/useCalendly'
-import { useCallBookings } from '../../features/callBookings/api/useCallBookings'
+import { Container } from '@components/Container/Container'
+import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
+import { ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { Tasks, TasksStringOverrides } from '@components/Tasks/Tasks'
+import { Toggle } from '@components/Toggle/Toggle'
+import { View } from '@components/View/View'
+import { useWindowSize } from '@hooks/useWindowSize/useWindowSize'
+import { Variants } from '@utils/styleUtils/sizeVariants'
+import { BookkeepingProfitAndLossSummariesContainer } from '@views/BookkeepingOverview/internal/BookkeepingProfitAndLossSummariesContainer'
+import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
+import { VStack } from '@ui/Stack/Stack'
+import { CallBooking } from '@components/CallBooking/CallBooking'
+import { type CallBooking as CallBookingData } from '@schemas/callBookings'
+import { useCalendly } from '@hooks/useCalendly/useCalendly'
+import { useCallBookings } from '@features/callBookings/api/useCallBookings'
 
 export interface BookkeepingOverviewProps {
   showTitle?: boolean
@@ -37,8 +37,6 @@ export interface BookkeepingOverviewProps {
     }
   }
 
-  _showBookACall?: boolean
-
   onClickReconnectAccounts?: () => void
   /**
    * @deprecated Use `stringOverrides.title` instead
@@ -54,7 +52,6 @@ export const BookkeepingOverview = ({
   onClickReconnectAccounts,
   stringOverrides,
   slotProps,
-  _showBookACall,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
@@ -70,7 +67,7 @@ export const BookkeepingOverview = ({
 
   const { data: callBookings, isError, isLoading, isValidating } = useCallBookings(1)
   const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
-  const callBookingVisible = _showBookACall && callBooking && !isLoading && !isValidating && !isError
+  const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -124,6 +121,7 @@ export const BookkeepingOverview = ({
               text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
               withDatePicker
               withStatus
+              dateSelectionMode='month'
             />
             <BookkeepingProfitAndLossSummariesContainer>
               <ProfitAndLoss.Summaries

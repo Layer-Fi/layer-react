@@ -1,11 +1,11 @@
 import useSWRInfinite from 'swr/infinite'
-import { useAuth } from '../useAuth'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { getBankTransactions, type GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
-import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getBankTransactions, type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'
-import type { BankTransaction } from '../../types/bank_transactions'
-import { debounce } from 'lodash'
+import type { BankTransaction } from '@internal-types/bank_transactions'
+import { debounce } from 'lodash-es'
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
 

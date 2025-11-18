@@ -1,16 +1,18 @@
-import { useMemo, useState } from 'react'
-import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { DateRange, MoneyFormat, ReportingBasis } from '../../types/general'
-import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { prepareFiltersBody, preparePeriodsBody } from './utils'
+import { useContext, useMemo, useState } from 'react'
+import { Layer } from '@api/layer'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { DateRange, MoneyFormat, ReportingBasis } from '@internal-types/general'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { prepareFiltersBody, preparePeriodsBody } from '@hooks/useProfitAndLossComparison/utils'
 import useSWR from 'swr'
 import { MultiValue } from 'react-select'
-import { ProfitAndLossCompareConfig, ProfitAndLossComparisonTags, TagComparisonOption, type ProfitAndLossComparisonRequestBody } from '../../types/profit_and_loss'
-import { ReadonlyArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
-import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { ProfitAndLossCompareConfig, ProfitAndLossComparisonTags, TagComparisonOption, type ProfitAndLossComparisonRequestBody } from '@internal-types/profit_and_loss'
+import { ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { DateGroupBy } from '@components/DateSelection/DateGroupByComboBox'
+import { differenceInCalendarMonths, differenceInCalendarYears } from 'date-fns'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -20,8 +22,6 @@ type Props = {
   reportingBasis?: ReportingBasis
   comparisonConfig?: ProfitAndLossCompareConfig
 }
-
-const COMPARE_MODES_SUPPORTING_MULTI_PERIOD = ['monthPicker', 'yearPicker']
 
 const isNotOnlyNoneTag = (compareOptions?: TagComparisonOption[]) => {
   return Boolean(
@@ -61,24 +61,33 @@ export function useProfitAndLossComparison({
   reportingBasis,
   comparisonConfig,
 }: Props) {
-  const [comparePeriods, setComparePeriods] = useState(comparisonConfig?.defaultPeriods ?? 1)
+  const [comparisonPeriodMode, setComparisonPeriodMode] = useState<DateGroupBy | null>(DateGroupBy.AllTime)
+  const { displayMode } = useContext(ProfitAndLossContext)
+  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'month' })
+
+  const comparePeriods = useMemo(() => {
+    if (!comparisonPeriodMode || comparisonPeriodMode === DateGroupBy.AllTime) {
+      return 1
+    }
+
+    if (comparisonPeriodMode === DateGroupBy.Year) {
+      return Math.abs(differenceInCalendarYears(endDate, startDate)) + 1
+    }
+
+    return Math.abs(differenceInCalendarMonths(endDate, startDate)) + 1
+  }, [comparisonPeriodMode, endDate, startDate])
+
   const [selectedCompareOptions, setSelectedCompareOptionsState] = useState<TagComparisonOption[]>(
     comparisonConfig?.defaultTagFilter ? [comparisonConfig?.defaultTagFilter] : [],
   )
 
-  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
-
-  const isPeriodsSelectEnabled = COMPARE_MODES_SUPPORTING_MULTI_PERIOD.includes(rangeDisplayMode)
-  const effectiveComparePeriods = isPeriodsSelectEnabled
-    ? comparePeriods
-    : 1
+  const dateRange = useGlobalDateRange({ displayMode })
 
   const compareModeActive = useMemo(() => (
-    effectiveComparePeriods > 1
+    comparePeriods > 1
     || selectedCompareOptions.length > 1
     || (selectedCompareOptions.length === 1 && isNotOnlyNoneTag(selectedCompareOptions))
-  ), [effectiveComparePeriods, selectedCompareOptions])
+  ), [comparePeriods, selectedCompareOptions])
 
   const setSelectedCompareOptions = (values: MultiValue<{ value: string, label: string }>) => {
     const options: TagComparisonOption[] = values.map(option =>
@@ -100,7 +109,7 @@ export function useProfitAndLossComparison({
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const periods = preparePeriodsBody(dateRange, effectiveComparePeriods, rangeDisplayMode)
+  const periods = preparePeriodsBody(dateRange, comparePeriods, comparisonPeriodMode)
   const tagFilters = prepareFiltersBody(selectedCompareOptions)
 
   const queryKey = buildKey({
@@ -133,7 +142,7 @@ export function useProfitAndLossComparison({
     dateRange: DateRange,
     moneyFormat?: MoneyFormat,
   ) => {
-    const periods = preparePeriodsBody(dateRange, effectiveComparePeriods, rangeDisplayMode)
+    const periods = preparePeriodsBody(dateRange, comparePeriods, comparisonPeriodMode)
     const tagFilters = prepareFiltersBody(selectedCompareOptions)
     return Layer.profitAndLossComparisonCsv(apiUrl, auth?.access_token, {
       params: {
@@ -152,14 +161,14 @@ export function useProfitAndLossComparison({
     data: data?.pnls,
     isLoading,
     isValidating,
-    isPeriodsSelectEnabled,
     compareModeActive,
-    comparePeriods: effectiveComparePeriods,
-    setComparePeriods,
+    comparePeriods,
     compareOptions: comparisonConfig?.tagComparisonOptions ?? [],
     selectedCompareOptions,
     setSelectedCompareOptions,
     getProfitAndLossComparisonCsv,
     comparisonConfig,
+    comparisonPeriodMode,
+    setComparisonPeriodMode,
   }
 }

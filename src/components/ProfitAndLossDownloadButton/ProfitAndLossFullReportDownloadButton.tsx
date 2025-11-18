@@ -1,13 +1,13 @@
+import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
 import { useContext, useState } from 'react'
-import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { MoneyFormat } from '../../types/general'
-import { DownloadButton as DownloadButtonComponent } from '../Button'
-import { useAuth } from '../../hooks/useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
-import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
-import type { ProfitAndLossDownloadButtonStringOverrides } from './types'
+import { Layer } from '@api/layer'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { MoneyFormat } from '@internal-types/general'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
 
 export interface ProfitAndLossReportDownloadButtonProps {
   stringOverrides?: ProfitAndLossDownloadButtonStringOverrides

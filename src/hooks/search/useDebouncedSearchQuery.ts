@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { useDebounce } from '../useDebounce/useDebounce'
+import { useDebounce } from '@hooks/useDebounce/useDebounce'
 
 type UseDebouncedSearchQueryOptions = {
   initialInputState: string | (() => string)

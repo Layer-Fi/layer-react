@@ -1,10 +1,10 @@
-import { Badge, BadgeVariant } from '../Badge'
-import { BadgeSize } from '../Badge/Badge'
-import { BadgeLoader } from '../BadgeLoader'
-import { SearchField, type SearchFieldProps } from '../SearchField/SearchField'
-import { Button } from '../ui/Button/Button'
-import { HStack, VStack } from '../ui/Stack/Stack'
-import { Span } from '../ui/Typography/Text'
+import { Button } from '@ui/Button/Button'
+import { Badge, BadgeVariant } from '@components/Badge/Badge'
+import { BadgeSize } from '@components/Badge/Badge'
+import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
+import { SearchField, type SearchFieldProps } from '@components/SearchField/SearchField'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import './dataTableHeader.scss'
 
 interface CountProps {
@@ -35,7 +35,7 @@ export const DataTableHeader = ({ name, count, slotProps = {}, slots = {} }: Dat
 
   return (
     <VStack>
-      <HStack justify='space-between' align='center' className='Layer__DataTableHeader__Header'>
+      <HStack justify='space-between' align='center' gap='xs' className='Layer__DataTableHeader__Header'>
         <HStack pis='md' align='center' gap='xl'>
           <HStack align='center' gap='sm'>
             <Span weight='bold' size='md'>{name}</Span>

@@ -1,21 +1,28 @@
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { BackButton } from '@components/Button/BackButton'
+import { Button, ButtonVariant } from '@components/Button/Button'
 import { useCallback, useContext, useState } from 'react'
-import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
-import XIcon from '../../icons/X'
-import { humanizeTitle } from '../../utils/profitAndLossUtils'
-import { Button, BackButton, ButtonVariant } from '../Button'
-import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
-import { Text, TextSize, TextWeight } from '../Typography'
-import { DetailedChart } from './DetailedChart'
-import { DetailedTable, DetailedTableStringOverrides } from './DetailedTable'
-import { Filters } from './Filters'
-import { DetailReportModal } from './DetailReportModal'
+import { SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import XIcon from '@icons/X'
+import { humanizeTitle } from '@utils/profitAndLossUtils'
+import { DetailedChart } from '@components/ProfitAndLossDetailedCharts/DetailedChart'
+import { DetailedTable, DetailedTableStringOverrides } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
+import { Filters } from '@components/ProfitAndLossDetailedCharts/Filters'
+import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
 import { format } from 'date-fns'
-import type { ProfitAndLossDetailReportProps } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
-import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
-import { type SelectedLineItem } from '../ProfitAndLossReport/ProfitAndLossReport'
-import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
+import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
+import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
+import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
+
+export interface DetailedChartStringOverrides {
+  expenseChartHeader?: string
+  revenueChartHeader?: string
+}
 
 export interface ProfitAndLossDetailedChartsStringOverrides {
+  detailedChartStringOverrides?: DetailedChartStringOverrides
   detailedTableStringOverrides?: DetailedTableStringOverrides
   detailReportStringOverrides?: ProfitAndLossDetailReportProps['stringOverrides']
 }
@@ -70,12 +77,12 @@ export const ProfitAndLossDetailedCharts = ({
       <header className='Layer__profit-and-loss-detailed-charts__header'>
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(theScope)}
+            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides)}
           </Text>
           <Text size={TextSize.sm} className='date'>
             {format(dateRange.startDate, 'LLLL, y')}
           </Text>
-          {showDatePicker && <ProfitAndLossDatePicker />}
+          {showDatePicker && <GlobalMonthPicker />}
         </div>
         {!hideClose && (
           <Button
@@ -93,7 +100,7 @@ export const ProfitAndLossDetailedCharts = ({
         )}
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(theScope)}
+            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides)}
           </Text>
           <Text size={TextSize.sm} className='date'>
             {format(dateRange.startDate, 'LLLL, y')}

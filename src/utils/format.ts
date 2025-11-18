@@ -1,5 +1,5 @@
 import { parseISO, format as formatDateFns } from 'date-fns'
-import { DATE_FORMAT } from '../config/general'
+import { DATE_FORMAT } from '@config/general'
 
 /**
  * Capitalize first letter of the given text.
@@ -158,4 +158,10 @@ export const formatDate = (date?: string | Date, dateFormat: string = DATE_FORMA
   catch {
     return ''
   }
+}
+
+export const convertCentsToDecimalString = (
+  amount: number,
+): string => {
+  return (Number(amount) / 100).toFixed(2)
 }

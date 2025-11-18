@@ -1,19 +1,20 @@
+import { HeaderRow } from '@components/Header/HeaderRow'
+import { HeaderCol } from '@components/Header/HeaderCol'
+import { Header } from '@components/Header/Header'
 import { PropsWithChildren } from 'react'
-import { TableProvider } from '../../contexts/TableContext'
-import { useBalanceSheet } from '../../hooks/balanceSheet/useBalanceSheet'
-import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
-import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker/BalanceSheetDatePicker'
-import { BalanceSheetExpandAllButton } from '../BalanceSheetExpandAllButton'
-import { BalanceSheetTable } from '../BalanceSheetTable'
-import { BalanceSheetTableStringOverrides } from '../BalanceSheetTable/BalanceSheetTable'
-import { Container } from '../Container'
-import { Header, HeaderCol, HeaderRow } from '../Header'
-import { Loader } from '../Loader'
-import { View } from '../View'
-import { BALANCE_SHEET_ROWS } from './constants'
-import { BalanceSheetDownloadButton } from './download/BalanceSheetDownloadButton'
-import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ReportsModeStoreProvider } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { TableProvider } from '@contexts/TableContext/TableContext'
+import { useBalanceSheet } from '@hooks/balanceSheet/useBalanceSheet'
+import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
+import { BalanceSheetExpandAllButton } from '@components/BalanceSheetExpandAllButton/BalanceSheetExpandAllButton'
+import { BalanceSheetTable } from '@components/BalanceSheetTable/BalanceSheetTable'
+import { BalanceSheetTableStringOverrides } from '@components/BalanceSheetTable/BalanceSheetTable'
+import { Container } from '@components/Container/Container'
+import { Loader } from '@components/Loader/Loader'
+import { View } from '@components/View/View'
+import { BALANCE_SHEET_ROWS } from '@components/BalanceSheet/constants'
+import { BalanceSheetDownloadButton } from '@components/BalanceSheet/download/BalanceSheetDownloadButton'
+import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 
 export interface BalanceSheetStringOverrides {
   balanceSheetTable?: BalanceSheetTableStringOverrides
@@ -23,23 +24,17 @@ export type BalanceSheetViewProps = PropsWithChildren<{
   withExpandAllButton?: boolean
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
+  dateSelectionMode?: 'month' | 'full'
 }>
 
 export type BalanceSheetProps = PropsWithChildren<{
   effectiveDate?: Date
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
+  dateSelectionMode?: 'month' | 'full'
 }>
 
 const COMPONENT_NAME = 'balance-sheet'
-
-export const StandaloneBalanceSheet = (props: BalanceSheetProps) => {
-  return (
-    <ReportsModeStoreProvider initialModes={{ BalanceSheet: 'dayPicker' }}>
-      <BalanceSheet {...props} />
-    </ReportsModeStoreProvider>
-  )
-}
 
 export const BalanceSheet = (props: BalanceSheetProps) => {
   return (
@@ -55,6 +50,7 @@ const BalanceSheetView = ({
   withExpandAllButton = true,
   asWidget = false,
   stringOverrides,
+  dateSelectionMode = 'full',
 }: BalanceSheetViewProps) => {
   const { date: effectiveDate } = useGlobalDate()
   const { data, isLoading } = useBalanceSheet({ effectiveDate })
@@ -71,7 +67,7 @@ const BalanceSheetView = ({
               <Header>
                 <HeaderRow>
                   <HeaderCol>
-                    <BalanceSheetDatePicker />
+                    <CombinedDateSelection mode={dateSelectionMode} />
                   </HeaderCol>
                   {withExpandAllButton && (
                     <HeaderCol>
@@ -110,7 +106,7 @@ const BalanceSheetView = ({
           <Header>
             <HeaderRow>
               <HeaderCol>
-                <BalanceSheetDatePicker />
+                <CombinedDateSelection mode={dateSelectionMode} />
               </HeaderCol>
               <HeaderCol>
                 {withExpandAllButton && (

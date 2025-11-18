@@ -1,4 +1,4 @@
-import { DataState, DataStateStatus } from '../DataState'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 export const ErrorBoundaryMessage = () => {
   return (

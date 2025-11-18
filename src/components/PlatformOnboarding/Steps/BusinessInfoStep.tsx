@@ -1,5 +1,5 @@
-import { BusinessForm } from '../../BusinessForm/BusinessForm'
-import { Heading } from '../../ui/Typography/Heading'
+import { Heading } from '@ui/Typography/Heading'
+import { BusinessForm } from '@components/BusinessForm/BusinessForm'
 
 type BusinessInfoStepProps = {
   title?: string

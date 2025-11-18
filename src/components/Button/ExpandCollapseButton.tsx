@@ -1,6 +1,6 @@
-import CollapseIcon from '../../icons/Collapse'
-import ExpandIcon from '../../icons/Expand'
-import { Button, ButtonVariant } from './Button'
+import { Button, ButtonVariant } from '@components/Button/Button'
+import CollapseIcon from '@icons/Collapse'
+import ExpandIcon from '@icons/Expand'
 import classNames from 'classnames'
 
 export interface ExpandCollapseButtonProps {

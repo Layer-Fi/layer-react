@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
 import { formatIncompletePhoneNumber } from 'libphonenumber-js'
-import { Input, InputProps } from './Input'
+import { Input, InputProps } from '@components/Input/Input'
 
 interface PhoneInputProps extends Omit<InputProps, 'onChange' | 'value'> {
   value?: string

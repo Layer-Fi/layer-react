@@ -1,15 +1,18 @@
+import { TableRow } from '@components/TableRow/TableRow'
+import { TableCell } from '@components/TableCell/TableCell'
+import { TableBody } from '@components/TableBody/TableBody'
+import { Table } from '@components/Table/Table'
+import { Button } from '@ui/Button/Button'
 import { Fragment, useContext } from 'react'
-import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import { TableCellAlign } from '../../types/table'
-import { Loader } from '../Loader'
-import { Table, TableBody, TableCell, TableRow } from '../Table'
-import { Button } from '../ui/Button/Button'
-import { MoneySpan } from '../ui/Typography/MoneySpan'
+import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
+import { TableCellAlign } from '@internal-types/table'
+import { Loader } from '@components/Loader/Loader'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
 import classNames from 'classnames'
-import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
-import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { useEffectOnMount } from '../../hooks/useEffectOnMount/useEffectOnMount'
-import type { LineItem } from '../../schemas/common/lineItem'
+import { BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { useEffectOnMount } from '@hooks/useEffectOnMount/useEffectOnMount'
+import type { LineItem } from '@schemas/common/lineItem'
 
 export interface ProfitAndLossTableStringOverrides {
   grossProfitLabel?: string
@@ -213,13 +216,15 @@ export const ProfitAndLossTableComponent = ({
             rowIndex: 8,
           })}
         {data.customLineItems
-          && renderLineItem({
-            lineItem: data.customLineItems,
-            depth: 0,
-            rowKey: 'other_activity',
-            rowIndex: 9,
-            showValue: false,
-          })}
+          && data.customLineItems.map((customLineItem, index) =>
+            renderLineItem({
+              lineItem: customLineItem,
+              depth: 0,
+              rowKey: `custom_line_item_${index}`,
+              rowIndex: 9 + index,
+              showValue: false,
+            }),
+          )}
       </TableBody>
     </Table>
   )

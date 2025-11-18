@@ -1,5 +1,5 @@
-import { useBillsContext } from '../../contexts/BillsContext'
-import { SkeletonTableLoader } from '../SkeletonTableLoader/SkeletonTableLoader'
+import { useBillsContext } from '@contexts/BillsContext'
+import { SkeletonTableLoader } from '@components/SkeletonTableLoader/SkeletonTableLoader'
 
 export const BillsTableLoader = () => {
   const { status } = useBillsContext()

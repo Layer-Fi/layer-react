@@ -5,10 +5,10 @@ import {
   components,
 } from 'react-select'
 import BaseCreatableSelect, { type CreatableProps } from 'react-select/creatable'
-import ChevronDownFill from '../../icons/ChevronDownFill'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
+import ChevronDownFill from '@icons/ChevronDownFill'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
-import { type SelectProps } from './Select'
+import { type SelectProps } from '@components/Input/Select'
 
 export interface CreatableSelectProps<T> extends Omit<SelectProps<T>, 'value' | 'onChange'> {
   value?: T | null
@@ -53,8 +53,8 @@ export const CreatableSelect = <T,>({
   ), [])
 
   return (
-    <Tooltip disabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+    <DeprecatedTooltip disabled={!isInvalid || !errorMessage}>
+      <DeprecatedTooltipTrigger className='Layer__input-tooltip'>
         <BaseCreatableSelect<T>
           inputId={inputId}
           name={name}
@@ -77,8 +77,8 @@ export const CreatableSelect = <T,>({
           escapeClearsValue={isClearable}
           createOptionPosition={createOptionPosition}
         />
-      </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
-    </Tooltip>
+      </DeprecatedTooltipTrigger>
+      <DeprecatedTooltipContent className='Layer__tooltip'>{errorMessage}</DeprecatedTooltipContent>
+    </DeprecatedTooltip>
   )
 }

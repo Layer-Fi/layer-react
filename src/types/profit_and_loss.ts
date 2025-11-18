@@ -1,7 +1,7 @@
-import type { ReportingBasis } from './general'
-import { ReadonlyArrayWithAtLeastOne } from '../utils/array/getArrayWithAtLeastOneOrFallback'
-import { LineItem } from '../schemas/common/lineItem'
-import { TagViewConfig } from './tags'
+import type { ReportingBasis } from '@internal-types/general'
+import { ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
+import { type LineItemEncoded } from '@schemas/common/lineItem'
+import { TagViewConfig } from '@internal-types/tags'
 
 export interface TagComparisonOption {
   displayName: string
@@ -11,6 +11,10 @@ export interface TagComparisonOption {
 export interface ProfitAndLossCompareConfig {
   tagComparisonOptions: TagComparisonOption[]
   defaultTagFilter: TagComparisonOption
+
+  /**
+   * @deprecated This is a deprecated property - the number of periods to compare is derived from the date range.
+   */
   defaultPeriods?: number
 }
 
@@ -23,15 +27,15 @@ export interface ProfitAndLossComparisonPnl {
   business_id: string
   start_date: string
   end_date: string
-  income: LineItem
-  cost_of_goods_sold: LineItem
+  income: LineItemEncoded
+  cost_of_goods_sold: LineItemEncoded
   gross_profit: number
-  expenses: LineItem
+  expenses: LineItemEncoded
   profit_before_taxes: number
-  taxes: LineItem
+  taxes: LineItemEncoded
   net_profit: number
-  other_outflows?: LineItem | null
-  personal_expenses?: LineItem | null
+  other_outflows?: LineItemEncoded | null
+  personal_expenses?: LineItemEncoded | null
   fully_categorized: boolean
 }
 

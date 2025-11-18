@@ -1,6 +1,6 @@
-import { FileMetadata } from '../../types/file_upload'
-import { RawTask } from '../../types/tasks'
-import { post, postWithFormData } from './authenticated_http'
+import { FileMetadata } from '@internal-types/file_upload'
+import { RawTask } from '@internal-types/tasks'
+import { post, postWithFormData } from '@api/layer/authenticated_http'
 
 type SubmitUserResponseForTaskBody = {
   type: 'FreeResponse'

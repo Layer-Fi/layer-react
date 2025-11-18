@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
-import { ButtonProps } from '../Button/Button'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
+import { ButtonProps } from '@components/Button/Button'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
 import './badge.scss'
 
@@ -71,10 +71,10 @@ export const Badge = ({
 
   if (tooltip) {
     return (
-      <Tooltip offset={12}>
-        <TooltipTrigger>{content}</TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>{tooltip}</TooltipContent>
-      </Tooltip>
+      <DeprecatedTooltip offset={12}>
+        <DeprecatedTooltipTrigger>{content}</DeprecatedTooltipTrigger>
+        <DeprecatedTooltipContent className='Layer__tooltip'>{tooltip}</DeprecatedTooltipContent>
+      </DeprecatedTooltip>
     )
   }
 

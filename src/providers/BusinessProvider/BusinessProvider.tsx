@@ -1,9 +1,9 @@
 import { PropsWithChildren, useReducer, useEffect, Reducer, useMemo, useCallback } from 'react'
-import { Layer } from '../../api/layer'
-import { ToastProps, ToastsContainer } from '../../components/Toast/Toast'
-import { LayerContext } from '../../contexts/LayerContext'
-import { useDataSync } from '../../hooks/useDataSync'
-import { errorHandler, LayerError } from '../../models/ErrorHandler'
+import { Layer } from '@api/layer'
+import { ToastProps, ToastsContainer } from '@components/Toast/Toast'
+import { LayerContext } from '@contexts/LayerContext/LayerContext'
+import { useDataSync } from '@hooks/useDataSync/useDataSync'
+import { errorHandler, LayerError } from '@models/ErrorHandler'
 import {
   ColorConfig,
   ColorsPaletteOption,
@@ -12,15 +12,15 @@ import {
   type LayerContextAction,
   type LayerContextValues,
   LayerContextActionName as Action,
-} from '../../types/layer_context'
-import { buildColorsPalette } from '../../utils/colors'
-import { LayerProviderProps } from '../LayerProvider/LayerProvider'
+} from '@internal-types/layer_context'
+import { buildColorsPalette } from '@utils/colors'
+import { LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import useSWR from 'swr'
-import { useAuth } from '../../hooks/useAuth'
-import { useEnvironment } from '../Environment/EnvironmentInputProvider'
-import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
-import { useAccountingConfiguration } from '../../hooks/useAccountingConfiguration/useAccountingConfiguration'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '../GlobalDateStore/GlobalDateStoreProvider'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
+import { useAccountingConfiguration } from '@hooks/useAccountingConfiguration/useAccountingConfiguration'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -93,7 +93,7 @@ export const BusinessProvider = ({
     resetCaches,
   } = useDataSync()
 
-  const globalDateRange = useGlobalDateRange({ displayMode: 'dayRangePicker' })
+  const globalDateRange = useGlobalDateRange({ displayMode: 'full' })
   const { setDateRange } = useGlobalDateRangeActions()
 
   const dateRange = useMemo(() => ({

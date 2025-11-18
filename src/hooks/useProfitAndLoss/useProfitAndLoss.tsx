@@ -1,20 +1,20 @@
 import { useCallback, useMemo, useState } from 'react'
 import {
   SortDirection,
-} from '../../types/general'
-import { ReportingBasis } from '../../types/general'
+} from '@internal-types/general'
+import { ReportingBasis } from '@internal-types/general'
 import {
   collectExpensesItems,
   collectRevenueItems,
   applyShare,
   type PnlChartLineItem,
-} from '../../utils/profitAndLossUtils'
-import { useProfitAndLossReport } from './useProfitAndLossReport'
+} from '@utils/profitAndLossUtils'
+import { useProfitAndLossReport } from '@hooks/useProfitAndLoss/useProfitAndLossReport'
 import {
   useGlobalDateRange,
-} from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import type { BreadcrumbItem } from '../../components/DetailReportBreadcrumb/DetailReportBreadcrumb'
+  type DateRangePickerMode,
+} from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import type { BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -47,8 +47,8 @@ export type ProfitAndLossFilters = Record<
 >
 
 export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLossOptions) => {
-  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
+  const [displayMode, setDisplayMode] = useState<DateRangePickerMode>('month')
+  const dateRange = useGlobalDateRange({ displayMode })
 
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
@@ -204,5 +204,7 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
     dateRange,
     selectedLineItem,
     setSelectedLineItem,
+    setDisplayMode,
+    displayMode,
   }
 }

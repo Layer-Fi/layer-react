@@ -1,5 +1,5 @@
 import type { PlaidInstitution } from 'react-plaid-link'
-import type { EnumWithUnknownValues } from './utility/enumWithUnknownValues'
+import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 
 export type PublicToken = {
   public_token: string

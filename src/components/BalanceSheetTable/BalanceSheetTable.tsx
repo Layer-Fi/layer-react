@@ -1,10 +1,14 @@
+import { TableRow } from '@components/TableRow/TableRow'
+import { TableHead } from '@components/TableHead/TableHead'
+import { TableCell } from '@components/TableCell/TableCell'
+import { TableBody } from '@components/TableBody/TableBody'
+import { Table } from '@components/Table/Table'
 import { Fragment, ReactNode, useEffect } from 'react'
-import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import { TableCellAlign } from '../../types/table'
-import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
-import { useEffectOnMount } from '../../hooks/useEffectOnMount/useEffectOnMount'
-import type { BalanceSheet } from '../../types/balance_sheet'
-import type { LineItem } from '../../types/line_item'
+import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
+import { TableCellAlign } from '@internal-types/table'
+import { useEffectOnMount } from '@hooks/useEffectOnMount/useEffectOnMount'
+import type { BalanceSheet } from '@internal-types/balance_sheet'
+import type { LineItem } from '@internal-types/line_item'
 
 export interface BalanceSheetTableStringOverrides {
   typeColumnHeader?: string

@@ -1,1 +1,0 @@
-export { SyncingBadge } from './SyncingBadge'

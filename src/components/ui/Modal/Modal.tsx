@@ -6,11 +6,12 @@ import {
   ModalOverlay as ReactAriaModalOverlay,
   type ModalOverlayProps,
 } from 'react-aria-components'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import './modal.scss'
+import { AnimatedPresenceDiv } from '@components/ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 
 type ModalSize = 'md' | 'lg' | 'xl'
-type ModalVariant = 'center' | 'drawer' | 'mobile-drawer'
+type ModalVariant = 'center' | 'drawer' | 'mobile-drawer' | 'mobile-popover'
 
 const BASE_MODAL_OVERLAY_CLASS_NAME = 'Layer__ModalOverlay'
 const MODAL_OVERLAY_CLASS_NAME = `Layer__Portal ${BASE_MODAL_OVERLAY_CLASS_NAME}`
@@ -39,10 +40,11 @@ const InternalModal = forwardRef<
   PropsWithChildren<{
     size?: ModalSize
     flexBlock?: boolean
+    flexInline?: boolean
     variant?: ModalVariant
   }>
->(({ children, flexBlock, size, variant = 'center' }, ref) => {
-  const dataProperties = toDataProperties({ size, 'flex-block': flexBlock, variant })
+>(({ children, flexBlock, flexInline, size, variant = 'center' }, ref) => {
+  const dataProperties = toDataProperties({ size, 'flex-block': flexBlock, 'flex-inline': flexInline, variant })
 
   return (
     <ReactAriaModal
@@ -82,7 +84,7 @@ type AllowedModalOverlayProps = Pick<
 
 type AllowedInternalModalProps = Pick<
   ComponentProps<typeof InternalModal>,
-  'flexBlock' | 'size'
+  'flexBlock' | 'flexInline' | 'size' | 'variant'
 >
 
 type AllowedDialogProps = Pick<
@@ -96,15 +98,18 @@ export function Modal({
   isOpen,
   size = 'md',
   flexBlock,
+  flexInline,
   onOpenChange,
   children,
   'aria-label': ariaLabel,
   role,
+  variant = 'center',
+  isDismissable = false,
 }: ModalProps) {
   return (
-    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant='center'>
-      <InternalModal flexBlock={flexBlock} size={size} variant='center'>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant='center'>
+    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
+      <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
+        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
           {children}
         </Dialog>
       </InternalModal>
@@ -115,7 +120,7 @@ export function Modal({
 type AllowedInternalDrawerProps = Pick<
   ComponentProps<typeof InternalModal>,
   'size'
-> & { variant?: Exclude<ModalVariant, 'center'> }
+> & { variant?: Extract<ModalVariant, 'drawer' | 'mobile-drawer'> }
 
 export type DrawerProps = AllowedModalOverlayProps &
   AllowedInternalDrawerProps &
@@ -127,19 +132,48 @@ export function Drawer({
   onOpenChange,
   size = 'md',
   flexBlock,
+  flexInline,
   children,
   'aria-label': ariaLabel,
   variant = 'drawer',
   isDismissable = false,
   role,
 }: DrawerProps) {
+  const isMobileDrawer = variant === 'mobile-drawer'
+  const shouldUseFadeOverlay = variant === 'drawer' || isMobileDrawer
+
+  const modalContent = (
+    <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
+      <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
+        {children}
+      </Dialog>
+    </InternalModal>
+  )
+
+  const wrappedModalContent = isMobileDrawer
+    ? (
+      <AnimatedPresenceDiv
+        variant='slideUp'
+        isOpen={isOpen}
+        className='Layer__ModalContentSlideUpMotionContent'
+        slotProps={{ AnimatePresence: { initial: true } }}
+      >
+        {modalContent}
+      </AnimatedPresenceDiv>
+    )
+    : modalContent
+
+  const overlayContent = shouldUseFadeOverlay
+    ? (
+      <AnimatedPresenceDiv variant='fade' isOpen={isOpen} className='Layer__ModalContentFadeMotionContent'>
+        {wrappedModalContent}
+      </AnimatedPresenceDiv>
+    )
+    : wrappedModalContent
+
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
-      <InternalModal flexBlock={flexBlock} size={size} variant={variant}>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
-          {children}
-        </Dialog>
-      </InternalModal>
+      {overlayContent}
     </ModalOverlay>
   )
 }

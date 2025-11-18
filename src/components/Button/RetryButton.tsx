@@ -1,6 +1,6 @@
+import { Button, ButtonVariant } from '@components/Button/Button'
 import { ButtonHTMLAttributes } from 'react'
-import RefreshCcw from '../../icons/RefreshCcw'
-import { Button, ButtonVariant } from './Button'
+import RefreshCcw from '@icons/RefreshCcw'
 import classNames from 'classnames'
 
 export interface RetryButtonProps

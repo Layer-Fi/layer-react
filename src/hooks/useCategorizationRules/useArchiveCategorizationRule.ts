@@ -1,11 +1,11 @@
-import { post } from '../../api/layer/authenticated_http'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { useAuth } from '../useAuth'
+import { post } from '@api/layer/authenticated_http'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
 import useSWRMutation from 'swr/mutation'
 import { useCallback } from 'react'
-import { CategorizationRuleSchema } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
+import { CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { Schema } from 'effect/index'
-import { useCategorizationRulesGlobalCacheActions } from './useListCategorizationRules'
+import { useCategorizationRulesGlobalCacheActions } from '@hooks/useCategorizationRules/useListCategorizationRules'
 
 const ARCHIVE_CATEGORIZATION_RULE_TAG = '#archive-categorization-rule'
 

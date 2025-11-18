@@ -1,22 +1,22 @@
+import { Button } from '@ui/Button/Button'
 import {
   useCallback,
   useId,
   useMemo,
   type PropsWithChildren,
 } from 'react'
-import { Label, Span } from '../../../components/ui/Typography/Text'
-import { useTagDimensions } from '../api/useTagDimensions'
-import { VStack } from '../../../components/ui/Stack/Stack'
-import { Button } from '../../../components/ui/Button/Button'
+import { Label, Span } from '@ui/Typography/Text'
+import { useTagDimensions } from '@features/tags/api/useTagDimensions'
+import { VStack } from '@ui/Stack/Stack'
 import { X } from 'lucide-react'
-import { Tag, TagGroup, TagList } from '../../../components/ui/TagGroup/TagGroup'
-import { useFlattenedTagValues } from '../useFlattenedTagValues'
-import type { OneOf } from '../../../types/utility/oneOf'
-import { LoadingSpinner } from '../../../components/ui/Loading/LoadingSpinner'
-import { Square } from '../../../components/ui/Square/Square'
+import { Tag, TagGroup, TagList } from '@ui/TagGroup/TagGroup'
+import { useFlattenedTagValues } from '@features/tags/useFlattenedTagValues'
+import type { OneOf } from '@internal-types/utility/oneOf'
+import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
+import { Square } from '@ui/Square/Square'
 import { Group } from 'react-aria-components'
-import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
-import { getDimensionDisplayName, getTagDisplayNameForDimension, getTagDisplayNameForValue, getTagValueDisplayName, type Tag as TagType, type TagValue } from '../tagSchemas'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { getDimensionDisplayName, getTagDisplayNameForDimension, getTagDisplayNameForValue, getTagValueDisplayName, type Tag as TagType, type TagValue } from '@features/tags/tagSchemas'
 import './tagSelector.scss'
 
 const TAG_SELECTOR_CLASS_NAMES = {

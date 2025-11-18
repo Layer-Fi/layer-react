@@ -1,10 +1,10 @@
-import { Button } from '../Button/Button'
-import { MobilePanel } from '../MobilePanel/MobilePanel'
-import { TextButton } from '../Button'
+import { TextButton } from '@components/Button/TextButton'
+import { Button } from '@components/Button/Button'
+import { MobilePanel } from '@components/MobilePanel/MobilePanel'
 import { useState } from 'react'
-import { TasksListItem } from './TasksListItem'
-import { Pagination } from '../Pagination/Pagination'
-import { getIncompleteTasks, type UserVisibleTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { TasksListItem } from '@components/Tasks/TasksListItem'
+import { Pagination } from '@components/Pagination/Pagination'
+import { getIncompleteTasks, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 const MOBILE_SHOW_UNRESOLVED_TASKS_COUNT = 2
 

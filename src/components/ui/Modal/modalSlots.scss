@@ -22,6 +22,10 @@
   }
 }
 
+.Layer__ModalTitleWithClose > .Layer__UI__Button {
+  margin: 0 0 auto;
+}
+
 .Layer__ModalContent {
   display: grid;
   overflow-y: auto;

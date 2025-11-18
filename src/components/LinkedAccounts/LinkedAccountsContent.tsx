@@ -1,10 +1,10 @@
+import { Text, TextSize } from '@components/Typography/Text'
 import { useContext } from 'react'
-import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
-import PlusIcon from '../../icons/PlusIcon'
-import { Text, TextSize } from '../Typography'
-import { LinkedAccountItemThumb } from './LinkedAccountItemThumb'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import PlusIcon from '@icons/PlusIcon'
+import { LinkedAccountItemThumb } from '@components/LinkedAccounts/LinkedAccountItemThumb'
 import classNames from 'classnames'
-import { LinkedAccountsConfirmationModal } from '../LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
+import { LinkedAccountsConfirmationModal } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
 
 interface LinkedAccountsDataProps {
   asWidget?: boolean

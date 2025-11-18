@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 
 export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange'> {
   onChange?: (value?: string) => void
@@ -64,8 +64,8 @@ export const AmountInput = ({
   )
 
   return (
-    <Tooltip disabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+    <DeprecatedTooltip disabled={!isInvalid || !errorMessage}>
+      <DeprecatedTooltipTrigger className='Layer__input-tooltip'>
         {badge
           ? (
             <div className='Layer__input-with-badge'>
@@ -75,8 +75,8 @@ export const AmountInput = ({
           )
           : currencyInput}
         {leftText && <span className='Layer__input-left-text'>{leftText}</span>}
-      </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
-    </Tooltip>
+      </DeprecatedTooltipTrigger>
+      <DeprecatedTooltipContent className='Layer__tooltip'>{errorMessage}</DeprecatedTooltipContent>
+    </DeprecatedTooltip>
   )
 }

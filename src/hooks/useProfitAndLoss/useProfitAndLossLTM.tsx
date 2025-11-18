@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
-import { ReportingBasis } from '../../types/general'
+import { ReportingBasis } from '@internal-types/general'
 import { startOfMonth, sub } from 'date-fns'
-import type { ProfitAndLossSummary } from './schemas'
-import { useProfitAndLossSummaries } from './useProfitAndLossSummaries'
+import type { ProfitAndLossSummary } from '@hooks/useProfitAndLoss/schemas'
+import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
 
 type UseProfitAndLossLTMProps = {
   currentDate: Date

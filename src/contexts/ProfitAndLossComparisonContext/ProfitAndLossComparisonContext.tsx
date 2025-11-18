@@ -1,15 +1,13 @@
 import { createContext } from 'react'
-import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison'
-import { S3PresignedUrl } from '../../types/general'
+import { useProfitAndLossComparison } from '@hooks/useProfitAndLossComparison/useProfitAndLossComparison'
+import { S3PresignedUrl } from '@internal-types/general'
 
 export const ProfitAndLossComparisonContext = createContext<ReturnType<typeof useProfitAndLossComparison>>({
   data: undefined,
   isLoading: true,
   isValidating: false,
-  isPeriodsSelectEnabled: true,
   compareModeActive: false,
   comparePeriods: 0,
-  setComparePeriods: () => {},
   compareOptions: [],
   selectedCompareOptions: [],
   setSelectedCompareOptions: function (): void {
@@ -22,4 +20,6 @@ export const ProfitAndLossComparisonContext = createContext<ReturnType<typeof us
     throw new Error('Function not implemented.')
   },
   comparisonConfig: undefined,
+  comparisonPeriodMode: null,
+  setComparisonPeriodMode: () => {},
 })

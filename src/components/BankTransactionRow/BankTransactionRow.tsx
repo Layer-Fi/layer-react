@@ -1,46 +1,44 @@
+import { TextSize, Text } from '@components/Typography/Text'
+import { RetryButton } from '@components/Button/RetryButton'
+import { IconButton } from '@components/Button/IconButton'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import AlertCircle from '../../icons/AlertCircle'
-import ChevronDownFill from '../../icons/ChevronDownFill'
-import FileIcon from '../../icons/File'
-import Scissors from '../../icons/Scissors'
-import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction } from '../../types/bank_transactions'
-import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import AlertCircle from '@icons/AlertCircle'
+import ChevronDownFill from '@icons/ChevronDownFill'
+import FileIcon from '@icons/File'
+import { BankTransaction } from '@internal-types/bank_transactions'
 import {
   isCredit,
-  isTransferMatch,
-} from '../../utils/bankTransactions'
-import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-import { Badge } from '../Badge'
+} from '@utils/bankTransactions'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import {
   BankTransactionCTAStringOverrides,
-} from '../BankTransactions/BankTransactions'
-import { isCategorized } from '../BankTransactions/utils'
-import { SubmitButton, IconButton, RetryButton } from '../Button'
-import { SubmitAction } from '../Button/SubmitButton'
-import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
-import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { IconBox } from '../IconBox'
-import { Text } from '../Typography'
-import { TextSize } from '../Typography/Text'
-import { MatchBadge } from './MatchBadge'
-import { SplitTooltipDetails } from './SplitTooltipDetails'
+} from '@components/BankTransactions/BankTransactions'
+import { isCategorized } from '@components/BankTransactions/utils'
+import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
+import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { SaveHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { IconBox } from '@components/IconBox/IconBox'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
-import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
-import { VStack } from '../ui/Stack/Stack'
-import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
-import { Span } from '../ui/Typography/Text'
-import { Checkbox } from '../ui/Checkbox/Checkbox'
-import { useBulkSelectionActions, useIdIsSelected } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { BankTransactionCategoryComboBox } from '../BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { getDefaultSelectedCategoryForBankTransaction } from '../BankTransactionCategoryComboBox/utils'
-import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isSplitCategorizationEncoded, type CategorizationEncoded } from '../../schemas/categorization'
-import { useBankTransactionsCategoryActions } from '../../providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
+import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
+import { VStack } from '@ui/Stack/Stack'
+import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
+import { Span } from '@ui/Typography/Text'
+import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isSplitCategorizationEncoded, type CategorizationEncoded } from '@schemas/categorization'
+import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
+import { HStack } from '@ui/Stack/Stack'
+import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
+import { MoneySpan } from '@components/ui/Typography/MoneySpan'
+import './bankTransactionRow.scss'
+import { AnimatedPresenceDiv } from '@components/ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 
 type Props = {
   index: number
@@ -54,7 +52,6 @@ type Props = {
   showReceiptUploads: boolean
   showReceiptUploadColumn: boolean
   showTooltips: boolean
-  _showBulkSelection?: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
 }
 
@@ -82,41 +79,30 @@ export const BankTransactionRow = ({
   showReceiptUploads,
   showReceiptUploadColumn,
   showTooltips,
-  _showBulkSelection = false,
   stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
-  const {
-    categorize: categorizeBankTransaction,
-    match: matchBankTransaction,
-    shouldHideAfterCategorize,
-  } = useBankTransactionsContext()
-  const [selectedCategory, setSelectedCategory] = useState(
-    getDefaultSelectedCategoryForBankTransaction(bankTransaction),
-  )
+  const { shouldHideAfterCategorize } = useBankTransactionsContext()
   const [open, setOpen] = useState(false)
   const toggleOpen = () => {
     setShowRetry(false)
     setOpen(!open)
   }
 
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
+  const categorized = isCategorized(bankTransaction)
+
+  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
-
-  const openRow = {
-    onMouseDown: () => {
-      clickTimer = Date.now()
-    },
-    onMouseUp: () => {
-      if (Date.now() - clickTimer < 100 && !open) {
-        setShowRetry(false)
-        setOpen(true)
-      }
-    },
-  }
+  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
+  const { saveBankTransactionRow } = useSaveBankTransactionRow()
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -144,42 +130,24 @@ export const BankTransactionRow = ({
       return
     }
 
-    if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
-      return
-    }
-
-    if (isSuggestedMatchAsOption(selectedCategory)) {
-      await matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
-
-      // Remove from bulk selection store
-      deselect(bankTransaction.id)
-      setOpen(false)
-      return
-    }
-
-    if (isSplitAsOption(selectedCategory)) {
-      // TODO: implement split categorization
-      return
-    }
-
-    if (!selectedCategory.classificationEncoded) return
-
-    await categorizeBankTransaction(bankTransaction.id, {
-      type: 'Category',
-      category: selectedCategory.classificationEncoded,
-    })
+    await saveBankTransactionRow(selectedCategory, bankTransaction)
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)
     setOpen(false)
   }
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-
-  const categorized = isCategorized(bankTransaction)
-
-  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+  const openRow = {
+    onMouseDown: () => {
+      clickTimer = Date.now()
+    },
+    onMouseUp: () => {
+      if (Date.now() - clickTimer < 100 && !open) {
+        setShowRetry(false)
+        setOpen(true)
+      }
+    },
+  }
 
   const className = 'Layer__bank-transaction-row'
   const openClassName = open ? `${className}--expanded` : ''
@@ -200,10 +168,12 @@ export const BankTransactionRow = ({
     [showReceiptUploadColumn],
   )
 
+  const colSpan = categorizationEnabled ? 7 : 6
+
   return (
     <>
       <tr className={rowClassName}>
-        {_showBulkSelection && (
+        {categorizationEnabled && (
           <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
             <span className='Layer__table-cell-content'>
               <Checkbox
@@ -235,7 +205,7 @@ export const BankTransactionRow = ({
           {...openRow}
         >
           <span className='Layer__table-cell-content'>
-            <Span>
+            <Span withTooltip>
               {bankTransaction.counterparty_name ?? bankTransaction.description}
             </Span>
           </span>
@@ -265,10 +235,13 @@ export const BankTransactionRow = ({
           {...openRow}
           {...showReceiptDataProperties}
         >
-          <span className='Layer__table-cell-content'>
-            {isCredit(bankTransaction) ? '+$' : ' $'}
-            {formatMoney(bankTransaction.amount)}
-          </span>
+          <VStack align='end'>
+            <MoneySpan
+              amount={bankTransaction.amount}
+              displayPlusSign={isCredit(bankTransaction)}
+              className='Layer__table-cell-content'
+            />
+          </VStack>
         </td>
         <td
           className='Layer__table-cell Layer__bank-transactions__documents-col'
@@ -290,153 +263,152 @@ export const BankTransactionRow = ({
             `${className}__actions-cell--${open ? 'open' : 'close'}`,
           )}
         >
-          <span
-            className={`${className}__actions-container Layer__table-cell-content`}
-          >
-            {categorizationEnabled && !categorized && !open
-              ? (
-                <BankTransactionCategoryComboBox
-                  bankTransaction={bankTransaction}
-                  selectedValue={selectedCategory}
-                  onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                    setSelectedCategory(selectedCategory)
-                    setTransactionCategory(bankTransaction.id, selectedCategory)
-                    setShowRetry(false)
-                  }}
-                  isLoading={bankTransaction.processing}
-                />
-              )
-              : null}
-            {categorized && !open
-              ? (
-                <Text as='span' className={`${className}__category-text`}>
-                  {bankTransaction.categorization_status
-                    === CategorizationStatus.SPLIT && (
-                    <>
-                      <Badge
-                        icon={<Scissors size={11} />}
-                        tooltip={(
-                          <SplitTooltipDetails
-                            classNamePrefix={className}
-                            category={bankTransaction.category}
-                          />
-                        )}
-                      >
-                        Split
-                      </Badge>
-                      <span className={`${className}__category-text__text`}>
-                        {extractDescriptionForSplit(bankTransaction.category)}
-                      </span>
-                    </>
+          {open
+            ? (
+              <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
+                { bankTransaction.error
+                  && (
+                    <Text
+                      as='span'
+                      size={TextSize.md}
+                      className='Layer__unsaved-info'
+                    >
+                      <span>Unsaved</span>
+                      <AlertCircle size={12} />
+                    </Text>
                   )}
-                  {bankTransaction?.categorization_status
-                    === CategorizationStatus.MATCHED
-                    && bankTransaction?.match && (
-                    <>
-                      <MatchBadge
-                        classNamePrefix={className}
-                        bankTransaction={bankTransaction}
-                        dateFormat={dateFormat}
-                        text={isTransferMatch(bankTransaction) ? 'Transfer' : 'Match'}
-                      />
-                      <span className={`${className}__category-text__text`}>
-                        {`${formatTime(
-                          parseISO(bankTransaction.match.bank_transaction.date),
-                          dateFormat,
-                        )}, ${bankTransaction.match?.details?.description}`}
-                      </span>
-                    </>
+                {categorizationEnabled
+                  && (
+                    <SubmitButton
+                      onClick={() => {
+                        if (!bankTransaction.processing) {
+                          void save()
+                        }
+                      }}
+                      className='Layer__bank-transaction__submit-btn'
+                      processing={bankTransaction.processing}
+                      active={open}
+                      action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+                    >
+                      {categorized
+                        ? stringOverrides?.updateButtonText || 'Update'
+                        : stringOverrides?.approveButtonText || 'Confirm'}
+                    </SubmitButton>
                   )}
-                  {bankTransaction?.categorization_status
-                    !== CategorizationStatus.MATCHED
-                    && bankTransaction?.categorization_status
-                    !== CategorizationStatus.SPLIT && (
-                    <span className={`${className}__category-text__text`}>
-                      {bankTransaction?.category?.display_name}
-                    </span>
-                  )}
-                </Text>
-              )
-              : null}
-            {categorizationEnabled && !categorized && !open && showRetry
-              ? (
-                <RetryButton
-                  onClick={() => {
-                    if (!bankTransaction.processing) {
-                      void save()
-                    }
-                  }}
-                  className='Layer__bank-transaction__retry-btn'
-                  processing={bankTransaction.processing}
-                  error='Approval failed. Check connection and retry in few seconds.'
-                >
-                  Retry
-                </RetryButton>
-              )
-              : null}
-            {open && bankTransaction.error
-              ? (
-                <Text
-                  as='span'
-                  size={TextSize.md}
-                  className='Layer__unsaved-info'
-                >
-                  <span>Unsaved</span>
-                  <AlertCircle size={12} />
-                </Text>
-              )
-              : null}
-            {(!categorized && categorizationEnabled && (open || (!open && !showRetry)))
-              || (categorizationEnabled && categorized && open)
-              ? (
-                <SubmitButton
-                  onClick={() => {
-                    if (!bankTransaction.processing) {
-                      void save()
-                    }
-                  }}
-                  className='Layer__bank-transaction__submit-btn'
-                  processing={bankTransaction.processing}
+                {!categorizationEnabled && !categorized && (
+                  <VStack>
+                    <BankTransactionsProcessingInfo />
+                  </VStack>
+                )}
+                <IconButton
+                  onClick={toggleOpen}
+                  className='Layer__bank-transaction-row__expand-button'
                   active={open}
-                  action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-                >
-                  {categorized
-                    ? stringOverrides?.updateButtonText || 'Update'
-                    : stringOverrides?.approveButtonText || 'Confirm'}
-                </SubmitButton>
-              )
-              : null}
-            {!categorizationEnabled && !categorized
-              ? <VStack pis='xs' fluid><BankTransactionProcessingInfo /></VStack>
-              : null}
-            <IconButton
-              onClick={toggleOpen}
-              className='Layer__bank-transaction-row__expand-button'
-              active={open}
-              icon={(
-                <ChevronDownFill
-                  className={`Layer__chevron ${
-                    open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                  }`}
+                  icon={(
+                    <ChevronDownFill
+                      className={`Layer__chevron ${
+                        open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                      }`}
+                    />
+                  )}
                 />
-              )}
-            />
-          </span>
+              </HStack>
+            )
+            : (
+              <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
+                <AnimatedPresenceDiv
+                  variant='fade'
+                  isOpen={categorizationEnabled && !categorized}
+                  className='Layer__BankTransactionRow__CategoryComboBoxMotionContent'
+                  slotProps={{ AnimatePresence: { mode: 'wait' } }}
+                  key='category-combobox'
+                >
+                  <BankTransactionCategoryComboBox
+                    bankTransaction={bankTransaction}
+                    selectedValue={selectedCategory ?? null}
+                    onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
+                      setTransactionCategory(bankTransaction.id, selectedCategory)
+                      setShowRetry(false)
+                    }}
+                    isLoading={bankTransaction.processing}
+                  />
+                </AnimatedPresenceDiv>
+                {categorized
+                  && (
+                    <BankTransactionsCategorizedSelectedValue
+                      bankTransaction={bankTransaction}
+                      className='Layer__bank-transaction-row__category'
+                    />
+                  )}
+                {categorizationEnabled && !categorized && showRetry
+                  && (
+                    <RetryButton
+                      onClick={() => {
+                        if (!bankTransaction.processing) {
+                          void save()
+                        }
+                      }}
+                      className='Layer__bank-transaction__retry-btn'
+                      processing={bankTransaction.processing}
+                      error='Approval failed. Check connection and retry in few seconds.'
+                    >
+                      Retry
+                    </RetryButton>
+                  )}
+                {!categorized && categorizationEnabled && !showRetry
+                  && (
+                    <SubmitButton
+                      onClick={() => {
+                        if (!bankTransaction.processing) {
+                          void save()
+                        }
+                      }}
+                      className='Layer__bank-transaction__submit-btn'
+                      processing={bankTransaction.processing}
+                      active={open}
+                      action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+                    >
+                      {categorized
+                        ? stringOverrides?.updateButtonText || 'Update'
+                        : stringOverrides?.approveButtonText || 'Confirm'}
+                    </SubmitButton>
+                  )}
+                {!categorizationEnabled && !categorized && (
+                  <VStack pis='xs' fluid>
+                    <BankTransactionsProcessingInfo />
+                  </VStack>
+                )}
+                <IconButton
+                  onClick={toggleOpen}
+                  className='Layer__bank-transaction-row__expand-button'
+                  active={open}
+                  icon={(
+                    <ChevronDownFill
+                      className={`Layer__chevron ${
+                        open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                      }`}
+                    />
+                  )}
+                />
+              </HStack>
+            )}
         </td>
       </tr>
       <tr>
-        <td colSpan={_showBulkSelection ? 7 : 6} className='Layer__bank-transaction-row__expanded-td'>
-          <ExpandedBankTransactionRow
-            ref={expandedRowRef}
-            bankTransaction={bankTransaction}
-            categorized={categorized}
-            isOpen={open}
-            close={() => setOpen(false)}
-            containerWidth={containerWidth}
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-          />
+        <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
+          <AnimatedPresenceDiv variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+            <ExpandedBankTransactionRow
+              ref={expandedRowRef}
+              bankTransaction={bankTransaction}
+              categorized={categorized}
+              isOpen={open}
+              close={() => setOpen(false)}
+              containerWidth={containerWidth}
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+            />
+          </AnimatedPresenceDiv>
         </td>
       </tr>
     </>

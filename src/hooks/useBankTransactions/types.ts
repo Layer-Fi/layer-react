@@ -1,7 +1,7 @@
-import { DateRange } from '../../types/general'
-import { DisplayState } from '../../types/bank_transactions'
-import { Direction } from '../../types/general'
-import { TagFilterInput } from '../../types/tags'
+import { DateRange } from '@internal-types/general'
+import { DisplayState } from '@internal-types/bank_transactions'
+import { Direction } from '@internal-types/general'
+import { TagFilterInput } from '@internal-types/tags'
 
 export interface NumericRangeFilter {
   min?: number

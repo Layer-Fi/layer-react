@@ -1,89 +1,61 @@
-import { MONTH_DAY_FORMAT } from '../../config/general'
-import CheckIcon from '../../icons/Check'
-import { centsToDollars as formatMoney } from '../../models/Money'
-import { Text, ErrorText, TextSize } from '../Typography'
-import { MatchFormProps } from './MatchForm'
-import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
-import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/bankTransactions/match'
-import { HStack } from '../ui/Stack/Stack'
+import {
+  GridList,
+} from 'react-aria-components'
+import { ErrorText } from '@components/Typography/ErrorText'
+import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
+import { MatchFormMobileItem } from './MatchFormMobileItem'
+import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
+import './matchFormMobile.scss'
+
+export interface MatchFormMobileProps {
+  bankTransaction: BankTransaction
+  selectedMatchId?: string
+  setSelectedMatch: (val?: SuggestedMatch) => void
+  matchFormError?: string
+  readOnly?: boolean
+}
 
 export const MatchFormMobile = ({
-  classNamePrefix,
   bankTransaction,
   selectedMatchId,
-  setSelectedMatchId,
+  setSelectedMatch,
   matchFormError,
   readOnly,
-}: MatchFormProps) => {
+}: MatchFormMobileProps) => {
   const { renderInAppLink } = useInAppLinkContext()
+  const suggestedMatches = bankTransaction.suggested_matches
+
   return (
-    <div className={`${classNamePrefix}__match-list`}>
-      {bankTransaction.suggested_matches?.map((match, idx) => {
+    <GridList
+      aria-label='Select a match'
+      selectionMode='single'
+      selectedKeys={selectedMatchId ? new Set([selectedMatchId]) : new Set()}
+      onSelectionChange={(keys) => {
+        if (readOnly) return
+
+        const selectedKey = [...keys][0]
+        const selectedMatch = suggestedMatches?.find(m => m.id === selectedKey)
+        if (selectedMatch) {
+          setSelectedMatch(selectedMatch)
+        }
+      }}
+      className='Layer__MatchFormMobile'
+    >
+      {suggestedMatches?.map((match) => {
         const matchDetails = match.details ? decodeMatchDetails(match.details) : undefined
         const inAppLink = renderInAppLink && matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : null
+
         return (
-          <div
-            key={idx}
-            className={classNames(
-              `${classNamePrefix}__match-item`,
-              match.id === selectedMatchId
-                ? `${classNamePrefix}__match-item--selected`
-                : '',
-            )}
-            onClick={() => {
-              if (readOnly) {
-                return
-              }
-
-              setSelectedMatchId(match.id)
-            }}
-          >
-            <div className={`${classNamePrefix}__match-item__col-details`}>
-              <div className={`${classNamePrefix}__match-item__heading`}>
-                <Text
-                  className={`${classNamePrefix}__match-item__name`}
-                  as='span'
-                >
-                  {match.details.description}
-                </Text>
-                <Text
-                  className={`${classNamePrefix}__match-item__amount`}
-                  as='span'
-                >
-                  $
-                  {formatMoney(match.details.amount)}
-                </Text>
-              </div>
-              <div className={`${classNamePrefix}__match-item__details`}>
-                <HStack>
-                  {inAppLink}
-                </HStack>
-                <Text
-                  className={`${classNamePrefix}__match-item__date`}
-                  size={TextSize.sm}
-                  as='span'
-                >
-                  {formatTime(parseISO(match.details.date), MONTH_DAY_FORMAT)}
-                </Text>
-              </div>
-            </div>
-
-            <div className={`${classNamePrefix}__match-item__col-status`}>
-              {selectedMatchId && selectedMatchId === match.id
-                ? (
-                  <CheckIcon
-                    size={16}
-                    className={`${classNamePrefix}__match-item__selected-icon`}
-                  />
-                )
-                : null}
-            </div>
-          </div>
+          <MatchFormMobileItem
+            key={match.id}
+            match={match}
+            bankTransaction={bankTransaction}
+            inAppLink={inAppLink}
+          />
         )
       })}
       {matchFormError && <ErrorText>{matchFormError}</ErrorText>}
-    </div>
+    </GridList>
   )
 }

@@ -1,13 +1,13 @@
+import { Text, TextSize } from '@components/Typography/Text'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import SmileIcon from '../../icons/SmileIcon'
-import { Text, TextSize } from '../Typography'
-import { TasksListItem } from './TasksListItem'
-import { Pagination } from '../Pagination/Pagination'
-import { TasksListMobile } from './TasksListMobile'
-import { isCompletedTask, isIncompleteTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { useActiveBookkeepingPeriod } from '../../hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
-import { usePaginatedList } from '../../hooks/array/usePaginatedList'
-import { VStack } from '../ui/Stack/Stack'
+import SmileIcon from '@icons/SmileIcon'
+import { TasksListItem } from '@components/Tasks/TasksListItem'
+import { Pagination } from '@components/Pagination/Pagination'
+import { TasksListMobile } from '@components/Tasks/TasksListMobile'
+import { isCompletedTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
+import { usePaginatedList } from '@hooks/array/usePaginatedList'
+import { VStack } from '@ui/Stack/Stack'
 
 const TasksEmptyState = () => (
   <div className='Layer__tasks-empty-state'>

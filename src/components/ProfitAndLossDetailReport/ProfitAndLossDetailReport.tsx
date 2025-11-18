@@ -1,27 +1,27 @@
+import { Text, TextUseTooltip, TextSize, TextWeight } from '@components/Typography/Text'
+import { Button } from '@ui/Button/Button'
 import { useContext, useState, useMemo, useCallback } from 'react'
-import { useProfitAndLossDetailLines } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
-import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTable'
-import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
-import { type ColumnConfig } from '../DataTable/DataTable'
-import { Badge } from '../Badge'
-import { DateTime } from '../DateTime'
-import { Text, TextUseTooltip } from '../Typography/Text'
-import { TextSize, TextWeight } from '../Typography'
-import { DetailsList, DetailsListItem } from '../DetailsList'
-import { DataState, DataStateStatus } from '../DataState/DataState'
-import { Button } from '../ui/Button/Button'
-import { VStack, HStack } from '../ui/Stack/Stack'
-import { Label } from '../ui/Typography/Text'
+import { useProfitAndLossDetailLines } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { SourceDetailView } from '@components/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
+import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
+import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
+import { type ColumnConfig } from '@components/DataTable/DataTable'
+import { Badge } from '@components/Badge/Badge'
+import { DateTime } from '@components/DateTime/DateTime'
+import { DetailsList } from '@components/DetailsList/DetailsList'
+import { DetailsListItem } from '@components/DetailsList/DetailsListItem'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { VStack, HStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
 import { format } from 'date-fns'
-import { convertLedgerEntrySourceToLinkingMetadata, LedgerEntrySourceType } from '../../schemas/generalLedger/ledgerEntrySource'
-import { Direction } from '../../types/general'
-import { BreadcrumbItem, DetailReportBreadcrumb } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
-import type { PnlDetailLine } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
-import { MoneySpan } from '../ui/Typography/MoneySpan'
-import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { convertLedgerEntrySourceToLinkingMetadata, LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
+import { Direction } from '@internal-types/general'
+import { BreadcrumbItem, DetailReportBreadcrumb } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
+import type { PnlDetailLine } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import './profitAndLossDetailReport.scss'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
@@ -178,7 +178,7 @@ export const ProfitAndLossDetailReport = ({
       cell: row => (
         <Text
           as='span'
-          withTooltip={TextUseTooltip.whenTruncated}
+          withDeprecatedTooltip={TextUseTooltip.whenTruncated}
           ellipsis
         >
           {row.account.name || '-'}
@@ -191,7 +191,7 @@ export const ProfitAndLossDetailReport = ({
       cell: row => (
         <Text
           as='span'
-          withTooltip={TextUseTooltip.whenTruncated}
+          withDeprecatedTooltip={TextUseTooltip.whenTruncated}
           ellipsis
         >
           {row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}

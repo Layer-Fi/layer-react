@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
-import type { Variants } from '../../../utils/styleUtils/sizeVariants'
-import { SkeletonLoader } from '../../SkeletonLoader'
-import { MoneySpan } from '../../ui/Typography/MoneySpan'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
-import { ProfitAndLossSummariesHeading } from './ProfitAndLossSummariesHeading'
+import type { Variants } from '@utils/styleUtils/sizeVariants'
+import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { ProfitAndLossSummariesHeading } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
 
 const CLASS_NAME = 'Layer__ProfitAndLossSummariesSummary'
 

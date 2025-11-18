@@ -1,14 +1,14 @@
-import { useLayerContext } from '../../contexts/LayerContext'
-import { useAuth } from '../useAuth'
-import { get } from '../../api/layer/authenticated_http'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { get } from '@api/layer/authenticated_http'
 import useSWR from 'swr'
-import { filterReadonly, mapReadonly } from '../../utils/array/readonlyTransformations'
+import { filterReadonly, mapReadonly } from '@utils/array/readonlyTransformations'
 import {
   isPersonnelRole,
   type BusinessPersonnel,
   type PersonnelRole,
   type RawBusinessPersonnel,
-} from './types'
+} from '@hooks/businessPersonnel/types'
 
 export const BUSINESS_PERSONNEL_TAG_KEY = '#business-personnel'
 

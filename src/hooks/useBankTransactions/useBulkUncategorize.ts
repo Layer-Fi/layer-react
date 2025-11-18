@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
-import { post } from '../../api/layer/authenticated_http'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { useAuth } from '../useAuth'
+import { post } from '@api/layer/authenticated_http'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
 import { Schema } from 'effect'
-import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
 

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { QuickbooksConnectionLastSyncStatus, type StatusOfQuickbooksConnection } from '../../types/quickbooks'
+import { Layer } from '@api/layer'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { QuickbooksConnectionLastSyncStatus, type StatusOfQuickbooksConnection } from '@internal-types/quickbooks'
 import { format } from 'date-fns'
 
 type UseQuickbooks = () => {

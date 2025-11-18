@@ -1,24 +1,28 @@
+import { TableRow } from '@components/TableRow/TableRow'
+import { TableHead } from '@components/TableHead/TableHead'
+import { TableCell } from '@components/TableCell/TableCell'
+import { TableBody } from '@components/TableBody/TableBody'
+import { Table } from '@components/Table/Table'
 import { Fragment, useContext, useLayoutEffect } from 'react'
-import { DATE_FORMAT } from '../../config/general'
-import { JournalContext } from '../../contexts/JournalContext'
-import { TableProvider } from '../../contexts/TableContext'
-import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import { DATE_FORMAT } from '@config/general'
+import { JournalContext } from '@contexts/JournalContext/JournalContext'
+import { TableProvider } from '@contexts/TableContext/TableContext'
+import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
 import {
   JournalEntry,
   JournalEntryLine,
   JournalEntryLineItem,
-} from '../../types/journal'
-import { View } from '../../types/general'
-import { TableCellAlign } from '../../types/table'
-import { humanizeEnum } from '../../utils/format'
-import { entryNumber } from '../../utils/journal'
-import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
-import { JournalTableStringOverrides } from './JournalTableWithPanel'
+} from '@internal-types/journal'
+import { View } from '@internal-types/general'
+import { TableCellAlign } from '@internal-types/table'
+import { humanizeEnum } from '@utils/format'
+import { entryNumber } from '@utils/journal'
+import { JournalTableStringOverrides } from '@components/JournalTable/JournalTableWithPanel'
 import { parseISO, format as formatTime } from 'date-fns'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { Span } from '../ui/Typography/Text'
-import { HStack } from '../ui/Stack/Stack'
-import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { Span } from '@ui/Typography/Text'
+import { HStack } from '@ui/Stack/Stack'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 
 const accountName = (
   row: JournalEntry | JournalEntryLine | JournalEntryLineItem,

@@ -1,12 +1,12 @@
 import {
   BankTransactions,
   type BankTransactionsStringOverrides,
-} from '../../components/BankTransactions/BankTransactions'
-import { BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
-import { MobileComponentType } from '../../components/BankTransactions/constants'
-import { LinkedAccounts } from '../../components/LinkedAccounts'
-import { View } from '../../components/View'
-import { LinkingMetadata } from '../../contexts/InAppLinkContext'
+} from '@components/BankTransactions/BankTransactions'
+import { BankTransactionsMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
+import { MobileComponentType } from '@components/BankTransactions/constants'
+import { LinkedAccounts } from '@components/LinkedAccounts/LinkedAccounts'
+import { View } from '@components/View/View'
+import { LinkingMetadata } from '@contexts/InAppLinkContext'
 import { ReactNode } from 'react'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {
@@ -36,8 +36,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
-  _showCategorizationRules?: boolean
-  _showBulkSelection?: boolean
+  showCategorizationRules?: boolean
 }
 
 export const BankTransactionsWithLinkedAccounts = ({
@@ -59,8 +58,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   mobileComponent,
   stringOverrides,
   renderInAppLink,
-  _showCategorizationRules,
-  _showBulkSelection = false,
+  showCategorizationRules,
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
     <View
@@ -86,8 +84,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         mode={mode}
         stringOverrides={stringOverrides?.bankTransactions}
         renderInAppLink={renderInAppLink}
-        _showCategorizationRules={_showCategorizationRules}
-        _showBulkSelection={_showBulkSelection}
+        showCategorizationRules={showCategorizationRules}
       />
     </View>
   )

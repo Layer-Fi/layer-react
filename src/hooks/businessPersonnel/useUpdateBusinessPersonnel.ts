@@ -1,13 +1,13 @@
 import useSWRMutation from 'swr/mutation'
-import { useAuth } from '../useAuth'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useSWRConfig } from 'swr'
-import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
-import { BUSINESS_PERSONNEL_TAG_KEY } from './useBusinessPersonnel'
+import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { BUSINESS_PERSONNEL_TAG_KEY } from '@hooks/businessPersonnel/useBusinessPersonnel'
 import {
   updateBusinessPersonnel,
   type UpdateBusinessPersonnelBody,
-} from '../../api/layer/businessPersonnel/updateBusinessPersonnel'
+} from '@api/layer/businessPersonnel/updateBusinessPersonnel'
 import { useCallback } from 'react'
 
 function buildKey({

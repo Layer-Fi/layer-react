@@ -1,11 +1,11 @@
 import useSWRMutation from 'swr/mutation'
-import { post } from '../../api/layer/authenticated_http'
-import type { BusinessPersonnel, PersonnelRole, RawBusinessPersonnel } from './types'
-import { useAuth } from '../useAuth'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { post } from '@api/layer/authenticated_http'
+import type { BusinessPersonnel, PersonnelRole, RawBusinessPersonnel } from '@hooks/businessPersonnel/types'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useSWRConfig } from 'swr'
-import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
-import { BUSINESS_PERSONNEL_TAG_KEY } from './useBusinessPersonnel'
+import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { BUSINESS_PERSONNEL_TAG_KEY } from '@hooks/businessPersonnel/useBusinessPersonnel'
 import { useCallback } from 'react'
 
 type CreateBusinessPersonnelBody = Pick<

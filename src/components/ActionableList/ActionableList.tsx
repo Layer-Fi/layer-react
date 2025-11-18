@@ -1,6 +1,6 @@
-import CheckIcon from '../../icons/Check'
-import ChevronRight from '../../icons/ChevronRight'
-import { Text, TextSize } from '../Typography'
+import { Text, TextSize } from '@components/Typography/Text'
+import CheckIcon from '@icons/Check'
+import ChevronRight from '@icons/ChevronRight'
 import classNames from 'classnames'
 import './actionableList.scss'
 

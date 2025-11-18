@@ -1,11 +1,11 @@
 import { useCallback, useMemo, useState, useRef } from 'react'
 import { useStore, revalidateLogic } from '@tanstack/react-form'
-import { useAppForm } from '../../../features/forms/hooks/useForm'
-import { ApiCustomJournalEntryWithEntry, UpsertJournalEntrySchema, type JournalEntryForm } from './journalEntryFormSchemas'
-import { useUpsertJournalEntry, UpsertJournalEntryMode } from './useUpsertJournalEntry'
+import { useAppForm } from '@features/forms/hooks/useForm'
+import { ApiCustomJournalEntryWithEntry, UpsertJournalEntrySchema, type JournalEntryForm } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
+import { useUpsertJournalEntry, UpsertJournalEntryMode } from '@components/Journal/JournalEntryForm/useUpsertJournalEntry'
 import { Schema } from 'effect'
-import { convertJournalEntryFormToParams, getJournalEntryFormDefaultValues, getJournalEntryFormInitialValues, validateJournalEntryForm } from './formUtils'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { convertJournalEntryFormToParams, getJournalEntryFormDefaultValues, getJournalEntryFormInitialValues, validateJournalEntryForm } from '@components/Journal/JournalEntryForm/formUtils'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type onSuccessFn = (journalEntry: ApiCustomJournalEntryWithEntry) => void
 type UseJournalEntryFormProps =

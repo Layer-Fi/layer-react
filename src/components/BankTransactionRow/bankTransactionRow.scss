@@ -1,0 +1,27 @@
+.Layer__bank-transaction-row__category-hstack {
+  max-width: 100%;
+}
+
+.Layer__bank-transaction-row__category-open {
+  padding-block-start: 0.875rem;
+}
+
+.Layer__bank-transaction-row__category {
+  overflow: hidden;
+  width: 100%;
+}
+
+.Layer__BankTransactionRow__Description {
+  width: 40%;
+}
+
+@container (max-width: 760px) {
+  .Layer__BankTransactionRow__Description {
+    width: 100%;
+  }
+}
+
+.Layer__BankTransactionRow__CategoryComboBoxMotionContent {
+  flex: 1 0 auto;
+  max-width: 17.5rem;
+}

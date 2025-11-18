@@ -1,20 +1,20 @@
+import { Button } from '@ui/Button/Button'
 import { useContext, useMemo, useState } from 'react'
-import { Modal } from '../../ui/Modal/Modal'
-import { ModalHeading, ModalActions, ModalContent, ModalTitleWithClose } from '../../ui/Modal/ModalSlots'
-import { Button } from '../../ui/Button/Button'
-import { VStack } from '../../ui/Stack/Stack'
-import { useLinkedAccounts } from '../../../hooks/useLinkedAccounts'
-import { useLayerContext } from '../../../contexts/LayerContext'
-import { LinkedAccount } from '../../../types/linked_accounts'
-import { getActivationDate } from '../../../utils/business'
-import { AccountFormBox, AccountFormBoxData } from '../AccountFormBox/AccountFormBox'
+import { Modal } from '@ui/Modal/Modal'
+import { ModalHeading, ModalActions, ModalContent, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { VStack } from '@ui/Stack/Stack'
+import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { LinkedAccount } from '@internal-types/linked_accounts'
+import { getActivationDate } from '@utils/business'
+import { AccountFormBox, AccountFormBoxData } from '@components/LinkedAccounts/AccountFormBox/AccountFormBox'
 import {
   OpeningBalanceAPIResponseResult,
   OpeningBalanceData,
   useBulkSetOpeningBalanceAndDate,
-} from './useUpdateOpeningBalanceAndDate'
-import { convertToCents } from '../../../utils/format'
-import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
+} from '@components/LinkedAccounts/OpeningBalanceModal/useUpdateOpeningBalanceAndDate'
+import { convertToCents } from '@utils/format'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { startOfYear } from 'date-fns'
 
 type OpeningBalanceModalStringOverrides = {
@@ -87,6 +87,7 @@ function LinkedAccountsOpeningBalanceModalContent({
       accountId: x.account.id,
       openingDate: x.openingDate,
       openingBalance: convertToCents(x.openingBalance)?.toString(),
+      isDateInvalid: x.isDateInvalid,
     })) as OpeningBalanceData[],
     {
       onSuccess: async (responses) => {

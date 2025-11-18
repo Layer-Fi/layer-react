@@ -1,8 +1,8 @@
-import { Container } from '../Container'
-import { UnifiedReportTable } from './UnifiedReportTable'
-import { UnifiedReportTableHeader } from './UnifiedReportTableHeader'
-import { ExpandableDataTableProvider } from '../ExpandableDataTable/ExpandableDataTableProvider'
-import { UnifiedReportStoreProvider } from '../../providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { Container } from '@components/Container/Container'
+import { UnifiedReportTable } from '@components/UnifiedReport/UnifiedReportTable'
+import { UnifiedReportTableHeader } from '@components/UnifiedReport/UnifiedReportTableHeader'
+import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
+import { UnifiedReportStoreProvider } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import './unifiedReport.scss'
 
 export const UnifiedReport = () => {

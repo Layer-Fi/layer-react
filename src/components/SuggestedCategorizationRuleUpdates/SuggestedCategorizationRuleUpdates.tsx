@@ -1,14 +1,16 @@
-import { Wizard } from '../Wizard/Wizard'
-import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
-import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
-import { RuleUpdatesPromptStep } from './RuleUpdatesPromptStep'
-import { RuleUpdatesReviewStep } from './RuleUpdatesReviewStep'
-import { ModalHeading } from '../ui/Modal/ModalSlots'
+import { Wizard } from '@components/Wizard/Wizard'
+import { UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { RuleUpdatesPromptStep } from '@components/SuggestedCategorizationRuleUpdates/RuleUpdatesPromptStep'
+import { RuleUpdatesReviewStep } from '@components/SuggestedCategorizationRuleUpdates/RuleUpdatesReviewStep'
+import { ModalHeading } from '@ui/Modal/ModalSlots'
 import './suggestedCategorizationRuleUpdates.scss'
 
 type SuggestedCategorizationRuleUpdatesProps = {
   close: () => void
   ruleSuggestion: UpdateCategorizationRulesSuggestion
+  mobile?: boolean
+  isDrawer?: boolean
 }
 
 export function RuleSuggestionHeader({ ruleSuggestion }: { ruleSuggestion: UpdateCategorizationRulesSuggestion }) {
@@ -28,7 +30,7 @@ export function RuleSuggestionHeader({ ruleSuggestion }: { ruleSuggestion: Updat
   }
 }
 
-export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesProps) {
+export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion, isDrawer }: SuggestedCategorizationRuleUpdatesProps) {
   const hasTransactions = ruleSuggestion.transactionsThatWillBeAffected.length > 0
 
   return (
@@ -39,7 +41,7 @@ export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: Su
         onComplete={close}
         onStepChange={undefined}
       >
-        <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} close={close} />
+        <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} close={close} isDrawer={isDrawer} />
         {hasTransactions && <RuleUpdatesReviewStep ruleSuggestion={ruleSuggestion} />}
       </Wizard>
     </section>

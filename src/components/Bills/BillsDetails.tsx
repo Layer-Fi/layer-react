@@ -1,34 +1,35 @@
+import { ErrorText } from '@components/Typography/ErrorText'
+import { TextWeight, TextSize, Text } from '@components/Typography/Text'
+import { Select } from '@components/Input/Select'
+import { InputGroup } from '@components/Input/InputGroup'
+import { Input } from '@components/Input/Input'
+import { HeaderCol } from '@components/Header/HeaderCol'
+import { HeaderRow } from '@components/Header/HeaderRow'
+import { Header } from '@components/Header/Header'
+import { TextButton } from '@components/Button/TextButton'
+import { SubmitButton } from '@components/Button/SubmitButton'
+import { RetryButton } from '@components/Button/RetryButton'
+import { IconButton } from '@components/Button/IconButton'
+import { Button, ButtonVariant } from '@components/Button/Button'
+import { BackButton } from '@components/Button/BackButton'
 import { RefObject } from 'react'
-import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
-import { BackButton, Button, ButtonVariant, IconButton, RetryButton, SubmitButton, TextButton } from '../Button'
-import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
-import { Header, HeaderRow, HeaderCol } from '../Header'
-import { Input, InputGroup } from '../Input'
-import { Select } from '../Input/Select'
-import { Textarea } from '../Textarea'
-import { TextWeight, TextSize, Text, ErrorText } from '../Typography'
-import { EditableBill, useBillForm } from './useBillForm'
-import { formatDate } from '../../utils/format'
-import { formatISO, parseISO } from 'date-fns'
-import { Panel } from '../Panel'
-import { BillsSidebar } from './BillsSidebar'
-import { Bill, BillTerms } from '../../types/bills'
-import { SelectVendor } from '../Vendors/SelectVendor'
-import { AmountInput } from '../Input/AmountInput'
-import { getVendorName } from '../../utils/vendors'
-import { DATE_FORMAT_SHORT, DATE_FORMAT_SHORT_PADDED } from '../../config/general'
-import { BillSummary } from './BillSummary'
-import { isBillPaid, isBillUnpaid } from '../../utils/bills'
-import CloseIcon from '../../icons/CloseIcon'
-import { HStack } from '../ui/Stack/Stack'
-import { notEmpty } from '../../utils/form'
-import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-
-const convertToInputDate = (date?: string) => {
-  const d = date ? parseISO(date) : new Date()
-  d.setHours(0, 0, 0, 0)
-  return d
-}
+import { useBillsContext, useBillsRecordPaymentContext } from '@contexts/BillsContext'
+import { Textarea } from '@components/Textarea/Textarea'
+import { EditableBill, useBillForm } from '@components/Bills/useBillForm'
+import { formatDate } from '@utils/format'
+import { Panel } from '@components/Panel/Panel'
+import { BillsSidebar } from '@components/Bills/BillsSidebar'
+import { Bill, BillTerms } from '@internal-types/bills'
+import { SelectVendor } from '@components/Vendors/SelectVendor'
+import { AmountInput } from '@components/Input/AmountInput'
+import { getVendorName } from '@utils/vendors'
+import { DATE_FORMAT_SHORT } from '@config/general'
+import { BillSummary } from '@components/Bills/BillSummary'
+import { isBillPaid, isBillUnpaid } from '@utils/bills'
+import CloseIcon from '@icons/CloseIcon'
+import { HStack } from '@ui/Stack/Stack'
+import { notEmpty } from '@utils/form'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
 export const BillsDetails = ({
   bill,
@@ -180,19 +181,6 @@ export const BillsDetails = ({
                     </InputGroup>
                   )}
                 </form.Field>
-                <form.Field name='received_at'>
-                  {field => (
-                    <InputGroup inline={true} label='Bill date'>
-                      <DeprecatedDatePicker
-                        displayMode='dayPicker'
-                        selected={convertToInputDate(field.state.value)}
-                        onChange={e => field.handleChange(formatISO(e as Date))}
-                        dateFormat={DATE_FORMAT_SHORT_PADDED}
-                        disabled={disabled}
-                      />
-                    </InputGroup>
-                  )}
-                </form.Field>
               </div>
               <div className='Layer__bill-details__form-col'>
                 <form.Field name='bill_number'>
@@ -206,25 +194,6 @@ export const BillsDetails = ({
                     </InputGroup>
                   )}
                 </form.Field>
-                <form.Field name='due_at'>
-                  {field => (
-                    <InputGroup inline={true} label='Due date'>
-                      <DeprecatedDatePicker
-                        displayMode='dayPicker'
-                        selected={convertToInputDate(field.state.value)}
-                        onChange={(d) => {
-                          const x = d as Date
-                          x.setHours(0, 0, 0, 0)
-                          field.handleChange(formatISO(x))
-                        }}
-                        maxDate={null}
-                        dateFormat={DATE_FORMAT_SHORT_PADDED}
-                        disabled={disabled}
-                      />
-                    </InputGroup>
-                  )}
-                </form.Field>
-
               </div>
             </div>
           </div>

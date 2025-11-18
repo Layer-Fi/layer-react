@@ -1,7 +1,7 @@
-import { AccountingConfigurationSchemaType, AccountingConfigurationSchema } from '../../schemas/accountingConfiguration'
-import { get } from '../../api/layer/authenticated_http'
-import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { AccountingConfigurationSchemaType, AccountingConfigurationSchema } from '@schemas/accountingConfiguration'
+import { get } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import useSWR, { type SWRResponse } from 'swr'
 import { Schema } from 'effect/index'
 

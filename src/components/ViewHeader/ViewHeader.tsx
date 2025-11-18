@@ -1,5 +1,5 @@
+import { Heading } from '@components/Typography/Heading'
 import { ReactNode } from 'react'
-import { Heading } from '../Typography'
 import classNames from 'classnames'
 
 export interface ViewHeaderProps {

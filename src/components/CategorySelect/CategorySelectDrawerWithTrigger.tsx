@@ -1,8 +1,10 @@
-import ChevronDown from '../../icons/ChevronDown'
-import classNames from 'classnames'
-import { CategorySelectDrawer } from './CategorySelectDrawer'
+import ChevronDown from '@icons/ChevronDown'
+import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { useState } from 'react'
-import type { BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { Button } from '@components/ui/Button/Button'
+import { HStack, Spacer } from '@components/ui/Stack/Stack'
+import { Span } from '@components/ui/Typography/Text'
 
 type Props = {
   value: BankTransactionCategoryComboBoxOption | null
@@ -11,29 +13,23 @@ type Props = {
   showTooltips: boolean
 }
 
-export const CategorySelectDrawerWithTrigger = ({
-  value,
-  onChange,
-  showTooltips,
-}: Props) => {
+export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips }: Props) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   return (
-    <>
-      <button
+    <HStack fluid>
+      <Button
+        flex
+        fullWidth
         aria-label='Select category'
-        className={classNames(
-          'Layer__category-menu__drawer-btn',
-          value && 'Layer__category-menu__drawer-btn--selected',
-        )}
         onClick={() => { setIsDrawerOpen(true) }}
+        variant='outlined'
       >
-        {value?.label ?? 'Select...'}
-        <ChevronDown
-          size={16}
-          className='Layer__category-menu__drawer-btn__arrow'
-        />
-      </button>
+        <Span>{value?.label ?? 'Select...'}</Span>
+        <Spacer />
+        <ChevronDown size={16} />
+      </Button>
+
       <CategorySelectDrawer
         onSelect={onChange}
         selectedId={value?.value}
@@ -41,6 +37,6 @@ export const CategorySelectDrawerWithTrigger = ({
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
       />
-    </>
+    </HStack>
   )
 }

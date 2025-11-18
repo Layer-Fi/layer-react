@@ -1,7 +1,7 @@
-import { filterVisibility } from '../components/BankTransactions/utils'
-import { DateRange } from '../types/general'
-import { BankTransaction, DisplayState } from '../types/bank_transactions'
-import { Direction } from '../types/general'
+import { filterVisibility } from '@components/BankTransactions/utils'
+import { DateRange } from '@internal-types/general'
+import { BankTransaction, DisplayState, SuggestedMatch } from '@internal-types/bank_transactions'
+import { Direction } from '@internal-types/general'
 import { isWithinInterval, parseISO } from 'date-fns'
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
@@ -14,17 +14,6 @@ export const hasMatch = (bankTransaction?: BankTransaction) => {
 
 export const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === Direction.CREDIT
-
-export const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
-  if (bankTransaction?.match) {
-    const foundMatch = bankTransaction.suggested_matches?.find(
-      x => x.details.id === bankTransaction?.match?.details.id,
-    )
-    return foundMatch?.id
-  }
-
-  return undefined
-}
 
 export const countTransactionsToReview = ({
   transactions,
@@ -66,5 +55,24 @@ export const isTransferMatch = (bankTransaction?: BankTransaction) => {
 }
 
 export const hasSuggestedTransferMatches = (bankTransaction?: BankTransaction) => {
-  return bankTransaction?.suggested_matches?.every(x => x.details.type === 'Transfer_Match') ?? false
+  return (
+    (bankTransaction?.suggested_matches?.length ?? 0) > 0
+    && bankTransaction?.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
+  )
+}
+
+export const getBankTransactionMatchAsSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
+  if (bankTransaction?.match) {
+    const foundMatch = bankTransaction.suggested_matches?.find(
+      x => x.details.id === bankTransaction?.match?.details.id
+        || x.details.id === bankTransaction?.match?.bank_transaction.id,
+    )
+    return foundMatch
+  }
+
+  return undefined
+}
+
+export const getBankTransactionFirstSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
+  return getBankTransactionMatchAsSuggestedMatch(bankTransaction) ?? bankTransaction?.suggested_matches?.[0]
 }

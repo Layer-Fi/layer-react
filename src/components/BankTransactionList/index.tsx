@@ -1,1 +1,0 @@
-export { BankTransactionList } from './BankTransactionList'

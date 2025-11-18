@@ -1,8 +1,8 @@
 import { fromDate, getLocalTimeZone } from '@internationalized/date'
-import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccount'
-import type { JournalEntryForm, CreateCustomJournalEntry, JournalEntryFormLineItem, ApiCustomJournalEntryWithEntry } from './journalEntryFormSchemas'
-import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
-import { makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../../features/tags/tagSchemas'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import type { JournalEntryForm, CreateCustomJournalEntry, JournalEntryFormLineItem, ApiCustomJournalEntryWithEntry } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
+import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
+import { makeTagKeyValueFromTag, makeTagFromTransactionTag } from '@features/tags/tagSchemas'
 import { BigDecimal as BD } from 'effect'
 
 /**

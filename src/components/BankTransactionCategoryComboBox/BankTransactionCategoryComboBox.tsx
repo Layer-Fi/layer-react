@@ -1,53 +1,19 @@
 import { useMemo } from 'react'
-import { ComboBox } from '../ui/ComboBox/ComboBox'
-import type { BankTransaction } from '../../types/bank_transactions'
-import { flattenCategories, getSuggestedMatchesGroup, getSuggestedCategoriesGroup, getAllCategoriesGroup, BankTransactionCategoryComboBoxGroupLabel, isLoadingSuggestions } from './utils'
-import { useCategories } from '../../hooks/categories/useCategories'
-import { isSplitAsOption, isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '../../components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { Badge, BadgeSize } from '../Badge/Badge'
-import MinimizeTwo from '../../icons/MinimizeTwo'
-import { Header, Span } from '../ui/Typography/Text'
-import Scissors from '../../icons/Scissors'
-import { HStack, VStack } from '../ui/Stack/Stack'
-import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { DateTime } from '../DateTime'
-import { MoneySpan } from '../ui/Typography/MoneySpan'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/bankTransactions/match'
-import { LoadingSpinner } from '../ui/Loading/LoadingSpinner'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
+import type { BankTransaction } from '@internal-types/bank_transactions'
+import { flattenCategories, getSuggestedMatchesGroup, getSuggestedCategoriesGroup, getAllCategoriesGroup, BankTransactionCategoryComboBoxGroupLabel, isLoadingSuggestions } from '@components/BankTransactionCategoryComboBox/utils'
+import { useCategories } from '@hooks/categories/useCategories'
+import { isSuggestedMatchAsOption, type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { Header, Span } from '@ui/Typography/Text'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { DateTime } from '@components/DateTime/DateTime'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
+import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import type { GroupBase } from 'react-select'
 import './bankTransactionCategoryComboBox.scss'
-
-type BankTransactionCategoryComboBoxSelectedValueProps = {
-  selectedValue: BankTransactionCategoryComboBoxOption | null
-}
-
-const BankTransactionCategoryComboBoxSelectedValue = ({ selectedValue }: BankTransactionCategoryComboBoxSelectedValueProps) => {
-  if (!selectedValue) return null
-
-  if (isSuggestedMatchAsOption(selectedValue)) {
-    return (
-      <HStack gap='3xs' align='center'>
-        <Badge size={BadgeSize.SMALL} icon={<MinimizeTwo size={11} />}>
-          {selectedValue.original.details.type === 'Transfer_Match' ? 'Transfer' : 'Match'}
-        </Badge>
-        <Span ellipsis>{selectedValue.label}</Span>
-      </HStack>
-    )
-  }
-
-  if (isSplitAsOption(selectedValue)) {
-    return (
-      <HStack gap='3xs' align='center'>
-        <Badge size={BadgeSize.SMALL} icon={<Scissors size={11} />}>
-          Split
-        </Badge>
-        <Span ellipsis>{selectedValue.label}</Span>
-      </HStack>
-    )
-  }
-
-  return <Span ellipsis>{selectedValue.label}</Span>
-}
+import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
 
 type BankTransactionCategoryComboBoxOptionProps = {
   option: BankTransactionCategoryComboBoxOption
@@ -171,7 +137,7 @@ export const BankTransactionCategoryComboBox = ({
       : 'Categorize or match...'
 
   const SelectedValue = useMemo(() => {
-    return <BankTransactionCategoryComboBoxSelectedValue selectedValue={selectedValue} />
+    return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} />
   }, [selectedValue])
 
   return (

@@ -1,6 +1,6 @@
-import RefreshCcw from '../../icons/RefreshCcw'
-import { IconButton } from '../Button'
-import { SmallLoader } from '../Loader'
+import { IconButton } from '@components/Button/IconButton'
+import RefreshCcw from '@icons/RefreshCcw'
+import { SmallLoader } from '@components/Loader/SmallLoader'
 import classNames from 'classnames'
 
 interface SyncingComponentProps {

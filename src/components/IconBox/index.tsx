@@ -1,1 +1,0 @@
-export { IconBox } from './IconBox'

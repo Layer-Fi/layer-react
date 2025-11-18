@@ -1,7 +1,7 @@
-import { ModalProps } from '../../ui/Modal/Modal'
-import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
-import { useVoidInvoice } from '../../../features/invoices/api/useVoidInvoice'
-import type { Invoice } from '../../../features/invoices/invoiceSchemas'
+import { ModalProps } from '@ui/Modal/Modal'
+import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
+import { useVoidInvoice } from '@features/invoices/api/useVoidInvoice'
+import type { Invoice } from '@features/invoices/invoiceSchemas'
 import { useCallback } from 'react'
 
 type InvoiceVoidModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {

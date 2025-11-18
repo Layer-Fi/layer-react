@@ -1,1 +1,0 @@
-export { ReceiptsProvider } from './ReceiptsProvider'

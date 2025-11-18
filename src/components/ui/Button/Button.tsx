@@ -1,8 +1,9 @@
+import { Button as ReactAriaButton } from 'react-aria-components'
 import { forwardRef, type PropsWithChildren } from 'react'
-import { Button as ReactAriaButton, type ButtonProps } from 'react-aria-components'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
-import { withRenderProp } from '../../utility/withRenderProp'
-import { LoadingSpinner } from '../Loading/LoadingSpinner'
+import { type ButtonProps } from 'react-aria-components'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { withRenderProp } from '@components/utility/withRenderProp'
+import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import './button.scss'
 
 const BUTTON_CLASS_NAMES = {
@@ -40,6 +41,8 @@ const Button = forwardRef<
     inset?: true
     size?: ButtonSize
     variant?: ButtonVariant
+    fullWidth?: boolean
+    flex?: boolean
   }
 >((
   {
@@ -49,6 +52,8 @@ const Button = forwardRef<
     inset,
     size = 'md',
     variant = 'solid',
+    fullWidth = false,
+    flex = false,
     ...restProps
   },
   ref,
@@ -60,6 +65,8 @@ const Button = forwardRef<
     inset,
     size,
     variant,
+    'full-width': fullWidth,
+    flex,
   })
 
   return (

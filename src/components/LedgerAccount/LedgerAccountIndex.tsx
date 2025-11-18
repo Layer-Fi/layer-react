@@ -1,24 +1,26 @@
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { HeaderRow } from '@components/Header/HeaderRow'
+import { HeaderCol } from '@components/Header/HeaderCol'
+import { Header } from '@components/Header/Header'
+import { BackButton } from '@components/Button/BackButton'
 import {
   RefObject,
   useContext,
   useMemo,
   useState,
 } from 'react'
-import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
-import { centsToDollars } from '../../models/Money'
-import { View } from '../../types/general'
-import { BackButton } from '../Button'
-import { DataState, DataStateStatus } from '../DataState'
-import { Header, HeaderCol, HeaderRow } from '../Header'
-import { LedgerAccountEntryDetails } from '../LedgerAccountEntryDetails'
-import { LedgerAccountEntryDetailsStringOverrides } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
-import { Loader } from '../Loader'
-import { Pagination } from '../Pagination'
-import { Panel } from '../Panel'
-import { Text, TextSize, TextWeight } from '../Typography'
-import { LedgerAccountRow } from './LedgerAccountRow'
+import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
+import { centsToDollars } from '@models/Money'
+import { View } from '@internal-types/general'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { LedgerAccountEntryDetails } from '@components/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
+import { LedgerAccountEntryDetailsStringOverrides } from '@components/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
+import { Loader } from '@components/Loader/Loader'
+import { Pagination } from '@components/Pagination/Pagination'
+import { Panel } from '@components/Panel/Panel'
+import { LedgerAccountRow } from '@components/LedgerAccount/LedgerAccountRow'
 import classNames from 'classnames'
-import { LedgerAccountNodeType } from '../../types/chart_of_accounts'
+import { LedgerAccountNodeType } from '@internal-types/chart_of_accounts'
 
 interface LedgerEntriesTableStringOverrides {
   dateColumnHeader?: string

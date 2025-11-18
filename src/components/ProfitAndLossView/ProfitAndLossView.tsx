@@ -1,15 +1,15 @@
 import { RefObject, useContext, useRef } from 'react'
-import { Container } from '../Container'
-import { DataState, DataStateStatus } from '../DataState'
-import { Panel } from '../Panel'
-import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
-import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
-import { ProfitAndLossDetailedChartsStringOverrides } from '../ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossSummariesStringOverrides } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { ProfitAndLossTableStringOverrides } from '../ProfitAndLossTable/ProfitAndLossTableComponent'
-import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { ProfitAndLossTable } from '../ProfitAndLossTable'
-import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
+import { Container } from '@components/Container/Container'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { Panel } from '@components/Panel/Panel'
+import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
+import { ProfitAndLossDetailedCharts } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossTableWithProvider } from '@components/ProfitAndLossTable/ProfitAndLossTableWithProvider'
+import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 const COMPONENT_NAME = 'profit-and-loss'
 
@@ -97,7 +97,7 @@ const Components = ({
           <div
             className={`Layer__${COMPONENT_NAME}__chart_with_summaries__summary-col`}
           >
-            <ProfitAndLossDatePicker />
+            <GlobalMonthPicker />
             <ProfitAndLoss.Summaries
               actionable
               stringOverrides={stringOverrides?.profitAndLossSummaries}
@@ -111,7 +111,7 @@ const Components = ({
         </div>
       )}
       {!hideTable && (
-        <ProfitAndLossTable
+        <ProfitAndLossTableWithProvider
           stringOverrides={stringOverrides?.profitAndLossTable}
         />
       )}

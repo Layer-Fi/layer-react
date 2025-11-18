@@ -6,7 +6,8 @@
 }
 
 .Layer__UI__TextField,
-.Layer__UI__DateField {
+.Layer__UI__DateField,
+.Layer__UI__NumberField {
   display: grid;
 
   grid-template-areas:
@@ -22,7 +23,7 @@
     align-items: center;
 
     &[data-textarea] {
-      align-items: start;
+      align-items: flex-start;
     }
   }
 

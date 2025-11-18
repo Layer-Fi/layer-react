@@ -1,13 +1,13 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
-import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { LedgerAccountsEntry, type LedgerAccountLineItem } from '../../types/ledger_accounts'
-import { DataModel } from '../../types/general'
+import { Layer } from '@api/layer'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { LedgerAccountsEntry, type LedgerAccountLineItem } from '@internal-types/ledger_accounts'
+import { DataModel } from '@internal-types/general'
 import useSWR from 'swr'
-import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useListLedgerAccountLines, type ListLedgerAccountLinesReturn } from '../../features/ledger/accounts/[ledgerAccountId]/api/useListLedgerAccountLines'
-import type { LedgerAccountBalanceWithNodeType } from '../../types/chart_of_accounts'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useListLedgerAccountLines, type ListLedgerAccountLinesReturn } from '@features/ledger/accounts/[ledgerAccountId]/api/useListLedgerAccountLines'
+import type { LedgerAccountBalanceWithNodeType } from '@internal-types/chart_of_accounts'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
   data?: LedgerAccountLineItem[] | undefined

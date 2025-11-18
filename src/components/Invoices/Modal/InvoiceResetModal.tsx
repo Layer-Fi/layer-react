@@ -1,7 +1,7 @@
-import { ModalProps } from '../../ui/Modal/Modal'
-import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
-import { InvoiceStatus, type Invoice } from '../../../features/invoices/invoiceSchemas'
-import { useResetInvoice } from '../../../features/invoices/api/useResetInvoice'
+import { ModalProps } from '@ui/Modal/Modal'
+import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
+import { InvoiceStatus, type Invoice } from '@features/invoices/invoiceSchemas'
+import { useResetInvoice } from '@features/invoices/api/useResetInvoice'
 import { useCallback } from 'react'
 
 type InvoiceResetModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {

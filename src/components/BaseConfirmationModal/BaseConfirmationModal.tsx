@@ -1,17 +1,17 @@
-import { Modal, ModalProps } from '../ui/Modal/Modal'
+import { SubmitButton } from '@components/Button/SubmitButton'
+import { Button, ButtonVariant } from '@components/Button/Button'
+import { Modal, ModalProps } from '@ui/Modal/Modal'
 import {
   ModalHeading,
   ModalActions,
   ModalDescription,
   ModalTitleWithClose,
   ModalContent,
-} from '../ui/Modal/ModalSlots'
-import { Button, ButtonVariant } from '../Button/Button'
-import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
+} from '@ui/Modal/ModalSlots'
+import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { useCallback, useState, type ReactNode } from 'react'
-import { SubmitButton } from '../Button'
-import { Awaitable } from '../../types/utility/promises'
-import { APIError } from '../../models/APIError'
+import { Awaitable } from '@internal-types/utility/promises'
+import { APIError } from '@models/APIError'
 
 export type BaseConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   title: string

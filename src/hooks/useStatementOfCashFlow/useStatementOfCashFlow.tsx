@@ -1,8 +1,8 @@
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import useSWR from 'swr'
-import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { getStatementOfCashFlow } from '../../api/layer/statement-of-cash-flow'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { getStatementOfCashFlow } from '@api/layer/statement-of-cash-flow'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 function buildKey({

@@ -3,9 +3,9 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 import {
   BankTransactionFilters,
   BankTransactionsDateFilterMode,
-} from '../../hooks/useBankTransactions/types'
-import { DisplayState } from '../../types/bank_transactions'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+} from '@hooks/useBankTransactions/types'
+import { DisplayState } from '@internal-types/bank_transactions'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type useBankTransactionsFiltersParams = {
   scope?: DisplayState
@@ -22,7 +22,7 @@ export const useBankTransactionsFilters = (
       ? BankTransactionsDateFilterMode.MonthlyView
       : undefined
 
-  const globalDateRange = useGlobalDateRange({ displayMode: 'monthPicker' })
+  const globalDateRange = useGlobalDateRange({ displayMode: 'full' })
 
   const defaultDateRange = {
     startDate: startOfMonth(new Date()),

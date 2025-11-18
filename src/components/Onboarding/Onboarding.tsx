@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
-import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider'
-import { OnboardingStep } from '../../types/layer_context'
-import { Container } from '../Container'
-import { ConnectAccount } from './ConnectAccount'
-import { AccountConfirmationStoreProvider } from '../../providers/AccountConfirmationStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
+import { OnboardingStep } from '@internal-types/layer_context'
+import { Container } from '@components/Container/Container'
+import { ConnectAccount } from '@components/Onboarding/ConnectAccount'
+import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
 import './onboarding.scss'
 
 const COLLAPSED_STYLE = {

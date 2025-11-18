@@ -1,13 +1,13 @@
 import useSWRMutation from 'swr/mutation'
-import { useAuth } from '../../../../../hooks/useAuth'
-import { useLayerContext } from '../../../../../contexts/LayerContext'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useCallback } from 'react'
-import { post } from '../../../../../api/layer/authenticated_http'
+import { post } from '@api/layer/authenticated_http'
 import {
   useBankTransactionsGlobalCacheActions,
-} from '../../../../../hooks/useBankTransactions/useBankTransactions'
+} from '@hooks/useBankTransactions/useBankTransactions'
 import { v4 as uuidv4 } from 'uuid'
-import type { TransactionTagEncoded } from '../../../../tags/tagSchemas'
+import type { TransactionTagEncoded } from '@features/tags/tagSchemas'
 
 const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 

@@ -41,7 +41,8 @@
     padding-inline: 0;
   }
 
-  &[data-ellipsis] {
+  &[data-ellipsis],
+  &[data-with-tooltip] {
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
@@ -143,6 +144,14 @@
   &[data-variant='branded'] {
     background-color: var(--bg-brand-accent, var(--color-accent));
     color: var(--fg-brand-accent, var(--color-primary));
+  }
+
+  &[data-full-width] {
+    inline-size: 100%;
+  }
+
+  &[data-flex] {
+    display: flex;
   }
 }
 

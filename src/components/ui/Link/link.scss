@@ -11,7 +11,8 @@
 
   text-decoration: none;
 
-  &[data-ellipsis] {
+  &[data-ellipsis],
+  &[data-with-tooltip] {
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
@@ -25,7 +26,7 @@
     pointer-events: none;
   }
 
-  // Sizes
+  /* Sizes */
   $sizes: xs sm md lg;
 
   @each $size in $sizes {

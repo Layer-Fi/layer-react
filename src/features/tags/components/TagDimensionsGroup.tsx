@@ -1,8 +1,8 @@
-import { TagDimensionCombobox } from './TagDimensionCombobox'
-import { Tag } from '../tagSchemas'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { TagDimensionCombobox } from '@features/tags/components/TagDimensionCombobox'
+import { Tag } from '@features/tags/tagSchemas'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import './tagDimensionsGroup.scss'
-import { HStack } from '../../../components/ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
 
 const TAG_DIMENSIONS_GROUP_CSS_PREFIX = 'Layer__TagDimensionsGroup'
 

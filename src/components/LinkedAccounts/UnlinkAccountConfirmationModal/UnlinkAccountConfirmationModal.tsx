@@ -1,8 +1,8 @@
 import { useContext, useMemo } from 'react'
-import { ModalProps } from '../../ui/Modal/Modal'
-import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
-import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
-import type { LinkedAccount } from '../../../types/linked_accounts'
+import { ModalProps } from '@ui/Modal/Modal'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
+import type { LinkedAccount } from '@internal-types/linked_accounts'
 
 type UnlinkAccountConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   account: LinkedAccount

@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react'
-import { VStack } from '../ui/Stack/Stack'
-import { Span } from '../ui/Typography/Text'
+import { VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 
 export type DataPointProps = PropsWithChildren<{
   label: string

@@ -1,8 +1,8 @@
-import { HeaderCol } from '../Header'
-import { Button } from '../ui/Button/Button'
-import { Span } from '../ui/Typography/Text'
-import { HStack, VStack } from '../ui/Stack/Stack'
-import ChevronRight from '../../icons/ChevronRight'
+import { HeaderCol } from '@components/Header/HeaderCol'
+import { Button } from '@ui/Button/Button'
+import { Span } from '@ui/Typography/Text'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import ChevronRight from '@icons/ChevronRight'
 
 export interface BreadcrumbItem {
   name: string

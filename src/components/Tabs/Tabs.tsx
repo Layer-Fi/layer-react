@@ -1,8 +1,8 @@
 import { ChangeEvent, ReactNode, useEffect, useState } from 'react'
-import { useElementSize } from '../../hooks/useElementSize'
-import { Tab } from './Tab'
+import { useElementSize } from '@hooks/useElementSize/useElementSize'
+import { Tab } from '@components/Tabs/Tab'
 import classNames from 'classnames'
-import { HStack } from '../ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
 import './tabs.scss'
 
 const STARTING_PADDING = 12

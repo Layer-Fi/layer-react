@@ -1,10 +1,10 @@
 import useSWRMutation from 'swr/mutation'
-import { Layer } from '../../../api/layer'
-import type { Awaitable } from '../../../types/utility/promises'
-import { useAuth } from '../../../hooks/useAuth'
-import { useLayerContext } from '../../../contexts/LayerContext'
+import { Layer } from '@api/layer'
+import type { Awaitable } from '@internal-types/utility/promises'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-export type OpeningBalanceData = { accountId: string, openingDate?: Date, openingBalance?: number }
+export type OpeningBalanceData = { accountId: string, openingDate?: Date, openingBalance?: number, isDateInvalid: boolean }
 
 type OpeningBalanceAPIResponseValidationError = {
   accountId: string
@@ -94,11 +94,15 @@ export function useBulkSetOpeningBalanceAndDate(
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
-  const validate = ({ openingBalance, openingDate }: OpeningBalanceData) => {
+  const validate = ({ openingBalance, openingDate, isDateInvalid }: OpeningBalanceData) => {
     const errors: string[] = []
 
     if (!openingDate) {
       errors.push('MISSING_DATE')
+    }
+
+    if (isDateInvalid) {
+      errors.push('INVALID_DATE')
     }
 
     if (!openingBalance) {
@@ -113,8 +117,8 @@ export function useBulkSetOpeningBalanceAndDate(
     ({ accessToken, apiUrl, businessId, data }) => (
       Promise.allSettled(
         data.map(
-          ({ accountId, openingDate, openingBalance }) => {
-            const errors = validate({ accountId, openingDate, openingBalance })
+          ({ accountId, openingDate, openingBalance, isDateInvalid }) => {
+            const errors = validate({ accountId, openingDate, openingBalance, isDateInvalid })
             if (errors.length > 0) {
               return Promise.reject(
                 new Error('Invalid data', {

@@ -1,7 +1,7 @@
 import { ReactNode, useRef, useState, useEffect } from 'react'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
-import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
 export enum TextSize {
   lg = 'lg',
@@ -35,7 +35,7 @@ export interface TextProps {
   weight?: TextWeight
   status?: TextStatus
   htmlFor?: string
-  withTooltip?: TextUseTooltip
+  withDeprecatedTooltip?: TextUseTooltip
   tooltipOptions?: TextTooltipOptions
   ellipsis?: boolean
   pb?: '4xs' | '3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg'
@@ -48,7 +48,7 @@ export const Text = ({
   children,
   size = TextSize.md,
   weight = TextWeight.normal,
-  withTooltip,
+  withDeprecatedTooltip: withTooltip,
   ellipsis,
   status,
   pb,
@@ -64,17 +64,17 @@ export const Text = ({
 
   if (withTooltip) {
     return (
-      <TextWithTooltip
+      <DeprecatedTextWithTooltip
         as={Component}
         className={baseClassName}
         size={size}
         weight={weight}
-        withTooltip={withTooltip}
+        withDeprecatedTooltip={withTooltip}
         {...dataProperties}
         {...props}
       >
         {children}
-      </TextWithTooltip>
+      </DeprecatedTextWithTooltip>
     )
   }
 
@@ -85,13 +85,13 @@ export const Text = ({
   )
 }
 
-export const TextWithTooltip = ({
+export const DeprecatedTextWithTooltip = ({
   as: Component = 'p',
   className,
   children,
   size: _size = TextSize.md,
   weight: _weight = TextWeight.normal,
-  withTooltip: _withTooltip = TextUseTooltip.whenTruncated,
+  withDeprecatedTooltip: _withTooltip = TextUseTooltip.whenTruncated,
   tooltipOptions,
   ...props
 }: TextProps) => {
@@ -125,17 +125,17 @@ export const TextWithTooltip = ({
   )
 
   return (
-    <Tooltip
+    <DeprecatedTooltip
       disabled={!hoverStatus}
       offset={tooltipOptions?.offset}
       shift={tooltipOptions?.shift}
     >
-      <TooltipTrigger>
+      <DeprecatedTooltipTrigger>
         <Component className={className} ref={textElementRef} {...props}>
           {children}
         </Component>
-      </TooltipTrigger>
-      <TooltipContent className={contentClassName}>{children}</TooltipContent>
-    </Tooltip>
+      </DeprecatedTooltipTrigger>
+      <DeprecatedTooltipContent className={contentClassName}>{children}</DeprecatedTooltipContent>
+    </DeprecatedTooltip>
   )
 }

@@ -1,33 +1,32 @@
+import { Heading, HeadingSize } from '@components/Typography/Heading'
+import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
+import { ButtonVariant } from '@components/Button/Button'
 import { useCallback, useMemo, useState } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
-import type { DateRange } from '../../types/general'
-import { DisplayState } from '../../types/bank_transactions'
-import { getEarliestDateToBrowse } from '../../utils/business'
-import { ButtonVariant, DownloadButton as DownloadButtonComponent } from '../Button'
-import { Header } from '../Container'
-import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
-import { SyncingComponent } from '../SyncingComponent'
-import { Toggle } from '../Toggle'
-import { ToggleSize } from '../Toggle/Toggle'
-import { Heading, HeadingSize } from '../Typography'
-import { MobileComponentType } from './constants'
+import { DisplayState } from '@internal-types/bank_transactions'
+import { Header } from '@components/Container/Header'
+import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
+import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
+import { MobileComponentType } from '@components/BankTransactions/constants'
 import classNames from 'classnames'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { useDebounce } from '@hooks/useDebounce/useDebounce'
+import { SearchField } from '@components/SearchField/SearchField'
+import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
+import { HStack } from '@ui/Stack/Stack'
+import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
+import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
+import { BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
+import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
+import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
+import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
+import { MonthPicker } from '@components/MonthPicker/MonthPicker'
+import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
+import type { ZonedDateTime } from '@internationalized/date'
 import { endOfMonth, startOfMonth } from 'date-fns'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import { useBankTransactionsFiltersContext } from '../../contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { useDebounce } from '../../hooks/useDebounce/useDebounce'
-import { SearchField } from '../SearchField/SearchField'
-import { BankTransactionsActions } from '../BankTransactionsActions/BankTransactionsActions'
-import { HStack } from '../ui/Stack/Stack'
-import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
-import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
-import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
-import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
-import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
-import { BankTransactionsHeaderMenu } from './BankTransactionsHeaderMenu'
-import { useCountSelectedIds } from '../../providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { BulkActionsModule } from '../BulkActionsModule/BulkActionsModule'
-import { BankTransactionsBulkActions } from './BankTransactionsBulkActions/BankTransactionsBulkActions'
+import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -42,8 +41,7 @@ export interface BankTransactionsHeaderProps {
   withUploadMenu?: boolean
   showStatusToggle?: boolean
   collapseHeader?: boolean
-  _showCategorizationRules?: boolean
-  _showBulkSelection?: boolean
+  showCategorizationRules?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -134,10 +132,10 @@ export const BankTransactionsHeader = ({
   withUploadMenu,
   showStatusToggle,
   collapseHeader,
-  _showCategorizationRules = false,
-  _showBulkSelection = false,
+  showCategorizationRules = false,
+
 }: BankTransactionsHeaderProps) => {
-  const { business } = useLayerContext()
+  const activationDate = useBusinessActivationDate()
   const { display } = useBankTransactionsContext()
   const {
     setFilters,
@@ -146,14 +144,20 @@ export const BankTransactionsHeader = ({
   } = useBankTransactionsFiltersContext()
 
   const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
-  const dateRange = filters?.dateRange
-  const setDateRange = useCallback((newRange: DateRange) => {
-    setFilters({ dateRange: newRange })
+  const monthPickerDate = filters?.dateRange ? convertDateToZonedDateTime(filters.dateRange.startDate) : null
+  const setDateRange = useCallback((newMonth: ZonedDateTime) => {
+    const newMonthAsDate = newMonth.toDate()
+    setFilters({
+      dateRange: {
+        startDate: startOfMonth(newMonthAsDate),
+        endDate: endOfMonth(newMonthAsDate),
+      },
+    })
   }, [setFilters])
 
   const { count } = useCountSelectedIds()
 
-  const showBulkActions = _showBulkSelection && count > 0
+  const showBulkActions = count > 0
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
@@ -172,25 +176,27 @@ export const BankTransactionsHeader = ({
           />
         )}
       </div>
-      {withDatePicker && dateRange
-        ? (
-          <DeprecatedDatePicker
-            displayMode='monthPicker'
-            selected={dateRange.startDate}
-            onChange={(date) => {
-              if (!Array.isArray(date)) {
-                setDateRange({
-                  startDate: startOfMonth(date),
-                  endDate: endOfMonth(date),
-                })
-              }
-            }}
-            minDate={getEarliestDateToBrowse(business)}
-          />
-        )
-        : null}
+      {withDatePicker && monthPickerDate && (
+        <MonthPicker
+          label='Select a month'
+          showLabel={false}
+          date={monthPickerDate}
+          onChange={setDateRange}
+          minDate={activationDate ? convertDateToZonedDateTime(activationDate) : null}
+          maxDate={convertDateToZonedDateTime(new Date())}
+        />
+      )}
     </div>
-  ), [asWidget, business, dateRange, isSyncing, listView, setDateRange, stringOverrides?.header, withDatePicker])
+  ), [
+    activationDate,
+    asWidget,
+    isSyncing,
+    listView,
+    monthPickerDate,
+    setDateRange,
+    stringOverrides?.header,
+    withDatePicker,
+  ])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -204,6 +210,17 @@ export const BankTransactionsHeader = ({
             : DisplayState.review,
     })
   }
+
+  const headerMenuActions = useMemo(() => {
+    const actions: BankTransactionsHeaderMenuActions[] = []
+    if (withUploadMenu) {
+      actions.push(BankTransactionsHeaderMenuActions.UploadTransactions)
+    }
+    if (showCategorizationRules) {
+      actions.push(BankTransactionsHeaderMenuActions.ManageCategorizationRules)
+    }
+    return actions
+  }, [withUploadMenu, showCategorizationRules])
 
   return (
     <Header
@@ -222,9 +239,7 @@ export const BankTransactionsHeader = ({
         {showBulkActions
           ? (
             <BulkActionsModule
-              slots={{ BulkActions: () => (
-                <BankTransactionsBulkActions />
-              ) }}
+              slots={{ BulkActions: BankTransactionsBulkActions }}
             />
           )
           : (
@@ -255,9 +270,7 @@ export const BankTransactionsHeader = ({
             iconOnly={listView}
             disabled={showBulkActions}
           />
-          {_showCategorizationRules
-            ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} isDisabled={showBulkActions} />
-            : withUploadMenu && <BankTransactionsUploadMenu isDisabled={showBulkActions} />}
+          <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
         </HStack>
       </BankTransactionsActions>
     </Header>

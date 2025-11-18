@@ -1,14 +1,14 @@
+import { TextSize, TextWeight } from '@components/Typography/Text'
 import { useMemo } from 'react'
-import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTable'
-import { type ColumnConfig } from '../DataTable/DataTable'
-import { DateTime } from '../DateTime'
-import { TextSize, TextWeight } from '../Typography'
-import { MoneySpan } from '../ui/Typography/MoneySpan'
-import { DataState, DataStateStatus } from '../DataState/DataState'
-import type { MinimalBankTransaction } from '../../schemas/bankTransactions/base'
-import { BankTransactionDirection } from '../../schemas/bankTransactions/base'
-import { VStack } from '../ui/Stack/Stack'
-import { Span } from '../ui/Typography/Text'
+import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
+import { type ColumnConfig } from '@components/DataTable/DataTable'
+import { DateTime } from '@components/DateTime/DateTime'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import type { MinimalBankTransaction } from '@schemas/bankTransactions/base'
+import { BankTransactionDirection } from '@schemas/bankTransactions/base'
+import { VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import './affectedTransactionsTable.scss'
 
 const COMPONENT_NAME = 'AffectedTransactionsTable'
@@ -66,9 +66,7 @@ export const AffectedTransactionsTable = ({
       id: TransactionColumns.Description,
       header: 'Description',
       cell: row => (
-        <Span
-          ellipsis
-        >
+        <Span withTooltip>
           {row.counterpartyName || row.description || '-'}
         </Span>
       ),

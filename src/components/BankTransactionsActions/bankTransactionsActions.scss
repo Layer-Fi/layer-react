@@ -7,9 +7,8 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: var(--spacing-xs);
   align-items: center;
-  min-height: 2.5rem;
 
-  @container (min-width: 768px) {
+  @container (min-width: 840px) {
     grid-template-areas: 'toggle . search download-upload';
     grid-template-columns: auto minmax(0, 2fr) 15rem auto;
   }

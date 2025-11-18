@@ -1,21 +1,21 @@
 import { useState, useMemo, useCallback } from 'react'
-import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { FormError, FormErrorWithId } from '../../types/general'
-import { BaseSelectOption, DataModel } from '../../types/general'
+import { Layer } from '@api/layer'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { FormError, FormErrorWithId } from '@internal-types/general'
+import { BaseSelectOption, DataModel } from '@internal-types/general'
 import {
   JournalEntry,
   JournalEntryLineItem,
   NewApiJournalEntry,
   NewFormJournalEntry,
-} from '../../types/journal'
-import { getAccountIdentifierPayload } from '../../utils/journal'
-import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useListLedgerEntries, type ListLedgerEntriesReturn } from '../../features/ledger/entries/api/useListLedgerEntries'
-import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
-import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
-import { LedgerAccountBalance } from '../../types/journal'
+} from '@internal-types/journal'
+import { getAccountIdentifierPayload } from '@utils/journal'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useListLedgerEntries, type ListLedgerEntriesReturn } from '@features/ledger/entries/api/useListLedgerEntries'
+import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { LedgerAccountBalance } from '@internal-types/journal'
 
 type UseJournal = () => {
   data?: ReadonlyArray<JournalEntry>
