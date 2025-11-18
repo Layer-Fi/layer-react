@@ -16,7 +16,7 @@ export const CustomerSchema = Schema.Struct({
   
   // Handle snake_case to camelCase transformation
   externalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('external_id'),  // Maps API's 'external_id' to 'externalId'
   ),
   
