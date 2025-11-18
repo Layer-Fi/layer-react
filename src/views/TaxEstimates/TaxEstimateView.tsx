@@ -28,10 +28,12 @@ type YearOption = {
   value: string
 }
 
+const currentYear = new Date().getFullYear()
+
 const yearOptions: YearOption[] = [
-  { label: '2025', value: '2025' },
-  { label: '2024', value: '2024' },
-  { label: '2023', value: '2023' },
+  { label: currentYear.toString(), value: currentYear.toString() },
+  { label: (currentYear - 1).toString(), value: (currentYear - 1).toString() },
+  { label: (currentYear - 2).toString(), value: (currentYear - 2).toString() },
 ]
 
 export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateViewProps = {}) => {

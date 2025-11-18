@@ -1,5 +1,5 @@
 const baseValues = {
-  year: '2025',
+  year: new Date().getFullYear().toString(),
   businessIncome: 109000.00,
   deductibleExpenses: 8735.00,
   deductibleMileage: 0.00,

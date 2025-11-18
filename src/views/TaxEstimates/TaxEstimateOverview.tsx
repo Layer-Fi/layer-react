@@ -26,7 +26,7 @@ export const TaxEstimateOverview = ({ onNavigateToBankTransactions }: TaxEstimat
   const totalIncomeAmountRef = useRef<HTMLSpanElement>(null)
   const taxableIncomeAmountRef = useRef<HTMLSpanElement>(null)
   const deductionsAmountRef = useRef<HTMLSpanElement>(null)
-  const yearForTaxFiling = 2025
+  const yearForTaxFiling = new Date().getFullYear()
 
   const { data: taxOverviewData } = useTaxOverview({ useMockData: true })
   const { data: taxChecklistData } = useTaxChecklist({ useMockData: true })

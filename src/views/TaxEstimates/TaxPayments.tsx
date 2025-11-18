@@ -34,7 +34,7 @@ export const TaxPayments = ({
   onPaymentsSectionExpandedChange: _onPaymentsSectionExpandedChange,
   onNavigateToBankTransactions = () => {},
 }: TaxPaymentsProps = {}) => {
-  const [selectedYear] = useState('2025')
+  const [selectedYear] = useState(new Date().getFullYear().toString())
 
   const quarterlyData = useMemo(() => {
     const estimatesMap = new Map(quarterlyEstimates.map(e => [e.quarter, e.amount]))
