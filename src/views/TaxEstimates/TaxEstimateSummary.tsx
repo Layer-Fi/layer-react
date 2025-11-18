@@ -6,8 +6,8 @@ import { FederalTaxesSection } from './FederalTaxesSection'
 import { StateTaxesSection } from './StateTaxesSection'
 import { TaxEstimateAnnualProjection } from './TaxEstimateAnnualProjection'
 import './taxEstimate.scss'
-import { taxEstimateDefaults } from './defaults'
 import { Separator } from '@components/Separator/Separator'
+import { useTaxEstimates } from '@hooks/useTaxEstimates'
 
 interface TaxEstimateSummaryProps {
   projectedTaxesOwed?: number
@@ -54,23 +54,13 @@ export interface FederalTaxItem {
   formula?: string
 }
 
-const defaultAdjustedGrossIncomeItems: AdjustedGrossIncomeItem[] = [
-  { id: 'business-income', label: 'Business Income', amount: taxEstimateDefaults.businessIncome },
-  // { id: 'w2-income', label: 'W-2 Income', amount: 85000.00 },
-  { id: 'deductible-expenses', label: 'Deductible Expenses', amount: -taxEstimateDefaults.deductibleExpenses, isDeduction: true },
-  { id: 'deductible-mileage', label: 'Deductible Mileage Expenses', amount: -taxEstimateDefaults.deductibleMileage, isDeduction: true },
-  { id: 'self-employment-deduction', label: 'Self-Employment Deduction', amount: -taxEstimateDefaults.selfEmploymentDeduction, isDeduction: true },
-  { id: 'qualified-tip-deduction', label: 'Qualified Tip Deduction', amount: -taxEstimateDefaults.qualifiedTipDeduction, isDeduction: true },
-  { id: 'qualified-overtime-deduction', label: 'Qualified Overtime Deduction', amount: -taxEstimateDefaults.qualifiedOvertimeDeduction, isDeduction: true },
-]
-
 export const TaxEstimateSummary = ({
-  projectedTaxesOwed = taxEstimateDefaults.projectedTaxesOwed,
-  taxesDueDate = taxEstimateDefaults.taxesDueDate,
-  federalTaxesOwed = taxEstimateDefaults.federalTaxesOwed,
-  federalTaxesPaid = taxEstimateDefaults.federalTaxesPaid,
-  stateTaxesOwed = taxEstimateDefaults.stateTaxesOwed,
-  stateTaxesPaid = taxEstimateDefaults.stateTaxesPaid,
+  projectedTaxesOwed,
+  taxesDueDate,
+  federalTaxesOwed,
+  federalTaxesPaid,
+  stateTaxesOwed,
+  stateTaxesPaid,
   onFederalTaxesOwedClick,
   onFederalTaxesPaidClick,
   onStateTaxesOwedClick,
@@ -80,44 +70,75 @@ export const TaxEstimateSummary = ({
   stateSectionExpanded,
   onStateSectionExpandedChange,
 }: TaxEstimateSummaryProps) => {
+  const { data: taxEstimatesData } = useTaxEstimates({ useMockData: true })
+
+  if (!taxEstimatesData) {
+    return null
+  }
+
+  const { taxableBusinessIncome, federalTaxes, stateTaxes } = taxEstimatesData.data
+  const { breakdown: federalBreakdown } = federalTaxes ?? {}
+  const { breakdown: stateBreakdown } = stateTaxes ?? {}
+
   const agiItems: AdjustedGrossIncomeItem[] = [
-    ...defaultAdjustedGrossIncomeItems,
-    { id: 'total', label: 'Adjusted Gross Income', amount: taxEstimateDefaults.adjustedGrossIncome, isTotal: true },
+    { id: 'business-income', label: 'Business Income', amount: taxableBusinessIncome.businessIncome },
+    { id: 'deductible-expenses', label: 'Deductible Expenses', amount: taxableBusinessIncome.deductibleExpenses, isDeduction: true },
+    { id: 'deductible-mileage', label: 'Deductible Mileage Expenses', amount: taxableBusinessIncome.deductibleMileageExpenses, isDeduction: true },
+    { id: 'self-employment-deduction', label: 'Self-Employment Deduction', amount: taxableBusinessIncome.selfEmploymentDeduction, isDeduction: true },
+    { id: 'qualified-tip-deduction', label: 'Qualified Tip Deduction', amount: taxableBusinessIncome.qualifiedTipDeduction, isDeduction: true },
+    { id: 'qualified-overtime-deduction', label: 'Qualified Overtime Deduction', amount: taxableBusinessIncome.qualifiedOvertimeDeduction, isDeduction: true },
+    { id: 'total', label: 'Adjusted Gross Income', amount: taxableBusinessIncome.adjustedGrossIncome, isTotal: true },
   ]
+
+  const federalTaxRate = federalBreakdown.taxableIncome > 0
+    ? federalBreakdown.incomeTax / federalBreakdown.taxableIncome
+    : 0
+  const socialSecurityTaxableIncome = taxableBusinessIncome.businessIncome
+    + taxableBusinessIncome.deductibleExpenses
+    + taxableBusinessIncome.deductibleMileageExpenses
+  const socialSecurityTaxRate = socialSecurityTaxableIncome > 0
+    ? federalBreakdown.socialSecurityTax / socialSecurityTaxableIncome
+    : 0
+  const medicareTaxRate = socialSecurityTaxableIncome > 0
+    ? federalBreakdown.medicareTax / socialSecurityTaxableIncome
+    : 0
 
   const federalTaxItems: FederalTaxItem[] = [
-    { id: 'agi', label: 'Adjusted Gross Income', amount: taxEstimateDefaults.adjustedGrossIncome },
-    { id: 'federal-deductions', label: 'Federal Deductions', amount: -taxEstimateDefaults.federalDeductions, isDeduction: true },
-    { id: 'business-deduction', label: 'Business Income Deduction (20.00%)', amount: -taxEstimateDefaults.businessIncomeDeduction, isDeduction: true },
-    { id: 'taxable-income', label: '= Taxable Income', amount: taxEstimateDefaults.taxableIncome, isSubtotal: true },
-    { id: 'federal-rate', label: 'x Federal Tax Rate', amount: taxEstimateDefaults.federalTaxRate },
-    { id: 'federal-estimate', label: 'Federal Tax Estimate (Owed)', amount: taxEstimateDefaults.federalTaxEstimate, isOwed: true, formula: '= Taxable Income x Federal Tax Rate' },
+    { id: 'agi', label: 'Adjusted Gross Income', amount: federalBreakdown.adjustedGrossIncome },
+    { id: 'federal-deductions', label: 'Federal Deductions', amount: -federalBreakdown.standardDeduction, isDeduction: true },
+    { id: 'business-deduction', label: `Business Income Deduction (${(20).toFixed(2)}%)`, amount: -federalBreakdown.qbiDeduction, isDeduction: true },
+    { id: 'taxable-income', label: '= Taxable Income', amount: federalBreakdown.taxableIncome, isSubtotal: true },
+    { id: 'federal-rate', label: 'x Federal Tax Rate', amount: federalTaxRate },
+    { id: 'federal-estimate', label: 'Federal Tax Estimate (Owed)', amount: federalBreakdown.incomeTax, isOwed: true, formula: '= Taxable Income x Federal Tax Rate' },
     { id: 'separator-1', label: '', isSeparator: true },
-    { id: 'ss-income', label: 'Taxable Social Security Income', amount: taxEstimateDefaults.taxableSocialSecurityIncome },
-    { id: 'ss-rate', label: 'x Social Security Tax Rate', amount: taxEstimateDefaults.socialSecurityTaxRate },
-    { id: 'ss-estimate', label: 'Social Security Tax Estimate (Owed)', amount: taxEstimateDefaults.socialSecurityTaxEstimate, isOwed: true, formula: '= Taxable Social Security Income x Social Security Tax Rate' },
+    { id: 'ss-income', label: 'Taxable Social Security Income', amount: socialSecurityTaxableIncome },
+    { id: 'ss-rate', label: 'x Social Security Tax Rate', amount: socialSecurityTaxRate },
+    { id: 'ss-estimate', label: 'Social Security Tax Estimate (Owed)', amount: federalBreakdown.socialSecurityTax, isOwed: true, formula: '= Taxable Social Security Income x Social Security Tax Rate' },
     { id: 'separator-2', label: '', isSeparator: true },
-    { id: 'medicare-income', label: 'Taxable Medicare Income', amount: taxEstimateDefaults.taxableMedicareIncome },
-    { id: 'medicare-rate', label: 'x Medicare Tax Rate', amount: taxEstimateDefaults.medicareTaxRate },
-    { id: 'medicare-estimate', label: 'Medicare Tax Estimate (Owed)', amount: taxEstimateDefaults.medicareTaxEstimate, isOwed: true, formula: '= Taxable Medicare Income x Medicare Tax Rate' },
+    { id: 'medicare-income', label: 'Taxable Medicare Income', amount: socialSecurityTaxableIncome },
+    { id: 'medicare-rate', label: 'x Medicare Tax Rate', amount: medicareTaxRate },
+    { id: 'medicare-estimate', label: 'Medicare Tax Estimate (Owed)', amount: federalBreakdown.medicareTax, isOwed: true, formula: '= Taxable Medicare Income x Medicare Tax Rate' },
     { id: 'separator-3', label: '', isSeparator: true },
-    { id: 'federal-estimate-row', label: 'Federal Tax Estimate (Owed)', amount: taxEstimateDefaults.federalTaxEstimate, isOwed: true, formula: '= Taxable Income x Federal Tax Rate' },
-    { id: 'ss-estimate-row', label: '+ Social Security Tax Estimate (Owed)', amount: taxEstimateDefaults.socialSecurityTaxEstimate, isOwed: true, formula: '= Taxable Social Security Income x Social Security Tax Rate' },
-    { id: 'medicare-estimate-row', label: '+ Medicare Tax Estimate (Owed)', amount: taxEstimateDefaults.medicareTaxEstimate, isOwed: true, formula: '= Taxable Medicare Income x Medicare Tax Rate' },
-    // { id: 'w2-withholding', label: '- Amount Applied from Federal W-2 Withholding', amount: -taxEstimateDefaults.federalTaxesPaid, isDeduction: true },
-    { id: 'total-federal', label: 'Total Federal Tax Estimate', amount: taxEstimateDefaults.federalTaxesOwed, isTotal: true, isOwed: true, formula: '= Federal Tax Estimate + Social Security Tax Estimate + Medicare Tax Estimate' },
+    { id: 'federal-estimate-row', label: 'Federal Tax Estimate (Owed)', amount: federalBreakdown.incomeTax, isOwed: true, formula: '= Taxable Income x Federal Tax Rate' },
+    { id: 'ss-estimate-row', label: '+ Social Security Tax Estimate (Owed)', amount: federalBreakdown.socialSecurityTax, isOwed: true, formula: '= Taxable Social Security Income x Social Security Tax Rate' },
+    { id: 'medicare-estimate-row', label: '+ Medicare Tax Estimate (Owed)', amount: federalBreakdown.medicareTax, isOwed: true, formula: '= Taxable Medicare Income x Medicare Tax Rate' },
+    { id: 'total-federal', label: 'Total Federal Tax Estimate', amount: federalTaxes.taxesOwed, isTotal: true, isOwed: true, formula: '= Federal Tax Estimate + Social Security Tax Estimate + Medicare Tax Estimate' },
   ]
 
+  const stateTaxRate = stateBreakdown.taxableIncome > 0
+    ? stateBreakdown.stateTaxEstimate / stateBreakdown.taxableIncome
+    : 0
+  const stateDeductions = federalBreakdown.adjustedGrossIncome - stateBreakdown.taxableIncome
+
   const stateTaxItems: FederalTaxItem[] = [
-    { id: 'agi', label: 'Adjusted Gross Income', amount: taxEstimateDefaults.adjustedGrossIncome },
-    { id: 'state-deductions', label: 'State Deductions & Exemptions', amount: -taxEstimateDefaults.stateDeductions, isDeduction: true },
-    { id: 'state-taxable-income', label: 'State Taxable Income', amount: taxEstimateDefaults.stateTaxableIncome, isSubtotal: true },
-    { id: 'state-rate', label: 'x State Tax Rate', amount: taxEstimateDefaults.stateTaxRate },
-    { id: 'state-estimate', label: 'State Tax Estimate (Owed)', amount: taxEstimateDefaults.stateTaxEstimate, isOwed: true, formula: '= Taxable Income x State Tax Rate' },
+    { id: 'agi', label: 'Adjusted Gross Income', amount: federalBreakdown.adjustedGrossIncome },
+    { id: 'state-deductions', label: 'State Deductions & Exemptions', amount: -stateDeductions, isDeduction: true },
+    { id: 'state-taxable-income', label: 'State Taxable Income', amount: stateBreakdown.taxableIncome, isSubtotal: true },
+    { id: 'state-rate', label: 'x State Tax Rate', amount: stateTaxRate },
+    { id: 'state-estimate', label: 'State Tax Estimate (Owed)', amount: stateBreakdown.stateTaxEstimate, isOwed: true, formula: '= Taxable Income x State Tax Rate' },
     { id: 'separator-1', label: '', isSeparator: true },
-    { id: 'state-estimate-row', label: 'State Tax Estimate (Owed)', amount: taxEstimateDefaults.stateTaxEstimate, isOwed: true, formula: '= Taxable Income x State Tax Rate' },
-    // { id: 'w2-withholding', label: '- Amount Applied from State W-2 Withholding', amount: -taxEstimateDefaults.stateTaxesPaid, isDeduction: true },
-    { id: 'total-state', label: 'Total State Tax Estimate', amount: taxEstimateDefaults.stateTaxesOwed, isTotal: true, isOwed: true },
+    { id: 'state-estimate-row', label: 'State Tax Estimate (Owed)', amount: stateBreakdown.stateTaxEstimate, isOwed: true, formula: '= Taxable Income x State Tax Rate' },
+    { id: 'total-state', label: 'Total State Tax Estimate', amount: stateTaxes.taxesOwed, isTotal: true, isOwed: true },
   ]
 
   return (

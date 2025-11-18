@@ -7,12 +7,12 @@ import { Separator } from '@components/Separator/Separator'
 import './taxEstimate.scss'
 
 export interface TaxEstimateAnnualProjectionProps {
-  projectedTaxesOwed: number
-  taxesDueDate: Date
-  federalTaxesOwed: number
-  federalTaxesPaid: number
-  stateTaxesOwed: number
-  stateTaxesPaid: number
+  projectedTaxesOwed?: number
+  taxesDueDate?: Date
+  federalTaxesOwed?: number
+  federalTaxesPaid?: number
+  stateTaxesOwed?: number
+  stateTaxesPaid?: number
   onFederalTaxesOwedClick?: () => void
   onFederalTaxesPaidClick?: () => void
   onStateTaxesOwedClick?: () => void
@@ -33,6 +33,17 @@ export const TaxEstimateAnnualProjection = ({
 }: TaxEstimateAnnualProjectionProps) => {
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  }
+
+  if (
+    !projectedTaxesOwed
+    || !taxesDueDate
+    || federalTaxesOwed === undefined
+    || federalTaxesPaid === undefined
+    || stateTaxesOwed === undefined
+    || stateTaxesPaid === undefined
+  ) {
+    return null
   }
 
   return (

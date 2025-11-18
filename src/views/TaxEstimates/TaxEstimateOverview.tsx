@@ -11,8 +11,9 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Label, Text as ChartText } fr
 import { PolarViewBox } from 'recharts/types/util/types'
 import classNames from 'classnames'
 import './taxEstimateOverview.scss'
-import { taxEstimateDefaults } from './defaults'
 import { Separator } from '@components/Separator/Separator'
+import { useTaxOverview, useTaxChecklist } from '@hooks/useTaxEstimates'
+import { ChecklistStatus } from '@schemas/taxEstimates'
 
 interface TaxEstimateOverviewProps {
   onNavigateToBankTransactions?: () => void
@@ -27,60 +28,41 @@ export const TaxEstimateOverview = ({ onNavigateToBankTransactions }: TaxEstimat
   const deductionsAmountRef = useRef<HTMLSpanElement>(null)
   const yearForTaxFiling = 2025
 
-  const todoItems = [
-    {
-      label: `Categorize ${convertNumberToCurrency(2100)} of potential deductions`,
-      buttonLabel: 'Review',
-      variant: 'solid' as ButtonVariant,
-      icon: null,
-      onPress: () => {
+  const { data: taxOverviewData } = useTaxOverview({ useMockData: true })
+  const { data: taxChecklistData } = useTaxChecklist({ useMockData: true })
+
+  console.log('taxChecklistData', taxChecklistData)
+
+  const todoItems = (taxChecklistData?.data.items ?? []).map(item => ({
+    label: item.description,
+    buttonLabel: item.status === ChecklistStatus.PENDING ? 'Review' : 'Completed',
+    variant: (item.status === ChecklistStatus.PENDING ? 'solid' : 'outlined') as ButtonVariant,
+    icon: item.actionUrl?.includes('export') ? <Download size={16} /> : null,
+    onPress: () => {
+      if (item.actionUrl) {
         onNavigateToBankTransactions?.()
-      },
+      }
     },
-    {
-      label: `Categorize ${convertNumberToCurrency(4925)} of deposits`,
-      buttonLabel: 'Review',
-      variant: 'solid' as ButtonVariant,
-      icon: null,
-      onPress: () => {
-        onNavigateToBankTransactions?.()
-      },
-    },
-    {
-      label: 'Export your tax packet',
-      buttonLabel: 'Export',
-      icon: <Download size={16} />,
-      variant: 'outlined' as ButtonVariant,
-      onPress: () => {},
-    },
-  ]
+  }))
 
-  const deadlines = [
-    { date: 'Apr 15, 2025', label: `Q1 estimated tax due (${convertNumberToCurrency(945.52)})` },
-    { date: 'Jul 15, 2025', label: `Q2 estimated tax due (${convertNumberToCurrency(6654.00)})` },
-    { date: 'Oct 15, 2025', label: `Q3 estimated tax due (${convertNumberToCurrency(4649.00)})` },
-    { date: 'Jan 15, 2026', label: `Q4 estimated tax due (${convertNumberToCurrency(6199.00)})` },
-    { date: 'Apr 15, 2026', label: `Annual income taxes due (${convertNumberToCurrency(0)})` },
-  ]
-  // Quarterly total: 945.52 + 6654.00 + 4649.00 + 6199.00 = 18,447.52 ✓
+  const deadlines = (taxOverviewData?.data.deadlines ?? []).map(d => ({
+    date: format(new Date(d.date), 'MMM dd, yyyy'),
+    label: `${d.description} (${convertNumberToCurrency(d.amount)})`,
+  }))
 
-  const taxableIncome = taxEstimateDefaults.taxableIncome
-  const income = taxEstimateDefaults.businessIncome
-  const deductions = taxEstimateDefaults.deductibleExpenses
-    + taxEstimateDefaults.deductibleMileage
-    + taxEstimateDefaults.selfEmploymentDeduction
-    + taxEstimateDefaults.qualifiedTipDeduction
-    + taxEstimateDefaults.qualifiedOvertimeDeduction
-    + taxEstimateDefaults.federalDeductions
-    + taxEstimateDefaults.businessIncomeDeduction
-  const deductionsPercentage = (deductions / income) * 100
-  const taxableIncomePercentage = (taxableIncome / income) * 100
+  const taxableIncome = taxOverviewData?.data.taxableIncomeEstimate ?? 0
+  const income = taxOverviewData?.data.totalIncome ?? 0
+  const deductions = taxOverviewData?.data.deductions ?? 0
+  const deductionsPercentage = income > 0 ? (deductions / income) * 100 : 0
+  const taxableIncomePercentage = income > 0 ? (taxableIncome / income) * 100 : 0
 
-  const federalTaxesOwed = taxEstimateDefaults.federalTaxesOwed
+  const federalTaxesOwed = taxOverviewData?.data.estimatedTaxes.federal ?? 0
   const selfEmployedTaxesOwed = 0
-  const stateTaxesOwed = taxEstimateDefaults.stateTaxesOwed
+  const stateTaxesOwed = taxOverviewData?.data.estimatedTaxes.state ?? 0
   const totalTaxesOwed = federalTaxesOwed + selfEmployedTaxesOwed + stateTaxesOwed
-  const taxesDueDate = taxEstimateDefaults.taxesDueDate
+  const taxesDueDate = taxOverviewData?.data.estimatedTaxes.taxesDueDate
+    ? new Date(taxOverviewData.data.estimatedTaxes.taxesDueDate)
+    : new Date()
 
   const [hoveredItem, setHoveredItem] = useState<string | undefined>()
 
