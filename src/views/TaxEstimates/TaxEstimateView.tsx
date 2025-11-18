@@ -17,7 +17,7 @@ import { TaxEstimateOverview } from './TaxEstimateOverview'
 import './taxEstimateView.scss'
 import { Separator } from '@components/Separator/Separator'
 import { reducer, initialState } from './store'
-import { taxEstimateDefaults } from './defaults'
+import { useTaxEstimates, useTaxPayments } from '@hooks/useTaxEstimates'
 
 interface TaxEstimateViewProps {
   onNavigateToBankTransactions?: () => void
@@ -28,10 +28,12 @@ type YearOption = {
   value: string
 }
 
+const currentYear = new Date().getFullYear()
+
 const yearOptions: YearOption[] = [
-  { label: '2025', value: '2025' },
-  { label: '2024', value: '2024' },
-  { label: '2023', value: '2023' },
+  { label: currentYear.toString(), value: currentYear.toString() },
+  { label: (currentYear - 1).toString(), value: (currentYear - 1).toString() },
+  { label: (currentYear - 2).toString(), value: (currentYear - 2).toString() },
 ]
 
 export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateViewProps = {}) => {
@@ -42,6 +44,15 @@ export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateVie
   const [stateSectionExpanded, setStateSectionExpanded] = useState(false)
   const [paymentsSectionExpanded, setPaymentsSectionExpanded] = useState(false)
   const [selectedYear, setSelectedYear] = useState<YearOption | null>(yearOptions[0])
+
+  const { data: taxEstimatesData } = useTaxEstimates({
+    year: selectedYear ? parseInt(selectedYear.value) : undefined,
+    useMockData: true,
+  })
+  const { data: taxPaymentsData } = useTaxPayments({
+    year: selectedYear ? parseInt(selectedYear.value) : undefined,
+    useMockData: true,
+  })
 
   useEffect(() => {
     if (!isOnboarded) {
@@ -205,9 +216,19 @@ export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateVie
             </VStack>
           )}
 
-          {activeTab === 'tax-estimates' && (
+          {activeTab === 'tax-estimates' && taxEstimatesData && (
             <VStack gap='md' pb='lg' pi='lg'>
               <TaxEstimateSummary
+                projectedTaxesOwed={taxEstimatesData.data.projectedTaxesOwed}
+                taxesDueDate={new Date(taxEstimatesData.data.taxesDueDate)}
+                federalTaxesOwed={taxEstimatesData.data.federalTaxes.taxesOwed}
+                federalTaxesPaid={taxEstimatesData.data.federalTaxes.taxesPaid}
+                stateTaxesOwed={taxEstimatesData.data.stateTaxes.taxesOwed}
+                stateTaxesPaid={taxEstimatesData.data.stateTaxes.taxesPaid}
+                quarterlyEstimates={taxEstimatesData.data.quarterlyEstimates.map(q => ({
+                  quarter: q.quarter,
+                  amount: q.amount,
+                }))}
                 onFederalTaxesOwedClick={handleFederalTaxesOwedClick}
                 onFederalTaxesPaidClick={handleFederalTaxesPaidClick}
                 onStateTaxesOwedClick={handleStateTaxesOwedClick}
@@ -220,21 +241,17 @@ export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateVie
             </VStack>
           )}
 
-          {activeTab === 'tax-payments' && (
+          {activeTab === 'tax-payments' && taxPaymentsData && taxEstimatesData && (
             <VStack gap='md' pb='lg' pi='lg'>
               <TaxPayments
-                quarterlyPayments={[
-                  { quarter: 'Q1', amount: taxEstimateDefaults.quarterlyPayments[0].amount },
-                  { quarter: 'Q2', amount: taxEstimateDefaults.quarterlyPayments[1].amount },
-                  { quarter: 'Q3', amount: taxEstimateDefaults.quarterlyPayments[2].amount },
-                  { quarter: 'Q4', amount: taxEstimateDefaults.quarterlyPayments[3].amount },
-                ]}
-                quarterlyEstimates={[
-                  { quarter: 'Q1', amount: taxEstimateDefaults.quarterlyEstimates[0].amount },
-                  { quarter: 'Q2', amount: taxEstimateDefaults.quarterlyEstimates[1].amount },
-                  { quarter: 'Q3', amount: taxEstimateDefaults.quarterlyEstimates[2].amount },
-                  { quarter: 'Q4', amount: taxEstimateDefaults.quarterlyEstimates[3].amount },
-                ]}
+                quarterlyPayments={taxPaymentsData.data.quarters.map(q => ({
+                  quarter: q.quarter,
+                  amount: q.totalPaid,
+                }))}
+                quarterlyEstimates={taxEstimatesData.data.quarterlyEstimates.map(q => ({
+                  quarter: q.quarter,
+                  amount: q.amount,
+                }))}
                 paymentsSectionExpanded={paymentsSectionExpanded}
                 onPaymentsSectionExpandedChange={handlePaymentsSectionExpandedChange}
                 onNavigateToBankTransactions={onNavigateToBankTransactions}

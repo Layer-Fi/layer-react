@@ -4,7 +4,7 @@ import { Span } from '@ui/Typography/Text'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@ui/Tooltip/Tooltip'
 import { convertNumberToCurrency } from '@utils/format'
 import { Download } from 'lucide-react'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuList, MenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { Table } from '@components/Table/Table'
@@ -13,8 +13,6 @@ import { TableHead } from '@components/TableHead/TableHead'
 import { TableRow } from '@components/TableRow/TableRow'
 import { TableCell } from '@components/TableCell/TableCell'
 import { TableCellAlign } from '@internal-types/table'
-import { taxEstimateDefaults } from './defaults'
-import { useMemo } from 'react'
 
 interface QuarterlyAmount {
   quarter: string
@@ -30,13 +28,13 @@ interface TaxPaymentsProps {
 }
 
 export const TaxPayments = ({
-  quarterlyPayments = taxEstimateDefaults.quarterlyPayments,
-  quarterlyEstimates = taxEstimateDefaults.quarterlyEstimates,
+  quarterlyPayments = [],
+  quarterlyEstimates = [],
   paymentsSectionExpanded: _paymentsSectionExpanded,
   onPaymentsSectionExpandedChange: _onPaymentsSectionExpandedChange,
   onNavigateToBankTransactions = () => {},
 }: TaxPaymentsProps = {}) => {
-  const [selectedYear] = useState(taxEstimateDefaults.year)
+  const [selectedYear] = useState(new Date().getFullYear().toString())
 
   const quarterlyData = useMemo(() => {
     const estimatesMap = new Map(quarterlyEstimates.map(e => [e.quarter, e.amount]))
