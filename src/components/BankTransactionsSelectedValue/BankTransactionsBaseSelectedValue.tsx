@@ -8,6 +8,7 @@ import { Layers2Icon } from 'lucide-react'
 export type BankTransactionsBaseSelectedValueProps = {
   type: 'match' | 'transfer' | 'split' | 'category' | 'placeholder'
   label: string
+  showCategoryBadge?: boolean
   className?: string
   slotProps?: {
     Label?: {
@@ -17,7 +18,7 @@ export type BankTransactionsBaseSelectedValueProps = {
 }
 
 export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSelectedValueProps) => {
-  const { type, className, label, slotProps } = props
+  const { type, className, label, slotProps, showCategoryBadge = false } = props
 
   if (type === 'placeholder') {
     return (
@@ -51,9 +52,11 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
 
   return (
     <HStack gap='xs' align='center' className={className}>
-      <Badge size={BadgeSize.SMALL} icon={<Layers2Icon size={11} />}>
-        Category
-      </Badge>
+      {showCategoryBadge && (
+        <Badge size={BadgeSize.SMALL} icon={<Layers2Icon size={11} />}>
+          Category
+        </Badge>
+      )}
       <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
     </HStack>
   )
