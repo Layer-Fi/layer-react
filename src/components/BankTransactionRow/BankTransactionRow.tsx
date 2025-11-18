@@ -338,7 +338,6 @@ export const BankTransactionRow = ({
                     <BankTransactionsCategorizedSelectedValue
                       bankTransaction={bankTransaction}
                       className='Layer__bank-transaction-row__category'
-                      showCategoryBadge={false}
                     />
                   )}
                 {categorizationEnabled && !categorized && showRetry

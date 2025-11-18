@@ -16,7 +16,7 @@ type BankTransactionsCategorizedSelectedValueProps = {
 }
 
 export const BankTransactionsCategorizedSelectedValue = (props: BankTransactionsCategorizedSelectedValueProps) => {
-  const { bankTransaction, className, slotProps, showCategoryBadge = true } = props
+  const { bankTransaction, className, slotProps, showCategoryBadge } = props
 
   const baseSelectedValue = normalizeFromBankTransaction(bankTransaction)
   return <BankTransactionsBaseSelectedValue {...baseSelectedValue} slotProps={slotProps} className={className} showCategoryBadge={showCategoryBadge} />

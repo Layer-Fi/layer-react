@@ -18,7 +18,7 @@ export type BankTransactionsBaseSelectedValueProps = {
 }
 
 export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSelectedValueProps) => {
-  const { type, className, label, slotProps, showCategoryBadge = true } = props
+  const { type, className, label, slotProps, showCategoryBadge = false } = props
 
   if (type === 'placeholder') {
     return (
