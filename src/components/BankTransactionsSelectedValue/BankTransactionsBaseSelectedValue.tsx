@@ -11,6 +11,9 @@ export type BankTransactionsBaseSelectedValueProps = {
   showCategoryBadge?: boolean
   className?: string
   slotProps?: {
+    CategoryBadge?: {
+      label?: string
+    }
     Label?: {
       size?: 'sm' | 'md'
     }
@@ -54,7 +57,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
     <HStack gap='xs' align='center' className={className}>
       {showCategoryBadge && (
         <Badge size={BadgeSize.SMALL} icon={<Layers2Icon size={11} />}>
-          Category
+          {slotProps?.CategoryBadge?.label ?? 'Category'}
         </Badge>
       )}
       <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>

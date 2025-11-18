@@ -8,6 +8,9 @@ type BankTransactionsUncategorizedSelectedValueProps = {
   className?: string
   showCategoryBadge?: boolean
   slotProps?: {
+    CategoryBadge?: {
+      label?: string
+    }
     Label?: {
       size?: 'sm' | 'md'
     }
@@ -15,7 +18,7 @@ type BankTransactionsUncategorizedSelectedValueProps = {
 }
 
 export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactionsUncategorizedSelectedValueProps) => {
-  const { selectedValue, className, slotProps, showCategoryBadge } = props
+  const { selectedValue, className, slotProps = {}, showCategoryBadge } = props
 
   if (!selectedValue) return null
 
