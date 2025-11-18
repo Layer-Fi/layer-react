@@ -38,7 +38,7 @@ export const BankTransactionsListItemCategory = ({
         <BankTransactionsUncategorizedSelectedValue
           selectedValue={selectedCategory ?? null}
           className={className}
-          slotProps={{ CategoryBadge: { label: 'Suggested Category' }, Label: { size: 'sm' } }}
+          slotProps={{ CategoryBadge: { label: 'Suggested category' }, Label: { size: 'sm' } }}
           showCategoryBadge={mobile}
         />
       )
