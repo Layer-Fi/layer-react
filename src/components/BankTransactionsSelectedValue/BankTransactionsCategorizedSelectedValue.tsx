@@ -19,7 +19,7 @@ export const BankTransactionsCategorizedSelectedValue = (props: BankTransactions
   const { bankTransaction, className, slotProps, showBadge = true } = props
 
   const baseSelectedValue = normalizeFromBankTransaction(bankTransaction)
-  return <BankTransactionsBaseSelectedValue{...baseSelectedValue}slotProps={slotProps} className={className} showBadge={showBadge} />
+  return <BankTransactionsBaseSelectedValue{...baseSelectedValue} slotProps={slotProps} className={className} showBadge={showBadge} />
 }
 
 const normalizeFromBankTransaction = (bankTransaction: BankTransaction): BankTransactionsBaseSelectedValueProps => {

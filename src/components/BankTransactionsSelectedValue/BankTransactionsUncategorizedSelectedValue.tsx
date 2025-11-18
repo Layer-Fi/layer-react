@@ -15,7 +15,7 @@ type BankTransactionsUncategorizedSelectedValueProps = {
 }
 
 export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactionsUncategorizedSelectedValueProps) => {
-  const { selectedValue, className, slotProps, showBadge = true } = props
+  const { selectedValue, className, slotProps, showBadge } = props
 
   if (!selectedValue) return null
 
