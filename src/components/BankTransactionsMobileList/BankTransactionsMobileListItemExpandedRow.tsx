@@ -5,7 +5,7 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasMatch } from '@utils/bankTransactions'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
 import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
-import { VStack } from '@components/ui/Stack/Stack'
+import { VStack } from '@ui/Stack/Stack'
 
 import { Purpose } from './BankTransactionsMobileListItem'
 

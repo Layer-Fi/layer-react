@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { GridList } from 'react-aria-components'
 
-import { VStack } from '@components/ui/Stack/Stack'
-import { Span } from '@components/ui/Typography/Text'
+import { VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 
 import './businessFormMobile.scss'
 

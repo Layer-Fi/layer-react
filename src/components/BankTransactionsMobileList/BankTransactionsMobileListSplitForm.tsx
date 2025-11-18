@@ -20,7 +20,7 @@ import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
-import { HStack, VStack } from '@components/ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 import './bankTransactionsMobileListSplitForm.scss'

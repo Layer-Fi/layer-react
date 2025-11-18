@@ -13,8 +13,8 @@ import { type BankTransactionReceiptsHandle } from '@components/BankTransactionR
 import { FileInput } from '@components/Input/FileInput'
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { HStack, VStack } from '@components/ui/Stack/Stack'
-import { Span } from '@components/ui/Typography/Text'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 interface BankTransactionsMobileListMatchFormProps {

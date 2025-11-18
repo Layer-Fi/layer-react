@@ -7,7 +7,7 @@ import {
 } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
-import { Span } from '@components/ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 import { BankTransactionCustomerVendorSelector } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorSelector'
 import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'

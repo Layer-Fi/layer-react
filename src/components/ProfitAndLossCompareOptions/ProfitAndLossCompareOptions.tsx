@@ -6,7 +6,7 @@ import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossCompariso
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
 import { MultiSelect } from '@components/Input/MultiSelect'
-import { HStack } from '@components/ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
 
 const selectStyles = {
   valueContainer: (styles) => {

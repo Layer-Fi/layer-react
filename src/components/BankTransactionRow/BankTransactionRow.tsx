@@ -37,8 +37,8 @@ import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionR
 import { type SaveHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '@components/IconBox/IconBox'
 import { Text, TextSize } from '@components/Typography/Text'
-import { AnimatedPresenceDiv } from '@components/ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
-import { MoneySpan } from '@components/ui/Typography/MoneySpan'
+import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
 
 import './bankTransactionRow.scss'
 

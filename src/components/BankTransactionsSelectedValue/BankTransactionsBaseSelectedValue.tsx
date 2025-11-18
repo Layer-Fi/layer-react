@@ -3,8 +3,8 @@ import { Layers2Icon } from 'lucide-react'
 import MinimizeTwo from '@icons/MinimizeTwo'
 import Scissors from '@icons/Scissors'
 import { Badge, BadgeSize } from '@components/Badge/Badge'
-import { HStack } from '@components/ui/Stack/Stack'
-import { Span } from '@components/ui/Typography/Text'
+import { HStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 
 export type BankTransactionsBaseSelectedValueProps = {
   type: 'match' | 'transfer' | 'split' | 'category' | 'placeholder'

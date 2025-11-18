@@ -2,9 +2,9 @@ import { GridListItem } from 'react-aria-components'
 
 import ChevronRight from '@icons/ChevronRight'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { Checkbox } from '@components/ui/Checkbox/Checkbox'
-import { HStack } from '@components/ui/Stack/Stack'
-import { Span } from '@components/ui/Typography/Text'
+import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { HStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 
 import './businessFormMobileItem.scss'
 

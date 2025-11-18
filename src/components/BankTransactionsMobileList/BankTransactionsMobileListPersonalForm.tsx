@@ -12,7 +12,7 @@ import { type BankTransactionReceiptsHandle } from '@components/BankTransactionR
 import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { HStack, VStack } from '@components/ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 interface BankTransactionsMobileListPersonalFormProps {
