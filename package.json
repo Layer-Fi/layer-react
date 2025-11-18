@@ -100,6 +100,7 @@
     "libphonenumber-js": "^1.12.7",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.507.0",
+    "motion": "^12.23.11",
     "pluralize": "^8.0.0",
     "react-aria-components": "^1.8.0",
     "react-calendly": "^4.4.0",

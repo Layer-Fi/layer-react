@@ -53,6 +53,7 @@ export { UnifiedReport as unstable_UnifiedReports } from './components/UnifiedRe
 export { Reports } from './views/Reports/Reports'
 export { ProfitAndLossView } from './components/ProfitAndLossView/ProfitAndLossView'
 export { Invoices } from './components/Invoices/Invoices'
+export { unstable_MileageTracking } from './views/MileageTracking'
 
 /*
 ======================= Layer Provider & Context =======================

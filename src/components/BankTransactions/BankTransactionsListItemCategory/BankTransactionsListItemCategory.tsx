@@ -1,18 +1,23 @@
 import { BankTransaction } from '@internal-types/bank_transactions'
 import { isCategorized } from '@components/BankTransactions/utils'
-import { Span } from '@ui/Typography/Text'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
-import './bankTransactionsMobileListItemCategory.scss'
+import { BankTransactionsBaseSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
+import './bankTransactionsListItemCategory.scss'
 
-export interface BankTransactionsMobileListItemCategoryProps {
+export interface BankTransactionsListItemCategoryProps {
   bankTransaction: BankTransaction
+  mobile?: boolean
 }
 
-export const BankTransactionsMobileListItemCategory = ({
+export const BankTransactionsListItemCategory = ({
   bankTransaction,
-}: BankTransactionsMobileListItemCategoryProps) => {
+  mobile = false,
+}: BankTransactionsListItemCategoryProps) => {
+  const className = mobile
+    ? 'Layer__bankTransactionsListItemCategory__Mobile'
+    : 'Layer__bankTransactionsListItemCategory__List'
   const categorized = isCategorized(bankTransaction)
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
 
@@ -20,8 +25,9 @@ export const BankTransactionsMobileListItemCategory = ({
     return (
       <BankTransactionsCategorizedSelectedValue
         bankTransaction={bankTransaction}
-        className='Layer__bankTransactionsMobileListItemCategory'
+        className={className}
         slotProps={{ Label: { size: 'sm' } }}
+        showCategoryBadge={mobile}
       />
     )
   }
@@ -31,14 +37,19 @@ export const BankTransactionsMobileListItemCategory = ({
       ? (
         <BankTransactionsUncategorizedSelectedValue
           selectedValue={selectedCategory ?? null}
-          className='Layer__bankTransactionsMobileListItemCategory'
+          className={className}
           slotProps={{ Label: { size: 'sm' } }}
+          showCategoryBadge={mobile}
         />
       )
       : (
-        <Span ellipsis className='Layer__bankTransactionsMobileListItemCategory' size='sm'>
-          No category selected
-        </Span>
+        <BankTransactionsBaseSelectedValue
+          type='placeholder'
+          label='No category selected'
+          className={className}
+          slotProps={{ Label: { size: 'sm' } }}
+          showCategoryBadge={mobile}
+        />
       )
   )
 }

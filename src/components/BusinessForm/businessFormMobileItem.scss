@@ -1,0 +1,5 @@
+.Layer__BusinessFormMobileItem {
+  &[data-selected] {
+    background: var(--color-base-100);
+  }
+}
