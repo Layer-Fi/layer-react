@@ -1,6 +1,7 @@
 import { type PropsWithChildren } from 'react'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 
 export function LinkedAccountsProvider({ children }: PropsWithChildren) {
   const linkedAccountsContextData = useLinkedAccounts()

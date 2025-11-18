@@ -1,11 +1,12 @@
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { useFieldContext } from '@features/forms/hooks/useForm'
-import { InputGroup } from '@ui/Input/InputGroup'
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { BigDecimal as BD, Option } from 'effect'
-import { Input } from '@ui/Input/Input'
+
 import { BIG_DECIMAL_ONE, BIG_DECIMAL_ZERO, buildDecimalCharRegex, convertPercentToDecimal, formatBigDecimalToString } from '@utils/bigDecimalUtils'
-import { BaseFormTextField, type BaseFormTextFieldProps } from '@features/forms/components/BaseFormTextField'
+import { Input } from '@ui/Input/Input'
+import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack } from '@ui/Stack/Stack'
+import { BaseFormTextField, type BaseFormTextFieldProps } from '@features/forms/components/BaseFormTextField'
+import { useFieldContext } from '@features/forms/hooks/useForm'
 
 type FormBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTextArea'> & {
   maxValue?: BD.BigDecimal

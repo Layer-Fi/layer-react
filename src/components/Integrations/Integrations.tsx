@@ -1,13 +1,14 @@
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 import { useContext } from 'react'
+
+import { QuickbooksContextProvider } from '@providers/QuickbooksContextProvider/QuickbooksContextProvider'
+import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import { Container } from '@components/Container/Container'
 import { Header } from '@components/Container/Header'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { Loader } from '@components/Loader/Loader'
-import { IntegrationsContent } from '@components/Integrations/IntegrationsContent'
-import { QuickbooksContextProvider } from '@providers/QuickbooksContextProvider/QuickbooksContextProvider'
-import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import { IntegrationsConnectMenu } from '@components/Integrations/IntegrationsConnectMenu/IntegrationsConnectMenu'
+import { IntegrationsContent } from '@components/Integrations/IntegrationsContent'
+import { Loader } from '@components/Loader/Loader'
+import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 const COMPONENT_NAME = 'integrations'
 

@@ -1,14 +1,15 @@
-import { Button } from '@ui/Button/Button'
 import { useCallback, useMemo, useState } from 'react'
-import { ActionableList } from '@components/ActionableList/ActionableList'
-import { flattenCategories, type CategoryGroup } from '@components/BankTransactionsMobileList/utils'
-import { useCategories } from '@hooks/categories/useCategories'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { SearchField } from '@components/SearchField/SearchField'
 import { ChevronLeft } from 'lucide-react'
-import { ModalHeading } from '@ui/Modal/ModalSlots'
+
 import type { CategoryAsOption } from '@internal-types/categorizationOption'
+import { useCategories } from '@hooks/categories/useCategories'
+import { Button } from '@ui/Button/Button'
+import { ModalHeading } from '@ui/Modal/ModalSlots'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { ActionableList } from '@components/ActionableList/ActionableList'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type CategoryGroup, flattenCategories } from '@components/BankTransactionsMobileList/utils'
+import { SearchField } from '@components/SearchField/SearchField'
 
 export interface BankTransactionsMobileListBusinessCategoriesProps {
   select: (category: BankTransactionCategoryComboBoxOption | null) => void

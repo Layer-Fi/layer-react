@@ -1,10 +1,12 @@
-import { Button } from '@ui/Button/Button'
 import classNames from 'classnames'
-import { usePaginationRange, Dots } from '@hooks/usePaginationRange/usePaginationRange'
+import type { ComponentProps } from 'react'
+
+import { Dots, usePaginationRange } from '@hooks/usePaginationRange/usePaginationRange'
 import ChevronLeft from '@icons/ChevronLeft'
 import ChevronRight from '@icons/ChevronRight'
-import type { ComponentProps } from 'react'
+import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
+
 import './pagination.scss'
 
 export interface PaginationProps {

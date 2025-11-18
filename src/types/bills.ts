@@ -1,5 +1,5 @@
+import { type Vendor } from '@internal-types/vendors'
 import type { TransactionTagEncoded } from '@features/tags/tagSchemas'
-import { Vendor } from '@internal-types/vendors'
 
 const UNPAID_STATUS_MAP = {
   SENT: 'SENT',

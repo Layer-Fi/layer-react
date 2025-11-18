@@ -1,4 +1,7 @@
-import React, { createContext, ReactNode, useContext } from 'react'
+import { type ReactNode } from 'react'
+import { createContext, useContext } from 'react'
+import type React from 'react'
+
 import { useVendors } from '@hooks/useVendors'
 
 type VendorsProviderProps = {

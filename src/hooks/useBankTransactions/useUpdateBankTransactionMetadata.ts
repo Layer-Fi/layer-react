@@ -1,12 +1,13 @@
-import useSWRMutation from 'swr/mutation'
-import { Layer } from '@api/layer'
-import type { Awaitable } from '@internal-types/utility/promises'
-import { useAuth } from '@hooks/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { useSWRConfig } from 'swr'
-import { GET_BANK_TRANSACTION_METADATA_TAG_KEY } from '@hooks/useBankTransactions/useBankTransactionsMetadata'
 import { useCallback } from 'react'
+import { useSWRConfig } from 'swr'
+import useSWRMutation from 'swr/mutation'
+
+import type { Awaitable } from '@internal-types/utility/promises'
+import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { Layer } from '@api/layer'
+import { useAuth } from '@hooks/useAuth'
+import { GET_BANK_TRANSACTION_METADATA_TAG_KEY } from '@hooks/useBankTransactions/useBankTransactionsMetadata'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type UpdateBankTransactionMetadataBody = { memo: string }
 

@@ -1,25 +1,27 @@
+import { type ComponentProps, type ReactNode, useId, useMemo, useRef } from 'react'
+import classNames from 'classnames'
+import { ChevronDown, X } from 'lucide-react'
 import Select, {
+  type ClearIndicatorProps,
   components,
-  type OptionProps,
+  type DropdownIndicatorProps,
   type GroupBase,
   type GroupHeadingProps,
-  type ClearIndicatorProps,
-  type DropdownIndicatorProps,
   type LoadingIndicatorProps,
-  type PlaceholderProps,
   type NoticeProps,
+  type OptionProps,
+  type PlaceholderProps,
   type SingleValueProps,
 } from 'react-select'
+
+import type { OneOf } from '@internal-types/utility/oneOf'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import Check from '@icons/Check'
+import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
+import { PORTAL_CLASS_NAME } from '@ui/Portal/Portal'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Header, P, Span } from '@ui/Typography/Text'
-import { useId, useMemo, useRef, type ComponentProps, type ReactNode } from 'react'
-import type { OneOf } from '@internal-types/utility/oneOf'
-import classNames from 'classnames'
-import { PORTAL_CLASS_NAME } from '@ui/Portal/Portal'
-import Check from '@icons/Check'
-import { ChevronDown, X } from 'lucide-react'
-import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+
 import './comboBox.scss'
 
 const COMBO_BOX_CLASS_NAMES = {

@@ -1,14 +1,15 @@
-import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { get } from '@api/layer/authenticated_http'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useCallback } from 'react'
 import { Schema } from 'effect'
+import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
+
+import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { PaginatedResponseMetaSchema, SortOrder, type PaginationParams, type SortParams } from '@internal-types/utility/pagination'
-import { CategorizationRuleSchema, type CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { get } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const LIST_CATEGORIZATION_RULES_TAG_KEY = '#list-categorization-rules'
 

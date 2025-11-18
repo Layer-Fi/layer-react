@@ -1,7 +1,7 @@
-import { centsToDollars, centsToDollarsWithoutCommas } from '@models/Money'
 import type { AugmentedLedgerAccountBalance } from '@internal-types/chart_of_accounts'
+import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { centsToDollars, centsToDollarsWithoutCommas } from '@models/Money'
 import { convertCentsToCurrency } from '@utils/format'
-import { NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 
 const accountMatchesQuery = (account: NestedLedgerAccountType, query: string) => {
   return [

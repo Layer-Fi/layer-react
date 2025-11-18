@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
+import { differenceInDays, parseISO } from 'date-fns'
+
 import type { Bill } from '@internal-types/bills'
 import { convertFromCents, convertNumberToCurrency } from '@utils/format'
-import { TextStatus, Text, TextSize, TextWeight } from '@components/Typography/Text'
-import { differenceInDays, parseISO } from 'date-fns'
+import { Text, TextSize, type TextStatus, TextWeight } from '@components/Typography/Text'
 
 type BillSummaryUnpaidProps = {
   bill: Bill

@@ -1,4 +1,6 @@
-import React, { createContext, useContext, type PropsWithChildren } from 'react'
+import { createContext, type PropsWithChildren, useContext } from 'react'
+import type React from 'react'
+
 import type { Awaitable } from '@internal-types/utility/promises'
 import { InvoicesRouteStoreProvider } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 

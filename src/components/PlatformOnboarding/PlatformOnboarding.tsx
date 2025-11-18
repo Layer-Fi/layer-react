@@ -1,12 +1,14 @@
-import { Button, ButtonVariant } from '@components/Button/Button'
-import { useState, useMemo } from 'react'
-import { LinkAccounts } from '@components/PlatformOnboarding/LinkAccounts'
-import { ProgressSteps } from '@components/ProgressSteps/ProgressSteps'
-import { WelcomeStep, WelcomeStepFooter } from '@components/PlatformOnboarding/Steps/WelcomeStep'
-import { SummaryStep } from '@components/PlatformOnboarding/Steps/SummaryStep'
-import { BusinessInfoStep } from '@components/PlatformOnboarding/Steps/BusinessInfoStep'
-import { BookOnboardingCallStep } from '@components/PlatformOnboarding/Steps/BookOnboardingCallStep'
+import { useMemo, useState } from 'react'
+
 import { useBookkeepingConfiguration } from '@hooks/useBookkeepingConfiguration/useBookkeepingConfiguration'
+import { Button, ButtonVariant } from '@components/Button/Button'
+import { LinkAccounts } from '@components/PlatformOnboarding/LinkAccounts'
+import { BookOnboardingCallStep } from '@components/PlatformOnboarding/Steps/BookOnboardingCallStep'
+import { BusinessInfoStep } from '@components/PlatformOnboarding/Steps/BusinessInfoStep'
+import { SummaryStep } from '@components/PlatformOnboarding/Steps/SummaryStep'
+import { WelcomeStep, WelcomeStepFooter } from '@components/PlatformOnboarding/Steps/WelcomeStep'
+import { ProgressSteps } from '@components/ProgressSteps/ProgressSteps'
+
 import './platformOnboarding.scss'
 
 enum PlatformOnboardingStep {

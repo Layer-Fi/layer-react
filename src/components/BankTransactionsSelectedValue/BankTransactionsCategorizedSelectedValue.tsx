@@ -1,8 +1,8 @@
-import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
-import { BankTransaction } from '@internal-types/bank_transactions'
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { isTransferMatch } from '@utils/bankTransactions'
 import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
+import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 
 type BankTransactionsCategorizedSelectedValueProps = {
   bankTransaction: BankTransaction

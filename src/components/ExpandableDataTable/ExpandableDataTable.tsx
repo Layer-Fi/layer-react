@@ -1,15 +1,16 @@
 import { useContext, useMemo } from 'react'
 import {
-  useReactTable,
-  getCoreRowModel,
   createColumnHelper,
+  getCoreRowModel,
   getExpandedRowModel,
   type Row,
+  useReactTable,
 } from '@tanstack/react-table'
-import { DataTable, type Column, type ColumnConfig, type DataTableProps } from '@components/DataTable/DataTable'
+
 import { HStack } from '@ui/Stack/Stack'
-import { ExpandButton } from '@components/ExpandButton/ExpandButton'
+import { type Column, type ColumnConfig, DataTable, type DataTableProps } from '@components/DataTable/DataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
+import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
 type ExpandableDataTableProps<TData, TColumns extends string> = Omit<DataTableProps<TData, TColumns>, 'columnConfig'> & {
   columnConfig: ColumnConfig<Row<TData>, TColumns>

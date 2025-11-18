@@ -1,13 +1,15 @@
-import { useInvoiceSummaryStats } from '@features/invoices/api/useInvoiceSummaryStats'
-import Check from '@icons/Check'
+import { BigDecimal as BD } from 'effect'
+
 import { convertBigIntCentsToBigDecimal, convertDecimalToPercent, formatBigDecimalToString, safeDivide } from '@utils/bigDecimalUtils'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
-import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
-import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
+import Check from '@icons/Check'
 import { Meter } from '@ui/Meter/Meter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { BigDecimal as BD } from 'effect'
+import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
+import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
+import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
+import { useInvoiceSummaryStats } from '@features/invoices/api/useInvoiceSummaryStats'
+
 import './invoiceSummaryStats.scss'
 
 const getPercentageOverdue = (sentTotal: bigint | undefined, overdueTotal: bigint | undefined): number => {

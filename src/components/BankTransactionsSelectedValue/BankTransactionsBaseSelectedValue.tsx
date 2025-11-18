@@ -1,9 +1,10 @@
-import { HStack } from '@components/ui/Stack/Stack'
-import { Badge, BadgeSize } from '@components/Badge/Badge'
-import MinimizeTwo from '@icons/MinimizeTwo'
-import { Span } from '@components/ui/Typography/Text'
-import Scissors from '@icons/Scissors'
 import { Layers2Icon } from 'lucide-react'
+
+import MinimizeTwo from '@icons/MinimizeTwo'
+import Scissors from '@icons/Scissors'
+import { HStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+import { Badge, BadgeSize } from '@components/Badge/Badge'
 
 export type BankTransactionsBaseSelectedValueProps = {
   type: 'match' | 'transfer' | 'split' | 'category' | 'placeholder'

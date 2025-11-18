@@ -1,4 +1,5 @@
 import type { SWRConfiguration } from 'swr'
+
 import { compareWithStableHash } from '@utils/swr/compareWithStableHash'
 
 export const DEFAULT_SWR_CONFIG = {

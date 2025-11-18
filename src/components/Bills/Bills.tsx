@@ -1,7 +1,7 @@
-import { BillsProvider, useBillsContext } from '@contexts/BillsContext'
 import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
+import { BillsProvider, useBillsContext } from '@contexts/BillsContext'
 import { BillsDetails } from '@components/Bills/BillsDetails'
-import { BillsTableStringOverrides, BillsTableWithPanel } from '@components/Bills/BillsTableWithPanel'
+import { type BillsTableStringOverrides, BillsTableWithPanel } from '@components/Bills/BillsTableWithPanel'
 import { Container } from '@components/Container/Container'
 
 export type BillsStringOverrides = {

@@ -1,14 +1,15 @@
-import { TableRow } from '@components/TableRow/TableRow'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableBody } from '@components/TableBody/TableBody'
-import { Table } from '@components/Table/Table'
-import { Fragment, ReactNode, useEffect } from 'react'
-import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
-import { TableCellAlign } from '@internal-types/table'
-import { useEffectOnMount } from '@hooks/useEffectOnMount/useEffectOnMount'
+import { Fragment, type ReactNode, useEffect } from 'react'
+
 import type { BalanceSheet } from '@internal-types/balance_sheet'
 import type { LineItem } from '@internal-types/line_item'
+import { TableCellAlign } from '@internal-types/table'
+import { useEffectOnMount } from '@hooks/useEffectOnMount/useEffectOnMount'
+import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
+import { Table } from '@components/Table/Table'
+import { TableBody } from '@components/TableBody/TableBody'
+import { TableCell } from '@components/TableCell/TableCell'
+import { TableHead } from '@components/TableHead/TableHead'
+import { TableRow } from '@components/TableRow/TableRow'
 
 export interface BalanceSheetTableStringOverrides {
   typeColumnHeader?: string

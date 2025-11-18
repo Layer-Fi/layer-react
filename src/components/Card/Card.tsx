@@ -1,5 +1,6 @@
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import classNames from 'classnames'
+
 import './card.scss'
 
 export interface CardProps {

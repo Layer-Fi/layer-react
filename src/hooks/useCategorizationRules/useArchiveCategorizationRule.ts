@@ -1,11 +1,12 @@
-import { post } from '@api/layer/authenticated_http'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
-import useSWRMutation from 'swr/mutation'
 import { useCallback } from 'react'
-import { CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { Schema } from 'effect/index'
+import useSWRMutation from 'swr/mutation'
+
+import { CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { post } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/useCategorizationRules/useListCategorizationRules'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const ARCHIVE_CATEGORIZATION_RULE_TAG = '#archive-categorization-rule'
 

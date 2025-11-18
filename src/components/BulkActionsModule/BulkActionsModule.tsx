@@ -1,8 +1,9 @@
-import { Button } from '@ui/Button/Button'
-import X from '@icons/X'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import X from '@icons/X'
+import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+
 import './bulkActionsModule.scss'
 
 export interface BulkActionsModuleProps {

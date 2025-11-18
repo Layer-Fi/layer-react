@@ -1,21 +1,22 @@
-import { LandingPagePlatformConfig, LandingPageConfig, LandingPageValueProposition } from '@components/LandingPage/types'
+import { Check } from 'lucide-react'
+
 import {
+  type ContentConfig,
+  type LandingPageContentID,
+  landingPageDefaultContentConfig,
+  LandingPageDefaultTextContent,
+  type LandingPageTypesTextContent,
+  type PartialContentConfig,
+} from '@components/LandingPage/content'
+import { type LandingPageConfig, type LandingPagePlatformConfig, type LandingPageValueProposition } from '@components/LandingPage/types'
+import {
+  imageBookkeeperInquiries,
   imageBusinessAccounts,
   imageBusinessOverview,
   imageCategorizeExpenses,
-  imageBookkeeperInquiries,
-  imageScheduleBookkeeperMeeting,
   imagePnlOverview,
+  imageScheduleBookkeeperMeeting,
 } from '@assets/images'
-import {
-  LandingPageContentID,
-  LandingPageTypesTextContent,
-  LandingPageDefaultTextContent,
-  ContentConfig,
-  PartialContentConfig,
-  landingPageDefaultContentConfig,
-} from '@components/LandingPage/content'
-import { Check } from 'lucide-react'
 
 /**
  * Helper class to create defaults for the Landing Pages and override them, as well

@@ -1,14 +1,14 @@
-import { View } from '@components/View/View'
-import { InvoiceRoute, useInvoiceRouteState } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { InvoiceDetail } from '@components/Invoices/InvoiceDetail/InvoiceDetail'
-import { InvoiceOverview } from '@components/Invoices/InvoiceOverview/InvoiceOverview'
-import { usePreloadCustomers } from '@features/customers/api/useListCustomers'
-import { usePreloadCategories } from '@hooks/categories/useCategories'
-import { CategoriesListMode } from '@schemas/categorization'
-import { usePreloadTagDimensionByKey } from '@features/tags/api/useTagDimensionByKey'
-import { INVOICE_MECE_TAG_DIMENSION } from '@components/Invoices/InvoiceForm/formUtils'
 import type { Awaitable } from '@internal-types/utility/promises'
+import { CategoriesListMode } from '@schemas/categorization'
+import { usePreloadCategories } from '@hooks/categories/useCategories'
+import { InvoiceRoute, useInvoiceRouteState } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { InvoicesProvider } from '@contexts/InvoicesContext/InvoicesContext'
+import { InvoiceDetail } from '@components/Invoices/InvoiceDetail/InvoiceDetail'
+import { INVOICE_MECE_TAG_DIMENSION } from '@components/Invoices/InvoiceForm/formUtils'
+import { InvoiceOverview } from '@components/Invoices/InvoiceOverview/InvoiceOverview'
+import { View } from '@components/View/View'
+import { usePreloadCustomers } from '@features/customers/api/useListCustomers'
+import { usePreloadTagDimensionByKey } from '@features/tags/api/useTagDimensionByKey'
 interface InvoicesStringOverrides {
   title?: string
 }

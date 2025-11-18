@@ -8,9 +8,9 @@
 export { Onboarding } from './components/Onboarding/Onboarding'
 
 /* ------------------ Bank Accounts & Transactions ------------------ */
-export { LinkedAccounts } from './components/LinkedAccounts/LinkedAccounts'
 export { BankTransactions } from './components/BankTransactions/BankTransactions'
 export { Integrations } from './components/Integrations/Integrations'
+export { LinkedAccounts } from './components/LinkedAccounts/LinkedAccounts'
 
 /* ------------------ Reporting ------------------ */
 export { ProfitAndLoss } from './components/ProfitAndLoss/ProfitAndLoss'
@@ -42,24 +42,23 @@ export { BookkeepingUpsellBar } from './components/BookkeepingUpsellBar/Bookkeep
 /*
 ======================= Composite Views =======================
 */
-export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOverview'
+export { Invoices } from './components/Invoices/Invoices'
+export { ProfitAndLossView } from './components/ProfitAndLossView/ProfitAndLossView'
+export { UnifiedReport as unstable_UnifiedReports } from './components/UnifiedReport/UnifiedReport'
 export { AccountingOverview } from './views/AccountingOverview/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
-export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
-export { ProjectProfitabilityView } from './views/ProjectProfitability/ProjectProfitability'
 export { unstable_BillsView } from './views/Bills'
-export { UnifiedReport as unstable_UnifiedReports } from './components/UnifiedReport/UnifiedReport'
-export { Reports } from './views/Reports/Reports'
-export { ProfitAndLossView } from './components/ProfitAndLossView/ProfitAndLossView'
-export { Invoices } from './components/Invoices/Invoices'
+export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOverview'
+export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
 export { unstable_MileageTracking } from './views/MileageTracking'
+export { ProjectProfitabilityView } from './views/ProjectProfitability/ProjectProfitability'
+export { Reports } from './views/Reports/Reports'
 
 /*
 ======================= Layer Provider & Context =======================
 */
-export { LayerProvider } from './providers/LayerProvider/LayerProvider'
+export { EntityName, type LinkingMetadata } from './contexts/InAppLinkContext'
 export { useLayerContext } from './contexts/LayerContext/LayerContext'
-
+export { LayerProvider } from './providers/LayerProvider/LayerProvider'
 export { DisplayState } from './types/bank_transactions'
 export { Direction } from './types/general'
-export { type LinkingMetadata, EntityName } from './contexts/InAppLinkContext'

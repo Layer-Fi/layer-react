@@ -1,7 +1,8 @@
-import { IconButton } from '@components/Button/IconButton'
-import RefreshCcw from '@icons/RefreshCcw'
-import { SmallLoader } from '@components/Loader/SmallLoader'
 import classNames from 'classnames'
+
+import RefreshCcw from '@icons/RefreshCcw'
+import { IconButton } from '@components/Button/IconButton'
+import { SmallLoader } from '@components/Loader/SmallLoader'
 
 interface SyncingComponentProps {
   title?: string

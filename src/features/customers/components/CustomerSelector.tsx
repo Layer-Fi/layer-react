@@ -1,13 +1,15 @@
 import { useCallback, useId, useMemo } from 'react'
-import { useListCustomers } from '@features/customers/api/useListCustomers'
+import classNames from 'classnames'
+
+import { type Customer } from '@schemas/customer'
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { P } from '@ui/Typography/Text'
 import { VStack } from '@ui/Stack/Stack'
+import { P } from '@ui/Typography/Text'
 import { Label } from '@ui/Typography/Text'
-import { Customer } from '@schemas/customer'
-import classNames from 'classnames'
+import { useListCustomers } from '@features/customers/api/useListCustomers'
 import { getCustomerName } from '@features/customers/util'
+
 import './customerSelector.scss'
 
 class CustomerAsOption {

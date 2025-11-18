@@ -1,7 +1,7 @@
-import { Modal, ModalProps } from '@ui/Modal/Modal'
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { Modal, type ModalProps } from '@ui/Modal/Modal'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { RuleSuggestionHeader, SuggestedCategorizationRuleUpdates } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
-import { UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 
 function SuggestedCategorizationRuleUpdatesModalContent({ close, ruleSuggestion }:
 { close: () => void, ruleSuggestion: UpdateCategorizationRulesSuggestion }) {

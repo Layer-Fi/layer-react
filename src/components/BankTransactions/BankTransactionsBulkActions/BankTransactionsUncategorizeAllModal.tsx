@@ -1,9 +1,10 @@
-import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
-import { Span } from '@ui/Typography/Text'
 import { useCallback } from 'react'
 import pluralize from 'pluralize'
-import { useCountSelectedIds, useSelectedIds, useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+
 import { useBulkUncategorize } from '@hooks/useBankTransactions/useBulkUncategorize'
+import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { Span } from '@ui/Typography/Text'
+import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
 
 interface BankTransactionsUncategorizeAllModalProps {
   isOpen: boolean

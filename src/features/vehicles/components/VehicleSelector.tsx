@@ -1,12 +1,14 @@
 import { useCallback, useId, useMemo } from 'react'
-import { useListVehicles } from '@features/vehicles/api/useListVehicles'
-import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { P } from '@ui/Typography/Text'
-import { VStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
-import { type Vehicle } from '@schemas/vehicle'
 import classNames from 'classnames'
+
+import { type Vehicle } from '@schemas/vehicle'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { VStack } from '@ui/Stack/Stack'
+import { P } from '@ui/Typography/Text'
+import { Label } from '@ui/Typography/Text'
+import { useListVehicles } from '@features/vehicles/api/useListVehicles'
 import { getVehicleDisplayName } from '@features/vehicles/util'
+
 import './vehicleSelector.scss'
 
 class VehicleAsOption {

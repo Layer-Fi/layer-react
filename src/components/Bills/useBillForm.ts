@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { Bill, BillLineItem } from '@internal-types/bills'
 import { useStore } from '@tanstack/react-form'
-import { Vendor } from '@internal-types/vendors'
+
+import { type Bill, type BillLineItem } from '@internal-types/bills'
+import { type Vendor } from '@internal-types/vendors'
 import { convertFromCents, convertToCents } from '@utils/format'
 import { Layer } from '@api/layer'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { type SaveBillPayload } from '@api/layer/bills'
 import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useBillsContext } from '@contexts/BillsContext'
-import { SaveBillPayload } from '@api/layer/bills'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useForm } from '@features/forms/hooks/useForm'
 
 export type BillForm = {

@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { Car } from 'lucide-react'
-import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
+
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
+import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
 
 enum TripsTableHeaderMenuActions {
   ManageVehicles = 'ManageVehicles',

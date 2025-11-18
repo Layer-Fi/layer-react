@@ -1,4 +1,5 @@
 import { useState } from 'react'
+
 import { DataModel } from '@internal-types/general'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 

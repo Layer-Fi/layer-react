@@ -1,12 +1,13 @@
-import { ReactNode, useState } from 'react'
+import { type ReactNode, useState } from 'react'
+
+import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { ChartOfAccounts } from '@components/ChartOfAccounts/ChartOfAccounts'
-import { ChartOfAccountsStringOverrides } from '@components/ChartOfAccounts/ChartOfAccounts'
+import { type ChartOfAccountsStringOverrides } from '@components/ChartOfAccounts/ChartOfAccounts'
 import { Journal } from '@components/Journal/Journal'
-import { JournalStringOverrides } from '@components/Journal/Journal'
+import { type JournalStringOverrides } from '@components/Journal/Journal'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { Toggle } from '@components/Toggle/Toggle'
 import { View } from '@components/View/View'
-import { LinkingMetadata } from '@contexts/InAppLinkContext'
 
 export interface GeneralLedgerStringOverrides {
   title?: string

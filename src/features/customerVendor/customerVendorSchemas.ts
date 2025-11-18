@@ -1,6 +1,7 @@
+import { Schema } from 'effect'
+
 import { CustomerSchema } from '@schemas/customer'
 import { VendorSchema } from '@schemas/vendor'
-import { Schema } from 'effect'
 
 export const CustomerVendorTypeSchema = Schema.Literal('CUSTOMER', 'VENDOR')
 

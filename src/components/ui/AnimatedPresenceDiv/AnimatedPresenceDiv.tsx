@@ -1,5 +1,6 @@
-import { AnimatePresence, motion, type HTMLMotionProps } from 'motion/react'
+import { AnimatePresence, type HTMLMotionProps, motion } from 'motion/react'
 import type { ReactNode } from 'react'
+
 import { variants } from './variants'
 
 type AnimationVariant = 'fade' | 'slideUp' | 'expand'

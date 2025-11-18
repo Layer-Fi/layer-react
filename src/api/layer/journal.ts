@@ -1,5 +1,5 @@
-import { S3PresignedUrl } from '@internal-types/general'
-import { JournalEntry } from '@internal-types/journal'
+import { type S3PresignedUrl } from '@internal-types/general'
+import { type JournalEntry } from '@internal-types/journal'
 import { get, post } from '@api/layer/authenticated_http'
 
 export const createJournalEntries = post<{ data: JournalEntry[] }>(

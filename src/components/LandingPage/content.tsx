@@ -1,7 +1,7 @@
-import { imagePartnerAccountingImage } from '@assets/images'
-import { HeroContentConfig, LandingPageCardConfig, LandingPageConfig } from '@components/LandingPage/types'
+import { type ReactNode } from 'react'
 
-import { ReactNode } from 'react'
+import { type HeroContentConfig, type LandingPageCardConfig, type LandingPageConfig } from '@components/LandingPage/types'
+import { imagePartnerAccountingImage } from '@assets/images'
 
 export type CoreValueProposition = {
   icon: ReactNode

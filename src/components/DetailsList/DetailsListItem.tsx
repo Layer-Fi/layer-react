@@ -1,6 +1,7 @@
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
+
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 export interface DetailsListItemProps {
   label: string

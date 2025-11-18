@@ -1,6 +1,6 @@
 import { DownloadButton } from '@components/Button/DownloadButton'
-import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 import { useJournalEntriesDownload } from '@components/Journal/download/useJournalEntriesDownload'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type JournalEntriesDownloadButtonProps = {
   startCutoff?: Date

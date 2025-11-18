@@ -1,12 +1,13 @@
-import { PropsWithChildren, useState } from 'react'
-import { LayerError } from '@models/ErrorHandler'
-import { BusinessProvider } from '@providers/BusinessProvider/BusinessProvider'
-import { LayerThemeConfig } from '@internal-types/layer_context'
+import { type PropsWithChildren, useState } from 'react'
 import { SWRConfig } from 'swr'
-import type { Environment } from '@providers/Environment/environmentConfigs'
-import { AuthInputProvider } from '@providers/AuthInputProvider'
-import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInputProvider'
+
+import { type LayerThemeConfig } from '@internal-types/layer_context'
+import { type LayerError } from '@models/ErrorHandler'
 import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
+import { AuthInputProvider } from '@providers/AuthInputProvider'
+import { BusinessProvider } from '@providers/BusinessProvider/BusinessProvider'
+import type { Environment } from '@providers/Environment/environmentConfigs'
+import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInputProvider'
 import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type EventCallbacks = {

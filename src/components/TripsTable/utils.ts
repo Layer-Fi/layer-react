@@ -1,6 +1,7 @@
+import { BigDecimal as BD } from 'effect'
+
 import { TripPurpose } from '@schemas/trip'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { BigDecimal as BD } from 'effect'
 
 export const formatDistance = (distance: BD.BigDecimal) => {
   const distanceNum = parseFloat(BD.unsafeToNumber(distance).toString())

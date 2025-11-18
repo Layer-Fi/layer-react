@@ -1,16 +1,17 @@
 import { useCallback } from 'react'
-import { categorizeBankTransaction, type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import type { CategoryUpdate } from '@internal-types/categories'
-import { useAuth } from '@hooks/useAuth'
 import { useSWRConfig } from 'swr'
-import useSWRMutation from 'swr/mutation'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
+import useSWRMutation from 'swr/mutation'
+
+import type { CategoryUpdate } from '@internal-types/categories'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { categorizeBankTransaction, type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/bookkeeping/useBankAccounts'
+import { useAuth } from '@hooks/useAuth'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExternalAccounts'
 import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 

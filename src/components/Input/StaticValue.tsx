@@ -1,5 +1,6 @@
-import { TextProps, Text } from '@components/Typography/Text'
 import classNames from 'classnames'
+
+import { Text, type TextProps } from '@components/Typography/Text'
 
 export type StaticValueProps = TextProps
 

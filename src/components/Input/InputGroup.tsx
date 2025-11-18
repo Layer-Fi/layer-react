@@ -1,6 +1,7 @@
-import { Text, TextSize } from '@components/Typography/Text'
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import classNames from 'classnames'
+
+import { Text, TextSize } from '@components/Typography/Text'
 
 export interface InputGroupProps {
   label?: string

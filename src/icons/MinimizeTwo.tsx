@@ -1,4 +1,4 @@
-import { IconSvgProps } from '@icons/types'
+import { type IconSvgProps } from '@icons/types'
 
 const MinimizeTwo = ({ size = 18, ...props }: IconSvgProps) => (
   <svg

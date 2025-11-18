@@ -1,7 +1,8 @@
-import { ButtonHTMLAttributes, ReactNode, useRef } from 'react'
-import LoaderIcon from '@icons/Loader'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
+import { type ButtonHTMLAttributes, type ReactNode, useRef } from 'react'
 import classNames from 'classnames'
+
+import LoaderIcon from '@icons/Loader'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export enum ButtonVariant {
   primary = 'primary',

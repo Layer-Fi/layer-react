@@ -1,13 +1,16 @@
-import { TextSize } from '@components/Typography/Text'
-import { Button } from '@ui/Button/Button'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
+import { AlertTriangle } from 'lucide-react'
+import type React from 'react'
+
 import { type Vehicle } from '@schemas/vehicle'
+import { flattenValidationErrors } from '@utils/form'
+import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { AlertTriangle } from 'lucide-react'
+import { TextSize } from '@components/Typography/Text'
 import { useVehicleForm } from '@components/VehicleManagement/VehicleForm/useVehicleForm'
-import { flattenValidationErrors } from '@utils/form'
+
 import './vehicleForm.scss'
 
 const VEHICLE_FORM_CSS_PREFIX = 'Layer__VehicleForm'

@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
+
+import { type BaseSelectOption } from '@internal-types/general'
+import { type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerAccount'
 import { flattenAccounts } from '@hooks/useChartOfAccounts/useChartOfAccounts'
-import { BaseSelectOption } from '@internal-types/general'
-import { LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerAccount'
 
 export const useParentOptions = (
   data?: LedgerBalancesSchemaType,

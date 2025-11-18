@@ -1,13 +1,14 @@
 import { useCallback, useMemo } from 'react'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
-import { get } from '@api/layer/authenticated_http'
-import useSWR, { type SWRResponse } from 'swr'
 import { Schema } from 'effect'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { type ProfitAndLossSummaries, ProfitAndLossSummariesSchema, ProfitAndLossSummariesRequestParams } from '@hooks/useProfitAndLoss/schemas'
 import { debounce } from 'lodash-es'
+import useSWR, { type SWRResponse } from 'swr'
+
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { get } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
+import { type ProfitAndLossSummaries, type ProfitAndLossSummariesRequestParams, ProfitAndLossSummariesSchema } from '@hooks/useProfitAndLoss/schemas'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const PNL_SUMMARIES_TAG_KEY = '#profit-and-loss-summaries'
 

@@ -1,7 +1,7 @@
-import { DetailedChartStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import type { ProfitAndLoss } from '@hooks/useProfitAndLoss/schemas'
-import { SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import type { LineItem } from '@schemas/common/lineItem'
+import type { ProfitAndLoss } from '@hooks/useProfitAndLoss/schemas'
+import { type SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import { type DetailedChartStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 
 export type PnlChartLineItem = LineItem & {
   type: string

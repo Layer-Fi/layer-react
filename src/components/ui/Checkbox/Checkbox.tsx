@@ -1,10 +1,12 @@
-import { Check, Minus } from 'lucide-react'
 import { useMemo } from 'react'
-import { Checkbox as ReactAriaCheckbox, type CheckboxProps as AriaCheckboxProps } from 'react-aria-components'
-import { withRenderProp } from '@components/utility/withRenderProp'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
 import classNames from 'classnames'
+import { Check, Minus } from 'lucide-react'
+import { Checkbox as ReactAriaCheckbox, type CheckboxProps as AriaCheckboxProps } from 'react-aria-components'
+
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
+import { withRenderProp } from '@components/utility/withRenderProp'
+
 import './checkbox.scss'
 
 const CLASS_NAME = 'Layer__Checkbox'

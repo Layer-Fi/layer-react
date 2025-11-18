@@ -1,12 +1,12 @@
-import { COLORS, SHADES } from '@config/theme'
 import {
-  LayerThemeConfig,
-  ColorConfig,
-  ColorRGBConfig,
-  ColorRGBNumberConfig,
-  ColorHSLNumberConfig,
-  ColorsPalette,
+  type ColorConfig,
+  type ColorHSLNumberConfig,
+  type ColorRGBConfig,
+  type ColorRGBNumberConfig,
+  type ColorsPalette,
+  type LayerThemeConfig,
 } from '@internal-types/layer_context'
+import { COLORS, SHADES } from '@config/theme'
 
 /**
  * Convert `theme` config set in Provider into component styles.

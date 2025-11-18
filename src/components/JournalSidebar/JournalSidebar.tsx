@@ -1,4 +1,5 @@
-import { RefObject, useContext } from 'react'
+import { type RefObject, useContext } from 'react'
+
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { JournalEntryDetails } from '@components/JournalEntryDetails/JournalEntryDetails'
 

@@ -1,8 +1,8 @@
 import {
   createContext,
+  type PropsWithChildren,
   useContext,
   useMemo,
-  type PropsWithChildren,
 } from 'react'
 
 const BankTransactionCustomerVendorVisibilityContext = createContext({

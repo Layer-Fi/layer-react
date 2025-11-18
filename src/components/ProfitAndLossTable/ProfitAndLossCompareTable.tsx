@@ -1,24 +1,25 @@
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableRow } from '@components/TableRow/TableRow'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableBody } from '@components/TableBody/TableBody'
-import { Table } from '@components/Table/Table'
 import { Fragment, useContext, useEffect } from 'react'
-import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
-import { ProfitAndLossComparisonPnl } from '@internal-types/profit_and_loss'
+
+import { type ProfitAndLossComparisonPnl } from '@internal-types/profit_and_loss'
+import { type LineItemEncoded } from '@schemas/common/lineItem'
 import {
   generateComparisonPeriods,
   getComparisonValue,
   mergeComparisonLineItemsAtDepth,
 } from '@utils/profitAndLossComparisonUtils'
-import { Loader } from '@components/Loader/Loader'
-import { ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
 import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
-import { HStack } from '@ui/Stack/Stack'
+import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
-import { LineItemEncoded } from '@schemas/common/lineItem'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { HStack } from '@ui/Stack/Stack'
+import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
+import { Loader } from '@components/Loader/Loader'
+import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
+import { Table } from '@components/Table/Table'
+import { TableBody } from '@components/TableBody/TableBody'
+import { TableCell } from '@components/TableCell/TableCell'
+import { TableHead } from '@components/TableHead/TableHead'
+import { TableRow } from '@components/TableRow/TableRow'
 
 interface ProfitAndLossCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides

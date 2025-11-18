@@ -1,9 +1,10 @@
-import { ModalProps } from '@ui/Modal/Modal'
-import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
-import type { Invoice } from '@features/invoices/invoiceSchemas'
 import { useCallback, useMemo, useRef } from 'react'
+
+import { type ModalProps } from '@ui/Modal/Modal'
+import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
 import { InvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/InvoiceRefundForm'
 import { updateInvoiceWithRefund } from '@features/invoices/api/useRefundInvoice'
+import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 type InvoiceRefundModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   invoice: Invoice

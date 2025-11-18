@@ -1,8 +1,10 @@
 import { forwardRef } from 'react'
-import { Meter as ReactAriaMeter, MeterProps as ReactAriaMeterProps } from 'react-aria-components'
-import { Label, Span } from '@ui/Typography/Text'
-import { HStack, VStack } from '@ui/Stack/Stack'
 import classNames from 'classnames'
+import { Meter as ReactAriaMeter, type MeterProps as ReactAriaMeterProps } from 'react-aria-components'
+
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Label, Span } from '@ui/Typography/Text'
+
 import './meter.scss'
 
 const getClassnameForSubComponent = (className: string | undefined, suffix: string) => {

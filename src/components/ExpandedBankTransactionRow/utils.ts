@@ -1,14 +1,15 @@
-import { BankTransaction, Split } from '@internal-types/bank_transactions'
-import { SplitCategorizationEntryEncoded } from '@schemas/categorization'
-import { decodeCustomerVendor } from '@features/customerVendor/customerVendorSchemas'
-import { BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { makeTagFromTransactionTag, TransactionTagSchema } from '@features/tags/tagSchemas'
 import { Schema } from 'effect/index'
-import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
-import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { uniqBy } from 'lodash-es'
-import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+
+import { type BankTransaction, type Split } from '@internal-types/bank_transactions'
+import { type SplitCategorizationEntryEncoded } from '@schemas/categorization'
 import { isSplitCategorizationEncoded } from '@schemas/categorization'
+import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
+import { decodeCustomerVendor } from '@features/customerVendor/customerVendorSchemas'
+import { makeTagFromTransactionTag, TransactionTagSchema } from '@features/tags/tagSchemas'
 
 export enum ValidateSplitError {
   AmountsMustBeGreaterThanZero = 'All splits must have an amount greater than $0.00',

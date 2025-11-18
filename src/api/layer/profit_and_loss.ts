@@ -1,10 +1,10 @@
-import { S3PresignedUrl } from '@internal-types/general'
+import { type S3PresignedUrl } from '@internal-types/general'
 import type {
   ProfitAndLossComparison,
   ProfitAndLossComparisonRequestBody,
 } from '@internal-types/profit_and_loss'
-import { get, post } from '@api/layer/authenticated_http'
 import { toLocalDateString } from '@utils/time/timeUtils'
+import { get, post } from '@api/layer/authenticated_http'
 
 type BaseProfitAndLossParams = {
   businessId: string

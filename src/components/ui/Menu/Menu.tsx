@@ -4,6 +4,7 @@ import {
   MenuItem as ReactAriaMenuItem,
   type MenuItemProps as ReactAriaMenuItemProps,
 } from 'react-aria-components'
+
 import './menu.scss'
 
 const MENU_CLASS_NAME = 'Layer__Menu'

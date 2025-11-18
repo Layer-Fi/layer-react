@@ -1,6 +1,9 @@
-import React, { type PropsWithChildren, createContext, useContext } from 'react'
-import { Menu as AriaMenu, MenuItem as AriaMenuItem, MenuTrigger, Popover, Dialog } from 'react-aria-components'
+import { createContext, type PropsWithChildren, useContext } from 'react'
+import type React from 'react'
+import { Dialog, Menu as AriaMenu, MenuItem as AriaMenuItem, MenuTrigger, Popover } from 'react-aria-components'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+
 import './dropdownMenu.scss'
 
 type DropdownMenuContextValue = {

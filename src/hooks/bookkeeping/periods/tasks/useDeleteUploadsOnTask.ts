@@ -1,11 +1,12 @@
+import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
+
+import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { deleteUploadsOnTask } from '@api/layer/tasks'
+import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { deleteUploadsOnTask } from '@api/layer/tasks'
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { useCallback } from 'react'
 
 function buildKey({
   access_token: accessToken,

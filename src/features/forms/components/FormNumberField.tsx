@@ -1,10 +1,11 @@
-import { useCallback, type PropsWithChildren } from 'react'
-import { useFieldContext } from '@features/forms/hooks/useForm'
-import { InputGroup } from '@ui/Input/InputGroup'
+import { type PropsWithChildren, useCallback } from 'react'
+
+import { FieldError } from '@ui/Form/Form'
 import { Input } from '@ui/Input/Input'
+import { InputGroup } from '@ui/Input/InputGroup'
 import { NumberField } from '@ui/NumberField/NumberField'
 import { Label } from '@ui/Typography/Text'
-import { FieldError } from '@ui/Form/Form'
+import { useFieldContext } from '@features/forms/hooks/useForm'
 import type { CommonFormFieldProps } from '@features/forms/types'
 
 export type FormNumberFieldProps = CommonFormFieldProps & {

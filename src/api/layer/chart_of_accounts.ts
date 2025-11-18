@@ -1,11 +1,11 @@
-import type { SingleChartAccountEncodedType } from '@schemas/generalLedger/ledgerAccount'
 import type {
-  NewAccount,
   EditAccount,
+  NewAccount,
   NewChildAccount,
 } from '@internal-types/chart_of_accounts'
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { LedgerAccountLineItems, LedgerAccountsEntry } from '@internal-types/ledger_accounts'
+import type { SingleChartAccountEncodedType } from '@schemas/generalLedger/ledgerAccount'
 import { get, post, put } from '@api/layer/authenticated_http'
 
 export const createAccount = post<{ data: SingleChartAccountEncodedType }, NewAccount>(
