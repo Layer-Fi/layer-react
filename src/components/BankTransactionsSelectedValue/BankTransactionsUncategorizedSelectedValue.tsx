@@ -26,7 +26,6 @@ export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactio
       slotProps={slotProps}
       className={className}
       showCategoryBadge={showCategoryBadge}
-      isCategorized={false}
     />
   )
 }
