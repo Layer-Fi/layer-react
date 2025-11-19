@@ -1,7 +1,7 @@
 import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import Clock from '@icons/Clock'
 import { HStack } from '@ui/Stack/Stack'
-import { Badge, BadgeSize } from '@components/Badge/Badge'
+import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
@@ -16,7 +16,11 @@ export const BankTransactionsProcessingInfo = ({ showAsBadge = false }: BankTran
   if (showAsBadge) {
     return (
       <HStack gap='xs' align='center' fluid className='Layer__BankTransactionsProcessingInfo'>
-        <Badge size={BadgeSize.SMALL} icon={<Clock size={11} />}>
+        <Badge
+          size={BadgeSize.SMALL}
+          icon={<Clock size={11} />}
+          variant={BadgeVariant.INFO}
+        >
           Processing
         </Badge>
       </HStack>
