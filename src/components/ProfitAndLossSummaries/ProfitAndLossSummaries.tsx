@@ -1,6 +1,11 @@
 import { type ReactNode, useContext, useMemo } from 'react'
+import { format, sub } from 'date-fns'
 
+import { calculatePercentageChange } from '@utils/percentageChange'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
+import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import {
   ProfitAndLossSummariesList,
   ProfitAndLossSummariesListItem,
@@ -11,11 +16,6 @@ import {
 } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesMiniChart'
 import { ProfitAndLossSummariesSummary } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesSummary'
 import { TransactionsToReview } from '@views/AccountingOverview/internal/TransactionsToReview'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
-import { calculatePercentageChange } from '@utils/percentageChange'
-import { format, sub } from 'date-fns'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
@@ -62,7 +62,7 @@ function Internal_ProfitAndLossSummaries({
     sidebarScope,
   } = useContext(ProfitAndLossContext)
 
-  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'month' })
+  const { startDate, endDate: _endDate } = useGlobalDateRange({ displayMode: 'month' })
 
   const previousMonthStart = sub(startDate, { months: 1 })
   const { data: previousData } = useProfitAndLossSummaries({
@@ -80,7 +80,10 @@ function Internal_ProfitAndLossSummaries({
     [data],
   )
 
-  const effectiveData = data ?? { income: { value: 0 }, netProfit: 0 }
+  const effectiveData = useMemo(
+    () => data ?? { income: { value: 0 }, netProfit: 0 },
+    [data],
+  )
 
   const comparisonData = useMemo(() => {
     const previousMonthData = previousData?.months?.[0]

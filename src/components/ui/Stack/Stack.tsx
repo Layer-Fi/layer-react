@@ -31,25 +31,25 @@ const CLASS_NAME = 'Layer__Stack'
 
 const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
   function Stack(
-{
-    align,
-    children,
-    className,
-    direction,
-    gap,
-    justify,
-    overflow,
-    pb,
-    pbs,
-    pbe,
-    pi,
-    pis,
-    pie,
-    fluid,
-    hidden,
-    ...restProps
-  },
-  ref,
+    {
+      align,
+      children,
+      className,
+      direction,
+      gap,
+      justify,
+      overflow,
+      pb,
+      pbs,
+      pbe,
+      pi,
+      pis,
+      pie,
+      fluid,
+      hidden,
+      ...restProps
+    },
+    ref,
   ) {
     const dataProperties = toDataProperties({
       align,
