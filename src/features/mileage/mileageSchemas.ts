@@ -1,4 +1,4 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
 
 // Schema that converts dollar string to cents (number)
 // e.g., "79683.8000" -> 7968380
@@ -7,8 +7,8 @@ const DollarStringToCentsSchema = Schema.transform(
   Schema.Number,
   {
     strict: true,
-    decode: (dollars) => Math.round(dollars * 100),
-    encode: (cents) => cents / 100,
+    decode: dollars => Math.round(dollars * 100),
+    encode: cents => cents / 100,
   },
 )
 
@@ -111,4 +111,3 @@ export const MileageSummarySchema = Schema.Struct({
   years: Schema.Array(MileageYearSchema),
 })
 export type MileageSummary = typeof MileageSummarySchema.Type
-

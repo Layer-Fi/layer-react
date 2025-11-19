@@ -1,14 +1,16 @@
 import { useMemo } from 'react'
 import { getYear } from 'date-fns'
-import { useMileageSummary } from '@features/mileage/api/useMileageSummary'
-import { MileageDeductionChart } from '@components/MileageDeductionChart/MileageDeductionChart'
-import { Container } from '@components/Container/Container'
+
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
+import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { MileageDeductionChart } from '@components/MileageDeductionChart/MileageDeductionChart'
+import { useMileageSummary } from '@features/mileage/api/useMileageSummary'
+
 import './mileageTrackingStats.scss'
 
 const CLASS_NAME = 'Layer__MileageTrackingStats'
@@ -46,8 +48,6 @@ export const MileageTrackingStats = () => {
       }],
     }
   }, [selectedYearData, selectedYear])
-
-
 
   if (isLoading) {
     return (

@@ -1,20 +1,22 @@
-import { useMemo, type FunctionComponent } from 'react'
+import { type FunctionComponent, useMemo } from 'react'
 import { format } from 'date-fns'
 import {
-  ResponsiveContainer,
-  ComposedChart,
   Bar,
+  CartesianGrid,
+  Cell,
+  ComposedChart,
+  Rectangle,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Cell,
-  Rectangle,
 } from 'recharts'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
 import { centsToDollars } from '@models/Money'
-import './mileageDeductionChart.scss'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { VStack } from '@components/ui/Stack/Stack'
+
+import './mileageDeductionChart.scss'
 
 interface MileageMonth {
   month: number
@@ -46,7 +48,14 @@ export const MileageDeductionChart = ({
 }: MileageDeductionChartProps) => {
   const { getColor } = useLayerContext()
 
-  const chartData = useMemo(() => {
+  type ChartDataPoint = {
+    month: number
+    monthName: string
+    deduction: number
+    miles: number
+  }
+
+  const chartData = useMemo<ChartDataPoint[]>(() => {
     const yearData = data.years.find(y => y.year === selectedYear)
     if (!yearData) return []
 
@@ -65,7 +74,14 @@ export const MileageDeductionChart = ({
     return `$${(value / 100).toLocaleString()}`
   }
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  type TooltipProps = {
+    active?: boolean
+    payload?: Array<{
+      payload: ChartDataPoint
+    }>
+  }
+
+  const CustomTooltip = ({ active, payload }: TooltipProps) => {
     if (!active || !payload?.[0]) return null
 
     const data = payload[0].payload
@@ -110,14 +126,21 @@ export const MileageDeductionChart = ({
     )
   }
 
-  const handleBarClick = (data: any) => {
+  const handleBarClick = (data: ChartDataPoint) => {
     if (onMonthClick) {
       onMonthClick(selectedYear, data.month)
     }
   }
 
-  const CustomizedCursor: FunctionComponent<any> = ({ points, height }: any) => {
+  type CursorProps = {
+    points?: Array<{ x: number, y: number }>
+    height?: number
+  }
+
+  const CustomizedCursor: FunctionComponent<CursorProps> = ({ points, height }: CursorProps) => {
     const boxWidth = BAR_SIZE + (2 * CURSOR_MARGIN)
+
+    if (!points || points.length === 0) return null
 
     return (
       <Rectangle

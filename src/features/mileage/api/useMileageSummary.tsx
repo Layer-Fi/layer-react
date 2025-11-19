@@ -1,11 +1,12 @@
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
-import { get } from '@api/layer/authenticated_http'
-import useSWR, { type SWRResponse } from 'swr'
-import { Schema } from 'effect'
-import { MileageSummarySchema, type MileageSummary } from '@features/mileage/mileageSchemas'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useCallback } from 'react'
+import { Schema } from 'effect'
+import useSWR, { type SWRResponse } from 'swr'
+
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { get } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { type MileageSummary, MileageSummarySchema } from '@features/mileage/mileageSchemas'
 
 export const MILEAGE_SUMMARY_TAG_KEY = '#mileage-summary'
 
@@ -90,4 +91,3 @@ export const useMileageSummaryCacheActions = () => {
 
   return { forceReloadMileageSummary }
 }
-
