@@ -16,6 +16,7 @@ export type StackProps = PropsWithChildren<{
   pis?: Spacing
   pie?: Spacing
   fluid?: boolean
+  hidden?: boolean
   slot?: string
   className?: string
 }>
@@ -27,7 +28,8 @@ type InternalStackProps = StackProps & {
 const CLASS_NAME = 'Layer__Stack'
 
 const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
-  function Stack({
+  function Stack(
+{
     align,
     children,
     className,
@@ -42,6 +44,7 @@ const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
     pis,
     pie,
     fluid,
+    hidden,
     ...restProps
   },
   ref,
@@ -59,6 +62,7 @@ const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
       pis,
       pie,
       fluid,
+      hidden,
     })
 
     return (

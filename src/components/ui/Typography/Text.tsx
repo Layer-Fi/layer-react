@@ -20,7 +20,7 @@ export type TextStyleProps = {
   pbe?: Spacing
   pbs?: Spacing
   size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  status?: 'error'
+  status?: 'error' | 'success'
   variant?: 'placeholder' | 'subtle' | 'inherit'
   weight?: 'normal' | 'bold'
   className?: string

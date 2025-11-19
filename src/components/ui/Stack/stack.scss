@@ -5,6 +5,10 @@
     flex: 1;
   }
 
+  &[data-hidden='true'] {
+    visibility: hidden;
+  }
+
   $directions: row, column;
 
   @each $direction in $directions {

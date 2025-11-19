@@ -27,6 +27,10 @@
     color: var(--color-info-error);
   }
 
+  &[data-status='success'] {
+    color: var(--color-info-success);
+  }
+
   &[data-no-wrap] {
     white-space: nowrap;
   }

@@ -11,6 +11,10 @@ import {
 import { ProfitAndLossSummariesSummary } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesSummary'
 import { TransactionsToReview } from '@views/AccountingOverview/internal/TransactionsToReview'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
+import { calculatePercentageChange } from '@utils/percentageChange'
+import { format, sub } from 'date-fns'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
@@ -57,6 +61,16 @@ function Internal_ProfitAndLossSummaries({
     sidebarScope,
   } = useContext(ProfitAndLossContext)
 
+  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'month' })
+
+  const previousMonthStart = sub(startDate, { months: 1 })
+  const { data: previousData } = useProfitAndLossSummaries({
+    startYear: previousMonthStart.getFullYear(),
+    startMonth: previousMonthStart.getMonth() + 1,
+    endYear: previousMonthStart.getFullYear(),
+    endMonth: previousMonthStart.getMonth() + 1,
+  })
+
   const { revenueChartData, expensesChartData } = useMemo(
     () => ({
       revenueChartData: toMiniChartData({ scope: 'revenue', data }),
@@ -66,6 +80,33 @@ function Internal_ProfitAndLossSummaries({
   )
 
   const effectiveData = data ?? { income: { value: 0 }, netProfit: 0 }
+
+  const { revenuePercentChange, expensesPercentChange, netProfitPercentChange, comparisonMonth } = useMemo(() => {
+    const previousMonthData = previousData?.months?.[0]
+
+    if (!previousMonthData) {
+      return {
+        revenuePercentChange: null,
+        expensesPercentChange: null,
+        comparisonMonth: null,
+      }
+    }
+
+    const currentRevenue = effectiveData.income.value ?? 0
+    const previousRevenue = previousMonthData.income ?? 0
+    const currentExpenses = (effectiveData.income.value ?? 0) - effectiveData.netProfit
+    const previousExpenses = previousMonthData.totalExpenses ?? 0
+
+    const currentNetProfit = effectiveData.netProfit ?? 0
+    const previousNetProfit = previousMonthData.netProfit ?? 0
+
+    return {
+      revenuePercentChange: calculatePercentageChange(currentRevenue, previousRevenue),
+      expensesPercentChange: calculatePercentageChange(currentExpenses, previousExpenses),
+      netProfitPercentChange: calculatePercentageChange(currentNetProfit, previousNetProfit),
+      comparisonMonth: format(previousMonthStart, 'MMM'),
+    }
+  }, [previousData, effectiveData, previousMonthStart])
 
   const { unstable_AdditionalListItems = [] } = slots ?? {}
   const listItemCount = unstable_AdditionalListItems.length + 3
@@ -81,6 +122,8 @@ function Internal_ProfitAndLossSummaries({
             label={stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
             amount={effectiveData.income.value ?? 0}
             isLoading={isLoading}
+            percentChange={revenuePercentChange}
+            comparisonMonth={comparisonMonth ?? undefined}
             slots={{
               Chart: (
                 <ProfitAndLossSummariesMiniChart
@@ -101,6 +144,9 @@ function Internal_ProfitAndLossSummaries({
             label={stringOverrides?.expensesLabel || 'Expenses'}
             amount={(effectiveData?.income?.value ?? 0) - effectiveData.netProfit}
             isLoading={isLoading}
+            percentChange={expensesPercentChange}
+            comparisonMonth={comparisonMonth ?? undefined}
+            isExpense={true}
             slots={{
               Chart: (
                 <ProfitAndLossSummariesMiniChart
@@ -119,6 +165,8 @@ function Internal_ProfitAndLossSummaries({
             amount={data?.netProfit ?? 0}
             variants={variants}
             isLoading={isLoading}
+            percentChange={netProfitPercentChange ?? null}
+            comparisonMonth={comparisonMonth ?? undefined}
           />
         </ProfitAndLossSummariesListItem>
         {unstable_AdditionalListItems.map((item, index) => (
