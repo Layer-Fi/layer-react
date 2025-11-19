@@ -19,14 +19,14 @@ interface BankTransactionsCategorizeAllModalProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   mode: CategorizationMode
-  useMobileDrawer?: boolean
+  useCategorySelectDrawer?: boolean
 }
 
 export const BankTransactionsCategorizeAllModal = ({
   isOpen,
   onOpenChange,
   mode,
-  useMobileDrawer = false,
+  useCategorySelectDrawer = false,
 }: BankTransactionsCategorizeAllModalProps) => {
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
@@ -77,7 +77,7 @@ export const BankTransactionsCategorizeAllModal = ({
         <VStack gap='xs'>
           <VStack gap='3xs'>
             <Label htmlFor={categorySelectId}>Select category</Label>
-            {useMobileDrawer
+            {useCategorySelectDrawer
               ? (
                 <CategorySelectDrawerWithTrigger
                   aria-labelledby={categorySelectId}

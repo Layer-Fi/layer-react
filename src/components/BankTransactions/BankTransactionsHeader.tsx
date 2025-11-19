@@ -223,7 +223,7 @@ export const BankTransactionsHeader = ({
   }, [withUploadMenu, showCategorizationRules])
 
   const BulkActionsModuleSlot = useCallback(() => {
-    return <BankTransactionsBulkActions useMobileDrawer={listView && mobileComponent === 'mobileList'} />
+    return <BankTransactionsBulkActions useCategorySelectDrawer={listView && mobileComponent === 'mobileList'} />
   }, [listView, mobileComponent])
 
   return (

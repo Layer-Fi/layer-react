@@ -9,7 +9,7 @@ import { BankTransactionsCategorizeAllModal } from '@components/BankTransactions
 import { BankTransactionsConfirmAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsConfirmAllModal'
 import { BankTransactionsUncategorizeAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsUncategorizeAllModal'
 
-export const BankTransactionsBulkActions = ({ useMobileDrawer = false }: { useMobileDrawer?: boolean }) => {
+export const BankTransactionsBulkActions = ({ useCategorySelectDrawer = false }: { useCategorySelectDrawer?: boolean }) => {
   const { display } = useBankTransactionsContext()
   const [categorizeModalOpen, setCategorizeModalOpen] = useState(false)
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
@@ -32,7 +32,7 @@ export const BankTransactionsBulkActions = ({ useMobileDrawer = false }: { useMo
                 isOpen={categorizeModalOpen}
                 onOpenChange={setCategorizeModalOpen}
                 mode={CategorizationMode.Categorize}
-                useMobileDrawer={useMobileDrawer}
+                useCategorySelectDrawer={useCategorySelectDrawer}
               />
 
               <Button variant='solid' onClick={() => setConfirmModalOpen(true)}>
@@ -56,7 +56,7 @@ export const BankTransactionsBulkActions = ({ useMobileDrawer = false }: { useMo
                 isOpen={recategorizeModalOpen}
                 onOpenChange={setRecategorizeModalOpen}
                 mode={CategorizationMode.Recategorize}
-                useMobileDrawer={useMobileDrawer}
+                useCategorySelectDrawer={useCategorySelectDrawer}
               />
 
               <Button
