@@ -56,6 +56,7 @@ export const BankTransactionsBulkActions = ({ useMobileDrawer = false }: { useMo
                 isOpen={recategorizeModalOpen}
                 onOpenChange={setRecategorizeModalOpen}
                 mode={CategorizationMode.Recategorize}
+                useMobileDrawer={useMobileDrawer}
               />
 
               <Button
