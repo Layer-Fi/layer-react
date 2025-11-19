@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
 
 const CLASS_NAME = 'Layer__BookkeepingProfitAndLossSummariesContainer'
 

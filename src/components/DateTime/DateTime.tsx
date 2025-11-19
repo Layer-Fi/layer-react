@@ -1,7 +1,9 @@
-import { Text } from '@components/Typography/Text'
+import { format as formatTime, parseISO } from 'date-fns'
+
 import { DATE_FORMAT, TIME_FORMAT } from '@config/general'
-import { parseISO, format as formatTime } from 'date-fns'
-import { Span, TextStyleProps } from '@ui/Typography/Text'
+import { Span, type TextStyleProps } from '@ui/Typography/Text'
+import { Text } from '@components/Typography/Text'
+
 import './dateTime.scss'
 
 interface BaseDateTimeProps {

@@ -1,12 +1,13 @@
-import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
-import { BankTransaction } from '@internal-types/bank_transactions'
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { isTransferMatch } from '@utils/bankTransactions'
 import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
+import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 
 type BankTransactionsCategorizedSelectedValueProps = {
   bankTransaction: BankTransaction
   className?: string
+  showCategoryBadge?: boolean
   slotProps?: {
     Label?: {
       size?: 'sm' | 'md'
@@ -15,10 +16,18 @@ type BankTransactionsCategorizedSelectedValueProps = {
 }
 
 export const BankTransactionsCategorizedSelectedValue = (props: BankTransactionsCategorizedSelectedValueProps) => {
-  const { bankTransaction, className, slotProps } = props
+  const { bankTransaction, className, slotProps, showCategoryBadge } = props
 
   const baseSelectedValue = normalizeFromBankTransaction(bankTransaction)
-  return <BankTransactionsBaseSelectedValue {...baseSelectedValue} slotProps={slotProps} className={className} />
+  return (
+    <BankTransactionsBaseSelectedValue
+      {...baseSelectedValue}
+      slotProps={slotProps}
+      className={className}
+      showCategoryBadge={showCategoryBadge}
+      isCategorized
+    />
+  )
 }
 
 const normalizeFromBankTransaction = (bankTransaction: BankTransaction): BankTransactionsBaseSelectedValueProps => {

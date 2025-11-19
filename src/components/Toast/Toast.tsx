@@ -1,5 +1,7 @@
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import classNames from 'classnames'
+
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
 import './toast.scss'
 
 export interface ToastProps {

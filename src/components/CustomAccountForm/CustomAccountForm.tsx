@@ -1,14 +1,16 @@
-import { ErrorText } from '@components/Typography/ErrorText'
-import { Select } from '@components/Input/Select'
-import { InputGroup } from '@components/Input/InputGroup'
-import { Input } from '@components/Input/Input'
-import { SubmitButton } from '@components/Button/SubmitButton'
-import { Button, ButtonVariant } from '@components/Button/Button'
-import { useCallback, useEffect, FormEvent } from 'react'
+import { type FormEvent, useCallback, useEffect } from 'react'
+
 import { notEmpty } from '@utils/form'
-import { useCustomAccountForm } from '@components/CustomAccountForm/useCustomAccountForm'
-import { Spacer, HStack, VStack } from '@ui/Stack/Stack'
 import { type CustomAccount, CustomAccountSubtype } from '@hooks/customAccounts/types'
+import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { Button, ButtonVariant } from '@components/Button/Button'
+import { SubmitButton } from '@components/Button/SubmitButton'
+import { useCustomAccountForm } from '@components/CustomAccountForm/useCustomAccountForm'
+import { Input } from '@components/Input/Input'
+import { InputGroup } from '@components/Input/InputGroup'
+import { Select } from '@components/Input/Select'
+import { ErrorText } from '@components/Typography/ErrorText'
+
 import './customAccountForm.scss'
 
 const accountTypeOptions = [

@@ -1,16 +1,18 @@
-import { Button } from '@ui/Button/Button'
-import ChevronDown from '@icons/ChevronDown'
-import { InputGroup } from '@ui/Input/InputGroup'
+import { useCallback, useRef, useState } from 'react'
+import { type ZonedDateTime } from '@internationalized/date'
+import { format as formatTime } from 'date-fns'
 import { Dialog, DialogTrigger } from 'react-aria-components'
+
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import ChevronDown from '@icons/ChevronDown'
+import { Button } from '@ui/Button/Button'
+import { Input } from '@ui/Input/Input'
+import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { MonthCalendar } from '@components/MonthCalendar/MonthCalendar'
-import { useCallback, useRef, useState } from 'react'
-import { type ZonedDateTime } from '@internationalized/date'
-import { Input } from '@ui/Input/Input'
-import { format as formatTime } from 'date-fns'
 import { ResponsivePopover } from '@components/ResponsivePopover/ResponsivePopover'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+
 import './monthPicker.scss'
 
 type MonthPickerProps = {

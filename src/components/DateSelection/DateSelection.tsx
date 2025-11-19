@@ -1,8 +1,10 @@
+import classNames from 'classnames'
+
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { HStack } from '@ui/Stack/Stack'
 import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
-import classNames from 'classnames'
 import { GlobalDatePicker } from '@components/GlobalDatePicker/GlobalDatePicker'
+
 import './dateSelection.scss'
 
 export const DateSelection = () => {

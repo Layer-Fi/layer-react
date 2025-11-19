@@ -1,27 +1,32 @@
-import { Button } from '@ui/Button/Button'
-import { useMemo, useState, useCallback } from 'react'
-import { useListTrips } from '@features/trips/api/useListTrips'
-import { type TripEncoded, type TripPurpose } from '@schemas/trip'
-import { formatDate } from '@utils/format'
-import type { ColumnConfig } from '@components/DataTable/DataTable'
-import { PaginatedTable } from '@components/PaginatedDataTable/PaginatedDataTable'
-import { Span } from '@ui/Typography/Text'
-import ChevronRightFill from '@icons/ChevronRightFill'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Car, Plus } from 'lucide-react'
-import { DataTableHeader } from '@components/DataTable/DataTableHeader'
-import { Container } from '@components/Container/Container'
+
+import { type Trip, type TripPurpose } from '@schemas/trip'
+import { type Vehicle } from '@schemas/vehicle'
+import { formatCalendarDate } from '@utils/time/timeUtils'
+import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
+import ChevronRightFill from '@icons/ChevronRightFill'
+import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+import { Container } from '@components/Container/Container'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import type { ColumnConfig } from '@components/DataTable/DataTable'
+import { DataTableHeader } from '@components/DataTable/DataTableHeader'
+import { PaginatedTable } from '@components/PaginatedDataTable/PaginatedDataTable'
 import { TripForm } from '@components/Trips/TripForm/TripForm'
-import { VStack, HStack } from '@ui/Stack/Stack'
-import { formatDistance, getPurposeLabel } from './utils'
-import './tripsTable.scss'
-import { getVehicleDisplayName } from '@features/vehicles/util'
-import { type VehicleEncoded } from '@schemas/vehicle'
-import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { useListTrips } from '@features/trips/api/useListTrips'
+import { TripPurposeFilterValue, TripPurposeToggle } from '@features/trips/components/TripPurposeToggle'
 import { VehicleSelector } from '@features/vehicles/components/VehicleSelector'
-import { TripPurposeToggle, TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
+import { getVehicleDisplayName } from '@features/vehicles/util'
+
+import './tripsTable.scss'
+
+import { TripsTableHeaderMenu } from './TripsTableHeaderMenu'
+import { formatDistance, getPurposeLabel } from './utils'
 
 const COMPONENT_NAME = 'TripsTable'
 
@@ -35,11 +40,11 @@ enum TripColumns {
   Expand = 'Expand',
 }
 
-const getColumnConfig = (onSelectTrip: (trip: TripEncoded) => void): ColumnConfig<TripEncoded, TripColumns> => ({
+const getColumnConfig = (onSelectTrip: (trip: Trip) => void): ColumnConfig<Trip, TripColumns> => ({
   [TripColumns.TripDate]: {
     id: TripColumns.TripDate,
     header: 'Date',
-    cell: row => formatDate(new Date(row.trip_date)),
+    cell: row => formatCalendarDate(row.tripDate),
   },
   [TripColumns.Vehicle]: {
     id: TripColumns.Vehicle,
@@ -60,25 +65,31 @@ const getColumnConfig = (onSelectTrip: (trip: TripEncoded) => void): ColumnConfi
   [TripColumns.Address]: {
     id: TripColumns.Address,
     header: 'Address',
-    cell: row => (
-      <VStack gap='3xs' overflow='auto'>
-        <Span ellipsis size='sm' withTooltip>
-          <strong>Start:</strong>
-          {' '}
-          {row.start_address || '—'}
-        </Span>
-        <Span ellipsis size='sm' withTooltip>
-          <strong>End:</strong>
-          {' '}
-          {row.end_address || '—'}
-        </Span>
-      </VStack>
-    ),
+    cell: (row) => {
+      return (
+        <VStack gap='3xs' overflow='auto'>
+          {row.startAddress && (
+            <Span ellipsis size='sm' withTooltip>
+              <strong>Start:</strong>
+              {' '}
+              {row.startAddress}
+            </Span>
+          )}
+          {row.endAddress && (
+            <Span ellipsis size='sm' withTooltip>
+              <strong>End:</strong>
+              {' '}
+              {row.endAddress}
+            </Span>
+          )}
+        </VStack>
+      )
+    },
   },
   [TripColumns.Description]: {
     id: TripColumns.Description,
     header: 'Description',
-    cell: row => <Span ellipsis withTooltip>{row.description || '—'}</Span>,
+    cell: row => <Span ellipsis withTooltip>{row.description}</Span>,
   },
   [TripColumns.Expand]: {
     id: TripColumns.Expand,
@@ -92,11 +103,16 @@ const getColumnConfig = (onSelectTrip: (trip: TripEncoded) => void): ColumnConfi
 
 export const TripsTable = () => {
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
-  const [selectedTrip, setSelectedTrip] = useState<TripEncoded | null>(null)
-  const [selectedVehicle, setSelectedVehicle] = useState<VehicleEncoded | null>(null)
-  const [purposeFilter, setPurposeFilter] = useState<TripPurposeFilterValue>(TripPurposeFilterValue.All)
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
 
-  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
+  const { tableFilters, setTableFilters } = useTripsTableFilters()
+  const { query, selectedVehicle, purposeFilter } = tableFilters
+
+  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: query })
+
+  useEffect(() => {
+    setTableFilters({ query: searchQuery })
+  }, [searchQuery, setTableFilters])
 
   const filterParams = useMemo(() => {
     const params: { query?: string, vehicleId?: string, purpose?: string } = {}
@@ -121,7 +137,7 @@ export const TripsTable = () => {
   const trips = useMemo(() => data?.flatMap(({ data }) => data), [data])
 
   const paginationMeta = data?.[data.length - 1]?.meta.pagination
-  const hasMore = paginationMeta?.has_more
+  const hasMore = paginationMeta?.hasMore
 
   const fetchMore = useCallback(() => {
     if (hasMore) {
@@ -129,7 +145,7 @@ export const TripsTable = () => {
     }
   }, [hasMore, setSize, size])
 
-  const onSelectTrip = useCallback((trip: TripEncoded) => {
+  const onSelectTrip = useCallback((trip: Trip) => {
     setSelectedTrip(trip)
     setIsTripDrawerOpen(true)
   }, [])
@@ -137,12 +153,6 @@ export const TripsTable = () => {
   const onRecordTrip = useCallback(() => {
     setSelectedTrip(null)
     setIsTripDrawerOpen(true)
-  }, [])
-
-  const onTripSuccess = useCallback((trip: TripEncoded) => {
-    setIsTripDrawerOpen(false)
-    setSelectedTrip(null)
-    void trip
   }, [])
 
   const paginationProps = useMemo(() => {
@@ -153,29 +163,40 @@ export const TripsTable = () => {
     }
   }, [fetchMore, hasMore])
 
+  const handlePurposeFilterChange = useCallback((newPurposeFilter: TripPurposeFilterValue) => {
+    setTableFilters({ purposeFilter: newPurposeFilter })
+  }, [setTableFilters])
+
+  const handleVehicleChange = useCallback((newVehicle: Vehicle | null) => {
+    setTableFilters({ selectedVehicle: newVehicle })
+  }, [setTableFilters])
+
   const PurposeToggle = useCallback(() => (
     <TripPurposeToggle
       selected={purposeFilter}
-      onChange={setPurposeFilter}
+      onChange={handlePurposeFilterChange}
     />
-  ), [purposeFilter, setPurposeFilter])
+  ), [purposeFilter, handlePurposeFilterChange])
 
   const VehicleFilter = useCallback(() => (
     <VehicleSelector
       selectedVehicle={selectedVehicle}
-      onSelectedVehicleChange={setSelectedVehicle}
+      onSelectedVehicleChange={handleVehicleChange}
       placeholder='All vehicles'
       showLabel={false}
       className='Layer__TripsTable__VehicleSelector'
       inline
     />
-  ), [selectedVehicle, setSelectedVehicle])
+  ), [selectedVehicle, handleVehicleChange])
 
-  const RecordTripButton = useCallback(() => (
-    <Button onPress={onRecordTrip}>
-      Record Trip
-      <Plus size={16} />
-    </Button>
+  const HeaderActions = useCallback(() => (
+    <HStack gap='xs'>
+      <Button onPress={onRecordTrip}>
+        Record Trip
+        <Plus size={16} />
+      </Button>
+      <TripsTableHeaderMenu />
+    </HStack>
   ), [onRecordTrip])
 
   const TripsTableEmptyState = () => (
@@ -212,7 +233,7 @@ export const TripsTable = () => {
         <DataTableHeader
           name='Trips'
           slots={{
-            HeaderActions: RecordTripButton,
+            HeaderActions,
             HeaderFilters,
           }}
           slotProps={{
@@ -253,8 +274,8 @@ export const TripsTable = () => {
             </VStack>
             <TripForm
               trip={selectedTrip ?? undefined}
-              onSuccess={(trip: TripEncoded) => {
-                onTripSuccess(trip)
+              onSuccess={() => {
+                setSelectedTrip(null)
                 close()
               }}
             />

@@ -1,4 +1,4 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
 
 export const VehicleSchema = Schema.Struct({
   id: Schema.UUID,
@@ -46,3 +46,29 @@ export const VehicleSchema = Schema.Struct({
 
 export type Vehicle = typeof VehicleSchema.Type
 export type VehicleEncoded = typeof VehicleSchema.Encoded
+
+export const VehicleFormSchema = Schema.Struct({
+  make: Schema.String,
+  model: Schema.String,
+  year: Schema.Number,
+  licensePlate: Schema.String,
+  vin: Schema.String,
+  description: Schema.String,
+})
+
+export type VehicleForm = typeof VehicleFormSchema.Type
+
+export const UpsertVehicleSchema = Schema.Struct({
+  make: Schema.String,
+  model: Schema.String,
+  year: Schema.Number,
+  licensePlate: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('license_plate'),
+  ),
+  vin: Schema.NullishOr(Schema.String),
+  description: Schema.NullishOr(Schema.String),
+})
+
+export type UpsertVehicle = typeof UpsertVehicleSchema.Type
+export type UpsertVehicleEncoded = typeof UpsertVehicleSchema.Encoded

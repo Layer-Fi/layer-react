@@ -1,56 +1,58 @@
-import { ErrorText } from '@components/Typography/ErrorText'
-import { Text, TextSize } from '@components/Typography/Text'
-import { Input } from '@components/Input/Input'
-import { Button } from '@ui/Button/Button'
-import { TextButton } from '@components/Button/TextButton'
 import {
   forwardRef,
   useImperativeHandle,
-  useState,
   useRef,
+  useState,
 } from 'react'
+import classNames from 'classnames'
+
+import {
+  type BankTransaction,
+  type SuggestedMatch,
+} from '@internal-types/bank_transactions'
+import { type Split } from '@internal-types/bank_transactions'
+import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { centsToDollars as formatMoney } from '@models/Money'
+import {
+  hasMatch,
+} from '@utils/bankTransactions'
+import { getBankTransactionFirstSuggestedMatch, getBankTransactionMatchAsSuggestedMatch } from '@utils/bankTransactions'
+import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
+import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
+import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '@icons/AlertCircle'
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
-import { centsToDollars as formatMoney } from '@models/Money'
-import {
-  BankTransaction,
-  SuggestedMatch,
-} from '@internal-types/bank_transactions'
-import {
-  hasMatch,
-} from '@utils/bankTransactions'
-import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { Tag } from '@features/tags/tagSchemas'
-import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
-import { CustomerVendorSelector } from '@features/customerVendor/components/CustomerVendorSelector'
-import { CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
-import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
-import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
-import { useSetMetadataOnBankTransaction } from '@features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
-import { MatchForm } from '@components/MatchForm/MatchForm'
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
-import { APIErrorNotifications } from '@components/ExpandedBankTransactionRow/APIErrorNotifications'
-import classNames from 'classnames'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
-import { useBankTransactionTagVisibility } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
-import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { type Split } from '@internal-types/bank_transactions'
-import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { getBankTransactionFirstSuggestedMatch, getBankTransactionMatchAsSuggestedMatch } from '@utils/bankTransactions'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
-import { AmountInput } from '@components/Input/AmountInput'
+import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
-import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
-import './expandedBankTransactionRow.scss'
+import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
+import { TextButton } from '@components/Button/TextButton'
+import { APIErrorNotifications } from '@components/ExpandedBankTransactionRow/APIErrorNotifications'
+import { AmountInput } from '@components/Input/AmountInput'
+import { Input } from '@components/Input/Input'
+import { MatchForm } from '@components/MatchForm/MatchForm'
 import { Separator } from '@components/Separator/Separator'
+import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
+import { ErrorText } from '@components/Typography/ErrorText'
+import { Text, TextSize } from '@components/Typography/Text'
+import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
+import { useSetMetadataOnBankTransaction } from '@features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
+import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
+import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
+import { useBankTransactionTagVisibility } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
+import { CustomerVendorSelector } from '@features/customerVendor/components/CustomerVendorSelector'
+import { type CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
+import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
+import { type Tag } from '@features/tags/tagSchemas'
+
+import './expandedBankTransactionRow.scss'
 
 export type ExpandedRowState = {
   splits: Split[]
@@ -90,10 +92,10 @@ type ExpandedBankTransactionRowProps = {
   showReceiptUploads: boolean
   showTooltips: boolean
 
-  showLeftPadding?: boolean
+  variant?: 'list' | 'row'
 }
 
-const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactionRowProps>(
+export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactionRowProps>(
   (
     {
       bankTransaction,
@@ -105,7 +107,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       containerWidth,
       showDescriptions,
       showReceiptUploads,
-      showLeftPadding = true,
+      variant = 'row',
     },
     ref,
   ) => {
@@ -282,7 +284,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
           <>
             <Separator />
             <span className={`${className}__wrapper`} ref={bodyRef}>
-              <VStack pis={showLeftPadding ? 'md' : undefined} pbs='sm'>
+              <VStack pis={variant === 'row' ? 'md' : undefined} pbs='sm'>
                 {categorizationEnabled
                   && (
                     <HStack pi='md' pbe='md' pbs='3xs'>
@@ -513,5 +515,3 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
 )
 
 ExpandedBankTransactionRow.displayName = 'ExpandedBankTransactionRow'
-
-export { ExpandedBankTransactionRow }

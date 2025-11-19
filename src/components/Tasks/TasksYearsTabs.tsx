@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
-import { Tabs } from '@components/Tabs/Tabs'
-import { useBookkeepingYearsStatus } from '@hooks/bookkeeping/periods/useBookkeepingYearsStatus'
-import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
-import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { getMonth } from 'date-fns'
+
 import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useBookkeepingYearsStatus } from '@hooks/bookkeeping/periods/useBookkeepingYearsStatus'
+import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { Tabs } from '@components/Tabs/Tabs'
+import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
 
 export const TasksYearsTabs = () => {
   const { date } = useGlobalDate()

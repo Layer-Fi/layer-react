@@ -1,14 +1,16 @@
-import {
-  useReactTable,
-  getCoreRowModel,
-  type PaginationState,
-  getPaginationRowModel,
-  createColumnHelper,
-} from '@tanstack/react-table'
-import { DataTable, type Column, type DataTableProps } from '@components/DataTable/DataTable'
 import { useCallback, useMemo, useState } from 'react'
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  getPaginationRowModel,
+  type PaginationState,
+  useReactTable,
+} from '@tanstack/react-table'
+
 import { VStack } from '@ui/Stack/Stack'
+import { type Column, DataTable, type DataTableProps } from '@components/DataTable/DataTable'
 import { Pagination } from '@components/Pagination/Pagination'
+
 import './paginatedDataTable.scss'
 
 interface PaginationProps {

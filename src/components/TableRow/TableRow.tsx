@@ -1,5 +1,6 @@
-import { TableRowProps } from '@internal-types/table'
 import classNames from 'classnames'
+
+import { type TableRowProps } from '@internal-types/table'
 
 export const TableRow: React.FC<TableRowProps> = ({
   rowKey,

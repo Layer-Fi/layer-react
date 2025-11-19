@@ -1,9 +1,10 @@
 import useSWR from 'swr'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+import { type BankAccount } from '@internal-types/linked_accounts'
+import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { get } from '@api/layer/authenticated_http'
-import { BankAccount } from '@internal-types/linked_accounts'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const BANK_ACCOUNTS_TAG_KEY = '#bank-accounts'
 

@@ -1,6 +1,6 @@
-import { ExpandCollapseButton } from '@components/Button/ExpandCollapseButton'
+import { type View } from '@internal-types/general'
 import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
-import { View } from '@internal-types/general'
+import { ExpandCollapseButton } from '@components/Button/ExpandCollapseButton'
 
 export interface BalanceSheetExpandAllButtonProps {
   view?: View

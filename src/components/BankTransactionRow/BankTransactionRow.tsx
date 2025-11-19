@@ -1,44 +1,46 @@
-import { TextSize, Text } from '@components/Typography/Text'
-import { RetryButton } from '@components/Button/RetryButton'
-import { IconButton } from '@components/Button/IconButton'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import classNames from 'classnames'
+import { format as formatTime, parseISO } from 'date-fns'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type CategorizationEncoded, isSplitCategorizationEncoded } from '@schemas/categorization'
+import {
+  isCredit,
+} from '@utils/bankTransactions'
+import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
+import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
+import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '@icons/AlertCircle'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import FileIcon from '@icons/File'
-import { BankTransaction } from '@internal-types/bank_transactions'
-import {
-  isCredit,
-} from '@utils/bankTransactions'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import {
-  BankTransactionCTAStringOverrides,
-} from '@components/BankTransactions/BankTransactions'
-import { isCategorized } from '@components/BankTransactions/utils'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
-import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { SaveHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { IconBox } from '@components/IconBox/IconBox'
-import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
-import { VStack } from '@ui/Stack/Stack'
-import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
-import { Span } from '@ui/Typography/Text'
+import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { VStack } from '@ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isSplitCategorizationEncoded, type CategorizationEncoded } from '@schemas/categorization'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
-import { HStack } from '@ui/Stack/Stack'
+import {
+  type BankTransactionCTAStringOverrides,
+} from '@components/BankTransactions/BankTransactions'
+import { isCategorized } from '@components/BankTransactions/utils'
+import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
-import { MoneySpan } from '@components/ui/Typography/MoneySpan'
+import { IconButton } from '@components/Button/IconButton'
+import { RetryButton } from '@components/Button/RetryButton'
+import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
+import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { type SaveHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { IconBox } from '@components/IconBox/IconBox'
+import { Text, TextSize } from '@components/Typography/Text'
+
 import './bankTransactionRow.scss'
-import { AnimatedContent } from '@components/ui/AnimatedContent/AnimatedContent'
 
 type Props = {
   index: number
@@ -296,7 +298,7 @@ export const BankTransactionRow = ({
                     </SubmitButton>
                   )}
                 {!categorizationEnabled && !categorized && (
-                  <VStack>
+                  <VStack pis='lg' fluid>
                     <BankTransactionsProcessingInfo />
                   </VStack>
                 )}
@@ -316,7 +318,7 @@ export const BankTransactionRow = ({
             )
             : (
               <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
-                <AnimatedContent
+                <AnimatedPresenceDiv
                   variant='fade'
                   isOpen={categorizationEnabled && !categorized}
                   className='Layer__BankTransactionRow__CategoryComboBoxMotionContent'
@@ -332,7 +334,7 @@ export const BankTransactionRow = ({
                     }}
                     isLoading={bankTransaction.processing}
                   />
-                </AnimatedContent>
+                </AnimatedPresenceDiv>
                 {categorized
                   && (
                     <BankTransactionsCategorizedSelectedValue
@@ -396,7 +398,7 @@ export const BankTransactionRow = ({
       </tr>
       <tr>
         <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
-          <AnimatedContent variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+          <AnimatedPresenceDiv variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
             <ExpandedBankTransactionRow
               ref={expandedRowRef}
               bankTransaction={bankTransaction}
@@ -408,7 +410,7 @@ export const BankTransactionRow = ({
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
             />
-          </AnimatedContent>
+          </AnimatedPresenceDiv>
         </td>
       </tr>
     </>

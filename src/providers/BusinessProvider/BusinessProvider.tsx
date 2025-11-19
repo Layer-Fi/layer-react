@@ -1,26 +1,27 @@
-import { PropsWithChildren, useReducer, useEffect, Reducer, useMemo, useCallback } from 'react'
-import { Layer } from '@api/layer'
-import { ToastProps, ToastsContainer } from '@components/Toast/Toast'
-import { LayerContext } from '@contexts/LayerContext/LayerContext'
-import { useDataSync } from '@hooks/useDataSync/useDataSync'
-import { errorHandler, LayerError } from '@models/ErrorHandler'
-import {
-  ColorConfig,
-  ColorsPaletteOption,
-  LayerThemeConfig,
-  OnboardingStep,
-  type LayerContextAction,
-  type LayerContextValues,
-  LayerContextActionName as Action,
-} from '@internal-types/layer_context'
-import { buildColorsPalette } from '@utils/colors'
-import { LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
+import { type PropsWithChildren, type Reducer, useCallback, useEffect, useMemo, useReducer } from 'react'
 import useSWR from 'swr'
-import { useAuth } from '@hooks/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+
+import {
+  type ColorConfig,
+  type ColorsPaletteOption,
+  type LayerContextAction,
+  LayerContextActionName as Action,
+  type LayerContextValues,
+  type LayerThemeConfig,
+  type OnboardingStep,
+} from '@internal-types/layer_context'
+import { errorHandler, type LayerError } from '@models/ErrorHandler'
+import { buildColorsPalette } from '@utils/colors'
 import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
+import { Layer } from '@api/layer'
 import { useAccountingConfiguration } from '@hooks/useAccountingConfiguration/useAccountingConfiguration'
+import { useAuth } from '@hooks/useAuth'
+import { useDataSync } from '@hooks/useDataSync/useDataSync'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
+import { LayerContext } from '@contexts/LayerContext/LayerContext'
+import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,

@@ -1,5 +1,6 @@
-import { createContext, useState, ReactNode, useCallback } from 'react'
-import { TableContextProps } from '@internal-types/table'
+import { createContext, type ReactNode, useCallback, useState } from 'react'
+
+import { type TableContextProps } from '@internal-types/table'
 
 const defaultValue: TableContextProps = {
   expandedRows: [],

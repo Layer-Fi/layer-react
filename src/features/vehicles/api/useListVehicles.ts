@@ -1,15 +1,24 @@
+import { Schema } from 'effect'
 import useSWR, { type SWRResponse } from 'swr'
+
+import { VehicleSchema } from '@schemas/vehicle'
+import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { get } from '@api/layer/authenticated_http'
-import { type VehicleEncoded } from '@schemas/vehicle'
 
 type ListVehiclesParams = {
   businessId: string
 }
 
+const ListVehiclesResponseSchema = Schema.Struct({
+  data: Schema.Array(VehicleSchema),
+})
+
+type ListVehiclesResponse = typeof ListVehiclesResponseSchema.Type
+type ListVehiclesResponseEncoded = typeof ListVehiclesResponseSchema.Encoded
+
 const listVehicles = get<
-  { data: ReadonlyArray<VehicleEncoded> },
+  ListVehiclesResponseEncoded,
   ListVehiclesParams
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/mileage/vehicles`
@@ -40,9 +49,9 @@ function buildKey({
 }
 
 class ListVehiclesSWRResponse {
-  private swrResponse: SWRResponse<{ data: ReadonlyArray<VehicleEncoded> }>
+  private swrResponse: SWRResponse<ListVehiclesResponse>
 
-  constructor(swrResponse: SWRResponse<{ data: ReadonlyArray<VehicleEncoded> }>) {
+  constructor(swrResponse: SWRResponse<ListVehiclesResponse>) {
     this.swrResponse = swrResponse
   }
 
@@ -80,7 +89,7 @@ export function useListVehicles() {
           businessId,
         },
       },
-    )(),
+    )().then(Schema.decodeUnknownPromise(ListVehiclesResponseSchema)),
   )
 
   return new ListVehiclesSWRResponse(response)

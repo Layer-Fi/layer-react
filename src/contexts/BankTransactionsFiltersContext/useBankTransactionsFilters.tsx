@@ -1,10 +1,11 @@
 import { useCallback, useMemo, useState } from 'react'
 import { endOfMonth, startOfMonth } from 'date-fns'
+
+import { type DisplayState } from '@internal-types/bank_transactions'
 import {
-  BankTransactionFilters,
+  type BankTransactionFilters,
   BankTransactionsDateFilterMode,
 } from '@hooks/useBankTransactions/types'
-import { DisplayState } from '@internal-types/bank_transactions'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type useBankTransactionsFiltersParams = {

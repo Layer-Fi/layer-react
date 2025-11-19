@@ -1,4 +1,4 @@
-import { forwardRef, type ComponentProps, type PropsWithChildren } from 'react'
+import { type ComponentProps, forwardRef, type PropsWithChildren } from 'react'
 import {
   Dialog as ReactAriaDialog,
   type DialogProps,
@@ -6,9 +6,11 @@ import {
   ModalOverlay as ReactAriaModalOverlay,
   type ModalOverlayProps,
 } from 'react-aria-components'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
+
 import './modal.scss'
-import { AnimatedContent } from '@components/ui/AnimatedContent/AnimatedContent'
 
 type ModalSize = 'md' | 'lg' | 'xl'
 type ModalVariant = 'center' | 'drawer' | 'mobile-drawer' | 'mobile-popover'
@@ -152,22 +154,22 @@ export function Drawer({
 
   const wrappedModalContent = isMobileDrawer
     ? (
-      <AnimatedContent
+      <AnimatedPresenceDiv
         variant='slideUp'
         isOpen={isOpen}
         className='Layer__ModalContentSlideUpMotionContent'
         slotProps={{ AnimatePresence: { initial: true } }}
       >
         {modalContent}
-      </AnimatedContent>
+      </AnimatedPresenceDiv>
     )
     : modalContent
 
   const overlayContent = shouldUseFadeOverlay
     ? (
-      <AnimatedContent variant='fade' isOpen={isOpen} className='Layer__ModalContentFadeMotionContent'>
+      <AnimatedPresenceDiv variant='fade' isOpen={isOpen} className='Layer__ModalContentFadeMotionContent'>
         {wrappedModalContent}
-      </AnimatedContent>
+      </AnimatedPresenceDiv>
     )
     : wrappedModalContent
 

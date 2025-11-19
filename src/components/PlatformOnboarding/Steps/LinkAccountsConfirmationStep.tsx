@@ -1,16 +1,18 @@
-import { Heading } from '@ui/Typography/Heading'
-import { Button, ButtonVariant } from '@components/Button/Button'
 import { useContext } from 'react'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
-import { ConditionalList } from '@components/utility/ConditionalList'
-import { LinkedAccountToConfirm } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
 import { useForm } from '@tanstack/react-form'
+
 import { getAccountsNeedingConfirmation } from '@hooks/useLinkedAccounts/useLinkedAccounts'
-import { useWizard } from '@components/Wizard/Wizard'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { P } from '@ui/Typography/Text'
+import { Button, ButtonVariant } from '@components/Button/Button'
+import { LinkedAccountToConfirm } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
 import { useConfirmAndExcludeMultiple } from '@components/LinkedAccounts/ConfirmationModal/useConfirmAndExcludeMultiple'
 import { LinkAccountsListContainer } from '@components/PlatformOnboarding/Container/LinkAccountsListContainer'
+import { ConditionalList } from '@components/utility/ConditionalList'
+import { useWizard } from '@components/Wizard/Wizard'
+
 import './linkAccountsConfirmationStep.scss'
 
 function getSubmitButtonText({

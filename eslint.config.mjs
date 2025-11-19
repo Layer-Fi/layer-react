@@ -7,6 +7,7 @@ import stylisticPlugin from '@stylistic/eslint-plugin'
 import tsEslint from 'typescript-eslint'
 import unusedImportsPlugin from 'eslint-plugin-unused-imports'
 import pluginImport from 'eslint-plugin-import'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 export default tsEslint.config(
   {
@@ -114,6 +115,71 @@ export default tsEslint.config(
         ],
         },
       ],
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': ['error', {
+        prefer: 'type-imports',
+        fixStyle: 'inline-type-imports',
+      }],
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx,js,jsx}'],
+    plugins: { 'simple-import-sort': simpleImportSort },
+    rules: {
+      'simple-import-sort/imports': ['error', {
+        groups: [
+          [
+            // React + react-dom
+            '^(?:type:)?react(?:$|/)',
+            '^(?:type:)?react-dom(?:$|/)',
+
+            // Node + external dependencies
+            '^(?:type:)?node:',
+            '^(?:type:)?@?\\w',
+          ],
+          [
+            // Domain & data contracts
+            '^(?:type:)?@internal-types/',
+            '^(?:type:)?@schemas/',
+            '^(?:type:)?@models/',
+
+            // App/environment configuration
+            '^(?:type:)?@config/',
+
+            // Cross-cutting helpers (used by api, hooks, components, etc.)
+            '^(?:type:)?@utils/',
+
+            // Data layer: API definitions, then hooks that consume them
+            '^(?:type:)?@api/',
+            '^(?:type:)?@hooks/',
+
+            // App wiring & global state (can depend on hooks/api)
+            '^(?:type:)?@providers/',
+            '^(?:type:)?@contexts/',
+
+            // Design system primitives
+            '^(?:type:)?@icons/',
+            '^(?:type:)?@ui/',
+
+            // Reusable and feature-level UI
+            '^(?:type:)?@components/',
+            '^(?:type:)?@features/',
+            '^(?:type:)?@views/',
+
+            // Static resources
+            '^(?:type:)?@assets/',
+          ],
+          [
+            // Styles
+            '.*\\.s?css$',
+          ],
+        ],
+      }],
+      'simple-import-sort/exports': 'error',
     },
   },
 )

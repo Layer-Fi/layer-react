@@ -1,30 +1,31 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { TagFilterInput } from '@internal-types/tags'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
 import {
-  CategoryUpdate,
-} from '@internal-types/categories'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import {
+  type BankTransaction,
   DisplayState,
-  BankTransaction,
 } from '@internal-types/bank_transactions'
+import {
+  type CategoryUpdate,
+} from '@internal-types/categories'
 import { Direction } from '@internal-types/general'
 import { DataModel } from '@internal-types/general'
-import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { type TagFilterInput } from '@internal-types/tags'
+import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import {
-  BankTransactionFilters,
+  type BankTransactionFilters,
 } from '@hooks/useBankTransactions/types'
+import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/useBankTransactions/useBankTransactions'
+import { useCategorizeBankTransaction } from '@hooks/useBankTransactions/useCategorizeBankTransaction'
+import { useMatchBankTransaction } from '@hooks/useBankTransactions/useMatchBankTransaction'
 import {
   applyAccountFilter,
   applyAmountFilter,
   applyCategorizationStatusFilter,
 } from '@hooks/useBankTransactions/utils'
-import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/useBankTransactions/useBankTransactions'
-import { useCategorizeBankTransaction } from '@hooks/useBankTransactions/useCategorizeBankTransaction'
-import { useMatchBankTransaction } from '@hooks/useBankTransactions/useMatchBankTransaction'
-import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000

@@ -1,6 +1,7 @@
-import { useMemo, useCallback } from 'react'
-import { useSelectedIds, useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { BankTransaction } from '@internal-types/bank_transactions'
+import { useCallback, useMemo } from 'react'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
+import { useBulkSelectionActions, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 
 export const useBankTransactionsTableCheckboxState = ({ bankTransactions }: { bankTransactions: BankTransaction[] | undefined }) => {
   const { selectedIds } = useSelectedIds()

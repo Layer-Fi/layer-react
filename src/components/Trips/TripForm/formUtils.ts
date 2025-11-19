@@ -1,40 +1,27 @@
-import { type TripEncoded, TripPurpose } from '@schemas/trip'
-import { type VehicleEncoded } from '@schemas/vehicle'
-import { BigDecimal as BD, Option } from 'effect'
-import { getLocalTimeZone, fromDate, toCalendarDate, today, type ZonedDateTime } from '@internationalized/date'
-import { BIG_DECIMAL_ZERO, formatBigDecimalToString } from '@utils/bigDecimalUtils'
+import { getLocalTimeZone, today } from '@internationalized/date'
+import { BigDecimal as BD } from 'effect'
 
-export type TripForm = {
-  vehicle: VehicleEncoded | null
-  tripDate: ZonedDateTime | null
-  distance: BD.BigDecimal
-  purpose: TripPurpose
-  startAddress: string
-  endAddress: string
-  description: string
-}
+import { type Trip, type TripForm, TripPurpose } from '@schemas/trip'
+import { BIG_DECIMAL_ZERO } from '@utils/bigDecimalUtils'
 
-export const getTripFormDefaultValues = (trip?: TripEncoded): TripForm => {
+export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
   if (trip) {
-    const distanceOption = BD.fromString(trip.distance)
-    const distance = Option.getOrElse(distanceOption, () => BIG_DECIMAL_ZERO)
-
     return {
       vehicle: trip.vehicle,
-      tripDate: fromDate(new Date(trip.trip_date), 'UTC'),
-      distance,
-      purpose: trip.purpose as TripPurpose,
-      startAddress: trip.start_address || '',
-      endAddress: trip.end_address || '',
+      tripDate: trip.tripDate,
+      distance: trip.distance,
+      purpose: trip.purpose,
+      startAddress: trip.startAddress || '',
+      endAddress: trip.endAddress || '',
       description: trip.description || '',
     }
   }
 
   return {
     vehicle: null,
-    tripDate: fromDate(new Date(), getLocalTimeZone()),
+    tripDate: today(getLocalTimeZone()),
     distance: BIG_DECIMAL_ZERO,
-    purpose: TripPurpose.Unreviewed,
+    purpose: TripPurpose.Business,
     startAddress: '',
     endAddress: '',
     description: '',
@@ -54,7 +41,7 @@ export const validateTripForm = ({ trip }: { trip: TripForm }) => {
     errors.push({ tripDate: 'Trip date is a required field.' })
   }
 
-  if (tripDate && toCalendarDate(tripDate).compare(today(getLocalTimeZone())) > 0) {
+  if (tripDate && tripDate.compare(today(getLocalTimeZone())) > 0) {
     errors.push({ tripDate: 'Trip date cannot be in the future.' })
   }
 
@@ -69,22 +56,14 @@ export const validateTripForm = ({ trip }: { trip: TripForm }) => {
   return errors.length > 0 ? errors : null
 }
 
-export type TripFormParams = {
-  vehicle_id: string
-  trip_date: string
-  distance: string
-  purpose: string
-  start_address: string | null
-  end_address: string | null
-  description: string | null
+export const convertTripFormToUpsertTrip = (form: TripForm): unknown => {
+  return {
+    vehicleId: form.vehicle?.id,
+    tripDate: form.tripDate,
+    distance: form.distance,
+    purpose: form.purpose,
+    startAddress: form.startAddress.trim() || null,
+    endAddress: form.endAddress.trim() || null,
+    description: form.description.trim() || null,
+  }
 }
-
-export const convertTripFormToParams = (form: TripForm): TripFormParams => ({
-  vehicle_id: form.vehicle!.id,
-  trip_date: toCalendarDate(form.tripDate!).toString(),
-  distance: formatBigDecimalToString(form.distance),
-  purpose: form.purpose,
-  start_address: form.startAddress.trim() || null,
-  end_address: form.endAddress.trim() || null,
-  description: form.description.trim() || null,
-})

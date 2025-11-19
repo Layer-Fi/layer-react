@@ -1,10 +1,11 @@
-import { Button } from '@ui/Button/Button'
-import { Schema } from 'effect/index'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useCreateCategorizationRule } from '@hooks/useCategorizationRules/useCreateCategorizationRule'
-import { CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { useWizard } from '@components/Wizard/Wizard'
 import { useCallback } from 'react'
+import { Schema } from 'effect/index'
+
+import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { useCreateCategorizationRule } from '@hooks/useCategorizationRules/useCreateCategorizationRule'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { Button } from '@ui/Button/Button'
+import { useWizard } from '@components/Wizard/Wizard'
 
 interface CreateRuleButtonProps {
   newRule: CreateCategorizationRule

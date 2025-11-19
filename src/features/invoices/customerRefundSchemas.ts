@@ -1,4 +1,5 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
+
 import { PaymentMethodSchema } from '@components/PaymentMethod/schemas'
 
 export enum CustomerRefundStatus {

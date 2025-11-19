@@ -1,6 +1,7 @@
 import { createContext } from 'react'
-import { useProfitAndLoss } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import { endOfMonth, startOfMonth } from 'date-fns'
+
+import { type useProfitAndLoss } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 
 export const ProfitAndLossContext = createContext<ReturnType<typeof useProfitAndLoss>>({
   data: undefined,

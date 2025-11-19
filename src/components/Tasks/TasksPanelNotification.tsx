@@ -1,10 +1,11 @@
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import pluralize from 'pluralize'
+
 import { useBookkeepingYearsStatus } from '@hooks/bookkeeping/periods/useBookkeepingYearsStatus'
+import { useBankAccounts } from '@hooks/bookkeeping/useBankAccounts'
+import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import AlertCircle from '@icons/AlertCircle'
 import ArrowRightCircle from '@icons/ArrowRightCircle'
-import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useBankAccounts } from '@hooks/bookkeeping/useBankAccounts'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 type TasksPanelNotificationProps = {
   onClickReconnectAccounts?: () => void

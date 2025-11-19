@@ -1,10 +1,11 @@
+import { pipe, Schema } from 'effect'
 import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
+
+import { VendorSchema } from '@schemas/vendor'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { get } from '@api/layer/authenticated_http'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { Schema, pipe } from 'effect'
-import { VendorSchema } from '@schemas/vendor'
 
 const ListVendorsRawResultSchema = Schema.Struct({
   data: Schema.Array(VendorSchema),

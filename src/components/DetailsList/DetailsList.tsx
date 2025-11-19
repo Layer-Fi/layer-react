@@ -1,7 +1,8 @@
-import { Heading, HeadingSize } from '@components/Typography/Heading'
-import { ReactNode } from 'react'
-import { Header } from '@components/Container/Header'
+import { type ReactNode } from 'react'
 import classNames from 'classnames'
+
+import { Header } from '@components/Container/Header'
+import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 export interface DetailsListProps {
   title?: ReactNode

@@ -1,5 +1,6 @@
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { Spacing } from '@ui/sharedUITypes'
+import { type Spacing } from '@ui/sharedUITypes'
+
 import './separator.scss'
 
 type SeparatorProps = {

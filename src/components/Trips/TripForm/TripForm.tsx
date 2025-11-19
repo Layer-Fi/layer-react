@@ -1,25 +1,28 @@
-import { TextSize } from '@components/Typography/Text'
+import { useCallback } from 'react'
+import { type CalendarDate } from '@internationalized/date'
+import { AlertTriangle } from 'lucide-react'
+import type React from 'react'
+
+import { type Trip, TripPurpose } from '@schemas/trip'
+import { flattenValidationErrors } from '@utils/form'
 import { Button } from '@ui/Button/Button'
-import React, { useCallback } from 'react'
-import type { TripEncoded } from '@schemas/trip'
-import { TripPurpose } from '@schemas/trip'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { AlertTriangle } from 'lucide-react'
 import { useTripForm } from '@components/Trips/TripForm/useTripForm'
-import { flattenValidationErrors } from '@utils/form'
 import { TripPurposeComboBox } from '@components/Trips/TripPurposeComboBox/TripPurposeComboBox'
+import { TextSize } from '@components/Typography/Text'
 import { VehicleSelector } from '@features/vehicles/components/VehicleSelector'
+
 import './tripForm.scss'
 
 const TRIP_FORM_CSS_PREFIX = 'Layer__TripForm'
 const TRIP_FORM_FIELD_CSS_PREFIX = `${TRIP_FORM_CSS_PREFIX}__Field`
 
 export type TripFormProps = {
-  trip?: TripEncoded
+  trip?: Trip
   isReadOnly?: boolean
-  onSuccess: (trip: TripEncoded) => void
+  onSuccess: (trip: Trip) => void
 }
 
 export const TripForm = (props: TripFormProps) => {
@@ -60,14 +63,15 @@ export const TripForm = (props: TripFormProps) => {
             onSelectedVehicleChange={field.handleChange}
             isReadOnly={isReadOnly}
             inline
-            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Vehicle`}
+            containerClassName={`${TRIP_FORM_FIELD_CSS_PREFIX}__Vehicle`}
           />
         )}
       </form.Field>
 
       <form.AppField name='tripDate'>
-        {field => <field.FormDateField label='Trip date' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__TripDate`} isReadOnly={isReadOnly} />}
+        {field => <field.FormDateField<CalendarDate> label='Trip date' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__TripDate`} isReadOnly={isReadOnly} />}
       </form.AppField>
+
       <form.AppField name='distance'>
         {field => <field.FormBigDecimalField label='Distance (miles)' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Distance`} isReadOnly={isReadOnly} maxDecimalPlaces={1} />}
       </form.AppField>
@@ -82,12 +86,15 @@ export const TripForm = (props: TripFormProps) => {
           />
         )}
       </form.Field>
+
       <form.AppField name='startAddress'>
         {field => <field.FormTextField label='Start address' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__StartAddress`} isReadOnly={isReadOnly} />}
       </form.AppField>
+
       <form.AppField name='endAddress'>
         {field => <field.FormTextField label='End address' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__EndAddress`} isReadOnly={isReadOnly} />}
       </form.AppField>
+
       <form.AppField name='description'>
         {field => (
           <field.FormTextAreaField label='Description' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Description`} isReadOnly={isReadOnly} />

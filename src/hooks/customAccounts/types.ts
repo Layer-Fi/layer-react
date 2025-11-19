@@ -1,4 +1,4 @@
-import { Direction } from '@internal-types/general'
+import { type Direction } from '@internal-types/general'
 
 export enum CustomAccountSubtype {
   CHECKING = 'CHECKING',

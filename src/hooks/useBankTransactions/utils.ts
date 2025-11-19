@@ -1,11 +1,11 @@
+import { type BankTransaction, DisplayState, type Split } from '@internal-types/bank_transactions'
+import { type CategoryUpdate } from '@internal-types/categories'
+import { type ClassificationEncoded } from '@schemas/categorization'
+import { type AccountItem, type NumericRangeFilter } from '@hooks/useBankTransactions/types'
+import { type MatchOrCategorizeTransactionRequestSchema } from '@hooks/useBankTransactions/useBulkMatchOrCategorize'
+import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { filterVisibility } from '@components/BankTransactions/utils'
-import { BankTransaction, DisplayState, Split } from '@internal-types/bank_transactions'
-import { AccountItem, NumericRangeFilter } from '@hooks/useBankTransactions/types'
-import { isCategoryAsOption, isSplitAsOption, isSuggestedMatchAsOption, isApiCategorizationAsOption, type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { MatchOrCategorizeTransactionRequestSchema } from '@hooks/useBankTransactions/useBulkMatchOrCategorize'
-import { CategoryUpdate } from '@internal-types/categories'
 import { makeTagKeyValueFromTag } from '@features/tags/tagSchemas'
-import { ClassificationEncoded } from '@schemas/categorization'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
   const accounts: AccountItem[] = []

@@ -1,9 +1,10 @@
-import MinimizeTwo from '@icons/MinimizeTwo'
-import { centsToDollars as formatMoney } from '@models/Money'
-import { BankTransaction } from '@internal-types/bank_transactions'
+import { format as formatTime, parseISO } from 'date-fns'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { centsToDollars as formatMoney } from '@models/Money'
+import MinimizeTwo from '@icons/MinimizeTwo'
 import { Badge } from '@components/Badge/Badge'
-import { parseISO, format as formatTime } from 'date-fns'
 
 export interface MatchBadgeProps {
   bankTransaction: BankTransaction

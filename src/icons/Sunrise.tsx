@@ -1,4 +1,4 @@
-import { IconSvgProps } from '@icons/types'
+import { type IconSvgProps } from '@icons/types'
 
 const Sunrise = ({ size = 12, ...props }: IconSvgProps) => (
   <svg

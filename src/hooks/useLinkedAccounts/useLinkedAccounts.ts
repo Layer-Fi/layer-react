@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
-import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
+import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
+
+import { DataModel, type LoadedStatus } from '@internal-types/general'
+import { type AccountSource, type LinkedAccount } from '@internal-types/linked_accounts'
 import { Layer } from '@api/layer'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { DataModel, LoadedStatus } from '@internal-types/general'
-import { LinkedAccount, AccountSource } from '@internal-types/linked_accounts'
 import { useAuth } from '@hooks/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
 import { useListExternalAccounts } from '@hooks/useLinkedAccounts/useListExternalAccounts'
+import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
   return linkedAccounts.filter(

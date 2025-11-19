@@ -1,22 +1,23 @@
 import { forwardRef } from 'react'
-import { withRenderProp } from '@components/utility/withRenderProp'
-
+import classNames, { type Argument } from 'classnames'
 import {
   Cell as ReactAriaCell,
+  type CellProps,
   Column as ReactAriaColumn,
+  type ColumnProps,
   Row as ReactAriaTableRow,
+  type RowProps,
   Table as ReactAriaTable,
   TableBody as ReactAriaTableBody,
-  TableHeader as ReactAriaTableHeader,
-  type CellProps,
-  type ColumnProps,
-  type RowProps,
   type TableBodyProps,
+  TableHeader as ReactAriaTableHeader,
   type TableHeaderProps,
   type TableProps,
 } from 'react-aria-components'
-import classNames, { type Argument } from 'classnames'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { withRenderProp } from '@components/utility/withRenderProp'
+
 import './table.scss'
 
 enum TableComponent {
@@ -168,10 +169,10 @@ const Cell = forwardRef<HTMLTableCellElement, CellProps>(
 Cell.displayName = TableComponent.Cell
 
 export {
-  Table,
-  TableBody,
-  TableHeader,
   Cell,
   Column,
   Row,
+  Table,
+  TableBody,
+  TableHeader,
 }

@@ -1,5 +1,6 @@
-import { TableProps } from '@internal-types/table'
 import classNames from 'classnames'
+
+import { type TableProps } from '@internal-types/table'
 
 export const Table = ({
   componentName,

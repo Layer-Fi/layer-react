@@ -1,14 +1,15 @@
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 import { useMemo } from 'react'
-import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
-import { Header } from '@components/Container/Header'
-import { SyncingBadge } from '@components/SyncingBadge/SyncingBadge'
-import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
+
 import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
-import { ProfitAndLossDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
+import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { HStack } from '@ui/Stack/Stack'
-import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
+import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
+import { Header } from '@components/Container/Header'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
+import { ProfitAndLossDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
+import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
+import { SyncingBadge } from '@components/SyncingBadge/SyncingBadge'
+import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 import './profitAndLossHeader.scss'
 

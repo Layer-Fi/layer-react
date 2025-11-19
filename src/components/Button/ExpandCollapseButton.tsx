@@ -1,7 +1,8 @@
-import { Button, ButtonVariant } from '@components/Button/Button'
+import classNames from 'classnames'
+
 import CollapseIcon from '@icons/Collapse'
 import ExpandIcon from '@icons/Expand'
-import classNames from 'classnames'
+import { Button, ButtonVariant } from '@components/Button/Button'
 
 export interface ExpandCollapseButtonProps {
   onClick: (value: boolean) => void

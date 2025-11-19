@@ -1,4 +1,4 @@
-import { ZonedDateTime } from '@internationalized/date'
+import { type ZonedDateTime } from '@internationalized/date'
 
 export const getIsDateInvalid = (
   date: ZonedDateTime | null,

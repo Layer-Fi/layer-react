@@ -1,12 +1,13 @@
 import { useCallback, useId, useMemo } from 'react'
-import { useListCustomers } from '@features/customers/api/useListCustomers'
-import { useListVendors } from '@features/vendors/api/useListVendors'
-import type { CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
+
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { P } from '@ui/Typography/Text'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { P } from '@ui/Typography/Text'
 import { Label } from '@ui/Typography/Text'
+import { useListCustomers } from '@features/customers/api/useListCustomers'
+import type { CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
+import { useListVendors } from '@features/vendors/api/useListVendors'
 
 type CustomerVendor = typeof CustomerVendorSchema.Type
 

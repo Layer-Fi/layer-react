@@ -1,12 +1,13 @@
-import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
 import { useContext, useState } from 'react'
+
+import { type MoneyFormat } from '@internal-types/general'
 import { Layer } from '@api/layer'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { MoneyFormat } from '@internal-types/general'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
 
 export interface ProfitAndLossReportDownloadButtonProps {

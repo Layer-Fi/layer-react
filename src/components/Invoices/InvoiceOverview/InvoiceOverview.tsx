@@ -1,6 +1,6 @@
 import { VStack } from '@ui/Stack/Stack'
-import { InvoiceTable } from '@components/Invoices/InvoiceTable/InvoiceTable'
 import { InvoiceSummaryStats } from '@components/Invoices/InvoiceSummaryStats/InvoiceSummaryStats'
+import { InvoiceTable } from '@components/Invoices/InvoiceTable/InvoiceTable'
 
 export const InvoiceOverview = () => {
   return (

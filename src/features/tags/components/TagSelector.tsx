@@ -1,22 +1,24 @@
-import { Button } from '@ui/Button/Button'
 import {
+  type PropsWithChildren,
   useCallback,
   useId,
   useMemo,
-  type PropsWithChildren,
 } from 'react'
-import { Label, Span } from '@ui/Typography/Text'
-import { useTagDimensions } from '@features/tags/api/useTagDimensions'
-import { VStack } from '@ui/Stack/Stack'
 import { X } from 'lucide-react'
-import { Tag, TagGroup, TagList } from '@ui/TagGroup/TagGroup'
-import { useFlattenedTagValues } from '@features/tags/useFlattenedTagValues'
+import { Group } from 'react-aria-components'
+
 import type { OneOf } from '@internal-types/utility/oneOf'
+import { Button } from '@ui/Button/Button'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { Square } from '@ui/Square/Square'
-import { Group } from 'react-aria-components'
-import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { VStack } from '@ui/Stack/Stack'
+import { Tag, TagGroup, TagList } from '@ui/TagGroup/TagGroup'
+import { Label, Span } from '@ui/Typography/Text'
+import { useTagDimensions } from '@features/tags/api/useTagDimensions'
 import { getDimensionDisplayName, getTagDisplayNameForDimension, getTagDisplayNameForValue, getTagValueDisplayName, type Tag as TagType, type TagValue } from '@features/tags/tagSchemas'
+import { useFlattenedTagValues } from '@features/tags/useFlattenedTagValues'
+
 import './tagSelector.scss'
 
 const TAG_SELECTOR_CLASS_NAMES = {

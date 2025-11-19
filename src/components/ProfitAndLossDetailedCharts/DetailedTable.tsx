@@ -1,15 +1,16 @@
-import { Button } from '@ui/Button/Button'
+import classNames from 'classnames'
+
+import { type SortDirection } from '@internal-types/general'
 import { DEFAULT_CHART_COLOR_TYPE } from '@config/charts'
+import { formatPercent } from '@utils/format'
+import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import {
-  Scope,
-  SidebarScope,
-  ProfitAndLossFilters,
+  type ProfitAndLossFilters,
+  type Scope,
+  type SidebarScope,
 } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import SortArrows from '@icons/SortArrows'
-import { SortDirection } from '@internal-types/general'
-import { formatPercent } from '@utils/format'
-import classNames from 'classnames'
-import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
+import { Button } from '@ui/Button/Button'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 
 export interface DetailedTableStringOverrides {

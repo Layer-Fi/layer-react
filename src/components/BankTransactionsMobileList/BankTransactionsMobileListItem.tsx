@@ -1,28 +1,30 @@
-import { useContext, useEffect, useRef, useState, useMemo, type ReactNode } from 'react'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import FileIcon from '@icons/File'
-import { BankTransaction } from '@internal-types/bank_transactions'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { hasReceipts, isCredit } from '@utils/bankTransactions'
-import { TransactionToOpenContext } from '@components/BankTransactionsMobileList/TransactionToOpenContext'
+import { type ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
+import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
+import { hasReceipts, isCredit } from '@utils/bankTransactions'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
-import { Span } from '@ui/Typography/Text'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { VStack, HStack } from '@ui/Stack/Stack'
-import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
+import FileIcon from '@icons/File'
+import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
+import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { isCategorized } from '@components/BankTransactions/utils'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
-import { useInAppLinkContext, type LinkingMetadata } from '@contexts/InAppLinkContext'
-import { decodeMatchDetails, convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
-import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
+import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
+import { TransactionToOpenContext } from '@components/BankTransactionsMobileList/TransactionToOpenContext'
+
 import './bankTransactionsMobileListItem.scss'
-import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
-import { AnimatedContent } from '@components/ui/AnimatedContent/AnimatedContent'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
@@ -217,12 +219,12 @@ export const BankTransactionsMobileListItem = ({
           role='button'
         >
           <HStack
-            gap='md'
+            gap='lg'
             justify='space-between'
             align='center'
             pie='md'
           >
-            <HStack align='center'>
+            <HStack align='center' overflow='hidden'>
               <BankTransactionsMobileListItemCheckbox
                 bulkActionsEnabled={bulkActionsEnabled}
                 bankTransaction={bankTransaction}
@@ -250,12 +252,6 @@ export const BankTransactionsMobileListItem = ({
                   </Span>
                   {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
                 </HStack>
-
-                {!categorizationEnabled && !categorized
-                  ? (
-                    <BankTransactionsProcessingInfo />
-                  )
-                  : null}
               </VStack>
             </HStack>
 
@@ -270,15 +266,22 @@ export const BankTransactionsMobileListItem = ({
               }}
             />
           </HStack>
-          {!open
-            && (
-              <BankTransactionsListItemCategory
-                bankTransaction={bankTransaction}
-                mobile
-              />
-            )}
+          {!open && (
+            !categorizationEnabled && !categorized
+              ? (
+                <span className='Layer__bank-transaction-list-item__processing-info'>
+                  <BankTransactionsProcessingInfo />
+                </span>
+              )
+              : (
+                <BankTransactionsListItemCategory
+                  bankTransaction={bankTransaction}
+                  mobile
+                />
+              )
+          )}
         </div>
-        <AnimatedContent variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+        <AnimatedPresenceDiv variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
           <BankTransactionsMobileListItemExpandedRow
             bankTransaction={bankTransaction}
             showCategorization={categorizationEnabled}
@@ -286,7 +289,7 @@ export const BankTransactionsMobileListItem = ({
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
           />
-        </AnimatedContent>
+        </AnimatedPresenceDiv>
 
       </VStack>
 

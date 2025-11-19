@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
+import { SearchX } from 'lucide-react'
+
 import InboxIcon from '@icons/Inbox'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { SearchX } from 'lucide-react'
 
 type BankTransactionsTableEmptyStatesProps = {
   hasVisibleTransactions: boolean

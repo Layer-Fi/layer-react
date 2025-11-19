@@ -1,11 +1,12 @@
+import { Schema } from 'effect'
 import useSWR, { type SWRResponse } from 'swr'
+
+import { type ReportEnum, type UnifiedReport, type UnifiedReportDateQueryParams, UnifiedReportSchema } from '@schemas/reports/unifiedReport'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { get } from '@api/layer/authenticated_http'
-import { Schema } from 'effect'
-import { UnifiedReportSchema, type ReportEnum, type UnifiedReport, type UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 
 export const UNIFIED_REPORT_TAG_KEY = '#unified-report'
 

@@ -1,18 +1,20 @@
 import { useCallback, useId, useMemo } from 'react'
-import { useListVehicles } from '@features/vehicles/api/useListVehicles'
-import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { P } from '@ui/Typography/Text'
-import { VStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
-import { type VehicleEncoded } from '@schemas/vehicle'
 import classNames from 'classnames'
+
+import { type Vehicle } from '@schemas/vehicle'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { VStack } from '@ui/Stack/Stack'
+import { P } from '@ui/Typography/Text'
+import { Label } from '@ui/Typography/Text'
+import { useListVehicles } from '@features/vehicles/api/useListVehicles'
 import { getVehicleDisplayName } from '@features/vehicles/util'
+
 import './vehicleSelector.scss'
 
 class VehicleAsOption {
-  private internalVehicle: VehicleEncoded
+  private internalVehicle: Vehicle
 
-  constructor(vehicle: VehicleEncoded) {
+  constructor(vehicle: Vehicle) {
     this.internalVehicle = vehicle
   }
 
@@ -34,8 +36,8 @@ class VehicleAsOption {
 }
 
 export type VehicleSelectorProps = {
-  selectedVehicle: VehicleEncoded | null
-  onSelectedVehicleChange: (vehicle: VehicleEncoded | null) => void
+  selectedVehicle: Vehicle | null
+  onSelectedVehicleChange: (vehicle: Vehicle | null) => void
 
   placeholder?: string
 
@@ -43,6 +45,7 @@ export type VehicleSelectorProps = {
   inline?: boolean
 
   className?: string
+  containerClassName?: string
   showLabel?: boolean
 }
 
@@ -57,12 +60,13 @@ export function VehicleSelector({
   inline,
 
   className,
+  containerClassName,
   showLabel = true,
 }: VehicleSelectorProps) {
   const combinedClassName = classNames(
     'Layer__VehicleSelector',
     inline && 'Layer__VehicleSelector--inline',
-    className,
+    containerClassName,
   )
 
   const { data, isLoading, isError } = useListVehicles()
@@ -131,6 +135,7 @@ export function VehicleSelector({
         isLoading={isLoadingWithoutFallback}
         isReadOnly={isReadOnly}
         isSearchable
+        className={className}
         {...additionalAriaProps}
       />
     </VStack>

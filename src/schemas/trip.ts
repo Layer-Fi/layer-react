@@ -1,5 +1,8 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
+
 import { VehicleSchema } from '@schemas/vehicle'
+
+import { CalendarDateFromSelf, CalendarDateSchema } from './common/calendarDateFromSelf'
 
 export enum TripPurpose {
   Unreviewed = 'UNREVIEWED',
@@ -36,7 +39,7 @@ export const TripSchema = Schema.Struct({
   distance: Schema.BigDecimal,
 
   tripDate: pipe(
-    Schema.propertySignature(Schema.Date),
+    Schema.propertySignature(CalendarDateSchema),
     Schema.fromKey('trip_date'),
   ),
 
@@ -72,3 +75,40 @@ export const TripSchema = Schema.Struct({
 
 export type Trip = typeof TripSchema.Type
 export type TripEncoded = typeof TripSchema.Encoded
+
+export const TripFormSchema = Schema.Struct({
+  vehicle: Schema.NullOr(VehicleSchema),
+  tripDate: Schema.NullOr(CalendarDateFromSelf),
+  distance: Schema.BigDecimal,
+  purpose: TripPurposeSchema,
+  startAddress: Schema.String,
+  endAddress: Schema.String,
+  description: Schema.String,
+})
+
+export type TripForm = typeof TripFormSchema.Type
+
+export const UpsertTripSchema = Schema.Struct({
+  vehicleId: pipe(
+    Schema.propertySignature(Schema.UUID),
+    Schema.fromKey('vehicle_id'),
+  ),
+  tripDate: pipe(
+    Schema.propertySignature(CalendarDateSchema),
+    Schema.fromKey('trip_date'),
+  ),
+  distance: Schema.BigDecimal,
+  purpose: Schema.String,
+  startAddress: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('start_address'),
+  ),
+  endAddress: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('end_address'),
+  ),
+  description: Schema.NullishOr(Schema.String),
+})
+
+export type UpsertTrip = typeof UpsertTripSchema.Type
+export type UpsertTripEncoded = typeof UpsertTripSchema.Encoded

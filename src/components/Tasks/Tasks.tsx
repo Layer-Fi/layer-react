@@ -1,19 +1,20 @@
+import { useMemo } from 'react'
+
+import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
+import { P, Span } from '@ui/Typography/Text'
+import { Container } from '@components/Container/Container'
 import { Loader } from '@components/Loader/Loader'
+import { TasksEmptyContainer } from '@components/Tasks/container/TasksEmptyContainer'
 import { TasksHeader } from '@components/Tasks/TasksHeader'
 import { TasksList } from '@components/Tasks/TasksList'
-import { TasksPending } from '@components/Tasks/TasksPending'
 import { TasksMonthSelector } from '@components/Tasks/TasksMonthSelector'
 import { TasksPanelNotification } from '@components/Tasks/TasksPanelNotification'
+import { TasksPending } from '@components/Tasks/TasksPending'
 import { TasksYearsTabs } from '@components/Tasks/TasksYearsTabs'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
-import { TasksEmptyContainer } from '@components/Tasks/container/TasksEmptyContainer'
-import { P, Span } from '@ui/Typography/Text'
-import { VStack } from '@ui/Stack/Stack'
-import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { Container } from '@components/Container/Container'
 import { CallBookingPurpose, useCallBookings } from '@features/callBookings/api/useCallBookings'
-import { useMemo } from 'react'
 
 const TasksOnboardingEmptyState = () => {
   return (

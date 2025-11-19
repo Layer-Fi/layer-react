@@ -1,11 +1,12 @@
-import { BankTransaction } from '@internal-types/bank_transactions'
-import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { Span } from '@ui/Typography/Text'
-import { HStack } from '@ui/Stack/Stack'
-import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
+import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { HStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
+import { Span } from '@ui/Typography/Text'
+
 import './bankTransactionsMobileBulkActionsHeader.scss'
 
 interface BankTransactionsMobileBulkActionsHeaderProps {

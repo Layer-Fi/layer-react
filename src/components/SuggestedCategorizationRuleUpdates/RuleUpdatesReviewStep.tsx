@@ -1,13 +1,14 @@
-import { Button } from '@ui/Button/Button'
-import { UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { Separator } from '@components/Separator/Separator'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { useWizard } from '@components/Wizard/Wizard'
-import { Label } from '@ui/Typography/Text'
-import { AffectedTransactionsTable } from '@components/SuggestedCategorizationRuleUpdates/AffectedTransactionsTable'
 import pluralize from 'pluralize'
-import { CreateRuleButton } from '@components/SuggestedCategorizationRuleUpdates/CreateRuleButton'
+
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { asMutable } from '@utils/asMutable'
+import { Button } from '@ui/Button/Button'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
+import { Separator } from '@components/Separator/Separator'
+import { AffectedTransactionsTable } from '@components/SuggestedCategorizationRuleUpdates/AffectedTransactionsTable'
+import { CreateRuleButton } from '@components/SuggestedCategorizationRuleUpdates/CreateRuleButton'
+import { useWizard } from '@components/Wizard/Wizard'
 
 interface RuleUpdatesPromptReviewStepProps {
   ruleSuggestion: UpdateCategorizationRulesSuggestion

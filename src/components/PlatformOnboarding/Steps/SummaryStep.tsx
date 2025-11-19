@@ -1,6 +1,6 @@
-import { Text } from '@components/Typography/Text'
-import { Heading } from '@components/Typography/Heading'
 import { Button } from '@components/Button/Button'
+import { Heading } from '@components/Typography/Heading'
+import { Text } from '@components/Typography/Text'
 
 type SummaryStepProps = {
   onNext: () => void

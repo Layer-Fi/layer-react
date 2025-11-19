@@ -1,18 +1,20 @@
-import { useCallback, useMemo, useState, useRef } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
-import { useAppForm } from '@features/forms/hooks/useForm'
-import { type TripEncoded } from '@schemas/trip'
-import { type TripForm, getTripFormDefaultValues, validateTripForm, convertTripFormToParams } from '@components/Trips/TripForm/formUtils'
-import { useUpsertTrip, UpsertTripMode } from '@features/trips/api/useUpsertTrip'
+import { Schema } from 'effect'
 
-type onSuccessFn = (trip: TripEncoded) => void
-type UseTripFormProps = { onSuccess: onSuccessFn, trip?: TripEncoded }
+import { type Trip, type TripForm, UpsertTripSchema } from '@schemas/trip'
+import { convertTripFormToUpsertTrip, getTripFormDefaultValues, validateTripForm } from '@components/Trips/TripForm/formUtils'
+import { useAppForm } from '@features/forms/hooks/useForm'
+import { UpsertTripMode, useUpsertTrip } from '@features/trips/api/useUpsertTrip'
+
+type onSuccessFn = (trip: Trip) => void
+type UseTripFormProps = { onSuccess: onSuccessFn, trip?: Trip }
 
 export const useTripForm = (props: UseTripFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, trip } = props
 
-  const upsertTrip = useUpsertTrip(
+  const { trigger: upsertTrip } = useUpsertTrip(
     trip
       ? { mode: UpsertTripMode.Update, tripId: trip.id }
       : { mode: UpsertTripMode.Create },
@@ -23,8 +25,9 @@ export const useTripForm = (props: UseTripFormProps) => {
 
   const onSubmit = useCallback(async ({ value }: { value: TripForm }) => {
     try {
-      const tripParams = convertTripFormToParams(value)
-      const result = await upsertTrip.trigger(tripParams)
+      const tripParams = convertTripFormToUpsertTrip(value)
+      const upsertTripRequest = Schema.encodeUnknownSync(UpsertTripSchema)(tripParams)
+      const result = await upsertTrip(upsertTripRequest)
 
       setSubmitError(undefined)
       onSuccess(result.data)

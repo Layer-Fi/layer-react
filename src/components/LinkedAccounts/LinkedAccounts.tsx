@@ -1,14 +1,15 @@
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 import { useContext } from 'react'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+
+import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Container } from '@components/Container/Container'
 import { Header } from '@components/Container/Header'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { Loader } from '@components/Loader/Loader'
 import { LinkedAccountsContent } from '@components/LinkedAccounts/LinkedAccountsContent'
 import { OpeningBalanceModal } from '@components/LinkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
-import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
+import { Loader } from '@components/Loader/Loader'
+import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 const COMPONENT_NAME = 'linked-accounts'
 

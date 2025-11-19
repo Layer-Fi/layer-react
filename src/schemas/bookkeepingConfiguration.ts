@@ -1,4 +1,5 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
+
 import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum TransactionTaggingStrategy {

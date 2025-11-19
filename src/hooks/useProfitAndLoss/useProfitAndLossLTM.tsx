@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
-import { ReportingBasis } from '@internal-types/general'
 import { startOfMonth, sub } from 'date-fns'
+
+import { type ReportingBasis } from '@internal-types/general'
 import type { ProfitAndLossSummary } from '@hooks/useProfitAndLoss/schemas'
 import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
 

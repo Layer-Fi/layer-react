@@ -1,4 +1,4 @@
-import { TextProps, Text } from '@components/Typography/Text'
+import { Text, type TextProps } from '@components/Typography/Text'
 
 export type ErrorTextProps = TextProps
 
