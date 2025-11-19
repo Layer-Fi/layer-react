@@ -8,6 +8,7 @@ import { Label, Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
+import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 
 export enum CategorizationMode {
   Categorize = 'Categorize',
@@ -18,9 +19,15 @@ interface BankTransactionsCategorizeAllModalProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   mode: CategorizationMode
+  useCategorySelectDrawer?: boolean
 }
 
-export const BankTransactionsCategorizeAllModal = ({ isOpen, onOpenChange, mode }: BankTransactionsCategorizeAllModalProps) => {
+export const BankTransactionsCategorizeAllModal = ({
+  isOpen,
+  onOpenChange,
+  mode,
+  useCategorySelectDrawer = false,
+}: BankTransactionsCategorizeAllModalProps) => {
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
@@ -70,16 +77,26 @@ export const BankTransactionsCategorizeAllModal = ({ isOpen, onOpenChange, mode 
         <VStack gap='xs'>
           <VStack gap='3xs'>
             <Label htmlFor={categorySelectId}>Select category</Label>
-            <BankTransactionCategoryComboBox
-              inputId={categorySelectId}
-              selectedValue={selectedCategory}
-              onSelectedValueChange={setSelectedCategory}
-              includeSuggestedMatches={false}
-            />
+            {useCategorySelectDrawer
+              ? (
+                <CategorySelectDrawerWithTrigger
+                  aria-labelledby={categorySelectId}
+                  value={selectedCategory}
+                  onChange={setSelectedCategory}
+                  showTooltips={false}
+                />
+              )
+              : (
+                <BankTransactionCategoryComboBox
+                  inputId={categorySelectId}
+                  selectedValue={selectedCategory}
+                  onSelectedValueChange={setSelectedCategory}
+                  includeSuggestedMatches={false}
+                />
+              )}
           </VStack>
           {selectedCategory && isCategoryAsOption(selectedCategory) && (
             <Span>
-
               {mode === CategorizationMode.Categorize
                 ? `This will categorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`
                 : `This will recategorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`}

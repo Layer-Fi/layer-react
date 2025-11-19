@@ -134,7 +134,6 @@ export const BankTransactionsHeader = ({
   showStatusToggle,
   collapseHeader,
   showCategorizationRules = false,
-
 }: BankTransactionsHeaderProps) => {
   const activationDate = useBusinessActivationDate()
   const { display } = useBankTransactionsContext()
@@ -223,6 +222,10 @@ export const BankTransactionsHeader = ({
     return actions
   }, [withUploadMenu, showCategorizationRules])
 
+  const BulkActionsModuleSlot = useCallback(() => {
+    return <BankTransactionsBulkActions useCategorySelectDrawer={listView && mobileComponent === 'mobileList'} />
+  }, [listView, mobileComponent])
+
   return (
     <Header
       className={classNames(
@@ -240,7 +243,7 @@ export const BankTransactionsHeader = ({
         {showBulkActions
           ? (
             <BulkActionsModule
-              slots={{ BulkActions: BankTransactionsBulkActions }}
+              slots={{ BulkActions: BulkActionsModuleSlot }}
             />
           )
           : (
