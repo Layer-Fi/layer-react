@@ -15,6 +15,7 @@ export type ListTripsFilterParams = {
   query?: string
   vehicleId?: string
   purpose?: string
+  year?: number
 }
 
 const ListTripsResponseSchema = Schema.Struct({
@@ -72,6 +73,7 @@ function keyLoader(
     query,
     vehicleId,
     purpose,
+    year,
   }: {
     access_token?: string
     apiUrl?: string
@@ -79,6 +81,7 @@ function keyLoader(
     query?: string
     vehicleId?: string
     purpose?: string
+    year?: number
   },
 ) {
   if (accessToken && apiUrl) {
@@ -90,6 +93,7 @@ function keyLoader(
       query,
       vehicleId,
       purpose,
+      year,
       tags: [LIST_TRIPS_TAG_KEY],
     } as const
   }
@@ -97,14 +101,15 @@ function keyLoader(
 
 const listTrips = get<
   typeof ListTripsResponseSchema.Encoded,
-  { businessId: string, cursor?: string, limit?: number, query?: string, vehicleId?: string, purpose?: string }
->(({ businessId, cursor, limit, query, vehicleId, purpose }) => {
+  { businessId: string, cursor?: string, limit?: number, query?: string, vehicleId?: string, purpose?: string, year?: number }
+>(({ businessId, cursor, limit, query, vehicleId, purpose, year }) => {
   const parameters = toDefinedSearchParameters({
     cursor,
     limit,
     q: query,
     vehicle_ids: vehicleId,
     purpose,
+    year,
   })
   const baseUrl = `/v1/businesses/${businessId}/mileage/trips`
   return parameters ? `${baseUrl}?${parameters}` : baseUrl
@@ -123,7 +128,7 @@ export function useListTrips(filterParams: ListTripsFilterParams = {}) {
         ...filterParams,
       },
     ),
-    ({ accessToken, apiUrl, businessId, cursor, query, vehicleId, purpose }) => listTrips(
+    ({ accessToken, apiUrl, businessId, cursor, query, vehicleId, purpose, year }) => listTrips(
       apiUrl,
       accessToken,
       {
@@ -134,6 +139,7 @@ export function useListTrips(filterParams: ListTripsFilterParams = {}) {
           query,
           vehicleId,
           purpose,
+          year,
         },
       },
     )().then(Schema.decodeUnknownPromise(ListTripsResponseSchema)),
