@@ -18,7 +18,6 @@ export type StackProps = PropsWithChildren<{
   pis?: Spacing
   pie?: Spacing
   fluid?: boolean
-  hidden?: boolean
   slot?: string
   className?: string
 }>
@@ -46,7 +45,6 @@ const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
       pis,
       pie,
       fluid,
-      hidden,
       ...restProps
     },
     ref,
@@ -64,7 +62,6 @@ const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
       pis,
       pie,
       fluid,
-      hidden,
     })
 
     return (

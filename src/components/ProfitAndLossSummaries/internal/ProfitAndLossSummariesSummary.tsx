@@ -8,6 +8,8 @@ import { Span } from '@ui/Typography/Text'
 import { ProfitAndLossSummariesHeading } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
+import './profit_and_loss_summaries_summary.scss'
+
 const CHART_AREA_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummaryChartArea'
 
 type ProfitAndLossSummariesSummaryProps = {
@@ -66,21 +68,23 @@ export function ProfitAndLossSummariesSummary({
             )}
         </VStack>
 
-        <VStack gap='3xs' align='end' hidden={!showPercentChange}>
-          <HStack gap='3xs' align='center'>
-            <Span size='md' weight='bold' status={isGoodChange ? 'success' : undefined}>
-              {arrow}
+        {showPercentChange && (
+          <VStack gap='3xs' align='end'>
+            <HStack gap='3xs' align='center'>
+              <Span size='md' weight='bold' status={isGoodChange ? 'success' : undefined}>
+                {arrow}
+              </Span>
+              <Span size='md' weight='normal' status={isGoodChange ? 'success' : undefined}>
+                {formatPercentageChange(percentChange ?? null)}
+              </Span>
+            </HStack>
+            <Span size='xs' variant='subtle' noWrap>
+              vs.
+              {' '}
+              {comparisonMonth || ''}
             </Span>
-            <Span size='md' weight='normal' status={isGoodChange ? 'success' : undefined}>
-              {formatPercentageChange(percentChange ?? null)}
-            </Span>
-          </HStack>
-          <Span size='xs' variant='subtle' noWrap>
-            vs.
-            {' '}
-            {comparisonMonth || ''}
-          </Span>
-        </VStack>
+          </VStack>
+        )}
       </HStack>
     </HStack>
   )
