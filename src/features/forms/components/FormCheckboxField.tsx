@@ -1,9 +1,11 @@
 import { type PropsWithChildren } from 'react'
-import { useFieldContext } from '@features/forms/hooks/useForm'
+import classNames from 'classnames'
+
 import { CheckboxWithTooltip } from '@ui/Checkbox/Checkbox'
 import { Label } from '@ui/Typography/Text'
-import classNames from 'classnames'
+import { useFieldContext } from '@features/forms/hooks/useForm'
 import type { CommonFormFieldProps } from '@features/forms/types'
+
 import './formCheckboxField.scss'
 
 export type FormCheckboxFieldProps = CommonFormFieldProps

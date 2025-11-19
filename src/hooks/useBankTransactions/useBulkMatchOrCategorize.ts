@@ -1,15 +1,16 @@
 import { useCallback } from 'react'
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
-import { post } from '@api/layer/authenticated_http'
+
+import { CategoryUpdateSchema } from '@schemas/bankTransactions/BankTransactionsBulkActions'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
-import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useGetAllBankTransactionsCategories } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { buildBulkMatchOrCategorizePayload } from '@hooks/useBankTransactions/utils'
-import { CategoryUpdateSchema } from '@schemas/bankTransactions/BankTransactionsBulkActions'
+import { useGetAllBankTransactionsCategories } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 

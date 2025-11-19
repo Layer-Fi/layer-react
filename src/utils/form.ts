@@ -1,4 +1,4 @@
-import { ValidationErrorMap } from '@tanstack/react-form'
+import { type ValidationErrorMap } from '@tanstack/react-form'
 
 export const notEmpty = (value?: string | null) => {
   if (!value) {

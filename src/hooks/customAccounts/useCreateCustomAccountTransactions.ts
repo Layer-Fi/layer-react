@@ -1,11 +1,12 @@
 import useSWRMutation from 'swr/mutation'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type APIError } from '@models/APIError'
 import { post } from '@api/layer/authenticated_http'
 import type { RawCustomTransaction } from '@hooks/customAccounts/types'
+import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/customAccounts/useCustomAccounts'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/customAccounts/useCustomAccounts'
-import { BankTransaction } from '@internal-types/bank_transactions'
-import { APIError } from '@models/APIError'
 
 type CreateCustomAccountTransactionsBody = {
   transactions: RawCustomTransaction[]

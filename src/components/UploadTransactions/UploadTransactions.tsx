@@ -1,14 +1,16 @@
-import { Heading } from '@ui/Typography/Heading'
 import { useCallback, useState } from 'react'
-import { Wizard } from '@components/Wizard/Wizard'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type CustomAccountParseCsvResponse } from '@hooks/customAccounts/useCustomAccountParseCsv'
+import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { Heading } from '@ui/Typography/Heading'
+import { UploadTransactionsStep } from '@components/UploadTransactions/types'
+import { UploadTransactionsConfirmationStep } from '@components/UploadTransactions/UploadTransactionsConfirmationStep'
 import { type AccountOption, UploadTransactionsUploadCsvStep } from '@components/UploadTransactions/UploadTransactionsUploadCsvStep'
 import { UploadTransactionsValidateCsvStep } from '@components/UploadTransactions/UploadTransactionsValidateCsvStep'
-import { type CustomAccountParseCsvResponse } from '@hooks/customAccounts/useCustomAccountParseCsv'
-import { UploadTransactionsConfirmationStep } from '@components/UploadTransactions/UploadTransactionsConfirmationStep'
-import { UploadTransactionsStep } from '@components/UploadTransactions/types'
-import { BankTransaction } from '@internal-types/bank_transactions'
+import { Wizard } from '@components/Wizard/Wizard'
+
 import './uploadTransactions.scss'
-import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 
 type UploadTransactionsHeaderProps = {
   currentStep: UploadTransactionsStep

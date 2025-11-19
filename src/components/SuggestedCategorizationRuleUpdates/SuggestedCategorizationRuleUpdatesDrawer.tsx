@@ -1,4 +1,4 @@
-import { UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { Drawer } from '@ui/Modal/Modal'
 import { VStack } from '@ui/Stack/Stack'
 import { RuleSuggestionHeader, SuggestedCategorizationRuleUpdates } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
@@ -19,7 +19,7 @@ export const SuggestedCategorizationRuleUpdatesDrawer = ({
       {({ close }) => (
         <VStack pi='sm' pb='sm'>
           <RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />
-          <SuggestedCategorizationRuleUpdates ruleSuggestion={ruleSuggestion} close={close} />
+          <SuggestedCategorizationRuleUpdates ruleSuggestion={ruleSuggestion} close={close} isDrawer />
         </VStack>
       )}
     </Drawer>

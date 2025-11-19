@@ -1,4 +1,4 @@
-import { IconSvgProps } from '@icons/types'
+import { type IconSvgProps } from '@icons/types'
 
 const ChevronRightFill = ({ size = 18, ...props }: IconSvgProps) => (
   <svg

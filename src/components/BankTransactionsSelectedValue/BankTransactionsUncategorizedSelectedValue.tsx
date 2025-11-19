@@ -1,11 +1,12 @@
-import { BankTransactionsBaseSelectedValue, BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
-import { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 
 type BankTransactionsUncategorizedSelectedValueProps = {
   selectedValue: BankTransactionCategoryComboBoxOption | null
   className?: string
+  showCategoryBadge?: boolean
   slotProps?: {
     Label?: {
       size?: 'sm' | 'md'
@@ -14,12 +15,19 @@ type BankTransactionsUncategorizedSelectedValueProps = {
 }
 
 export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactionsUncategorizedSelectedValueProps) => {
-  const { selectedValue, className, slotProps } = props
+  const { selectedValue, className, slotProps, showCategoryBadge } = props
 
   if (!selectedValue) return null
 
   const baseSelectedValue = normalizeFromSelectedValue(selectedValue)
-  return <BankTransactionsBaseSelectedValue {...baseSelectedValue} slotProps={slotProps} className={className} />
+  return (
+    <BankTransactionsBaseSelectedValue
+      {...baseSelectedValue}
+      slotProps={slotProps}
+      className={className}
+      showCategoryBadge={showCategoryBadge}
+    />
+  )
 }
 
 const normalizeFromSelectedValue = (selectedValue: BankTransactionCategoryComboBoxOption): BankTransactionsBaseSelectedValueProps => {

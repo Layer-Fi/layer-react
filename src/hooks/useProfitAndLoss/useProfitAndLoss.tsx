@@ -1,18 +1,19 @@
 import { useCallback, useMemo, useState } from 'react'
+
 import {
-  SortDirection,
+  type SortDirection,
 } from '@internal-types/general'
-import { ReportingBasis } from '@internal-types/general'
+import { type ReportingBasis } from '@internal-types/general'
 import {
+  applyShare,
   collectExpensesItems,
   collectRevenueItems,
-  applyShare,
   type PnlChartLineItem,
 } from '@utils/profitAndLossUtils'
 import { useProfitAndLossReport } from '@hooks/useProfitAndLoss/useProfitAndLossReport'
 import {
-  useGlobalDateRange,
   type DateRangePickerMode,
+  useGlobalDateRange,
 } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import type { BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 

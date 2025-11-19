@@ -1,7 +1,9 @@
-import { Text, TextSize } from '@components/Typography/Text'
+import classNames from 'classnames'
+
 import CheckIcon from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'
-import classNames from 'classnames'
+import { Text, TextSize } from '@components/Typography/Text'
+
 import './actionableList.scss'
 
 export interface ActionableListOption<T> {

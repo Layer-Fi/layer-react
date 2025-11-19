@@ -1,16 +1,17 @@
+import classNames from 'classnames'
+import { format as formatTime, parseISO } from 'date-fns'
+
+import { type BankTransaction, type SuggestedMatch } from '@internal-types/bank_transactions'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
+import { centsToDollars as formatMoney } from '@models/Money'
+import { DATE_FORMAT } from '@config/general'
+import { isTransferMatch } from '@utils/bankTransactions'
+import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { MatchBadge } from '@components/BankTransactionRow/MatchBadge'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { Text, TextUseTooltip } from '@components/Typography/Text'
-import { DATE_FORMAT } from '@config/general'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
-import { centsToDollars as formatMoney } from '@models/Money'
-import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { isTransferMatch } from '@utils/bankTransactions'
-import { MatchBadge } from '@components/BankTransactionRow/MatchBadge'
-import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
-import { useInAppLinkContext } from '@contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 
 export interface MatchFormProps {
   classNamePrefix: string

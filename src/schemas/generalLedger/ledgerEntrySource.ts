@@ -1,8 +1,9 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
+
 import { Direction } from '@internal-types/general'
-import { EntityName, LinkingMetadata } from '@contexts/InAppLinkContext'
 import { CustomerSchema } from '@schemas/customer'
 import { VendorSchema } from '@schemas/vendor'
+import { EntityName, type LinkingMetadata } from '@contexts/InAppLinkContext'
 
 export const FinancialEventIdentifiersSchema = Schema.Struct({
   id: Schema.String,

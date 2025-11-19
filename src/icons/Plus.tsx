@@ -1,4 +1,4 @@
-import { IconSvgProps } from '@icons/types'
+import { type IconSvgProps } from '@icons/types'
 
 const Plus = ({ size = 14, ...props }: IconSvgProps) => (
   <svg

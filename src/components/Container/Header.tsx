@@ -2,7 +2,7 @@
  * @deprecated- use components/Header instead.
  * This has been kept to not introduce breaking changes.
  */
-import { CSSProperties, ReactNode, forwardRef } from 'react'
+import { type CSSProperties, forwardRef, type ReactNode } from 'react'
 import classNames from 'classnames'
 
 export enum HeaderLayout {

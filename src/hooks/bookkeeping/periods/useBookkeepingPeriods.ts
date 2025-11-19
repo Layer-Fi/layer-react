@@ -1,16 +1,17 @@
 import useSWR from 'swr'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useAuth } from '@hooks/useAuth'
+
+import type { RawTask } from '@internal-types/tasks'
+import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
+import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
+import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
+import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { get } from '@api/layer/authenticated_http'
 import {
   BOOKKEEPING_TAG_KEY,
   useBookkeepingStatus,
 } from '@hooks/bookkeeping/useBookkeepingStatus'
-import type { RawTask } from '@internal-types/tasks'
-import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
-import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
-import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export enum BookkeepingPeriodStatus {
   BOOKKEEPING_NOT_ACTIVE = 'BOOKKEEPING_NOT_ACTIVE',

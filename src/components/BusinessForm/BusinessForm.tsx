@@ -1,14 +1,16 @@
-import { ErrorText } from '@components/Typography/ErrorText'
-import { InputGroup } from '@components/Input/InputGroup'
-import { Input } from '@components/Input/Input'
-import { SubmitButton } from '@components/Button/SubmitButton'
+import { isPossiblePhoneNumber } from 'libphonenumber-js'
+
 import { notEmpty, validateEmailFormat } from '@utils/form'
 import { useBusinessForm } from '@components/BusinessForm/useBusinessForm'
-import { FormSection } from '@components/Input/FormSection'
+import { SubmitButton } from '@components/Button/SubmitButton'
 import { BusinessTypeSelect } from '@components/Input/BusinessTypeSelect'
-import { USStateSelect } from '@components/Input/USStateSelect'
+import { FormSection } from '@components/Input/FormSection'
+import { Input } from '@components/Input/Input'
+import { InputGroup } from '@components/Input/InputGroup'
 import { PhoneInput } from '@components/Input/PhoneInput'
-import { isPossiblePhoneNumber } from 'libphonenumber-js'
+import { USStateSelect } from '@components/Input/USStateSelect'
+import { ErrorText } from '@components/Typography/ErrorText'
+
 import './businessForm.scss'
 
 export type BusinessFormStringOverrides = {

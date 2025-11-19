@@ -1,9 +1,10 @@
+import { endOfDay } from 'date-fns'
 import useSWR from 'swr'
+
+import { getBalanceSheet } from '@api/layer/balance_sheet'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { getBalanceSheet } from '@api/layer/balance_sheet'
-import { endOfDay } from 'date-fns'
 
 function buildKey({
   access_token: accessToken,

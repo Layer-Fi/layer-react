@@ -1,6 +1,7 @@
-import { ButtonHTMLAttributes } from 'react'
-import BackArrow from '@icons/BackArrow'
+import { type ButtonHTMLAttributes } from 'react'
 import classNames from 'classnames'
+
+import BackArrow from '@icons/BackArrow'
 
 type BackButtonProps = {
   textOnly?: boolean

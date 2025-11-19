@@ -1,35 +1,36 @@
-import { TableRow } from '@components/TableRow/TableRow'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableBody } from '@components/TableBody/TableBody'
-import { Table } from '@components/Table/Table'
-import { Button as UIButton } from '@ui/Button/Button'
-import { Button, ButtonVariant } from '@components/Button/Button'
-import { Fragment, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { Fragment, type ReactNode, useContext, useEffect, useMemo, useState } from 'react'
+import { List, Trash2 } from 'lucide-react'
+
+import {
+  type AugmentedLedgerAccountBalance,
+  LedgerAccountNodeType,
+} from '@internal-types/chart_of_accounts'
+import { type View } from '@internal-types/general'
+import { TableCellAlign } from '@internal-types/table'
+import { type LedgerBalancesSchemaType, type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { asMutable } from '@utils/asMutable'
+import { convertCentsToCurrency } from '@utils/format'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { TableProvider } from '@contexts/TableContext/TableContext'
 import Edit2 from '@icons/Edit2'
-import {
-  LedgerAccountNodeType,
-  type AugmentedLedgerAccountBalance,
-} from '@internal-types/chart_of_accounts'
-import { View } from '@internal-types/general'
-import { TableCellAlign } from '@internal-types/table'
-import {
-  ChartOfAccountsTableStringOverrides,
-  ExpandActionState,
-} from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
+import { Button as UIButton } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { List, Trash2 } from 'lucide-react'
-import { convertCentsToCurrency } from '@utils/format'
 import { Span } from '@ui/Typography/Text'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { filterAccounts, getMatchedTextIndices } from '@components/ChartOfAccountsTable/utils/utils'
 import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
-import { LedgerBalancesSchemaType, NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { asMutable } from '@utils/asMutable'
+import { Button, ButtonVariant } from '@components/Button/Button'
+import {
+  type ChartOfAccountsTableStringOverrides,
+  type ExpandActionState,
+} from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
+import { filterAccounts, getMatchedTextIndices } from '@components/ChartOfAccountsTable/utils/utils'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { Table } from '@components/Table/Table'
+import { TableBody } from '@components/TableBody/TableBody'
+import { TableCell } from '@components/TableCell/TableCell'
+import { TableHead } from '@components/TableHead/TableHead'
+import { TableRow } from '@components/TableRow/TableRow'
 
 const highlightMatch = ({ text, query, isMatching }: { text: string, query: string, isMatching?: boolean }): ReactNode => {
   const matchedTextIndices = getMatchedTextIndices({ text, query, isMatching })

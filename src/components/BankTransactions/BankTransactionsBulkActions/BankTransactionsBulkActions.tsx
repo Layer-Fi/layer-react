@@ -1,12 +1,13 @@
+import { useState } from 'react'
+
+import { DisplayState } from '@internal-types/bank_transactions'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { CategorizationMode } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsCategorizeAllModal'
 import { BankTransactionsCategorizeAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsCategorizeAllModal'
 import { BankTransactionsConfirmAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsConfirmAllModal'
 import { BankTransactionsUncategorizeAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsUncategorizeAllModal'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { DisplayState } from '@internal-types/bank_transactions'
-import { useState } from 'react'
 
 export const BankTransactionsBulkActions = () => {
   const { display } = useBankTransactionsContext()

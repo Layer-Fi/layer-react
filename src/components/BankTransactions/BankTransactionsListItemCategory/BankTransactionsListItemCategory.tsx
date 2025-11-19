@@ -1,18 +1,24 @@
-import { BankTransaction } from '@internal-types/bank_transactions'
-import { isCategorized } from '@components/BankTransactions/utils'
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { isCategorized } from '@components/BankTransactions/utils'
+import { BankTransactionsBaseSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
-import './bankTransactionsMobileListItemCategory.scss'
-import { BankTransactionsBaseSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 
-export interface BankTransactionsMobileListItemCategoryProps {
+import './bankTransactionsListItemCategory.scss'
+
+export interface BankTransactionsListItemCategoryProps {
   bankTransaction: BankTransaction
+  mobile?: boolean
 }
 
-export const BankTransactionsMobileListItemCategory = ({
+export const BankTransactionsListItemCategory = ({
   bankTransaction,
-}: BankTransactionsMobileListItemCategoryProps) => {
+  mobile = false,
+}: BankTransactionsListItemCategoryProps) => {
+  const className = mobile
+    ? 'Layer__bankTransactionsListItemCategory__Mobile'
+    : 'Layer__bankTransactionsListItemCategory__List'
   const categorized = isCategorized(bankTransaction)
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
 
@@ -20,8 +26,9 @@ export const BankTransactionsMobileListItemCategory = ({
     return (
       <BankTransactionsCategorizedSelectedValue
         bankTransaction={bankTransaction}
-        className='Layer__bankTransactionsMobileListItemCategory'
+        className={className}
         slotProps={{ Label: { size: 'sm' } }}
+        showCategoryBadge={mobile}
       />
     )
   }
@@ -31,16 +38,18 @@ export const BankTransactionsMobileListItemCategory = ({
       ? (
         <BankTransactionsUncategorizedSelectedValue
           selectedValue={selectedCategory ?? null}
-          className='Layer__bankTransactionsMobileListItemCategory'
+          className={className}
           slotProps={{ Label: { size: 'sm' } }}
+          showCategoryBadge={mobile}
         />
       )
       : (
         <BankTransactionsBaseSelectedValue
           type='placeholder'
           label='No category selected'
-          className='Layer__bankTransactionsMobileListItemCategory'
+          className={className}
           slotProps={{ Label: { size: 'sm' } }}
+          showCategoryBadge={mobile}
         />
       )
   )

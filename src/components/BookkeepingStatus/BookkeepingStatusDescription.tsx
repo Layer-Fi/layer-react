@@ -1,6 +1,6 @@
-import { Text, TextSize } from '@components/Typography/Text'
-import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { type BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { getBookkeepingStatusConfig } from '@components/BookkeepingStatus/utils'
+import { Text, TextSize } from '@components/Typography/Text'
 
 type BookkeepingStatusDescriptionProps = {
   monthNumber: number

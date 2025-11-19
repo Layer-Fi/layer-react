@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
-import { useAugmentedBankTransactions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
+
 import { DisplayState } from '@internal-types/bank_transactions'
+import { type useAugmentedBankTransactions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
 
 export type BankTransactionsContextType = ReturnType<typeof useAugmentedBankTransactions>
 

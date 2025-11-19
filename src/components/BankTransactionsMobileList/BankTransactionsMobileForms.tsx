@@ -1,7 +1,7 @@
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { ReceiptsProvider } from '@providers/ReceiptsProvider/ReceiptsProvider'
-import { BankTransaction } from '@internal-types/bank_transactions'
-import { Purpose } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
 import { BankTransactionsMobileListBusinessForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListBusinessForm'
+import { Purpose } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
 import { BankTransactionsMobileListPersonalForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListPersonalForm'
 import { BankTransactionsMobileListSplitAndMatchForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListSplitAndMatchForm'
 

@@ -1,20 +1,21 @@
 import { useMemo } from 'react'
-import { SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
-import { centsToDollars as formatMoney } from '@models/Money'
-import { formatPercent } from '@utils/format'
-import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
 import classNames from 'classnames'
 import {
-  PieChart,
-  Pie,
   Cell,
-  ResponsiveContainer,
   Label,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
   Text as ChartText,
 } from 'recharts'
-import { PolarViewBox } from 'recharts/types/util/types'
+import { type PolarViewBox } from 'recharts/types/util/types'
+
+import { centsToDollars as formatMoney } from '@models/Money'
+import { formatPercent } from '@utils/format'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
+import { type SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
+import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
 
 interface DetailedChartProps {
   filteredData: PnlChartLineItem[]

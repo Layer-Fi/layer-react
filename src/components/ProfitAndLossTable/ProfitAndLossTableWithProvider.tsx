@@ -1,11 +1,12 @@
 import { useContext } from 'react'
+
+import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { TableProvider } from '@contexts/TableContext/TableContext'
 import { ProfitAndLossCompareTable } from '@components/ProfitAndLossTable/ProfitAndLossCompareTable'
 import {
   ProfitAndLossTableComponent,
-  ProfitAndLossTableProps,
+  type ProfitAndLossTableProps,
 } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
-import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 
 export const ProfitAndLossTableWithProvider = (
   props: ProfitAndLossTableProps,

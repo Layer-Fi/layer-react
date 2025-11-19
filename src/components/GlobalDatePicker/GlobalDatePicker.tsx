@@ -1,9 +1,10 @@
 import { useCallback, useMemo } from 'react'
-import { DatePicker } from '@components/DatePicker/DatePicker'
-import { useGlobalDate, useGlobalDateActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
-import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
 import { endOfDay, startOfDay } from 'date-fns'
+
+import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
+import { useGlobalDate, useGlobalDateActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { DatePicker } from '@components/DatePicker/DatePicker'
+import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 
 export const GlobalDatePicker = () => {
   const { date } = useGlobalDate()

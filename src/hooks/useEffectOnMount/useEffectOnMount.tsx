@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+
 import type { Awaitable } from '@internal-types/utility/promises'
 
 type Cleanup = () => Awaitable<void>

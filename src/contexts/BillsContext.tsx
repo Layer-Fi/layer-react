@@ -1,7 +1,10 @@
-import React, { createContext, ReactNode, useContext } from 'react'
+import { type ReactNode } from 'react'
+import { createContext, useContext } from 'react'
+import { endOfMonth, startOfMonth } from 'date-fns'
+import type React from 'react'
+
 import { useBills } from '@hooks/useBills'
 import { useBillsRecordPayment } from '@components/Bills/useBillsRecordPayment'
-import { endOfMonth, startOfMonth } from 'date-fns'
 
 type BillsProviderProps = {
   children: ReactNode

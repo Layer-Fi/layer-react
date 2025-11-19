@@ -1,13 +1,14 @@
-import { Button, ButtonVariant } from '@components/Button/Button'
 import { useCallback } from 'react'
-import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
-import { useWizard } from '@components/Wizard/Wizard'
-import { UploadTransactionsStep } from '@components/UploadTransactions/types'
-import { Separator } from '@components/Separator/Separator'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import pluralize from 'pluralize'
+
 import ChevronRight from '@icons/ChevronRight'
 import UploadCloud from '@icons/UploadCloud'
+import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { Button, ButtonVariant } from '@components/Button/Button'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { Separator } from '@components/Separator/Separator'
+import { UploadTransactionsStep } from '@components/UploadTransactions/types'
+import { useWizard } from '@components/Wizard/Wizard'
 
 type UploadTransactionsConfirmationStepProps = {
   onRestartFlow: () => void

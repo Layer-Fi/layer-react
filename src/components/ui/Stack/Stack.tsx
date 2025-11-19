@@ -1,7 +1,9 @@
 import { forwardRef, type PropsWithChildren } from 'react'
+import classNames from 'classnames'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import type { Spacing } from '@ui/sharedUITypes'
-import classNames from 'classnames'
+
 import './stack.scss'
 
 export type StackProps = PropsWithChildren<{

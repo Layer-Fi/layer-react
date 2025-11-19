@@ -1,14 +1,15 @@
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
-import { post } from '@api/layer/authenticated_http'
-import { CreateCategorizationRuleSchema, CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { useAuth } from '@hooks/useAuth'
-import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
-import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { Schema } from 'effect/index'
+import useSWRMutation from 'swr/mutation'
+
+import { CategorizationRuleSchema, type CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { post } from '@api/layer/authenticated_http'
+import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/useCategorizationRules/useListCategorizationRules'
+import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const CREATE_CATEGORIZATION_RULE_TAG = '#create-categorization-rule'
 

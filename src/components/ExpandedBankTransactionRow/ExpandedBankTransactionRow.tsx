@@ -1,54 +1,58 @@
-import { ErrorText } from '@components/Typography/ErrorText'
-import { Text, TextSize } from '@components/Typography/Text'
-import { Input } from '@components/Input/Input'
-import { Button } from '@ui/Button/Button'
-import { TextButton } from '@components/Button/TextButton'
 import {
   forwardRef,
   useImperativeHandle,
-  useState,
   useRef,
+  useState,
 } from 'react'
+import classNames from 'classnames'
+
+import {
+  type BankTransaction,
+  type SuggestedMatch,
+} from '@internal-types/bank_transactions'
+import { type Split } from '@internal-types/bank_transactions'
+import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { centsToDollars as formatMoney } from '@models/Money'
+import {
+  hasMatch,
+} from '@utils/bankTransactions'
+import { getBankTransactionFirstSuggestedMatch, getBankTransactionMatchAsSuggestedMatch } from '@utils/bankTransactions'
+import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
+import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
+import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '@icons/AlertCircle'
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
-import { centsToDollars as formatMoney } from '@models/Money'
-import {
-  BankTransaction,
-  SuggestedMatch,
-} from '@internal-types/bank_transactions'
-import {
-  hasMatch,
-} from '@utils/bankTransactions'
-import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { Tag } from '@features/tags/tagSchemas'
-import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
-import { CustomerVendorSelector } from '@features/customerVendor/components/CustomerVendorSelector'
-import { CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
-import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
-import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
-import { useSetMetadataOnBankTransaction } from '@features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
-import { MatchForm } from '@components/MatchForm/MatchForm'
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
-import { APIErrorNotifications } from '@components/ExpandedBankTransactionRow/APIErrorNotifications'
-import classNames from 'classnames'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
-import { useBankTransactionTagVisibility } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
-import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { type Split } from '@internal-types/bank_transactions'
+import { Button } from '@ui/Button/Button'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { getBankTransactionFirstSuggestedMatch, getBankTransactionMatchAsSuggestedMatch } from '@utils/bankTransactions'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
+import { TextButton } from '@components/Button/TextButton'
+import { APIErrorNotifications } from '@components/ExpandedBankTransactionRow/APIErrorNotifications'
 import { AmountInput } from '@components/Input/AmountInput'
-import { HStack } from '@ui/Stack/Stack'
-import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
-import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
+import { Input } from '@components/Input/Input'
+import { MatchForm } from '@components/MatchForm/MatchForm'
+import { Separator } from '@components/Separator/Separator'
+import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
+import { ErrorText } from '@components/Typography/ErrorText'
+import { Text, TextSize } from '@components/Typography/Text'
+import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
+import { useSetMetadataOnBankTransaction } from '@features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
+import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
+import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
+import { useBankTransactionTagVisibility } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
+import { CustomerVendorSelector } from '@features/customerVendor/components/CustomerVendorSelector'
+import { type CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
+import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
+import { type Tag } from '@features/tags/tagSchemas'
+
+import './expandedBankTransactionRow.scss'
 
 export type ExpandedRowState = {
   splits: Split[]
@@ -87,9 +91,11 @@ type ExpandedBankTransactionRowProps = {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
+
+  variant?: 'list' | 'row'
 }
 
-const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactionRowProps>(
+export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactionRowProps>(
   (
     {
       bankTransaction,
@@ -101,6 +107,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
       containerWidth,
       showDescriptions,
       showReceiptUploads,
+      variant = 'row',
     },
     ref,
   ) => {
@@ -274,232 +281,237 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactio
         }`}
       >
         {isOpen && (
-          <span className={`${className}__wrapper`} ref={bodyRef}>
-            {categorizationEnabled
-              && (
-                <div className={`${className}__content-toggle`}>
-                  <Toggle
-                    name={`purpose-${bankTransaction.id}${
-                      asListItem ? '-li' : ''
-                    }`}
-                    size={ToggleSize.small}
-                    options={[
-                      {
-                        value: 'categorize',
-                        label: 'Categorize',
-                      },
-                      {
-                        value: 'match',
-                        label: 'Match',
-                        disabled: !hasMatch(bankTransaction),
-                        disabledMessage:
+          <>
+            <Separator />
+            <span className={`${className}__wrapper`} ref={bodyRef}>
+              <VStack pis={variant === 'row' ? 'md' : undefined} pbs='sm'>
+                {categorizationEnabled
+                  && (
+                    <HStack pi='md' pbe='md' pbs='3xs'>
+                      <Toggle
+                        name={`purpose-${bankTransaction.id}${
+                          asListItem ? '-li' : ''
+                        }`}
+                        size={ToggleSize.small}
+                        options={[
+                          {
+                            value: 'categorize',
+                            label: 'Categorize',
+                          },
+                          {
+                            value: 'match',
+                            label: 'Match',
+                            disabled: !hasMatch(bankTransaction),
+                            disabledMessage:
                         'We could not find matching transactions',
-                      },
-                    ]}
-                    selected={purpose}
-                    onChange={onChangePurpose}
-                  />
-                </div>
-              )}
-            <div
-              className={`${className}__content`}
-              id={`expanded-${bankTransaction.id}`}
-            >
-              <div className={`${className}__content-panels`}>
-                <div
-                  className={classNames(
-                    `${className}__match`,
-                    `${className}__content-panel`,
-                    purpose === Purpose.match
-                      ? `${className}__content-panel--active`
-                      : '',
+                          },
+                        ]}
+                        selected={purpose}
+                        onChange={onChangePurpose}
+                      />
+                    </HStack>
                   )}
+                <div
+                  className={`${className}__content`}
+                  id={`expanded-${bankTransaction.id}`}
                 >
-                  <div className={`${className}__content-panel-container`}>
-                    <MatchForm
-                      classNamePrefix={className}
-                      bankTransaction={bankTransaction}
-                      selectedMatchId={selectedMatch?.id}
-                      readOnly={!categorizationEnabled}
-                      setSelectedMatch={(suggestedMatch) => {
-                        setMatchFormError(undefined)
-                        setSelectedMatch(suggestedMatch)
-                      }}
-                      matchFormError={matchFormError}
-                    />
-                  </div>
-                </div>
+                  <div className={`${className}__content-panels`}>
+                    <div
+                      className={classNames(
+                        `${className}__match`,
+                        `${className}__content-panel`,
+                        purpose === Purpose.match
+                          ? `${className}__content-panel--active`
+                          : '',
+                      )}
+                    >
+                      <div className={`${className}__content-panel-container`}>
+                        <MatchForm
+                          classNamePrefix={className}
+                          bankTransaction={bankTransaction}
+                          selectedMatchId={selectedMatch?.id}
+                          readOnly={!categorizationEnabled}
+                          setSelectedMatch={(suggestedMatch) => {
+                            setMatchFormError(undefined)
+                            setSelectedMatch(suggestedMatch)
+                          }}
+                          matchFormError={matchFormError}
+                        />
+                      </div>
+                    </div>
 
-                <div
-                  className={classNames(
-                    `${className}__splits`,
-                    `${className}__content-panel`,
-                    purpose === Purpose.categorize
-                      ? `${className}__content-panel--active`
-                      : '',
-                  )}
-                >
-                  <div className={`${className}__content-panel-container`}>
-                    <div className={`${className}__splits-inputs`}>
-                      {effectiveSplits.map((split, index) => (
-                        <div
-                          className={`${className}__table-cell--split-entry`}
-                          key={`split-${index}`}
-                        >
-                          <AmountInput
-                            name={`split-${index}${asListItem ? '-li' : ''}`}
-                            disabled={
-                              index === 0 || !categorizationEnabled
-                            }
-                            onChange={updateSplitAmount(index)}
-                            value={getInputValueForSplitAtIndex(index, split)}
-                            onBlur={onBlurSplitAmount}
-                            className={`${className}__table-cell--split-entry__amount`}
-                            isInvalid={split.amount < 0}
-                          />
-                          <BankTransactionCategoryComboBox
-                            bankTransaction={bankTransaction}
-                            selectedValue={split.category}
-                            onSelectedValueChange={(value) => {
-                              changeCategoryForSplitAtIndex(index, value)
-                            }}
-                            isLoading={bankTransaction.processing}
-                            isDisabled={!categorizationEnabled}
-                            includeSuggestedMatches={false}
-                          />
-                          {showTags && (
-                            <TagDimensionsGroup
-                              value={split.tags}
-                              onChange={tags => changeTags(index, tags)}
-                              showLabels={false}
-                              isReadOnly={!categorizationEnabled}
-                              className={`${className}__table-cell--split-entry__tags`}
+                    <div
+                      className={classNames(
+                        `${className}__splits`,
+                        `${className}__content-panel`,
+                        purpose === Purpose.categorize
+                          ? `${className}__content-panel--active`
+                          : '',
+                      )}
+                    >
+                      <div className={`${className}__content-panel-container`}>
+                        <div className={`${className}__splits-inputs`}>
+                          {effectiveSplits.map((split, index) => (
+                            <div
+                              className={`${className}__table-cell--split-entry`}
+                              key={`split-${index}`}
+                            >
+                              <AmountInput
+                                name={`split-${index}${asListItem ? '-li' : ''}`}
+                                disabled={
+                                  index === 0 || !categorizationEnabled
+                                }
+                                onChange={updateSplitAmount(index)}
+                                value={getInputValueForSplitAtIndex(index, split)}
+                                onBlur={onBlurSplitAmount}
+                                className={`${className}__table-cell--split-entry__amount`}
+                                isInvalid={split.amount < 0}
+                              />
+                              <BankTransactionCategoryComboBox
+                                bankTransaction={bankTransaction}
+                                selectedValue={split.category}
+                                onSelectedValueChange={(value) => {
+                                  changeCategoryForSplitAtIndex(index, value)
+                                }}
+                                isLoading={bankTransaction.processing}
+                                isDisabled={!categorizationEnabled}
+                                includeSuggestedMatches={false}
+                              />
+                              {showTags && (
+                                <TagDimensionsGroup
+                                  value={split.tags}
+                                  onChange={tags => changeTags(index, tags)}
+                                  showLabels={false}
+                                  isReadOnly={!categorizationEnabled}
+                                  className={`${className}__table-cell--split-entry__tags`}
+                                />
+                              )}
+                              {showCustomerVendor && (
+                                <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__customer'>
+                                  <CustomerVendorSelector
+                                    selectedCustomerVendor={split.customerVendor}
+                                    onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
+                                    placeholder='Set customer or vendor'
+                                    isReadOnly={!categorizationEnabled}
+                                    showLabel={false}
+                                  />
+                                </div>
+                              )}
+                              <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__button'>
+                                <Button
+                                  onPress={() => removeSplit(index)}
+                                  variant='outlined'
+                                  icon
+                                  isDisabled={index == 0}
+                                >
+                                  <Trash size={18} />
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        {splitFormError && <HStack pb='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
+                        <div className={`${className}__total-and-btns`}>
+                          {effectiveSplits.length > 1 && (
+                            <Input
+                              disabled={true}
+                              leftText='Total'
+                              inputMode='numeric'
+                              value={`$${formatMoney(
+                                effectiveSplits.reduce(
+                                  (x, { amount }) => x + amount,
+                                  0,
+                                ),
+                              )}`}
                             />
                           )}
-                          {showCustomerVendor && (
-                            <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__customer'>
-                              <CustomerVendorSelector
-                                selectedCustomerVendor={split.customerVendor}
-                                onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
-                                placeholder='Set customer or vendor'
-                                isReadOnly={!categorizationEnabled}
-                                showLabel={false}
-                              />
-                            </div>
-                          )}
-                          <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__button'>
-                            <Button
-                              onPress={() => removeSplit(index)}
-                              variant='outlined'
-                              icon
-                              isDisabled={index == 0}
-                            >
-                              <Trash size={18} />
-                            </Button>
-                          </div>
+                          {categorizationEnabled
+                            ? (
+                              <div className={`${className}__splits-buttons`}>
+                                {effectiveSplits.length > 1
+                                  ? (
+                                    <TextButton
+                                      onClick={addSplit}
+                                    >
+                                      Add new split
+                                    </TextButton>
+                                  )
+                                  : (
+                                    <Button
+                                      onClick={addSplit}
+                                      variant='outlined'
+                                    >
+                                      <Scissors size={14} />
+                                      Split
+                                    </Button>
+                                  )}
+                              </div>
+                            )
+                            : (
+                              <></>
+                            )}
                         </div>
-                      ))}
-                    </div>
-                    {splitFormError && <HStack pb='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
-                    <div className={`${className}__total-and-btns`}>
-                      {effectiveSplits.length > 1 && (
-                        <Input
-                          disabled={true}
-                          leftText='Total'
-                          inputMode='numeric'
-                          value={`$${formatMoney(
-                            effectiveSplits.reduce(
-                              (x, { amount }) => x + amount,
-                              0,
-                            ),
-                          )}`}
-                        />
-                      )}
-                      {categorizationEnabled
-                        ? (
-                          <div className={`${className}__splits-buttons`}>
-                            {effectiveSplits.length > 1
-                              ? (
-                                <TextButton
-                                  onClick={addSplit}
-                                >
-                                  Add new split
-                                </TextButton>
-                              )
-                              : (
-                                <Button
-                                  onClick={addSplit}
-                                  variant='outlined'
-                                >
-                                  <Scissors size={14} />
-                                  Split
-                                </Button>
-                              )}
-                          </div>
-                        )
-                        : (
-                          <></>
-                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                  <VStack pis='md' className='Layer__ExpandedBankTransactionRow__Description'>
+                    <BankTransactionFormFields
+                      bankTransaction={bankTransaction}
+                      showDescriptions={showDescriptions}
+                      hideTags={purpose === Purpose.categorize}
+                      hideCustomerVendor={purpose === Purpose.categorize}
+                    />
+                  </VStack>
 
-              <BankTransactionFormFields
-                bankTransaction={bankTransaction}
-                showDescriptions={showDescriptions}
-                hideTags={purpose === Purpose.categorize}
-                hideCustomerVendor={purpose === Purpose.categorize}
-              />
+                  {showReceiptUploads && (
+                    <BankTransactionReceiptsWithProvider
+                      bankTransaction={bankTransaction}
+                      isActive={isOpen}
+                      classNamePrefix={className}
+                      floatingActions={!asListItem}
+                    />
+                  )}
 
-              {showReceiptUploads && (
-                <BankTransactionReceiptsWithProvider
-                  bankTransaction={bankTransaction}
-                  isActive={isOpen}
-                  classNamePrefix={className}
-                  floatingActions={!asListItem}
-                />
-              )}
-
-              {asListItem && categorizationEnabled
-                && (
-                  <div className={`${className}__submit-btn`}>
-                    {bankTransaction.error
-                      && (
-                        <Text
-                          as='span'
-                          size={TextSize.md}
-                          className='Layer__unsaved-info'
+                  {asListItem && categorizationEnabled
+                    && (
+                      <div className={`${className}__submit-btn`}>
+                        {bankTransaction.error
+                          && (
+                            <Text
+                              as='span'
+                              size={TextSize.md}
+                              className='Layer__unsaved-info'
+                            >
+                              <span>Unsaved</span>
+                              <AlertCircle size={12} />
+                            </Text>
+                          )}
+                        <SubmitButton
+                          onClick={save}
+                          className='Layer__bank-transaction__submit-btn'
+                          processing={bankTransaction.processing}
+                          active={true}
+                          action={
+                            categorized ? SubmitAction.SAVE : SubmitAction.UPDATE
+                          }
                         >
-                          <span>Unsaved</span>
-                          <AlertCircle size={12} />
-                        </Text>
-                      )}
-                    <SubmitButton
-                      onClick={save}
-                      className='Layer__bank-transaction__submit-btn'
-                      processing={bankTransaction.processing}
-                      active={true}
-                      action={
-                        categorized ? SubmitAction.SAVE : SubmitAction.UPDATE
-                      }
-                    >
-                      {submitBtnText}
-                    </SubmitButton>
-                  </div>
-                )}
-            </div>
-            <APIErrorNotifications
-              bankTransaction={bankTransaction}
-              containerWidth={containerWidth}
-            />
-          </span>
+                          {submitBtnText}
+                        </SubmitButton>
+                      </div>
+                    )}
+                </div>
+                <APIErrorNotifications
+                  bankTransaction={bankTransaction}
+                  containerWidth={containerWidth}
+                />
+              </VStack>
+            </span>
+          </>
         )}
       </span>
+
     )
   },
 )
 
 ExpandedBankTransactionRow.displayName = 'ExpandedBankTransactionRow'
-
-export { ExpandedBankTransactionRow }

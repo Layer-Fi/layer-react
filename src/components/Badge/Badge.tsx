@@ -1,7 +1,9 @@
-import { ReactNode } from 'react'
-import { ButtonProps } from '@components/Button/Button'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
+import { type ReactNode } from 'react'
 import classNames from 'classnames'
+
+import { type ButtonProps } from '@components/Button/Button'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
+
 import './badge.scss'
 
 export enum BadgeSize {

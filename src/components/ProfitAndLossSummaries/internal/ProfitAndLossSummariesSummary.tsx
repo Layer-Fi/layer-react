@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { MoneySpan } from '@ui/Typography/MoneySpan'

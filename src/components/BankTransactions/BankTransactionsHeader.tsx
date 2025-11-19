@@ -1,33 +1,33 @@
-import { Heading, HeadingSize } from '@components/Typography/Heading'
-import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
-import { ButtonVariant } from '@components/Button/Button'
 import { useCallback, useMemo, useState } from 'react'
-import { DisplayState } from '@internal-types/bank_transactions'
-import { Header } from '@components/Container/Header'
-import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
-import { MobileComponentType } from '@components/BankTransactions/constants'
+import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
+import { endOfMonth, startOfMonth } from 'date-fns'
+
+import { DisplayState } from '@internal-types/bank_transactions'
+import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
+import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
+import { BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
+import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
+import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
+import { useDebounce } from '@hooks/useDebounce/useDebounce'
+import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { useDebounce } from '@hooks/useDebounce/useDebounce'
-import { SearchField } from '@components/SearchField/SearchField'
-import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { HStack } from '@ui/Stack/Stack'
-import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
-import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
-import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
-import { BankTransactionsUploadMenu } from '@components/BankTransactions/BankTransactionsUploadMenu'
-import { BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
-import { BankTransactionsHeaderMenu } from '@components/BankTransactions/BankTransactionsHeaderMenu'
-import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
+import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
+import { type MobileComponentType } from '@components/BankTransactions/constants'
+import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
+import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
+import { ButtonVariant } from '@components/Button/Button'
+import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
+import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
-import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
-import type { ZonedDateTime } from '@internationalized/date'
-import { endOfMonth, startOfMonth } from 'date-fns'
-import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
+import { SearchField } from '@components/SearchField/SearchField'
+import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
+import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
+import { Heading, HeadingSize } from '@components/Typography/Heading'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -212,6 +212,17 @@ export const BankTransactionsHeader = ({
     })
   }
 
+  const headerMenuActions = useMemo(() => {
+    const actions: BankTransactionsHeaderMenuActions[] = []
+    if (withUploadMenu) {
+      actions.push(BankTransactionsHeaderMenuActions.UploadTransactions)
+    }
+    if (showCategorizationRules) {
+      actions.push(BankTransactionsHeaderMenuActions.ManageCategorizationRules)
+    }
+    return actions
+  }, [withUploadMenu, showCategorizationRules])
+
   return (
     <Header
       className={classNames(
@@ -260,9 +271,7 @@ export const BankTransactionsHeader = ({
             iconOnly={listView}
             disabled={showBulkActions}
           />
-          {showCategorizationRules
-            ? <BankTransactionsHeaderMenu withUploadMenu={withUploadMenu} isDisabled={showBulkActions} />
-            : withUploadMenu && <BankTransactionsUploadMenu isDisabled={showBulkActions} />}
+          <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
         </HStack>
       </BankTransactionsActions>
     </Header>

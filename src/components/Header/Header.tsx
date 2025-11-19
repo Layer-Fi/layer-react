@@ -1,8 +1,8 @@
 import {
-  CSSProperties,
-  MutableRefObject,
-  ReactNode,
+  type CSSProperties,
   forwardRef,
+  type MutableRefObject,
+  type ReactNode,
 } from 'react'
 import classNames from 'classnames'
 

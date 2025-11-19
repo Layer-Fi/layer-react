@@ -1,14 +1,15 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import type { Key } from 'swr'
 import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+
 import { post } from '@api/layer/authenticated_http'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useAuth } from '@hooks/useAuth'
-import { Schema } from 'effect'
-import { useInvoicesGlobalCacheActions } from '@features/invoices/api/useListInvoices'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useInvoiceSummaryStatsCacheActions } from '@features/invoices/api/useInvoiceSummaryStats'
-import { CreateCustomerRefundSchema, CustomerRefundSchema } from '@features/invoices/customerRefundSchemas'
-import { InvoiceStatus, type Invoice } from '@features/invoices/invoiceSchemas'
+import { useInvoicesGlobalCacheActions } from '@features/invoices/api/useListInvoices'
+import { type CreateCustomerRefundSchema, CustomerRefundSchema } from '@features/invoices/customerRefundSchemas'
+import { type Invoice, InvoiceStatus } from '@features/invoices/invoiceSchemas'
 
 const REFUND_INVOICE_TAG_KEY = '#refund-invoice'
 

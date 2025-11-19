@@ -1,26 +1,31 @@
 import { forwardRef } from 'react'
+import type { DateValue, ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
-import type { ZonedDateTime } from '@internationalized/date'
 import {
   DateField as ReactAriaDateField,
   type DateFieldProps as ReactAriaDateFieldProps,
-  DateSegment as ReactAriaDateSegment,
-  type DateSegmentProps as ReactAriaDateSegmentProps,
   DateInput as ReactAriaDateInput,
   type DateInputProps as ReactAriaDateInputProps,
   DatePicker as ReactAriaDatePicker,
   type DatePickerProps as ReactAriaDatePickerProps,
+  DateSegment as ReactAriaDateSegment,
+  type DateSegmentProps as ReactAriaDateSegmentProps,
 } from 'react-aria-components'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+
 import './date.scss'
 
 const DATE_FIELD_CLASS_NAME = 'Layer__UI__DateField'
-type DateFieldProps = ReactAriaDateFieldProps<ZonedDateTime> & {
+type DateFieldProps<T extends DateValue> = ReactAriaDateFieldProps<T> & {
   inline?: boolean
 }
 
-export const DateField = forwardRef<HTMLDivElement, DateFieldProps>(
-  function DateField({ inline, className, isReadOnly, ...restProps }, ref) {
+export const DateField = forwardRef(
+  function DateField<T extends DateValue>(
+    { inline, className, isReadOnly, ...restProps }: DateFieldProps<T>,
+    ref: React.Ref<HTMLDivElement>,
+  ) {
     const dataProperties = toDataProperties({ inline, readonly: isReadOnly })
 
     return (
@@ -33,7 +38,9 @@ export const DateField = forwardRef<HTMLDivElement, DateFieldProps>(
       />
     )
   },
-)
+) as <T extends DateValue>(
+  props: DateFieldProps<T> & { ref?: React.Ref<HTMLDivElement> }
+) => React.ReactElement
 
 const DATE_INPUT_CLASS_NAME = 'Layer__UI__DateInput'
 type DateInputProps = Omit<ReactAriaDateInputProps, 'className'> & {

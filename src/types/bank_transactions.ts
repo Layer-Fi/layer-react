@@ -1,14 +1,14 @@
+import { type Categorization } from '@internal-types/categories'
+import { type Direction, type S3PresignedUrl } from '@internal-types/general'
+import { type CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { type UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { type MatchDetailsType } from '@schemas/bankTransactions/match'
+import type { CategorizationEncoded } from '@schemas/categorization'
 import type { CustomerSchema } from '@schemas/customer'
 import type { VendorSchema } from '@schemas/vendor'
-import { MatchDetailsType } from '@schemas/bankTransactions/match'
-import { Categorization } from '@internal-types/categories'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { S3PresignedUrl, type Direction } from '@internal-types/general'
-import type { Tag, TransactionTagEncoded } from '@features/tags/tagSchemas'
-import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import type { CategorizationEncoded } from '@schemas/categorization'
-import type { CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import type { CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
+import type { Tag, TransactionTagEncoded } from '@features/tags/tagSchemas'
 
 export enum BankTransactionMatchType {
   CONFIRM_MATCH = 'Confirm_Match',

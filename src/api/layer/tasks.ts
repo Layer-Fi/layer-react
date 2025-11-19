@@ -1,5 +1,5 @@
-import { FileMetadata } from '@internal-types/file_upload'
-import { RawTask } from '@internal-types/tasks'
+import { type FileMetadata } from '@internal-types/file_upload'
+import { type RawTask } from '@internal-types/tasks'
 import { post, postWithFormData } from '@api/layer/authenticated_http'
 
 type SubmitUserResponseForTaskBody = {

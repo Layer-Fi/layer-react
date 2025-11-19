@@ -1,4 +1,4 @@
-import { forwardRef, type ComponentProps, type PropsWithChildren } from 'react'
+import { type ComponentProps, forwardRef, type PropsWithChildren } from 'react'
 import {
   Dialog as ReactAriaDialog,
   type DialogProps,
@@ -6,7 +6,10 @@ import {
   ModalOverlay as ReactAriaModalOverlay,
   type ModalOverlayProps,
 } from 'react-aria-components'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
+
 import './modal.scss'
 
 type ModalSize = 'md' | 'lg' | 'xl'
@@ -138,13 +141,41 @@ export function Drawer({
   isDismissable = false,
   role,
 }: DrawerProps) {
+  const isMobileDrawer = variant === 'mobile-drawer'
+  const shouldUseFadeOverlay = variant === 'drawer' || isMobileDrawer
+
+  const modalContent = (
+    <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
+      <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
+        {children}
+      </Dialog>
+    </InternalModal>
+  )
+
+  const wrappedModalContent = isMobileDrawer
+    ? (
+      <AnimatedPresenceDiv
+        variant='slideUp'
+        isOpen={isOpen}
+        className='Layer__ModalContentSlideUpMotionContent'
+        slotProps={{ AnimatePresence: { initial: true } }}
+      >
+        {modalContent}
+      </AnimatedPresenceDiv>
+    )
+    : modalContent
+
+  const overlayContent = shouldUseFadeOverlay
+    ? (
+      <AnimatedPresenceDiv variant='fade' isOpen={isOpen} className='Layer__ModalContentFadeMotionContent'>
+        {wrappedModalContent}
+      </AnimatedPresenceDiv>
+    )
+    : wrappedModalContent
+
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
-      <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
-          {children}
-        </Dialog>
-      </InternalModal>
+      {overlayContent}
     </ModalOverlay>
   )
 }

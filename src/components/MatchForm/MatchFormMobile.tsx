@@ -1,12 +1,15 @@
 import {
   GridList,
 } from 'react-aria-components'
-import { ErrorText } from '@components/Typography/ErrorText'
-import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+
+import { type BankTransaction, type SuggestedMatch } from '@internal-types/bank_transactions'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
-import { MatchFormMobileItem } from './MatchFormMobileItem'
-import { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
+import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { ErrorText } from '@components/Typography/ErrorText'
+
 import './matchFormMobile.scss'
+
+import { MatchFormMobileItem } from './MatchFormMobileItem'
 
 export interface MatchFormMobileProps {
   bankTransaction: BankTransaction

@@ -1,12 +1,13 @@
-import { Label, Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
-import { VStack } from '@ui/Stack/Stack'
 import { useCallback, useId, useState } from 'react'
-import { useCountSelectedIds, useSelectedIds, useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { isApiCategorizationAsOption, isCategoryAsOption, type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { useBulkCategorize } from '@hooks/useBankTransactions/useBulkCategorize'
 import pluralize from 'pluralize'
+
+import { useBulkCategorize } from '@hooks/useBankTransactions/useBulkCategorize'
+import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { VStack } from '@ui/Stack/Stack'
+import { Label, Span } from '@ui/Typography/Text'
+import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
 
 export enum CategorizationMode {
   Categorize = 'Categorize',

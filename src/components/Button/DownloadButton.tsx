@@ -1,6 +1,6 @@
-import { RetryButton } from '@components/Button/RetryButton'
 import DownloadCloud from '@icons/DownloadCloud'
-import { ButtonProps, Button, ButtonVariant } from '@components/Button/Button'
+import { Button, type ButtonProps, ButtonVariant } from '@components/Button/Button'
+import { RetryButton } from '@components/Button/RetryButton'
 
 interface DownloadButtonProps {
   onClick?: () => void | Promise<void>

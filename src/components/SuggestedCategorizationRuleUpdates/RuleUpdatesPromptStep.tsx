@@ -1,20 +1,22 @@
-import { Button } from '@ui/Button/Button'
 import { useCallback, useState } from 'react'
-import { UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { useWizard } from '@components/Wizard/Wizard'
+
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { useRejectCategorizationRulesUpdateSuggestion } from '@hooks/useCategorizationRules/useRejectCategorizationRulesUpdateSuggestion'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { Button } from '@ui/Button/Button'
 import { CheckboxWithTooltip } from '@ui/Checkbox/Checkbox'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { CreateRuleButton } from '@components/SuggestedCategorizationRuleUpdates/CreateRuleButton'
-import { useRejectCategorizationRulesUpdateSuggestion } from '@hooks/useCategorizationRules/useRejectCategorizationRulesUpdateSuggestion'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useWizard } from '@components/Wizard/Wizard'
 
 interface RuleUpdatesPromptStepProps {
   close: () => void
   ruleSuggestion: UpdateCategorizationRulesSuggestion
+  isDrawer?: boolean
 }
 
-export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesPromptStepProps) {
+export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleUpdatesPromptStepProps) {
   const { next } = useWizard()
   const { addToast } = useLayerContext()
   const [dontAskAgain, setDontAskAgain] = useState(false)
@@ -38,7 +40,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesProm
   }, [addToast, close, dontAskAgain, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
 
   return (
-    <VStack gap='3xl'>
+    <VStack gap='3xl' pbe={isDrawer ? '5xl' : undefined}>
       <Span size='md'>{ruleSuggestion.suggestionPrompt}</Span>
       <VStack gap='sm' align='end'>
         <HStack gap='sm' justify='end' align='end'>
@@ -73,7 +75,6 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesProm
           </Label>
         </HStack>
       </VStack>
-
     </VStack>
   )
 }

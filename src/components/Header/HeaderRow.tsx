@@ -1,5 +1,6 @@
-import { CSSProperties, ReactNode } from 'react'
+import { type CSSProperties, type ReactNode } from 'react'
 import classNames from 'classnames'
+
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
 interface HeaderRowProps {

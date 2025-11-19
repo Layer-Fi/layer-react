@@ -1,13 +1,14 @@
+import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
+
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { post } from '@api/layer/authenticated_http'
-import { type TagValueDefinitionSchema } from '@features/tags/tagSchemas'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useCallback } from 'react'
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { TAG_DIMENSIONS_TAG_KEY } from '@features/tags/api/useTagDimensions'
+import { type TagValueDefinitionSchema } from '@features/tags/tagSchemas'
 
 const CREATE_TAG_VALUE_DEFINITION_TAG_KEY = '#create-tag-value-definition'
 

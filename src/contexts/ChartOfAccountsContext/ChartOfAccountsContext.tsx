@@ -1,5 +1,6 @@
 import { createContext } from 'react'
-import { useChartOfAccounts } from '@hooks/useChartOfAccounts/useChartOfAccounts'
+
+import { type useChartOfAccounts } from '@hooks/useChartOfAccounts/useChartOfAccounts'
 
 export type ChartOfAccountsContextType = ReturnType<typeof useChartOfAccounts>
 export const ChartOfAccountsContext = createContext<ChartOfAccountsContextType>(

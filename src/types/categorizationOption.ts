@@ -1,14 +1,15 @@
 import { Schema } from 'effect'
-import type { SuggestedMatch, Split } from '@internal-types/bank_transactions'
+
+import type { Split, SuggestedMatch } from '@internal-types/bank_transactions'
+import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
 import {
-  ClassificationSchema,
-  makeExclusion,
   type CategorizationEncoded,
   type Classification,
   type ClassificationEncoded,
+  ClassificationSchema,
+  makeExclusion,
   type NestedCategorization,
 } from '@schemas/categorization'
-import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { BaseComboBoxOption } from '@ui/ComboBox/baseComboBoxOption'
 

@@ -1,8 +1,10 @@
-import { BankTransaction } from '@internal-types/bank_transactions'
-import { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isPlaceholderAsOption, isSuggestedMatchAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { useCallback, useMemo } from 'react'
+
+import { type BankTransaction } from '@internal-types/bank_transactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+
 import { buildCategorizeBankTransactionPayloadForSplit } from './utils'
 
 type UseSaveBankTransactionRowResult = {

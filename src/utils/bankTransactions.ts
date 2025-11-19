@@ -1,8 +1,9 @@
-import { filterVisibility } from '@components/BankTransactions/utils'
-import { DateRange } from '@internal-types/general'
-import { BankTransaction, DisplayState, SuggestedMatch } from '@internal-types/bank_transactions'
-import { Direction } from '@internal-types/general'
 import { isWithinInterval, parseISO } from 'date-fns'
+
+import { type BankTransaction, DisplayState, type SuggestedMatch } from '@internal-types/bank_transactions'
+import { type DateRange } from '@internal-types/general'
+import { Direction } from '@internal-types/general'
+import { filterVisibility } from '@components/BankTransactions/utils'
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
   return Boolean(

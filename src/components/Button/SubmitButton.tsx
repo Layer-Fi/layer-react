@@ -1,13 +1,14 @@
-import { RetryButton } from '@components/Button/RetryButton'
-import { ButtonHTMLAttributes } from 'react'
+import { type ButtonHTMLAttributes } from 'react'
+import classNames from 'classnames'
+import { UploadCloud } from 'lucide-react'
+
 import AlertCircle from '@icons/AlertCircle'
 import CheckCircle from '@icons/CheckCircle'
 import Loader from '@icons/Loader'
 import Save from '@icons/Save'
-import { DeprecatedTooltip, DeprecatedTooltipTrigger, DeprecatedTooltipContent } from '@components/Tooltip/Tooltip'
-import { ButtonProps, Button, ButtonVariant } from '@components/Button/Button'
-import classNames from 'classnames'
-import { UploadCloud } from 'lucide-react'
+import { Button, type ButtonProps, ButtonVariant } from '@components/Button/Button'
+import { RetryButton } from '@components/Button/RetryButton'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface SubmitButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
