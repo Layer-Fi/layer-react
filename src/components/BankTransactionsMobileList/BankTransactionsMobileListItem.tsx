@@ -234,14 +234,14 @@ export const BankTransactionsMobileListItem = ({
               <VStack
                 align='start'
                 gap='3xs'
-                className='Layer__bankTransactionsMobileListItem__headingContentLeft'
+                className='Layer__BankTransactionsMobileListItem__HeadingContentLeft'
                 pi='md'
                 pb='sm'
               >
                 <Span ellipsis>
                   {bankTransaction.counterparty_name ?? bankTransaction.description}
                 </Span>
-                <Span className='Layer__bankTransactionsMobileListItem__categorizedValue'>
+                <Span className='Layer__BankTransactionsMobileListItem__CategorizedValue'>
                   {categorized && bankTransaction.categorization_status
                     ? getAssignedValue(bankTransaction, renderInAppLink)
                     : null}
@@ -269,9 +269,7 @@ export const BankTransactionsMobileListItem = ({
           {!open && (
             !categorizationEnabled && !categorized
               ? (
-                <span className='Layer__bank-transaction-list-item__processing-info'>
-                  <BankTransactionsProcessingInfo />
-                </span>
+                <BankTransactionsProcessingInfo showAsBadge />
               )
               : (
                 <BankTransactionsListItemCategory
