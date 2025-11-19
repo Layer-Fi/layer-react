@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
+import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { BankTransactionsMobileBulkActionsHeader } from '@components/BankTransactionsMobileList/BankTransactionsMobileBulkActionsHeader'
 import { BankTransactionsMobileListItem } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
@@ -32,6 +33,7 @@ export const BankTransactionsMobileList = ({
   const transactionToOpenContextData = useTransactionToOpen()
   const [bulkActionsEnabled, setBulkActionsEnabled] = useState(false)
   const { clearSelection } = useBulkSelectionActions()
+  useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
   useEffect(() => {
     if (!bulkActionsEnabled) {
