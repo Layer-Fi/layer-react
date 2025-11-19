@@ -76,10 +76,11 @@ export const BankTransactionsCategorizeAllModal = ({
       content={(
         <VStack gap='xs'>
           <VStack gap='3xs'>
-            <Label htmlFor={categorySelectId}>Select category</Label>
+            <Label>Select category</Label>
             {useMobileDrawer
               ? (
                 <CategorySelectDrawerWithTrigger
+                  aria-labelledby={categorySelectId}
                   value={selectedCategory}
                   onChange={setSelectedCategory}
                   showTooltips={false}
