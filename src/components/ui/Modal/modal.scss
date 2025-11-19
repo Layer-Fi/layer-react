@@ -10,6 +10,14 @@
 
   &[data-variant='drawer'] {
     place-items: end;
+
+    &[data-entering] {
+      animation: overlay-fade-in 300ms;
+    }
+
+    &[data-exiting] {
+      animation: overlay-fade-out 300ms;
+    }
   }
 
   &[data-variant='mobile-drawer'] {
@@ -99,6 +107,26 @@
 
   to {
     transform: translateX(0);
+  }
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlay-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
   }
 }
 

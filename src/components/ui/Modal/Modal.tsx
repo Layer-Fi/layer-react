@@ -142,7 +142,6 @@ export function Drawer({
   role,
 }: DrawerProps) {
   const isMobileDrawer = variant === 'mobile-drawer'
-  const shouldUseFadeOverlay = variant === 'drawer' || isMobileDrawer
 
   const modalContent = (
     <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
@@ -152,26 +151,25 @@ export function Drawer({
     </InternalModal>
   )
 
-  const wrappedModalContent = isMobileDrawer
+  const overlayContent = isMobileDrawer
     ? (
       <AnimatedPresenceDiv
-        variant='slideUp'
+        variant='fade'
         isOpen={isOpen}
-        className='Layer__ModalContentSlideUpMotionContent'
+        className='Layer__ModalContentFadeMotionContent'
         slotProps={{ AnimatePresence: { initial: true } }}
       >
-        {modalContent}
+        <AnimatedPresenceDiv
+          variant='slideUp'
+          isOpen={isOpen}
+          className='Layer__ModalContentSlideUpMotionContent'
+          slotProps={{ AnimatePresence: { initial: true } }}
+        >
+          {modalContent}
+        </AnimatedPresenceDiv>
       </AnimatedPresenceDiv>
     )
     : modalContent
-
-  const overlayContent = shouldUseFadeOverlay
-    ? (
-      <AnimatedPresenceDiv variant='fade' isOpen={isOpen} className='Layer__ModalContentFadeMotionContent'>
-        {wrappedModalContent}
-      </AnimatedPresenceDiv>
-    )
-    : wrappedModalContent
 
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>

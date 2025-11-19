@@ -259,7 +259,12 @@ export const TripsTable = () => {
           }}
         />
       </Container>
-      <Drawer isOpen={isTripDrawerOpen} onOpenChange={setIsTripDrawerOpen} aria-label={selectedTrip ? 'Trip details' : 'Record trip'}>
+      <Drawer
+        isOpen={isTripDrawerOpen}
+        onOpenChange={setIsTripDrawerOpen}
+        isDismissable
+        aria-label={selectedTrip ? 'Trip details' : 'Record trip'}
+      >
         {({ close }) => (
           <VStack pb='lg'>
             <VStack pi='md'>
