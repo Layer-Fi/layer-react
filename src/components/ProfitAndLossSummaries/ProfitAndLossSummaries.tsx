@@ -89,6 +89,7 @@ function Internal_ProfitAndLossSummaries({
       return {
         revenuePercentChange: null,
         expensesPercentChange: null,
+        netProfitPercentChange: null,
         comparisonMonth: null,
       }
     }
