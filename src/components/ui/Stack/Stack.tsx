@@ -29,24 +29,25 @@ type InternalStackProps = StackProps & {
 const CLASS_NAME = 'Layer__Stack'
 
 const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
-  function Stack({
-    align,
-    children,
-    className,
-    direction,
-    gap,
-    justify,
-    overflow,
-    pb,
-    pbs,
-    pbe,
-    pi,
-    pis,
-    pie,
-    fluid,
-    ...restProps
-  },
-  ref,
+  function Stack(
+    {
+      align,
+      children,
+      className,
+      direction,
+      gap,
+      justify,
+      overflow,
+      pb,
+      pbs,
+      pbe,
+      pi,
+      pis,
+      pie,
+      fluid,
+      ...restProps
+    },
+    ref,
   ) {
     const dataProperties = toDataProperties({
       align,
