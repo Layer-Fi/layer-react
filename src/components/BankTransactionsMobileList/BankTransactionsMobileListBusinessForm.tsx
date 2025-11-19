@@ -11,6 +11,7 @@ import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
@@ -52,6 +53,11 @@ export const BankTransactionsMobileListBusinessForm = ({
 
   const [sessionCategories, setSessionCategories] = useState<Map<string, BankTransactionCategoryComboBoxOption>>(() => {
     const initialMap = new Map<string, BankTransactionCategoryComboBoxOption>()
+
+    if (bankTransaction.category) {
+      const existingCategory = convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
+      initialMap.set(existingCategory.value, existingCategory)
+    }
 
     if (bankTransaction?.categorization_flow?.type === CategorizationType.ASK_FROM_SUGGESTIONS) {
       bankTransaction.categorization_flow.suggestions.forEach((suggestion) => {
