@@ -42,7 +42,15 @@ export function ProfitAndLossSummariesSummary({
 
   return (
     <HStack gap='xs' align='center'>
-      {Chart && <div className={CHART_AREA_CLASS_NAME}>{Chart}</div>}
+      {Chart && (
+        <HStack
+          align='center'
+          justify='center'
+          className={CHART_AREA_CLASS_NAME}
+        >
+          {Chart}
+        </HStack>
+      )}
 
       <HStack gap='xs' fluid pi='sm'>
       <VStack gap='3xs' fluid>
