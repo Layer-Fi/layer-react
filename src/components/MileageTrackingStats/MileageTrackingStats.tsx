@@ -23,7 +23,18 @@ export const MileageTrackingStats = () => {
   }, [mileageData, selectedYear])
 
   const chartData = useMemo(() => {
-    if (!selectedYearData) return { years: [] }
+    if (!selectedYearData) {
+      return {
+        years: [{
+          year: selectedYear,
+          months: Array.from({ length: 12 }, (_, i) => ({
+            month: i + 1,
+            miles: 0,
+            estimatedDeduction: 0,
+          })),
+        }],
+      }
+    }
     return {
       years: [{
         year: selectedYearData.year,
@@ -34,7 +45,7 @@ export const MileageTrackingStats = () => {
         })),
       }],
     }
-  }, [selectedYearData])
+  }, [selectedYearData, selectedYear])
 
 
 
