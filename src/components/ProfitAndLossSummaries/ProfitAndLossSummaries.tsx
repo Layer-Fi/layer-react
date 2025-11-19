@@ -82,16 +82,11 @@ function Internal_ProfitAndLossSummaries({
 
   const effectiveData = data ?? { income: { value: 0 }, netProfit: 0 }
 
-  const { revenuePercentChange, expensesPercentChange, netProfitPercentChange, comparisonMonth } = useMemo(() => {
+  const comparisonData = useMemo(() => {
     const previousMonthData = previousData?.months?.[0]
 
     if (!previousMonthData) {
-      return {
-        revenuePercentChange: null,
-        expensesPercentChange: null,
-        netProfitPercentChange: null,
-        comparisonMonth: null,
-      }
+      return null
     }
 
     const currentRevenue = effectiveData.income.value ?? 0
@@ -109,6 +104,13 @@ function Internal_ProfitAndLossSummaries({
       comparisonMonth: format(previousMonthStart, 'MMM'),
     }
   }, [previousData, effectiveData, previousMonthStart])
+
+  const {
+    revenuePercentChange = null,
+    expensesPercentChange = null,
+    netProfitPercentChange = null,
+    comparisonMonth = null,
+  } = comparisonData ?? {}
 
   const { unstable_AdditionalListItems = [] } = slots ?? {}
   const listItemCount = unstable_AdditionalListItems.length + 3
@@ -167,7 +169,7 @@ function Internal_ProfitAndLossSummaries({
             amount={data?.netProfit ?? 0}
             variants={variants}
             isLoading={isLoading}
-            percentChange={netProfitPercentChange ?? null}
+            percentChange={netProfitPercentChange}
             comparisonMonth={comparisonMonth ?? undefined}
           />
         </ProfitAndLossSummariesListItem>
