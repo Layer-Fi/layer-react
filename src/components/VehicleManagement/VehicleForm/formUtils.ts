@@ -3,8 +3,7 @@ import { type Vehicle, type VehicleForm } from '@schemas/vehicle'
 export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
   if (vehicle) {
     return {
-      make: vehicle.make,
-      model: vehicle.model,
+      makeAndModel: vehicle.makeAndModel,
       year: vehicle.year,
       licensePlate: vehicle.licensePlate || '',
       vin: vehicle.vin || '',
@@ -13,8 +12,7 @@ export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
   }
 
   return {
-    make: '',
-    model: '',
+    makeAndModel: '',
     year: new Date().getFullYear(),
     licensePlate: '',
     vin: '',
@@ -23,16 +21,12 @@ export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
 }
 
 export const validateVehicleForm = ({ vehicle }: { vehicle: VehicleForm }) => {
-  const { make, model, year } = vehicle
+  const { makeAndModel, year } = vehicle
 
   const errors = []
 
-  if (!make.trim()) {
-    errors.push({ make: 'Make is a required field.' })
-  }
-
-  if (!model.trim()) {
-    errors.push({ model: 'Model is a required field.' })
+  if (!makeAndModel.trim()) {
+    errors.push({ makeAndModel: 'Make and model is a required field.' })
   }
 
   const currentYear = new Date().getFullYear()
@@ -45,8 +39,7 @@ export const validateVehicleForm = ({ vehicle }: { vehicle: VehicleForm }) => {
 
 export const convertVehicleFormToUpsertVehicle = (form: VehicleForm): unknown => {
   return {
-    make: form.make.trim(),
-    model: form.model.trim(),
+    makeAndModel: form.makeAndModel.trim(),
     year: form.year,
     licensePlate: form.licensePlate.trim() || null,
     vin: form.vin.trim() || null,

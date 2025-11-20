@@ -13,9 +13,10 @@ export const VehicleSchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
 
-  make: Schema.String,
-
-  model: Schema.String,
+  makeAndModel: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('make_and_model'),
+  ),
 
   year: Schema.Number,
 
@@ -48,8 +49,7 @@ export type Vehicle = typeof VehicleSchema.Type
 export type VehicleEncoded = typeof VehicleSchema.Encoded
 
 export const VehicleFormSchema = Schema.Struct({
-  make: Schema.String,
-  model: Schema.String,
+  makeAndModel: Schema.String,
   year: Schema.Number,
   licensePlate: Schema.String,
   vin: Schema.String,
@@ -59,8 +59,10 @@ export const VehicleFormSchema = Schema.Struct({
 export type VehicleForm = typeof VehicleFormSchema.Type
 
 export const UpsertVehicleSchema = Schema.Struct({
-  make: Schema.String,
-  model: Schema.String,
+  makeAndModel: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('make_and_model'),
+  ),
   year: Schema.Number,
   licensePlate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
