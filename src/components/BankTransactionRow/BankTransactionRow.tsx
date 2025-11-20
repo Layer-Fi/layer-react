@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
 
@@ -155,8 +155,8 @@ export const BankTransactionRow = ({
   const rowClassName = classNames(
     className,
     bankTransaction.recently_categorized
-      && editable
-      && shouldHideAfterCategorize()
+    && editable
+    && shouldHideAfterCategorize()
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
@@ -228,7 +228,7 @@ export const BankTransactionRow = ({
         </td>
         <td
           className={`Layer__table-cell Layer__table-cell__amount-col Layer__bank-transactions__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${isCredit(bankTransaction) ? 'credit' : 'debit'
-            }`}
+          }`}
           {...showReceiptDataProperties}
         >
           <VStack align='end'>
@@ -303,7 +303,7 @@ export const BankTransactionRow = ({
                   icon={(
                     <ChevronDownFill
                       className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                        }`}
+                      }`}
                     />
                   )}
                 />
@@ -380,7 +380,7 @@ export const BankTransactionRow = ({
                   icon={(
                     <ChevronDownFill
                       className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                        }`}
+                      }`}
                     />
                   )}
                 />
