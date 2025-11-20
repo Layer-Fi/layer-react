@@ -15,7 +15,6 @@ import FileIcon from '@icons/File'
 import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { isCategorized } from '@components/BankTransactions/utils'
@@ -46,24 +45,21 @@ export enum Purpose {
   more = 'more',
 }
 
-const getAssignedValue = (
+const getInAppLink = (
   bankTransaction: BankTransaction,
   renderInAppLink?: (details: LinkingMetadata) => ReactNode,
 ) => {
-  if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
-    return extractDescriptionForSplit(bankTransaction.category)
-  }
-
-  if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
-    if (renderInAppLink && bankTransaction.match?.details) {
-      const matchDetails = bankTransaction.match.details ? decodeMatchDetails(bankTransaction.match.details) : undefined
-      const inAppLink = matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : undefined
-      if (inAppLink) return inAppLink
+  if (
+    bankTransaction.categorization_status === CategorizationStatus.MATCHED
+    && renderInAppLink
+    && bankTransaction.match?.details
+  ) {
+    const matchDetails = decodeMatchDetails(bankTransaction.match.details)
+    if (matchDetails) {
+      return renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails))
     }
-    return bankTransaction.match?.details?.description
   }
-
-  return bankTransaction.category?.display_name
+  return null
 }
 
 export const BankTransactionsMobileListItem = ({
@@ -200,6 +196,13 @@ export const BankTransactionsMobileListItem = ({
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { renderInAppLink } = useInAppLinkContext()
 
+  const inAppLink = useMemo(() => {
+    if (!categorized) {
+      return null
+    }
+    return getInAppLink(bankTransaction, renderInAppLink)
+  }, [categorized, bankTransaction, renderInAppLink])
+
   const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
 
   const className = 'Layer__bank-transaction-mobile-list-item'
@@ -240,12 +243,11 @@ export const BankTransactionsMobileListItem = ({
                 <Span ellipsis>
                   {bankTransaction.counterparty_name ?? bankTransaction.description}
                 </Span>
-                {categorized && bankTransaction.categorization_status
-                  && (
-                    <Span className='Layer__BankTransactionsMobileListItem__CategorizedValue'>
-                      {getAssignedValue(bankTransaction, renderInAppLink)}
-                    </Span>
-                  )}
+                {inAppLink && (
+                  <Span className='Layer__BankTransactionsMobileListItem__CategorizedValue'>
+                    {inAppLink}
+                  </Span>
+                )}
                 <HStack gap='2xs' align='center'>
                   <Span size='sm' ellipsis>
                     {fullAccountName}
