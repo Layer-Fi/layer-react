@@ -58,6 +58,7 @@ const getAssignedValue = (
       return renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails))
     }
   }
+  return null
 }
 
 export const BankTransactionsMobileListItem = ({
@@ -195,9 +196,7 @@ export const BankTransactionsMobileListItem = ({
   const { renderInAppLink } = useInAppLinkContext()
 
   const assignedValue = useMemo(() => {
-    if (!categorized
-      || bankTransaction.categorization_status !== CategorizationStatus.MATCHED
-      || !renderInAppLink) {
+    if (!categorized) {
       return null
     }
     return getAssignedValue(bankTransaction, renderInAppLink)
