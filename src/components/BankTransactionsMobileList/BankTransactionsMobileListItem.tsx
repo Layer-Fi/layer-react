@@ -221,7 +221,6 @@ export const BankTransactionsMobileListItem = ({
           <HStack
             gap='sm'
             justify='space-between'
-            align='center'
             pie='md'
           >
             <HStack align='center' overflow='hidden'>
