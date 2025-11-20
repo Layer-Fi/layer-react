@@ -241,11 +241,12 @@ export const BankTransactionsMobileListItem = ({
                 <Span ellipsis>
                   {bankTransaction.counterparty_name ?? bankTransaction.description}
                 </Span>
-                <Span className='Layer__BankTransactionsMobileListItem__CategorizedValue'>
-                  {categorized && bankTransaction.categorization_status
-                    ? getAssignedValue(bankTransaction, renderInAppLink)
-                    : null}
-                </Span>
+                {categorized && bankTransaction.categorization_status
+                  && (
+                    <Span className='Layer__BankTransactionsMobileListItem__CategorizedValue'>
+                      {getAssignedValue(bankTransaction, renderInAppLink)}
+                    </Span>
+                  )}
                 <HStack gap='2xs' align='center'>
                   <Span size='sm' ellipsis>
                     {fullAccountName}
