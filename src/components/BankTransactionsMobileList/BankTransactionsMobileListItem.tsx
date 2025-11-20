@@ -284,6 +284,7 @@ export const BankTransactionsMobileListItem = ({
         <AnimatedPresenceDiv variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
           <BankTransactionsMobileListItemExpandedRow
             bankTransaction={bankTransaction}
+            isOpen={open}
             showCategorization={categorizationEnabled}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
