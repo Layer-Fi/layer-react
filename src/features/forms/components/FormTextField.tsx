@@ -5,8 +5,10 @@ import { InputGroup } from '@ui/Input/InputGroup'
 import { BaseFormTextField, type BaseFormTextFieldProps } from '@features/forms/components/BaseFormTextField'
 import { useFieldContext } from '@features/forms/hooks/useForm'
 
-type FormTextFieldProps = Omit<BaseFormTextFieldProps, 'isTextArea'>
-export function FormTextField(props: FormTextFieldProps) {
+type FormTextFieldProps = Omit<BaseFormTextFieldProps, 'isTextArea'> & {
+  placeholder?: string
+}
+export function FormTextField({ placeholder, ...props }: FormTextFieldProps) {
   const field = useFieldContext<string>()
 
   const { name, state, handleChange, handleBlur } = field
@@ -25,6 +27,7 @@ export function FormTextField(props: FormTextFieldProps) {
           value={value}
           onChange={onChange}
           onBlur={handleBlur}
+          placeholder={placeholder}
           inset
         />
       </InputGroup>

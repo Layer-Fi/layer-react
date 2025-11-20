@@ -13,7 +13,7 @@ export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
 
   return {
     makeAndModel: '',
-    year: new Date().getFullYear(),
+    year: Number.NaN,
     licensePlate: '',
     vin: '',
     description: '',
@@ -29,8 +29,12 @@ export const validateVehicleForm = ({ vehicle }: { vehicle: VehicleForm }) => {
     errors.push({ makeAndModel: 'Make and model is a required field.' })
   }
 
+  if (Number.isNaN(year)) {
+    errors.push({ year: 'Year is a required field.' })
+  }
+
   const currentYear = new Date().getFullYear()
-  if (year < 1900 || year > currentYear + 1) {
+  if (!Number.isNaN(year) && (year < 1900 || year > currentYear + 1)) {
     errors.push({ year: `Year must be between 1900 and ${currentYear + 1}.` })
   }
 

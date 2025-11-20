@@ -33,10 +33,6 @@ export const validateTripForm = ({ trip }: { trip: TripForm }) => {
 
   const errors = []
 
-  if (vehicle === null) {
-    errors.push({ vehicle: 'Vehicle is a required field.' })
-  }
-
   if (tripDate === null) {
     errors.push({ tripDate: 'Trip date is a required field.' })
   }
@@ -51,6 +47,10 @@ export const validateTripForm = ({ trip }: { trip: TripForm }) => {
 
   if (!purpose) {
     errors.push({ purpose: 'Purpose is a required field.' })
+  }
+
+  if (vehicle === null) {
+    errors.push({ vehicle: 'Vehicle is a required field.' })
   }
 
   return errors.length > 0 ? errors : null
