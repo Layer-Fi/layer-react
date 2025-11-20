@@ -54,23 +54,23 @@ export const VehicleForm = (props: VehicleFormProps) => {
       </form.Subscribe>
 
       <form.AppField name='makeAndModel'>
-        {field => <field.FormTextField label='Make and model' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__MakeAndModel`} isReadOnly={isReadOnly} />}
+        {field => <field.FormTextField label='Make and model' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__MakeAndModel`} isReadOnly={isReadOnly} placeholder='Enter vehicle make and model' />}
       </form.AppField>
 
       <form.AppField name='year'>
-        {field => <field.FormNumberField maxValue={9999} label='Year' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Year`} isReadOnly={isReadOnly} />}
+        {field => <field.FormNumberField maxValue={9999} label='Year' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Year`} isReadOnly={isReadOnly} placeholder='Enter vehicle year' />}
       </form.AppField>
 
       <form.AppField name='licensePlate'>
-        {field => <field.FormTextField label='License plate' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__LicensePlate`} isReadOnly={isReadOnly} />}
+        {field => <field.FormTextField label='License plate' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__LicensePlate`} isReadOnly={isReadOnly} placeholder='Enter license plate' />}
       </form.AppField>
 
       <form.AppField name='vin'>
-        {field => <field.FormTextField label='VIN' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Vin`} isReadOnly={isReadOnly} />}
+        {field => <field.FormTextField label='VIN' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Vin`} isReadOnly={isReadOnly} placeholder='Enter VIN' />}
       </form.AppField>
 
       <form.AppField name='description'>
-        {field => <field.FormTextAreaField label='Description' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Description`} isReadOnly={isReadOnly} />}
+        {field => <field.FormTextAreaField label='Description' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Description`} isReadOnly={isReadOnly} placeholder='Add description' />}
       </form.AppField>
 
       <VStack justify='end' className={`${VEHICLE_FORM_CSS_PREFIX}__Submit`}>
