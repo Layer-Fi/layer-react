@@ -45,7 +45,7 @@ function buildKey({
 
 export const useBulkUncategorize = () => {
   const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { businessId, eventCallbacks } = useLayerContext()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
@@ -79,9 +79,11 @@ export const useBulkUncategorize = () => {
 
       void forceReloadBankTransactions()
 
+      eventCallbacks?.onTransactionCategorized?.()
+
       return triggerResult
     },
-    [originalTrigger, forceReloadBankTransactions],
+    [originalTrigger, forceReloadBankTransactions, eventCallbacks],
   )
 
   return new Proxy(mutationResponse, {

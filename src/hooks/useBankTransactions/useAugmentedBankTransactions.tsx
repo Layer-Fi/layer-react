@@ -251,7 +251,7 @@ export const useAugmentedBankTransactions = (
         }
       })
       .finally(() => {
-        eventCallbacks?.onTransactionCategorized?.(bankTransactionId)
+        eventCallbacks?.onTransactionCategorized?.()
       })
   }
 
@@ -338,7 +338,7 @@ export const useAugmentedBankTransactions = (
         }
       })
       .finally(() => {
-        eventCallbacks?.onTransactionCategorized?.(bankTransactionId)
+        eventCallbacks?.onTransactionCategorized?.()
       })
   }
 
