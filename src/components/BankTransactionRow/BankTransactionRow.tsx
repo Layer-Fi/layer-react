@@ -137,17 +137,13 @@ export const BankTransactionRow = ({
     setOpen(false)
   }
 
-  const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
-    const target = e.target as HTMLElement | null
-    const isInteractive = target?.closest(
-      'button, a, input, label, [role="button"], '
-      + '.Layer__Portal, .Layer__ComboBoxContainer',
-    )
+  const handleRowClick = () => {
+    setShowRetry(false)
+    toggleOpen()
+  }
 
-    if (!isInteractive) {
-      setShowRetry(false)
-      toggleOpen()
-    }
+  const preventRowExpansion = (e: React.MouseEvent) => {
+    e.stopPropagation()
   }
 
   const className = 'Layer__bank-transaction-row'
@@ -175,7 +171,7 @@ export const BankTransactionRow = ({
     <>
       <tr className={rowClassName} onClick={handleRowClick}>
         {categorizationEnabled && (
-          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
+          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col' onClick={preventRowExpansion}>
             <span className='Layer__table-cell-content'>
               <Checkbox
                 isSelected={isTransactionSelected}
@@ -258,6 +254,7 @@ export const BankTransactionRow = ({
             `${className}__actions-cell`,
             `${className}__actions-cell--${open ? 'open' : 'close'}`,
           )}
+          onClick={preventRowExpansion}
         >
           {open
             ? (
