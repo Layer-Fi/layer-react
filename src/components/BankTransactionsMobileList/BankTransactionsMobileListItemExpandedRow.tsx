@@ -29,6 +29,7 @@ const PURPOSE_TOGGLE_OPTIONS = [
 
 export interface BankTransactionsMobileListItemExpandedRowProps {
   bankTransaction: BankTransaction
+  isOpen?: boolean
   showCategorization?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -37,6 +38,7 @@ export interface BankTransactionsMobileListItemExpandedRowProps {
 
 export const BankTransactionsMobileListItemExpandedRow = ({
   bankTransaction,
+  isOpen,
   showCategorization,
   showDescriptions,
   showReceiptUploads,
@@ -60,6 +62,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
           />
         )}
       <BankTransactionsMobileForms
+        isOpen={isOpen}
         purpose={purpose}
         bankTransaction={bankTransaction}
         showCategorization={showCategorization}
