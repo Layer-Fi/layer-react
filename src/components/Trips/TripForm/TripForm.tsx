@@ -61,15 +61,15 @@ export const TripForm = (props: TripFormProps) => {
       </form.AppField>
 
       <form.AppField name='distance'>
-        {field => <field.FormBigDecimalField label='Distance (miles)' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Distance`} isReadOnly={isReadOnly} maxDecimalPlaces={1} />}
+        {field => <field.FormBigDecimalField label='Distance (miles)' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Distance`} isReadOnly={isReadOnly} placeholder='Enter distance' />}
       </form.AppField>
 
       <form.AppField name='startAddress'>
-        {field => <field.FormTextField label='Start address' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__StartAddress`} isReadOnly={isReadOnly} />}
+        {field => <field.FormTextField label='Start address' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__StartAddress`} isReadOnly={isReadOnly} placeholder='Enter address' />}
       </form.AppField>
 
       <form.AppField name='endAddress'>
-        {field => <field.FormTextField label='End address' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__EndAddress`} isReadOnly={isReadOnly} />}
+        {field => <field.FormTextField label='End address' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__EndAddress`} isReadOnly={isReadOnly} placeholder='Enter address' />}
       </form.AppField>
 
       <form.Field name='purpose'>
@@ -85,7 +85,7 @@ export const TripForm = (props: TripFormProps) => {
 
       <form.AppField name='description'>
         {field => (
-          <field.FormTextAreaField label='Description' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Description`} isReadOnly={isReadOnly} />
+          <field.FormTextAreaField label='Description' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Description`} isReadOnly={isReadOnly} placeholder='Add description' />
         )}
       </form.AppField>
 
@@ -97,6 +97,7 @@ export const TripForm = (props: TripFormProps) => {
             isReadOnly={isReadOnly}
             inline
             containerClassName={`${TRIP_FORM_FIELD_CSS_PREFIX}__Vehicle`}
+            placeholder='Add vehicle'
           />
         )}
       </form.Field>
