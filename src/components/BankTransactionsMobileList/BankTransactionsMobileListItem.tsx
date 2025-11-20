@@ -45,14 +45,15 @@ export enum Purpose {
   more = 'more',
 }
 
-const getAssignedValue = (
+const getInAppLink = (
   bankTransaction: BankTransaction,
   renderInAppLink?: (details: LinkingMetadata) => ReactNode,
 ) => {
   if (
     bankTransaction.categorization_status === CategorizationStatus.MATCHED
     && renderInAppLink
-    && bankTransaction.match?.details) {
+    && bankTransaction.match?.details
+  ) {
     const matchDetails = decodeMatchDetails(bankTransaction.match.details)
     if (matchDetails) {
       return renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails))
@@ -195,11 +196,11 @@ export const BankTransactionsMobileListItem = ({
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { renderInAppLink } = useInAppLinkContext()
 
-  const assignedValue = useMemo(() => {
+  const inAppLink = useMemo(() => {
     if (!categorized) {
       return null
     }
-    return getAssignedValue(bankTransaction, renderInAppLink)
+    return getInAppLink(bankTransaction, renderInAppLink)
   }, [categorized, bankTransaction, renderInAppLink])
 
   const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
@@ -242,9 +243,9 @@ export const BankTransactionsMobileListItem = ({
                 <Span ellipsis>
                   {bankTransaction.counterparty_name ?? bankTransaction.description}
                 </Span>
-                {assignedValue && (
+                {inAppLink && (
                   <Span className='Layer__BankTransactionsMobileListItem__CategorizedValue'>
-                    {assignedValue}
+                    {inAppLink}
                   </Span>
                 )}
                 <HStack gap='2xs' align='center'>
