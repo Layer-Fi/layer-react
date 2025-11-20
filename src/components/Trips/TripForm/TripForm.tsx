@@ -57,35 +57,73 @@ export const TripForm = (props: TripFormProps) => {
       </form.Subscribe>
 
       <form.AppField name='tripDate'>
-        {field => <field.FormDateField<CalendarDate> label='Trip date' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__TripDate`} isReadOnly={isReadOnly} />}
+        {field => (
+          <field.FormDateField<CalendarDate>
+            label='Trip date'
+            inline
+            isReadOnly={isReadOnly}
+            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__TripDate`}
+          />
+        )}
       </form.AppField>
 
       <form.AppField name='distance'>
-        {field => <field.FormBigDecimalField label='Distance (miles)' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Distance`} isReadOnly={isReadOnly} maxDecimalPlaces={2} placeholder='Enter distance' />}
+        {field => (
+          <field.FormBigDecimalField
+            label='Distance (miles)'
+            inline
+            isReadOnly={isReadOnly}
+            maxDecimalPlaces={2}
+            placeholder='Enter distance'
+            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Distance`}
+          />
+        )}
       </form.AppField>
 
       <form.AppField name='startAddress'>
-        {field => <field.FormTextField label='Start address' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__StartAddress`} isReadOnly={isReadOnly} placeholder='Enter address' />}
+        {field => (
+          <field.FormTextField
+            label='Start address'
+            inline
+            isReadOnly={isReadOnly}
+            placeholder='Enter address'
+            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__StartAddress`}
+          />
+        )}
       </form.AppField>
 
       <form.AppField name='endAddress'>
-        {field => <field.FormTextField label='End address' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__EndAddress`} isReadOnly={isReadOnly} placeholder='Enter address' />}
+        {field => (
+          <field.FormTextField
+            label='End address'
+            inline
+            isReadOnly={isReadOnly}
+            placeholder='Enter address'
+            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__EndAddress`}
+          />
+        )}
       </form.AppField>
 
       <form.Field name='purpose'>
         {field => (
           <TripPurposeComboBox
-            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Purpose`}
             value={field.state.value}
             onValueChange={value => field.handleChange(value ?? TripPurpose.Unreviewed)}
             isReadOnly={isReadOnly}
+            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Purpose`}
           />
         )}
       </form.Field>
 
       <form.AppField name='description'>
         {field => (
-          <field.FormTextAreaField label='Description' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Description`} isReadOnly={isReadOnly} placeholder='Add description' />
+          <field.FormTextAreaField
+            label='Description'
+            inline
+            isReadOnly={isReadOnly}
+            placeholder='Add description'
+            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Description`}
+          />
         )}
       </form.AppField>
 
@@ -96,8 +134,8 @@ export const TripForm = (props: TripFormProps) => {
             onSelectedVehicleChange={field.handleChange}
             isReadOnly={isReadOnly}
             inline
-            containerClassName={`${TRIP_FORM_FIELD_CSS_PREFIX}__Vehicle`}
             placeholder='Add vehicle'
+            containerClassName={`${TRIP_FORM_FIELD_CSS_PREFIX}__Vehicle`}
           />
         )}
       </form.Field>
@@ -105,7 +143,12 @@ export const TripForm = (props: TripFormProps) => {
       <VStack justify='end' className={`${TRIP_FORM_CSS_PREFIX}__Submit`}>
         <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
           {([canSubmit, isSubmitting]) => (
-            <Button type='submit' isDisabled={!canSubmit} isPending={isSubmitting} onPress={() => { void form.handleSubmit() }}>
+            <Button
+              type='submit'
+              isDisabled={!canSubmit}
+              isPending={isSubmitting}
+              onPress={() => { void form.handleSubmit() }}
+            >
               Save Trip
             </Button>
           )}
