@@ -17,7 +17,7 @@ export const BankTransactionsAmountDate = ({ amount, date, slotProps }: BankTran
   return (
     <VStack
       align='end'
-      gap='3xs'
+      gap='xs'
       pb='sm'
     >
       <HStack>
