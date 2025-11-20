@@ -64,7 +64,7 @@ export function ProfitAndLossSummariesSummary({
               <SkeletonLoader height='20px' />
             )
             : (
-              <MoneySpan slot='amount' amount={amount} size='lg' bold />
+              <MoneySpan slot='amount' amount={amount} size='lg' weight='bold' />
             )}
         </VStack>
 
