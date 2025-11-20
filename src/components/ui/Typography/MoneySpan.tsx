@@ -9,12 +9,12 @@ import './moneySpan.scss'
 
 const CLASS_NAME = 'Layer__MoneySpan Layer__Span'
 
-type MoneyTextProps = {
+type MoneySpanProps = {
   amount: number
   displayPlusSign?: boolean
 } & TextStyleProps & Pick<ComponentPropsWithoutRef<'span'>, 'slot'>
 
-const MoneySpan = forwardRef<HTMLSpanElement, MoneyTextProps>(
+const MoneySpan = forwardRef<HTMLSpanElement, MoneySpanProps>(
   ({
     amount,
     displayPlusSign,
