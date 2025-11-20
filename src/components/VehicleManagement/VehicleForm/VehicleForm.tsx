@@ -53,12 +53,8 @@ export const VehicleForm = (props: VehicleFormProps) => {
         }}
       </form.Subscribe>
 
-      <form.AppField name='make'>
-        {field => <field.FormTextField label='Make' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Make`} isReadOnly={isReadOnly} />}
-      </form.AppField>
-
-      <form.AppField name='model'>
-        {field => <field.FormTextField label='Model' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Model`} isReadOnly={isReadOnly} />}
+      <form.AppField name='makeAndModel'>
+        {field => <field.FormTextField label='Make and model' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__MakeAndModel`} isReadOnly={isReadOnly} />}
       </form.AppField>
 
       <form.AppField name='year'>

@@ -16,8 +16,7 @@ interface VehicleCardProps {
 }
 
 const VEHICLE_CARD_FIELDS = [
-  { label: 'Make', key: 'make' as const },
-  { label: 'Model', key: 'model' as const },
+  { label: 'Make and model', key: 'makeAndModel' as const },
   { label: 'Year', key: 'year' as const },
   { label: 'License plate', key: 'licensePlate' as const },
   { label: 'VIN', key: 'vin' as const },
