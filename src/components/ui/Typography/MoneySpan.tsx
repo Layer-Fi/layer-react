@@ -3,32 +3,29 @@ import classNames from 'classnames'
 
 import { centsToDollars as formatMoney } from '@models/Money'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { Span, type TextStyleProps } from '@ui/Typography/Text'
 
 import './moneySpan.scss'
 
-const CLASS_NAME = 'Layer__MoneyText'
+const CLASS_NAME = 'Layer__MoneySpan'
 
-type MoneyTextProps = {
+type MoneySpanProps = {
   amount: number
-  bold?: boolean
-  size?: 'xs' | 'sm' | 'md' | 'lg'
   displayPlusSign?: boolean
-} & Pick<ComponentPropsWithoutRef<'span'>, 'slot' | 'className'>
+} & TextStyleProps & Pick<ComponentPropsWithoutRef<'span'>, 'slot'>
 
-const MoneySpan = forwardRef<HTMLSpanElement, MoneyTextProps>(
-  ({ amount, bold, size, displayPlusSign, className, ...restProps }, ref) => {
+const MoneySpan = forwardRef<HTMLSpanElement, MoneySpanProps>(
+  ({ amount, displayPlusSign, className, ...restProps }, ref) => {
     const dataProperties = toDataProperties({
-      bold,
       'positive': amount >= 0,
       'negative': amount < 0,
-      size,
       'display-plus-sign': displayPlusSign,
     })
 
     return (
-      <span {...restProps} {...dataProperties} className={classNames(CLASS_NAME, className)} ref={ref}>
+      <Span {...restProps} {...dataProperties} className={classNames(CLASS_NAME, className)} ref={ref}>
         {formatMoney(Math.abs(amount))}
-      </span>
+      </Span>
     )
   },
 )

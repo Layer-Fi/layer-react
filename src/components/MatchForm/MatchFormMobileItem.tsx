@@ -41,7 +41,13 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
             DateTime: { size: 'xs' },
           }}
         />
-        {inAppLink}
+        {inAppLink && (
+          <HStack align='center'>
+            <Span size='sm'>
+              {inAppLink}
+            </Span>
+          </HStack>
+        )}
       </HStack>
     </GridListItem>
   )

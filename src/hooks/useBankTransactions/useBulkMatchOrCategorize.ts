@@ -84,7 +84,7 @@ function buildKey({
 
 export const useBulkMatchOrCategorize = () => {
   const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { businessId, eventCallbacks } = useLayerContext()
   const { selectedIds } = useSelectedIds()
   const { transactionCategories } = useGetAllBankTransactionsCategories()
 
@@ -125,12 +125,11 @@ export const useBulkMatchOrCategorize = () => {
 
       void forceReloadBankTransactions()
 
+      eventCallbacks?.onTransactionCategorized?.()
+
       return triggerResult
     },
-    [
-      originalTrigger,
-      forceReloadBankTransactions,
-    ],
+    [originalTrigger, forceReloadBankTransactions, eventCallbacks],
   )
 
   const proxiedResponse = new Proxy(mutationResponse, {

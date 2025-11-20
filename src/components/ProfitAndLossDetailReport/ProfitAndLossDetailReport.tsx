@@ -270,7 +270,7 @@ export const ProfitAndLossDetailReport = ({
               <Label weight='bold' size='md'>Total</Label>
             </HStack>
             <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
-              <MoneySpan bold size='md' amount={rowsWithRunningBalance.total} />
+              <MoneySpan weight='bold' size='md' amount={rowsWithRunningBalance.total} />
             </HStack>
           </HStack>
         )}

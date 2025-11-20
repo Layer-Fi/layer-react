@@ -411,7 +411,7 @@ const BankTransactionsTableView = ({
       )}
 
       {!isLoadingWithoutData && listView && mobileComponent !== 'mobileList'
-        ? (
+        && (
           <div className='Layer__bank-transactions__list-wrapper'>
             {rulesSuggestionModal}
             <BankTransactionsList
@@ -426,11 +426,10 @@ const BankTransactionsTableView = ({
               showTooltips={showTooltips}
             />
           </div>
-        )
-        : null}
+        )}
 
       {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
-        ? (
+        && (
           <>
             <BankTransactionsMobileList
               bankTransactions={bankTransactions}
@@ -442,19 +441,17 @@ const BankTransactionsTableView = ({
             />
             {rulesSuggestionDrawer}
           </>
-        )
-        : null}
+        )}
 
       {listView && isLoadingWithoutData
-        ? (
+        && (
           <div className='Layer__bank-transactions__list-loader'>
             <Loader />
           </div>
-        )
-        : null}
+        )}
 
-      {!isSyncing || listView
-        ? (
+      {(!isSyncing || listView)
+        && (
           <BankTransactionsTableEmptyStates
             hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
             isCategorizationMode={editable}
@@ -462,8 +459,7 @@ const BankTransactionsTableView = ({
             isFiltered={Boolean(filters?.query)}
             isLoadingWithoutData={isLoadingWithoutData}
           />
-        )
-        : null}
+        )}
 
       {!isMonthlyViewMode && (
         <HStack justify='end'>

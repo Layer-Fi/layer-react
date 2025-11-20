@@ -11,7 +11,7 @@ import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInpu
 import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type EventCallbacks = {
-  onTransactionCategorized?: (bankTransactionId: string) => void
+  onTransactionCategorized?: () => void
   onTransactionsFetched?: () => void
 }
 

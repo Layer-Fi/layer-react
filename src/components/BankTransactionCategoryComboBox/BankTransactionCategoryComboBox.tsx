@@ -48,7 +48,7 @@ const BankTransactionCategoryComboBoxOption = ({ option, fallback }: BankTransac
           <Span size='sm' variant='placeholder'>{option.label}</Span>
           {inAppLink}
         </VStack>
-        <MoneySpan size='sm' bold amount={option.original.details.amount} />
+        <MoneySpan size='sm' weight='bold' amount={option.original.details.amount} />
       </VStack>
     )
   }
