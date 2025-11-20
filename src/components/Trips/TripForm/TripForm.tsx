@@ -61,7 +61,7 @@ export const TripForm = (props: TripFormProps) => {
       </form.AppField>
 
       <form.AppField name='distance'>
-        {field => <field.FormBigDecimalField label='Distance (miles)' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Distance`} isReadOnly={isReadOnly} placeholder='Enter distance' />}
+        {field => <field.FormBigDecimalField label='Distance (miles)' inline className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Distance`} isReadOnly={isReadOnly} maxDecimalPlaces={2} placeholder='Enter distance' />}
       </form.AppField>
 
       <form.AppField name='startAddress'>
