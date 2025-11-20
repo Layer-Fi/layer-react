@@ -211,7 +211,7 @@ export const BankTransactionsListItem = ({
             <BankTransactionsProcessingInfo />
           </span>
         )}
-      <span className='Layer__bank-transaction-list-item__expanded-row'>
+      <span className='Layer__bank-transaction-list-item__expanded-row' onClick={preventRowExpansion}>
         <AnimatedPresenceDiv variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
@@ -238,7 +238,6 @@ export const BankTransactionsListItem = ({
       {!openExpandedRow && categorizationEnabled && !categorized && (
         <div onClick={preventRowExpansion}>
           <HStack pi='md' gap='md' pb='md'>
-
             <BankTransactionCategoryComboBox
               bankTransaction={bankTransaction}
               selectedValue={selectedCategory ?? null}
