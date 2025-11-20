@@ -124,6 +124,10 @@ export const BankTransactionsListItem = ({
     void save()
   }
 
+  const preventRowExpansion = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
+
   const openClassName = openExpandedRow ? 'Layer__bank-transaction-list-item--expanded' : ''
   const rowClassName = classNames(
     'Layer__bank-transaction-list-item',
@@ -137,7 +141,7 @@ export const BankTransactionsListItem = ({
   )
 
   return (
-    <li className={rowClassName}>
+    <li className={rowClassName} onClick={toggleExpandedRow}>
       <span className='Layer__bank-transaction-list-item__heading'>
         <div className='Layer__bank-transaction-list-item__heading__main'>
           <Span ellipsis size='sm'>
@@ -177,7 +181,7 @@ export const BankTransactionsListItem = ({
       <HStack className='Layer__bank-transaction-list-item__body'>
         <HStack gap='sm' className='Layer__bank-transaction-list-item__body__name'>
           {categorizationEnabled && (
-            <div className='Layer__bank-transaction-list-item__checkbox'>
+            <div className='Layer__bank-transaction-list-item__checkbox' onClick={preventRowExpansion}>
               <Checkbox
                 isSelected={isTransactionSelected}
                 onChange={(selected) => {
@@ -207,7 +211,7 @@ export const BankTransactionsListItem = ({
             <BankTransactionsProcessingInfo />
           </span>
         )}
-      <span className='Layer__bank-transaction-list-item__expanded-row'>
+      <span className='Layer__bank-transaction-list-item__expanded-row' onClick={preventRowExpansion}>
         <AnimatedPresenceDiv variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
@@ -232,32 +236,34 @@ export const BankTransactionsListItem = ({
         </AnimatedPresenceDiv>
       </span>
       {!openExpandedRow && categorizationEnabled && !categorized && (
-        <HStack pi='md' gap='md' pb='md'>
-          <BankTransactionCategoryComboBox
-            bankTransaction={bankTransaction}
-            selectedValue={selectedCategory ?? null}
-            onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-              setTransactionCategory(bankTransaction.id, selectedCategory)
-              setShowRetry(false)
-            }}
-            isLoading={bankTransaction.processing}
-          />
-          <SubmitButton
-            disabled={bankTransaction.processing}
-            onClick={handleSave}
-            className={showRetry ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
-            processing={bankTransaction.processing}
-            action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-            withRetry={true}
-            error={showRetry ? 'Approval failed. Check connection and retry in few seconds.' : undefined}
-          >
-            {showRetry
-              ? 'Retry'
-              : (!categorized
-                ? stringOverrides?.approveButtonText || 'Approve'
-                : stringOverrides?.updateButtonText || 'Update')}
-          </SubmitButton>
-        </HStack>
+        <div onClick={preventRowExpansion}>
+          <HStack pi='md' gap='md' pb='md'>
+            <BankTransactionCategoryComboBox
+              bankTransaction={bankTransaction}
+              selectedValue={selectedCategory ?? null}
+              onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
+                setTransactionCategory(bankTransaction.id, selectedCategory)
+                setShowRetry(false)
+              }}
+              isLoading={bankTransaction.processing}
+            />
+            <SubmitButton
+              disabled={bankTransaction.processing}
+              onClick={handleSave}
+              className={showRetry ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
+              processing={bankTransaction.processing}
+              action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+              withRetry={true}
+              error={showRetry ? 'Approval failed. Check connection and retry in few seconds.' : undefined}
+            >
+              {showRetry
+                ? 'Retry'
+                : (!categorized
+                  ? stringOverrides?.approveButtonText || 'Approve'
+                  : stringOverrides?.updateButtonText || 'Update')}
+            </SubmitButton>
+          </HStack>
+        </div>
       )}
       {!openExpandedRow && categorized && (
         <BankTransactionsListItemCategory

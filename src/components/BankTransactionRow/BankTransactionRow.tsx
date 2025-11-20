@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
 
@@ -67,8 +67,6 @@ export const extractDescriptionForSplit = (category: CategorizationEncoded | nul
   return category.entries.map(c => c.category.display_name).join(', ')
 }
 
-let clickTimer = Date.now()
-
 export const BankTransactionRow = ({
   index,
   editable,
@@ -87,10 +85,10 @@ export const BankTransactionRow = ({
   const [showRetry, setShowRetry] = useState(false)
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
   const [open, setOpen] = useState(false)
-  const toggleOpen = () => {
+  const toggleOpen = useCallback(() => {
     setShowRetry(false)
     setOpen(!open)
-  }
+  }, [open])
 
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
@@ -122,7 +120,7 @@ export const BankTransactionRow = ({
         removeTransaction(bankTransaction)
       }, 300)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
   const save = async () => {
@@ -139,16 +137,13 @@ export const BankTransactionRow = ({
     setOpen(false)
   }
 
-  const openRow = {
-    onMouseDown: () => {
-      clickTimer = Date.now()
-    },
-    onMouseUp: () => {
-      if (Date.now() - clickTimer < 100 && !open) {
-        setShowRetry(false)
-        setOpen(true)
-      }
-    },
+  const handleRowClick = () => {
+    setShowRetry(false)
+    toggleOpen()
+  }
+
+  const preventRowExpansion = (e: React.MouseEvent) => {
+    e.stopPropagation()
   }
 
   const className = 'Layer__bank-transaction-row'
@@ -174,9 +169,9 @@ export const BankTransactionRow = ({
 
   return (
     <>
-      <tr className={rowClassName}>
+      <tr className={rowClassName} onClick={handleRowClick}>
         {categorizationEnabled && (
-          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col'>
+          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col' onClick={preventRowExpansion}>
             <span className='Layer__table-cell-content'>
               <Checkbox
                 isSelected={isTransactionSelected}
@@ -194,7 +189,6 @@ export const BankTransactionRow = ({
         )}
         <td
           className='Layer__table-cell Layer__bank-transaction-table__date-col'
-          {...openRow}
         >
           <span className='Layer__table-cell-content'>
             <Span>
@@ -204,7 +198,6 @@ export const BankTransactionRow = ({
         </td>
         <td
           className='Layer__table-cell Layer__bank-transactions__tx-col'
-          {...openRow}
         >
           <span className='Layer__table-cell-content'>
             <Span withTooltip>
@@ -214,7 +207,6 @@ export const BankTransactionRow = ({
         </td>
         <td
           className='Layer__table-cell Layer__bank-transactions__account-col'
-          {...openRow}
         >
           <span className='Layer__table-cell-content'>
             <VStack align='start'>
@@ -231,10 +223,8 @@ export const BankTransactionRow = ({
           </span>
         </td>
         <td
-          className={`Layer__table-cell Layer__table-cell__amount-col Layer__bank-transactions__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${
-            isCredit(bankTransaction) ? 'credit' : 'debit'
+          className={`Layer__table-cell Layer__table-cell__amount-col Layer__bank-transactions__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
-          {...openRow}
           {...showReceiptDataProperties}
         >
           <VStack align='end'>
@@ -264,11 +254,12 @@ export const BankTransactionRow = ({
             `${className}__actions-cell`,
             `${className}__actions-cell--${open ? 'open' : 'close'}`,
           )}
+          onClick={preventRowExpansion}
         >
           {open
             ? (
               <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
-                { bankTransaction.error
+                {bankTransaction.error
                   && (
                     <Text
                       as='span'
@@ -308,8 +299,7 @@ export const BankTransactionRow = ({
                   active={open}
                   icon={(
                     <ChevronDownFill
-                      className={`Layer__chevron ${
-                        open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                      className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
                       }`}
                     />
                   )}
@@ -386,8 +376,7 @@ export const BankTransactionRow = ({
                   active={open}
                   icon={(
                     <ChevronDownFill
-                      className={`Layer__chevron ${
-                        open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                      className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
                       }`}
                     />
                   )}
