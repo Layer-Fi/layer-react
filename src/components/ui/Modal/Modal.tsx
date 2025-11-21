@@ -8,7 +8,6 @@ import {
 } from 'react-aria-components'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 
 import './modal.scss'
 
@@ -141,15 +140,13 @@ export function Drawer({
   isDismissable = false,
   role,
 }: DrawerProps) {
-  const isMobileDrawer = variant === 'mobile-drawer'
-
- return (
-  <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
-    <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
-      <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
-        {children}
-      </Dialog>
-    </InternalModal>
-  </ModalOverlay>
+  return (
+    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
+      <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
+        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
+          {children}
+        </Dialog>
+      </InternalModal>
+    </ModalOverlay>
   )
 }

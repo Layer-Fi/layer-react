@@ -8,16 +8,21 @@
   background: rgb(0 0 0 / 50%);
   place-items: center;
 
+  &[data-variant='mobile-drawer'],
   &[data-variant='drawer'] {
     place-items: end;
 
     &[data-entering] {
-      animation: overlay-fade-in 300ms;
+      animation: overlay-fade 250ms;
     }
 
     &[data-exiting] {
-      animation: overlay-fade-out 300ms;
+      animation: overlay-fade reverse 250ms;
     }
+  }
+
+  &[data-variant='drawer'] {
+    place-items: end;
   }
 
   &[data-variant='mobile-drawer'] {
@@ -41,11 +46,11 @@
     block-size: 100%;
 
     &[data-entering] {
-      animation: drawer-slide 300ms;
+      animation: drawer-slide 250ms;
     }
 
     &[data-exiting] {
-      animation: drawer-slide 300ms reverse ease-in;
+      animation: drawer-slide 250ms reverse ease-in;
     }
   }
 
@@ -60,11 +65,11 @@
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
 
     &[data-entering] {
-      animation: mobile-drawer-slide 300ms;
+      animation: mobile-drawer-slide 250ms;
     }
 
     &[data-exiting] {
-      animation: mobile-drawer-slide 300ms reverse ease-in;
+      animation: mobile-drawer-slide 250ms reverse ease-in;
     }
   }
 
@@ -128,22 +133,12 @@
   }
 }
 
-@keyframes overlay-fade-in {
+@keyframes overlay-fade {
   from {
     opacity: 0;
   }
 
   to {
     opacity: 1;
-  }
-}
-
-@keyframes overlay-fade-out {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
   }
 }
