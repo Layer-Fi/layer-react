@@ -8,6 +8,17 @@
   background: rgb(0 0 0 / 50%);
   place-items: center;
 
+  &[data-variant='mobile-drawer'],
+  &[data-variant='drawer'] {
+    &[data-entering] {
+      animation: overlay-fade 250ms;
+    }
+
+    &[data-exiting] {
+      animation: overlay-fade reverse 250ms;
+    }
+  }
+
   &[data-variant='drawer'] {
     place-items: end;
   }
@@ -33,11 +44,11 @@
     block-size: 100%;
 
     &[data-entering] {
-      animation: drawer-slide 300ms;
+      animation: drawer-slide 250ms;
     }
 
     &[data-exiting] {
-      animation: drawer-slide 300ms reverse ease-in;
+      animation: drawer-slide 250ms reverse ease-in;
     }
   }
 
@@ -50,6 +61,14 @@
     inline-size: 100%;
 
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
+
+    &[data-entering] {
+      animation: mobile-drawer-slide 250ms;
+    }
+
+    &[data-exiting] {
+      animation: mobile-drawer-slide 250ms reverse ease-in;
+    }
   }
 
   &[data-flex-block] {
@@ -102,13 +121,22 @@
   }
 }
 
-.Layer__ModalContentFadeMotionContent {
-  display: contents;
-  height: 100%;
-  width: 100%;
+@keyframes mobile-drawer-slide {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
 }
 
-.Layer__ModalContentSlideUpMotionContent {
-  height: 100%;
-  width: 100%;
+@keyframes overlay-fade {
+  from {
+    background: rgb(0 0 0 / 0%);
+  }
+
+  to {
+    background: rgb(0 0 0 / 50%);
+  }
 }
