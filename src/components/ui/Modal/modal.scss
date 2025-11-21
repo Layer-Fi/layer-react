@@ -58,6 +58,14 @@
     inline-size: 100%;
 
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
+
+    &[data-entering] {
+      animation: mobile-drawer-slide 300ms;
+    }
+
+    &[data-exiting] {
+      animation: mobile-drawer-slide 300ms reverse ease-in;
+    }
   }
 
   &[data-flex-block] {
@@ -110,6 +118,16 @@
   }
 }
 
+@keyframes mobile-drawer-slide {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
 @keyframes overlay-fade-in {
   from {
     opacity: 0;
@@ -128,15 +146,4 @@
   to {
     opacity: 0;
   }
-}
-
-.Layer__ModalContentFadeMotionContent {
-  display: contents;
-  height: 100%;
-  width: 100%;
-}
-
-.Layer__ModalContentSlideUpMotionContent {
-  height: 100%;
-  width: 100%;
 }

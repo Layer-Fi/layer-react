@@ -143,37 +143,13 @@ export function Drawer({
 }: DrawerProps) {
   const isMobileDrawer = variant === 'mobile-drawer'
 
-  const modalContent = (
+ return (
+  <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
     <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
       <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
         {children}
       </Dialog>
     </InternalModal>
-  )
-
-  const overlayContent = isMobileDrawer
-    ? (
-      <AnimatedPresenceDiv
-        variant='fade'
-        isOpen={isOpen}
-        className='Layer__ModalContentFadeMotionContent'
-        slotProps={{ AnimatePresence: { initial: true } }}
-      >
-        <AnimatedPresenceDiv
-          variant='slideUp'
-          isOpen={isOpen}
-          className='Layer__ModalContentSlideUpMotionContent'
-          slotProps={{ AnimatePresence: { initial: true } }}
-        >
-          {modalContent}
-        </AnimatedPresenceDiv>
-      </AnimatedPresenceDiv>
-    )
-    : modalContent
-
-  return (
-    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
-      {overlayContent}
-    </ModalOverlay>
+  </ModalOverlay>
   )
 }
