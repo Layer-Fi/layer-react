@@ -10,8 +10,6 @@
 
   &[data-variant='mobile-drawer'],
   &[data-variant='drawer'] {
-    place-items: end;
-
     &[data-entering] {
       animation: overlay-fade 250ms;
     }
