@@ -61,14 +61,6 @@
     font-size: var(--btn-font-size);
     font-family: var(--font-family);
     color: var(--text-color-secondary);
-    transition:
-      color var(--transition-speed) ease-in-out,
-      background-color 150ms ease-in-out;
-
-    &[data-disabled] {
-      cursor: not-allowed;
-      color: var(--text-color-secondary);
-    }
 
     &[data-hovered]:not([data-disabled], [data-selected]) {
       background-color: var(--color-base-200);
