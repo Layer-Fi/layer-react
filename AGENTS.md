@@ -2,6 +2,8 @@
 
 ## Code Style
 
+- Run `npm run lint --fix` to fix lint errors. Do not fix them manually.
+
 ### React Components
 - For text, use `Span` from `../ui/Typography/Text` instead of lowercase `<span>`.
 - Use `<HStack>` and `<VStack>` from `../ui/Stack/Stack` instead of `div`.
