@@ -2,7 +2,7 @@
 
 ## Code Style
 
-- Run `npm run lint --fix` to fix lint errors. Do not fix them manually.
+- Run `npx lint-staged` to fix lint errors. Do not fix them manually.
 
 ### React Components
 - For text, use `Span` from `../ui/Typography/Text` instead of lowercase `<span>`.
@@ -133,5 +133,5 @@ Use context-based visibility providers for feature flags:
 
 ## Testing
 1. Run `npm run typecheck` and fix any issues
-2. Run `npm run lint` and fix any issues
+2. Run `npx lint-staged` to lint and auto-fix staged files (preferred), or `npm run lint` to lint all files
 3. Instruct the user on specific manual tests to perform
