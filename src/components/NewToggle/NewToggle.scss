@@ -1,0 +1,93 @@
+.Layer__NewToggle {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  width: max-content;
+  padding: 2px;
+  border-radius: 52px;
+  box-shadow: 0 0 0 1px var(--color-base-300);
+  background: var(--color-base-100);
+  cursor: pointer;
+  user-select: none;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+
+  .Layer__NewToggle-Option-Content {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+  }
+
+  button {
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: var(--btn-font-size);
+    font-family: var(--font-family);
+    color: var(--text-color-secondary);
+    transition:
+      color var(--transition-speed) ease-in-out,
+      background-color 150ms ease-in-out;
+
+    &[data-selected] {
+      box-shadow:
+        0 0 0 1px var(--color-base-300),
+        0 1px 1px 0 rgb(0 0 0 / 4%),
+        0 2px 3px 0 rgb(0 0 0 / 4%),
+        0 3px 4px 0 rgb(0 0 0 / 2%),
+        0 4px 5px 0 rgb(0 0 0 / 1%);
+      background: var(--color-white);
+      color: var(--text-color-primary);
+    }
+
+    &[data-disabled] {
+      cursor: not-allowed;
+      color: var(--text-color-secondary);
+    }
+
+    &[data-hovered]:not([data-disabled], [data-selected]) {
+      background-color: var(--color-base-200);
+      color: var(--text-color-primary);
+    }
+  }
+}
+
+.Layer__NewToggle-Option__Icon {
+  line-height: 11px;
+}
+
+.Layer__NewToggle[data-size='small'] {
+  height: 36px;
+  border-radius: 6px;
+
+  button {
+    height: 32px;
+    border-radius: 4px;
+  }
+}
+
+.Layer__NewToggle[data-size='xsmall'] {
+  height: 36px;
+  border-radius: 6px;
+
+  button {
+    height: 32px;
+    border-radius: 4px;
+
+    .Layer__NewToggle-Option-Content {
+      font-size: 12px;
+    }
+  }
+}
