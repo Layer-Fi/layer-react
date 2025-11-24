@@ -125,7 +125,6 @@ export const AccountingOverview = ({
         )}
         <div className='Layer__accounting-overview-profit-and-loss-charts'>
           <Toggle
-            name='pnl-detailed-charts'
             options={[
               {
                 value: 'revenue',
@@ -136,8 +135,8 @@ export const AccountingOverview = ({
                 label: 'Expenses',
               },
             ]}
-            selected={pnlToggle}
-            onChange={e => setPnlToggle(e.target.value as PnlToggleOption)}
+            selectedKey={pnlToggle}
+            onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
           />
           <Container
             name={classNames(

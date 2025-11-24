@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import type { Key } from 'react-aria-components'
 
 import { TripPurpose } from '@schemas/trip'
 import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
@@ -13,14 +14,12 @@ export type TripPurposeToggleProps = {
   selected: TripPurposeFilterValue
   onChange: (value: TripPurposeFilterValue) => void
   size?: ToggleSize
-  name?: string
 }
 
 export const TripPurposeToggle = ({
   selected,
   onChange,
   size = ToggleSize.small,
-  name = 'trip-purpose-filter',
 }: TripPurposeToggleProps) => {
   const options = useMemo(() => [
     { label: 'All', value: TripPurposeFilterValue.All },
@@ -30,10 +29,9 @@ export const TripPurposeToggle = ({
 
   return (
     <Toggle
-      name={name}
       options={options}
-      selected={selected}
-      onChange={e => onChange(e.target.value as TripPurposeFilterValue)}
+      selectedKey={selected}
+      onSelectionChange={(key: Key) => onChange(key as TripPurposeFilterValue)}
       size={size}
     />
   )

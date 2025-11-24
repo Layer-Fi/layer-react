@@ -198,14 +198,12 @@ export const BankTransactionsHeader = ({
     withDatePicker,
   ])
 
-  const onCategorizationDisplayChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const onCategorizationDisplayChange = (key: React.Key) => {
     setFilters({
       categorizationStatus:
-        event.target.value === 'categorized' // see DisplayState enum
+        key === 'categorized' // see DisplayState enum
           ? DisplayState.categorized
-          : event.target.value === 'all' // see DisplayState enum
+          : key === 'all' // see DisplayState enum
             ? DisplayState.all
             : DisplayState.review,
     })
@@ -251,7 +249,6 @@ export const BankTransactionsHeader = ({
               {collapseHeader && headerTopRow}
               {!categorizedOnly && categorizeView && showStatusToggle && (
                 <Toggle
-                  name='bank-transaction-display'
                   size={
                     mobileComponent === 'mobileList'
                       ? ToggleSize.small
@@ -261,8 +258,8 @@ export const BankTransactionsHeader = ({
                     { label: 'To Review', value: DisplayState.review },
                     { label: 'Categorized', value: DisplayState.categorized },
                   ]}
-                  selected={display}
-                  onChange={onCategorizationDisplayChange}
+                  selectedKey={display}
+                  onSelectionChange={onCategorizationDisplayChange}
                 />
               )}
             </HStack>

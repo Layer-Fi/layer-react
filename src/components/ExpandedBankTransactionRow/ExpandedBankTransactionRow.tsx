@@ -154,8 +154,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
       setSplitFormError,
     } = useSplitsForm({ bankTransaction, selectedCategory, isOpen })
 
-    const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newPurpose = event.target.value === 'match'
+    const onChangePurpose = (key: React.Key) => {
+      const newPurpose = key === 'match'
         ? Purpose.match
         : Purpose.categorize
       setPurpose(newPurpose)
@@ -289,9 +289,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                   && (
                     <HStack pi='md' pbe='md' pbs='3xs'>
                       <Toggle
-                        name={`purpose-${bankTransaction.id}${
-                          asListItem ? '-li' : ''
-                        }`}
                         size={ToggleSize.small}
                         options={[
                           {
@@ -306,8 +303,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                         'We could not find matching transactions',
                           },
                         ]}
-                        selected={purpose}
-                        onChange={onChangePurpose}
+                        selectedKey={purpose}
+                        onSelectionChange={onChangePurpose}
                       />
                     </HStack>
                   )}

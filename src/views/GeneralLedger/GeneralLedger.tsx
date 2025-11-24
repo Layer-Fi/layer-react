@@ -50,7 +50,6 @@ export const GeneralLedgerView = ({
         showHeader={showTitle}
       >
         <Toggle
-          name='general-ledger-tabs'
           options={[
             {
               value: 'chartOfAccounts',
@@ -63,8 +62,8 @@ export const GeneralLedgerView = ({
               label: stringOverrides?.journalToggleOption || 'Journal',
             },
           ]}
-          selected={activeTab}
-          onChange={opt => setActiveTab(opt.target.value)}
+          selectedKey={activeTab}
+          onSelectionChange={key => setActiveTab(key as string)}
         />
 
         {activeTab === 'chartOfAccounts'
