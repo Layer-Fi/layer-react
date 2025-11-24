@@ -12,6 +12,7 @@ import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExter
 import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBankTransactionsGlobalCacheActions } from './useBankTransactions'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
@@ -53,7 +54,8 @@ export function useCategorizeBankTransaction({
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
-
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  
   const mutationResponse = useSWRMutation(
     () => buildKey({
       access_token: auth?.access_token,
@@ -97,7 +99,7 @@ export function useCategorizeBankTransaction({
        */
       void mutateBankTransactions(undefined, { revalidate: true })
       void invalidatePnlDetailLines()
-
+      void forceReloadBankTransactions()
       void debouncedInvalidateProfitAndLoss()
 
       return triggerResult
