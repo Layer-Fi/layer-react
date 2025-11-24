@@ -8,7 +8,7 @@ import {
   DeprecatedTooltipTrigger,
 } from '@components/Tooltip/Tooltip'
 
-import './NewToggleOption.scss'
+import './newToggleOption.scss'
 
 import { type NewToggleSize } from './NewToggle'
 
