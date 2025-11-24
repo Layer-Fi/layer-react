@@ -1,0 +1,17 @@
+.Layer__NewToggle {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  width: max-content;
+  padding: 2px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--color-base-300);
+  background: var(--color-base-100);
+  cursor: pointer;
+  user-select: none;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}

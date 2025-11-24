@@ -1,11 +1,12 @@
-import { type ChangeEvent, useState } from 'react'
+import { useState } from 'react'
+import type { Key } from 'react-aria-components'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasMatch } from '@utils/bankTransactions'
 import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
+import { NewToggle } from '@components/NewToggle/NewToggle'
 
 import { Purpose } from './BankTransactionsMobileListItem'
 
@@ -46,19 +47,17 @@ export const BankTransactionsMobileListItemExpandedRow = ({
 }: BankTransactionsMobileListItemExpandedRowProps) => {
   const [purpose, setPurpose] = useState<Purpose>(getInitialPurpose(bankTransaction))
 
-  const onChangePurpose = (event: ChangeEvent<HTMLInputElement>) =>
-    setPurpose(event.target.value as Purpose)
+  const onChangePurpose = (key: Key) =>
+    setPurpose(key as Purpose)
 
   return (
     <VStack pi='md' gap='md' pbe='md'>
       {showCategorization
         && (
-          <Toggle
-            name={`purpose-${bankTransaction.id}`}
-            size={ToggleSize.medium}
+          <NewToggle
             options={PURPOSE_TOGGLE_OPTIONS}
-            selected={purpose}
-            onChange={onChangePurpose}
+            selectedKey={purpose}
+            onSelectionChange={onChangePurpose}
           />
         )}
       <BankTransactionsMobileForms
