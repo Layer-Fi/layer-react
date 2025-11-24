@@ -20,48 +20,6 @@
     gap: var(--spacing-xs);
     align-items: center;
   }
-
-  .react-aria-SelectionIndicator {
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    border-radius: 6px;
-    box-shadow:
-      0 0 0 1px var(--color-base-300),
-      0 1px 1px 0 rgb(0 0 0 / 4%),
-      0 2px 3px 0 rgb(0 0 0 / 4%),
-      0 3px 4px 0 rgb(0 0 0 / 2%),
-      0 4px 5px 0 rgb(0 0 0 / 1%);
-    background: var(--color-white);
-    transition-property: translate, width;
-    transition-duration: 200ms;
-  }
-
-  .react-aria-ToggleButton {
-    box-sizing: border-box;
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 32px;
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: var(--btn-font-size);
-    font-family: var(--font-family);
-    color: var(--text-color-secondary);
-
-    &[data-hovered]:not([data-disabled], [data-selected]) {
-      background-color: var(--color-base-200);
-      color: var(--text-color-primary);
-    }
-  }
 }
 
 .Layer__NewToggle-Option__Icon {

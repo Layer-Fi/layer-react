@@ -8,6 +8,8 @@ import {
   DeprecatedTooltipTrigger,
 } from '@components/Tooltip/Tooltip'
 
+import './NewToggleOption.scss'
+
 import { type NewToggleSize } from './NewToggle'
 
 interface NewToggleOptionProps extends NewToggleOptionData {
@@ -40,8 +42,9 @@ export const NewToggleOption = ({
             id={value}
             isDisabled={disabled}
             style={style}
+            className='Layer__NewToggleOption'
           >
-            <SelectionIndicator />
+            <SelectionIndicator className='Layer__NewToggleOption-SelectionIndicator' />
             <Span className='Layer__NewToggle-Option-Content'>
               {leftIcon && (
                 <span className='Layer__NewToggle-Option__Icon'>{leftIcon}</span>
@@ -58,8 +61,8 @@ export const NewToggleOption = ({
   }
 
   return (
-    <ToggleButton id={value} isDisabled={disabled} style={style}>
-      <SelectionIndicator />
+    <ToggleButton id={value} isDisabled={disabled} style={style} className='Layer__NewToggleOption'>
+      <SelectionIndicator className='Layer__NewToggleOption-SelectionIndicator' />
       <Span className='Layer__NewToggle-Option-Content'>
         {leftIcon && (
           <span className='Layer__NewToggle-Option__Icon'>{leftIcon}</span>
