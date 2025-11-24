@@ -282,6 +282,7 @@ export const BankTransactionRow = ({
                       processing={bankTransaction.processing}
                       active={open}
                       action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+                      disabled={selectedCategory === null}
                     >
                       {categorized
                         ? stringOverrides?.updateButtonText || 'Update'
@@ -358,6 +359,7 @@ export const BankTransactionRow = ({
                       className='Layer__bank-transaction__submit-btn'
                       processing={bankTransaction.processing}
                       active={open}
+                      disabled={selectedCategory === null}
                       action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
                     >
                       {categorized
