@@ -282,7 +282,7 @@ export const BankTransactionRow = ({
                       processing={bankTransaction.processing}
                       active={open}
                       action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-                      disabled={!selectedCategory}
+                      disabled={selectedCategory === null}
                     >
                       {categorized
                         ? stringOverrides?.updateButtonText || 'Update'
