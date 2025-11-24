@@ -1,17 +1,16 @@
-import type { CSSProperties, ReactNode } from 'react'
-import type { Key, Selection } from 'react-aria-components'
 import {
-  ToggleButton as ReactAriaToggleButton,
-  ToggleButtonGroup as ReactAriaToggleButtonGroup,
-} from 'react-aria-components'
+  type ChangeEvent,
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+import classNames from 'classnames'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { useElementSize } from '@hooks/useElementSize/useElementSize'
 import { Span } from '@ui/Typography/Text'
-import {
-  DeprecatedTooltip,
-  DeprecatedTooltipContent,
-  DeprecatedTooltipTrigger,
-} from '@components/Tooltip/Tooltip'
+import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface Option {
   label: string
@@ -29,81 +28,186 @@ export enum ToggleSize {
 }
 
 export interface ToggleProps {
+  name: string
   size?: ToggleSize
   options: Option[]
-  selectedKey?: Key
-  defaultSelectedKey?: Key
-  onSelectionChange?: (key: Key) => void
+  selected?: Option['value']
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
 interface ToggleOptionProps extends Option {
+  checked: boolean
+  label: string
+  name: string
   size: ToggleSize
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+  value: string
+  disabled?: boolean
+  disabledMessage?: string
+  leftIcon?: ReactNode
+  index: number
 }
 
 export const Toggle = ({
+  name,
   options,
-  selectedKey,
-  defaultSelectedKey,
-  onSelectionChange,
+  selected,
+  onChange,
   size = ToggleSize.medium,
 }: ToggleProps) => {
-  const dataProperties = toDataProperties({ size })
+  const [currentWidth, setCurrentWidth] = useState(0)
+  const [thumbPos, setThumbPos] = useState({ left: 0, width: 0 })
+  const [initialized, setInitialized] = useState(false)
+  const activeOption = useMemo(() => {
+    return selected
+      ? selected
+      : options.length > 0
+        ? options[0].value
+        : undefined
+  }, [selected, options])
 
-  const selectedKeys: Selection =
-    selectedKey !== undefined ? new Set([selectedKey]) : new Set()
-  const defaultSelectedKeys: Selection =
-    defaultSelectedKey !== undefined
-      ? new Set([defaultSelectedKey])
-      : new Set()
+  const toggleRef = useElementSize<HTMLDivElement>((_a, _b, c) => {
+    if (c.width && c?.width !== currentWidth) {
+      setCurrentWidth(c.width)
+    }
+  })
+
+  const baseClassName = classNames(
+    'Layer__toggle',
+    `Layer__toggle--${size}`,
+    initialized ? 'Layer__toggle--initialized' : '',
+  )
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    updateThumbPosition(Number(e.target.getAttribute('data-idx') ?? 0))
+    onChange(e)
+  }
+
+  const updateThumbPosition = (active: number) => {
+    if (!toggleRef?.current) {
+      return
+    }
+
+    const optionsNodes = [...toggleRef.current.children]
+      .map((x) => {
+        if (
+          x.className.includes('Layer__tooltip-trigger')
+          && x.children
+          && x.children.length > 0
+        ) {
+          return x.children[0]
+        }
+
+        return x
+      })
+      .filter(c => c.className.includes('Layer__toggle-option'))
+
+    let shift = 0
+    let width = thumbPos.width
+
+    optionsNodes.forEach((c, i) => {
+      if (i < active) {
+        shift = shift + (c as HTMLElement).offsetWidth
+      }
+      else if (i === active) {
+        width = (c as HTMLElement).offsetWidth
+      }
+    })
+
+    shift = shift + (size === ToggleSize.medium ? 2 : 1.5)
+
+    setThumbPos({ left: shift, width })
+  }
+
+  useEffect(() => {
+    const selectedIndex = getSelectedIndex()
+    updateThumbPosition(selectedIndex)
+
+    setTimeout(() => {
+      setInitialized(true)
+    }, 400)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    const selectedIndex = getSelectedIndex()
+    updateThumbPosition(selectedIndex)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentWidth])
+
+  const getSelectedIndex = () => {
+    const selectedIndex = options.findIndex(
+      option => option.value === activeOption,
+    )
+    if (selectedIndex === -1) {
+      return 0
+    }
+
+    return selectedIndex
+  }
 
   return (
-    <ReactAriaToggleButtonGroup
-      className='Layer__toggle'
-      {...dataProperties}
-      selectionMode='single'
-      selectedKeys={selectedKey !== undefined ? selectedKeys : undefined}
-      defaultSelectedKeys={
-        defaultSelectedKey !== undefined ? defaultSelectedKeys : undefined
-      }
-      onSelectionChange={(keys) => {
-        const selectedKeysArray = Array.from(keys)
-        if (selectedKeysArray.length > 0 && onSelectionChange) {
-          onSelectionChange(selectedKeysArray[0])
-        }
-      }}
-    >
-      {options.map(option => (
-        <ToggleOption key={option.value} {...option} size={size} />
+    <div className={baseClassName} ref={toggleRef}>
+      {options.map((option, index) => (
+        <ToggleOption
+          {...option}
+          size={size}
+          key={option.value}
+          name={name}
+          checked={activeOption === option.value}
+          onChange={handleChange}
+          disabled={option.disabled ?? false}
+          disabledMessage={option.disabledMessage}
+          index={index}
+        />
       ))}
-    </ReactAriaToggleButtonGroup>
+      <span className='Layer__toggle__thumb' style={{ ...thumbPos }} />
+    </div>
   )
 }
 
 const ToggleOption = ({
+  checked,
   label,
+  name,
+  onChange,
   value,
   size: _size,
   leftIcon,
   disabled,
   disabledMessage = 'Disabled',
   style,
+  index,
 }: ToggleOptionProps) => {
+  const optionClassName = classNames('Layer__toggle-option', {
+    'Layer__toggle-option--active': checked,
+  })
+
   if (disabled) {
     return (
       <DeprecatedTooltip>
         <DeprecatedTooltipTrigger>
-          <ReactAriaToggleButton
-            id={value}
-            isDisabled={disabled}
+          <label
+            className={optionClassName}
+            data-checked={checked}
             style={style}
           >
+            <input
+              type='radio'
+              checked={checked}
+              name={name}
+              onChange={onChange}
+              value={value}
+              disabled={disabled}
+              data-idx={index}
+            />
             <span className='Layer__toggle-option-content'>
               {leftIcon && (
                 <span className='Layer__toggle-option__icon'>{leftIcon}</span>
               )}
               <Span noWrap>{label}</Span>
             </span>
-          </ReactAriaToggleButton>
+          </label>
         </DeprecatedTooltipTrigger>
         <DeprecatedTooltipContent className='Layer__tooltip'>
           {disabledMessage}
@@ -113,13 +217,22 @@ const ToggleOption = ({
   }
 
   return (
-    <ReactAriaToggleButton id={value} isDisabled={disabled} style={style}>
+    <label className={optionClassName} data-checked={checked} style={style}>
+      <input
+        type='radio'
+        checked={checked}
+        name={name}
+        onChange={onChange}
+        value={value}
+        disabled={disabled}
+        data-idx={index}
+      />
       <span className='Layer__toggle-option-content'>
         {leftIcon && (
           <span className='Layer__toggle-option__icon'>{leftIcon}</span>
         )}
         <Span noWrap>{label}</Span>
       </span>
-    </ReactAriaToggleButton>
+    </label>
   )
 }

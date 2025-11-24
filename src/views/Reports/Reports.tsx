@@ -103,9 +103,10 @@ export const Reports = ({
       {enabledReports.length > 1 && (
         <div className='Layer__component Layer__header__actions'>
           <Toggle
+            name='reports-tabs'
             options={options}
-            selectedKey={activeTab}
-            onSelectionChange={key => setActiveTab(key as ReportType)}
+            selected={activeTab}
+            onChange={opt => setActiveTab(opt.target.value as ReportType)}
           />
         </div>
       )}

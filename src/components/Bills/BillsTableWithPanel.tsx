@@ -92,6 +92,7 @@ export const BillsTableWithPanel = ({
         <HeaderRow>
           <HeaderCol noPadding>
             <Toggle
+              name='bills-tabs'
               options={[
                 {
                   value: 'UNPAID',
@@ -102,10 +103,10 @@ export const BillsTableWithPanel = ({
                   label: stringOverrides?.paidToggleOption || 'Paid',
                 },
               ]}
-              selectedKey={status}
-              onSelectionChange={(key) => {
-                setStatus(key as BillStatusFilter)
-                if (key === 'PAID') {
+              selected={status}
+              onChange={(opt) => {
+                setStatus(opt.target.value as BillStatusFilter)
+                if (opt.target.value === 'PAID') {
                   clearRecordPaymentSelection()
                 }
                 setCurrentPage(1)

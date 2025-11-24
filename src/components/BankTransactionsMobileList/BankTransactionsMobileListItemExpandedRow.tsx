@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import type { Key } from 'react-aria-components'
+import { type ChangeEvent, useState } from 'react'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
@@ -47,18 +46,19 @@ export const BankTransactionsMobileListItemExpandedRow = ({
 }: BankTransactionsMobileListItemExpandedRowProps) => {
   const [purpose, setPurpose] = useState<Purpose>(getInitialPurpose(bankTransaction))
 
-  const onChangePurpose = (key: Key) =>
-    setPurpose(key as Purpose)
+  const onChangePurpose = (event: ChangeEvent<HTMLInputElement>) =>
+    setPurpose(event.target.value as Purpose)
 
   return (
     <VStack pi='md' gap='md' pbe='md'>
       {showCategorization
         && (
           <Toggle
+            name={`purpose-${bankTransaction.id}`}
             size={ToggleSize.medium}
             options={PURPOSE_TOGGLE_OPTIONS}
-            selectedKey={purpose}
-            onSelectionChange={onChangePurpose}
+            selected={purpose}
+            onChange={onChangePurpose}
           />
         )}
       <BankTransactionsMobileForms

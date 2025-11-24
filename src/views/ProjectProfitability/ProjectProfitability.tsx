@@ -85,6 +85,7 @@ export const ProjectProfitabilityView = ({
       <div className='Layer__component Layer__header__actions'>
         <div className='Layer__component'>
           <Toggle
+            name='project-tabs'
             options={[
               {
                 value: 'overview',
@@ -99,8 +100,8 @@ export const ProjectProfitabilityView = ({
                 label: 'Report',
               },
             ]}
-            selectedKey={activeTab}
-            onSelectionChange={key => setActiveTab(key as ProjectTab)}
+            selected={activeTab}
+            onChange={opt => setActiveTab(opt.target.value as ProjectTab)}
           />
         </div>
         <Select
