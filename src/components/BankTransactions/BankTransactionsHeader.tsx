@@ -23,9 +23,9 @@ import { ButtonVariant } from '@components/Button/Button'
 import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
 import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
+import { NewToggle } from '@components/NewToggle/NewToggle'
 import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
@@ -198,14 +198,12 @@ export const BankTransactionsHeader = ({
     withDatePicker,
   ])
 
-  const onCategorizationDisplayChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const onCategorizationDisplayChange = (value: string | number) => {
     setFilters({
       categorizationStatus:
-        event.target.value === 'categorized' // see DisplayState enum
+        value === 'categorized' // see DisplayState enum
           ? DisplayState.categorized
-          : event.target.value === 'all' // see DisplayState enum
+          : value === 'all' // see DisplayState enum
             ? DisplayState.all
             : DisplayState.review,
     })
@@ -250,19 +248,13 @@ export const BankTransactionsHeader = ({
             <HStack slot='toggle' justify='center' gap='xs'>
               {collapseHeader && headerTopRow}
               {!categorizedOnly && categorizeView && showStatusToggle && (
-                <Toggle
-                  name='bank-transaction-display'
-                  size={
-                    mobileComponent === 'mobileList'
-                      ? ToggleSize.small
-                      : ToggleSize.medium
-                  }
+                <NewToggle
                   options={[
                     { label: 'To Review', value: DisplayState.review },
                     { label: 'Categorized', value: DisplayState.categorized },
                   ]}
-                  selected={display}
-                  onChange={onCategorizationDisplayChange}
+                  selectedKey={display}
+                  onSelectionChange={onCategorizationDisplayChange}
                 />
               )}
             </HStack>
