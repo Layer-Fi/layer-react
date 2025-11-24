@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import type { Key } from 'react-aria-components'
 
 import { DisplayState } from '@internal-types/bank_transactions'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
@@ -198,12 +199,12 @@ export const BankTransactionsHeader = ({
     withDatePicker,
   ])
 
-  const onCategorizationDisplayChange = (value: string | number) => {
+  const onCategorizationDisplayChange = (value: Key) => {
     setFilters({
       categorizationStatus:
-        value === 'categorized' // see DisplayState enum
+        value === 'categorized'
           ? DisplayState.categorized
-          : value === 'all' // see DisplayState enum
+          : value === 'all'
             ? DisplayState.all
             : DisplayState.review,
     })
