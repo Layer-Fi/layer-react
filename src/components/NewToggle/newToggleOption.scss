@@ -1,7 +1,6 @@
 .Layer__NewToggleOption {
   box-sizing: border-box;
   position: relative;
-  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,14 +9,24 @@
   border-radius: 6px;
   border: none;
   background: transparent;
-  cursor: pointer;
-  font-size: var(--btn-font-size);
-  font-family: var(--font-family);
   color: var(--text-color-secondary);
 
+  &::before {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    border-radius: 6px;
+    background: transparent;
+    content: '';
+    transition: background-color 150ms;
+  }
+
   &[data-hovered]:not([data-disabled], [data-selected]) {
-    background-color: var(--color-base-200);
     color: var(--text-color-primary);
+
+    &::before {
+      background-color: var(--color-base-200);
+    }
   }
 }
 

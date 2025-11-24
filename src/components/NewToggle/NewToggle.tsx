@@ -1,52 +1,30 @@
 import type { Key, Selection } from 'react-aria-components'
 import { ToggleButtonGroup } from 'react-aria-components'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-
 import './NewToggle.scss'
 
 import { NewToggleOption } from './NewToggleOption'
-import { type NewToggleOptionData } from './NewToggleOption'
-
-export enum NewToggleSize {
-  medium = 'medium',
-  small = 'small',
-  xsmall = 'xsmall',
-}
+import { type NewToggleOptionProps } from './NewToggleOption'
 
 export interface NewToggleProps {
-  size?: NewToggleSize
-  options: NewToggleOptionData[]
+  options: NewToggleOptionProps[]
   selectedKey?: Key
-  defaultSelectedKey?: Key
   onSelectionChange?: (key: Key) => void
 }
 
 export const NewToggle = ({
   options,
   selectedKey,
-  defaultSelectedKey,
   onSelectionChange,
-  size = NewToggleSize.medium,
 }: NewToggleProps) => {
-  const dataProperties = toDataProperties({ size })
-
   const selectedKeys: Selection =
     selectedKey !== undefined ? new Set([selectedKey]) : new Set()
-  const defaultSelectedKeys: Selection =
-    defaultSelectedKey !== undefined
-      ? new Set([defaultSelectedKey])
-      : new Set()
 
   return (
     <ToggleButtonGroup
       className='Layer__NewToggle'
-      {...dataProperties}
       selectionMode='single'
-      selectedKeys={selectedKey !== undefined ? selectedKeys : undefined}
-      defaultSelectedKeys={
-        defaultSelectedKey !== undefined ? defaultSelectedKeys : undefined
-      }
+      selectedKeys={selectedKeys}
       onSelectionChange={(keys) => {
         const selectedKeysArray = Array.from(keys)
         if (selectedKeysArray.length > 0 && onSelectionChange) {
@@ -55,7 +33,7 @@ export const NewToggle = ({
       }}
     >
       {options.map(option => (
-        <NewToggleOption key={option.value} {...option} size={size} />
+        <NewToggleOption key={option.value} {...option} />
       ))}
     </ToggleButtonGroup>
   )
