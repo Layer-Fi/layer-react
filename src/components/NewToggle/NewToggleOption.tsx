@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties } from 'react'
 import { SelectionIndicator, ToggleButton } from 'react-aria-components'
 
 import { Span } from '@ui/Typography/Text'
@@ -9,27 +9,17 @@ import {
 } from '@components/Tooltip/Tooltip'
 
 import './newToggleOption.scss'
-
-import { type NewToggleSize } from './NewToggle'
-
-interface NewToggleOptionProps extends NewToggleOptionData {
-  size: NewToggleSize
-}
-
-export interface NewToggleOptionData {
+export interface NewToggleOptionProps {
   label: string
   value: string
   disabled?: boolean
   disabledMessage?: string
-  leftIcon?: ReactNode
   style?: CSSProperties
 }
 
 export const NewToggleOption = ({
   label,
   value,
-  size: _size,
-  leftIcon,
   disabled,
   disabledMessage = 'Disabled',
   style,
@@ -46,9 +36,6 @@ export const NewToggleOption = ({
           >
             <SelectionIndicator className='Layer__NewToggleOption-SelectionIndicator' />
             <Span className='Layer__NewToggle-Option-Content'>
-              {leftIcon && (
-                <span className='Layer__NewToggle-Option__Icon'>{leftIcon}</span>
-              )}
               <Span noWrap>{label}</Span>
             </Span>
           </ToggleButton>
@@ -64,9 +51,6 @@ export const NewToggleOption = ({
     <ToggleButton id={value} isDisabled={disabled} style={style} className='Layer__NewToggleOption'>
       <SelectionIndicator className='Layer__NewToggleOption-SelectionIndicator' />
       <Span className='Layer__NewToggle-Option-Content'>
-        {leftIcon && (
-          <span className='Layer__NewToggle-Option__Icon'>{leftIcon}</span>
-        )}
         <Span noWrap>{label}</Span>
       </Span>
     </ToggleButton>
