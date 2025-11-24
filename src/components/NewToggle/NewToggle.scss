@@ -36,13 +36,8 @@
       0 3px 4px 0 rgb(0 0 0 / 2%),
       0 4px 5px 0 rgb(0 0 0 / 1%);
     background: var(--color-white);
-    transition:
-      transform 150ms ease,
-      width 150ms ease;
-
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-    }
+    transition-property: translate, width;
+    transition-duration: 200ms;
   }
 
   .react-aria-ToggleButton {
