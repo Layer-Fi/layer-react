@@ -6,7 +6,7 @@
   height: 36px;
   width: max-content;
   padding: 2px;
-  border-radius: 52px;
+  border-radius: 6px;
   box-shadow: 0 0 0 1px var(--color-base-300);
   background: var(--color-base-100);
   cursor: pointer;
@@ -21,7 +21,31 @@
     align-items: center;
   }
 
-  button {
+  .react-aria-SelectionIndicator {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 6px;
+    box-shadow:
+      0 0 0 1px var(--color-base-300),
+      0 1px 1px 0 rgb(0 0 0 / 4%),
+      0 2px 3px 0 rgb(0 0 0 / 4%),
+      0 3px 4px 0 rgb(0 0 0 / 2%),
+      0 4px 5px 0 rgb(0 0 0 / 1%);
+    background: var(--color-white);
+    transition:
+      transform 150ms ease,
+      width 150ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  .react-aria-ToggleButton {
     box-sizing: border-box;
     position: relative;
     z-index: 2;
@@ -30,7 +54,7 @@
     justify-content: center;
     height: 32px;
     padding: 8px 16px;
-    border-radius: 8px;
+    border-radius: 6px;
     border: none;
     background: transparent;
     cursor: pointer;
@@ -40,17 +64,6 @@
     transition:
       color var(--transition-speed) ease-in-out,
       background-color 150ms ease-in-out;
-
-    &[data-selected] {
-      box-shadow:
-        0 0 0 1px var(--color-base-300),
-        0 1px 1px 0 rgb(0 0 0 / 4%),
-        0 2px 3px 0 rgb(0 0 0 / 4%),
-        0 3px 4px 0 rgb(0 0 0 / 2%),
-        0 4px 5px 0 rgb(0 0 0 / 1%);
-      background: var(--color-white);
-      color: var(--text-color-primary);
-    }
 
     &[data-disabled] {
       cursor: not-allowed;

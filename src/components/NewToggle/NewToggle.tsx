@@ -1,5 +1,5 @@
 import type { Key, Selection } from 'react-aria-components'
-import { ToggleButtonGroup as ReactAriaToggleButtonGroup } from 'react-aria-components'
+import { ToggleButtonGroup } from 'react-aria-components'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
@@ -39,7 +39,7 @@ export const NewToggle = ({
       : new Set()
 
   return (
-    <ReactAriaToggleButtonGroup
+    <ToggleButtonGroup
       className='Layer__NewToggle'
       {...dataProperties}
       selectionMode='single'
@@ -57,6 +57,6 @@ export const NewToggle = ({
       {options.map(option => (
         <NewToggleOption key={option.value} {...option} size={size} />
       ))}
-    </ReactAriaToggleButtonGroup>
+    </ToggleButtonGroup>
   )
 }

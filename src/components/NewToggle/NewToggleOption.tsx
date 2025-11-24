@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { ToggleButton as ReactAriaToggleButton } from 'react-aria-components'
+import { SelectionIndicator, ToggleButton } from 'react-aria-components'
 
 import { Span } from '@ui/Typography/Text'
 import {
@@ -36,18 +36,19 @@ export const NewToggleOption = ({
     return (
       <DeprecatedTooltip>
         <DeprecatedTooltipTrigger>
-          <ReactAriaToggleButton
+          <ToggleButton
             id={value}
             isDisabled={disabled}
             style={style}
           >
-            <span className='Layer__NewToggle-Option-Content'>
+            <SelectionIndicator />
+            <Span className='Layer__NewToggle-Option-Content'>
               {leftIcon && (
                 <span className='Layer__NewToggle-Option__Icon'>{leftIcon}</span>
               )}
               <Span noWrap>{label}</Span>
-            </span>
-          </ReactAriaToggleButton>
+            </Span>
+          </ToggleButton>
         </DeprecatedTooltipTrigger>
         <DeprecatedTooltipContent className='Layer__tooltip'>
           {disabledMessage}
@@ -57,13 +58,14 @@ export const NewToggleOption = ({
   }
 
   return (
-    <ReactAriaToggleButton id={value} isDisabled={disabled} style={style}>
-      <span className='Layer__NewToggle-Option-Content'>
+    <ToggleButton id={value} isDisabled={disabled} style={style}>
+      <SelectionIndicator />
+      <Span className='Layer__NewToggle-Option-Content'>
         {leftIcon && (
           <span className='Layer__NewToggle-Option__Icon'>{leftIcon}</span>
         )}
         <Span noWrap>{label}</Span>
-      </span>
-    </ReactAriaToggleButton>
+      </Span>
+    </ToggleButton>
   )
 }
