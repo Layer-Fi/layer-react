@@ -79,6 +79,11 @@ export const BankTransactionsListItem = ({
 
   const categorized = isCategorized(bankTransaction)
 
+  // Keep showing as uncategorized during removal animation to prevent UI flashing
+  const displayAsCategorized = bankTransaction.recently_categorized && shouldHideAfterCategorize()
+    ? false
+    : categorized
+
   const { isVisible } = useDelayedVisibility({ delay: index * 80 })
 
   const { select, deselect } = useBulkSelectionActions()
@@ -205,7 +210,7 @@ export const BankTransactionsListItem = ({
           size='md'
         />
       </HStack>
-      {!categorizationEnabled && !categorized
+      {!categorizationEnabled && !displayAsCategorized
         && (
           <span className='Layer__bank-transaction-list-item__processing-info'>
             <BankTransactionsProcessingInfo />
@@ -218,10 +223,10 @@ export const BankTransactionsListItem = ({
             bankTransaction={bankTransaction}
             isOpen={openExpandedRow}
             close={() => setOpenExpandedRow(false)}
-            categorized={categorized}
+            categorized={displayAsCategorized}
             asListItem={true}
             submitBtnText={
-              categorized
+              displayAsCategorized
                 ? stringOverrides?.updateButtonText || 'Update'
                 : stringOverrides?.approveButtonText || 'Approve'
             }
@@ -235,7 +240,7 @@ export const BankTransactionsListItem = ({
           />
         </AnimatedPresenceDiv>
       </span>
-      {!openExpandedRow && categorizationEnabled && !categorized && (
+      {!openExpandedRow && categorizationEnabled && !displayAsCategorized && (
         <div onClick={preventRowExpansion}>
           <HStack pi='md' gap='md' pb='md'>
             <BankTransactionCategoryComboBox
@@ -252,20 +257,20 @@ export const BankTransactionsListItem = ({
               onClick={handleSave}
               className={showRetry ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
               processing={bankTransaction.processing}
-              action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+              action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
               withRetry={true}
               error={showRetry ? 'Approval failed. Check connection and retry in few seconds.' : undefined}
             >
               {showRetry
                 ? 'Retry'
-                : (!categorized
+                : (!displayAsCategorized
                   ? stringOverrides?.approveButtonText || 'Approve'
                   : stringOverrides?.updateButtonText || 'Update')}
             </SubmitButton>
           </HStack>
         </div>
       )}
-      {!openExpandedRow && categorized && (
+      {!openExpandedRow && displayAsCategorized && (
         <BankTransactionsListItemCategory
           bankTransaction={bankTransaction}
         />
