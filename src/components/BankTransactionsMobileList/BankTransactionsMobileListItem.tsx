@@ -85,6 +85,11 @@ export const BankTransactionsMobileListItem = ({
 
   const itemRef = useRef<HTMLLIElement>(null)
 
+  // Keep showing as uncategorized during removal animation to prevent UI flashing
+  const displayAsCategorized = bankTransaction.recently_categorized && shouldHideAfterCategorize()
+    ? false
+    : categorized
+
   const [open, setOpen] = useState(isFirstItem)
 
   const openNext = () => {
@@ -197,11 +202,11 @@ export const BankTransactionsMobileListItem = ({
   const { renderInAppLink } = useInAppLinkContext()
 
   const inAppLink = useMemo(() => {
-    if (!categorized) {
+    if (!displayAsCategorized) {
       return null
     }
     return getInAppLink(bankTransaction, renderInAppLink)
-  }, [categorized, bankTransaction, renderInAppLink])
+  }, [displayAsCategorized, bankTransaction, renderInAppLink])
 
   const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
 
@@ -269,7 +274,7 @@ export const BankTransactionsMobileListItem = ({
             />
           </HStack>
           {!open && (
-            !categorizationEnabled && !categorized
+            !categorizationEnabled && !displayAsCategorized
               ? (
                 <BankTransactionsProcessingInfo showAsBadge />
               )

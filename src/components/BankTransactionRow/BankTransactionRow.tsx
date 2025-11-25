@@ -104,6 +104,11 @@ export const BankTransactionRow = ({
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
   const { saveBankTransactionRow } = useSaveBankTransactionRow()
 
+  // Keep showing as uncategorized during removal animation to prevent UI flashing
+  const displayAsCategorized = bankTransaction.recently_categorized && shouldHideAfterCategorize()
+    ? false
+    : categorized
+
   useEffect(() => {
     if (bankTransaction.error) {
       setShowRetry(true)
@@ -281,15 +286,15 @@ export const BankTransactionRow = ({
                       className='Layer__bank-transaction__submit-btn'
                       processing={bankTransaction.processing}
                       active={open}
-                      action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+                      action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
                       disabled={selectedCategory === null}
                     >
-                      {categorized
+                      {displayAsCategorized
                         ? stringOverrides?.updateButtonText || 'Update'
                         : stringOverrides?.approveButtonText || 'Confirm'}
                     </SubmitButton>
                   )}
-                {!categorizationEnabled && !categorized && (
+                {!categorizationEnabled && !displayAsCategorized && (
                   <VStack pis='lg' fluid>
                     <BankTransactionsProcessingInfo />
                   </VStack>
@@ -313,7 +318,7 @@ export const BankTransactionRow = ({
                   variant='fade'
                   isOpen={categorizationEnabled && !categorized}
                   className='Layer__BankTransactionRow__CategoryComboBoxMotionContent'
-                  slotProps={{ AnimatePresence: { mode: 'wait' } }}
+                  slotProps={{ AnimatePresence: { mode: 'wait', initial: false } }}
                   key='category-combobox'
                 >
                   <BankTransactionCategoryComboBox
@@ -323,17 +328,17 @@ export const BankTransactionRow = ({
                       setTransactionCategory(bankTransaction.id, selectedCategory)
                       setShowRetry(false)
                     }}
-                    isLoading={bankTransaction.processing}
+                    isDisabled={bankTransaction.processing}
                   />
                 </AnimatedPresenceDiv>
-                {categorized
+                {displayAsCategorized
                   && (
                     <BankTransactionsCategorizedSelectedValue
                       bankTransaction={bankTransaction}
                       className='Layer__bank-transaction-row__category'
                     />
                   )}
-                {categorizationEnabled && !categorized && showRetry
+                {!displayAsCategorized && categorizationEnabled && showRetry
                   && (
                     <RetryButton
                       onClick={() => {
@@ -348,7 +353,7 @@ export const BankTransactionRow = ({
                       Retry
                     </RetryButton>
                   )}
-                {!categorized && categorizationEnabled && !showRetry
+                {!displayAsCategorized && categorizationEnabled && !showRetry
                   && (
                     <SubmitButton
                       onClick={() => {
@@ -360,14 +365,14 @@ export const BankTransactionRow = ({
                       processing={bankTransaction.processing}
                       active={open}
                       disabled={selectedCategory === null}
-                      action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+                      action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
                     >
-                      {categorized
+                      {displayAsCategorized
                         ? stringOverrides?.updateButtonText || 'Update'
                         : stringOverrides?.approveButtonText || 'Confirm'}
                     </SubmitButton>
                   )}
-                {!categorizationEnabled && !categorized && (
+                {!categorizationEnabled && !displayAsCategorized && (
                   <VStack pis='xs' fluid>
                     <BankTransactionsProcessingInfo />
                   </VStack>
@@ -393,7 +398,7 @@ export const BankTransactionRow = ({
             <ExpandedBankTransactionRow
               ref={expandedRowRef}
               bankTransaction={bankTransaction}
-              categorized={categorized}
+              categorized={displayAsCategorized}
               isOpen={open}
               close={() => setOpen(false)}
               containerWidth={containerWidth}

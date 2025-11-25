@@ -32,7 +32,7 @@ export const BankTransactionsCategorizeAllModal = ({
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   const [selectedCategory, setSelectedCategory] = useState<BankTransactionCategoryComboBoxOption | null>(null)
-  const { trigger } = useBulkCategorize()
+  const { trigger, isMutating } = useBulkCategorize()
 
   const handleCategorizeModalClose = useCallback((isOpen: boolean) => {
     onOpenChange(isOpen)
@@ -76,7 +76,7 @@ export const BankTransactionsCategorizeAllModal = ({
       content={(
         <VStack gap='xs'>
           <VStack gap='3xs'>
-            <Label htmlFor={categorySelectId}>Select category</Label>
+            <Label size='sm' htmlFor={categorySelectId}>Select category</Label>
             {useCategorySelectDrawer
               ? (
                 <CategorySelectDrawerWithTrigger
@@ -92,6 +92,7 @@ export const BankTransactionsCategorizeAllModal = ({
                   selectedValue={selectedCategory}
                   onSelectedValueChange={setSelectedCategory}
                   includeSuggestedMatches={false}
+                  isDisabled={isMutating}
                 />
               )}
           </VStack>

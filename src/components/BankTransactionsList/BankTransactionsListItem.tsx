@@ -245,7 +245,7 @@ export const BankTransactionsListItem = ({
                 setTransactionCategory(bankTransaction.id, selectedCategory)
                 setShowRetry(false)
               }}
-              isLoading={bankTransaction.processing}
+              isDisabled={bankTransaction.processing}
             />
             <SubmitButton
               disabled={bankTransaction.processing}
