@@ -6,7 +6,6 @@ import {
   useEffectiveBookkeepingStatus,
 } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { VStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
 import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { BankTransactionCustomerVendorSelector } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorSelector'
 import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
@@ -107,7 +106,6 @@ export function BankTransactionFormFields({
       {showDescriptions
         && (
           <VStack gap='sm'>
-            <Span size='sm' weight='bold'>Description</Span>
             <BankTransactionMemo bankTransactionId={bankTransaction.id} />
           </VStack>
         )}
