@@ -3,12 +3,14 @@ import { useForm } from '@tanstack/react-form'
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { useBankTransactionMetadata } from '@hooks/useBankTransactions/useBankTransactionsMetadata'
 import { useUpdateBankTransactionMetadata } from '@hooks/useBankTransactions/useUpdateBankTransactionMetadata'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 interface BankTransactionMemoProps {
   bankTransactionId: BankTransaction['id']
 }
 
 export const useBankTransactionMemo = ({ bankTransactionId }: BankTransactionMemoProps) => {
+  const { addToast } = useLayerContext()
   const { trigger: updateBankTransactionMetadata } = useUpdateBankTransactionMetadata({ bankTransactionId })
   const { data: bankTransactionMetadata } = useBankTransactionMetadata({ bankTransactionId })
 
@@ -20,6 +22,7 @@ export const useBankTransactionMemo = ({ bankTransactionId }: BankTransactionMem
       if (value.memo !== undefined && form.state.isDirty) {
         await updateBankTransactionMetadata({ memo: value.memo ?? '' })
         form.reset(value)
+        addToast({ content: 'Description saved', type: 'success' })
       }
     },
   })
