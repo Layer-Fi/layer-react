@@ -373,8 +373,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                                 onSelectedValueChange={(value) => {
                                   changeCategoryForSplitAtIndex(index, value)
                                 }}
-                                isLoading={bankTransaction.processing}
-                                isDisabled={!categorizationEnabled}
+                                isDisabled={!categorizationEnabled || bankTransaction.processing}
                                 includeSuggestedMatches={false}
                               />
                               {showTags && (
