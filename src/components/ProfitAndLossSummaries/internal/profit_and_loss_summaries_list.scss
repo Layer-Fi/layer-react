@@ -30,7 +30,7 @@
   gap: var(--spacing-sm);
 }
 
-@container (min-width: 48rem) {
+@container (min-width: 60rem) {
   .Layer__ProfitAndLossSummariesList {
     --column-count: 3;
 
