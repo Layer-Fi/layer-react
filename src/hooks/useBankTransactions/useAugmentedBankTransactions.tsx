@@ -263,8 +263,11 @@ export const useAugmentedBankTransactions = (
     suggestedMatchId: string,
     notify?: boolean,
   ) => {
-    // Get the other side's ID from the bank transaction's match details
-    const matchedBankTransactionId = bankTransaction.match?.details?.id
+    const suggestedMatch = bankTransaction.suggested_matches?.find(
+      sm => sm.id === suggestedMatchId,
+    )
+
+    const matchedBankTransactionId = suggestedMatch?.details?.id
 
     updateOneLocal({
       ...bankTransaction,
