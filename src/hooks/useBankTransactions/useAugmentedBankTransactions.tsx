@@ -293,7 +293,6 @@ export const useAugmentedBankTransactions = (
       type: 'Confirm_Match',
     })
       .then(() => {
-        // Remove both transactions after successful match
         const idsToRemove = [bankTransaction.id]
         if (matchedBankTransactionId) {
           idsToRemove.push(matchedBankTransactionId)
