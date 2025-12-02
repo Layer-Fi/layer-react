@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Car, Plus } from 'lucide-react'
+import { Car, Edit, Plus, Trash2 } from 'lucide-react'
 
 import { type Trip, type TripPurpose } from '@schemas/trip'
 import { type Vehicle } from '@schemas/vehicle'
 import { formatCalendarDate } from '@utils/time/timeUtils'
+import { useAutoResetPageIndex } from '@hooks/pagination/useAutoResetPageIndex'
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
-import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
-import ChevronRightFill from '@icons/ChevronRightFill'
+import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
@@ -17,6 +17,7 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import type { ColumnConfig } from '@components/DataTable/DataTable'
 import { DataTableHeader } from '@components/DataTable/DataTableHeader'
 import { PaginatedTable } from '@components/PaginatedDataTable/PaginatedDataTable'
+import { TripDeleteConfirmationModal } from '@components/Trips/TripDeleteConfirmationModal'
 import { TripForm } from '@components/Trips/TripForm/TripForm'
 import { useListTrips } from '@features/trips/api/useListTrips'
 import { TripPurposeFilterValue, TripPurposeToggle } from '@features/trips/components/TripPurposeToggle'
@@ -37,10 +38,15 @@ enum TripColumns {
   Purpose = 'Purpose',
   Address = 'Address',
   Description = 'Description',
-  Expand = 'Expand',
+  Actions = 'Actions',
 }
 
-const getColumnConfig = (onSelectTrip: (trip: Trip) => void): ColumnConfig<Trip, TripColumns> => ({
+type TripActions = {
+  onSelectTrip: (trip: Trip) => void
+  onDeleteTrip: (trip: Trip) => void
+}
+
+const getColumnConfig = ({ onSelectTrip, onDeleteTrip }: TripActions): ColumnConfig<Trip, TripColumns> => ({
   [TripColumns.TripDate]: {
     id: TripColumns.TripDate,
     header: 'Date',
@@ -91,12 +97,17 @@ const getColumnConfig = (onSelectTrip: (trip: Trip) => void): ColumnConfig<Trip,
     header: 'Description',
     cell: row => <Span ellipsis withTooltip>{row.description}</Span>,
   },
-  [TripColumns.Expand]: {
-    id: TripColumns.Expand,
+  [TripColumns.Actions]: {
+    id: TripColumns.Actions,
     cell: row => (
-      <Button inset icon onPress={() => onSelectTrip(row)} aria-label='View trip' variant='ghost'>
-        <ChevronRightFill />
-      </Button>
+      <HStack gap='3xs'>
+        <Button inset icon onPress={() => onSelectTrip(row)} aria-label='View trip' variant='ghost'>
+          <Edit size={20} />
+        </Button>
+        <Button inset icon onPress={() => onDeleteTrip(row)} aria-label='Delete trip' variant='ghost'>
+          <Trash2 size={20} />
+        </Button>
+      </HStack>
     ),
   },
 })
@@ -104,9 +115,11 @@ const getColumnConfig = (onSelectTrip: (trip: Trip) => void): ColumnConfig<Trip,
 export const TripsTable = () => {
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
+  const [tripToDelete, setTripToDelete] = useState<Trip | null>(null)
 
   const { tableFilters, setTableFilters } = useTripsTableFilters()
   const { query, selectedVehicle, purposeFilter } = tableFilters
+  const { currentTripsPage, setCurrentTripsPage } = useCurrentTripsPage()
 
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: query })
 
@@ -117,8 +130,8 @@ export const TripsTable = () => {
   const filterParams = useMemo(() => {
     const params: { query?: string, vehicleId?: string, purpose?: string } = {}
 
-    if (searchQuery) {
-      params.query = searchQuery
+    if (query) {
+      params.query = query
     }
 
     if (selectedVehicle) {
@@ -130,11 +143,11 @@ export const TripsTable = () => {
     }
 
     return params
-  }, [searchQuery, selectedVehicle, purposeFilter])
+  }, [query, selectedVehicle, purposeFilter])
 
   const { data, isLoading, isError, size, setSize } = useListTrips(filterParams)
-
   const trips = useMemo(() => data?.flatMap(({ data }) => data), [data])
+  const autoResetPageIndexRef = useAutoResetPageIndex(filterParams, data)
 
   const paginationMeta = data?.[data.length - 1]?.meta.pagination
   const hasMore = paginationMeta?.hasMore
@@ -150,6 +163,10 @@ export const TripsTable = () => {
     setIsTripDrawerOpen(true)
   }, [])
 
+  const onDeleteTrip = useCallback((trip: Trip) => {
+    setTripToDelete(trip)
+  }, [])
+
   const onRecordTrip = useCallback(() => {
     setSelectedTrip(null)
     setIsTripDrawerOpen(true)
@@ -157,11 +174,14 @@ export const TripsTable = () => {
 
   const paginationProps = useMemo(() => {
     return {
+      initialPage: currentTripsPage,
+      onSetPage: setCurrentTripsPage,
       pageSize: 20,
       hasMore,
       fetchMore,
+      autoResetPageIndexRef,
     }
-  }, [fetchMore, hasMore])
+  }, [currentTripsPage, setCurrentTripsPage, fetchMore, hasMore, autoResetPageIndexRef])
 
   const handlePurposeFilterChange = useCallback((newPurposeFilter: TripPurposeFilterValue) => {
     setTableFilters({ purposeFilter: newPurposeFilter })
@@ -218,7 +238,7 @@ export const TripsTable = () => {
     />
   )
 
-  const columnConfig = useMemo(() => getColumnConfig(onSelectTrip), [onSelectTrip])
+  const columnConfig = useMemo(() => getColumnConfig({ onSelectTrip, onDeleteTrip }), [onSelectTrip, onDeleteTrip])
 
   const HeaderFilters = useCallback(() => (
     <HStack gap='sm' align='center'>
@@ -287,6 +307,17 @@ export const TripsTable = () => {
           </VStack>
         )}
       </Drawer>
+      {tripToDelete && (
+        <TripDeleteConfirmationModal
+          isOpen={!!tripToDelete}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setTripToDelete(null)
+            }
+          }}
+          trip={tripToDelete}
+        />
+      )}
     </>
   )
 }

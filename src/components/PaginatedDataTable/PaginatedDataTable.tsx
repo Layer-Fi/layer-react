@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { type MutableRefObject, useCallback, useMemo, useState } from 'react'
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -19,12 +19,12 @@ interface PaginationProps {
   pageSize?: number
   hasMore?: boolean
   fetchMore?: () => void
+  autoResetPageIndexRef?: MutableRefObject<boolean>
 }
 interface PaginatedTableProps<TData, TColumns extends string> extends DataTableProps<TData, TColumns> {
   paginationProps: PaginationProps
 }
 
-const EMPTY_ARRAY: never[] = []
 export function PaginatedTable<TData extends { id: string }, TColumns extends string>({
   data,
   isLoading,
@@ -35,7 +35,7 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
   paginationProps,
   slots,
 }: PaginatedTableProps<TData, TColumns>) {
-  const { pageSize = 20, hasMore, fetchMore, initialPage = 0, onSetPage } = paginationProps
+  const { pageSize = 20, hasMore, fetchMore, initialPage = 0, onSetPage, autoResetPageIndexRef } = paginationProps
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: initialPage, pageSize })
 
@@ -51,7 +51,7 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
   })
 
   const table = useReactTable<TData>({
-    data: data ?? EMPTY_ARRAY,
+    data: data ?? [],
     columns: columnDefs,
     state: { pagination },
     onPaginationChange: (updaterOrValue) => {
@@ -64,7 +64,7 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
     },
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    autoResetPageIndex: false,
+    autoResetPageIndex: autoResetPageIndexRef?.current ?? false,
   })
 
   const { rows } = table.getRowModel()

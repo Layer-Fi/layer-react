@@ -114,6 +114,17 @@ export const VehicleForm = (props: VehicleFormProps) => {
         )}
       </form.AppField>
 
+      <form.AppField name='isPrimary'>
+        {field => (
+          <field.FormSwitchField
+            label='Set as primary vehicle'
+            inline
+            isReadOnly={isReadOnly}
+            className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__IsPrimary`}
+          />
+        )}
+      </form.AppField>
+
       <VStack justify='end' className={`${VEHICLE_FORM_CSS_PREFIX}__Submit`}>
         <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
           {([canSubmit, isSubmitting]) => (
