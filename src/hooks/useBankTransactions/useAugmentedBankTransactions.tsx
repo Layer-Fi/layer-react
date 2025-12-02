@@ -291,10 +291,13 @@ export const useAugmentedBankTransactions = (
       type: 'Confirm_Match',
     })
       .then((match) => {
-        const submittedTransaction = data?.find(({ id }) => id === bankTransactionId)
-        if (submittedTransaction) {
+        const matchedTransaction = data?.find(({ id }) => id === match.bank_transaction.id)
+
+        const updatedTransferTransaction = data?.find(({ id }) => id === matchedTransactionId)
+
+        if (matchedTransaction) {
           updateOneLocal({
-            ...submittedTransaction,
+            ...matchedTransaction,
             categorization_status: CategorizationStatus.MATCHED,
             match,
             processing: false,
@@ -302,11 +305,13 @@ export const useAugmentedBankTransactions = (
           })
         }
 
-        const matchedTransaction = data?.find(({ id }) => id === match.bank_transaction.id)
-        if (matchedTransaction && matchedTransaction.id !== bankTransactionId) {
+        if (updatedTransferTransaction) {
+          /*
+           * We do not have the corresponding `match` for the transfer, so this portion of
+           * the optimistic update is not as complete as the other.
+           */
           updateOneLocal({
-            ...matchedTransaction,
-            categorization_status: CategorizationStatus.MATCHED,
+            ...updatedTransferTransaction,
             processing: false,
             recently_categorized: true,
           })
