@@ -15,13 +15,13 @@ import { formatPercent } from '@utils/format'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { type SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
+import { isLineItemUncategorized, mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 
 interface DetailedChartProps {
   filteredData: PnlChartLineItem[]
   filteredTotal?: number
-  hoveredItem?: string
-  setHoveredItem: (name?: string) => void
+  hoveredItem: PnlChartLineItem | undefined
+  setHoveredItem: (item: PnlChartLineItem | undefined) => void
   sidebarScope?: SidebarScope
   date: number | Date
   isLoading?: boolean
@@ -42,13 +42,11 @@ export const DetailedChart = ({
     if (x.isHidden) {
       return {
         ...x,
-        name: x.displayName,
         value: 0,
       }
     }
     return {
       ...x,
-      name: x.displayName,
       value: x.value > 0 ? x.value : 0,
     }
   }),
@@ -97,7 +95,7 @@ export const DetailedChart = ({
                 <Pie
                   data={chartData}
                   dataKey='value'
-                  nameKey='name'
+                  nameKey='displayName'
                   cx='50%'
                   cy='50%'
                   innerRadius='91%'
@@ -110,7 +108,7 @@ export const DetailedChart = ({
                   {chartData.map((entry, index) => {
                     let fill: string | undefined = typeColorMapping[index].color
                     let active = true
-                    if (hoveredItem && entry.name !== hoveredItem) {
+                    if (hoveredItem && entry.name !== hoveredItem.name) {
                       active = false
                       fill = undefined
                     }
@@ -121,17 +119,17 @@ export const DetailedChart = ({
                         className={classNames(
                           'Layer__profit-and-loss-detailed-charts__pie',
                           hoveredItem && active ? 'active' : 'inactive',
-                          entry.type === 'Uncategorized'
+                          isLineItemUncategorized(entry)
                           && 'Layer__profit-and-loss-detailed-charts__pie--border',
                         )}
                         style={{
                           fill:
-                          entry.type === 'Uncategorized' && fill
+                          isLineItemUncategorized(entry) && fill
                             ? 'url(#layer-pie-dots-pattern)'
                             : fill,
                         }}
                         opacity={typeColorMapping[index].opacity}
-                        onMouseEnter={() => setHoveredItem(entry.name)}
+                        onMouseEnter={() => setHoveredItem(entry)}
                         onMouseLeave={() => setHoveredItem(undefined)}
                       />
                     )
@@ -159,7 +157,7 @@ export const DetailedChart = ({
                       let text = 'Total'
 
                       if (hoveredItem) {
-                        text = hoveredItem
+                        text = hoveredItem.displayName
                       }
 
                       return (
@@ -196,7 +194,7 @@ export const DetailedChart = ({
                       let value = filteredTotal
                       if (hoveredItem) {
                         value = filteredData.find(
-                          x => x.displayName === hoveredItem,
+                          x => x.name === hoveredItem.name,
                         )?.value
                       }
 
@@ -234,7 +232,7 @@ export const DetailedChart = ({
 
                       if (hoveredItem) {
                         const item = filteredData.find(
-                          x => x.displayName === hoveredItem,
+                          x => x.name === hoveredItem.name,
                         )
                         const positiveTotal = chartData.reduce((sum, x) => sum + x.value, 0)
 
@@ -262,7 +260,7 @@ export const DetailedChart = ({
                 <Pie
                   data={[{ name: 'Total', value: 1 }]}
                   dataKey='value'
-                  nameKey='name'
+                  nameKey='displayName'
                   cx='50%'
                   cy='50%'
                   innerRadius='91%'
@@ -295,7 +293,7 @@ export const DetailedChart = ({
                       let text = 'Total'
 
                       if (hoveredItem) {
-                        text = hoveredItem
+                        text = hoveredItem.displayName
                       }
 
                       return (
@@ -332,7 +330,7 @@ export const DetailedChart = ({
                       let value = filteredTotal
                       if (hoveredItem) {
                         value = filteredData.find(
-                          x => x.displayName === hoveredItem,
+                          x => x.name === hoveredItem.name,
                         )?.value
                       }
 
@@ -355,7 +353,7 @@ export const DetailedChart = ({
                 <Pie
                   data={[{ name: 'loading...', value: 1 }]}
                   dataKey='value'
-                  nameKey='name'
+                  nameKey='displayName'
                   cx='50%'
                   cy='50%'
                   innerRadius='91%'

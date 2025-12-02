@@ -1,7 +1,6 @@
 import classNames from 'classnames'
 
 import { type SortDirection } from '@internal-types/general'
-import { DEFAULT_CHART_COLOR_TYPE } from '@config/charts'
 import { formatPercent } from '@utils/format'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import {
@@ -12,6 +11,7 @@ import {
 import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { isLineItemUncategorized, mapTypesToColors, type TypeColorMapping } from '@components/ProfitAndLossDetailedCharts/utils'
 
 export interface DetailedTableStringOverrides {
   categoryColumnHeader?: string
@@ -19,59 +19,18 @@ export interface DetailedTableStringOverrides {
   valueColumnHeader?: string
 }
 
-const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
+export const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
 
 export interface DetailedTableProps {
   filteredData: PnlChartLineItem[]
-  hoveredItem?: string
-  setHoveredItem: (name?: string) => void
+  hoveredItem: PnlChartLineItem | undefined
+  setHoveredItem: (item: PnlChartLineItem | undefined) => void
   sidebarScope: SidebarScope
   filters: ProfitAndLossFilters
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
   chartColorsList?: string[]
   stringOverrides?: DetailedTableStringOverrides
   onValueClick?: (item: PnlChartLineItem) => void
-}
-
-export interface TypeColorMapping {
-  color: string
-  opacity: number
-}
-
-export const mapTypesToColors = (
-  data: PnlChartLineItem[],
-  colorList: string[] = DEFAULT_CHART_COLOR_TYPE,
-): TypeColorMapping[] => {
-  const typeToColor: Record<string, string> = {}
-  const typeToLastOpacity: Record<string, number> = {}
-  let colorIndex = 0
-
-  return data.map((obj) => {
-    const type = obj.name ?? obj.type
-
-    if (type === 'Uncategorized') {
-      return {
-        color: '#EEEEF0',
-        opacity: 1,
-      }
-    }
-
-    if (!typeToColor[type]) {
-      typeToColor[type] = colorList[colorIndex % colorList.length]
-      colorIndex++
-      typeToLastOpacity[type] = 1
-    }
-    else {
-      typeToLastOpacity[type] -= 0.1
-    }
-
-    const opacity = typeToLastOpacity[type]
-
-    return {
-      color: typeToColor[type],
-      opacity: opacity,
-    }
-  })
 }
 
 const ValueIcon = ({
@@ -83,7 +42,7 @@ const ValueIcon = ({
   typeColorMapping: TypeColorMapping[]
   idx: number
 }) => {
-  if (item.type === 'Uncategorized') {
+  if (isLineItemUncategorized(item)) {
     return (
       <svg
         viewBox='0 0 12 12'
@@ -197,11 +156,11 @@ export const DetailedTable = ({
                     key={`pl-side-table-item-${idx}`}
                     className={classNames(
                       'Layer__profit-and-loss-detailed-table__row',
-                      hoveredItem && hoveredItem === item.displayName
+                      hoveredItem && hoveredItem.name === item.name
                         ? 'active'
                         : '',
                     )}
-                    onMouseEnter={() => setHoveredItem(item.displayName)}
+                    onMouseEnter={() => setHoveredItem(item)}
                     onMouseLeave={() => setHoveredItem(undefined)}
                   >
                     <td className='category-col'>{item.displayName}</td>

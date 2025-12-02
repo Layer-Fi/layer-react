@@ -54,7 +54,7 @@ export const TasksPending = () => {
                 <Pie
                   data={chartData}
                   dataKey='value'
-                  nameKey='name'
+                  nameKey='displayName'
                   cx='50%'
                   cy='50%'
                   innerRadius={5}
