@@ -26,11 +26,7 @@ export const useSaveBankTransactionRow = (): UseSaveBankTransactionRowResult => 
     }
 
     if (isSuggestedMatchAsOption(selectedCategory)) {
-      return matchBankTransaction(
-        bankTransaction.id,
-        selectedCategory.original.id,
-        selectedCategory.original.details.id,
-      )
+      return matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
     }
 
     if (isSplitAsOption(selectedCategory)) {

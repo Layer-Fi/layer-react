@@ -12,8 +12,8 @@ export const BankTransactionsContext =
     isValidating: false,
     isError: false,
     refetch: () => {},
-    categorize: () => Promise.resolve(),
-    match: () => Promise.resolve(),
+    categorize: () => Promise.resolve(undefined),
+    match: () => Promise.resolve(undefined),
     metadata: {
       pagination: {
         cursor: undefined,

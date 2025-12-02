@@ -262,7 +262,6 @@ export const useAugmentedBankTransactions = (
   const matchWithOptimisticUpdate = async (
     bankTransactionId: BankTransaction['id'],
     suggestedMatchId: string,
-    matchedTransactionId: string,
     notify?: boolean,
   ) => {
     const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
@@ -275,11 +274,14 @@ export const useAugmentedBankTransactions = (
       })
     }
 
-    const matchedTransferTransaction = data?.find(({ id }) => id === matchedTransactionId)
+    const transferBankTransaction = data?.find(({ id, suggested_matches }) =>
+      id !== bankTransactionId
+      && suggested_matches?.some(({ id }) => id === suggestedMatchId),
+    )
 
-    if (matchedTransferTransaction) {
+    if (transferBankTransaction) {
       updateOneLocal({
-        ...matchedTransferTransaction,
+        ...transferBankTransaction,
         processing: true,
         error: undefined,
       })
@@ -293,8 +295,6 @@ export const useAugmentedBankTransactions = (
       .then((match) => {
         const matchedTransaction = data?.find(({ id }) => id === match.bank_transaction.id)
 
-        const updatedTransferTransaction = data?.find(({ id }) => id === matchedTransactionId)
-
         if (matchedTransaction) {
           updateOneLocal({
             ...matchedTransaction,
@@ -305,13 +305,18 @@ export const useAugmentedBankTransactions = (
           })
         }
 
-        if (updatedTransferTransaction) {
+        const matchedTransferTransaction = data?.find(({ id, suggested_matches }) =>
+          id !== bankTransactionId
+          && suggested_matches?.some(({ id }) => id === suggestedMatchId),
+        )
+
+        if (matchedTransferTransaction) {
           /*
            * We do not have the corresponding `match` for the transfer, so this portion of
            * the optimistic update is not as complete as the other.
            */
           updateOneLocal({
-            ...updatedTransferTransaction,
+            ...matchedTransferTransaction,
             processing: false,
             recently_categorized: true,
           })

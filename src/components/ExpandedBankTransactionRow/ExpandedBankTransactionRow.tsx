@@ -258,11 +258,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
         return
       }
 
-      await matchBankTransaction(
-        bankTransaction.id,
-        foundMatch.id,
-        foundMatch.details.id,
-      )
+      await matchBankTransaction(bankTransaction.id, foundMatch.id)
 
       // Remove from bulk selection store
       deselect(bankTransaction.id)
