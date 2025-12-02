@@ -129,4 +129,3 @@ export const useArchiveVehicle = ({ vehicleId }: UseArchiveVehicleProps) => {
     },
   })
 }
-
