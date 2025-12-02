@@ -10,7 +10,6 @@ import {
 import { Direction } from '@internal-types/general'
 import { DataModel } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import {
   type BankTransactionFilters,
@@ -260,79 +259,59 @@ export const useAugmentedBankTransactions = (
   })
 
   const matchWithOptimisticUpdate = async (
-    bankTransactionId: BankTransaction['id'],
+    bankTransaction: BankTransaction,
     suggestedMatchId: string,
     notify?: boolean,
   ) => {
-    const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
+    // Get the other side's ID from the bank transaction's match details
+    const matchedBankTransactionId = bankTransaction.match?.details?.id
 
-    if (existingTransaction) {
+    updateOneLocal({
+      ...bankTransaction,
+      processing: true,
+      error: undefined,
+    })
+
+    const matchedBankTransaction = matchedBankTransactionId
+      ? data?.find(({ id }) => id === matchedBankTransactionId)
+      : undefined
+
+    if (matchedBankTransaction) {
       updateOneLocal({
-        ...existingTransaction,
-        processing: true,
-        error: undefined,
-      })
-    }
-
-    const transferBankTransaction = data?.find(({ id, suggested_matches }) =>
-      id !== bankTransactionId
-      && suggested_matches?.some(({ id }) => id === suggestedMatchId),
-    )
-
-    if (transferBankTransaction) {
-      updateOneLocal({
-        ...transferBankTransaction,
+        ...matchedBankTransaction,
         processing: true,
         error: undefined,
       })
     }
 
     return matchBankTransaction({
-      bankTransactionId,
+      bankTransactionId: bankTransaction.id,
       match_id: suggestedMatchId,
       type: 'Confirm_Match',
     })
-      .then((match) => {
-        const matchedTransaction = data?.find(({ id }) => id === match.bank_transaction.id)
-
-        if (matchedTransaction) {
-          updateOneLocal({
-            ...matchedTransaction,
-            categorization_status: CategorizationStatus.MATCHED,
-            match,
-            processing: false,
-            recently_categorized: true,
-          })
+      .then(() => {
+        // Remove both transactions after successful match
+        const idsToRemove = [bankTransaction.id]
+        if (matchedBankTransactionId) {
+          idsToRemove.push(matchedBankTransactionId)
         }
-
-        const matchedTransferTransaction = data?.find(({ id, suggested_matches }) =>
-          id !== bankTransactionId
-          && suggested_matches?.some(({ id }) => id === suggestedMatchId),
-        )
-
-        if (matchedTransferTransaction) {
-          /*
-           * We do not have the corresponding `match` for the transfer, so this portion of
-           * the optimistic update is not as complete as the other.
-           */
-          updateOneLocal({
-            ...matchedTransferTransaction,
-            processing: false,
-            recently_categorized: true,
-          })
-        }
+        removeAfterCategorize(idsToRemove)
 
         if (notify) {
           addToast({ content: 'Transaction saved' })
         }
       })
       .catch((error: unknown) => {
-        const targetedTransaction = data?.find(({ id }) => id === bankTransactionId)
+        updateOneLocal({
+          ...bankTransaction,
+          error: error instanceof Error ? error.message : 'An unknown error occurred',
+          processing: false,
+        })
 
-        if (targetedTransaction) {
+        if (matchedBankTransaction) {
           updateOneLocal({
-            ...targetedTransaction,
-            error: error instanceof Error ? error.message : 'An unknown error occurred',
+            ...matchedBankTransaction,
+            error: undefined,
             processing: false,
           })
         }
@@ -346,14 +325,12 @@ export const useAugmentedBankTransactions = (
     return filters?.categorizationStatus === DisplayState.review
   }
 
-  const removeAfterCategorize = (bankTransaction: BankTransaction) => {
+  const removeAfterCategorize = (transactionIds: string[]) => {
     if (shouldHideAfterCategorize()) {
-      const updatedData = rawResponseData?.map((page) => {
-        return {
-          ...page,
-          data: page.data?.filter(bt => bt.id !== bankTransaction.id),
-        }
-      })
+      const updatedData = rawResponseData?.map(page => ({
+        ...page,
+        data: page.data?.filter(bt => !transactionIds.includes(bt.id)),
+      }))
       void mutate(updatedData, { revalidate: false })
     }
   }

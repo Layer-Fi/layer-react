@@ -321,7 +321,7 @@ const BankTransactionsTableView = ({
   const debounceContainerWidth = debounce(setContainerWidth, 500)
 
   const removeTransaction = (bankTransaction: BankTransaction) =>
-    removeAfterCategorize(bankTransaction)
+    removeAfterCategorize([bankTransaction.id])
 
   const containerRef = useElementSize<HTMLDivElement>((_el, _en, size) => {
     if (size?.height && size?.height >= 90) {
