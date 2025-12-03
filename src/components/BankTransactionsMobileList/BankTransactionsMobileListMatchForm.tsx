@@ -50,7 +50,7 @@ export const BankTransactionsMobileListMatchForm = ({
       return
     }
 
-    await matchBankTransaction(bankTransaction.id, foundMatch.id, true)
+    await matchBankTransaction(bankTransaction, foundMatch.id, true)
   }
 
   const save = () => {

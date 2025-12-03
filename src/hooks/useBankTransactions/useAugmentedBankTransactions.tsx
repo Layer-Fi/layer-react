@@ -192,19 +192,24 @@ export const useAugmentedBankTransactions = (
     return filtered
   }, [filters, data])
 
-  const updateOneLocal = (newBankTransaction: BankTransaction) => {
-    if (newBankTransaction.update_categorization_rules_suggestion) {
-      const decodedRuleSuggestion = decodeRulesSuggestion(newBankTransaction.update_categorization_rules_suggestion)
-      setRuleSuggestion(decodedRuleSuggestion)
-    }
-    const updatedData = rawResponseData?.map((page) => {
-      return {
-        ...page,
-        data: page.data?.map(bt =>
-          bt.id === newBankTransaction.id ? newBankTransaction : bt,
-        ),
+  const updateLocalBankTransactions = (newBankTransactions: BankTransaction[]) => {
+    const transactionsById = new Map(
+      newBankTransactions.map(bt => [bt.id, bt]),
+    )
+
+    for (const bt of newBankTransactions) {
+      if (bt.update_categorization_rules_suggestion) {
+        const decodedRuleSuggestion = decodeRulesSuggestion(bt.update_categorization_rules_suggestion)
+        setRuleSuggestion(decodedRuleSuggestion)
       }
-    })
+    }
+
+    const updatedData = rawResponseData?.map(page => ({
+      ...page,
+      data: page.data?.map(bt =>
+        transactionsById.get(bt.id) ?? bt,
+      ),
+    }))
 
     void mutate(updatedData, { revalidate: false })
   }
@@ -221,7 +226,12 @@ export const useAugmentedBankTransactions = (
     const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
 
     if (existingTransaction) {
-      updateOneLocal({ ...existingTransaction, update_categorization_rules_suggestion: undefined, processing: true, error: undefined })
+      updateLocalBankTransactions([{
+        ...existingTransaction,
+        update_categorization_rules_suggestion: undefined,
+        processing: true,
+        error: undefined,
+      }])
     }
 
     return categorizeBankTransaction({
@@ -229,11 +239,11 @@ export const useAugmentedBankTransactions = (
       ...newCategory,
     })
       .then((updatedTransaction) => {
-        updateOneLocal({
+        updateLocalBankTransactions([{
           ...updatedTransaction,
           processing: false,
           recently_categorized: true,
-        })
+        }])
 
         if (notify) {
           addToast({ content: 'Transaction confirmed' })
@@ -243,11 +253,11 @@ export const useAugmentedBankTransactions = (
         const targetedTransaction = data?.find(({ id }) => id === bankTransactionId)
 
         if (targetedTransaction) {
-          updateOneLocal({
+          updateLocalBankTransactions([{
             ...targetedTransaction,
             error: error instanceof Error ? error.message : 'An unknown error occurred',
             processing: false,
-          })
+          }])
         }
       })
       .finally(() => {
@@ -260,82 +270,78 @@ export const useAugmentedBankTransactions = (
   })
 
   const matchWithOptimisticUpdate = async (
-    bankTransactionId: BankTransaction['id'],
+    bankTransaction: BankTransaction,
     suggestedMatchId: string,
     notify?: boolean,
   ) => {
-    const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
-
-    if (existingTransaction) {
-      updateOneLocal({
-        ...existingTransaction,
-        processing: true,
-        error: undefined,
-      })
-    }
-
-    const transferBankTransaction = data?.find(({ id, suggested_matches }) =>
-      id !== bankTransactionId
-      && suggested_matches?.some(({ id }) => id === suggestedMatchId),
+    const suggestedMatch = bankTransaction.suggested_matches?.find(
+      sm => sm.id === suggestedMatchId,
     )
 
-    if (transferBankTransaction) {
-      updateOneLocal({
-        ...transferBankTransaction,
+    const matchedTransferBankTransactionId = suggestedMatch?.details?.id
+
+    const matchedTransferBankTransaction = matchedTransferBankTransactionId
+      ? data?.find(({ id }) => id === matchedTransferBankTransactionId)
+      : undefined
+
+    const transactionsToSetProcessing: BankTransaction[] = [
+      { ...bankTransaction, processing: true, error: undefined },
+    ]
+    if (matchedTransferBankTransaction) {
+      transactionsToSetProcessing.push({
+        ...matchedTransferBankTransaction,
         processing: true,
         error: undefined,
       })
     }
+    updateLocalBankTransactions(transactionsToSetProcessing)
 
     return matchBankTransaction({
-      bankTransactionId,
+      bankTransactionId: bankTransaction.id,
       match_id: suggestedMatchId,
       type: 'Confirm_Match',
     })
       .then((match) => {
-        const matchedTransaction = data?.find(({ id }) => id === match.bank_transaction.id)
-
-        if (matchedTransaction) {
-          updateOneLocal({
-            ...matchedTransaction,
+        const transactionsToUpdate: BankTransaction[] = [
+          {
+            ...bankTransaction,
+            categorization_status: CategorizationStatus.MATCHED,
+            match,
+            processing: false,
+            recently_categorized: true,
+          },
+        ]
+        if (matchedTransferBankTransaction) {
+          transactionsToUpdate.push({
+            ...matchedTransferBankTransaction,
             categorization_status: CategorizationStatus.MATCHED,
             match,
             processing: false,
             recently_categorized: true,
           })
         }
-
-        const matchedTransferTransaction = data?.find(({ id, suggested_matches }) =>
-          id !== bankTransactionId
-          && suggested_matches?.some(({ id }) => id === suggestedMatchId),
-        )
-
-        if (matchedTransferTransaction) {
-          /*
-           * We do not have the corresponding `match` for the transfer, so this portion of
-           * the optimistic update is not as complete as the other.
-           */
-          updateOneLocal({
-            ...matchedTransferTransaction,
-            processing: false,
-            recently_categorized: true,
-          })
-        }
+        updateLocalBankTransactions(transactionsToUpdate)
 
         if (notify) {
           addToast({ content: 'Transaction saved' })
         }
       })
       .catch((error: unknown) => {
-        const targetedTransaction = data?.find(({ id }) => id === bankTransactionId)
-
-        if (targetedTransaction) {
-          updateOneLocal({
-            ...targetedTransaction,
+        const transactionsToResetProcessing: BankTransaction[] = [
+          {
+            ...bankTransaction,
             error: error instanceof Error ? error.message : 'An unknown error occurred',
+            processing: false,
+          },
+        ]
+        if (matchedTransferBankTransaction) {
+          transactionsToResetProcessing.push({
+            ...matchedTransferBankTransaction,
+            error: undefined,
             processing: false,
           })
         }
+        updateLocalBankTransactions(transactionsToResetProcessing)
       })
       .finally(() => {
         eventCallbacks?.onTransactionCategorized?.()
@@ -346,14 +352,12 @@ export const useAugmentedBankTransactions = (
     return filters?.categorizationStatus === DisplayState.review
   }
 
-  const removeAfterCategorize = (bankTransaction: BankTransaction) => {
+  const removeAfterCategorize = (transactionIds: string[]) => {
     if (shouldHideAfterCategorize()) {
-      const updatedData = rawResponseData?.map((page) => {
-        return {
-          ...page,
-          data: page.data?.filter(bt => bt.id !== bankTransaction.id),
-        }
-      })
+      const updatedData = rawResponseData?.map(page => ({
+        ...page,
+        data: page.data?.filter(bt => !transactionIds.includes(bt.id)),
+      }))
       void mutate(updatedData, { revalidate: false })
     }
   }
@@ -453,7 +457,7 @@ export const useAugmentedBankTransactions = (
     isError: !!responseError,
     categorize: categorizeWithOptimisticUpdate,
     match: matchWithOptimisticUpdate,
-    updateOneLocal,
+    updateLocalBankTransactions,
     shouldHideAfterCategorize,
     removeAfterCategorize,
     display,

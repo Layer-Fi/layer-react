@@ -104,8 +104,11 @@ export const BankTransactionRow = ({
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
   const { saveBankTransactionRow } = useSaveBankTransactionRow()
 
+  // Track if the row is being removed (after categorization in review mode)
+  const isBeingRemoved = bankTransaction.recently_categorized && shouldHideAfterCategorize()
+
   // Keep showing as uncategorized during removal animation to prevent UI flashing
-  const displayAsCategorized = bankTransaction.recently_categorized && shouldHideAfterCategorize()
+  const displayAsCategorized = isBeingRemoved
     ? false
     : categorized
 
@@ -155,9 +158,7 @@ export const BankTransactionRow = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    bankTransaction.recently_categorized
-    && editable
-    && shouldHideAfterCategorize()
+    isBeingRemoved && editable
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
@@ -353,7 +354,7 @@ export const BankTransactionRow = ({
                       Retry
                     </RetryButton>
                   )}
-                {!displayAsCategorized && categorizationEnabled && !showRetry
+                {!displayAsCategorized && categorizationEnabled && !showRetry && !isBeingRemoved
                   && (
                     <SubmitButton
                       onClick={() => {
@@ -372,22 +373,24 @@ export const BankTransactionRow = ({
                         : stringOverrides?.approveButtonText || 'Confirm'}
                     </SubmitButton>
                   )}
-                {!categorizationEnabled && !displayAsCategorized && (
+                {!categorizationEnabled && !displayAsCategorized && !isBeingRemoved && (
                   <VStack pis='xs' fluid>
                     <BankTransactionsProcessingInfo />
                   </VStack>
                 )}
-                <IconButton
-                  onClick={toggleOpen}
-                  className='Layer__bank-transaction-row__expand-button'
-                  active={open}
-                  icon={(
-                    <ChevronDownFill
-                      className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                      }`}
-                    />
-                  )}
-                />
+                {!isBeingRemoved && (
+                  <IconButton
+                    onClick={toggleOpen}
+                    className='Layer__bank-transaction-row__expand-button'
+                    active={open}
+                    icon={(
+                      <ChevronDownFill
+                        className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                        }`}
+                      />
+                    )}
+                  />
+                )}
               </HStack>
             )}
         </td>
