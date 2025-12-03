@@ -8,7 +8,6 @@ import {
   applyShare,
   collectExpensesItems,
   collectRevenueItems,
-  type PnlChartLineItem,
 } from '@utils/profitAndLossUtils'
 import { useProfitAndLossReport } from '@hooks/useProfitAndLoss/useProfitAndLossReport'
 import {
@@ -82,33 +81,14 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
     })
   }
 
-  const setFilterTypes = (scope: Scope, types: string[]) => {
-    setFilters({
-      ...filters,
-      [scope]: {
-        ...filters[scope],
-        types,
-      },
-    })
-  }
-
   const { filteredDataRevenue, filteredTotalRevenue } = useMemo(() => {
     if (!data) {
       return { filteredDataRevenue: [], filteredTotalRevenue: undefined }
     }
 
     const items = collectRevenueItems(data)
-    const revenueTypeFilters = filters['revenue']?.types
 
-    const filtered: PnlChartLineItem[] = items.map((x) => {
-      if (revenueTypeFilters && revenueTypeFilters.length > 0 && !revenueTypeFilters.includes(x.type)) {
-        return { ...x, isHidden: true }
-      }
-
-      return x
-    })
-
-    const sorted = filtered.sort((a, b) => {
+    const sorted = items.sort((a, b) => {
       switch (filters['revenue']?.sortBy) {
         case 'category':
           if (filters['revenue']?.sortDirection === 'asc') {
@@ -130,7 +110,6 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
       }
     })
     const total = sorted
-      .filter(x => !x.isHidden)
       .reduce((x, { value }) => x + value, 0)
     const withShare = applyShare(sorted, total)
 
@@ -143,17 +122,8 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
     }
 
     const items = collectExpensesItems(data)
-    const expenseTypeFilters = filters['expenses']?.types
 
-    const filtered: PnlChartLineItem[] = items.map((x) => {
-      if (expenseTypeFilters && expenseTypeFilters.length > 0 && !expenseTypeFilters.includes(x.type)) {
-        return { ...x, isHidden: true }
-      }
-
-      return x
-    })
-
-    const sorted = filtered.sort((a, b) => {
+    const sorted = items.sort((a, b) => {
       switch (filters['expenses']?.sortBy) {
         case 'category':
           if (filters['expenses']?.sortDirection === 'asc') {
@@ -175,7 +145,6 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
       }
     })
     const total = sorted
-      .filter(x => !x.isHidden)
       .reduce((x, { value }) => x + value, 0)
     const withShare = applyShare(sorted, total)
 
@@ -200,7 +169,6 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
     setSidebarScope,
     sortBy,
     filters,
-    setFilterTypes,
     tagFilter,
     dateRange,
     selectedLineItem,
