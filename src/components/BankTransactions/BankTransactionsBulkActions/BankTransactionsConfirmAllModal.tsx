@@ -16,21 +16,20 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTr
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   const { trigger, buildTransactionsPayload } = useBulkMatchOrCategorize()
+  const payload = buildTransactionsPayload()
 
   const { actionableCount, skippedCount } = useMemo(() => {
-    const payload = buildTransactionsPayload()
     const actionable = Object.keys(payload.transactions).length
     return {
       actionableCount: actionable,
       skippedCount: count - actionable,
     }
-  }, [buildTransactionsPayload, count])
+  }, [payload, count])
 
   const handleConfirm = useCallback(async () => {
-    const payload = buildTransactionsPayload()
     await trigger(payload)
     clearSelection()
-  }, [buildTransactionsPayload, trigger, clearSelection])
+  }, [payload, trigger, clearSelection])
 
   return (
     <BaseConfirmationModal
