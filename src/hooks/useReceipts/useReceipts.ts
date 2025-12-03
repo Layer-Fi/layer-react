@@ -35,7 +35,7 @@ export const useReceipts: UseReceipts = ({
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
-  const { updateOneLocal: updateBankTransaction } = useBankTransactionsContext()
+  const { updateLocalBankTransactions } = useBankTransactionsContext()
 
   const [receiptUrls, setReceiptUrls] = useState<DocumentWithStatus[]>([])
 
@@ -99,15 +99,15 @@ export const useReceipts: UseReceipts = ({
       await fetchDocuments()
       // Update the bank transaction with the new document id
       if (
-        updateBankTransaction
+        updateLocalBankTransactions
         && result?.data?.id
         && bankTransaction?.document_ids
         && bankTransaction.document_ids.length === 0
       ) {
-        updateBankTransaction({
+        updateLocalBankTransactions([{
           ...bankTransaction,
           document_ids: [result.data.id],
-        })
+        }])
       }
     }
     catch (_err) {
