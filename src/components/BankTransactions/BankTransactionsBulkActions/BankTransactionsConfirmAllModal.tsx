@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import pluralize from 'pluralize'
 
 import { useBulkMatchOrCategorize } from '@hooks/useBankTransactions/useBulkMatchOrCategorize'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -39,11 +40,11 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTr
       content={(
         <VStack gap='xs'>
           <Span>
-            {`${actionableCount} of ${count} transactions will be confirmed.`}
+            {`${actionableCount} of ${count} ${pluralize('transaction', count)} will be confirmed.`}
           </Span>
           {skippedCount > 0 && (
             <Span>
-              {`${skippedCount} ${skippedCount === 1 ? 'is' : 'are'} missing a category and will be skipped.`}
+              {`${skippedCount} ${pluralize('transaction', skippedCount)} will be skipped due to missing category.`}
             </Span>
           )}
         </VStack>
