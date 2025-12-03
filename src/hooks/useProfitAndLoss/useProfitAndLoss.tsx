@@ -34,7 +34,6 @@ export type PnlTagFilter = {
 type ProfitAndLossFilter = {
   sortBy?: string
   sortDirection?: SortDirection
-  types?: string[]
 }
 
 export type ProfitAndLossFilters = Record<
