@@ -8,6 +8,7 @@ import {
   applyShare,
   collectExpensesItems,
   collectRevenueItems,
+  type PnlChartLineItem,
 } from '@utils/profitAndLossUtils'
 import { useProfitAndLossReport } from '@hooks/useProfitAndLoss/useProfitAndLossReport'
 import {
@@ -30,11 +31,6 @@ export type PnlTagFilter = {
   values: string[]
 }
 
-type UseProfitAndLossOptions = {
-  tagFilter?: PnlTagFilter
-  reportingBasis?: ReportingBasis
-}
-
 type ProfitAndLossFilter = {
   sortBy?: string
   sortDirection?: SortDirection
@@ -45,6 +41,46 @@ export type ProfitAndLossFilters = Record<
   Scope,
   ProfitAndLossFilter | undefined
 >
+
+const createPnlLineItemComparator = (filters: ProfitAndLossFilter | undefined) => {
+  return (a: PnlChartLineItem, b: PnlChartLineItem) => {
+    switch (filters?.sortBy) {
+      case 'category':
+        if (filters?.sortDirection === 'asc') {
+          return a.displayName.localeCompare(b.displayName)
+        }
+        return b.displayName.localeCompare(a.displayName)
+
+      case 'type':
+        if (filters?.sortDirection === 'asc') {
+          return a.type.localeCompare(b.type)
+        }
+        return b.type.localeCompare(a.type)
+
+      default:
+        if (filters?.sortDirection === 'asc') {
+          return a.value - b.value
+        }
+        return b.value - a.value
+    }
+  }
+}
+
+const sortPnlLineItemsAndCalculateTotal = (
+  items: PnlChartLineItem[],
+  filter: ProfitAndLossFilter | undefined,
+) => {
+  const sorted = items.sort(createPnlLineItemComparator(filter))
+  const total = sorted.reduce((x, { value }) => x + value, 0)
+  const withShare = applyShare(sorted, total)
+
+  return { items: withShare, total }
+}
+
+type UseProfitAndLossOptions = {
+  tagFilter?: PnlTagFilter
+  reportingBasis?: ReportingBasis
+}
 
 export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLossOptions) => {
   const [displayMode, setDisplayMode] = useState<DateRangePickerMode>('month')
@@ -87,31 +123,7 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
     }
 
     const items = collectRevenueItems(data)
-
-    const sorted = items.sort((a, b) => {
-      switch (filters['revenue']?.sortBy) {
-        case 'category':
-          if (filters['revenue']?.sortDirection === 'asc') {
-            return a.displayName.localeCompare(b.displayName)
-          }
-          return b.displayName.localeCompare(a.displayName)
-
-        case 'type':
-          if (filters['revenue']?.sortDirection === 'asc') {
-            return a.type.localeCompare(b.type)
-          }
-          return b.type.localeCompare(a.type)
-
-        default:
-          if (filters['revenue']?.sortDirection === 'asc') {
-            return a.value - b.value
-          }
-          return b.value - a.value
-      }
-    })
-    const total = sorted
-      .reduce((x, { value }) => x + value, 0)
-    const withShare = applyShare(sorted, total)
+    const { items: withShare, total } = sortPnlLineItemsAndCalculateTotal(items, filters['revenue'])
 
     return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
   }, [data, filters])
@@ -122,31 +134,7 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
     }
 
     const items = collectExpensesItems(data)
-
-    const sorted = items.sort((a, b) => {
-      switch (filters['expenses']?.sortBy) {
-        case 'category':
-          if (filters['expenses']?.sortDirection === 'asc') {
-            return a.displayName.localeCompare(b.displayName)
-          }
-          return b.displayName.localeCompare(a.displayName)
-
-        case 'type':
-          if (filters['expenses']?.sortDirection === 'asc') {
-            return a.type.localeCompare(b.type)
-          }
-          return b.type.localeCompare(a.type)
-
-        default:
-          if (filters['expenses']?.sortDirection === 'asc') {
-            return a.value - b.value
-          }
-          return b.value - a.value
-      }
-    })
-    const total = sorted
-      .reduce((x, { value }) => x + value, 0)
-    const withShare = applyShare(sorted, total)
+    const { items: withShare, total } = sortPnlLineItemsAndCalculateTotal(items, filters['expenses'])
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
   }, [data, filters])
