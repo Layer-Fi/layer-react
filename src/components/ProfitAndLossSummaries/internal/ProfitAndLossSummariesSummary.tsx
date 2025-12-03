@@ -43,7 +43,7 @@ export function ProfitAndLossSummariesSummary({
   const arrow = showPercentChange && percentChange >= 0 ? '↑' : '↓'
 
   return (
-    <HStack gap='xs' align='center'>
+    <HStack gap='xs' align='center' overflow='hidden'>
       {Chart && (
         <HStack
           align='center'
