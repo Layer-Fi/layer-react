@@ -38,18 +38,11 @@ export const DetailedChart = ({
   isLoading,
   showDatePicker = true,
 }: DetailedChartProps) => {
-  const chartData = useMemo(() => filteredData.map((x) => {
-    if (x.isHidden) {
-      return {
-        ...x,
-        value: 0,
-      }
-    }
-    return {
-      ...x,
-      value: x.value > 0 ? x.value : 0,
-    }
-  }),
+  const chartData = useMemo(() => filteredData.map(x => ({
+    ...x,
+    value: x.value > 0 ? x.value : 0,
+  }
+  )),
   [filteredData])
 
   const noValue = chartData.length === 0 || !chartData.find(x => x.value !== 0)

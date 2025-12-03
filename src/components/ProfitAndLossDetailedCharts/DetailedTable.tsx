@@ -110,7 +110,7 @@ export const DetailedTable = ({
 
   const typeColorMapping = mapTypesToColors(filteredData, chartColorsList)
   const positiveTotal = filteredData
-    .filter(x => !x.isHidden && x.value > 0)
+    .filter(x => x.value > 0)
     .reduce((sum, x) => sum + x.value, 0)
 
   return (
@@ -148,7 +148,6 @@ export const DetailedTable = ({
           </thead>
           <tbody>
             {filteredData
-              .filter(x => !x.isHidden)
               .map((item, idx) => {
                 const share = item.value > 0 ? item.value / positiveTotal : 0
                 return (

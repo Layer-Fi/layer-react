@@ -20,7 +20,6 @@ export const ProfitAndLossContext = createContext<ReturnType<typeof useProfitAnd
   sidebarScope: undefined,
   setSidebarScope: () => {},
   sortBy: () => {},
-  setFilterTypes: () => {},
   filters: {
     expenses: undefined,
     revenue: undefined,
