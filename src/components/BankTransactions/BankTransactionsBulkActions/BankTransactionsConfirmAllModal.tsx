@@ -39,11 +39,11 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTr
       content={(
         <VStack gap='xs'>
           <Span>
-            {`This will confirm ${actionableCount} selected ${pluralize('transaction', actionableCount)}.`}
+            {`${actionableCount} of ${count} transactions will be confirmed.`}
           </Span>
           {skippedCount > 0 && (
             <Span>
-              {`${skippedCount} ${pluralize('transaction', skippedCount)} ${skippedCount === 1 ? 'does' : 'do'} not have a selected category and will not be confirmed.`}
+              {`${skippedCount} ${skippedCount === 1 ? 'is' : 'are'} missing a category and will be skipped.`}
             </Span>
           )}
         </VStack>
