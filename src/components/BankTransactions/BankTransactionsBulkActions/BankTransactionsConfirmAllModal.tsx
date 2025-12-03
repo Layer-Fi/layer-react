@@ -1,8 +1,8 @@
-import { useCallback } from 'react'
-import pluralize from 'pluralize'
+import { useCallback, useMemo } from 'react'
 
 import { useBulkMatchOrCategorize } from '@hooks/useBankTransactions/useBulkMatchOrCategorize'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
 
@@ -16,6 +16,15 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTr
   const { clearSelection } = useBulkSelectionActions()
   const { trigger, buildTransactionsPayload } = useBulkMatchOrCategorize()
 
+  const { actionableCount, skippedCount } = useMemo(() => {
+    const payload = buildTransactionsPayload()
+    const actionable = Object.keys(payload.transactions).length
+    return {
+      actionableCount: actionable,
+      skippedCount: count - actionable,
+    }
+  }, [buildTransactionsPayload, count])
+
   const handleConfirm = useCallback(async () => {
     const payload = buildTransactionsPayload()
     await trigger(payload)
@@ -28,15 +37,23 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTr
       onOpenChange={onOpenChange}
       title='Confirm all suggestions?'
       content={(
-        <Span>
-          {`This will confirm ${count} selected ${pluralize('transaction', count)}.`}
-        </Span>
+        <VStack gap='xs'>
+          <Span>
+            {`This will confirm ${actionableCount} selected ${pluralize('transaction', actionableCount)}.`}
+          </Span>
+          {skippedCount > 0 && (
+            <Span>
+              {`${skippedCount} ${pluralize('transaction', skippedCount)} ${skippedCount === 1 ? 'does' : 'do'} not have a selected category and will not be confirmed.`}
+            </Span>
+          )}
+        </VStack>
       )}
       onConfirm={handleConfirm}
       confirmLabel='Confirm All'
       cancelLabel='Cancel'
       errorText='Failed to confirm transactions'
       closeOnConfirm
+      confirmDisabled={actionableCount === 0}
     />
   )
 }
