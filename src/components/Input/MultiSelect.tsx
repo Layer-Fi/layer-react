@@ -10,6 +10,7 @@ import ReactSelect, {
 } from 'react-select'
 
 import ChevronDownFill from '@icons/ChevronDownFill'
+import { SelectMenuPortal } from '@components/Input/SelectMenuPortal'
 import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface SelectProps<T> {
@@ -75,7 +76,7 @@ export const MultiSelect = <T,>({
             menuPortal: base => ({ ...base, zIndex: 9999 }),
             ...styles,
           }}
-          components={{ DropdownIndicator }}
+          components={{ DropdownIndicator, MenuPortal: SelectMenuPortal }}
           isLoading={isLoading}
           isDisabled={disabled}
           isMulti={true}
