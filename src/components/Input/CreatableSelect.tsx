@@ -9,6 +9,7 @@ import BaseCreatableSelect, { type CreatableProps } from 'react-select/creatable
 
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { type SelectProps } from '@components/Input/Select'
+import { SelectMenuPortal } from '@components/Input/SelectMenuPortal'
 import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface CreatableSelectProps<T> extends Omit<SelectProps<T>, 'value' | 'onChange'> {
@@ -71,7 +72,7 @@ export const CreatableSelect = <T,>({
           formatCreateLabel={formatCreateLabel}
           menuPortalTarget={document.body}
           styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-          components={{ DropdownIndicator }}
+          components={{ DropdownIndicator, MenuPortal: SelectMenuPortal }}
           isLoading={isLoading}
           isDisabled={disabled}
           isClearable={isClearable}
