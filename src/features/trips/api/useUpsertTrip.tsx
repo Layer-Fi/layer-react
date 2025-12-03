@@ -8,6 +8,7 @@ import { patch, post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useTripsGlobalCacheActions } from '@features/trips/api/useListTrips'
+import { useVehiclesGlobalCacheActions } from '@features/vehicles/api/useListVehicles'
 
 const UPSERT_TRIP_TAG_KEY = '#upsert-trip'
 
@@ -182,6 +183,7 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
   const mutationResponse = new UpsertTripSWRResponse(rawMutationResponse)
 
   const { patchTripByKey, forceReloadTrips } = useTripsGlobalCacheActions()
+  const { forceReloadVehicles } = useVehiclesGlobalCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 
@@ -196,9 +198,12 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
         void forceReloadTrips()
       }
 
+      // Creating/updating a trip may change our ability to delete/archive the vehicle
+      void forceReloadVehicles()
+
       return triggerResult
     },
-    [originalTrigger, mode, patchTripByKey, forceReloadTrips],
+    [originalTrigger, mode, patchTripByKey, forceReloadTrips, forceReloadVehicles],
   )
 
   return new Proxy(mutationResponse, {

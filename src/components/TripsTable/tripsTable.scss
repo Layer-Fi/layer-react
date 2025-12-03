@@ -25,12 +25,13 @@
       minmax(8rem, 10%)
       minmax(12rem, 25%)
       minmax(12rem, 30%)
-      3.75rem;
+      6rem;
   }
 
   .Layer__UI__Table-Column__TripsTable,
   .Layer__UI__Table-Cell__TripsTable {
-    &--Distance {
+    &--Distance,
+    &--Actions {
       justify-content: flex-end;
     }
   }

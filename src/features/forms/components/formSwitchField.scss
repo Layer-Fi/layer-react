@@ -1,0 +1,29 @@
+.Layer__FormSwitchField {
+  display: grid;
+  grid-template-areas:
+    'label'
+    'switch';
+
+  > [slot='switch'] {
+    grid-area: switch;
+    justify-self: center;
+
+    margin-block: var(--spacing-2xs);
+  }
+
+  > [slot='label'] {
+    grid-area: label;
+
+    padding-block-end: var(--spacing-3xs);
+  }
+
+  &--inline {
+    grid-template-areas: 'label switch';
+    gap: var(--spacing-3xs);
+    align-items: center;
+
+    > [slot='label'] {
+      padding-block-end: 0;
+    }
+  }
+}

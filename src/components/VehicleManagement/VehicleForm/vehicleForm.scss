@@ -17,7 +17,8 @@
   .Layer__VehicleForm__Field__Year,
   .Layer__VehicleForm__Field__LicensePlate,
   .Layer__VehicleForm__Field__Vin,
-  .Layer__VehicleForm__Field__Description {
+  .Layer__VehicleForm__Field__Description,
+  .Layer__VehicleForm__Field__IsPrimary {
     grid-template-columns: 10rem auto;
     width: 100%;
   }

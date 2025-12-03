@@ -6,18 +6,18 @@ import { asMutable } from '@utils/asMutable'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
+import { VehicleCard } from '@components/VehicleManagement/VehicleCard'
 import { useListVehicles } from '@features/vehicles/api/useListVehicles'
 
 import './vehicleManagementGrid.scss'
 
-import { VehicleCard } from './VehicleCard'
-
 interface VehicleManagementGridProps {
   onEditVehicle: (vehicle: Vehicle) => void
+  showArchived: boolean
 }
 
-export const VehicleManagementGrid = ({ onEditVehicle }: VehicleManagementGridProps) => {
-  const { data, isLoading, isError } = useListVehicles()
+export const VehicleManagementGrid = ({ onEditVehicle, showArchived }: VehicleManagementGridProps) => {
+  const { data, isLoading, isError } = useListVehicles({ allowArchived: showArchived })
   const vehicles = useMemo(() => data ? asMutable(data) : undefined, [data])
 
   if (isLoading) {

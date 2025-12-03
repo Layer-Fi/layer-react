@@ -8,6 +8,7 @@ export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
       licensePlate: vehicle.licensePlate || '',
       vin: vehicle.vin || '',
       description: vehicle.description || '',
+      isPrimary: vehicle.isPrimary,
     }
   }
 
@@ -17,6 +18,7 @@ export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
     licensePlate: '',
     vin: '',
     description: '',
+    isPrimary: false,
   }
 }
 
@@ -48,5 +50,6 @@ export const convertVehicleFormToUpsertVehicle = (form: VehicleForm): unknown =>
     licensePlate: form.licensePlate.trim() || null,
     vin: form.vin.trim() || null,
     description: form.description.trim() || null,
+    isPrimary: form.isPrimary,
   }
 }
