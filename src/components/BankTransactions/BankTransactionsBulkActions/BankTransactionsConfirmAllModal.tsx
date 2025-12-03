@@ -39,14 +39,22 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTr
       title='Confirm all suggestions?'
       content={(
         <VStack gap='xs'>
-          <Span>
-            {`${actionableCount} of ${count} ${pluralize('transaction', count)} will be confirmed.`}
-          </Span>
-          {skippedCount > 0 && (
-            <Span>
-              {`${skippedCount} ${pluralize('transaction', skippedCount)} will be skipped due to missing category.`}
-            </Span>
-          )}
+          {skippedCount === 0
+            ? (
+              <Span>
+                {`This will confirm ${pluralize('transaction', count, true)}.`}
+              </Span>
+            )
+            : (
+              <>
+                <Span>
+                  {`${actionableCount} of ${pluralize('transaction', count, true)} will be confirmed.`}
+                </Span>
+                <Span>
+                  {`${pluralize('transaction', skippedCount, true)} will be skipped due to missing category.`}
+                </Span>
+              </>
+            )}
         </VStack>
       )}
       onConfirm={handleConfirm}
