@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { getYear } from 'date-fns'
 import { Car, Plus } from 'lucide-react'
 
 import { type Trip, type TripPurpose } from '@schemas/trip'
 import { type Vehicle } from '@schemas/vehicle'
 import { formatCalendarDate } from '@utils/time/timeUtils'
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import ChevronRightFill from '@icons/ChevronRightFill'
 import { Button } from '@ui/Button/Button'
@@ -108,6 +110,9 @@ export const TripsTable = () => {
   const { tableFilters, setTableFilters } = useTripsTableFilters()
   const { query, selectedVehicle, purposeFilter } = tableFilters
 
+  const { startDate } = useGlobalDateRange({ displayMode: 'full' })
+  const selectedYear = getYear(startDate)
+
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: query })
 
   useEffect(() => {
@@ -115,7 +120,7 @@ export const TripsTable = () => {
   }, [searchQuery, setTableFilters])
 
   const filterParams = useMemo(() => {
-    const params: { query?: string, vehicleId?: string, purpose?: string } = {}
+    const params: { query?: string, vehicleId?: string, purpose?: string, year?: number } = {}
 
     if (searchQuery) {
       params.query = searchQuery
@@ -129,8 +134,10 @@ export const TripsTable = () => {
       params.purpose = purposeFilter
     }
 
+    params.year = selectedYear
+
     return params
-  }, [searchQuery, selectedVehicle, purposeFilter])
+  }, [searchQuery, selectedVehicle, purposeFilter, selectedYear])
 
   const { data, isLoading, isError, size, setSize } = useListTrips(filterParams)
 

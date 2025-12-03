@@ -1,0 +1,14 @@
+.Layer__mileage-chart {
+  .recharts-responsive-container {
+    box-sizing: border-box;
+    padding: 0;
+  }
+}
+
+.Layer__mileage-chart__bar--deduction {
+  fill: var(--bar-color-income);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
