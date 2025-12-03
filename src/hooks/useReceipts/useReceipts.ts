@@ -99,8 +99,7 @@ export const useReceipts: UseReceipts = ({
       await fetchDocuments()
       // Update the bank transaction with the new document id
       if (
-        updateLocalBankTransactions
-        && result?.data?.id
+        result?.data?.id
         && bankTransaction?.document_ids
         && bankTransaction.document_ids.length === 0
       ) {

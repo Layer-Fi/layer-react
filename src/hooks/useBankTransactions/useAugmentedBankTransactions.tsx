@@ -207,7 +207,7 @@ export const useAugmentedBankTransactions = (
     const updatedData = rawResponseData?.map(page => ({
       ...page,
       data: page.data?.map(bt =>
-        transactionsById.has(bt.id) ? transactionsById.get(bt.id)! : bt,
+        transactionsById.get(bt.id) ?? bt,
       ),
     }))
 
@@ -278,18 +278,18 @@ export const useAugmentedBankTransactions = (
       sm => sm.id === suggestedMatchId,
     )
 
-    const matchedBankTransactionId = suggestedMatch?.details?.id
+    const matchedTransferBankTransactionId = suggestedMatch?.details?.id
 
-    const matchedBankTransaction = matchedBankTransactionId
-      ? data?.find(({ id }) => id === matchedBankTransactionId)
+    const matchedTransferBankTransaction = matchedTransferBankTransactionId
+      ? data?.find(({ id }) => id === matchedTransferBankTransactionId)
       : undefined
 
     const transactionsToSetProcessing: BankTransaction[] = [
       { ...bankTransaction, processing: true, error: undefined },
     ]
-    if (matchedBankTransaction) {
+    if (matchedTransferBankTransaction) {
       transactionsToSetProcessing.push({
-        ...matchedBankTransaction,
+        ...matchedTransferBankTransaction,
         processing: true,
         error: undefined,
       })
@@ -311,9 +311,9 @@ export const useAugmentedBankTransactions = (
             recently_categorized: true,
           },
         ]
-        if (matchedBankTransaction) {
+        if (matchedTransferBankTransaction) {
           transactionsToUpdate.push({
-            ...matchedBankTransaction,
+            ...matchedTransferBankTransaction,
             categorization_status: CategorizationStatus.MATCHED,
             match,
             processing: false,
@@ -334,9 +334,9 @@ export const useAugmentedBankTransactions = (
             processing: false,
           },
         ]
-        if (matchedBankTransaction) {
+        if (matchedTransferBankTransaction) {
           transactionsToResetProcessing.push({
-            ...matchedBankTransaction,
+            ...matchedTransferBankTransaction,
             error: undefined,
             processing: false,
           })
