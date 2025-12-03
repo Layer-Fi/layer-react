@@ -12,7 +12,6 @@ import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPick
 import { DetailedChart } from '@components/ProfitAndLossDetailedCharts/DetailedChart'
 import { DetailedTable, type DetailedTableStringOverrides } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
 import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
-import { Filters } from '@components/ProfitAndLossDetailedCharts/Filters'
 import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
@@ -52,7 +51,6 @@ export const ProfitAndLossDetailedCharts = ({
     dateRange,
     sidebarScope,
     setSidebarScope,
-    setFilterTypes,
   } = useContext(ProfitAndLossContext)
 
   const theScope = scope ? scope : sidebarScope
@@ -123,13 +121,6 @@ export const ProfitAndLossDetailedCharts = ({
         />
 
         <div className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
-          <Filters
-            filteredData={data}
-            sidebarScope={theScope}
-            filters={filters}
-            setFilterTypes={setFilterTypes}
-          />
-
           <DetailedTable
             filteredData={data}
             sidebarScope={theScope}
