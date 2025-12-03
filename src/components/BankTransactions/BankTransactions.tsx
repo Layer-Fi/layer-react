@@ -7,6 +7,7 @@ import type { LayerError } from '@models/ErrorHandler'
 import { BREAKPOINTS } from '@config/general'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { usePreloadCategories } from '@hooks/categories/useCategories'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
 import { useElementSize } from '@hooks/useElementSize/useElementSize'
 import { useIsVisible } from '@hooks/useIsVisible/useIsVisible'
@@ -106,6 +107,7 @@ export const BankTransactions = ({
   usePreloadTagDimensions({ isEnabled: showTags })
   usePreloadCustomers({ isEnabled: showCustomerVendor })
   usePreloadVendors({ isEnabled: showCustomerVendor })
+  usePreloadCategories()
 
   return (
     <ErrorBoundary onError={onError}>
