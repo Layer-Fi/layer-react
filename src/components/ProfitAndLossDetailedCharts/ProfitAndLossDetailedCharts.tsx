@@ -61,7 +61,7 @@ export const ProfitAndLossDetailedCharts = ({
   const total =
     theScope === 'revenue' ? filteredTotalRevenue : filteredTotalExpenses
 
-  const [hoveredItem, setHoveredItem] = useState<string | undefined>()
+  const [hoveredItem, setHoveredItem] = useState<PnlChartLineItem | undefined>(undefined)
   const [selectedItem, setSelectedItem] = useState<SelectedLineItem | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
