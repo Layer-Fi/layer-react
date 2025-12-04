@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import pluralize from 'pluralize'
 
 import { useBulkUncategorize } from '@hooks/useBankTransactions/useBulkUncategorize'
+import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
@@ -16,13 +17,15 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange }: B
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   const { trigger } = useBulkUncategorize()
+  const { clearMultipleTransactionCategories } = useBankTransactionsCategoryActions()
 
   const handleConfirm = useCallback(async () => {
     const transactionIds = Array.from(selectedIds)
 
     await trigger({ transactionIds })
+    clearMultipleTransactionCategories(transactionIds)
     clearSelection()
-  }, [selectedIds, trigger, clearSelection])
+  }, [selectedIds, trigger, clearSelection, clearMultipleTransactionCategories])
 
   return (
     <BaseConfirmationModal
