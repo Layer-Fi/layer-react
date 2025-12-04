@@ -221,9 +221,20 @@ export const BankTransactionsHeader = ({
     return actions
   }, [withUploadMenu, showCategorizationRules])
 
+  const isMobileList = listView && mobileComponent === 'mobileList'
+
   const BulkActionsModuleSlot = useCallback(() => {
-    return <BankTransactionsBulkActions useCategorySelectDrawer={listView && mobileComponent === 'mobileList'} />
-  }, [listView, mobileComponent])
+    return (
+      <BankTransactionsBulkActions
+        useCategorySelectDrawer={isMobileList}
+        slotProps={{
+          ConfirmAllModal: {
+            label: isMobileList ? 'Confirm' : 'Confirm all',
+          },
+        }}
+      />
+    )
+  }, [isMobileList])
 
   return (
     <Header

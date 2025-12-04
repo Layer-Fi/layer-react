@@ -9,12 +9,25 @@ import { BankTransactionsCategorizeAllModal } from '@components/BankTransactions
 import { BankTransactionsConfirmAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsConfirmAllModal'
 import { BankTransactionsUncategorizeAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsUncategorizeAllModal'
 
-export const BankTransactionsBulkActions = ({ useCategorySelectDrawer = false }: { useCategorySelectDrawer?: boolean }) => {
+interface BankTransactionsBulkActionsProps {
+  useCategorySelectDrawer?: boolean
+  slotProps?: {
+    ConfirmAllModal?: {
+      label?: string
+    }
+  }
+}
+
+export const BankTransactionsBulkActions = ({
+  useCategorySelectDrawer = false,
+  slotProps,
+}: BankTransactionsBulkActionsProps) => {
   const { display } = useBankTransactionsContext()
   const [categorizeModalOpen, setCategorizeModalOpen] = useState(false)
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
   const [recategorizeModalOpen, setRecategorizeModalOpen] = useState(false)
   const [uncategorizeModalOpen, setUncategorizeModalOpen] = useState(false)
+  const confirmButtonLabel = slotProps?.ConfirmAllModal?.label || 'Confirm all'
 
   return (
     <>
@@ -36,7 +49,7 @@ export const BankTransactionsBulkActions = ({ useCategorySelectDrawer = false }:
               />
 
               <Button variant='solid' onClick={() => setConfirmModalOpen(true)}>
-                Confirm
+                {confirmButtonLabel}
               </Button>
               <BankTransactionsConfirmAllModal
                 isOpen={confirmModalOpen}
