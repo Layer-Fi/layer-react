@@ -13,7 +13,7 @@ import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeeping
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '@icons/AlertCircle'
 import ChevronDownFill from '@icons/ChevronDownFill'
@@ -100,6 +100,8 @@ export const BankTransactionRow = ({
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
+  const { count: bulkSelectionCount } = useCountSelectedIds()
+  const isBulkSelectionActive = bulkSelectionCount > 0
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
   const { saveBankTransactionRow } = useSaveBankTransactionRow()
@@ -365,7 +367,7 @@ export const BankTransactionRow = ({
                       className='Layer__bank-transaction__submit-btn'
                       processing={bankTransaction.processing}
                       active={open}
-                      disabled={selectedCategory === null}
+                      disabled={selectedCategory === null || isBulkSelectionActive}
                       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
                     >
                       {displayAsCategorized
