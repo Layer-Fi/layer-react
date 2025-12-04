@@ -8,7 +8,6 @@ import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import Scissors from '@icons/Scissors'
 import Trash from '@icons/Trash'
@@ -43,7 +42,6 @@ export const BankTransactionsMobileListSplitForm = ({
 }: BankTransactionsMobileListSplitFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
-  const { isLoading: isLoadingBankTransactions } = useBankTransactionsContext()
   const {
     categorize: categorizeBankTransaction,
     isMutating: isCategorizing,
@@ -193,7 +191,7 @@ export const BankTransactionsMobileListSplitForm = ({
           <Button
             fullWidth
             onClick={save}
-            isDisabled={isLoadingBankTransactions || isCategorizing || !isValid}
+            isDisabled={isCategorizing || !isValid}
           >
             {isCategorizing ? 'Confirming...' : 'Confirm'}
           </Button>

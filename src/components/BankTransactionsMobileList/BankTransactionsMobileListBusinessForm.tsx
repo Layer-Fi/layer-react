@@ -7,7 +7,6 @@ import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/
 import { hasReceipts } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -49,7 +48,6 @@ export const BankTransactionsMobileListBusinessForm = ({
 }: BankTransactionsMobileListBusinessFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
-  const { isLoading: isLoadingBankTransactions } = useBankTransactionsContext()
   const {
     categorize: categorizeBankTransaction,
     isMutating: isCategorizing,
@@ -198,7 +196,7 @@ export const BankTransactionsMobileListBusinessForm = ({
               <Button
                 onClick={save}
                 fullWidth
-                isDisabled={!selectedCategory || isLoadingBankTransactions || isCategorizing}
+                isDisabled={!selectedCategory || isCategorizing}
               >
                 {isCategorizing
                   ? 'Confirming...'

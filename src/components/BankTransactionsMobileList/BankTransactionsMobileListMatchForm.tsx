@@ -6,7 +6,6 @@ import {
   getBankTransactionMatchAsSuggestedMatch,
 } from '@utils/bankTransactions'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useMatchBankTransactionWithCacheUpdate'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -32,8 +31,6 @@ export const BankTransactionsMobileListMatchForm = ({
   showCategorization,
 }: BankTransactionsMobileListMatchFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
-
-  const { isLoading: isLoadingBankTransactions } = useBankTransactionsContext()
 
   const {
     match: matchBankTransaction,
@@ -119,13 +116,12 @@ export const BankTransactionsMobileListMatchForm = ({
             fullWidth
             isDisabled={
               !selectedMatch
-              || isLoadingBankTransactions
               || isMatching
               || selectedMatch.id === getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
             }
             onClick={save}
           >
-            {isLoadingBankTransactions || isMatching
+            {isMatching
               ? 'Saving...'
               : 'Approve match'}
           </Button>
