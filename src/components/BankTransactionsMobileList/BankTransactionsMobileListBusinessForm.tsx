@@ -14,6 +14,7 @@ import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } fro
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { isCategorized } from '@components/BankTransactions/utils'
 import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
 import { type BusinessFormMobileItemOption, type BusinessFormOptionValue } from '@components/BusinessForm/BusinessFormMobileItem'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
@@ -196,8 +197,8 @@ export const BankTransactionsMobileListBusinessForm = ({
                 isDisabled={!selectedCategory || isLoading || bankTransaction.processing}
               >
                 {bankTransaction.processing || isLoading
-                  ? 'Confirming...'
-                  : 'Confirm'}
+                  ? (isCategorized(bankTransaction) ? 'Updating...' : 'Confirming...')
+                  : (isCategorized(bankTransaction) ? 'Update' : 'Confirm')}
               </Button>
             )}
         </HStack>
