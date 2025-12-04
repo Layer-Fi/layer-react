@@ -229,7 +229,7 @@ export const BankTransactionsHeader = ({
         useCategorySelectDrawer={isMobileList}
         slotProps={{
           ConfirmAllModal: {
-            label: isMobileList ? 'Confirm' : 'Confirm All',
+            label: isMobileList ? 'Confirm' : 'Confirm all',
           },
         }}
       />
