@@ -106,6 +106,7 @@ export function useMatchBankTransaction({
     ).then(({ data }) => data),
     {
       revalidate: false,
+      throwOnError: false,
     },
   )
 

@@ -123,6 +123,7 @@ export function useCategorizeBankTransaction({
     ).then(({ data }) => data),
     {
       revalidate: false,
+      throwOnError: false,
     },
   )
 
