@@ -16,7 +16,6 @@ interface BankTransactionsBulkActionsProps {
       label?: string
     }
   }
-  confirmButtonLabel?: string
 }
 
 export const BankTransactionsBulkActions = ({
