@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { pipe, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
-import { CategoryUpdateSchema } from '@schemas/bankTransactions/BankTransactionsBulkActions'
+import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'

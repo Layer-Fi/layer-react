@@ -34,11 +34,11 @@ export const useSaveBankTransactionRow = (): UseSaveBankTransactionRowResult => 
       return categorizeBankTransaction(bankTransaction.id, splitCategorizationRequest)
     }
 
-    if (!selectedCategory.classificationEncoded) return
+    if (!selectedCategory.classification) return
 
     return categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
-      category: selectedCategory.classificationEncoded,
+      category: selectedCategory.classification,
     })
   }, [categorizeBankTransaction, matchBankTransaction])
 

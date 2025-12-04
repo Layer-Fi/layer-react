@@ -1,11 +1,14 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import { useSWRConfig } from 'swr'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import useSWRMutation from 'swr/mutation'
 
-import type { CategoryUpdate } from '@internal-types/categories'
+import type { BankTransaction } from '@internal-types/bank_transactions'
+import { type CategoryUpdate, type CategoryUpdateEncoded, CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { categorizeBankTransaction, type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
+import { put } from '@api/layer/authenticated_http'
+import { type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/bookkeeping/useBankAccounts'
 import { useAuth } from '@hooks/useAuth'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExternalAccounts'
@@ -14,6 +17,18 @@ import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/usePr
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
+
+const categorizeBankTransaction = put<
+  { data: BankTransaction },
+  CategoryUpdateEncoded,
+  {
+    businessId: string
+    bankTransactionId: string
+  }
+>(
+  ({ businessId, bankTransactionId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,
+)
 
 function buildKey({
   access_token: accessToken,
@@ -38,7 +53,7 @@ type CategorizeBankTransactionArgs = CategoryUpdate & {
   bankTransactionId: string
 }
 
-type UseCategorizeBankTransactionOptions = {
+export type UseCategorizeBankTransactionOptions = {
   mutateBankTransactions: SWRInfiniteKeyedMutator<
     Array<GetBankTransactionsReturn>
   >
@@ -62,7 +77,7 @@ export function useCategorizeBankTransaction({
     }),
     (
       { accessToken, apiUrl, businessId },
-      { arg: { bankTransactionId, ...body } }: { arg: CategorizeBankTransactionArgs },
+      { arg: { bankTransactionId, ...rest } }: { arg: CategorizeBankTransactionArgs },
     ) => categorizeBankTransaction(
       apiUrl,
       accessToken,
@@ -71,7 +86,7 @@ export function useCategorizeBankTransaction({
           businessId,
           bankTransactionId,
         },
-        body,
+        body: Schema.encodeSync(CategoryUpdateSchema)(rest),
       },
     ).then(({ data }) => data),
     {
