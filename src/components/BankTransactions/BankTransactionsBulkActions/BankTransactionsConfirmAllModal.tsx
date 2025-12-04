@@ -55,7 +55,7 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTr
           )
       )}
       onConfirm={handleConfirm}
-      confirmLabel='Confirm All'
+      confirmLabel='Confirm all'
       cancelLabel='Cancel'
       errorText='Failed to confirm transactions'
       closeOnConfirm
