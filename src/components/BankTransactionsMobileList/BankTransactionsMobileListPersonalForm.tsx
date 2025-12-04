@@ -67,7 +67,7 @@ export const BankTransactionsMobileListPersonalForm = ({
         type: 'Category',
         category: {
           type: 'Exclusion',
-          exclusion_type: isCredit(bankTransaction)
+          exclusionType: isCredit(bankTransaction)
             ? PersonalCategories.INCOME
             : PersonalCategories.EXPENSES,
         },

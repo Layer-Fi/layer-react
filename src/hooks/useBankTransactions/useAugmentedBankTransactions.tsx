@@ -4,14 +4,12 @@ import {
   type BankTransaction,
   DisplayState,
 } from '@internal-types/bank_transactions'
-import {
-  type CategoryUpdate,
-} from '@internal-types/categories'
 import { Direction } from '@internal-types/general'
 import { DataModel } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import {
   type BankTransactionFilters,
 } from '@hooks/useBankTransactions/types'

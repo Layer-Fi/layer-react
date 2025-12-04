@@ -1,5 +1,5 @@
 import { type AccountIdentifier, AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName } from '@schemas/accountIdentifier'
-import { type CategorizationEncoded as ApiCategorization, type ClassificationEncoded, type NestedCategorization } from '@schemas/categorization'
+import { type CategorizationEncoded as ApiCategorization, type NestedCategorization } from '@schemas/categorization'
 
 export enum CategorizationType {
   AUTO = 'AUTO',
@@ -31,23 +31,6 @@ export type AccountIdentifierPayloadObject =
     type: 'Exclusion'
     exclusion_type: string
   }
-
-export type SingleCategoryUpdate = {
-  type: 'Category'
-  category: ClassificationEncoded
-}
-
-export type SplitCategoryUpdate = {
-  type: 'Split'
-  entries: {
-    category: ClassificationEncoded
-    amount: number
-    tags?: Array<{ key: string, value: string }>
-    customer_id?: string | null
-    vendor_id?: string | null
-  }[]
-}
-export type CategoryUpdate = SingleCategoryUpdate | SplitCategoryUpdate
 
 export function hasSuggestions(
   categorization: Categorization | null,

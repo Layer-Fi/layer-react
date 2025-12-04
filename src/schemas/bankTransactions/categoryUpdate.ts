@@ -25,3 +25,6 @@ export const CategoryUpdateSchema = Schema.Union(
   SingleCategoryUpdateSchema,
   SplitCategoryUpdateSchema,
 )
+
+export type CategoryUpdate = typeof CategoryUpdateSchema.Type
+export type CategoryUpdateEncoded = typeof CategoryUpdateSchema.Encoded

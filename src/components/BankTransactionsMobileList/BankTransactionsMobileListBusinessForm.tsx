@@ -125,7 +125,7 @@ export const BankTransactionsMobileListBusinessForm = ({
       return
     }
 
-    const payload = selectedCategory.classificationEncoded
+    const payload = selectedCategory.classification
     if (payload === null) return
 
     void categorizeBankTransaction(
