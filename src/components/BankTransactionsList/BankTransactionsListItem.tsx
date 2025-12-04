@@ -41,7 +41,6 @@ type BankTransactionsListItemProps = {
   bankTransaction: BankTransaction
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
-  containerWidth?: number
   stringOverrides?: BankTransactionCTAStringOverrides
 
   showDescriptions: boolean
@@ -54,7 +53,6 @@ export const BankTransactionsListItem = ({
   dateFormat,
   bankTransaction,
   editable,
-  containerWidth,
   removeTransaction,
   stringOverrides,
 
@@ -230,7 +228,6 @@ export const BankTransactionsListItem = ({
                 ? stringOverrides?.updateButtonText || 'Update'
                 : stringOverrides?.approveButtonText || 'Approve'
             }
-            containerWidth={containerWidth}
 
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}

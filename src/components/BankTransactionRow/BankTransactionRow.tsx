@@ -48,7 +48,6 @@ type Props = {
   dateFormat: string
   bankTransaction: BankTransaction
   removeTransaction: (bt: BankTransaction) => void
-  containerWidth?: number
   initialLoad?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -73,7 +72,6 @@ export const BankTransactionRow = ({
   dateFormat,
   bankTransaction,
   removeTransaction,
-  containerWidth,
   initialLoad,
   showDescriptions,
   showReceiptUploads,
@@ -406,7 +404,6 @@ export const BankTransactionRow = ({
               categorized={displayAsCategorized}
               isOpen={open}
               close={() => setOpen(false)}
-              containerWidth={containerWidth}
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}

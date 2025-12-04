@@ -319,8 +319,6 @@ const BankTransactionsTableView = ({
   const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
   const debounceShiftStickyHeader = debounce(setShiftStickyHeader, 500)
   const [listView, setListView] = useState(false)
-  const [containerWidth, setContainerWidth] = useState(0)
-  const debounceContainerWidth = debounce(setContainerWidth, 500)
 
   const removeTransaction = (bankTransaction: BankTransaction) =>
     removeAfterCategorize([bankTransaction.id])
@@ -342,8 +340,6 @@ const BankTransactionsTableView = ({
     else if (size.width <= BREAKPOINTS.TABLET && !listView) {
       setListView(true)
     }
-
-    void debounceContainerWidth(size?.width)
   })
 
   const editable =
@@ -398,7 +394,6 @@ const BankTransactionsTableView = ({
             isLoading={isLoadingWithoutData}
             isSyncing={isSyncing}
             bankTransactions={bankTransactions}
-            containerWidth={containerWidth}
             removeTransaction={removeTransaction}
             page={currentPage}
             stringOverrides={stringOverrides}
@@ -420,7 +415,6 @@ const BankTransactionsTableView = ({
               bankTransactions={bankTransactions}
               editable={editable}
               removeTransaction={removeTransaction}
-              containerWidth={containerWidth}
               stringOverrides={stringOverrides?.bankTransactionCTAs}
 
               showDescriptions={showDescriptions}

@@ -29,7 +29,6 @@ interface BankTransactionsTableProps {
   editable: boolean
   categorizeView?: boolean
   isLoading?: boolean
-  containerWidth: number
   removeTransaction: (bt: BankTransaction) => void
 
   showDescriptions: boolean
@@ -48,7 +47,6 @@ export const BankTransactionsTable = ({
   editable,
   isLoading,
   bankTransactions,
-  containerWidth,
   removeTransaction,
 
   showDescriptions,
@@ -147,7 +145,6 @@ export const BankTransactionsTable = ({
                 dateFormat={DATE_FORMAT}
                 bankTransaction={bankTransaction}
                 removeTransaction={removeTransaction}
-                containerWidth={containerWidth}
                 showDescriptions={showDescriptions}
                 showReceiptUploads={showReceiptUploads}
                 showReceiptUploadColumn={showReceiptColumn}

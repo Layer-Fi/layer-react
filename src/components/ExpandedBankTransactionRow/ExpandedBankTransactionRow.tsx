@@ -85,7 +85,6 @@ type ExpandedBankTransactionRowProps = {
   close: () => void
   asListItem?: boolean
   submitBtnText?: string
-  containerWidth?: number
   categorized?: boolean
 
   showDescriptions: boolean
@@ -104,7 +103,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
       categorized,
       asListItem = false,
       submitBtnText = 'Save',
-      containerWidth,
       showDescriptions,
       showReceiptUploads,
       variant = 'row',
