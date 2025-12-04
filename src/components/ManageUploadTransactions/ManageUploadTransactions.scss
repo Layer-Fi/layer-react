@@ -1,0 +1,110 @@
+.Layer__upload-transactions {
+  container-type: inline-size;
+
+  .Layer__upload-transactions__select-account-name-field {
+    >.Layer__input-tooltip {
+      flex: auto;
+    }
+  }
+
+  .Layer__upload-transactions__select-account-name-input {
+    .Layer__select__control {
+      max-width: 24rem;
+    }
+
+    &--error {
+      .Layer__select__control {
+        box-shadow:
+          0 0 0 1px var(--color-base-300),
+          0 0 0 2px var(--color-danger);
+      }
+
+      .Layer__select__placeholder {
+        color: var(--color-danger);
+      }
+    }
+  }
+
+  .Layer__upload-transactions__create-account-form {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-3xs);
+    background: var(--color-base-100);
+  }
+
+  .Layer__upload-transactions__parse-csv-error-message {
+    max-width: 29rem;
+  }
+
+  .Layer__upload-transactions__template-section {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-3xs);
+    border: 1px solid var(--color-base-300);
+  }
+
+  .Layer__upload-transactions__template-section__button-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @container (max-width: 36rem) {
+    .Layer__upload-transactions__template-section__button-row {
+      flex-direction: column;
+
+      >.Layer__upload-transactions__template-section__button-row-item {
+        width: 100%;
+      }
+    }
+  }
+
+  @container (max-width: 30rem) {
+    .Layer__upload-transactions__confirmation-step__button-row {
+      flex-direction: column;
+
+      >.Layer__upload-transactions__confirmation-step__button-row-item {
+        width: 100%;
+      }
+    }
+  }
+
+  .Layer__upload-transactions__confirmation-step__data-state {
+    .Layer__data-state__description {
+      margin-bottom: 0;
+    }
+  }
+
+  .Layer__upload-transactions__preview_table {
+    .Layer__csv-upload__validate-csv-table__cell--date,
+    .Layer__csv-upload__validate-csv-table__header-cell--date {
+      min-width: 7.5rem;
+    }
+
+    .Layer__csv-upload__validate-csv-table__cell--amount,
+    .Layer__csv-upload__validate-csv-table__header-cell--amount {
+      min-width: 7.5rem;
+
+      .Layer__csv-upload__validate-csv-table__header-cell-content {
+        margin-left: auto;
+      }
+
+      .Layer__csv-upload__validate-csv-table__cell-content {
+        text-align: right;
+      }
+    }
+
+    .Layer__csv-upload__validate-csv-table__cell--description,
+    .Layer__csv-upload__validate-csv-table__header-cell--description {
+      flex: 3 1 0;
+      min-width: 12rem;
+    }
+
+    .Layer__csv-upload__validate-csv-table__cell--external_id,
+    .Layer__csv-upload__validate-csv-table__header-cell--external_id {
+      min-width: 7.5rem;
+    }
+
+    .Layer__csv-upload__validate-csv-table__cell--reference_number,
+    .Layer__csv-upload__validate-csv-table__header-cell--reference_number {
+      min-width: 7.5rem;
+    }
+  }
+}

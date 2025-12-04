@@ -1,0 +1,58 @@
+manage uploads button
+ - this could be beside the upload button
+   PROS: Easier to discover
+   CONS: takes up more space for an edge case probably why the button is really small
+ - below the upload transaction manually
+   PROS: its in a natural place under the existing button option
+   CONS: Might be hard to see but users only need to worry about that for manual entries so they would have seen it before
+
+When button is clicked it should open up a modal that will have a similar UI to the existing Upload transactions but will say Manage transactions
+subheading will say (Group delete transaction by date)
+
+under it should have a table view with each row as an accordion that contains another table with a list of their transactions. we could call it transaction snippet as we might just want to show the first 10 and won't need pagination
+The main table rows should show
+-upload date
+-upload source
+-transaction count
+-account
+-delete button we might want to have a "warning" that the data will be archived for X amount of data and they can have a final confirmation setPageIndex
+
+
+API requests needed
+- GET: A list of the "upload batches" and the top 10 transaction Categories
+   *considerations*
+   -single get request with a join for upload batches and the transactions
+    PROS: frontend makes a request and each paginated response will contain a fixed amount of batches and transactions
+    CONS: Might be some work for the backend to handle and requirements might require more complex display of information or all transactions to show
+   -2 API calls fetch upload batches and fetch the paginations for the uploads
+    we could quicky fetch a paginated "upload batches" and display that while we fetch the transactions in the background
+    PROS: Better UX on the frontend
+    CONS: Might be some hydration issues
+
+- UPDATE: Soft delete on the transactions
+  This should mostly be done on the server to take the id of batches and set all the _isDeleted fields to true
+
+
+
+Questions?
+Do schemas represent the database schema too? this will make it easy to know what fields are available
+Curious to know how the uploaded data is represented in the database. Is there a seperate table of uploaded docs and a foreign key on the transaction table
+
+Schemas ill like to see
+ - Transactions (documentIds?)
+ - Uploads (looks like its the same as transactions)
+
+  reads ill like to see
+ - Transaction (useBankTransactionsContext)
+ 
+
+ Mutations ill like to see
+ - categorize transactions (useCategorizeBankTransaction)
+ - Upload transactions (useCustomAccountParseCsv)
+
+
+
+
+
+
+

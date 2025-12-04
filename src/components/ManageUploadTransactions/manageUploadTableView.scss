@@ -1,0 +1,58 @@
+.Layer__ManageUpload {
+  overflow-x: auto;
+  width: 100%;
+  max-width: 1406px;
+}
+
+.Layer__UI__Table__ManageUpload {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 800px;
+
+  .Layer__UI__Table-Row,
+  .Layer__UI__Table-TableHeader > tr {
+    display: grid;
+    grid-template-columns:
+      minmax(10rem, 1fr)
+      minmax(10rem, 1fr)
+      minmax(10rem, 1fr)
+      minmax(8rem, 0.8fr)
+      4rem;
+  }
+
+  .Layer__UI__Table-Column__ManageUpload,
+  .Layer__UI__Table-Cell__ManageUpload {
+    &--transactionCount {
+      justify-content: flex-end;
+    }
+
+    &--actions {
+      justify-content: center;
+      padding: 0;
+    }
+  }
+
+  .Layer__ManageUpload__Actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+
+    .Layer__ManageUpload__DeleteIcon {
+      color: var(--color-base-600);
+      transition: color 0.2s ease;
+    }
+
+    &:hover .Layer__ManageUpload__DeleteIcon {
+      color: var(--color-info-error);
+    }
+
+    &:focus-visible {
+      border-radius: 4px;
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+}

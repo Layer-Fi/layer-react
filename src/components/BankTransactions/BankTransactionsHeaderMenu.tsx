@@ -3,8 +3,10 @@ import { MenuIcon, PencilRuler } from 'lucide-react'
 
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import UploadCloud from '@icons/UploadCloud'
+import Document from '@icons/Document'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
+import { BankTransactionsManageUploadModal } from './BankTransactionsManageUploadModal/BankTransactionsManageUploadModal'
 
 interface BankTransactionsHeaderMenuProps {
   actions: BankTransactionsHeaderMenuActions[]
@@ -18,7 +20,8 @@ export enum BankTransactionsHeaderMenuActions {
 
 export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransactionsHeaderMenuProps) => {
   const { toCategorizationRulesTable } = useBankTransactionsNavigation()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+  const [isManageModalOpen, setIsManageModalOpen] = useState(false)
 
   const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
     const items: DataTableHeaderMenuItem[] = []
@@ -26,9 +29,15 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
     if (actions.includes(BankTransactionsHeaderMenuActions.UploadTransactions)) {
       items.push({
         key: BankTransactionsHeaderMenuActions.UploadTransactions,
-        onClick: () => setIsModalOpen(true),
+        onClick: () => setIsUploadModalOpen(true),
         icon: <UploadCloud size={16} />,
         label: 'Upload transactions manually',
+      })
+      items.push({
+        key: BankTransactionsHeaderMenuActions.UploadTransactions,
+        onClick: () => setIsManageModalOpen(true),
+        icon: <Document size={16} />,
+        label: 'Manage manual transactions',
       })
     }
 
@@ -63,7 +72,8 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
         isDisabled={isDisabled}
         slots={{ Icon }}
       />
-      {isModalOpen && <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />}
+      {isUploadModalOpen && <BankTransactionsUploadModal isOpen onOpenChange={setIsUploadModalOpen} />}
+      {isManageModalOpen && <BankTransactionsManageUploadModal isOpen onOpenChange={setIsManageModalOpen} />}
     </>
   )
 }
