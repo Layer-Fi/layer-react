@@ -5,6 +5,7 @@ import {
   getBankTransactionFirstSuggestedMatch,
   getBankTransactionMatchAsSuggestedMatch,
 } from '@utils/bankTransactions'
+import { useMatchBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
@@ -32,15 +33,20 @@ export const BankTransactionsMobileListMatchForm = ({
 }: BankTransactionsMobileListMatchFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
-  const { match: matchBankTransaction, isLoading } =
-    useBankTransactionsContext()
+  const { isLoading: isLoadingBankTransactions } = useBankTransactionsContext()
+
+  const {
+    match: matchBankTransaction,
+    isMutating: isMatching,
+    isError: isErrorMatching,
+  } = useMatchBankTransactionWithCacheUpdate()
 
   const [selectedMatch, setSelectedMatch] = useState<SuggestedMatch | undefined>(
     getBankTransactionFirstSuggestedMatch(bankTransaction),
   )
   const [formError, setFormError] = useState<string | undefined>()
 
-  const showRetry = Boolean(bankTransaction.error)
+  const showRetry = Boolean(isErrorMatching)
 
   const onMatchSubmit = async (matchId: string) => {
     const foundMatch = bankTransaction.suggested_matches?.find(
@@ -113,13 +119,13 @@ export const BankTransactionsMobileListMatchForm = ({
             fullWidth
             isDisabled={
               !selectedMatch
-              || isLoading
-              || bankTransaction.processing
+              || isLoadingBankTransactions
+              || isMatching
               || selectedMatch.id === getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
             }
             onClick={save}
           >
-            {isLoading || bankTransaction.processing
+            {isLoadingBankTransactions || isMatching
               ? 'Saving...'
               : 'Approve match'}
           </Button>

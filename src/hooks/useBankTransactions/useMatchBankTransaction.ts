@@ -1,8 +1,10 @@
 import { useCallback } from 'react'
+import type { Key } from 'swr'
 import { useSWRConfig } from 'swr'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
-import useSWRMutation from 'swr/mutation'
+import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 
+import type { BankTransactionMatch } from '@internal-types/bank_transactions'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { type GetBankTransactionsReturn, matchBankTransaction, type MatchBankTransactionBody } from '@api/layer/bankTransactions'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/bookkeeping/useBankAccounts'
@@ -36,6 +38,37 @@ type MatchBankTransactionArgs = MatchBankTransactionBody & {
   bankTransactionId: string
 }
 
+type MatchBankTransactionSWRMutationResponse =
+  SWRMutationResponse<BankTransactionMatch, unknown, Key, MatchBankTransactionArgs>
+
+class MatchBankTransactionSWRResponse {
+  private swrResponse: MatchBankTransactionSWRMutationResponse
+
+  constructor(swrResponse: MatchBankTransactionSWRMutationResponse) {
+    this.swrResponse = swrResponse
+  }
+
+  get data() {
+    return this.swrResponse.data
+  }
+
+  get trigger() {
+    return this.swrResponse.trigger
+  }
+
+  get isMutating() {
+    return this.swrResponse.isMutating
+  }
+
+  get error() {
+    return this.swrResponse.error
+  }
+
+  get isError() {
+    return this.swrResponse.error !== undefined
+  }
+}
+
 type UseMatchBankTransactionOptions = {
   mutateBankTransactions: SWRInfiniteKeyedMutator<
     Array<GetBankTransactionsReturn>
@@ -51,7 +84,7 @@ export function useMatchBankTransaction({
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
-  const mutationResponse = useSWRMutation(
+  const rawMutationResponse = useSWRMutation(
     () => buildKey({
       access_token: auth?.access_token,
       apiUrl: auth?.apiUrl,
@@ -76,7 +109,9 @@ export function useMatchBankTransaction({
     },
   )
 
-  const { trigger: originalTrigger } = mutationResponse
+  const mutationResponse = new MatchBankTransactionSWRResponse(rawMutationResponse)
+
+  const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {

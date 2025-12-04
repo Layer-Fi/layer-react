@@ -11,7 +11,6 @@ export const BankTransactionsContext =
     isLoading: false,
     isValidating: false,
     isError: false,
-    match: () => Promise.resolve(),
     metadata: {
       pagination: {
         cursor: undefined,

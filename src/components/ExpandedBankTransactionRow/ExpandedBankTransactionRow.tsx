@@ -20,11 +20,11 @@ import { getBankTransactionFirstSuggestedMatch, getBankTransactionMatchAsSuggest
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { useMatchBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import AlertCircle from '@icons/AlertCircle'
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
@@ -34,7 +34,6 @@ import { BankTransactionCategoryComboBox } from '@components/BankTransactionCate
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { TextButton } from '@components/Button/TextButton'
-import { APIErrorNotifications } from '@components/ExpandedBankTransactionRow/APIErrorNotifications'
 import { AmountInput } from '@components/Input/AmountInput'
 import { Input } from '@components/Input/Input'
 import { MatchForm } from '@components/MatchForm/MatchForm'
@@ -112,13 +111,17 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
     },
     ref,
   ) => {
-    const { match: matchBankTransaction } = useBankTransactionsContext()
-
     const {
       categorize: categorizeBankTransaction,
       isMutating: isCategorizing,
       isError: isErrorCategorizing,
     } = useCategorizeBankTransactionWithCacheUpdate()
+
+    const {
+      match: matchBankTransaction,
+      isMutating: isMatching,
+      isError: isErrorMatching,
+    } = useMatchBankTransactionWithCacheUpdate()
 
     const { deselect } = useBulkSelectionActions()
     const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
@@ -479,7 +482,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                   {asListItem && categorizationEnabled
                     && (
                       <div className={`${className}__submit-btn`}>
-                        {isErrorCategorizing
+                        {(isErrorCategorizing || isErrorMatching)
                           && (
                             <Text
                               as='span'
@@ -493,7 +496,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                         <SubmitButton
                           onClick={save}
                           className='Layer__bank-transaction__submit-btn'
-                          processing={isCategorizing}
+                          processing={isCategorizing || isMatching}
                           active={true}
                           action={
                             categorized ? SubmitAction.SAVE : SubmitAction.UPDATE
@@ -504,10 +507,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                       </div>
                     )}
                 </div>
-                <APIErrorNotifications
-                  bankTransaction={bankTransaction}
-                  containerWidth={containerWidth}
-                />
               </VStack>
             </span>
           </>
