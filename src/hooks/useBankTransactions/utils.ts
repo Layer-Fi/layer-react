@@ -150,6 +150,7 @@ export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): 
     : ({
       type: 'Split',
       entries: splits.map(split => ({
+        // TODO: enforce upstream in the category combobox that split.category is non-null
         category: split.category!.classification!,
         amount: split.amount,
         tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
