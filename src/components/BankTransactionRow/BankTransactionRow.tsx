@@ -104,7 +104,7 @@ export const BankTransactionRow = ({
   const isBulkSelectionActive = bulkSelectionCount > 0
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-  const { saveBankTransactionRow } = useSaveBankTransactionRow()
+  const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
 
   // Track if the row is being removed (after categorization in review mode)
   const isBeingRemoved = bankTransaction.recently_categorized && shouldHideAfterCategorize()
@@ -115,10 +115,10 @@ export const BankTransactionRow = ({
     : categorized
 
   useEffect(() => {
-    if (bankTransaction.error) {
+    if (isError) {
       setShowRetry(true)
     }
-  }, [bankTransaction.error])
+  }, [isError])
 
   useEffect(() => {
     if (
@@ -267,7 +267,7 @@ export const BankTransactionRow = ({
           {open
             ? (
               <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
-                {bankTransaction.error
+                {isError
                   && (
                     <Text
                       as='span'
@@ -282,12 +282,12 @@ export const BankTransactionRow = ({
                   && (
                     <SubmitButton
                       onClick={() => {
-                        if (!bankTransaction.processing) {
+                        if (!isProcessing) {
                           void save()
                         }
                       }}
                       className='Layer__bank-transaction__submit-btn'
-                      processing={bankTransaction.processing}
+                      processing={isProcessing}
                       active={open}
                       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
                       disabled={selectedCategory === null}
@@ -331,7 +331,7 @@ export const BankTransactionRow = ({
                       setTransactionCategory(bankTransaction.id, selectedCategory)
                       setShowRetry(false)
                     }}
-                    isDisabled={bankTransaction.processing}
+                    isDisabled={isProcessing}
                   />
                 </AnimatedPresenceDiv>
                 {displayAsCategorized
@@ -345,12 +345,12 @@ export const BankTransactionRow = ({
                   && (
                     <RetryButton
                       onClick={() => {
-                        if (!bankTransaction.processing) {
+                        if (!isProcessing) {
                           void save()
                         }
                       }}
                       className='Layer__bank-transaction__retry-btn'
-                      processing={bankTransaction.processing}
+                      processing={isProcessing}
                       error='Approval failed. Check connection and retry in few seconds.'
                     >
                       Retry
@@ -360,12 +360,12 @@ export const BankTransactionRow = ({
                   && (
                     <SubmitButton
                       onClick={() => {
-                        if (!bankTransaction.processing) {
+                        if (!isProcessing) {
                           void save()
                         }
                       }}
                       className='Layer__bank-transaction__submit-btn'
-                      processing={bankTransaction.processing}
+                      processing={isProcessing}
                       active={open}
                       disabled={selectedCategory === null || isBulkSelectionActive}
                       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}

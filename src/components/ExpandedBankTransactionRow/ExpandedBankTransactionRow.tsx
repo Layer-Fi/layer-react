@@ -19,6 +19,7 @@ import {
 import { getBankTransactionFirstSuggestedMatch, getBankTransactionMatchAsSuggestedMatch } from '@utils/bankTransactions'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
@@ -111,10 +112,14 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
     },
     ref,
   ) => {
+    const { match: matchBankTransaction } = useBankTransactionsContext()
+
     const {
       categorize: categorizeBankTransaction,
-      match: matchBankTransaction,
-    } = useBankTransactionsContext()
+      isMutating: isCategorizing,
+      isError: isErrorCategorizing,
+    } = useCategorizeBankTransactionWithCacheUpdate()
+
     const { deselect } = useBulkSelectionActions()
     const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
     const { setTransactionCategory } = useBankTransactionsCategoryActions()
@@ -373,7 +378,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                                 onSelectedValueChange={(value) => {
                                   changeCategoryForSplitAtIndex(index, value)
                                 }}
-                                isDisabled={!categorizationEnabled || bankTransaction.processing}
+                                isDisabled={!categorizationEnabled || isCategorizing}
                                 includeSuggestedMatches={false}
                               />
                               {showTags && (
@@ -474,7 +479,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                   {asListItem && categorizationEnabled
                     && (
                       <div className={`${className}__submit-btn`}>
-                        {bankTransaction.error
+                        {isErrorCategorizing
                           && (
                             <Text
                               as='span'
@@ -488,7 +493,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                         <SubmitButton
                           onClick={save}
                           className='Layer__bank-transaction__submit-btn'
-                          processing={bankTransaction.processing}
+                          processing={isCategorizing}
                           active={true}
                           action={
                             categorized ? SubmitAction.SAVE : SubmitAction.UPDATE

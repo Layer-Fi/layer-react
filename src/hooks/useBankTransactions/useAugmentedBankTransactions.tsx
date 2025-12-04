@@ -9,12 +9,10 @@ import { DataModel } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import {
   type BankTransactionFilters,
 } from '@hooks/useBankTransactions/types'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/useBankTransactions/useBankTransactions'
-import { useCategorizeBankTransaction } from '@hooks/useBankTransactions/useCategorizeBankTransaction'
 import { useMatchBankTransaction } from '@hooks/useBankTransactions/useMatchBankTransaction'
 import {
   applyAccountFilter,
@@ -212,57 +210,6 @@ export const useAugmentedBankTransactions = (
     void mutate(updatedData, { revalidate: false })
   }
 
-  const { trigger: categorizeBankTransaction } = useCategorizeBankTransaction({
-    mutateBankTransactions: mutate,
-  })
-
-  const categorizeWithOptimisticUpdate = async (
-    bankTransactionId: BankTransaction['id'],
-    newCategory: CategoryUpdate,
-    notify?: boolean,
-  ) => {
-    const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
-
-    if (existingTransaction) {
-      updateLocalBankTransactions([{
-        ...existingTransaction,
-        update_categorization_rules_suggestion: undefined,
-        processing: true,
-        error: undefined,
-      }])
-    }
-
-    return categorizeBankTransaction({
-      bankTransactionId,
-      ...newCategory,
-    })
-      .then((updatedTransaction) => {
-        updateLocalBankTransactions([{
-          ...updatedTransaction,
-          processing: false,
-          recently_categorized: true,
-        }])
-
-        if (notify) {
-          addToast({ content: 'Transaction confirmed' })
-        }
-      })
-      .catch((error: unknown) => {
-        const targetedTransaction = data?.find(({ id }) => id === bankTransactionId)
-
-        if (targetedTransaction) {
-          updateLocalBankTransactions([{
-            ...targetedTransaction,
-            error: error instanceof Error ? error.message : 'An unknown error occurred',
-            processing: false,
-          }])
-        }
-      })
-      .finally(() => {
-        eventCallbacks?.onTransactionCategorized?.()
-      })
-  }
-
   const { trigger: matchBankTransaction } = useMatchBankTransaction({
     mutateBankTransactions: mutate,
   })
@@ -360,10 +307,6 @@ export const useAugmentedBankTransactions = (
     }
   }
 
-  const refetch = () => {
-    void mutate()
-  }
-
   const fetchMore = useCallback(() => {
     if (hasMore) {
       void setSize(size + 1)
@@ -384,7 +327,7 @@ export const useAugmentedBankTransactions = (
 
   useEffect(() => {
     if (hasBeenTouched(getCacheKey(filters))) {
-      refetch()
+      void mutate()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps, filters])
@@ -409,12 +352,12 @@ export const useAugmentedBankTransactions = (
 
   const intervalIdRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
-  // calling `refetch()` directly in the `setInterval` didn't trigger actual request to API.
+  // calling `void mutate()` directly in the `setInterval` didn't trigger actual request to API.
   // But it works when called from `useEffect`
   const [refreshTrigger, setRefreshTrigger] = useState(-1)
   useEffect(() => {
     if (refreshTrigger !== -1) {
-      refetch()
+      void mutate()
       void refetchAccounts()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -451,9 +394,7 @@ export const useAugmentedBankTransactions = (
     metadata: lastMetadata,
     isLoading,
     isValidating,
-    refetch,
     isError: !!responseError,
-    categorize: categorizeWithOptimisticUpdate,
     match: matchWithOptimisticUpdate,
     updateLocalBankTransactions,
     shouldHideAfterCategorize,
@@ -461,5 +402,6 @@ export const useAugmentedBankTransactions = (
     display,
     fetchMore,
     hasMore,
+    mutate,
   }
 }

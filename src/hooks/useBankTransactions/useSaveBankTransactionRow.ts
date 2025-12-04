@@ -1,21 +1,20 @@
 import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
+import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
-import { buildCategorizeBankTransactionPayloadForSplit } from './utils'
+export const useSaveBankTransactionRow = () => {
+  const { match: matchBankTransaction } = useBankTransactionsContext()
 
-type UseSaveBankTransactionRowResult = {
-  saveBankTransactionRow: (selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined, bankTransaction: BankTransaction) => Promise<void>
-}
-
-export const useSaveBankTransactionRow = (): UseSaveBankTransactionRowResult => {
   const {
     categorize: categorizeBankTransaction,
-    match: matchBankTransaction,
-  } = useBankTransactionsContext()
+    isMutating: isCategorizing,
+    isError: isErrorCategorizing,
+  } = useCategorizeBankTransactionWithCacheUpdate()
 
   const saveBankTransactionRow = useCallback(async (
     selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
@@ -44,5 +43,7 @@ export const useSaveBankTransactionRow = (): UseSaveBankTransactionRowResult => 
 
   return useMemo(() => ({
     saveBankTransactionRow,
-  }), [saveBankTransactionRow])
+    isProcessing: isCategorizing,
+    isError: isErrorCategorizing,
+  }), [isCategorizing, isErrorCategorizing, saveBankTransactionRow])
 }

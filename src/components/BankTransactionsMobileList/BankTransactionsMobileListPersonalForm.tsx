@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasReceipts, isCredit } from '@utils/bankTransactions'
+import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
@@ -46,15 +47,21 @@ export const BankTransactionsMobileListPersonalForm = ({
 }: BankTransactionsMobileListPersonalFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
-  const { categorize: categorizeBankTransaction, isLoading } =
-    useBankTransactionsContext()
+  const { isLoading: isLoadingBankTransactions } = useBankTransactionsContext()
+
+  const {
+    categorize: categorizeBankTransaction,
+    isMutating: isCategorizing,
+    isError: isErrorCategorizing,
+  } = useCategorizeBankTransactionWithCacheUpdate()
+
   const [showRetry, setShowRetry] = useState(false)
 
   useEffect(() => {
-    if (bankTransaction.error) {
+    if (isErrorCategorizing) {
       setShowRetry(true)
     }
-  }, [bankTransaction.error])
+  }, [isErrorCategorizing])
 
   const save = () => {
     if (!showCategorization) {
@@ -117,9 +124,9 @@ export const BankTransactionsMobileListPersonalForm = ({
             <Button
               fullWidth
               onClick={save}
-              isDisabled={alreadyAssigned || isLoading || bankTransaction.processing}
+              isDisabled={alreadyAssigned || isLoadingBankTransactions || isCategorizing}
             >
-              {bankTransaction.processing || isLoading
+              {isCategorizing
                 ? 'Confirming...'
                 : alreadyAssigned
                   ? 'Confirmed'
@@ -127,7 +134,7 @@ export const BankTransactionsMobileListPersonalForm = ({
             </Button>
           )}
       </HStack>
-      {bankTransaction.error && showRetry
+      {isErrorCategorizing && showRetry
         ? (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.

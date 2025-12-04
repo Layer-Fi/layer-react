@@ -249,7 +249,7 @@ const BankTransactionsTableView = ({
     data,
     isLoading,
     isError,
-    refetch,
+    mutate,
     display,
     hasMore,
     fetchMore,
@@ -403,7 +403,7 @@ const BankTransactionsTableView = ({
             page={currentPage}
             stringOverrides={stringOverrides}
             lastPage={isLastPage}
-            onRefresh={refetch}
+            onRefresh={() => { void mutate() }}
 
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}

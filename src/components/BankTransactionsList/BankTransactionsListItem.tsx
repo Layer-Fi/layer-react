@@ -65,7 +65,7 @@ export const BankTransactionsListItem = ({
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
-  const { saveBankTransactionRow } = useSaveBankTransactionRow()
+  const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
   const [openExpandedRow, setOpenExpandedRow] = useState(false)
   const toggleExpandedRow = () => {
     setShowRetry(false)
@@ -93,10 +93,10 @@ export const BankTransactionsListItem = ({
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
 
   useEffect(() => {
-    if (bankTransaction.error) {
+    if (isError) {
       setShowRetry(true)
     }
-  }, [bankTransaction.error])
+  }, [isError])
 
   useEffect(() => {
     if (
@@ -250,13 +250,13 @@ export const BankTransactionsListItem = ({
                 setTransactionCategory(bankTransaction.id, selectedCategory)
                 setShowRetry(false)
               }}
-              isDisabled={bankTransaction.processing}
+              isDisabled={isProcessing}
             />
             <SubmitButton
-              disabled={bankTransaction.processing}
+              disabled={isProcessing}
               onClick={handleSave}
               className={showRetry ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
-              processing={bankTransaction.processing}
+              processing={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
               withRetry={true}
               error={showRetry ? 'Approval failed. Check connection and retry in few seconds.' : undefined}
@@ -275,7 +275,7 @@ export const BankTransactionsListItem = ({
           bankTransaction={bankTransaction}
         />
       )}
-      {bankTransaction.error && showRetry
+      {isError && showRetry
         && (
           <HStack pis='md' pbe='md'>
             <ErrorText>

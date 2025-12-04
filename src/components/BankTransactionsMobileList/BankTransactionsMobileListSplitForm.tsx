@@ -3,6 +3,7 @@ import classNames from 'classnames'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { hasReceipts } from '@utils/bankTransactions'
+import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
@@ -42,10 +43,12 @@ export const BankTransactionsMobileListSplitForm = ({
 }: BankTransactionsMobileListSplitFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
+  const { isLoading: isLoadingBankTransactions } = useBankTransactionsContext()
   const {
     categorize: categorizeBankTransaction,
-    isLoading,
-  } = useBankTransactionsContext()
+    isMutating: isCategorizing,
+    isError: isErrorCategorizing,
+  } = useCategorizeBankTransactionWithCacheUpdate()
 
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
   const [showRetry, setShowRetry] = useState(false)
@@ -76,10 +79,10 @@ export const BankTransactionsMobileListSplitForm = ({
     : 'Split'
 
   useEffect(() => {
-    if (bankTransaction.error) {
+    if (isErrorCategorizing) {
       setShowRetry(true)
     }
-  }, [bankTransaction.error])
+  }, [isErrorCategorizing])
 
   const save = () => {
     if (!isValid) return
@@ -190,13 +193,13 @@ export const BankTransactionsMobileListSplitForm = ({
           <Button
             fullWidth
             onClick={save}
-            isDisabled={isLoading || bankTransaction.processing || !isValid}
+            isDisabled={isLoadingBankTransactions || isCategorizing || !isValid}
           >
-            {bankTransaction.processing || isLoading ? 'Confirming...' : 'Confirm'}
+            {isCategorizing ? 'Confirming...' : 'Confirm'}
           </Button>
         )}
       </HStack>
-      {(bankTransaction.error && showRetry)
+      {(isErrorCategorizing && showRetry)
         && (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.
