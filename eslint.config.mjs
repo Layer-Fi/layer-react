@@ -11,7 +11,7 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 export default tsEslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**', 'stylelint.config.mjs'],
+    ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**', 'stylelint.config.mjs', 'eslint.config.mjs'],
   },
   js.configs.recommended,
   ...tsEslint.configs.recommendedTypeChecked,
