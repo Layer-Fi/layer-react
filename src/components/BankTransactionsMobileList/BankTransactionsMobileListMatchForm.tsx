@@ -43,8 +43,6 @@ export const BankTransactionsMobileListMatchForm = ({
   )
   const [formError, setFormError] = useState<string | undefined>()
 
-  const showRetry = Boolean(isErrorMatching)
-
   const onMatchSubmit = async (matchId: string) => {
     const foundMatch = bankTransaction.suggested_matches?.find(
       x => x.id === matchId,
@@ -128,7 +126,7 @@ export const BankTransactionsMobileListMatchForm = ({
         )}
       </HStack>
       {formError && <ErrorText>{formError}</ErrorText>}
-      {showRetry
+      {isErrorMatching
         && (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.
