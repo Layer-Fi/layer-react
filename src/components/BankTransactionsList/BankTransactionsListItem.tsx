@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
 
@@ -31,7 +31,7 @@ import { BankTransactionsListItemCategory } from '@components/BankTransactions/B
 import { isCategorized } from '@components/BankTransactions/utils'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
-import { ExpandedBankTransactionRow, type ExpandedBankTransactionRowHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 type BankTransactionsListItemProps = {
@@ -59,10 +59,10 @@ export const BankTransactionsListItem = ({
   showReceiptUploads,
   showTooltips,
 }: BankTransactionsListItemProps) => {
-  const expandedRowRef = useRef<ExpandedBankTransactionRowHandle | null>(null)
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
   const [openExpandedRow, setOpenExpandedRow] = useState(false)
+  const [isExpandedRowValid, setIsExpandedRowValid] = useState(true)
   const toggleExpandedRow = () => {
     setOpenExpandedRow(!openExpandedRow)
   }
@@ -100,26 +100,16 @@ export const BankTransactionsListItem = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
-  const save = async () => {
-    let category = selectedCategory
-    // Save using form from expanded row when row is open:
-    if (openExpandedRow && expandedRowRef.current) {
-      const expandedRowCategory = expandedRowRef.current.getSelectedCategory()
-      category = expandedRowCategory
+  const save = useCallback(async () => {
+    if (openExpandedRow && !isExpandedRowValid) return
+    if (!selectedCategory) return
 
-      if (!expandedRowCategory) return
-    }
-
-    await saveBankTransactionRow(category, bankTransaction)
+    await saveBankTransactionRow(selectedCategory, bankTransaction)
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)
     setOpenExpandedRow(false)
-  }
-
-  const handleSave = () => {
-    void save()
-  }
+  }, [bankTransaction, deselect, isExpandedRowValid, openExpandedRow, saveBankTransactionRow, selectedCategory])
 
   const preventRowExpansion = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -211,7 +201,6 @@ export const BankTransactionsListItem = ({
       <span className='Layer__bank-transaction-list-item__expanded-row' onClick={preventRowExpansion}>
         <AnimatedPresenceDiv variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
           <ExpandedBankTransactionRow
-            ref={expandedRowRef}
             bankTransaction={bankTransaction}
             isOpen={openExpandedRow}
             categorized={displayAsCategorized}
@@ -227,6 +216,7 @@ export const BankTransactionsListItem = ({
             showTooltips={showTooltips}
 
             variant='list'
+            onValidityChange={setIsExpandedRowValid}
           />
         </AnimatedPresenceDiv>
       </span>
@@ -245,7 +235,7 @@ export const BankTransactionsListItem = ({
             )}
             <SubmitButton
               disabled={isProcessing}
-              onClick={handleSave}
+              onClick={() => { void save() }}
               className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
               processing={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}

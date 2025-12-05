@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
 
@@ -35,7 +35,6 @@ import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransa
 import { IconButton } from '@components/Button/IconButton'
 import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { type ExpandedBankTransactionRowHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '@components/IconBox/IconBox'
 import { Text, TextSize } from '@components/Typography/Text'
 
@@ -78,9 +77,9 @@ export const BankTransactionRow = ({
   showTooltips,
   stringOverrides,
 }: Props) => {
-  const expandedRowRef = useRef<ExpandedBankTransactionRowHandle | null>(null)
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
   const [open, setOpen] = useState(false)
+  const [isExpandedRowValid, setIsExpandedRowValid] = useState(true)
   const toggleOpen = useCallback(() => {
     setOpen(!open)
   }, [open])
@@ -123,21 +122,15 @@ export const BankTransactionRow = ({
   }, [bankTransaction.recently_categorized])
 
   const save = useCallback(async () => {
-    let category = selectedCategory
-    // Save using form from expanded row when row is open:
-    if (open && expandedRowRef.current) {
-      const expandedRowCategory = expandedRowRef.current.getSelectedCategory()
-      category = expandedRowCategory
+    if (open && !isExpandedRowValid) return
+    if (!selectedCategory) return
 
-      if (!expandedRowCategory) return
-    }
-
-    await saveBankTransactionRow(category, bankTransaction)
+    await saveBankTransactionRow(selectedCategory, bankTransaction)
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)
     setOpen(false)
-  }, [bankTransaction, deselect, open, saveBankTransactionRow, selectedCategory])
+  }, [bankTransaction, deselect, isExpandedRowValid, open, saveBankTransactionRow, selectedCategory])
 
   const submitButton = useMemo(() => (
     <SubmitButton
@@ -369,13 +362,13 @@ export const BankTransactionRow = ({
         <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
           <AnimatedPresenceDiv variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
             <ExpandedBankTransactionRow
-              ref={expandedRowRef}
               bankTransaction={bankTransaction}
               categorized={displayAsCategorized}
               isOpen={open}
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
+              onValidityChange={setIsExpandedRowValid}
             />
           </AnimatedPresenceDiv>
         </td>
