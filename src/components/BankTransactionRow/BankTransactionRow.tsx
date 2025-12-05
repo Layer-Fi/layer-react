@@ -109,11 +109,7 @@ export const BankTransactionRow = ({
     : categorized
 
   useEffect(() => {
-    if (
-      editable
-      && bankTransaction.recently_categorized
-      && shouldHideAfterCategorize()
-    ) {
+    if (editable && isBeingRemoved) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
       }, 300)
@@ -173,7 +169,7 @@ export const BankTransactionRow = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    isBeingRemoved && editable
+    editable && isBeingRemoved
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',

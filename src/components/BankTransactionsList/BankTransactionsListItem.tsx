@@ -74,8 +74,9 @@ export const BankTransactionsListItem = ({
 
   const categorized = isCategorized(bankTransaction)
 
+  const isBeingRemoved = bankTransaction.recently_categorized && shouldHideAfterCategorize()
   // Keep showing as uncategorized during removal animation to prevent UI flashing
-  const displayAsCategorized = bankTransaction.recently_categorized && shouldHideAfterCategorize()
+  const displayAsCategorized = isBeingRemoved
     ? false
     : categorized
 
@@ -88,11 +89,7 @@ export const BankTransactionsListItem = ({
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
 
   useEffect(() => {
-    if (
-      editable
-      && bankTransaction.recently_categorized
-      && shouldHideAfterCategorize()
-    ) {
+    if (editable && isBeingRemoved) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
       }, 300)
@@ -118,9 +115,7 @@ export const BankTransactionsListItem = ({
   const openClassName = openExpandedRow ? 'Layer__bank-transaction-list-item--expanded' : ''
   const rowClassName = classNames(
     'Layer__bank-transaction-list-item',
-    bankTransaction.recently_categorized
-    && editable
-    && shouldHideAfterCategorize()
+    editable && isBeingRemoved
       ? 'Layer__bank-transaction-row--removing'
       : '',
     openExpandedRow ? openClassName : '',
