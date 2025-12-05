@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef } from 'react'
 
 import { type ModalProps } from '@ui/Modal/Modal'
-import { BaseConfirmationModal } from '@components/ConfirmationModal/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@ui/ConfirmationModal/BaseConfirmationModal/BaseConfirmationModal'
 import { InvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/InvoiceRefundForm'
 import { updateInvoiceWithRefund } from '@features/invoices/api/useRefundInvoice'
 import type { Invoice } from '@features/invoices/invoiceSchemas'

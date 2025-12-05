@@ -12,7 +12,7 @@ import { useSetCurrentCategorizationRulesPage } from '@providers/BankTransaction
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@components/ConfirmationModal/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@ui/ConfirmationModal/BaseConfirmationModal/BaseConfirmationModal'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { type ColumnConfig } from '@components/DataTable/DataTable'
