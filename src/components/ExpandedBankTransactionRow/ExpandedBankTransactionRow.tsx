@@ -337,7 +337,7 @@ export const ExpandedBankTransactionRow = ({
                                 onPress={() => removeSplit(index)}
                                 variant='outlined'
                                 icon
-                                isDisabled={index == 0}
+                                isDisabled={index === 0}
                               >
                                 <Trash size={18} />
                               </Button>
