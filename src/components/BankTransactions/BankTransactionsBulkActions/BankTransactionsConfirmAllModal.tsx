@@ -5,14 +5,15 @@ import { useBulkMatchOrCategorize } from '@hooks/useBankTransactions/useBulkMatc
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
+import { ResponsiveConfirmationModal } from '@components/ConfirmationModal/ResponsiveConfirmationModal/ResponsiveConfirmationModal'
 
 interface BankTransactionsConfirmAllModalProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
+  isMobileView?: boolean
 }
 
-export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTransactionsConfirmAllModalProps) => {
+export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobileView = false }: BankTransactionsConfirmAllModalProps) => {
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   const { trigger, buildTransactionsPayload } = useBulkMatchOrCategorize()
@@ -32,7 +33,7 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTr
   }, [payload, trigger, clearSelection])
 
   return (
-    <BaseConfirmationModal
+    <ResponsiveConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       title='Confirm all suggestions?'
@@ -60,6 +61,7 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange }: BankTr
       errorText='Failed to confirm transactions'
       closeOnConfirm
       confirmDisabled={actionableCount === 0}
+      useDrawer={isMobileView}
     />
   )
 }

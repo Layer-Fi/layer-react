@@ -5,14 +5,15 @@ import { useBulkUncategorize } from '@hooks/useBankTransactions/useBulkUncategor
 import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
+import { ResponsiveConfirmationModal } from '@components/ConfirmationModal/ResponsiveConfirmationModal/ResponsiveConfirmationModal'
 
 interface BankTransactionsUncategorizeAllModalProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
+  isMobileView?: boolean
 }
 
-export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange }: BankTransactionsUncategorizeAllModalProps) => {
+export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isMobileView = false }: BankTransactionsUncategorizeAllModalProps) => {
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
@@ -28,7 +29,7 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange }: B
   }, [selectedIds, trigger, clearSelection, clearMultipleTransactionCategories])
 
   return (
-    <BaseConfirmationModal
+    <ResponsiveConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       title='Uncategorize all selected transactions?'
@@ -41,6 +42,7 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange }: B
       confirmLabel='Uncategorize All'
       cancelLabel='Cancel'
       errorText='Failed to uncategorize transactions'
+      useDrawer={isMobileView}
     />
   )
 }

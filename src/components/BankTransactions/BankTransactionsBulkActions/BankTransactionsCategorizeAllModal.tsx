@@ -7,8 +7,8 @@ import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
+import { ResponsiveConfirmationModal } from '@components/ConfirmationModal/ResponsiveConfirmationModal/ResponsiveConfirmationModal'
 
 export enum CategorizationMode {
   Categorize = 'Categorize',
@@ -19,14 +19,14 @@ interface BankTransactionsCategorizeAllModalProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   mode: CategorizationMode
-  useCategorySelectDrawer?: boolean
+  isMobileView?: boolean
 }
 
 export const BankTransactionsCategorizeAllModal = ({
   isOpen,
   onOpenChange,
   mode,
-  useCategorySelectDrawer = false,
+  isMobileView = false,
 }: BankTransactionsCategorizeAllModalProps) => {
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
@@ -69,7 +69,7 @@ export const BankTransactionsCategorizeAllModal = ({
   const categorySelectId = useId()
 
   return (
-    <BaseConfirmationModal
+    <ResponsiveConfirmationModal
       isOpen={isOpen}
       onOpenChange={handleCategorizeModalClose}
       title={mode === CategorizationMode.Categorize ? 'Categorize all selected transactions?' : 'Recategorize all selected transactions?'}
@@ -77,7 +77,7 @@ export const BankTransactionsCategorizeAllModal = ({
         <VStack gap='xs'>
           <VStack gap='3xs'>
             <Label size='sm' htmlFor={categorySelectId}>Select category</Label>
-            {useCategorySelectDrawer
+            {isMobileView
               ? (
                 <CategorySelectDrawerWithTrigger
                   aria-labelledby={categorySelectId}
@@ -111,6 +111,7 @@ export const BankTransactionsCategorizeAllModal = ({
       confirmDisabled={!selectedCategory}
       errorText={mode === CategorizationMode.Categorize ? 'Failed to categorize transactions' : 'Failed to recategorize transactions'}
       closeOnConfirm
+      useDrawer={isMobileView}
     />
   )
 }
