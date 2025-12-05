@@ -10,6 +10,7 @@ import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { isCategorized } from '@components/BankTransactions/utils'
 import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
@@ -120,9 +121,9 @@ export const BankTransactionsMobileListPersonalForm = ({
               isDisabled={alreadyAssigned || isLoading || bankTransaction.processing}
             >
               {bankTransaction.processing || isLoading
-                ? 'Confirming...'
+                ? (isCategorized(bankTransaction) ? 'Updating...' : 'Confirming...')
                 : alreadyAssigned
-                  ? 'Confirmed'
+                  ? 'Updated'
                   : 'Mark as Personal'}
             </Button>
           )}
