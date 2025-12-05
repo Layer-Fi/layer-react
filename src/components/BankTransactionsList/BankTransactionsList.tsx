@@ -15,7 +15,6 @@ import { BankTransactionsListItem } from '@components/BankTransactionsList/BankT
 interface BankTransactionsListProps {
   bankTransactions?: BankTransaction[]
   editable: boolean
-  containerWidth: number
   removeTransaction: (bt: BankTransaction) => void
   stringOverrides?: BankTransactionCTAStringOverrides
 
@@ -28,7 +27,6 @@ export const BankTransactionsList = ({
   bankTransactions,
   editable,
   removeTransaction,
-  containerWidth,
   stringOverrides,
 
   showDescriptions,
@@ -72,7 +70,6 @@ export const BankTransactionsList = ({
               bankTransaction={bankTransaction}
               editable={editable}
               removeTransaction={removeTransaction}
-              containerWidth={containerWidth}
               stringOverrides={stringOverrides}
 
               showDescriptions={showDescriptions}

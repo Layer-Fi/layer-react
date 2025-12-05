@@ -3,11 +3,10 @@ import classNames from 'classnames'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { hasReceipts } from '@utils/bankTransactions'
+import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import Scissors from '@icons/Scissors'
 import Trash from '@icons/Trash'
@@ -45,13 +44,12 @@ export const BankTransactionsMobileListSplitForm = ({
 
   const {
     categorize: categorizeBankTransaction,
-    isLoading,
-  } = useBankTransactionsContext()
+    isMutating: isCategorizing,
+    isError: isErrorCategorizing,
+  } = useCategorizeBankTransactionWithCacheUpdate()
 
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
   const [showRetry, setShowRetry] = useState(false)
-
-  const { deselect } = useBulkSelectionActions()
 
   const {
     localSplits,
@@ -77,10 +75,10 @@ export const BankTransactionsMobileListSplitForm = ({
     : 'Split'
 
   useEffect(() => {
-    if (bankTransaction.error) {
+    if (isErrorCategorizing) {
       setShowRetry(true)
     }
-  }, [bankTransaction.error])
+  }, [isErrorCategorizing])
 
   const save = () => {
     if (!isValid) return
@@ -91,10 +89,6 @@ export const BankTransactionsMobileListSplitForm = ({
       bankTransaction.id,
       categorizationRequest,
     )
-
-    // Remove from bulk selection store
-    deselect(bankTransaction.id)
-    close()
   }
 
   const handleCategoryChange = useCallback((index: number) => (value: BankTransactionCategoryComboBoxOption | null) => {
@@ -191,15 +185,15 @@ export const BankTransactionsMobileListSplitForm = ({
           <Button
             fullWidth
             onClick={save}
-            isDisabled={isLoading || bankTransaction.processing || !isValid}
+            isDisabled={isCategorizing || !isValid}
           >
-            {bankTransaction.processing || isLoading
+            {isCategorizing
               ? (isCategorized(bankTransaction) ? 'Updating...' : 'Confirming...')
               : (isCategorized(bankTransaction) ? 'Update' : 'Confirm')}
           </Button>
         )}
       </HStack>
-      {(bankTransaction.error && showRetry)
+      {(isErrorCategorizing && showRetry)
         && (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.

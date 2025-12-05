@@ -266,15 +266,15 @@ export type MatchAdjustmentType = typeof MatchAdjustmentSchema.Type
 export type FinancialEventIdentifiersType = typeof FinancialEventIdentifiersSchema.Type
 
 export enum MatchType {
-  TRANSFER = 'Transfer',
-  INVOICE_PAYMENT = 'Invoice Payment',
-  PAYOUT = 'Payout',
-  VENDOR_PAYOUT = 'Vendor Payout',
-  REFUND_PAYMENT = 'Refund Payment',
-  VENDOR_REFUND_PAYMENT = 'Vendor Refund Payment',
-  MANUAL_JOURNAL_ENTRY = 'Journal Entry',
-  BILL_PAYMENT = 'Bill Payment',
-  PAYROLL_PAYMENT = 'Payroll Payment',
+  TRANSFER = 'TRANSFER',
+  INVOICE_PAYMENT = 'INVOICE_PAYMENT',
+  PAYOUT = 'PAYOUT',
+  VENDOR_PAYOUT = 'VENDOR_PAYOUT',
+  REFUND_PAYMENT = 'REFUND_PAYMENT',
+  VENDOR_REFUND_PAYMENT = 'VENDOR_REFUND_PAYMENT',
+  MANUAL_JOURNAL_ENTRY = 'MANUAL_JOURNAL_ENTRY',
+  BILL_PAYMENT = 'BILL_PAYMENT',
+  PAYROLL_PAYMENT = 'PAYROLL_PAYMENT',
 }
 export const MatchTypeSchema = Schema.Enums(MatchType)
 

@@ -2,7 +2,7 @@ import { type Categorization } from '@internal-types/categories'
 import { type Direction, type S3PresignedUrl } from '@internal-types/general'
 import { type CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { type UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { type MatchDetailsType } from '@schemas/bankTransactions/match'
+import { type MatchDetailsType, type MatchType } from '@schemas/bankTransactions/match'
 import type { CategorizationEncoded } from '@schemas/categorization'
 import type { CustomerSchema } from '@schemas/customer'
 import type { VendorSchema } from '@schemas/vendor'
@@ -62,14 +62,15 @@ export interface BankTransaction extends Record<string, unknown> {
 
 export interface SuggestedMatch {
   id: string
-  matchType: string
+  // Yes, this really is camelCase in the API response.
+  matchType: MatchType
   details: MatchDetailsType
 }
 
 export interface BankTransactionMatch {
   bank_transaction: BankTransaction
   id: string
-  match_type: string
+  match_type: MatchType
   details: MatchDetailsType
 }
 
