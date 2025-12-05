@@ -7,7 +7,6 @@ import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTrans
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import Scissors from '@icons/Scissors'
 import Trash from '@icons/Trash'
@@ -52,8 +51,6 @@ export const BankTransactionsMobileListSplitForm = ({
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
   const [showRetry, setShowRetry] = useState(false)
 
-  const { deselect } = useBulkSelectionActions()
-
   const {
     localSplits,
     splitFormError,
@@ -92,10 +89,6 @@ export const BankTransactionsMobileListSplitForm = ({
       bankTransaction.id,
       categorizationRequest,
     )
-
-    // Remove from bulk selection store
-    deselect(bankTransaction.id)
-    close()
   }
 
   const handleCategoryChange = useCallback((index: number) => (value: BankTransactionCategoryComboBoxOption | null) => {
