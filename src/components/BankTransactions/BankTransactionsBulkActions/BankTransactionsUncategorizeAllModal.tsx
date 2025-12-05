@@ -4,8 +4,8 @@ import pluralize from 'pluralize'
 import { useBulkUncategorize } from '@hooks/useBankTransactions/useBulkUncategorize'
 import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { Span } from '@ui/Typography/Text'
 import { ResponsiveConfirmationModal } from '@ui/ConfirmationModal/ResponsiveConfirmationModal/ResponsiveConfirmationModal'
+import { Span } from '@ui/Typography/Text'
 
 interface BankTransactionsUncategorizeAllModalProps {
   isOpen: boolean

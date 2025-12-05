@@ -3,12 +3,12 @@ import pluralize from 'pluralize'
 
 import { useBulkCategorize } from '@hooks/useBankTransactions/useBulkCategorize'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { ResponsiveConfirmationModal } from '@ui/ConfirmationModal/ResponsiveConfirmationModal/ResponsiveConfirmationModal'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
-import { ResponsiveConfirmationModal } from '@ui/ConfirmationModal/ResponsiveConfirmationModal/ResponsiveConfirmationModal'
 
 export enum CategorizationMode {
   Categorize = 'Categorize',
