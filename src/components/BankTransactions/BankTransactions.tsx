@@ -249,7 +249,6 @@ const BankTransactionsTableView = ({
     data,
     isLoading,
     isError,
-    mutate,
     display,
     hasMore,
     fetchMore,
