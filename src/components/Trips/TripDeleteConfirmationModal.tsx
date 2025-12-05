@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 
 import { type Trip } from '@schemas/trip'
 import { type ModalProps } from '@ui/Modal/Modal'
-import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@components/ConfirmationModal/BaseConfirmationModal/BaseConfirmationModal'
 import { useDeleteTrip } from '@features/trips/api/useDeleteTrip'
 
 type TripDeleteConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
