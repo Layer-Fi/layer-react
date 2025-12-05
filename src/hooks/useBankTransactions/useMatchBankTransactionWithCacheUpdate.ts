@@ -9,7 +9,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function useMatchBankTransactionWithCacheUpdate() {
   const { addToast, eventCallbacks } = useLayerContext()
-  const { mutate: mutateBankTransactions, updateLocalBankTransactions } = useBankTransactionsContext()
+  const { mutate: mutateBankTransactions, updateLocalBankTransactions, data } = useBankTransactionsContext()
 
   const { trigger: matchBankTransaction, isMutating, isError } = useMatchBankTransaction({
     mutateBankTransactions,
@@ -33,17 +33,19 @@ export function useMatchBankTransactionWithCacheUpdate() {
           ]
 
           if (matchResult.match_type === MatchType.TRANSFER) {
-            const matchedTransferMatchResult = {
-              ...matchResult,
-              bank_transaction: bankTransaction,
-            }
+            const matchedTransferBankTransactionId = matchResult.details.id
 
-            transactionsToUpdate.push({
-              ...matchResult.bank_transaction,
-              categorization_status: CategorizationStatus.MATCHED,
-              match: matchedTransferMatchResult,
-              recently_categorized: true,
-            })
+            const matchedTransferBankTransaction = matchedTransferBankTransactionId
+              ? data?.find(({ id }) => id === matchedTransferBankTransactionId)
+              : undefined
+
+            if (matchedTransferBankTransaction) {
+              transactionsToUpdate.push({
+                ...matchedTransferBankTransaction,
+                categorization_status: CategorizationStatus.MATCHED,
+                recently_categorized: true,
+              })
+            }
           }
 
           updateLocalBankTransactions(transactionsToUpdate)
@@ -56,7 +58,7 @@ export function useMatchBankTransactionWithCacheUpdate() {
           eventCallbacks?.onTransactionCategorized?.()
         })
     },
-    [matchBankTransaction, updateLocalBankTransactions, addToast, eventCallbacks],
+    [matchBankTransaction, updateLocalBankTransactions, data, addToast, eventCallbacks],
   )
 
   return useMemo(
