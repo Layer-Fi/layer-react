@@ -16,23 +16,18 @@ import { centsToDollars as formatMoney } from '@models/Money'
 import {
   hasMatch,
 } from '@utils/bankTransactions'
-import { getBankTransactionFirstSuggestedMatch, getBankTransactionMatchAsSuggestedMatch } from '@utils/bankTransactions'
+import { getBankTransactionFirstSuggestedMatch } from '@utils/bankTransactions'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
-import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
-import { useMatchBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
-import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import AlertCircle from '@icons/AlertCircle'
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { TextButton } from '@components/Button/TextButton'
 import { AmountInput } from '@components/Input/AmountInput'
 import { Input } from '@components/Input/Input'
@@ -40,7 +35,6 @@ import { MatchForm } from '@components/MatchForm/MatchForm'
 import { Separator } from '@components/Separator/Separator'
 import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { Text, TextSize } from '@components/Typography/Text'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { useSetMetadataOnBankTransaction } from '@features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
@@ -65,8 +59,8 @@ enum Purpose {
   match = 'match',
 }
 
-export type SaveHandle = {
-  save: () => void
+export type ExpandedBankTransactionRowHandle = {
+  getSelectedCategory: () => BankTransactionCategoryComboBoxOption | null | undefined
 }
 
 export interface DocumentWithStatus {
@@ -82,7 +76,6 @@ export interface DocumentWithStatus {
 type ExpandedBankTransactionRowProps = {
   bankTransaction: BankTransaction
   isOpen?: boolean
-  close: () => void
   asListItem?: boolean
   submitBtnText?: string
   categorized?: boolean
@@ -94,34 +87,18 @@ type ExpandedBankTransactionRowProps = {
   variant?: 'list' | 'row'
 }
 
-export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTransactionRowProps>(
+export const ExpandedBankTransactionRow = forwardRef<ExpandedBankTransactionRowHandle, ExpandedBankTransactionRowProps>(
   (
     {
       bankTransaction,
       isOpen = false,
-      close,
-      categorized,
       asListItem = false,
-      submitBtnText = 'Save',
       showDescriptions,
       showReceiptUploads,
       variant = 'row',
     },
     ref,
   ) => {
-    const {
-      categorize: categorizeBankTransaction,
-      isMutating: isCategorizing,
-      isError: isErrorCategorizing,
-    } = useCategorizeBankTransactionWithCacheUpdate()
-
-    const {
-      match: matchBankTransaction,
-      isMutating: isMatching,
-      isError: isErrorMatching,
-    } = useMatchBankTransactionWithCacheUpdate()
-
-    const { deselect } = useBulkSelectionActions()
     const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
     const { setTransactionCategory } = useBankTransactionsCategoryActions()
     // Hooks for auto-saving tags and customer/vendor in unsplit state
@@ -149,7 +126,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
     const {
       localSplits,
       splitFormError,
-      isValid,
+      isValid: isSplitsValid,
       addSplit,
       removeSplit,
       updateSplitAmount,
@@ -170,7 +147,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
         setTransactionCategory(bankTransaction.id, selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null)
       }
 
-      else if (newPurpose === Purpose.categorize && isValid) {
+      else if (newPurpose === Purpose.categorize && isSplitsValid) {
         setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
       }
 
@@ -220,56 +197,22 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
       }
     }
 
-    const save = () => {
-      if (purpose === Purpose.match) {
-        if (!selectedMatch) {
-          setMatchFormError('Select an option to match the transaction')
-          return
-        }
-        else if (
-          selectedMatch
-          && selectedMatch.id !== getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
-        ) {
-          void onMatchSubmit(selectedMatch.id)
-          return
-        }
-        close()
-        return
-      }
-
-      if (!isValid) return
-
-      const categorizationRequest = buildCategorizeBankTransactionPayloadForSplit(localSplits)
-
-      void categorizeBankTransaction(
-        bankTransaction.id,
-        categorizationRequest,
-      )
-
-      // Remove from bulk selection store
-      deselect(bankTransaction.id)
-      close()
-    }
-
-    // This will allow the parent BankTransactionRow / ListItem / MobileListItem to call the save function from this component.
+    // This will allow the parent BankTransactionRow / ListItem / MobileListItem to get the selected category from this component.
     useImperativeHandle(ref, () => ({
-      save,
+      getSelectedCategory: () => {
+        if (purpose === Purpose.match) {
+          if (!selectedMatch) {
+            setMatchFormError('Select an option to match the transaction')
+            return null
+          }
+          return new SuggestedMatchAsOption(selectedMatch)
+        }
+        if (!isSplitsValid) {
+          return null
+        }
+        return new SplitAsOption(localSplits)
+      },
     }))
-
-    const onMatchSubmit = async (matchId: string) => {
-      const foundMatch = bankTransaction.suggested_matches?.find(
-        x => x.id === matchId,
-      )
-      if (!foundMatch) {
-        return
-      }
-
-      await matchBankTransaction(bankTransaction, foundMatch.id)
-
-      // Remove from bulk selection store
-      deselect(bankTransaction.id)
-      close()
-    }
 
     const bookkeepingStatus = useEffectiveBookkeepingStatus()
     const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
@@ -379,7 +322,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                                 onSelectedValueChange={(value) => {
                                   changeCategoryForSplitAtIndex(index, value)
                                 }}
-                                isDisabled={!categorizationEnabled || isCategorizing}
+                                isDisabled={!categorizationEnabled}
                                 includeSuggestedMatches={false}
                               />
                               {showTags && (
@@ -476,34 +419,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, ExpandedBankTra
                       floatingActions={!asListItem}
                     />
                   )}
-
-                  {asListItem && categorizationEnabled
-                    && (
-                      <div className={`${className}__submit-btn`}>
-                        {(isErrorCategorizing || isErrorMatching)
-                          && (
-                            <Text
-                              as='span'
-                              size={TextSize.md}
-                              className='Layer__unsaved-info'
-                            >
-                              <span>Unsaved</span>
-                              <AlertCircle size={12} />
-                            </Text>
-                          )}
-                        <SubmitButton
-                          onClick={save}
-                          className='Layer__bank-transaction__submit-btn'
-                          processing={isCategorizing || isMatching}
-                          active={true}
-                          action={
-                            categorized ? SubmitAction.SAVE : SubmitAction.UPDATE
-                          }
-                        >
-                          {submitBtnText}
-                        </SubmitButton>
-                      </div>
-                    )}
                 </div>
               </VStack>
             </span>

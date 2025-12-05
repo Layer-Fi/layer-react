@@ -7,6 +7,11 @@ import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTra
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
+export type SaveBankTransactionRowFn = (
+  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+  bankTransaction: BankTransaction,
+) => Promise<void> | void
+
 export const useSaveBankTransactionRow = () => {
   const {
     categorize: categorizeBankTransaction,
