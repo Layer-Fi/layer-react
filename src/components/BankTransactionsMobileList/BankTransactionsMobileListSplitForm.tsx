@@ -16,6 +16,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { isCategorized } from '@components/BankTransactions/utils'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'
@@ -193,7 +194,9 @@ export const BankTransactionsMobileListSplitForm = ({
             onClick={save}
             isDisabled={isCategorizing || !isValid}
           >
-            {isCategorizing ? 'Confirming...' : 'Confirm'}
+            {isCategorizing
+              ? (isCategorized(bankTransaction) ? 'Updating...' : 'Confirming...')
+              : (isCategorized(bankTransaction) ? 'Update' : 'Confirm')}
           </Button>
         )}
       </HStack>
