@@ -398,7 +398,6 @@ const BankTransactionsTableView = ({
             page={currentPage}
             stringOverrides={stringOverrides}
             lastPage={isLastPage}
-            onRefresh={() => { void mutate() }}
 
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
