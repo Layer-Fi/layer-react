@@ -71,7 +71,10 @@ export function BaseConfirmationModal({
   }
 
   const modalContent = (close: () => void) => (
-    <VStack>
+    <VStack
+      pi={useDrawer ? 'lg' : undefined}
+      pb={useDrawer ? 'lg' : undefined}
+    >
       <ModalTitleWithClose
         heading={(
           <ModalHeading size='sm'>
