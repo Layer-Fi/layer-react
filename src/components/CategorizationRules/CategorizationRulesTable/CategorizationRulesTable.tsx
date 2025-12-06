@@ -11,7 +11,7 @@ import { useListCategorizationRules } from '@hooks/useCategorizationRules/useLis
 import { useSetCurrentCategorizationRulesPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
-import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'

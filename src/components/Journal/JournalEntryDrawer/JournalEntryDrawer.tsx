@@ -5,7 +5,7 @@ import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvid
 import BackArrow from '@icons/BackArrow'
 import X from '@icons/X'
 import { Button } from '@ui/Button/Button'
-import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'

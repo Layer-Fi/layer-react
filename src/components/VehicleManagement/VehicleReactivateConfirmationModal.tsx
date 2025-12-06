@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { type Vehicle } from '@schemas/vehicle'
-import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { useReactivateVehicle } from '@features/vehicles/api/useReactivateVehicle'
 import { getVehicleDisplayName } from '@features/vehicles/util'

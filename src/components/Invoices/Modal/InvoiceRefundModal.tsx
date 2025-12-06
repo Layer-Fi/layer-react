@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react'
 
-import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { InvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/InvoiceRefundForm'
 import { updateInvoiceWithRefund } from '@features/invoices/api/useRefundInvoice'

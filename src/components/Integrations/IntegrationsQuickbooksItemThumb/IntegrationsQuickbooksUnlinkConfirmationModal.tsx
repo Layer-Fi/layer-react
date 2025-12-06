@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
-import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { type ModalProps } from '@ui/Modal/Modal'
 
 type IntegrationsQuickbooksUnlinkConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'>
