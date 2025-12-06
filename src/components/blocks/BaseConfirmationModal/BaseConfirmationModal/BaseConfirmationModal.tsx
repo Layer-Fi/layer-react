@@ -2,7 +2,7 @@ import { type ReactNode, useCallback, useState } from 'react'
 
 import { type Awaitable } from '@internal-types/utility/promises'
 import { APIError } from '@models/APIError'
-import { Modal, type ModalProps } from '@ui/Modal/Modal'
+import { Drawer, Modal, type ModalProps } from '@ui/Modal/Modal'
 import {
   ModalActions,
   ModalContent,
@@ -25,6 +25,7 @@ export type BaseConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChan
   errorText?: string
   closeOnConfirm?: boolean
   confirmDisabled?: boolean
+  useDrawer?: boolean
 }
 
 export function BaseConfirmationModal({
@@ -40,6 +41,7 @@ export function BaseConfirmationModal({
   errorText,
   closeOnConfirm = true,
   confirmDisabled = false,
+  useDrawer = false,
 }: BaseConfirmationModalProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<APIError | Error | null>(null)
@@ -68,42 +70,59 @@ export function BaseConfirmationModal({
       : error?.message
   }
 
+  const modalContent = (close: () => void) => (
+    <VStack>
+      <ModalTitleWithClose
+        heading={(
+          <ModalHeading size='sm'>
+            {title}
+          </ModalHeading>
+        )}
+        onClose={close}
+      />
+      <VStack gap='md'>
+        {description && <ModalDescription>{description}</ModalDescription>}
+        {content && <ModalContent>{content}</ModalContent>}
+      </VStack>
+      <ModalActions>
+        <HStack gap='md'>
+          <Spacer />
+          <Button variant={ButtonVariant.secondary} onClick={close}>
+            {cancelLabel}
+          </Button>
+          <SubmitButton
+            onClick={() => onClickConfirm(close)}
+            processing={isProcessing}
+            disabled={confirmDisabled}
+            error={getErrorMessage(error, errorText) ?? ''}
+            withRetry
+            noIcon={!isProcessing}
+          >
+            {error ? retryLabel : confirmLabel}
+          </SubmitButton>
+        </HStack>
+      </ModalActions>
+    </VStack>
+  )
+
+  if (useDrawer) {
+    return (
+      <Drawer
+        flexBlock
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        variant='mobile-drawer'
+        isDismissable
+        role='alertdialog'
+      >
+        {({ close }) => modalContent(close)}
+      </Drawer>
+    )
+  }
+
   return (
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} role='alertdialog'>
-      {({ close }) => (
-        <VStack>
-          <ModalTitleWithClose
-            heading={(
-              <ModalHeading size='sm'>
-                {title}
-              </ModalHeading>
-            )}
-            onClose={close}
-          />
-          <VStack gap='md'>
-            {description && <ModalDescription>{description}</ModalDescription>}
-            {content && <ModalContent>{content}</ModalContent>}
-          </VStack>
-          <ModalActions>
-            <HStack gap='md'>
-              <Spacer />
-              <Button variant={ButtonVariant.secondary} onClick={close}>
-                {cancelLabel}
-              </Button>
-              <SubmitButton
-                onClick={() => onClickConfirm(close)}
-                processing={isProcessing}
-                disabled={confirmDisabled}
-                error={getErrorMessage(error, errorText) ?? ''}
-                withRetry
-                noIcon={!isProcessing}
-              >
-                {error ? retryLabel : confirmLabel}
-              </SubmitButton>
-            </HStack>
-          </ModalActions>
-        </VStack>
-      )}
+      {({ close }) => modalContent(close)}
     </Modal>
   )
 }
