@@ -25,6 +25,7 @@
     "dev": "vite build --config vite/vite.config.ts --mode esm --watch",
     "prepack": "npm run typecheck && npm run build:clean",
     "lint": "eslint . && stylelint '**/*.{css,scss}'",
+    "lint:fix": "eslint . --fix && stylelint '**/*.{css,scss}' --fix",
     "lint:eslint": "eslint .",
     "lint:stylelint": "stylelint '**/*.{css,scss}'",
     "clear:react": "rm -rf ./node_modules/react && rm -rf ./node_modules/react-dom",
