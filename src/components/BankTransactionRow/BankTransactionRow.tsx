@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
 
@@ -33,10 +33,8 @@ import { isCategorized } from '@components/BankTransactions/utils'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { IconButton } from '@components/Button/IconButton'
-import { RetryButton } from '@components/Button/RetryButton'
 import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { type SaveHandle } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '@components/IconBox/IconBox'
 import { Text, TextSize } from '@components/Typography/Text'
 
@@ -48,7 +46,6 @@ type Props = {
   dateFormat: string
   bankTransaction: BankTransaction
   removeTransaction: (bt: BankTransaction) => void
-  containerWidth?: number
   initialLoad?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -73,7 +70,6 @@ export const BankTransactionRow = ({
   dateFormat,
   bankTransaction,
   removeTransaction,
-  containerWidth,
   initialLoad,
   showDescriptions,
   showReceiptUploads,
@@ -81,12 +77,10 @@ export const BankTransactionRow = ({
   showTooltips,
   stringOverrides,
 }: Props) => {
-  const expandedRowRef = useRef<SaveHandle>(null)
-  const [showRetry, setShowRetry] = useState(false)
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
   const [open, setOpen] = useState(false)
+  const [isExpandedRowValid, setIsExpandedRowValid] = useState(true)
   const toggleOpen = useCallback(() => {
-    setShowRetry(false)
     setOpen(!open)
   }, [open])
 
@@ -104,7 +98,7 @@ export const BankTransactionRow = ({
   const isBulkSelectionActive = bulkSelectionCount > 0
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-  const { saveBankTransactionRow } = useSaveBankTransactionRow()
+  const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
 
   // Track if the row is being removed (after categorization in review mode)
   const isBeingRemoved = bankTransaction.recently_categorized && shouldHideAfterCategorize()
@@ -115,17 +109,7 @@ export const BankTransactionRow = ({
     : categorized
 
   useEffect(() => {
-    if (bankTransaction.error) {
-      setShowRetry(true)
-    }
-  }, [bankTransaction.error])
-
-  useEffect(() => {
-    if (
-      editable
-      && bankTransaction.recently_categorized
-      && shouldHideAfterCategorize()
-    ) {
+    if (editable && isBeingRemoved) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
       }, 300)
@@ -133,24 +117,49 @@ export const BankTransactionRow = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
-  const save = async () => {
-    // Save using form from expanded row when row is open:
-    if (open && expandedRowRef?.current) {
-      expandedRowRef?.current?.save()
-      return
-    }
+  const save = useCallback(async () => {
+    if (open && !isExpandedRowValid) return
+    if (!selectedCategory) return
 
     await saveBankTransactionRow(selectedCategory, bankTransaction)
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)
     setOpen(false)
-  }
+  }, [bankTransaction, deselect, isExpandedRowValid, open, saveBankTransactionRow, selectedCategory])
 
-  const handleRowClick = () => {
-    setShowRetry(false)
-    toggleOpen()
-  }
+  const submitButton = useMemo(() => (
+    <SubmitButton
+      onClick={() => {
+        if (!isProcessing) {
+          void save()
+        }
+      }}
+      className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
+      processing={isProcessing}
+      active={open}
+      disabled={selectedCategory === null || isBulkSelectionActive}
+      action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+      withRetry
+      error={isError ? 'Approval failed. Check connection and retry in few seconds.' : undefined}
+    >
+      {isError
+        ? 'Retry'
+        : displayAsCategorized
+          ? stringOverrides?.updateButtonText || 'Update'
+          : stringOverrides?.approveButtonText || 'Confirm'}
+    </SubmitButton>
+  ), [
+    displayAsCategorized,
+    isBulkSelectionActive,
+    isError,
+    isProcessing,
+    open,
+    save,
+    selectedCategory,
+    stringOverrides?.approveButtonText,
+    stringOverrides?.updateButtonText,
+  ])
 
   const preventRowExpansion = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -160,7 +169,7 @@ export const BankTransactionRow = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    isBeingRemoved && editable
+    editable && isBeingRemoved
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
@@ -177,7 +186,7 @@ export const BankTransactionRow = ({
 
   return (
     <>
-      <tr className={rowClassName} onClick={handleRowClick}>
+      <tr className={rowClassName} onClick={toggleOpen}>
         {categorizationEnabled && (
           <td className='Layer__table-cell Layer__bank-transactions__checkbox-col' onClick={preventRowExpansion}>
             <span className='Layer__table-cell-content'>
@@ -267,7 +276,7 @@ export const BankTransactionRow = ({
           {open
             ? (
               <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
-                {bankTransaction.error
+                {isError
                   && (
                     <Text
                       as='span'
@@ -278,25 +287,7 @@ export const BankTransactionRow = ({
                       <AlertCircle size={12} />
                     </Text>
                   )}
-                {categorizationEnabled
-                  && (
-                    <SubmitButton
-                      onClick={() => {
-                        if (!bankTransaction.processing) {
-                          void save()
-                        }
-                      }}
-                      className='Layer__bank-transaction__submit-btn'
-                      processing={bankTransaction.processing}
-                      active={open}
-                      action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-                      disabled={selectedCategory === null}
-                    >
-                      {displayAsCategorized
-                        ? stringOverrides?.updateButtonText || 'Update'
-                        : stringOverrides?.approveButtonText || 'Confirm'}
-                    </SubmitButton>
-                  )}
+                {categorizationEnabled && submitButton}
                 {!categorizationEnabled && !displayAsCategorized && (
                   <VStack pis='lg' fluid>
                     <BankTransactionsProcessingInfo />
@@ -329,9 +320,8 @@ export const BankTransactionRow = ({
                     selectedValue={selectedCategory ?? null}
                     onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
                       setTransactionCategory(bankTransaction.id, selectedCategory)
-                      setShowRetry(false)
                     }}
-                    isDisabled={bankTransaction.processing}
+                    isDisabled={isProcessing}
                   />
                 </AnimatedPresenceDiv>
                 {displayAsCategorized
@@ -341,40 +331,7 @@ export const BankTransactionRow = ({
                       className='Layer__bank-transaction-row__category'
                     />
                   )}
-                {!displayAsCategorized && categorizationEnabled && showRetry
-                  && (
-                    <RetryButton
-                      onClick={() => {
-                        if (!bankTransaction.processing) {
-                          void save()
-                        }
-                      }}
-                      className='Layer__bank-transaction__retry-btn'
-                      processing={bankTransaction.processing}
-                      error='Approval failed. Check connection and retry in few seconds.'
-                    >
-                      Retry
-                    </RetryButton>
-                  )}
-                {!displayAsCategorized && categorizationEnabled && !showRetry && !isBeingRemoved
-                  && (
-                    <SubmitButton
-                      onClick={() => {
-                        if (!bankTransaction.processing) {
-                          void save()
-                        }
-                      }}
-                      className='Layer__bank-transaction__submit-btn'
-                      processing={bankTransaction.processing}
-                      active={open}
-                      disabled={selectedCategory === null || isBulkSelectionActive}
-                      action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-                    >
-                      {displayAsCategorized
-                        ? stringOverrides?.updateButtonText || 'Update'
-                        : stringOverrides?.approveButtonText || 'Confirm'}
-                    </SubmitButton>
-                  )}
+                {!displayAsCategorized && categorizationEnabled && !isBeingRemoved && submitButton}
                 {!categorizationEnabled && !displayAsCategorized && !isBeingRemoved && (
                   <VStack pis='xs' fluid>
                     <BankTransactionsProcessingInfo />
@@ -401,15 +358,13 @@ export const BankTransactionRow = ({
         <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
           <AnimatedPresenceDiv variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
             <ExpandedBankTransactionRow
-              ref={expandedRowRef}
               bankTransaction={bankTransaction}
               categorized={displayAsCategorized}
               isOpen={open}
-              close={() => setOpen(false)}
-              containerWidth={containerWidth}
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
+              onValidityChange={setIsExpandedRowValid}
             />
           </AnimatedPresenceDiv>
         </td>

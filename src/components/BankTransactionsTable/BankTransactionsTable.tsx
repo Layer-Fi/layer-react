@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { DATE_FORMAT } from '@config/general'
@@ -7,6 +7,7 @@ import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { BankTransactionRow } from '@components/BankTransactionRow/BankTransactionRow'
 import {
@@ -29,7 +30,6 @@ interface BankTransactionsTableProps {
   editable: boolean
   categorizeView?: boolean
   isLoading?: boolean
-  containerWidth: number
   removeTransaction: (bt: BankTransaction) => void
 
   showDescriptions: boolean
@@ -40,7 +40,6 @@ interface BankTransactionsTableProps {
   isSyncing?: boolean
   page?: number
   lastPage?: boolean
-  onRefresh?: () => void
 }
 
 export const BankTransactionsTable = ({
@@ -48,7 +47,6 @@ export const BankTransactionsTable = ({
   editable,
   isLoading,
   bankTransactions,
-  containerWidth,
   removeTransaction,
 
   showDescriptions,
@@ -59,8 +57,8 @@ export const BankTransactionsTable = ({
   isSyncing = false,
   page,
   lastPage,
-  onRefresh,
 }: BankTransactionsTableProps) => {
+  const { mutate } = useBankTransactionsContext()
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
@@ -78,6 +76,10 @@ export const BankTransactionsTable = ({
     () => toDataProperties({ 'show-receipt-upload-column': showReceiptColumn }),
     [showReceiptColumn],
   )
+
+  const onRefresh = useCallback(() => {
+    void mutate()
+  }, [mutate])
 
   return (
     <table
@@ -147,7 +149,6 @@ export const BankTransactionsTable = ({
                 dateFormat={DATE_FORMAT}
                 bankTransaction={bankTransaction}
                 removeTransaction={removeTransaction}
-                containerWidth={containerWidth}
                 showDescriptions={showDescriptions}
                 showReceiptUploads={showReceiptUploads}
                 showReceiptUploadColumn={showReceiptColumn}
@@ -166,7 +167,7 @@ export const BankTransactionsTable = ({
                 <SyncingComponent
                   title='Syncing historical account data'
                   timeSync={5}
-                  onRefresh={() => onRefresh && onRefresh()}
+                  onRefresh={onRefresh}
                 />
               </td>
             </tr>

@@ -11,9 +11,6 @@ export const BankTransactionsContext =
     isLoading: false,
     isValidating: false,
     isError: false,
-    refetch: () => {},
-    categorize: () => Promise.resolve(),
-    match: () => Promise.resolve(),
     metadata: {
       pagination: {
         cursor: undefined,
@@ -26,6 +23,7 @@ export const BankTransactionsContext =
     display: DisplayState.review,
     fetchMore: () => {},
     hasMore: false,
+    mutate: () => Promise.resolve(undefined),
   })
 
 export const useBankTransactionsContext = () =>
