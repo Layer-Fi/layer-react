@@ -106,6 +106,7 @@
     "paths": {
       "@api/*": ["src/api/*"],
       "@ui/*": ["src/components/ui/*"],
+      "@blocks/*": ["src/components/blocks/*"],
       "@components/*": ["src/components/*"],
       "@contexts/*": ["src/contexts/*"],
       "@features/*": ["src/features/*"],

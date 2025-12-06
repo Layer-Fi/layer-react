@@ -100,6 +100,7 @@ export default tsEslint.config(
           '@api/',
           '@components/',
           '@ui/',
+          '@blocks/',
           '@contexts/',
           '@features/',
           '@hooks/',
@@ -164,6 +165,7 @@ export default tsEslint.config(
             // Design system primitives
             '^(?:type:)?@icons/',
             '^(?:type:)?@ui/',
+            '^(?:type:)?@blocks/',
 
             // Reusable and feature-level UI
             '^(?:type:)?@components/',

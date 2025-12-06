@@ -10,7 +10,7 @@ import { BankTransactionsConfirmAllModal } from '@components/BankTransactions/Ba
 import { BankTransactionsUncategorizeAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsUncategorizeAllModal'
 
 interface BankTransactionsBulkActionsProps {
-  useCategorySelectDrawer?: boolean
+  isMobileView?: boolean
   slotProps?: {
     ConfirmAllModal?: {
       label?: string
@@ -19,7 +19,7 @@ interface BankTransactionsBulkActionsProps {
 }
 
 export const BankTransactionsBulkActions = ({
-  useCategorySelectDrawer = false,
+  isMobileView = false,
   slotProps,
 }: BankTransactionsBulkActionsProps) => {
   const { display } = useBankTransactionsContext()
@@ -45,7 +45,7 @@ export const BankTransactionsBulkActions = ({
                 isOpen={categorizeModalOpen}
                 onOpenChange={setCategorizeModalOpen}
                 mode={CategorizationMode.Categorize}
-                useCategorySelectDrawer={useCategorySelectDrawer}
+                isMobileView={isMobileView}
               />
 
               <Button variant='solid' onClick={() => setConfirmModalOpen(true)}>
@@ -54,6 +54,7 @@ export const BankTransactionsBulkActions = ({
               <BankTransactionsConfirmAllModal
                 isOpen={confirmModalOpen}
                 onOpenChange={setConfirmModalOpen}
+                isMobileView={isMobileView}
               />
             </>
           )
@@ -69,7 +70,7 @@ export const BankTransactionsBulkActions = ({
                 isOpen={recategorizeModalOpen}
                 onOpenChange={setRecategorizeModalOpen}
                 mode={CategorizationMode.Recategorize}
-                useCategorySelectDrawer={useCategorySelectDrawer}
+                isMobileView={isMobileView}
               />
 
               <Button
@@ -81,6 +82,7 @@ export const BankTransactionsBulkActions = ({
               <BankTransactionsUncategorizeAllModal
                 isOpen={uncategorizeModalOpen}
                 onOpenChange={setUncategorizeModalOpen}
+                isMobileView={isMobileView}
               />
             </>
           )}

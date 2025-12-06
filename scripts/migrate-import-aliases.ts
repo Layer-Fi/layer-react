@@ -16,6 +16,7 @@ const SKIP_EXT = /\.(s?css|less|sass|styl|svg|png|jpg|jpeg|gif)$/i;
  */
 const ALIAS_MAP: Array<{ abs: string, alias: string }> = [
   { abs: path.join(SRC, 'components', 'ui'), alias: '@ui' },
+  { abs: path.join(SRC, 'components', 'blocks'), alias: '@blocks' },
   { abs: path.join(SRC, 'components'), alias: '@components' },
   { abs: path.join(SRC, 'api'), alias: '@api' },
   { abs: path.join(SRC, 'contexts'), alias: '@contexts' },
