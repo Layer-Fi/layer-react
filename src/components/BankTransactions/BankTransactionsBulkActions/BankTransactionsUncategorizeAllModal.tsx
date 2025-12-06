@@ -4,8 +4,8 @@ import pluralize from 'pluralize'
 import { useBulkUncategorize } from '@hooks/useBankTransactions/useBulkUncategorize'
 import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { ResponsiveConfirmationModal } from '@components/blocks/BaseConfirmationModal/ResponsiveConfirmationModal/ResponsiveConfirmationModal'
 import { Span } from '@ui/Typography/Text'
+import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 
 interface BankTransactionsUncategorizeAllModalProps {
   isOpen: boolean
@@ -29,7 +29,7 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isM
   }, [selectedIds, trigger, clearSelection, clearMultipleTransactionCategories])
 
   return (
-    <ResponsiveConfirmationModal
+    <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       title='Uncategorize all selected transactions?'

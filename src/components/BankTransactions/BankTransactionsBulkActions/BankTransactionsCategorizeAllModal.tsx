@@ -3,11 +3,11 @@ import pluralize from 'pluralize'
 
 import { useBulkCategorize } from '@hooks/useBankTransactions/useBulkCategorize'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { ResponsiveConfirmationModal } from '@components/blocks/BaseConfirmationModal/ResponsiveConfirmationModal/ResponsiveConfirmationModal'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 
 export enum CategorizationMode {
@@ -69,7 +69,7 @@ export const BankTransactionsCategorizeAllModal = ({
   const categorySelectId = useId()
 
   return (
-    <ResponsiveConfirmationModal
+    <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={handleCategorizeModalClose}
       title={mode === CategorizationMode.Categorize ? 'Categorize all selected transactions?' : 'Recategorize all selected transactions?'}
