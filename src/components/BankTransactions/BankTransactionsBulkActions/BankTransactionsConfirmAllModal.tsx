@@ -3,7 +3,7 @@ import pluralize from 'pluralize'
 
 import { useBulkMatchOrCategorize } from '@hooks/useBankTransactions/useBulkMatchOrCategorize'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { ResponsiveConfirmationModal } from '@ui/ConfirmationModal/ResponsiveConfirmationModal/ResponsiveConfirmationModal'
+import { ResponsiveConfirmationModal } from '@components/blocks/BaseConfirmationModal/ResponsiveConfirmationModal/ResponsiveConfirmationModal'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
