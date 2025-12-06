@@ -38,7 +38,12 @@ function buildStore() {
           let hasChanges = false
 
           transactionCategories.forEach(({ id, category }) => {
-            if (!newMap.has(id)) {
+            const currentValue = newMap.get(id)
+
+            // Set transaction category if:
+            // 1. transaction currently doesn't exist
+            // 2. current value is null (no category selected) and new category exists (suggested category from API)
+            if (!newMap.has(id) || (currentValue === null && category !== null)) {
               newMap.set(id, category)
               hasChanges = true
             }
