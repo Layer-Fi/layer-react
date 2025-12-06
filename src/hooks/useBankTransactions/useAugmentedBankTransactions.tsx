@@ -4,7 +4,7 @@ import {
   type BankTransaction,
   DisplayState,
 } from '@internal-types/bank_transactions'
-import { Direction } from '@internal-types/general'
+import { DataModel, Direction } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
 import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import {
@@ -79,7 +79,7 @@ export type UseAugmentedBankTransactionsWithFiltersParams = {
 export const useAugmentedBankTransactions = (
   params: UseAugmentedBankTransactionsWithFiltersParams,
 ) => {
-  const { eventCallbacks } = useLayerContext()
+  const { touch, eventCallbacks } = useLayerContext()
 
   const { setRuleSuggestion } = useContext(CategorizationRulesContext)
 
@@ -230,6 +230,7 @@ export const useAugmentedBankTransactions = (
     clearInterval(intervalIdRef.current)
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
     eventCallbacks?.onTransactionsFetched?.()
+    touch(DataModel.BANK_TRANSACTIONS)
   })
 
   return {
