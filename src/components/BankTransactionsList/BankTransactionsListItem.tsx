@@ -74,7 +74,7 @@ export const BankTransactionsListItem = ({
 
   const categorized = isCategorized(bankTransaction)
 
-  const isBeingRemoved = bankTransaction.recently_categorized && shouldHideAfterCategorize()
+  const isBeingRemoved = bankTransaction.recently_categorized && shouldHideAfterCategorize
   // Keep showing as uncategorized during removal animation to prevent UI flashing
   const displayAsCategorized = isBeingRemoved
     ? false

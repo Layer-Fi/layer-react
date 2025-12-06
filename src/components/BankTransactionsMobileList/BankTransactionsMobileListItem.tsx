@@ -86,7 +86,7 @@ export const BankTransactionsMobileListItem = ({
   const itemRef = useRef<HTMLLIElement>(null)
 
   // Keep showing as uncategorized during removal animation to prevent UI flashing
-  const displayAsCategorized = bankTransaction.recently_categorized && shouldHideAfterCategorize()
+  const displayAsCategorized = bankTransaction.recently_categorized && shouldHideAfterCategorize
     ? false
     : categorized
 
@@ -127,7 +127,7 @@ export const BankTransactionsMobileListItem = ({
 
   useEffect(() => {
     if (bankTransaction.recently_categorized) {
-      if (editable && shouldHideAfterCategorize()) {
+      if (editable && shouldHideAfterCategorize) {
         setTimeout(() => {
           removeTransaction(bankTransaction)
           openNext()
@@ -179,7 +179,7 @@ export const BankTransactionsMobileListItem = ({
     if (
       editable
       && bankTransaction.recently_categorized
-      && shouldHideAfterCategorize()
+      && shouldHideAfterCategorize
     ) {
       setTimeout(() => {
         removeTransaction(bankTransaction)

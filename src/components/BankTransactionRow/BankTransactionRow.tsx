@@ -101,7 +101,7 @@ export const BankTransactionRow = ({
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
 
   // Track if the row is being removed (after categorization in review mode)
-  const isBeingRemoved = bankTransaction.recently_categorized && shouldHideAfterCategorize()
+  const isBeingRemoved = bankTransaction.recently_categorized && shouldHideAfterCategorize
 
   // Keep showing as uncategorized during removal animation to prevent UI flashing
   const displayAsCategorized = isBeingRemoved
