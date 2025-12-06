@@ -18,7 +18,7 @@ import Edit2 from '@icons/Edit2'
 import { Button as UIButton } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import {
   type ChartOfAccountsTableStringOverrides,

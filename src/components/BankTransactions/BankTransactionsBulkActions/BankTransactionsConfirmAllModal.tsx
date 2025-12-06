@@ -5,7 +5,7 @@ import { useBulkMatchOrCategorize } from '@hooks/useBankTransactions/useBulkMatc
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
 interface BankTransactionsConfirmAllModalProps {
   isOpen: boolean

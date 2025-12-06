@@ -7,8 +7,8 @@ import X from '@icons/X'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
+import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
-import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { JournalEntryForm, type JournalEntryFormState } from '@components/Journal/JournalEntryForm/JournalEntryForm'
 
 export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true }: { showTags?: boolean, showCustomerVendor?: boolean }) => {

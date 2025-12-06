@@ -5,7 +5,7 @@ import { useBulkUncategorize } from '@hooks/useBankTransactions/useBulkUncategor
 import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
 interface BankTransactionsUncategorizeAllModalProps {
   isOpen: boolean
