@@ -39,10 +39,9 @@ function buildStore() {
 
           transactionCategories.forEach(({ id, category }) => {
             const currentValue = newMap.get(id)
-            const isNewTransaction = !newMap.has(id)
             const hasNewSuggestionForUnselectedCategory = currentValue === null && category !== null
 
-            if (isNewTransaction || hasNewSuggestionForUnselectedCategory) {
+            if (!currentValue || hasNewSuggestionForUnselectedCategory) {
               newMap.set(id, category)
               hasChanges = true
             }
