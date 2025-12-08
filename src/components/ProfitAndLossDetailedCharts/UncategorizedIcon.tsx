@@ -23,10 +23,10 @@ export const UncategorizedIcon = ({ variant }: UncategorizedIconProps) => {
           height='3'
           patternUnits='userSpaceOnUse'
         >
-          <rect width='1' height='1' opacity={0.76} />
+          <rect width='1' height='1' opacity={0.76} className='Layer__charts__dots-pattern-legend__dot' />
         </pattern>
       </defs>
-      <rect width='12' height='12' id={bgRectId} rx='2' />
+      <rect width='12' height='12' id={bgRectId} rx='2' className='Layer__charts__dots-pattern-legend__bg' />
       <rect
         x='1'
         y='1'
