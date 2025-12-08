@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash-es'
-import useSWRInfinite from 'swr/infinite'
+import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -9,6 +9,48 @@ import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
+
+class BankTransactionsSWRResponse {
+  private swrResponse: SWRInfiniteResponse<GetBankTransactionsReturn>
+
+  constructor(swrResponse: SWRInfiniteResponse<GetBankTransactionsReturn>) {
+    this.swrResponse = swrResponse
+  }
+
+  get data() {
+    return this.swrResponse.data
+  }
+
+  get size() {
+    return this.swrResponse.size
+  }
+
+  get setSize() {
+    return this.swrResponse.setSize
+  }
+
+  get isLoading() {
+    return this.swrResponse.isLoading
+  }
+
+  get isValidating() {
+    return this.swrResponse.isValidating
+  }
+
+  get isError() {
+    return this.swrResponse.error !== undefined
+  }
+
+  get mutate() {
+    return this.swrResponse.mutate
+  }
+
+  get hasMore() {
+    return this.data && this.data.length > 0
+      ? this.data[this.data.length - 1].meta.pagination.has_more
+      : false
+  }
+}
 
 export type UseBankTransactionsOptions = {
   categorized?: boolean
@@ -65,7 +107,7 @@ export function useBankTransactions({
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
-  return useSWRInfinite(
+  const swrResponse = useSWRInfinite(
     (_index, previousPageData: GetBankTransactionsReturn | null) => keyLoader(
       previousPageData,
       {
@@ -115,6 +157,8 @@ export function useBankTransactions({
       initialSize: 1,
     },
   )
+
+  return new BankTransactionsSWRResponse(swrResponse)
 }
 
 const INVALIDATION_DEBOUNCE_OPTIONS = {
