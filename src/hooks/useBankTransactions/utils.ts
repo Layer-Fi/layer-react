@@ -96,7 +96,7 @@ export const buildBulkMatchOrCategorizePayload = (
     else if (isSplitAsOption(transactionCategory)) {
       const splitEntries = transactionCategory.original
         .map((split) => {
-          if (!split.category || !isCategoryAsOption(split.category) || !isApiCategorizationAsOption(split.category)) {
+          if (!split.category || !(isCategoryAsOption(split.category) || isApiCategorizationAsOption(split.category))) {
             return null
           }
           const classification = split.category.classification
