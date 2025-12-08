@@ -9,11 +9,9 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function useMatchBankTransactionWithCacheUpdate() {
   const { addToast, eventCallbacks } = useLayerContext()
-  const { mutate: mutateBankTransactions, updateLocalBankTransactions, data } = useBankTransactionsContext()
+  const { updateLocalBankTransactions, data } = useBankTransactionsContext()
 
-  const { trigger: matchBankTransaction, isMutating, isError } = useMatchBankTransaction({
-    mutateBankTransactions,
-  })
+  const { trigger: matchBankTransaction, isMutating, isError } = useMatchBankTransaction()
 
   const match = useCallback(
     async (bankTransaction: BankTransaction, suggestedMatchId: string, notify?: boolean) => {
