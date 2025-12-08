@@ -151,6 +151,50 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
         border-radius: 2px;
       }
     }
+
+    .category-cell-content {
+      display: flex;
+      gap: var(--spacing-2xs);
+      align-items: center;
+
+      .share-icon {
+        height: 12px;
+        width: 12px;
+        border-radius: 2px;
+      }
+    }
+
+    .value-cell-content {
+      display: flex;
+      gap: var(--spacing-xs);
+      align-items: center;
+      justify-content: flex-end;
+
+      .Layer__profit-and-loss-detailed-table__pct {
+        width: 4ch;
+        margin-inline-start: var(--spacing-xs);
+        color: var(--color-base-500);
+      }
+    }
+  }
+
+  .details-container--mobile {
+    table {
+      th,
+      td {
+        &:first-child {
+          text-align: left;
+        }
+
+        &:last-child {
+          text-align: right;
+        }
+      }
+    }
+
+    .Layer__profit-and-loss-detailed-table__row {
+      height: 2.5rem;
+    }
   }
 }
 
@@ -262,10 +306,26 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       width: 100%;
     }
 
+    .Layer__profit-and-loss-detailed-charts__table-desktop {
+      display: none;
+    }
+
+    .Layer__profit-and-loss-detailed-charts__table-mobile {
+      display: block;
+    }
+
     .Layer__profit-and-loss-detailed-charts__head {
       .date {
         display: none;
       }
     }
   }
+}
+
+.Layer__profit-and-loss-detailed-charts__table-mobile {
+  display: none;
+}
+
+.Layer__profit-and-loss-detailed-charts__table-desktop {
+  display: block;
 }
