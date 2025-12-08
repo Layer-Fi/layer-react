@@ -5,7 +5,7 @@ import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasReceipts, isCredit } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
-import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
+import { RECEIPT_ALLOWED_UPLOAD_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -116,7 +116,7 @@ export const BankTransactionsMobileListPersonalForm = ({
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
-            accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
+            accept={RECEIPT_ALLOWED_UPLOAD_FILE_TYPES}
           />
         )}
         {showCategorization
