@@ -28,7 +28,9 @@ const readDate = (date?: string) => {
   return date && formatTime(parseISO(date), DATE_FORMAT)
 }
 
-const ALLOWED_RECEIPT_MIME_TYPES = [
+export const RECEIPT_ALLOWED_INPUT_FILE_TYPES = 'image/*,.pdf,application/pdf'
+
+const RECEIPT_ALLOWED_UPLOAD_FILE_TYPES = new Set<string>([
   'image/jpeg',
   'image/png',
   'image/gif',
@@ -39,12 +41,10 @@ const ALLOWED_RECEIPT_MIME_TYPES = [
   'image/avif',
   'image/bmp',
   'application/pdf',
-]
-
-export const RECEIPT_FILE_ACCEPT = 'image/*,.pdf,application/pdf'
+])
 
 const isValidReceiptFile = (file: File): boolean => {
-  return ALLOWED_RECEIPT_MIME_TYPES.includes(file.type)
+  return RECEIPT_ALLOWED_UPLOAD_FILE_TYPES.has(file.type)
 }
 
 const getUniqueFileName = (fileName: string, existingNames: string[]): string => {

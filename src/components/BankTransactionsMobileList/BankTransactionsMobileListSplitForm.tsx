@@ -6,7 +6,7 @@ import { hasReceipts } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
-import { RECEIPT_FILE_ACCEPT } from '@hooks/useReceipts/useReceipts'
+import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import Scissors from '@icons/Scissors'
@@ -180,7 +180,7 @@ export const BankTransactionsMobileListSplitForm = ({
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
-            accept={RECEIPT_FILE_ACCEPT}
+            accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
           />
         )}
         {showCategorization && (
