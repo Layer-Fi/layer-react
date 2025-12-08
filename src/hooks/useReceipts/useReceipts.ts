@@ -114,8 +114,8 @@ export const useReceipts: UseReceipts = ({
   const uploadReceipt = async (file: File) => {
     if (!isValidReceiptFile(file)) {
       const id = new Date().valueOf().toString()
-      setReceiptUrls([
-        ...receiptUrls,
+      setReceiptUrls(prev => [
+        ...prev,
         {
           id,
           type: file.type,
