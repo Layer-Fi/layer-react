@@ -6,6 +6,7 @@ import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
 import { hasReceipts } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { RECEIPT_FILE_ACCEPT } from '@hooks/useReceipts/useReceipts'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
@@ -190,6 +191,7 @@ export const BankTransactionsMobileListBusinessForm = ({
               text='Upload receipt'
               iconOnly={true}
               icon={<PaperclipIcon />}
+              accept={RECEIPT_FILE_ACCEPT}
             />
           )}
           {showCategorization && sessionCategories.size > 0
