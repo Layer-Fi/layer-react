@@ -152,6 +152,7 @@ const ReportsPanel = ({
       {openReport === 'statementOfCashFlow' && (
         <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
+          view={view}
           {...statementOfCashFlowConfig}
         />
       )}

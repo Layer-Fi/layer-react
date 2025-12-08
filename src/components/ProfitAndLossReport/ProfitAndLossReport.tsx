@@ -5,6 +5,8 @@ import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkCont
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
+import { DateRangePickers } from '@components/DateSelection/DateRangePickers'
+import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 import { type BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
@@ -79,6 +81,40 @@ export const ProfitAndLossReport = ({
 
   const header = useMemo(() => {
     if (hideHeader) return null
+
+    const isMobile = view !== 'desktop'
+    const isFullDateMode = dateSelectionMode === 'full'
+
+    if (isMobile && isFullDateMode) {
+      return (
+        <Header>
+          <HeaderRow>
+            <HeaderCol style={{ flex: 1 }}>
+              <DateSelectionComboBox />
+            </HeaderCol>
+            <HeaderCol style={{ flex: 0 }}>
+              <ProfitAndLossDownloadButton
+                stringOverrides={stringOverrides?.downloadButton}
+                moneyFormat={csvMoneyFormat}
+              />
+            </HeaderCol>
+          </HeaderRow>
+          <HeaderRow>
+            <HeaderCol>
+              <DateRangePickers />
+            </HeaderCol>
+          </HeaderRow>
+          {useComparisonPnl
+            && (
+              <HeaderRow>
+                <HeaderCol>
+                  <ProfitAndLossCompareOptions />
+                </HeaderCol>
+              </HeaderRow>
+            )}
+        </Header>
+      )
+    }
 
     return (
       <Header>

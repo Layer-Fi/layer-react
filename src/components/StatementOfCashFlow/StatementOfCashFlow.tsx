@@ -1,8 +1,12 @@
-import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
+import { useMemo } from 'react'
+
+import { type View as ViewType } from '@internal-types/general'
 import { useStatementOfCashFlow } from '@hooks/useStatementOfCashFlow/useStatementOfCashFlow'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TableProvider } from '@contexts/TableContext/TableContext'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
+import { DateRangePickers } from '@components/DateSelection/DateRangePickers'
+import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
@@ -14,6 +18,8 @@ import { type StatementOfCashFlowTableStringOverrides } from '@components/Statem
 import { View } from '@components/View/View'
 import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
 
+type ViewBreakpoint = ViewType | undefined
+
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
 export interface StatementOfCashFlowStringOverrides {
@@ -22,6 +28,7 @@ export interface StatementOfCashFlowStringOverrides {
 
 export type StatementOfCashFlowProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
+  view?: ViewBreakpoint
 }
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
@@ -32,38 +39,64 @@ export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
 
 type StatementOfCashFlowViewProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
+  view?: ViewBreakpoint
 }
 
 const StatementOfCashFlowView = ({
   stringOverrides,
   dateSelectionMode = 'full',
+  view,
 }: StatementOfCashFlowViewProps) => {
   const dateRange = useGlobalDateRange({ displayMode: dateSelectionMode })
   const { data, isLoading } = useStatementOfCashFlow(dateRange)
-  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+
+  const header = useMemo(() => {
+    const isMobile = view !== 'desktop'
+    const isFullDateMode = dateSelectionMode === 'full'
+
+    if (isMobile && isFullDateMode) {
+      return (
+        <Header>
+          <HeaderRow>
+            <HeaderCol style={{ flex: 1 }}>
+              <DateSelectionComboBox />
+            </HeaderCol>
+            <HeaderCol style={{ flex: 0 }}>
+              <CashflowStatementDownloadButton
+                startDate={dateRange.startDate}
+                endDate={dateRange.endDate}
+              />
+            </HeaderCol>
+          </HeaderRow>
+          <HeaderRow>
+            <HeaderCol>
+              <DateRangePickers />
+            </HeaderCol>
+          </HeaderRow>
+        </Header>
+      )
+    }
+
+    return (
+      <Header>
+        <HeaderRow>
+          <HeaderCol>
+            <CombinedDateRangeSelection mode={dateSelectionMode} />
+          </HeaderCol>
+          <HeaderCol>
+            <CashflowStatementDownloadButton
+              startDate={dateRange.startDate}
+              endDate={dateRange.endDate}
+            />
+          </HeaderCol>
+        </HeaderRow>
+      </Header>
+    )
+  }, [dateRange.startDate, dateRange.endDate, dateSelectionMode, view])
 
   return (
     <TableProvider>
-      <View
-        type='panel'
-        ref={containerRef}
-        header={(
-          <Header>
-            <HeaderRow>
-              <HeaderCol>
-                <CombinedDateRangeSelection mode={dateSelectionMode} />
-              </HeaderCol>
-              <HeaderCol>
-                <CashflowStatementDownloadButton
-                  startDate={dateRange.startDate}
-                  endDate={dateRange.endDate}
-                  iconOnly={view === 'mobile'}
-                />
-              </HeaderCol>
-            </HeaderRow>
-          </Header>
-        )}
-      >
+      <View type='panel' header={header}>
         {!data || isLoading
           ? (
             <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
