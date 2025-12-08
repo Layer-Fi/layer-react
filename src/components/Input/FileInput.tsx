@@ -37,6 +37,7 @@ export const FileInput = ({
       const filesUploaded = Array.from(event.target.files)
       onUpload(filesUploaded)
     }
+    event.target.value = ''
   }
 
   if (secondary) {
