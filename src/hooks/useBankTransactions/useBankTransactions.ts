@@ -3,12 +3,27 @@ import { debounce } from 'lodash-es'
 import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
+import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { getBankTransactions, type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
+
+export type BankTransactionsKey = NonNullable<ReturnType<typeof keyLoader>>
+
+const compareDates = (a: unknown, b: unknown) =>
+  (a as Date | undefined)?.getTime() === (b as Date | undefined)?.getTime()
+
+const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactionsOptions>([
+  { key: 'categorized' },
+  { key: 'direction' },
+  { key: 'query' },
+  { key: 'startDate', compare: compareDates },
+  { key: 'endDate', compare: compareDates },
+  { key: 'tagFilterQueryString' },
+])
 
 class BankTransactionsSWRResponse {
   private swrResponse: SWRInfiniteResponse<GetBankTransactionsReturn>
@@ -174,13 +189,25 @@ export const useBankTransactionsGlobalCacheActions = () => {
   const { invalidate, optimisticUpdate, forceReload } = useGlobalCacheActions()
 
   const forceReloadBankTransactions = useCallback(
-    () => forceReload(tags => tags.includes(BANK_TRANSACTIONS_TAG_KEY)),
+    () => forceReload(({ tags }) => tags.includes(BANK_TRANSACTIONS_TAG_KEY)),
+    [forceReload],
+  )
+
+  const forceReloadBackgroundBankTransactions = useCallback(
+    (currentParams: UseBankTransactionsOptions) =>
+      forceReload<BankTransactionsKey>(({ tags, key }) => {
+        if (!tags.includes(BANK_TRANSACTIONS_TAG_KEY)) {
+          return false
+        }
+
+        return !keyMatchesParams(key, currentParams)
+      }),
     [forceReload],
   )
 
   const invalidateBankTransactions = useCallback(
     (invalidateOptions?: BankTransactionsInvalidateOptions) => invalidate(
-      tags => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
+      ({ tags }) => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
       invalidateOptions,
     ),
     [invalidate],
@@ -205,7 +232,7 @@ export const useBankTransactionsGlobalCacheActions = () => {
       optimisticUpdate<
         Array<GetBankTransactionsReturn> | GetBankTransactionsReturn
       >(
-        tags => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
+        ({ tags }) => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
         (currentData) => {
           const iterateOverPage = (page: GetBankTransactionsReturn) => {
             return {
@@ -234,6 +261,7 @@ export const useBankTransactionsGlobalCacheActions = () => {
     invalidateBankTransactions,
     debouncedInvalidateBankTransactions,
     forceReloadBankTransactions,
+    forceReloadBackgroundBankTransactions,
     optimisticallyUpdateBankTransactions,
   }
 }
