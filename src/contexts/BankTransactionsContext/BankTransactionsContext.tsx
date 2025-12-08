@@ -11,14 +11,8 @@ export const BankTransactionsContext =
     isLoading: false,
     isValidating: false,
     isError: false,
-    metadata: {
-      pagination: {
-        cursor: undefined,
-        has_more: false,
-      },
-    },
     updateLocalBankTransactions: () => undefined,
-    shouldHideAfterCategorize: () => false,
+    shouldHideAfterCategorize: false,
     removeAfterCategorize: () => undefined,
     display: DisplayState.review,
     fetchMore: () => {},
