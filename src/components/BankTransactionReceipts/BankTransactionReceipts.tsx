@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle } from 'react'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
-import { RECEIPT_ALLOWED_UPLOAD_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
+import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
 import { ReceiptsProvider } from '@providers/ReceiptsProvider/ReceiptsProvider'
 import { useReceiptsContext } from '@contexts/ReceiptsContext/ReceiptsContext'
 import { FileThumb } from '@components/FileThumb/FileThumb'
@@ -104,7 +104,7 @@ const BankTransactionReceipts = forwardRef<
           : null}
         {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0)
           ? (
-            <FileInput onUpload={files => void uploadReceipt(files[0])} text='Upload receipt' accept={RECEIPT_ALLOWED_UPLOAD_FILE_TYPES} />
+            <FileInput onUpload={files => void uploadReceipt(files[0])} text='Upload receipt' accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES} />
           )
           : null}
         {receiptUrls.map((url, index) => (
@@ -136,7 +136,7 @@ const BankTransactionReceipts = forwardRef<
               secondary
               onUpload={files => void uploadReceipt(files[0])}
               text='Add next receipt'
-              accept={RECEIPT_ALLOWED_UPLOAD_FILE_TYPES}
+              accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
             />
           )
           : null}

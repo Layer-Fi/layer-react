@@ -6,7 +6,7 @@ import {
   getBankTransactionMatchAsSuggestedMatch,
 } from '@utils/bankTransactions'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useMatchBankTransactionWithCacheUpdate'
-import { RECEIPT_ALLOWED_UPLOAD_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
+import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -108,7 +108,7 @@ export const BankTransactionsMobileListMatchForm = ({
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
-            accept={RECEIPT_ALLOWED_UPLOAD_FILE_TYPES}
+            accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
           />
         )}
         {showCategorization && (

@@ -28,7 +28,7 @@ const readDate = (date?: string) => {
   return date && formatTime(parseISO(date), DATE_FORMAT)
 }
 
-export const RECEIPT_ALLOWED_UPLOAD_FILE_TYPES = [
+const RECEIPT_ALLOWED_UPLOAD_FILE_TYPES = [
   'image/jpeg',
   'image/png',
   'image/gif',
@@ -41,6 +41,8 @@ export const RECEIPT_ALLOWED_UPLOAD_FILE_TYPES = [
   'application/pdf',
   '.pdf',
 ]
+
+export const RECEIPT_ALLOWED_INPUT_FILE_TYPES = [...RECEIPT_ALLOWED_UPLOAD_FILE_TYPES].join(',')
 
 const isValidReceiptFile = (file: File): boolean => {
   return RECEIPT_ALLOWED_UPLOAD_FILE_TYPES.includes(file.type)
