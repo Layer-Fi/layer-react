@@ -152,12 +152,12 @@ export function useLedgerEntriesCacheActions() {
   const { invalidate, forceReload } = useGlobalCacheActions()
 
   const invalidateLedgerEntries = useCallback(
-    () => invalidate(tags => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
+    () => invalidate(({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
     [invalidate],
   )
 
   const forceReloadLedgerEntries = useCallback(
-    () => forceReload(tags => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
+    () => forceReload(({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
     [forceReload],
   )
 
@@ -188,7 +188,7 @@ export function useLedgerEntriesOptimisticUpdater() {
       transformJournalEntry: (entry: JournalEntry) => JournalEntry,
     ) =>
       optimisticUpdate<ListLedgerEntriesReturn>(
-        tags => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY),
+        ({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY),
         (currentData) => {
           return {
             ...currentData,

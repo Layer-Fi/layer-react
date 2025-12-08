@@ -163,7 +163,7 @@ export function usePnlDetailLinesInvalidator() {
   const { invalidate } = useGlobalCacheActions()
 
   const invalidatePnlDetailLines = useCallback(
-    () => invalidate(tags => tags.includes(LIST_PNL_DETAIL_LINES_TAG_KEY)),
+    () => invalidate(({ tags }) => tags.includes(LIST_PNL_DETAIL_LINES_TAG_KEY)),
     [invalidate],
   )
 

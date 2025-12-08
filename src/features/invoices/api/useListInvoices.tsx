@@ -215,7 +215,7 @@ export function useInvoicesGlobalCacheActions() {
 
   const patchInvoiceByKey = useCallback((updatedInvoice: Invoice) =>
     patchCache<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
-      tags => tags.includes(LIST_INVOICES_TAG_KEY),
+      ({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY),
       (currentData) => {
         const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
           ...page,
@@ -232,7 +232,7 @@ export function useInvoicesGlobalCacheActions() {
 
   const patchInvoiceWithTransformation = useCallback((transformation: (invoice: Invoice) => Invoice) =>
     patchCache<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
-      tags => tags.includes(LIST_INVOICES_TAG_KEY),
+      ({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY),
       (currentData) => {
         const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
           ...page,
@@ -248,7 +248,7 @@ export function useInvoicesGlobalCacheActions() {
   )
 
   const forceReloadInvoices = useCallback(
-    () => forceReload(tags => tags.includes(LIST_INVOICES_TAG_KEY)),
+    () => forceReload(({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY)),
     [forceReload],
   )
 

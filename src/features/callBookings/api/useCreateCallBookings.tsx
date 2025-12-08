@@ -72,7 +72,7 @@ export function useCreateCallBooking() {
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(CALL_BOOKINGS_TAG_KEY),
+        ({ tags }) => tags.includes(CALL_BOOKINGS_TAG_KEY),
       ))
 
       return triggerResult
