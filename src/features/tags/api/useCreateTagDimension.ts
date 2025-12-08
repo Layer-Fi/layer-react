@@ -3,7 +3,6 @@ import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -80,10 +79,7 @@ export function useCreateTagDimension() {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      await invalidate(key => withSWRKeyTags(
-        key,
-        tags => tags.includes(TAG_DIMENSIONS_TAG_KEY),
-      ))
+      await invalidate(({ tags }) => tags.includes(TAG_DIMENSIONS_TAG_KEY))
 
       return triggerResult
     },

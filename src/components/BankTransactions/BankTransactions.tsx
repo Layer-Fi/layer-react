@@ -375,7 +375,6 @@ const BankTransactionsTableView = ({
           mobileComponent={mobileComponent}
           listView={listView}
           stringOverrides={stringOverrides?.bankTransactionsHeader}
-          isDataLoading={isLoadingWithoutData}
           isSyncing={isSyncing}
           withUploadMenu={showUploadOptions}
           collapseHeader={collapseHeader}
@@ -390,7 +389,7 @@ const BankTransactionsTableView = ({
           <BankTransactionsTable
             categorizeView={categorizeView}
             editable={editable}
-            isLoading={isLoadingWithoutData}
+            isLoading={isLoading}
             isSyncing={isSyncing}
             bankTransactions={bankTransactions}
             removeTransaction={removeTransaction}

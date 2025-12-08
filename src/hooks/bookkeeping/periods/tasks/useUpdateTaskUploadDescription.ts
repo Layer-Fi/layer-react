@@ -70,7 +70,7 @@ export function useUpdateTaskUploadDescription() {
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(BOOKKEEPING_PERIODS_TAG_KEY),
+        ({ tags }) => tags.includes(BOOKKEEPING_PERIODS_TAG_KEY),
       ))
 
       return triggerResult

@@ -213,7 +213,7 @@ export function useLedgerAccountLinesInvalidator() {
   const { invalidate } = useGlobalCacheActions()
 
   const invalidateLedgerAccountLines = useCallback(
-    () => invalidate(tags => tags.includes(LIST_LEDGER_ACCOUNT_LINES_TAG_KEY)),
+    () => invalidate(({ tags }) => tags.includes(LIST_LEDGER_ACCOUNT_LINES_TAG_KEY)),
     [invalidate],
   )
 
@@ -243,7 +243,7 @@ export function useLedgerAccountLinesOptimisticUpdater() {
       transformLineItem: (lineItem: LedgerAccountLineItem) => LedgerAccountLineItem,
     ) =>
       optimisticUpdate<ListLedgerAccountLinesReturn>(
-        tags => tags.includes(LIST_LEDGER_ACCOUNT_LINES_TAG_KEY),
+        ({ tags }) => tags.includes(LIST_LEDGER_ACCOUNT_LINES_TAG_KEY),
         (currentData) => {
           return {
             ...currentData,

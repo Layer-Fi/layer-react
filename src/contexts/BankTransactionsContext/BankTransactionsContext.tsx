@@ -18,6 +18,7 @@ export const BankTransactionsContext =
     fetchMore: () => {},
     hasMore: false,
     mutate: () => Promise.resolve(undefined),
+    useBankTransactionsOptions: {},
   })
 
 export const useBankTransactionsContext = () =>

@@ -66,7 +66,7 @@ export function useUpdateBusiness() {
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(BUSINESS_TAG_KEY),
+        ({ tags }) => tags.includes(BUSINESS_TAG_KEY),
       ))
 
       return triggerResult

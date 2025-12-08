@@ -86,6 +86,10 @@ export const useAugmentedBankTransactions = (
   const { filters } = params
 
   const display = filters?.categorizationStatus ?? DisplayState.categorized
+  const useBankTransactionsOptions = useMemo(
+    () => bankTransactionFiltersToHookOptions(filters),
+    [filters],
+  )
 
   const {
     data: rawResponseData,
@@ -96,9 +100,7 @@ export const useAugmentedBankTransactions = (
     size,
     setSize,
     hasMore,
-  } = useBankTransactions(
-    bankTransactionFiltersToHookOptions(filters),
-  )
+  } = useBankTransactions(useBankTransactionsOptions)
 
   const data: BankTransaction[] | undefined = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
@@ -241,6 +243,7 @@ export const useAugmentedBankTransactions = (
     updateLocalBankTransactions,
     shouldHideAfterCategorize,
     removeAfterCategorize,
+    useBankTransactionsOptions,
     display,
     fetchMore,
     hasMore,

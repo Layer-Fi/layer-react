@@ -78,7 +78,7 @@ export function useCreateBusinessPersonnel() {
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(BUSINESS_PERSONNEL_TAG_KEY),
+        ({ tags }) => tags.includes(BUSINESS_PERSONNEL_TAG_KEY),
       ))
 
       return triggerResult

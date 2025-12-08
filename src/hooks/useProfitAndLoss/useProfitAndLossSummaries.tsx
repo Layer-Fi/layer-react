@@ -129,7 +129,7 @@ export const useProfitAndLossSummariesCacheActions = () => {
 
   const invalidateProfitAndLossSummaries = useCallback(
     () => invalidate(
-      tags => tags.includes(PNL_SUMMARIES_TAG_KEY),
+      ({ tags }) => tags.includes(PNL_SUMMARIES_TAG_KEY),
     ),
     [invalidate],
   )

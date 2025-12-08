@@ -101,8 +101,8 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
       void debouncedInvalidateProfitAndLossSummaries()
 
       // Invalidate balance sheet and cash flow statement caches
-      void invalidate(tags => tags.includes('#balance-sheet'))
-      void invalidate(tags => tags.includes('#statement-of-cash-flow'))
+      void invalidate(({ tags }) => tags.includes('#balance-sheet'))
+      void invalidate(({ tags }) => tags.includes('#statement-of-cash-flow'))
 
       // Touch data models to trigger sync
       touch(DataModel.PROFIT_AND_LOSS)

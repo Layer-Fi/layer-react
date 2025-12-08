@@ -125,7 +125,7 @@ export const useProfitAndLossReportCacheActions = () => {
 
   const invalidateProfitAndLossReport = useCallback(
     () => invalidate(
-      tags => tags.includes(PNL_REPORT_TAG_KEY),
+      ({ tags }) => tags.includes(PNL_REPORT_TAG_KEY),
     ),
     [invalidate],
   )

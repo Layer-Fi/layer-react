@@ -110,7 +110,7 @@ export function useVehiclesGlobalCacheActions() {
 
   const patchVehicleByKey = useCallback((updatedVehicle: Vehicle) =>
     patchCache<ListVehiclesResponse | undefined>(
-      tags => tags.includes(VEHICLES_TAG_KEY),
+      ({ tags }) => tags.includes(VEHICLES_TAG_KEY),
       (currentData) => {
         if (!currentData) return currentData
 
@@ -124,7 +124,7 @@ export function useVehiclesGlobalCacheActions() {
   )
 
   const forceReloadVehicles = useCallback(
-    () => forceReload(tags => tags.includes(VEHICLES_TAG_KEY)),
+    () => forceReload(({ tags }) => tags.includes(VEHICLES_TAG_KEY)),
     [forceReload],
   )
 
