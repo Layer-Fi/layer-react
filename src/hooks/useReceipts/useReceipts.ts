@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { format as formatTime, parseISO } from 'date-fns'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
@@ -28,6 +28,26 @@ const readDate = (date?: string) => {
   return date && formatTime(parseISO(date), DATE_FORMAT)
 }
 
+const getUniqueFileName = (fileName: string, existingNames: string[]): string => {
+  if (!existingNames.includes(fileName)) {
+    return fileName
+  }
+
+  const lastDotIndex = fileName.lastIndexOf('.')
+  const baseName = lastDotIndex > 0 ? fileName.slice(0, lastDotIndex) : fileName
+  const extension = lastDotIndex > 0 ? fileName.slice(lastDotIndex) : ''
+
+  let counter = 2
+  let newName = `${baseName} (${counter})${extension}`
+
+  while (existingNames.includes(newName)) {
+    counter++
+    newName = `${baseName} (${counter})${extension}`
+  }
+
+  return newName
+}
+
 export const useReceipts: UseReceipts = ({
   bankTransaction,
   isActive,
@@ -38,6 +58,7 @@ export const useReceipts: UseReceipts = ({
   const { updateLocalBankTransactions } = useBankTransactionsContext()
 
   const [receiptUrls, setReceiptUrls] = useState<DocumentWithStatus[]>([])
+  const pendingUploadNamesRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     // Fetch documents details when the row is being opened and the documents are not yet loaded
@@ -72,20 +93,29 @@ export const useReceipts: UseReceipts = ({
   }
 
   const uploadReceipt = async (file: File) => {
-    const id = new Date().valueOf().toString()
-    const receipts = [
-      ...receiptUrls,
-      {
-        id,
-        type: file.type,
-        url: undefined,
-        status: 'pending' as const,
-        name: file.name,
-        date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
-      },
+    const existingNames = [
+      ...receiptUrls
+        .map(r => r.name)
+        .filter((name): name is string => Boolean(name)),
+      ...pendingUploadNamesRef.current,
     ]
+    const uniqueName = getUniqueFileName(file.name, existingNames)
+    const renamedFile = new File([file], uniqueName, { type: file.type })
+
+    pendingUploadNamesRef.current.add(uniqueName)
+
+    const id = new Date().valueOf().toString()
+    const newReceipt = {
+      id,
+      type: renamedFile.type,
+      url: undefined,
+      status: 'pending' as const,
+      name: renamedFile.name,
+      date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
+    }
+
     try {
-      setReceiptUrls(receipts)
+      setReceiptUrls(prev => [...prev, newReceipt])
       const uploadDocument = Layer.uploadBankTransactionDocument(
         apiUrl,
         auth?.access_token,
@@ -93,9 +123,10 @@ export const useReceipts: UseReceipts = ({
       const result = await uploadDocument({
         businessId: businessId,
         bankTransactionId: bankTransaction.id,
-        file: file,
+        file: renamedFile,
         documentType: 'RECEIPT',
       })
+      pendingUploadNamesRef.current.delete(uniqueName)
       await fetchDocuments()
       // Update the bank transaction with the new document id
       if (
@@ -110,18 +141,20 @@ export const useReceipts: UseReceipts = ({
       }
     }
     catch (_err) {
-      const newReceiptUrls = receipts.map((url) => {
-        if (url.id === id) {
-          return {
-            ...url,
-            error: 'Failed to upload',
-            status: 'failed' as const,
+      pendingUploadNamesRef.current.delete(uniqueName)
+      setReceiptUrls(prev =>
+        prev.map((url) => {
+          if (url.id === id) {
+            return {
+              ...url,
+              error: 'Failed to upload',
+              status: 'failed' as const,
+            }
           }
-        }
 
-        return url
-      })
-      setReceiptUrls(newReceiptUrls)
+          return url
+        }),
+      )
     }
   }
 
@@ -130,11 +163,11 @@ export const useReceipts: UseReceipts = ({
 
     try {
       if (document.error) {
-        setReceiptUrls(receiptUrls.filter(url => url.id !== document.id))
+        setReceiptUrls(prev => prev.filter(url => url.id !== document.id))
       }
       else {
-        setReceiptUrls(
-          receiptUrls.map((url) => {
+        setReceiptUrls(prev =>
+          prev.map((url) => {
             if (url.id === document.id) {
               return {
                 ...url,
@@ -156,8 +189,8 @@ export const useReceipts: UseReceipts = ({
       }
     }
     catch (_err) {
-      setReceiptUrls(
-        receiptUrls.map((url) => {
+      setReceiptUrls(prev =>
+        prev.map((url) => {
           if (url.id === document.id) {
             return {
               ...url,
