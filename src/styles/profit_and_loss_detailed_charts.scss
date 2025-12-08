@@ -306,26 +306,10 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       width: 100%;
     }
 
-    .Layer__profit-and-loss-detailed-charts__table-desktop {
-      display: none;
-    }
-
-    .Layer__profit-and-loss-detailed-charts__table-mobile {
-      display: block;
-    }
-
     .Layer__profit-and-loss-detailed-charts__head {
       .date {
         display: none;
       }
     }
   }
-}
-
-.Layer__profit-and-loss-detailed-charts__table-mobile {
-  display: none;
-}
-
-.Layer__profit-and-loss-detailed-charts__table-desktop {
-  display: block;
 }

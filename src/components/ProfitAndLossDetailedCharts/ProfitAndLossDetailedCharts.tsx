@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { humanizeTitle } from '@utils/profitAndLossUtils'
+import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
 import { type SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import XIcon from '@icons/X'
@@ -64,6 +65,7 @@ export const ProfitAndLossDetailedCharts = ({
   const [hoveredItem, setHoveredItem] = useState<PnlChartLineItem | undefined>(undefined)
   const [selectedItem, setSelectedItem] = useState<SelectedLineItem | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   const handleValueClick = useCallback((item: PnlChartLineItem) => {
     setSelectedItem({
@@ -122,33 +124,34 @@ export const ProfitAndLossDetailedCharts = ({
           showDatePicker={showDatePicker}
         />
 
-        <div className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
-          <div className='Layer__profit-and-loss-detailed-charts__table-desktop'>
-            <DetailedTable
-              filteredData={data}
-              sidebarScope={theScope}
-              filters={filters}
-              sortBy={sortBy}
-              hoveredItem={hoveredItem}
-              setHoveredItem={setHoveredItem}
-              chartColorsList={chartColorsList}
-              stringOverrides={stringOverrides?.detailedTableStringOverrides}
-              onValueClick={handleValueClick}
-            />
-          </div>
-          <div className='Layer__profit-and-loss-detailed-charts__table-mobile'>
-            <DetailedTableMobile
-              filteredData={data}
-              sidebarScope={theScope}
-              filters={filters}
-              sortBy={sortBy}
-              hoveredItem={hoveredItem}
-              setHoveredItem={setHoveredItem}
-              chartColorsList={chartColorsList}
-              stringOverrides={stringOverrides?.detailedTableMobileStringOverrides}
-              onValueClick={handleValueClick}
-            />
-          </div>
+        <div className='Layer__profit-and-loss-detailed-charts__table-wrapper' ref={containerRef}>
+          {view === 'mobile'
+            ? (
+              <DetailedTableMobile
+                filteredData={data}
+                sidebarScope={theScope}
+                filters={filters}
+                sortBy={sortBy}
+                hoveredItem={hoveredItem}
+                setHoveredItem={setHoveredItem}
+                chartColorsList={chartColorsList}
+                stringOverrides={stringOverrides?.detailedTableMobileStringOverrides}
+                onValueClick={handleValueClick}
+              />
+            )
+            : (
+              <DetailedTable
+                filteredData={data}
+                sidebarScope={theScope}
+                filters={filters}
+                sortBy={sortBy}
+                hoveredItem={hoveredItem}
+                setHoveredItem={setHoveredItem}
+                chartColorsList={chartColorsList}
+                stringOverrides={stringOverrides?.detailedTableStringOverrides}
+                onValueClick={handleValueClick}
+              />
+            )}
         </div>
       </div>
 
