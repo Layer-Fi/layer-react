@@ -13,6 +13,7 @@ import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
+import { UncategorizedIcon } from '@components/ProfitAndLossDetailedCharts/UncategorizedIcon'
 import { isLineItemUncategorized, mapTypesToColors, type TypeColorMapping } from '@components/ProfitAndLossDetailedCharts/utils'
 
 export interface DetailedTableMobileStringOverrides {
@@ -44,36 +45,7 @@ const ValueIcon = ({
   idx: number
 }) => {
   if (isLineItemUncategorized(item)) {
-    return (
-      <svg
-        viewBox='0 0 12 12'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-        width='12'
-        height='12'
-      >
-        <defs>
-          <pattern
-            id='layer-pie-dots-pattern-legend-mobile'
-            x='0'
-            y='0'
-            width='3'
-            height='3'
-            patternUnits='userSpaceOnUse'
-          >
-            <rect width='1' height='1' opacity={0.76} />
-          </pattern>
-        </defs>
-        <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' />
-        <rect
-          x='1'
-          y='1'
-          width='10'
-          height='10'
-          fill='url(#layer-pie-dots-pattern-legend-mobile)'
-        />
-      </svg>
-    )
+    return <UncategorizedIcon variant='mobile' />
   }
 
   return (
