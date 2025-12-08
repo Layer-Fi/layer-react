@@ -134,7 +134,7 @@ export function BaseConfirmationModal({
         {({ close }) => (
           <BaseConfirmationModalContent
             {...contentProps}
-            useDrawer={useDrawer}
+            useDrawer
             close={close}
           />
         )}
