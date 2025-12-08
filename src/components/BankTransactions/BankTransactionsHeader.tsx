@@ -37,7 +37,6 @@ export interface BankTransactionsHeaderProps {
   categorizeView?: boolean
   mobileComponent?: MobileComponentType
   listView?: boolean
-  isDataLoading?: boolean
   isSyncing?: boolean
   stringOverrides?: BankTransactionsHeaderStringOverrides
   withUploadMenu?: boolean
