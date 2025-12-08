@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useState } from 'react'
+import { memo, type ReactNode, useCallback, useState } from 'react'
 
 import { type Awaitable } from '@internal-types/utility/promises'
 import { APIError } from '@models/APIError'
@@ -28,9 +28,25 @@ export type BaseConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChan
   useDrawer?: boolean
 }
 
-export function BaseConfirmationModal({
-  isOpen,
-  onOpenChange,
+function getErrorMessage(error: APIError | Error | null, errorText?: string) {
+  if (error === null) return null
+
+  if (errorText) return errorText
+
+  return error instanceof APIError
+    ? error?.getAllMessages()?.[0] || error?.getMessage()
+    : error?.message
+}
+
+type BaseConfirmationModalContentProps = Omit<
+  BaseConfirmationModalProps,
+  'isOpen' | 'onOpenChange'
+> & {
+  close: () => void
+}
+
+const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent({
+  close,
   title,
   description,
   content,
@@ -42,11 +58,11 @@ export function BaseConfirmationModal({
   closeOnConfirm = true,
   confirmDisabled = false,
   useDrawer = false,
-}: BaseConfirmationModalProps) {
+}: BaseConfirmationModalContentProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<APIError | Error | null>(null)
 
-  const onClickConfirm = useCallback((close: () => void) => {
+  const onClickConfirm = useCallback(() => {
     setIsProcessing(true)
     void Promise.resolve(onConfirm())
       .then(() => {
@@ -58,19 +74,9 @@ export function BaseConfirmationModal({
       .finally(() => {
         setIsProcessing(false)
       })
-  }, [closeOnConfirm, onConfirm])
+  }, [closeOnConfirm, onConfirm, close])
 
-  const getErrorMessage = (error: APIError | Error | null, errorText?: string) => {
-    if (error === null) return null
-
-    if (errorText) return errorText
-
-    return error instanceof APIError
-      ? error?.getAllMessages()?.[0] || error?.getMessage()
-      : error?.message
-  }
-
-  const modalContent = (close: () => void) => (
+  return (
     <VStack
       pi={useDrawer ? 'lg' : undefined}
       pb={useDrawer ? 'lg' : undefined}
@@ -94,7 +100,7 @@ export function BaseConfirmationModal({
             {cancelLabel}
           </Button>
           <SubmitButton
-            onClick={() => onClickConfirm(close)}
+            onClick={onClickConfirm}
             processing={isProcessing}
             disabled={confirmDisabled}
             error={getErrorMessage(error, errorText) ?? ''}
@@ -107,7 +113,14 @@ export function BaseConfirmationModal({
       </ModalActions>
     </VStack>
   )
+})
 
+export function BaseConfirmationModal({
+  isOpen,
+  onOpenChange,
+  useDrawer = false,
+  ...contentProps
+}: BaseConfirmationModalProps) {
   if (useDrawer) {
     return (
       <Drawer
@@ -118,14 +131,25 @@ export function BaseConfirmationModal({
         isDismissable
         role='alertdialog'
       >
-        {({ close }) => modalContent(close)}
+        {({ close }) => (
+          <BaseConfirmationModalContent
+            {...contentProps}
+            useDrawer={useDrawer}
+            close={close}
+          />
+        )}
       </Drawer>
     )
   }
 
   return (
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} role='alertdialog'>
-      {({ close }) => modalContent(close)}
+      {({ close }) => (
+        <BaseConfirmationModalContent
+          {...contentProps}
+          close={close}
+        />
+      )}
     </Modal>
   )
 }
