@@ -13,6 +13,7 @@ export interface FileInputProps {
   iconOnly?: boolean
   icon?: React.ReactNode
   allowMultipleUploads?: boolean
+  accept?: string
 }
 
 export const FileInput = ({
@@ -23,6 +24,7 @@ export const FileInput = ({
   iconOnly = false,
   icon,
   allowMultipleUploads = false,
+  accept,
 }: FileInputProps) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
@@ -48,6 +50,7 @@ export const FileInput = ({
         </TextButton>
         <input
           type='file'
+          accept={accept}
           multiple={allowMultipleUploads}
           onChange={onChange}
           ref={hiddenFileInput}
@@ -70,6 +73,7 @@ export const FileInput = ({
       </Button>
       <input
         type='file'
+        accept={accept}
         multiple={allowMultipleUploads}
         onChange={onChange}
         ref={hiddenFileInput}

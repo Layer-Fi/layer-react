@@ -28,6 +28,26 @@ const readDate = (date?: string) => {
   return date && formatTime(parseISO(date), DATE_FORMAT)
 }
 
+const RECEIPT_ALLOWED_UPLOAD_FILE_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+  'image/tiff',
+  'image/avif',
+  'image/bmp',
+  'application/pdf',
+  '.pdf',
+]
+
+export const RECEIPT_ALLOWED_INPUT_FILE_TYPES = [...RECEIPT_ALLOWED_UPLOAD_FILE_TYPES].join(',')
+
+const isValidReceiptFile = (file: File): boolean => {
+  return RECEIPT_ALLOWED_UPLOAD_FILE_TYPES.includes(file.type)
+}
+
 const getUniqueFileName = (fileName: string, existingNames: string[]): string => {
   if (!existingNames.includes(fileName)) {
     return fileName
@@ -93,6 +113,23 @@ export const useReceipts: UseReceipts = ({
   }
 
   const uploadReceipt = async (file: File) => {
+    if (!isValidReceiptFile(file)) {
+      const id = new Date().valueOf().toString()
+      setReceiptUrls(prev => [
+        ...prev,
+        {
+          id,
+          type: file.type,
+          url: undefined,
+          status: 'failed' as const,
+          name: file.name,
+          date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
+          error: 'Invalid file type. Please upload an image or PDF.',
+        },
+      ])
+      return
+    }
+
     const existingNames = [
       ...receiptUrls
         .map(r => r.name)
