@@ -28,6 +28,26 @@ const readDate = (date?: string) => {
   return date && formatTime(parseISO(date), DATE_FORMAT)
 }
 
+const getUniqueFileName = (fileName: string, existingNames: string[]): string => {
+  if (!existingNames.includes(fileName)) {
+    return fileName
+  }
+
+  const lastDotIndex = fileName.lastIndexOf('.')
+  const baseName = lastDotIndex > 0 ? fileName.slice(0, lastDotIndex) : fileName
+  const extension = lastDotIndex > 0 ? fileName.slice(lastDotIndex) : ''
+
+  let counter = 2
+  let newName = `${baseName} (${counter})${extension}`
+
+  while (existingNames.includes(newName)) {
+    counter++
+    newName = `${baseName} (${counter})${extension}`
+  }
+
+  return newName
+}
+
 export const useReceipts: UseReceipts = ({
   bankTransaction,
   isActive,
@@ -72,15 +92,21 @@ export const useReceipts: UseReceipts = ({
   }
 
   const uploadReceipt = async (file: File) => {
+    const existingNames = receiptUrls
+      .map(r => r.name)
+      .filter((name): name is string => Boolean(name))
+    const uniqueName = getUniqueFileName(file.name, existingNames)
+    const renamedFile = new File([file], uniqueName, { type: file.type })
+
     const id = new Date().valueOf().toString()
     const receipts = [
       ...receiptUrls,
       {
         id,
-        type: file.type,
+        type: renamedFile.type,
         url: undefined,
         status: 'pending' as const,
-        name: file.name,
+        name: renamedFile.name,
         date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
       },
     ]
@@ -93,7 +119,7 @@ export const useReceipts: UseReceipts = ({
       const result = await uploadDocument({
         businessId: businessId,
         bankTransactionId: bankTransaction.id,
-        file: file,
+        file: renamedFile,
         documentType: 'RECEIPT',
       })
       await fetchDocuments()
