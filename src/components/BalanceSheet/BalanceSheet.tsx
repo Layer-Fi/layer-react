@@ -112,6 +112,7 @@ const BalanceSheetView = ({
             <HeaderCol style={{ flex: 0 }}>
               <BalanceSheetDownloadButton
                 effectiveDate={effectiveDate}
+                iconOnly
               />
             </HeaderCol>
           </HeaderRow>
@@ -141,6 +142,7 @@ const BalanceSheetView = ({
             )}
             <BalanceSheetDownloadButton
               effectiveDate={effectiveDate}
+              iconOnly
             />
           </HeaderCol>
         </HeaderRow>

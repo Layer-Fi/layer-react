@@ -9,11 +9,13 @@ import { type ProfitAndLossDownloadButtonStringOverrides } from '@components/Pro
 type ProfitAndLossDownloadButtonProps = {
   stringOverrides?: ProfitAndLossDownloadButtonStringOverrides
   moneyFormat?: MoneyFormat
+  iconOnly?: boolean
 }
 
 export function ProfitAndLossDownloadButton({
   stringOverrides,
   moneyFormat,
+  iconOnly,
 }: ProfitAndLossDownloadButtonProps) {
   const { selectedLineItem } = useContext(ProfitAndLossContext)
 
@@ -22,6 +24,7 @@ export function ProfitAndLossDownloadButton({
       <ProfitAndLossDetailLinesDownloadButton
         pnlStructureLineItemName={selectedLineItem.lineItemName}
         stringOverrides={stringOverrides}
+        iconOnly={iconOnly}
       />
     )
   }
@@ -30,6 +33,7 @@ export function ProfitAndLossDownloadButton({
     <ProfitAndLossFullReportDownloadButton
       stringOverrides={stringOverrides}
       moneyFormat={moneyFormat}
+      iconOnly={iconOnly}
     />
   )
 }

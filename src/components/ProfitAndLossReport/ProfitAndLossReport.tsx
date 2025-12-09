@@ -96,6 +96,7 @@ export const ProfitAndLossReport = ({
               <ProfitAndLossDownloadButton
                 stringOverrides={stringOverrides?.downloadButton}
                 moneyFormat={csvMoneyFormat}
+                iconOnly
               />
             </HeaderCol>
           </HeaderRow>
@@ -127,6 +128,7 @@ export const ProfitAndLossReport = ({
             <ProfitAndLossDownloadButton
               stringOverrides={stringOverrides?.downloadButton}
               moneyFormat={csvMoneyFormat}
+              iconOnly
             />
           </HeaderCol>
         </HeaderRow>

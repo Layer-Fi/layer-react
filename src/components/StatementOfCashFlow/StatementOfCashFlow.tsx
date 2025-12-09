@@ -65,6 +65,7 @@ const StatementOfCashFlowView = ({
               <CashflowStatementDownloadButton
                 startDate={dateRange.startDate}
                 endDate={dateRange.endDate}
+                iconOnly={isMobile}
               />
             </HeaderCol>
           </HeaderRow>

@@ -1,6 +1,4 @@
-import DownloadCloud from '@icons/DownloadCloud'
-import RefreshCcw from '@icons/RefreshCcw'
-import { Button } from '@ui/Button/Button'
+import { DownloadButton } from '@components/Button/DownloadButton'
 import { useUnifiedReportDownload } from '@components/UnifiedReport/download/useUnifiedReportDownload'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
@@ -13,15 +11,12 @@ export function UnifiedReportDownloadButton() {
 
   return (
     <>
-      <Button
-        variant='outlined'
-        onPress={() => { void trigger() }}
-        isPending={isMutating}
-        isDisabled={isMutating}
-      >
-        {isError ? 'Retry' : 'Download'}
-        {isError ? <RefreshCcw size={12} /> : <DownloadCloud size={16} /> }
-      </Button>
+      <DownloadButton
+        iconOnly
+        onClick={() => { void trigger() }}
+        isDownloading={isMutating}
+        requestFailed={isError}
+      />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>
   )
