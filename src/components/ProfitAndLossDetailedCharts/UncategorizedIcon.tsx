@@ -13,6 +13,8 @@ export const UncategorizedIcon = ({ variant }: UncategorizedIconProps) => {
       xmlns='http://www.w3.org/2000/svg'
       width='12'
       height='12'
+      role='img'
+      aria-label='Uncategorized item indicator'
     >
       <defs>
         <pattern
