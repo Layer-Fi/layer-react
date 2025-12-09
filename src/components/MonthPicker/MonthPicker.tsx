@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
+import classNames from 'classnames'
 import { format as formatTime } from 'date-fns'
 import { Dialog, DialogTrigger } from 'react-aria-components'
 
@@ -37,7 +38,7 @@ export const MonthPicker = ({
 }: MonthPickerProps) => {
   const triggerRef = useRef(null)
   const [isPopoverOpen, setPopoverOpen] = useState(false)
-  const { value } = useSizeClass()
+  const { value, isMobile } = useSizeClass()
 
   const onChangeMonth = useCallback((val: ZonedDateTime) => {
     onChange(val)
@@ -50,7 +51,12 @@ export const MonthPicker = ({
   return (
     <DialogTrigger isOpen={isPopoverOpen} onOpenChange={setPopoverOpen}>
       {showLabel && <Label>{label}</Label>}
-      <InputGroup ref={triggerRef} slot='input' className='Layer__MonthPicker__InputGroup' onClick={() => setPopoverOpen(true)}>
+      <InputGroup
+        ref={triggerRef}
+        slot='input'
+        className={classNames('Layer__MonthPicker__InputGroup', { 'Layer__MonthPicker__InputGroup--mobile': isMobile })}
+        onClick={() => setPopoverOpen(true)}
+      >
         <Input inset {...additionalAriaProps} value={inputValue} readOnly />
         <HStack gap='3xs' align='center'>
           <Button icon inset variant='ghost'>
