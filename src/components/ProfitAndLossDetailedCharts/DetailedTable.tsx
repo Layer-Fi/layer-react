@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import classNames from 'classnames'
 
 import { type SortDirection } from '@internal-types/general'
@@ -8,10 +9,10 @@ import {
   type Scope,
   type SidebarScope,
 } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
-import { UncategorizedIcon } from '@components/ProfitAndLossDetailedCharts/UncategorizedIcon'
 import { isLineItemUncategorized, mapTypesToColors, type TypeColorMapping } from '@components/ProfitAndLossDetailedCharts/utils'
 
 export interface DetailedTableStringOverrides {
@@ -44,7 +45,36 @@ const ValueIcon = ({
   idx: number
 }) => {
   if (isLineItemUncategorized(item)) {
-    return <UncategorizedIcon variant='desktop' />
+    return (
+      <svg
+        viewBox='0 0 12 12'
+        fill='none'
+        xmlns='http://www.w3.org/2000/svg'
+        width='12'
+        height='12'
+      >
+        <defs>
+          <pattern
+            id='layer-pie-dots-pattern-legend'
+            x='0'
+            y='0'
+            width='3'
+            height='3'
+            patternUnits='userSpaceOnUse'
+          >
+            <rect width='1' height='1' opacity={0.76} />
+          </pattern>
+        </defs>
+        <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' />
+        <rect
+          x='1'
+          y='1'
+          width='10'
+          height='10'
+          fill='url(#layer-pie-dots-pattern-legend)'
+        />
+      </svg>
+    )
   }
 
   return (
@@ -69,21 +99,16 @@ export const DetailedTable = ({
   stringOverrides,
   onValueClick,
 }: DetailedTableProps) => {
-  const buildColClass = (column: string) => {
-    return classNames(
-      'Layer__sortable-col',
-      sidebarScope && filters[sidebarScope]?.sortBy === column
-        ? `sort--${
-          (sidebarScope && filters[sidebarScope]?.sortDirection) ?? 'desc'
-        }`
-        : '',
-    )
-  }
-
   const typeColorMapping = mapTypesToColors(filteredData, chartColorsList)
   const positiveTotal = filteredData
     .filter(x => x.value > 0)
     .reduce((sum, x) => sum + x.value, 0)
+
+  const sortDirectionClass = useMemo(() => {
+    return sidebarScope && filters[sidebarScope]?.sortDirection ? `sort--${filters[sidebarScope]?.sortDirection}` : ''
+  }, [sidebarScope, filters])
+
+  const { isMobile } = useSizeClass()
 
   return (
     <div className='details-container'>
@@ -91,31 +116,34 @@ export const DetailedTable = ({
         <table>
           <thead>
             <tr>
+              <th></th>
               <th
-                className={buildColClass('category')}
+                className={classNames('Layer__sortable-col', sortDirectionClass)}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'category')}
               >
                 {stringOverrides?.categoryColumnHeader || 'Category'}
                 {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>
+              {!isMobile && (
+                <th
+                  className={classNames('Layer__sortable-col', sortDirectionClass)}
+                  onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
+                >
+                  {stringOverrides?.typeColumnHeader || 'Type'}
+                  {' '}
+                  <SortArrows className='Layer__sort-arrows' />
+                </th>
+              )}
               <th
-                className={buildColClass('type')}
-                onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
-              >
-                {stringOverrides?.typeColumnHeader || 'Type'}
-                {' '}
-                <SortArrows className='Layer__sort-arrows' />
-              </th>
-              <th></th>
-              <th
-                className={buildColClass('value')}
+                className={classNames('Layer__sortable-col', sortDirectionClass, 'value-col')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'value')}
               >
                 {stringOverrides?.valueColumnHeader || 'Value'}
                 {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>
+              <th className='percent-col'></th>
             </tr>
           </thead>
           <tbody>
@@ -134,8 +162,17 @@ export const DetailedTable = ({
                     onMouseEnter={() => setHoveredItem(item)}
                     onMouseLeave={() => setHoveredItem(undefined)}
                   >
+                    <td className='color-col'>
+                      <ValueIcon
+                        item={item}
+                        typeColorMapping={typeColorMapping}
+                        idx={idx}
+                      />
+                    </td>
                     <td className='category-col'>{item.displayName}</td>
-                    <td className='type-col'>{item.type}</td>
+                    {!isMobile && (
+                      <td className='type-col'>{item.type}</td>
+                    )}
                     <td className='value-col'>
                       <Button
                         variant='text'
@@ -145,14 +182,9 @@ export const DetailedTable = ({
                         <MoneySpan size='sm' amount={item.value} />
                       </Button>
                     </td>
-                    <td className='share-col'>
-                      <span className='share-cell-content'>
+                    <td className='percent-col'>
+                      <span className='share-text'>
                         {item.value < 0 ? '-' : `${formatPercent(share)}%`}
-                        <ValueIcon
-                          item={item}
-                          typeColorMapping={typeColorMapping}
-                          idx={idx}
-                        />
                       </span>
                     </td>
                   </tr>
