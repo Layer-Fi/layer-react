@@ -200,6 +200,7 @@ export const BankTransactionsHeader = ({
     setDateRange,
     stringOverrides?.header,
     withDatePicker,
+    sizeClass,
   ])
 
   const onCategorizationDisplayChange = (value: Key) => {
