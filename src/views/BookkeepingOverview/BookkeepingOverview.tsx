@@ -139,11 +139,11 @@ export const BookkeepingOverview = ({
             options={[
               {
                 value: 'revenue',
-                label: 'Revenue',
+                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
               },
               {
                 value: 'expenses',
-                label: 'Expenses',
+                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expensesToggleLabel || 'Expenses',
               },
             ]}
             selected={pnlToggle}

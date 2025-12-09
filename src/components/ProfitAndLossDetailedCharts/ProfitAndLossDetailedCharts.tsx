@@ -23,6 +23,8 @@ import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 export interface DetailedChartStringOverrides {
   expenseChartHeader?: string
   revenueChartHeader?: string
+  revenueToggleLabel?: string
+  expensesToggleLabel?: string
 }
 
 export interface ProfitAndLossDetailedChartsStringOverrides {
