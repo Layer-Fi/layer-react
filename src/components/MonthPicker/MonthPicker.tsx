@@ -22,6 +22,7 @@ type MonthPickerProps = {
   onChange: (val: ZonedDateTime) => void
   minDate?: ZonedDateTime | null
   maxDate?: ZonedDateTime | null
+  truncateMonth?: boolean
 }
 
 export const MonthPicker = ({
@@ -31,6 +32,7 @@ export const MonthPicker = ({
   onChange,
   minDate = null,
   maxDate = null,
+  truncateMonth = false,
 }: MonthPickerProps) => {
   const triggerRef = useRef(null)
   const [isPopoverOpen, setPopoverOpen] = useState(false)
@@ -41,7 +43,7 @@ export const MonthPicker = ({
     setPopoverOpen(false)
   }, [onChange])
 
-  const inputValue = formatTime(date.toDate(), 'MMMM yyyy')
+  const inputValue = formatTime(date.toDate(), truncateMonth ? 'MMM yyyy' : 'MMMM yyyy')
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
   return (
