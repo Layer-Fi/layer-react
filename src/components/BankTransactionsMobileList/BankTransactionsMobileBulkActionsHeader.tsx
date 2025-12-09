@@ -31,8 +31,8 @@ export const BankTransactionsMobileBulkActionsHeader = ({
   return (
     <HStack
       gap='md'
-      pi='sm'
-      pbs='md'
+      pi='xs'
+      pbs='sm'
       justify='space-between'
       align='center'
     >

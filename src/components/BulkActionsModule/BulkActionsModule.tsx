@@ -16,7 +16,7 @@ export const BulkActionsModule = ({ slots }: BulkActionsModuleProps) => {
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   return (
-    <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
+    <HStack slot='toggle' justify='space-between' align='center' gap='xs' className='Layer__BulkActionsModule'>
       <HStack justify='space-between' align='center' pis='sm' pie='3xs' gap='3xs' className='Layer__BulkActionsModule__SelectedItemsContainer'>
         <Span noWrap>
           {`${count} selected`}
