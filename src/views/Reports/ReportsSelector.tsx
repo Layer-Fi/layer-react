@@ -1,7 +1,7 @@
 import { type ChangeEvent, useState } from 'react'
 import classNames from 'classnames'
 
-import { type View } from '@internal-types/general'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import ChevronDown from '@icons/ChevronDown'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -15,16 +15,15 @@ export interface ReportsSelectorProps {
   options: ReportOption[]
   selected: ReportType
   onChange: (value: ReportType) => void
-  view?: View
 }
 
 export const ReportsSelector = ({
   options,
   selected,
   onChange,
-  view = 'mobile',
 }: ReportsSelectorProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const { value: view } = useSizeClass()
 
   const selectedOption = options.find(opt => opt.value === selected)
 

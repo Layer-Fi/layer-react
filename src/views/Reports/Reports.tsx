@@ -108,7 +108,6 @@ export const Reports = ({
             options={options}
             selected={activeTab}
             onChange={setActiveTab}
-            view={view}
           />
         </div>
       )}
