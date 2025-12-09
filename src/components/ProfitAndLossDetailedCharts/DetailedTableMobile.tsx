@@ -86,18 +86,18 @@ export const DetailedTableMobile = ({
     .filter(x => x.value > 0)
     .reduce((sum, x) => sum + x.value, 0)
 
-  const onSelectHeader = useCallback((column: 'category' | 'value') => {
-    return () => {
-      switch (column) {
-        case 'category':
-          sortBy(sidebarScope ?? 'expenses', 'category')
-          break
-        case 'value':
-          sortBy(sidebarScope ?? 'expenses', 'value')
-          break
-      }
-    }
-  }, [sidebarScope, sortBy])
+              <th
+                className={buildColClass('category')}
+                onClick={() => sortBy(sidebarScope ?? 'expenses', 'category')}
+              >
+                {stringOverrides?.categoryColumnHeader || 'Category'}
+                {' '}
+                <SortArrows className='Layer__sort-arrows' />
+              </th>
+              <th
+                className={buildColClass('value')}
+                onClick={() => sortBy(sidebarScope ?? 'expenses', 'value')}
+              >
 
   return (
     <div className='details-container details-container--mobile'>
