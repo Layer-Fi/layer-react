@@ -67,12 +67,6 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
     padding-right: var(--spacing-md);
     padding-bottom: var(--spacing-lg);
     padding-left: var(--spacing-md);
-
-    @container (max-width: 280px) {
-      & {
-        width: 100%;
-      }
-    }
   }
 
   .recharts-responsive-container {
@@ -108,15 +102,13 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
         padding: var(--spacing-2xs) var(--spacing-xs);
         font-size: 12px;
         text-align: left;
-        transition: color 150ms ease-out;
 
         &:first-child {
           width: 20px;
           padding-right: 0;
         }
 
-        &:last-child,
-        &.value-col {
+        &:last-child {
           text-align: right;
         }
 
@@ -171,20 +163,7 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
     tbody tr {
       height: 2.5rem;
     }
-
-    table th.type-col-header,
-    table td.type-col {
-      display: table-cell;
-    }
   }
-}
-
-.Layer__profit-and-loss .Layer__panel__sidebar .Layer__panel__sidebar-content {
-  width: 100%;
-}
-
-.Layer__profit-and-loss .Layer__panel__sidebar .Layer__profit-and-loss-detailed-charts {
-  width: 100%;
 }
 
 .Layer__profit-and-loss-detailed-table__row {
