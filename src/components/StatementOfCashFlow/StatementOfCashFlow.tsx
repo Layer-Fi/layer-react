@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
-import { type View as ViewType } from '@internal-types/general'
 import { useStatementOfCashFlow } from '@hooks/useStatementOfCashFlow/useStatementOfCashFlow'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TableProvider } from '@contexts/TableContext/TableContext'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
@@ -18,8 +18,6 @@ import { type StatementOfCashFlowTableStringOverrides } from '@components/Statem
 import { View } from '@components/View/View'
 import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
 
-type ViewBreakpoint = ViewType | undefined
-
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
 export interface StatementOfCashFlowStringOverrides {
@@ -28,7 +26,6 @@ export interface StatementOfCashFlowStringOverrides {
 
 export type StatementOfCashFlowProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
-  view?: ViewBreakpoint
 }
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
@@ -39,16 +36,15 @@ export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
 
 type StatementOfCashFlowViewProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
-  view?: ViewBreakpoint
 }
 
 const StatementOfCashFlowView = ({
   stringOverrides,
   dateSelectionMode = 'full',
-  view,
 }: StatementOfCashFlowViewProps) => {
   const dateRange = useGlobalDateRange({ displayMode: dateSelectionMode })
   const { data, isLoading } = useStatementOfCashFlow(dateRange)
+  const { value: view } = useSizeClass()
 
   const header = useMemo(() => {
     const isMobile = view !== 'desktop'
