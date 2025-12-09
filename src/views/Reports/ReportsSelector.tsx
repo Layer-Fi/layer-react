@@ -1,5 +1,4 @@
 import { type ChangeEvent, useState } from 'react'
-import classNames from 'classnames'
 
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import ChevronDown from '@icons/ChevronDown'
@@ -49,30 +48,21 @@ export const ReportsSelector = ({
           aria-label='Select report type'
         >
           {({ close }) => (
-            <VStack className='Layer__reports-selector-drawer'>
+            <VStack className='Layer__ReportsSelectorDrawer'>
               <HStack
                 justify='center'
                 pb='md'
-                className='Layer__reports-selector-drawer__header'
               >
                 <Span size='lg' weight='bold'>
                   Select Report
                 </Span>
               </HStack>
-              <VStack className='Layer__reports-selector-drawer__options'>
+              <VStack>
                 {options.map((option) => {
                   const isSelected = option.value === selected
-                  const optionClassName = classNames(
-                    'Layer__reports-selector-drawer__option',
-                    {
-                      'Layer__reports-selector-drawer__option--selected': isSelected,
-                    },
-                  )
-
                   return (
                     <button
                       key={option.value}
-                      className={optionClassName}
                       onClick={() => {
                         onChange(option.value)
                         close()

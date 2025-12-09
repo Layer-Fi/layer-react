@@ -116,7 +116,7 @@ const BalanceSheetView = ({
               />
             </HeaderCol>
           </HeaderRow>
-          <HeaderRow className='Layer__Reports__header-row'>
+          <HeaderRow className='Layer__ReportsSelector__HeaderRow'>
             <HeaderCol style={{ flex: 1 }}>
               <LabeledGlobalDatePicker />
             </HeaderCol>
