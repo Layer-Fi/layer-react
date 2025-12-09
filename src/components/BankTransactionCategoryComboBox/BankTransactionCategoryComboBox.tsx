@@ -136,7 +136,9 @@ export const BankTransactionCategoryComboBox = ({
     ? `${numMatchOptions} possible matches...`
     : loadingSuggestions
       ? 'Generating suggestions...'
-      : 'Categorize or match...'
+      : includeSuggestedMatches
+        ? 'Categorize or match...'
+        : 'Select category'
 
   const SelectedValue = useMemo(() => {
     return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} />
