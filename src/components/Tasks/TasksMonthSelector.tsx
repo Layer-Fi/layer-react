@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { format, getMonth, getYear, set } from 'date-fns'
 
+import { MONTH_FORMAT_SHORT } from '@config/general'
 import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -53,7 +54,7 @@ function TasksMonthSelector() {
       const total = taskData.tasks?.length ?? 0
 
       return {
-        monthStr: format(date, 'MMM'),
+        monthStr: format(date, MONTH_FORMAT_SHORT),
         date,
         completed: getCompletedTasks(taskData.tasks).length,
         total,

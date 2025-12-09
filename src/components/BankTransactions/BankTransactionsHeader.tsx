@@ -11,6 +11,7 @@ import { BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types
 import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
 import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
 import { useDebounce } from '@hooks/useDebounce/useDebounce'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
@@ -142,6 +143,7 @@ export const BankTransactionsHeader = ({
     filters,
     dateFilterMode,
   } = useBankTransactionsFiltersContext()
+  const { value: sizeClass } = useSizeClass()
 
   const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
   const monthPickerDate = filters?.dateRange ? convertDateToZonedDateTime(filters.dateRange.startDate) : null
@@ -184,6 +186,7 @@ export const BankTransactionsHeader = ({
           onChange={setDateRange}
           minDate={activationDate ? convertDateToZonedDateTime(activationDate) : null}
           maxDate={convertDateToZonedDateTime(new Date())}
+          truncateMonth={sizeClass === 'mobile'}
         />
       )}
     </div>
@@ -196,6 +199,7 @@ export const BankTransactionsHeader = ({
     setDateRange,
     stringOverrides?.header,
     withDatePicker,
+    sizeClass,
   ])
 
   const onCategorizationDisplayChange = (value: Key) => {

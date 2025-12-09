@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import classNames from 'classnames'
 
 import { type SortDirection } from '@internal-types/general'
@@ -8,6 +9,7 @@ import {
   type Scope,
   type SidebarScope,
 } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -60,10 +62,10 @@ const ValueIcon = ({
             height='3'
             patternUnits='userSpaceOnUse'
           >
-            <rect width='1' height='1' opacity={0.76} />
+            <rect width='1' height='1' opacity={0.76} className='Layer__charts__dots-pattern-legend__dot' />
           </pattern>
         </defs>
-        <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' />
+        <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' className='Layer__charts__dots-pattern-legend__bg' />
         <rect
           x='1'
           y='1'
@@ -97,21 +99,22 @@ export const DetailedTable = ({
   stringOverrides,
   onValueClick,
 }: DetailedTableProps) => {
-  const buildColClass = (column: string) => {
-    return classNames(
-      'Layer__sortable-col',
-      sidebarScope && filters[sidebarScope]?.sortBy === column
-        ? `sort--${
-          (sidebarScope && filters[sidebarScope]?.sortDirection) ?? 'desc'
-        }`
-        : '',
-    )
-  }
-
   const typeColorMapping = mapTypesToColors(filteredData, chartColorsList)
   const positiveTotal = filteredData
     .filter(x => x.value > 0)
     .reduce((sum, x) => sum + x.value, 0)
+
+  const buildColClass = useCallback((column: string) => {
+    if (!sidebarScope || !filters[sidebarScope]?.sortDirection) {
+      return ''
+    }
+    if (filters[sidebarScope]?.sortBy === column) {
+      return `sort--${filters[sidebarScope]?.sortDirection}`
+    }
+    return ''
+  }, [sidebarScope, filters])
+
+  const { isMobile } = useSizeClass()
 
   return (
     <div className='details-container'>
@@ -119,31 +122,34 @@ export const DetailedTable = ({
         <table>
           <thead>
             <tr>
+              <th></th>
               <th
-                className={buildColClass('category')}
+                className={classNames('Layer__sortable-col', buildColClass('category'))}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'category')}
               >
                 {stringOverrides?.categoryColumnHeader || 'Category'}
                 {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>
+              {!isMobile && (
+                <th
+                  className={classNames('Layer__sortable-col', buildColClass('type'))}
+                  onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
+                >
+                  {stringOverrides?.typeColumnHeader || 'Type'}
+                  {' '}
+                  <SortArrows className='Layer__sort-arrows' />
+                </th>
+              )}
               <th
-                className={buildColClass('type')}
-                onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
-              >
-                {stringOverrides?.typeColumnHeader || 'Type'}
-                {' '}
-                <SortArrows className='Layer__sort-arrows' />
-              </th>
-              <th></th>
-              <th
-                className={buildColClass('value')}
+                className={classNames('Layer__sortable-col', buildColClass('value'), 'value-col')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'value')}
               >
                 {stringOverrides?.valueColumnHeader || 'Value'}
                 {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>
+              <th className='percent-col'></th>
             </tr>
           </thead>
           <tbody>
@@ -162,8 +168,17 @@ export const DetailedTable = ({
                     onMouseEnter={() => setHoveredItem(item)}
                     onMouseLeave={() => setHoveredItem(undefined)}
                   >
+                    <td className='color-col'>
+                      <ValueIcon
+                        item={item}
+                        typeColorMapping={typeColorMapping}
+                        idx={idx}
+                      />
+                    </td>
                     <td className='category-col'>{item.displayName}</td>
-                    <td className='type-col'>{item.type}</td>
+                    {!isMobile && (
+                      <td className='type-col'>{item.type}</td>
+                    )}
                     <td className='value-col'>
                       <Button
                         variant='text'
@@ -173,14 +188,9 @@ export const DetailedTable = ({
                         <MoneySpan size='sm' amount={item.value} />
                       </Button>
                     </td>
-                    <td className='share-col'>
-                      <span className='share-cell-content'>
+                    <td className='percent-col'>
+                      <span className='share-text'>
                         {item.value < 0 ? '-' : `${formatPercent(share)}%`}
-                        <ValueIcon
-                          item={item}
-                          typeColorMapping={typeColorMapping}
-                          idx={idx}
-                        />
                       </span>
                     </td>
                   </tr>

@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { Cell, Pie, PieChart } from 'recharts'
 
 import { TASKS_CHARTS_COLORS } from '@config/charts'
+import { MONTH_YEAR_FORMAT } from '@config/general'
 import { getCompletedTasks, getIncompleteTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -39,7 +40,7 @@ export const TasksPending = () => {
   return (
     <div className='Layer__tasks-pending'>
       <div className='Layer__tasks-pending-header'>
-        <Heading size={HeadingSize.secondary}>{format(date, 'MMMM yyyy')}</Heading>
+        <Heading size={HeadingSize.secondary}>{format(date, MONTH_YEAR_FORMAT)}</Heading>
         {activePeriod?.tasks && activePeriod.tasks.length > 0
           ? (
             <div className='Layer__tasks-pending-bar'>

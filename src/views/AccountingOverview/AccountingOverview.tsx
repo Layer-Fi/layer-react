@@ -3,6 +3,7 @@ import classNames from 'classnames'
 
 import { type OnboardingStep } from '@internal-types/layer_context'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
@@ -65,6 +66,7 @@ export const AccountingOverview = ({
   slotProps,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
+  const { value: sizeClass } = useSizeClass()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -85,7 +87,7 @@ export const AccountingOverview = ({
           <Header>
             <HeaderRow>
               <HeaderCol>
-                <GlobalMonthPicker />
+                <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
               </HeaderCol>
             </HeaderRow>
           </Header>
