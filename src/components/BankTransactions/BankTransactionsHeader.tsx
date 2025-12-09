@@ -275,14 +275,19 @@ export const BankTransactionsHeader = ({
             </HStack>
           )}
         <TransactionsSearch slot='search' isDisabled={showBulkActions} />
-        <HStack slot='download-upload' justify='center' gap='xs'>
-          <DownloadButton
-            downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={listView}
-            disabled={showBulkActions}
-          />
-          <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
-        </HStack>
+
+        {showBulkActions
+          ? null
+          : (
+            <HStack slot='download-upload' justify='center' gap='xs'>
+              <DownloadButton
+                downloadButtonTextOverride={stringOverrides?.downloadButton}
+                iconOnly={listView}
+                disabled={showBulkActions}
+              />
+              <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
+            </HStack>
+          )}
       </BankTransactionsActions>
     </Header>
   )
