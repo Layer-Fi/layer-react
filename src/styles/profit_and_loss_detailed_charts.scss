@@ -286,6 +286,11 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 
     .Layer__profit-and-loss-detailed-charts__table-wrapper {
       width: 100%;
+      padding-inline: var(--spacing-md);
+
+      .Layer__Span {
+        margin: 0 1rem;
+      }
     }
 
     .Layer__profit-and-loss-detailed-charts__head {

@@ -1,7 +1,7 @@
+import { MONTH_DAY_FORMAT } from '@config/general'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { DateTime } from '@components/DateTime/DateTime'
-import { MONTH_DAY_FORMAT } from '@config/general'
 
 interface BankTransactionsAmountDateProps {
   amount: number
