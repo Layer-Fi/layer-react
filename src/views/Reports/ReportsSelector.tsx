@@ -26,7 +26,7 @@ export const ReportsSelector = ({
 
   const selectedOption = options.find(opt => opt.value === selected)
 
-  if (view === 'mobile') {
+  if (view !== 'desktop') {
     return (
       <HStack>
         <button
