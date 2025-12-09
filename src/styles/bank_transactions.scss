@@ -829,8 +829,11 @@
   .Layer__bank-transactions__header {
     row-gap: var(--spacing-sm);
     padding-top: var(--spacing-md);
-    padding-right: var(--spacing-md);
-    padding-left: var(--spacing-md);
+    padding-right: 0;
+    padding-left: 0;
+
+    // padding-right: var(--spacing-md);
+    // padding-left: var(--spacing-md);
   }
 }
 
