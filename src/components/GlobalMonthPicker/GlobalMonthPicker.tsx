@@ -5,6 +5,7 @@ import { endOfToday, startOfDay } from 'date-fns'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 
 export const GlobalMonthPicker = () => {
@@ -13,6 +14,7 @@ export const GlobalMonthPicker = () => {
 
   const { setMonth } = useGlobalDateRangeActions()
   const { date } = useGlobalDate()
+  const { value: sizeClass } = useSizeClass()
 
   const dateZdt = useMemo(() => convertDateToZonedDateTime(date), [date])
   const minDateZdt = useMemo(() => activationDate ? convertDateToZonedDateTime(activationDate) : null, [activationDate])
@@ -30,6 +32,7 @@ export const GlobalMonthPicker = () => {
       onChange={onChange}
       minDate={minDateZdt}
       maxDate={maxDateZdt}
+      truncateMonth={sizeClass === 'mobile'}
     />
   )
 }
