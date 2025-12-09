@@ -1,6 +1,7 @@
 import { type ReactNode, useContext, useMemo } from 'react'
 import { format, sub } from 'date-fns'
 
+import { MONTH_FORMAT_SHORT } from '@config/general'
 import { calculatePercentageChange } from '@utils/percentageChange'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
@@ -104,7 +105,7 @@ function Internal_ProfitAndLossSummaries({
       revenuePercentChange: calculatePercentageChange(currentRevenue, previousRevenue),
       expensesPercentChange: calculatePercentageChange(currentExpenses, previousExpenses),
       netProfitPercentChange: calculatePercentageChange(currentNetProfit, previousNetProfit),
-      comparisonMonth: format(previousMonthStart, 'MMM'),
+      comparisonMonth: format(previousMonthStart, MONTH_FORMAT_SHORT),
     }
   }, [previousData, effectiveData, previousMonthStart])
 

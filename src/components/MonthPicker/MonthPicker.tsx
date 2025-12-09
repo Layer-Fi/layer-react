@@ -3,6 +3,7 @@ import { type ZonedDateTime } from '@internationalized/date'
 import { format as formatTime } from 'date-fns'
 import { Dialog, DialogTrigger } from 'react-aria-components'
 
+import { MONTH_YEAR_FORMAT, MONTH_YEAR_FORMAT_SHORT } from '@config/general'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import ChevronDown from '@icons/ChevronDown'
 import { Button } from '@ui/Button/Button'
@@ -43,7 +44,7 @@ export const MonthPicker = ({
     setPopoverOpen(false)
   }, [onChange])
 
-  const inputValue = formatTime(date.toDate(), truncateMonth ? 'MMM yyyy' : 'MMMM yyyy')
+  const inputValue = formatTime(date.toDate(), truncateMonth ? MONTH_YEAR_FORMAT_SHORT : MONTH_YEAR_FORMAT)
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
   return (

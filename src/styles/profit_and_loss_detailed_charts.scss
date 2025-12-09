@@ -69,6 +69,24 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
     padding-left: var(--spacing-md);
   }
 
+  .Layer__profit-and-loss-detailed-charts__empty-chart {
+    box-sizing: border-box;
+    height: 280px;
+    width: 100%;
+    padding-top: var(--spacing-2xl);
+    padding-right: var(--spacing-md);
+    padding-bottom: var(--spacing-lg);
+    padding-left: var(--spacing-md);
+  }
+
+  .Layer__profit-and-loss-detailed-charts__empty-chart-content {
+    height: 100%;
+  }
+
+  .Layer__profit-and-loss-detailed-charts__empty-chart-icon {
+    color: var(--color-base-400);
+  }
+
   .recharts-responsive-container {
     box-shadow: none;
 
@@ -227,6 +245,10 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       }
 
       .chart-container {
+        max-width: 300px;
+      }
+
+      .Layer__profit-and-loss-detailed-charts__empty-chart {
         max-width: 300px;
       }
     }

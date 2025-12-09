@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { format, isValid } from 'date-fns'
 
+import { MONTH_FORMAT } from '@config/general'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
@@ -11,7 +12,7 @@ const formatLastSyncedAt = (datetime: string) => {
   const parsed = new Date(datetime)
   if (!isValid(parsed)) return ''
 
-  return `${format(parsed, 'MMMM d, yyyy')} at ${format(parsed, 'h:mm a')}`
+  return `${format(parsed, `${MONTH_FORMAT} d, yyyy`)} at ${format(parsed, 'h:mm a')}`
 }
 
 const getFooterConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, lastSyncedAt?: string) => {

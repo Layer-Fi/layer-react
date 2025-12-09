@@ -1,6 +1,7 @@
 import { useCallback, useContext, useState } from 'react'
 import { format } from 'date-fns'
 
+import { MONTH_YEAR_FORMAT_FULL } from '@config/general'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { humanizeTitle } from '@utils/profitAndLossUtils'
 import { type SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
@@ -79,7 +80,7 @@ export const ProfitAndLossDetailedCharts = ({
             {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides)}
           </Text>
           <Text size={TextSize.sm} className='date'>
-            {format(dateRange.startDate, 'LLLL, y')}
+            {format(dateRange.startDate, MONTH_YEAR_FORMAT_FULL)}
           </Text>
           {showDatePicker && <GlobalMonthPicker />}
         </div>
@@ -102,7 +103,7 @@ export const ProfitAndLossDetailedCharts = ({
             {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides)}
           </Text>
           <Text size={TextSize.sm} className='date'>
-            {format(dateRange.startDate, 'LLLL, y')}
+            {format(dateRange.startDate, MONTH_YEAR_FORMAT_FULL)}
           </Text>
         </div>
       </header>

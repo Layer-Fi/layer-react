@@ -27,6 +27,7 @@ import {
 import { type CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 import { type Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
 
+import { MONTH_FORMAT_ABBREVIATED, MONTH_FORMAT_NARROW } from '@config/general'
 import { centsToDollars } from '@models/Money'
 import { isDateAllowedToBrowse } from '@utils/business'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
@@ -266,7 +267,7 @@ export const ProfitAndLossChart = ({
     pnl
       ? format(
         new Date(pnl.year, pnl.month - 1, 1),
-        compactView ? 'LLLLL' : 'LLL',
+        compactView ? MONTH_FORMAT_NARROW : MONTH_FORMAT_ABBREVIATED,
       )
       : '', [compactView])
 
@@ -295,7 +296,7 @@ export const ProfitAndLossChart = ({
       for (let i = 11; i >= 0; i--) {
         const currentDate = sub(today, { months: i })
         loadingData.push({
-          name: format(currentDate, compactView ? 'LLLLL' : 'LLL'),
+          name: format(currentDate, compactView ? MONTH_FORMAT_NARROW : MONTH_FORMAT_ABBREVIATED),
           revenue: 0,
           revenueUncategorized: 0,
           totalExpensesInverse: 0,

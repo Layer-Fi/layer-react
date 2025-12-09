@@ -1,6 +1,7 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { format } from 'date-fns'
 
+import { MONTH_DAY_FORMAT_SHORT } from '@config/general'
 import { Direction } from '@internal-types/general'
 import { convertLedgerEntrySourceToLinkingMetadata, type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
 import type { PnlDetailLine } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
@@ -102,8 +103,8 @@ export const ProfitAndLossDetailReport = ({
   }, [breadcrumbPath, lineItemName])
 
   const formatDateRange = (startDate: Date, endDate: Date) => {
-    const start = format(startDate, 'MMM d')
-    const end = format(endDate, 'MMM d')
+    const start = format(startDate, MONTH_DAY_FORMAT_SHORT)
+    const end = format(endDate, MONTH_DAY_FORMAT_SHORT)
     return `${start} - ${end}`
   }
 
