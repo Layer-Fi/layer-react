@@ -143,7 +143,7 @@ export const BookkeepingOverview = ({
               },
               {
                 value: 'expenses',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expensesToggleLabel || 'Expenses',
+                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
               },
             ]}
             selected={pnlToggle}
