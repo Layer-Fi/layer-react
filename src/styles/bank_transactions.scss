@@ -829,11 +829,8 @@
   .Layer__bank-transactions__header {
     row-gap: var(--spacing-sm);
     padding-top: var(--spacing-md);
-    padding-right: 0;
-    padding-left: 0;
-
-    // padding-right: var(--spacing-md);
-    // padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+    padding-left: var(--spacing-md);
   }
 }
 
@@ -842,6 +839,8 @@
     position: sticky;
     z-index: 2;
     top: 0;
+    padding-right: 0;
+    padding-left: 0;
     border-top-left-radius: var(--border-radius-sm);
     border-top-right-radius: var(--border-radius-sm);
     box-shadow: 0 -1px 0 0 rgb(23 51 45 / 16%) inset;
