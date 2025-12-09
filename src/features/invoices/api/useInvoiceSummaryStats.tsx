@@ -84,7 +84,7 @@ export const useInvoiceSummaryStatsCacheActions = () => {
 
   const forceReloadInvoiceSummaryStats = useCallback(
     () => forceReload(
-      tags => tags.includes(INVOICE_SUMMARY_STATS_TAG_KEY),
+      ({ tags }) => tags.includes(INVOICE_SUMMARY_STATS_TAG_KEY),
     ),
     [forceReload],
   )

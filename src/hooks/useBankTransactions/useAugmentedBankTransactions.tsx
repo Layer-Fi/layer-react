@@ -4,8 +4,7 @@ import {
   type BankTransaction,
   DisplayState,
 } from '@internal-types/bank_transactions'
-import { Direction } from '@internal-types/general'
-import { DataModel } from '@internal-types/general'
+import { DataModel, Direction } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
 import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import {
@@ -52,28 +51,6 @@ function useTriggerOnChange(
   }, [data, anyAccountSyncing, callback])
 }
 
-const filtersSettingString = (filters?: BankTransactionFilters): string => {
-  return `bank-transactions${
-    filters?.categorizationStatus
-      ? `-categorizationStatus-${filters.categorizationStatus}`
-      : `-categorizationStatus-${DisplayState.all}`
-  }${
-    filters?.direction?.length === 1
-      ? `-direction-${filters.direction.join('-')}`
-      : ''
-  }${
-    filters?.dateRange?.startDate
-      ? `-startDate-${filters.dateRange.startDate.toISOString()}`
-      : ''
-  }${
-    filters?.dateRange?.endDate
-      ? `-endDate-${filters.dateRange.endDate.toISOString()}`
-      : ''
-  }${
-    filters?.tagFilter ? `--${tagFilterToQueryString(filters.tagFilter)}` : ''
-  }`
-}
-
 export function bankTransactionFiltersToHookOptions(
   filters?: BankTransactionFilters,
 ): UseBankTransactionsOptions {
@@ -102,32 +79,28 @@ export type UseAugmentedBankTransactionsWithFiltersParams = {
 export const useAugmentedBankTransactions = (
   params: UseAugmentedBankTransactionsWithFiltersParams,
 ) => {
-  const {
-    touch,
-    read,
-    syncTimestamps,
-    hasBeenTouched,
-    eventCallbacks,
-  } = useLayerContext()
+  const { touch, eventCallbacks } = useLayerContext()
 
   const { setRuleSuggestion } = useContext(CategorizationRulesContext)
 
   const { filters } = params
 
   const display = filters?.categorizationStatus ?? DisplayState.categorized
+  const useBankTransactionsOptions = useMemo(
+    () => bankTransactionFiltersToHookOptions(filters),
+    [filters],
+  )
 
   const {
     data: rawResponseData,
     isLoading,
     isValidating,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    error: responseError,
+    isError,
     mutate,
     size,
     setSize,
-  } = useBankTransactions(
-    bankTransactionFiltersToHookOptions(filters),
-  )
+    hasMore,
+  } = useBankTransactions(useBankTransactionsOptions)
 
   const data: BankTransaction[] | undefined = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
@@ -138,26 +111,6 @@ export const useAugmentedBankTransactions = (
     }
 
     return undefined
-  }, [rawResponseData])
-
-  const lastMetadata = useMemo(() => {
-    if (rawResponseData && rawResponseData.length > 0) {
-      return rawResponseData[rawResponseData.length - 1].meta
-    }
-
-    return undefined
-  }, [rawResponseData])
-
-  const hasMore = useMemo(() => {
-    if (rawResponseData && rawResponseData.length > 0) {
-      const lastElement = rawResponseData[rawResponseData.length - 1]
-      return Boolean(
-        lastElement.meta?.pagination?.cursor
-        && lastElement.meta?.pagination?.has_more,
-      )
-    }
-
-    return false
   }, [rawResponseData])
 
   const filteredData = useMemo(() => {
@@ -207,12 +160,10 @@ export const useAugmentedBankTransactions = (
     void mutate(updatedData, { revalidate: false })
   }, [rawResponseData, mutate, setRuleSuggestion])
 
-  const shouldHideAfterCategorize = (): boolean => {
-    return filters?.categorizationStatus === DisplayState.review
-  }
+  const shouldHideAfterCategorize = filters?.categorizationStatus === DisplayState.review
 
   const removeAfterCategorize = (transactionIds: string[]) => {
-    if (shouldHideAfterCategorize()) {
+    if (shouldHideAfterCategorize) {
       const updatedData = rawResponseData?.map(page => ({
         ...page,
         data: page.data?.filter(bt => !transactionIds.includes(bt.id)),
@@ -226,25 +177,6 @@ export const useAugmentedBankTransactions = (
       void setSize(size + 1)
     }
   }, [hasMore, setSize, size])
-
-  const getCacheKey = (txnFilters?: BankTransactionFilters) => {
-    return filtersSettingString(txnFilters)
-  }
-
-  // Refetch data if related models has been changed since last fetch
-  useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.BANK_TRANSACTIONS, getCacheKey(filters))
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isValidating])
-
-  useEffect(() => {
-    if (hasBeenTouched(getCacheKey(filters))) {
-      void mutate()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncTimestamps, filters])
 
   const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
   const anyAccountSyncing = useMemo(
@@ -305,13 +237,13 @@ export const useAugmentedBankTransactions = (
 
   return {
     data: filteredData,
-    metadata: lastMetadata,
     isLoading,
     isValidating,
-    isError: !!responseError,
+    isError,
     updateLocalBankTransactions,
     shouldHideAfterCategorize,
     removeAfterCategorize,
+    useBankTransactionsOptions,
     display,
     fetchMore,
     hasMore,

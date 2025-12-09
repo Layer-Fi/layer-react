@@ -110,12 +110,12 @@ export function useLedgerBalancesCacheActions() {
   const { invalidate, forceReload } = useGlobalCacheActions()
 
   const invalidateLedgerBalances = useCallback(
-    () => invalidate(tags => tags.includes(LEDGER_BALANCES_TAG_KEY)),
+    () => invalidate(({ tags }) => tags.includes(LEDGER_BALANCES_TAG_KEY)),
     [invalidate],
   )
 
   const forceReloadLedgerBalances = useCallback(
-    () => forceReload(tags => tags.includes(LEDGER_BALANCES_TAG_KEY)),
+    () => forceReload(({ tags }) => tags.includes(LEDGER_BALANCES_TAG_KEY)),
     [forceReload],
   )
 

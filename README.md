@@ -390,7 +390,7 @@ The full list of variables is listed in the [`variables.css`](https://github.com
 --text-sm: 12px;
 --text-md: 14px;
 --text-lg: 16px;
---text-heading: 24px;
+--text-heading: 24px; // 20px on mobile (max-width: 768px)
 --text-heading-sm: 16px;
 --font-weight-normal: 460;
 --font-weight-bold: 540;

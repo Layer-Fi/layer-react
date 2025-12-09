@@ -1,7 +1,7 @@
 import { format, subMonths, subYears } from 'date-fns'
 
 import { type LineItemEncoded } from '@schemas/common/lineItem'
-import { DATE_FORMAT } from '@config/general'
+import { DATE_FORMAT, MONTH_YEAR_FORMAT_SHORT } from '@config/general'
 import { DateGroupBy } from '@components/DateSelection/DateGroupByComboBox'
 
 export type ComparisonPeriodParams = { endDate: Date, numberOfPeriods: number } & (
@@ -25,7 +25,7 @@ const generateComparisonMonths = (
 ) => {
   return Array.from({ length: numberOfMonths }, (_, index) => {
     const currentMonth = subMonths(endDate, numberOfMonths - index - 1)
-    return { date: currentMonth, label: format(currentMonth, 'MMM yyyy') }
+    return { date: currentMonth, label: format(currentMonth, MONTH_YEAR_FORMAT_SHORT) }
   })
 }
 

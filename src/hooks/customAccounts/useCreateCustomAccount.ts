@@ -81,7 +81,7 @@ export function useCreateCustomAccount() {
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(CUSTOM_ACCOUNTS_TAG_KEY)
+        ({ tags }) => tags.includes(CUSTOM_ACCOUNTS_TAG_KEY)
           || tags.includes(BANK_ACCOUNTS_TAG_KEY)
           || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
       ))

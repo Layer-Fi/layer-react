@@ -207,7 +207,7 @@ export function useCategorizationRulesGlobalCacheActions() {
 
   const patchCategorizationRuleByKey = useCallback((updatedCategorizationRule: CategorizationRule) =>
     patchCache<ListCategorizationRulesReturn[] | ListCategorizationRulesReturn | undefined>(
-      tags => tags.includes(LIST_CATEGORIZATION_RULES_TAG_KEY),
+      ({ tags }) => tags.includes(LIST_CATEGORIZATION_RULES_TAG_KEY),
       (currentData) => {
         const iterateOverPage = (page: ListCategorizationRulesReturn): ListCategorizationRulesReturn => ({
           ...page,
@@ -223,7 +223,7 @@ export function useCategorizationRulesGlobalCacheActions() {
   )
 
   const forceReloadCategorizationRules = useCallback(
-    () => forceReload(tags => tags.includes(LIST_CATEGORIZATION_RULES_TAG_KEY)),
+    () => forceReload(({ tags }) => tags.includes(LIST_CATEGORIZATION_RULES_TAG_KEY)),
     [forceReload],
   )
 

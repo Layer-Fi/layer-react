@@ -106,7 +106,7 @@ export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess 
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(GET_BANK_TRANSACTION_METADATA_TAG_KEY),
+        ({ tags }) => tags.includes(GET_BANK_TRANSACTION_METADATA_TAG_KEY),
       ))
 
       return triggerResult

@@ -20,6 +20,10 @@
 }
 
 .Layer__sortable-col {
+  &.value-col {
+    text-align: right;
+  }
+
   .Layer__sort-arrows {
     .desc-arrow,
     .asc-arrow {

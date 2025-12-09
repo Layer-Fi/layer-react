@@ -1,8 +1,10 @@
 import { useCallback, useRef, useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
+import classNames from 'classnames'
 import { format as formatTime } from 'date-fns'
 import { Dialog, DialogTrigger } from 'react-aria-components'
 
+import { MONTH_YEAR_FORMAT, MONTH_YEAR_FORMAT_SHORT } from '@config/general'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import ChevronDown from '@icons/ChevronDown'
 import { Button } from '@ui/Button/Button'
@@ -22,6 +24,7 @@ type MonthPickerProps = {
   onChange: (val: ZonedDateTime) => void
   minDate?: ZonedDateTime | null
   maxDate?: ZonedDateTime | null
+  truncateMonth?: boolean
 }
 
 export const MonthPicker = ({
@@ -31,23 +34,29 @@ export const MonthPicker = ({
   onChange,
   minDate = null,
   maxDate = null,
+  truncateMonth = false,
 }: MonthPickerProps) => {
   const triggerRef = useRef(null)
   const [isPopoverOpen, setPopoverOpen] = useState(false)
-  const { value } = useSizeClass()
+  const { value, isMobile } = useSizeClass()
 
   const onChangeMonth = useCallback((val: ZonedDateTime) => {
     onChange(val)
     setPopoverOpen(false)
   }, [onChange])
 
-  const inputValue = formatTime(date.toDate(), 'MMMM yyyy')
+  const inputValue = formatTime(date.toDate(), truncateMonth ? MONTH_YEAR_FORMAT_SHORT : MONTH_YEAR_FORMAT)
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
   return (
     <DialogTrigger isOpen={isPopoverOpen} onOpenChange={setPopoverOpen}>
       {showLabel && <Label>{label}</Label>}
-      <InputGroup ref={triggerRef} slot='input' className='Layer__MonthPicker__InputGroup' onClick={() => setPopoverOpen(true)}>
+      <InputGroup
+        ref={triggerRef}
+        slot='input'
+        className={classNames('Layer__MonthPicker__InputGroup', { 'Layer__MonthPicker__InputGroup--mobile': isMobile })}
+        onClick={() => setPopoverOpen(true)}
+      >
         <Input inset {...additionalAriaProps} value={inputValue} readOnly />
         <HStack gap='3xs' align='center'>
           <Button icon inset variant='ghost'>

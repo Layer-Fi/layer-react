@@ -12,9 +12,11 @@ import { put } from '@api/layer/authenticated_http'
 import { type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/bookkeeping/useBankAccounts'
 import { useAuth } from '@hooks/useAuth'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExternalAccounts'
 import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
@@ -91,15 +93,15 @@ export type UseCategorizeBankTransactionOptions = {
   >
 }
 
-export function useCategorizeBankTransaction({
-  mutateBankTransactions,
-}: UseCategorizeBankTransactionOptions) {
+export function useCategorizeBankTransaction() {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+  const { useBankTransactionsOptions } = useBankTransactionsContext()
+  const { forceReloadBackgroundBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => buildKey({
@@ -137,22 +139,25 @@ export function useCategorizeBankTransaction({
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(BANK_ACCOUNTS_TAG_KEY)
+        ({ tags }) => tags.includes(BANK_ACCOUNTS_TAG_KEY)
           || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
       ))
-      /**
-       * SWR does not expose infinite queries through the matcher
-       *
-       * @see https://github.com/vercel/swr/blob/main/src/_internal/utils/mutate.ts#L78
-       */
-      void mutateBankTransactions(undefined, { revalidate: true })
-      void invalidatePnlDetailLines()
 
+      void forceReloadBackgroundBankTransactions(useBankTransactionsOptions)
+
+      void invalidatePnlDetailLines()
       void debouncedInvalidateProfitAndLoss()
 
       return triggerResult
     },
-    [originalTrigger, mutate, mutateBankTransactions, debouncedInvalidateProfitAndLoss, invalidatePnlDetailLines],
+    [
+      originalTrigger,
+      mutate,
+      forceReloadBackgroundBankTransactions,
+      useBankTransactionsOptions,
+      invalidatePnlDetailLines,
+      debouncedInvalidateProfitAndLoss,
+    ],
   )
 
   return new Proxy(mutationResponse, {

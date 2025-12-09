@@ -7,7 +7,7 @@ import { useBusinessActivationDate } from '@hooks/business/useBusinessActivation
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 
-export const GlobalMonthPicker = () => {
+export const GlobalMonthPicker = ({ truncateMonth }: { truncateMonth?: boolean }) => {
   const rawActivationDate = useBusinessActivationDate()
   const activationDate = useMemo(() => rawActivationDate ? startOfDay(rawActivationDate) : null, [rawActivationDate])
 
@@ -30,6 +30,7 @@ export const GlobalMonthPicker = () => {
       onChange={onChange}
       minDate={minDateZdt}
       maxDate={maxDateZdt}
+      truncateMonth={truncateMonth}
     />
   )
 }

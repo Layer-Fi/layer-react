@@ -8,11 +8,9 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function useCategorizeBankTransactionWithCacheUpdate() {
   const { addToast, eventCallbacks } = useLayerContext()
-  const { mutate: mutateBankTransactions, updateLocalBankTransactions } = useBankTransactionsContext()
+  const { updateLocalBankTransactions } = useBankTransactionsContext()
 
-  const { trigger: categorizeBankTransaction, isMutating, isError } = useCategorizeBankTransaction({
-    mutateBankTransactions,
-  })
+  const { trigger: categorizeBankTransaction, isMutating, isError } = useCategorizeBankTransaction()
 
   const categorize = useCallback(
     async (bankTransactionId: BankTransaction['id'], newCategory: CategoryUpdate, notify?: boolean) => {
