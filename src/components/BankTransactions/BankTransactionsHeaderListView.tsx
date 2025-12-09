@@ -111,7 +111,7 @@ export function BankTransactionsHeaderListView({
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
-      <div className='Layer__bank-transactions__header__content-title'>
+      <HStack align='center'>
         <Heading
           className='Layer__bank-transactions__title'
           size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
@@ -125,7 +125,7 @@ export function BankTransactionsHeaderListView({
             hideContent={true}
           />
         )}
-      </div>
+      </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
           label='Select a month'
