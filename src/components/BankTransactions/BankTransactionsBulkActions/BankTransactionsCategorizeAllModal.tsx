@@ -5,9 +5,9 @@ import { useBulkCategorize } from '@hooks/useBankTransactions/useBulkCategorize'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 
 export enum CategorizationMode {
@@ -19,14 +19,14 @@ interface BankTransactionsCategorizeAllModalProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   mode: CategorizationMode
-  isMobileView?: boolean
+  useCategorySelectDrawer?: boolean
 }
 
 export const BankTransactionsCategorizeAllModal = ({
   isOpen,
   onOpenChange,
   mode,
-  isMobileView = false,
+  useCategorySelectDrawer = false,
 }: BankTransactionsCategorizeAllModalProps) => {
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
@@ -77,7 +77,7 @@ export const BankTransactionsCategorizeAllModal = ({
         <VStack gap='xs'>
           <VStack gap='3xs'>
             <Label size='sm' htmlFor={categorySelectId}>Select category</Label>
-            {isMobileView
+            {useCategorySelectDrawer
               ? (
                 <CategorySelectDrawerWithTrigger
                   aria-labelledby={categorySelectId}
@@ -111,7 +111,6 @@ export const BankTransactionsCategorizeAllModal = ({
       confirmDisabled={!selectedCategory}
       errorText={mode === CategorizationMode.Categorize ? 'Failed to categorize transactions' : 'Failed to recategorize transactions'}
       closeOnConfirm
-      useDrawer={isMobileView}
     />
   )
 }
