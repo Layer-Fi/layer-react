@@ -225,7 +225,7 @@ export const BankTransactionsHeader = ({
   const BulkActionsModuleSlot = useCallback(() => {
     return (
       <BankTransactionsBulkActions
-        useCategorySelectDrawer={isMobileList}
+        isMobileView={isMobileList}
         slotProps={{
           ConfirmAllModal: {
             label: isMobileList ? 'Confirm' : 'Confirm all',
