@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback } from 'react'
 import classNames from 'classnames'
 
 import { type SortDirection } from '@internal-types/general'
@@ -62,10 +62,10 @@ const ValueIcon = ({
             height='3'
             patternUnits='userSpaceOnUse'
           >
-            <rect width='1' height='1' opacity={0.76} />
+            <rect width='1' height='1' opacity={0.76} className='Layer__charts__dots-pattern-legend__dot' />
           </pattern>
         </defs>
-        <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' />
+        <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' className='Layer__charts__dots-pattern-legend__bg' />
         <rect
           x='1'
           y='1'
@@ -104,8 +104,14 @@ export const DetailedTable = ({
     .filter(x => x.value > 0)
     .reduce((sum, x) => sum + x.value, 0)
 
-  const sortDirectionClass = useMemo(() => {
-    return sidebarScope && filters[sidebarScope]?.sortDirection ? `sort--${filters[sidebarScope]?.sortDirection}` : ''
+  const buildColClass = useCallback((column: string) => {
+    if (!sidebarScope || !filters[sidebarScope]?.sortDirection) {
+      return ''
+    }
+    if (filters[sidebarScope]?.sortBy === column) {
+      return `sort--${filters[sidebarScope]?.sortDirection}`
+    }
+    return ''
   }, [sidebarScope, filters])
 
   const { isMobile } = useSizeClass()
@@ -118,7 +124,7 @@ export const DetailedTable = ({
             <tr>
               <th></th>
               <th
-                className={classNames('Layer__sortable-col', sortDirectionClass)}
+                className={classNames('Layer__sortable-col', buildColClass('category'))}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'category')}
               >
                 {stringOverrides?.categoryColumnHeader || 'Category'}
@@ -127,7 +133,7 @@ export const DetailedTable = ({
               </th>
               {!isMobile && (
                 <th
-                  className={classNames('Layer__sortable-col', sortDirectionClass)}
+                  className={classNames('Layer__sortable-col', buildColClass('type'))}
                   onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
                 >
                   {stringOverrides?.typeColumnHeader || 'Type'}
@@ -136,7 +142,7 @@ export const DetailedTable = ({
                 </th>
               )}
               <th
-                className={classNames('Layer__sortable-col', sortDirectionClass, 'value-col')}
+                className={classNames('Layer__sortable-col', buildColClass('value'), 'value-col')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'value')}
               >
                 {stringOverrides?.valueColumnHeader || 'Value'}
