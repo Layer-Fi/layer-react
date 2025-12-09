@@ -27,8 +27,8 @@ import {
 import { type CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 import { type Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
 
-import { MONTH_FORMAT_ABBREVIATED, MONTH_FORMAT_NARROW } from '@config/general'
 import { centsToDollars } from '@models/Money'
+import { MONTH_FORMAT_ABBREVIATED, MONTH_FORMAT_NARROW } from '@config/general'
 import { isDateAllowedToBrowse } from '@utils/business'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import {
