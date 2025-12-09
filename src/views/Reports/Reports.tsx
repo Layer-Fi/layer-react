@@ -14,9 +14,11 @@ import { ProfitAndLossReport } from '@components/ProfitAndLossReport/ProfitAndLo
 import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
 import { StatementOfCashFlow } from '@components/StatementOfCashFlow/StatementOfCashFlow'
 import { type StatementOfCashFlowStringOverrides } from '@components/StatementOfCashFlow/StatementOfCashFlow'
-import { Toggle } from '@components/Toggle/Toggle'
 import { View } from '@components/View/View'
+import { ReportsSelector } from '@views/Reports/ReportsSelector'
 import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
+
+import '@views/Reports/ReportsSelector.scss'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -102,11 +104,11 @@ export const Reports = ({
     >
       {enabledReports.length > 1 && (
         <div className='Layer__component Layer__header__actions'>
-          <Toggle
-            name='reports-tabs'
+          <ReportsSelector
             options={options}
             selected={activeTab}
-            onChange={opt => setActiveTab(opt.target.value as ReportType)}
+            onChange={setActiveTab}
+            view={view}
           />
         </div>
       )}
@@ -150,6 +152,7 @@ const ReportsPanel = ({
       {openReport === 'statementOfCashFlow' && (
         <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
+          view={view}
           {...statementOfCashFlowConfig}
         />
       )}
