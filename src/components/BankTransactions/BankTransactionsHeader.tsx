@@ -251,6 +251,38 @@ export const BankTransactionsHeader = ({
     )
     : null
 
+  if (isMobileList) {
+    return (
+      <Header
+        className={classNames(
+          'Layer__bank-transactions__header',
+          withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
+          mobileComponent && listView
+            ? 'Layer__bank-transactions__header--mobile'
+            : undefined,
+        )}
+      >
+        <VStack gap='sm'>
+          {headerTopRow}
+
+          <TransactionsSearch isDisabled={showBulkActions} />
+
+          <HStack justify={showBulkActions ? 'end' : 'space-between'} align='center' gap='xs'>
+            {showBulkActions
+              ? (
+                <BulkActionsModule
+                  showSelectedCount={false}
+                  slots={{ BulkActions: BulkActionsModuleSlot }}
+                />
+              )
+              : statusToggle}
+          </HStack>
+
+        </VStack>
+      </Header>
+    )
+  }
+
   if (listView) {
     return (
       <Header
@@ -277,6 +309,7 @@ export const BankTransactionsHeader = ({
           </HStack>
 
           <TransactionsSearch isDisabled={showBulkActions} />
+
         </VStack>
       </Header>
     )
