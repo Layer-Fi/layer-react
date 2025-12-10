@@ -846,8 +846,11 @@
   }
 
   .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile {
-    padding-bottom: var(--spacing-2xs);
+    padding-right: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    padding-left: 0;
     box-shadow: none;
+    margin-left: var(--spacing-md);
   }
 }
 
