@@ -29,7 +29,15 @@ export const BankTransactionsMobileBulkActionsHeader = ({
   }
 
   return (
-    <HStack className='Layer__BankTransactionsMobileBulkActionsHeader'>
+    <HStack
+      gap='md'
+      align='center'
+      justify='space-between'
+      pis='xs'
+      pie='md'
+      pb='xs'
+      className='Layer__BankTransactionsMobileBulkActionsHeader'
+    >
       <HStack
         align='center'
         pi='xs'

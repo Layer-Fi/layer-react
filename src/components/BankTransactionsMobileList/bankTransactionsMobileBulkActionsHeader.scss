@@ -1,12 +1,6 @@
 .Layer__BankTransactionsMobileBulkActionsHeader {
-  gap: var(--spacing-md);
-  align-items: center;
-  justify-content: space-between;
-  padding-block: var(--spacing-xs);
-  padding-right: var(--spacing-sm);
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--border-color);
-  margin-top: var(--spacing-sm);
   margin-left: var(--spacing-md);
   background-color: var(--color-base-100);
 }
