@@ -82,7 +82,7 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   )
 }
 
-function DownloadButton({
+const DownloadButton = ({
   downloadButtonTextOverride,
   iconOnly,
   disabled,
@@ -90,7 +90,7 @@ function DownloadButton({
   downloadButtonTextOverride?: string
   iconOnly?: boolean
   disabled?: boolean
-}) {
+}) => {
   const { filters } = useBankTransactionsFiltersContext()
 
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
@@ -251,14 +251,15 @@ export const BankTransactionsHeader = ({
     )
     : null
 
-  // List view layout (mobile/tablet)
   if (listView) {
     return (
       <Header
         className={classNames(
-          'Layer__BankTransactionsHeaderListView',
-          withDatePicker && 'Layer__BankTransactionsHeaderListView--with-date-picker',
-          mobileComponent && 'Layer__BankTransactionsHeaderListView--mobile',
+          'Layer__bank-transactions__header',
+          withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
+          mobileComponent && listView
+            ? 'Layer__bank-transactions__header--mobile'
+            : undefined,
         )}
         style={{ top: shiftStickyHeader }}
       >
@@ -281,43 +282,44 @@ export const BankTransactionsHeader = ({
     )
   }
 
-  // Table view layout (desktop)
-  return (
-    <Header
-      className={classNames(
-        'Layer__bank-transactions__header',
-        withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
-        mobileComponent && listView
-          ? 'Layer__bank-transactions__header--mobile'
-          : undefined,
-      )}
-      style={{ top: shiftStickyHeader }}
-    >
-      {!collapseHeader && headerTopRow}
+  else {
+    return (
+      <Header
+        className={classNames(
+          'Layer__bank-transactions__header',
+          withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
+          mobileComponent && listView
+            ? 'Layer__bank-transactions__header--mobile'
+            : undefined,
+        )}
+        style={{ top: shiftStickyHeader }}
+      >
+        {!collapseHeader && headerTopRow}
 
-      <BankTransactionsActions>
-        {showBulkActions
-          ? (
-            <BulkActionsModule
-              slots={{ BulkActions: BulkActionsModuleSlot }}
+        <BankTransactionsActions>
+          {showBulkActions
+            ? (
+              <BulkActionsModule
+                slots={{ BulkActions: BulkActionsModuleSlot }}
+              />
+            )
+            : (
+              <HStack slot='toggle' justify='center' gap='xs'>
+                {collapseHeader && headerTopRow}
+                {statusToggle}
+              </HStack>
+            )}
+          <TransactionsSearch slot='search' isDisabled={showBulkActions} />
+          <HStack slot='download-upload' justify='center' gap='xs'>
+            <DownloadButton
+              downloadButtonTextOverride={stringOverrides?.downloadButton}
+              iconOnly={listView}
+              disabled={showBulkActions}
             />
-          )
-          : (
-            <HStack slot='toggle' justify='center' gap='xs'>
-              {collapseHeader && headerTopRow}
-              {statusToggle}
-            </HStack>
-          )}
-        <TransactionsSearch slot='search' isDisabled={showBulkActions} />
-        <HStack slot='download-upload' justify='center' gap='xs'>
-          <DownloadButton
-            downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={listView}
-            disabled={showBulkActions}
-          />
-          <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
-        </HStack>
-      </BankTransactionsActions>
-    </Header>
-  )
+            <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
+          </HStack>
+        </BankTransactionsActions>
+      </Header>
+    )
+  }
 }
