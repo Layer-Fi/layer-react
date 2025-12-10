@@ -7,33 +7,31 @@ import { Span } from '@ui/Typography/Text'
 import './bulkActionsModule.scss'
 
 export interface BulkActionsModuleProps {
-  showSelectedCount?: boolean
+  showSelectedLabel?: boolean
   slots: {
     BulkActions: React.FC
   }
 }
 
-export const BulkActionsModule = ({ showSelectedCount = true, slots }: BulkActionsModuleProps) => {
+export const BulkActionsModule = ({ showSelectedLabel = true, slots }: BulkActionsModuleProps) => {
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   return (
-    <HStack slot='toggle' justify={showSelectedCount ? 'space-between' : 'end'} align='center' gap='xs'>
-      {showSelectedCount && (
-        <HStack justify='space-between' align='center' pis='sm' pie='3xs' gap='3xs' className='Layer__BulkActionsModule__SelectedItemsContainer'>
-          <Span noWrap>
-            {`${count} selected`}
-          </Span>
-          <Button
-            variant='ghost'
-            icon
-            inset
-            onClick={clearSelection}
-            aria-label='Clear selected items'
-          >
-            <X />
-          </Button>
-        </HStack>
-      )}
+    <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
+      <HStack justify='space-between' align='center' pis='sm' pie='3xs' gap='3xs' className='Layer__BulkActionsModule__SelectedItemsContainer'>
+        <Span noWrap>
+          {showSelectedLabel ? `${count} selected` : count}
+        </Span>
+        <Button
+          variant='ghost'
+          icon
+          inset
+          onClick={clearSelection}
+          aria-label='Clear selected items'
+        >
+          <X />
+        </Button>
+      </HStack>
       <slots.BulkActions />
     </HStack>
   )

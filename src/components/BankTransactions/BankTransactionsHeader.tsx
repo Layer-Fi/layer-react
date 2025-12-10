@@ -273,7 +273,7 @@ export const BankTransactionsHeader = ({
             {showBulkActions
               ? (
                 <BulkActionsModule
-                  showSelectedCount={false}
+                  showSelectedLabel={false}
                   slots={{ BulkActions: BulkActionsModuleSlot }}
                 />
               )
