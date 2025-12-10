@@ -24,7 +24,7 @@ export interface DetailedChartStringOverrides {
   expenseChartHeader?: string
   revenueChartHeader?: string
   revenueToggleLabel?: string
-  expensesToggleLabel?: string
+  expenseToggleLabel?: string
 }
 
 export interface ProfitAndLossDetailedChartsStringOverrides {
