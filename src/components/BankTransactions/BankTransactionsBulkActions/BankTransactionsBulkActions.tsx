@@ -64,7 +64,7 @@ export const BankTransactionsBulkActions = ({
                 variant='outlined'
                 onClick={() => setRecategorizeModalOpen(true)}
               >
-                Recategorize
+                {isMobileView ? 'Categorize' : 'Recategorize'}
               </Button>
               <BankTransactionsCategorizeAllModal
                 isOpen={recategorizeModalOpen}
