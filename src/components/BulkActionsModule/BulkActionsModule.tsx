@@ -8,17 +8,18 @@ import './bulkActionsModule.scss'
 
 export interface BulkActionsModuleProps {
   showSelectedLabel?: boolean
+  fullWidth?: boolean
   slots: {
     BulkActions: React.FC
   }
 }
 
-export const BulkActionsModule = ({ showSelectedLabel = true, slots }: BulkActionsModuleProps) => {
+export const BulkActionsModule = ({ showSelectedLabel = true, fullWidth = false, slots }: BulkActionsModuleProps) => {
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   return (
-    <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
-      <HStack justify='space-between' align='center' pis='sm' pie='3xs' gap='3xs' className='Layer__BulkActionsModule__SelectedItemsContainer'>
+    <HStack slot='toggle' justify='space-between' align='center' gap='xs' fluid={fullWidth ? true : undefined}>
+      <HStack justify='space-between' align='center' pis='sm' pie='3xs' gap='3xs'>
         <Span noWrap>
           {showSelectedLabel ? `${count} selected` : count}
         </Span>
