@@ -261,6 +261,7 @@ export const BankTransactionsHeader = ({
             ? 'Layer__bank-transactions__header--mobile'
             : undefined,
         )}
+        style={{ top: shiftStickyHeader }}
       >
         <VStack gap='sm'>
           {headerTopRow}

@@ -4,6 +4,10 @@
   overflow: hidden;
   padding: 0;
   list-style: none;
+
+  .Layer__bank-transaction-mobile-list-item:first-child {
+    margin-top: 0;
+  }
 }
 
 .Layer__bank-transaction-mobile-list-item {
