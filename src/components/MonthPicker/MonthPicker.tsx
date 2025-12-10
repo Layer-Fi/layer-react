@@ -38,7 +38,7 @@ export const MonthPicker = ({
 }: MonthPickerProps) => {
   const triggerRef = useRef(null)
   const [isPopoverOpen, setPopoverOpen] = useState(false)
-  const { value, isMobile } = useSizeClass()
+  const { value } = useSizeClass()
 
   const onChangeMonth = useCallback((val: ZonedDateTime) => {
     onChange(val)
@@ -54,7 +54,7 @@ export const MonthPicker = ({
       <InputGroup
         ref={triggerRef}
         slot='input'
-        className={classNames('Layer__MonthPicker__InputGroup', { 'Layer__MonthPicker__InputGroup--mobile': isMobile })}
+        className={classNames('Layer__MonthPicker__InputGroup', { 'Layer__MonthPicker__InputGroup--truncated': truncateMonth })}
         onClick={() => setPopoverOpen(true)}
       >
         <Input inset {...additionalAriaProps} value={inputValue} readOnly />
