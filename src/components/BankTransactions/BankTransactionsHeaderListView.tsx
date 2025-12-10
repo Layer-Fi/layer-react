@@ -3,6 +3,8 @@ import classNames from 'classnames'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Header } from '@components/Container/Header'
 
+import './BankTransactionsHeaderListView.scss'
+
 import type { BankTransactionsHeaderSharedProps } from './BankTransactionsHeader'
 
 export function BankTransactionsHeaderListView({
@@ -18,10 +20,9 @@ export function BankTransactionsHeaderListView({
   return (
     <Header
       className={classNames(
-        'Layer__bank-transactions__header',
-        'Layer__bank-transactions__header--list-view',
-        withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
-        mobileComponent && 'Layer__bank-transactions__header--mobile',
+        'Layer__BankTransactionsHeaderListView',
+        withDatePicker && 'Layer__BankTransactionsHeaderListView--with-date-picker',
+        mobileComponent && 'Layer__BankTransactionsHeaderListView--mobile',
       )}
       style={{ top: shiftStickyHeader }}
     >
