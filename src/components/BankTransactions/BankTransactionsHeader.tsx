@@ -269,7 +269,7 @@ export const BankTransactionsHeader = ({
 
           <TransactionsSearch isDisabled={showBulkActions} />
 
-          <HStack justify={showBulkActions ? 'end' : 'space-between'} align='center' gap='xs'>
+          <HStack justify='space-between' align='center' gap='xs' fluid>
             {showBulkActions
               ? (
                 <BulkActionsModule

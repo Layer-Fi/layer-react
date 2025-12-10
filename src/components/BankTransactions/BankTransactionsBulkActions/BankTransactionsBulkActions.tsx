@@ -31,7 +31,7 @@ export const BankTransactionsBulkActions = ({
 
   return (
     <>
-      <HStack align='center' gap='xs'>
+      <HStack align='center' gap='xs' justify={isMobileView ? 'end' : undefined}>
         {display === DisplayState.review
           ? (
             <>
