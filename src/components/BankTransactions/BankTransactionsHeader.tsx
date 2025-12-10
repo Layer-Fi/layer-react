@@ -31,8 +31,6 @@ import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
-import './BankTransactionsHeaderListView.scss'
-
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
   asWidget?: boolean
