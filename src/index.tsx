@@ -39,6 +39,9 @@ export { PlatformOnboarding } from './components/PlatformOnboarding/PlatformOnbo
 /* --------------------- Banners -------------------------- */
 export { BookkeepingUpsellBar } from './components/BookkeepingUpsellBar/BookkeepingUpsellBar'
 
+/* --------------------- Date Pickers -------------------------- */
+export { GlobalMonthPicker } from './components/GlobalMonthPicker/GlobalMonthPicker'
+
 /*
 ======================= Composite Views =======================
 */
