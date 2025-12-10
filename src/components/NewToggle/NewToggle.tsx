@@ -1,6 +1,6 @@
+import classNames from 'classnames'
 import type { Key, Selection } from 'react-aria-components'
 import { ToggleButtonGroup } from 'react-aria-components'
-import classNames from 'classnames'
 
 import './NewToggle.scss'
 
