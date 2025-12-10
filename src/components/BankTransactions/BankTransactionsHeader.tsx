@@ -258,9 +258,7 @@ export const BankTransactionsHeader = ({
         className={classNames(
           'Layer__bank-transactions__header',
           withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
-          mobileComponent && listView
-            ? 'Layer__bank-transactions__header--mobile'
-            : undefined,
+          'Layer__bank-transactions__header--mobile',
         )}
         style={{ top: shiftStickyHeader }}
       >
@@ -292,9 +290,6 @@ export const BankTransactionsHeader = ({
         className={classNames(
           'Layer__bank-transactions__header',
           withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
-          mobileComponent && listView
-            ? 'Layer__bank-transactions__header--mobile'
-            : undefined,
         )}
         style={{ top: shiftStickyHeader }}
       >
