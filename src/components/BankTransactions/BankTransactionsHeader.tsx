@@ -247,6 +247,7 @@ export const BankTransactionsHeader = ({
         ]}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}
+        fullWidth={isMobileList}
       />
     )
     : null

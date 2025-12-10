@@ -14,4 +14,12 @@
   isolation: isolate;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+
+  &--full-width {
+    width: 100%;
+
+    .Layer__NewToggleOption {
+      flex: 1;
+    }
+  }
 }
