@@ -1,5 +1,6 @@
-import { type ReactNode, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
+import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import type { Key } from 'react-aria-components'
 
@@ -7,23 +8,30 @@ import { DisplayState } from '@internal-types/bank_transactions'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
 import { BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
+import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
+import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
 import { useDebounce } from '@hooks/useDebounce/useDebounce'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { HStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
+import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { type MobileComponentType } from '@components/BankTransactions/constants'
+import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
+import { ButtonVariant } from '@components/Button/Button'
+import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
+import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { NewToggle } from '@components/NewToggle/NewToggle'
 import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
-import { BankTransactionsHeaderListView } from './BankTransactionsHeaderListView'
-import { BankTransactionsHeaderTableView } from './BankTransactionsHeaderTableView'
+import './BankTransactionsHeaderListView.scss'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -45,31 +53,12 @@ export interface BankTransactionsHeaderStringOverrides {
   downloadButton?: string
 }
 
-export interface BankTransactionsHeaderSharedProps {
-  shiftStickyHeader: number
-  withDatePicker: boolean
-  mobileComponent?: MobileComponentType
-  listView?: boolean
-  showBulkActions: boolean
-  headerTopRow: ReactNode
-  statusToggle: ReactNode
-  bulkActionsModule: ReactNode
-  transactionsSearch: ReactNode
-}
-
-export interface BankTransactionsHeaderTableViewExtraProps {
-  stringOverrides?: BankTransactionsHeaderStringOverrides
-  withUploadMenu?: boolean
-  showCategorizationRules?: boolean
-  collapseHeader?: boolean
-}
-
 type TransactionsSearchProps = {
   slot?: string
   isDisabled?: boolean
 }
 
-export function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
+function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   const { filters, setFilters } = useBankTransactionsFiltersContext()
 
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
@@ -95,6 +84,46 @@ export function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps
   )
 }
 
+function DownloadButton({
+  downloadButtonTextOverride,
+  iconOnly,
+  disabled,
+}: {
+  downloadButtonTextOverride?: string
+  iconOnly?: boolean
+  disabled?: boolean
+}) {
+  const { filters } = useBankTransactionsFiltersContext()
+
+  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { trigger, isMutating, error } = useBankTransactionsDownload()
+
+  const handleClick = () => {
+    void trigger(bankTransactionFiltersToHookOptions(filters))
+      .then((result) => {
+        if (result?.presignedUrl) {
+          triggerInvisibleDownload({ url: result.presignedUrl })
+        }
+      })
+  }
+
+  return (
+    <>
+      <DownloadButtonComponent
+        variant={ButtonVariant.secondary}
+        iconOnly={iconOnly}
+        onClick={handleClick}
+        isDownloading={isMutating}
+        requestFailed={Boolean(error)}
+        text={downloadButtonTextOverride ?? 'Download'}
+        disabled={disabled}
+      />
+      <InvisibleDownload ref={invisibleDownloadRef} />
+    </>
+  )
+}
+
 export const BankTransactionsHeader = ({
   shiftStickyHeader,
   asWidget,
@@ -117,7 +146,6 @@ export const BankTransactionsHeader = ({
     dateFilterMode,
   } = useBankTransactionsFiltersContext()
   const { value: sizeClass } = useSizeClass()
-  const { count } = useCountSelectedIds()
 
   const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
   const monthPickerDate = filters?.dateRange ? convertDateToZonedDateTime(filters.dateRange.startDate) : null
@@ -131,19 +159,10 @@ export const BankTransactionsHeader = ({
     })
   }, [setFilters])
 
+  const { count } = useCountSelectedIds()
+
   const showBulkActions = count > 0
   const isMobileList = listView && mobileComponent === 'mobileList'
-
-  const onCategorizationDisplayChange = useCallback((value: Key) => {
-    setFilters({
-      categorizationStatus:
-        value === 'categorized'
-          ? DisplayState.categorized
-          : value === 'all'
-            ? DisplayState.all
-            : DisplayState.review,
-    })
-  }, [setFilters])
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
@@ -186,21 +205,27 @@ export const BankTransactionsHeader = ({
     sizeClass,
   ])
 
-  const statusToggle = useMemo(() => {
-    if (categorizedOnly || !categorizeView || !showStatusToggle) {
-      return null
+  const onCategorizationDisplayChange = (value: Key) => {
+    setFilters({
+      categorizationStatus:
+        value === 'categorized'
+          ? DisplayState.categorized
+          : value === 'all'
+            ? DisplayState.all
+            : DisplayState.review,
+    })
+  }
+
+  const headerMenuActions = useMemo(() => {
+    const actions: BankTransactionsHeaderMenuActions[] = []
+    if (withUploadMenu) {
+      actions.push(BankTransactionsHeaderMenuActions.UploadTransactions)
     }
-    return (
-      <NewToggle
-        options={[
-          { label: 'To Review', value: DisplayState.review },
-          { label: 'Categorized', value: DisplayState.categorized },
-        ]}
-        selectedKey={display}
-        onSelectionChange={onCategorizationDisplayChange}
-      />
-    )
-  }, [categorizedOnly, categorizeView, showStatusToggle, display, onCategorizationDisplayChange])
+    if (showCategorizationRules) {
+      actions.push(BankTransactionsHeaderMenuActions.ManageCategorizationRules)
+    }
+    return actions
+  }, [withUploadMenu, showCategorizationRules])
 
   const BulkActionsModuleSlot = useCallback(() => {
     return (
@@ -215,43 +240,86 @@ export const BankTransactionsHeader = ({
     )
   }, [isMobileList])
 
-  const bulkActionsModule = useMemo(() => (
-    <BulkActionsModule
-      slots={{ BulkActions: BulkActionsModuleSlot }}
-    />
-  ), [BulkActionsModuleSlot])
+  const statusToggle = !categorizedOnly && categorizeView && showStatusToggle
+    ? (
+      <NewToggle
+        options={[
+          { label: 'To Review', value: DisplayState.review },
+          { label: 'Categorized', value: DisplayState.categorized },
+        ]}
+        selectedKey={display}
+        onSelectionChange={onCategorizationDisplayChange}
+      />
+    )
+    : null
 
-  const transactionsSearch = useMemo(() => (
-    <TransactionsSearch isDisabled={showBulkActions} />
-  ), [showBulkActions])
-
-  const sharedProps: BankTransactionsHeaderSharedProps = {
-    shiftStickyHeader,
-    withDatePicker,
-    mobileComponent,
-    listView,
-    showBulkActions,
-    headerTopRow,
-    statusToggle,
-    bulkActionsModule,
-    transactionsSearch,
-  }
-
+  // List view layout (mobile/tablet)
   if (listView) {
     return (
-      <BankTransactionsHeaderListView
-        {...sharedProps}
-      />
+      <Header
+        className={classNames(
+          'Layer__BankTransactionsHeaderListView',
+          withDatePicker && 'Layer__BankTransactionsHeaderListView--with-date-picker',
+          mobileComponent && 'Layer__BankTransactionsHeaderListView--mobile',
+        )}
+        style={{ top: shiftStickyHeader }}
+      >
+        <VStack gap='xs'>
+          {headerTopRow}
+
+          <HStack justify='space-between' align='center' gap='xs'>
+            {showBulkActions
+              ? (
+                <BulkActionsModule
+                  slots={{ BulkActions: BulkActionsModuleSlot }}
+                />
+              )
+              : statusToggle}
+          </HStack>
+
+          <TransactionsSearch isDisabled={showBulkActions} />
+        </VStack>
+      </Header>
     )
   }
 
+  // Table view layout (desktop)
   return (
-    <BankTransactionsHeaderTableView
-      {...sharedProps}
-      stringOverrides={stringOverrides}
-      withUploadMenu={withUploadMenu}
-      showCategorizationRules={showCategorizationRules}
-      collapseHeader={collapseHeader}
-    />
+    <Header
+      className={classNames(
+        'Layer__bank-transactions__header',
+        withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
+        mobileComponent && listView
+          ? 'Layer__bank-transactions__header--mobile'
+          : undefined,
+      )}
+      style={{ top: shiftStickyHeader }}
+    >
+      {!collapseHeader && headerTopRow}
+
+      <BankTransactionsActions>
+        {showBulkActions
+          ? (
+            <BulkActionsModule
+              slots={{ BulkActions: BulkActionsModuleSlot }}
+            />
+          )
+          : (
+            <HStack slot='toggle' justify='center' gap='xs'>
+              {collapseHeader && headerTopRow}
+              {statusToggle}
+            </HStack>
+          )}
+        <TransactionsSearch slot='search' isDisabled={showBulkActions} />
+        <HStack slot='download-upload' justify='center' gap='xs'>
+          <DownloadButton
+            downloadButtonTextOverride={stringOverrides?.downloadButton}
+            iconOnly={listView}
+            disabled={showBulkActions}
+          />
+          <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
+        </HStack>
+      </BankTransactionsActions>
+    </Header>
   )
 }
