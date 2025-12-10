@@ -69,7 +69,7 @@ export const BankTransactionsBulkActions = ({
               <BankTransactionsCategorizeAllModal
                 isOpen={recategorizeModalOpen}
                 onOpenChange={setRecategorizeModalOpen}
-                mode={CategorizationMode.Recategorize}
+                mode={isMobileView ? CategorizationMode.Categorize : CategorizationMode.Recategorize}
                 isMobileView={isMobileView}
               />
 
