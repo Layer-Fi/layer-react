@@ -1,3 +1,6 @@
-.Layer__BankTransactionsMobileBulkActionsHeader__checkbox-container {
-  gap: 20px;
+.Layer__BankTransactionsMobileBulkActionsHeader {
+  border-radius: var(--input-border-radius);
+  border: 1px solid var(--border-color);
+  margin-inline-start: var(--spacing-md);
+  background-color: var(--color-base-100);
 }

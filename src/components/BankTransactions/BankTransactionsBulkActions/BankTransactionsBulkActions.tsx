@@ -31,7 +31,7 @@ export const BankTransactionsBulkActions = ({
 
   return (
     <>
-      <HStack align='center' gap='xs'>
+      <HStack align='center' gap='xs' justify={isMobileView ? 'end' : undefined}>
         {display === DisplayState.review
           ? (
             <>
@@ -64,12 +64,12 @@ export const BankTransactionsBulkActions = ({
                 variant='outlined'
                 onClick={() => setRecategorizeModalOpen(true)}
               >
-                Recategorize
+                {isMobileView ? 'Categorize' : 'Recategorize'}
               </Button>
               <BankTransactionsCategorizeAllModal
                 isOpen={recategorizeModalOpen}
                 onOpenChange={setRecategorizeModalOpen}
-                mode={CategorizationMode.Recategorize}
+                mode={isMobileView ? CategorizationMode.Categorize : CategorizationMode.Recategorize}
                 isMobileView={isMobileView}
               />
 

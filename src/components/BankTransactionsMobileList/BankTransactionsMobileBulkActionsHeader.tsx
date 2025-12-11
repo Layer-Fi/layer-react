@@ -31,15 +31,17 @@ export const BankTransactionsMobileBulkActionsHeader = ({
   return (
     <HStack
       gap='md'
-      pi='lg'
-      pbs='md'
-      justify='space-between'
       align='center'
+      justify='space-between'
+      pis='xs'
+      pie='md'
+      pb='xs'
+      className='Layer__BankTransactionsMobileBulkActionsHeader'
     >
       <HStack
         align='center'
         pi='xs'
-        className='Layer__BankTransactionsMobileBulkActionsHeader__checkbox-container'
+        gap='xs'
       >
         {bulkActionsEnabled && (
           <>
@@ -58,15 +60,17 @@ export const BankTransactionsMobileBulkActionsHeader = ({
           </>
         )}
       </HStack>
-      <Switch
-        isSelected={bulkActionsEnabled}
-        onChange={onBulkActionsToggle}
-        aria-label='Toggle bulk actions'
-      >
+      <HStack align='center' gap='xs'>
         <Span size='md' noWrap>
           Bulk Actions
         </Span>
-      </Switch>
+        <Switch
+          isSelected={bulkActionsEnabled}
+          onChange={onBulkActionsToggle}
+          aria-label='Toggle bulk actions'
+        />
+      </HStack>
+
     </HStack>
   )
 }
