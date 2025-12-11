@@ -10,16 +10,18 @@ import { HStack } from '@ui/Stack/Stack'
 import {
   getColumnDefs,
   isLeafColumn,
+  type NestedColumnConfig,
 } from '@components/DataTable/columnUtils'
 import {
+  type BaseDataTableProps,
   DataTable,
-  type DataTableProps,
 } from '@components/DataTable/DataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
-type ExpandableDataTableProps<TData> = Omit<DataTableProps<TData>, 'data' | 'headerGroups'> & {
+type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   data: TData[] | undefined
+  columnConfig: NestedColumnConfig<TData>
   getSubRows: (row: TData) => TData[] | undefined
   getRowId: (row: TData) => string
 }
@@ -44,22 +46,6 @@ export function ExpandableDataTable<TData extends object>({
   getRowId,
 }: ExpandableDataTableProps<TData>) {
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
-
-  const columnDefs = getColumnDefs<TData>(columnConfig)
-
-  const table = useReactTable<TData>({
-    data: data ?? EMPTY_ARRAY,
-    columns: columnDefs,
-    getSubRows,
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    state: { expanded },
-    onExpandedChange: setExpanded,
-    autoResetPageIndex: false,
-    getRowId,
-  })
-
-  const { rows } = table.getExpandedRowModel()
 
   const wrappedColumnConfig = useMemo(() => {
     const [first, ...rest] = columnConfig
@@ -89,14 +75,31 @@ export function ExpandableDataTable<TData extends object>({
     return [firstWithChevron, ...rest]
   }, [columnConfig])
 
+  const columnDefs = getColumnDefs<TData>(wrappedColumnConfig)
+
+  const table = useReactTable<TData>({
+    data: data ?? EMPTY_ARRAY,
+    columns: columnDefs,
+    getSubRows,
+    getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
+    state: { expanded },
+    onExpandedChange: setExpanded,
+    autoResetPageIndex: false,
+    getRowId,
+  })
+
+  const { rows } = table.getExpandedRowModel()
+
   const dependencies = useMemo(() => [expanded], [expanded])
 
   const headerGroups = table.getHeaderGroups()
+  const numColumns = table.getVisibleLeafColumns().length
 
   return (
     <DataTable
       ariaLabel={ariaLabel}
-      columnConfig={wrappedColumnConfig}
+      numColumns={numColumns}
       data={rows}
       isLoading={isLoading}
       isError={isError}

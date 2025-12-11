@@ -7,8 +7,8 @@ import {
 } from '@tanstack/react-table'
 
 import { VStack } from '@ui/Stack/Stack'
-import { getColumnDefs } from '@components/DataTable/columnUtils'
-import { DataTable, type DataTableProps } from '@components/DataTable/DataTable'
+import { getColumnDefs, type NestedColumnConfig } from '@components/DataTable/columnUtils'
+import { type BaseDataTableProps, DataTable } from '@components/DataTable/DataTable'
 import { Pagination } from '@components/Pagination/Pagination'
 
 import './paginatedDataTable.scss'
@@ -21,8 +21,9 @@ interface PaginationProps {
   fetchMore?: () => void
   autoResetPageIndexRef?: MutableRefObject<boolean>
 }
-interface PaginatedTableProps<TData> extends Omit<DataTableProps<TData>, 'data' | 'headerGroups'> {
+interface PaginatedTableProps<TData> extends BaseDataTableProps {
   data: TData[] | undefined
+  columnConfig: NestedColumnConfig<TData>
   paginationProps: PaginationProps
 }
 
@@ -66,12 +67,13 @@ export function PaginatedTable<TData extends { id: string }>({
   }, [table])
 
   const headerGroups = table.getHeaderGroups()
+  const numColumns = table.getVisibleLeafColumns().length
 
   return (
     <VStack>
       <DataTable
         ariaLabel={ariaLabel}
-        columnConfig={columnConfig}
+        numColumns={numColumns}
         data={rows}
         isLoading={isLoading}
         isError={isError}

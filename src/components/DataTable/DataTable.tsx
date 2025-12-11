@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
+import { flexRender, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
 
 import {
   Cell,
@@ -9,14 +9,11 @@ import {
   TableBody,
   TableHeader,
 } from '@ui/Table/Table'
-import { flattenColumns, type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { Loader } from '@components/Loader/Loader'
 
 import './dataTable.scss'
 
-export interface DataTableProps<TData> {
-  columnConfig: NestedColumnConfig<TData>
-  data: RowType<TData>[] | undefined
+export interface BaseDataTableProps {
   componentName: string
   ariaLabel: string
   isLoading: boolean
@@ -28,12 +25,15 @@ export interface DataTableProps<TData> {
   hideHeader?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dependencies?: readonly any[]
+}
+
+export interface DataTableProps<TData> extends BaseDataTableProps {
+  data: RowType<TData>[] | undefined
   headerGroups: HeaderGroup<TData>[]
+  numColumns: number
 }
 
 export const DataTable = <TData extends object>({
-  columnConfig,
-  data,
   isLoading,
   isError,
   componentName,
@@ -41,9 +41,10 @@ export const DataTable = <TData extends object>({
   slots,
   hideHeader,
   dependencies,
+  data,
   headerGroups,
+  numColumns,
 }: DataTableProps<TData>) => {
-  const leafColumns = useMemo(() => flattenColumns(columnConfig), [columnConfig])
   const nonAria = headerGroups.length > 1
 
   const { EmptyState, ErrorState } = slots
@@ -53,7 +54,7 @@ export const DataTable = <TData extends object>({
     if (isError) {
       return (
         <Row className='Layer__DataTable__EmptyState__Row' nonAria={nonAria}>
-          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={leafColumns.length} nonAria={nonAria}>
+          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={numColumns} nonAria={nonAria}>
             <ErrorState />
           </Cell>
         </Row>
@@ -63,7 +64,7 @@ export const DataTable = <TData extends object>({
     if (isLoading) {
       return (
         <Row className='Layer__DataTable__EmptyState__Row' nonAria={nonAria}>
-          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={leafColumns.length} nonAria={nonAria}>
+          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={numColumns} nonAria={nonAria}>
             <Loader />
           </Cell>
         </Row>
@@ -73,7 +74,7 @@ export const DataTable = <TData extends object>({
     if (isEmptyTable) {
       return (
         <Row className='Layer__DataTable__EmptyState__Row' nonAria={nonAria}>
-          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={leafColumns.length} nonAria={nonAria}>
+          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={numColumns} nonAria={nonAria}>
             <EmptyState />
           </Cell>
         </Row>
@@ -84,20 +85,20 @@ export const DataTable = <TData extends object>({
       <>
         {data?.map(row => (
           <Row key={row.id} depth={row.depth} nonAria={nonAria}>
-            {leafColumns.map(col => (
+            {row.getVisibleCells().map(cell => (
               <Cell
-                key={`${row.id}-${col.id}`}
-                className={`Layer__UI__Table-Cell__${componentName}--${col.id}`}
+                key={`${row.id}-${cell.id}`}
+                className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
                 nonAria={nonAria}
               >
-                {col.cell(row)}
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </Cell>
             ))}
           </Row>
         ))}
       </>
     )
-  }, [isError, isLoading, isEmptyTable, data, nonAria, leafColumns, ErrorState, EmptyState, componentName])
+  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, componentName])
 
   return (
     <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>
