@@ -18,7 +18,7 @@ export const BulkActionsModule = ({ showSelectedLabel = true, fullWidth = false,
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   return (
-    <HStack slot='toggle' justify='space-between' align='center' gap='xs' fluid={fullWidth ? true : undefined}>
+    <HStack slot='toggle' justify='space-between' align='center' gap='xs' fluid={fullWidth}>
       <HStack justify='space-between' align='center' pis='sm' pie='3xs' gap='3xs' className='Layer__BulkActionsModule__SelectedItemsContainer'>
         <Span noWrap>
           {showSelectedLabel ? `${count} selected` : count}
