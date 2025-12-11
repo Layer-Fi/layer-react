@@ -7,8 +7,6 @@ import { HStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
 import { Span } from '@ui/Typography/Text'
 
-import './bankTransactionsMobileBulkActionsHeader.scss'
-
 interface BankTransactionsMobileBulkActionsHeaderProps {
   bankTransactions?: BankTransaction[]
   bulkActionsEnabled: boolean
@@ -33,14 +31,11 @@ export const BankTransactionsMobileBulkActionsHeader = ({
       gap='md'
       align='center'
       justify='space-between'
-      pis='xs'
-      pie='md'
+      pi='md'
       pb='xs'
-      className='Layer__BankTransactionsMobileBulkActionsHeader'
     >
       <HStack
         align='center'
-        pi='xs'
         gap='xs'
       >
         {bulkActionsEnabled && (
