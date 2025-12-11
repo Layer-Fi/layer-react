@@ -108,7 +108,7 @@ const unifiedReportRowFields = {
   ),
   cells: Schema.Record({
     key: Schema.String,
-    value: UnifiedReportCellSchema,
+    value: Schema.NullishOr(UnifiedReportCellSchema),
   }),
 }
 

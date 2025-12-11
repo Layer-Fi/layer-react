@@ -20,7 +20,11 @@ const makeLeafColumn = (col: UnifiedReportColumn): LeafColumn<UnifiedReportRow> 
   id: col.columnKey,
   header: col.displayName,
   cell: (row: RowType) => {
-    const cellValue = row.original.cells[col.columnKey].value
+    const cellValue = row.original.cells[col.columnKey]?.value
+
+    if (!cellValue || isEmptyCellValue(cellValue)) {
+      return null
+    }
 
     if (isAmountCellValue(cellValue)) {
       return <MoneySpan ellipsis amount={cellValue.value} />
