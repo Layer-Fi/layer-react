@@ -1,6 +1,7 @@
-import classNames from 'classnames'
 import type { Key, Selection } from 'react-aria-components'
 import { ToggleButtonGroup } from 'react-aria-components'
+
+import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
 import './NewToggle.scss'
 
@@ -18,14 +19,19 @@ export const NewToggle = ({
   options,
   selectedKey,
   onSelectionChange,
-  fullWidth,
+  fullWidth = false,
 }: NewToggleProps) => {
   const selectedKeys: Selection =
     selectedKey !== undefined ? new Set([selectedKey]) : new Set()
 
+  const dataProperties = toDataProperties({
+    'full-width': fullWidth,
+  })
+
   return (
     <ToggleButtonGroup
-      className={classNames('Layer__NewToggle', fullWidth && 'Layer__NewToggle--full-width')}
+      className='Layer__NewToggle'
+      {...dataProperties}
       selectionMode='single'
       selectedKeys={selectedKeys}
       onSelectionChange={(keys) => {
