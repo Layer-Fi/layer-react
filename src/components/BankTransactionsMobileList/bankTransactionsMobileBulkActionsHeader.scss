@@ -1,6 +1,4 @@
-.Layer__BankTransactionsMobileBulkActionsHeader {
-  border-radius: var(--input-border-radius);
-  border: 1px solid var(--border-color);
-  margin-inline-start: var(--spacing-md);
-  background-color: var(--color-base-100);
+.Layer__Stack.Layer__BankTransactionsMobileBulkActionsHeader {
+  padding-inline-start: var(--spacing-xs);
+  padding-inline-end: var(--spacing-xs);
 }
