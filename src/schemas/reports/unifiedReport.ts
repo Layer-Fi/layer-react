@@ -62,12 +62,39 @@ export const UnifiedReportColumnSchema = Schema.Struct({
   ),
 })
 
-const UnifiedRowCellFormatSchema = Schema.Struct({
+const UnifiedCellValueAmountSchema = Schema.Struct({
+  type: Schema.Literal('Amount'),
   value: Schema.Number,
 })
 
-const UnifiedRowCellSchema = Schema.Struct({
-  value: UnifiedRowCellFormatSchema,
+const UnifiedCellValueEmptySchema = Schema.Struct({
+  type: Schema.Literal('Empty'),
+})
+
+const UnifiedCellValueUnknownSchema = Schema.Struct({
+  type: Schema.String,
+  value: Schema.optional(Schema.Unknown),
+})
+
+const UnifiedCellValueSchema = Schema.Union(
+  UnifiedCellValueAmountSchema,
+  UnifiedCellValueEmptySchema,
+  UnifiedCellValueUnknownSchema,
+)
+
+export type UnifiedCellValue = typeof UnifiedCellValueSchema.Type
+export type UnifiedCellValueAmount = typeof UnifiedCellValueAmountSchema.Type
+export type UnifiedCellValueEmpty = typeof UnifiedCellValueEmptySchema.Type
+export type UnifiedCellValueUnknown = typeof UnifiedCellValueUnknownSchema.Type
+
+export const isAmountCellValue = (value: UnifiedCellValue): value is UnifiedCellValueAmount =>
+  value.type === 'Amount'
+
+export const isEmptyCellValue = (value: UnifiedCellValue): value is UnifiedCellValueEmpty =>
+  value.type === 'Empty'
+
+const UnifiedReportCellSchema = Schema.Struct({
+  value: UnifiedCellValueSchema,
 })
 
 const unifiedReportRowFields = {
@@ -81,7 +108,7 @@ const unifiedReportRowFields = {
   ),
   cells: Schema.Record({
     key: Schema.String,
-    value: UnifiedRowCellSchema,
+    value: UnifiedReportCellSchema,
   }),
 }
 

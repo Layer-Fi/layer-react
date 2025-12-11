@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
 
-import type { UnifiedReportColumn, UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { isAmountCellValue, isEmptyCellValue, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 import { asMutable } from '@utils/asMutable'
 import { useUnifiedReportWithDateParams } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -20,9 +20,17 @@ const makeLeafColumn = (col: UnifiedReportColumn): LeafColumn<UnifiedReportRow> 
   id: col.columnKey,
   header: col.displayName,
   cell: (row: RowType) => {
-    const cell = row.original.cells[col.columnKey]
-    const value = cell.value.value
-    return <MoneySpan amount={value} />
+    const cellValue = row.original.cells[col.columnKey].value
+
+    if (isAmountCellValue(cellValue)) {
+      return <MoneySpan ellipsis amount={cellValue.value} />
+    }
+
+    if (isEmptyCellValue(cellValue)) {
+      return null
+    }
+
+    return <Span ellipsis>{String(cellValue.value)}</Span>
   },
 })
 
