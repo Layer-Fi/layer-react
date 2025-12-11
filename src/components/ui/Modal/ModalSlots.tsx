@@ -42,12 +42,13 @@ type ModalTitleWithCloseProps = {
   heading: ReactElement
   description?: ReactElement
   onClose?: () => void
+  hideCloseButton?: boolean
 }
 
 export const ModalTitleWithClose = forwardRef<
   HTMLElementTagNameMap['div'],
   ModalTitleWithCloseProps
->(function ModalTitleWithClose({ heading, description, onClose }, ref) {
+>(function ModalTitleWithClose({ heading, description, onClose, hideCloseButton = false }, ref) {
   return (
     <VStack>
       <div
@@ -58,15 +59,17 @@ export const ModalTitleWithClose = forwardRef<
           {heading}
           {description}
         </VStack>
-        <Button
-          icon
-          variant='outlined'
-          slot='close'
-          onPress={onClose}
-          aria-label='Close Modal'
-        >
-          <X size={16} />
-        </Button>
+        {!hideCloseButton && (
+          <Button
+            icon
+            variant='outlined'
+            slot='close'
+            onPress={onClose}
+            aria-label='Close Modal'
+          >
+            <X size={16} />
+          </Button>
+        )}
       </div>
       <Separator mbe='md' />
     </VStack>
