@@ -1,6 +1,5 @@
-import { type MutableRefObject, useCallback, useMemo, useState } from 'react'
+import { type MutableRefObject, useCallback, useState } from 'react'
 import {
-  createColumnHelper,
   getCoreRowModel,
   getPaginationRowModel,
   type PaginationState,
@@ -8,7 +7,8 @@ import {
 } from '@tanstack/react-table'
 
 import { VStack } from '@ui/Stack/Stack'
-import { type Column, DataTable, type DataTableProps } from '@components/DataTable/DataTable'
+import { getColumnDefs } from '@components/DataTable/columnUtils'
+import { DataTable, type DataTableProps } from '@components/DataTable/DataTable'
 import { Pagination } from '@components/Pagination/Pagination'
 
 import './paginatedDataTable.scss'
@@ -21,11 +21,12 @@ interface PaginationProps {
   fetchMore?: () => void
   autoResetPageIndexRef?: MutableRefObject<boolean>
 }
-interface PaginatedTableProps<TData, TColumns extends string> extends DataTableProps<TData, TColumns> {
+interface PaginatedTableProps<TData> extends Omit<DataTableProps<TData>, 'data' | 'headerGroups'> {
+  data: TData[] | undefined
   paginationProps: PaginationProps
 }
 
-export function PaginatedTable<TData extends { id: string }, TColumns extends string>({
+export function PaginatedTable<TData extends { id: string }>({
   data,
   isLoading,
   isError,
@@ -34,21 +35,12 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
   ariaLabel,
   paginationProps,
   slots,
-}: PaginatedTableProps<TData, TColumns>) {
+}: PaginatedTableProps<TData>) {
   const { pageSize = 20, hasMore, fetchMore, initialPage = 0, onSetPage, autoResetPageIndexRef } = paginationProps
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: initialPage, pageSize })
 
-  const columnHelper = createColumnHelper<TData>()
-  const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
-
-  const columnDefs = columns.map((col) => {
-    return columnHelper.display({
-      id: col.id,
-      header: () => col.header,
-      cell: ({ row }) => col.cell(row.original),
-    })
-  })
+  const columnDefs = getColumnDefs(columnConfig)
 
   const table = useReactTable<TData>({
     data: data ?? [],
@@ -68,22 +60,24 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
   })
 
   const { rows } = table.getRowModel()
-  const rowData = useMemo(() => rows.map(r => r.original), [rows])
 
   const onPageChange = useCallback((page: number) => {
     table.setPageIndex(page - 1)
   }, [table])
+
+  const headerGroups = table.getHeaderGroups()
 
   return (
     <VStack>
       <DataTable
         ariaLabel={ariaLabel}
         columnConfig={columnConfig}
-        data={rowData}
+        data={rows}
         isLoading={isLoading}
         isError={isError}
         componentName={componentName}
         slots={slots}
+        headerGroups={headerGroups}
       />
       {!isError && !isLoading && (
         <Pagination

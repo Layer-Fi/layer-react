@@ -1,4 +1,5 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
+import type { Row } from '@tanstack/react-table'
 import { format } from 'date-fns'
 
 import { Direction } from '@internal-types/general'
@@ -16,7 +17,7 @@ import { Label } from '@ui/Typography/Text'
 import { Badge } from '@components/Badge/Badge'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { type ColumnConfig } from '@components/DataTable/DataTable'
+import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { DateTime } from '@components/DateTime/DateTime'
 import { type BreadcrumbItem, DetailReportBreadcrumb } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { DetailsList } from '@components/DetailsList/DetailsList'
@@ -144,13 +145,14 @@ export const ProfitAndLossDetailReport = ({
     }
   }, [data?.lines])
 
-  const columnConfig: ColumnConfig<ProcessedPnlDetailLine, PnlDetailColumns> = useMemo(() => ({
-    [PnlDetailColumns.Date]: {
+  type PnlDetailRowType = Row<ProcessedPnlDetailLine>
+  const columnConfig: NestedColumnConfig<ProcessedPnlDetailLine> = useMemo(() => [
+    {
       id: PnlDetailColumns.Date,
       header: stringOverrides?.dateColumnHeader || 'Date',
-      cell: row => (
+      cell: (row: PnlDetailRowType) => (
         <DateTime
-          value={row.date}
+          value={row.original.date}
           onlyDate
           slotProps={
             { Date: { size: TextSize.md, weight: TextWeight.normal, variant: 'subtle' } }
@@ -158,11 +160,11 @@ export const ProfitAndLossDetailReport = ({
         />
       ),
     },
-    [PnlDetailColumns.Type]: {
+    {
       id: PnlDetailColumns.Type,
       header: stringOverrides?.typeColumnHeader || 'Type',
-      cell: (row) => {
-        const { source } = row
+      cell: (row: PnlDetailRowType) => {
+        const { source } = row.original
         return source
           ? (
             <Button
@@ -175,52 +177,52 @@ export const ProfitAndLossDetailReport = ({
           : '-'
       },
     },
-    [PnlDetailColumns.Account]: {
+    {
       id: PnlDetailColumns.Account,
       header: stringOverrides?.accountColumnHeader || 'Account',
-      cell: row => (
+      cell: (row: PnlDetailRowType) => (
         <Text
           as='span'
           withDeprecatedTooltip={TextUseTooltip.whenTruncated}
           ellipsis
         >
-          {row.account.name || '-'}
+          {row.original.account.name || '-'}
         </Text>
       ),
     },
-    [PnlDetailColumns.Description]: {
+    {
       id: PnlDetailColumns.Description,
       header: stringOverrides?.descriptionColumnHeader || 'Description',
-      cell: row => (
+      cell: (row: PnlDetailRowType) => (
         <Text
           as='span'
           withDeprecatedTooltip={TextUseTooltip.whenTruncated}
           ellipsis
         >
-          {row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}
+          {row.original.source?.displayDescription || row.original.account.accountSubtype.displayName || '-'}
         </Text>
       ),
       isRowHeader: true,
     },
-    [PnlDetailColumns.Amount]: {
+    {
       id: PnlDetailColumns.Amount,
       header: stringOverrides?.amountColumnHeader || 'Amount',
-      cell: (row) => {
+      cell: (row: PnlDetailRowType) => {
         return (
-          <MoneySpan amount={row.direction === Direction.CREDIT ? row.amount : -row.amount} />
+          <MoneySpan amount={row.original.direction === Direction.CREDIT ? row.original.amount : -row.original.amount} />
         )
       },
     },
-    [PnlDetailColumns.Balance]: {
+    {
       id: PnlDetailColumns.Balance,
       header: stringOverrides?.balanceColumnHeader || 'Balance',
-      cell: (row) => {
+      cell: (row: PnlDetailRowType) => {
         return (
-          <MoneySpan amount={row.runningBalance} />
+          <MoneySpan amount={row.original.runningBalance} />
         )
       },
     },
-  }), [stringOverrides, handleSourceClick])
+  ], [stringOverrides, handleSourceClick])
 
   const Header = useCallback(() => {
     return (
@@ -252,7 +254,7 @@ export const ProfitAndLossDetailReport = ({
   return (
     <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={onClose} borderless>
       <VStack className='Layer__ProfitAndLossDetailReport'>
-        <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
+        <VirtualizedDataTable<ProcessedPnlDetailLine>
           componentName={COMPONENT_NAME}
           ariaLabel={`${lineItemName} detail lines`}
           columnConfig={columnConfig}

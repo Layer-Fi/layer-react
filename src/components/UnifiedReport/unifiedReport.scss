@@ -1,4 +1,4 @@
 .Layer__UnifiedReport {
   overflow: hidden;
-  width: clamp(24rem, 100%, 1406px);
+  min-width: clamp(24rem, 100%, 1406px);
 }

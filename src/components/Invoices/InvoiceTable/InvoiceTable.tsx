@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react'
+import type { Row } from '@tanstack/react-table'
 import { endOfYesterday, startOfToday } from 'date-fns'
 import { HandCoins, Plus, Search } from 'lucide-react'
 
@@ -13,7 +14,7 @@ import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import type { ColumnConfig } from '@components/DataTable/DataTable'
+import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { DataTableHeader } from '@components/DataTable/DataTableHeader'
 import { InvoiceStatusCell } from '@components/Invoices/InvoiceStatusCell/InvoiceStatusCell'
 import { PaginatedTable } from '@components/PaginatedDataTable/PaginatedDataTable'
@@ -95,42 +96,43 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
   }
 }
 
-const getColumnConfig = (onSelectInvoice: (invoice: Invoice) => void): ColumnConfig<Invoice, InvoiceColumns> => ({
-  [InvoiceColumns.SentAt]: {
+type InvoiceRowType = Row<Invoice>
+const getColumnConfig = (onSelectInvoice: (invoice: Invoice) => void): NestedColumnConfig<Invoice> => [
+  {
     id: InvoiceColumns.SentAt,
     header: 'Sent Date',
-    cell: row => row.sentAt ? formatDate(row.sentAt) : null,
+    cell: (row: InvoiceRowType) => row.original.sentAt ? formatDate(row.original.sentAt) : null,
   },
-  [InvoiceColumns.InvoiceNo]: {
+  {
     id: InvoiceColumns.InvoiceNo,
     header: 'No.',
-    cell: row => <Span ellipsis>{row.invoiceNumber}</Span>,
+    cell: (row: InvoiceRowType) => <Span ellipsis>{row.original.invoiceNumber}</Span>,
     isRowHeader: true,
   },
-  [InvoiceColumns.Customer]: {
+  {
     id: InvoiceColumns.Customer,
     header: 'Customer',
-    cell: row => <Span ellipsis>{getCustomerName(row.customer)}</Span>,
+    cell: (row: InvoiceRowType) => <Span ellipsis>{getCustomerName(row.original.customer)}</Span>,
   },
-  [InvoiceColumns.Total]: {
+  {
     id: InvoiceColumns.Total,
     header: 'Amount',
-    cell: row => <AmountCell invoice={row} />,
+    cell: (row: InvoiceRowType) => <AmountCell invoice={row.original} />,
   },
-  [InvoiceColumns.Status]: {
+  {
     id: InvoiceColumns.Status,
     header: 'Status',
-    cell: row => <InvoiceStatusCell invoice={row} />,
+    cell: (row: InvoiceRowType) => <InvoiceStatusCell invoice={row.original} />,
   },
-  [InvoiceColumns.Expand]: {
+  {
     id: InvoiceColumns.Expand,
-    cell: row => (
-      <Button inset icon onPress={() => onSelectInvoice(row)} aria-label='View invoice' variant='ghost'>
+    cell: (row: InvoiceRowType) => (
+      <Button inset icon onPress={() => onSelectInvoice(row.original)} aria-label='View invoice' variant='ghost'>
         <ChevronRightFill />
       </Button>
     ),
   },
-})
+]
 
 const UNPAID_STATUSES = [InvoiceStatus.Sent, InvoiceStatus.PartiallyPaid]
 const getStatusFilterParams = (statusFilter: InvoiceStatusFilter) => {

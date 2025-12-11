@@ -1,6 +1,5 @@
 import { useContext, useMemo } from 'react'
 import {
-  createColumnHelper,
   getCoreRowModel,
   getExpandedRowModel,
   type Row,
@@ -8,13 +7,21 @@ import {
 } from '@tanstack/react-table'
 
 import { HStack } from '@ui/Stack/Stack'
-import { type Column, type ColumnConfig, DataTable, type DataTableProps } from '@components/DataTable/DataTable'
+import {
+  getColumnDefs,
+  isLeafColumn,
+} from '@components/DataTable/columnUtils'
+import {
+  DataTable,
+  type DataTableProps,
+} from '@components/DataTable/DataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
-type ExpandableDataTableProps<TData, TColumns extends string> = Omit<DataTableProps<TData, TColumns>, 'columnConfig'> & {
-  columnConfig: ColumnConfig<Row<TData>, TColumns>
+type ExpandableDataTableProps<TData> = Omit<DataTableProps<TData>, 'data' | 'headerGroups'> & {
+  data: TData[] | undefined
   getSubRows: (row: TData) => TData[] | undefined
+  getRowId: (row: TData) => string
 }
 
 const getRowIndentStyle = (
@@ -24,7 +31,7 @@ const getRowIndentStyle = (
 })
 
 const EMPTY_ARRAY: never[] = []
-export function ExpandableDataTable<TData extends { id: string }, TColumns extends string>({
+export function ExpandableDataTable<TData extends object>({
   data,
   isLoading,
   isError,
@@ -34,18 +41,11 @@ export function ExpandableDataTable<TData extends { id: string }, TColumns exten
   slots,
   hideHeader,
   getSubRows,
-}: ExpandableDataTableProps<TData, TColumns>) {
-  const columnHelper = createColumnHelper<TData>()
-  const columns: Column<Row<TData>, TColumns>[] = Object.values(columnConfig)
+  getRowId,
+}: ExpandableDataTableProps<TData>) {
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
 
-  const columnDefs = columns.map((col) => {
-    return columnHelper.display({
-      id: col.id,
-      header: () => col.header,
-      cell: ({ row }) => col.cell(row),
-    })
-  })
+  const columnDefs = getColumnDefs<TData>(columnConfig)
 
   const table = useReactTable<TData>({
     data: data ?? EMPTY_ARRAY,
@@ -56,15 +56,15 @@ export function ExpandableDataTable<TData extends { id: string }, TColumns exten
     state: { expanded },
     onExpandedChange: setExpanded,
     autoResetPageIndex: false,
-    getRowId: (row: TData) => row.id,
+    getRowId,
   })
 
   const { rows } = table.getExpandedRowModel()
 
   const wrappedColumnConfig = useMemo(() => {
-    if (!columns.length) return columnConfig
+    const [first, ...rest] = columnConfig
+    if (!first || !isLeafColumn(first)) return columnConfig
 
-    const [first, ...rest] = columns
     const originalFirstCell = first.cell
 
     const firstWithChevron = {
@@ -86,17 +86,12 @@ export function ExpandableDataTable<TData extends { id: string }, TColumns exten
       },
     }
 
-    return {
-      ...columnConfig,
-      [first.id]: firstWithChevron,
-      ...rest.reduce((acc, col) => {
-        acc[col.id] = col
-        return acc
-      }, {} as Record<string, Column<Row<TData>, TColumns>>),
-    }
-  }, [columns, columnConfig])
+    return [firstWithChevron, ...rest]
+  }, [columnConfig])
 
   const dependencies = useMemo(() => [expanded], [expanded])
+
+  const headerGroups = table.getHeaderGroups()
 
   return (
     <DataTable
@@ -109,6 +104,7 @@ export function ExpandableDataTable<TData extends { id: string }, TColumns exten
       slots={slots}
       hideHeader={hideHeader}
       dependencies={dependencies}
+      headerGroups={headerGroups}
     />
   )
 }

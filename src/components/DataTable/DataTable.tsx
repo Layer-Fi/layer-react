@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
 
 import {
   Cell,
@@ -8,31 +9,14 @@ import {
   TableBody,
   TableHeader,
 } from '@ui/Table/Table'
+import { flattenColumns, type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { Loader } from '@components/Loader/Loader'
 
 import './dataTable.scss'
 
-export type Column<TData, K> = {
-  id: K
-  header?: React.ReactNode
-  cell: (row: TData) => React.ReactNode
-  isRowHeader?: true
-}
-
-export type ColumnConfig<TData, TColumns extends string> = {
-  [K in TColumns]: Column<TData, K>;
-}
-
-// DataTable has two type parameters - `TData` and `TColumns`
-// Neither type is a subset of the other, and each is defined as follows:
-// 1. `TData` is the shape of one row of data as it comes back from the API.
-// 2. `TColumns` is the set of the columns that are displayed in the table. Not every field in `TData`
-//  may have its own column, and there may be columns that are derived from multiple fields in `TData`.
-// The relationship between `TColumns` and `TData` is that every column specified by`TColumn` has a
-// `cell` render method in the `columnConfig` that takes a row of type `TData` and displays the cell.
-export interface DataTableProps<TData, TColumns extends string> {
-  columnConfig: ColumnConfig<TData, TColumns>
-  data: TData[] | undefined
+export interface DataTableProps<TData> {
+  columnConfig: NestedColumnConfig<TData>
+  data: RowType<TData>[] | undefined
   componentName: string
   ariaLabel: string
   isLoading: boolean
@@ -44,9 +28,10 @@ export interface DataTableProps<TData, TColumns extends string> {
   hideHeader?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dependencies?: readonly any[]
+  headerGroups: HeaderGroup<TData>[]
 }
 
-export const DataTable = <TData extends { id: string, depth?: number }, TColumns extends string>({
+export const DataTable = <TData extends object>({
   columnConfig,
   data,
   isLoading,
@@ -56,16 +41,19 @@ export const DataTable = <TData extends { id: string, depth?: number }, TColumns
   slots,
   hideHeader,
   dependencies,
-}: DataTableProps<TData, TColumns>) => {
-  const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
+  headerGroups,
+}: DataTableProps<TData>) => {
+  const leafColumns = useMemo(() => flattenColumns(columnConfig), [columnConfig])
+  const nonAria = headerGroups.length > 1
+
   const { EmptyState, ErrorState } = slots
 
   const isEmptyTable = data?.length === 0
   const renderTableBody = useMemo(() => {
     if (isError) {
       return (
-        <Row className='Layer__DataTable__EmptyState__Row'>
-          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={columns.length}>
+        <Row className='Layer__DataTable__EmptyState__Row' nonAria={nonAria}>
+          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={leafColumns.length} nonAria={nonAria}>
             <ErrorState />
           </Cell>
         </Row>
@@ -74,8 +62,8 @@ export const DataTable = <TData extends { id: string, depth?: number }, TColumns
 
     if (isLoading) {
       return (
-        <Row className='Layer__DataTable__EmptyState__Row'>
-          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={columns.length}>
+        <Row className='Layer__DataTable__EmptyState__Row' nonAria={nonAria}>
+          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={leafColumns.length} nonAria={nonAria}>
             <Loader />
           </Cell>
         </Row>
@@ -84,40 +72,57 @@ export const DataTable = <TData extends { id: string, depth?: number }, TColumns
 
     if (isEmptyTable) {
       return (
-        <Row className='Layer__DataTable__EmptyState__Row'>
-          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={columns.length}>
+        <Row className='Layer__DataTable__EmptyState__Row' nonAria={nonAria}>
+          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={leafColumns.length} nonAria={nonAria}>
             <EmptyState />
           </Cell>
         </Row>
       )
     }
 
-    const RowRenderer = (row: TData) => (
-      <Row key={row.id} depth={row?.depth}>
-        {columns.map(col => (
-          <Cell
-            key={`${row.id}-${col.id}`}
-            className={`Layer__UI__Table-Cell__${componentName}--${col.id}`}
-          >
-            {col.cell(row)}
-          </Cell>
+    return (
+      <>
+        {data?.map(row => (
+          <Row key={row.id} depth={row.depth} nonAria={nonAria}>
+            {leafColumns.map(col => (
+              <Cell
+                key={`${row.id}-${col.id}`}
+                className={`Layer__UI__Table-Cell__${componentName}--${col.id}`}
+                nonAria={nonAria}
+              >
+                {col.cell(row)}
+              </Cell>
+            ))}
+          </Row>
         ))}
-      </Row>
+      </>
     )
-    RowRenderer.displayName = 'Row'
-    return RowRenderer
-  }, [isError, isLoading, isEmptyTable, columns, ErrorState, EmptyState, componentName])
+  }, [isError, isLoading, isEmptyTable, data, nonAria, leafColumns, ErrorState, EmptyState, componentName])
 
   return (
-    <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`}>
-      <TableHeader columns={columns} hideHeader={hideHeader}>
-        {({ id, header, isRowHeader }) => (
-          <Column key={id} isRowHeader={isRowHeader} className={`Layer__UI__Table-Column__${componentName}--${id}`}>
-            {header}
-          </Column>
-        )}
+    <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>
+      <TableHeader hideHeader={hideHeader} nonAria={nonAria}>
+        {headerGroups.map(headerGroup => (
+          <Row key={headerGroup.id} nonAria={nonAria}>
+            {headerGroup.headers.map(header => (
+              <Column
+                key={header.id}
+                isRowHeader={header.column.columnDef.meta?.isRowHeader}
+                className={`Layer__UI__Table-Column__${componentName}--${header.id}`}
+                nonAria={nonAria}
+                colSpan={header.colSpan}
+              >
+                {header.isPlaceholder
+                  ? null
+                  : (typeof header.column.columnDef.header === 'function'
+                    ? header.column.columnDef.header(header.getContext())
+                    : header.column.columnDef.header)}
+              </Column>
+            ))}
+          </Row>
+        ))}
       </TableHeader>
-      <TableBody items={data} dependencies={dependencies}>
+      <TableBody dependencies={dependencies} nonAria={nonAria}>
         {renderTableBody}
       </TableBody>
     </Table>
