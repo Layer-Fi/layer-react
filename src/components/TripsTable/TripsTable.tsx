@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import type { Row } from '@tanstack/react-table'
 import { Car, Edit, Plus, Trash2 } from 'lucide-react'
 
 import { type Trip, type TripPurpose } from '@schemas/trip'
@@ -14,7 +15,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import type { ColumnConfig } from '@components/DataTable/DataTable'
+import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { DataTableHeader } from '@components/DataTable/DataTableHeader'
 import { PaginatedTable } from '@components/PaginatedDataTable/PaginatedDataTable'
 import { TripDeleteConfirmationModal } from '@components/Trips/TripDeleteConfirmationModal'
@@ -46,71 +47,72 @@ type TripActions = {
   onDeleteTrip: (trip: Trip) => void
 }
 
-const getColumnConfig = ({ onSelectTrip, onDeleteTrip }: TripActions): ColumnConfig<Trip, TripColumns> => ({
-  [TripColumns.TripDate]: {
+type TripsRowType = Row<Trip>
+const getColumnConfig = ({ onSelectTrip, onDeleteTrip }: TripActions): NestedColumnConfig<Trip> => [
+  {
     id: TripColumns.TripDate,
     header: 'Date',
-    cell: row => formatCalendarDate(row.tripDate),
+    cell: (row: TripsRowType) => formatCalendarDate(row.original.tripDate),
   },
-  [TripColumns.Vehicle]: {
+  {
     id: TripColumns.Vehicle,
     header: 'Vehicle',
-    cell: row => <Span ellipsis withTooltip>{getVehicleDisplayName(row.vehicle)}</Span>,
+    cell: (row: TripsRowType) => <Span ellipsis withTooltip>{getVehicleDisplayName(row.original.vehicle)}</Span>,
     isRowHeader: true,
   },
-  [TripColumns.Distance]: {
+  {
     id: TripColumns.Distance,
     header: 'Distance',
-    cell: row => <Span align='right'>{formatDistance(row.distance)}</Span>,
+    cell: (row: TripsRowType) => <Span align='right'>{formatDistance(row.original.distance)}</Span>,
   },
-  [TripColumns.Purpose]: {
+  {
     id: TripColumns.Purpose,
     header: 'Purpose',
-    cell: row => getPurposeLabel(row.purpose as TripPurpose),
+    cell: (row: TripsRowType) => getPurposeLabel(row.original.purpose as TripPurpose),
   },
-  [TripColumns.Address]: {
+  {
     id: TripColumns.Address,
     header: 'Address',
-    cell: (row) => {
+    cell: (row: TripsRowType) => {
       return (
         <VStack gap='3xs' overflow='auto'>
-          {row.startAddress && (
+          {row.original.startAddress && (
             <Span ellipsis size='sm' withTooltip>
               <strong>Start:</strong>
               {' '}
-              {row.startAddress}
+              {row.original.startAddress}
             </Span>
           )}
-          {row.endAddress && (
+          {row.original.endAddress && (
             <Span ellipsis size='sm' withTooltip>
               <strong>End:</strong>
               {' '}
-              {row.endAddress}
+              {row.original.endAddress}
             </Span>
           )}
         </VStack>
       )
     },
   },
-  [TripColumns.Description]: {
+  {
     id: TripColumns.Description,
     header: 'Description',
-    cell: row => <Span ellipsis withTooltip>{row.description}</Span>,
+    cell: (row: TripsRowType) => <Span ellipsis withTooltip>{row.original.description}</Span>,
   },
-  [TripColumns.Actions]: {
+  {
     id: TripColumns.Actions,
-    cell: row => (
+    cell: (row: TripsRowType) => (
       <HStack gap='3xs'>
-        <Button inset icon onPress={() => onSelectTrip(row)} aria-label='View trip' variant='ghost'>
+        <Button inset icon onPress={() => onSelectTrip(row.original)} aria-label='View trip' variant='ghost'>
           <Edit size={20} />
         </Button>
-        <Button inset icon onPress={() => onDeleteTrip(row)} aria-label='Delete trip' variant='ghost'>
+        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label='Delete trip' variant='ghost'>
           <Trash2 size={20} />
         </Button>
       </HStack>
     ),
   },
-})
+]
 
 export const TripsTable = () => {
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)

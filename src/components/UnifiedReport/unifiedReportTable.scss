@@ -1,19 +1,13 @@
 .Layer__UI__Table__UnifiedReport {
-  table-layout: fixed;
-  width: 100%;
+  min-width: 100%;
 
-  .Layer__UI__Table-Row,
-  .Layer__UI__Table-TableHeader > tr {
-    display: grid;
-    grid-template-columns:
-      minmax(16rem, 80%)
-      minmax(8rem, 20%);
-  }
+  .Layer__UI__Table-Column,
+  .Layer__UI__Table-Cell {
+    display: table-cell;
+    text-align: end;
 
-  .Layer__UI__Table-Column__UnifiedReport,
-  .Layer__UI__Table-Cell__UnifiedReport {
-    &--Value {
-      justify-content: flex-end;
+    &__UnifiedReport--displayName {
+      text-align: start;
     }
   }
 }

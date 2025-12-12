@@ -1,7 +1,8 @@
 import { Schema } from 'effect'
 import useSWR, { type SWRResponse } from 'swr'
 
-import { type ReportEnum, type UnifiedReport, type UnifiedReportDateQueryParams, UnifiedReportSchema } from '@schemas/reports/unifiedReport'
+import type { ReportEnum, UnifiedReport, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
+import { UnifiedReportSchema } from '@schemas/reports/unifiedReport'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -44,27 +45,10 @@ const getUnifiedReport = get<
   return `/v1/businesses/${businessId}/reports/unified/${report}?${parameters}`
 })
 
-type LineItemDecoded = UnifiedReport['lineItems'][number]
-
-interface LineItemWithId extends Omit<LineItemDecoded, 'lineItems'> {
-  readonly id: string
-  readonly lineItems: ReadonlyArray<LineItemWithId>
-}
-
-type UnifiedReportWithId = Omit<UnifiedReport, 'lineItems'> & {
-  readonly lineItems: ReadonlyArray<LineItemWithId>
-}
-
-const addIdToLineItem = (li: LineItemDecoded): LineItemWithId => ({
-  ...li,
-  id: li.name,
-  lineItems: li.lineItems.map(addIdToLineItem),
-})
-
 class UnifiedReportSWRResponse {
-  private swrResponse: SWRResponse<UnifiedReportWithId>
+  private swrResponse: SWRResponse<UnifiedReport>
 
-  constructor(swrResponse: SWRResponse<UnifiedReportWithId>) {
+  constructor(swrResponse: SWRResponse<UnifiedReport>) {
     this.swrResponse = swrResponse
   }
 
@@ -108,14 +92,7 @@ export function useUnifiedReport({ report, ...dateParams }: UseUnifiedReportPara
     }),
     ({ accessToken, apiUrl, businessId }) => getUnifiedReport(apiUrl, accessToken, {
       params: { businessId, report, ...dateParams },
-    })().then(({ data }) =>
-      Schema
-        .decodeUnknownPromise(UnifiedReportSchema)(data)
-        .then((rep): UnifiedReportWithId => ({
-          ...rep,
-          lineItems: rep.lineItems.map(addIdToLineItem),
-        })),
-    ),
+    })().then(({ data }) => Schema.decodeUnknownPromise(UnifiedReportSchema)(data)),
   )
 
   return new UnifiedReportSWRResponse(swrResponse)
