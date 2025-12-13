@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 
 import type { MoneyFormat } from '@internal-types/general'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { ProfitAndLossDetailLinesDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDetailLinesDownloadButton'
 import { ProfitAndLossFullReportDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossFullReportDownloadButton'
@@ -10,16 +9,15 @@ import { type ProfitAndLossDownloadButtonStringOverrides } from '@components/Pro
 type ProfitAndLossDownloadButtonProps = {
   stringOverrides?: ProfitAndLossDownloadButtonStringOverrides
   moneyFormat?: MoneyFormat
+  iconOnly?: boolean
 }
 
 export function ProfitAndLossDownloadButton({
   stringOverrides,
   moneyFormat,
+  iconOnly,
 }: ProfitAndLossDownloadButtonProps) {
   const { selectedLineItem } = useContext(ProfitAndLossContext)
-
-  const { value } = useSizeClass()
-  const iconOnly = value !== 'desktop'
 
   if (selectedLineItem) {
     return (
