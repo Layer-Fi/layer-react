@@ -3,6 +3,7 @@ import { type Row } from '@tanstack/react-table'
 
 import { isAmountCellValue, isEmptyCellValue, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 import { asMutable } from '@utils/asMutable'
+import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useUnifiedReportWithDateParams } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -74,8 +75,12 @@ export const buildColumnConfig = (columns: ReadonlyArray<UnifiedReportColumn>): 
 
 const getSubRows = (row: UnifiedReportRow) => row.rows ? asMutable(row.rows) : undefined
 
-export const UnifiedReportTable = () => {
-  const { report, ...dateParams } = useUnifiedReportWithDateParams()
+type UnifiedReportTableProps = {
+  dateSelectionMode: DateSelectionMode
+}
+
+export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProps) => {
+  const { report, ...dateParams } = useUnifiedReportWithDateParams({ dateSelectionMode: dateSelectionMode })
   const { data, isLoading, isError, refetch } = useUnifiedReport({ report, ...dateParams })
   const { setExpanded } = useContext(ExpandableDataTableContext)
   const mutableRows = data?.rows ? asMutable(data.rows) : undefined

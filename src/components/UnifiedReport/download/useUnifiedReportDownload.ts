@@ -8,6 +8,7 @@ import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { getBalanceSheetExcel } from '@api/layer/balance_sheet'
 import { getCashflowStatementCSV } from '@api/layer/statement-of-cash-flow'
 import { useAuth } from '@hooks/useAuth'
+import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import {
   type UnifiedReportWithDateParams,
   useUnifiedReportWithDateParams,
@@ -113,13 +114,14 @@ function downloadReport(
 }
 
 type UseUnifiedReportDownloadOptions = {
+  dateSelectionMode: DateSelectionMode
   onSuccess?: (url: S3PresignedUrlSchemaType) => Promise<void> | void
 }
 
-export function useUnifiedReportDownload({ onSuccess }: UseUnifiedReportDownloadOptions = {}) {
+export function useUnifiedReportDownload({ dateSelectionMode, onSuccess }: UseUnifiedReportDownloadOptions) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
-  const reportWithDateParams = useUnifiedReportWithDateParams()
+  const reportWithDateParams = useUnifiedReportWithDateParams({ dateSelectionMode: dateSelectionMode })
 
   const rawMutationResponse = useSWRMutation(
     () => buildKey({

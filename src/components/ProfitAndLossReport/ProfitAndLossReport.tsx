@@ -39,12 +39,12 @@ export const ProfitAndLossReport = ({
   renderInAppLink,
   hideHeader,
 }: ProfitAndLossReportProps) => {
-  const { selectedLineItem, setSelectedLineItem, setDisplayMode } = useContext(ProfitAndLossContext)
+  const { selectedLineItem, setSelectedLineItem, setDateSelectionMode } = useContext(ProfitAndLossContext)
   const { comparisonConfig } = useContext(ProfitAndLossComparisonContext)
 
   useEffect(() => {
-    setDisplayMode(dateSelectionMode)
-  }, [dateSelectionMode, setDisplayMode])
+    setDateSelectionMode(dateSelectionMode)
+  }, [dateSelectionMode, setDateSelectionMode])
 
   const breadcrumbIndexMap = useMemo(() => {
     if (!selectedLineItem) return {}

@@ -2,7 +2,7 @@ import { type PropsWithChildren } from 'react'
 
 import { useBalanceSheet } from '@hooks/balanceSheet/useBalanceSheet'
 import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
-import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { type DateSelectionMode, useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TableProvider } from '@contexts/TableContext/TableContext'
 import { BALANCE_SHEET_ROWS } from '@components/BalanceSheet/constants'
 import { BalanceSheetDownloadButton } from '@components/BalanceSheet/download/BalanceSheetDownloadButton'
@@ -25,14 +25,14 @@ export type BalanceSheetViewProps = PropsWithChildren<{
   withExpandAllButton?: boolean
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
-  dateSelectionMode?: 'month' | 'full'
+  dateSelectionMode?: DateSelectionMode
 }>
 
 export type BalanceSheetProps = PropsWithChildren<{
   effectiveDate?: Date
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
-  dateSelectionMode?: 'month' | 'full'
+  dateSelectionMode?: DateSelectionMode
 }>
 
 const COMPONENT_NAME = 'balance-sheet'
@@ -53,7 +53,7 @@ const BalanceSheetView = ({
   stringOverrides,
   dateSelectionMode = 'full',
 }: BalanceSheetViewProps) => {
-  const { date: effectiveDate } = useGlobalDate()
+  const { date: effectiveDate } = useGlobalDate({ dateSelectionMode: dateSelectionMode })
   const { data, isLoading } = useBalanceSheet({ effectiveDate })
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 

@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 
 import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { Header } from '@components/Container/Header'
@@ -28,7 +29,7 @@ export interface ProfitAndLossHeaderProps {
   withDatePicker?: boolean
   withDownloadButton?: boolean
   withStatus?: boolean
-  dateSelectionMode?: 'month' | 'full'
+  dateSelectionMode?: DateSelectionMode
 }
 
 export const ProfitAndLossHeader = ({

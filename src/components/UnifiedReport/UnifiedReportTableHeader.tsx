@@ -1,16 +1,21 @@
 import { useCallback, useContext } from 'react'
 
+import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { UnifiedReportDateVariant, useUnifiedReportDateVariant } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { DateRangeSelection } from '@components/DateSelection/DateRangeSelection'
-import { DateSelection } from '@components/DateSelection/DateSelection'
+import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
+import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { UnifiedReportDownloadButton } from '@components/UnifiedReport/download/UnifiedReportDownloadButton'
 
 import './unifiedReportTableHeader.scss'
 
-export const UnifiedReportTableHeader = () => {
+type UnifiedReportTableHeaderProps = {
+  dateSelectionMode: DateSelectionMode
+}
+
+export const UnifiedReportTableHeader = ({ dateSelectionMode }: UnifiedReportTableHeaderProps) => {
   const dateVariant = useUnifiedReportDateVariant()
 
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
@@ -28,14 +33,14 @@ export const UnifiedReportTableHeader = () => {
     <HStack fluid justify='space-between' align='center' className='Layer__UnifiedReport__Header'>
       <HStack pi='md'>
         {dateVariant === UnifiedReportDateVariant.DateRange
-          ? <DateRangeSelection />
-          : <DateSelection />}
+          ? <CombinedDateRangeSelection mode={dateSelectionMode} />
+          : <CombinedDateSelection mode={dateSelectionMode} />}
       </HStack>
       <HStack pi='md' className='Layer__UnifiedReport__Header__SecondaryActions'>
         <Button variant='outlined' onClick={onClickExpandOrCollapse}>
           {shouldCollapse ? 'Collapse All' : 'Expand All'}
         </Button>
-        <UnifiedReportDownloadButton />
+        <UnifiedReportDownloadButton dateSelectionMode={dateSelectionMode} />
       </HStack>
     </HStack>
   )

@@ -4,7 +4,7 @@ import Select, { type Options } from 'react-select'
 import { DisplayState } from '@internal-types/bank_transactions'
 import { type MoneyFormat } from '@internal-types/general'
 import { type PnlTagFilter } from '@hooks/useProfitAndLoss/useProfitAndLoss'
-import type { DateRangePickerMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { BankTransactions } from '@components/BankTransactions/BankTransactions'
 import { Container } from '@components/Container/Container'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
@@ -32,7 +32,7 @@ export interface ProjectProfitabilityProps {
    * @deprecated This property is no longer used. Use `dateSelectionMode` instead.
    */
   datePickerMode?: unknown
-  dateSelectionMode?: DateRangePickerMode
+  dateSelectionMode?: DateSelectionMode
   csvMoneyFormat?: MoneyFormat
 }
 

@@ -25,7 +25,7 @@ export const DateSelectionComboBox = () => {
   const [lastPreset, setLastPreset] = useState<DatePreset | null>(null)
   const { business } = useLayerContext()
 
-  const dateRange = useGlobalDateRange({ displayMode: 'full' })
+  const dateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange } = useGlobalDateRangeActions()
 
   const selectedPreset = presetForDateRange(dateRange, lastPreset, getActivationDate(business))

@@ -63,7 +63,7 @@ function Internal_ProfitAndLossSummaries({
     sidebarScope,
   } = useContext(ProfitAndLossContext)
 
-  const { startDate, endDate: _endDate } = useGlobalDateRange({ displayMode: 'month' })
+  const { startDate, endDate: _endDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
 
   const previousMonthStart = sub(startDate, { months: 1 })
   const { data: previousData } = useProfitAndLossSummaries({

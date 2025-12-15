@@ -3,7 +3,7 @@ import { createStore, useStore } from 'zustand'
 
 import { type DateQueryParams, type DateRangeQueryParams, ReportEnum } from '@schemas/reports/unifiedReport'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 type UnifiedReportStoreShape = { report: ReportEnum }
 
@@ -38,10 +38,10 @@ export function useUnifiedReportDateVariant(): UnifiedReportDateVariant {
   return reportToDateVariantMap[report]
 }
 
-export function useUnifiedReportWithDateParams(): UnifiedReportWithDateParams {
+export function useUnifiedReportWithDateParams({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }): UnifiedReportWithDateParams {
   const store = useContext(UnifiedReportStoreContext)
-  const { date: effectiveDate } = useGlobalDate()
-  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'full' })
+  const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
+  const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode })
 
   const report = useStore(store, state => state.report)
   const dateVariant = reportToDateVariantMap[report]
