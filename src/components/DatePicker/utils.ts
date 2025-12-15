@@ -5,6 +5,6 @@ export const getIsDateInvalid = (
   { minDate, maxDate }: { minDate?: ZonedDateTime | null, maxDate?: ZonedDateTime | null }) => {
   if (date === null) return 'Cannot select empty date'
   if (minDate && date.compare(minDate) < 0) return 'Cannot select date before the business activation date'
-  if (maxDate && date.compare(maxDate) > 0) return 'Cannot select date after current date'
+  if (maxDate && date.compare(maxDate) > 0) return 'Cannot select date in the future'
   return null
 }
