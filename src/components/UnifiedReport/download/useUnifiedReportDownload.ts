@@ -121,7 +121,7 @@ type UseUnifiedReportDownloadOptions = {
 export function useUnifiedReportDownload({ dateSelectionMode, onSuccess }: UseUnifiedReportDownloadOptions) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
-  const reportWithDateParams = useUnifiedReportWithDateParams({ dateSelectionMode: dateSelectionMode })
+  const reportWithDateParams = useUnifiedReportWithDateParams({ dateSelectionMode })
 
   const rawMutationResponse = useSWRMutation(
     () => buildKey({

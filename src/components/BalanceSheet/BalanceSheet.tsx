@@ -53,7 +53,7 @@ const BalanceSheetView = ({
   stringOverrides,
   dateSelectionMode = 'full',
 }: BalanceSheetViewProps) => {
-  const { date: effectiveDate } = useGlobalDate({ dateSelectionMode: dateSelectionMode })
+  const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
   const { data, isLoading } = useBalanceSheet({ effectiveDate })
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 

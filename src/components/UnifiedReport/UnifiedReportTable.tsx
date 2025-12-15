@@ -80,7 +80,7 @@ type UnifiedReportTableProps = {
 }
 
 export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProps) => {
-  const { report, ...dateParams } = useUnifiedReportWithDateParams({ dateSelectionMode: dateSelectionMode })
+  const { report, ...dateParams } = useUnifiedReportWithDateParams({ dateSelectionMode })
   const { data, isLoading, isError, refetch } = useUnifiedReport({ report, ...dateParams })
   const { setExpanded } = useContext(ExpandableDataTableContext)
   const mutableRows = data?.rows ? asMutable(data.rows) : undefined
