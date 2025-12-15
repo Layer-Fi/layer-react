@@ -141,6 +141,10 @@ export const InvoicePaymentLedgerEntrySourceSchema = Schema.Struct({
     Schema.propertySignature(Schema.String),
     Schema.fromKey('invoice_id'),
   ),
+  invoicePaymentId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('invoice_payment_id'),
+  ),
   invoiceNumber: pipe(
     Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('invoice_number'),
@@ -616,6 +620,10 @@ export const BillPaymentLedgerEntrySourceSchema = Schema.Struct({
     Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
+  billPaymentId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('bill_payment_id'),
+  ),
   billId: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('bill_id'),
@@ -747,7 +755,7 @@ export const convertLedgerEntrySourceToLinkingMetadata = (ledgerEntrySource: Led
       baseMetadata.id = ledgerEntrySource.manualEntryId
       break
     case 'Invoice_Payment_Ledger_Entry_Source':
-      baseMetadata.id = ledgerEntrySource.invoiceId
+      baseMetadata.id = ledgerEntrySource.invoicePaymentId
       baseMetadata.entityName = EntityName.InvoicePayment
       if (ledgerEntrySource.invoiceIdentifiers) {
         baseMetadata.relatedEntityLinkingMetadata = ledgerEntrySource.invoiceIdentifiers.map(identifier => ({
@@ -853,7 +861,7 @@ export const convertLedgerEntrySourceToLinkingMetadata = (ledgerEntrySource: Led
       baseMetadata.entityName = EntityName.Bill
       break
     case 'Bill_Payment_Ledger_Entry_Source':
-      baseMetadata.id = ledgerEntrySource.billId
+      baseMetadata.id = ledgerEntrySource.billPaymentId
       baseMetadata.entityName = EntityName.BillPayment
       if (ledgerEntrySource.billIdentifiers) {
         baseMetadata.relatedEntityLinkingMetadata = ledgerEntrySource.billIdentifiers.map(identifier => ({
