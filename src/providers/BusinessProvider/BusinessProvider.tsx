@@ -111,7 +111,7 @@ export const BusinessProvider = ({
     resetCaches,
   } = useDataSync()
 
-  const globalDateRange = useGlobalDateRange({ displayMode: 'full' })
+  const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange } = useGlobalDateRangeActions()
 
   const dateRange = useMemo(() => ({

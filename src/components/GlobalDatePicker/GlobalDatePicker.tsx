@@ -1,19 +1,14 @@
-import { useCallback, useMemo } from 'react'
-import { endOfDay, startOfDay } from 'date-fns'
+import { useCallback } from 'react'
 
-import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
+import { useGlobalDatePickerBounds } from '@hooks/useGlobalDatePickerBounds/useGlobalDatePickerBounds'
 import { useGlobalDate, useGlobalDateActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 
 export const GlobalDatePicker = () => {
-  const { date } = useGlobalDate()
+  const { date } = useGlobalDate({ dateSelectionMode: 'full' })
   const { setDate: setGlobalDate } = useGlobalDateActions()
-
-  const rawActivationDate = useBusinessActivationDate()
-  const activationDate = useMemo(() => rawActivationDate ? startOfDay(rawActivationDate) : null, [rawActivationDate])
-
-  const maxDate = useMemo(() => endOfDay(new Date()), [])
+  const { minDate, maxDate } = useGlobalDatePickerBounds()
 
   const setDate = useCallback((date: Date) => {
     setGlobalDate({ date })
@@ -22,7 +17,7 @@ export const GlobalDatePicker = () => {
   const { localDate, onChange, minDateZdt, maxDateZdt, errorText, onBlur, isInvalid } = useDatePickerState({
     date,
     setDate,
-    minDate: activationDate,
+    minDate,
     maxDate,
   })
 

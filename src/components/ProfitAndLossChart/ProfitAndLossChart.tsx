@@ -153,7 +153,7 @@ export const ProfitAndLossChart = ({
 
   const { getColor, business } = useLayerContext()
 
-  const dateRange = useGlobalDateRange({ displayMode: 'month' })
+  const dateRange = useGlobalDateRange({ dateSelectionMode: 'month' })
   const { setMonth } = useGlobalDateRangeActions()
 
   const [customCursorSize, setCustomCursorSize] = useState({

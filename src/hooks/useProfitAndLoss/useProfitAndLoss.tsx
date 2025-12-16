@@ -12,7 +12,7 @@ import {
 } from '@utils/profitAndLossUtils'
 import { useProfitAndLossReport } from '@hooks/useProfitAndLoss/useProfitAndLossReport'
 import {
-  type DateRangePickerMode,
+  type DateSelectionMode,
   useGlobalDateRange,
 } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import type { BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
@@ -82,8 +82,8 @@ type UseProfitAndLossOptions = {
 }
 
 export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLossOptions) => {
-  const [displayMode, setDisplayMode] = useState<DateRangePickerMode>('month')
-  const dateRange = useGlobalDateRange({ displayMode })
+  const [dateSelectionMode, setDateSelectionMode] = useState<DateSelectionMode>('month')
+  const dateRange = useGlobalDateRange({ dateSelectionMode })
 
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
@@ -160,7 +160,7 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
     dateRange,
     selectedLineItem,
     setSelectedLineItem,
-    setDisplayMode,
-    displayMode,
+    setDateSelectionMode,
+    dateSelectionMode,
   }
 }

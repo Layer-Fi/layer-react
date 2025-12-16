@@ -63,8 +63,8 @@ export function useProfitAndLossComparison({
   comparisonConfig,
 }: Props) {
   const [comparisonPeriodMode, setComparisonPeriodMode] = useState<DateGroupBy | null>(DateGroupBy.AllTime)
-  const { displayMode } = useContext(ProfitAndLossContext)
-  const { startDate, endDate } = useGlobalDateRange({ displayMode: 'month' })
+  const { dateSelectionMode } = useContext(ProfitAndLossContext)
+  const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
 
   const comparePeriods = useMemo(() => {
     if (!comparisonPeriodMode || comparisonPeriodMode === DateGroupBy.AllTime) {
@@ -82,7 +82,7 @@ export function useProfitAndLossComparison({
     comparisonConfig?.defaultTagFilter ? [comparisonConfig?.defaultTagFilter] : [],
   )
 
-  const dateRange = useGlobalDateRange({ displayMode })
+  const dateRange = useGlobalDateRange({ dateSelectionMode })
 
   const compareModeActive = useMemo(() => (
     comparePeriods > 1

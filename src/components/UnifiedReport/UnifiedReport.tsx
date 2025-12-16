@@ -1,3 +1,4 @@
+import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { UnifiedReportStoreProvider } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Container } from '@components/Container/Container'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
@@ -6,13 +7,17 @@ import { UnifiedReportTableHeader } from '@components/UnifiedReport/UnifiedRepor
 
 import './unifiedReport.scss'
 
-export const UnifiedReport = () => {
+type UnifiedReportProps = {
+  dateSelectionMode: DateSelectionMode
+}
+
+export const UnifiedReport = ({ dateSelectionMode }: UnifiedReportProps) => {
   return (
     <Container name='UnifiedReport'>
       <UnifiedReportStoreProvider>
         <ExpandableDataTableProvider>
-          <UnifiedReportTableHeader />
-          <UnifiedReportTable />
+          <UnifiedReportTableHeader dateSelectionMode={dateSelectionMode} />
+          <UnifiedReportTable dateSelectionMode={dateSelectionMode} />
         </ExpandableDataTableProvider>
       </UnifiedReportStoreProvider>
     </Container>
