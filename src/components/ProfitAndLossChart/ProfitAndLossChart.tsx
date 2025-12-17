@@ -298,28 +298,35 @@ export const ProfitAndLossChart = ({
       )
       : '', [compactView])
 
-  const summarizePnL = useCallback((pnl: ProfitAndLossSummaryData | undefined) => ({
-    name: getMonthName(pnl),
-    revenue: pnl?.income || 0,
-    revenueUncategorized: pnl?.uncategorizedInflows || 0,
-    expenses: -(pnl?.totalExpenses || 0),
-    expensesForTooltip: pnl?.totalExpenses || 0,
-    expensesUncategorized: -(pnl?.uncategorizedOutflows || 0),
-    netProfit: pnl?.netProfit || 0,
-    selected:
-      !!pnl
-      && pnl.month === selectionMonth.month + 1
-      && pnl.year === selectionMonth.year,
-    year: pnl?.year,
-    month: pnl?.month,
-    base: 0,
-    loading: pnl?.isLoading ? loadingValue : 0,
-    loadingExpenses: pnl?.isLoading ? -loadingValue : 0,
-  }), [getMonthName, loadingValue, selectionMonth.month, selectionMonth.year])
+  const summarizePnL = useCallback((pnl: ProfitAndLossSummaryData | undefined): ChartDataPoint => {
+    const totalExpenses = pnl?.totalExpenses || 0
+    const uncategorizedOutflows = pnl?.uncategorizedOutflows || 0
 
-  const dataOrPlaceholderData = useMemo(() => {
+    return {
+      name: getMonthName(pnl),
+      revenue: pnl?.income || 0,
+      revenueUncategorized: pnl?.uncategorizedInflows || 0,
+      expenses: -totalExpenses,
+      expensesForTooltip: totalExpenses,
+      expensesUncategorized: -uncategorizedOutflows,
+      netProfit: pnl?.netProfit || 0,
+      selected:
+        !!pnl
+        && pnl.month === selectionMonth.month + 1
+        && pnl.year === selectionMonth.year,
+      year: pnl?.year,
+      month: pnl?.month,
+      base: 0,
+      loading: pnl?.isLoading ? loadingValue : 0,
+      loadingExpenses: pnl?.isLoading ? -loadingValue : 0,
+      totalExpensesForBarChartDisplay: totalExpenses < 0 ? -totalExpenses : 0,
+      uncategorizedOutflowsForBarChartDisplay: uncategorizedOutflows < 0 ? -uncategorizedOutflows : 0,
+    }
+  }, [getMonthName, loadingValue, selectionMonth.month, selectionMonth.year])
+
+  const dataOrPlaceholderData = useMemo((): ChartDataPoint[] => {
     if (isLoading || !hasNonZeroData) {
-      const loadingData = []
+      const loadingData: ChartDataPoint[] = []
       const today = Date.now()
       for (let i = 11; i >= 0; i--) {
         const currentDate = sub(today, { months: i })
@@ -330,6 +337,7 @@ export const ProfitAndLossChart = ({
           totalExpensesForBarChartDisplay: 0,
           uncategorizedOutflowsForBarChartDisplay: 0,
           expenses: 0,
+          expensesForTooltip: 0,
           expensesUncategorized: 0,
           netProfit: 0,
           selected: false,
@@ -345,20 +353,6 @@ export const ProfitAndLossChart = ({
     }
 
     return data
-      ?.map((x) => {
-        const totalExpenses = x.totalExpenses || 0
-        const uncategorizedOutflows = x.uncategorizedOutflows || 0
-        if (totalExpenses < 0 || uncategorizedOutflows < 0) {
-          return {
-            ...x,
-            totalExpensesForBarChartDisplay: totalExpenses < 0 ? -totalExpenses : 0,
-            uncategorizedOutflowsForBarChartDisplay:
-              uncategorizedOutflows < 0 ? -uncategorizedOutflows : 0,
-          }
-        }
-
-        return x
-      })
       ?.filter(
         x =>
           differenceInMonths(
