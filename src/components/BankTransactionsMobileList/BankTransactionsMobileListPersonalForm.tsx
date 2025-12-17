@@ -72,8 +72,8 @@ export const BankTransactionsMobileListPersonalForm = ({
       {
         type: 'Category',
         category: {
-          type: 'Exclusion',
-          exclusionType: isCredit(bankTransaction)
+          type: 'StableName',
+          stableName: isCredit(bankTransaction)
             ? PersonalCategories.INCOME
             : PersonalCategories.EXPENSES,
         },
