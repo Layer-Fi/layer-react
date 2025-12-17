@@ -44,6 +44,24 @@ import { ChartStateCard } from '@components/ProfitAndLossChart/ChartStateCard'
 import { Indicator } from '@components/ProfitAndLossChart/Indicator'
 import { Text } from '@components/Typography/Text'
 
+type ChartDataPoint = {
+  name: string
+  revenue: number
+  revenueUncategorized: number
+  expenses: number
+  expensesForTooltip: number
+  expensesUncategorized: number
+  netProfit: number
+  selected: boolean
+  year: number | undefined
+  month: number | undefined
+  base: number
+  loading: number
+  loadingExpenses: number
+  totalExpensesForBarChartDisplay?: number
+  uncategorizedOutflowsForBarChartDisplay?: number
+}
+
 const getChartWindow = ({
   chartWindow,
   currentYear,
@@ -276,6 +294,7 @@ export const ProfitAndLossChart = ({
     revenue: pnl?.income || 0,
     revenueUncategorized: pnl?.uncategorizedInflows || 0,
     expenses: -(pnl?.totalExpenses || 0),
+    expensesForTooltip: pnl?.totalExpenses || 0,
     expensesUncategorized: -(pnl?.uncategorizedOutflows || 0),
     netProfit: pnl?.netProfit || 0,
     selected:
@@ -299,8 +318,8 @@ export const ProfitAndLossChart = ({
           name: format(currentDate, compactView ? MONTH_FORMAT_NARROW : MONTH_FORMAT_ABBREVIATED),
           revenue: 0,
           revenueUncategorized: 0,
-          totalExpensesInverse: 0,
-          uncategorizedOutflowsInverse: 0,
+          totalExpensesForBarChartDisplay: 0,
+          uncategorizedOutflowsForBarChartDisplay: 0,
           expenses: 0,
           expensesUncategorized: 0,
           netProfit: 0,
@@ -319,15 +338,13 @@ export const ProfitAndLossChart = ({
     return data
       ?.map((x) => {
         const totalExpenses = x.totalExpenses || 0
-        if (totalExpenses < 0 || x.uncategorizedOutflows < 0) {
+        const uncategorizedOutflows = x.uncategorizedOutflows || 0
+        if (totalExpenses < 0 || uncategorizedOutflows < 0) {
           return {
             ...x,
-            totalExpenses: totalExpenses < 0 ? 0 : totalExpenses,
-            uncategorizedOutflows:
-              x.uncategorizedOutflows < 0 ? 0 : x.uncategorizedOutflows,
-            totalExpensesInverse: totalExpenses < 0 ? -totalExpenses : 0,
-            uncategorizedOutflowsInverse:
-              x.uncategorizedOutflows < 0 ? -x.uncategorizedOutflows : 0,
+            totalExpensesForBarChartDisplay: totalExpenses < 0 ? -totalExpenses : 0,
+            uncategorizedOutflowsForBarChartDisplay:
+              uncategorizedOutflows < 0 ? -uncategorizedOutflows : 0,
           }
         }
 
@@ -374,13 +391,14 @@ export const ProfitAndLossChart = ({
     }
   }
 
-  const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
-    if (active && payload && payload.length) {
-      const netProfit = payload.find(x => x.dataKey === 'netProfit')?.value ?? 0
+  const CustomTooltip = ({ active, payload: hoveredDataPoints }: TooltipProps<number, string>) => {
+    if (active && hoveredDataPoints && hoveredDataPoints.length) {
+      const dataRow = hoveredDataPoints[0]?.payload as ChartDataPoint | undefined
+      const revenue = dataRow?.revenue ?? 0
+      const expenses = dataRow?.expensesForTooltip ?? 0
+      const netProfit = dataRow?.netProfit ?? 0
       const netProfitClass =
         netProfit > 0 ? 'positive' : netProfit < 0 ? 'negative' : ''
-      const revenue = payload.find(x => x.dataKey === 'revenue')?.value ?? 0
-      const expenses = payload.find(x => x.dataKey === 'expenses')?.value ?? 0
 
       return (
         <div className='Layer__chart__tooltip'>
@@ -404,6 +422,7 @@ export const ProfitAndLossChart = ({
                   <li>
                     <label className='Layer__chart__tooltip-label'>Expenses</label>
                     <span className='Layer__chart__tooltip-value'>
+                      {expenses < 0 ? '-' : ''}
                       $
                       {centsToDollars(Math.abs(expenses))}
                     </span>
@@ -681,7 +700,7 @@ export const ProfitAndLossChart = ({
             stackId='expenses'
           />
           <Bar
-            dataKey='totalExpensesInverse'
+            dataKey='totalExpensesForBarChartDisplay'
             barSize={barSize}
             isAnimationActive={barAnimActive}
             animationDuration={100}
@@ -730,7 +749,7 @@ export const ProfitAndLossChart = ({
             })}
           </Bar>
           <Bar
-            dataKey='uncategorizedOutflowsInverse'
+            dataKey='uncategorizedOutflowsForBarChartDisplay'
             barSize={barSize}
             isAnimationActive={barAnimActive}
             animationDuration={100}
@@ -803,6 +822,7 @@ export const ProfitAndLossChart = ({
               )
             })}
           </Bar>
+
           <Line
             dot={true}
             strokeWidth={1}
