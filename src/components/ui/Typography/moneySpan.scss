@@ -1,4 +1,6 @@
 .Layer__MoneySpan {
+  white-space: nowrap;
+
   &[data-positive]::before {
     content: '$';
   }
