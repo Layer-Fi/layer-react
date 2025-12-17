@@ -45,21 +45,30 @@ import { Indicator } from '@components/ProfitAndLossChart/Indicator'
 import { Text } from '@components/Typography/Text'
 
 type ChartDataPoint = {
+  /* Used by XAxis */
   name: string
+
+  /* Used by Bar components */
   revenue: number
   revenueUncategorized: number
   expenses: number
-  expensesForTooltip: number
   expensesUncategorized: number
-  netProfit: number
-  selected: boolean
-  year: number | undefined
-  month: number | undefined
-  base: number
   loading: number
   loadingExpenses: number
   totalExpensesForBarChartDisplay?: number
   uncategorizedOutflowsForBarChartDisplay?: number
+
+  /* Used by Line component */
+  netProfit: number
+
+  /* Used by tooltip only */
+  expensesForTooltip: number
+
+  /* Used for selection/interaction */
+  selected: boolean
+  year: number | undefined
+  month: number | undefined
+  base: number
 }
 
 const getChartWindow = ({
