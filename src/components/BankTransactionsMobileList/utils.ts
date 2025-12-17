@@ -1,5 +1,7 @@
 import { CategoryAsOption } from '@internal-types/categorizationOption'
-import type { NestedCategorization } from '@schemas/categorization'
+import type { CategorizationEncoded, NestedCategorization } from '@schemas/categorization'
+
+import { PersonalCategories } from './constants'
 
 export interface CategoryGroup {
   label: string
@@ -35,4 +37,18 @@ export const flattenCategories = (categories: NestedCategorization[]): Array<Cat
 
     return leafCategories.map(cat => new CategoryAsOption(cat))
   })
+}
+
+export const isPersonalCategory = (category: CategorizationEncoded): boolean => {
+  // Check Exclusion for backwards compatibility
+  if (category.type === 'Exclusion') {
+    return true
+  }
+
+  if (category.type === 'Account' && 'stable_name' in category) {
+    const stableName = category.stable_name
+    return stableName === PersonalCategories.INCOME || stableName === PersonalCategories.EXPENSES
+  }
+
+  return false
 }

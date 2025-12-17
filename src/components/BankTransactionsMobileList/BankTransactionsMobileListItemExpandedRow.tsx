@@ -9,6 +9,7 @@ import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileL
 import { NewToggle } from '@components/NewToggle/NewToggle'
 
 import { Purpose } from './BankTransactionsMobileListItem'
+import { isPersonalCategory } from './utils'
 
 const PURPOSE_TOGGLE_OPTIONS = [
   {
@@ -76,7 +77,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
 
 const getInitialPurpose = (bankTransaction: BankTransaction): Purpose => {
   if (bankTransaction.category) {
-    if (bankTransaction.category.type === 'Exclusion') {
+    if (isPersonalCategory(bankTransaction.category)) {
       return Purpose.personal
     }
     if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {

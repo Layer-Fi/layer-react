@@ -13,6 +13,7 @@ import { BankTransactionReceipts } from '@components/BankTransactionReceipts/Ban
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { isCategorized } from '@components/BankTransactions/utils'
 import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
+import { isPersonalCategory } from '@components/BankTransactionsMobileList/utils'
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
@@ -32,12 +33,7 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
     return false
   }
 
-  return Boolean(
-    bankTransaction.category
-    && Object.values(PersonalCategories).includes(
-      bankTransaction.category.display_name as PersonalCategories,
-    ),
-  )
+  return Boolean(bankTransaction.category && isPersonalCategory(bankTransaction.category))
 }
 
 export const BankTransactionsMobileListPersonalForm = ({
