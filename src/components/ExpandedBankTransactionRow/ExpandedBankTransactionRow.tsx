@@ -389,7 +389,7 @@ export const ExpandedBankTransactionRow = ({
                     </div>
                   </div>
                 </div>
-                <VStack pis='md' className='Layer__ExpandedBankTransactionRow__Description'>
+                <VStack pis='md' pbe={!showReceiptUploads ? 'md' : undefined} className='Layer__ExpandedBankTransactionRow__Description'>
                   <BankTransactionFormFields
                     bankTransaction={bankTransaction}
                     showDescriptions={showDescriptions}
