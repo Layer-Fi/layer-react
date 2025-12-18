@@ -216,7 +216,7 @@ export const ExpandedBankTransactionRow = ({
         <>
           <Separator />
           <span className={`${className}__wrapper`} ref={bodyRef}>
-            <VStack pis={variant === 'row' ? 'md' : undefined} pbs='sm'>
+            <VStack pis={variant === 'row' ? 'md' : undefined} pbs='sm' pbe='md'>
               {categorizationEnabled
                 && (
                   <HStack pi='md' pbe='md' pbs='3xs'>
@@ -389,7 +389,7 @@ export const ExpandedBankTransactionRow = ({
                     </div>
                   </div>
                 </div>
-                <VStack pis='md' pbe={!showReceiptUploads ? 'md' : undefined} className='Layer__ExpandedBankTransactionRow__Description'>
+                <VStack pis='md' className='Layer__ExpandedBankTransactionRow__Description'>
                   <BankTransactionFormFields
                     bankTransaction={bankTransaction}
                     showDescriptions={showDescriptions}
