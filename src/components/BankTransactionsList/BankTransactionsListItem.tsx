@@ -217,7 +217,7 @@ export const BankTransactionsListItem = ({
       </span>
       {categorizationEnabled && !displayAsCategorized && (
         <div onClick={preventRowExpansion}>
-          <HStack pi='md' gap='md' pb='md' justify='end'>
+          <HStack pi='md' gap='md' pbe='md' justify='end'>
             {!openExpandedRow && (
               <BankTransactionCategoryComboBox
                 bankTransaction={bankTransaction}
