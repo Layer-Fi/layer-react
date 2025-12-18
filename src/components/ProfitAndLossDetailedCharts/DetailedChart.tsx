@@ -1,14 +1,15 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import classNames from 'classnames'
 import {
   Cell,
   Label,
+  type LabelProps,
   Pie,
   PieChart,
   ResponsiveContainer,
   Text as ChartText,
 } from 'recharts'
-import { type PolarViewBox } from 'recharts/types/util/types'
+import type { CartesianViewBox } from 'recharts/types/util/types'
 
 import { centsToDollars as formatMoney } from '@models/Money'
 import { formatPercent } from '@utils/format'
@@ -45,9 +46,70 @@ export const DetailedChart = ({
   )),
   [filteredData])
 
-  const noValue = chartData.length === 0 || !chartData.find(x => x.value !== 0)
-
   const typeColorMapping = mapTypesToColors(chartData, chartColorsList)
+
+  const text = hoveredItem
+    ? hoveredItem.displayName
+    : 'Total'
+
+  const value = hoveredItem
+    ? filteredData.find(
+      x => x.name === hoveredItem.name,
+    )?.value
+    : filteredTotal
+
+  let share = null
+  if (hoveredItem) {
+    const item = filteredData.find(
+      x => x.name === hoveredItem.name,
+    )
+    const positiveTotal = chartData.reduce((sum, x) => sum + x.value, 0)
+
+    const value = item?.value ?? 0
+    share = value > 0 ? value / positiveTotal : 0
+  }
+
+  const renderLabel = useCallback((props: LabelProps) => {
+    const { x = 0, y = 0, width = 0, height = 0 } = props.viewBox as CartesianViewBox ?? {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    }
+    return (
+      <>
+        <ChartText
+          y={y + height / 2 - 15}
+          x={x + width / 2}
+          textAnchor='middle'
+          verticalAnchor='middle'
+          className='pie-center-label__title'
+        >
+          {text}
+        </ChartText>
+        <ChartText
+          y={y + height / 2 + 5}
+          x={x + width / 2}
+          textAnchor='middle'
+          verticalAnchor='middle'
+          className='pie-center-label__value'
+        >
+          {`$${formatMoney(value)}`}
+        </ChartText>
+        {share != null && (
+          <ChartText
+            y={y + height / 2 + 25}
+            x={x + width / 2}
+            textAnchor='middle'
+            verticalAnchor='middle'
+            className='pie-center-label__share'
+          >
+            {`${formatPercent(share)}%`}
+          </ChartText>
+        )}
+      </>
+    )
+  }, [text, share, value])
 
   return (
     <div className='chart-field'>
@@ -83,8 +145,25 @@ export const DetailedChart = ({
                 <rect width='1' height='1' opacity={0.56} />
               </pattern>
             </defs>
-            {!isLoading && !noValue
+            {isLoading
               ? (
+                <Pie
+                  data={[{ name: 'loading...', value: 1 }]}
+                  dataKey='value'
+                  nameKey='displayName'
+                  cx='50%'
+                  cy='50%'
+                  innerRadius='91%'
+                  outerRadius='100%'
+                  paddingAngle={0}
+                  fill='#F8F8FA'
+                  animationDuration={200}
+                  animationEasing='ease-in-out'
+                >
+                  <Label position='center' value='Loading...' className='pie-center-label__loading' />
+                </Pie>
+              )
+              : (
                 <Pie
                   data={chartData}
                   dataKey='value'
@@ -127,237 +206,9 @@ export const DetailedChart = ({
                       />
                     )
                   })}
-                  <Label
-                    position='center'
-                    value='Total'
-                    className='pie-center-label-title'
-                    content={(props) => {
-                      const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
-                        cx: 0,
-                        cy: 0,
-                      }
-                      const positioningProps = {
-                        x: cx,
-                        y: (cy || 0) - 15,
-                        textAnchor: 'middle' as
-                        | 'start'
-                        | 'middle'
-                        | 'end'
-                        | 'inherit',
-                        verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
-                      }
-
-                      let text = 'Total'
-
-                      if (hoveredItem) {
-                        text = hoveredItem.displayName
-                      }
-
-                      return (
-                        <ChartText
-                          {...positioningProps}
-                          className='pie-center-label__title'
-                        >
-                          {text}
-                        </ChartText>
-                      )
-                    }}
-                  />
-
-                  <Label
-                    position='center'
-                    value='Total'
-                    className='pie-center-label-title'
-                    content={(props) => {
-                      const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
-                        cx: 0,
-                        cy: 0,
-                      }
-                      const positioningProps = {
-                        x: cx,
-                        y: (cy || 0) + 5,
-                        textAnchor: 'middle' as
-                        | 'start'
-                        | 'middle'
-                        | 'end'
-                        | 'inherit',
-                        verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
-                      }
-
-                      let value = filteredTotal
-                      if (hoveredItem) {
-                        value = filteredData.find(
-                          x => x.name === hoveredItem.name,
-                        )?.value
-                      }
-
-                      return (
-                        <ChartText
-                          {...positioningProps}
-                          className='pie-center-label__value'
-                        >
-                          {`$${formatMoney(value)}`}
-                        </ChartText>
-                      )
-                    }}
-                  />
-
-                  <Label
-                    position='center'
-                    value='Total'
-                    className='pie-center-label-title'
-                    content={(props) => {
-                      const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
-                        cx: 0,
-                        cy: 0,
-                      }
-                      const positioningProps = {
-                        x: cx,
-                        y: (cy || 0) + 25,
-                        height: 20,
-                        textAnchor: 'middle' as
-                        | 'start'
-                        | 'middle'
-                        | 'end'
-                        | 'inherit',
-                        verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
-                      }
-
-                      if (hoveredItem) {
-                        const item = filteredData.find(
-                          x => x.name === hoveredItem.name,
-                        )
-                        const positiveTotal = chartData.reduce((sum, x) => sum + x.value, 0)
-
-                        const value = item?.value ?? 0
-                        const share = value > 0 ? value / positiveTotal : 0
-                        return (
-                          <ChartText
-                            {...positioningProps}
-                            className='pie-center-label__share'
-                          >
-                            {`${formatPercent(share)}%`}
-                          </ChartText>
-                        )
-                      }
-
-                      return null
-                    }}
-                  />
+                  <Label position='center' content={renderLabel} />
                 </Pie>
-              )
-              : null}
-
-            {!isLoading && noValue
-              ? (
-                <Pie
-                  data={[{ name: 'Total', value: 1 }]}
-                  dataKey='value'
-                  nameKey='displayName'
-                  cx='50%'
-                  cy='50%'
-                  innerRadius='91%'
-                  outerRadius='100%'
-                  paddingAngle={0}
-                  fill='#F8F8FA'
-                  animationDuration={200}
-                  animationEasing='ease-in-out'
-                >
-                  <Label
-                    position='center'
-                    value='Total'
-                    className='pie-center-label-title'
-                    content={(props) => {
-                      const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
-                        cx: 0,
-                        cy: 0,
-                      }
-                      const positioningProps = {
-                        x: cx,
-                        y: (cy || 0) - 15,
-                        textAnchor: 'middle' as
-                        | 'start'
-                        | 'middle'
-                        | 'end'
-                        | 'inherit',
-                        verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
-                      }
-
-                      let text = 'Total'
-
-                      if (hoveredItem) {
-                        text = hoveredItem.displayName
-                      }
-
-                      return (
-                        <ChartText
-                          {...positioningProps}
-                          className='pie-center-label__title'
-                        >
-                          {text}
-                        </ChartText>
-                      )
-                    }}
-                  />
-
-                  <Label
-                    position='center'
-                    value='Total'
-                    className='pie-center-label-title'
-                    content={(props) => {
-                      const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
-                        cx: 0,
-                        cy: 0,
-                      }
-                      const positioningProps = {
-                        x: cx,
-                        y: (cy || 0) + 5,
-                        textAnchor: 'middle' as
-                        | 'start'
-                        | 'middle'
-                        | 'end'
-                        | 'inherit',
-                        verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
-                      }
-
-                      let value = filteredTotal
-                      if (hoveredItem) {
-                        value = filteredData.find(
-                          x => x.name === hoveredItem.name,
-                        )?.value
-                      }
-
-                      return (
-                        <ChartText
-                          {...positioningProps}
-                          className='pie-center-label__value'
-                        >
-                          {`$${formatMoney(value)}`}
-                        </ChartText>
-                      )
-                    }}
-                  />
-                </Pie>
-              )
-              : null}
-
-            {isLoading
-              ? (
-                <Pie
-                  data={[{ name: 'loading...', value: 1 }]}
-                  dataKey='value'
-                  nameKey='displayName'
-                  cx='50%'
-                  cy='50%'
-                  innerRadius='91%'
-                  outerRadius='100%'
-                  paddingAngle={0}
-                  fill='#F8F8FA'
-                  animationDuration={200}
-                  animationEasing='ease-in-out'
-                />
-              )
-              : null}
+              )}
           </PieChart>
         </ResponsiveContainer>
       </div>

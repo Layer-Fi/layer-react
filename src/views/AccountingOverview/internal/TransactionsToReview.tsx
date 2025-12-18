@@ -1,9 +1,9 @@
-import { useContext, useEffect, useMemo } from 'react'
-import { getMonth, getYear, startOfMonth } from 'date-fns'
+import { useMemo } from 'react'
+import { getMonth, getYear } from 'date-fns'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { useProfitAndLossLTM } from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import BellIcon from '@icons/Bell'
 import CheckIcon from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'
@@ -19,7 +19,6 @@ const CLASS_NAME = 'Layer__TransactionsToReview'
 
 type TransactionsToReviewProps = {
   onClick?: () => void
-  usePnlDateRange?: boolean
   tagFilter?: {
     key: string
     values: string[]
@@ -29,39 +28,32 @@ type TransactionsToReviewProps = {
 
 export function TransactionsToReview({
   onClick,
-  usePnlDateRange,
   tagFilter = undefined,
   variants,
 }: TransactionsToReviewProps) {
   const { size = 'sm' } = variants ?? {}
 
-  const { dateRange: contextDateRange } = useContext(ProfitAndLossContext)
-  const dateRange = usePnlDateRange ? contextDateRange : undefined
+  const dateRange = useGlobalDateRange({ dateSelectionMode: 'month' })
 
-  const currentDate = useMemo(() => dateRange ? dateRange.startDate : startOfMonth(new Date()), [dateRange])
-
-  const { data, isLoading, isError, refetch, setDate } = useProfitAndLossLTM({
-    currentDate,
-    tagFilter,
+  const { data, isLoading, isError, mutate } = useProfitAndLossSummaries({
+    startYear: dateRange.startDate.getFullYear(),
+    startMonth: dateRange.startDate.getMonth() + 1,
+    endYear: dateRange.endDate.getFullYear(),
+    endMonth: dateRange.endDate.getMonth() + 1,
+    tagKey: tagFilter?.key,
+    tagValues: tagFilter?.values?.join(','),
   })
 
   const activeMonth = useMemo(() => {
     if (!data || !dateRange) return undefined
     const { startDate } = dateRange
 
-    return data.find(
+    return data.months.find(
       summary =>
         summary.month - 1 === getMonth(startDate)
         && summary.year === getYear(startDate),
     )
   }, [data, dateRange])
-
-  // If we haven't loaded the current month's P&L summary data, go fetch it.
-  useEffect(() => {
-    if (!activeMonth) {
-      setDate(currentDate)
-    }
-  }, [activeMonth, currentDate, setDate])
 
   const hasLoadedData = !isLoading && activeMonth
   const numTransactionsToReview = activeMonth?.uncategorizedTransactions ?? 0
@@ -77,7 +69,7 @@ export function TransactionsToReview({
           variant={BadgeVariant.ERROR}
           size={BadgeSize.SMALL}
           icon={<RefreshCcw size={12} />}
-          onClick={() => refetch()}
+          onClick={() => void mutate()}
         >
           Refresh
         </Badge>
@@ -107,7 +99,7 @@ export function TransactionsToReview({
         All done
       </Badge>
     )
-  }, [hasLoadedData, isError, numTransactionsToReview, refetch])
+  }, [hasLoadedData, isError, mutate, numTransactionsToReview])
 
   let verticalGap: StackProps['gap'] = '3xs'
   switch (size) {

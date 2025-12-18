@@ -87,15 +87,6 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
     color: var(--color-base-400);
   }
 
-  .recharts-responsive-container {
-    box-shadow: none;
-
-    path:focus,
-    g:focus {
-      outline: none;
-    }
-  }
-
   .pie-center-label__title,
   .pie-center-label__share {
     fill: var(--color-base-600);
@@ -104,6 +95,11 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 
   .pie-center-label__value {
     fill: var(--text-color-primary);
+    font-size: 14px;
+  }
+
+  .pie-center-label__loading {
+    fill: var(--color-base-600);
     font-size: 14px;
   }
 
