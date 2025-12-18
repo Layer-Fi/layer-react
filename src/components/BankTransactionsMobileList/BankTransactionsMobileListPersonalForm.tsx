@@ -12,11 +12,12 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { isCategorized } from '@components/BankTransactions/utils'
-import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
-import { isPersonalCategory } from '@components/BankTransactionsMobileList/utils'
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+
+import { PersonalStableName } from './constants'
+import { isPersonalCategory } from './utils'
 
 interface BankTransactionsMobileListPersonalFormProps {
   bankTransaction: BankTransaction
@@ -70,8 +71,8 @@ export const BankTransactionsMobileListPersonalForm = ({
         category: {
           type: 'StableName',
           stableName: isCredit(bankTransaction)
-            ? PersonalCategories.INCOME
-            : PersonalCategories.EXPENSES,
+            ? PersonalStableName.CREDIT
+            : PersonalStableName.DEBIT,
         },
       },
       true,

@@ -1,7 +1,7 @@
 import { CategoryAsOption } from '@internal-types/categorizationOption'
 import type { CategorizationEncoded, NestedCategorization } from '@schemas/categorization'
 
-import { PersonalCategories } from './constants'
+import { PersonalStableName } from './constants'
 
 export interface CategoryGroup {
   label: string
@@ -47,7 +47,7 @@ export const isPersonalCategory = (category: CategorizationEncoded): boolean => 
 
   if (category.type === 'Account' && 'stable_name' in category) {
     const stableName = category.stable_name
-    return stableName === PersonalCategories.INCOME || stableName === PersonalCategories.EXPENSES
+    return stableName === PersonalStableName.CREDIT || stableName === PersonalStableName.DEBIT
   }
 
   return false

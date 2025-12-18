@@ -1,4 +1,4 @@
-export enum PersonalCategories {
-  INCOME = 'PERSONAL_INFLOWS',
-  EXPENSES = 'PERSONAL_EXPENSES',
+export enum PersonalStableName {
+  CREDIT = 'CONTRIBUTIONS',
+  DEBIT = 'PERSONAL_EXPENSES',
 }
