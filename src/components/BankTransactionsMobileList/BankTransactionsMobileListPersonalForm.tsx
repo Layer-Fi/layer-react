@@ -12,10 +12,11 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { isCategorized } from '@components/BankTransactions/utils'
-import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+
+import { LegacyPersonalCategories, PersonalStableName } from './constants'
 
 interface BankTransactionsMobileListPersonalFormProps {
   bankTransaction: BankTransaction
@@ -32,12 +33,27 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
     return false
   }
 
-  return Boolean(
-    bankTransaction.category
-    && Object.values(PersonalCategories).includes(
-      bankTransaction.category.display_name as PersonalCategories,
-    ),
-  )
+  if (!bankTransaction.category) {
+    return false
+  }
+
+  const category = bankTransaction.category
+
+  if (category.type === 'Account' && 'stable_name' in category) {
+    const stableName = category.stable_name
+    if (stableName === PersonalStableName.CREDIT || stableName === PersonalStableName.DEBIT) {
+      return true
+    }
+  }
+
+  if (category.type === 'Exclusion') {
+    const displayName = category.display_name
+    if (Object.values(LegacyPersonalCategories).includes(displayName as LegacyPersonalCategories)) {
+      return true
+    }
+  }
+
+  return false
 }
 
 export const BankTransactionsMobileListPersonalForm = ({
@@ -72,10 +88,10 @@ export const BankTransactionsMobileListPersonalForm = ({
       {
         type: 'Category',
         category: {
-          type: 'Exclusion',
-          exclusionType: isCredit(bankTransaction)
-            ? PersonalCategories.INCOME
-            : PersonalCategories.EXPENSES,
+          type: 'StableName',
+          stableName: isCredit(bankTransaction)
+            ? PersonalStableName.CREDIT
+            : PersonalStableName.DEBIT,
         },
       },
       true,
