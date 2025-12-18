@@ -9,7 +9,7 @@ import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileL
 import { NewToggle } from '@components/NewToggle/NewToggle'
 
 import { Purpose } from './BankTransactionsMobileListItem'
-import { isPersonalCategory } from './utils'
+import { PersonalStableName } from './constants'
 
 const PURPOSE_TOGGLE_OPTIONS = [
   {
@@ -73,6 +73,25 @@ export const BankTransactionsMobileListItemExpandedRow = ({
     </VStack>
 
   )
+}
+
+const isPersonalCategory = (category: BankTransaction['category']): boolean => {
+  if (!category) {
+    return false
+  }
+
+  if (category.type === 'Account' && 'stable_name' in category) {
+    const stableName = category.stable_name
+    if (stableName === PersonalStableName.CREDIT || stableName === PersonalStableName.DEBIT) {
+      return true
+    }
+  }
+
+  if (category.type === 'Exclusion') {
+    return true
+  }
+
+  return false
 }
 
 const getInitialPurpose = (bankTransaction: BankTransaction): Purpose => {

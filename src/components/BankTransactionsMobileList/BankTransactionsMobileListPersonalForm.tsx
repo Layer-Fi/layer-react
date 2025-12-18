@@ -16,8 +16,7 @@ import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
-import { PersonalStableName } from './constants'
-import { isPersonalCategory } from './utils'
+import { LegacyPersonalCategories, PersonalStableName } from './constants'
 
 interface BankTransactionsMobileListPersonalFormProps {
   bankTransaction: BankTransaction
@@ -34,7 +33,27 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
     return false
   }
 
-  return Boolean(bankTransaction.category && isPersonalCategory(bankTransaction.category))
+  if (!bankTransaction.category) {
+    return false
+  }
+
+  const category = bankTransaction.category
+
+  if (category.type === 'Account' && 'stable_name' in category) {
+    const stableName = category.stable_name
+    if (stableName === PersonalStableName.CREDIT || stableName === PersonalStableName.DEBIT) {
+      return true
+    }
+  }
+
+  if (category.type === 'Exclusion') {
+    const displayName = category.display_name
+    if (Object.values(LegacyPersonalCategories).includes(displayName as LegacyPersonalCategories)) {
+      return true
+    }
+  }
+
+  return false
 }
 
 export const BankTransactionsMobileListPersonalForm = ({
