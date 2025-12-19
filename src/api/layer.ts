@@ -36,7 +36,6 @@ import {
   updateOpeningBalance,
 } from '@api/layer/linked_accounts'
 import {
-  compareProfitAndLoss,
   getProfitAndLossCsv,
   getProfitAndLossExcel,
   profitAndLossComparisonCsv,
@@ -76,7 +75,6 @@ export const Layer = {
   getProfitAndLossExcel,
   getJournalEntriesCSV,
   reverseJournalEntry,
-  compareProfitAndLoss,
   profitAndLossComparisonCsv,
   createJournalEntries,
   getPlaidLinkToken,

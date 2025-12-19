@@ -6,9 +6,7 @@ import { DataModel } from '@internal-types/general'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
-import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
-import { useProfitAndLossReportCacheActions } from '@hooks/useProfitAndLoss/useProfitAndLossReport'
-import { useProfitAndLossSummariesCacheActions } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type JournalEntryReturn, JournalEntryReturnSchema, type UpsertJournalEntrySchema } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 import { useLedgerEntriesCacheActions } from '@features/ledger/entries/api/useListLedgerEntries'
@@ -65,9 +63,7 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
 
   // Cache invalidation hooks
   const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
-  const { debouncedInvalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
-  const { debouncedInvalidateProfitAndLossReport } = useProfitAndLossReportCacheActions()
-  const { debouncedInvalidateProfitAndLossSummaries } = useProfitAndLossSummariesCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { invalidate } = useGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
@@ -96,30 +92,19 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
 
       // Invalidate all relevant caches after successful journal entry creation
       void forceReloadLedgerEntries()
-      void debouncedInvalidatePnlDetailLines()
-      void debouncedInvalidateProfitAndLossReport()
-      void debouncedInvalidateProfitAndLossSummaries()
+      void debouncedInvalidateProfitAndLoss()
 
       // Invalidate balance sheet and cash flow statement caches
       void invalidate(({ tags }) => tags.includes('#balance-sheet'))
       void invalidate(({ tags }) => tags.includes('#statement-of-cash-flow'))
 
       // Touch data models to trigger sync
-      touch(DataModel.PROFIT_AND_LOSS)
       touch(DataModel.BALANCE_SHEET)
       touch(DataModel.STATEMENT_OF_CASH_FLOWS)
 
       return result
     },
-    [
-      forceReloadLedgerEntries,
-      debouncedInvalidatePnlDetailLines,
-      debouncedInvalidateProfitAndLossReport,
-      debouncedInvalidateProfitAndLossSummaries,
-      invalidate,
-      touch,
-      rawMutationResponse,
-    ],
+    [rawMutationResponse, forceReloadLedgerEntries, debouncedInvalidateProfitAndLoss, invalidate, touch],
   )
 
   return {
