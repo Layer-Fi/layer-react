@@ -10,7 +10,6 @@ import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/bookkeeping/useBankAccounts'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExternalAccounts'
-import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -77,7 +76,6 @@ export function useMatchBankTransaction() {
   const { mutate } = useSWRConfig()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
   const { useBankTransactionsOptions } = useBankTransactionsContext()
   const { forceReloadBackgroundBankTransactions } = useBankTransactionsGlobalCacheActions()
 
@@ -125,19 +123,11 @@ export function useMatchBankTransaction() {
 
       void forceReloadBackgroundBankTransactions(useBankTransactionsOptions)
 
-      void invalidatePnlDetailLines()
       void debouncedInvalidateProfitAndLoss()
 
       return triggerResult
     },
-    [
-      originalTrigger,
-      mutate,
-      forceReloadBackgroundBankTransactions,
-      useBankTransactionsOptions,
-      invalidatePnlDetailLines,
-      debouncedInvalidateProfitAndLoss,
-    ],
+    [originalTrigger, mutate, forceReloadBackgroundBankTransactions, useBankTransactionsOptions, debouncedInvalidateProfitAndLoss],
   )
 
   return new Proxy(mutationResponse, {

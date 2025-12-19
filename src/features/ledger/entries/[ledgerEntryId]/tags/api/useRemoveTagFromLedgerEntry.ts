@@ -3,7 +3,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
-import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useLedgerEntriesCacheActions, useLedgerEntriesOptimisticUpdater } from '@features/ledger/entries/api/useListLedgerEntries'
 
@@ -82,7 +82,7 @@ export function useRemoveTagFromLedgerEntry({ ledgerEntryId }: RemoveTagFromLedg
 
   const { debouncedInvalidateLedgerEntries } = useLedgerEntriesCacheActions()
   const { optimisticallyUpdateLedgerEntries } = useLedgerEntriesOptimisticUpdater()
-  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const { trigger: originalTrigger } = mutationResponse
 
@@ -107,14 +107,14 @@ export function useRemoveTagFromLedgerEntry({ ledgerEntryId }: RemoveTagFromLedg
 
       return triggerResultPromise
         .finally(() => { void debouncedInvalidateLedgerEntries() })
-        .finally(() => { void invalidatePnlDetailLines() })
+        .finally(() => { void debouncedInvalidateProfitAndLoss() })
     },
     [
       ledgerEntryId,
       originalTrigger,
       optimisticallyUpdateLedgerEntries,
       debouncedInvalidateLedgerEntries,
-      invalidatePnlDetailLines,
+      debouncedInvalidateProfitAndLoss,
     ],
   )
 

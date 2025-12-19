@@ -7,7 +7,6 @@ import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/useCategorizationRules/useListCategorizationRules'
-import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -50,7 +49,6 @@ export function useCreateCategorizationRule() {
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
   const { forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
 
   const mutationResponse = useSWRMutation(
@@ -83,14 +81,14 @@ export function useCreateCategorizationRule() {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
       void forceReloadBankTransactions()
-      void invalidatePnlDetailLines()
+
       void forceReloadCategorizationRules()
 
       void debouncedInvalidateProfitAndLoss()
 
       return triggerResult
     },
-    [originalTrigger, forceReloadBankTransactions, invalidatePnlDetailLines, forceReloadCategorizationRules, debouncedInvalidateProfitAndLoss],
+    [originalTrigger, forceReloadBankTransactions, forceReloadCategorizationRules, debouncedInvalidateProfitAndLoss],
   )
 
   return new Proxy(mutationResponse, {

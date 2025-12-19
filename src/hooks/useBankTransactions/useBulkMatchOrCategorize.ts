@@ -8,6 +8,7 @@ import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { buildBulkMatchOrCategorizePayload } from '@hooks/useBankTransactions/utils'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useGetAllBankTransactionsCategories } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -89,6 +90,7 @@ export const useBulkMatchOrCategorize = () => {
   const { transactionCategories } = useGetAllBankTransactionsCategories()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const buildTransactionsPayload: () => BulkMatchOrCategorizeRequest = useCallback(() => {
     const transactions = buildBulkMatchOrCategorizePayload(selectedIds, transactionCategories)
@@ -125,11 +127,13 @@ export const useBulkMatchOrCategorize = () => {
 
       void forceReloadBankTransactions()
 
+      void debouncedInvalidateProfitAndLoss()
+
       eventCallbacks?.onTransactionCategorized?.()
 
       return triggerResult
     },
-    [originalTrigger, forceReloadBankTransactions, eventCallbacks],
+    [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
   )
 
   const proxiedResponse = new Proxy(mutationResponse, {

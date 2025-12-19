@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
@@ -48,6 +49,7 @@ export const useBulkUncategorize = () => {
   const { businessId, eventCallbacks } = useLayerContext()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const mutationResponse = useSWRMutation(
     () => buildKey({
@@ -79,11 +81,13 @@ export const useBulkUncategorize = () => {
 
       void forceReloadBankTransactions()
 
+      void debouncedInvalidateProfitAndLoss()
+
       eventCallbacks?.onTransactionCategorized?.()
 
       return triggerResult
     },
-    [originalTrigger, forceReloadBankTransactions, eventCallbacks],
+    [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
   )
 
   return new Proxy(mutationResponse, {
