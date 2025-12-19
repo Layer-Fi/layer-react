@@ -58,7 +58,7 @@ export const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
   {
     dataKey: 'revenueBarInverse',
     xAxisId: 'expenses',
-    cellFill: STRIPE_PATTERN_FILL,
+    radius: [2, 2, 0, 0],
     className: 'Layer__profit-and-loss-chart__bar--income',
   },
   {
@@ -99,7 +99,7 @@ export const ProfitAndLossChartBar = ({
   selectedIndex,
   barAnimation,
 }: ProfitAndLossChartBarProps) => {
-  const showIndicator = dataKey === 'revenueBar' && !barAnimation
+  const showIndicator = (dataKey === 'revenueBar' || dataKey === 'revenueBarInverse') && !barAnimation
 
   const renderIndicator = useCallback(
     (props: LabelProps) => (
