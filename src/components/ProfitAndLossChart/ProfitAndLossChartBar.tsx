@@ -37,7 +37,7 @@ export const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
     className: 'Layer__profit-and-loss-chart__bar--expenses',
   },
   {
-    dataKey: 'revenue',
+    dataKey: 'revenueBar',
     xAxisId: 'revenue',
     className: 'Layer__profit-and-loss-chart__bar--income',
   },
@@ -47,21 +47,31 @@ export const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
     radius: [2, 2, 0, 0],
     cellFill: STRIPE_PATTERN_DARK_FILL,
     className: 'Layer__profit-and-loss-chart__bar--expenses-uncategorized',
-
   },
   {
-    dataKey: 'revenueUncategorized',
+    dataKey: 'revenueUncategorizedBar',
     xAxisId: 'revenue',
     radius: [2, 2, 0, 0],
     cellFill: STRIPE_PATTERN_FILL,
     className: 'Layer__profit-and-loss-chart__bar--income-uncategorized',
-
+  },
+  {
+    dataKey: 'revenueBarInverse',
+    xAxisId: 'expenses',
+    cellFill: STRIPE_PATTERN_FILL,
+    className: 'Layer__profit-and-loss-chart__bar--income',
   },
   {
     dataKey: 'expensesBar',
     xAxisId: 'expenses',
     className: 'Layer__profit-and-loss-chart__bar--expenses',
-
+  },
+  {
+    dataKey: 'revenueUncategorizedBarInverse',
+    xAxisId: 'expenses',
+    radius: [2, 2, 0, 0],
+    cellFill: STRIPE_PATTERN_FILL,
+    className: 'Layer__profit-and-loss-chart__bar--income-uncategorized',
   },
   {
     dataKey: 'expensesUncategorizedBar',
@@ -69,7 +79,6 @@ export const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
     radius: [2, 2, 0, 0],
     cellFill: STRIPE_PATTERN_DARK_FILL,
     className: 'Layer__profit-and-loss-chart__bar--expenses-uncategorized',
-
   },
 ]
 
@@ -90,7 +99,7 @@ export const ProfitAndLossChartBar = ({
   selectedIndex,
   barAnimation,
 }: ProfitAndLossChartBarProps) => {
-  const showIndicator = dataKey === 'revenue' && !barAnimation
+  const showIndicator = dataKey === 'revenueBar' && !barAnimation
 
   const renderIndicator = useCallback(
     (props: LabelProps) => (

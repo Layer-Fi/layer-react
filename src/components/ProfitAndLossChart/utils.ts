@@ -14,14 +14,18 @@ export interface ChartDataPoint {
 
   revenue: number
   revenueUncategorized: number
-
-  expensesUncategorized: number
-  expensesUncategorizedBar: number
-  expensesUncategorizedBarInverse: number
-
   expenses: number
+  expensesUncategorized: number
+
+  revenueBar: number
+  revenueBarInverse: number
+  revenueUncategorizedBar: number
+  revenueUncategorizedBarInverse: number
+
   expensesBar: number
   expensesBarInverse: number
+  expensesUncategorizedBar: number
+  expensesUncategorizedBarInverse: number
 
   loadingBar: number
   loadingBarInverse: number
@@ -89,12 +93,16 @@ export const summarizePnL = ({
 
     revenue: pnl.income,
     revenueUncategorized: pnl.uncategorizedInflows,
-
     expenses: pnl.totalExpenses,
+    expensesUncategorized: pnl.uncategorizedOutflows,
+
+    revenueBar: pnl.income > 0 ? pnl.income : 0,
+    revenueBarInverse: pnl.income < 0 ? pnl.income : 0,
+    revenueUncategorizedBar: pnl.uncategorizedInflows > 0 ? pnl.uncategorizedInflows : 0,
+    revenueUncategorizedBarInverse: pnl.uncategorizedInflows < 0 ? pnl.uncategorizedInflows : 0,
+
     expensesBar: pnl.totalExpenses > 0 ? -pnl.totalExpenses : 0,
     expensesBarInverse: pnl.totalExpenses < 0 ? -pnl.totalExpenses : 0,
-
-    expensesUncategorized: pnl.uncategorizedOutflows,
     expensesUncategorizedBar: pnl.uncategorizedOutflows > 0 ? -pnl.uncategorizedOutflows : 0,
     expensesUncategorizedBarInverse: pnl.uncategorizedOutflows < 0 ? -pnl.uncategorizedOutflows : 0,
 
