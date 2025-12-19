@@ -1,5 +1,4 @@
-import { useCallback, useMemo } from 'react'
-import { debounce } from 'lodash-es'
+import { useCallback } from 'react'
 import useSWR from 'swr'
 
 import { type ReportingBasis } from '@internal-types/general'
@@ -88,11 +87,6 @@ export function useProfitAndLossComparisonReport({
   return response
 }
 
-const INVALIDATE_DEBOUNCE_OPTIONS = {
-  wait: 1000,
-  maxWait: 3000,
-}
-
 export const useProfitAndLossComparisonReportCacheActions = () => {
   const { invalidate } = useGlobalCacheActions()
 
@@ -103,17 +97,5 @@ export const useProfitAndLossComparisonReportCacheActions = () => {
     [invalidate],
   )
 
-  const debouncedInvalidateProfitAndLossComparisonReport = useMemo(
-    () => debounce(
-      invalidateProfitAndLossComparisonReport,
-      INVALIDATE_DEBOUNCE_OPTIONS.wait,
-      {
-        maxWait: INVALIDATE_DEBOUNCE_OPTIONS.maxWait,
-        trailing: true,
-      },
-    ),
-    [invalidateProfitAndLossComparisonReport],
-  )
-
-  return { invalidateProfitAndLossComparisonReport, debouncedInvalidateProfitAndLossComparisonReport }
+  return { invalidateProfitAndLossComparisonReport }
 }
