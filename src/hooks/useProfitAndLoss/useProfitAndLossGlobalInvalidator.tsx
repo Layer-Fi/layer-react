@@ -32,14 +32,14 @@ export const useProfitAndLossGlobalInvalidator = () => {
 
   const debouncedInvalidateProfitAndLoss = useMemo(
     () => debounce(
-      invalidateProfitAndLossReport,
+      invalidateProfitAndLoss,
       INVALIDATE_DEBOUNCE_OPTIONS.wait,
       {
         maxWait: INVALIDATE_DEBOUNCE_OPTIONS.maxWait,
         trailing: true,
       },
     ),
-    [invalidateProfitAndLossReport],
+    [invalidateProfitAndLoss],
   )
 
   return { invalidateProfitAndLoss, debouncedInvalidateProfitAndLoss }
