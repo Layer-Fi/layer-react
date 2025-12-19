@@ -2,7 +2,7 @@ import BarChart2Icon from '@icons/BarChart2'
 import { IconBox } from '@components/IconBox/IconBox'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
-export const ChartStateCard = () => {
+export const ProfitAndLossChartStateCard = () => {
   return (
     <div className='Layer__profit-and-loss-chart__state-card'>
       <IconBox>

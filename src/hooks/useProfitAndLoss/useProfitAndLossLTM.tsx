@@ -1,29 +1,23 @@
-import { useCallback, useMemo, useState } from 'react'
-import { startOfMonth, sub } from 'date-fns'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { type ReportingBasis } from '@internal-types/general'
 import type { ProfitAndLossSummary } from '@hooks/useProfitAndLoss/schemas'
 import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
+import type { ChartWindow } from '@components/ProfitAndLossChart/getChartWindow'
+
+const MIN_LOADING_DURATION_MS = 1000
 
 type UseProfitAndLossLTMProps = {
-  currentDate: Date
   tagFilter?: {
     key: string
     values: string[]
   }
   reportingBasis?: ReportingBasis
+  chartWindow: ChartWindow
 }
 
 export interface ProfitAndLossSummaryData extends ProfitAndLossSummary {
   isLoading?: boolean
-}
-
-type UseProfitAndLossLTMReturn = (props?: UseProfitAndLossLTMProps) => {
-  data: ProfitAndLossSummaryData[]
-  isLoading: boolean
-  isError: boolean
-  setDate: (date: Date) => void
-  refetch: () => void
 }
 
 const getYearMonthKey = (y: number, m: number) => {
@@ -38,7 +32,7 @@ const BASE_PNL_SUMMARY: Omit<ProfitAndLossSummary, 'year' | 'month'> = {
   profitBeforeTaxes: 0,
   taxes: 0,
   netProfit: 0,
-  fullyCategorized: false,
+  fullyCategorized: true,
   totalExpenses: 0,
   uncategorizedInflows: 0,
   uncategorizedOutflows: 0,
@@ -46,12 +40,12 @@ const BASE_PNL_SUMMARY: Omit<ProfitAndLossSummary, 'year' | 'month'> = {
   categorizedTransactions: 0,
 }
 
-const buildDates = ({ currentDate }: { currentDate: Date }) => {
+const buildDatesFromChartWindow = (chartWindow: ChartWindow) => {
   return {
-    startYear: startOfMonth(currentDate).getFullYear() - 1,
-    startMonth: startOfMonth(currentDate).getMonth() + 1,
-    endYear: startOfMonth(currentDate).getFullYear(),
-    endMonth: startOfMonth(currentDate).getMonth() + 1,
+    startYear: chartWindow.start.getFullYear(),
+    startMonth: chartWindow.start.getMonth() + 1,
+    endYear: chartWindow.end.getFullYear(),
+    endMonth: chartWindow.end.getMonth() + 1,
   }
 }
 
@@ -61,29 +55,17 @@ const buildMonthsArray = (startDate: Date, endDate: Date) => {
   }
 
   const dates = []
-  for (let d = startDate; d <= endDate; d.setMonth(d.getMonth() + 1)) {
+  for (let d = new Date(startDate); d <= endDate; d.setMonth(d.getMonth() + 1)) {
     dates.push(new Date(d))
   }
 
   return dates
 }
 
-/**
- * Hooks fetch Last Twelve Months sending 12 requests (one for each month).
- * Implementation is not perfect, but we cannot use loops and arrays with hooks.
- */
-export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
-  { currentDate, tagFilter, reportingBasis }: UseProfitAndLossLTMProps = {
-    currentDate: startOfMonth(Date.now()),
-  },
-) => {
-  const [date, setDate] = useState(currentDate)
+export const useProfitAndLossLTM = ({ tagFilter, reportingBasis, chartWindow }: UseProfitAndLossLTMProps) => {
+  const { startYear, startMonth, endYear, endMonth } = buildDatesFromChartWindow(chartWindow)
 
-  const { startYear, startMonth, endYear, endMonth } = useMemo(() => {
-    return buildDates({ currentDate: date })
-  }, [date])
-
-  const { data, isLoading, isError, mutate } = useProfitAndLossSummaries({
+  const { data, isLoading, isError } = useProfitAndLossSummaries({
     startYear,
     startMonth,
     endYear,
@@ -91,11 +73,31 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     tagKey: tagFilter?.key,
     tagValues: tagFilter?.values?.join(','),
     reportingBasis,
+    keepPreviousData: true,
   })
 
+  const [delayedMonths, setDelayedMonths] = useState(data?.months)
+  const loadingStartRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (isLoading) {
+      loadingStartRef.current = Date.now()
+      return
+    }
+
+    const elapsed = loadingStartRef.current ? Date.now() - loadingStartRef.current : MIN_LOADING_DURATION_MS
+    const remainingDelay = Math.max(0, MIN_LOADING_DURATION_MS - elapsed)
+
+    const timeout = setTimeout(() => {
+      setDelayedMonths(data?.months)
+    }, remainingDelay)
+
+    return () => clearTimeout(timeout)
+  }, [isLoading, data?.months])
+
   const augmentedData = useMemo(() => {
-    // 1) Build the 12-month period ending at `date`
-    const period = buildMonthsArray(sub(date, { years: 1 }), date)
+    // 1) Build the 12-month period from the chart window
+    const period = buildMonthsArray(chartWindow.start, chartWindow.end)
 
     // 2) Create placeholders for each period month
     const map = new Map<string, ProfitAndLossSummaryData>()
@@ -112,33 +114,16 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     }
 
     // 3) Overlay API data (replacing placeholders; mark as loaded)
-    const monthsFromApi = data?.months ?? []
+    const monthsFromApi = delayedMonths ?? []
     for (const m of monthsFromApi) {
       const key = getYearMonthKey(m.year, m.month)
-      map.set(key, { ...m, isLoading: false })
+      if (map.has(key)) {
+        map.set(key, { ...m, isLoading: false })
+      }
     }
 
-    // 4) Sorted array
-    const sorted = Array.from(map.values()).sort(
-      (a, b) =>
-        new Date(a.year, a.month - 1, 1).getTime()
-          - new Date(b.year, b.month - 1, 1).getTime(),
-    )
+    return Array.from(map.values())
+  }, [chartWindow.end, chartWindow.start, delayedMonths])
 
-    return sorted
-  }, [date, data?.months])
-
-  const updateDate = useCallback((date: Date) => setDate(date), [])
-
-  const refetch = useCallback(() => {
-    void mutate()
-  }, [mutate])
-
-  return {
-    data: augmentedData,
-    isLoading,
-    isError,
-    setDate: updateDate,
-    refetch,
-  }
+  return { data: augmentedData, isLoading, isError }
 }

@@ -90,8 +90,19 @@ const getProfitAndLossSummaries = get<
     return `/v1/businesses/${businessId}/reports/profit-and-loss-summaries?${parameters}`
   })
 
-type UseProfitAndLossSummariesProps = Omit<ProfitAndLossSummariesRequestParams, 'businessId'>
-export function useProfitAndLossSummaries({ startYear, startMonth, endYear, endMonth, tagKey, tagValues, reportingBasis }: UseProfitAndLossSummariesProps) {
+type UseProfitAndLossSummariesProps = Omit<ProfitAndLossSummariesRequestParams, 'businessId'> & {
+  keepPreviousData?: boolean
+}
+export function useProfitAndLossSummaries({
+  startYear,
+  startMonth,
+  endYear,
+  endMonth,
+  tagKey,
+  tagValues,
+  reportingBasis,
+  keepPreviousData,
+}: UseProfitAndLossSummariesProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -114,6 +125,7 @@ export function useProfitAndLossSummaries({ startYear, startMonth, endYear, endM
         params: { businessId, startYear, startMonth, endYear, endMonth, tagKey, tagValues, reportingBasis },
       },
     )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossSummariesSchema)(data)),
+    { keepPreviousData },
   )
 
   return new ProfitAndLossSummariesSWRResponse(response)

@@ -203,7 +203,6 @@ export function ProfitAndLossSummaries({
           ? [
             <TransactionsToReview
               key='transactions-to-review'
-              usePnlDateRange
               variants={restProps.variants}
               onClick={onTransactionsToReviewClick}
             />,
