@@ -1,96 +1,31 @@
 import { useCallback } from 'react'
-import { Bar, Cell, LabelList, type LabelProps } from 'recharts'
+import { Bar, LabelList, type LabelProps, Rectangle, type RectangleProps } from 'recharts'
 
-import {
-  STRIPE_PATTERN_DARK_FILL,
-  STRIPE_PATTERN_FILL,
-} from '@components/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
+import { type ChartDataPoint } from '@components/ProfitAndLossChart/chartDataPoint'
+import { type BarConfig, isOutermostBar } from '@components/ProfitAndLossChart/profitAndLossChartBarConfig'
 import { ProfitAndLossChartSelectionIndicator } from '@components/ProfitAndLossChart/ProfitAndLossChartSelectionIndicator'
 
-export interface BarConfig {
-  dataKey: string
-  xAxisId: 'revenue' | 'expenses'
-  radius?: [number, number, number, number]
-  cellFill?: string
-  className: string
-  barAnimation?: boolean
-}
-
-export const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
-  {
-    dataKey: 'loadingBar',
-    xAxisId: 'revenue',
-    radius: [2, 2, 0, 0],
-    className: 'Layer__profit-and-loss-chart__bar--loading',
-  },
-  {
-    dataKey: 'loadingBarInverse',
-    xAxisId: 'expenses',
-    radius: [2, 2, 0, 0],
-    className: 'Layer__profit-and-loss-chart__bar--loading',
-  },
-  {
-    dataKey: 'expensesBarInverse',
-    xAxisId: 'revenue',
-    radius: [2, 2, 0, 0],
-    cellFill: STRIPE_PATTERN_DARK_FILL,
-    className: 'Layer__profit-and-loss-chart__bar--expenses',
-  },
-  {
-    dataKey: 'revenue',
-    xAxisId: 'revenue',
-    className: 'Layer__profit-and-loss-chart__bar--income',
-  },
-  {
-    dataKey: 'expensesUncategorizedBarInverse',
-    xAxisId: 'revenue',
-    radius: [2, 2, 0, 0],
-    cellFill: STRIPE_PATTERN_DARK_FILL,
-    className: 'Layer__profit-and-loss-chart__bar--expenses-uncategorized',
-
-  },
-  {
-    dataKey: 'revenueUncategorized',
-    xAxisId: 'revenue',
-    radius: [2, 2, 0, 0],
-    cellFill: STRIPE_PATTERN_FILL,
-    className: 'Layer__profit-and-loss-chart__bar--income-uncategorized',
-
-  },
-  {
-    dataKey: 'expensesBar',
-    xAxisId: 'expenses',
-    className: 'Layer__profit-and-loss-chart__bar--expenses',
-
-  },
-  {
-    dataKey: 'expensesUncategorizedBar',
-    xAxisId: 'expenses',
-    radius: [2, 2, 0, 0],
-    cellFill: STRIPE_PATTERN_DARK_FILL,
-    className: 'Layer__profit-and-loss-chart__bar--expenses-uncategorized',
-
-  },
-]
-
 type ProfitAndLossChartBarProps = BarConfig & {
-  data: Array<{ name: string }>
   barSize: number
   selectedIndex: number
 }
 
+interface BarShapeProps extends RectangleProps {
+  payload?: ChartDataPoint
+}
+
+const BAR_RADIUS: [number, number, number, number] = [2, 2, 0, 0]
+
 export const ProfitAndLossChartBar = ({
-  data,
   dataKey,
   xAxisId,
-  radius,
   cellFill,
   className,
   barSize,
   selectedIndex,
   barAnimation,
 }: ProfitAndLossChartBarProps) => {
-  const showIndicator = dataKey === 'revenue' && !barAnimation
+  const showIndicator = dataKey === 'revenueBar' && !barAnimation
 
   const renderIndicator = useCallback(
     (props: LabelProps) => (
@@ -99,19 +34,26 @@ export const ProfitAndLossChartBar = ({
     [selectedIndex],
   )
 
+  const BarCell = useCallback((props: unknown) => {
+    const { payload, fill, ...restProps } = props as BarShapeProps
+    const shouldRound = payload && isOutermostBar(payload, dataKey, xAxisId)
+
+    return <Rectangle {...restProps} fill={fill} radius={shouldRound ? BAR_RADIUS : 0} />
+  }, [dataKey, xAxisId])
+
   return (
     <Bar
       dataKey={dataKey}
       barSize={barSize}
       animationDuration={100}
-      radius={radius}
       className={className}
       xAxisId={xAxisId}
       stackId={xAxisId}
       isAnimationActive={barAnimation}
+      fill={cellFill}
+      shape={BarCell}
     >
       {showIndicator && <LabelList content={renderIndicator} />}
-      {data.map(entry => <Cell key={entry.name} fill={cellFill} />)}
     </Bar>
   )
 }

@@ -1,7 +1,7 @@
 import { DefaultZIndexes, Rectangle, Tooltip, type TooltipContentProps, ZIndexLayer } from 'recharts'
 
 import { MoneySpan } from '@ui/Typography/MoneySpan'
-import type { ChartDataPoint } from '@components/ProfitAndLossChart/utils'
+import type { ChartDataPoint } from '@components/ProfitAndLossChart/chartDataPoint'
 import { Text } from '@components/Typography/Text'
 
 export interface ProfitAndLossChartTooltipProps {
