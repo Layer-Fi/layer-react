@@ -4,32 +4,7 @@ import {
 
 import { MONTH_FORMAT_ABBREVIATED, MONTH_FORMAT_NARROW } from '@config/general'
 import { type ProfitAndLossSummaryData } from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
-
-export interface ChartDataPoint {
-  name: string
-  year: number
-  month: number
-
-  netProfit: number
-
-  revenue: number
-  revenueUncategorized: number
-  expenses: number
-  expensesUncategorized: number
-
-  revenueBar: number
-  revenueBarInverse: number
-  revenueUncategorizedBar: number
-  revenueUncategorizedBarInverse: number
-
-  expensesBar: number
-  expensesBarInverse: number
-  expensesUncategorizedBar: number
-  expensesUncategorizedBarInverse: number
-
-  loadingBar: number
-  loadingBarInverse: number
-}
+import type { ChartDataPoint } from '@components/ProfitAndLossChart/chartDataPoint'
 
 const BASE_LOADING_DEFAULT = 90000
 
@@ -52,19 +27,16 @@ const getBaseLoadingValues = (data?: ProfitAndLossSummaryData[]) => {
   }
 }
 
-export const getLoadingValues = (index: number, data?: ProfitAndLossSummaryData[]) => {
+const getLoadingValues = (index: number, data?: ProfitAndLossSummaryData[]) => {
   const { maxRevenue, maxExpenses } = getBaseLoadingValues(data)
   const wave = Math.pow(-1, index + 1)
   const loadingRevenue = maxRevenue + (maxRevenue * 0.05 * wave * (((index + 1) % 12) + 1))
   const loadingExpenses = maxExpenses + (maxExpenses * 0.05 * wave * (((index + 1) % 2) + 1))
 
-  return {
-    loadingBar: loadingRevenue > 0 ? loadingRevenue : 0,
-    loadingBarInverse: loadingRevenue < 0 ? loadingRevenue : -loadingExpenses,
-  }
+  return { loadingBar: loadingRevenue, loadingBarInverse: -loadingExpenses }
 }
 
-export const summarizePnL = ({
+const summarizePnL = ({
   pnl,
   index,
   compactView,

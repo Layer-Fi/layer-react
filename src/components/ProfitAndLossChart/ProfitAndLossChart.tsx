@@ -23,13 +23,14 @@ import { useProfitAndLossLTM } from '@hooks/useProfitAndLoss/useProfitAndLossLTM
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { areChartWindowsEqual, getChartWindow } from '@components/ProfitAndLossChart/getChartWindow'
-import { PROFIT_AND_LOSS_BAR_CONFIG, ProfitAndLossChartBar } from '@components/ProfitAndLossChart/ProfitAndLossChartBar'
+import { ProfitAndLossChartBar } from '@components/ProfitAndLossChart/ProfitAndLossChartBar'
+import { PROFIT_AND_LOSS_BAR_CONFIG } from '@components/ProfitAndLossChart/profitAndLossChartBarConfig'
 import { ProfitAndLossChartLegend } from '@components/ProfitAndLossChart/ProfitAndLossChartLegend'
 import { ProfitAndLossChartPatternDefs } from '@components/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
 import { ProfitAndLossChartStateCard } from '@components/ProfitAndLossChart/ProfitAndLossChartStateCard'
 import { ProfitAndLossChartTooltip } from '@components/ProfitAndLossChart/ProfitAndLossChartTooltip'
 import { ProfitAndLossChartYAxis } from '@components/ProfitAndLossChart/ProfitAndLossChartYAxis'
-import { transformPnLData } from '@components/ProfitAndLossChart/utils'
+import { transformPnLData } from '@components/ProfitAndLossChart/transformPnLData'
 
 export interface ProfitAndLossChartProps {
   tagFilter?: {
@@ -162,7 +163,6 @@ export const ProfitAndLossChart = ({ tagFilter }: ProfitAndLossChartProps) => {
           {PROFIT_AND_LOSS_BAR_CONFIG.map(config => (
             <ProfitAndLossChartBar
               key={config.dataKey}
-              data={dataOrPlaceholderData}
               barSize={barSize}
               selectedIndex={selectedIndex}
               barAnimation={barAnimation}
