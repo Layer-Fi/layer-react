@@ -25,7 +25,7 @@ export const ProfitAndLossChartBar = ({
   selectedIndex,
   barAnimation,
 }: ProfitAndLossChartBarProps) => {
-  const showIndicator = (dataKey === 'revenueBar' || dataKey === 'revenueBarInverse') && !barAnimation
+  const showIndicator = dataKey === 'revenueBar' && !barAnimation
 
   const renderIndicator = useCallback(
     (props: LabelProps) => (
