@@ -323,21 +323,16 @@ const BankTransactionsTableView = ({
     removeAfterCategorize([bankTransaction.id])
 
   const containerRef = useElementSize<HTMLDivElement>((_el, _en, size) => {
-    if (size?.height && size?.height >= 90) {
-      const newShift = -Math.floor(size.height / 2) + 6
-      if (newShift !== shiftStickyHeader) {
-        void debounceShiftStickyHeader(newShift)
-      }
-    }
-    else if (size?.height > 0 && shiftStickyHeader !== 0) {
-      void debounceShiftStickyHeader(0)
+    const targetShift = size?.height >= 90
+      ? -Math.floor(size.height / 2) + 6
+      : 0
+    if (size?.height > 0 && targetShift !== shiftStickyHeader) {
+      void debounceShiftStickyHeader(targetShift)
     }
 
-    if (size.width > BREAKPOINTS.TABLET && listView) {
-      setListView(false)
-    }
-    else if (size.width <= BREAKPOINTS.TABLET && !listView) {
-      setListView(true)
+    const shouldBeListView = size.width <= BREAKPOINTS.TABLET
+    if (shouldBeListView !== listView) {
+      setListView(shouldBeListView)
     }
   })
 
@@ -350,6 +345,15 @@ const BankTransactionsTableView = ({
     && Math.ceil((data?.length || 0) / pageSize) === currentPage
 
   const isLoadingWithoutData = isLoading && !data
+
+  type ViewType = 'table' | 'list' | 'mobileList' | 'loading'
+
+  const viewType: ViewType = useMemo(() => {
+    if (!listView) return 'table'
+    if (isLoadingWithoutData) return 'loading'
+    if (mobileComponent === 'mobileList') return 'mobileList'
+    return 'list'
+  }, [listView, isLoadingWithoutData, mobileComponent])
 
   return (
     <Container
@@ -383,7 +387,7 @@ const BankTransactionsTableView = ({
         />
       )}
 
-      {!listView && (
+      {viewType === 'table' && (
         <div className='Layer__bank-transactions__table-wrapper'>
           {rulesSuggestionModal}
           <BankTransactionsTable
@@ -404,44 +408,41 @@ const BankTransactionsTableView = ({
         </div>
       )}
 
-      {!isLoadingWithoutData && listView && mobileComponent !== 'mobileList'
-        && (
-          <div className='Layer__bank-transactions__list-wrapper'>
-            {rulesSuggestionModal}
-            <BankTransactionsList
-              bankTransactions={bankTransactions}
-              editable={editable}
-              removeTransaction={removeTransaction}
-              stringOverrides={stringOverrides?.bankTransactionCTAs}
+      {viewType === 'list' && (
+        <div className='Layer__bank-transactions__list-wrapper'>
+          {rulesSuggestionModal}
+          <BankTransactionsList
+            bankTransactions={bankTransactions}
+            editable={editable}
+            removeTransaction={removeTransaction}
+            stringOverrides={stringOverrides?.bankTransactionCTAs}
 
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showTooltips={showTooltips}
-            />
-          </div>
-        )}
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
+          />
+        </div>
+      )}
 
-      {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
-        && (
-          <>
-            <BankTransactionsMobileList
-              bankTransactions={bankTransactions}
-              editable={editable}
-              removeTransaction={removeTransaction}
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showTooltips={showTooltips}
-            />
-            {rulesSuggestionDrawer}
-          </>
-        )}
+      {viewType === 'mobileList' && (
+        <>
+          <BankTransactionsMobileList
+            bankTransactions={bankTransactions}
+            editable={editable}
+            removeTransaction={removeTransaction}
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
+          />
+          {rulesSuggestionDrawer}
+        </>
+      )}
 
-      {listView && isLoadingWithoutData
-        && (
-          <div className='Layer__bank-transactions__list-loader'>
-            <Loader />
-          </div>
-        )}
+      {viewType === 'loading' && (
+        <div className='Layer__bank-transactions__list-loader'>
+          <Loader />
+        </div>
+      )}
 
       {(!isSyncing || listView)
         && (
