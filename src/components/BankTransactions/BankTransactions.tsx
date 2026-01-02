@@ -51,6 +51,13 @@ import { usePreloadVendors } from '@features/vendors/api/useListVendors'
 
 const COMPONENT_NAME = 'bank-transactions'
 
+enum ViewType {
+  Table = 'table',
+  List = 'list',
+  MobileList = 'mobileList',
+  Loading = 'loading',
+}
+
 export interface BankTransactionsStringOverrides {
   bankTransactionCTAs?: BankTransactionCTAStringOverrides
   transactionsTable?: BankTransactionsTableStringOverrides
@@ -346,13 +353,11 @@ const BankTransactionsTableView = ({
 
   const isLoadingWithoutData = isLoading && !data
 
-  type ViewType = 'table' | 'list' | 'mobileList' | 'loading'
-
-  const viewType: ViewType = useMemo(() => {
-    if (!listView) return 'table'
-    if (isLoadingWithoutData) return 'loading'
-    if (mobileComponent === 'mobileList') return 'mobileList'
-    return 'list'
+  const viewType = useMemo(() => {
+    if (!listView) return ViewType.Table
+    if (isLoadingWithoutData) return ViewType.Loading
+    if (mobileComponent === 'mobileList') return ViewType.MobileList
+    return ViewType.List
   }, [listView, isLoadingWithoutData, mobileComponent])
 
   return (
@@ -387,7 +392,7 @@ const BankTransactionsTableView = ({
         />
       )}
 
-      {viewType === 'table' && (
+      {viewType === ViewType.Table && (
         <div className='Layer__bank-transactions__table-wrapper'>
           {rulesSuggestionModal}
           <BankTransactionsTable
@@ -408,7 +413,7 @@ const BankTransactionsTableView = ({
         </div>
       )}
 
-      {viewType === 'list' && (
+      {viewType === ViewType.List && (
         <div className='Layer__bank-transactions__list-wrapper'>
           {rulesSuggestionModal}
           <BankTransactionsList
@@ -424,7 +429,7 @@ const BankTransactionsTableView = ({
         </div>
       )}
 
-      {viewType === 'mobileList' && (
+      {viewType === ViewType.MobileList && (
         <>
           <BankTransactionsMobileList
             bankTransactions={bankTransactions}
@@ -438,7 +443,7 @@ const BankTransactionsTableView = ({
         </>
       )}
 
-      {viewType === 'loading' && (
+      {viewType === ViewType.Loading && (
         <div className='Layer__bank-transactions__list-loader'>
           <Loader />
         </div>
