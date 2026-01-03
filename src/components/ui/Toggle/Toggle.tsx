@@ -15,6 +15,7 @@ export enum ToggleSize {
 }
 
 export interface ToggleProps {
+  ariaLabel: string
   options: ToggleOptionProps[]
   selectedKey?: Key
   onSelectionChange?: (key: Key) => void
@@ -23,6 +24,7 @@ export interface ToggleProps {
 }
 
 export const Toggle = ({
+  ariaLabel,
   options,
   selectedKey,
   onSelectionChange,
@@ -39,6 +41,7 @@ export const Toggle = ({
 
   return (
     <ToggleButtonGroup
+      aria-label={ariaLabel}
       className='Layer__Toggle'
       {...dataProperties}
       selectionMode='single'

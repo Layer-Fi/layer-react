@@ -85,6 +85,7 @@ export const ProjectProfitabilityView = ({
       <div className='Layer__component Layer__header__actions'>
         <div className='Layer__component'>
           <Toggle
+            ariaLabel='Select active tab'
             options={[
               {
                 value: 'overview',

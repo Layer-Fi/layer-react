@@ -135,6 +135,7 @@ export const BookkeepingOverview = ({
         </div>
         <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>
           <Toggle
+            ariaLabel='Select profit and loss chart'
             options={[
               {
                 value: 'revenue',

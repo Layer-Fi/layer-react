@@ -1,10 +1,8 @@
 import { type RefObject, useMemo } from 'react'
 
-import { type BillStatusFilter } from '@hooks/useBills'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useBillsContext, useBillsRecordPaymentContext } from '@contexts/BillsContext'
 import CloseIcon from '@icons/CloseIcon'
-import { Toggle } from '@ui/Toggle/Toggle'
 import { BillsList } from '@components/Bills/BillsList'
 import { BillsSidebar } from '@components/Bills/BillsSidebar'
 import { BillsTable } from '@components/Bills/BillsTable'
@@ -35,10 +33,8 @@ const COMPONENT_NAME = 'bills'
 
 export const BillsTableWithPanel = ({
   containerRef,
-  stringOverrides,
 }: {
   containerRef: RefObject<HTMLDivElement>
-  stringOverrides?: BillsTableStringOverrides
 }) => {
   const {
     data: rawData,
@@ -46,7 +42,6 @@ export const BillsTableWithPanel = ({
     currentPage,
     setCurrentPage,
     status,
-    setStatus,
     vendor,
     setVendor,
     fetchMore,
@@ -62,7 +57,6 @@ export const BillsTableWithPanel = ({
     bulkSelectionActive,
     openBulkSelection,
     closeBulkSelection,
-    clearRecordPaymentSelection,
     showRecordPaymentForm,
     setShowRecordPaymentForm,
     billsToPay,
@@ -89,30 +83,6 @@ export const BillsTableWithPanel = ({
         sticky
         rounded
       >
-        <HeaderRow>
-          <HeaderCol noPadding>
-            <Toggle
-              options={[
-                {
-                  value: 'UNPAID',
-                  label: stringOverrides?.unpaidToggleOption || 'Unpaid',
-                },
-                {
-                  value: 'PAID',
-                  label: stringOverrides?.paidToggleOption || 'Paid',
-                },
-              ]}
-              selectedKey={status}
-              onSelectionChange={(key) => {
-                setStatus(key as BillStatusFilter)
-                if (key === 'PAID') {
-                  clearRecordPaymentSelection()
-                }
-                setCurrentPage(1)
-              }}
-            />
-          </HeaderCol>
-        </HeaderRow>
         {status === 'UNPAID' && (
           <HeaderRow direction={isMobile ? 'col' : 'row'}>
             <HeaderCol noPadding>
