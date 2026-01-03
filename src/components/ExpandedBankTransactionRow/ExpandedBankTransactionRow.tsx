@@ -24,6 +24,7 @@ import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { TextButton } from '@components/Button/TextButton'
@@ -31,7 +32,6 @@ import { AmountInput } from '@components/Input/AmountInput'
 import { Input } from '@components/Input/Input'
 import { MatchForm } from '@components/MatchForm/MatchForm'
 import { Separator } from '@components/Separator/Separator'
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
@@ -137,8 +137,8 @@ export const ExpandedBankTransactionRow = ({
     onValidityChange?.(isValid)
   }, [isSplitsValid, onValidityChange, purpose, selectedMatch])
 
-  const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newPurpose = event.target.value === 'match'
+  const onChangePurpose = (key: React.Key) => {
+    const newPurpose = key === 'match'
       ? Purpose.match
       : Purpose.categorize
     setPurpose(newPurpose)
@@ -221,9 +221,6 @@ export const ExpandedBankTransactionRow = ({
                 && (
                   <HStack pi='md' pbe='md' pbs='3xs'>
                     <Toggle
-                      name={`purpose-${bankTransaction.id}${
-                        asListItem ? '-li' : ''
-                      }`}
                       size={ToggleSize.small}
                       options={[
                         {
@@ -238,8 +235,8 @@ export const ExpandedBankTransactionRow = ({
                         'We could not find matching transactions',
                         },
                       ]}
-                      selected={purpose}
-                      onChange={onChangePurpose}
+                      selectedKey={purpose}
+                      onSelectionChange={onChangePurpose}
                     />
                   </HStack>
                 )}

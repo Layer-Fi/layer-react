@@ -16,6 +16,7 @@ import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelection
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { type MobileComponentType } from '@components/BankTransactions/constants'
@@ -25,7 +26,6 @@ import { ButtonVariant } from '@components/Button/Button'
 import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
 import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
-import { NewToggle } from '@ui/NewToggle/NewToggle'
 import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
@@ -240,7 +240,7 @@ export const BankTransactionsHeader = ({
 
   const statusToggle = !categorizedOnly && categorizeView && showStatusToggle
     ? (
-      <NewToggle
+      <Toggle
         options={[
           { label: 'To Review', value: DisplayState.review },
           { label: 'Categorized', value: DisplayState.categorized },

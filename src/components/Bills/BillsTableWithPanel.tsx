@@ -4,6 +4,7 @@ import { type BillStatusFilter } from '@hooks/useBills'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useBillsContext, useBillsRecordPaymentContext } from '@contexts/BillsContext'
 import CloseIcon from '@icons/CloseIcon'
+import { Toggle } from '@ui/Toggle/Toggle'
 import { BillsList } from '@components/Bills/BillsList'
 import { BillsSidebar } from '@components/Bills/BillsSidebar'
 import { BillsTable } from '@components/Bills/BillsTable'
@@ -15,7 +16,6 @@ import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { Pagination } from '@components/Pagination/Pagination'
 import { Panel } from '@components/Panel/Panel'
-import { Toggle } from '@components/Toggle/Toggle'
 import { SelectVendor } from '@components/Vendors/SelectVendor'
 
 export type BillsTableStringOverrides = {
@@ -92,7 +92,6 @@ export const BillsTableWithPanel = ({
         <HeaderRow>
           <HeaderCol noPadding>
             <Toggle
-              name='bills-tabs'
               options={[
                 {
                   value: 'UNPAID',
@@ -103,10 +102,10 @@ export const BillsTableWithPanel = ({
                   label: stringOverrides?.paidToggleOption || 'Paid',
                 },
               ]}
-              selected={status}
-              onChange={(opt) => {
-                setStatus(opt.target.value as BillStatusFilter)
-                if (opt.target.value === 'PAID') {
+              selectedKey={status}
+              onSelectionChange={(key) => {
+                setStatus(key as BillStatusFilter)
+                if (key === 'PAID') {
                   clearRecordPaymentSelection()
                 }
                 setCurrentPage(1)

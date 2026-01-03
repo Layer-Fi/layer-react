@@ -5,10 +5,10 @@ import { DisplayState } from '@internal-types/bank_transactions'
 import { type MoneyFormat } from '@internal-types/general'
 import { type PnlTagFilter } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactions } from '@components/BankTransactions/BankTransactions'
 import { Container } from '@components/Container/Container'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import { Toggle } from '@components/Toggle/Toggle'
 import { View } from '@components/View/View'
 import { AccountingOverview } from '@views/AccountingOverview/AccountingOverview'
 
@@ -85,7 +85,6 @@ export const ProjectProfitabilityView = ({
       <div className='Layer__component Layer__header__actions'>
         <div className='Layer__component'>
           <Toggle
-            name='project-tabs'
             options={[
               {
                 value: 'overview',
@@ -100,8 +99,8 @@ export const ProjectProfitabilityView = ({
                 label: 'Report',
               },
             ]}
-            selected={activeTab}
-            onChange={opt => setActiveTab(opt.target.value as ProjectTab)}
+            selectedKey={activeTab}
+            onSelectionChange={key => setActiveTab(key as ProjectTab)}
           />
         </div>
         <Select

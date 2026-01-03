@@ -1,4 +1,4 @@
-.Layer__NewToggle {
+.Layer__Toggle {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -18,8 +18,22 @@
   &[data-full-width] {
     inline-size: 100%;
 
-    .Layer__NewToggleOption {
+    .Layer__ToggleOption {
       flex: 1;
+    }
+  }
+
+  &[data-size='small'],
+  &[data-size='xsmall'] {
+    height: 36px;
+    border-radius: 6px;
+  }
+
+  &[data-size='xsmall'] {
+    .Layer__ToggleOption {
+      .Layer__Toggle-Option-Content {
+        font-size: 12px;
+      }
     }
   }
 }
