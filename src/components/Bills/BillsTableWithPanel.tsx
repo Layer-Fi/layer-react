@@ -1,6 +1,5 @@
 import { type RefObject, useMemo } from 'react'
 
-import { type BillStatusFilter } from '@hooks/useBills'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useBillsContext, useBillsRecordPaymentContext } from '@contexts/BillsContext'
 import CloseIcon from '@icons/CloseIcon'
@@ -15,7 +14,6 @@ import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { Pagination } from '@components/Pagination/Pagination'
 import { Panel } from '@components/Panel/Panel'
-import { Toggle } from '@components/Toggle/Toggle'
 import { SelectVendor } from '@components/Vendors/SelectVendor'
 
 export type BillsTableStringOverrides = {
@@ -35,10 +33,8 @@ const COMPONENT_NAME = 'bills'
 
 export const BillsTableWithPanel = ({
   containerRef,
-  stringOverrides,
 }: {
   containerRef: RefObject<HTMLDivElement>
-  stringOverrides?: BillsTableStringOverrides
 }) => {
   const {
     data: rawData,
@@ -46,7 +42,6 @@ export const BillsTableWithPanel = ({
     currentPage,
     setCurrentPage,
     status,
-    setStatus,
     vendor,
     setVendor,
     fetchMore,
@@ -62,7 +57,6 @@ export const BillsTableWithPanel = ({
     bulkSelectionActive,
     openBulkSelection,
     closeBulkSelection,
-    clearRecordPaymentSelection,
     showRecordPaymentForm,
     setShowRecordPaymentForm,
     billsToPay,
@@ -89,31 +83,6 @@ export const BillsTableWithPanel = ({
         sticky
         rounded
       >
-        <HeaderRow>
-          <HeaderCol noPadding>
-            <Toggle
-              name='bills-tabs'
-              options={[
-                {
-                  value: 'UNPAID',
-                  label: stringOverrides?.unpaidToggleOption || 'Unpaid',
-                },
-                {
-                  value: 'PAID',
-                  label: stringOverrides?.paidToggleOption || 'Paid',
-                },
-              ]}
-              selected={status}
-              onChange={(opt) => {
-                setStatus(opt.target.value as BillStatusFilter)
-                if (opt.target.value === 'PAID') {
-                  clearRecordPaymentSelection()
-                }
-                setCurrentPage(1)
-              }}
-            />
-          </HeaderCol>
-        </HeaderRow>
         {status === 'UNPAID' && (
           <HeaderRow direction={isMobile ? 'col' : 'row'}>
             <HeaderCol noPadding>
