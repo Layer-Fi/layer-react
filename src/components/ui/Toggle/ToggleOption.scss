@@ -1,4 +1,4 @@
-.Layer__NewToggleOption {
+.Layer__UI__ToggleOption {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -9,6 +9,7 @@
   border-radius: 6px;
   border: none;
   background: transparent;
+  cursor: pointer;
   color: var(--text-color-secondary);
 
   &::before {
@@ -28,9 +29,18 @@
       background-color: var(--color-base-200);
     }
   }
+
+  &[data-selected] {
+    color: var(--text-color-primary);
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 }
 
-.Layer__NewToggleOption-SelectionIndicator {
+.Layer__UI__ToggleOption-SelectionIndicator {
   position: absolute;
   z-index: -1;
   top: 0;
@@ -47,4 +57,10 @@
   background: var(--color-white);
   transition-property: translate, width;
   transition-duration: 200ms;
+}
+
+.Layer__UI__Toggle-Option-Content {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
 }

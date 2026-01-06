@@ -363,14 +363,6 @@
   }
 }
 
-.Layer__expanded-bank-transaction-row__content-toggle {
-  padding: var(--spacing-sm) var(--spacing-md);
-
-  .Layer__toggle-option {
-    width: 110px;
-  }
-}
-
 .Layer__expanded-bank-transaction-row__splits {
   display: flex;
   gap: var(--spacing-sm);
@@ -1250,10 +1242,6 @@
 }
 
 @container (max-width: 500px) {
-  .Layer__expanded-bank-transaction-row__content-toggle .Layer__toggle-option input + span {
-    font-size: var(--text-xs);
-  }
-
   .Layer__bank-transaction-list-item__expanded-row {
     input,
     .Layer__category-menu {

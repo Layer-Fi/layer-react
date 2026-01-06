@@ -4,6 +4,7 @@ import { type View as ViewType } from '@internal-types/general'
 import { type ProfitAndLossCompareConfig } from '@internal-types/profit_and_loss'
 import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { Toggle } from '@ui/Toggle/Toggle'
 import { BalanceSheet } from '@components/BalanceSheet/BalanceSheet'
 import { type BalanceSheetStringOverrides } from '@components/BalanceSheet/BalanceSheet'
 import { Container } from '@components/Container/Container'
@@ -14,7 +15,6 @@ import { ProfitAndLossReport } from '@components/ProfitAndLossReport/ProfitAndLo
 import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
 import { StatementOfCashFlow } from '@components/StatementOfCashFlow/StatementOfCashFlow'
 import { type StatementOfCashFlowStringOverrides } from '@components/StatementOfCashFlow/StatementOfCashFlow'
-import { Toggle } from '@components/Toggle/Toggle'
 import { View } from '@components/View/View'
 import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
 
@@ -103,10 +103,10 @@ export const Reports = ({
       {enabledReports.length > 1 && (
         <div className='Layer__component Layer__header__actions'>
           <Toggle
-            name='reports-tabs'
+            ariaLabel='Report type'
             options={options}
-            selected={activeTab}
-            onChange={opt => setActiveTab(opt.target.value as ReportType)}
+            selectedKey={activeTab}
+            onSelectionChange={key => setActiveTab(key as ReportType)}
           />
         </div>
       )}

@@ -7,13 +7,13 @@ import { type Variants } from '@utils/styleUtils/sizeVariants'
 import { useCalendly } from '@hooks/useCalendly/useCalendly'
 import { useWindowSize } from '@hooks/useWindowSize/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
+import { Toggle } from '@ui/Toggle/Toggle'
 import { CallBooking } from '@components/CallBooking/CallBooking'
 import { Container } from '@components/Container/Container'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
-import { Toggle } from '@components/Toggle/Toggle'
 import { View } from '@components/View/View'
 import { useCallBookings } from '@features/callBookings/api/useCallBookings'
 import { BookkeepingProfitAndLossSummariesContainer } from '@views/BookkeepingOverview/internal/BookkeepingProfitAndLossSummariesContainer'
@@ -135,7 +135,7 @@ export const BookkeepingOverview = ({
         </div>
         <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>
           <Toggle
-            name='pnl-detailed-charts'
+            ariaLabel='Chart type'
             options={[
               {
                 value: 'revenue',
@@ -146,8 +146,8 @@ export const BookkeepingOverview = ({
                 label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
               },
             ]}
-            selected={pnlToggle}
-            onChange={e => setPnlToggle(e.target.value as PnlToggleOption)}
+            selectedKey={pnlToggle}
+            onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
           />
           <Container
             name={classNames(

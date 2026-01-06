@@ -5,8 +5,8 @@ import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasMatch } from '@utils/bankTransactions'
 import { VStack } from '@ui/Stack/Stack'
+import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
-import { NewToggle } from '@ui/NewToggle/NewToggle'
 
 import { Purpose } from './BankTransactionsMobileListItem'
 import { PersonalStableName } from './constants'
@@ -55,7 +55,8 @@ export const BankTransactionsMobileListItemExpandedRow = ({
     <VStack pi='md' gap='md' pbe='md'>
       {showCategorization
         && (
-          <NewToggle
+          <Toggle
+            ariaLabel='Purpose'
             options={PURPOSE_TOGGLE_OPTIONS}
             selectedKey={purpose}
             onSelectionChange={onChangePurpose}

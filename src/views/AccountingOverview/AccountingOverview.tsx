@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { type OnboardingStep } from '@internal-types/layer_context'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { Toggle } from '@ui/Toggle/Toggle'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
@@ -16,7 +17,6 @@ import {
   ProfitAndLossSummaries,
   type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { Toggle } from '@components/Toggle/Toggle'
 import { View } from '@components/View/View'
 import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
@@ -127,7 +127,7 @@ export const AccountingOverview = ({
         )}
         <div className='Layer__accounting-overview-profit-and-loss-charts'>
           <Toggle
-            name='pnl-detailed-charts'
+            ariaLabel='Chart type'
             options={[
               {
                 value: 'revenue',
@@ -138,8 +138,8 @@ export const AccountingOverview = ({
                 label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
               },
             ]}
-            selected={pnlToggle}
-            onChange={e => setPnlToggle(e.target.value as PnlToggleOption)}
+            selectedKey={pnlToggle}
+            onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
           />
           <Container
             name={classNames(
