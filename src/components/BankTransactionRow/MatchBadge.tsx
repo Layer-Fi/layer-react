@@ -18,13 +18,13 @@ interface MatchTooltipProps {
 const MatchTooltip = ({ amount, date, dateFormat, description }: MatchTooltipProps) => {
   return (
     <span className='Layer__MatchTooltip'>
-      <div className='Layer__MatchTooltip--date'>
+      <div className='Layer__MatchTooltip__date'>
         {formatTime(parseISO(date), dateFormat)}
       </div>
-      <div className='Layer__MatchTooltip--description'>
+      <div className='Layer__MatchTooltip__description'>
         {description}
       </div>
-      <div className='Layer__MatchTooltip--amount'>
+      <div className='Layer__MatchTooltip__amount'>
         $
         {formatMoney(amount)}
       </div>

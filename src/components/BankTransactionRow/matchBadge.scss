@@ -5,16 +5,16 @@
   min-width: 200px;
   font-size: var(--text-sm);
 
-  .Layer__MatchTooltip--date {
+  .Layer__MatchTooltip__date {
     color: var(--color-base-500);
   }
 
-  .Layer__MatchTooltip--description {
+  .Layer__MatchTooltip__description {
     max-width: 230px;
     color: var(--color-base-500);
   }
 
-  .Layer__MatchTooltip--amount {
+  .Layer__MatchTooltip__amount {
     font-size: var(--text-md);
   }
 }
