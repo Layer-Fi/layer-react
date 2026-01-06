@@ -56,7 +56,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
       {showCategorization
         && (
           <Toggle
-            ariaLabel='Select purpose'
+            ariaLabel='Purpose'
             options={PURPOSE_TOGGLE_OPTIONS}
             selectedKey={purpose}
             onSelectionChange={onChangePurpose}

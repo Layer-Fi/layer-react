@@ -50,7 +50,7 @@ export const GeneralLedgerView = ({
         showHeader={showTitle}
       >
         <Toggle
-          ariaLabel='Select active tab'
+          ariaLabel='Ledger view'
           options={[
             {
               value: 'chartOfAccounts',

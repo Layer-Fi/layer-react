@@ -103,7 +103,7 @@ export const Reports = ({
       {enabledReports.length > 1 && (
         <div className='Layer__component Layer__header__actions'>
           <Toggle
-            ariaLabel='Select active report'
+            ariaLabel='Report type'
             options={options}
             selectedKey={activeTab}
             onSelectionChange={key => setActiveTab(key as ReportType)}

@@ -221,7 +221,7 @@ export const ExpandedBankTransactionRow = ({
                 && (
                   <HStack pi='md' pbe='md' pbs='3xs'>
                     <Toggle
-                      ariaLabel='Categorize or match transaction'
+                      ariaLabel='Transaction action'
                       size={ToggleSize.small}
                       options={[
                         {

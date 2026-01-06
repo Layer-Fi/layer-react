@@ -28,7 +28,7 @@ export const TripPurposeToggle = ({
 
   return (
     <Toggle
-      ariaLabel='Select trip purpose'
+      ariaLabel='Trip purpose'
       options={options}
       selectedKey={selected}
       onSelectionChange={key => onChange(key as TripPurposeFilterValue)}

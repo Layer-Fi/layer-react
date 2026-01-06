@@ -241,7 +241,7 @@ export const BankTransactionsHeader = ({
   const statusToggle = !categorizedOnly && categorizeView && showStatusToggle
     ? (
       <Toggle
-        ariaLabel='Select categorization status'
+        ariaLabel='Categorization status'
         options={[
           { label: 'To Review', value: DisplayState.review },
           { label: 'Categorized', value: DisplayState.categorized },
