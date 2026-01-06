@@ -1,0 +1,20 @@
+.Layer__MatchTooltip {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--spacing-2xs);
+  min-width: 200px;
+  font-size: var(--text-sm);
+
+  .Layer__MatchTooltip--date {
+    color: var(--color-base-500);
+  }
+
+  .Layer__MatchTooltip--description {
+    max-width: 230px;
+    color: var(--color-base-500);
+  }
+
+  .Layer__MatchTooltip--amount {
+    font-size: var(--text-md);
+  }
+}

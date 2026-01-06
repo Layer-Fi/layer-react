@@ -6,16 +6,40 @@ import { centsToDollars as formatMoney } from '@models/Money'
 import MinimizeTwo from '@icons/MinimizeTwo'
 import { Badge } from '@components/Badge/Badge'
 
+import './matchBadge.scss'
+
+interface MatchTooltipProps {
+  amount: number
+  date: string
+  dateFormat: string
+  description: string
+}
+
+const MatchTooltip = ({ amount, date, dateFormat, description }: MatchTooltipProps) => {
+  return (
+    <span className='Layer__MatchTooltip'>
+      <div className='Layer__MatchTooltip--date'>
+        {formatTime(parseISO(date), dateFormat)}
+      </div>
+      <div className='Layer__MatchTooltip--description'>
+        {description}
+      </div>
+      <div className='Layer__MatchTooltip--amount'>
+        $
+        {formatMoney(amount)}
+      </div>
+    </span>
+  )
+}
+
 export interface MatchBadgeProps {
   bankTransaction: BankTransaction
-  classNamePrefix: string
   dateFormat: string
   text?: string
 }
 
 export const MatchBadge = ({
   bankTransaction,
-  classNamePrefix,
   dateFormat,
   text = 'Match',
 }: MatchBadgeProps) => {
@@ -24,29 +48,17 @@ export const MatchBadge = ({
     && bankTransaction.match
   ) {
     const { date, amount } = bankTransaction.match.bank_transaction
+    const description = bankTransaction.match.details?.description ?? ''
 
     return (
       <Badge
         icon={<MinimizeTwo size={11} />}
-        tooltip={(
-          <span className={`${classNamePrefix}__match-tooltip`}>
-            <div className={`${classNamePrefix}__match-tooltip__date`}>
-              {formatTime(parseISO(date), dateFormat)}
-            </div>
-            <div className={`${classNamePrefix}__match-tooltip__description`}>
-              {bankTransaction.match?.details?.description ?? ''}
-            </div>
-            <div className={`${classNamePrefix}__match-tooltip__amount`}>
-              $
-              {formatMoney(amount)}
-            </div>
-          </span>
-        )}
+        tooltip={<MatchTooltip amount={amount} date={date} dateFormat={dateFormat} description={description} />}
       >
         {text}
       </Badge>
     )
   }
 
-  return
+  return null
 }
