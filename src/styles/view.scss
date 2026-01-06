@@ -8,18 +8,6 @@
     gap: var(--spacing-md);
     padding: var(--spacing-lg);
     container-type: inline-size;
-
-    .Layer__toggle {
-      border-radius: 6px;
-
-      .Layer__toggle-option input + span {
-        border-radius: 6px;
-      }
-    }
-
-    .Layer__toggle__thumb {
-      border-radius: 6px;
-    }
   }
 
   .Layer__view-header {

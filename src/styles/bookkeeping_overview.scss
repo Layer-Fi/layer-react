@@ -42,10 +42,6 @@
   max-width: 1406px;
 }
 
-.Layer__bookkeeping-overview-profit-and-loss-charts > .Layer__toggle {
-  display: none;
-}
-
 .Layer__bookkeeping-overview-profit-and-loss .recharts-legend-wrapper {
   top: 16px !important;
 }
@@ -57,10 +53,6 @@
 
   .Layer__bookkeeping-overview-profit-and-loss-charts {
     flex-direction: column;
-  }
-
-  .Layer__bookkeeping-overview-profit-and-loss-charts > .Layer__toggle {
-    display: flex;
   }
 
   .Layer__component.Layer__bookkeeping-overview-profit-and-loss-chart.bookkeeping-overview-profit-and-loss-chart--hidden {
