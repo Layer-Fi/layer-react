@@ -14,6 +14,8 @@ import { AccountingOverview } from '@views/AccountingOverview/AccountingOverview
 
 import './projectProfitability.scss'
 
+  type ProjectTab = 'overview' | 'transactions' | 'report'
+
 export type TagOption = {
   label: string
   tagKey: string
@@ -48,8 +50,6 @@ export const ProjectProfitabilityView = ({
   const [pnlTagFilter, setPnlTagFilter] = useState<PnlTagFilter | undefined>(
     undefined,
   )
-
-  type ProjectTab = 'overview' | 'transactions' | 'report'
 
   const isOptionSelected = (
     option: TagOption,
