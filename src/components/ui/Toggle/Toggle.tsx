@@ -42,7 +42,7 @@ export const Toggle = ({
   return (
     <ToggleButtonGroup
       aria-label={ariaLabel}
-      className='Layer__Toggle'
+      className='Layer__UI__Toggle'
       {...dataProperties}
       selectionMode='single'
       selectedKeys={selectedKeys}

@@ -19,9 +19,9 @@ export const ToggleOption = ({
   disabledMessage = 'Disabled',
 }: ToggleOptionProps) => {
   const button = (
-    <ToggleButton id={value} className='Layer__ToggleOption' isDisabled={disabled}>
-      <SelectionIndicator className='Layer__ToggleOption-SelectionIndicator' />
-      <Span className='Layer__Toggle-Option-Content'>
+    <ToggleButton id={value} className='Layer__UI__ToggleOption' isDisabled={disabled}>
+      <SelectionIndicator className='Layer__UI__ToggleOption-SelectionIndicator' />
+      <Span className='Layer__UI__Toggle-Option-Content'>
         <Span noWrap>{label}</Span>
       </Span>
     </ToggleButton>

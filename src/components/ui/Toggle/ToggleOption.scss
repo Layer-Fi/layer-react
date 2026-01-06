@@ -1,4 +1,4 @@
-.Layer__ToggleOption {
+.Layer__UI__ToggleOption {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -40,7 +40,7 @@
   }
 }
 
-.Layer__ToggleOption-SelectionIndicator {
+.Layer__UI__ToggleOption-SelectionIndicator {
   position: absolute;
   z-index: -1;
   top: 0;
@@ -59,7 +59,7 @@
   transition-duration: 200ms;
 }
 
-.Layer__Toggle-Option-Content {
+.Layer__UI__Toggle-Option-Content {
   display: flex;
   gap: var(--spacing-xs);
   align-items: center;

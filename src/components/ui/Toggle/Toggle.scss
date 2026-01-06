@@ -1,4 +1,4 @@
-.Layer__Toggle {
+.Layer__UI__Toggle {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -30,8 +30,8 @@
   }
 
   &[data-size='xsmall'] {
-    .Layer__ToggleOption {
-      .Layer__Toggle-Option-Content {
+    .Layer__UI__ToggleOption {
+      .Layer__UI__Toggle-Option-Content {
         font-size: 12px;
       }
     }
