@@ -14,7 +14,7 @@ import { AccountingOverview } from '@views/AccountingOverview/AccountingOverview
 
 import './projectProfitability.scss'
 
-  type ProjectTab = 'overview' | 'transactions' | 'report'
+type ProjectTab = 'overview' | 'transactions' | 'report'
 
 export type TagOption = {
   label: string
