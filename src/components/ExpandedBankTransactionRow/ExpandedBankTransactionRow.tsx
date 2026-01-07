@@ -71,7 +71,6 @@ type ExpandedBankTransactionRowProps = {
   bankTransaction: BankTransaction
   isOpen?: boolean
   asListItem?: boolean
-  submitBtnText?: string
   categorized?: boolean
 
   showDescriptions: boolean
@@ -257,7 +256,6 @@ export const ExpandedBankTransactionRow = ({
                   >
                     <div className={`${className}__content-panel-container`}>
                       <MatchForm
-                        classNamePrefix={className}
                         bankTransaction={bankTransaction}
                         selectedMatchId={selectedMatch?.id}
                         readOnly={!categorizationEnabled}

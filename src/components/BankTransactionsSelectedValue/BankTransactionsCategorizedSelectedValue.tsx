@@ -1,7 +1,7 @@
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { type CategorizationEncoded, isSplitCategorizationEncoded } from '@schemas/categorization'
 import { isTransferMatch } from '@utils/bankTransactions'
-import { extractDescriptionForSplit } from '@components/BankTransactionRow/BankTransactionRow'
 import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 
 type BankTransactionsCategorizedSelectedValueProps = {
@@ -15,19 +15,12 @@ type BankTransactionsCategorizedSelectedValueProps = {
   }
 }
 
-export const BankTransactionsCategorizedSelectedValue = (props: BankTransactionsCategorizedSelectedValueProps) => {
-  const { bankTransaction, className, slotProps, showCategoryBadge } = props
+const extractDescriptionForSplit = (category: CategorizationEncoded | null) => {
+  if (!category || !isSplitCategorizationEncoded(category)) {
+    return ''
+  }
 
-  const baseSelectedValue = normalizeFromBankTransaction(bankTransaction)
-  return (
-    <BankTransactionsBaseSelectedValue
-      {...baseSelectedValue}
-      slotProps={slotProps}
-      className={className}
-      showCategoryBadge={showCategoryBadge}
-      isCategorized
-    />
-  )
+  return category.entries.map(c => c.category.display_name).join(', ')
 }
 
 const normalizeFromBankTransaction = (bankTransaction: BankTransaction): BankTransactionsBaseSelectedValueProps => {
@@ -49,4 +42,19 @@ const normalizeFromBankTransaction = (bankTransaction: BankTransaction): BankTra
     type: 'category',
     label: bankTransaction.category?.display_name ?? '',
   }
+}
+
+export const BankTransactionsCategorizedSelectedValue = (props: BankTransactionsCategorizedSelectedValueProps) => {
+  const { bankTransaction, className, slotProps, showCategoryBadge } = props
+
+  const baseSelectedValue = normalizeFromBankTransaction(bankTransaction)
+  return (
+    <BankTransactionsBaseSelectedValue
+      {...baseSelectedValue}
+      slotProps={slotProps}
+      className={className}
+      showCategoryBadge={showCategoryBadge}
+      isCategorized
+    />
+  )
 }

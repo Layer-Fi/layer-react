@@ -199,13 +199,7 @@ export const BankTransactionsListItem = ({
             bankTransaction={bankTransaction}
             isOpen={openExpandedRow}
             categorized={displayAsCategorized}
-            asListItem={true}
-            submitBtnText={
-              displayAsCategorized
-                ? stringOverrides?.updateButtonText || 'Update'
-                : stringOverrides?.approveButtonText || 'Approve'
-            }
-
+            asListItem
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}

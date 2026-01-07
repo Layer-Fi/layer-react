@@ -13,8 +13,9 @@ import { MatchBadge } from '@components/BankTransactionRow/MatchBadge'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { Text, TextUseTooltip } from '@components/Typography/Text'
 
+import './matchForm.scss'
+
 export interface MatchFormProps {
-  classNamePrefix: string
   bankTransaction: BankTransaction
   selectedMatchId?: string
   setSelectedMatch: (val?: SuggestedMatch) => void
@@ -23,7 +24,6 @@ export interface MatchFormProps {
 }
 
 export const MatchForm = ({
-  classNamePrefix,
   bankTransaction,
   selectedMatchId,
   setSelectedMatch,
@@ -50,15 +50,15 @@ export const MatchForm = ({
   }
 
   return (
-    <div className={`${classNamePrefix}__match-table`}>
-      <div className={`${classNamePrefix}__match-table__header`}>
-        <div className={`${classNamePrefix}__match-table__date`}>Date</div>
-        <div className={`${classNamePrefix}__match-table__desc`}>
+    <div className='Layer__MatchForm__Table'>
+      <div className='Layer__MatchForm__Table__header'>
+        <div className='Layer__MatchForm__Table__date'>Date</div>
+        <div className='Layer__MatchForm__Table__desc'>
           Description
         </div>
-        <div className={`${classNamePrefix}__match-table__amount`}>Amount</div>
-        {renderInAppLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div>}
-        {match && <div className={`${classNamePrefix}__match-table__status`} />}
+        <div className='Layer__MatchForm__Table__amount'>Amount</div>
+        {renderInAppLink && <div className='Layer__MatchForm__Table__link'>Link</div>}
+        {match && <div className='Layer__MatchForm__Table__status' />}
       </div>
       {effectiveSuggestedMatches.map((suggestedMatch) => {
         const matchDetails = suggestedMatch.details ? decodeMatchDetails(suggestedMatch.details) : undefined
@@ -67,9 +67,9 @@ export const MatchForm = ({
           <div
             key={suggestedMatch.id}
             className={classNames(
-              `${classNamePrefix}__match-row`,
+              'Layer__MatchForm__Row',
               suggestedMatch.id === selectedMatchId
-                ? `${classNamePrefix}__match-row--selected`
+                ? 'Layer__MatchForm__Row--selected'
                 : '',
             )}
             onClick={() => {
@@ -79,39 +79,39 @@ export const MatchForm = ({
               setSelectedMatch(suggestedMatch)
             }}
           >
-            <div className={`Layer__nowrap ${classNamePrefix}__match-table__date`}>
+            <div className='Layer__nowrap Layer__MatchForm__Table__date'>
               <span>
                 {formatTime(parseISO(suggestedMatch.details.date), DATE_FORMAT)}
               </span>
             </div>
-            <div className={`${classNamePrefix}__match-table__desc`}>
+            <div className='Layer__MatchForm__Table__desc'>
               <Text
-                className={`${classNamePrefix}__match-table__desc-tooltip`}
+                className='Layer__MatchForm__Table__desc-tooltip'
                 withDeprecatedTooltip={TextUseTooltip.whenTruncated}
                 as='span'
               >
                 {suggestedMatch.details.description}
               </Text>
             </div>
-            <div className={`${classNamePrefix}__match-table__amount`}>
+            <div className='Layer__MatchForm__Table__amount'>
               $
               {formatMoney(suggestedMatch.details.amount)}
             </div>
             {inAppLink && (
-              <div className={`${classNamePrefix}__match-table__link`}>
+              <div className='Layer__MatchForm__Table__link'>
                 {inAppLink}
               </div>
             )}
             {
               bankTransaction.match && (
                 <div
-                  className={`${classNamePrefix}__match-table__status ${
-                    bankTransaction.match ? '' : 'no-match'
-                  }`}
+                  className={classNames(
+                    'Layer__MatchForm__Table__status',
+                    { 'no-match': !bankTransaction.match },
+                  )}
                 >
                   {suggestedMatch.details.id === match?.details.id && (
                     <MatchBadge
-                      classNamePrefix={classNamePrefix}
                       bankTransaction={bankTransaction}
                       dateFormat={DATE_FORMAT}
                       text={isTransferMatch(bankTransaction) ? 'Transfer' : 'Matched'}

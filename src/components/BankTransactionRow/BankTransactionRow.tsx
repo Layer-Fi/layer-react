@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
-import { type CategorizationEncoded, isSplitCategorizationEncoded } from '@schemas/categorization'
 import {
   isCredit,
 } from '@utils/bankTransactions'
@@ -55,14 +54,6 @@ type Props = {
 }
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
-
-export const extractDescriptionForSplit = (category: CategorizationEncoded | null) => {
-  if (!category || !isSplitCategorizationEncoded(category)) {
-    return ''
-  }
-
-  return category.entries.map(c => c.category.display_name).join(', ')
-}
 
 export const BankTransactionRow = ({
   index,
