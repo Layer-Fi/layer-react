@@ -3,7 +3,7 @@ import { ToggleButtonGroup } from 'react-aria-components'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
-import './Toggle.scss'
+import './toggle.scss'
 
 import { ToggleOption } from './ToggleOption'
 import { type ToggleOptionProps } from './ToggleOption'
