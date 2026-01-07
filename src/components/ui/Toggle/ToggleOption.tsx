@@ -34,7 +34,7 @@ export const ToggleOption = ({
           {button}
         </TooltipTrigger>
         <TooltipContent>
-          <Span className='Layer__UI__tooltip-content--text'>{disabledMessage}</Span>
+          <span className='Layer__UI__tooltip-content--text'>{disabledMessage}</span>
         </TooltipContent>
       </Tooltip>
     )
