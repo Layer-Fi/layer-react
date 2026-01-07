@@ -3,7 +3,7 @@ import { SelectionIndicator, ToggleButton } from 'react-aria-components'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { Span } from '@ui/Typography/Text'
 
-import './ToggleOption.scss'
+import './toggleOption.scss'
 
 export interface ToggleOptionProps {
   label: string
@@ -33,7 +33,9 @@ export const ToggleOption = ({
         <TooltipTrigger asChild>
           {button}
         </TooltipTrigger>
-        <TooltipContent>{disabledMessage}</TooltipContent>
+        <TooltipContent>
+          <span className='Layer__UI__tooltip-content--text'>{disabledMessage}</span>
+        </TooltipContent>
       </Tooltip>
     )
   }
