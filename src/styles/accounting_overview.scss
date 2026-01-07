@@ -4,6 +4,10 @@
   display: flex;
   gap: var(--spacing-md);
   max-width: 1406px;
+
+  > .Layer__UI__Toggle {
+    display: none;
+  }
 }
 
 .Layer__component.Layer__accounting-overview-profit-and-loss .recharts-responsive-container {
@@ -19,6 +23,10 @@
 @container (max-width: 796px) {
   .Layer__accounting-overview-profit-and-loss-charts {
     flex-direction: column;
+  }
+
+  .Layer__accounting-overview-profit-and-loss-charts > .Layer__UI__Toggle {
+    display: flex;
   }
 
   .Layer__component.Layer__accounting-overview-profit-and-loss-chart.accounting-overview-profit-and-loss-chart--hidden {
