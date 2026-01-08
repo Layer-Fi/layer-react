@@ -104,7 +104,7 @@ export function MonthCalendar({
       <GridList
         aria-label='Select a month'
         selectionMode='single'
-        selectedKeys={date ? new Set([date.month]) : new Set()}
+        selectedKeys={date?.year === year ? new Set([date.month]) : new Set()}
         onSelectionChange={(keys) => {
           const selectedKey = [...keys][0]
           if (typeof selectedKey === 'number') {
