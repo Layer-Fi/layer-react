@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 
+import { DateGroupBy } from '@schemas/reports/unifiedReport'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 
 import './dateGroupByComboBox.scss'
@@ -7,12 +8,6 @@ import './dateGroupByComboBox.scss'
 type DateGroupByOption = {
   label: string
   value: DateGroupBy
-}
-
-export enum DateGroupBy {
-  AllTime = 'AllTime',
-  Month = 'Month',
-  Year = 'Year',
 }
 
 const DateGroupByOptionConfig = {

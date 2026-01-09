@@ -4,6 +4,7 @@ import { type MultiValue } from 'react-select'
 
 import { type DateRange, type MoneyFormat, type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossCompareConfig, type TagComparisonOption } from '@internal-types/profit_and_loss'
+import { DateGroupBy } from '@schemas/reports/unifiedReport'
 import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
 import { useProfitAndLossComparisonReport } from '@hooks/useProfitAndLossComparison/useProfitAndLossComparisonReport'
@@ -12,7 +13,6 @@ import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { DateGroupBy } from '@components/DateSelection/DateGroupByComboBox'
 
 export type Scope = 'expenses' | 'revenue'
 
