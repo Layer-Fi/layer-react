@@ -1,26 +1,54 @@
-# Project Guidelines
+# Agent Instructions
 
-## Code Style
+- Do not make assumptions on unclear task details — ask for clarification
+- For significant changes, provide implementation options with a recommended approach before coding
+- Refer to documentation files below when relevant to current task
+- If user provides information broadly relevant to codebase, ask if it should be added to relevant docs
+- Generate designs and code in reviewable phases
+- After phase completion, stop and ask for feedback
 
-- Run `npx lint-staged` to fix lint errors. Do not fix them manually.
+# Codebase Conventions
 
-### React Components
-- For text, use `Span` from `../ui/Typography/Text` instead of lowercase `<span>`.
-- Use `<HStack>` and `<VStack>` from `../ui/Stack/Stack` instead of `div`.
-- When possible, build on top of existing components in `../ui` instead of creating new ones.
+- Run `npx lint-staged` to fix lint errors
+- Run `npm run typecheck` and fix any issues before completing work
 
-### CSS Styling
-- Do not use in-line styling aside from existing props.
-- Avoid adding unnecessary css classes and use existing props when possible.
-- When creating css, make a .scss file with the same name as the .ts or .tsx file and directly import the .scss file. Do not use any index.ts files.
-- Use the design system spacing scale (`--spacing-xs: 8px`, `--spacing-md: 16px`, etc.) when appropriate.
+# Components
 
-#### CSS Component Scoping
+## Text & Layout
+
+- Use `Span` from `../ui/Typography/Text` instead of `<span>`
+- Use `<HStack>` and `<VStack>` from `../ui/Stack/Stack` instead of `<div>`
+- Build on existing components in `../ui` before creating new ones
+
+# Style
+
+## General Rules
+
+- No inline styles — use existing component props
+- Avoid unnecessary CSS classes — use existing props when possible
+- Use design system spacing scale (`--spacing-xs: 8px`, `--spacing-md: 16px`, etc.)
+
+## File Organization
+
+- Create `.scss` file with same name as `.ts`/`.tsx` file
+- Import `.scss` directly — no `index.ts` barrel files
+
+## Class Naming
 
 All component styles are scoped under class prefixes:
-- `.Layer__component` for UI primitives
-- `.Layer__view` for full-page views
-- `.Layer__table`, `.Layer__button`, etc.
+
+- `.Layer__component` — UI primitives
+- `.Layer__view` — full-page views
+- `.Layer__table`, `.Layer__button`, etc. — specific components
+
+# Documentation
+
+- **Styling:** `docs/ai/styling.md`
+- **State Management:** `docs/ai/state-management.md`
+- **API Layer:** `docs/ai/api-layer.md`
+
+
+
 
 ## Architecture
 
@@ -111,14 +139,6 @@ const parameters = toDefinedSearchParameters({
 // Returns URLSearchParams ready for API URLs
 return `/v1/businesses/${businessId}/endpoint?${parameters}`
 ```
-
-**Key features:**
-- Automatically filters out `null`/`undefined` values
-- Converts camelCase keys to snake_case (e.g., `startDate` → `start_date`)
-- Formats Date objects to ISO date strings (`YYYY-MM-DD`)
-- Handles arrays by creating multiple parameters with the same key
-- Type-safe: only accepts `Date | string | string[] | number | boolean | null | undefined`
-
 ### Feature Visibility Toggles
 
 Use context-based visibility providers for feature flags:
@@ -132,6 +152,4 @@ Use context-based visibility providers for feature flags:
 ```
 
 ## Testing
-1. Run `npm run typecheck` and fix any issues
-2. Run `npx lint-staged` to lint and auto-fix staged files (preferred), or `npm run lint` to lint all files
-3. Instruct the user on specific manual tests to perform
+
