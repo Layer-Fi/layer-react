@@ -8,10 +8,10 @@ import { UnifiedReportTableHeader } from '@components/UnifiedReport/UnifiedRepor
 import './unifiedReport.scss'
 
 type UnifiedReportProps = {
-  dateSelectionMode: DateSelectionMode
+  dateSelectionMode?: DateSelectionMode
 }
 
-export const UnifiedReport = ({ dateSelectionMode }: UnifiedReportProps) => {
+export const UnifiedReport = ({ dateSelectionMode = 'full' }: UnifiedReportProps) => {
   return (
     <Container name='UnifiedReport'>
       <UnifiedReportStoreProvider>

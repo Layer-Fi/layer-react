@@ -3,6 +3,13 @@ import { pipe, Schema } from 'effect'
 export enum ReportEnum {
   BalanceSheet = 'balance-sheet',
   CashflowStatement = 'cashflow-statement',
+  ProfitAndLoss = 'profit-and-loss',
+}
+
+export enum DateGroupBy {
+  AllTime = 'ALL_TIME',
+  Month = 'MONTH',
+  Year = 'YEAR',
 }
 
 export const DateQueryParamsSchema = Schema.Struct({
