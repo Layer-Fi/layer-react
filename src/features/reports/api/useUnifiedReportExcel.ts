@@ -2,7 +2,6 @@ import { Schema } from 'effect'
 import type { Key } from 'swr'
 import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 
-import type { S3PresignedUrl } from '@internal-types/general'
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
 import type { DateGroupBy, ReportEnum, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -22,7 +21,7 @@ type GetUnifiedReportExcelParams = {
 } & UnifiedReportDateQueryParams
 
 const getUnifiedReportExcel = get<
-  { data: S3PresignedUrl },
+  { data: S3PresignedUrlSchemaType },
   GetUnifiedReportExcelParams
 >(({ businessId, report, groupBy, ...dateParams }) => {
   const parameters = toDefinedSearchParameters({ ...dateParams, groupBy })
