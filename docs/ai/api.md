@@ -1,34 +1,23 @@
-#
+# API
 
-## Curried API Functions
+- API functions are curried: `getBankTransactions(apiUrl, accessToken, { params })`
+- Use `toDefinedSearchParameters` for query strings (handles camelCase→snake_case, null filtering, Date formatting)
 
-API functions are curried and type-safe:
-```typescript
-// API function builder
-export const getBankTransactions = get<ReturnType, ParamsType>(
-  (params) => `/v1/businesses/${params.businessId}/endpoint?${searchParams}`
-)
+## Schema Enforcement (Effect)
 
-// Usage in hooks
-const fetcher = getBankTransactions(apiUrl, accessToken, { params })
-useSWR(key, fetcher)
-```
+- **When consuming API response from backend, stop and ask user for backend API contract**
+- **Reference:** `useVoidInvoice.tsx`
+- Use for complex transformations, skip for internal-only types where simple TypeScript interfaces suffice
 
-## URL Search Parameters
+### File Structure
 
-Use `toDefinedSearchParameters` for type-safe query strings:
-```typescript
-import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
+- Schema definitions: `/src/schemas/*.ts`
+- Hooks that use schemas: `/src/hooks/*` or `/src/features/*/api/*`
 
-const parameters = toDefinedSearchParameters({
-  cursor,        // Strings passed as-is
-  categorized,   // Booleans → strings
-  startDate,     // Dates → ISO date strings (YYYY-MM-DD)
-  sortBy,        // camelCase → snake_case
-  limit,         // Numbers → strings
-  tagValues,     // Arrays → multiple params with same key
-  optional: null // null/undefined omitted
-})
-****
-return `/v1/businesses/${businessId}/endpoint?${parameters}`
-```
+### Key Patterns
+
+- **Field transformation:** Use `Schema.fromKey('snake_case')` to convert to camelCase
+- **Enum validation:** Use `Schema.transform` with safe defaults for unknown backend values
+- **Type derivation:** Export types via `typeof Schema.Type`
+- **Response validation:** Decode with `.then(Schema.decodeUnknownPromise(ResponseSchema))`
+- **Response schemas:** Create separate schemas for list (`{ data: T[], meta }`) vs single-item (`{ data: T }`)
