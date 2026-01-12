@@ -79,20 +79,20 @@ export const MileageTrackingStats = () => {
     }
   }, [selectedYearData, selectedYear])
 
+  if (isError) {
+    return (
+      <Container name='mileage-tracking-stats'>
+        <DataState status={DataStateStatus.failed} title='Failed to load mileage data' spacing />
+      </Container>
+    )
+  }
+
   if (isLoading || !mileageData) {
     return (
       <Container name='mileage-tracking-stats'>
         <HStack className='Layer__MileageTrackingStats__Content' gap='lg' justify='center' align='center'>
           <Loader />
         </HStack>
-      </Container>
-    )
-  }
-
-  if (isError) {
-    return (
-      <Container name='mileage-tracking-stats'>
-        <DataState status={DataStateStatus.failed} title='Failed to load mileage data' spacing />
       </Container>
     )
   }

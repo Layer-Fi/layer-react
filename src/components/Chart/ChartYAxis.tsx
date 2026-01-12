@@ -35,7 +35,7 @@ interface CustomizedYTickProps {
   verticalAnchor?: unknown
   visibleTicksCount?: unknown
   tickFormatter?: unknown
-  format?: (value?: string | number) => string | number | undefined
+  format: (value?: string | number) => string | number | undefined
   payload: { value: string | number }
 }
 
@@ -43,7 +43,7 @@ const CustomizedYTick = ({
   verticalAnchor: _verticalAnchor,
   visibleTicksCount: _visibleTicksCount,
   tickFormatter: _tickFormatter,
-  format = formatYAxisValue,
+  format,
   payload,
   ...restProps
 }: CustomizedYTickProps) => {
@@ -55,10 +55,10 @@ const CustomizedYTick = ({
 }
 
 type ChartYAxisProps = Omit<YAxisProps, 'format'> & {
-  format?: (value?: string | number) => string | number | undefined
+  format: (value?: string | number) => string | number | undefined
 }
 
-export const ChartYAxis = ({ format, ...props }: ChartYAxisProps) => {
+export const ChartYAxis = ({ format = formatYAxisValue, ...props }: ChartYAxisProps) => {
   const tick = (tickProps: CustomizedYTickProps) => (
     <CustomizedYTick {...tickProps} format={format} />
   )
