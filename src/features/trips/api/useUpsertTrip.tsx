@@ -7,6 +7,7 @@ import { TripSchema, type UpsertTripEncoded } from '@schemas/trip'
 import { patch, post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useMileageSummaryGlobalCacheActions } from '@features/mileage/api/useMileageSummary'
 import { useTripsGlobalCacheActions } from '@features/trips/api/useListTrips'
 import { useVehiclesGlobalCacheActions } from '@features/vehicles/api/useListVehicles'
 
@@ -184,6 +185,7 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
 
   const { patchTripByKey, forceReloadTrips } = useTripsGlobalCacheActions()
   const { forceReloadVehicles } = useVehiclesGlobalCacheActions()
+  const { invalidateMileageSummary } = useMileageSummaryGlobalCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 
@@ -201,9 +203,12 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
       // Creating/updating a trip may change our ability to delete/archive the vehicle
       void forceReloadVehicles()
 
+      // Creating/updating a trip may change our mileage summary
+      void invalidateMileageSummary()
+
       return triggerResult
     },
-    [originalTrigger, mode, patchTripByKey, forceReloadTrips, forceReloadVehicles],
+    [originalTrigger, mode, forceReloadVehicles, invalidateMileageSummary, patchTripByKey, forceReloadTrips],
   )
 
   return new Proxy(mutationResponse, {

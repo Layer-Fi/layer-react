@@ -1,4 +1,6 @@
-import { YAxis } from 'recharts'
+import { YAxis, type YAxisProps } from 'recharts'
+
+import './ChartYAxis.scss'
 
 const formatYAxisValue = (value?: string | number) => {
   if (!value) {
@@ -29,10 +31,13 @@ const formatYAxisValue = (value?: string | number) => {
   }
 }
 
+type FormatFn = (value?: string | number) => string | number | undefined
+
 interface CustomizedYTickProps {
   verticalAnchor?: unknown
   visibleTicksCount?: unknown
   tickFormatter?: unknown
+  format: FormatFn
   payload: { value: string | number }
 }
 
@@ -40,16 +45,25 @@ const CustomizedYTick = ({
   verticalAnchor: _verticalAnchor,
   visibleTicksCount: _visibleTicksCount,
   tickFormatter: _tickFormatter,
+  format,
   payload,
   ...restProps
 }: CustomizedYTickProps) => {
   return (
-    <text {...restProps} className='Layer__chart_y-axis-tick'>
-      <tspan dy='0.355em'>{formatYAxisValue(payload.value)}</tspan>
+    <text {...restProps} className='Layer__ChartYAxis__tick'>
+      <tspan dy='0.355em'>{format(payload.value)}</tspan>
     </text>
   )
 }
 
-export const ProfitAndLossChartYAxis = () => {
-  return <YAxis tick={CustomizedYTick} />
+type ChartYAxisProps = Omit<YAxisProps, 'format'> & {
+  format?: FormatFn
+}
+
+export const ChartYAxis = ({ format = formatYAxisValue, ...props }: ChartYAxisProps) => {
+  const tick = (tickProps: CustomizedYTickProps) => (
+    <CustomizedYTick {...tickProps} format={format} />
+  )
+
+  return <YAxis tick={tick} {...props} />
 }

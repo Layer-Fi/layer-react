@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Row } from '@tanstack/react-table'
+import { getYear } from 'date-fns'
 import { Car, Edit, Plus, Trash2 } from 'lucide-react'
 
 import { type Trip, type TripPurpose } from '@schemas/trip'
@@ -7,6 +8,7 @@ import { type Vehicle } from '@schemas/vehicle'
 import { formatCalendarDate } from '@utils/time/timeUtils'
 import { useAutoResetPageIndex } from '@hooks/pagination/useAutoResetPageIndex'
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
@@ -123,29 +125,21 @@ export const TripsTable = () => {
   const { query, selectedVehicle, purposeFilter } = tableFilters
   const { currentTripsPage, setCurrentTripsPage } = useCurrentTripsPage()
 
+  const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
+  const selectedYear = getYear(startDate)
+
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: query })
 
   useEffect(() => {
     setTableFilters({ query: searchQuery })
   }, [searchQuery, setTableFilters])
 
-  const filterParams = useMemo(() => {
-    const params: { query?: string, vehicleId?: string, purpose?: string } = {}
-
-    if (query) {
-      params.query = query
-    }
-
-    if (selectedVehicle) {
-      params.vehicleId = selectedVehicle.id
-    }
-
-    if (purposeFilter !== TripPurposeFilterValue.All) {
-      params.purpose = purposeFilter
-    }
-
-    return params
-  }, [query, selectedVehicle, purposeFilter])
+  const filterParams = useMemo(() => ({
+    year: selectedYear,
+    ...(query && { query }),
+    ...(selectedVehicle && { vehicleId: selectedVehicle.id }),
+    ...(purposeFilter !== TripPurposeFilterValue.All && { purpose: purposeFilter }),
+  }), [query, selectedVehicle, purposeFilter, selectedYear])
 
   const { data, isLoading, isError, size, setSize } = useListTrips(filterParams)
   const trips = useMemo(() => data?.flatMap(({ data }) => data), [data])

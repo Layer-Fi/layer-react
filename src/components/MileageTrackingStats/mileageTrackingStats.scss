@@ -1,0 +1,21 @@
+.Layer__MileageTrackingStats__YearSelector {
+  width: 8rem;
+}
+
+.Layer__MileageTrackingStats__Content {
+  padding: var(--spacing-md);
+}
+
+.Layer__MileageTrackingStats__Cards {
+  min-width: 12rem;
+}
+
+.Layer__MileageTrackingStats__Card {
+  box-sizing: border-box;
+
+  padding-block: var(--spacing-sm);
+  padding-inline: var(--spacing-md);
+
+  border-radius: var(--border-radius-2xs);
+  border: 1px solid var(--border-color);
+}
