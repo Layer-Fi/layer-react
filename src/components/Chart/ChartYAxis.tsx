@@ -31,11 +31,13 @@ const formatYAxisValue = (value?: string | number) => {
   }
 }
 
+type FormatFn = (value?: string | number) => string | number | undefined
+
 interface CustomizedYTickProps {
   verticalAnchor?: unknown
   visibleTicksCount?: unknown
   tickFormatter?: unknown
-  format: (value?: string | number) => string | number | undefined
+  format: FormatFn
   payload: { value: string | number }
 }
 
@@ -55,7 +57,7 @@ const CustomizedYTick = ({
 }
 
 type ChartYAxisProps = Omit<YAxisProps, 'format'> & {
-  format: (value?: string | number) => string | number | undefined
+  format?: FormatFn
 }
 
 export const ChartYAxis = ({ format = formatYAxisValue, ...props }: ChartYAxisProps) => {
