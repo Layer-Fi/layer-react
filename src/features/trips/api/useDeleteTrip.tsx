@@ -5,6 +5,7 @@ import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 import { del } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useMileageSummaryGlobalCacheActions } from '@features/mileage/api/useMileageSummary'
 import { useTripsGlobalCacheActions } from '@features/trips/api/useListTrips'
 import { useVehiclesGlobalCacheActions } from '@features/vehicles/api/useListVehicles'
 
@@ -93,6 +94,7 @@ export const useDeleteTrip = ({ tripId }: UseDeleteTripProps) => {
 
   const { forceReloadTrips } = useTripsGlobalCacheActions()
   const { forceReloadVehicles } = useVehiclesGlobalCacheActions()
+  const { invalidateMileageSummary } = useMileageSummaryGlobalCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 
@@ -103,9 +105,12 @@ export const useDeleteTrip = ({ tripId }: UseDeleteTripProps) => {
       void forceReloadTrips()
       void forceReloadVehicles()
 
+      // Deleting a trip may change our mileage summary
+      void invalidateMileageSummary()
+
       return triggerResult
     },
-    [originalTrigger, forceReloadTrips, forceReloadVehicles],
+    [originalTrigger, forceReloadTrips, forceReloadVehicles, invalidateMileageSummary],
   )
 
   return new Proxy(mutationResponse, {

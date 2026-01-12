@@ -79,15 +79,15 @@ export function useMileageSummary() {
   return new MileageSummarySWRResponse(response)
 }
 
-export const useMileageSummaryCacheActions = () => {
-  const { forceReload } = useGlobalCacheActions()
+export const useMileageSummaryGlobalCacheActions = () => {
+  const { invalidate } = useGlobalCacheActions()
 
-  const forceReloadMileageSummary = useCallback(
-    () => forceReload(
+  const invalidateMileageSummary = useCallback(
+    () => invalidate(
       ({ tags }) => tags.includes(MILEAGE_SUMMARY_TAG_KEY),
     ),
-    [forceReload],
+    [invalidate],
   )
 
-  return { forceReloadMileageSummary }
+  return { invalidateMileageSummary }
 }
