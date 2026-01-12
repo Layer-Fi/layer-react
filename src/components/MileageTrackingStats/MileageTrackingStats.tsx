@@ -13,7 +13,47 @@ import { useMileageSummary } from '@features/mileage/api/useMileageSummary'
 
 import './mileageTrackingStats.scss'
 
-const CLASS_NAME = 'Layer__MileageTrackingStats'
+const EMPTY_MONTHS = Array.from({ length: 12 }, (_, i) => ({
+  month: i + 1,
+  miles: 0,
+  estimatedDeduction: 0,
+}))
+
+interface StatBreakdown {
+  business: number
+  personal: number
+  uncategorized: number
+}
+
+type MileageTrackingStatsCardProps = {
+  title: string
+  amount: number
+  formatAsMoney?: boolean
+  breakdown?: StatBreakdown
+}
+
+const MileageTrackingStatsRow = ({ label, value }: { label: string, value: number }) => (
+  <VStack gap='3xs'>
+    <Span size='xs' variant='subtle'>{label}</Span>
+    <Span size='sm'>{value}</Span>
+  </VStack>
+)
+
+const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdown }: MileageTrackingStatsCardProps) => (
+  <VStack className='Layer__MileageTrackingStats__Card' gap='3xs'>
+    <Span size='md'>{title}</Span>
+    {formatAsMoney
+      ? <MoneySpan amount={amount} size='lg' weight='bold' />
+      : <Span size='lg' weight='bold'>{amount}</Span>}
+    {breakdown && (
+      <HStack gap='md'>
+        <MileageTrackingStatsRow label='Business' value={breakdown.business} />
+        <MileageTrackingStatsRow label='Personal' value={breakdown.personal} />
+        <MileageTrackingStatsRow label='Uncategorized' value={breakdown.uncategorized} />
+      </HStack>
+    )}
+  </VStack>
+)
 
 export const MileageTrackingStats = () => {
   const { data: mileageData, isLoading, isError } = useMileageSummary()
@@ -25,25 +65,15 @@ export const MileageTrackingStats = () => {
   }, [mileageData, selectedYear])
 
   const chartData = useMemo(() => {
-    if (!selectedYearData) {
-      return {
-        years: [{
-          year: selectedYear,
-          months: Array.from({ length: 12 }, (_, i) => ({
-            month: i + 1,
-            miles: 0,
-            estimatedDeduction: 0,
-          })),
-        }],
-      }
-    }
+    if (!selectedYearData) return { years: [{ year: selectedYear, months: EMPTY_MONTHS }] }
+
     return {
       years: [{
         year: selectedYearData.year,
-        months: selectedYearData.months.map(month => ({
-          month: month.month,
-          miles: month.miles,
-          estimatedDeduction: month.estimatedDeduction,
+        months: selectedYearData.months.map(({ month, miles, estimatedDeduction }) => ({
+          month,
+          miles,
+          estimatedDeduction,
         })),
       }],
     }
@@ -52,7 +82,7 @@ export const MileageTrackingStats = () => {
   if (isLoading) {
     return (
       <Container name='mileage-tracking-stats' asWidget>
-        <HStack className={`${CLASS_NAME}__Content`} gap='lg' justify='center' align='center'>
+        <HStack className='Layer__MileageTrackingStats__Content' gap='lg' justify='center' align='center'>
           <Loader />
         </HStack>
       </Container>
@@ -69,72 +99,32 @@ export const MileageTrackingStats = () => {
 
   return (
     <Container name='mileage-tracking-stats' asWidget>
-      <HStack className={`${CLASS_NAME}__Content`} gap='lg'>
-        <VStack className={`${CLASS_NAME}__Cards`} gap='md' justify='center'>
-          <VStack className={`${CLASS_NAME}__Card`} gap='3xs'>
-            <Span size='md'>Total Deduction</Span>
-            <MoneySpan
-              amount={selectedYearData?.estimatedDeduction ?? 0}
-              size='lg'
-              weight='bold'
-            />
-          </VStack>
-
-          <VStack className={`${CLASS_NAME}__Card`} gap='3xs'>
-            <Span size='md'>Total Miles</Span>
-            <Span size='lg' weight='bold'>
-              {(selectedYearData?.miles ?? 0).toLocaleString()}
-            </Span>
-            <HStack gap='md'>
-              <VStack gap='3xs'>
-                <Span size='xs' variant='subtle'>Business</Span>
-                <Span size='sm'>
-                  {(selectedYearData?.businessMiles ?? 0).toLocaleString()}
-                </Span>
-              </VStack>
-              <VStack gap='3xs'>
-                <Span size='xs' variant='subtle'>Personal</Span>
-                <Span size='sm'>
-                  {(selectedYearData?.personalMiles ?? 0).toLocaleString()}
-                </Span>
-              </VStack>
-              <VStack gap='3xs'>
-                <Span size='xs' variant='subtle'>Uncategorized</Span>
-                <Span size='sm'>
-                  {(selectedYearData?.uncategorizedMiles ?? 0).toLocaleString()}
-                </Span>
-              </VStack>
-            </HStack>
-          </VStack>
-
-          <VStack className={`${CLASS_NAME}__Card`} gap='3xs'>
-            <Span size='md'>Trips</Span>
-            <Span size='lg' weight='bold'>
-              {(selectedYearData?.trips ?? 0).toLocaleString()}
-            </Span>
-            <HStack gap='md'>
-              <VStack gap='3xs'>
-                <Span size='xs' variant='subtle'>Business</Span>
-                <Span size='sm'>
-                  {(selectedYearData?.businessTrips ?? 0).toLocaleString()}
-                </Span>
-              </VStack>
-              <VStack gap='3xs'>
-                <Span size='xs' variant='subtle'>Personal</Span>
-                <Span size='sm'>
-                  {(selectedYearData?.personalTrips ?? 0).toLocaleString()}
-                </Span>
-              </VStack>
-              <VStack gap='3xs'>
-                <Span size='xs' variant='subtle'>Uncategorized</Span>
-                <Span size='sm'>
-                  {(selectedYearData?.uncategorizedTrips ?? 0).toLocaleString()}
-                </Span>
-              </VStack>
-            </HStack>
-          </VStack>
+      <HStack className='Layer__MileageTrackingStats__Content' gap='lg'>
+        <VStack className='Layer__MileageTrackingStats__Cards' gap='md' justify='center'>
+          <MileageTrackingStatsCard
+            title='Total Deduction'
+            amount={selectedYearData?.estimatedDeduction ?? 0}
+            formatAsMoney
+          />
+          <MileageTrackingStatsCard
+            title='Total Miles'
+            amount={selectedYearData?.miles ?? 0}
+            breakdown={{
+              business: selectedYearData?.businessMiles ?? 0,
+              personal: selectedYearData?.personalMiles ?? 0,
+              uncategorized: selectedYearData?.uncategorizedMiles ?? 0,
+            }}
+          />
+          <MileageTrackingStatsCard
+            title='Trips'
+            amount={selectedYearData?.trips ?? 0}
+            breakdown={{
+              business: selectedYearData?.businessTrips ?? 0,
+              personal: selectedYearData?.personalTrips ?? 0,
+              uncategorized: selectedYearData?.uncategorizedTrips ?? 0,
+            }}
+          />
         </VStack>
-
         <VStack fluid justify='end'>
           <MileageDeductionChart data={chartData} selectedYear={selectedYear} />
         </VStack>

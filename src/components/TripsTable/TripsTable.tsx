@@ -125,7 +125,7 @@ export const TripsTable = () => {
   const { query, selectedVehicle, purposeFilter } = tableFilters
   const { currentTripsPage, setCurrentTripsPage } = useCurrentTripsPage()
 
-  const { startDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
+  const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
   const selectedYear = getYear(startDate)
 
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: query })
@@ -134,25 +134,12 @@ export const TripsTable = () => {
     setTableFilters({ query: searchQuery })
   }, [searchQuery, setTableFilters])
 
-  const filterParams = useMemo(() => {
-    const params: { query?: string, vehicleId?: string, purpose?: string, year?: number } = {}
-
-    if (query) {
-      params.query = query
-    }
-
-    if (selectedVehicle) {
-      params.vehicleId = selectedVehicle.id
-    }
-
-    if (purposeFilter !== TripPurposeFilterValue.All) {
-      params.purpose = purposeFilter
-    }
-
-    params.year = selectedYear
-
-    return params
-  }, [query, selectedVehicle, purposeFilter, selectedYear])
+  const filterParams = useMemo(() => ({
+    year: selectedYear,
+    ...(query && { query }),
+    ...(selectedVehicle && { vehicleId: selectedVehicle.id }),
+    ...(purposeFilter !== TripPurposeFilterValue.All && { purpose: purposeFilter }),
+  }), [query, selectedVehicle, purposeFilter, selectedYear])
 
   const { data, isLoading, isError, size, setSize } = useListTrips(filterParams)
   const trips = useMemo(() => data?.flatMap(({ data }) => data), [data])

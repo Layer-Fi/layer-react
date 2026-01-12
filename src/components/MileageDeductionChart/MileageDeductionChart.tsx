@@ -150,7 +150,7 @@ export const MileageDeductionChart = ({
   }
 
   return (
-    <VStack className='Layer__mileage-chart' align='center' justify='center'>
+    <VStack className='Layer__MileageDeductionChart' align='center' justify='center'>
       <ResponsiveContainer width='100%' height={300}>
         <ComposedChart
           data={chartData}
@@ -178,7 +178,7 @@ export const MileageDeductionChart = ({
             dataKey='deduction'
             barSize={BAR_SIZE}
             radius={[2, 2, 0, 0]}
-            className='Layer__mileage-chart__bar--deduction'
+            className='Layer__MileageDeductionChart__bar--deduction'
           >
             {chartData.map((_entry, index) => (
               <Cell key={`cell-${index}`} />

@@ -1,11 +1,11 @@
-.Layer__mileage-chart {
+.Layer__MileageDeductionChart {
   .recharts-responsive-container {
     box-sizing: border-box;
     padding: 0;
   }
 }
 
-.Layer__mileage-chart__bar--deduction {
+.Layer__MileageDeductionChart__bar--deduction {
   fill: var(--bar-color-income);
 
   &:hover {

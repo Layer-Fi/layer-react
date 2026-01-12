@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
-import { pipe, Schema } from 'effect'
+import { Schema } from 'effect'
 import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
 
+import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { type Trip, TripSchema } from '@schemas/trip'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -21,13 +22,7 @@ export type ListTripsFilterParams = {
 const ListTripsResponseSchema = Schema.Struct({
   data: Schema.Array(TripSchema),
   meta: Schema.Struct({
-    pagination: Schema.Struct({
-      cursor: Schema.NullOr(Schema.String),
-      hasMore: pipe(
-        Schema.propertySignature(Schema.Boolean),
-        Schema.fromKey('has_more'),
-      ),
-    }),
+    pagination: PaginatedResponseMetaSchema,
   }),
 })
 type ListTripsResponse = typeof ListTripsResponseSchema.Type

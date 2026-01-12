@@ -12,29 +12,27 @@ type YearOption = {
   value: string
 }
 
+const toYearOption = (year: number): YearOption => {
+  const yearString = String(year)
+  return { label: yearString, value: yearString }
+}
+
 export const GlobalYearPicker = () => {
   const activationDate = useBusinessActivationDate()
-
   const { setYear } = useGlobalDateRangeActions()
   const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
 
   const currentYear = getYear(new Date())
   const selectedYear = getYear(startDate)
 
-  const yearOptions = useMemo<YearOption[]>(() => {
+  const yearOptions = useMemo(() => {
     const activationYear = activationDate ? getYear(activationDate) : currentYear
-    const years: YearOption[] = []
+    const count = currentYear - activationYear + 1
 
-    for (let year = currentYear; year >= activationYear; year--) {
-      years.push({ label: String(year), value: String(year) })
-    }
-
-    return years
+    return Array.from({ length: count }, (_, i) => toYearOption(currentYear - i))
   }, [activationDate, currentYear])
 
-  const selectedYearOption = useMemo(() => {
-    return yearOptions.find(opt => opt.value === String(selectedYear)) || yearOptions[0]
-  }, [yearOptions, selectedYear])
+  const selectedYearOption = yearOptions.find(opt => opt.value === String(selectedYear)) ?? yearOptions[0]
 
   const onChange = useCallback((option: YearOption | null) => {
     if (option) {
