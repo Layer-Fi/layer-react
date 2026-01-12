@@ -2,11 +2,11 @@ import { getMonth, getYear, startOfMonth, startOfYear, subMonths, subYears } fro
 
 import { type DateRange } from '@internal-types/general'
 import { type ProfitAndLossComparisonTags, type TagComparisonOption } from '@internal-types/profit_and_loss'
+import { DateGroupBy } from '@schemas/reports/unifiedReport'
 import { isArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
 import { type ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
 import { range } from '@utils/array/range'
 import { toLocalDateString } from '@utils/time/timeUtils'
-import { DateGroupBy } from '@components/DateSelection/DateGroupByComboBox'
 
 export function prepareFiltersBody(compareOptions: TagComparisonOption[]): ReadonlyArrayWithAtLeastOne<ProfitAndLossComparisonTags> | undefined {
   const noneFilters = compareOptions.filter(

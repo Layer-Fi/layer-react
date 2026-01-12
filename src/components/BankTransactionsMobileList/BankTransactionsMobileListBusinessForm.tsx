@@ -5,14 +5,17 @@ import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
 import { hasReceipts } from '@utils/bankTransactions'
+import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { isCategorized } from '@components/BankTransactions/utils'
 import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
 import { type BusinessFormMobileItemOption, type BusinessFormOptionValue } from '@components/BusinessForm/BusinessFormMobileItem'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
@@ -47,11 +50,19 @@ export const BankTransactionsMobileListBusinessForm = ({
 }: BankTransactionsMobileListBusinessFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
-  const { categorize: categorizeBankTransaction, isLoading } =
-    useBankTransactionsContext()
+  const {
+    categorize: categorizeBankTransaction,
+    isMutating: isCategorizing,
+    isError: isErrorCategorizing,
+  } = useCategorizeBankTransactionWithCacheUpdate()
 
   const [sessionCategories, setSessionCategories] = useState<Map<string, BankTransactionCategoryComboBoxOption>>(() => {
     const initialMap = new Map<string, BankTransactionCategoryComboBoxOption>()
+
+    if (bankTransaction.category) {
+      const existingCategory = convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
+      initialMap.set(existingCategory.value, existingCategory)
+    }
 
     if (bankTransaction?.categorization_flow?.type === CategorizationType.ASK_FROM_SUGGESTIONS) {
       bankTransaction.categorization_flow.suggestions.forEach((suggestion) => {
@@ -70,10 +81,10 @@ export const BankTransactionsMobileListBusinessForm = ({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   useEffect(() => {
-    if (bankTransaction.error) {
+    if (isErrorCategorizing) {
       setShowRetry(true)
     }
-  }, [bankTransaction.error])
+  }, [isErrorCategorizing])
 
   const options = useMemo((): DisplayOption[] => {
     const options: DisplayOption[] = Array.from(sessionCategories.values()).map(category => ({
@@ -119,7 +130,7 @@ export const BankTransactionsMobileListBusinessForm = ({
       return
     }
 
-    const payload = selectedCategory.classificationEncoded
+    const payload = selectedCategory.classification
     if (payload === null) return
 
     void categorizeBankTransaction(
@@ -180,6 +191,7 @@ export const BankTransactionsMobileListBusinessForm = ({
               text='Upload receipt'
               iconOnly={true}
               icon={<PaperclipIcon />}
+              accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
             />
           )}
           {showCategorization && sessionCategories.size > 0
@@ -187,15 +199,15 @@ export const BankTransactionsMobileListBusinessForm = ({
               <Button
                 onClick={save}
                 fullWidth
-                isDisabled={!selectedCategory || isLoading || bankTransaction.processing}
+                isDisabled={!selectedCategory || isCategorizing}
               >
-                {bankTransaction.processing || isLoading
-                  ? 'Confirming...'
-                  : 'Confirm'}
+                {isCategorizing
+                  ? (isCategorized(bankTransaction) ? 'Updating...' : 'Confirming...')
+                  : (isCategorized(bankTransaction) ? 'Update' : 'Confirm')}
               </Button>
             )}
         </HStack>
-        {bankTransaction.error && showRetry
+        {isErrorCategorizing && showRetry
           ? (
             <ErrorText>
               Approval failed. Check connection and retry in few seconds.

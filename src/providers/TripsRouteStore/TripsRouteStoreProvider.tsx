@@ -22,10 +22,14 @@ type TripsRouteState = TripsTableRouteState | VehicleManagementRouteState
 type TripsRouteStoreShape = {
   routeState: TripsRouteState
   tableFilters: TripsTableFilters
+  currentTripsPage: number
   setTableFilters: (patchFilters: Partial<TripsTableFilters>) => void
   navigate: {
     toTripsTable: () => void
     toVehicleManagement: () => void
+  }
+  actions: {
+    setCurrentTripsPage: (page: number) => void
   }
 }
 
@@ -37,10 +41,14 @@ const TripsRouteStoreContext = createContext(
       selectedVehicle: null,
       purposeFilter: TripPurposeFilterValue.All,
     },
+    currentTripsPage: 0,
     setTableFilters: () => {},
     navigate: {
       toTripsTable: () => {},
       toVehicleManagement: () => {},
+    },
+    actions: {
+      setCurrentTripsPage: () => {},
     },
   })),
 )
@@ -63,6 +71,15 @@ export function useTripsNavigation() {
   return useStore(store, state => state.navigate)
 }
 
+export function useCurrentTripsPage() {
+  const store = useContext(TripsRouteStoreContext)
+  const currentTripsPage = useStore(store, state => state.currentTripsPage)
+  const setCurrentTripsPage = useStore(store, state => state.actions.setCurrentTripsPage)
+  return useMemo(() => ({ currentTripsPage, setCurrentTripsPage }),
+    [currentTripsPage, setCurrentTripsPage],
+  )
+}
+
 export function TripsRouteStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<TripsRouteStoreShape>(set => ({
@@ -72,6 +89,7 @@ export function TripsRouteStoreProvider(props: PropsWithChildren) {
         selectedVehicle: null,
         purposeFilter: TripPurposeFilterValue.All,
       },
+      currentTripsPage: 0,
       setTableFilters: (patchFilters: Partial<TripsTableFilters>) => {
         set(state => ({
           tableFilters: {
@@ -94,6 +112,11 @@ export function TripsRouteStoreProvider(props: PropsWithChildren) {
               route: TripsRoute.TripsTable,
             },
           }))
+        },
+      },
+      actions: {
+        setCurrentTripsPage: (page: number) => {
+          set({ currentTripsPage: page })
         },
       },
     })),

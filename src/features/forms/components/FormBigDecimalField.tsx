@@ -15,6 +15,7 @@ type FormBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTe
   allowNegative?: boolean
   mode?: 'percent' | 'currency' | 'decimal'
   slots?: { badge?: ReactNode }
+  placeholder?: string
 }
 
 const DEFAULT_MAX_VALUE = BD.fromBigInt(BigInt(10_000_000))
@@ -51,6 +52,7 @@ export function FormBigDecimalField({
   minDecimalPlaces = mode === 'currency' ? 2 : DEFAULT_MIN_DECIMAL_PLACES,
   maxDecimalPlaces = mode === 'currency' ? 2 : DEFAULT_MAX_DECIMAL_PLACES,
   slots,
+  placeholder,
   ...restProps
 }: FormBigDecimalFieldProps) {
   const field = useFieldContext<BD.BigDecimal>()
@@ -132,6 +134,7 @@ export function FormBigDecimalField({
           onBlur={onInputBlur}
           onBeforeInput={onBeforeInput}
           onPaste={onPaste}
+          placeholder={placeholder}
         />
         {slots?.badge && <HStack>{slots.badge}</HStack>}
       </InputGroup>

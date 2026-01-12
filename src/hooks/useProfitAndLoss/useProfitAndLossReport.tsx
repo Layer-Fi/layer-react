@@ -1,6 +1,5 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { Schema } from 'effect'
-import { debounce } from 'lodash-es'
 import useSWR, { type SWRResponse } from 'swr'
 
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -115,32 +114,15 @@ export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, 
   return new ProfitAndLossReportSWRResponse(response)
 }
 
-const INVALIDATE_DEBOUNCE_OPTIONS = {
-  wait: 1000,
-  maxWait: 3000,
-}
-
 export const useProfitAndLossReportCacheActions = () => {
   const { invalidate } = useGlobalCacheActions()
 
   const invalidateProfitAndLossReport = useCallback(
     () => invalidate(
-      tags => tags.includes(PNL_REPORT_TAG_KEY),
+      ({ tags }) => tags.includes(PNL_REPORT_TAG_KEY),
     ),
     [invalidate],
   )
 
-  const debouncedInvalidateProfitAndLossReport = useMemo(
-    () => debounce(
-      invalidateProfitAndLossReport,
-      INVALIDATE_DEBOUNCE_OPTIONS.wait,
-      {
-        maxWait: INVALIDATE_DEBOUNCE_OPTIONS.maxWait,
-        trailing: true,
-      },
-    ),
-    [invalidateProfitAndLossReport],
-  )
-
-  return { invalidateProfitAndLossReport, debouncedInvalidateProfitAndLossReport }
+  return { invalidateProfitAndLossReport }
 }

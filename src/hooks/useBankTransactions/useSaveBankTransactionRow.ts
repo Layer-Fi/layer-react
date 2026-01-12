@@ -1,21 +1,29 @@
 import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { useMatchBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useMatchBankTransactionWithCacheUpdate'
+import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/useBankTransactions/utils'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
-import { buildCategorizeBankTransactionPayloadForSplit } from './utils'
+export type SaveBankTransactionRowFn = (
+  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+  bankTransaction: BankTransaction,
+) => Promise<void> | void
 
-type UseSaveBankTransactionRowResult = {
-  saveBankTransactionRow: (selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined, bankTransaction: BankTransaction) => Promise<void>
-}
-
-export const useSaveBankTransactionRow = (): UseSaveBankTransactionRowResult => {
+export const useSaveBankTransactionRow = () => {
   const {
     categorize: categorizeBankTransaction,
+    isMutating: isCategorizing,
+    isError: isErrorCategorizing,
+  } = useCategorizeBankTransactionWithCacheUpdate()
+
+  const {
     match: matchBankTransaction,
-  } = useBankTransactionsContext()
+    isMutating: isMatching,
+    isError: isErrorMatching,
+  } = useMatchBankTransactionWithCacheUpdate()
 
   const saveBankTransactionRow = useCallback(async (
     selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
@@ -26,7 +34,7 @@ export const useSaveBankTransactionRow = (): UseSaveBankTransactionRowResult => 
     }
 
     if (isSuggestedMatchAsOption(selectedCategory)) {
-      return matchBankTransaction(bankTransaction.id, selectedCategory.original.id)
+      return matchBankTransaction(bankTransaction, selectedCategory.original.id)
     }
 
     if (isSplitAsOption(selectedCategory)) {
@@ -34,15 +42,17 @@ export const useSaveBankTransactionRow = (): UseSaveBankTransactionRowResult => 
       return categorizeBankTransaction(bankTransaction.id, splitCategorizationRequest)
     }
 
-    if (!selectedCategory.classificationEncoded) return
+    if (!selectedCategory.classification) return
 
     return categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
-      category: selectedCategory.classificationEncoded,
+      category: selectedCategory.classification,
     })
   }, [categorizeBankTransaction, matchBankTransaction])
 
   return useMemo(() => ({
     saveBankTransactionRow,
-  }), [saveBankTransactionRow])
+    isProcessing: isCategorizing || isMatching,
+    isError: isErrorCategorizing || isErrorMatching,
+  }), [isCategorizing, isMatching, isErrorCategorizing, isErrorMatching, saveBankTransactionRow])
 }

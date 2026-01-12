@@ -1,4 +1,4 @@
-import { type PropsWithChildren, type Reducer, useCallback, useEffect, useMemo, useReducer } from 'react'
+import { type PropsWithChildren, type Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import useSWR from 'swr'
 
 import {
@@ -75,6 +75,23 @@ export const BusinessProvider = ({
 
   const colors = buildColorsPalette(theme)
 
+  // Store latest callbacks in ref to prevent unnecessary re-renders
+  const eventCallbacksRef = useRef(eventCallbacks)
+
+  useEffect(() => {
+    eventCallbacksRef.current = eventCallbacks
+  }, [eventCallbacks])
+
+  // Create stable callback wrappers that always call the latest version
+  const stableEventCallbacks = useMemo(() => ({
+    onTransactionCategorized: () => {
+      eventCallbacksRef.current?.onTransactionCategorized?.()
+    },
+    onTransactionsFetched: () => {
+      eventCallbacksRef.current?.onTransactionsFetched?.()
+    },
+  }), [])
+
   const [state, dispatch] = useReducer(reducer, {
     businessId,
     business: undefined,
@@ -94,7 +111,7 @@ export const BusinessProvider = ({
     resetCaches,
   } = useDataSync()
 
-  const globalDateRange = useGlobalDateRange({ displayMode: 'full' })
+  const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange } = useGlobalDateRangeActions()
 
   const dateRange = useMemo(() => ({
@@ -243,7 +260,7 @@ export const BusinessProvider = ({
         readTimestamps,
         expireDataCaches: resetCaches,
         hasBeenTouched,
-        eventCallbacks,
+        eventCallbacks: stableEventCallbacks,
         accountingConfiguration,
         dateRange,
       }}

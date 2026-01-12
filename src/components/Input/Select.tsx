@@ -9,6 +9,7 @@ import ReactSelect, {
 } from 'react-select'
 
 import ChevronDownFill from '@icons/ChevronDownFill'
+import { SelectMenuPortal } from '@components/Input/SelectMenuPortal'
 import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface SelectProps<T> {
@@ -69,7 +70,7 @@ export const Select = <T,>({
           onChange={newValue => newValue && onChange(newValue)}
           menuPortalTarget={document.body}
           styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-          components={{ DropdownIndicator }}
+          components={{ DropdownIndicator, MenuPortal: SelectMenuPortal }}
           isLoading={isLoading}
           isDisabled={disabled}
         />

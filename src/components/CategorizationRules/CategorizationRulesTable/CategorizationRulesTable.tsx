@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+import type { Row } from '@tanstack/react-table'
 import { PencilRuler, Trash2 } from 'lucide-react'
 
 import { accountIdentifierIsForCategory, getLeafCategories } from '@internal-types/categories'
@@ -12,10 +13,10 @@ import { useSetCurrentCategorizationRulesPage } from '@providers/BankTransaction
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
+import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { type ColumnConfig } from '@components/DataTable/DataTable'
+import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { PaginatedTable } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 import './categorizationRulesTable.scss'
@@ -107,33 +108,34 @@ export const CategorizationRulesTable = () => {
     />
   ), [refetch])
 
-  const columnConfig: ColumnConfig<CategorizationRule, CategorizationRuleColumns> = useMemo(() => ({
-    [CategorizationRuleColumns.Counterparty]: {
+  type CategorizationRuleRow = Row<CategorizationRule>
+  const columnConfig: NestedColumnConfig<CategorizationRule> = useMemo(() => [
+    {
       id: CategorizationRuleColumns.Counterparty,
       header: 'Counterparty',
-      cell: row => (
-        <Span ellipsis>{row.counterpartyFilter?.name}</Span>
+      cell: (row: CategorizationRuleRow) => (
+        <Span ellipsis>{row.original.counterpartyFilter?.name}</Span>
       ),
     },
-    [CategorizationRuleColumns.Category]: {
+    {
       id: CategorizationRuleColumns.Category,
       header: 'Category',
-      cell: (row) => {
-        const accountIdentifier = row.category
+      cell: (row: CategorizationRuleRow) => {
+        const accountIdentifier = row.original.category
         return accountIdentifier && (
           <CategoryDisplay accountIdentifier={accountIdentifier} options={options} />
         )
       },
       isRowHeader: true,
     },
-    [CategorizationRuleColumns.Delete]: {
+    {
       id: CategorizationRuleColumns.Delete,
-      cell: row => (
+      cell: (row: CategorizationRuleRow) => (
         <Button
           inset
           icon
           onPress={() => {
-            setSelectedRule(row)
+            setSelectedRule(row.original)
             setShowDeletionConfirmationModal(true)
           }}
           aria-label='Delete rule'
@@ -143,7 +145,7 @@ export const CategorizationRulesTable = () => {
         </Button>
       ),
     },
-  }), [options])
+  ], [options])
 
   return (
     <Container name='CategorizationRulesTable'>

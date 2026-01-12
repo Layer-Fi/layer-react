@@ -5,7 +5,6 @@ import { type DetailedChartStringOverrides } from '@components/ProfitAndLossDeta
 
 export type PnlChartLineItem = LineItem & {
   type: string
-  isHidden?: boolean
   share?: number
 }
 

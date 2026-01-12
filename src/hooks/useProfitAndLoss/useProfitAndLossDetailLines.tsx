@@ -1,6 +1,5 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { Schema } from 'effect'
-import { debounce } from 'lodash-es'
 import useSWR, { type SWRResponse } from 'swr'
 
 import { type ReportingBasis } from '@internal-types/general'
@@ -154,35 +153,15 @@ export function useProfitAndLossDetailLines({
   return new PnlDetailLinesSWRResponse(swrResponse)
 }
 
-const INVALIDATION_DEBOUNCE_OPTIONS = {
-  wait: 1000,
-  maxWait: 3000,
-}
-
 export function usePnlDetailLinesInvalidator() {
   const { invalidate } = useGlobalCacheActions()
 
   const invalidatePnlDetailLines = useCallback(
-    () => invalidate(tags => tags.includes(LIST_PNL_DETAIL_LINES_TAG_KEY)),
+    () => invalidate(({ tags }) => tags.includes(LIST_PNL_DETAIL_LINES_TAG_KEY)),
     [invalidate],
   )
 
-  const debouncedInvalidatePnlDetailLines = useMemo(
-    () => debounce(
-      invalidatePnlDetailLines,
-      INVALIDATION_DEBOUNCE_OPTIONS.wait,
-      {
-        maxWait: INVALIDATION_DEBOUNCE_OPTIONS.maxWait,
-        trailing: true,
-      },
-    ),
-    [invalidatePnlDetailLines],
-  )
-
-  return {
-    invalidatePnlDetailLines,
-    debouncedInvalidatePnlDetailLines,
-  }
+  return { invalidatePnlDetailLines }
 }
 
 export type GetProfitAndLossDetailLinesParams = {

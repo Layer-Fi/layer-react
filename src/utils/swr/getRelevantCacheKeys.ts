@@ -1,18 +1,18 @@
 import { type Cache } from 'swr'
 
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { type CacheKeyInfo, withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 
-type GetRelevantCacheKeysParameters = {
+type GetRelevantCacheKeysParameters<TKey = unknown> = {
   cache: Cache<unknown>
-  predicate: (tags: ReadonlyArray<string>) => boolean
+  predicate: (info: CacheKeyInfo<TKey>) => boolean
   withPrecedingOptimisticUpdate?: boolean
 }
 
-export function getRelevantCacheKeys({
+export function getRelevantCacheKeys<TKey = unknown>({
   cache,
   predicate,
   withPrecedingOptimisticUpdate,
-}: GetRelevantCacheKeysParameters) {
+}: GetRelevantCacheKeysParameters<TKey>) {
   return Array.from(cache.keys())
     .map((key) => {
       const data = cache.get(key)
@@ -28,7 +28,7 @@ export function getRelevantCacheKeys({
               .split(',')
               .map(tag => tag.replaceAll('"', ''))
 
-            const isMatch = predicate(tags)
+            const isMatch = predicate({ tags, key: rawKey })
 
             if (isMatch) {
               if ('_i' in data && !withPrecedingOptimisticUpdate) {
@@ -50,9 +50,9 @@ export function getRelevantCacheKeys({
           }
         }
 
-        return withSWRKeyTags(rawKey, predicate)
-          ? key
-          : undefined
+        const isMatch = withSWRKeyTags<TKey>(rawKey, predicate)
+
+        return isMatch ? key : undefined
       }
     })
     .filter(key => key !== undefined)

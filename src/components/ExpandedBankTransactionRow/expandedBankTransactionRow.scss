@@ -4,6 +4,7 @@
 
 @container (max-width: 760px) {
   .Layer__ExpandedBankTransactionRow__Description {
-    width: 95%;
+    width: 100%;
+    padding-inline-end: var(--spacing-md);
   }
 }

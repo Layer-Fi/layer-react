@@ -1,18 +1,5 @@
-.Layer__MoneyText {
-  color: var(--color-base-800);
-
-  &[data-bold] {
-    font-weight: var(--font-weight-bold);
-    font-variation-settings: 'wght' var(--font-weight-bold);
-  }
-
-  $sizes: xs sm md lg;
-
-  @each $size in $sizes {
-    &[data-size="#{$size}"] {
-      font-size: var(--text-#{$size});
-    }
-  }
+.Layer__MoneySpan {
+  white-space: nowrap;
 
   &[data-positive]::before {
     content: '$';

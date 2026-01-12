@@ -4,16 +4,19 @@ import classNames from 'classnames'
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasReceipts, isCredit } from '@utils/bankTransactions'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { PersonalCategories } from '@components/BankTransactionsMobileList/constants'
+import { isCategorized } from '@components/BankTransactions/utils'
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+
+import { LegacyPersonalCategories, PersonalStableName } from './constants'
 
 interface BankTransactionsMobileListPersonalFormProps {
   bankTransaction: BankTransaction
@@ -30,12 +33,27 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
     return false
   }
 
-  return Boolean(
-    bankTransaction.category
-    && Object.values(PersonalCategories).includes(
-      bankTransaction.category.display_name as PersonalCategories,
-    ),
-  )
+  if (!bankTransaction.category) {
+    return false
+  }
+
+  const category = bankTransaction.category
+
+  if (category.type === 'Account' && 'stable_name' in category) {
+    const stableName = category.stable_name
+    if (stableName === PersonalStableName.CREDIT || stableName === PersonalStableName.DEBIT) {
+      return true
+    }
+  }
+
+  if (category.type === 'Exclusion') {
+    const displayName = category.display_name
+    if (Object.values(LegacyPersonalCategories).includes(displayName as LegacyPersonalCategories)) {
+      return true
+    }
+  }
+
+  return false
 }
 
 export const BankTransactionsMobileListPersonalForm = ({
@@ -46,15 +64,19 @@ export const BankTransactionsMobileListPersonalForm = ({
 }: BankTransactionsMobileListPersonalFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
-  const { categorize: categorizeBankTransaction, isLoading } =
-    useBankTransactionsContext()
+  const {
+    categorize: categorizeBankTransaction,
+    isMutating: isCategorizing,
+    isError: isErrorCategorizing,
+  } = useCategorizeBankTransactionWithCacheUpdate()
+
   const [showRetry, setShowRetry] = useState(false)
 
   useEffect(() => {
-    if (bankTransaction.error) {
+    if (isErrorCategorizing) {
       setShowRetry(true)
     }
-  }, [bankTransaction.error])
+  }, [isErrorCategorizing])
 
   const save = () => {
     if (!showCategorization) {
@@ -66,10 +88,10 @@ export const BankTransactionsMobileListPersonalForm = ({
       {
         type: 'Category',
         category: {
-          type: 'Exclusion',
-          exclusion_type: isCredit(bankTransaction)
-            ? PersonalCategories.INCOME
-            : PersonalCategories.EXPENSES,
+          type: 'StableName',
+          stableName: isCredit(bankTransaction)
+            ? PersonalStableName.CREDIT
+            : PersonalStableName.DEBIT,
         },
       },
       true,
@@ -110,6 +132,7 @@ export const BankTransactionsMobileListPersonalForm = ({
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
+            accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
           />
         )}
         {showCategorization
@@ -117,17 +140,17 @@ export const BankTransactionsMobileListPersonalForm = ({
             <Button
               fullWidth
               onClick={save}
-              isDisabled={alreadyAssigned || isLoading || bankTransaction.processing}
+              isDisabled={alreadyAssigned || isCategorizing}
             >
-              {bankTransaction.processing || isLoading
-                ? 'Confirming...'
+              {isCategorizing
+                ? (isCategorized(bankTransaction) ? 'Updating...' : 'Confirming...')
                 : alreadyAssigned
-                  ? 'Confirmed'
+                  ? 'Updated'
                   : 'Mark as Personal'}
             </Button>
           )}
       </HStack>
-      {bankTransaction.error && showRetry
+      {isErrorCategorizing && showRetry
         ? (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.

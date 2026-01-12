@@ -2,10 +2,11 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
-import { CategoryUpdateSchema } from '@schemas/bankTransactions/BankTransactionsBulkActions'
+import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'
@@ -51,9 +52,10 @@ function buildKey({
 
 export const useBulkCategorize = () => {
   const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { businessId, eventCallbacks } = useLayerContext()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const mutationResponse = useSWRMutation(
     () => buildKey({
@@ -85,9 +87,13 @@ export const useBulkCategorize = () => {
 
       void forceReloadBankTransactions()
 
+      void debouncedInvalidateProfitAndLoss()
+
+      eventCallbacks?.onTransactionCategorized?.()
+
       return triggerResult
     },
-    [originalTrigger, forceReloadBankTransactions],
+    [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
   )
 
   return new Proxy(mutationResponse, {

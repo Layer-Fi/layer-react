@@ -1,19 +1,36 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
+import type { Key } from 'swr'
 import { useSWRConfig } from 'swr'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
-import useSWRMutation from 'swr/mutation'
+import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 
-import type { CategoryUpdate } from '@internal-types/categories'
+import type { BankTransaction } from '@internal-types/bank_transactions'
+import { type CategoryUpdate, type CategoryUpdateEncoded, CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { categorizeBankTransaction, type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
+import { put } from '@api/layer/authenticated_http'
+import { type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/bookkeeping/useBankAccounts'
 import { useAuth } from '@hooks/useAuth'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExternalAccounts'
-import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
+
+const categorizeBankTransaction = put<
+  { data: BankTransaction },
+  CategoryUpdateEncoded,
+  {
+    businessId: string
+    bankTransactionId: string
+  }
+>(
+  ({ businessId, bankTransactionId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,
+)
 
 function buildKey({
   access_token: accessToken,
@@ -38,23 +55,53 @@ type CategorizeBankTransactionArgs = CategoryUpdate & {
   bankTransactionId: string
 }
 
-type UseCategorizeBankTransactionOptions = {
+type CategorizeBankTransactionSWRMutationResponse =
+  SWRMutationResponse<BankTransaction, unknown, Key, CategorizeBankTransactionArgs>
+
+class CategorizeBankTransactionSWRResponse {
+  private swrResponse: CategorizeBankTransactionSWRMutationResponse
+
+  constructor(swrResponse: CategorizeBankTransactionSWRMutationResponse) {
+    this.swrResponse = swrResponse
+  }
+
+  get data() {
+    return this.swrResponse.data
+  }
+
+  get trigger() {
+    return this.swrResponse.trigger
+  }
+
+  get isMutating() {
+    return this.swrResponse.isMutating
+  }
+
+  get error() {
+    return this.swrResponse.error
+  }
+
+  get isError() {
+    return this.swrResponse.error !== undefined
+  }
+}
+
+export type UseCategorizeBankTransactionOptions = {
   mutateBankTransactions: SWRInfiniteKeyedMutator<
     Array<GetBankTransactionsReturn>
   >
 }
 
-export function useCategorizeBankTransaction({
-  mutateBankTransactions,
-}: UseCategorizeBankTransactionOptions) {
+export function useCategorizeBankTransaction() {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+  const { useBankTransactionsOptions } = useBankTransactionsContext()
+  const { forceReloadBackgroundBankTransactions } = useBankTransactionsGlobalCacheActions()
 
-  const mutationResponse = useSWRMutation(
+  const rawMutationResponse = useSWRMutation(
     () => buildKey({
       access_token: auth?.access_token,
       apiUrl: auth?.apiUrl,
@@ -62,7 +109,7 @@ export function useCategorizeBankTransaction({
     }),
     (
       { accessToken, apiUrl, businessId },
-      { arg: { bankTransactionId, ...body } }: { arg: CategorizeBankTransactionArgs },
+      { arg: { bankTransactionId, ...rest } }: { arg: CategorizeBankTransactionArgs },
     ) => categorizeBankTransaction(
       apiUrl,
       accessToken,
@@ -71,15 +118,18 @@ export function useCategorizeBankTransaction({
           businessId,
           bankTransactionId,
         },
-        body,
+        body: Schema.encodeSync(CategoryUpdateSchema)(rest),
       },
     ).then(({ data }) => data),
     {
       revalidate: false,
+      throwOnError: false,
     },
   )
 
-  const { trigger: originalTrigger } = mutationResponse
+  const mutationResponse = new CategorizeBankTransactionSWRResponse(rawMutationResponse)
+
+  const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
@@ -87,22 +137,17 @@ export function useCategorizeBankTransaction({
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(BANK_ACCOUNTS_TAG_KEY)
+        ({ tags }) => tags.includes(BANK_ACCOUNTS_TAG_KEY)
           || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
       ))
-      /**
-       * SWR does not expose infinite queries through the matcher
-       *
-       * @see https://github.com/vercel/swr/blob/main/src/_internal/utils/mutate.ts#L78
-       */
-      void mutateBankTransactions(undefined, { revalidate: true })
-      void invalidatePnlDetailLines()
+
+      void forceReloadBackgroundBankTransactions(useBankTransactionsOptions)
 
       void debouncedInvalidateProfitAndLoss()
 
       return triggerResult
     },
-    [originalTrigger, mutate, mutateBankTransactions, debouncedInvalidateProfitAndLoss, invalidatePnlDetailLines],
+    [originalTrigger, mutate, forceReloadBackgroundBankTransactions, useBankTransactionsOptions, debouncedInvalidateProfitAndLoss],
   )
 
   return new Proxy(mutationResponse, {

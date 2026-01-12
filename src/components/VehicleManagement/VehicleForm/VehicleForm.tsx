@@ -53,34 +53,87 @@ export const VehicleForm = (props: VehicleFormProps) => {
         }}
       </form.Subscribe>
 
-      <form.AppField name='make'>
-        {field => <field.FormTextField label='Make' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Make`} isReadOnly={isReadOnly} />}
-      </form.AppField>
-
-      <form.AppField name='model'>
-        {field => <field.FormTextField label='Model' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Model`} isReadOnly={isReadOnly} />}
+      <form.AppField name='makeAndModel'>
+        {field => (
+          <field.FormTextField
+            label='Make and model'
+            inline
+            isReadOnly={isReadOnly}
+            placeholder='Enter vehicle make and model'
+            className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__MakeAndModel`}
+          />
+        )}
       </form.AppField>
 
       <form.AppField name='year'>
-        {field => <field.FormNumberField maxValue={9999} label='Year' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Year`} isReadOnly={isReadOnly} />}
+        {field => (
+          <field.FormNumberField
+            maxValue={9999}
+            label='Year'
+            inline
+            isReadOnly={isReadOnly}
+            placeholder='Enter vehicle year'
+            className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Year`}
+          />
+        )}
       </form.AppField>
 
       <form.AppField name='licensePlate'>
-        {field => <field.FormTextField label='License plate' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__LicensePlate`} isReadOnly={isReadOnly} />}
+        {field => (
+          <field.FormTextField
+            label='License plate'
+            inline
+            isReadOnly={isReadOnly}
+            placeholder='Enter license plate'
+            className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__LicensePlate`}
+          />
+        )}
       </form.AppField>
 
       <form.AppField name='vin'>
-        {field => <field.FormTextField label='VIN' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Vin`} isReadOnly={isReadOnly} />}
+        {field => (
+          <field.FormTextField
+            label='VIN'
+            inline
+            isReadOnly={isReadOnly}
+            placeholder='Enter VIN'
+            className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Vin`}
+          />
+        )}
       </form.AppField>
 
       <form.AppField name='description'>
-        {field => <field.FormTextAreaField label='Description' inline className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Description`} isReadOnly={isReadOnly} />}
+        {field => (
+          <field.FormTextAreaField
+            label='Description'
+            inline
+            isReadOnly={isReadOnly}
+            placeholder='Add description'
+            className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Description`}
+          />
+        )}
+      </form.AppField>
+
+      <form.AppField name='isPrimary'>
+        {field => (
+          <field.FormSwitchField
+            label='Set as primary vehicle'
+            inline
+            isReadOnly={isReadOnly}
+            className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__IsPrimary`}
+          />
+        )}
       </form.AppField>
 
       <VStack justify='end' className={`${VEHICLE_FORM_CSS_PREFIX}__Submit`}>
         <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
           {([canSubmit, isSubmitting]) => (
-            <Button type='submit' isDisabled={!canSubmit} isPending={isSubmitting} onPress={() => { void form.handleSubmit() }}>
+            <Button
+              type='submit'
+              isDisabled={!canSubmit}
+              isPending={isSubmitting}
+              onPress={() => { void form.handleSubmit() }}
+            >
               Save Vehicle
             </Button>
           )}

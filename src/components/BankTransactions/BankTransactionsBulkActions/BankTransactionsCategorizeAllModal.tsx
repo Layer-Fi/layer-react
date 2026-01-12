@@ -5,9 +5,10 @@ import { useBulkCategorize } from '@hooks/useBankTransactions/useBulkCategorize'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
+import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { BaseConfirmationModal } from '@components/BaseConfirmationModal/BaseConfirmationModal'
+import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 
 export enum CategorizationMode {
   Categorize = 'Categorize',
@@ -18,14 +19,20 @@ interface BankTransactionsCategorizeAllModalProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   mode: CategorizationMode
+  isMobileView?: boolean
 }
 
-export const BankTransactionsCategorizeAllModal = ({ isOpen, onOpenChange, mode }: BankTransactionsCategorizeAllModalProps) => {
+export const BankTransactionsCategorizeAllModal = ({
+  isOpen,
+  onOpenChange,
+  mode,
+  isMobileView = false,
+}: BankTransactionsCategorizeAllModalProps) => {
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   const [selectedCategory, setSelectedCategory] = useState<BankTransactionCategoryComboBoxOption | null>(null)
-  const { trigger } = useBulkCategorize()
+  const { trigger, isMutating } = useBulkCategorize()
 
   const handleCategorizeModalClose = useCallback((isOpen: boolean) => {
     onOpenChange(isOpen)
@@ -69,17 +76,28 @@ export const BankTransactionsCategorizeAllModal = ({ isOpen, onOpenChange, mode 
       content={(
         <VStack gap='xs'>
           <VStack gap='3xs'>
-            <Label htmlFor={categorySelectId}>Select category</Label>
-            <BankTransactionCategoryComboBox
-              inputId={categorySelectId}
-              selectedValue={selectedCategory}
-              onSelectedValueChange={setSelectedCategory}
-              includeSuggestedMatches={false}
-            />
+            <Label size='sm' htmlFor={categorySelectId}>Select category</Label>
+            {isMobileView
+              ? (
+                <CategorySelectDrawerWithTrigger
+                  aria-labelledby={categorySelectId}
+                  value={selectedCategory}
+                  onChange={setSelectedCategory}
+                  showTooltips={false}
+                />
+              )
+              : (
+                <BankTransactionCategoryComboBox
+                  inputId={categorySelectId}
+                  selectedValue={selectedCategory}
+                  onSelectedValueChange={setSelectedCategory}
+                  includeSuggestedMatches={false}
+                  isDisabled={isMutating}
+                />
+              )}
           </VStack>
           {selectedCategory && isCategoryAsOption(selectedCategory) && (
             <Span>
-
               {mode === CategorizationMode.Categorize
                 ? `This will categorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`
                 : `This will recategorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`}
@@ -93,6 +111,7 @@ export const BankTransactionsCategorizeAllModal = ({ isOpen, onOpenChange, mode 
       confirmDisabled={!selectedCategory}
       errorText={mode === CategorizationMode.Categorize ? 'Failed to categorize transactions' : 'Failed to recategorize transactions'}
       closeOnConfirm
+      useDrawer={isMobileView}
     />
   )
 }

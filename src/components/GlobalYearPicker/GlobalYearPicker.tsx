@@ -16,7 +16,7 @@ export const GlobalYearPicker = () => {
   const activationDate = useBusinessActivationDate()
 
   const { setYear } = useGlobalDateRangeActions()
-  const { startDate } = useGlobalDateRange({ displayMode: 'full' })
+  const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
 
   const currentYear = getYear(new Date())
   const selectedYear = getYear(startDate)

@@ -11,21 +11,14 @@ export const BankTransactionsContext =
     isLoading: false,
     isValidating: false,
     isError: false,
-    refetch: () => {},
-    categorize: () => Promise.resolve(undefined),
-    match: () => Promise.resolve(undefined),
-    metadata: {
-      pagination: {
-        cursor: undefined,
-        has_more: false,
-      },
-    },
-    updateOneLocal: () => undefined,
-    shouldHideAfterCategorize: () => false,
+    updateLocalBankTransactions: () => undefined,
+    shouldHideAfterCategorize: false,
     removeAfterCategorize: () => undefined,
     display: DisplayState.review,
     fetchMore: () => {},
     hasMore: false,
+    mutate: () => Promise.resolve(undefined),
+    useBankTransactionsOptions: {},
   })
 
 export const useBankTransactionsContext = () =>

@@ -4,20 +4,13 @@ import {
   type BankTransaction,
   DisplayState,
 } from '@internal-types/bank_transactions'
-import {
-  type CategoryUpdate,
-} from '@internal-types/categories'
-import { Direction } from '@internal-types/general'
-import { DataModel } from '@internal-types/general'
+import { DataModel, Direction } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import {
   type BankTransactionFilters,
 } from '@hooks/useBankTransactions/types'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/useBankTransactions/useBankTransactions'
-import { useCategorizeBankTransaction } from '@hooks/useBankTransactions/useCategorizeBankTransaction'
-import { useMatchBankTransaction } from '@hooks/useBankTransactions/useMatchBankTransaction'
 import {
   applyAccountFilter,
   applyAmountFilter,
@@ -58,28 +51,6 @@ function useTriggerOnChange(
   }, [data, anyAccountSyncing, callback])
 }
 
-const filtersSettingString = (filters?: BankTransactionFilters): string => {
-  return `bank-transactions${
-    filters?.categorizationStatus
-      ? `-categorizationStatus-${filters.categorizationStatus}`
-      : `-categorizationStatus-${DisplayState.all}`
-  }${
-    filters?.direction?.length === 1
-      ? `-direction-${filters.direction.join('-')}`
-      : ''
-  }${
-    filters?.dateRange?.startDate
-      ? `-startDate-${filters.dateRange.startDate.toISOString()}`
-      : ''
-  }${
-    filters?.dateRange?.endDate
-      ? `-endDate-${filters.dateRange.endDate.toISOString()}`
-      : ''
-  }${
-    filters?.tagFilter ? `--${tagFilterToQueryString(filters.tagFilter)}` : ''
-  }`
-}
-
 export function bankTransactionFiltersToHookOptions(
   filters?: BankTransactionFilters,
 ): UseBankTransactionsOptions {
@@ -108,33 +79,28 @@ export type UseAugmentedBankTransactionsWithFiltersParams = {
 export const useAugmentedBankTransactions = (
   params: UseAugmentedBankTransactionsWithFiltersParams,
 ) => {
-  const {
-    addToast,
-    touch,
-    read,
-    syncTimestamps,
-    hasBeenTouched,
-    eventCallbacks,
-  } = useLayerContext()
+  const { touch, eventCallbacks } = useLayerContext()
 
   const { setRuleSuggestion } = useContext(CategorizationRulesContext)
 
   const { filters } = params
 
   const display = filters?.categorizationStatus ?? DisplayState.categorized
+  const useBankTransactionsOptions = useMemo(
+    () => bankTransactionFiltersToHookOptions(filters),
+    [filters],
+  )
 
   const {
     data: rawResponseData,
     isLoading,
     isValidating,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    error: responseError,
+    isError,
     mutate,
     size,
     setSize,
-  } = useBankTransactions(
-    bankTransactionFiltersToHookOptions(filters),
-  )
+    hasMore,
+  } = useBankTransactions(useBankTransactionsOptions)
 
   const data: BankTransaction[] | undefined = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
@@ -145,26 +111,6 @@ export const useAugmentedBankTransactions = (
     }
 
     return undefined
-  }, [rawResponseData])
-
-  const lastMetadata = useMemo(() => {
-    if (rawResponseData && rawResponseData.length > 0) {
-      return rawResponseData[rawResponseData.length - 1].meta
-    }
-
-    return undefined
-  }, [rawResponseData])
-
-  const hasMore = useMemo(() => {
-    if (rawResponseData && rawResponseData.length > 0) {
-      const lastElement = rawResponseData[rawResponseData.length - 1]
-      return Boolean(
-        lastElement.meta?.pagination?.cursor
-        && lastElement.meta?.pagination?.has_more,
-      )
-    }
-
-    return false
   }, [rawResponseData])
 
   const filteredData = useMemo(() => {
@@ -192,174 +138,38 @@ export const useAugmentedBankTransactions = (
     return filtered
   }, [filters, data])
 
-  const updateOneLocal = (newBankTransaction: BankTransaction) => {
-    if (newBankTransaction.update_categorization_rules_suggestion) {
-      const decodedRuleSuggestion = decodeRulesSuggestion(newBankTransaction.update_categorization_rules_suggestion)
-      setRuleSuggestion(decodedRuleSuggestion)
-    }
-    const updatedData = rawResponseData?.map((page) => {
-      return {
-        ...page,
-        data: page.data?.map(bt =>
-          bt.id === newBankTransaction.id ? newBankTransaction : bt,
-        ),
-      }
-    })
-
-    void mutate(updatedData, { revalidate: false })
-  }
-
-  const { trigger: categorizeBankTransaction } = useCategorizeBankTransaction({
-    mutateBankTransactions: mutate,
-  })
-
-  const categorizeWithOptimisticUpdate = async (
-    bankTransactionId: BankTransaction['id'],
-    newCategory: CategoryUpdate,
-    notify?: boolean,
-  ) => {
-    const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
-
-    if (existingTransaction) {
-      updateOneLocal({ ...existingTransaction, update_categorization_rules_suggestion: undefined, processing: true, error: undefined })
-    }
-
-    return categorizeBankTransaction({
-      bankTransactionId,
-      ...newCategory,
-    })
-      .then((updatedTransaction) => {
-        updateOneLocal({
-          ...updatedTransaction,
-          processing: false,
-          recently_categorized: true,
-        })
-
-        if (notify) {
-          addToast({ content: 'Transaction confirmed' })
-        }
-      })
-      .catch((error: unknown) => {
-        const targetedTransaction = data?.find(({ id }) => id === bankTransactionId)
-
-        if (targetedTransaction) {
-          updateOneLocal({
-            ...targetedTransaction,
-            error: error instanceof Error ? error.message : 'An unknown error occurred',
-            processing: false,
-          })
-        }
-      })
-      .finally(() => {
-        eventCallbacks?.onTransactionCategorized?.(bankTransactionId)
-      })
-  }
-
-  const { trigger: matchBankTransaction } = useMatchBankTransaction({
-    mutateBankTransactions: mutate,
-  })
-
-  const matchWithOptimisticUpdate = async (
-    bankTransactionId: BankTransaction['id'],
-    suggestedMatchId: string,
-    notify?: boolean,
-  ) => {
-    const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
-
-    if (existingTransaction) {
-      updateOneLocal({
-        ...existingTransaction,
-        processing: true,
-        error: undefined,
-      })
-    }
-
-    const transferBankTransaction = data?.find(({ id, suggested_matches }) =>
-      id !== bankTransactionId
-      && suggested_matches?.some(({ id }) => id === suggestedMatchId),
+  const updateLocalBankTransactions = useCallback((newBankTransactions: BankTransaction[]) => {
+    const transactionsById = new Map(
+      newBankTransactions.map(bt => [bt.id, bt]),
     )
 
-    if (transferBankTransaction) {
-      updateOneLocal({
-        ...transferBankTransaction,
-        processing: true,
-        error: undefined,
-      })
+    for (const bt of newBankTransactions) {
+      if (bt.update_categorization_rules_suggestion) {
+        const decodedRuleSuggestion = decodeRulesSuggestion(bt.update_categorization_rules_suggestion)
+        setRuleSuggestion(decodedRuleSuggestion)
+      }
     }
 
-    return matchBankTransaction({
-      bankTransactionId,
-      match_id: suggestedMatchId,
-      type: 'Confirm_Match',
-    })
-      .then((match) => {
-        const matchedTransaction = data?.find(({ id }) => id === match.bank_transaction.id)
+    const updatedData = rawResponseData?.map(page => ({
+      ...page,
+      data: page.data?.map(bt =>
+        transactionsById.get(bt.id) ?? bt,
+      ),
+    }))
 
-        if (matchedTransaction) {
-          updateOneLocal({
-            ...matchedTransaction,
-            categorization_status: CategorizationStatus.MATCHED,
-            match,
-            processing: false,
-            recently_categorized: true,
-          })
-        }
+    void mutate(updatedData, { revalidate: false })
+  }, [rawResponseData, mutate, setRuleSuggestion])
 
-        const matchedTransferTransaction = data?.find(({ id, suggested_matches }) =>
-          id !== bankTransactionId
-          && suggested_matches?.some(({ id }) => id === suggestedMatchId),
-        )
+  const shouldHideAfterCategorize = filters?.categorizationStatus === DisplayState.review
 
-        if (matchedTransferTransaction) {
-          /*
-           * We do not have the corresponding `match` for the transfer, so this portion of
-           * the optimistic update is not as complete as the other.
-           */
-          updateOneLocal({
-            ...matchedTransferTransaction,
-            processing: false,
-            recently_categorized: true,
-          })
-        }
-
-        if (notify) {
-          addToast({ content: 'Transaction saved' })
-        }
-      })
-      .catch((error: unknown) => {
-        const targetedTransaction = data?.find(({ id }) => id === bankTransactionId)
-
-        if (targetedTransaction) {
-          updateOneLocal({
-            ...targetedTransaction,
-            error: error instanceof Error ? error.message : 'An unknown error occurred',
-            processing: false,
-          })
-        }
-      })
-      .finally(() => {
-        eventCallbacks?.onTransactionCategorized?.(bankTransactionId)
-      })
-  }
-
-  const shouldHideAfterCategorize = (): boolean => {
-    return filters?.categorizationStatus === DisplayState.review
-  }
-
-  const removeAfterCategorize = (bankTransaction: BankTransaction) => {
-    if (shouldHideAfterCategorize()) {
-      const updatedData = rawResponseData?.map((page) => {
-        return {
-          ...page,
-          data: page.data?.filter(bt => bt.id !== bankTransaction.id),
-        }
-      })
+  const removeAfterCategorize = (transactionIds: string[]) => {
+    if (shouldHideAfterCategorize) {
+      const updatedData = rawResponseData?.map(page => ({
+        ...page,
+        data: page.data?.filter(bt => !transactionIds.includes(bt.id)),
+      }))
       void mutate(updatedData, { revalidate: false })
     }
-  }
-
-  const refetch = () => {
-    void mutate()
   }
 
   const fetchMore = useCallback(() => {
@@ -367,25 +177,6 @@ export const useAugmentedBankTransactions = (
       void setSize(size + 1)
     }
   }, [hasMore, setSize, size])
-
-  const getCacheKey = (txnFilters?: BankTransactionFilters) => {
-    return filtersSettingString(txnFilters)
-  }
-
-  // Refetch data if related models has been changed since last fetch
-  useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.BANK_TRANSACTIONS, getCacheKey(filters))
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isValidating])
-
-  useEffect(() => {
-    if (hasBeenTouched(getCacheKey(filters))) {
-      refetch()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncTimestamps, filters])
 
   const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
   const anyAccountSyncing = useMemo(
@@ -407,12 +198,12 @@ export const useAugmentedBankTransactions = (
 
   const intervalIdRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
-  // calling `refetch()` directly in the `setInterval` didn't trigger actual request to API.
+  // calling `void mutate()` directly in the `setInterval` didn't trigger actual request to API.
   // But it works when called from `useEffect`
   const [refreshTrigger, setRefreshTrigger] = useState(-1)
   useEffect(() => {
     if (refreshTrigger !== -1) {
-      refetch()
+      void mutate()
       void refetchAccounts()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -446,18 +237,16 @@ export const useAugmentedBankTransactions = (
 
   return {
     data: filteredData,
-    metadata: lastMetadata,
     isLoading,
     isValidating,
-    refetch,
-    isError: !!responseError,
-    categorize: categorizeWithOptimisticUpdate,
-    match: matchWithOptimisticUpdate,
-    updateOneLocal,
+    isError,
+    updateLocalBankTransactions,
     shouldHideAfterCategorize,
     removeAfterCategorize,
+    useBankTransactionsOptions,
     display,
     fetchMore,
     hasMore,
+    mutate,
   }
 }

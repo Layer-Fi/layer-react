@@ -12,6 +12,14 @@
   }
 }
 
+.Layer__component .recharts-wrapper {
+  svg:focus,
+  path:focus,
+  g:focus {
+    outline: none;
+  }
+}
+
 .Layer__component .recharts-responsive-container.Layer__chart-container {
   padding-top: 42px;
 }

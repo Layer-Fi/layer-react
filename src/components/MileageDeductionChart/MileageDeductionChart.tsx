@@ -44,7 +44,6 @@ const CURSOR_MARGIN = 12
 export const MileageDeductionChart = ({
   data,
   selectedYear,
-  onMonthClick,
 }: MileageDeductionChartProps) => {
   const { getColor } = useLayerContext()
 
@@ -126,12 +125,6 @@ export const MileageDeductionChart = ({
     )
   }
 
-  const handleBarClick = (data: ChartDataPoint) => {
-    if (onMonthClick) {
-      onMonthClick(selectedYear, data.month)
-    }
-  }
-
   type CursorProps = {
     points?: Array<{ x: number, y: number }>
     height?: number
@@ -186,8 +179,6 @@ export const MileageDeductionChart = ({
             barSize={BAR_SIZE}
             radius={[2, 2, 0, 0]}
             className='Layer__mileage-chart__bar--deduction'
-            onClick={handleBarClick}
-            cursor={onMonthClick ? 'pointer' : 'default'}
           >
             {chartData.map((_entry, index) => (
               <Cell key={`cell-${index}`} />

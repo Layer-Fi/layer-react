@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Cell, Pie, PieChart } from 'recharts'
 
 import {
@@ -8,7 +9,7 @@ import {
 import { type Variants } from '@utils/styleUtils/sizeVariants'
 import type { ProfitAndLoss } from '@hooks/useProfitAndLoss/schemas'
 import type { Scope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
-import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
+import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 
 const CHART_PLACEHOLDER: Array<PnlChartLineItem> = [{
   name: 'placeholder',
@@ -63,7 +64,14 @@ export function ProfitAndLossSummariesMiniChart({
   chartColorsList,
   variants,
 }: ProfitAndLossMiniChartProps) {
-  const typeColorMapping = mapTypesToColors(data, chartColorsList)
+  const chartData = useMemo(() => data.map(x => ({
+    ...x,
+    value: x.value > 0 ? x.value : 0,
+  }
+  )),
+  [data])
+
+  const typeColorMapping = mapTypesToColors(chartData, chartColorsList)
 
   let chartDimension: number = 52
   let innerRadius: number = 10
@@ -84,9 +92,9 @@ export function ProfitAndLossSummariesMiniChart({
   return (
     <PieChart width={chartDimension} height={chartDimension}>
       <Pie
-        data={data}
+        data={chartData}
         dataKey='value'
-        nameKey='name'
+        nameKey='displayName'
         cx='50%'
         cy='50%'
         innerRadius={innerRadius}
@@ -98,7 +106,7 @@ export function ProfitAndLossSummariesMiniChart({
         animationDuration={250}
         animationEasing='ease-in-out'
       >
-        {data.map((entry, index) => {
+        {chartData.map((entry, index) => {
           const colorConfig = typeColorMapping[index]
 
           return (

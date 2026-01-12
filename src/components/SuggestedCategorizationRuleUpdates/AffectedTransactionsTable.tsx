@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import type { Row } from '@tanstack/react-table'
 
 import type { MinimalBankTransaction } from '@schemas/bankTransactions/base'
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
@@ -6,7 +7,7 @@ import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { type ColumnConfig } from '@components/DataTable/DataTable'
+import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { DateTime } from '@components/DateTime/DateTime'
 import { TextSize, TextWeight } from '@components/Typography/Text'
 import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
@@ -50,13 +51,14 @@ export const AffectedTransactionsTable = ({
   isLoading = false,
   isError = false,
 }: AffectedTransactionsTableProps) => {
-  const columnConfig: ColumnConfig<MinimalBankTransaction, TransactionColumns> = useMemo(() => ({
-    [TransactionColumns.Date]: {
+  type AffectedTransactionRowType = Row<MinimalBankTransaction>
+  const columnConfig: NestedColumnConfig<MinimalBankTransaction> = useMemo(() => [
+    {
       id: TransactionColumns.Date,
       header: 'Date',
-      cell: row => (
+      cell: (row: AffectedTransactionRowType) => (
         <DateTime
-          valueAsDate={row.date}
+          valueAsDate={row.original.date}
           onlyDate
           slotProps={
             { Date: { size: TextSize.md, weight: TextWeight.normal, variant: 'subtle' } }
@@ -64,29 +66,29 @@ export const AffectedTransactionsTable = ({
         />
       ),
     },
-    [TransactionColumns.Description]: {
+    {
       id: TransactionColumns.Description,
       header: 'Description',
-      cell: row => (
+      cell: (row: AffectedTransactionRowType) => (
         <Span withTooltip>
-          {row.counterpartyName || row.description || '-'}
+          {row.original.counterpartyName || row.original.description || '-'}
         </Span>
       ),
       isRowHeader: true,
     },
-    [TransactionColumns.Amount]: {
+    {
       id: TransactionColumns.Amount,
       header: 'Amount',
-      cell: (row) => {
-        const amount = row.direction === BankTransactionDirection.Credit ? row.amount : -row.amount
+      cell: (row: AffectedTransactionRowType) => {
+        const amount = row.original.direction === BankTransactionDirection.Credit ? row.original.amount : -row.original.amount
         return <MoneySpan amount={amount} />
       },
     },
-  }), [])
+  ], [])
 
   return (
     <VStack className='Layer__AffectedTransactionsTable'>
-      <VirtualizedDataTable<MinimalBankTransaction, TransactionColumns>
+      <VirtualizedDataTable<MinimalBankTransaction>
         componentName={COMPONENT_NAME}
         ariaLabel='Affected transactions'
         columnConfig={columnConfig}

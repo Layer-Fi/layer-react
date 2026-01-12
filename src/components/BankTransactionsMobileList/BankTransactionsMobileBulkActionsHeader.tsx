@@ -7,8 +7,6 @@ import { HStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
 import { Span } from '@ui/Typography/Text'
 
-import './bankTransactionsMobileBulkActionsHeader.scss'
-
 interface BankTransactionsMobileBulkActionsHeaderProps {
   bankTransactions?: BankTransaction[]
   bulkActionsEnabled: boolean
@@ -31,15 +29,14 @@ export const BankTransactionsMobileBulkActionsHeader = ({
   return (
     <HStack
       gap='md'
-      pi='lg'
-      pbs='md'
-      justify='space-between'
       align='center'
+      justify='space-between'
+      pi='md'
+      pb='xs'
     >
       <HStack
         align='center'
-        pi='xs'
-        className='Layer__BankTransactionsMobileBulkActionsHeader__checkbox-container'
+        gap='xs'
       >
         {bulkActionsEnabled && (
           <>
@@ -58,15 +55,17 @@ export const BankTransactionsMobileBulkActionsHeader = ({
           </>
         )}
       </HStack>
-      <Switch
-        isSelected={bulkActionsEnabled}
-        onChange={onBulkActionsToggle}
-        aria-label='Toggle bulk actions'
-      >
+      <HStack align='center' gap='xs'>
         <Span size='md' noWrap>
           Bulk Actions
         </Span>
-      </Switch>
+        <Switch
+          isSelected={bulkActionsEnabled}
+          onChange={onBulkActionsToggle}
+          aria-label='Toggle bulk actions'
+        />
+      </HStack>
+
     </HStack>
   )
 }

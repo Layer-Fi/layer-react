@@ -1,6 +1,5 @@
 import { useMemo, useRef } from 'react'
 import {
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
@@ -12,7 +11,7 @@ import classNames from 'classnames'
 
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
-import type { Column, ColumnConfig } from '@components/DataTable/DataTable'
+import { getColumnDefs, type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { Loader } from '@components/Loader/Loader'
 
 import './virtualizedDataTable.scss'
@@ -33,8 +32,8 @@ const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HE
 const CSS_PREFIX = 'Layer__UI__VirtualizedTable'
 const EMPTY_ARRAY: never[] = []
 
-export interface VirtualizedDataTableProps<TData extends { id: string }, TColumns extends string> {
-  columnConfig: ColumnConfig<TData, TColumns>
+export interface VirtualizedDataTableProps<TData extends { id: string }> {
+  columnConfig: NestedColumnConfig<TData>
   data: TData[] | undefined
   componentName: string
   ariaLabel: string
@@ -51,7 +50,7 @@ export interface VirtualizedDataTableProps<TData extends { id: string }, TColumn
   overscan?: number
 }
 
-export const VirtualizedDataTable = <TData extends { id: string }, TColumns extends string>({
+export const VirtualizedDataTable = <TData extends { id: string }>({
   columnConfig,
   data,
   isLoading,
@@ -63,7 +62,7 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
   height = DEFAULT_TABLE_HEIGHT,
   rowHeight = DEFAULT_ROW_HEIGHT,
   overscan = DEFAULT_OVERSCAN,
-}: VirtualizedDataTableProps<TData, TColumns>) => {
+}: VirtualizedDataTableProps<TData>) => {
   const { EmptyState, ErrorState } = slots
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -75,20 +74,9 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
     return Math.min(height, calculatedHeight)
   }, [data, height, rowHeight, shrinkHeightToFitRows])
 
-  const columnHelper = createColumnHelper<TData>()
-  const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
   const tableData = data ?? EMPTY_ARRAY
 
-  const columnDefs = columns.map((col) => {
-    return columnHelper.display({
-      id: col.id,
-      header: () => col.header,
-      cell: ({ row }) => col.cell(row.original),
-      meta: {
-        isRowHeader: col.isRowHeader || false,
-      },
-    })
-  })
+  const columnDefs = getColumnDefs(columnConfig)
 
   const table = useReactTable<TData>({
     data: tableData,

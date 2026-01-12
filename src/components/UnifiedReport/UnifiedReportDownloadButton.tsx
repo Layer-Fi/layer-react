@@ -1,13 +1,19 @@
+import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import DownloadCloud from '@icons/DownloadCloud'
 import RefreshCcw from '@icons/RefreshCcw'
 import { Button } from '@ui/Button/Button'
-import { useUnifiedReportDownload } from '@components/UnifiedReport/download/useUnifiedReportDownload'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
+import { useUnifiedReportExcel } from '@features/reports/api/useUnifiedReportExcel'
 
-export function UnifiedReportDownloadButton() {
+type UnifiedReportDownloadButtonProps = {
+  dateSelectionMode: DateSelectionMode
+}
+
+export function UnifiedReportDownloadButton({ dateSelectionMode }: UnifiedReportDownloadButtonProps) {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
-  const { trigger, isMutating, isError } = useUnifiedReportDownload({
+  const { trigger, isMutating, isError } = useUnifiedReportExcel({
+    dateSelectionMode,
     onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
   })
 

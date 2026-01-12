@@ -1,6 +1,5 @@
 import { type BankTransaction, DisplayState, type Split } from '@internal-types/bank_transactions'
-import { type CategoryUpdate } from '@internal-types/categories'
-import { type ClassificationEncoded } from '@schemas/categorization'
+import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { type AccountItem, type NumericRangeFilter } from '@hooks/useBankTransactions/types'
 import { type MatchOrCategorizeTransactionRequestSchema } from '@hooks/useBankTransactions/useBulkMatchOrCategorize'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -97,7 +96,7 @@ export const buildBulkMatchOrCategorizePayload = (
     else if (isSplitAsOption(transactionCategory)) {
       const splitEntries = transactionCategory.original
         .map((split) => {
-          if (!split.category || !isCategoryAsOption(split.category) || !isApiCategorizationAsOption(split.category)) {
+          if (!split.category || !(isCategoryAsOption(split.category) || isApiCategorizationAsOption(split.category))) {
             return null
           }
           const classification = split.category.classification
@@ -142,22 +141,21 @@ export const buildBulkMatchOrCategorizePayload = (
   return transactions
 }
 
-export const buildCategorizeBankTransactionPayloadForSplit = (
-  splits: Split[],
-): CategoryUpdate => {
+export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): CategoryUpdate => {
   return splits.length === 1 && splits[0].category
     ? ({
       type: 'Category',
-      category: splits[0].category.classificationEncoded as ClassificationEncoded,
+      category: splits[0].category.classification!,
     })
     : ({
       type: 'Split',
       entries: splits.map(split => ({
-        category: split.category?.classificationEncoded as ClassificationEncoded,
+        // TODO: enforce upstream in the category combobox that split.category is non-null
+        category: split.category!.classification!,
         amount: split.amount,
         tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
-        customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
-        vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
+        customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
+        vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
       })),
     })
 }

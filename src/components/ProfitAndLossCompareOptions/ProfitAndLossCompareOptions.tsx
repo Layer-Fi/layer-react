@@ -27,7 +27,7 @@ export const ProfitAndLossCompareOptions = () => {
     setComparisonPeriodMode,
   } = useContext(ProfitAndLossComparisonContext)
 
-  const { displayMode } = useContext(ProfitAndLossContext)
+  const { dateSelectionMode } = useContext(ProfitAndLossContext)
 
   const tagComparisonSelectOptions = compareOptions.map(
     (tagComparisonOption) => {
@@ -44,7 +44,7 @@ export const ProfitAndLossCompareOptions = () => {
 
   return (
     <HStack align='center' gap='xs'>
-      {displayMode === 'full' && (
+      {dateSelectionMode === 'full' && (
         <DateGroupByComboBox value={comparisonPeriodMode} onValueChange={setComparisonPeriodMode} />
       )}
       <MultiSelect

@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import type { Key } from 'react-aria-components'
 
 import { DisplayState } from '@internal-types/bank_transactions'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
@@ -10,10 +11,12 @@ import { BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types
 import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
 import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
 import { useDebounce } from '@hooks/useDebounce/useDebounce'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { HStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { type MobileComponentType } from '@components/BankTransactions/constants'
@@ -25,7 +28,6 @@ import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
@@ -36,7 +38,6 @@ export interface BankTransactionsHeaderProps {
   categorizeView?: boolean
   mobileComponent?: MobileComponentType
   listView?: boolean
-  isDataLoading?: boolean
   isSyncing?: boolean
   stringOverrides?: BankTransactionsHeaderStringOverrides
   withUploadMenu?: boolean
@@ -134,7 +135,6 @@ export const BankTransactionsHeader = ({
   showStatusToggle,
   collapseHeader,
   showCategorizationRules = false,
-
 }: BankTransactionsHeaderProps) => {
   const activationDate = useBusinessActivationDate()
   const { display } = useBankTransactionsContext()
@@ -143,6 +143,7 @@ export const BankTransactionsHeader = ({
     filters,
     dateFilterMode,
   } = useBankTransactionsFiltersContext()
+  const { value: sizeClass } = useSizeClass()
 
   const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
   const monthPickerDate = filters?.dateRange ? convertDateToZonedDateTime(filters.dateRange.startDate) : null
@@ -159,10 +160,11 @@ export const BankTransactionsHeader = ({
   const { count } = useCountSelectedIds()
 
   const showBulkActions = count > 0
+  const isMobileList = listView && mobileComponent === 'mobileList'
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
-      <div className='Layer__bank-transactions__header__content-title'>
+      <HStack align='center'>
         <Heading
           className='Layer__bank-transactions__title'
           size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
@@ -176,7 +178,7 @@ export const BankTransactionsHeader = ({
             hideContent={listView}
           />
         )}
-      </div>
+      </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
           label='Select a month'
@@ -185,6 +187,7 @@ export const BankTransactionsHeader = ({
           onChange={setDateRange}
           minDate={activationDate ? convertDateToZonedDateTime(activationDate) : null}
           maxDate={convertDateToZonedDateTime(new Date())}
+          truncateMonth={sizeClass === 'mobile'}
         />
       )}
     </div>
@@ -197,16 +200,15 @@ export const BankTransactionsHeader = ({
     setDateRange,
     stringOverrides?.header,
     withDatePicker,
+    sizeClass,
   ])
 
-  const onCategorizationDisplayChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const onCategorizationDisplayChange = (value: Key) => {
     setFilters({
       categorizationStatus:
-        event.target.value === 'categorized' // see DisplayState enum
+        value === 'categorized'
           ? DisplayState.categorized
-          : event.target.value === 'all' // see DisplayState enum
+          : value === 'all'
             ? DisplayState.all
             : DisplayState.review,
     })
@@ -223,57 +225,133 @@ export const BankTransactionsHeader = ({
     return actions
   }, [withUploadMenu, showCategorizationRules])
 
-  return (
-    <Header
-      className={classNames(
-        'Layer__bank-transactions__header',
-        withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
-        mobileComponent && listView
-          ? 'Layer__bank-transactions__header--mobile'
-          : undefined,
-      )}
-      style={{ top: shiftStickyHeader }}
-    >
-      {!collapseHeader && headerTopRow}
+  const BulkActionsModuleSlot = useCallback(() => {
+    return (
+      <BankTransactionsBulkActions
+        isMobileView={isMobileList}
+        slotProps={{
+          ConfirmAllModal: {
+            label: isMobileList ? 'Confirm' : 'Confirm all',
+          },
+        }}
+      />
+    )
+  }, [isMobileList])
 
-      <BankTransactionsActions>
-        {showBulkActions
-          ? (
-            <BulkActionsModule
-              slots={{ BulkActions: BankTransactionsBulkActions }}
-            />
-          )
-          : (
-            <HStack slot='toggle' justify='center' gap='xs'>
-              {collapseHeader && headerTopRow}
-              {!categorizedOnly && categorizeView && showStatusToggle && (
-                <Toggle
-                  name='bank-transaction-display'
-                  size={
-                    mobileComponent === 'mobileList'
-                      ? ToggleSize.small
-                      : ToggleSize.medium
-                  }
-                  options={[
-                    { label: 'To Review', value: DisplayState.review },
-                    { label: 'Categorized', value: DisplayState.categorized },
-                  ]}
-                  selected={display}
-                  onChange={onCategorizationDisplayChange}
+  const statusToggle = !categorizedOnly && categorizeView && showStatusToggle
+    ? (
+      <Toggle
+        ariaLabel='Categorization status'
+        options={[
+          { label: 'To Review', value: DisplayState.review },
+          { label: 'Categorized', value: DisplayState.categorized },
+        ]}
+        selectedKey={display}
+        onSelectionChange={onCategorizationDisplayChange}
+        fullWidth={isMobileList}
+      />
+    )
+    : null
+
+  if (isMobileList) {
+    return (
+      <Header
+        className={classNames(
+          'Layer__bank-transactions__header',
+          withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
+          'Layer__bank-transactions__header--mobile',
+        )}
+        style={{ top: shiftStickyHeader }}
+      >
+        <VStack gap='sm'>
+          {headerTopRow}
+
+          <TransactionsSearch isDisabled={showBulkActions} />
+
+          <HStack justify='space-between' align='center' gap='xs'>
+            {showBulkActions
+              ? (
+                <BulkActionsModule
+                  showSelectedLabel={false}
+                  fullWidth
+                  slots={{ BulkActions: BulkActionsModuleSlot }}
                 />
-              )}
-            </HStack>
-          )}
-        <TransactionsSearch slot='search' isDisabled={showBulkActions} />
-        <HStack slot='download-upload' justify='center' gap='xs'>
-          <DownloadButton
-            downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={listView}
-            disabled={showBulkActions}
-          />
-          <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
-        </HStack>
-      </BankTransactionsActions>
-    </Header>
-  )
+              )
+              : statusToggle}
+          </HStack>
+
+        </VStack>
+      </Header>
+    )
+  }
+
+  if (listView) {
+    return (
+      <Header
+        className={classNames(
+          'Layer__bank-transactions__header',
+          withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
+        )}
+        style={{ top: shiftStickyHeader }}
+      >
+        <VStack gap='xs'>
+          {headerTopRow}
+
+          <HStack justify='space-between' align='center' gap='xs'>
+            {showBulkActions
+              ? (
+                <BulkActionsModule
+                  slots={{ BulkActions: BulkActionsModuleSlot }}
+                />
+              )
+              : statusToggle}
+          </HStack>
+
+          <TransactionsSearch isDisabled={showBulkActions} />
+
+        </VStack>
+      </Header>
+    )
+  }
+
+  else {
+    return (
+      <Header
+        className={classNames(
+          'Layer__bank-transactions__header',
+          withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
+          mobileComponent && listView
+            ? 'Layer__bank-transactions__header--mobile'
+            : undefined,
+        )}
+        style={{ top: shiftStickyHeader }}
+      >
+        {!collapseHeader && headerTopRow}
+
+        <BankTransactionsActions>
+          {showBulkActions
+            ? (
+              <BulkActionsModule
+                slots={{ BulkActions: BulkActionsModuleSlot }}
+              />
+            )
+            : (
+              <HStack slot='toggle' justify='center' gap='xs'>
+                {collapseHeader && headerTopRow}
+                {statusToggle}
+              </HStack>
+            )}
+          <TransactionsSearch slot='search' isDisabled={showBulkActions} />
+          <HStack slot='download-upload' justify='center' gap='xs'>
+            <DownloadButton
+              downloadButtonTextOverride={stringOverrides?.downloadButton}
+              iconOnly={listView}
+              disabled={showBulkActions}
+            />
+            <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
+          </HStack>
+        </BankTransactionsActions>
+      </Header>
+    )
+  }
 }

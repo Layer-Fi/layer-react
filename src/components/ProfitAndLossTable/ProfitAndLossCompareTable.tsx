@@ -28,7 +28,7 @@ interface ProfitAndLossCompareTableProps {
 export const ProfitAndLossCompareTable = ({
   stringOverrides,
 }: ProfitAndLossCompareTableProps) => {
-  const { dateRange, displayMode } = useContext(ProfitAndLossContext)
+  const { dateRange, dateSelectionMode } = useContext(ProfitAndLossContext)
   const {
     data: comparisonData,
     isLoading,
@@ -53,7 +53,7 @@ export const ProfitAndLossCompareTable = ({
   }
 
   const getBookkeepingPeriodStatus = (date: Date) => {
-    if (!bookkeepingPeriods || displayMode !== 'month') {
+    if (!bookkeepingPeriods || dateSelectionMode !== 'month') {
       return
     }
 

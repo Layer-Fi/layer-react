@@ -84,7 +84,7 @@ export const useMileageSummaryCacheActions = () => {
 
   const forceReloadMileageSummary = useCallback(
     () => forceReload(
-      tags => tags.includes(MILEAGE_SUMMARY_TAG_KEY),
+      ({ tags }) => tags.includes(MILEAGE_SUMMARY_TAG_KEY),
     ),
     [forceReload],
   )

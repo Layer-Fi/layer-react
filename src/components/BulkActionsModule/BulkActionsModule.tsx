@@ -7,19 +7,21 @@ import { Span } from '@ui/Typography/Text'
 import './bulkActionsModule.scss'
 
 export interface BulkActionsModuleProps {
+  showSelectedLabel?: boolean
+  fullWidth?: boolean
   slots: {
     BulkActions: React.FC
   }
 }
 
-export const BulkActionsModule = ({ slots }: BulkActionsModuleProps) => {
+export const BulkActionsModule = ({ showSelectedLabel = true, fullWidth = false, slots }: BulkActionsModuleProps) => {
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   return (
-    <HStack slot='toggle' justify='space-between' align='center' gap='xs'>
+    <HStack slot='toggle' justify='space-between' align='center' gap='xs' fluid={fullWidth}>
       <HStack justify='space-between' align='center' pis='sm' pie='3xs' gap='3xs' className='Layer__BulkActionsModule__SelectedItemsContainer'>
         <Span noWrap>
-          {`${count} selected`}
+          {showSelectedLabel ? `${count} selected` : count}
         </Span>
         <Button
           variant='ghost'

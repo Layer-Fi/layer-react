@@ -1,8 +1,7 @@
+import { MONTH_DAY_FORMAT } from '@config/general'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { DateTime } from '@components/DateTime/DateTime'
-
-const DATE_FORMAT = 'LLL d'
 
 interface BankTransactionsAmountDateProps {
   amount: number
@@ -29,7 +28,7 @@ export const BankTransactionsAmountDate = ({ amount, date, slotProps }: BankTran
 
       <DateTime
         value={date}
-        dateFormat={DATE_FORMAT}
+        dateFormat={MONTH_DAY_FORMAT}
         onlyDate
         slotProps={{
           Date: {

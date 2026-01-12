@@ -1,4 +1,5 @@
 import { formatISO } from 'date-fns'
+import { Schema } from 'effect'
 
 import { isStringArray } from '@utils/array/isStringArray'
 
@@ -11,7 +12,15 @@ function toSnakeCase(input: string) {
     .join('_')
 }
 
-export type ParameterValues = Date | string | ReadonlyArray<string> | number | boolean
+// eslint-disable-next-line unused-imports/no-unused-vars
+const ParameterValuesSchema = Schema.Union(
+  Schema.Date,
+  Schema.String,
+  Schema.Array(Schema.String),
+  Schema.Number,
+  Schema.Boolean,
+)
+export type ParameterValues = typeof ParameterValuesSchema.Type
 
 export function toDefinedSearchParameters(
   input: Record<string, ParameterValues | null | undefined>,

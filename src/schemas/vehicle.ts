@@ -13,9 +13,10 @@ export const VehicleSchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
 
-  make: Schema.String,
-
-  model: Schema.String,
+  makeAndModel: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('make_and_model'),
+  ),
 
   year: Schema.Number,
 
@@ -42,25 +43,42 @@ export const VehicleSchema = Schema.Struct({
     Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('deleted_at'),
   ),
+
+  archivedAt: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
+    Schema.fromKey('archived_at'),
+  ),
+
+  isPrimary: pipe(
+    Schema.propertySignature(Schema.Boolean),
+    Schema.fromKey('is_primary'),
+  ),
+
+  isEligibleForDeletion: pipe(
+    Schema.propertySignature(Schema.Boolean),
+    Schema.fromKey('is_eligible_for_deletion'),
+  ),
 })
 
 export type Vehicle = typeof VehicleSchema.Type
 export type VehicleEncoded = typeof VehicleSchema.Encoded
 
 export const VehicleFormSchema = Schema.Struct({
-  make: Schema.String,
-  model: Schema.String,
+  makeAndModel: Schema.String,
   year: Schema.Number,
   licensePlate: Schema.String,
   vin: Schema.String,
   description: Schema.String,
+  isPrimary: Schema.Boolean,
 })
 
 export type VehicleForm = typeof VehicleFormSchema.Type
 
 export const UpsertVehicleSchema = Schema.Struct({
-  make: Schema.String,
-  model: Schema.String,
+  makeAndModel: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('make_and_model'),
+  ),
   year: Schema.Number,
   licensePlate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
@@ -68,6 +86,10 @@ export const UpsertVehicleSchema = Schema.Struct({
   ),
   vin: Schema.NullishOr(Schema.String),
   description: Schema.NullishOr(Schema.String),
+  isPrimary: pipe(
+    Schema.propertySignature(Schema.Boolean),
+    Schema.fromKey('is_primary'),
+  ),
 })
 
 export type UpsertVehicle = typeof UpsertVehicleSchema.Type

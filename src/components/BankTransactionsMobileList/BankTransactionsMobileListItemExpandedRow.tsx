@@ -1,13 +1,15 @@
-import { type ChangeEvent, useState } from 'react'
+import { useState } from 'react'
+import type { Key } from 'react-aria-components'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasMatch } from '@utils/bankTransactions'
 import { VStack } from '@ui/Stack/Stack'
+import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
-import { Toggle, ToggleSize } from '@components/Toggle/Toggle'
 
 import { Purpose } from './BankTransactionsMobileListItem'
+import { PersonalStableName } from './constants'
 
 const PURPOSE_TOGGLE_OPTIONS = [
   {
@@ -29,6 +31,7 @@ const PURPOSE_TOGGLE_OPTIONS = [
 
 export interface BankTransactionsMobileListItemExpandedRowProps {
   bankTransaction: BankTransaction
+  isOpen?: boolean
   showCategorization?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -37,6 +40,7 @@ export interface BankTransactionsMobileListItemExpandedRowProps {
 
 export const BankTransactionsMobileListItemExpandedRow = ({
   bankTransaction,
+  isOpen,
   showCategorization,
   showDescriptions,
   showReceiptUploads,
@@ -44,22 +48,22 @@ export const BankTransactionsMobileListItemExpandedRow = ({
 }: BankTransactionsMobileListItemExpandedRowProps) => {
   const [purpose, setPurpose] = useState<Purpose>(getInitialPurpose(bankTransaction))
 
-  const onChangePurpose = (event: ChangeEvent<HTMLInputElement>) =>
-    setPurpose(event.target.value as Purpose)
+  const onChangePurpose = (key: Key) =>
+    setPurpose(key as Purpose)
 
   return (
     <VStack pi='md' gap='md' pbe='md'>
       {showCategorization
         && (
           <Toggle
-            name={`purpose-${bankTransaction.id}`}
-            size={ToggleSize.medium}
+            ariaLabel='Purpose'
             options={PURPOSE_TOGGLE_OPTIONS}
-            selected={purpose}
-            onChange={onChangePurpose}
+            selectedKey={purpose}
+            onSelectionChange={onChangePurpose}
           />
         )}
       <BankTransactionsMobileForms
+        isOpen={isOpen}
         purpose={purpose}
         bankTransaction={bankTransaction}
         showCategorization={showCategorization}
@@ -72,9 +76,28 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   )
 }
 
+const isPersonalCategory = (category: BankTransaction['category']): boolean => {
+  if (!category) {
+    return false
+  }
+
+  if (category.type === 'Account' && 'stable_name' in category) {
+    const stableName = category.stable_name
+    if (stableName === PersonalStableName.CREDIT || stableName === PersonalStableName.DEBIT) {
+      return true
+    }
+  }
+
+  if (category.type === 'Exclusion') {
+    return true
+  }
+
+  return false
+}
+
 const getInitialPurpose = (bankTransaction: BankTransaction): Purpose => {
   if (bankTransaction.category) {
-    if (bankTransaction.category.type === 'Exclusion') {
+    if (isPersonalCategory(bankTransaction.category)) {
       return Purpose.personal
     }
     if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {

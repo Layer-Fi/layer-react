@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 
 import { type FormError, type FormErrorWithId } from '@internal-types/general'
-import { type BaseSelectOption, DataModel } from '@internal-types/general'
+import { type BaseSelectOption } from '@internal-types/general'
 import {
   type JournalEntry,
   type JournalEntryLineItem,
@@ -13,7 +13,7 @@ import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { getAccountIdentifierPayload } from '@utils/journal'
 import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
-import { usePnlDetailLinesInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ListLedgerEntriesReturn, useListLedgerEntries } from '@features/ledger/entries/api/useListLedgerEntries'
@@ -118,10 +118,7 @@ const validate = (formData?: JournalFormTypes) => {
 }
 
 export const useJournal: UseJournal = () => {
-  const {
-    businessId,
-    touch,
-  } = useLayerContext()
+  const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
@@ -176,7 +173,7 @@ export const useJournal: UseJournal = () => {
     setSelectedEntryId(undefined)
   }, [])
 
-  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const create = useCallback(async (newJournalEntry: NewApiJournalEntry) => {
     setSendingForm(true)
@@ -196,10 +193,9 @@ export const useJournal: UseJournal = () => {
     }
     finally {
       setSendingForm(false)
-      touch(DataModel.PROFIT_AND_LOSS)
-      void invalidatePnlDetailLines()
+      void debouncedInvalidateProfitAndLoss()
     }
-  }, [apiUrl, auth?.access_token, businessId, refetch, closeSelectedEntry, touch, invalidatePnlDetailLines])
+  }, [apiUrl, auth?.access_token, businessId, refetch, closeSelectedEntry, debouncedInvalidateProfitAndLoss])
 
   const addEntry = useCallback(() => {
     setSelectedEntryId('new')

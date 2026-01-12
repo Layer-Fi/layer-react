@@ -1,12 +1,12 @@
 import { type ReactNode, useState } from 'react'
 
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { Toggle } from '@ui/Toggle/Toggle'
 import { ChartOfAccounts } from '@components/ChartOfAccounts/ChartOfAccounts'
 import { type ChartOfAccountsStringOverrides } from '@components/ChartOfAccounts/ChartOfAccounts'
 import { Journal } from '@components/Journal/Journal'
 import { type JournalStringOverrides } from '@components/Journal/Journal'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import { Toggle } from '@components/Toggle/Toggle'
 import { View } from '@components/View/View'
 
 export interface GeneralLedgerStringOverrides {
@@ -50,7 +50,7 @@ export const GeneralLedgerView = ({
         showHeader={showTitle}
       >
         <Toggle
-          name='general-ledger-tabs'
+          ariaLabel='Ledger view'
           options={[
             {
               value: 'chartOfAccounts',
@@ -63,8 +63,8 @@ export const GeneralLedgerView = ({
               label: stringOverrides?.journalToggleOption || 'Journal',
             },
           ]}
-          selected={activeTab}
-          onChange={opt => setActiveTab(opt.target.value)}
+          selectedKey={activeTab}
+          onSelectionChange={key => setActiveTab(key as string)}
         />
 
         {activeTab === 'chartOfAccounts'

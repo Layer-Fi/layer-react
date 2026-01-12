@@ -2,12 +2,13 @@ import { useCallback } from 'react'
 import { pipe, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
-import { CategoryUpdateSchema } from '@schemas/bankTransactions/BankTransactionsBulkActions'
+import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { buildBulkMatchOrCategorizePayload } from '@hooks/useBankTransactions/utils'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useGetAllBankTransactionsCategories } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -84,11 +85,12 @@ function buildKey({
 
 export const useBulkMatchOrCategorize = () => {
   const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { businessId, eventCallbacks } = useLayerContext()
   const { selectedIds } = useSelectedIds()
   const { transactionCategories } = useGetAllBankTransactionsCategories()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const buildTransactionsPayload: () => BulkMatchOrCategorizeRequest = useCallback(() => {
     const transactions = buildBulkMatchOrCategorizePayload(selectedIds, transactionCategories)
@@ -125,12 +127,13 @@ export const useBulkMatchOrCategorize = () => {
 
       void forceReloadBankTransactions()
 
+      void debouncedInvalidateProfitAndLoss()
+
+      eventCallbacks?.onTransactionCategorized?.()
+
       return triggerResult
     },
-    [
-      originalTrigger,
-      forceReloadBankTransactions,
-    ],
+    [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
   )
 
   const proxiedResponse = new Proxy(mutationResponse, {

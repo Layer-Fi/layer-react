@@ -17,7 +17,7 @@ const CLASS_NAME = 'Layer__MileageTrackingStats'
 
 export const MileageTrackingStats = () => {
   const { data: mileageData, isLoading, isError } = useMileageSummary()
-  const { startDate } = useGlobalDateRange({ displayMode: 'full' })
+  const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
   const selectedYear = getYear(startDate)
 
   const selectedYearData = useMemo(() => {
@@ -76,7 +76,7 @@ export const MileageTrackingStats = () => {
             <MoneySpan
               amount={selectedYearData?.estimatedDeduction ?? 0}
               size='lg'
-              bold
+              weight='bold'
             />
           </VStack>
 

@@ -7,6 +7,7 @@ import type { LayerError } from '@models/ErrorHandler'
 import { BREAKPOINTS } from '@config/general'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { usePreloadCategories } from '@hooks/categories/useCategories'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
 import { useElementSize } from '@hooks/useElementSize/useElementSize'
 import { useIsVisible } from '@hooks/useIsVisible/useIsVisible'
@@ -106,6 +107,7 @@ export const BankTransactions = ({
   usePreloadTagDimensions({ isEnabled: showTags })
   usePreloadCustomers({ isEnabled: showCustomerVendor })
   usePreloadVendors({ isEnabled: showCustomerVendor })
+  usePreloadCategories()
 
   return (
     <ErrorBoundary onError={onError}>
@@ -247,7 +249,6 @@ const BankTransactionsTableView = ({
     data,
     isLoading,
     isError,
-    refetch,
     display,
     hasMore,
     fetchMore,
@@ -317,11 +318,9 @@ const BankTransactionsTableView = ({
   const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
   const debounceShiftStickyHeader = debounce(setShiftStickyHeader, 500)
   const [listView, setListView] = useState(false)
-  const [containerWidth, setContainerWidth] = useState(0)
-  const debounceContainerWidth = debounce(setContainerWidth, 500)
 
   const removeTransaction = (bankTransaction: BankTransaction) =>
-    removeAfterCategorize(bankTransaction)
+    removeAfterCategorize([bankTransaction.id])
 
   const containerRef = useElementSize<HTMLDivElement>((_el, _en, size) => {
     if (size?.height && size?.height >= 90) {
@@ -340,8 +339,6 @@ const BankTransactionsTableView = ({
     else if (size.width <= BREAKPOINTS.TABLET && !listView) {
       setListView(true)
     }
-
-    void debounceContainerWidth(size?.width)
   })
 
   const editable =
@@ -378,7 +375,6 @@ const BankTransactionsTableView = ({
           mobileComponent={mobileComponent}
           listView={listView}
           stringOverrides={stringOverrides?.bankTransactionsHeader}
-          isDataLoading={isLoadingWithoutData}
           isSyncing={isSyncing}
           withUploadMenu={showUploadOptions}
           collapseHeader={collapseHeader}
@@ -393,15 +389,13 @@ const BankTransactionsTableView = ({
           <BankTransactionsTable
             categorizeView={categorizeView}
             editable={editable}
-            isLoading={isLoadingWithoutData}
+            isLoading={isLoading}
             isSyncing={isSyncing}
             bankTransactions={bankTransactions}
-            containerWidth={containerWidth}
             removeTransaction={removeTransaction}
             page={currentPage}
             stringOverrides={stringOverrides}
             lastPage={isLastPage}
-            onRefresh={refetch}
 
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
@@ -411,14 +405,13 @@ const BankTransactionsTableView = ({
       )}
 
       {!isLoadingWithoutData && listView && mobileComponent !== 'mobileList'
-        ? (
+        && (
           <div className='Layer__bank-transactions__list-wrapper'>
             {rulesSuggestionModal}
             <BankTransactionsList
               bankTransactions={bankTransactions}
               editable={editable}
               removeTransaction={removeTransaction}
-              containerWidth={containerWidth}
               stringOverrides={stringOverrides?.bankTransactionCTAs}
 
               showDescriptions={showDescriptions}
@@ -426,11 +419,10 @@ const BankTransactionsTableView = ({
               showTooltips={showTooltips}
             />
           </div>
-        )
-        : null}
+        )}
 
       {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
-        ? (
+        && (
           <>
             <BankTransactionsMobileList
               bankTransactions={bankTransactions}
@@ -442,19 +434,17 @@ const BankTransactionsTableView = ({
             />
             {rulesSuggestionDrawer}
           </>
-        )
-        : null}
+        )}
 
       {listView && isLoadingWithoutData
-        ? (
+        && (
           <div className='Layer__bank-transactions__list-loader'>
             <Loader />
           </div>
-        )
-        : null}
+        )}
 
-      {!isSyncing || listView
-        ? (
+      {(!isSyncing || listView)
+        && (
           <BankTransactionsTableEmptyStates
             hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
             isCategorizationMode={editable}
@@ -462,8 +452,7 @@ const BankTransactionsTableView = ({
             isFiltered={Boolean(filters?.query)}
             isLoadingWithoutData={isLoadingWithoutData}
           />
-        )
-        : null}
+        )}
 
       {!isMonthlyViewMode && (
         <HStack justify='end'>

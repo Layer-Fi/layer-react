@@ -200,3 +200,18 @@
     'cv08' on,
     'ss03' on;
 }
+
+@media (width <= 768px) {
+  .Layer__component,
+  .Layer__Portal,
+  .Layer__view,
+  .Layer__select__menu-portal,
+  .Layer__tooltip,
+  .Layer__UI__tooltip,
+  .Layer__toasts-container,
+  .Layer__drawer,
+  .Layer__variables,
+  .Layer__tasks-component {
+    --text-heading: 20px;
+  }
+}

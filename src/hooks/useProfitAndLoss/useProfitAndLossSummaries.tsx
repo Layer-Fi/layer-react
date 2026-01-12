@@ -1,6 +1,5 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { Schema } from 'effect'
-import { debounce } from 'lodash-es'
 import useSWR, { type SWRResponse } from 'swr'
 
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -90,8 +89,19 @@ const getProfitAndLossSummaries = get<
     return `/v1/businesses/${businessId}/reports/profit-and-loss-summaries?${parameters}`
   })
 
-type UseProfitAndLossSummariesProps = Omit<ProfitAndLossSummariesRequestParams, 'businessId'>
-export function useProfitAndLossSummaries({ startYear, startMonth, endYear, endMonth, tagKey, tagValues, reportingBasis }: UseProfitAndLossSummariesProps) {
+type UseProfitAndLossSummariesProps = Omit<ProfitAndLossSummariesRequestParams, 'businessId'> & {
+  keepPreviousData?: boolean
+}
+export function useProfitAndLossSummaries({
+  startYear,
+  startMonth,
+  endYear,
+  endMonth,
+  tagKey,
+  tagValues,
+  reportingBasis,
+  keepPreviousData,
+}: UseProfitAndLossSummariesProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -114,14 +124,10 @@ export function useProfitAndLossSummaries({ startYear, startMonth, endYear, endM
         params: { businessId, startYear, startMonth, endYear, endMonth, tagKey, tagValues, reportingBasis },
       },
     )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossSummariesSchema)(data)),
+    { keepPreviousData },
   )
 
   return new ProfitAndLossSummariesSWRResponse(response)
-}
-
-const INVALIDATE_DEBOUNCE_OPTIONS = {
-  wait: 1000,
-  maxWait: 3000,
 }
 
 export const useProfitAndLossSummariesCacheActions = () => {
@@ -129,22 +135,10 @@ export const useProfitAndLossSummariesCacheActions = () => {
 
   const invalidateProfitAndLossSummaries = useCallback(
     () => invalidate(
-      tags => tags.includes(PNL_SUMMARIES_TAG_KEY),
+      ({ tags }) => tags.includes(PNL_SUMMARIES_TAG_KEY),
     ),
     [invalidate],
   )
 
-  const debouncedInvalidateProfitAndLossSummaries = useMemo(
-    () => debounce(
-      invalidateProfitAndLossSummaries,
-      INVALIDATE_DEBOUNCE_OPTIONS.wait,
-      {
-        maxWait: INVALIDATE_DEBOUNCE_OPTIONS.maxWait,
-        trailing: true,
-      },
-    ),
-    [invalidateProfitAndLossSummaries],
-  )
-
-  return { invalidateProfitAndLossSummaries, debouncedInvalidateProfitAndLossSummaries }
+  return { invalidateProfitAndLossSummaries }
 }

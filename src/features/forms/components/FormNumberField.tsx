@@ -11,6 +11,7 @@ import type { CommonFormFieldProps } from '@features/forms/types'
 export type FormNumberFieldProps = CommonFormFieldProps & {
   minValue?: number
   maxValue?: number
+  placeholder?: string
 }
 
 export function FormNumberField({
@@ -22,6 +23,7 @@ export function FormNumberField({
   isReadOnly = false,
   minValue,
   maxValue,
+  placeholder,
 }: PropsWithChildren<FormNumberFieldProps>) {
   const field = useFieldContext<number>()
 
@@ -64,7 +66,7 @@ export function FormNumberField({
         </Label>
       )}
       <InputGroup slot='input'>
-        <Input inset />
+        <Input inset placeholder={placeholder} />
       </InputGroup>
       {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
     </NumberField>

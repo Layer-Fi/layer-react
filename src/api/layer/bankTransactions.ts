@@ -4,7 +4,6 @@ import {
   type BankTransactionMetadata,
   type DocumentS3Urls,
 } from '@internal-types/bank_transactions'
-import type { CategoryUpdate } from '@internal-types/categories'
 import { type FileMetadata } from '@internal-types/file_upload'
 import { type S3PresignedUrl } from '@internal-types/general'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -67,18 +66,6 @@ export const getBankTransactions = get<
 
     return `/v1/businesses/${businessId}/bank-transactions?${parameters}${tagFilterQueryString ? `&${tagFilterQueryString}` : ''}`
   },
-)
-
-export const categorizeBankTransaction = put<
-  { data: BankTransaction },
-  CategoryUpdate,
-  {
-    businessId: string
-    bankTransactionId: string
-  }
->(
-  ({ businessId, bankTransactionId }) =>
-    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,
 )
 
 export type MatchBankTransactionBody = {

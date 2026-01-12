@@ -174,7 +174,7 @@ function buildCustomDropdownIndicator() {
         {...restProps}
         className={COMBO_BOX_CLASS_NAMES.DROPDOWN_INDICATOR}
       >
-        {!isDisabled && <ChevronDown size={16} />}
+        {!isDisabled ? <ChevronDown size={16} /> : <></>}
       </components.DropdownIndicator>
     )
   }

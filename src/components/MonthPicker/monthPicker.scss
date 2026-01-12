@@ -4,4 +4,8 @@
 
 .Layer__MonthPicker__InputGroup {
   inline-size: 12rem;
+
+  &--truncated {
+    inline-size: 12ch;
+  }
 }

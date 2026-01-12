@@ -1,13 +1,14 @@
 import { forwardRef } from 'react'
+import classNames from 'classnames'
 import { Switch as ReactAriaSwitch, type SwitchProps as ReactAriaSwitchProps } from 'react-aria-components'
 
 import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './switch.scss'
 
-const SWITCH_CLASS_NAME = 'Layer__Switch'
+const SWITCH_CLASS_NAME = 'Layer__UI__Switch'
 
-type SwitchProps = Omit<ReactAriaSwitchProps, 'className'>
+type SwitchProps = ReactAriaSwitchProps
 
 export const Switch = forwardRef<
   HTMLLabelElement,
@@ -15,6 +16,7 @@ export const Switch = forwardRef<
 >((
   {
     children,
+    className,
     ...props
   },
   ref,
@@ -22,7 +24,7 @@ export const Switch = forwardRef<
   return (
     <ReactAriaSwitch
       {...props}
-      className={SWITCH_CLASS_NAME}
+      className={classNames(SWITCH_CLASS_NAME, className)}
       ref={ref}
     >
       {withRenderProp(children, node => (

@@ -1,15 +1,14 @@
 import { useCallback } from 'react'
 import { Effect, Schema } from 'effect'
 import type { Key } from 'swr'
-import { useSWRConfig } from 'swr'
 import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 
 import { type UpsertVehicleEncoded, VehicleSchema } from '@schemas/vehicle'
 import { patch, post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-
-import { VEHICLES_TAG_KEY } from './useListVehicles'
+import { useTripsGlobalCacheActions } from '@features/trips/api/useListTrips'
+import { useVehiclesGlobalCacheActions } from '@features/vehicles/api/useListVehicles'
 
 const UPSERT_VEHICLE_TAG_KEY = '#upsert-vehicle'
 
@@ -61,6 +60,30 @@ type UpsertVehicleReturn = typeof UpsertVehicleReturnSchema.Type
 
 type UpsertVehicleSWRMutationResponse =
   SWRMutationResponse<UpsertVehicleReturn, unknown, Key, UpsertVehicleBody>
+
+class UpsertVehicleSWRResponse {
+  private swrResponse: UpsertVehicleSWRMutationResponse
+
+  constructor(swrResponse: UpsertVehicleSWRMutationResponse) {
+    this.swrResponse = swrResponse
+  }
+
+  get trigger() {
+    return this.swrResponse.trigger
+  }
+
+  get isMutating() {
+    return this.swrResponse.isMutating
+  }
+
+  get data() {
+    return this.swrResponse.data
+  }
+
+  get error() {
+    return this.swrResponse.error
+  }
+}
 
 type RequestArgs = {
   apiUrl: string
@@ -129,7 +152,6 @@ type UseUpsertVehicleProps =
 export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
-  const { mutate } = useSWRConfig()
 
   const { mode } = props
   const vehicleId = mode === UpsertVehicleMode.Update ? props.vehicleId : undefined
@@ -160,52 +182,36 @@ export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
 
   const mutationResponse = new UpsertVehicleSWRResponse(rawMutationResponse)
 
+  const { patchVehicleByKey, forceReloadVehicles } = useVehiclesGlobalCacheActions()
+  const { forceReloadTrips } = useTripsGlobalCacheActions()
+
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      // Revalidate the vehicles list
-      void mutate((key) => {
-        if (typeof key === 'object' && key !== null && 'tags' in key) {
-          const tags = key.tags as string[]
-          return tags.includes(VEHICLES_TAG_KEY)
-        }
-        return false
-      })
+      if (mode === UpsertVehicleMode.Update) {
+        void patchVehicleByKey(triggerResult.data)
+        void forceReloadTrips()
+      }
+      else {
+        void forceReloadVehicles()
+      }
 
       return triggerResult
     },
-    [originalTrigger, mutate],
+    [originalTrigger, mode, patchVehicleByKey, forceReloadTrips, forceReloadVehicles],
   )
 
-  return {
-    ...mutationResponse,
-    trigger: stableProxiedTrigger,
-  }
-}
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
 
-class UpsertVehicleSWRResponse {
-  private swrResponse: UpsertVehicleSWRMutationResponse
-
-  constructor(swrResponse: UpsertVehicleSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get error() {
-    return this.swrResponse.error
-  }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
 }

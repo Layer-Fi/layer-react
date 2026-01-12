@@ -5,7 +5,8 @@ import {
   getBankTransactionFirstSuggestedMatch,
   getBankTransactionMatchAsSuggestedMatch,
 } from '@utils/bankTransactions'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useMatchBankTransactionWithCacheUpdate } from '@hooks/useBankTransactions/useMatchBankTransactionWithCacheUpdate'
+import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -32,15 +33,16 @@ export const BankTransactionsMobileListMatchForm = ({
 }: BankTransactionsMobileListMatchFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
-  const { match: matchBankTransaction, isLoading } =
-    useBankTransactionsContext()
+  const {
+    match: matchBankTransaction,
+    isMutating: isMatching,
+    isError: isErrorMatching,
+  } = useMatchBankTransactionWithCacheUpdate()
 
   const [selectedMatch, setSelectedMatch] = useState<SuggestedMatch | undefined>(
     getBankTransactionFirstSuggestedMatch(bankTransaction),
   )
   const [formError, setFormError] = useState<string | undefined>()
-
-  const showRetry = Boolean(bankTransaction.error)
 
   const onMatchSubmit = async (matchId: string) => {
     const foundMatch = bankTransaction.suggested_matches?.find(
@@ -50,7 +52,7 @@ export const BankTransactionsMobileListMatchForm = ({
       return
     }
 
-    await matchBankTransaction(bankTransaction.id, foundMatch.id, true)
+    await matchBankTransaction(bankTransaction, foundMatch.id, true)
   }
 
   const save = () => {
@@ -106,6 +108,7 @@ export const BankTransactionsMobileListMatchForm = ({
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
+            accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
           />
         )}
         {showCategorization && (
@@ -113,20 +116,19 @@ export const BankTransactionsMobileListMatchForm = ({
             fullWidth
             isDisabled={
               !selectedMatch
-              || isLoading
-              || bankTransaction.processing
+              || isMatching
               || selectedMatch.id === getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
             }
             onClick={save}
           >
-            {isLoading || bankTransaction.processing
+            {isMatching
               ? 'Saving...'
               : 'Approve match'}
           </Button>
         )}
       </HStack>
       {formError && <ErrorText>{formError}</ErrorText>}
-      {showRetry
+      {isErrorMatching
         && (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.

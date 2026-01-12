@@ -161,7 +161,7 @@ export function useTripsGlobalCacheActions() {
 
   const patchTripByKey = useCallback((updatedTrip: Trip) =>
     patchCache<ListTripsResponse[] | ListTripsResponse | undefined>(
-      tags => tags.includes(LIST_TRIPS_TAG_KEY),
+      ({ tags }) => tags.includes(LIST_TRIPS_TAG_KEY),
       (currentData) => {
         const iterateOverPage = (page: ListTripsResponse): ListTripsResponse => ({
           ...page,
@@ -177,7 +177,7 @@ export function useTripsGlobalCacheActions() {
   )
 
   const forceReloadTrips = useCallback(
-    () => forceReload(tags => tags.includes(LIST_TRIPS_TAG_KEY)),
+    () => forceReload(({ tags }) => tags.includes(LIST_TRIPS_TAG_KEY)),
     [forceReload],
   )
 

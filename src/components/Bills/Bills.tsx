@@ -30,7 +30,6 @@ export const Bills = ({ context = true, ...props }: BillsProps) => {
 
 const BillsContent = ({
   asWidget,
-  stringOverrides,
 }: BillsProps) => {
   const { showBillInDetails, billInDetails } = useBillsContext()
 
@@ -49,7 +48,6 @@ const BillsContent = ({
         : (
           <BillsTableWithPanel
             containerRef={containerRef}
-            stringOverrides={stringOverrides?.billsTable}
           />
         )}
     </Container>

@@ -4,15 +4,19 @@
   overflow: hidden;
   padding: 0;
   list-style: none;
+
+  .Layer__bank-transaction-mobile-list-item:first-child {
+    margin-top: 0;
+  }
 }
 
 .Layer__bank-transaction-mobile-list-item {
   box-sizing: border-box;
-  width: 95%;
+  width: 100%;
   padding: 0;
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--border-color);
-  margin: var(--spacing-2xs) var(--spacing-md);
+  margin: var(--spacing-2xs) 0;
   background: var(--color-base-0);
   cursor: pointer;
   user-select: none;

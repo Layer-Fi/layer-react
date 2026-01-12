@@ -9,16 +9,29 @@ import { BankTransactionsCategorizeAllModal } from '@components/BankTransactions
 import { BankTransactionsConfirmAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsConfirmAllModal'
 import { BankTransactionsUncategorizeAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsUncategorizeAllModal'
 
-export const BankTransactionsBulkActions = () => {
+interface BankTransactionsBulkActionsProps {
+  isMobileView?: boolean
+  slotProps?: {
+    ConfirmAllModal?: {
+      label?: string
+    }
+  }
+}
+
+export const BankTransactionsBulkActions = ({
+  isMobileView = false,
+  slotProps,
+}: BankTransactionsBulkActionsProps) => {
   const { display } = useBankTransactionsContext()
   const [categorizeModalOpen, setCategorizeModalOpen] = useState(false)
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
   const [recategorizeModalOpen, setRecategorizeModalOpen] = useState(false)
   const [uncategorizeModalOpen, setUncategorizeModalOpen] = useState(false)
+  const confirmButtonLabel = slotProps?.ConfirmAllModal?.label || 'Confirm all'
 
   return (
     <>
-      <HStack align='center' gap='xs'>
+      <HStack align='center' gap='xs' justify={isMobileView ? 'end' : undefined}>
         {display === DisplayState.review
           ? (
             <>
@@ -32,14 +45,16 @@ export const BankTransactionsBulkActions = () => {
                 isOpen={categorizeModalOpen}
                 onOpenChange={setCategorizeModalOpen}
                 mode={CategorizationMode.Categorize}
+                isMobileView={isMobileView}
               />
 
               <Button variant='solid' onClick={() => setConfirmModalOpen(true)}>
-                Confirm
+                {confirmButtonLabel}
               </Button>
               <BankTransactionsConfirmAllModal
                 isOpen={confirmModalOpen}
                 onOpenChange={setConfirmModalOpen}
+                isMobileView={isMobileView}
               />
             </>
           )
@@ -49,12 +64,13 @@ export const BankTransactionsBulkActions = () => {
                 variant='outlined'
                 onClick={() => setRecategorizeModalOpen(true)}
               >
-                Recategorize
+                {isMobileView ? 'Categorize' : 'Recategorize'}
               </Button>
               <BankTransactionsCategorizeAllModal
                 isOpen={recategorizeModalOpen}
                 onOpenChange={setRecategorizeModalOpen}
-                mode={CategorizationMode.Recategorize}
+                mode={isMobileView ? CategorizationMode.Categorize : CategorizationMode.Recategorize}
+                isMobileView={isMobileView}
               />
 
               <Button
@@ -66,6 +82,7 @@ export const BankTransactionsBulkActions = () => {
               <BankTransactionsUncategorizeAllModal
                 isOpen={uncategorizeModalOpen}
                 onOpenChange={setUncategorizeModalOpen}
+                isMobileView={isMobileView}
               />
             </>
           )}
