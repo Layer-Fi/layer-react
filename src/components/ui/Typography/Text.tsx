@@ -22,7 +22,7 @@ export type TextStyleProps = {
   pbs?: Spacing
   size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   status?: 'error' | 'success'
-  variant?: 'placeholder' | 'subtle' | 'inherit'
+  variant?: 'placeholder' | 'subtle' | 'inherit' | 'white'
   weight?: 'normal' | 'bold'
   className?: string
 }

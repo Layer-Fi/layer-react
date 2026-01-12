@@ -22,6 +22,7 @@ import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { useProfitAndLossLTM } from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { ChartYAxis } from '@components/Chart/ChartYAxis'
 import { areChartWindowsEqual, getChartWindow } from '@components/ProfitAndLossChart/getChartWindow'
 import { ProfitAndLossChartBar } from '@components/ProfitAndLossChart/ProfitAndLossChartBar'
 import { PROFIT_AND_LOSS_BAR_CONFIG } from '@components/ProfitAndLossChart/profitAndLossChartBarConfig'
@@ -29,7 +30,6 @@ import { ProfitAndLossChartLegend } from '@components/ProfitAndLossChart/ProfitA
 import { ProfitAndLossChartPatternDefs } from '@components/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
 import { ProfitAndLossChartStateCard } from '@components/ProfitAndLossChart/ProfitAndLossChartStateCard'
 import { ProfitAndLossChartTooltip } from '@components/ProfitAndLossChart/ProfitAndLossChartTooltip'
-import { ProfitAndLossChartYAxis } from '@components/ProfitAndLossChart/ProfitAndLossChartYAxis'
 import { transformPnLData } from '@components/ProfitAndLossChart/transformPnLData'
 
 export interface ProfitAndLossChartProps {
@@ -159,7 +159,7 @@ export const ProfitAndLossChart = ({ tagFilter }: ProfitAndLossChartProps) => {
           <ProfitAndLossChartLegend />
           <XAxis dataKey='name' xAxisId='revenue' tickLine={false} />
           <XAxis dataKey='name' xAxisId='expenses' tickLine={false} height={0} hide />
-          <ProfitAndLossChartYAxis />
+          <ChartYAxis />
           {PROFIT_AND_LOSS_BAR_CONFIG.map(config => (
             <ProfitAndLossChartBar
               key={config.dataKey}

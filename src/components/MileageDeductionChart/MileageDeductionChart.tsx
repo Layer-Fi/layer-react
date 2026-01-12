@@ -1,19 +1,20 @@
-import { type FunctionComponent, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { format } from 'date-fns'
 import {
   Bar,
   CartesianGrid,
-  Cell,
   ComposedChart,
-  Rectangle,
   ResponsiveContainer,
-  Tooltip,
   XAxis,
-  YAxis,
 } from 'recharts'
 
 import { centsToDollars } from '@models/Money'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { ChartYAxis } from '@components/Chart/ChartYAxis'
+import type { MileageDeductionChartDataPoint } from '@components/MileageDeductionChart/MileageDeductionChartDataPoint'
+import {
+  MileageDeductionChartTooltip,
+} from '@components/MileageDeductionChart/MileageDeductionChartTooltip'
 import { VStack } from '@components/ui/Stack/Stack'
 
 import './mileageDeductionChart.scss'
@@ -34,27 +35,47 @@ interface MileageDeductionChartProps {
     years: MileageYear[]
   }
   selectedYear: number
-  onMonthClick?: (year: number, month: number) => void
 }
 
 const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
-const BAR_SIZE = 20
-const CURSOR_MARGIN = 12
+const CHART_HEIGHT = 328
+const RESIZE_DEBOUNCE_MS = 50
+const CURSOR_WIDTH_MULTIPLE = 2.2
+
+const BAR_RADIUS: [number, number, number, number] = [2, 2, 0, 0]
+const GRID_STROKE_DASHARRAY = '5 5'
+const GRID_STROKE_FALLBACK = '#f0f0f0'
+const TICK_FONT_SIZE = 12
+
+const SMALL_BREAKPOINT = 480
+const MEDIUM_BREAKPOINT = 720
+const SMALL_BAR_SIZE = 10
+const MEDIUM_BAR_SIZE = 20
+const LARGE_BAR_SIZE = 30
+
+const getBarSize = (width: number | undefined): number => {
+  if (!width) return MEDIUM_BAR_SIZE
+
+  if (width < SMALL_BREAKPOINT) return SMALL_BAR_SIZE
+  if (width < MEDIUM_BREAKPOINT) return MEDIUM_BAR_SIZE
+  return LARGE_BAR_SIZE
+}
+
+const formatYAxis = (value?: string | number) =>
+  `$${centsToDollars(Number(value))}`
 
 export const MileageDeductionChart = ({
   data,
   selectedYear,
 }: MileageDeductionChartProps) => {
   const { getColor } = useLayerContext()
+  const [barSize, setBarSize] = useState(MEDIUM_BAR_SIZE)
 
-  type ChartDataPoint = {
-    month: number
-    monthName: string
-    deduction: number
-    miles: number
-  }
+  const onResize = useCallback((width: number | undefined) => {
+    setBarSize(getBarSize(width))
+  }, [])
 
-  const chartData = useMemo<ChartDataPoint[]>(() => {
+  const chartData = useMemo<MileageDeductionChartDataPoint[]>(() => {
     const yearData = data.years.find(y => y.year === selectedYear)
     if (!yearData) return []
 
@@ -69,126 +90,40 @@ export const MileageDeductionChart = ({
     })
   }, [data, selectedYear])
 
-  const formatYAxis = (value: number) => {
-    return `$${(value / 100).toLocaleString()}`
-  }
-
-  type TooltipProps = {
-    active?: boolean
-    payload?: Array<{
-      payload: ChartDataPoint
-    }>
-  }
-
-  const CustomTooltip = ({ active, payload }: TooltipProps) => {
-    if (!active || !payload?.[0]) return null
-
-    const data = payload[0].payload
-    return (
-      <div className='Layer__chart__tooltip'>
-        <div className='Layer__chart__tooltip-list'>
-          <li>
-            <span className='Layer__chart__tooltip-label'>
-              {data.monthName}
-              {' '}
-              {selectedYear}
-            </span>
-          </li>
-          <li>
-            <span className='Layer__chart__tooltip-label'>Miles:</span>
-            <span className='Layer__chart__tooltip-value'>
-              {data.miles.toLocaleString()}
-            </span>
-          </li>
-          <li>
-            <span className='Layer__chart__tooltip-label'>Deduction:</span>
-            <span className='Layer__chart__tooltip-value positive'>
-              $
-              {centsToDollars(data.deduction)}
-            </span>
-          </li>
-        </div>
-      </div>
-    )
-  }
-
-  const CustomizedYTick = ({
-    payload,
-    ...restProps
-  }: {
-    payload: { value: number }
-  }) => {
-    return (
-      <text {...restProps} className='Layer__chart_y-axis-tick'>
-        <tspan dy='0.355em'>{formatYAxis(payload.value)}</tspan>
-      </text>
-    )
-  }
-
-  type CursorProps = {
-    points?: Array<{ x: number, y: number }>
-    height?: number
-  }
-
-  const CustomizedCursor: FunctionComponent<CursorProps> = ({ points, height }: CursorProps) => {
-    const boxWidth = BAR_SIZE + (2 * CURSOR_MARGIN)
-
-    if (!points || points.length === 0) return null
-
-    return (
-      <Rectangle
-        fill='#F7F8FA'
-        stroke='none'
-        x={points[0].x - boxWidth / 2}
-        y={CHART_MARGIN.top}
-        width={boxWidth}
-        height={height || 0}
-        radius={6}
-        className='Layer__chart__tooltip-cursor'
-      />
-    )
-  }
-
   return (
     <VStack className='Layer__MileageDeductionChart' align='center' justify='center'>
-      <ResponsiveContainer width='100%' height={300}>
-        <ComposedChart
-          data={chartData}
-          margin={CHART_MARGIN}
-        >
+      <ResponsiveContainer
+        key='mileage-deduction-chart'
+        width='100%'
+        height={CHART_HEIGHT}
+        debounce={RESIZE_DEBOUNCE_MS}
+        onResize={onResize}
+      >
+        <ComposedChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid
             vertical={false}
-            stroke={getColor(200)?.hex ?? '#f0f0f0'}
-            strokeDasharray='5 5'
+            stroke={getColor(200)?.hex ?? GRID_STROKE_FALLBACK}
+            strokeDasharray={GRID_STROKE_DASHARRAY}
           />
 
-          <YAxis
-            tick={CustomizedYTick}
-            domain={[0, 'auto']}
-          />
+          <ChartYAxis format={formatYAxis} domain={[0, 'auto']} />
 
-          <Tooltip
-            content={<CustomTooltip />}
-            cursor={<CustomizedCursor />}
-            animationDuration={100}
-            animationEasing='ease-out'
+          <MileageDeductionChartTooltip
+            selectedYear={selectedYear}
+            cursorWidth={barSize * CURSOR_WIDTH_MULTIPLE}
           />
 
           <Bar
             dataKey='deduction'
-            barSize={BAR_SIZE}
-            radius={[2, 2, 0, 0]}
+            barSize={barSize}
+            radius={BAR_RADIUS}
             className='Layer__MileageDeductionChart__bar--deduction'
-          >
-            {chartData.map((_entry, index) => (
-              <Cell key={`cell-${index}`} />
-            ))}
-          </Bar>
+          />
 
           <XAxis
             dataKey='monthName'
             tickLine={false}
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: TICK_FONT_SIZE }}
           />
         </ComposedChart>
       </ResponsiveContainer>
