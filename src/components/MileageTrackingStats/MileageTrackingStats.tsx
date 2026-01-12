@@ -79,9 +79,9 @@ export const MileageTrackingStats = () => {
     }
   }, [selectedYearData, selectedYear])
 
-  if (isLoading) {
+  if (isLoading || !mileageData) {
     return (
-      <Container name='mileage-tracking-stats' asWidget>
+      <Container name='mileage-tracking-stats'>
         <HStack className='Layer__MileageTrackingStats__Content' gap='lg' justify='center' align='center'>
           <Loader />
         </HStack>
@@ -89,16 +89,16 @@ export const MileageTrackingStats = () => {
     )
   }
 
-  if (isError || !mileageData) {
+  if (isError) {
     return (
-      <Container name='mileage-tracking-stats' asWidget>
-        <DataState status={DataStateStatus.failed} title='Failed to load mileage data' />
+      <Container name='mileage-tracking-stats'>
+        <DataState status={DataStateStatus.failed} title='Failed to load mileage data' spacing />
       </Container>
     )
   }
 
   return (
-    <Container name='mileage-tracking-stats' asWidget>
+    <Container name='mileage-tracking-stats'>
       <HStack className='Layer__MileageTrackingStats__Content' gap='lg'>
         <VStack className='Layer__MileageTrackingStats__Cards' gap='md' justify='center'>
           <MileageTrackingStatsCard
