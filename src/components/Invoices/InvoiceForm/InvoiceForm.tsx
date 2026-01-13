@@ -253,138 +253,135 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
     onChangeFormState?.(formState)
   }, [formState, onChangeFormState])
 
-  const selectedCustomer = form.getFieldValue('customer')
-
   return (
-    <>
-      <Form className={INVOICE_FORM_CSS_PREFIX} onSubmit={blockNativeOnSubmit}>
-        <form.Subscribe selector={state => state.errorMap}>
-          {(errorMap) => {
-            const validationErrors = flattenValidationErrors(errorMap)
-            if (validationErrors.length > 0 || submitError) {
-              return (
-                <HStack className={`${INVOICE_FORM_CSS_PREFIX}__FormError`}>
-                  <DataState
-                    icon={<AlertTriangle size={16} />}
-                    status={DataStateStatus.failed}
-                    title={validationErrors[0] || submitError}
-                    titleSize={TextSize.md}
-                    inline
-                  />
-                </HStack>
-              )
-            }
-          }}
-        </form.Subscribe>
-        <HStack gap='xl' className={`${INVOICE_FORM_CSS_PREFIX}__Terms`}>
-          <VStack gap='xs'>
-            <VStack align='end' gap='3xs'>
-              <form.Field
-                name='customer'
-                listeners={{
-                  onChange: ({ value: customer }) => {
-                    form.setFieldValue('email', customer?.email || '')
-                    form.setFieldValue('address', customer?.addressString || '')
-                  },
-                }}
-              >
-                {field => (
-                  <CustomerSelector
-                    className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Customer`}
-                    selectedCustomer={field.state.value}
-                    onSelectedCustomerChange={field.handleChange}
-                    isReadOnly={isReadOnly}
-                    inline
-                  />
-                )}
-              </form.Field>
-              {enableCustomerManagement && !isReadOnly && (
-                <form.Subscribe selector={state => state.values.customer}>
-                  {customer => customer && (
-                    <HStack>
-                      <Button variant='text' onPress={onClickEditCustomer}>
-                        <Span size='sm'>Edit customer details</Span>
-                      </Button>
-                    </HStack>
-                  )}
-                </form.Subscribe>
-              )}
-            </VStack>
-            <form.AppField name='email'>
-              {field => (
-                <field.FormTextField label='Email' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Email`} isReadOnly />
-              )}
-            </form.AppField>
-            <form.AppField name='address'>
-              {field => (
-                <field.FormTextAreaField label='Billing address' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Address`} isReadOnly />
-              )}
-            </form.AppField>
-          </VStack>
-          <VStack gap='xs'>
-            <form.AppField name='invoiceNumber'>
-              {field =>
-                <field.FormTextField label='Invoice number' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} isReadOnly={isReadOnly} />}
-            </form.AppField>
+    <Form className={INVOICE_FORM_CSS_PREFIX} onSubmit={blockNativeOnSubmit}>
+      <form.Subscribe selector={state => state.errorMap}>
+        {(errorMap) => {
+          const validationErrors = flattenValidationErrors(errorMap)
+          if (validationErrors.length > 0 || submitError) {
+            return (
+              <HStack className={`${INVOICE_FORM_CSS_PREFIX}__FormError`}>
+                <DataState
+                  icon={<AlertTriangle size={16} />}
+                  status={DataStateStatus.failed}
+                  title={validationErrors[0] || submitError}
+                  titleSize={TextSize.md}
+                  inline
+                />
+              </HStack>
+            )
+          }
+        }}
+      </form.Subscribe>
+      <HStack gap='xl' className={`${INVOICE_FORM_CSS_PREFIX}__Terms`}>
+        <VStack gap='xs'>
+          <VStack align='end' gap='3xs'>
             <form.Field
-              name='terms'
+              name='customer'
               listeners={{
-                onChange: ({ value: terms }) => {
-                  const sentAt = form.getFieldValue('sentAt')
-                  updateDueAtFromTermsAndSentAt(terms, sentAt)
+                onChange: ({ value: customer }) => {
+                  form.setFieldValue('email', customer?.email || '')
+                  form.setFieldValue('address', customer?.addressString || '')
                 },
               }}
             >
               {field => (
-                <InvoiceTermsComboBox
-                  value={field.state.value}
-                  onValueChange={(value: InvoiceTermsValues | null) => {
-                    if (value !== null) {
-                      field.handleChange(value)
-                    }
-                  }}
+                <CustomerSelector
+                  className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Customer`}
+                  selectedCustomer={field.state.value}
+                  onSelectedCustomerChange={field.handleChange}
                   isReadOnly={isReadOnly}
+                  inline
                 />
               )}
             </form.Field>
-            <form.AppField
-              name='sentAt'
-              listeners={{
-                onBlur: ({ value: sentAt }) => {
-                  const terms = form.getFieldValue('terms')
-                  updateDueAtFromTermsAndSentAt(terms, sentAt)
-                },
-              }}
-            >
-              {field => <field.FormDateField label='Invoice date' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__SentAt`} isReadOnly={isReadOnly} />}
-            </form.AppField>
-            <form.AppField
-              name='dueAt'
-              listeners={{
-                onBlur: ({ value: dueAt }) => {
-                  const terms = form.getFieldValue('terms')
-                  const previousDueAt = lastDueAtRef.current
-
-                  const dueAtChanged = getDueAtChanged(dueAt, previousDueAt)
-
-                  if (terms !== InvoiceTermsValues.Custom && dueAtChanged) {
-                    form.setFieldValue('terms', InvoiceTermsValues.Custom)
-                  }
-                  lastDueAtRef.current = dueAt
-                },
-              }}
-            >
-              {field => (
-                <field.FormDateField label='Due date' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__DueAt`} isReadOnly={isReadOnly} />
-              )}
-            </form.AppField>
+            {enableCustomerManagement && !isReadOnly && (
+              <form.Subscribe selector={state => state.values.customer}>
+                {customer => customer && (
+                  <HStack>
+                    <Button variant='text' onPress={onClickEditCustomer}>
+                      <Span size='sm'>Edit customer details</Span>
+                    </Button>
+                  </HStack>
+                )}
+              </form.Subscribe>
+            )}
           </VStack>
-        </HStack>
-        <VStack className={`${INVOICE_FORM_CSS_PREFIX}__LineItems`} gap='md'>
-          <form.Field name='lineItems' mode='array'>
+          <form.AppField name='email'>
             {field => (
-              <VStack gap='xs' align='baseline'>
-                {field.state.value.map((_value, index) => (
+              <field.FormTextField label='Email' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Email`} isReadOnly />
+            )}
+          </form.AppField>
+          <form.AppField name='address'>
+            {field => (
+              <field.FormTextAreaField label='Billing address' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Address`} isReadOnly />
+            )}
+          </form.AppField>
+        </VStack>
+        <VStack gap='xs'>
+          <form.AppField name='invoiceNumber'>
+            {field =>
+              <field.FormTextField label='Invoice number' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} isReadOnly={isReadOnly} />}
+          </form.AppField>
+          <form.Field
+            name='terms'
+            listeners={{
+              onChange: ({ value: terms }) => {
+                const sentAt = form.getFieldValue('sentAt')
+                updateDueAtFromTermsAndSentAt(terms, sentAt)
+              },
+            }}
+          >
+            {field => (
+              <InvoiceTermsComboBox
+                value={field.state.value}
+                onValueChange={(value: InvoiceTermsValues | null) => {
+                  if (value !== null) {
+                    field.handleChange(value)
+                  }
+                }}
+                isReadOnly={isReadOnly}
+              />
+            )}
+          </form.Field>
+          <form.AppField
+            name='sentAt'
+            listeners={{
+              onBlur: ({ value: sentAt }) => {
+                const terms = form.getFieldValue('terms')
+                updateDueAtFromTermsAndSentAt(terms, sentAt)
+              },
+            }}
+          >
+            {field => <field.FormDateField label='Invoice date' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__SentAt`} isReadOnly={isReadOnly} />}
+          </form.AppField>
+          <form.AppField
+            name='dueAt'
+            listeners={{
+              onBlur: ({ value: dueAt }) => {
+                const terms = form.getFieldValue('terms')
+                const previousDueAt = lastDueAtRef.current
+
+                const dueAtChanged = getDueAtChanged(dueAt, previousDueAt)
+
+                if (terms !== InvoiceTermsValues.Custom && dueAtChanged) {
+                  form.setFieldValue('terms', InvoiceTermsValues.Custom)
+                }
+                lastDueAtRef.current = dueAt
+              },
+            }}
+          >
+            {field => (
+              <field.FormDateField label='Due date' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__DueAt`} isReadOnly={isReadOnly} />
+            )}
+          </form.AppField>
+        </VStack>
+      </HStack>
+      <VStack className={`${INVOICE_FORM_CSS_PREFIX}__LineItems`} gap='md'>
+        <form.Field name='lineItems' mode='array'>
+          {field => (
+            <VStack gap='xs' align='baseline'>
+              {field.state.value.map((_value, index) => (
                 /**
                  * A better implementation would use a UUID as the key for this line item row. Specifically, it's an antipattern in
                  * React to use array indices as keys. However, there are some ongoing issues with @tanstack/react-form related to
@@ -392,53 +389,57 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                  * momentarily undefined as they re-render due to re-indexing. Thus, we use indices here for now.
                  * See here for more information: https://github.com/TanStack/form/issues/1518.
                  */
-                  (<InvoiceFormLineItemRow key={index} form={form} index={index} isReadOnly={isReadOnly} onDeleteLine={() => field.removeValue(index)} />)
-                ))}
-                {!isReadOnly
-                  && (
-                    <Button variant='outlined' onClick={() => field.pushValue(EMPTY_LINE_ITEM)}>
-                      Add line item
-                      <Plus size={16} />
-                    </Button>
-                  )}
-              </VStack>
-            )}
-          </form.Field>
-          <VStack className={`${INVOICE_FORM_CSS_PREFIX}__Metadata`} pbs='md'>
-            <HStack justify='space-between' gap='xl'>
-              <VStack className={`${INVOICE_FORM_CSS_PREFIX}__AdditionalTextFields`}>
-                <form.AppField name='memo'>
-                  {field => <field.FormTextAreaField label='Memo' isReadOnly={isReadOnly} />}
+                (<InvoiceFormLineItemRow key={index} form={form} index={index} isReadOnly={isReadOnly} onDeleteLine={() => field.removeValue(index)} />)
+              ))}
+              {!isReadOnly
+                && (
+                  <Button variant='outlined' onClick={() => field.pushValue(EMPTY_LINE_ITEM)}>
+                    Add line item
+                    <Plus size={16} />
+                  </Button>
+                )}
+            </VStack>
+          )}
+        </form.Field>
+        <VStack className={`${INVOICE_FORM_CSS_PREFIX}__Metadata`} pbs='md'>
+          <HStack justify='space-between' gap='xl'>
+            <VStack className={`${INVOICE_FORM_CSS_PREFIX}__AdditionalTextFields`}>
+              <form.AppField name='memo'>
+                {field => <field.FormTextAreaField label='Memo' isReadOnly={isReadOnly} />}
+              </form.AppField>
+            </VStack>
+            <VStack className={`${INVOICE_FORM_CSS_PREFIX}__TotalFields`} fluid>
+              <InvoiceFormTotalRow label='Subtotal' value={subtotal} />
+              <InvoiceFormTotalRow label='Discount' value={negate(additionalDiscount)}>
+                <form.AppField name='discountRate'>
+                  {field => <field.FormBigDecimalField label='Discount' showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
                 </form.AppField>
-              </VStack>
-              <VStack className={`${INVOICE_FORM_CSS_PREFIX}__TotalFields`} fluid>
-                <InvoiceFormTotalRow label='Subtotal' value={subtotal} />
-                <InvoiceFormTotalRow label='Discount' value={negate(additionalDiscount)}>
-                  <form.AppField name='discountRate'>
-                    {field => <field.FormBigDecimalField label='Discount' showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
-                  </form.AppField>
-                </InvoiceFormTotalRow>
-                <InvoiceFormTotalRow label='Taxable subtotal' value={taxableSubtotal} />
-                <InvoiceFormTotalRow label='Tax rate' value={taxes}>
-                  <form.AppField name='taxRate'>
-                    {field => <field.FormBigDecimalField label='Tax Rate' showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
-                  </form.AppField>
-                </InvoiceFormTotalRow>
-                <InvoiceFormTotalRow label='Total' value={grandTotal} />
-              </VStack>
-            </HStack>
-          </VStack>
+              </InvoiceFormTotalRow>
+              <InvoiceFormTotalRow label='Taxable subtotal' value={taxableSubtotal} />
+              <InvoiceFormTotalRow label='Tax rate' value={taxes}>
+                <form.AppField name='taxRate'>
+                  {field => <field.FormBigDecimalField label='Tax Rate' showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+                </form.AppField>
+              </InvoiceFormTotalRow>
+              <InvoiceFormTotalRow label='Total' value={grandTotal} />
+            </VStack>
+          </HStack>
         </VStack>
-      </Form>
+      </VStack>
       {enableCustomerManagement && (
-        <CustomerFormDrawer
-          isOpen={isCustomerDrawerOpen}
-          onOpenChange={setIsCustomerDrawerOpen}
-          customer={selectedCustomer ?? undefined}
-          onSuccess={onEditCustomerSuccess}
-        />
+        <form.Subscribe selector={state => state.values.customer}>
+          {customer => (
+            <CustomerFormDrawer
+              isOpen={isCustomerDrawerOpen}
+              onOpenChange={setIsCustomerDrawerOpen}
+              customer={customer}
+              onSuccess={onEditCustomerSuccess}
+            />
+          )}
+        </form.Subscribe>
       )}
-    </>
+    </Form>
+
   )
 })
 InvoiceForm.displayName = 'InvoiceForm'

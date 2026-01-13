@@ -8,7 +8,7 @@ import { UpsertCustomerMode, useUpsertCustomer } from '@features/customers/api/u
 import { useAppForm } from '@features/forms/hooks/useForm'
 
 type onSuccessFn = (customer: Customer) => void
-type UseCustomerFormProps = { onSuccess: onSuccessFn, customer?: Customer }
+type UseCustomerFormProps = { onSuccess: onSuccessFn, customer: Customer | null }
 
 export const useCustomerForm = (props: UseCustomerFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)

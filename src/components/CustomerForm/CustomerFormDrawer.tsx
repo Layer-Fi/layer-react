@@ -7,7 +7,7 @@ import { CustomerForm } from '@components/CustomerForm/CustomerForm'
 export type CustomerFormDrawerProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
-  customer?: Customer
+  customer: Customer | null
   onSuccess: (customer: Customer) => void
 }
 

@@ -17,7 +17,7 @@ const CUSTOMER_FORM_CSS_PREFIX = 'Layer__CustomerForm'
 const CUSTOMER_FORM_FIELD_CSS_PREFIX = `${CUSTOMER_FORM_CSS_PREFIX}__Field`
 
 export type CustomerFormProps = {
-  customer?: Customer
+  customer: Customer | null
   isReadOnly?: boolean
   onSuccess: (customer: Customer) => void
 }

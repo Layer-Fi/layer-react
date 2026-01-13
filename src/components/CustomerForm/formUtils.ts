@@ -1,6 +1,6 @@
 import { type Customer, type CustomerForm } from '@schemas/customer'
 
-export const getCustomerFormDefaultValues = (customer?: Customer): CustomerForm =>
+export const getCustomerFormDefaultValues = (customer: Customer | null): CustomerForm =>
   ({
     individualName: customer?.individualName || '',
     companyName: customer?.companyName || '',
