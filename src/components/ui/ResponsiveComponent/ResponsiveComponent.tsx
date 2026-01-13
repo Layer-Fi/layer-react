@@ -1,5 +1,4 @@
 import { type ReactNode, useCallback, useState } from 'react'
-import classNames from 'classnames'
 
 import { useElementSize } from '@hooks/useElementSize/useElementSize'
 
@@ -10,9 +9,8 @@ export type DefaultVariant = 'Desktop' | 'SmallDesktop' | 'Mobile'
 export type VariantResolver<T extends string> = ({ width }: { width: number }) => T
 
 export interface ResponsiveComponentProps<T extends string = DefaultVariant> {
-  slots: Record<T, ReactNode> // Require every variant of T has a corresponding component
+  slots: Record<T, ReactNode>
   resolveVariant: VariantResolver<T>
-// Don't need mobile here because we're going to use it in the resolver in parent component
 }
 
 export const ResponsiveComponent = <T extends string = DefaultVariant>({
