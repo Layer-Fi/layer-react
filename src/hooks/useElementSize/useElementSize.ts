@@ -34,8 +34,8 @@ export const useElementSize = <T extends HTMLElement>(
     }
 
     const observer = new ResizeObserver((entries) => {
-      const width = entries[0].contentRect.width
-      const height = entries[0].contentRect.height
+      const width = entries[0].borderBoxSize[0].inlineSize
+      const height = entries[0].borderBoxSize[0].blockSize
 
       if (resizeTimeout.current) {
         clearTimeout(resizeTimeout.current)
