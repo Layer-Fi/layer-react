@@ -37,7 +37,8 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
     })
 
     const effectiveTarget = external ? '_blank' : target
-    const effectiveRel = external ? 'noopener noreferrer' : rel
+    const externalRel = external ? 'noopener noreferrer' : ''
+    const effectiveRel = `${externalRel} ${rel}`.trim()
 
     return (
       <ReactAriaLink
