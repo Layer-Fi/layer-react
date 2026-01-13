@@ -322,8 +322,8 @@ const BankTransactionsTableView = ({
   const removeTransaction = (bankTransaction: BankTransaction) =>
     removeAfterCategorize([bankTransaction.id])
 
-  const containerRef = useElementSize<HTMLDivElement>((_el, _en, size) => {
-    if (size?.height && size?.height >= 90) {
+  const containerRef = useElementSize<HTMLDivElement>((size) => {
+    if (size.height >= 90) {
       const newShift = -Math.floor(size.height / 2) + 6
       if (newShift !== shiftStickyHeader) {
         void debounceShiftStickyHeader(newShift)

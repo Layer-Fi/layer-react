@@ -1,62 +1,58 @@
 import { useLayoutEffect, useRef } from 'react'
 
+export interface ElementSize {
+  width: number
+  height: number
+}
+
 export const useElementSize = <T extends HTMLElement>(
-  callback: (
-    target: T,
-    entry: ResizeObserverEntry,
-    size: {
-      width: number
-      height: number
-      clientWidth: number
-      clientHeight: number
-    },
-  ) => void,
+  callback: (size: ElementSize) => void,
 ) => {
   const ref = useRef<T>(null)
+  const callbackRef = useRef(callback)
+  const isFirstRender = useRef(true)
   const resizeTimeout = useRef<number | null>(null)
+
+  callbackRef.current = callback
 
   useLayoutEffect(() => {
     const element = ref?.current
 
-    if (!element) {
-      return
+    if (!element) return
+
+    const invokeCallback = ({ width, height }: ElementSize) => {
+      callbackRef.current({ width, height })
     }
 
-    let isFirstCallback = true
-
-    const invokeCallback = (entry: ResizeObserverEntry) => {
-      callback(element, entry, {
-        width: element.offsetWidth,
-        height: element.offsetHeight,
-        clientWidth: element.clientWidth,
-        clientHeight: element.clientHeight,
+    if (isFirstRender.current) {
+      const rect = element.getBoundingClientRect()
+      invokeCallback({
+        width: rect.width,
+        height: rect.height,
       })
+      isFirstRender.current = false
     }
 
     const observer = new ResizeObserver((entries) => {
-      const entry = entries[0]
-
-      if (isFirstCallback) {
-        isFirstCallback = false
-        invokeCallback(entry)
-        return
-      }
+      const width = entries[0].borderBoxSize[0].inlineSize
+      const height = entries[0].borderBoxSize[0].blockSize
 
       if (resizeTimeout.current) {
         clearTimeout(resizeTimeout.current)
       }
       resizeTimeout.current = window.setTimeout(() => {
-        invokeCallback(entry)
+        invokeCallback({ width, height })
       }, 100)
     })
+
     observer.observe(element)
+
     return () => {
       observer.disconnect()
       if (resizeTimeout.current) {
         clearTimeout(resizeTimeout.current)
       }
     }
-  }, [callback, ref])
-
+  }, [])
   return ref
 }
