@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
@@ -55,7 +55,9 @@ export const useTripForm = (props: UseTripFormProps) => {
     canSubmitWhenInvalid: true,
   })
 
-  return useMemo(() => (
-    { form, submitError }),
-  [form, submitError])
+  useEffect(() => {
+    form.reset(getTripFormDefaultValues(trip))
+  }, [trip, form])
+
+  return useMemo(() => ({ form, submitError }), [form, submitError])
 }

@@ -32,7 +32,7 @@ export const EMPTY_LINE_ITEM: InvoiceFormLineItem = {
   tags: [],
 }
 
-export const getInvoiceFormDefaultValues = (): InvoiceForm => {
+export const getEmptyInvoiceFormValues = (): InvoiceForm => {
   const sentAt = fromDate(startOfToday(), getLocalTimeZone())
   const dueAt = sentAt.add({ days: 30 })
 
@@ -110,6 +110,10 @@ export const getInvoiceFormInitialValues = (invoice: Invoice): InvoiceForm => {
     taxRate,
     memo: invoice.memo || '',
   }
+}
+
+export const getInvoiceFormDefaultValues = (invoice: Invoice | null): InvoiceForm => {
+  return invoice ? getInvoiceFormInitialValues(invoice) : getEmptyInvoiceFormValues()
 }
 
 export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) => {
