@@ -13,9 +13,6 @@ import { TextSize } from '@components/Typography/Text'
 
 import './customerForm.scss'
 
-const CUSTOMER_FORM_CSS_PREFIX = 'Layer__CustomerForm'
-const CUSTOMER_FORM_FIELD_CSS_PREFIX = `${CUSTOMER_FORM_CSS_PREFIX}__Field`
-
 export type CustomerFormProps = {
   customer: Customer | null
   isReadOnly?: boolean
@@ -33,13 +30,13 @@ export const CustomerForm = (props: CustomerFormProps) => {
   }, [])
 
   return (
-    <Form className={CUSTOMER_FORM_CSS_PREFIX} onSubmit={blockNativeOnSubmit}>
+    <Form className='Layer__CustomerForm' onSubmit={blockNativeOnSubmit}>
       <form.Subscribe selector={state => state.errorMap}>
         {(errorMap) => {
           const validationErrors = flattenValidationErrors(errorMap)
           if (validationErrors.length > 0 || submitError) {
             return (
-              <HStack className={`${CUSTOMER_FORM_CSS_PREFIX}__FormError`}>
+              <HStack className='Layer__CustomerForm__FormError'>
                 <DataState
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
@@ -60,7 +57,7 @@ export const CustomerForm = (props: CustomerFormProps) => {
             inline
             isReadOnly={isReadOnly}
             placeholder='Enter individual name'
-            className={`${CUSTOMER_FORM_FIELD_CSS_PREFIX}__IndividualName`}
+            className='Layer__CustomerForm__Field__IndividualName'
           />
         )}
       </form.AppField>
@@ -72,7 +69,7 @@ export const CustomerForm = (props: CustomerFormProps) => {
             inline
             isReadOnly={isReadOnly}
             placeholder='Enter company name'
-            className={`${CUSTOMER_FORM_FIELD_CSS_PREFIX}__CompanyName`}
+            className='Layer__CustomerForm__Field__CompanyName'
           />
         )}
       </form.AppField>
@@ -84,7 +81,7 @@ export const CustomerForm = (props: CustomerFormProps) => {
             inline
             isReadOnly={isReadOnly}
             placeholder='Enter email address'
-            className={`${CUSTOMER_FORM_FIELD_CSS_PREFIX}__Email`}
+            className='Layer__CustomerForm__Field__Email'
           />
         )}
       </form.AppField>
@@ -96,12 +93,12 @@ export const CustomerForm = (props: CustomerFormProps) => {
             inline
             isReadOnly={isReadOnly}
             placeholder='Enter address'
-            className={`${CUSTOMER_FORM_FIELD_CSS_PREFIX}__Address`}
+            className='Layer__CustomerForm__Field__Address'
           />
         )}
       </form.AppField>
 
-      <VStack justify='end' className={`${CUSTOMER_FORM_CSS_PREFIX}__Submit`}>
+      <VStack justify='end' className='Layer__CustomerForm__Submit'>
         <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
           {([canSubmit, isSubmitting]) => (
             <Button
