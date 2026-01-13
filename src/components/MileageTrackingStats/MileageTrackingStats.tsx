@@ -97,38 +97,34 @@ export const MileageTrackingStats = () => {
     )
   }
 
-  const cards = (
-    <VStack className='Layer__MileageTrackingStats__Cards' gap='md' justify='center'>
-      <MileageTrackingStatsCard
-        title='Total Deduction'
-        amount={selectedYearData?.estimatedDeduction ?? 0}
-        formatAsMoney
-      />
-      <MileageTrackingStatsCard
-        title='Total Miles'
-        amount={selectedYearData?.miles ?? 0}
-        breakdown={{
-          business: selectedYearData?.businessMiles ?? 0,
-          personal: selectedYearData?.personalMiles ?? 0,
-          uncategorized: selectedYearData?.uncategorizedMiles ?? 0,
-        }}
-      />
-      <MileageTrackingStatsCard
-        title='Trips'
-        amount={selectedYearData?.trips ?? 0}
-        breakdown={{
-          business: selectedYearData?.businessTrips ?? 0,
-          personal: selectedYearData?.personalTrips ?? 0,
-          uncategorized: selectedYearData?.uncategorizedTrips ?? 0,
-        }}
-      />
-    </VStack>
-  )
-
   return (
     <Container name='mileage-tracking-stats'>
       <div className='Layer__MileageTrackingStats__Content'>
-        {cards}
+        <VStack className='Layer__MileageTrackingStats__Cards' gap='md' justify='center'>
+          <MileageTrackingStatsCard
+            title='Total Deduction'
+            amount={selectedYearData?.estimatedDeduction ?? 0}
+            formatAsMoney
+          />
+          <MileageTrackingStatsCard
+            title='Total Miles'
+            amount={selectedYearData?.miles ?? 0}
+            breakdown={{
+              business: selectedYearData?.businessMiles ?? 0,
+              personal: selectedYearData?.personalMiles ?? 0,
+              uncategorized: selectedYearData?.uncategorizedMiles ?? 0,
+            }}
+          />
+          <MileageTrackingStatsCard
+            title='Trips'
+            amount={selectedYearData?.trips ?? 0}
+            breakdown={{
+              business: selectedYearData?.businessTrips ?? 0,
+              personal: selectedYearData?.personalTrips ?? 0,
+              uncategorized: selectedYearData?.uncategorizedTrips ?? 0,
+            }}
+          />
+        </VStack>
         <VStack className='Layer__MileageTrackingStats__Chart' fluid justify='end'>
           <MileageDeductionChart data={chartData} selectedYear={selectedYear} />
         </VStack>
