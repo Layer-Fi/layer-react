@@ -3,11 +3,26 @@
 }
 
 .Layer__MileageTrackingStats__Content {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-lg);
   padding: var(--spacing-md);
+
+  @container (width <= 760px) {
+    flex-direction: column;
+  }
 }
 
 .Layer__MileageTrackingStats__Cards {
   min-width: 12rem;
+}
+
+.Layer__MileageTrackingStats__Chart {
+  flex: 1;
+
+  @container (width <= 760px) {
+    order: -1;
+  }
 }
 
 .Layer__MileageTrackingStats__Card {

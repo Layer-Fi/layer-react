@@ -55,13 +55,7 @@ const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdown }: M
   </VStack>
 )
 
-export type MileageTrackingStatsLayout = 'horizontal' | 'vertical'
-
-export interface MileageTrackingStatsProps {
-  layout?: MileageTrackingStatsLayout
-}
-
-export const MileageTrackingStats = ({ layout = 'horizontal' }: MileageTrackingStatsProps) => {
+export const MileageTrackingStats = () => {
   const { data: mileageData, isLoading, isError } = useMileageSummary()
   const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
   const selectedYear = getYear(startDate)
@@ -131,21 +125,14 @@ export const MileageTrackingStats = ({ layout = 'horizontal' }: MileageTrackingS
     </VStack>
   )
 
-  const chart = (
-    <VStack fluid justify='end'>
-      <MileageDeductionChart data={chartData} selectedYear={selectedYear} />
-    </VStack>
-  )
-
-  const Stack = layout === 'vertical' ? VStack : HStack
-
   return (
     <Container name='mileage-tracking-stats'>
-      <Stack className='Layer__MileageTrackingStats__Content' gap='lg'>
-        {layout === 'vertical' && chart}
+      <div className='Layer__MileageTrackingStats__Content'>
         {cards}
-        {layout === 'horizontal' && chart}
-      </Stack>
+        <VStack className='Layer__MileageTrackingStats__Chart' fluid justify='end'>
+          <MileageDeductionChart data={chartData} selectedYear={selectedYear} />
+        </VStack>
+      </div>
     </Container>
   )
 }
