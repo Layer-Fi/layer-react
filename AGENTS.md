@@ -6,7 +6,7 @@
 - Do not add comments when writing code
 - Generate designs and code in reviewable phases
 - For all code changes: KISS, YAGNI, DRY
-- - **Refer to documentation files below when relevant to current task**
+- **Refer to documentation files below when relevant to current task**
 
 # Codebase Conventions
 
@@ -35,6 +35,5 @@
 
 # Documentation
 
-- **Styling:** `docs/ai/styling.md`
 - **State Management:** `docs/ai/state-management.md`
-- **API Layer:** `docs/ai/api-layer.md`
+- **API:** `docs/ai/api.md`
