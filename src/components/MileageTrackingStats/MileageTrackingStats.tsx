@@ -99,7 +99,7 @@ export const MileageTrackingStats = () => {
 
   return (
     <Container name='mileage-tracking-stats'>
-      <HStack className='Layer__MileageTrackingStats__Content' gap='lg'>
+      <div className='Layer__MileageTrackingStats__Content'>
         <VStack className='Layer__MileageTrackingStats__Cards' gap='md' justify='center'>
           <MileageTrackingStatsCard
             title='Total Deduction'
@@ -125,10 +125,10 @@ export const MileageTrackingStats = () => {
             }}
           />
         </VStack>
-        <VStack fluid justify='end'>
+        <VStack className='Layer__MileageTrackingStats__Chart' fluid justify='end'>
           <MileageDeductionChart data={chartData} selectedYear={selectedYear} />
         </VStack>
-      </HStack>
+      </div>
     </Container>
   )
 }
