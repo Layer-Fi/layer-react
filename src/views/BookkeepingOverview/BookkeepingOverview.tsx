@@ -66,7 +66,7 @@ export const BookkeepingOverview = ({
 
   const handleBookCall = () => {} // TODO
 
-  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings(1)
+  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings({ limit: 1 })
   const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
   const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
 

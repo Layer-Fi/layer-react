@@ -8,7 +8,7 @@ import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './button.scss'
 
-const BUTTON_CLASS_NAMES = {
+export const BUTTON_CLASS_NAMES = {
   DEFAULT: 'Layer__UI__Button',
   SPINNER_CONTAINER: 'Layer__ButtonSpinnerContainer',
   TRANSPARENT_CONTENT: 'Layer__ButtonTransparentContent',
@@ -33,19 +33,21 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
 }
 
 export type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text' | 'branded'
-type ButtonSize = 'md'
+export type ButtonSize = 'md'
+
+export type ButtonStyleProps = {
+  ellipsis?: true
+  icon?: true
+  inset?: true
+  size?: ButtonSize
+  variant?: ButtonVariant
+  fullWidth?: boolean
+  flex?: boolean
+}
 
 const Button = forwardRef<
   HTMLButtonElement,
-  Omit<ButtonProps, 'className'> & {
-    ellipsis?: true
-    icon?: true
-    inset?: true
-    size?: ButtonSize
-    variant?: ButtonVariant
-    fullWidth?: boolean
-    flex?: boolean
-  }
+  Omit<ButtonProps, 'className'> & ButtonStyleProps
 >((
   {
     children,
