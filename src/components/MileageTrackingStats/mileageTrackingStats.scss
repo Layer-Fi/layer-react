@@ -9,7 +9,7 @@
   padding: var(--spacing-md);
 
   @container (width <= 760px) {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 }
 
@@ -19,10 +19,6 @@
 
 .Layer__MileageTrackingStats__Chart {
   flex: 1;
-
-  @container (width <= 760px) {
-    order: -1;
-  }
 }
 
 .Layer__MileageTrackingStats__Card {
