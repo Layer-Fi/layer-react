@@ -20,8 +20,7 @@ export const ResponsiveComponent = <T extends string = DefaultVariant>({
   const [currentVariant, setCurrentVariant] = useState<T | null>(null)
 
   const handleResize = useCallback((_el: HTMLDivElement, _entry: ResizeObserverEntry, size: { width: number }) => {
-    const variant = resolveVariant({ width: size.width })
-    setCurrentVariant(prev => prev !== variant ? variant : prev)
+    setCurrentVariant(resolveVariant({ width: size.width }))
   }, [resolveVariant])
 
   const containerRef = useElementSize<HTMLDivElement>(handleResize)
