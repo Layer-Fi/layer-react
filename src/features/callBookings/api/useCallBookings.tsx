@@ -89,7 +89,7 @@ function keyLoader(
   }
 }
 
-export function useCallBookings(limit?: number) {
+export function useCallBookings({ limit }: { limit?: number } = {}) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
