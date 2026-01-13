@@ -33,7 +33,7 @@ export const ResponsiveComponent = <T extends string = DefaultVariant>({
   return (
     <div
       ref={containerRef}
-      className='Layer__responsive-component'
+      className='Layer__ResponsiveComponent'
     >
       {currentVariant !== null && slots[currentVariant]}
     </div>
