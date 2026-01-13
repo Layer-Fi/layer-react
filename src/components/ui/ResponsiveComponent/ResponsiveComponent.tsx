@@ -20,20 +20,15 @@ export const ResponsiveComponent = <T extends string = DefaultVariant>({
   const [currentVariant, setCurrentVariant] = useState<T | null>(null)
 
   const handleResize = useCallback((_el: HTMLDivElement, _entry: ResizeObserverEntry, size: { width: number }) => {
-    const resolver = resolveVariant
-    const variant = resolver({ width: size.width })
-
-    if (variant !== currentVariant) {
-      setCurrentVariant(variant)
-    }
-  }, [resolveVariant, currentVariant])
+    setCurrentVariant(resolveVariant({ width: size.width }))
+  }, [resolveVariant])
 
   const containerRef = useElementSize<HTMLDivElement>(handleResize)
 
   return (
     <div
       ref={containerRef}
-      className='Layer__responsive-component'
+      className='Layer__ResponsiveComponent'
     >
       {currentVariant !== null && slots[currentVariant]}
     </div>
