@@ -36,9 +36,9 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
     initialized && 'Layer__tabs--initialized',
   )
 
-  const elementRef = useElementSize<HTMLDivElement>((_a, _b, c) => {
-    if (c.width && c?.width !== currentWidth) {
-      setCurrentWidth(c.width)
+  const elementRef = useElementSize<HTMLDivElement>((size) => {
+    if (size.width !== currentWidth) {
+      setCurrentWidth(size.width)
     }
   })
 
