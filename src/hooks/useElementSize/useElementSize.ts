@@ -14,7 +14,6 @@ export const useElementSize = <T extends HTMLElement>(
 ) => {
   const ref = useRef<T>(null)
   const resizeTimeout = useRef<number | null>(null)
-  const isFirstCallback = useRef(true)
 
   useLayoutEffect(() => {
     const element = ref?.current
@@ -22,6 +21,8 @@ export const useElementSize = <T extends HTMLElement>(
     if (!element) {
       return
     }
+
+    let isFirstCallback = true
 
     const invokeCallback = (entry: ResizeObserverEntry) => {
       callback(element, entry, {
@@ -35,8 +36,8 @@ export const useElementSize = <T extends HTMLElement>(
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0]
 
-      if (isFirstCallback.current) {
-        isFirstCallback.current = false
+      if (isFirstCallback) {
+        isFirstCallback = false
         invokeCallback(entry)
         return
       }
