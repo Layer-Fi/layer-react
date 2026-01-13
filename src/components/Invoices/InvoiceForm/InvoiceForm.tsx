@@ -1,4 +1,4 @@
-import { forwardRef, type PropsWithChildren, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
+import { forwardRef, type PropsWithChildren, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { fromDate, toCalendarDate, type ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { BigDecimal as BD } from 'effect'
@@ -7,14 +7,18 @@ import { AlertTriangle } from 'lucide-react'
 import type React from 'react'
 
 import { CategoriesListMode, type Classification, isClassificationAccountIdentifier } from '@schemas/categorization'
+import type { Customer } from '@schemas/customer'
 import { convertBigDecimalToCents, negate, safeDivide } from '@utils/bigDecimalUtils'
 import { flattenValidationErrors } from '@utils/form'
 import { convertCentsToCurrency } from '@utils/format'
+import { useAccountingConfiguration } from '@hooks/useAccountingConfiguration/useAccountingConfiguration'
 import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { CustomerFormDrawer } from '@components/CustomerForm/CustomerFormDrawer'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { EMPTY_LINE_ITEM, getAdditionalTags, getSelectedTag, INVOICE_MECE_TAG_DIMENSION, type InvoiceFormState } from '@components/Invoices/InvoiceForm/formUtils'
 import { type InvoiceFormType, useInvoiceForm } from '@components/Invoices/InvoiceForm/useInvoiceForm'
@@ -190,6 +194,10 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   const { mode } = viewState
 
   const { onSuccess, onChangeFormState, isReadOnly } = props
+  const { businessId } = useLayerContext()
+  const { data: accountingConfig } = useAccountingConfiguration({ businessId })
+  const enableCustomerManagement = accountingConfig?.enableCustomerManagement ?? false
+
   const { form, formState, totals, submitError } = useInvoiceForm(
     { onSuccess, ...viewState },
   )
@@ -200,6 +208,19 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
     : null
 
   const lastDueAtRef = useRef<ZonedDateTime | null>(initialLastDueAt)
+
+  const [isCustomerDrawerOpen, setIsCustomerDrawerOpen] = useState(false)
+
+  const onClickEditCustomer = useCallback(() => {
+    setIsCustomerDrawerOpen(true)
+  }, [])
+
+  const onEditCustomerSuccess = useCallback((customer: Customer) => {
+    setIsCustomerDrawerOpen(false)
+    form.setFieldValue('customer', customer)
+    form.setFieldValue('email', customer.email || '')
+    form.setFieldValue('address', customer.addressString || '')
+  }, [form])
 
   const updateDueAtFromTermsAndSentAt = useCallback((terms: InvoiceTermsValues, sentAt: ZonedDateTime | null) => {
     if (sentAt == null) return
@@ -254,25 +275,38 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
       </form.Subscribe>
       <HStack gap='xl' className={`${INVOICE_FORM_CSS_PREFIX}__Terms`}>
         <VStack gap='xs'>
-          <form.Field
-            name='customer'
-            listeners={{
-              onChange: ({ value: customer }) => {
-                form.setFieldValue('email', customer?.email || '')
-                form.setFieldValue('address', customer?.addressString || '')
-              },
-            }}
-          >
-            {field => (
-              <CustomerSelector
-                className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Customer`}
-                selectedCustomer={field.state.value}
-                onSelectedCustomerChange={field.handleChange}
-                isReadOnly={isReadOnly}
-                inline
-              />
+          <VStack align='end' gap='3xs'>
+            <form.Field
+              name='customer'
+              listeners={{
+                onChange: ({ value: customer }) => {
+                  form.setFieldValue('email', customer?.email || '')
+                  form.setFieldValue('address', customer?.addressString || '')
+                },
+              }}
+            >
+              {field => (
+                <CustomerSelector
+                  className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Customer`}
+                  selectedCustomer={field.state.value}
+                  onSelectedCustomerChange={field.handleChange}
+                  isReadOnly={isReadOnly}
+                  inline
+                />
+              )}
+            </form.Field>
+            {enableCustomerManagement && !isReadOnly && (
+              <form.Subscribe selector={state => state.values.customer}>
+                {customer => customer && (
+                  <HStack>
+                    <Button variant='text' onPress={onClickEditCustomer}>
+                      <Span size='sm'>Edit customer details</Span>
+                    </Button>
+                  </HStack>
+                )}
+              </form.Subscribe>
             )}
-          </form.Field>
+          </VStack>
           <form.AppField name='email'>
             {field => (
               <field.FormTextField label='Email' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Email`} isReadOnly />
@@ -392,7 +426,20 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
           </HStack>
         </VStack>
       </VStack>
+      {enableCustomerManagement && (
+        <form.Subscribe selector={state => state.values.customer}>
+          {customer => (
+            <CustomerFormDrawer
+              isOpen={isCustomerDrawerOpen}
+              onOpenChange={setIsCustomerDrawerOpen}
+              customer={customer}
+              onSuccess={onEditCustomerSuccess}
+            />
+          )}
+        </form.Subscribe>
+      )}
     </Form>
+
   )
 })
 InvoiceForm.displayName = 'InvoiceForm'

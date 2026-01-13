@@ -1,0 +1,23 @@
+.Layer__CustomerForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  width: 100%;
+
+  .Layer__CustomerForm__FormError {
+    padding: var(--spacing-sm);
+  }
+
+  .Layer__CustomerForm__Submit {
+    align-items: flex-end;
+    padding-block-start: 1rem;
+  }
+
+  .Layer__CustomerForm__Field__IndividualName,
+  .Layer__CustomerForm__Field__CompanyName,
+  .Layer__CustomerForm__Field__Email,
+  .Layer__CustomerForm__Field__Address {
+    grid-template-columns: 10rem auto;
+    width: 100%;
+  }
+}

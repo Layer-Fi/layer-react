@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import {
   type FormAsyncValidateOrFn,
@@ -7,7 +7,7 @@ import {
 import { Schema } from 'effect'
 
 import { useInvoicesContext } from '@contexts/InvoicesContext/InvoicesContext'
-import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, getInvoiceFormInitialValues, validateInvoiceForm } from '@components/Invoices/InvoiceForm/formUtils'
+import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, validateInvoiceForm } from '@components/Invoices/InvoiceForm/formUtils'
 import {
   computeAdditionalDiscount,
   computeGrandTotal,
@@ -61,11 +61,8 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const upsertInvoiceProps = mode === UpsertInvoiceMode.Update ? { mode, invoiceId: props.invoice.id } : { mode }
   const { trigger: upsertInvoice } = useUpsertInvoice(upsertInvoiceProps)
 
-  const defaultValuesRef = useRef<InvoiceForm>(
-    isUpdateMode(props)
-      ? getInvoiceFormInitialValues(props.invoice)
-      : getInvoiceFormDefaultValues(),
-  )
+  const invoice = isUpdateMode(props) ? props.invoice : null
+  const defaultValuesRef = useRef<InvoiceForm>(getInvoiceFormDefaultValues(invoice))
   const defaultValues = defaultValuesRef.current
 
   const onSubmit = useCallback(async ({ value, meta }: { value: InvoiceForm, meta: InvoiceFormMeta }) => {
@@ -162,7 +159,9 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
     subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal,
   }), [additionalDiscount, grandTotal, subtotal, taxableSubtotal, taxes])
 
-  return useMemo(() => (
-    { form, formState, totals, submitError }),
-  [form, formState, totals, submitError])
+  useEffect(() => {
+    form.reset(getInvoiceFormDefaultValues(invoice))
+  }, [invoice, form])
+
+  return useMemo(() => ({ form, formState, totals, submitError }), [form, formState, totals, submitError])
 }

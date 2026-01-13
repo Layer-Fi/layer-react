@@ -1,6 +1,7 @@
-import { pipe, Schema } from 'effect'
+import { Schema } from 'effect'
 import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
 
+import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { VendorSchema } from '@schemas/vendor'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { get } from '@api/layer/authenticated_http'
@@ -10,14 +11,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 const ListVendorsRawResultSchema = Schema.Struct({
   data: Schema.Array(VendorSchema),
   meta: Schema.Struct({
-    pagination: Schema.Struct({
-      cursor: Schema.NullOr(Schema.String),
-
-      hasMore: pipe(
-        Schema.propertySignature(Schema.Boolean),
-        Schema.fromKey('has_more'),
-      ),
-    }),
+    pagination: PaginatedResponseMetaSchema,
   }),
 })
 type ListVendorsRawResult = typeof ListVendorsRawResultSchema.Type

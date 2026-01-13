@@ -211,7 +211,12 @@ const withUpdatedInvoice = (updated: Invoice) =>
   (inv: Invoice): Invoice => inv.id === updated.id ? updated : inv
 
 export function useInvoicesGlobalCacheActions() {
-  const { patchCache, forceReload } = useGlobalCacheActions()
+  const { invalidate, patchCache, forceReload } = useGlobalCacheActions()
+
+  const invalidateInvoices = useCallback(
+    () => invalidate(({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY)),
+    [invalidate],
+  )
 
   const patchInvoiceByKey = useCallback((updatedInvoice: Invoice) =>
     patchCache<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
@@ -252,5 +257,5 @@ export function useInvoicesGlobalCacheActions() {
     [forceReload],
   )
 
-  return { patchInvoiceByKey, patchInvoiceWithTransformation, forceReloadInvoices }
+  return { invalidateInvoices, patchInvoiceByKey, patchInvoiceWithTransformation, forceReloadInvoices }
 }

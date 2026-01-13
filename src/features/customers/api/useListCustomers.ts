@@ -1,8 +1,11 @@
-import { pipe, Schema } from 'effect'
+import { useCallback } from 'react'
+import { Schema } from 'effect'
 import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
 
-import { CustomerSchema } from '@schemas/customer'
+import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { type Customer, CustomerSchema } from '@schemas/customer'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -10,14 +13,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 const ListCustomersRawResultSchema = Schema.Struct({
   data: Schema.Array(CustomerSchema),
   meta: Schema.Struct({
-    pagination: Schema.Struct({
-      cursor: Schema.NullOr(Schema.String),
-
-      hasMore: pipe(
-        Schema.propertySignature(Schema.Boolean),
-        Schema.fromKey('has_more'),
-      ),
-    }),
+    pagination: PaginatedResponseMetaSchema,
   }),
 })
 type ListCustomersRawResult = typeof ListCustomersRawResultSchema.Type
@@ -162,4 +158,35 @@ export function usePreloadCustomers(parameters?: UseListCustomersParams) {
    * cause a re-render when `data` changes.
    */
   useListCustomers(parameters)
+}
+
+const withUpdatedCustomer = (updated: Customer) =>
+  (customer: Customer): Customer => customer.id === updated.id ? updated : customer
+
+export function useCustomersGlobalCacheActions() {
+  const { patchCache, forceReload } = useGlobalCacheActions()
+
+  const patchCustomerByKey = useCallback((updatedCustomer: Customer) =>
+    patchCache<ListCustomersRawResult[] | ListCustomersRawResult | undefined>(
+      ({ tags }) => tags.includes(CUSTOMERS_TAG_KEY),
+      (currentData) => {
+        const iterateOverPage = (page: ListCustomersRawResult): ListCustomersRawResult => ({
+          ...page,
+          data: page.data.map(withUpdatedCustomer(updatedCustomer)),
+        })
+
+        return Array.isArray(currentData)
+          ? currentData.map(iterateOverPage)
+          : currentData
+      },
+    ),
+  [patchCache],
+  )
+
+  const forceReloadCustomers = useCallback(
+    () => forceReload(({ tags }) => tags.includes(CUSTOMERS_TAG_KEY)),
+    [forceReload],
+  )
+
+  return { patchCustomerByKey, forceReloadCustomers }
 }
