@@ -3,6 +3,7 @@
 - For significant changes, provide implementation options with a recommended approach before coding
 - Pause and ask for guidance when: task scope is unclear, complications arise, or phase completion
 - If user provides information broadly relevant to codebase, ask if it should be added to relevant docs
+- Do not add comments when writing code
 - Generate designs and code in reviewable phases
 - For all code changes: KISS, YAGNI, DRY
 - - **Refer to documentation files below when relevant to current task**
@@ -21,9 +22,16 @@
 # Style
 
 - No inline styles. Use existing component props
-- Avoid unnecessary CSS classes. Use existing props when possible
+- Use existing props when available instead of creating a new css class
 - Use design system spacing scale
 - Create `.scss` file matching component name but with lowercase first letter and import directly
+- Use BEM naming for css classes
+
+# Abstractions
+
+- Render single data object with loading/error/inactive states: `ConditionalBlock`
+- Render array with loading/error/empty states: `ConditionalList`
+- Render different components based on page width / mobile: `ResponsiveContainer`
 
 # Documentation
 
