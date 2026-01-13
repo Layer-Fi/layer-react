@@ -6,7 +6,7 @@ import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingTyp
 import { DATE_FORMAT_WITH_TIME_READABLE } from '@config/general'
 import { getTimezoneDisplay } from '@utils/time/timezoneUtils'
 import { Button } from '@ui/Button/Button'
-import { Link } from '@ui/Link/Link'
+import { LinkButton } from '@ui/Button/LinkButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
@@ -79,12 +79,10 @@ const ScheduledCallState = ({
           />
         </VStack>
 
-        <Link href={callBooking.callLink.toString()} target='_blank' rel='noopener noreferrer'>
-          <Button variant='outlined'>
-            <LinkIcon size={16} />
-            Join call
-          </Button>
-        </Link>
+        <LinkButton href={callBooking.callLink.toString()} external variant='outlined'>
+          <LinkIcon size={16} />
+          Join call
+        </LinkButton>
 
       </HStack>
     </VStack>
