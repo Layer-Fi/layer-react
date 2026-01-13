@@ -1,6 +1,6 @@
 import { type ReactNode, useCallback, useState } from 'react'
 
-import { useElementSize } from '@hooks/useElementSize/useElementSize'
+import { type ElementSize, useElementSize } from '@hooks/useElementSize/useElementSize'
 
 import './responsiveComponent.scss'
 
@@ -19,7 +19,7 @@ export const ResponsiveComponent = <T extends string = DefaultVariant>({
 }: ResponsiveComponentProps<T>) => {
   const [currentVariant, setCurrentVariant] = useState<T | null>(null)
 
-  const handleResize = useCallback((_el: HTMLDivElement, _entry: ResizeObserverEntry, size: { width: number }) => {
+  const handleResize = useCallback((size: ElementSize) => {
     setCurrentVariant(resolveVariant({ width: size.width }))
   }, [resolveVariant])
 
