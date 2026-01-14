@@ -8,12 +8,14 @@ import { getVehicleDisplayName } from '@features/vehicles/util'
 
 type VehicleDeleteConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   vehicle: Vehicle
+  useDrawer?: boolean
 }
 
 export function VehicleDeleteConfirmationModal({
   isOpen,
   onOpenChange,
   vehicle,
+  useDrawer,
 }: VehicleDeleteConfirmationModalProps) {
   const { trigger: deleteVehicle } = useDeleteVehicle({ vehicleId: vehicle.id })
 
@@ -33,6 +35,7 @@ export function VehicleDeleteConfirmationModal({
       confirmLabel='Delete vehicle'
       cancelLabel='Cancel'
       errorText='Failed to delete vehicle. Please check your connection and try again.'
+      useDrawer={useDrawer}
     />
   )
 }

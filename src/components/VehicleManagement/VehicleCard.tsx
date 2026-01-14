@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Archive, Car, Edit, RotateCcw, Trash2 } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -33,6 +34,7 @@ export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false)
   const [isReactivateModalOpen, setIsReactivateModalOpen] = useState(false)
+  const { isMobile } = useSizeClass()
 
   const vehicleName = getVehicleDisplayName(vehicle)
   const isArchived = vehicle.archivedAt !== null && vehicle.archivedAt !== undefined
@@ -104,16 +106,19 @@ export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
         isOpen={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
         vehicle={vehicle}
+        useDrawer={isMobile}
       />
       <VehicleArchiveConfirmationModal
         isOpen={isArchiveModalOpen}
         onOpenChange={setIsArchiveModalOpen}
         vehicle={vehicle}
+        useDrawer={isMobile}
       />
       <VehicleReactivateConfirmationModal
         isOpen={isReactivateModalOpen}
         onOpenChange={setIsReactivateModalOpen}
         vehicle={vehicle}
+        useDrawer={isMobile}
       />
     </>
   )

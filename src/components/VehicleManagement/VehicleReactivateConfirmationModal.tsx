@@ -8,12 +8,14 @@ import { getVehicleDisplayName } from '@features/vehicles/util'
 
 type VehicleReactivateConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   vehicle: Vehicle
+  useDrawer?: boolean
 }
 
 export function VehicleReactivateConfirmationModal({
   isOpen,
   onOpenChange,
   vehicle,
+  useDrawer,
 }: VehicleReactivateConfirmationModalProps) {
   const { trigger: reactivateVehicle } = useReactivateVehicle({ vehicleId: vehicle.id })
 
@@ -33,6 +35,7 @@ export function VehicleReactivateConfirmationModal({
       confirmLabel='Reactivate vehicle'
       cancelLabel='Cancel'
       errorText='Failed to reactivate vehicle. Please check your connection and try again.'
+      useDrawer={useDrawer}
     />
   )
 }

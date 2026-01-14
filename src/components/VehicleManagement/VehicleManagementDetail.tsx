@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
 import { Button } from '@ui/Button/Button'
@@ -43,6 +44,7 @@ export const VehicleManagementDetail = () => {
   const [isVehicleDrawerOpen, setIsVehicleDrawerOpen] = useState(false)
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | undefined>(undefined)
   const [showArchived, setShowArchived] = useState(false)
+  const { isMobile } = useSizeClass()
 
   const handleAddVehicle = useCallback(() => {
     setSelectedVehicle(undefined)
@@ -86,7 +88,7 @@ export const VehicleManagementDetail = () => {
       >
         <VehicleManagementGrid onEditVehicle={handleEditVehicle} showArchived={showArchived} />
       </BaseDetailView>
-      <Drawer isOpen={isVehicleDrawerOpen} onOpenChange={setIsVehicleDrawerOpen} aria-label={selectedVehicle ? 'Vehicle details' : 'Add vehicle'}>
+      <Drawer isOpen={isVehicleDrawerOpen} onOpenChange={setIsVehicleDrawerOpen} aria-label={selectedVehicle ? 'Vehicle details' : 'Add vehicle'} variant={isMobile ? 'mobile-drawer' : 'drawer'} flexBlock={isMobile}>
         {({ close }) => (
           <VStack pb='lg'>
             <VStack pi='md'>
