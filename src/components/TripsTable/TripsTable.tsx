@@ -283,6 +283,7 @@ export const TripsTable = () => {
         isDismissable
         aria-label={selectedTrip ? 'Trip details' : 'Record trip'}
         variant={isMobile ? 'mobile-drawer' : 'drawer'}
+        flexBlock={isMobile}
       >
         {({ close }) => (
           <VStack pb='lg'>

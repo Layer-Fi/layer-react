@@ -88,7 +88,7 @@ export const VehicleManagementDetail = () => {
       >
         <VehicleManagementGrid onEditVehicle={handleEditVehicle} showArchived={showArchived} />
       </BaseDetailView>
-      <Drawer isOpen={isVehicleDrawerOpen} onOpenChange={setIsVehicleDrawerOpen} aria-label={selectedVehicle ? 'Vehicle details' : 'Add vehicle'} variant={isMobile ? 'mobile-drawer' : 'drawer'}>
+      <Drawer isOpen={isVehicleDrawerOpen} onOpenChange={setIsVehicleDrawerOpen} aria-label={selectedVehicle ? 'Vehicle details' : 'Add vehicle'} variant={isMobile ? 'mobile-drawer' : 'drawer'} flexBlock={isMobile}>
         {({ close }) => (
           <VStack pb='lg'>
             <VStack pi='md'>
