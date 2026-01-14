@@ -4,7 +4,7 @@ import { type ElementSize, useElementSize } from '@hooks/useElementSize/useEleme
 
 import './responsiveComponent.scss'
 
-export type DefaultVariant = 'Desktop' | 'SmallDesktop' | 'Mobile'
+export type DefaultVariant = 'Desktop' | 'Mobile'
 
 export type VariantResolver<T extends string> = ({ width }: { width: number }) => T
 
@@ -26,10 +26,7 @@ export const ResponsiveComponent = <T extends string = DefaultVariant>({
   const containerRef = useElementSize<HTMLDivElement>(handleResize)
 
   return (
-    <div
-      ref={containerRef}
-      className='Layer__ResponsiveComponent'
-    >
+    <div ref={containerRef} className='Layer__ResponsiveComponent'>
       {currentVariant !== null && slots[currentVariant]}
     </div>
   )

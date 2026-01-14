@@ -1,16 +1,3 @@
-.Layer__TripsTable {
-  overflow: hidden;
-  width: clamp(61rem, 100%, 1406px);
-}
-
-.Layer__TripsTable__VehicleSelector {
-  width: 12rem;
-}
-
-.Layer__TripsTable__SearchField {
-  width: 15rem;
-}
-
 .Layer__UI__Table__TripsTable {
   table-layout: fixed;
   width: 100%;

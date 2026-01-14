@@ -13,7 +13,7 @@ import { Pagination } from '@components/Pagination/Pagination'
 
 import './paginatedDataTable.scss'
 
-interface PaginationProps {
+export interface TablePaginationProps {
   initialPage?: number
   onSetPage?: (page: number) => void
   pageSize?: number
@@ -21,10 +21,11 @@ interface PaginationProps {
   fetchMore?: () => void
   autoResetPageIndexRef?: MutableRefObject<boolean>
 }
+
 interface PaginatedTableProps<TData> extends BaseDataTableProps {
   data: TData[] | undefined
   columnConfig: NestedColumnConfig<TData>
-  paginationProps: PaginationProps
+  paginationProps: TablePaginationProps
 }
 
 export function PaginatedTable<TData extends { id: string }>({

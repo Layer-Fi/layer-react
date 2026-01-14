@@ -1,0 +1,10 @@
+.Layer__MobileListSkeleton {
+  &__Item {
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-2xs);
+
+    box-shadow:
+      0 4px 4px 0 var(--color-base-100),
+      0 2px 2px 0 var(--color-base-200);
+  }
+}

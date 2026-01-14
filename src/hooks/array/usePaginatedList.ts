@@ -1,42 +1,34 @@
 import { useCallback, useMemo, useState } from 'react'
 
-export function usePaginatedList<T>(list: ReadonlyArray<T>, pageSize: number) {
-  const [internalPageIndex, setInternalPageIndex] = useState(0)
+type UsePaginatedListProps<T> = {
+  data: ReadonlyArray<T>
+  pageSize: number
+  initialPage?: number
+  onSetPage?: (page: number) => void
+}
 
-  const pageCount = Math.max(0, Math.ceil(list.length / pageSize))
+export function usePaginatedList<T>({ data, pageSize, initialPage = 0, onSetPage }: UsePaginatedListProps<T>) {
+  const [internalPageIndex, setInternalPageIndex] = useState(initialPage)
+
+  const pageCount = Math.max(0, Math.ceil(data.length / pageSize))
   const effectivePageIndex = Math.max(0, Math.min(internalPageIndex, pageCount - 1))
 
   const pageItems = useMemo(() => {
-    return list.slice(
+    return data.slice(
       effectivePageIndex * pageSize,
       (effectivePageIndex + 1) * pageSize,
     ) as ReadonlyArray<T>
-  }, [list, effectivePageIndex, pageSize])
+  }, [data, effectivePageIndex, pageSize])
 
-  const next = useCallback(() => {
-    setInternalPageIndex(Math.min(effectivePageIndex + 1, pageCount - 1))
-  }, [effectivePageIndex, pageCount])
-
-  const set = useCallback((pageIndex: number) => {
+  const setPage = useCallback((pageIndex: number) => {
     setInternalPageIndex(Math.max(0, Math.min(pageIndex, pageCount - 1)))
-  }, [pageCount])
-
-  const previous = useCallback(() => {
-    setInternalPageIndex(Math.max(effectivePageIndex - 1, 0))
-  }, [effectivePageIndex])
-
-  const reset = useCallback(() => {
-    setInternalPageIndex(0)
-  }, [])
+    onSetPage?.(pageIndex)
+  }, [onSetPage, pageCount])
 
   return {
     pageCount,
     pageIndex: effectivePageIndex,
     pageItems,
-    pageSize,
-    next,
-    set,
-    previous,
-    reset,
+    setPage,
   }
 }
