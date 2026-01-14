@@ -8,6 +8,7 @@ import { type Vehicle } from '@schemas/vehicle'
 import { formatCalendarDate } from '@utils/time/timeUtils'
 import { useAutoResetPageIndex } from '@hooks/pagination/useAutoResetPageIndex'
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -120,6 +121,7 @@ export const TripsTable = () => {
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
   const [tripToDelete, setTripToDelete] = useState<Trip | null>(null)
+  const { isMobile } = useSizeClass()
 
   const { tableFilters, setTableFilters } = useTripsTableFilters()
   const { query, selectedVehicle, purposeFilter } = tableFilters
@@ -280,6 +282,7 @@ export const TripsTable = () => {
         onOpenChange={setIsTripDrawerOpen}
         isDismissable
         aria-label={selectedTrip ? 'Trip details' : 'Record trip'}
+        variant={isMobile ? 'mobile-drawer' : 'drawer'}
       >
         {({ close }) => (
           <VStack pb='lg'>

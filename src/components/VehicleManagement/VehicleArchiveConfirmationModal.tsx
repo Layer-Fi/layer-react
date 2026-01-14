@@ -8,12 +8,14 @@ import { getVehicleDisplayName } from '@features/vehicles/util'
 
 type VehicleArchiveConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   vehicle: Vehicle
+  useDrawer?: boolean
 }
 
 export function VehicleArchiveConfirmationModal({
   isOpen,
   onOpenChange,
   vehicle,
+  useDrawer,
 }: VehicleArchiveConfirmationModalProps) {
   const { trigger: archiveVehicle } = useArchiveVehicle({ vehicleId: vehicle.id })
 
@@ -33,6 +35,7 @@ export function VehicleArchiveConfirmationModal({
       confirmLabel='Archive vehicle'
       cancelLabel='Cancel'
       errorText='Failed to archive vehicle. Please check your connection and try again.'
+      useDrawer={useDrawer}
     />
   )
 }
