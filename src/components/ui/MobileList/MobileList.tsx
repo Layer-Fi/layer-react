@@ -93,7 +93,7 @@ export const MobileList = <TData extends { id: string }>(props: MobileListProps<
   return (
     <GridList
       items={data}
-      selectionMode={selectionMode}
+      selectionMode={resolvedSelectionMode}
       selectionBehavior={resolvedSelectionBehavior}
       renderEmptyState={EmptyState}
       aria-label={ariaLabel}

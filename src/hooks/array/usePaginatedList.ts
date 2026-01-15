@@ -21,8 +21,10 @@ export function usePaginatedList<T>({ data, pageSize, initialPage = 0, onSetPage
   }, [data, effectivePageIndex, pageSize])
 
   const setPage = useCallback((pageIndex: number) => {
-    setInternalPageIndex(Math.max(0, Math.min(pageIndex, pageCount - 1)))
-    onSetPage?.(pageIndex)
+    const clampedPageIndex = Math.max(0, Math.min(pageIndex, pageCount - 1))
+
+    setInternalPageIndex(clampedPageIndex)
+    onSetPage?.(clampedPageIndex)
   }, [onSetPage, pageCount])
 
   return {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Edit, Trash2 } from 'lucide-react'
 
 import type { Trip } from '@schemas/trip'
@@ -22,27 +22,29 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
   const [isEditMode, setIsEditMode] = useState(false)
   const isReadOnly = !isEditMode && !!trip && (isMobile || isTablet)
 
+  const handleOpenChange = useCallback((nextIsOpen: boolean) => {
+    if (!nextIsOpen) {
+      setIsEditMode(false)
+    }
+    onOpenChange(nextIsOpen)
+  }, [onOpenChange])
+
   return (
     <Drawer
       isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       isDismissable
       variant={isMobile ? 'mobile-drawer' : 'drawer'}
       flexBlock={isMobile}
       aria-label={trip ? 'Trip details' : 'Record trip'}
     >
       {({ close }) => {
-        const onClose = () => {
-          setIsEditMode(false)
-          close()
-        }
-
         return (
           <VStack pb='lg'>
             <VStack pi='md'>
               <ModalTitleWithClose
                 heading={<ModalHeading size='md'>{trip ? 'Trip details' : 'Record trip'}</ModalHeading>}
-                onClose={onClose}
+                onClose={close}
               />
             </VStack>
             <VStack gap='md'>
@@ -51,7 +53,7 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
                 trip={trip ?? undefined}
                 onSuccess={() => {
                   onSuccess()
-                  onClose()
+                  close()
                 }}
               />
               {isReadOnly && (
