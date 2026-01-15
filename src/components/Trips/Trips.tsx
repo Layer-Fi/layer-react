@@ -1,5 +1,5 @@
 import { TripsRoute, TripsRouteStoreProvider, useTripsRouteState } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
-import { ResponsiveTripsView } from '@components/TripsTable/ResponsiveTripsView'
+import { ResponsiveTripsView } from '@components/Trips/TripsView/ResponsiveTripsView'
 import { VehicleManagementDetail } from '@components/VehicleManagement/VehicleManagementDetail'
 
 export const Trips = () => {

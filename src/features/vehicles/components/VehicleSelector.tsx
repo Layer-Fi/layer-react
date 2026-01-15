@@ -7,7 +7,7 @@ import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { Label } from '@ui/Typography/Text'
 import { useListVehicles } from '@features/vehicles/api/useListVehicles'
-import { getVehicleDisplayName } from '@features/vehicles/util'
+import { getVehicleDisplayName } from '@features/vehicles/utils'
 
 import './vehicleSelector.scss'
 

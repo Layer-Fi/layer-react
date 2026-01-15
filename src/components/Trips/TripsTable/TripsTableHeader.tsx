@@ -7,7 +7,7 @@ import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStore
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { DataTableHeader } from '@components/DataTable/DataTableHeader'
-import { TripsTableHeaderMenu } from '@components/TripsTable/TripsTableHeaderMenu'
+import { TripsTableHeaderMenu } from '@components/Trips/TripsTable/TripsTableHeaderMenu'
 import { type TripPurposeFilterValue, TripPurposeToggle } from '@features/trips/components/TripPurposeToggle'
 import { VehicleSelector } from '@features/vehicles/components/VehicleSelector'
 

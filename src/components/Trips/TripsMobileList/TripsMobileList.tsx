@@ -7,8 +7,8 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize } from '@components/Badge/Badge'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
-import { TripsAddressCell } from '@components/TripsTable/TripsAddressCell'
-import { formatDistance, getPurposeBadgeVariant, getPurposeLabel } from '@components/TripsTable/utils'
+import { TripsAddressCell } from '@components/Trips/TripAddressCell/TripAddressCell'
+import { formatDistance, getPurposeBadgeVariant, getPurposeLabel } from '@components/Trips/utils'
 
 import './tripsMobileList.scss'
 
