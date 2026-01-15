@@ -3,21 +3,3 @@
   flex-direction: column;
   gap: var(--spacing-sm);
 }
-
-.Layer__MobileList__Item {
-  display: grid;
-  grid-template-areas: 'content';
-  grid-template-columns: 1fr;
-
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-
-  border: 1px solid var(--border-color);
-  background-color: var(--color-base-0);
-
-  &[data-selection-mode='multiple'],
-  &[data-selection-mode='single'] {
-    grid-template-areas: 'selection content';
-    grid-template-columns: auto 1fr;
-  }
-}

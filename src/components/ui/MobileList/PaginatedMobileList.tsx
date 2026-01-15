@@ -6,8 +6,7 @@ import { VStack } from '@ui/Stack/Stack'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 import { Pagination } from '@components/Pagination/Pagination'
 
-type PaginatedMobileListProps<TData> = Omit<MobileListProps<TData>, 'data'> & {
-  data: TData[] | undefined
+type PaginatedMobileListProps<TData> = MobileListProps<TData> & {
   paginationProps: TablePaginationProps
 }
 
