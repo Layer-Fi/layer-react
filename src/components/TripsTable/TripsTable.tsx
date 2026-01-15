@@ -1,16 +1,17 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
-import { Car, Edit, Trash2 } from 'lucide-react'
+import { Edit, Trash2 } from 'lucide-react'
 
 import { type Trip, type TripPurpose } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { Container } from '@components/Container/Container'
 import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 import { TripsAddressCell } from '@components/TripsTable/TripsAddressCell'
+import { TripsTableHeader } from '@components/TripsTable/TripsTableHeader'
 import { formatDistance, getPurposeLabel } from '@components/TripsTable/utils'
 import { getVehicleDisplayName } from '@features/vehicles/util'
 
@@ -29,12 +30,12 @@ enum TripColumns {
 }
 
 type TripActions = {
-  onEditTrip: (trip: Trip) => void
+  onViewOrUpsertTrip: (trip: Trip) => void
   onDeleteTrip: (trip: Trip) => void
 }
 
 type TripsRowType = Row<Trip>
-const getColumnConfig = ({ onEditTrip, onDeleteTrip }: TripActions): NestedColumnConfig<Trip> => [
+const getColumnConfig = ({ onViewOrUpsertTrip, onDeleteTrip }: TripActions): NestedColumnConfig<Trip> => [
   {
     id: TripColumns.TripDate,
     header: 'Date',
@@ -70,10 +71,10 @@ const getColumnConfig = ({ onEditTrip, onDeleteTrip }: TripActions): NestedColum
     id: TripColumns.Actions,
     cell: (row: TripsRowType) => (
       <HStack gap='3xs'>
-        <Button inset icon onPress={() => onEditTrip(row.original)} aria-label='View trip' variant='ghost'>
+        <Button inset icon onPress={() => onViewOrUpsertTrip(row.original)} aria-label='View Trip' variant='ghost'>
           <Edit size={20} />
         </Button>
-        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label='Delete trip' variant='ghost'>
+        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label='Delete Trip' variant='ghost'>
           <Trash2 size={20} />
         </Button>
       </HStack>
@@ -81,32 +82,17 @@ const getColumnConfig = ({ onEditTrip, onDeleteTrip }: TripActions): NestedColum
   },
 ]
 
-const TripsTableEmptyState = () => (
-  <DataState
-    status={DataStateStatus.allDone}
-    title='No trips yet'
-    description='Add your first trip to start tracking mileage.'
-    icon={<Car />}
-    spacing
-  />
-)
-
-const TripsTableErrorState = () => (
-  <DataState
-    status={DataStateStatus.failed}
-    title="We couldn't load your trips"
-    description='An error occurred while loading your trips. Please check your connection and try again.'
-    spacing
-  />
-)
-
 export interface TripsTableProps {
   data: Trip[] | undefined
   isLoading: boolean
   isError: boolean
   paginationProps: TablePaginationProps
-  onEditTrip: (trip: Trip) => void
   onDeleteTrip: (trip: Trip) => void
+  onViewOrUpsertTrip: (trip: Trip | null) => void
+  slots: {
+    EmptyState: React.FC
+    ErrorState: React.FC
+  }
 }
 
 export const TripsTable = ({
@@ -114,24 +100,26 @@ export const TripsTable = ({
   isLoading,
   isError,
   paginationProps,
-  onEditTrip,
   onDeleteTrip,
+  onViewOrUpsertTrip,
+  slots,
 }: TripsTableProps) => {
-  const columnConfig = useMemo(() => getColumnConfig({ onEditTrip, onDeleteTrip }), [onEditTrip, onDeleteTrip])
+  const columnConfig = useMemo(() => getColumnConfig({ onViewOrUpsertTrip, onDeleteTrip }), [onViewOrUpsertTrip, onDeleteTrip])
+  const onRecordTrip = useCallback(() => onViewOrUpsertTrip(null), [onViewOrUpsertTrip])
 
   return (
-    <PaginatedTable
-      ariaLabel='Trips'
-      data={data}
-      isLoading={isLoading}
-      isError={isError}
-      columnConfig={columnConfig}
-      paginationProps={paginationProps}
-      componentName={COMPONENT_NAME}
-      slots={{
-        EmptyState: TripsTableEmptyState,
-        ErrorState: TripsTableErrorState,
-      }}
-    />
+    <Container name='TripsTable'>
+      <TripsTableHeader onRecordTrip={onRecordTrip} />
+      <PaginatedTable
+        ariaLabel='Trips'
+        data={data}
+        isLoading={isLoading}
+        isError={isError}
+        columnConfig={columnConfig}
+        paginationProps={paginationProps}
+        componentName={COMPONENT_NAME}
+        slots={slots}
+      />
+    </Container>
   )
 }

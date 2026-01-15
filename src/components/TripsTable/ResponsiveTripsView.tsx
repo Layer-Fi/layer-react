@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { getYear } from 'date-fns'
+import { Car } from 'lucide-react'
 
 import type { Trip } from '@schemas/trip'
 import { BREAKPOINTS } from '@config/general'
@@ -7,19 +8,37 @@ import { useAutoResetPageIndex } from '@hooks/pagination/useAutoResetPageIndex'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
-import { Container } from '@components/Container/Container'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TripDeleteConfirmationModal } from '@components/Trips/TripDeleteConfirmationModal'
 import { TripDrawer } from '@components/TripsTable/TripDrawer'
 import { TripsMobileList } from '@components/TripsTable/TripsMobileList'
 import { TripsTable } from '@components/TripsTable/TripsTable'
-import { TripsTableHeader } from '@components/TripsTable/TripsTableHeader'
 import { useListTrips } from '@features/trips/api/useListTrips'
 import { TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
 
-import './responsiveTripsView.scss'
-
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
   width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
+
+const TripsViewEmptyState = () => (
+  <DataState
+    status={DataStateStatus.allDone}
+    title='No trips yet'
+    description='Add your first trip to start tracking mileage.'
+    icon={<Car />}
+    spacing
+    className='Layer__TripsView__EmptyState'
+  />
+)
+
+const TripsViewErrorState = () => (
+  <DataState
+    status={DataStateStatus.failed}
+    title="We couldn't load your trips"
+    description='An error occurred while loading your trips. Please check your connection and try again.'
+    spacing
+    className='Layer__TripsView__ErrorState'
+  />
+)
 
 export const ResponsiveTripsView = () => {
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
@@ -53,18 +72,13 @@ export const ResponsiveTripsView = () => {
     }
   }, [hasMore, setSize, size])
 
-  const onEditTrip = useCallback((trip: Trip) => {
+  const onViewOrUpsertTrip = useCallback((trip: Trip | null) => {
     setSelectedTrip(trip)
     setIsTripDrawerOpen(true)
   }, [])
 
   const onDeleteTrip = useCallback((trip: Trip) => {
     setTripToDelete(trip)
-  }, [])
-
-  const onRecordTrip = useCallback(() => {
-    setSelectedTrip(null)
-    setIsTripDrawerOpen(true)
   }, [])
 
   const paginationProps = useMemo(() => ({
@@ -82,27 +96,32 @@ export const ResponsiveTripsView = () => {
       isLoading={isLoading}
       isError={isError}
       paginationProps={paginationProps}
-      onEditTrip={onEditTrip}
       onDeleteTrip={onDeleteTrip}
+      onViewOrUpsertTrip={onViewOrUpsertTrip}
+      slots={{
+        EmptyState: TripsViewEmptyState,
+        ErrorState: TripsViewErrorState,
+      }}
     />
-  ), [trips, isLoading, isError, paginationProps, onEditTrip, onDeleteTrip])
+  ), [trips, isLoading, isError, paginationProps, onViewOrUpsertTrip, onDeleteTrip])
 
   const MobileView = useMemo(() => (
     <TripsMobileList
       data={trips}
       isLoading={isLoading}
       isError={isError}
-      onEditTrip={onEditTrip}
       paginationProps={paginationProps}
+      onViewOrUpsertTrip={onViewOrUpsertTrip}
+      slots={{
+        EmptyState: TripsViewEmptyState,
+        ErrorState: TripsViewErrorState,
+      }}
     />
-  ), [trips, isLoading, isError, onEditTrip, paginationProps])
+  ), [trips, isLoading, isError, onViewOrUpsertTrip, paginationProps])
 
   return (
     <>
-      <Container name='TripsTable'>
-        <TripsTableHeader onRecordTrip={onRecordTrip} />
-        <ResponsiveComponent resolveVariant={resolveVariant} slots={{ Desktop: DesktopView, Mobile: MobileView }} />
-      </Container>
+      <ResponsiveComponent resolveVariant={resolveVariant} slots={{ Desktop: DesktopView, Mobile: MobileView }} />
       <TripDrawer
         isOpen={isTripDrawerOpen && !tripToDelete}
         onOpenChange={setIsTripDrawerOpen}

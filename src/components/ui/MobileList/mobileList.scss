@@ -12,9 +12,8 @@
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-sm);
 
-  box-shadow:
-    0 4px 4px 0 var(--color-base-100),
-    0 2px 2px 0 var(--color-base-200);
+  border: 1px solid var(--border-color);
+  background-color: var(--color-base-0);
 
   &[data-selection-mode='multiple'],
   &[data-selection-mode='single'] {
