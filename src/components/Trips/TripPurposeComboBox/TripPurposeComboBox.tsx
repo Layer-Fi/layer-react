@@ -5,7 +5,7 @@ import { TripPurpose } from '@schemas/trip'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { getPurposeLabel } from '@components/TripsTable/utils'
+import { getPurposeLabel } from '@components/Trips/utils'
 
 import './tripPurposeComboBox.scss'
 

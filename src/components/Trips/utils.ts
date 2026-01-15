@@ -2,6 +2,7 @@ import { BigDecimal as BD } from 'effect'
 
 import { TripPurpose } from '@schemas/trip'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { BadgeVariant } from '@components/Badge/Badge'
 
 export const formatDistance = (distance: BD.BigDecimal) => {
   return `${BD.format(distance)} mi`
@@ -22,4 +23,14 @@ export const getPurposeLabel = (purpose: TripPurpose): string => {
         fallbackValue: 'Business' as string,
       }) ?? 'Business'
   }
+}
+
+export const getPurposeBadgeVariant = (purpose: TripPurpose): BadgeVariant => {
+  if (purpose === TripPurpose.Business) {
+    return BadgeVariant.SUCCESS
+  }
+  if (purpose === TripPurpose.Personal) {
+    return BadgeVariant.INFO
+  }
+  return BadgeVariant.WARNING
 }

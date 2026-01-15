@@ -10,12 +10,12 @@ import {
 
 import { centsToDollars } from '@models/Money'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { VStack } from '@ui/Stack/Stack'
 import { ChartYAxis } from '@components/Chart/ChartYAxis'
 import type { MileageDeductionChartDataPoint } from '@components/MileageDeductionChart/MileageDeductionChartDataPoint'
 import {
   MileageDeductionChartTooltip,
 } from '@components/MileageDeductionChart/MileageDeductionChartTooltip'
-import { VStack } from '@components/ui/Stack/Stack'
 
 import './mileageDeductionChart.scss'
 

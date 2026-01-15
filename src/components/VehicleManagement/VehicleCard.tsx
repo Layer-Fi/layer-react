@@ -13,7 +13,7 @@ import { Separator } from '@components/Separator/Separator'
 import { VehicleArchiveConfirmationModal } from '@components/VehicleManagement/VehicleArchiveConfirmationModal'
 import { VehicleDeleteConfirmationModal } from '@components/VehicleManagement/VehicleDeleteConfirmationModal'
 import { VehicleReactivateConfirmationModal } from '@components/VehicleManagement/VehicleReactivateConfirmationModal'
-import { getVehicleDisplayName } from '@features/vehicles/util'
+import { getVehicleDisplayName } from '@features/vehicles/utils'
 
 import './vehicleCard.scss'
 

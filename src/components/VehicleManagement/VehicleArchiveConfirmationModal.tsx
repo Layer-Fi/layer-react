@@ -4,7 +4,7 @@ import { type Vehicle } from '@schemas/vehicle'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { useArchiveVehicle } from '@features/vehicles/api/useArchiveVehicle'
-import { getVehicleDisplayName } from '@features/vehicles/util'
+import { getVehicleDisplayName } from '@features/vehicles/utils'
 
 type VehicleArchiveConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   vehicle: Vehicle

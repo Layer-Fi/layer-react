@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { type CalendarDate } from '@internationalized/date'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
 
 import { type Trip, TripPurpose } from '@schemas/trip'
@@ -15,9 +15,6 @@ import { TextSize } from '@components/Typography/Text'
 import { VehicleSelector } from '@features/vehicles/components/VehicleSelector'
 
 import './tripForm.scss'
-
-const TRIP_FORM_CSS_PREFIX = 'Layer__TripForm'
-const TRIP_FORM_FIELD_CSS_PREFIX = `${TRIP_FORM_CSS_PREFIX}__Field`
 
 export type TripFormProps = {
   trip?: Trip
@@ -36,13 +33,13 @@ export const TripForm = (props: TripFormProps) => {
   }, [])
 
   return (
-    <Form className={TRIP_FORM_CSS_PREFIX} onSubmit={blockNativeOnSubmit}>
+    <Form className='Layer__TripForm' onSubmit={blockNativeOnSubmit}>
       <form.Subscribe selector={state => state.errorMap}>
         {(errorMap) => {
           const validationErrors = flattenValidationErrors(errorMap)
           if (validationErrors.length > 0 || submitError) {
             return (
-              <HStack className={`${TRIP_FORM_CSS_PREFIX}__FormError`}>
+              <HStack className='Layer__TripForm__FormError'>
                 <DataState
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
@@ -62,7 +59,7 @@ export const TripForm = (props: TripFormProps) => {
             label='Trip date'
             inline
             isReadOnly={isReadOnly}
-            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__TripDate`}
+            className='Layer__TripForm__Field__TripDate'
           />
         )}
       </form.AppField>
@@ -75,7 +72,7 @@ export const TripForm = (props: TripFormProps) => {
             isReadOnly={isReadOnly}
             maxDecimalPlaces={2}
             placeholder='Enter distance'
-            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Distance`}
+            className='Layer__TripForm__Field__Distance'
           />
         )}
       </form.AppField>
@@ -87,7 +84,7 @@ export const TripForm = (props: TripFormProps) => {
             inline
             isReadOnly={isReadOnly}
             placeholder='Enter address'
-            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__StartAddress`}
+            className='Layer__TripForm__Field__StartAddress'
           />
         )}
       </form.AppField>
@@ -99,7 +96,7 @@ export const TripForm = (props: TripFormProps) => {
             inline
             isReadOnly={isReadOnly}
             placeholder='Enter address'
-            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__EndAddress`}
+            className='Layer__TripForm__Field__EndAddress'
           />
         )}
       </form.AppField>
@@ -110,7 +107,7 @@ export const TripForm = (props: TripFormProps) => {
             value={field.state.value}
             onValueChange={value => field.handleChange(value ?? TripPurpose.Unreviewed)}
             isReadOnly={isReadOnly}
-            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Purpose`}
+            className='Layer__TripForm__Field__Purpose'
           />
         )}
       </form.Field>
@@ -122,7 +119,7 @@ export const TripForm = (props: TripFormProps) => {
             inline
             isReadOnly={isReadOnly}
             placeholder='Add description'
-            className={`${TRIP_FORM_FIELD_CSS_PREFIX}__Description`}
+            className='Layer__TripForm__Field__Description'
           />
         )}
       </form.AppField>
@@ -135,25 +132,28 @@ export const TripForm = (props: TripFormProps) => {
             isReadOnly={isReadOnly}
             inline
             placeholder='Add vehicle'
-            containerClassName={`${TRIP_FORM_FIELD_CSS_PREFIX}__Vehicle`}
+            containerClassName='Layer__TripForm__Field__Vehicle'
           />
         )}
       </form.Field>
 
-      <VStack justify='end' className={`${TRIP_FORM_CSS_PREFIX}__Submit`}>
-        <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
-          {([canSubmit, isSubmitting]) => (
-            <Button
-              type='submit'
-              isDisabled={!canSubmit}
-              isPending={isSubmitting}
-              onPress={() => { void form.handleSubmit() }}
-            >
-              Save Trip
-            </Button>
-          )}
-        </form.Subscribe>
-      </VStack>
+      {!isReadOnly && (
+        <VStack justify='end' className='Layer__TripForm__Submit'>
+          <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
+            {([canSubmit, isSubmitting]) => (
+              <Button
+                type='submit'
+                isDisabled={!canSubmit}
+                isPending={isSubmitting}
+                onPress={() => { void form.handleSubmit() }}
+              >
+                <Save size={14} />
+                Save Trip
+              </Button>
+            )}
+          </form.Subscribe>
+        </VStack>
+      )}
     </Form>
   )
 }

@@ -4,7 +4,7 @@ import { type Vehicle } from '@schemas/vehicle'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { useReactivateVehicle } from '@features/vehicles/api/useReactivateVehicle'
-import { getVehicleDisplayName } from '@features/vehicles/util'
+import { getVehicleDisplayName } from '@features/vehicles/utils'
 
 type VehicleReactivateConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   vehicle: Vehicle
