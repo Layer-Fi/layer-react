@@ -4,7 +4,7 @@ import { Span } from '@ui/Typography/Text'
 
 export const TripsAddressCell = ({ trip }: { trip: Trip }) => {
   return (
-    <VStack gap='3xs'>
+    <VStack gap='3xs' overflow='auto'>
       {trip.startAddress && (
         <Span ellipsis size='sm' withTooltip>
           <strong>Start:</strong>
