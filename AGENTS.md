@@ -15,9 +15,9 @@
 
 # Components
 
-- Use `Span` from `../ui/Typography/Text` instead of `<span>`
-- Use `<HStack>` and `<VStack>` from `../ui/Stack/Stack` instead of `<div>`
-- Build on existing components in `../ui` before creating new ones
+- Use `Span` from `@ui/Typography/Text` instead of `<span>`
+- Use `<HStack>` and `<VStack>` from `@ui/Stack/Stack` instead of `<div>`
+- Build on existing components in `@ui` before creating new ones
 
 # Style
 
