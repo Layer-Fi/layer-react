@@ -12,15 +12,26 @@ type UseCustomerFormProps = { onSuccess: onSuccessFn } & CustomerFormState
 
 export const useCustomerForm = (props: UseCustomerFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
-  const { onSuccess, ...formState } = props
+  const { onSuccess, mode } = props
+
+  const customer = mode === UpsertCustomerMode.Update ? props.customer : undefined
+  const initialName = mode === UpsertCustomerMode.Create ? props.initialName : undefined
+
+  const formDefaults = useMemo((): CustomerForm => {
+    const formState: CustomerFormState = mode === UpsertCustomerMode.Update && customer
+      ? { mode: UpsertCustomerMode.Update, customer }
+      : { mode: UpsertCustomerMode.Create, initialName }
+
+    return getCustomerFormDefaultValues(formState)
+  }, [mode, customer, initialName])
 
   const { trigger: upsertCustomer } = useUpsertCustomer(
-    props.mode === UpsertCustomerMode.Update
+    mode === UpsertCustomerMode.Update
       ? { mode: UpsertCustomerMode.Update, customerId: props.customer.id }
       : { mode: UpsertCustomerMode.Create },
   )
 
-  const defaultValuesRef = useRef<CustomerForm>(getCustomerFormDefaultValues(formState))
+  const defaultValuesRef = useRef<CustomerForm>(formDefaults)
   const defaultValues = defaultValuesRef.current
 
   const onSubmit = useCallback(async ({ value }: { value: CustomerForm }) => {
@@ -56,8 +67,8 @@ export const useCustomerForm = (props: UseCustomerFormProps) => {
   })
 
   useEffect(() => {
-    form.reset(getCustomerFormDefaultValues(formState))
-  }, [form, formState])
+    form.reset(formDefaults)
+  }, [form, formDefaults])
 
   return useMemo(() => ({ form, submitError }), [form, submitError])
 }

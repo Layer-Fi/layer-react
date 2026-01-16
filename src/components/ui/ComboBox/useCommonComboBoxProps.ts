@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import type { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
 
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
-import type { BaseComboBoxProps, ComboBoxOption } from '@ui/ComboBox/types'
+import type { AriaLabelProps, BaseComboBoxProps, ComboBoxOption } from '@ui/ComboBox/types'
 import { useComboBoxSubcomponents } from '@ui/ComboBox/useComboBoxSubcomponents'
 
 export function useCommonComboBoxProps<T extends ComboBoxOption>({
@@ -23,6 +23,9 @@ export function useCommonComboBoxProps<T extends ComboBoxOption>({
   isSearchable = true,
   isLoading,
   isMutating,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
+  'aria-describedby': ariaDescribedby,
 }: Pick<
   BaseComboBoxProps<T>,
   | 'className'
@@ -41,7 +44,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption>({
   | 'isSearchable'
   | 'isLoading'
   | 'isMutating'
->) {
+> & AriaLabelProps) {
   const internalInputId = useId()
   const effectiveInputId = inputId ?? internalInputId
 
@@ -93,7 +96,13 @@ export function useCommonComboBoxProps<T extends ComboBoxOption>({
     isSearchable: isSearchable && !isReadOnly,
     isLoading: isLoading || isMutating,
     openMenuOnClick: !isReadOnly,
+    ['aria-label']: ariaLabel,
+    ['aria-labelledby']: ariaLabelledby,
+    ['aria-describedby']: ariaDescribedby,
   }), [
+    ariaDescribedby,
+    ariaLabel,
+    ariaLabelledby,
     className,
     components,
     effectiveInputId,
