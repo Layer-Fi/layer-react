@@ -195,7 +195,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   const { onSuccess, onChangeFormState, isReadOnly } = props
   const { businessId } = useLayerContext()
   const { data: accountingConfig } = useAccountingConfiguration({ businessId })
-  const enableCustomerManagement = (accountingConfig?.enableCustomerManagement ?? false) || true
+  const enableCustomerManagement = accountingConfig?.enableCustomerManagement ?? false
 
   const { form, formState, totals, submitError } = useInvoiceForm(
     { onSuccess, ...viewState },
