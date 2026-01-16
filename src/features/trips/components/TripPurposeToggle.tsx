@@ -13,12 +13,14 @@ export type TripPurposeToggleProps = {
   selected: TripPurposeFilterValue
   onChange: (value: TripPurposeFilterValue) => void
   size?: ToggleSize
+  fullWidth?: boolean
 }
 
 export const TripPurposeToggle = ({
   selected,
   onChange,
   size = ToggleSize.small,
+  fullWidth,
 }: TripPurposeToggleProps) => {
   const options = useMemo(() => [
     { label: 'All', value: TripPurposeFilterValue.All },
@@ -33,6 +35,7 @@ export const TripPurposeToggle = ({
       selectedKey={selected}
       onSelectionChange={key => onChange(key as TripPurposeFilterValue)}
       size={size}
+      fullWidth={fullWidth}
     />
   )
 }
