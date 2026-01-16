@@ -1,0 +1,12 @@
+.Layer__TripsMobileHeader {
+  padding: var(--spacing-sm);
+
+  &__SearchField {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__RecordButton {
+    flex-shrink: 0;
+  }
+}

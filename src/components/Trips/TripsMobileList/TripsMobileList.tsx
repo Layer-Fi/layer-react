@@ -8,6 +8,7 @@ import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize } from '@components/Badge/Badge'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 import { TripsAddressCell } from '@components/Trips/TripAddressCell/TripAddressCell'
+import { TripsMobileHeader } from '@components/Trips/TripsMobileHeader/TripsMobileHeader'
 import { formatDistance, getPurposeBadgeVariant, getPurposeLabel } from '@components/Trips/utils'
 
 import './tripsMobileList.scss'
@@ -17,6 +18,7 @@ interface TripsMobileListProps {
   isLoading: boolean
   isError: boolean
   onViewOrUpsertTrip: (trip: Trip) => void
+  onRecordTrip: () => void
   paginationProps: TablePaginationProps
   slots: {
     EmptyState: React.FC
@@ -44,6 +46,7 @@ export const TripsMobileList = ({
   isLoading,
   isError,
   onViewOrUpsertTrip,
+  onRecordTrip,
   paginationProps,
   slots,
 }: TripsMobileListProps) => {
@@ -51,6 +54,7 @@ export const TripsMobileList = ({
 
   return (
     <div className='Layer__TripsMobileList'>
+      <TripsMobileHeader onRecordTrip={onRecordTrip} />
       <PaginatedMobileList
         ariaLabel='Trips'
         data={data}
