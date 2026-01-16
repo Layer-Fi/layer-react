@@ -19,12 +19,14 @@ import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { CustomerFormDrawer } from '@components/CustomerForm/CustomerFormDrawer'
+import type { CustomerFormState } from '@components/CustomerForm/formUtils'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { EMPTY_LINE_ITEM, getAdditionalTags, getSelectedTag, INVOICE_MECE_TAG_DIMENSION, type InvoiceFormState } from '@components/Invoices/InvoiceForm/formUtils'
 import { type InvoiceFormType, useInvoiceForm } from '@components/Invoices/InvoiceForm/useInvoiceForm'
 import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
 import { TextSize } from '@components/Typography/Text'
+import { UpsertCustomerMode } from '@features/customers/api/useUpsertCustomer'
 import { CustomerSelector } from '@features/customers/components/CustomerSelector'
 import { withForceUpdate } from '@features/forms/components/FormBigDecimalField'
 import { UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
@@ -33,9 +35,6 @@ import { TagDimensionCombobox } from '@features/tags/components/TagDimensionComb
 import { type Tag } from '@features/tags/tagSchemas'
 
 import './invoiceForm.scss'
-
-const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
-const INVOICE_FORM_FIELD_CSS_PREFIX = `${INVOICE_FORM_CSS_PREFIX}__Field`
 
 const getDueAtChanged = (dueAt: ZonedDateTime | null, previousDueAt: ZonedDateTime | null) =>
   (dueAt === null && previousDueAt !== null)
@@ -49,8 +48,8 @@ type InvoiceFormTotalRowProps = PropsWithChildren<{
 
 const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProps) => {
   const className = classNames(
-    `${INVOICE_FORM_CSS_PREFIX}__TotalRow`,
-    children && `${INVOICE_FORM_CSS_PREFIX}__TotalRow--withField`,
+    'Layer__InvoiceForm__TotalRow',
+    children && 'Layer__InvoiceForm__TotalRow--withField',
   )
 
   return (
@@ -77,7 +76,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
       <HStack
         gap='xs'
         align='end'
-        className={classNames(`${INVOICE_FORM_CSS_PREFIX}__LineItem`, isReadOnly && `${INVOICE_FORM_CSS_PREFIX}__LineItem--readonly`)}
+        className={classNames('Layer__InvoiceForm__LineItem', isReadOnly && 'Layer__InvoiceForm__LineItem--readonly')}
       >
         <form.Field name={`lineItems[${index}].accountIdentifier`}>
           {(field) => {
@@ -196,7 +195,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   const { onSuccess, onChangeFormState, isReadOnly } = props
   const { businessId } = useLayerContext()
   const { data: accountingConfig } = useAccountingConfiguration({ businessId })
-  const enableCustomerManagement = accountingConfig?.enableCustomerManagement ?? false
+  const enableCustomerManagement = (accountingConfig?.enableCustomerManagement ?? false) || true
 
   const { form, formState, totals, submitError } = useInvoiceForm(
     { onSuccess, ...viewState },
@@ -209,18 +208,35 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
 
   const lastDueAtRef = useRef<ZonedDateTime | null>(initialLastDueAt)
 
-  const [isCustomerDrawerOpen, setIsCustomerDrawerOpen] = useState(false)
+  const [customerFormState, setCustomerFormState] = useState<CustomerFormState | null>(null)
 
   const onClickEditCustomer = useCallback(() => {
-    setIsCustomerDrawerOpen(true)
+    const customer = form.getFieldValue('customer')
+    if (customer) {
+      setCustomerFormState({ mode: UpsertCustomerMode.Update, customer })
+    }
+  }, [form])
+
+  const closeCustomerDrawer = useCallback(() => {
+    setCustomerFormState(null)
   }, [])
 
+  const onCustomerDrawerOpenChange = useCallback((isOpen: boolean) => {
+    if (!isOpen) {
+      closeCustomerDrawer()
+    }
+  }, [closeCustomerDrawer])
+
   const onEditCustomerSuccess = useCallback((customer: Customer) => {
-    setIsCustomerDrawerOpen(false)
+    closeCustomerDrawer()
     form.setFieldValue('customer', customer)
     form.setFieldValue('email', customer.email || '')
     form.setFieldValue('address', customer.addressString || '')
-  }, [form])
+  }, [form, closeCustomerDrawer])
+
+  const onClickCreateNewCustomer = useCallback((inputValue: string) => {
+    setCustomerFormState({ mode: UpsertCustomerMode.Create, initialName: inputValue })
+  }, [])
 
   const updateDueAtFromTermsAndSentAt = useCallback((terms: InvoiceTermsValues, sentAt: ZonedDateTime | null) => {
     if (sentAt == null) return
@@ -254,134 +270,137 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   }, [formState, onChangeFormState])
 
   return (
-    <Form className={INVOICE_FORM_CSS_PREFIX} onSubmit={blockNativeOnSubmit}>
-      <form.Subscribe selector={state => state.errorMap}>
-        {(errorMap) => {
-          const validationErrors = flattenValidationErrors(errorMap)
-          if (validationErrors.length > 0 || submitError) {
-            return (
-              <HStack className={`${INVOICE_FORM_CSS_PREFIX}__FormError`}>
-                <DataState
-                  icon={<AlertTriangle size={16} />}
-                  status={DataStateStatus.failed}
-                  title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
-                  inline
-                />
-              </HStack>
-            )
-          }
-        }}
-      </form.Subscribe>
-      <HStack gap='xl' className={`${INVOICE_FORM_CSS_PREFIX}__Terms`}>
-        <VStack gap='xs'>
-          <VStack align='end' gap='3xs'>
+    <>
+      <Form className='Layer__InvoiceForm' onSubmit={blockNativeOnSubmit}>
+        <form.Subscribe selector={state => state.errorMap}>
+          {(errorMap) => {
+            const validationErrors = flattenValidationErrors(errorMap)
+            if (validationErrors.length > 0 || submitError) {
+              return (
+                <HStack className='Layer__InvoiceForm__FormError'>
+                  <DataState
+                    icon={<AlertTriangle size={16} />}
+                    status={DataStateStatus.failed}
+                    title={validationErrors[0] || submitError}
+                    titleSize={TextSize.md}
+                    inline
+                  />
+                </HStack>
+              )
+            }
+          }}
+        </form.Subscribe>
+        <HStack gap='xl' className='Layer__InvoiceForm__Terms'>
+          <VStack gap='xs'>
+            <VStack align='end' gap='3xs'>
+              <form.Field
+                name='customer'
+                listeners={{
+                  onChange: ({ value: customer }) => {
+                    form.setFieldValue('email', customer?.email || '')
+                    form.setFieldValue('address', customer?.addressString || '')
+                  },
+                }}
+              >
+                {field => (
+                  <CustomerSelector
+                    className='Layer__InvoiceForm__Field__Customer'
+                    selectedCustomer={field.state.value}
+                    onSelectedCustomerChange={field.handleChange}
+                    isReadOnly={isReadOnly}
+                    isCreatable={enableCustomerManagement}
+                    onCreateCustomer={onClickCreateNewCustomer}
+                    inline
+                  />
+                )}
+              </form.Field>
+              {enableCustomerManagement && !isReadOnly && (
+                <form.Subscribe selector={state => state.values.customer}>
+                  {customer => customer && (
+                    <HStack>
+                      <Button variant='text' onPress={onClickEditCustomer}>
+                        <Span size='sm'>Edit customer details</Span>
+                      </Button>
+                    </HStack>
+                  )}
+                </form.Subscribe>
+              )}
+            </VStack>
+            <form.AppField name='email'>
+              {field => (
+                <field.FormTextField label='Email' inline className='Layer__InvoiceForm__Field__Email' isReadOnly />
+              )}
+            </form.AppField>
+            <form.AppField name='address'>
+              {field => (
+                <field.FormTextAreaField label='Billing address' inline className='Layer__InvoiceForm__Field__Address' isReadOnly />
+              )}
+            </form.AppField>
+          </VStack>
+          <VStack gap='xs'>
+            <form.AppField name='invoiceNumber'>
+              {field =>
+                <field.FormTextField label='Invoice number' inline className='Layer__InvoiceForm__Field__InvoiceNo' isReadOnly={isReadOnly} />}
+            </form.AppField>
             <form.Field
-              name='customer'
+              name='terms'
               listeners={{
-                onChange: ({ value: customer }) => {
-                  form.setFieldValue('email', customer?.email || '')
-                  form.setFieldValue('address', customer?.addressString || '')
+                onChange: ({ value: terms }) => {
+                  const sentAt = form.getFieldValue('sentAt')
+                  updateDueAtFromTermsAndSentAt(terms, sentAt)
                 },
               }}
             >
               {field => (
-                <CustomerSelector
-                  className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Customer`}
-                  selectedCustomer={field.state.value}
-                  onSelectedCustomerChange={field.handleChange}
+                <InvoiceTermsComboBox
+                  value={field.state.value}
+                  onValueChange={(value: InvoiceTermsValues | null) => {
+                    if (value !== null) {
+                      field.handleChange(value)
+                    }
+                  }}
                   isReadOnly={isReadOnly}
-                  inline
                 />
               )}
             </form.Field>
-            {enableCustomerManagement && !isReadOnly && (
-              <form.Subscribe selector={state => state.values.customer}>
-                {customer => customer && (
-                  <HStack>
-                    <Button variant='text' onPress={onClickEditCustomer}>
-                      <Span size='sm'>Edit customer details</Span>
-                    </Button>
-                  </HStack>
-                )}
-              </form.Subscribe>
-            )}
-          </VStack>
-          <form.AppField name='email'>
-            {field => (
-              <field.FormTextField label='Email' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Email`} isReadOnly />
-            )}
-          </form.AppField>
-          <form.AppField name='address'>
-            {field => (
-              <field.FormTextAreaField label='Billing address' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Address`} isReadOnly />
-            )}
-          </form.AppField>
-        </VStack>
-        <VStack gap='xs'>
-          <form.AppField name='invoiceNumber'>
-            {field =>
-              <field.FormTextField label='Invoice number' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} isReadOnly={isReadOnly} />}
-          </form.AppField>
-          <form.Field
-            name='terms'
-            listeners={{
-              onChange: ({ value: terms }) => {
-                const sentAt = form.getFieldValue('sentAt')
-                updateDueAtFromTermsAndSentAt(terms, sentAt)
-              },
-            }}
-          >
-            {field => (
-              <InvoiceTermsComboBox
-                value={field.state.value}
-                onValueChange={(value: InvoiceTermsValues | null) => {
-                  if (value !== null) {
-                    field.handleChange(value)
+            <form.AppField
+              name='sentAt'
+              listeners={{
+                onBlur: ({ value: sentAt }) => {
+                  const terms = form.getFieldValue('terms')
+                  updateDueAtFromTermsAndSentAt(terms, sentAt)
+                },
+              }}
+            >
+              {field => <field.FormDateField label='Invoice date' inline className='Layer__InvoiceForm__Field__SentAt' isReadOnly={isReadOnly} />}
+            </form.AppField>
+            <form.AppField
+              name='dueAt'
+              listeners={{
+                onBlur: ({ value: dueAt }) => {
+                  const terms = form.getFieldValue('terms')
+                  const previousDueAt = lastDueAtRef.current
+
+                  const dueAtChanged = getDueAtChanged(dueAt, previousDueAt)
+
+                  if (terms !== InvoiceTermsValues.Custom && dueAtChanged) {
+                    form.setFieldValue('terms', InvoiceTermsValues.Custom)
                   }
-                }}
-                isReadOnly={isReadOnly}
-              />
-            )}
-          </form.Field>
-          <form.AppField
-            name='sentAt'
-            listeners={{
-              onBlur: ({ value: sentAt }) => {
-                const terms = form.getFieldValue('terms')
-                updateDueAtFromTermsAndSentAt(terms, sentAt)
-              },
-            }}
-          >
-            {field => <field.FormDateField label='Invoice date' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__SentAt`} isReadOnly={isReadOnly} />}
-          </form.AppField>
-          <form.AppField
-            name='dueAt'
-            listeners={{
-              onBlur: ({ value: dueAt }) => {
-                const terms = form.getFieldValue('terms')
-                const previousDueAt = lastDueAtRef.current
-
-                const dueAtChanged = getDueAtChanged(dueAt, previousDueAt)
-
-                if (terms !== InvoiceTermsValues.Custom && dueAtChanged) {
-                  form.setFieldValue('terms', InvoiceTermsValues.Custom)
-                }
-                lastDueAtRef.current = dueAt
-              },
-            }}
-          >
+                  lastDueAtRef.current = dueAt
+                },
+              }}
+            >
+              {field => (
+                <field.FormDateField label='Due date' inline className='Layer__InvoiceForm__Field__DueAt' isReadOnly={isReadOnly} />
+              )}
+            </form.AppField>
+          </VStack>
+        </HStack>
+        <VStack className='Layer__InvoiceForm__LineItems' gap='md'>
+          <form.Field name='lineItems' mode='array'>
             {field => (
-              <field.FormDateField label='Due date' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__DueAt`} isReadOnly={isReadOnly} />
-            )}
-          </form.AppField>
-        </VStack>
-      </HStack>
-      <VStack className={`${INVOICE_FORM_CSS_PREFIX}__LineItems`} gap='md'>
-        <form.Field name='lineItems' mode='array'>
-          {field => (
-            <VStack gap='xs' align='baseline'>
-              {field.state.value.map((_value, index) => (
+              <VStack gap='xs' align='baseline'>
+                {field.state.value.map((_value, index) => (
                 /**
                  * A better implementation would use a UUID as the key for this line item row. Specifically, it's an antipattern in
                  * React to use array indices as keys. However, there are some ongoing issues with @tanstack/react-form related to
@@ -389,57 +408,53 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                  * momentarily undefined as they re-render due to re-indexing. Thus, we use indices here for now.
                  * See here for more information: https://github.com/TanStack/form/issues/1518.
                  */
-                (<InvoiceFormLineItemRow key={index} form={form} index={index} isReadOnly={isReadOnly} onDeleteLine={() => field.removeValue(index)} />)
-              ))}
-              {!isReadOnly
-                && (
-                  <Button variant='outlined' onClick={() => field.pushValue(EMPTY_LINE_ITEM)}>
-                    Add line item
-                    <Plus size={16} />
-                  </Button>
-                )}
-            </VStack>
-          )}
-        </form.Field>
-        <VStack className={`${INVOICE_FORM_CSS_PREFIX}__Metadata`} pbs='md'>
-          <HStack justify='space-between' gap='xl'>
-            <VStack className={`${INVOICE_FORM_CSS_PREFIX}__AdditionalTextFields`}>
-              <form.AppField name='memo'>
-                {field => <field.FormTextAreaField label='Memo' isReadOnly={isReadOnly} />}
-              </form.AppField>
-            </VStack>
-            <VStack className={`${INVOICE_FORM_CSS_PREFIX}__TotalFields`} fluid>
-              <InvoiceFormTotalRow label='Subtotal' value={subtotal} />
-              <InvoiceFormTotalRow label='Discount' value={negate(additionalDiscount)}>
-                <form.AppField name='discountRate'>
-                  {field => <field.FormBigDecimalField label='Discount' showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+                  (<InvoiceFormLineItemRow key={index} form={form} index={index} isReadOnly={isReadOnly} onDeleteLine={() => field.removeValue(index)} />)
+                ))}
+                {!isReadOnly
+                  && (
+                    <Button variant='outlined' onClick={() => field.pushValue(EMPTY_LINE_ITEM)}>
+                      Add line item
+                      <Plus size={16} />
+                    </Button>
+                  )}
+              </VStack>
+            )}
+          </form.Field>
+          <VStack className='Layer__InvoiceForm__Metadata' pbs='md'>
+            <HStack justify='space-between' gap='xl'>
+              <VStack className='Layer__InvoiceForm__AdditionalTextFields'>
+                <form.AppField name='memo'>
+                  {field => <field.FormTextAreaField label='Memo' isReadOnly={isReadOnly} />}
                 </form.AppField>
-              </InvoiceFormTotalRow>
-              <InvoiceFormTotalRow label='Taxable subtotal' value={taxableSubtotal} />
-              <InvoiceFormTotalRow label='Tax rate' value={taxes}>
-                <form.AppField name='taxRate'>
-                  {field => <field.FormBigDecimalField label='Tax Rate' showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
-                </form.AppField>
-              </InvoiceFormTotalRow>
-              <InvoiceFormTotalRow label='Total' value={grandTotal} />
-            </VStack>
-          </HStack>
+              </VStack>
+              <VStack className='Layer__InvoiceForm__TotalFields' fluid>
+                <InvoiceFormTotalRow label='Subtotal' value={subtotal} />
+                <InvoiceFormTotalRow label='Discount' value={negate(additionalDiscount)}>
+                  <form.AppField name='discountRate'>
+                    {field => <field.FormBigDecimalField label='Discount' showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+                  </form.AppField>
+                </InvoiceFormTotalRow>
+                <InvoiceFormTotalRow label='Taxable subtotal' value={taxableSubtotal} />
+                <InvoiceFormTotalRow label='Tax rate' value={taxes}>
+                  <form.AppField name='taxRate'>
+                    {field => <field.FormBigDecimalField label='Tax Rate' showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+                  </form.AppField>
+                </InvoiceFormTotalRow>
+                <InvoiceFormTotalRow label='Total' value={grandTotal} />
+              </VStack>
+            </HStack>
+          </VStack>
         </VStack>
-      </VStack>
+      </Form>
       {enableCustomerManagement && (
-        <form.Subscribe selector={state => state.values.customer}>
-          {customer => (
-            <CustomerFormDrawer
-              isOpen={isCustomerDrawerOpen}
-              onOpenChange={setIsCustomerDrawerOpen}
-              customer={customer}
-              onSuccess={onEditCustomerSuccess}
-            />
-          )}
-        </form.Subscribe>
+        <CustomerFormDrawer
+          isOpen={!!customerFormState}
+          onOpenChange={onCustomerDrawerOpenChange}
+          onSuccess={onEditCustomerSuccess}
+          formState={customerFormState}
+        />
       )}
-    </Form>
-
+    </>
   )
 })
 InvoiceForm.displayName = 'InvoiceForm'

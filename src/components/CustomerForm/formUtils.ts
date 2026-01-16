@@ -1,12 +1,28 @@
 import { type Customer, type CustomerForm } from '@schemas/customer'
+import { UpsertCustomerMode } from '@features/customers/api/useUpsertCustomer'
 
-export const getCustomerFormDefaultValues = (customer: Customer | null): CustomerForm =>
-  ({
-    individualName: customer?.individualName || '',
-    companyName: customer?.companyName || '',
-    email: customer?.email || '',
-    addressString: customer?.addressString || '',
-  })
+export type CustomerFormState =
+  | { mode: UpsertCustomerMode.Update, customer: Customer }
+  | { mode: UpsertCustomerMode.Create, initialName?: string }
+
+export const getCustomerFormDefaultValues = (state: CustomerFormState): CustomerForm => {
+  if (state.mode === UpsertCustomerMode.Update) {
+    const { customer } = state
+    return {
+      individualName: customer.individualName || '',
+      companyName: customer.companyName || '',
+      email: customer.email || '',
+      addressString: customer.addressString || '',
+    }
+  }
+
+  return {
+    individualName: state.initialName || '',
+    companyName: '',
+    email: '',
+    addressString: '',
+  }
+}
 
 export const validateCustomerForm = ({ customer }: { customer: CustomerForm }) => {
   const { individualName, companyName, email } = customer

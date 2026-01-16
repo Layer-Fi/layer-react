@@ -3,24 +3,24 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
 import { type Customer, type CustomerForm, UpsertCustomerSchema } from '@schemas/customer'
-import { convertCustomerFormToUpsertCustomer, getCustomerFormDefaultValues, validateCustomerForm } from '@components/CustomerForm/formUtils'
+import { convertCustomerFormToUpsertCustomer, type CustomerFormState, getCustomerFormDefaultValues, validateCustomerForm } from '@components/CustomerForm/formUtils'
 import { UpsertCustomerMode, useUpsertCustomer } from '@features/customers/api/useUpsertCustomer'
 import { useAppForm } from '@features/forms/hooks/useForm'
 
 type onSuccessFn = (customer: Customer) => void
-type UseCustomerFormProps = { onSuccess: onSuccessFn, customer: Customer | null }
+type UseCustomerFormProps = { onSuccess: onSuccessFn } & CustomerFormState
 
 export const useCustomerForm = (props: UseCustomerFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
-  const { onSuccess, customer } = props
+  const { onSuccess, ...formState } = props
 
   const { trigger: upsertCustomer } = useUpsertCustomer(
-    customer
-      ? { mode: UpsertCustomerMode.Update, customerId: customer.id }
+    props.mode === UpsertCustomerMode.Update
+      ? { mode: UpsertCustomerMode.Update, customerId: props.customer.id }
       : { mode: UpsertCustomerMode.Create },
   )
 
-  const defaultValuesRef = useRef<CustomerForm>(getCustomerFormDefaultValues(customer))
+  const defaultValuesRef = useRef<CustomerForm>(getCustomerFormDefaultValues(formState))
   const defaultValues = defaultValuesRef.current
 
   const onSubmit = useCallback(async ({ value }: { value: CustomerForm }) => {
@@ -56,8 +56,8 @@ export const useCustomerForm = (props: UseCustomerFormProps) => {
   })
 
   useEffect(() => {
-    form.reset(getCustomerFormDefaultValues(customer))
-  }, [customer, form])
+    form.reset(getCustomerFormDefaultValues(formState))
+  }, [form, formState])
 
   return useMemo(() => ({ form, submitError }), [form, submitError])
 }

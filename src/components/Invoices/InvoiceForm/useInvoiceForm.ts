@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import {
   type FormAsyncValidateOrFn,
@@ -158,10 +158,6 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const totals = useMemo(() => ({
     subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal,
   }), [additionalDiscount, grandTotal, subtotal, taxableSubtotal, taxes])
-
-  useEffect(() => {
-    form.reset(getInvoiceFormDefaultValues(invoice))
-  }, [invoice, form])
 
   return useMemo(() => ({ form, formState, totals, submitError }), [form, formState, totals, submitError])
 }
