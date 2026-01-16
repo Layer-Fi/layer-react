@@ -108,7 +108,7 @@ export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
             routeState: {
               route: InvoiceRoute.Detail,
               mode: UpsertInvoiceMode.Update,
-              invoice: invoice,
+              invoice,
             },
           }))
         },

@@ -3,10 +3,9 @@ import classNames from 'classnames'
 
 import { type Customer } from '@schemas/customer'
 import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
-import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
-import { Label } from '@ui/Typography/Text'
+import { Label, P } from '@ui/Typography/Text'
 import { useListCustomers } from '@features/customers/api/useListCustomers'
 import { getCustomerName } from '@features/customers/util'
 
@@ -36,7 +35,7 @@ class CustomerAsOption {
   }
 }
 
-type CustomerSelectorProps = {
+type CustomerSelectorBaseProps = {
   selectedCustomer: Customer | null
   onSelectedCustomerChange: (customer: Customer | null) => void
 
@@ -48,16 +47,21 @@ type CustomerSelectorProps = {
   className?: string
 }
 
+type CustomerSelectorProps = CustomerSelectorBaseProps & (
+  | { isCreatable: true, onCreateCustomer: (name: string) => void }
+  | { isCreatable?: false, onCreateCustomer?: (name: string) => void }
+)
+
+const formatCreateLabel = (inputValue: string) => inputValue ? `Create customer "${inputValue}"` : 'Create new customer'
+
 export function CustomerSelector({
   selectedCustomer,
   onSelectedCustomerChange,
-
   placeholder,
-
+  isCreatable,
+  onCreateCustomer,
   isReadOnly,
-
   inline,
-
   className,
 }: CustomerSelectorProps) {
   const combinedClassName = classNames(
@@ -151,26 +155,27 @@ export function CustomerSelector({
   const isLoadingWithoutFallback = isLoading && !data
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
+  const sharedProps = {
+    selectedValue: selectedCustomerForComboBox,
+    onSelectedValueChange: handleSelectionChange,
+    onInputValueChange: handleInputChange,
+    inputId,
+    placeholder,
+    slots: { EmptyMessage, ErrorMessage },
+    isDisabled: shouldDisableComboBox,
+    isError,
+    isLoading: isLoadingWithoutFallback,
+    isReadOnly,
+  }
+
+  const creatableProps = isCreatable
+    ? { isCreatable: true as const, onCreateOption: onCreateCustomer, formatCreateLabel, groups: [{ label: 'Customers', options }] }
+    : { isCreatable: false as const, options }
+
   return (
     <VStack className={combinedClassName}>
       <Label htmlFor={inputId} size='sm'>Customer</Label>
-      <ComboBox
-        selectedValue={selectedCustomerForComboBox}
-        onSelectedValueChange={handleSelectionChange}
-
-        options={options}
-
-        onInputValueChange={handleInputChange}
-
-        inputId={inputId}
-        placeholder={placeholder}
-        slots={{ EmptyMessage, ErrorMessage }}
-
-        isDisabled={shouldDisableComboBox}
-        isError={isError}
-        isLoading={isLoadingWithoutFallback}
-        isReadOnly={isReadOnly}
-      />
+      <MaybeCreatableComboBox {...sharedProps} {...creatableProps} />
     </VStack>
   )
 }

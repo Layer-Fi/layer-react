@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
 
 import { type Customer } from '@schemas/customer'
@@ -7,21 +7,21 @@ import { flattenValidationErrors } from '@utils/form'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { type CustomerFormState } from '@components/CustomerForm/formUtils'
 import { useCustomerForm } from '@components/CustomerForm/useCustomerForm'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TextSize } from '@components/Typography/Text'
 
 import './customerForm.scss'
 
-export type CustomerFormProps = {
-  customer: Customer | null
+type CustomerFormBaseProps = {
   isReadOnly?: boolean
   onSuccess: (customer: Customer) => void
 }
 
-export const CustomerForm = (props: CustomerFormProps) => {
-  const { onSuccess, customer, isReadOnly } = props
-  const { form, submitError } = useCustomerForm({ onSuccess, customer })
+export type CustomerFormProps = CustomerFormBaseProps & CustomerFormState
+export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFormProps) => {
+  const { form, submitError } = useCustomerForm({ onSuccess, ...formState })
 
   // Prevents default browser form submission behavior
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -107,6 +107,7 @@ export const CustomerForm = (props: CustomerFormProps) => {
               isPending={isSubmitting}
               onPress={() => { void form.handleSubmit() }}
             >
+              <Save size={14} />
               Save Customer
             </Button>
           )}

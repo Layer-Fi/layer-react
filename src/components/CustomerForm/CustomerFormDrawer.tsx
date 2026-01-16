@@ -3,25 +3,27 @@ import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
 import { CustomerForm } from '@components/CustomerForm/CustomerForm'
+import { type CustomerFormState } from '@components/CustomerForm/formUtils'
+import { UpsertCustomerMode } from '@features/customers/api/useUpsertCustomer'
 
 export type CustomerFormDrawerProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
-  customer: Customer | null
   onSuccess: (customer: Customer) => void
+  formState: CustomerFormState | null
 }
 
-export const CustomerFormDrawer = ({
-  isOpen,
-  onOpenChange,
-  customer,
-  onSuccess,
-}: CustomerFormDrawerProps) => {
+export const CustomerFormDrawer = (props: CustomerFormDrawerProps) => {
+  const { isOpen, onOpenChange, onSuccess, formState } = props
+
+  if (formState === null) return null
+  const title = formState.mode === UpsertCustomerMode.Update ? 'Edit customer details' : 'Create new customer'
+
   return (
     <Drawer
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      aria-label={customer ? 'Edit customer details' : 'Add customer'}
+      aria-label={title}
     >
       {({ close }) => (
         <VStack pb='lg'>
@@ -29,14 +31,14 @@ export const CustomerFormDrawer = ({
             <ModalTitleWithClose
               heading={(
                 <ModalHeading size='md'>
-                  {customer ? 'Edit customer details' : 'Add customer'}
+                  {title}
                 </ModalHeading>
               )}
               onClose={close}
             />
           </VStack>
           <VStack pi='md'>
-            <CustomerForm customer={customer} onSuccess={onSuccess} />
+            <CustomerForm onSuccess={onSuccess} {...formState} />
           </VStack>
         </VStack>
       )}
