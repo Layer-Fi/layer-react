@@ -90,7 +90,7 @@ export const ResponsiveTripsView = () => {
     autoResetPageIndexRef,
   }), [currentTripsPage, setCurrentTripsPage, fetchMore, hasMore, autoResetPageIndexRef])
 
-  const DesktopView = useMemo(() => (
+  const DesktopViewTable = useMemo(() => (
     <TripsTable
       data={trips}
       isLoading={isLoading}
@@ -105,7 +105,7 @@ export const ResponsiveTripsView = () => {
     />
   ), [trips, isLoading, isError, paginationProps, onViewOrUpsertTrip, onDeleteTrip])
 
-  const MobileView = useMemo(() => (
+  const MobileViewTable = useMemo(() => (
     <TripsMobileList
       data={trips}
       isLoading={isLoading}
@@ -121,7 +121,7 @@ export const ResponsiveTripsView = () => {
 
   return (
     <>
-      <ResponsiveComponent resolveVariant={resolveVariant} slots={{ Desktop: DesktopView, Mobile: MobileView }} />
+      <ResponsiveComponent resolveVariant={resolveVariant} slots={{ Desktop: DesktopViewTable, Mobile: MobileViewTable }} />
       <TripDrawer
         isOpen={isTripDrawerOpen && !tripToDelete}
         onOpenChange={setIsTripDrawerOpen}
