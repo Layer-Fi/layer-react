@@ -1,9 +1,9 @@
 # Agent Instructions
 
+- **Important:** Do not add comments when writing code
 - For significant changes, provide implementation options with a recommended approach before coding
 - Pause and ask for guidance when: task scope is unclear, complications arise, or phase completion
 - If user provides information broadly relevant to codebase, ask if it should be added to relevant docs
-- Do not add comments when writing code
 - Generate designs and code in reviewable phases
 - For all code changes: KISS, YAGNI, DRY
 - **Refer to documentation files below when relevant to current task**
