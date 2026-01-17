@@ -1,4 +1,5 @@
 import { useMemo, useRef } from 'react'
+import classNames from 'classnames'
 import { Filter } from 'lucide-react'
 import {
   components,
@@ -69,13 +70,18 @@ const buildCustomMultiValue = <T extends ComboBoxOption>() => {
 }
 
 const buildCustomMultiValueLabel = <T extends ComboBoxOption>() => {
-  return function CustomMultiValueLabel({ children, ...restProps }: MultiValueGenericProps<T, true, GroupBase<T>>) {
+  return function CustomMultiValueLabel({ children, innerProps, ...restProps }: MultiValueGenericProps<T, true, GroupBase<T>>) {
     const selectedValues = restProps.selectProps.value
     const selectedCount = getSelectedCount(selectedValues)
     const selectedLabels = getSelectedLabels(selectedValues)
 
+    const mergedInnerProps = {
+      ...innerProps,
+      className: classNames(innerProps?.className, COMBO_BOX_CLASS_NAMES.MULTI_VALUE_LABEL),
+    }
+
     return (
-      <components.MultiValueLabel {...restProps} innerProps={{ className: COMBO_BOX_CLASS_NAMES.MULTI_VALUE_LABEL }}>
+      <components.MultiValueLabel {...restProps} innerProps={mergedInnerProps}>
         <HStack gap='3xs' align='center'>
           <Badge size={BadgeSize.SMALL} variant={BadgeVariant.INFO}>
             {selectedCount}
