@@ -31,9 +31,6 @@ export type ComboBoxSlots<T extends ComboBoxOption> = {
 export type BaseComboBoxProps<T extends ComboBoxOption> = {
   className?: string
 
-  selectedValue: T | null
-  onSelectedValueChange: (value: T | null) => void
-
   onInputValueChange?: (value: string) => void
 
   placeholder?: string
@@ -52,3 +49,13 @@ export type BaseComboBoxProps<T extends ComboBoxOption> = {
 
   displayDisabledAsSelected?: boolean
 } & OptionsOrGroups<T> & AriaLabelProps
+
+export type SingleSelectComboBoxProps<T extends ComboBoxOption> = BaseComboBoxProps<T> & {
+  selectedValue: T | null
+  onSelectedValueChange: (value: T | null) => void
+}
+
+export type MultiSelectComboBoxProps<T extends ComboBoxOption> = BaseComboBoxProps<T> & {
+  selectedValues: ReadonlyArray<T>
+  onSelectedValuesChange: (values: ReadonlyArray<T>) => void
+}

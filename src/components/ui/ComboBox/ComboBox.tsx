@@ -1,7 +1,7 @@
 import Select from 'react-select'
 
 import { ComboBoxErrorMessage } from '@ui/ComboBox/ComboBoxErrorMessage'
-import type { BaseComboBoxProps, ComboBoxOption } from '@ui/ComboBox/types'
+import type { ComboBoxOption, SingleSelectComboBoxProps } from '@ui/ComboBox/types'
 import { useCommonComboBoxProps } from '@ui/ComboBox/useCommonComboBoxProps'
 import { VStack } from '@ui/Stack/Stack'
 
@@ -11,13 +11,15 @@ export function ComboBox<T extends ComboBoxOption>({
   className,
   slots,
   isError,
+  selectedValue,
+  onSelectedValueChange,
   ...props
-}: BaseComboBoxProps<T>) {
-  const selectProps = useCommonComboBoxProps<T>({ className, slots, ...props })
+}: SingleSelectComboBoxProps<T>) {
+  const commonSelectProps = useCommonComboBoxProps<T, false>({ className, slots, ...props })
 
   return (
     <VStack gap='3xs' fluid className={className ? `${className}__Container` : undefined}>
-      <Select {...selectProps} />
+      <Select {...commonSelectProps} value={selectedValue} onChange={onSelectedValueChange} />
       <ComboBoxErrorMessage isError={isError} errorMessage={slots?.ErrorMessage} />
     </VStack>
   )

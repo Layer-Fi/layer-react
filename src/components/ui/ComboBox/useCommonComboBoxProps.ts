@@ -6,10 +6,8 @@ import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import type { AriaLabelProps, BaseComboBoxProps, ComboBoxOption } from '@ui/ComboBox/types'
 import { useComboBoxSubcomponents } from '@ui/ComboBox/useComboBoxSubcomponents'
 
-export function useCommonComboBoxProps<T extends ComboBoxOption>({
+export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends boolean>({
   className,
-  selectedValue,
-  onSelectedValueChange,
   options,
   groups,
   onInputValueChange,
@@ -29,8 +27,6 @@ export function useCommonComboBoxProps<T extends ComboBoxOption>({
 }: Pick<
   BaseComboBoxProps<T>,
   | 'className'
-  | 'selectedValue'
-  | 'onSelectedValueChange'
   | 'options'
   | 'groups'
   | 'onInputValueChange'
@@ -48,7 +44,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption>({
   const internalInputId = useId()
   const effectiveInputId = inputId ?? internalInputId
 
-  const components = useComboBoxSubcomponents<T>({
+  const components = useComboBoxSubcomponents<T, IsMulti>({
     placeholder,
     slots,
     displayDisabledAsSelected,
@@ -73,15 +69,13 @@ export function useCommonComboBoxProps<T extends ComboBoxOption>({
     group: () => COMBO_BOX_CLASS_NAMES.GROUP,
   }), [isReadOnly])
 
-  const styles: StylesConfig<T, false, GroupBase<T>> = useMemo(() => ({
+  const styles: StylesConfig<T, IsMulti, GroupBase<T>> = useMemo(() => ({
     menuPortal: (base: CSSObjectWithLabel) => ({ ...base, zIndex: 101 }),
   }), [])
 
   const selectProps = useMemo(() => ({
     inputId: effectiveInputId,
     className,
-    value: selectedValue,
-    onChange: onSelectedValueChange,
     options: options ?? groups,
     onInputChange: onInputValueChange,
     placeholder,
@@ -114,11 +108,9 @@ export function useCommonComboBoxProps<T extends ComboBoxOption>({
     isReadOnly,
     isSearchable,
     onInputValueChange,
-    onSelectedValueChange,
     options,
     placeholder,
     selectClassNames,
-    selectedValue,
     styles,
   ])
 
