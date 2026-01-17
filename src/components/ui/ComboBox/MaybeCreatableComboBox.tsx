@@ -1,8 +1,8 @@
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { type AllowedCreatableProps, CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
-import type { BaseComboBoxProps, ComboBoxOption } from '@ui/ComboBox/types'
+import type { ComboBoxOption, SingleSelectComboBoxProps } from '@ui/ComboBox/types'
 
-type MaybeCreatableComboBoxProps<T extends ComboBoxOption> = BaseComboBoxProps<T> & (
+type MaybeCreatableComboBoxProps<T extends ComboBoxOption> = SingleSelectComboBoxProps<T> & (
   | ({ isCreatable: true } & AllowedCreatableProps<T>)
   | ({ isCreatable?: false })
 )
