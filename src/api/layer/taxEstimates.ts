@@ -1,15 +1,15 @@
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { get, patch, post } from '@api/layer/authenticated_http'
 import type {
-  ApiTaxEstimates,
-  ApiTaxDetails,
-  ApiTaxOverview,
   ApiTaxChecklist,
+  ApiTaxDetails,
+  ApiTaxEstimates,
+  ApiTaxOverview,
   ApiTaxPayments,
   ApiTaxProfile,
-  TaxReportingBasis,
   TaxProfileInput,
+  TaxReportingBasis,
 } from '@schemas/taxEstimates'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { get, patch, post } from '@api/layer/authenticated_http'
 
 export type GetTaxEstimatesParams = {
   businessId: string
@@ -40,7 +40,7 @@ export type GetTaxDetailsReturn = {
 
 export const getTaxDetails = get<GetTaxDetailsReturn, GetTaxDetailsParams>(
   ({ businessId, year, reportingBasis, fullYearProjection }) => {
-    const parameters = toDefinedSearchParameters({ year, reporting_basis: reportingBasis, full_year_projection: fullYearProjection })
+    const parameters = toDefinedSearchParameters({ year, reportingBasis, fullYearProjection })
     return `/v1/businesses/${businessId}/tax-estimates/details?${parameters}`
   },
 )
@@ -58,7 +58,7 @@ export type GetTaxOverviewReturn = {
 
 export const getTaxOverview = get<GetTaxOverviewReturn, GetTaxOverviewParams>(
   ({ businessId, year, reportingBasis, fullYearProjection }) => {
-    const parameters = toDefinedSearchParameters({ year, reporting_basis: reportingBasis, full_year_projection: fullYearProjection })
+    const parameters = toDefinedSearchParameters({ year, reportingBasis, fullYearProjection })
     return `/v1/businesses/${businessId}/tax-estimates/overview?${parameters}`
   },
 )
@@ -92,7 +92,7 @@ export type GetTaxPaymentsReturn = {
 
 export const getTaxPayments = get<GetTaxPaymentsReturn, GetTaxPaymentsParams>(
   ({ businessId, year, reportingBasis, fullYearProjection }) => {
-    const parameters = toDefinedSearchParameters({ year, reporting_basis: reportingBasis, full_year_projection: fullYearProjection })
+    const parameters = toDefinedSearchParameters({ year, reportingBasis, fullYearProjection })
     return `/v1/businesses/${businessId}/tax-estimates/payments?${parameters}`
   },
 )
@@ -110,7 +110,6 @@ export const getTaxProfile = get<GetTaxProfileReturn, GetTaxProfileParams>(
     return `/v1/businesses/${businessId}/tax-estimates/profile`
   },
 )
-
 
 export type CreateTaxProfileReturn = {
   data: ApiTaxProfile
