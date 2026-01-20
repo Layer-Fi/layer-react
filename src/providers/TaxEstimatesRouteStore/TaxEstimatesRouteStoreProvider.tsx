@@ -4,6 +4,7 @@ import { createStore, useStore } from 'zustand'
 export enum TaxEstimatesRoute {
   Estimates = 'Estimates',
   Payments = 'Payments',
+  Profile = 'Profile',
 }
 
 type TaxEstimatesRouteState = {

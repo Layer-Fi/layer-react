@@ -10,7 +10,7 @@ import './baseDetailView.scss'
 export type BaseDetailViewProps = PropsWithChildren<{
   name: string
   borderless?: boolean
-  onGoBack: () => void
+  onGoBack?: () => void
   slots: {
     Header: React.FC
     BackIcon?: React.FC
@@ -23,7 +23,7 @@ export const BaseDetailView = ({ name, onGoBack, slots, children, borderless = f
   return (
     <Container name={name} className='Layer__BaseDetailView' transparentBg={borderless}>
       <HStack align='center' gap='md' className='Layer__BaseDetailView__Header'>
-        <Button variant='outlined' icon onPress={onGoBack}>{BackIcon ? <BackIcon /> : <BackArrow />}</Button>
+        {onGoBack && (<Button variant='outlined' icon onPress={onGoBack}>{BackIcon ? <BackIcon /> : <BackArrow />}</Button>)}
         <Header />
       </HStack>
       {children}
