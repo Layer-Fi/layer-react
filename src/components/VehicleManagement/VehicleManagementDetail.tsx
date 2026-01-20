@@ -32,25 +32,8 @@ const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
 const VehicleManagementDetailHeader = ({ onAddVehicle, showArchived, onShowArchivedChange }: VehicleManagementDetailHeaderProps) => {
   const DesktopViewHeader = useMemo(() => (
     <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
+      <Heading size='sm'>Manage vehicles</Heading>
       <HStack gap='md' align='center'>
-        <Heading size='sm'>Manage vehicles</Heading>
-        <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
-          <Span size='sm' noWrap>Show archived</Span>
-        </Switch>
-      </HStack>
-      <Button variant='solid' onPress={onAddVehicle}>
-        Add Vehicle
-        <Plus size={14} />
-      </Button>
-    </HStack>
-  ), [onAddVehicle, showArchived, onShowArchivedChange])
-
-  const MobileViewHeader = useMemo(() => (
-    <VStack gap='sm' pie='md'>
-      <HStack justify='start'>
-        <Heading size='sm'>Manage vehicles</Heading>
-      </HStack>
-      <HStack justify='space-between' align='center'>
         <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
           <Span size='sm' noWrap>Show archived</Span>
         </Switch>
@@ -59,7 +42,22 @@ const VehicleManagementDetailHeader = ({ onAddVehicle, showArchived, onShowArchi
           <Plus size={14} />
         </Button>
       </HStack>
-    </VStack>
+    </HStack>
+  ), [onAddVehicle, showArchived, onShowArchivedChange])
+
+  const MobileViewHeader = useMemo(() => (
+    <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
+      <Heading size='sm'>Vehicles</Heading>
+      <HStack gap='md' align='center'>
+        <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
+          <Span size='sm' noWrap>Show archived</Span>
+        </Switch>
+        <Button variant='solid' onPress={onAddVehicle}>
+          Add
+          <Plus size={14} />
+        </Button>
+      </HStack>
+    </HStack>
   ), [onAddVehicle, showArchived, onShowArchivedChange])
 
   return (
