@@ -5,23 +5,23 @@ import { FilingStatusSchema } from './taxEstimatesCommon'
 const UsTaxEstimatesInputsSchema = Schema.Struct({
   federalFilingStatus: pipe(
     Schema.propertySignature(Schema.NullishOr(FilingStatusSchema)),
-    Schema.fromKey('federalFilingStatus'),
+    Schema.fromKey('federal_filing_status'),
   ),
   stateFilingStatus: pipe(
     Schema.propertySignature(Schema.NullishOr(FilingStatusSchema)),
-    Schema.fromKey('stateFilingStatus'),
+    Schema.fromKey('state_filing_status'),
   ),
   w2Income: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('w2Income'),
+    Schema.fromKey('w2_income'),
   ),
   businessIncome: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('businessIncome'),
+    Schema.fromKey('business_income'),
   ),
   otherIncome: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('otherIncome'),
+    Schema.fromKey('other_income'),
   ),
   expenses: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
@@ -29,15 +29,15 @@ const UsTaxEstimatesInputsSchema = Schema.Struct({
   ),
   deductibleExpenses: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('deductibleExpenses'),
+    Schema.fromKey('deductible_expenses'),
   ),
   deductibleMileageExpenses: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('deductibleMileageExpenses'),
+    Schema.fromKey('deductible_mileage_expenses'),
   ),
   deductibleNonMileageExpenses: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('deductibleNonMileageExpenses'),
+    Schema.fromKey('deductible_non_mileage_expenses'),
   ),
 })
 
@@ -46,23 +46,23 @@ export type UsTaxEstimatesInputs = typeof UsTaxEstimatesInputsSchema.Type
 const UsTaxEstimatesResultsSchema = Schema.Struct({
   overallTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('overallTax'),
+    Schema.fromKey('overall_tax'),
   ),
   overallTaxSavings: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('overallTaxSavings'),
+    Schema.fromKey('overall_tax_savings'),
   ),
   overallTaxUnpaid: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('overallTaxUnpaid'),
+    Schema.fromKey('overall_tax_unpaid'),
   ),
   annualPaymentDueDate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('annualPaymentDueDate'),
+    Schema.fromKey('annual_payment_due_date'),
   ),
   afterTaxIncome: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('afterTaxIncome'),
+    Schema.fromKey('after_tax_income'),
   ),
 })
 
@@ -80,11 +80,11 @@ const SelfEmploymentTaxEstimateSchema = Schema.Struct({
   rate: Schema.NullishOr(Schema.Number),
   socialSecurityTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('socialSecurityTax'),
+    Schema.fromKey('social_security_tax'),
   ),
   medicareTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('medicareTax'),
+    Schema.fromKey('medicare_tax'),
   ),
 })
 
@@ -95,11 +95,11 @@ const EmploymentTaxEstimateSchema = Schema.Struct({
   rate: Schema.NullishOr(Schema.Number),
   socialSecurityTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('socialSecurityTax'),
+    Schema.fromKey('social_security_tax'),
   ),
   medicareTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('medicareTax'),
+    Schema.fromKey('medicare_tax'),
   ),
 })
 
@@ -108,94 +108,94 @@ export type EmploymentTaxEstimate = typeof EmploymentTaxEstimateSchema.Type
 const UsFederalTaxEstimateSchema = Schema.Struct({
   w2MarginalTaxRate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('w2MarginalTaxRate'),
+    Schema.fromKey('w2_marginal_tax_rate'),
   ),
   businessMarginalTaxRate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('businessMarginalTaxRate'),
+    Schema.fromKey('business_marginal_tax_rate'),
   ),
   adjustedGrossIncome: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('adjustedGrossIncome'),
+    Schema.fromKey('adjusted_gross_income'),
   ),
   businessIncomeDeduction: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('businessIncomeDeduction'),
+    Schema.fromKey('business_income_deduction'),
   ),
   businessIncomeDeductionEffectiveRate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('businessIncomeDeductionEffectiveRate'),
+    Schema.fromKey('business_income_deduction_effective_rate'),
   ),
   federalDeduction: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('federalDeduction'),
+    Schema.fromKey('federal_deduction'),
   ),
   qualifiedTipDeduction: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('qualifiedTipDeduction'),
+    Schema.fromKey('qualified_tip_deduction'),
   ),
   qualifiedOvertimeDeduction: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('qualifiedOvertimeDeduction'),
+    Schema.fromKey('qualified_overtime_deduction'),
   ),
   taxableIncome: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('taxableIncome'),
+    Schema.fromKey('taxable_income'),
   ),
   federalEffectiveTaxRate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('federalEffectiveTaxRate'),
+    Schema.fromKey('federal_effective_tax_rate'),
   ),
   federalTaxAmount: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('federalTaxAmount'),
+    Schema.fromKey('federal_tax_amount'),
   ),
   medicareSurtax: Schema.NullishOr(MedicareSurtaxEstimateSchema),
   selfEmploymentTax: Schema.NullishOr(SelfEmploymentTaxEstimateSchema),
   employmentTax: Schema.NullishOr(EmploymentTaxEstimateSchema),
   alternativeMinimumTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('alternativeMinimumTax'),
+    Schema.fromKey('alternative_minimum_tax'),
   ),
   taxAmountWithoutTaxCredit: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('taxAmountWithoutTaxCredit'),
+    Schema.fromKey('tax_amount_without_tax_credit'),
   ),
   dependentTaxCredit: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('dependentTaxCredit'),
+    Schema.fromKey('dependent_tax_credit'),
   ),
   totalTaxCredit: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('totalTaxCredit'),
+    Schema.fromKey('total_tax_credit'),
   ),
   totalTaxCreditAppliedToTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('totalTaxCreditAppliedToTax'),
+    Schema.fromKey('total_tax_credit_applied_to_tax'),
   ),
   taxBeforeWithholding: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('taxBeforeWithholding'),
+    Schema.fromKey('tax_before_withholding'),
   ),
   effectiveTaxRateBeforeWithholding: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('effectiveTaxRateBeforeWithholding'),
+    Schema.fromKey('effective_tax_rate_before_withholding'),
   ),
   withholdingAppliedToTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('withholdingAppliedToTax'),
+    Schema.fromKey('withholding_applied_to_tax'),
   ),
   taxAmount: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('taxAmount'),
+    Schema.fromKey('tax_amount'),
   ),
   taxUnpaid: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('taxUnpaid'),
+    Schema.fromKey('tax_unpaid'),
   ),
   effectiveTaxRate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('effectiveTaxRate'),
+    Schema.fromKey('effective_tax_rate'),
   ),
 })
 
@@ -204,63 +204,63 @@ export type UsFederalTaxEstimate = typeof UsFederalTaxEstimateSchema.Type
 const UsStateTaxEstimateSchema = Schema.Struct({
   w2MarginalTaxRate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('w2MarginalTaxRate'),
+    Schema.fromKey('w2_marginal_tax_rate'),
   ),
   businessMarginalTaxRate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('businessMarginalTaxRate'),
+    Schema.fromKey('business_marginal_tax_rate'),
   ),
   adjustedGrossIncome: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('adjustedGrossIncome'),
+    Schema.fromKey('adjusted_gross_income'),
   ),
   stateDeduction: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('stateDeduction'),
+    Schema.fromKey('state_deduction'),
   ),
   taxableIncome: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('taxableIncome'),
+    Schema.fromKey('taxable_income'),
   ),
   preCreditEffectiveTaxRate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('preCreditEffectiveTaxRate'),
+    Schema.fromKey('pre_credit_effective_tax_rate'),
   ),
   taxAmountWithoutTaxCredit: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('taxAmountWithoutTaxCredit'),
+    Schema.fromKey('tax_amount_without_tax_credit'),
   ),
   totalTaxCredit: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('totalTaxCredit'),
+    Schema.fromKey('total_tax_credit'),
   ),
   totalTaxCreditAppliedToTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('totalTaxCreditAppliedToTax'),
+    Schema.fromKey('total_tax_credit_applied_to_tax'),
   ),
   taxBeforeWithholding: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('taxBeforeWithholding'),
+    Schema.fromKey('tax_before_withholding'),
   ),
   effectiveTaxRateBeforeWithholding: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('effectiveTaxRateBeforeWithholding'),
+    Schema.fromKey('effective_tax_rate_before_withholding'),
   ),
   withholdingAppliedToTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('withholdingAppliedToTax'),
+    Schema.fromKey('withholding_applied_to_tax'),
   ),
   taxAmount: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('taxAmount'),
+    Schema.fromKey('tax_amount'),
   ),
   taxUnpaid: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('taxUnpaid'),
+    Schema.fromKey('tax_unpaid'),
   ),
   effectiveTaxRate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('effectiveTaxRate'),
+    Schema.fromKey('effective_tax_rate'),
   ),
 })
 
@@ -269,7 +269,7 @@ export type UsStateTaxEstimate = typeof UsStateTaxEstimateSchema.Type
 const QuarterlyEstimateSchema = Schema.Struct({
   dueDate: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('dueDate'),
+    Schema.fromKey('due_date'),
   ),
   federalTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Struct({
@@ -277,7 +277,7 @@ const QuarterlyEstimateSchema = Schema.Struct({
       paid: Schema.NullishOr(Schema.Number),
       remaining: Schema.NullishOr(Schema.Number),
     }))),
-    Schema.fromKey('federalTax'),
+    Schema.fromKey('federal_tax'),
   ),
   stateTax: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Struct({
@@ -285,7 +285,7 @@ const QuarterlyEstimateSchema = Schema.Struct({
       paid: Schema.NullishOr(Schema.Number),
       remaining: Schema.NullishOr(Schema.Number),
     }))),
-    Schema.fromKey('stateTax'),
+    Schema.fromKey('state_tax'),
   ),
 })
 
@@ -301,11 +301,26 @@ const UsQuarterlyEstimatesSchema = Schema.Struct({
 export type UsQuarterlyEstimates = typeof UsQuarterlyEstimatesSchema.Type
 
 const UsTaxEstimatesSchema = Schema.Struct({
-  inputs: Schema.NullishOr(UsTaxEstimatesInputsSchema),
-  results: Schema.NullishOr(UsTaxEstimatesResultsSchema),
-  federalTax: Schema.NullishOr(UsFederalTaxEstimateSchema),
-  stateTax: Schema.NullishOr(UsStateTaxEstimateSchema),
-  quarterlyEstimates: Schema.NullishOr(UsQuarterlyEstimatesSchema),
+  inputs: pipe(
+    Schema.propertySignature(Schema.NullishOr(UsTaxEstimatesInputsSchema)),
+    Schema.fromKey('inputs'),
+  ),
+  results: pipe(
+    Schema.propertySignature(Schema.NullishOr(UsTaxEstimatesResultsSchema)),
+    Schema.fromKey('results'),
+  ),
+  federalTax: pipe(
+    Schema.propertySignature(Schema.NullishOr(UsFederalTaxEstimateSchema)),
+    Schema.fromKey('federal_tax'),
+  ),
+  stateTax: pipe(
+    Schema.propertySignature(Schema.NullishOr(UsStateTaxEstimateSchema)),
+    Schema.fromKey('state_tax'),
+  ),
+  quarterlyEstimates: pipe(
+    Schema.propertySignature(Schema.NullishOr(UsQuarterlyEstimatesSchema)),
+    Schema.fromKey('quarterly_estimates'),
+  ),
 })
 
 export type UsTaxEstimates = typeof UsTaxEstimatesSchema.Type
@@ -315,7 +330,7 @@ const ApiTaxEstimatesSchema = Schema.Struct({
   state: Schema.NullishOr(Schema.String),
   year: Schema.Number,
   usEstimates: pipe(
-    Schema.propertySignature(UsTaxEstimatesSchema),
+    Schema.propertySignature(Schema.NullishOr(UsTaxEstimatesSchema)),
     Schema.fromKey('us_estimates'),
   ),
   caEstimates: pipe(
