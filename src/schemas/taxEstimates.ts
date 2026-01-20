@@ -32,7 +32,6 @@ const TaxPaymentQuarterSchema = Schema.Struct({
 export type TaxPaymentQuarter = typeof TaxPaymentQuarterSchema.Type
 
 const ApiTaxPaymentsSchema = Schema.Struct({
-  type: Schema.String,
   year: Schema.Number,
   quarters: Schema.Array(TaxPaymentQuarterSchema),
 })
@@ -46,7 +45,6 @@ export const TaxPaymentsResponseSchema = Schema.Struct({
 export type TaxPaymentsResponse = typeof TaxPaymentsResponseSchema.Type
 
 const ApiTaxOverviewSchema = Schema.Struct({
-  type: Schema.String,
   year: Schema.Number,
   excludesPendingTransactions: pipe(
     Schema.propertySignature(Schema.Boolean),
@@ -308,7 +306,7 @@ const ApiUsFederalTaxSchema = Schema.Struct({
     Schema.fromKey('medicare_tax'),
   ),
   medicareSurtax: pipe(
-    Schema.propertySignature(ApiMedicareSurtaxSchema),
+    Schema.propertySignature(Schema.NullishOr(ApiMedicareSurtaxSchema)),
     Schema.fromKey('medicare_surtax'),
   ),
   totalFederalTax: pipe(
@@ -321,7 +319,7 @@ export type ApiUsFederalTax = typeof ApiUsFederalTaxSchema.Type
 
 const ApiTaxesSchema = Schema.Struct({
   usFederal: pipe(
-    Schema.propertySignature(ApiUsFederalTaxSchema),
+    Schema.propertySignature(Schema.NullishOr(ApiUsFederalTaxSchema)),
     Schema.fromKey('us_federal'),
   ),
 })
@@ -329,7 +327,6 @@ const ApiTaxesSchema = Schema.Struct({
 export type ApiTaxes = typeof ApiTaxesSchema.Type
 
 const ApiTaxDetailsSchema = Schema.Struct({
-  type: Schema.String,
   year: Schema.Number,
   filingStatus: pipe(
     Schema.propertySignature(Schema.String),
@@ -663,7 +660,6 @@ const UsTaxEstimatesSchema = Schema.Struct({
 export type UsTaxEstimates = typeof UsTaxEstimatesSchema.Type
 
 const ApiTaxEstimatesSchema = Schema.Struct({
-  type: Schema.String,
   country: Schema.NullishOr(Schema.String),
   state: Schema.NullishOr(Schema.String),
   year: Schema.Number,
@@ -786,7 +782,6 @@ const ApiTaxProfileUsConfigurationSchema = Schema.Struct({
 })
 
 const ApiTaxProfileSchema = Schema.Struct({
-  type: Schema.String,
   taxCountryCode: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('tax_country_code'),
@@ -912,7 +907,6 @@ const TaxProfileInputUsConfigurationSchema = Schema.Struct({
 })
 
 export const TaxProfileInputSchema = Schema.Struct({
-  type: Schema.NullishOr(Schema.String),
   taxCountryCode: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('tax_country_code'),
