@@ -33,7 +33,7 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
 
   return (
     <Header className='Layer__TripsMobileHeader' asHeader>
-      <VStack gap='sm' pie='md'>
+      <VStack gap='sm'>
         <Heading size={HeadingSize.secondary} align='left'>Trips</Heading>
 
         <HStack align='center' gap='xs'>
@@ -45,7 +45,7 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
           <TripsTableHeaderMenu />
         </HStack>
 
-        <HStack gap='xs' align='center'>
+        <HStack gap='xs' align='center' pbe='md'>
           <SearchField
             label='Search trips'
             value={inputValue}
