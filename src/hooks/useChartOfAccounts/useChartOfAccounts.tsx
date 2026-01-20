@@ -95,7 +95,7 @@ const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
       }
 
       return (formData?.errors || []).filter(x => x.field !== fieldName)
-    }    
+    }
     default:
       return formData?.errors
   }
