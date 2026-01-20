@@ -7,13 +7,11 @@ import type {
   ApiTaxChecklist,
   ApiTaxPayments,
   ApiTaxProfile,
-  S3PresignedUrl,
   TaxReportingBasis,
-  TaxExportType,
-  FilingStatus,
+  TaxProfileInput,
 } from '@schemas/taxEstimates'
 
-type GetTaxEstimatesParams = {
+export type GetTaxEstimatesParams = {
   businessId: string
   year: number
 }
@@ -29,7 +27,7 @@ export const getTaxEstimates = get<GetTaxEstimatesReturn, GetTaxEstimatesParams>
   },
 )
 
-type GetTaxDetailsParams = {
+export type GetTaxDetailsParams = {
   businessId: string
   year: number
   reportingBasis?: TaxReportingBasis
@@ -47,7 +45,7 @@ export const getTaxDetails = get<GetTaxDetailsReturn, GetTaxDetailsParams>(
   },
 )
 
-type GetTaxOverviewParams = {
+export type GetTaxOverviewParams = {
   businessId: string
   year: number
   reportingBasis?: TaxReportingBasis
@@ -65,7 +63,7 @@ export const getTaxOverview = get<GetTaxOverviewReturn, GetTaxOverviewParams>(
   },
 )
 
-type GetTaxChecklistParams = {
+export type GetTaxChecklistParams = {
   businessId: string
   year: number
 }
@@ -81,7 +79,7 @@ export const getTaxChecklist = get<GetTaxChecklistReturn, GetTaxChecklistParams>
   },
 )
 
-type GetTaxPaymentsParams = {
+export type GetTaxPaymentsParams = {
   businessId: string
   year: number
   reportingBasis?: TaxReportingBasis
@@ -99,7 +97,7 @@ export const getTaxPayments = get<GetTaxPaymentsReturn, GetTaxPaymentsParams>(
   },
 )
 
-type GetTaxProfileParams = {
+export type GetTaxProfileParams = {
   businessId: string
 }
 
@@ -113,51 +111,6 @@ export const getTaxProfile = get<GetTaxProfileReturn, GetTaxProfileParams>(
   },
 )
 
-export type TaxProfileInput = {
-  type?: string
-  tax_country_code?: string | null
-  us_configuration?: {
-    federal?: {
-      filing_status?: FilingStatus | null
-      annual_w2_income?: number | null
-      tip_income?: number | null
-      overtime_income?: number | null
-      withholding?: {
-        use_custom_withholding?: boolean | null
-        amount?: number | null
-      } | null
-    } | null
-    state?: {
-      tax_state?: string | null
-      filing_status?: FilingStatus | null
-      num_exemptions?: number | null
-      withholding?: {
-        use_custom_withholding?: boolean | null
-        amount?: number | null
-      } | null
-    } | null
-    deductions?: {
-      home_office?: {
-        use_home_office_deduction?: boolean | null
-        home_office_area?: number | null
-      } | null
-      vehicle?: {
-        use_mileage_deduction?: boolean | null
-        vehicle_business_percent?: number | null
-        mileage?: {
-          use_user_estimated_business_mileage?: boolean | null
-          user_estimated_business_mileage?: number | null
-        } | null
-      } | null
-    } | null
-    business_estimates?: {
-      expenses?: {
-        use_user_estimated_expenses?: boolean | null
-        user_estimated_expenses?: number | null
-      } | null
-    } | null
-  } | null
-}
 
 export type CreateTaxProfileReturn = {
   data: ApiTaxProfile
@@ -178,22 +131,3 @@ export const updateTaxProfile = patch<
   TaxProfileInput,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/profile`)
-
-type ExportTaxDocumentsParams = {
-  businessId: string
-  type: TaxExportType
-  year: string
-}
-
-export type ExportTaxDocumentsReturn = {
-  data: S3PresignedUrl
-}
-
-export const exportTaxDocuments = post<
-  ExportTaxDocumentsReturn,
-  Record<string, never>,
-  ExportTaxDocumentsParams
->(({ businessId, type, year }) => {
-  const parameters = toDefinedSearchParameters({ type, year })
-  return `/v1/businesses/${businessId}/tax-estimates/export?${parameters}`
-})

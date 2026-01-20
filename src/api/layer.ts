@@ -57,7 +57,6 @@ import {
   getTaxProfile,
   createTaxProfile,
   updateTaxProfile,
-  exportTaxDocuments,
 } from '@api/layer/taxEstimates'
 
 export const Layer = {
@@ -113,5 +112,4 @@ export const Layer = {
   getTaxProfile,
   createTaxProfile,
   updateTaxProfile,
-  exportTaxDocuments,
 }

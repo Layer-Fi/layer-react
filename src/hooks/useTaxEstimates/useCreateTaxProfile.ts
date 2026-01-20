@@ -1,8 +1,10 @@
+import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
+import type { Key } from 'swr'
+import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 
-import { TaxProfileResponseSchema } from '@schemas/taxEstimates'
-import { createTaxProfile, type TaxProfileInput } from '@api/layer/taxEstimates'
+import { TaxProfileResponseSchema, type TaxProfileInput } from '@schemas/taxEstimates'
+import { createTaxProfile } from '@api/layer/taxEstimates'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -27,18 +29,51 @@ function buildKey({
   }
 }
 
+type CreateTaxProfileReturn = typeof TaxProfileResponseSchema.Type
+
+type CreateTaxProfileSWRMutationResponse =
+  SWRMutationResponse<CreateTaxProfileReturn, unknown, Key, TaxProfileInput>
+
+class CreateTaxProfileSWRResponse {
+  private swrResponse: CreateTaxProfileSWRMutationResponse
+
+  constructor(swrResponse: CreateTaxProfileSWRMutationResponse) {
+    this.swrResponse = swrResponse
+  }
+
+  get data() {
+    return this.swrResponse.data
+  }
+
+  get trigger() {
+    return this.swrResponse.trigger
+  }
+
+  get isMutating() {
+    return this.swrResponse.isMutating
+  }
+
+  get error() {
+    return this.swrResponse.error
+  }
+
+  get isError() {
+    return this.swrResponse.error !== undefined
+  }
+}
+
 export function useCreateTaxProfile() {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { invalidateTaxEstimates } = useTaxEstimatesGlobalCacheActions()
 
-  const swrMutationResponse = useSWRMutation(
+  const rawMutationResponse = useSWRMutation(
     () => buildKey({
       ...auth,
       businessId,
     }),
     async ({ accessToken, apiUrl, businessId }, { arg }: { arg: TaxProfileInput }) => {
-      const result = await createTaxProfile(
+      return createTaxProfile(
         apiUrl,
         accessToken,
         {
@@ -46,11 +81,36 @@ export function useCreateTaxProfile() {
           body: arg,
         },
       ).then(({ data }) => Schema.decodeUnknownPromise(TaxProfileResponseSchema)({ data }))
-
-      await invalidateTaxEstimates()
-      return result
+    },
+    {
+      revalidate: false,
+      throwOnError: true,
     },
   )
 
-  return swrMutationResponse
+  const mutationResponse = new CreateTaxProfileSWRResponse(rawMutationResponse)
+
+  const originalTrigger = mutationResponse.trigger
+
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const triggerResult = await originalTrigger(...triggerParameters)
+
+      await invalidateTaxEstimates()
+
+      return triggerResult
+    },
+    [originalTrigger, invalidateTaxEstimates],
+  )
+
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
 }

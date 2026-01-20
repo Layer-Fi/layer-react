@@ -12,12 +12,6 @@ const FilingStatusSchema = Schema.Enums(FilingStatus)
 
 export type TaxReportingBasis = 'ACCRUAL' | 'CASH'
 
-export enum TaxExportType {
-  TAX_PACKET = 'TAX_PACKET',
-  SCHEDULE_C = 'SCHEDULE_C',
-  PAYMENT_HISTORY = 'PAYMENT_HISTORY',
-}
-
 export enum ChecklistItemType {
   UNCATEGORIZED_DEDUCTIONS = 'UNCATEGORIZED_DEDUCTIONS',
   UNCATEGORIZED_DEPOSITS = 'UNCATEGORIZED_DEPOSITS',
@@ -837,22 +831,113 @@ export const TaxProfileResponseSchema = Schema.Struct({
 
 export type TaxProfileResponse = typeof TaxProfileResponseSchema.Type
 
-const S3PresignedUrlSchema = Schema.Struct({
-  type: Schema.String,
-  presignedUrl: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('presignedUrl'),
+const TaxProfileInputUsConfigurationFederalSchema = Schema.Struct({
+  filingStatus: pipe(
+    Schema.propertySignature(Schema.NullishOr(FilingStatusSchema)),
+    Schema.fromKey('filing_status'),
   ),
-  fileType: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('fileType'),
+  annualW2Income: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+    Schema.fromKey('annual_w2_income'),
+  ),
+  tipIncome: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+    Schema.fromKey('tip_income'),
+  ),
+  overtimeIncome: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+    Schema.fromKey('overtime_income'),
+  ),
+  withholding: Schema.NullishOr(Schema.Struct({
+    useCustomWithholding: pipe(
+      Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+      Schema.fromKey('use_custom_withholding'),
+    ),
+    amount: Schema.NullishOr(Schema.Number),
+  })),
+})
+
+const TaxProfileInputUsConfigurationStateSchema = Schema.Struct({
+  taxState: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('tax_state'),
+  ),
+  filingStatus: pipe(
+    Schema.propertySignature(Schema.NullishOr(FilingStatusSchema)),
+    Schema.fromKey('filing_status'),
+  ),
+  numExemptions: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+    Schema.fromKey('num_exemptions'),
+  ),
+  withholding: Schema.NullishOr(Schema.Struct({
+    useCustomWithholding: pipe(
+      Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+      Schema.fromKey('use_custom_withholding'),
+    ),
+    amount: Schema.NullishOr(Schema.Number),
+  })),
+})
+
+const TaxProfileInputUsConfigurationSchema = Schema.Struct({
+  federal: Schema.NullishOr(TaxProfileInputUsConfigurationFederalSchema),
+  state: Schema.NullishOr(TaxProfileInputUsConfigurationStateSchema),
+  deductions: Schema.NullishOr(Schema.Struct({
+    homeOffice: Schema.NullishOr(Schema.Struct({
+      useHomeOfficeDeduction: pipe(
+        Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+        Schema.fromKey('use_home_office_deduction'),
+      ),
+      homeOfficeArea: pipe(
+        Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+        Schema.fromKey('home_office_area'),
+      ),
+    })),
+    vehicle: Schema.NullishOr(Schema.Struct({
+      useMileageDeduction: pipe(
+        Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+        Schema.fromKey('use_mileage_deduction'),
+      ),
+      vehicleBusinessPercent: pipe(
+        Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+        Schema.fromKey('vehicle_business_percent'),
+      ),
+      mileage: Schema.NullishOr(Schema.Struct({
+        useUserEstimatedBusinessMileage: pipe(
+          Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+          Schema.fromKey('use_user_estimated_business_mileage'),
+        ),
+        userEstimatedBusinessMileage: pipe(
+          Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+          Schema.fromKey('user_estimated_business_mileage'),
+        ),
+      })),
+    })),
+  })),
+  businessEstimates: Schema.NullishOr(Schema.Struct({
+    expenses: Schema.NullishOr(Schema.Struct({
+      useUserEstimatedExpenses: pipe(
+        Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+        Schema.fromKey('use_user_estimated_expenses'),
+      ),
+      userEstimatedExpenses: pipe(
+        Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+        Schema.fromKey('user_estimated_expenses'),
+      ),
+    })),
+  })),
+})
+
+export const TaxProfileInputSchema = Schema.Struct({
+  type: Schema.NullishOr(Schema.String),
+  taxCountryCode: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('tax_country_code'),
+  ),
+  usConfiguration: pipe(
+    Schema.propertySignature(Schema.NullishOr(TaxProfileInputUsConfigurationSchema)),
+    Schema.fromKey('us_configuration'),
   ),
 })
 
-export type S3PresignedUrl = typeof S3PresignedUrlSchema.Type
-
-export const ExportTaxDocumentsResponseSchema = Schema.Struct({
-  data: S3PresignedUrlSchema,
-})
-
-export type ExportTaxDocumentsResponse = typeof ExportTaxDocumentsResponseSchema.Type
+export type TaxProfileInput = typeof TaxProfileInputSchema.Encoded

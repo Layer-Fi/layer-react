@@ -1,5 +1,4 @@
 export { useCreateTaxProfile } from './useCreateTaxProfile'
-export { useExportTaxDocuments } from './useExportTaxDocuments'
 export { useTaxChecklist } from './useTaxChecklist'
 export { useTaxDetails } from './useTaxDetails'
 export { TAX_ESTIMATES_TAG_KEY, useTaxEstimates, useTaxEstimatesGlobalCacheActions } from './useTaxEstimates'
