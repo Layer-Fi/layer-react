@@ -18,8 +18,6 @@ import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleForm'
 import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
 
-import './vehicleManagementDetailHeader.scss'
-
 interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void
   showArchived: boolean
