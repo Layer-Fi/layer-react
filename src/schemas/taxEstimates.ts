@@ -12,41 +12,6 @@ const FilingStatusSchema = Schema.Enums(FilingStatus)
 
 export type TaxReportingBasis = 'ACCRUAL' | 'CASH'
 
-export enum ChecklistItemType {
-  UNCATEGORIZED_DEDUCTIONS = 'UNCATEGORIZED_DEDUCTIONS',
-  UNCATEGORIZED_DEPOSITS = 'UNCATEGORIZED_DEPOSITS',
-  MISSING_PROFILE = 'MISSING_PROFILE',
-}
-
-const ChecklistItemTypeSchema = Schema.Enums(ChecklistItemType)
-
-const TaxChecklistItemSchema = Schema.Struct({
-  type: ChecklistItemTypeSchema,
-  description: Schema.String,
-  amount: Schema.NullishOr(Schema.Number),
-  count: Schema.NullishOr(Schema.Number),
-  actionUrl: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('action_url'),
-  ),
-})
-
-export type TaxChecklistItem = typeof TaxChecklistItemSchema.Type
-
-const ApiTaxChecklistSchema = Schema.Struct({
-  type: Schema.String,
-  year: Schema.Number,
-  items: Schema.Array(TaxChecklistItemSchema),
-})
-
-export type ApiTaxChecklist = typeof ApiTaxChecklistSchema.Type
-
-export const TaxChecklistResponseSchema = Schema.Struct({
-  data: ApiTaxChecklistSchema,
-})
-
-export type TaxChecklistResponse = typeof TaxChecklistResponseSchema.Type
-
 const TaxPaymentQuarterSchema = Schema.Struct({
   quarter: Schema.Number,
   owedRolledOverFromPrevious: pipe(

@@ -1,5 +1,4 @@
 import type {
-  ApiTaxChecklist,
   ApiTaxDetails,
   ApiTaxEstimates,
   ApiTaxOverview,
@@ -60,22 +59,6 @@ export const getTaxOverview = get<GetTaxOverviewReturn, GetTaxOverviewParams>(
   ({ businessId, year, reportingBasis, fullYearProjection }) => {
     const parameters = toDefinedSearchParameters({ year, reportingBasis, fullYearProjection })
     return `/v1/businesses/${businessId}/tax-estimates/overview?${parameters}`
-  },
-)
-
-export type GetTaxChecklistParams = {
-  businessId: string
-  year: number
-}
-
-export type GetTaxChecklistReturn = {
-  data: ApiTaxChecklist
-}
-
-export const getTaxChecklist = get<GetTaxChecklistReturn, GetTaxChecklistParams>(
-  ({ businessId, year }) => {
-    const parameters = toDefinedSearchParameters({ year })
-    return `/v1/businesses/${businessId}/tax-estimates/checklist?${parameters}`
   },
 )
 
