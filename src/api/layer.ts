@@ -48,6 +48,16 @@ import {
 } from '@api/layer/quickbooks'
 import { getStatementOfCashFlow } from '@api/layer/statement-of-cash-flow'
 import { getVendors } from '@api/layer/vendors'
+import {
+  getTaxEstimates,
+  getTaxOverview,
+  getTaxChecklist,
+  getTaxPayments,
+  getTaxProfile,
+  createTaxProfile,
+  updateTaxProfile,
+  exportTaxDocuments,
+} from '@api/layer/taxEstimates'
 
 export const Layer = {
   getBusiness,
@@ -94,4 +104,12 @@ export const Layer = {
   initQuickbooksOAuth,
   unlinkQuickbooksConnection,
   getVendors,
+  getTaxEstimates,
+  getTaxOverview,
+  getTaxChecklist,
+  getTaxPayments,
+  getTaxProfile,
+  createTaxProfile,
+  updateTaxProfile,
+  exportTaxDocuments,
 }

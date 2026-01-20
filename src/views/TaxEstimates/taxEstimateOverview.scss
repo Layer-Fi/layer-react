@@ -1,0 +1,174 @@
+.Layer__tax-estimate-overview__section {
+  align-self: stretch;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-base-300);
+  background: var(--color-base-0);
+}
+
+.Layer__tax-estimate-overview__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--spacing-lg);
+  padding-bottom: var(--spacing-lg);
+  box-shadow: 0 -1px 0 0 var(--color-base-300) inset;
+}
+
+.Layer__tax-estimate-overview__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4xs);
+
+  .title {
+    color: var(--color-base-800);
+  }
+
+  .date {
+    color: var(--color-base-500);
+  }
+
+  & > .Layer__text {
+    margin: 0;
+  }
+}
+
+.Layer__tax-estimate-overview__label {
+  flex-shrink: 0;
+  width: 20ch;
+}
+
+.Layer__tax-estimate-overview__bar-container {
+  position: relative;
+  overflow: hidden;
+  height: 0.75rem;
+  width: 100%;
+  border-radius: var(--border-radius-xs);
+  background: var(--color-base-200);
+}
+
+.Layer__tax-estimate-overview__bar-container--with-label {
+  overflow: visible;
+}
+
+.Layer__tax-estimate-overview__bar-amount {
+  position: absolute;
+  top: -1.5rem;
+  white-space: nowrap;
+}
+
+.Layer__tax-estimate-overview__bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  min-width: 0;
+  border-radius: var(--border-radius-xs);
+}
+
+.Layer__tax-estimate-overview__bar--total-income {
+  background: var(--color-info-success);
+}
+
+.Layer__tax-estimate-overview__bar--deductions {
+  background: var(--color-info-bg);
+}
+
+.Layer__tax-estimate-overview__item {
+  height: 4rem;
+}
+
+.Layer__tax-estimate-overview__chart-container {
+  box-sizing: border-box;
+  height: 280px;
+  width: 100%;
+  padding-top: var(--spacing-2xl);
+  padding-right: var(--spacing-md);
+  padding-bottom: var(--spacing-lg);
+  padding-left: var(--spacing-md);
+
+  .recharts-responsive-container {
+    box-shadow: none;
+
+    path:focus,
+    g:focus {
+      outline: none;
+    }
+  }
+
+  .pie-center-label__title,
+  .pie-center-label__share {
+    fill: var(--color-base-600);
+    font-size: 12px;
+  }
+
+  .pie-center-label__value {
+    fill: var(--text-color-primary);
+    font-size: 14px;
+  }
+}
+
+.Layer__tax-estimate-overview__table-container {
+  padding: var(--spacing-md);
+  padding-top: var(--spacing-2xs);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: var(--spacing-2xs) var(--spacing-xs);
+      font-size: 12px;
+      text-align: left;
+      transition: color 150ms ease-out;
+
+      &.value-col {
+        text-align: right;
+      }
+    }
+
+    th {
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 1px solid var(--color-base-300);
+      color: var(--color-base-500);
+      transition: color 150ms ease-out;
+
+      &:hover {
+        color: var(--color-base-800);
+      }
+    }
+  }
+
+  .Layer__tax-estimate-overview__category-cell {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+  }
+
+  .Layer__tax-estimate-overview__category-indicator {
+    flex-shrink: 0;
+    height: 12px;
+    width: 12px;
+    border-radius: 2px;
+  }
+
+  .Layer__profit-and-loss-detailed-table__row {
+    border-radius: 2px;
+    background: transparent;
+    transition: background-color 300ms ease-out;
+
+    .category-col,
+    .value-col {
+      color: var(--text-color-primary);
+    }
+
+    &.active {
+      background: var(--color-base-50);
+
+      .category-col,
+      .value-col {
+        color: var(--color-base-1000);
+      }
+    }
+  }
+}

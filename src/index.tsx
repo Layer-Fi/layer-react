@@ -56,6 +56,7 @@ export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
 export { unstable_MileageTracking } from './views/MileageTracking'
 export { ProjectProfitabilityView } from './views/ProjectProfitability/ProjectProfitability'
 export { Reports } from './views/Reports/Reports'
+export { TaxEstimateView as unstable_TaxEstimateView } from './views/TaxEstimates/TaxEstimateView'
 
 /*
 ======================= Layer Provider & Context =======================

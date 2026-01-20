@@ -34,9 +34,9 @@
 
   .Layer__view-header__title {
     display: flex;
+    flex: 1;
     align-items: center;
     min-height: 44px;
-    width: 100%;
     padding: var(--spacing-md) var(--spacing-sm);
   }
 
@@ -61,6 +61,12 @@
   .Layer__view-header__children {
     display: flex;
     width: 100%;
+  }
+
+  .Layer__view-header__actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
   }
 
   &.Layer__view--panel {
