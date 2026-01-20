@@ -1,13 +1,15 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { BREAKPOINTS } from '@config/general'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
 import { Heading } from '@ui/Typography/Heading'
@@ -16,14 +18,19 @@ import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleForm'
 import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
 
+import './vehicleManagementDetailHeader.scss'
+
 interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void
   showArchived: boolean
   onShowArchivedChange: (value: boolean) => void
 }
 
+const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
+  width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
+
 const VehicleManagementDetailHeader = ({ onAddVehicle, showArchived, onShowArchivedChange }: VehicleManagementDetailHeaderProps) => {
-  return (
+  const DesktopViewHeader = useMemo(() => (
     <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
       <HStack gap='md' align='center'>
         <Heading size='sm'>Manage vehicles</Heading>
@@ -36,6 +43,27 @@ const VehicleManagementDetailHeader = ({ onAddVehicle, showArchived, onShowArchi
         <Plus size={14} />
       </Button>
     </HStack>
+  ), [onAddVehicle, showArchived, onShowArchivedChange])
+
+  const MobileViewHeader = useMemo(() => (
+    <VStack gap='sm' pie='md'>
+      <HStack justify='start'>
+        <Heading size='sm'>Manage vehicles</Heading>
+      </HStack>
+      <HStack justify='space-between' align='center'>
+        <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
+          <Span size='sm' noWrap>Show archived</Span>
+        </Switch>
+        <Button variant='solid' onPress={onAddVehicle}>
+          Add Vehicle
+          <Plus size={14} />
+        </Button>
+      </HStack>
+    </VStack>
+  ), [onAddVehicle, showArchived, onShowArchivedChange])
+
+  return (
+    <ResponsiveComponent resolveVariant={resolveVariant} slots={{ Desktop: DesktopViewHeader, Mobile: MobileViewHeader }} />
   )
 }
 
