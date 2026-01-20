@@ -47,16 +47,16 @@ import {
   unlinkQuickbooksConnection,
 } from '@api/layer/quickbooks'
 import { getStatementOfCashFlow } from '@api/layer/statement-of-cash-flow'
-import { getVendors } from '@api/layer/vendors'
 import {
-  getTaxEstimates,
+  createTaxProfile,
   getTaxDetails,
+  getTaxEstimates,
   getTaxOverview,
   getTaxPayments,
   getTaxProfile,
-  createTaxProfile,
   updateTaxProfile,
 } from '@api/layer/taxEstimates'
+import { getVendors } from '@api/layer/vendors'
 
 export const Layer = {
   getBusiness,

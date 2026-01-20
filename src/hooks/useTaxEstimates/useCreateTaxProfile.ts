@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import type { Key } from 'swr'
 import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 
-import { TaxProfileResponseSchema, type TaxProfileInput } from '@schemas/taxEstimates'
+import { type TaxProfileInput, TaxProfileResponseSchema } from '@schemas/taxEstimates'
 import { createTaxProfile } from '@api/layer/taxEstimates'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
