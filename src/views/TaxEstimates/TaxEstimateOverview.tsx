@@ -1,40 +1,41 @@
-import { useEffect, useRef, useMemo, useState } from 'react'
-import { VStack, HStack } from '@ui/Stack/Stack'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import classNames from 'classnames'
+import { format } from 'date-fns'
+import { AlertTriangle, Download } from 'lucide-react'
+import { Cell, Label, Pie, PieChart, ResponsiveContainer, Text as ChartText } from 'recharts'
+import { type PolarViewBox } from 'recharts/types/util/types'
+
+import { convertNumberToCurrency, formatPercent } from '@utils/format'
+import { useTaxChecklist, useTaxOverview } from '@hooks/useTaxEstimates'
+import { Button, type ButtonVariant } from '@ui/Button/Button'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
-import { Button, ButtonVariant } from '@ui/Button/Button'
-import { AlertTriangle, Download } from 'lucide-react'
-import { convertNumberToCurrency, formatPercent } from '@utils/format'
-import { format } from 'date-fns'
-import { PieChart, Pie, Cell, ResponsiveContainer, Label, Text as ChartText } from 'recharts'
-import { PolarViewBox } from 'recharts/types/util/types'
-import classNames from 'classnames'
-import './taxEstimateOverview.scss'
 import { Separator } from '@components/Separator/Separator'
-import { useTaxOverview, useTaxChecklist } from '@hooks/useTaxEstimates'
-import { ChecklistStatus } from '@schemas/taxEstimates'
+import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+
+import './taxEstimateOverview.scss'
 
 interface TaxEstimateOverviewProps {
+  year: number
   onNavigateToBankTransactions?: () => void
 }
 
-export const TaxEstimateOverview = ({ onNavigateToBankTransactions }: TaxEstimateOverviewProps = {}) => {
+export const TaxEstimateOverview = ({ year, onNavigateToBankTransactions }: TaxEstimateOverviewProps) => {
   const totalIncomeBarRef = useRef<HTMLDivElement>(null)
   const incomeBarRef = useRef<HTMLDivElement>(null)
   const deductionsBarRef = useRef<HTMLDivElement>(null)
   const totalIncomeAmountRef = useRef<HTMLSpanElement>(null)
   const taxableIncomeAmountRef = useRef<HTMLSpanElement>(null)
   const deductionsAmountRef = useRef<HTMLSpanElement>(null)
-  const yearForTaxFiling = new Date().getFullYear()
 
-  const { data: taxOverviewData } = useTaxOverview({ useMockData: true })
-  const { data: taxChecklistData } = useTaxChecklist({ useMockData: true })
+  const { data: taxOverviewData } = useTaxOverview({ year })
+  const { data: taxChecklistData } = useTaxChecklist({ year })
 
   const todoItems = (taxChecklistData?.data.items ?? []).map(item => ({
     label: item.description,
-    buttonLabel: item.status === ChecklistStatus.PENDING ? 'Review' : 'Completed',
-    variant: (item.status === ChecklistStatus.PENDING ? 'solid' : 'outlined') as ButtonVariant,
+    buttonLabel: 'Review',
+    variant: 'solid' as ButtonVariant,
     icon: item.actionUrl?.includes('export') ? <Download size={16} /> : null,
     onPress: () => {
       if (item.actionUrl) {
@@ -43,23 +44,18 @@ export const TaxEstimateOverview = ({ onNavigateToBankTransactions }: TaxEstimat
     },
   }))
 
-  const deadlines = (taxOverviewData?.data.deadlines ?? []).map(d => ({
-    date: format(new Date(d.date), 'MMM dd, yyyy'),
-    label: `${d.description} (${convertNumberToCurrency(d.amount)})`,
-  }))
-
-  const taxableIncome = taxOverviewData?.data.taxableIncomeEstimate ?? 0
-  const income = taxOverviewData?.data.totalIncome ?? 0
-  const deductions = taxOverviewData?.data.deductions ?? 0
+  const taxableIncome = (taxOverviewData?.data.taxableIncomeEstimate ?? 0) / 100
+  const income = (taxOverviewData?.data.totalIncome ?? 0) / 100
+  const deductions = (taxOverviewData?.data.totalDeductions ?? 0) / 100
   const deductionsPercentage = income > 0 ? (deductions / income) * 100 : 0
   const taxableIncomePercentage = income > 0 ? (taxableIncome / income) * 100 : 0
 
-  const federalTaxesOwed = taxOverviewData?.data.estimatedTaxes.federal ?? 0
+  const totalTaxesOwed = (taxOverviewData?.data.estimatedTaxesOwed ?? 0) / 100
+  const federalTaxesOwed = 0
   const selfEmployedTaxesOwed = 0
-  const stateTaxesOwed = taxOverviewData?.data.estimatedTaxes.state ?? 0
-  const totalTaxesOwed = federalTaxesOwed + selfEmployedTaxesOwed + stateTaxesOwed
-  const taxesDueDate = taxOverviewData?.data.estimatedTaxes.taxesDueDate
-    ? new Date(taxOverviewData.data.estimatedTaxes.taxesDueDate)
+  const stateTaxesOwed = 0
+  const taxesDueDate = taxOverviewData?.data.taxesDueDate
+    ? new Date(taxOverviewData.data.taxesDueDate)
     : new Date()
 
   const [hoveredItem, setHoveredItem] = useState<string | undefined>()
@@ -108,12 +104,12 @@ export const TaxEstimateOverview = ({ onNavigateToBankTransactions }: TaxEstimat
               <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
                 Taxable income estimate for
                 {' '}
-                {yearForTaxFiling}
+                {year}
               </Text>
               <Text size={TextSize.sm} className='date'>
                 Taxable income estimate to date for Year
                 {' '}
-                {yearForTaxFiling}
+                {year}
               </Text>
             </div>
           </header>
@@ -199,7 +195,7 @@ export const TaxEstimateOverview = ({ onNavigateToBankTransactions }: TaxEstimat
               <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
                 Estimated Taxes for
                 {' '}
-                {yearForTaxFiling}
+                {year}
               </Text>
             </div>
           </header>
@@ -533,23 +529,15 @@ export const TaxEstimateOverview = ({ onNavigateToBankTransactions }: TaxEstimat
                 {' '}
                 for
                 {' '}
-                {yearForTaxFiling}
+                {year}
               </Text>
             </div>
           </header>
           <VStack gap='md' pb='lg' pi='lg'>
             <VStack>
-              {deadlines.map((deadline, index) => (
-                <>
-                  <HStack key={index} gap='xl' align='center' justify='space-between' fluid>
-                    <HStack gap='md' align='center' className='Layer__tax-estimate-overview__item'>
-                      <Span size='md' weight='bold' variant='subtle'>{deadline.date}</Span>
-                      <Span size='md'>{deadline.label}</Span>
-                    </HStack>
-                  </HStack>
-                  {index !== deadlines.length - 1 && <Separator />}
-                </>
-              ))}
+              <Span size='md' variant='subtle'>
+                Deadline information will be available soon.
+              </Span>
             </VStack>
           </VStack>
         </VStack>

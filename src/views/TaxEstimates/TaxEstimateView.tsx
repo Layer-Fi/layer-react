@@ -209,7 +209,7 @@ export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateVie
             // },
           ]}
           selectedKey={activeTab}
-          onSelectionChange={(key) => setActiveTab(key as typeof activeTab)}
+          onSelectionChange={key => setActiveTab(key as typeof activeTab)}
         />
 
         <Container name='tax-estimate'>
@@ -223,12 +223,42 @@ export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateVie
             <VStack gap='md' pb='lg' pi='lg'>
               <TaxEstimateSummary
                 year={year}
-                projectedTaxesOwed={taxEstimatesData.data.usEstimates.results?.overallTax ? taxEstimatesData.data.usEstimates.results.overallTax / 100 : undefined}
-                taxesDueDate={taxEstimatesData.data.usEstimates.results?.annualPaymentDueDate ? new Date(taxEstimatesData.data.usEstimates.results.annualPaymentDueDate) : undefined}
-                federalTaxesOwed={taxEstimatesData.data.usEstimates.federalTax?.taxAmount ? taxEstimatesData.data.usEstimates.federalTax.taxAmount / 100 : undefined}
-                federalTaxesPaid={taxEstimatesData.data.usEstimates.quarterlyEstimates ? Object.values(taxEstimatesData.data.usEstimates.quarterlyEstimates).reduce((sum, q) => sum + (q?.federalTax?.paid ?? 0), 0) / 100 : undefined}
-                stateTaxesOwed={taxEstimatesData.data.usEstimates.stateTax?.taxAmount ? taxEstimatesData.data.usEstimates.stateTax.taxAmount / 100 : undefined}
-                stateTaxesPaid={taxEstimatesData.data.usEstimates.quarterlyEstimates ? Object.values(taxEstimatesData.data.usEstimates.quarterlyEstimates).reduce((sum, q) => sum + (q?.stateTax?.paid ?? 0), 0) / 100 : undefined}
+                projectedTaxesOwed={
+                  taxEstimatesData.data.usEstimates.results?.overallTax
+                    ? taxEstimatesData.data.usEstimates.results.overallTax / 100
+                    : undefined
+                }
+                taxesDueDate={
+                  taxEstimatesData.data.usEstimates.results?.annualPaymentDueDate
+                    ? new Date(taxEstimatesData.data.usEstimates.results.annualPaymentDueDate)
+                    : undefined
+                }
+                federalTaxesOwed={
+                  taxEstimatesData.data.usEstimates.federalTax?.taxAmount
+                    ? taxEstimatesData.data.usEstimates.federalTax.taxAmount / 100
+                    : undefined
+                }
+                federalTaxesPaid={
+                  taxEstimatesData.data.usEstimates.quarterlyEstimates
+                    ? Object.values(taxEstimatesData.data.usEstimates.quarterlyEstimates).reduce(
+                      (sum, q) => sum + (q?.federalTax?.paid ?? 0),
+                      0,
+                    ) / 100
+                    : undefined
+                }
+                stateTaxesOwed={
+                  taxEstimatesData.data.usEstimates.stateTax?.taxAmount
+                    ? taxEstimatesData.data.usEstimates.stateTax.taxAmount / 100
+                    : undefined
+                }
+                stateTaxesPaid={
+                  taxEstimatesData.data.usEstimates.quarterlyEstimates
+                    ? Object.values(taxEstimatesData.data.usEstimates.quarterlyEstimates).reduce(
+                      (sum, q) => sum + (q?.stateTax?.paid ?? 0),
+                      0,
+                    ) / 100
+                    : undefined
+                }
                 quarterlyEstimates={taxEstimatesData.data.usEstimates.quarterlyEstimates
                   ? [
                     { quarter: 'Q1', amount: ((taxEstimatesData.data.usEstimates.quarterlyEstimates.q1?.federalTax?.amount ?? 0) + (taxEstimatesData.data.usEstimates.quarterlyEstimates.q1?.stateTax?.amount ?? 0)) / 100 },
