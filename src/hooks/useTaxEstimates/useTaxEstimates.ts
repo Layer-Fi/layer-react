@@ -2,11 +2,19 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { TaxEstimateResponseSchema } from '@schemas/taxEstimates'
+import { type ApiTaxEstimates, TaxEstimateResponseSchema } from '@schemas/taxEstimates'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { getTaxEstimates } from '@api/layer/taxEstimates'
+import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+const getTaxEstimates = get<{ data: ApiTaxEstimates }, { businessId: string, year: number }>(
+  ({ businessId, year }) => {
+    const parameters = toDefinedSearchParameters({ year })
+    return `/v1/businesses/${businessId}/tax-estimates?${parameters}`
+  },
+)
 
 export const TAX_ESTIMATES_TAG_KEY = '#tax-estimates'
 
@@ -65,12 +73,12 @@ export const useTaxEstimatesGlobalCacheActions = () => {
   const { invalidate, forceReload } = useGlobalCacheActions()
 
   const invalidateTaxEstimates = useCallback(
-    () => invalidate(({ tags }) => tags.includes(TAX_ESTIMATES_TAG_KEY)),
+    () => invalidate(({ tags }) => tags.some(tag => tag.startsWith(TAX_ESTIMATES_TAG_KEY))),
     [invalidate],
   )
 
   const forceReloadTaxEstimates = useCallback(
-    () => forceReload(({ tags }) => tags.includes(TAX_ESTIMATES_TAG_KEY)),
+    () => forceReload(({ tags }) => tags.some(tag => tag.startsWith(TAX_ESTIMATES_TAG_KEY))),
     [forceReload],
   )
 

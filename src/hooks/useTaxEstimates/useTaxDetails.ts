@@ -1,12 +1,23 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { TaxDetailsResponseSchema, type TaxReportingBasis } from '@schemas/taxEstimates'
-import { getTaxDetails } from '@api/layer/taxEstimates'
+import { type ApiTaxDetails, TaxDetailsResponseSchema, type TaxReportingBasis } from '@schemas/taxEstimates'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 import { TAX_ESTIMATES_TAG_KEY } from './useTaxEstimates'
+
+const getTaxDetails = get<
+  { data: ApiTaxDetails },
+  { businessId: string, year: number, reportingBasis?: TaxReportingBasis, fullYearProjection?: boolean }
+>(
+  ({ businessId, year, reportingBasis, fullYearProjection }) => {
+    const parameters = toDefinedSearchParameters({ year, reportingBasis, fullYearProjection })
+    return `/v1/businesses/${businessId}/tax-estimates/details?${parameters}`
+  },
+)
 
 type UseTaxDetailsOptions = {
   year: number

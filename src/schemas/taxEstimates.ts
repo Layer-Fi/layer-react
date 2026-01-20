@@ -663,8 +663,14 @@ const ApiTaxEstimatesSchema = Schema.Struct({
   country: Schema.NullishOr(Schema.String),
   state: Schema.NullishOr(Schema.String),
   year: Schema.Number,
-  usEstimates: UsTaxEstimatesSchema,
-  caEstimates: Schema.NullishOr(Schema.Struct({})),
+  usEstimates: pipe(
+    Schema.propertySignature(UsTaxEstimatesSchema),
+    Schema.fromKey('us_estimates'),
+  ),
+  caEstimates: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Struct({}))),
+    Schema.fromKey('ca_estimates'),
+  ),
 })
 
 export type ApiTaxEstimates = typeof ApiTaxEstimatesSchema.Type

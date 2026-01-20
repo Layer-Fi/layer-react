@@ -3,10 +3,16 @@ import { Schema } from 'effect'
 import type { Key } from 'swr'
 import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 
-import { type TaxProfileInput, TaxProfileResponseSchema } from '@schemas/taxEstimates'
-import { updateTaxProfile } from '@api/layer/taxEstimates'
+import { type ApiTaxProfile, type TaxProfileInput, TaxProfileResponseSchema } from '@schemas/taxEstimates'
+import { patch } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+const updateTaxProfile = patch<
+  { data: ApiTaxProfile },
+  TaxProfileInput,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/profile`)
 
 import { TAX_ESTIMATES_TAG_KEY, useTaxEstimatesGlobalCacheActions } from './useTaxEstimates'
 

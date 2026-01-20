@@ -1,10 +1,14 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { TaxProfileResponseSchema } from '@schemas/taxEstimates'
-import { getTaxProfile } from '@api/layer/taxEstimates'
+import { TaxProfileResponseSchema, type ApiTaxProfile } from '@schemas/taxEstimates'
+import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+const getTaxProfile = get<{ data: ApiTaxProfile }, { businessId: string }>(
+  ({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/profile`,
+)
 
 import { TAX_ESTIMATES_TAG_KEY } from './useTaxEstimates'
 
