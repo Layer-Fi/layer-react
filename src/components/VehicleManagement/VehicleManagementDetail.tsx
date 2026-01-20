@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
@@ -69,8 +69,8 @@ export const VehicleManagementDetail = () => {
     setSelectedVehicle(undefined)
   }, [])
 
-  const vehicleManagementDetailHeader = useMemo(() => {
-    const Comp = () => (
+  const vehicleManagementDetailHeader = useCallback(() => {
+    return (
       <VehicleManagementDetailHeader
         onAddVehicle={handleAddVehicle}
         showArchived={showArchived}
@@ -79,7 +79,6 @@ export const VehicleManagementDetail = () => {
         buttonText={mobileHeader ? 'Add' : 'Add Vehicle'}
       />
     )
-    return Comp
   }, [handleAddVehicle, showArchived, setShowArchived, mobileHeader])
 
   return (

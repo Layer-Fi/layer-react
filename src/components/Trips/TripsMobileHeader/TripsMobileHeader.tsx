@@ -57,6 +57,7 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
             <Plus size={16} />
           </Button>
         </HStack>
+
       </VStack>
     </Header>
   )
