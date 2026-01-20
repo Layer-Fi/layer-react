@@ -21,6 +21,10 @@ import { useLedgerEntriesCacheActions } from '@features/ledger/entries/api/useLi
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
 
+  const parentIdError = validateParentId(formData)
+  if (parentIdError) {
+    errors.push(parentIdError)
+  }
   const nameError = validateName(formData)
   if (nameError) {
     errors.push(nameError)
@@ -33,12 +37,25 @@ const validate = (formData?: ChartOfAccountsForm) => {
   if (typeError) {
     errors.push(typeError)
   }
+  const subTypeError = validateSubType(formData)
+  if (subTypeError) {
+    errors.push(subTypeError)
+  }
 
   return errors
 }
 
 const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
   switch (fieldName) {
+    case 'parent': {
+      const parentIdError = validateParentId(formData)
+      if (parentIdError) {
+        return (formData?.errors || [])
+          .filter(x => x.field !== fieldName)
+          .concat([parentIdError])
+      }
+      return (formData?.errors || []).filter(x => x.field !== fieldName)
+    }
     case 'name': {
       const nameError = validateName(formData)
       if (nameError) {
@@ -69,9 +86,30 @@ const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
 
       return (formData?.errors || []).filter(x => x.field !== fieldName)
     }
+    case 'subType': {
+      const subTypeError = validateSubType(formData)
+      if (subTypeError) {
+        return (formData?.errors || [])
+          .filter(x => x.field !== fieldName)
+          .concat([subTypeError])
+      }
+
+      return (formData?.errors || []).filter(x => x.field !== fieldName)
+    }    
     default:
       return formData?.errors
   }
+}
+
+const validateSubType = (formData?: ChartOfAccountsForm) => {
+  if (!formData?.data.subType?.value) {
+    return {
+      field: 'subType',
+      message: 'Must be selected',
+    }
+  }
+
+  return
 }
 
 const validateType = (formData?: ChartOfAccountsForm) => {
@@ -96,6 +134,17 @@ const validateNormality = (formData?: ChartOfAccountsForm) => {
   else if (!['DEBIT', 'CREDIT'].includes(stringValueNormality)) {
     return {
       field: 'normality',
+      message: 'Must be selected',
+    }
+  }
+
+  return
+}
+
+const validateParentId = (formData?: ChartOfAccountsForm) => {
+  if (!formData?.data.parent?.value) {
+    return {
+      field: 'parent',
       message: 'Must be selected',
     }
   }
