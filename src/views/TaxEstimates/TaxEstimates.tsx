@@ -22,57 +22,45 @@ export const TaxEstimatesView = () => {
 }
 
 const TaxEstimatesViewContent = () => {
+  const { isOnboarded } = useTaxEstimatesOnboardingState()
+
+  return (
+    <View title='Tax Estimates' header={<GlobalYearPicker />}>
+      {!isOnboarded ? <></> : <TaxEstimatesOnboardedViewContent />}
+    </View>
+  )
+}
+
+const TaxEstimatesOnboardedViewContent = () => {
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
-  const { isOnboarded } = useTaxEstimatesOnboardingState()
 
   const handleTabChange = useCallback((key: Key) => {
     navigate(key as TaxEstimatesRoute)
   }, [navigate])
 
   return (
-    <View
-      title='Tax Estimates'
-      showHeader
-      header={<GlobalYearPicker />}
-    >
+    <>
       <Toggle
         ariaLabel='Tax estimate view'
         options={[
           {
-            value: TaxEstimatesRoute.Overview,
-            label: 'Overview',
-          },
-          {
             value: TaxEstimatesRoute.Estimates,
             label: 'Estimates',
-            disabled: !isOnboarded,
-            disabledMessage: 'Please complete your tax profile first',
           },
           {
             value: TaxEstimatesRoute.Payments,
             label: 'Payments',
-            disabled: !isOnboarded,
-            disabledMessage: 'Please complete your tax profile first',
-          },
-          {
-            value: TaxEstimatesRoute.Profile,
-            label: 'Tax Profile',
           },
         ]}
         selectedKey={route}
         onSelectionChange={handleTabChange}
       />
       <Container name='tax-estimate'>
-        {route === TaxEstimatesRoute.Overview && <></>}
-
         {route === TaxEstimatesRoute.Estimates && <></>}
 
         {route === TaxEstimatesRoute.Payments && <></>}
-
-        {route === TaxEstimatesRoute.Profile && <></>}
-
       </Container>
-    </View>
+    </>
   )
 }

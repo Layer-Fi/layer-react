@@ -2,10 +2,8 @@ import { createContext, type PropsWithChildren, useContext, useMemo, useState } 
 import { createStore, useStore } from 'zustand'
 
 export enum TaxEstimatesRoute {
-  Overview = 'Overview',
   Estimates = 'Estimates',
   Payments = 'Payments',
-  Profile = 'Profile',
 }
 
 type TaxEstimatesRouteState = {
@@ -20,7 +18,7 @@ type TaxEstimatesRouteStoreShape = {
 
 const TaxEstimatesRouteStoreContext = createContext(
   createStore<TaxEstimatesRouteStoreShape>(() => ({
-    routeState: { route: TaxEstimatesRoute.Overview },
+    routeState: { route: TaxEstimatesRoute.Estimates },
     isOnboarded: true,
     navigate: () => {},
   })),
@@ -45,7 +43,7 @@ export function useTaxEstimatesOnboardingState() {
 export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<TaxEstimatesRouteStoreShape>(set => ({
-      routeState: { route: TaxEstimatesRoute.Overview },
+      routeState: { route: TaxEstimatesRoute.Estimates },
       isOnboarded: true,
       navigate: (route: TaxEstimatesRoute) => {
         set({ routeState: { route } })
