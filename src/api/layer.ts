@@ -50,6 +50,7 @@ import { getStatementOfCashFlow } from '@api/layer/statement-of-cash-flow'
 import { getVendors } from '@api/layer/vendors'
 import {
   getTaxEstimates,
+  getTaxDetails,
   getTaxOverview,
   getTaxChecklist,
   getTaxPayments,
@@ -105,6 +106,7 @@ export const Layer = {
   unlinkQuickbooksConnection,
   getVendors,
   getTaxEstimates,
+  getTaxDetails,
   getTaxOverview,
   getTaxChecklist,
   getTaxPayments,

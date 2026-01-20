@@ -1,14 +1,14 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { TaxPaymentsResponseSchema, type TaxReportingBasis } from '@schemas/taxEstimates'
-import { getTaxPayments } from '@api/layer/taxEstimates'
+import { TaxDetailsResponseSchema, type TaxReportingBasis } from '@schemas/taxEstimates'
+import { getTaxDetails } from '@api/layer/taxEstimates'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 import { TAX_ESTIMATES_TAG_KEY } from './useTaxEstimates'
 
-type UseTaxPaymentsOptions = {
+type UseTaxDetailsOptions = {
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
@@ -37,12 +37,12 @@ function buildKey({
       year,
       reportingBasis,
       fullYearProjection,
-      tags: [`${TAX_ESTIMATES_TAG_KEY}#payments`],
+      tags: [`${TAX_ESTIMATES_TAG_KEY}#details`],
     } as const
   }
 }
 
-export function useTaxPayments({ year, reportingBasis, fullYearProjection }: UseTaxPaymentsOptions) {
+export function useTaxDetails({ year, reportingBasis, fullYearProjection }: UseTaxDetailsOptions) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -55,7 +55,7 @@ export function useTaxPayments({ year, reportingBasis, fullYearProjection }: Use
       fullYearProjection,
     }),
     async ({ accessToken, apiUrl, businessId, year, reportingBasis, fullYearProjection }) => {
-      return getTaxPayments(
+      return getTaxDetails(
         apiUrl,
         accessToken,
         {
@@ -66,7 +66,7 @@ export function useTaxPayments({ year, reportingBasis, fullYearProjection }: Use
             fullYearProjection,
           },
         },
-      )().then(({ data }) => Schema.decodeUnknownPromise(TaxPaymentsResponseSchema)({ data }))
+      )().then(({ data }) => Schema.decodeUnknownPromise(TaxDetailsResponseSchema)({ data }))
     },
   )
 }

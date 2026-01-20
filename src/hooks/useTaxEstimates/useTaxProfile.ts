@@ -1,14 +1,12 @@
-import useSWR from 'swr'
 import { Schema } from 'effect'
+import useSWR from 'swr'
+
+import { TaxProfileResponseSchema } from '@schemas/taxEstimates'
+import { getTaxProfile } from '@api/layer/taxEstimates'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { getTaxProfile } from '@api/layer/taxEstimates'
-import { TAX_ESTIMATES_TAG_KEY } from './useTaxEstimates'
-import { TaxProfileResponseSchema } from '@schemas/taxEstimates'
 
-type UseTaxProfileOptions = {
-  useMockData?: boolean
-}
+import { TAX_ESTIMATES_TAG_KEY } from './useTaxEstimates'
 
 function buildKey({
   access_token: accessToken,
@@ -29,7 +27,7 @@ function buildKey({
   }
 }
 
-export function useTaxProfile({ useMockData = false }: UseTaxProfileOptions = {}) {
+export function useTaxProfile() {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -39,27 +37,6 @@ export function useTaxProfile({ useMockData = false }: UseTaxProfileOptions = {}
       businessId,
     }),
     async ({ accessToken, apiUrl, businessId }) => {
-      if (useMockData) {
-        return Schema.decodeUnknownSync(TaxProfileResponseSchema)({
-          data: {
-            general_information: {
-              first_name: 'John',
-              last_name: 'Doe',
-              email: 'john.doe@example.com',
-              phone_personal: '+1-555-123-4567',
-              date_of_birth: '1985-06-15',
-              ssn: '****5678',
-            },
-            profile: {
-              work_description: 'Software Consultant',
-              filing_status: 'single' as const,
-              us_state: 'CA',
-              canadian_province: null,
-            },
-          },
-        })
-      }
-
       return getTaxProfile(
         apiUrl,
         accessToken,
@@ -68,7 +45,7 @@ export function useTaxProfile({ useMockData = false }: UseTaxProfileOptions = {}
             businessId,
           },
         },
-      )().then(Schema.decodeUnknownPromise(TaxProfileResponseSchema))
+      )().then(({ data }) => Schema.decodeUnknownPromise(TaxProfileResponseSchema)({ data }))
     },
   )
 }

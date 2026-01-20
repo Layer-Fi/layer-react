@@ -1,51 +1,101 @@
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { get, patch, post } from '@api/layer/authenticated_http'
+import type {
+  ApiTaxEstimates,
+  ApiTaxDetails,
+  ApiTaxOverview,
+  ApiTaxChecklist,
+  ApiTaxPayments,
+  ApiTaxProfile,
+  S3PresignedUrl,
+  TaxReportingBasis,
+  TaxExportType,
+  FilingStatus,
+} from '@schemas/taxEstimates'
 
 type GetTaxEstimatesParams = {
   businessId: string
-  year?: number
+  year: number
 }
 
-export const getTaxEstimates = get<Record<string, unknown>, GetTaxEstimatesParams>(
+export type GetTaxEstimatesReturn = {
+  data: ApiTaxEstimates
+}
+
+export const getTaxEstimates = get<GetTaxEstimatesReturn, GetTaxEstimatesParams>(
   ({ businessId, year }) => {
     const parameters = toDefinedSearchParameters({ year })
-    return `/v1/businesses/${businessId}/taxes/estimates?${parameters}`
+    return `/v1/businesses/${businessId}/tax-estimates?${parameters}`
+  },
+)
+
+type GetTaxDetailsParams = {
+  businessId: string
+  year: number
+  reportingBasis?: TaxReportingBasis
+  fullYearProjection?: boolean
+}
+
+export type GetTaxDetailsReturn = {
+  data: ApiTaxDetails
+}
+
+export const getTaxDetails = get<GetTaxDetailsReturn, GetTaxDetailsParams>(
+  ({ businessId, year, reportingBasis, fullYearProjection }) => {
+    const parameters = toDefinedSearchParameters({ year, reporting_basis: reportingBasis, full_year_projection: fullYearProjection })
+    return `/v1/businesses/${businessId}/tax-estimates/details?${parameters}`
   },
 )
 
 type GetTaxOverviewParams = {
   businessId: string
-  year?: number
+  year: number
+  reportingBasis?: TaxReportingBasis
+  fullYearProjection?: boolean
 }
 
-export const getTaxOverview = get<Record<string, unknown>, GetTaxOverviewParams>(
-  ({ businessId, year }) => {
-    const parameters = toDefinedSearchParameters({ year })
-    return `/v1/businesses/${businessId}/taxes/overview?${parameters}`
+export type GetTaxOverviewReturn = {
+  data: ApiTaxOverview
+}
+
+export const getTaxOverview = get<GetTaxOverviewReturn, GetTaxOverviewParams>(
+  ({ businessId, year, reportingBasis, fullYearProjection }) => {
+    const parameters = toDefinedSearchParameters({ year, reporting_basis: reportingBasis, full_year_projection: fullYearProjection })
+    return `/v1/businesses/${businessId}/tax-estimates/overview?${parameters}`
   },
 )
 
 type GetTaxChecklistParams = {
   businessId: string
-  year?: number
+  year: number
 }
 
-export const getTaxChecklist = get<Record<string, unknown>, GetTaxChecklistParams>(
+export type GetTaxChecklistReturn = {
+  data: ApiTaxChecklist
+}
+
+export const getTaxChecklist = get<GetTaxChecklistReturn, GetTaxChecklistParams>(
   ({ businessId, year }) => {
     const parameters = toDefinedSearchParameters({ year })
-    return `/v1/businesses/${businessId}/taxes/checklist?${parameters}`
+    return `/v1/businesses/${businessId}/tax-estimates/checklist?${parameters}`
   },
 )
 
 type GetTaxPaymentsParams = {
   businessId: string
-  year?: number
+  year: number
+  reportingBasis?: TaxReportingBasis
+  fullYearProjection?: boolean
 }
 
-export const getTaxPayments = get<Record<string, unknown>, GetTaxPaymentsParams>(
-  ({ businessId, year }) => {
-    const parameters = toDefinedSearchParameters({ year })
-    return `/v1/businesses/${businessId}/taxes/payments?${parameters}`
+export type GetTaxPaymentsReturn = {
+  data: ApiTaxPayments
+}
+
+export const getTaxPayments = get<GetTaxPaymentsReturn, GetTaxPaymentsParams>(
+  ({ businessId, year, reportingBasis, fullYearProjection }) => {
+    const parameters = toDefinedSearchParameters({ year, reporting_basis: reportingBasis, full_year_projection: fullYearProjection })
+    return `/v1/businesses/${businessId}/tax-estimates/payments?${parameters}`
   },
 )
 
@@ -53,52 +103,97 @@ type GetTaxProfileParams = {
   businessId: string
 }
 
-export const getTaxProfile = get<Record<string, unknown>, GetTaxProfileParams>(
+export type GetTaxProfileReturn = {
+  data: ApiTaxProfile
+}
+
+export const getTaxProfile = get<GetTaxProfileReturn, GetTaxProfileParams>(
   ({ businessId }) => {
-    return `/v1/businesses/${businessId}/taxes/profile`
+    return `/v1/businesses/${businessId}/tax-estimates/profile`
   },
 )
 
 export type TaxProfileInput = {
-  general_information?: {
-    first_name?: string
-    last_name?: string
-    email?: string
-    phone_personal?: string
-    date_of_birth?: string | null
-    ssn?: string
-  }
-  profile?: {
-    work_description?: string | null
-    filing_status?: 'single' | 'married_filing_jointly' | 'married_filing_separately' | 'head_of_household' | 'qualifying_widow' | null
-    us_state?: string | null
-    canadian_province?: string | null
-  }
+  type?: string
+  tax_country_code?: string | null
+  us_configuration?: {
+    federal?: {
+      filing_status?: FilingStatus | null
+      annual_w2_income?: number | null
+      tip_income?: number | null
+      overtime_income?: number | null
+      withholding?: {
+        use_custom_withholding?: boolean | null
+        amount?: number | null
+      } | null
+    } | null
+    state?: {
+      tax_state?: string | null
+      filing_status?: FilingStatus | null
+      num_exemptions?: number | null
+      withholding?: {
+        use_custom_withholding?: boolean | null
+        amount?: number | null
+      } | null
+    } | null
+    deductions?: {
+      home_office?: {
+        use_home_office_deduction?: boolean | null
+        home_office_area?: number | null
+      } | null
+      vehicle?: {
+        use_mileage_deduction?: boolean | null
+        vehicle_business_percent?: number | null
+        mileage?: {
+          use_user_estimated_business_mileage?: boolean | null
+          user_estimated_business_mileage?: number | null
+        } | null
+      } | null
+    } | null
+    business_estimates?: {
+      expenses?: {
+        use_user_estimated_expenses?: boolean | null
+        user_estimated_expenses?: number | null
+      } | null
+    } | null
+  } | null
+}
+
+export type CreateTaxProfileReturn = {
+  data: ApiTaxProfile
 }
 
 export const createTaxProfile = post<
-  Record<string, unknown>,
+  CreateTaxProfileReturn,
   TaxProfileInput,
   { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/taxes/profile`)
+>(({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/profile`)
+
+export type UpdateTaxProfileReturn = {
+  data: ApiTaxProfile
+}
 
 export const updateTaxProfile = patch<
-  Record<string, unknown>,
+  UpdateTaxProfileReturn,
   TaxProfileInput,
   { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/taxes/profile`)
+>(({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/profile`)
 
 type ExportTaxDocumentsParams = {
   businessId: string
-  type: 'tax-packet' | 'schedule-c' | 'payment-history'
-  year?: string
+  type: TaxExportType
+  year: string
+}
+
+export type ExportTaxDocumentsReturn = {
+  data: S3PresignedUrl
 }
 
 export const exportTaxDocuments = post<
-  Record<string, unknown>,
+  ExportTaxDocumentsReturn,
   Record<string, never>,
   ExportTaxDocumentsParams
 >(({ businessId, type, year }) => {
   const parameters = toDefinedSearchParameters({ type, year })
-  return `/v1/businesses/${businessId}/taxes/export?${parameters}`
+  return `/v1/businesses/${businessId}/tax-estimates/export?${parameters}`
 })

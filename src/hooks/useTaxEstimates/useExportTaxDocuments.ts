@@ -1,12 +1,16 @@
+import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
+
+import { ExportTaxDocumentsResponseSchema, type TaxExportType } from '@schemas/taxEstimates'
+import { exportTaxDocuments } from '@api/layer/taxEstimates'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { exportTaxDocuments } from '@api/layer/taxEstimates'
+
 import { TAX_ESTIMATES_TAG_KEY } from './useTaxEstimates'
 
 type ExportTaxDocumentsParams = {
-  type: 'tax-packet' | 'schedule-c' | 'payment-history'
-  year?: number
+  type: TaxExportType
+  year: number
 }
 
 function buildKey({
@@ -45,11 +49,11 @@ export function useExportTaxDocuments() {
           params: {
             businessId,
             type: arg.type,
-            year: arg.year ? String(arg.year) : undefined,
+            year: String(arg.year),
           },
           body: {},
         },
-      )
+      ).then(({ data }) => Schema.decodeUnknownPromise(ExportTaxDocumentsResponseSchema)({ data }))
     },
   )
 

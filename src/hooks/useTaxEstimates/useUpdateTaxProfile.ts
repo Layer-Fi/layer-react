@@ -1,8 +1,12 @@
+import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
+
+import { TaxProfileResponseSchema } from '@schemas/taxEstimates'
+import { type TaxProfileInput, updateTaxProfile } from '@api/layer/taxEstimates'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { updateTaxProfile, type TaxProfileInput } from '@api/layer/taxEstimates'
-import { useTaxEstimatesGlobalCacheActions, TAX_ESTIMATES_TAG_KEY } from './useTaxEstimates'
+
+import { TAX_ESTIMATES_TAG_KEY, useTaxEstimatesGlobalCacheActions } from './useTaxEstimates'
 
 function buildKey({
   access_token: accessToken,
@@ -41,7 +45,7 @@ export function useUpdateTaxProfile() {
           params: { businessId },
           body: arg,
         },
-      )
+      ).then(({ data }) => Schema.decodeUnknownPromise(TaxProfileResponseSchema)({ data }))
 
       await invalidateTaxEstimates()
       return result

@@ -1,14 +1,15 @@
-import useSWR from 'swr'
 import { Schema } from 'effect'
+import useSWR from 'swr'
+
+import { TaxChecklistResponseSchema } from '@schemas/taxEstimates'
+import { getTaxChecklist } from '@api/layer/taxEstimates'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { getTaxChecklist } from '@api/layer/taxEstimates'
+
 import { TAX_ESTIMATES_TAG_KEY } from './useTaxEstimates'
-import { TaxChecklistResponseSchema } from '@schemas/taxEstimates'
 
 type UseTaxChecklistOptions = {
-  year?: number
-  useMockData?: boolean
+  year: number
 }
 
 function buildKey({
@@ -20,7 +21,7 @@ function buildKey({
   access_token?: string
   apiUrl?: string
   businessId: string
-  year?: number
+  year: number
 }) {
   if (accessToken && apiUrl) {
     return {
@@ -33,7 +34,7 @@ function buildKey({
   }
 }
 
-export function useTaxChecklist({ year, useMockData = false }: UseTaxChecklistOptions = {}) {
+export function useTaxChecklist({ year }: UseTaxChecklistOptions) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -44,35 +45,6 @@ export function useTaxChecklist({ year, useMockData = false }: UseTaxChecklistOp
       year,
     }),
     async ({ accessToken, apiUrl, businessId, year }) => {
-      if (useMockData) {
-        return Schema.decodeUnknownSync(TaxChecklistResponseSchema)({
-          data: {
-            items: [
-              {
-                id: 'categorize-deductions',
-                description: 'Categorize $2,100.00 of potential deductions',
-                amount: 2100.00,
-                status: 'pending',
-                action_url: '/bank-transactions?filter=uncategorized',
-              },
-              {
-                id: 'track-mileage',
-                description: 'Track mileage for business trips',
-                amount: 0,
-                status: 'pending',
-                action_url: '/mileage',
-              },
-              {
-                id: 'review-quarterly-taxes',
-                description: 'Review quarterly tax payments',
-                amount: 945.52,
-                status: 'completed',
-              },
-            ],
-          },
-        })
-      }
-
       return getTaxChecklist(
         apiUrl,
         accessToken,
@@ -82,7 +54,7 @@ export function useTaxChecklist({ year, useMockData = false }: UseTaxChecklistOp
             year,
           },
         },
-      )().then(Schema.decodeUnknownPromise(TaxChecklistResponseSchema))
+      )().then(({ data }) => Schema.decodeUnknownPromise(TaxChecklistResponseSchema)({ data }))
     },
   )
 }
