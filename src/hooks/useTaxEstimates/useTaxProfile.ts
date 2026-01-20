@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { TaxProfileResponseSchema, type ApiTaxProfile } from '@schemas/taxEstimates'
+import { type ApiTaxProfile, TaxProfileResponseSchema } from '@schemas/taxEstimates'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

@@ -1,15 +1,15 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { TaxPaymentsResponseSchema, type ApiTaxPayments, type TaxReportingBasis } from '@schemas/taxEstimates'
-import { get } from '@api/layer/authenticated_http'
+import { type ApiTaxPayments, TaxPaymentsResponseSchema, type TaxReportingBasis } from '@schemas/taxEstimates'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const getTaxPayments = get<
   { data: ApiTaxPayments },
-  { businessId: string; year: number; reportingBasis?: TaxReportingBasis; fullYearProjection?: boolean }
+  { businessId: string, year: number, reportingBasis?: TaxReportingBasis, fullYearProjection?: boolean }
 >(
   ({ businessId, year, reportingBasis, fullYearProjection }) => {
     const parameters = toDefinedSearchParameters({ year, reportingBasis, fullYearProjection })
