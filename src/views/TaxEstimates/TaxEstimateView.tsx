@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useState } from 'react'
 
-import { useTaxEstimates, useTaxPayments } from '@hooks/useTaxEstimates'
+import { useTaxPayments } from '@hooks/useTaxEstimates'
 import MoreVertical from '@icons/MoreVertical'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
@@ -50,9 +50,6 @@ export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateVie
 
   const year = selectedYear ? parseInt(selectedYear.value) : currentYear
 
-  const { data: taxEstimatesData } = useTaxEstimates({
-    year,
-  })
   const { data: taxPaymentsData } = useTaxPayments({
     year,
   })
@@ -219,54 +216,17 @@ export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateVie
             </VStack>
           )}
 
-          {activeTab === 'tax-estimates' && taxEstimatesData && (
+          {activeTab === 'tax-estimates' && (
             <VStack gap='md' pb='lg' pi='lg'>
               <TaxEstimateSummary
                 year={year}
-                projectedTaxesOwed={
-                  taxEstimatesData.data.usEstimates.results?.overallTax
-                    ? taxEstimatesData.data.usEstimates.results.overallTax / 100
-                    : undefined
-                }
-                taxesDueDate={
-                  taxEstimatesData.data.usEstimates.results?.annualPaymentDueDate
-                    ? new Date(taxEstimatesData.data.usEstimates.results.annualPaymentDueDate)
-                    : undefined
-                }
-                federalTaxesOwed={
-                  taxEstimatesData.data.usEstimates.federalTax?.taxAmount
-                    ? taxEstimatesData.data.usEstimates.federalTax.taxAmount / 100
-                    : undefined
-                }
-                federalTaxesPaid={
-                  taxEstimatesData.data.usEstimates.quarterlyEstimates
-                    ? Object.values(taxEstimatesData.data.usEstimates.quarterlyEstimates).reduce(
-                      (sum, q) => sum + (q?.federalTax?.paid ?? 0),
-                      0,
-                    ) / 100
-                    : undefined
-                }
-                stateTaxesOwed={
-                  taxEstimatesData.data.usEstimates.stateTax?.taxAmount
-                    ? taxEstimatesData.data.usEstimates.stateTax.taxAmount / 100
-                    : undefined
-                }
-                stateTaxesPaid={
-                  taxEstimatesData.data.usEstimates.quarterlyEstimates
-                    ? Object.values(taxEstimatesData.data.usEstimates.quarterlyEstimates).reduce(
-                      (sum, q) => sum + (q?.stateTax?.paid ?? 0),
-                      0,
-                    ) / 100
-                    : undefined
-                }
-                quarterlyEstimates={taxEstimatesData.data.usEstimates.quarterlyEstimates
-                  ? [
-                    { quarter: 'Q1', amount: ((taxEstimatesData.data.usEstimates.quarterlyEstimates.q1?.federalTax?.amount ?? 0) + (taxEstimatesData.data.usEstimates.quarterlyEstimates.q1?.stateTax?.amount ?? 0)) / 100 },
-                    { quarter: 'Q2', amount: ((taxEstimatesData.data.usEstimates.quarterlyEstimates.q2?.federalTax?.amount ?? 0) + (taxEstimatesData.data.usEstimates.quarterlyEstimates.q2?.stateTax?.amount ?? 0)) / 100 },
-                    { quarter: 'Q3', amount: ((taxEstimatesData.data.usEstimates.quarterlyEstimates.q3?.federalTax?.amount ?? 0) + (taxEstimatesData.data.usEstimates.quarterlyEstimates.q3?.stateTax?.amount ?? 0)) / 100 },
-                    { quarter: 'Q4', amount: ((taxEstimatesData.data.usEstimates.quarterlyEstimates.q4?.federalTax?.amount ?? 0) + (taxEstimatesData.data.usEstimates.quarterlyEstimates.q4?.stateTax?.amount ?? 0)) / 100 },
-                  ]
-                  : []}
+                projectedTaxesOwed={undefined}
+                taxesDueDate={undefined}
+                federalTaxesOwed={undefined}
+                federalTaxesPaid={undefined}
+                stateTaxesOwed={undefined}
+                stateTaxesPaid={undefined}
+                quarterlyEstimates={[]}
                 onFederalTaxesOwedClick={handleFederalTaxesOwedClick}
                 onFederalTaxesPaidClick={handleFederalTaxesPaidClick}
                 onStateTaxesOwedClick={handleStateTaxesOwedClick}
@@ -279,24 +239,20 @@ export const TaxEstimateView = ({ onNavigateToBankTransactions }: TaxEstimateVie
             </VStack>
           )}
 
-          {activeTab === 'tax-payments' && taxPaymentsData && taxEstimatesData && (
+          {activeTab === 'tax-payments' && taxPaymentsData && (
             <VStack gap='md' pb='lg' pi='lg'>
               <TaxPayments
-                quarterlyPayments={taxPaymentsData.data.quarters.map(q => ({
+                quarterlyData={taxPaymentsData.data.quarters.map(q => ({
                   quarter: `Q${q.quarter}`,
-                  amount: q.totalPaid / 100,
+                  rolledOver: q.owedRolledOverFromPrevious / 100,
+                  owed: q.owedThisQuarter / 100,
+                  paid: q.totalPaid / 100,
+                  total: q.total / 100,
                 }))}
-                quarterlyEstimates={taxEstimatesData.data.usEstimates.quarterlyEstimates
-                  ? [
-                    { quarter: 'Q1', amount: ((taxEstimatesData.data.usEstimates.quarterlyEstimates.q1?.federalTax?.amount ?? 0) + (taxEstimatesData.data.usEstimates.quarterlyEstimates.q1?.stateTax?.amount ?? 0)) / 100 },
-                    { quarter: 'Q2', amount: ((taxEstimatesData.data.usEstimates.quarterlyEstimates.q2?.federalTax?.amount ?? 0) + (taxEstimatesData.data.usEstimates.quarterlyEstimates.q2?.stateTax?.amount ?? 0)) / 100 },
-                    { quarter: 'Q3', amount: ((taxEstimatesData.data.usEstimates.quarterlyEstimates.q3?.federalTax?.amount ?? 0) + (taxEstimatesData.data.usEstimates.quarterlyEstimates.q3?.stateTax?.amount ?? 0)) / 100 },
-                    { quarter: 'Q4', amount: ((taxEstimatesData.data.usEstimates.quarterlyEstimates.q4?.federalTax?.amount ?? 0) + (taxEstimatesData.data.usEstimates.quarterlyEstimates.q4?.stateTax?.amount ?? 0)) / 100 },
-                  ]
-                  : []}
                 paymentsSectionExpanded={paymentsSectionExpanded}
                 onPaymentsSectionExpandedChange={handlePaymentsSectionExpandedChange}
                 onNavigateToBankTransactions={onNavigateToBankTransactions}
+                year={year}
               />
             </VStack>
           )}

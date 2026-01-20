@@ -1,65 +1,44 @@
+import { Download } from 'lucide-react'
+import { useCallback } from 'react'
+
+import { convertNumberToCurrency } from '@utils/format'
+import { Button } from '@ui/Button/Button'
+import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { Tooltip, TooltipTrigger, TooltipContent } from '@ui/Tooltip/Tooltip'
-import { convertNumberToCurrency } from '@utils/format'
-import { Download } from 'lucide-react'
-import { useState, useCallback, useMemo } from 'react'
-import { Button } from '@ui/Button/Button'
-import { DropdownMenu, MenuList, MenuItem } from '@ui/DropdownMenu/DropdownMenu'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { Table } from '@components/Table/Table'
 import { TableBody } from '@components/TableBody/TableBody'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableRow } from '@components/TableRow/TableRow'
 import { TableCell } from '@components/TableCell/TableCell'
 import { TableCellAlign } from '@internal-types/table'
+import { TableHead } from '@components/TableHead/TableHead'
+import { TableRow } from '@components/TableRow/TableRow'
 
-interface QuarterlyAmount {
+interface QuarterlyPaymentData {
   quarter: string
-  amount: number
+  rolledOver: number
+  owed: number
+  paid: number
+  total: number
 }
 
 interface TaxPaymentsProps {
-  quarterlyPayments?: QuarterlyAmount[]
-  quarterlyEstimates?: QuarterlyAmount[]
+  quarterlyData?: QuarterlyPaymentData[]
   paymentsSectionExpanded?: boolean
   onPaymentsSectionExpandedChange?: (expanded: boolean) => void
   onNavigateToBankTransactions?: () => void
+  year?: number
 }
 
 export const TaxPayments = ({
-  quarterlyPayments = [],
-  quarterlyEstimates = [],
+  quarterlyData = [],
   paymentsSectionExpanded: _paymentsSectionExpanded,
   onPaymentsSectionExpandedChange: _onPaymentsSectionExpandedChange,
   onNavigateToBankTransactions = () => {},
+  year,
 }: TaxPaymentsProps = {}) => {
-  const [selectedYear] = useState(new Date().getFullYear().toString())
-
-  const quarterlyData = useMemo(() => {
-    const estimatesMap = new Map(quarterlyEstimates.map(e => [e.quarter, e.amount]))
-    const paymentsMap = new Map(quarterlyPayments.map(p => [p.quarter, p.amount]))
-
-    let prevTotal = 0
-
-    return quarterlyPayments.map((payment) => {
-      const quarter = payment.quarter
-      const owed = estimatesMap.get(quarter) || 0
-      const paid = paymentsMap.get(quarter) || 0
-      const rolledOver = prevTotal
-      const total = rolledOver + owed - paid
-
-      prevTotal = total
-
-      return {
-        quarter,
-        rolledOver,
-        owed,
-        paid,
-        total,
-      }
-    })
-  }, [quarterlyPayments, quarterlyEstimates])
+  const displayYear = year ?? new Date().getFullYear()
 
   const Trigger = useCallback(() => {
     return (
@@ -78,7 +57,7 @@ export const TaxPayments = ({
           <Span size='md' variant='subtle'>
             These are your federal and state tax payments for Year
             {' '}
-            {selectedYear}
+            {displayYear}
             .
           </Span>
         </VStack>

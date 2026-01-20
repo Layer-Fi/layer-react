@@ -336,11 +336,26 @@ const ApiTotalFederalTaxSchema = Schema.Struct({
 export type ApiTotalFederalTax = typeof ApiTotalFederalTaxSchema.Type
 
 const ApiUsFederalTaxSchema = Schema.Struct({
-  federalIncomeTax: ApiFederalIncomeTaxSchema,
-  socialSecurityTax: ApiSocialSecurityTaxSchema,
-  medicareTax: ApiMedicareTaxSchema,
-  medicareSurtax: ApiMedicareSurtaxSchema,
-  totalFederalTax: ApiTotalFederalTaxSchema,
+  federalIncomeTax: pipe(
+    Schema.propertySignature(ApiFederalIncomeTaxSchema),
+    Schema.fromKey('federal_income_tax'),
+  ),
+  socialSecurityTax: pipe(
+    Schema.propertySignature(ApiSocialSecurityTaxSchema),
+    Schema.fromKey('social_security_tax'),
+  ),
+  medicareTax: pipe(
+    Schema.propertySignature(ApiMedicareTaxSchema),
+    Schema.fromKey('medicare_tax'),
+  ),
+  medicareSurtax: pipe(
+    Schema.propertySignature(ApiMedicareSurtaxSchema),
+    Schema.fromKey('medicare_surtax'),
+  ),
+  totalFederalTax: pipe(
+    Schema.propertySignature(ApiTotalFederalTaxSchema),
+    Schema.fromKey('total_federal_tax'),
+  ),
 })
 
 export type ApiUsFederalTax = typeof ApiUsFederalTaxSchema.Type
@@ -361,9 +376,15 @@ const ApiTaxDetailsSchema = Schema.Struct({
     Schema.propertySignature(Schema.String),
     Schema.fromKey('filing_status'),
   ),
-  adjustedGrossIncome: ApiAdjustedGrossIncomeSchema,
+  adjustedGrossIncome: pipe(
+    Schema.propertySignature(ApiAdjustedGrossIncomeSchema),
+    Schema.fromKey('adjusted_gross_income'),
+  ),
   taxes: ApiTaxesSchema,
-  quarterlyEstimates: ApiQuarterlyEstimatesSchema,
+  quarterlyEstimates: pipe(
+    Schema.propertySignature(ApiQuarterlyEstimatesSchema),
+    Schema.fromKey('quarterly_estimates'),
+  ),
 })
 
 export type ApiTaxDetails = typeof ApiTaxDetailsSchema.Type

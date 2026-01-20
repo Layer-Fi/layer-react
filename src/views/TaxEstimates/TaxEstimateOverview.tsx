@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { format } from 'date-fns'
-import { AlertTriangle, Download } from 'lucide-react'
+import { AlertTriangle } from 'lucide-react'
 import { Cell, Label, Pie, PieChart, ResponsiveContainer, Text as ChartText } from 'recharts'
 import { type PolarViewBox } from 'recharts/types/util/types'
 
 import { convertNumberToCurrency, formatPercent } from '@utils/format'
-import { useTaxChecklist, useTaxOverview } from '@hooks/useTaxEstimates'
+import { useTaxOverview } from '@hooks/useTaxEstimates'
 import { Button, type ButtonVariant } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -21,7 +21,7 @@ interface TaxEstimateOverviewProps {
   onNavigateToBankTransactions?: () => void
 }
 
-export const TaxEstimateOverview = ({ year, onNavigateToBankTransactions }: TaxEstimateOverviewProps) => {
+export const TaxEstimateOverview = ({ year, onNavigateToBankTransactions: _onNavigateToBankTransactions }: TaxEstimateOverviewProps) => {
   const totalIncomeBarRef = useRef<HTMLDivElement>(null)
   const incomeBarRef = useRef<HTMLDivElement>(null)
   const deductionsBarRef = useRef<HTMLDivElement>(null)
@@ -30,19 +30,15 @@ export const TaxEstimateOverview = ({ year, onNavigateToBankTransactions }: TaxE
   const deductionsAmountRef = useRef<HTMLSpanElement>(null)
 
   const { data: taxOverviewData } = useTaxOverview({ year })
-  const { data: taxChecklistData } = useTaxChecklist({ year })
+  // const { data: taxChecklistData } = useTaxChecklist({ year })
 
-  const todoItems = (taxChecklistData?.data.items ?? []).map(item => ({
-    label: item.description,
-    buttonLabel: 'Review',
-    variant: 'solid' as ButtonVariant,
-    icon: item.actionUrl?.includes('export') ? <Download size={16} /> : null,
-    onPress: () => {
-      if (item.actionUrl) {
-        onNavigateToBankTransactions?.()
-      }
-    },
-  }))
+  const todoItems: Array<{
+    label: string
+    buttonLabel: string
+    variant: ButtonVariant
+    icon: JSX.Element | null
+    onPress: () => void
+  }> = []
 
   const taxableIncome = (taxOverviewData?.data.taxableIncomeEstimate ?? 0) / 100
   const income = (taxOverviewData?.data.totalIncome ?? 0) / 100
