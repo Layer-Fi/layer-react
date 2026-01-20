@@ -765,50 +765,59 @@ const ApiTaxProfileUsConfigurationStateSchema = Schema.Struct({
 const ApiTaxProfileUsConfigurationSchema = Schema.Struct({
   federal: Schema.NullishOr(ApiTaxProfileUsConfigurationFederalSchema),
   state: Schema.NullishOr(ApiTaxProfileUsConfigurationStateSchema),
-  deductions: Schema.NullishOr(Schema.Struct({
-    homeOffice: Schema.NullishOr(Schema.Struct({
-      useHomeOfficeDeduction: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
-        Schema.fromKey('use_home_office_deduction'),
+  deductions: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Struct({
+      homeOffice: pipe(
+        Schema.propertySignature(Schema.NullishOr(Schema.Struct({
+          useHomeOfficeDeduction: pipe(
+            Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+            Schema.fromKey('use_home_office_deduction'),
+          ),
+          homeOfficeArea: pipe(
+            Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+            Schema.fromKey('home_office_area'),
+          ),
+        }))),
+        Schema.fromKey('home_office'),
       ),
-      homeOfficeArea: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-        Schema.fromKey('home_office_area'),
-      ),
-    })),
-    vehicle: Schema.NullishOr(Schema.Struct({
-      useMileageDeduction: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
-        Schema.fromKey('use_mileage_deduction'),
-      ),
-      vehicleBusinessPercent: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-        Schema.fromKey('vehicle_business_percent'),
-      ),
-      mileage: Schema.NullishOr(Schema.Struct({
-        useUserEstimatedBusinessMileage: pipe(
+      vehicle: Schema.NullishOr(Schema.Struct({
+        useMileageDeduction: pipe(
           Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
-          Schema.fromKey('use_user_estimated_business_mileage'),
+          Schema.fromKey('use_mileage_deduction'),
         ),
-        userEstimatedBusinessMileage: pipe(
+        vehicleBusinessPercent: pipe(
           Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-          Schema.fromKey('user_estimated_business_mileage'),
+          Schema.fromKey('vehicle_business_percent'),
+        ),
+        mileage: Schema.NullishOr(Schema.Struct({
+          useUserEstimatedBusinessMileage: pipe(
+            Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+            Schema.fromKey('use_user_estimated_business_mileage'),
+          ),
+          userEstimatedBusinessMileage: pipe(
+            Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+            Schema.fromKey('user_estimated_business_mileage'),
+          ),
+        })),
+      })),
+    }))),
+    Schema.fromKey('deductions'),
+  ),
+  businessEstimates: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Struct({
+      expenses: Schema.NullishOr(Schema.Struct({
+        useUserEstimatedExpenses: pipe(
+          Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+          Schema.fromKey('use_user_estimated_expenses'),
+        ),
+        userEstimatedExpenses: pipe(
+          Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+          Schema.fromKey('user_estimated_expenses'),
         ),
       })),
-    })),
-  })),
-  businessEstimates: Schema.NullishOr(Schema.Struct({
-    expenses: Schema.NullishOr(Schema.Struct({
-      useUserEstimatedExpenses: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
-        Schema.fromKey('use_user_estimated_expenses'),
-      ),
-      userEstimatedExpenses: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-        Schema.fromKey('user_estimated_expenses'),
-      ),
-    })),
-  })),
+    }))),
+    Schema.fromKey('business_estimates'),
+  ),
 })
 
 const ApiTaxProfileSchema = Schema.Struct({
@@ -882,50 +891,59 @@ const TaxProfileInputUsConfigurationStateSchema = Schema.Struct({
 const TaxProfileInputUsConfigurationSchema = Schema.Struct({
   federal: Schema.NullishOr(TaxProfileInputUsConfigurationFederalSchema),
   state: Schema.NullishOr(TaxProfileInputUsConfigurationStateSchema),
-  deductions: Schema.NullishOr(Schema.Struct({
-    homeOffice: Schema.NullishOr(Schema.Struct({
-      useHomeOfficeDeduction: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
-        Schema.fromKey('use_home_office_deduction'),
+  deductions: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Struct({
+      homeOffice: pipe(
+        Schema.propertySignature(Schema.NullishOr(Schema.Struct({
+          useHomeOfficeDeduction: pipe(
+            Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+            Schema.fromKey('use_home_office_deduction'),
+          ),
+          homeOfficeArea: pipe(
+            Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+            Schema.fromKey('home_office_area'),
+          ),
+        }))),
+        Schema.fromKey('home_office'),
       ),
-      homeOfficeArea: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-        Schema.fromKey('home_office_area'),
-      ),
-    })),
-    vehicle: Schema.NullishOr(Schema.Struct({
-      useMileageDeduction: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
-        Schema.fromKey('use_mileage_deduction'),
-      ),
-      vehicleBusinessPercent: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-        Schema.fromKey('vehicle_business_percent'),
-      ),
-      mileage: Schema.NullishOr(Schema.Struct({
-        useUserEstimatedBusinessMileage: pipe(
+      vehicle: Schema.NullishOr(Schema.Struct({
+        useMileageDeduction: pipe(
           Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
-          Schema.fromKey('use_user_estimated_business_mileage'),
+          Schema.fromKey('use_mileage_deduction'),
         ),
-        userEstimatedBusinessMileage: pipe(
+        vehicleBusinessPercent: pipe(
           Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-          Schema.fromKey('user_estimated_business_mileage'),
+          Schema.fromKey('vehicle_business_percent'),
+        ),
+        mileage: Schema.NullishOr(Schema.Struct({
+          useUserEstimatedBusinessMileage: pipe(
+            Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+            Schema.fromKey('use_user_estimated_business_mileage'),
+          ),
+          userEstimatedBusinessMileage: pipe(
+            Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+            Schema.fromKey('user_estimated_business_mileage'),
+          ),
+        })),
+      })),
+    }))),
+    Schema.fromKey('deductions'),
+  ),
+  businessEstimates: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Struct({
+      expenses: Schema.NullishOr(Schema.Struct({
+        useUserEstimatedExpenses: pipe(
+          Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
+          Schema.fromKey('use_user_estimated_expenses'),
+        ),
+        userEstimatedExpenses: pipe(
+          Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+          Schema.fromKey('user_estimated_expenses'),
         ),
       })),
-    })),
-  })),
-  businessEstimates: Schema.NullishOr(Schema.Struct({
-    expenses: Schema.NullishOr(Schema.Struct({
-      useUserEstimatedExpenses: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
-        Schema.fromKey('use_user_estimated_expenses'),
-      ),
-      userEstimatedExpenses: pipe(
-        Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-        Schema.fromKey('user_estimated_expenses'),
-      ),
-    })),
-  })),
+    }))),
+    Schema.fromKey('business_estimates'),
+  ),
 })
 
 export const TaxProfileInputSchema = Schema.Struct({
