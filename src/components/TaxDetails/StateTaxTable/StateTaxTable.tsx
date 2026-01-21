@@ -57,10 +57,7 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
               <React.Fragment key={additionalTax.taxName}>
                 <Row>
                   <Cell>
-                    <Span>
-                      Taxable Amount for
-                      {additionalTax.taxName}
-                    </Span>
+                    <Span>{`Taxable Amount for ${additionalTax.taxName}`}</Span>
                   </Cell>
                   <Cell><MoneySpan amount={additionalTax.taxableAmount} /></Cell>
                 </Row>
