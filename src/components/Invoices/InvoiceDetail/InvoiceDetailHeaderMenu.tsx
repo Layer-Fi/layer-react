@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { Menu as MenuIcon } from 'lucide-react'
 
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useInvoicesContext } from '@contexts/InvoicesContext/InvoicesContext'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Span } from '@ui/Typography/Text'
@@ -13,6 +14,8 @@ import { UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
 import { type Invoice, InvoiceStatus } from '@features/invoices/invoiceSchemas'
 
 enum InvoiceDetailHeaderMenuActions {
+  Download = 'Download',
+  Email = 'Email',
   Edit = 'Edit',
   Void = 'Void',
   Refund = 'Refund',
@@ -20,26 +23,51 @@ enum InvoiceDetailHeaderMenuActions {
   Reset = 'Reset',
 }
 
-type InvoiceActionModalType = Exclude<InvoiceDetailHeaderMenuActions, InvoiceDetailHeaderMenuActions.Edit>
+type InvoiceActionModalType = Exclude<
+  InvoiceDetailHeaderMenuActions,
+  InvoiceDetailHeaderMenuActions.Edit | InvoiceDetailHeaderMenuActions.Download | InvoiceDetailHeaderMenuActions.Email
+>
 
 const availableActions: Record<InvoiceStatus, InvoiceDetailHeaderMenuActions[]> = {
   [InvoiceStatus.Sent]: [
+    InvoiceDetailHeaderMenuActions.Download,
+    InvoiceDetailHeaderMenuActions.Email,
     InvoiceDetailHeaderMenuActions.Edit,
     InvoiceDetailHeaderMenuActions.Void,
     InvoiceDetailHeaderMenuActions.Writeoff,
   ],
   [InvoiceStatus.PartiallyPaid]: [
+    InvoiceDetailHeaderMenuActions.Download,
+    InvoiceDetailHeaderMenuActions.Email,
     InvoiceDetailHeaderMenuActions.Writeoff,
     InvoiceDetailHeaderMenuActions.Reset,
   ],
   [InvoiceStatus.Paid]: [
+    InvoiceDetailHeaderMenuActions.Download,
+    InvoiceDetailHeaderMenuActions.Email,
     InvoiceDetailHeaderMenuActions.Refund,
     InvoiceDetailHeaderMenuActions.Reset,
   ],
-  [InvoiceStatus.Voided]: [InvoiceDetailHeaderMenuActions.Reset],
-  [InvoiceStatus.PartiallyWrittenOff]: [InvoiceDetailHeaderMenuActions.Reset],
-  [InvoiceStatus.WrittenOff]: [InvoiceDetailHeaderMenuActions.Reset],
-  [InvoiceStatus.Refunded]: [InvoiceDetailHeaderMenuActions.Reset],
+  [InvoiceStatus.Voided]: [
+    InvoiceDetailHeaderMenuActions.Download,
+    InvoiceDetailHeaderMenuActions.Email,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
+  [InvoiceStatus.PartiallyWrittenOff]: [
+    InvoiceDetailHeaderMenuActions.Download,
+    InvoiceDetailHeaderMenuActions.Email,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
+  [InvoiceStatus.WrittenOff]: [
+    InvoiceDetailHeaderMenuActions.Download,
+    InvoiceDetailHeaderMenuActions.Email,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
+  [InvoiceStatus.Refunded]: [
+    InvoiceDetailHeaderMenuActions.Download,
+    InvoiceDetailHeaderMenuActions.Email,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
 }
 
 const getInvoiceActions = (invoice: Invoice): InvoiceDetailHeaderMenuActions[] => {
@@ -52,6 +80,7 @@ type InvoiceDetailHeaderMenuProps = {
 export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMenuProps) => {
   const viewState = useInvoiceDetail()
   const { toViewInvoice } = useInvoiceNavigation()
+  const { onDownloadInvoice, onEmailInvoice, stringOverrides } = useInvoicesContext()
   const [openModal, setOpenModal] = useState<InvoiceActionModalType>()
 
   const onSuccessUpdateInvoice = useCallback((updatedInvoice: Invoice) => {
@@ -92,6 +121,16 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
         variant='compact'
       >
         <MenuList>
+          {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Download) && onDownloadInvoice && (
+            <MenuItem key={InvoiceDetailHeaderMenuActions.Download} onClick={() => void onDownloadInvoice(invoice)}>
+              <Span size='sm'>{stringOverrides?.menu?.download ?? 'Download'}</Span>
+            </MenuItem>
+          )}
+          {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Email) && onEmailInvoice && (
+            <MenuItem key={InvoiceDetailHeaderMenuActions.Email} onClick={() => void onEmailInvoice(invoice)}>
+              <Span size='sm'>{stringOverrides?.menu?.email ?? 'Email'}</Span>
+            </MenuItem>
+          )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Edit) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Edit} onClick={onEditInvoice}>
               <Span size='sm'>Edit details</Span>
