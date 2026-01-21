@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { type UsStateTax } from '@schemas/taxEstimates/details'
+import { type StateAdditionalTax, type StateIncomeTax, type TotalStateTax, type UsStateTax } from '@schemas/taxEstimates/details'
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -12,7 +12,11 @@ type StateTaxTableProps = {
 }
 
 export const StateTaxTable = ({ data }: StateTaxTableProps) => {
-  const { stateIncomeTax, additionalTaxes, totalStateTax } = data
+  const { stateIncomeTax, additionalTaxes, totalStateTax }: {
+    stateIncomeTax: StateIncomeTax
+    additionalTaxes: readonly StateAdditionalTax[]
+    totalStateTax: TotalStateTax
+  } = data
 
   return (
     <Table className='Layer__StateTaxTable' aria-label='State Tax'>
