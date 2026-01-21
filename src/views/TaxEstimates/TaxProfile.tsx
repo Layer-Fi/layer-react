@@ -21,7 +21,7 @@ export const TaxProfile = () => {
   }, [navigate])
 
   const TaxProfileHeader = useCallback(() => {
-    return <Heading size='sm'>Tax Profile</Heading>
+    return <Heading size='md'>Tax Profile</Heading>
   }, [])
 
   return (
