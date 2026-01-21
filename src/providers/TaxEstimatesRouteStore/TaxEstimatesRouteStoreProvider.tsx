@@ -44,11 +44,11 @@ export function useTaxEstimatesOnboardingState() {
 }
 
 export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
-  const { data: taxProfile } = useTaxProfile()
+  const { data: taxProfile, isLoading } = useTaxProfile()
   const [store] = useState(() =>
     createStore<TaxEstimatesRouteStoreShape>(set => ({
       routeState: { route: TaxEstimatesRoute.Estimates },
-      isOnboarded: false,
+      isOnboarded: true,
       navigate: (route: TaxEstimatesRoute) => {
         set({ routeState: { route } })
       },
@@ -56,8 +56,12 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   )
 
   useEffect(() => {
-    store.setState({ isOnboarded: taxProfile !== undefined && taxProfile.userHasSavedTaxProfile === true })
-  }, [store, taxProfile])
+    if (!isLoading) {
+      store.setState({
+        isOnboarded: taxProfile !== undefined && taxProfile.userHasSavedTaxProfile === true,
+      })
+    }
+  }, [store, taxProfile, isLoading])
 
   return (
     <TaxEstimatesRouteStoreContext.Provider value={store}>
