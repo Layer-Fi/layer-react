@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
@@ -69,22 +69,30 @@ export const VehicleManagementDetail = () => {
     setSelectedVehicle(undefined)
   }, [])
 
-  const vehicleManagementDetailHeader = useCallback(() => {
+  // Use a ref to store the latest state values
+  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle })
+  stateRef.current = { showArchived, setShowArchived, handleAddVehicle }
+
+  // Header component is stable and reads from ref
+  const HeaderRef = useRef(() => {
+    const { showArchived: currentShowArchived, setShowArchived: currentSetShowArchived, handleAddVehicle: currentHandleAddVehicle } = stateRef.current
     return (
       <VehicleManagementDetailHeader
-        onAddVehicle={handleAddVehicle}
-        showArchived={showArchived}
-        onShowArchivedChange={setShowArchived}
+        onAddVehicle={currentHandleAddVehicle}
+        showArchived={currentShowArchived}
+        onShowArchivedChange={currentSetShowArchived}
         title={mobileHeader ? 'Vehicles' : 'Manage vehicles'}
         buttonText={mobileHeader ? 'Add' : 'Add Vehicle'}
       />
     )
-  }, [handleAddVehicle, showArchived, setShowArchived, mobileHeader])
+  })
+
+  const Header = HeaderRef.current
 
   return (
     <>
       <BaseDetailView
-        slots={{ Header: vehicleManagementDetailHeader, BackIcon: BackArrow }}
+        slots={{ Header, BackIcon: BackArrow }}
         name='VehicleManagementDetail'
         onGoBack={toTripsTable}
       >
