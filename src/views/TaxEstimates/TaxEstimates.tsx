@@ -1,7 +1,10 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+import { getYear } from 'date-fns'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 
+import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
+import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
 import { usePreloadTaxProfile } from '@hooks/taxEstimates/useTaxProfile'
 import {
   TaxEstimatesRoute,
@@ -9,6 +12,7 @@ import {
   useTaxEstimatesNavigation,
   useTaxEstimatesOnboardingState,
   useTaxEstimatesRouteState,
+  useTaxEstimatesYear,
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
@@ -16,11 +20,13 @@ import { HStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
-import { GlobalYearPicker } from '@components/GlobalYearPicker/GlobalYearPicker'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { View } from '@components/View/View'
+import { YearPicker } from '@components/YearPicker/YearPicker'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
+
+const TAX_ESTIMATES_MIN_YEAR = 2024
 
 export const TaxEstimatesView = () => {
   usePreloadTaxProfile()
@@ -34,9 +40,10 @@ export const TaxEstimatesView = () => {
 
 const TaxEstimatesViewContent = () => {
   const { isOnboarded } = useTaxEstimatesOnboardingState()
+  const header = useMemo(() => isOnboarded && <TaxEstimatesViewHeader />, [isOnboarded])
 
   return (
-    <View title='Tax Estimates' header={isOnboarded && <TaxEstimatesViewHeader />}>
+    <View title='Taxes' header={header}>
       {isOnboarded ? <TaxEstimatesOnboardedViewContent /> : <TaxProfile />}
     </View>
   )
@@ -44,6 +51,16 @@ const TaxEstimatesViewContent = () => {
 
 const TaxEstimatesViewHeader = () => {
   const navigate = useTaxEstimatesNavigation()
+  const { year, setYear } = useTaxEstimatesYear()
+  const activationDate = useBusinessActivationDate()
+
+  const minDateZdt = useMemo(() => {
+    const activationYear = activationDate ? getYear(activationDate) : TAX_ESTIMATES_MIN_YEAR
+    const effectiveMinYear = Math.max(activationYear, TAX_ESTIMATES_MIN_YEAR)
+    return convertDateToZonedDateTime(new Date(effectiveMinYear, 0, 1))
+  }, [activationDate])
+
+  const maxDateZdt = useMemo(() => convertDateToZonedDateTime(new Date()), [])
 
   const Trigger = useCallback(() => {
     return (
@@ -55,7 +72,12 @@ const TaxEstimatesViewHeader = () => {
 
   return (
     <HStack gap='xs'>
-      <GlobalYearPicker />
+      <YearPicker
+        year={year}
+        onChange={setYear}
+        minDate={minDateZdt}
+        maxDate={maxDateZdt}
+      />
       <DropdownMenu
         ariaLabel='Additional actions'
         slots={{ Trigger }}

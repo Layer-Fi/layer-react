@@ -1,9 +1,11 @@
+import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR, { type SWRResponse } from 'swr'
 
 import type { ReportingBasis } from '@internal-types/general'
 import { type TaxPayments, type TaxPaymentsResponse, TaxPaymentsResponseSchema } from '@schemas/taxEstimates/payments'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -111,4 +113,15 @@ export function useTaxPayments({ year, reportingBasis, fullYearProjection }: Use
   )
 
   return new TaxPaymentsSWRResponse(swrResponse)
+}
+
+export function useTaxPaymentsGlobalCacheActions() {
+  const { forceReload } = useGlobalCacheActions()
+
+  const forceReloadTaxPayments = useCallback(
+    () => forceReload(({ tags }) => tags.includes(TAX_PAYMENTS_TAG_KEY)),
+    [forceReload],
+  )
+
+  return { forceReloadTaxPayments }
 }

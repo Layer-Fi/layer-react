@@ -146,6 +146,8 @@ export const ChartOfAccountsForm = ({
             value={form?.data.parent}
             onChange={sel => changeFormData('parent', sel)}
             disabled={sendingForm}
+            isInvalid={Boolean(form?.errors?.find(x => x.field === 'parent'))}
+            errorMessage={form?.errors?.find(x => x.field === 'parent')?.message}
           />
         </InputGroup>
         <InputGroup
@@ -210,6 +212,8 @@ export const ChartOfAccountsForm = ({
                 : LEDGER_ACCOUNT_SUBTYPES
             }
             value={form?.data.subType}
+            isInvalid={Boolean(form?.errors?.find(x => x.field === 'subType'))}
+            errorMessage={form?.errors?.find(x => x.field === 'subType')?.message}
             onChange={sel => changeFormData('subType', sel)}
             disabled={sendingForm}
           />

@@ -3,7 +3,7 @@ import { type Row } from '@tanstack/react-table'
 
 import { type TaxPaymentQuarter } from '@schemas/taxEstimates/payments'
 import { useTaxPayments } from '@hooks/taxEstimates/useTaxPayments'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
@@ -88,11 +88,11 @@ const columnConfig: NestedColumnConfig<TaxPaymentQuarterWithId> = [
 ]
 
 export const TaxPaymentsTable = () => {
-  const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
-  const { data, isLoading, isError } = useTaxPayments({ year: startDate.getFullYear() })
+  const { year } = useTaxEstimatesYear()
+  const { data, isLoading, isError } = useTaxPayments({ year })
 
   const dataWithIds = useMemo(
-    () => data?.quarters.map(q => ({ ...q, id: `${q.quarter}` })),
+    () => data?.quarters.map(q => ({ ...q, id: `Q${q.quarter}` })),
     [data?.quarters],
   )
 

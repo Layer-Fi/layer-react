@@ -17,13 +17,23 @@ type TaxEstimatesRouteStoreShape = {
   routeState: TaxEstimatesRouteState
   isOnboarded: boolean
   navigate: (route: TaxEstimatesRoute) => void
+  year: number
+  actions: {
+    setYear: (year: number) => void
+  }
 }
+
+const currentYear = new Date().getFullYear()
 
 const TaxEstimatesRouteStoreContext = createContext(
   createStore<TaxEstimatesRouteStoreShape>(() => ({
     routeState: { route: TaxEstimatesRoute.Estimates },
     isOnboarded: true,
     navigate: () => {},
+    year: currentYear,
+    actions: {
+      setYear: () => {},
+    },
   })),
 )
 
@@ -43,6 +53,13 @@ export function useTaxEstimatesOnboardingState() {
   return useMemo(() => ({ isOnboarded }), [isOnboarded])
 }
 
+export function useTaxEstimatesYear() {
+  const store = useContext(TaxEstimatesRouteStoreContext)
+  const year = useStore(store, state => state.year)
+  const setYear = useStore(store, state => state.actions.setYear)
+  return useMemo(() => ({ year, setYear }), [year, setYear])
+}
+
 export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   const { data: taxProfile, isLoading } = useTaxProfile()
   const [store] = useState(() =>
@@ -51,6 +68,12 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
       isOnboarded: true,
       navigate: (route: TaxEstimatesRoute) => {
         set({ routeState: { route } })
+      },
+      year: currentYear,
+      actions: {
+        setYear: (year: number) => {
+          set({ year })
+        },
       },
     })),
   )

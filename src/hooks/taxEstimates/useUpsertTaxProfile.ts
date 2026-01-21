@@ -5,6 +5,8 @@ import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 
 import { type TaxProfileRequest, type TaxProfileResponse, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
 import { patch, post } from '@api/layer/authenticated_http'
+import { useTaxDetailsGlobalCacheActions } from '@hooks/taxEstimates/useTaxDetails'
+import { useTaxPaymentsGlobalCacheActions } from '@hooks/taxEstimates/useTaxPayments'
 import { useTaxProfileGlobalCacheActions } from '@hooks/taxEstimates/useTaxProfile'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -89,6 +91,8 @@ export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { patchTaxProfile } = useTaxProfileGlobalCacheActions()
+  const { forceReloadTaxPayments } = useTaxPaymentsGlobalCacheActions()
+  const { forceReloadTaxDetails } = useTaxDetailsGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => buildKey({
@@ -118,10 +122,12 @@ export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
       const triggerResult = await originalTrigger(...triggerParameters)
 
       void patchTaxProfile(triggerResult.data)
+      void forceReloadTaxPayments()
+      void forceReloadTaxDetails()
 
       return triggerResult
     },
-    [originalTrigger, patchTaxProfile],
+    [forceReloadTaxDetails, forceReloadTaxPayments, originalTrigger, patchTaxProfile],
   )
 
   return new Proxy(mutationResponse, {
