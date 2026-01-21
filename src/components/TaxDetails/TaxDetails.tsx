@@ -12,6 +12,7 @@ import { ExpandableCard } from '@components/ExpandableCard/ExpandableCard'
 import { Loader } from '@components/Loader/Loader'
 import { AdjustedGrossIncomeTable } from '@components/TaxDetails/AdjustedGrossIncomeTable/AdjustedGrossIncomeTable'
 import { FederalTaxTable } from '@components/TaxDetails/FederalTaxTable/FederalTaxTable'
+import { StateTaxTable } from '@components/TaxDetails/StateTaxTable/StateTaxTable'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxDetails.scss'
@@ -88,6 +89,23 @@ export const TaxDetails = () => {
                     data={usFederal}
                     adjustedGrossIncome={data.adjustedGrossIncome.totalAdjustedGrossIncome}
                   />
+                </ExpandableCard>
+              )
+            })()}
+            {data.taxes.usState && (() => {
+              const usState = data.taxes.usState
+              return (
+                <ExpandableCard
+                  slots={{
+                    Heading: () => (
+                      <CardHeading
+                        title={`State Tax (${usState.stateName})`}
+                        amount={usState.totalStateTax.totalStateTaxOwed}
+                      />
+                    ),
+                  }}
+                >
+                  <StateTaxTable data={usState} />
                 </ExpandableCard>
               )
             })()}
