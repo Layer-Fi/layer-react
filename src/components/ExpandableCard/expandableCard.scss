@@ -1,7 +1,9 @@
 .Layer__ExpandableCard {
-  border-radius: 0;
-  border: 1px solid var(--border-color);
   box-shadow: none;
+
+  &:not(:first-child) {
+    border-top: 1px solid var(--color-base-300);
+  }
 
   &__Header {
     all: unset;

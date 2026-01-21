@@ -1,7 +1,5 @@
-import { useCallback } from 'react'
-
 import { useTaxDetails } from '@hooks/taxEstimates/useTaxDetails'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -23,29 +21,24 @@ type CardHeadingProps = {
 
 const CardHeading = ({ title, amount }: CardHeadingProps) => (
   <HStack className='Layer__TaxDetails__CardHeading' pie='xs'>
-    <Heading size='sm'>{title}</Heading>
+    <Heading size='md'>{title}</Heading>
     <Spacer />
-    <MoneySpan size='lg' weight='bold' amount={amount} />
+    <MoneySpan size='xl' weight='bold' amount={amount} />
   </HStack>
 )
 
-export const TaxDetails = () => {
-  const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
-  const selectedYear = startDate.getFullYear()
-  const { data, isLoading, isError } = useTaxDetails({ year: selectedYear })
+const TaxDetailsHeader = () => (
+  <VStack gap='3xs'>
+    <Heading size='md'>Estimated Business Income Taxes</Heading>
+    <Span size='md' variant='subtle'>
+      Calculated based on your categorized transactions and tracked mileage
+    </Span>
+  </VStack>
+)
 
-  const TaxDetailsHeader = useCallback(() => (
-    <VStack gap='3xs'>
-      <Heading size='md'>Adjusted Gross Income</Heading>
-      <Span size='md' variant='subtle'>
-        Income and deductions for the
-        {' '}
-        {selectedYear}
-        {' '}
-        tax year
-      </Span>
-    </VStack>
-  ), [selectedYear])
+export const TaxDetails = () => {
+  const { year } = useTaxEstimatesYear()
+  const { data, isLoading, isError } = useTaxDetails({ year })
 
   return (
     <BaseDetailView name='TaxDetails' slots={{ Header: TaxDetailsHeader }}>
@@ -55,44 +48,48 @@ export const TaxDetails = () => {
         data={data}
         Loading={<Loader />}
         Inactive={null}
-        Error={<DataState status={DataStateStatus.failed} />}
+        Error={(
+          <DataState
+            status={DataStateStatus.failed}
+            title="We couldn't load your tax estimates"
+            description='An error occurred while loading your tax estimates. Please check your connection and try again.'
+            spacing
+          />
+        )}
       >
-        {({ data }) => (
-          <VStack gap='lg' pbe='lg'>
-            <ExpandableCard
-              slots={{
-                Heading: () => (
-                  <CardHeading
-                    title='Adjusted Gross Income'
-                    amount={data.adjustedGrossIncome.totalAdjustedGrossIncome}
-                  />
-                ),
-              }}
-            >
-              <AdjustedGrossIncomeTable data={data.adjustedGrossIncome} />
-            </ExpandableCard>
-            {data.taxes.usFederal && (() => {
-              const usFederal = data.taxes.usFederal
-              return (
+        {({ data }) => {
+          const usFederal = data.taxes.usFederal
+          return (
+            <VStack>
+              <ExpandableCard
+                slots={{
+                  Heading: (
+                    <CardHeading
+                      title='Taxable Business Income'
+                      amount={data.adjustedGrossIncome.totalAdjustedGrossIncome}
+                    />
+                  ),
+                }}
+              >
+                <AdjustedGrossIncomeTable data={data.adjustedGrossIncome} />
+              </ExpandableCard>
+              {usFederal && (
                 <ExpandableCard
                   slots={{
-                    Heading: () => (
+                    Heading: (
                       <CardHeading
-                        title='Federal Tax'
+                        title='Estimated Federal Taxes'
                         amount={usFederal.totalFederalTax.totalFederalTaxOwed}
                       />
                     ),
                   }}
                 >
-                  <FederalTaxTable
-                    data={usFederal}
-                    adjustedGrossIncome={data.adjustedGrossIncome.totalAdjustedGrossIncome}
-                  />
+                  <FederalTaxTable data={usFederal} adjustedGrossIncome={data.adjustedGrossIncome.totalAdjustedGrossIncome} />
                 </ExpandableCard>
-              )
-            })()}
-          </VStack>
-        )}
+              )}
+            </VStack>
+          )
+        }}
       </ConditionalBlock>
     </BaseDetailView>
   )

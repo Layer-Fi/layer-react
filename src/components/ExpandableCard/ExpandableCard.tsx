@@ -1,5 +1,4 @@
 import { type ReactNode, useCallback, useState } from 'react'
-import type React from 'react'
 
 import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -12,7 +11,7 @@ type ExpandableCardProps = {
   children: ReactNode
   defaultExpanded?: boolean
   slots: {
-    Heading: React.FC
+    Heading: ReactNode
   }
 }
 
@@ -29,7 +28,7 @@ export const ExpandableCard = ({ children, defaultExpanded = true, slots }: Expa
         onClick={toggleExpanded}
       >
         <HStack justify='space-between' align='center'>
-          <slots.Heading />
+          {slots.Heading}
           <ExpandButton isExpanded={isExpanded} onClick={toggleExpanded} />
         </HStack>
       </button>

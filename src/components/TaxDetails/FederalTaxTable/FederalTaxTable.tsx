@@ -26,20 +26,20 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
           <Cell><Span>Adjusted Gross Income</Span></Cell>
           <Cell><MoneySpan amount={adjustedGrossIncome} /></Cell>
         </Row>
-        <Row>
+        <Row className='Layer__FederalTaxTable_NestedRow'>
           <Cell><Span>- Federal Deductions</Span></Cell>
           <Cell><MoneySpan amount={federalIncomeTax.federalDeductions} /></Cell>
         </Row>
-        <Row>
+        <Row className='Layer__FederalTaxTable_NestedRow'>
           <Cell><Span>{`- Business Income Deduction (${federalIncomeTax.qbiEffectiveRate})`}</Span></Cell>
           <Cell><MoneySpan amount={federalIncomeTax.qualifiedBusinessIncomeDeduction} /></Cell>
         </Row>
         <Row>
-          <Cell><Span>= Taxable Income</Span></Cell>
+          <Cell><Span>Taxable Income</Span></Cell>
           <Cell><MoneySpan amount={federalIncomeTax.taxableIncome} /></Cell>
         </Row>
-        <Row>
-          <Cell><Span>x Federal Tax Rate</Span></Cell>
+        <Row className='Layer__FederalTaxTable_NestedRow'>
+          <Cell><Span>× Federal Tax Rate</Span></Cell>
           <Cell><Span>{federalIncomeTax.effectiveFederalTaxRate}</Span></Cell>
         </Row>
         <Row className='Layer__FederalTaxTable__SectionTotal'>
@@ -54,8 +54,8 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
           <Cell><Span>Taxable Social Security Income</Span></Cell>
           <Cell><MoneySpan amount={socialSecurityTax.socialSecurityIncome} /></Cell>
         </Row>
-        <Row>
-          <Cell><Span>x Social Security Tax Rate</Span></Cell>
+        <Row className='Layer__FederalTaxTable_NestedRow'>
+          <Cell><Span>× Social Security Tax Rate</Span></Cell>
           <Cell><Span>{socialSecurityTax.socialSecurityTaxRate}</Span></Cell>
         </Row>
         <Row className='Layer__FederalTaxTable__SectionTotal'>
@@ -70,8 +70,8 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
           <Cell><Span>Taxable Medicare Income</Span></Cell>
           <Cell><MoneySpan amount={medicareTax.medicareIncome} /></Cell>
         </Row>
-        <Row>
-          <Cell><Span>x Medicare Tax Rate</Span></Cell>
+        <Row className='Layer__FederalTaxTable_NestedRow'>
+          <Cell><Span>× Medicare Tax Rate</Span></Cell>
           <Cell><Span>{medicareTax.medicareTaxRate}</Span></Cell>
         </Row>
         <Row className='Layer__FederalTaxTable__SectionTotal'>
@@ -88,8 +88,8 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
               <Cell><Span>Taxable Medicare Surtax Income</Span></Cell>
               <Cell><MoneySpan amount={medicareSurtax.medicareSurtaxIncome} /></Cell>
             </Row>
-            <Row>
-              <Cell><Span>x Medicare Surtax Rate</Span></Cell>
+            <Row className='Layer__FederalTaxTable_NestedRow'>
+              <Cell><Span>× Medicare Surtax Rate</Span></Cell>
               <Cell><Span>{medicareSurtax.medicareSurtaxRate}</Span></Cell>
             </Row>
             <Row className='Layer__FederalTaxTable__SectionTotal'>
@@ -106,11 +106,11 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
           <Cell><Span>Federal Tax Estimate (Owed)</Span></Cell>
           <Cell><MoneySpan amount={totalFederalTax.federalIncomeTaxOwed} /></Cell>
         </Row>
-        <Row>
+        <Row className='Layer__FederalTaxTable_NestedRow'>
           <Cell><Span>+ Social Security Tax Estimate (Owed)</Span></Cell>
           <Cell><MoneySpan amount={totalFederalTax.socialSecurityTaxOwed} /></Cell>
         </Row>
-        <Row>
+        <Row className='Layer__FederalTaxTable_NestedRow'>
           <Cell><Span>+ Medicare Tax Estimate (Owed)</Span></Cell>
           <Cell><MoneySpan amount={totalFederalTax.medicareTaxOwed} /></Cell>
         </Row>
@@ -120,7 +120,7 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
             <Cell><MoneySpan amount={totalFederalTax.medicareSurtaxOwed} /></Cell>
           </Row>
         )}
-        <Row>
+        <Row className='Layer__FederalTaxTable_NestedRow'>
           <Cell><Span>- Amount Applied from Federal W-2 Withholding</Span></Cell>
           <Cell><MoneySpan amount={totalFederalTax.w2Withholdings} /></Cell>
         </Row>
