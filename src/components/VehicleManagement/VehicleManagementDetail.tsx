@@ -2,7 +2,6 @@ import { useCallback, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
-import { BREAKPOINTS } from '@config/general'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
@@ -19,9 +18,6 @@ import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleFo
 import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
 
 import './vehicleManagementDetail.scss'
-
-const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
-  width < BREAKPOINTS.MOBILE ? 'Mobile' : 'Desktop'
 
 interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void
@@ -69,7 +65,9 @@ export const VehicleManagementDetail = () => {
   const [isVehicleDrawerOpen, setIsVehicleDrawerOpen] = useState(false)
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | undefined>(undefined)
   const [showArchived, setShowArchived] = useState(false)
-  const { isMobile } = useSizeClass()
+  const { isDesktop } = useSizeClass()
+
+  const isMobileVariant = !isDesktop
 
   const handleAddVehicle = useCallback(() => {
     setSelectedVehicle(undefined)
@@ -86,13 +84,20 @@ export const VehicleManagementDetail = () => {
     setSelectedVehicle(undefined)
   }, [])
 
+  const resolveVariant = (): DefaultVariant => isMobileVariant ? 'Mobile' : 'Desktop'
+
   // Use a ref to store the latest state values for the Header component
-  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle })
-  stateRef.current = { showArchived, setShowArchived, handleAddVehicle }
+  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, resolveVariant })
+  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, resolveVariant }
 
   // Header component is stable and reads from ref
   const HeaderRef = useRef(() => {
-    const { showArchived: currentShowArchived, setShowArchived: currentSetShowArchived, handleAddVehicle: currentHandleAddVehicle } = stateRef.current
+    const {
+      showArchived: currentShowArchived,
+      setShowArchived: currentSetShowArchived,
+      handleAddVehicle: currentHandleAddVehicle,
+      resolveVariant: currentResolveVariant,
+    } = stateRef.current
 
     const DesktopHeader = (
       <DesktopVehicleManagementDetailHeader
@@ -112,7 +117,7 @@ export const VehicleManagementDetail = () => {
 
     return (
       <ResponsiveComponent
-        resolveVariant={resolveVariant}
+        resolveVariant={currentResolveVariant}
         slots={{ Desktop: DesktopHeader, Mobile: MobileHeader }}
         className='Layer__VehicleManagementDetail__Header'
       />
@@ -128,28 +133,28 @@ export const VehicleManagementDetail = () => {
         name='VehicleManagementDetail'
         onGoBack={toTripsTable}
       >
-        <ResponsiveComponent
-          resolveVariant={resolveVariant}
-          slots={{
-            Desktop: null,
-            Mobile: (
-              <HStack
-                justify='end'
-                align='center'
-                fluid
-                pie='md'
-                pbs='md'
-              >
-                <Switch isSelected={showArchived} onChange={setShowArchived}>
-                  <Span size='sm' noWrap>Show archived</Span>
-                </Switch>
-              </HStack>
-            ),
-          }}
-        />
+        {isMobileVariant && (
+          <HStack
+            justify='end'
+            align='center'
+            fluid
+            pie='md'
+            pbs='md'
+          >
+            <Switch isSelected={showArchived} onChange={setShowArchived}>
+              <Span size='sm' noWrap>Show archived</Span>
+            </Switch>
+          </HStack>
+        )}
         <VehicleManagementGrid onEditVehicle={handleEditVehicle} showArchived={showArchived} />
       </BaseDetailView>
-      <Drawer isOpen={isVehicleDrawerOpen} onOpenChange={setIsVehicleDrawerOpen} aria-label={selectedVehicle ? 'Vehicle details' : 'Add vehicle'} variant={isMobile ? 'mobile-drawer' : 'drawer'} flexBlock={isMobile}>
+      <Drawer
+        isOpen={isVehicleDrawerOpen}
+        onOpenChange={setIsVehicleDrawerOpen}
+        aria-label={selectedVehicle ? 'Vehicle details' : 'Add vehicle'}
+        variant={isMobileVariant ? 'mobile-drawer' : 'drawer'}
+        flexBlock={isMobileVariant}
+      >
         {({ close }) => (
           <VStack pb='lg'>
             <VStack pi='md'>
