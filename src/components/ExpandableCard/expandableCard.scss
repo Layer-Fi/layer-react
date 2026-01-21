@@ -1,4 +1,6 @@
 .Layer__ExpandableCard {
+  border-radius: 0;
+  border: none;
   box-shadow: none;
 
   &:not(:first-child) {
