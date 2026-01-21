@@ -20,39 +20,39 @@ interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void
   showArchived: boolean
   onShowArchivedChange: (value: boolean) => void
-  title: string
-  buttonText: string
 }
 
 const VehicleManagementDetailHeader = ({
   onAddVehicle,
   showArchived,
   onShowArchivedChange,
-  title,
-  buttonText,
-}: VehicleManagementDetailHeaderProps) => (
-  <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
-    <Heading size='sm'>{title}</Heading>
-    <HStack gap='md' align='center'>
-      <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
-        <Span size='sm' noWrap>Show archived</Span>
-      </Switch>
-      <Button variant='solid' onPress={onAddVehicle}>
-        {buttonText}
-        <Plus size={14} />
-      </Button>
+}: VehicleManagementDetailHeaderProps) => {
+  const { isDesktop } = useSizeClass()
+  const title = isDesktop ? 'Manage vehicles' : 'Vehicles'
+  const buttonText = isDesktop ? 'Add Vehicle' : 'Add'
+
+  return (
+    <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
+      <Heading size='sm'>{title}</Heading>
+      <HStack gap='md' align='center'>
+        <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
+          <Span size='sm' noWrap>Show archived</Span>
+        </Switch>
+        <Button variant='solid' onPress={onAddVehicle}>
+          {buttonText}
+          <Plus size={14} />
+        </Button>
+      </HStack>
     </HStack>
-  </HStack>
-)
+  )
+}
 
 export const VehicleManagementDetail = () => {
   const { toTripsTable } = useTripsNavigation()
   const [isVehicleDrawerOpen, setIsVehicleDrawerOpen] = useState(false)
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | undefined>(undefined)
   const [showArchived, setShowArchived] = useState(false)
-  const { isDesktop } = useSizeClass()
-
-  const mobileHeader = !isDesktop
+  const { isMobile } = useSizeClass()
 
   const handleAddVehicle = useCallback(() => {
     setSelectedVehicle(undefined)
@@ -81,8 +81,6 @@ export const VehicleManagementDetail = () => {
         onAddVehicle={currentHandleAddVehicle}
         showArchived={currentShowArchived}
         onShowArchivedChange={currentSetShowArchived}
-        title={mobileHeader ? 'Vehicles' : 'Manage vehicles'}
-        buttonText={mobileHeader ? 'Add' : 'Add Vehicle'}
       />
     )
   })
