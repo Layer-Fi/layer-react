@@ -61,6 +61,8 @@ export const TaxDetails = () => {
       >
         {({ data }) => {
           const usFederal = data.taxes.usFederal
+          const usState = data.taxes.usState
+
           return (
             <VStack>
               <ExpandableCard
@@ -89,24 +91,20 @@ export const TaxDetails = () => {
                   <FederalTaxTable data={usFederal} adjustedGrossIncome={data.adjustedGrossIncome.totalAdjustedGrossIncome} />
                 </ExpandableCard>
               )}
-              {data.taxes.usState && (() => {
-                const usState = data.taxes.usState
-                return (
-                  <ExpandableCard
-                    slots={{
-                      Heading: (
-                        <CardHeading
-                          title={`State Tax (${usState.stateName})`}
-                          amount={usState.totalStateTax.totalStateTaxOwed}
-                        />
-                      ),
-                    }}
-                  >
-                    <StateTaxTable data={usState} />
-                  </ExpandableCard>
-                )
-              })()}
-
+              {usState && (
+                <ExpandableCard
+                  slots={{
+                    Heading: (
+                      <CardHeading
+                        title={`State Tax (${usState.stateName})`}
+                        amount={usState.totalStateTax.totalStateTaxOwed}
+                      />
+                    ),
+                  }}
+                >
+                  <StateTaxTable data={usState} />
+                </ExpandableCard>
+              )}
             </VStack>
           )
         }}
