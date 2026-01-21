@@ -89,6 +89,10 @@ export const TaxProfileSchema = Schema.Struct({
     Schema.propertySignature(Schema.NullishOr(UsConfigurationSchema)),
     Schema.fromKey('us_configuration'),
   ),
+  userHasSavedTaxProfile: pipe(
+    Schema.propertySignature(Schema.Boolean),
+    Schema.fromKey('user_has_saved_tax_profile'),
+  ),
 })
 
 export type TaxProfile = typeof TaxProfileSchema.Type

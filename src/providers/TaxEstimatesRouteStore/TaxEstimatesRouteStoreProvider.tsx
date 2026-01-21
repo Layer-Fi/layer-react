@@ -1,5 +1,7 @@
-import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
+import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
+
+import { useTaxProfile } from '@hooks/taxEstimates/useTaxProfile'
 
 export enum TaxEstimatesRoute {
   Estimates = 'Estimates',
@@ -59,6 +61,7 @@ export function useTaxEstimatesYear() {
 }
 
 export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
+  const { data: taxProfile, isLoading } = useTaxProfile()
   const [store] = useState(() =>
     createStore<TaxEstimatesRouteStoreShape>(set => ({
       routeState: { route: TaxEstimatesRoute.Estimates },
@@ -74,6 +77,14 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
       },
     })),
   )
+
+  useEffect(() => {
+    if (!isLoading) {
+      store.setState({
+        isOnboarded: taxProfile !== undefined && taxProfile.userHasSavedTaxProfile === true,
+      })
+    }
+  }, [store, taxProfile, isLoading])
 
   return (
     <TaxEstimatesRouteStoreContext.Provider value={store}>

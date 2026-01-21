@@ -17,7 +17,7 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const [submitSuccess, setSubmitSuccess] = useState<string | undefined>(undefined)
 
-  const isNewProfile = !taxProfile?.usConfiguration
+  const isNewProfile = !taxProfile?.userHasSavedTaxProfile
 
   const mode = isNewProfile ? UpsertTaxProfileMode.Create : UpsertTaxProfileMode.Update
   const { trigger: upsertProfile } = useUpsertTaxProfile({ mode })
