@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 
+import { useTaxProfile } from '@hooks/useTaxEstimates/useTaxProfile'
 import {
   TaxEstimatesRoute,
   useTaxEstimatesNavigation,
@@ -8,18 +9,20 @@ import {
 import BackArrow from '@icons/BackArrow'
 import { Heading } from '@ui/Typography/Heading'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
+import { TaxProfileForm } from '@components/TaxProfileForm/TaxProfileForm'
 
 export const TaxProfile = () => {
   const { isOnboarded } = useTaxEstimatesOnboardingState()
   const navigate = useTaxEstimatesNavigation()
+  const { data: taxProfile } = useTaxProfile()
 
   const handleGoBack = useCallback(() => {
     navigate(TaxEstimatesRoute.Estimates)
   }, [navigate])
 
   const TaxProfileHeader = useCallback(() => {
-    return <Heading size='sm'>{isOnboarded ? 'Update tax profile' : 'Create a tax profile'}</Heading>
-  }, [isOnboarded])
+    return <Heading size='sm'>Tax Profile</Heading>
+  }, [])
 
   return (
     <BaseDetailView
@@ -27,7 +30,7 @@ export const TaxProfile = () => {
       name='TaxProfile'
       onGoBack={isOnboarded ? handleGoBack : undefined}
     >
-      {/* Form will go here */}
+      <TaxProfileForm taxProfile={taxProfile} />
     </BaseDetailView>
   )
 }

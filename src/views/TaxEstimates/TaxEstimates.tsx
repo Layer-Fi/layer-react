@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 
+import { usePreloadTaxProfile } from '@hooks/useTaxEstimates/useTaxProfile'
 import {
   TaxEstimatesRoute,
   TaxEstimatesRouteStoreProvider,
@@ -17,10 +18,11 @@ import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { GlobalYearPicker } from '@components/GlobalYearPicker/GlobalYearPicker'
 import { View } from '@components/View/View'
-
-import { TaxProfile } from './TaxProfile'
+import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 export const TaxEstimatesView = () => {
+  usePreloadTaxProfile()
+
   return (
     <TaxEstimatesRouteStoreProvider>
       <TaxEstimatesViewContent />

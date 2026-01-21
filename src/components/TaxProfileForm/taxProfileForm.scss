@@ -1,0 +1,17 @@
+.Layer__TaxProfileForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .Layer__TaxProfileForm__Section {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    background: var(--color-base-50);
+  }
+
+  .Layer__TaxProfileForm__Field {
+    grid-template-columns: 16rem minmax(auto, 24rem);
+    width: 100%;
+  }
+}
