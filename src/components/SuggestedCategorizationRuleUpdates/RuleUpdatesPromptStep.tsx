@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { useRejectCategorizationRulesUpdateSuggestion } from '@hooks/useCategorizationRules/useRejectCategorizationRulesUpdateSuggestion'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { CheckboxWithTooltip } from '@ui/Checkbox/Checkbox'
@@ -17,6 +18,7 @@ interface RuleUpdatesPromptStepProps {
 }
 
 export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleUpdatesPromptStepProps) {
+  const { isMobile } = useSizeClass()
   const { next } = useWizard()
   const { addToast } = useLayerContext()
   const [dontAskAgain, setDontAskAgain] = useState(false)
@@ -39,8 +41,11 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
     })()
   }, [addToast, close, dontAskAgain, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
 
+  const yesLabel = isMobile ? 'Yes, always' : 'Yes, always categorize'
+  const noLabel = isMobile ? 'No' : 'No, I\'ll decide each time'
+
   return (
-    <VStack gap='3xl' pbe={isDrawer ? '5xl' : undefined}>
+    <VStack className='Layer__RuleUpdatesPromptStep' gap='3xl' pbe={isDrawer ? '5xl' : undefined}>
       <Span size='md'>{ruleSuggestion.suggestionPrompt}</Span>
       <VStack gap='sm' align='end'>
         <HStack gap='sm' justify='end' align='end'>
@@ -49,7 +54,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
             isPending={isMutating}
             variant='outlined'
           >
-            No, I`ll decide each time
+            {noLabel}
           </Button>
           {ruleSuggestion.transactionsThatWillBeAffected.length === 0
             ? (
@@ -64,7 +69,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
                   void next()
                 }}
               >
-                Yes, always categorize
+                {yesLabel}
               </Button>
             )}
         </HStack>

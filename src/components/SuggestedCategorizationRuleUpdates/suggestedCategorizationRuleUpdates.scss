@@ -4,6 +4,12 @@
   }
 }
 
+.Layer__RuleUpdatesPromptStep {
+  .Layer__UI__Button {
+    min-inline-size: unset;
+  }
+}
+
 .Layer__suggested-categorization-rule-updates-header {
   padding-bottom: var(--spacing-sm);
 }
