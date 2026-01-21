@@ -4,10 +4,10 @@
   transition: transform 0.1s ease-in-out;
 
   &--collapsed {
-    transform: rotate(-90deg);
+    transform: rotate(0deg);
   }
 
   &--expanded {
-    transform: rotate(0deg);
+    transform: rotate(180deg);
   }
 }

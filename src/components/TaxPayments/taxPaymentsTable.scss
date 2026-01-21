@@ -1,0 +1,27 @@
+.Layer__UI__Table__TaxPaymentsTable {
+  width: 100%;
+  table-layout: fixed;
+
+  .Layer__UI__Table-Row,
+  .Layer__UI__Table-TableHeader > tr {
+    display: grid;
+    grid-template-columns:
+      minmax(4rem, 10%)
+      repeat(4, minmax(6rem, 22.5%));
+  }
+
+  .Layer__UI__Table-Column__TaxPaymentsTable,
+  .Layer__UI__Table-Cell__TaxPaymentsTable {
+    &--OwedFromPrevious,
+    &--OwedThisQuarter,
+    &--TotalPaid,
+    &--Total {
+      justify-content: flex-end;
+      text-align: right;
+    }
+  }
+
+  .Layer__UI__Table-Row {
+    background-color: var(--color-base-50);
+  }
+}

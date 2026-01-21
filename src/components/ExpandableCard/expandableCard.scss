@@ -1,0 +1,21 @@
+.Layer__ExpandableCard {
+  box-shadow: none;
+
+  &:not(:first-child) {
+    border-top: 1px solid var(--color-base-300);
+  }
+
+  &__Header {
+    all: unset;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    padding: var(--spacing-md);
+    cursor: pointer;
+  }
+
+  &__Content {
+    padding-block-end: var(--spacing-md);
+    padding-inline: var(--spacing-md);
+  }
+}
