@@ -102,6 +102,7 @@ export const formValuesToTaxProfile = (form: TaxProfileForm): TaxProfile => {
   const { federal, state, deductions } = form.usConfiguration ?? {}
 
   return {
+    userHasSavedTaxProfile: true,
     taxCountryCode: form.taxCountryCode,
     usConfiguration: {
       federal: federal
