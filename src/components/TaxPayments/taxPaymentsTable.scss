@@ -23,5 +23,9 @@
 
   .Layer__UI__Table-Row {
     background-color: var(--color-base-50);
+
+    &.Layer__DataTable__EmptyState__Row {
+      background-color: var(--color-base-0);
+    }
   }
 }

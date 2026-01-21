@@ -79,14 +79,6 @@ export function useTaxProfile() {
   return new TaxProfileSWRResponse(swrResponse)
 }
 
-export function usePreloadTaxProfile() {
-  /*
-   * This will initiate a network request to fill the cache, but will not
-   * cause a re-render when `data` changes.
-   */
-  useTaxProfile()
-}
-
 export function useTaxProfileGlobalCacheActions() {
   const { patchCache } = useGlobalCacheActions()
 

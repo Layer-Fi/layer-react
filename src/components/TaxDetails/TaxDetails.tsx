@@ -96,7 +96,7 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <CardHeading
-                        title={`State Tax (${usState.stateName})`}
+                        title={`Estimated State Taxes (${usState.stateName})`}
                         amount={usState.totalStateTax.totalStateTaxOwed}
                       />
                     ),

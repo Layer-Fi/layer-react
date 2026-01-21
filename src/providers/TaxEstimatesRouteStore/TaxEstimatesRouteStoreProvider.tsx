@@ -9,13 +9,20 @@ export enum TaxEstimatesRoute {
   Profile = 'Profile',
 }
 
+export enum OnboardingStatus {
+  Loading = 'Loading',
+  Error = 'Error',
+  NotOnboarded = 'NotOnboarded',
+  Onboarded = 'Onboarded',
+}
+
 type TaxEstimatesRouteState = {
   route: TaxEstimatesRoute
 }
 
 type TaxEstimatesRouteStoreShape = {
   routeState: TaxEstimatesRouteState
-  isOnboarded: boolean
+  onboardingStatus: OnboardingStatus
   navigate: (route: TaxEstimatesRoute) => void
   year: number
   actions: {
@@ -28,7 +35,7 @@ const currentYear = new Date().getFullYear()
 const TaxEstimatesRouteStoreContext = createContext(
   createStore<TaxEstimatesRouteStoreShape>(() => ({
     routeState: { route: TaxEstimatesRoute.Estimates },
-    isOnboarded: true,
+    onboardingStatus: OnboardingStatus.Loading,
     navigate: () => {},
     year: currentYear,
     actions: {
@@ -47,10 +54,9 @@ export function useTaxEstimatesNavigation() {
   return useStore(store, state => state.navigate)
 }
 
-export function useTaxEstimatesOnboardingState() {
+export function useTaxEstimatesOnboardingStatus() {
   const store = useContext(TaxEstimatesRouteStoreContext)
-  const isOnboarded = useStore(store, state => state.isOnboarded)
-  return useMemo(() => ({ isOnboarded }), [isOnboarded])
+  return useStore(store, state => state.onboardingStatus)
 }
 
 export function useTaxEstimatesYear() {
@@ -61,11 +67,11 @@ export function useTaxEstimatesYear() {
 }
 
 export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
-  const { data: taxProfile, isLoading } = useTaxProfile()
+  const { data: taxProfile, isLoading, isError } = useTaxProfile()
   const [store] = useState(() =>
     createStore<TaxEstimatesRouteStoreShape>(set => ({
       routeState: { route: TaxEstimatesRoute.Estimates },
-      isOnboarded: true,
+      onboardingStatus: OnboardingStatus.Loading,
       navigate: (route: TaxEstimatesRoute) => {
         set({ routeState: { route } })
       },
@@ -79,12 +85,26 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   )
 
   useEffect(() => {
-    if (!isLoading) {
-      store.setState({
-        isOnboarded: taxProfile !== undefined && taxProfile.userHasSavedTaxProfile === true,
-      })
+    if (isLoading) {
+      store.setState({ onboardingStatus: OnboardingStatus.Loading })
+      return
     }
-  }, [store, taxProfile, isLoading])
+
+    if (isError) {
+      store.setState({ onboardingStatus: OnboardingStatus.Error })
+      return
+    }
+
+    if (taxProfile && !taxProfile.userHasSavedTaxProfile) {
+      store.setState({ onboardingStatus: OnboardingStatus.NotOnboarded })
+      return
+    }
+
+    if (taxProfile && taxProfile.userHasSavedTaxProfile) {
+      store.setState({ onboardingStatus: OnboardingStatus.Onboarded })
+      return
+    }
+  }, [store, taxProfile, isLoading, isError])
 
   return (
     <TaxEstimatesRouteStoreContext.Provider value={store}>

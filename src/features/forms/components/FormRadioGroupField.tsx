@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from 'react'
+import { type PropsWithChildren, useId } from 'react'
 import classNames from 'classnames'
 
 import { Radio, RadioGroup } from '@ui/RadioGroup/RadioGroup'
@@ -38,7 +38,10 @@ export function FormRadioGroupField<T extends string>({
 
   const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
 
-  const additionalAriaProps = !showLabel && { 'aria-label': label }
+  const labelId = useId()
+  const additionalAriaProps = showLabel
+    ? { 'aria-labelledby': labelId }
+    : { 'aria-label': label }
 
   const radioGroupClassNames = classNames(
     FORM_RADIO_GROUP_FIELD_CLASSNAME,
@@ -48,7 +51,7 @@ export function FormRadioGroupField<T extends string>({
 
   return (
     <div className={radioGroupClassNames}>
-      {showLabel && <Label slot='label' size='sm' htmlFor={name}>{label}</Label>}
+      {showLabel && <Label slot='label' size='sm' id={labelId}>{label}</Label>}
       <RadioGroup<T>
         slot='radiogroup'
         value={value}
