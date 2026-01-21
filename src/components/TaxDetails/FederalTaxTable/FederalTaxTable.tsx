@@ -115,7 +115,7 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
           <Cell><MoneySpan amount={totalFederalTax.medicareTaxOwed} /></Cell>
         </Row>
         {medicareSurtax && (
-          <Row>
+          <Row className='Layer__FederalTaxTable_NestedRow'>
             <Cell><Span>+ Medicare Surtax Estimate (Owed)</Span></Cell>
             <Cell><MoneySpan amount={totalFederalTax.medicareSurtaxOwed} /></Cell>
           </Row>

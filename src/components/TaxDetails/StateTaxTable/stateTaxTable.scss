@@ -1,0 +1,44 @@
+.Layer__StateTaxTable {
+  width: 100%;
+  table-layout: fixed;
+
+  &__Header {
+    display: none;
+  }
+
+  .Layer__UI__Table-Row {
+    display: grid;
+    grid-template-columns:
+      minmax(2rem, 40%)
+      minmax(15rem, 60%);
+
+    &.Layer__StateTaxTable_NestedRow {
+      background-color: var(--color-base-50);
+
+      .Layer__UI__Table-Cell {
+        &:first-child {
+          padding-left: var(--spacing-lg);
+        }
+      }
+    }
+  }
+
+  .Layer__UI__Table-Cell {
+    &:nth-child(2) {
+      justify-content: flex-end;
+      text-align: right;
+    }
+  }
+
+  &__SectionTotal {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &__EmptyRow {
+    height: var(--spacing-md);
+  }
+
+  &__TotalRow {
+    border-top: 2px solid var(--color-border);
+  }
+}
