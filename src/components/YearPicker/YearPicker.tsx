@@ -46,7 +46,9 @@ export const YearPicker = ({
     return Array.from({ length: count }, (_, i) => toYearOption(effectiveMaxYear - i))
   }, [minYear, maxYear])
 
-  const selectedYearOption = yearOptions.find(opt => opt.value === String(year)) ?? yearOptions[0]
+  const selectedYearOption = useMemo(() => {
+    return yearOptions.find(opt => opt.value === String(year)) ?? yearOptions[0]
+  }, [yearOptions, year])
 
   const handleChange = useCallback((option: YearOption | null) => {
     if (option) {

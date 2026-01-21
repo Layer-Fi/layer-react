@@ -1,7 +1,10 @@
+import { useMemo } from 'react'
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
 import { getColumnDefs, type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { type BaseDataTableProps, DataTable } from '@components/DataTable/DataTable'
+
+const EMPTY_ARRAY: [] = []
 
 export interface SimpleDataTableProps<TData> extends BaseDataTableProps {
   data: TData[] | undefined
@@ -13,10 +16,10 @@ export const SimpleDataTable = <TData extends { id: string }>({
   columnConfig,
   ...rest
 }: SimpleDataTableProps<TData>) => {
-  const columnDefs = getColumnDefs(columnConfig)
+  const columnDefs = useMemo(() => getColumnDefs(columnConfig), [columnConfig])
 
   const table = useReactTable<TData>({
-    data: data ?? [],
+    data: data ?? EMPTY_ARRAY,
     columns: columnDefs,
     getCoreRowModel: getCoreRowModel(),
   })
