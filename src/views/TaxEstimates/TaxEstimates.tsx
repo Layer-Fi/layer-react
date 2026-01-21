@@ -17,6 +17,7 @@ import { Toggle } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { GlobalYearPicker } from '@components/GlobalYearPicker/GlobalYearPicker'
+import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { View } from '@components/View/View'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
@@ -101,7 +102,7 @@ const TaxEstimatesOnboardedViewContent = () => {
         onSelectionChange={handleTabChange}
       />
       <Container name='tax-estimate'>
-        {route === TaxEstimatesRoute.Estimates && <></>}
+        {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
 
         {route === TaxEstimatesRoute.Payments && <TaxPayments />}
       </Container>
