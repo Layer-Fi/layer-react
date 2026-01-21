@@ -136,7 +136,6 @@ export const VehicleManagementDetail = () => {
       >
         {isMobileVariant && (
           <>
-            <Separator />
             <HStack
               justify='end'
               align='center'
