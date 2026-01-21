@@ -11,6 +11,16 @@
     grid-template-columns:
       minmax(2rem, 40%)
       minmax(15rem, 60%);
+
+    &.Layer__StateTaxTable_NestedRow {
+      background-color: var(--color-base-50);
+
+      .Layer__UI__Table-Cell {
+        &:first-child {
+          padding-left: var(--spacing-lg);
+        }
+      }
+    }
   }
 
   .Layer__UI__Table-Cell {

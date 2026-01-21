@@ -31,16 +31,16 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
           <Cell><Span>State Adjusted Gross Income</Span></Cell>
           <Cell><MoneySpan amount={stateIncomeTax.stateAgi} /></Cell>
         </Row>
-        <Row>
+        <Row className='Layer__StateTaxTable_NestedRow'>
           <Cell><Span>- State Deductions</Span></Cell>
           <Cell><MoneySpan amount={stateIncomeTax.stateDeductions} /></Cell>
         </Row>
         <Row>
-          <Cell><Span>= State Taxable Income</Span></Cell>
+          <Cell><Span>State Taxable Income</Span></Cell>
           <Cell><MoneySpan amount={stateIncomeTax.stateTaxableIncome} /></Cell>
         </Row>
-        <Row>
-          <Cell><Span>x State Tax Rate</Span></Cell>
+        <Row className='Layer__StateTaxTable_NestedRow'>
+          <Cell><Span>× State Tax Rate</Span></Cell>
           <Cell><Span>{stateIncomeTax.effectiveStateTaxRate}</Span></Cell>
         </Row>
         <Row className='Layer__StateTaxTable__SectionTotal'>
@@ -61,8 +61,8 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
                   </Cell>
                   <Cell><MoneySpan amount={additionalTax.taxableAmount} /></Cell>
                 </Row>
-                <Row>
-                  <Cell><Span>{`x ${additionalTax.taxName} Rate`}</Span></Cell>
+                <Row className='Layer__StateTaxTable_NestedRow'>
+                  <Cell><Span>{`× ${additionalTax.taxName} Rate`}</Span></Cell>
                   <Cell><Span>{additionalTax.taxRate}</Span></Cell>
                 </Row>
                 <Row className='Layer__StateTaxTable__SectionTotal'>
@@ -88,12 +88,12 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
           <Cell><MoneySpan amount={totalStateTax.stateIncomeTaxOwed} /></Cell>
         </Row>
         {additionalTaxes.length > 0 && (
-          <Row>
+          <Row className='Layer__StateTaxTable_NestedRow'>
             <Cell><Span>+ Additional State Taxes Estimate (Owed)</Span></Cell>
             <Cell><MoneySpan amount={totalStateTax.additionalTaxesOwed} /></Cell>
           </Row>
         )}
-        <Row>
+        <Row className='Layer__StateTaxTable_NestedRow'>
           <Cell><Span>- Amount Applied from State Withholding</Span></Cell>
           <Cell><MoneySpan amount={totalStateTax.stateWithholdings} /></Cell>
         </Row>
