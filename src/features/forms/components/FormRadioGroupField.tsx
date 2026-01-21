@@ -38,15 +38,16 @@ export function FormRadioGroupField<T extends string>({
 
   const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
 
-  const additionalAriaProps = !showLabel && { 'aria-label': label }
+  const labelId = useId()
+  const additionalAriaProps = showLabel
+    ? { 'aria-labelledby': labelId }
+    : { 'aria-label': label }
 
   const radioGroupClassNames = classNames(
     FORM_RADIO_GROUP_FIELD_CLASSNAME,
     inline && `${FORM_RADIO_GROUP_FIELD_CLASSNAME}--inline`,
     className,
   )
-
-  const labelId = useId()
 
   return (
     <div className={radioGroupClassNames}>
@@ -60,7 +61,6 @@ export function FormRadioGroupField<T extends string>({
         orientation={orientation}
         isReadOnly={isReadOnly}
         isInvalid={!isValid}
-        aria-labelledby={labelId}
         {...additionalAriaProps}
       >
         {options.map(option => (

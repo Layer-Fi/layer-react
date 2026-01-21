@@ -6,10 +6,11 @@ import type { Key } from 'react-aria-components'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
 import {
+  OnboardingStatus,
   TaxEstimatesRoute,
   TaxEstimatesRouteStoreProvider,
   useTaxEstimatesNavigation,
-  useTaxEstimatesOnboardingState,
+  useTaxEstimatesOnboardingStatus,
   useTaxEstimatesRouteState,
   useTaxEstimatesYear,
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
@@ -19,6 +20,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
@@ -37,18 +39,41 @@ export const TaxEstimatesView = () => {
 }
 
 const TaxEstimatesViewContent = () => {
-  const { isOnboarded } = useTaxEstimatesOnboardingState()
-  const header = useMemo(() => isOnboarded && <TaxEstimatesViewHeader />, [isOnboarded])
+  const onboardingStatus = useTaxEstimatesOnboardingStatus()
+  const header = useMemo(
+    () => onboardingStatus === OnboardingStatus.Onboarded && <TaxEstimatesViewHeader />,
+    [onboardingStatus],
+  )
 
   const viewContent = useMemo(() => {
-    if (isOnboarded === undefined) return (
-      <Container name='tax-estimates'>
-        <Loader />
-      </Container>
-    )
-    if (isOnboarded === false) return <TaxProfile />
-    return <TaxEstimatesOnboardedViewContent />
-  }, [isOnboarded])
+    switch (onboardingStatus) {
+      case OnboardingStatus.Loading:
+        return (
+          <Container name='tax-estimates'>
+            <Loader />
+          </Container>
+        )
+
+      case OnboardingStatus.Error:
+        return (
+          <Container name='tax-estimates'>
+            <DataState
+              status={DataStateStatus.failed}
+              title='Unable to load tax information'
+              description='We couldn’t retrieve your tax profile. Please check your connection and try again.'
+              spacing
+            />
+          </Container>
+        )
+
+      case OnboardingStatus.Onboarded:
+        return <TaxEstimatesOnboardedViewContent />
+
+      case OnboardingStatus.NotOnboarded:
+      default:
+        return <TaxProfile />
+    }
+  }, [onboardingStatus])
 
   return (
     <View title='Taxes' header={header}>

@@ -33,7 +33,10 @@ export function FormRadioGroupYesNoField({
 
   const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
 
-  const additionalAriaProps = !showLabel && { 'aria-label': label }
+  const labelId = useId()
+  const additionalAriaProps = showLabel
+    ? { 'aria-labelledby': labelId }
+    : { 'aria-label': label }
 
   const radioGroupClassNames = classNames(
     FORM_RADIO_GROUP_FIELD_CLASSNAME,
@@ -46,8 +49,6 @@ export function FormRadioGroupYesNoField({
   const handleRadioChange = (newValue: YesNoValue) => {
     handleChange(newValue === 'yes')
   }
-
-  const labelId = useId()
 
   return (
     <div className={radioGroupClassNames}>
