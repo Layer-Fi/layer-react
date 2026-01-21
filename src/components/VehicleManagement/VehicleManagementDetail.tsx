@@ -15,14 +15,13 @@ import { Switch } from '@ui/Switch/Switch'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
-import { Separator } from '@components/Separator/Separator'
 import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleForm'
 import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
 
 import './vehicleManagementDetail.scss'
 
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
-  width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
+  width < BREAKPOINTS.MOBILE ? 'Mobile' : 'Desktop'
 
 interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void
@@ -32,31 +31,15 @@ interface VehicleManagementDetailHeaderProps {
 
 const MobileVehicleManagementDetailHeader = ({
   onAddVehicle,
-  showArchived,
-  onShowArchivedChange,
 }: VehicleManagementDetailHeaderProps) => {
   return (
-    <VStack fluid>
-      <HStack justify='space-between' align='center' fluid pie='md'>
-        <Heading size='sm'>Manage Vehicles</Heading>
-        <Button variant='solid' onPress={onAddVehicle}>
-          Add
-          <Plus size={14} />
-        </Button>
-      </HStack>
-      <Separator />
-      <HStack
-        justify='end'
-        align='center'
-        fluid
-        pie='md'
-        pbs='md'
-      >
-        <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
-          <Span size='sm' noWrap>Show archived</Span>
-        </Switch>
-      </HStack>
-    </VStack>
+    <HStack justify='space-between' align='center' fluid pie='md' pb='md'>
+      <Heading size='sm'>Manage vehicles</Heading>
+      <Button variant='solid' onPress={onAddVehicle}>
+        Add Vehicle
+        <Plus size={14} />
+      </Button>
+    </HStack>
   )
 }
 
@@ -145,6 +128,25 @@ export const VehicleManagementDetail = () => {
         name='VehicleManagementDetail'
         onGoBack={toTripsTable}
       >
+        <ResponsiveComponent
+          resolveVariant={resolveVariant}
+          slots={{
+            Desktop: null,
+            Mobile: (
+              <HStack
+                justify='end'
+                align='center'
+                fluid
+                pie='md'
+                pbs='md'
+              >
+                <Switch isSelected={showArchived} onChange={setShowArchived}>
+                  <Span size='sm' noWrap>Show archived</Span>
+                </Switch>
+              </HStack>
+            ),
+          }}
+        />
         <VehicleManagementGrid onEditVehicle={handleEditVehicle} showArchived={showArchived} />
       </BaseDetailView>
       <Drawer isOpen={isVehicleDrawerOpen} onOpenChange={setIsVehicleDrawerOpen} aria-label={selectedVehicle ? 'Vehicle details' : 'Add vehicle'} variant={isMobile ? 'mobile-drawer' : 'drawer'} flexBlock={isMobile}>
