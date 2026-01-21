@@ -207,14 +207,176 @@ const UsFederalTaxSchema = Schema.Struct({
 
 export type UsFederalTax = typeof UsFederalTaxSchema.Type
 
+const StateIncomeTaxSchema = Schema.Struct({
+  stateAgi: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('state_agi'),
+  ),
+  stateDeductions: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('state_deductions'),
+  ),
+  stateTaxableIncome: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('state_taxable_income'),
+  ),
+  effectiveStateTaxRate: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('effective_state_tax_rate'),
+  ),
+  stateIncomeTaxOwed: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('state_income_tax_owed'),
+  ),
+})
+
+export type StateIncomeTax = typeof StateIncomeTaxSchema.Type
+
+const StateAdditionalTaxSchema = Schema.Struct({
+  taxName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('tax_name'),
+  ),
+  taxRate: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('tax_rate'),
+  ),
+  taxableAmount: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('taxable_amount'),
+  ),
+  taxOwed: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('tax_owed'),
+  ),
+})
+
+export type StateAdditionalTax = typeof StateAdditionalTaxSchema.Type
+
+const TotalStateTaxSchema = Schema.Struct({
+  stateIncomeTaxOwed: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('state_income_tax_owed'),
+  ),
+  additionalTaxesOwed: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('additional_taxes_owed'),
+  ),
+  stateWithholdings: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('state_withholdings'),
+  ),
+  totalStateTaxOwed: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('total_state_tax_owed'),
+  ),
+})
+
+export type TotalStateTax = typeof TotalStateTaxSchema.Type
+
+const UsStateTaxSchema = Schema.Struct({
+  stateCode: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('state_code'),
+  ),
+  stateName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('state_name'),
+  ),
+  filingStatus: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('filing_status'),
+  ),
+  stateIncomeTax: pipe(
+    Schema.propertySignature(StateIncomeTaxSchema),
+    Schema.fromKey('state_income_tax'),
+  ),
+  additionalTaxes: pipe(
+    Schema.propertySignature(Schema.Array(StateAdditionalTaxSchema)),
+    Schema.fromKey('additional_taxes'),
+  ),
+  totalStateTax: pipe(
+    Schema.propertySignature(TotalStateTaxSchema),
+    Schema.fromKey('total_state_tax'),
+  ),
+})
+
+export type UsStateTax = typeof UsStateTaxSchema.Type
+
 const TaxesSchema = Schema.Struct({
   usFederal: pipe(
     Schema.propertySignature(Schema.NullishOr(UsFederalTaxSchema)),
     Schema.fromKey('us_federal'),
   ),
+  usState: pipe(
+    Schema.propertySignature(Schema.NullishOr(UsStateTaxSchema)),
+    Schema.fromKey('us_state'),
+  ),
 })
 
 export type Taxes = typeof TaxesSchema.Type
+
+const QuarterFederalTaxSchema = Schema.Struct({
+  dueDate: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('due_date'),
+  ),
+  owed: Schema.Number,
+  paid: Schema.Number,
+  balance: Schema.Number,
+})
+
+export type QuarterFederalTax = typeof QuarterFederalTaxSchema.Type
+
+const QuarterStateTaxSchema = Schema.Struct({
+  stateCode: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('state_code'),
+  ),
+  dueDate: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('due_date'),
+  ),
+  owed: Schema.Number,
+  paid: Schema.Number,
+  balance: Schema.Number,
+})
+
+export type QuarterStateTax = typeof QuarterStateTaxSchema.Type
+
+const QuarterEstimateSchema = Schema.Struct({
+  usFederal: pipe(
+    Schema.propertySignature(Schema.NullishOr(QuarterFederalTaxSchema)),
+    Schema.fromKey('us_federal'),
+  ),
+  usState: pipe(
+    Schema.propertySignature(Schema.NullishOr(QuarterStateTaxSchema)),
+    Schema.fromKey('us_state'),
+  ),
+})
+
+export type QuarterEstimate = typeof QuarterEstimateSchema.Type
+
+const QuarterlyEstimatesSchema = Schema.Struct({
+  q1: pipe(
+    Schema.propertySignature(Schema.NullishOr(QuarterEstimateSchema)),
+    Schema.fromKey('q1'),
+  ),
+  q2: pipe(
+    Schema.propertySignature(Schema.NullishOr(QuarterEstimateSchema)),
+    Schema.fromKey('q2'),
+  ),
+  q3: pipe(
+    Schema.propertySignature(Schema.NullishOr(QuarterEstimateSchema)),
+    Schema.fromKey('q3'),
+  ),
+  q4: pipe(
+    Schema.propertySignature(Schema.NullishOr(QuarterEstimateSchema)),
+    Schema.fromKey('q4'),
+  ),
+})
+
+export type QuarterlyEstimates = typeof QuarterlyEstimatesSchema.Type
 
 const TaxDetailsSchema = Schema.Struct({
   year: Schema.Number,
@@ -227,6 +389,10 @@ const TaxDetailsSchema = Schema.Struct({
     Schema.fromKey('adjusted_gross_income'),
   ),
   taxes: TaxesSchema,
+  quarterlyEstimates: pipe(
+    Schema.propertySignature(Schema.NullishOr(QuarterlyEstimatesSchema)),
+    Schema.fromKey('quarterly_estimates'),
+  ),
 })
 
 export type TaxDetails = typeof TaxDetailsSchema.Type
