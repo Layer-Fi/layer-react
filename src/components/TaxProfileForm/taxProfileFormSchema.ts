@@ -28,7 +28,6 @@ const FederalConfigurationFormSchema = Schema.Struct({
 const StateConfigurationFormSchema = Schema.Struct({
   taxState: Schema.NullishOr(Schema.String) as Schema.Schema<USStateCode | null | undefined>,
   filingStatus: Schema.NullishOr(Schema.String) as Schema.Schema<FilingStatus | null | undefined>,
-  numExemptions: Schema.NullishOr(Schema.Number),
   withholding: Schema.NullishOr(WithholdingFormSchema),
 })
 const UsConfigurationFormSchema = Schema.Struct({

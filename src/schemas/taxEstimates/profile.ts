@@ -68,10 +68,6 @@ const StateConfigurationSchema = Schema.Struct({
     Schema.propertySignature(Schema.NullishOr(FilingStatusSchema)),
     Schema.fromKey('filing_status'),
   ),
-  numExemptions: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('num_exemptions'),
-  ),
   withholding: Schema.NullishOr(WithholdingSchema),
 })
 

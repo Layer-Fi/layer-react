@@ -40,7 +40,6 @@ const DEFAULT_TAX_PROFILE_FORM: TaxProfileForm = {
     state: {
       taxState: null,
       filingStatus: null,
-      numExemptions: null,
       withholding: {
         useCustomWithholding: false,
         amount: BIG_DECIMAL_ZERO,

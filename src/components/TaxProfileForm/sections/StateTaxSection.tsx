@@ -39,19 +39,6 @@ export const StateTaxSection = ({ form, isReadOnly }: StateTaxSectionProps) => {
         )}
       </form.Field>
 
-      <form.AppField name='usConfiguration.state.numExemptions'>
-        {field => (
-          <field.FormNumberField
-            className='Layer__TaxProfileForm__Field'
-            label='Number of exemptions'
-            inline
-            isReadOnly={isReadOnly}
-            placeholder='Enter number'
-            minValue={0}
-          />
-        )}
-      </form.AppField>
-
       <form.AppField name='usConfiguration.state.withholding.useCustomWithholding'>
         {field => (
           <field.FormRadioGroupYesNoField
