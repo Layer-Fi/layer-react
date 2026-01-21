@@ -2,19 +2,25 @@ import { useCallback, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { BREAKPOINTS } from '@config/general'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
+import { Separator } from '@components/Separator/Separator'
 import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleForm'
 import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
+
+const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
+  width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
 
 interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void
@@ -22,24 +28,50 @@ interface VehicleManagementDetailHeaderProps {
   onShowArchivedChange: (value: boolean) => void
 }
 
-const VehicleManagementDetailHeader = ({
+const MobileVehicleManagementDetailHeader = ({
   onAddVehicle,
   showArchived,
   onShowArchivedChange,
 }: VehicleManagementDetailHeaderProps) => {
-  const { isDesktop } = useSizeClass()
-  const title = isDesktop ? 'Manage vehicles' : 'Vehicles'
-  const buttonText = isDesktop ? 'Add Vehicle' : 'Add'
+  return (
+    <VStack fluid>
+      <HStack justify='space-between' align='center' fluid pie='md'>
+        <Heading size='sm'>Manage Vehicles</Heading>
+        <Button variant='solid' onPress={onAddVehicle}>
+          Add
+          <Plus size={14} />
+        </Button>
+      </HStack>
+      <Separator />
+      <HStack
+        justify='end'
+        align='center'
+        fluid
+        pie='md'
+        pbs='md'
+      >
+        <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
+          <Span size='sm' noWrap>Show archived</Span>
+        </Switch>
+      </HStack>
+    </VStack>
+  )
+}
 
+const DesktopVehicleManagementDetailHeader = ({
+  onAddVehicle,
+  showArchived,
+  onShowArchivedChange,
+}: VehicleManagementDetailHeaderProps) => {
   return (
     <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
-      <Heading size='sm'>{title}</Heading>
+      <Heading size='sm'>Manage vehicles</Heading>
       <HStack gap='md' align='center'>
         <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
           <Span size='sm' noWrap>Show archived</Span>
         </Switch>
         <Button variant='solid' onPress={onAddVehicle}>
-          {buttonText}
+          Add Vehicle
           <Plus size={14} />
         </Button>
       </HStack>
@@ -69,18 +101,35 @@ export const VehicleManagementDetail = () => {
     setSelectedVehicle(undefined)
   }, [])
 
-  // Use a ref to store the latest state values
+  // Use a ref to store the latest state values for the Header component
   const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle })
   stateRef.current = { showArchived, setShowArchived, handleAddVehicle }
 
   // Header component is stable and reads from ref
   const HeaderRef = useRef(() => {
     const { showArchived: currentShowArchived, setShowArchived: currentSetShowArchived, handleAddVehicle: currentHandleAddVehicle } = stateRef.current
-    return (
-      <VehicleManagementDetailHeader
+
+    const DesktopHeader = (
+      <DesktopVehicleManagementDetailHeader
         onAddVehicle={currentHandleAddVehicle}
         showArchived={currentShowArchived}
         onShowArchivedChange={currentSetShowArchived}
+      />
+    )
+
+    const MobileHeader = (
+      <MobileVehicleManagementDetailHeader
+        onAddVehicle={currentHandleAddVehicle}
+        showArchived={currentShowArchived}
+        onShowArchivedChange={currentSetShowArchived}
+      />
+    )
+
+    return (
+      <ResponsiveComponent
+        resolveVariant={resolveVariant}
+        slots={{ Desktop: DesktopHeader, Mobile: MobileHeader }}
+        className='Layer__ResponsiveComponent--centered'
       />
     )
   })
