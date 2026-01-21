@@ -316,68 +316,6 @@ const TaxesSchema = Schema.Struct({
 
 export type Taxes = typeof TaxesSchema.Type
 
-const QuarterFederalTaxSchema = Schema.Struct({
-  dueDate: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('due_date'),
-  ),
-  owed: Schema.Number,
-  paid: Schema.Number,
-  balance: Schema.Number,
-})
-
-export type QuarterFederalTax = typeof QuarterFederalTaxSchema.Type
-
-const QuarterStateTaxSchema = Schema.Struct({
-  stateCode: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('state_code'),
-  ),
-  dueDate: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('due_date'),
-  ),
-  owed: Schema.Number,
-  paid: Schema.Number,
-  balance: Schema.Number,
-})
-
-export type QuarterStateTax = typeof QuarterStateTaxSchema.Type
-
-const QuarterEstimateSchema = Schema.Struct({
-  usFederal: pipe(
-    Schema.propertySignature(Schema.NullishOr(QuarterFederalTaxSchema)),
-    Schema.fromKey('us_federal'),
-  ),
-  usState: pipe(
-    Schema.propertySignature(Schema.NullishOr(QuarterStateTaxSchema)),
-    Schema.fromKey('us_state'),
-  ),
-})
-
-export type QuarterEstimate = typeof QuarterEstimateSchema.Type
-
-const QuarterlyEstimatesSchema = Schema.Struct({
-  q1: pipe(
-    Schema.propertySignature(Schema.NullishOr(QuarterEstimateSchema)),
-    Schema.fromKey('q1'),
-  ),
-  q2: pipe(
-    Schema.propertySignature(Schema.NullishOr(QuarterEstimateSchema)),
-    Schema.fromKey('q2'),
-  ),
-  q3: pipe(
-    Schema.propertySignature(Schema.NullishOr(QuarterEstimateSchema)),
-    Schema.fromKey('q3'),
-  ),
-  q4: pipe(
-    Schema.propertySignature(Schema.NullishOr(QuarterEstimateSchema)),
-    Schema.fromKey('q4'),
-  ),
-})
-
-export type QuarterlyEstimates = typeof QuarterlyEstimatesSchema.Type
-
 const TaxDetailsSchema = Schema.Struct({
   year: Schema.Number,
   filingStatus: pipe(
@@ -389,10 +327,6 @@ const TaxDetailsSchema = Schema.Struct({
     Schema.fromKey('adjusted_gross_income'),
   ),
   taxes: TaxesSchema,
-  quarterlyEstimates: pipe(
-    Schema.propertySignature(Schema.NullishOr(QuarterlyEstimatesSchema)),
-    Schema.fromKey('quarterly_estimates'),
-  ),
 })
 
 export type TaxDetails = typeof TaxDetailsSchema.Type
