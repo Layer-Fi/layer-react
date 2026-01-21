@@ -54,7 +54,7 @@ export const AdjustedGrossIncomeTable = ({ data }: AdjustedGrossIncomeTableProps
             <Cell><MoneySpan amount={-getAmount(deductions)} /></Cell>
           </Row>
         ))}
-        <Row className='AdjustedGrossIncomeTable__TotalRow'>
+        <Row className='Layer__AdjustedGrossIncomeTable__TotalRow'>
           <Cell><Span weight='bold'>Adjusted Gross Income</Span></Cell>
           <Cell><MoneySpan weight='bold' amount={totalAdjustedGrossIncome} /></Cell>
         </Row>

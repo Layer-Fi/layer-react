@@ -5,7 +5,6 @@ import type { Key } from 'react-aria-components'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
-import { usePreloadTaxProfile } from '@hooks/taxEstimates/useTaxProfile'
 import {
   TaxEstimatesRoute,
   TaxEstimatesRouteStoreProvider,
@@ -20,6 +19,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
+import { Loader } from '@components/Loader/Loader'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { View } from '@components/View/View'
@@ -29,8 +29,6 @@ import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 const TAX_ESTIMATES_MIN_YEAR = 2024
 
 export const TaxEstimatesView = () => {
-  usePreloadTaxProfile()
-
   return (
     <TaxEstimatesRouteStoreProvider>
       <TaxEstimatesViewContent />
@@ -42,9 +40,19 @@ const TaxEstimatesViewContent = () => {
   const { isOnboarded } = useTaxEstimatesOnboardingState()
   const header = useMemo(() => isOnboarded && <TaxEstimatesViewHeader />, [isOnboarded])
 
+  const viewContent = useMemo(() => {
+    if (isOnboarded === undefined) return (
+      <Container name='tax-estimates'>
+        <Loader />
+      </Container>
+    )
+    if (isOnboarded === false) return <TaxProfile />
+    return <TaxEstimatesOnboardedViewContent />
+  }, [isOnboarded])
+
   return (
     <View title='Taxes' header={header}>
-      {isOnboarded ? <TaxEstimatesOnboardedViewContent /> : <TaxProfile />}
+      {viewContent}
     </View>
   )
 }
@@ -123,11 +131,8 @@ const TaxEstimatesOnboardedViewContent = () => {
         selectedKey={route}
         onSelectionChange={handleTabChange}
       />
-      <Container name='tax-estimate'>
-        {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
-
-        {route === TaxEstimatesRoute.Payments && <TaxPayments />}
-      </Container>
+      {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
+      {route === TaxEstimatesRoute.Payments && <TaxPayments />}
     </>
   )
 }

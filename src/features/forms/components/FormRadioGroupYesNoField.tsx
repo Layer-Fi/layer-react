@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from 'react'
+import { type PropsWithChildren, useId } from 'react'
 import classNames from 'classnames'
 
 import { Radio, RadioGroup } from '@ui/RadioGroup/RadioGroup'
@@ -47,9 +47,11 @@ export function FormRadioGroupYesNoField({
     handleChange(newValue === 'yes')
   }
 
+  const labelId = useId()
+
   return (
     <div className={radioGroupClassNames}>
-      {showLabel && <Label slot='label' size='sm' htmlFor={name}>{label}</Label>}
+      {showLabel && <Label slot='label' size='sm' id={labelId}>{label}</Label>}
       <RadioGroup<YesNoValue>
         slot='radiogroup'
         value={radioValue}
@@ -60,6 +62,7 @@ export function FormRadioGroupYesNoField({
         isReadOnly={isReadOnly}
         isInvalid={!isValid}
         {...additionalAriaProps}
+        aria-labelledby={labelId}
       >
         <Radio<YesNoValue> value='no' size='md'>
           <Span size='md' slot='description'>No</Span>

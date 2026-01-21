@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from 'react'
+import { type PropsWithChildren, useId } from 'react'
 import classNames from 'classnames'
 
 import { Radio, RadioGroup } from '@ui/RadioGroup/RadioGroup'
@@ -46,9 +46,11 @@ export function FormRadioGroupField<T extends string>({
     className,
   )
 
+  const labelId = useId()
+
   return (
     <div className={radioGroupClassNames}>
-      {showLabel && <Label slot='label' size='sm' htmlFor={name}>{label}</Label>}
+      {showLabel && <Label slot='label' size='sm' id={labelId}>{label}</Label>}
       <RadioGroup<T>
         slot='radiogroup'
         value={value}
@@ -58,6 +60,7 @@ export function FormRadioGroupField<T extends string>({
         orientation={orientation}
         isReadOnly={isReadOnly}
         isInvalid={!isValid}
+        aria-labelledby={labelId}
         {...additionalAriaProps}
       >
         {options.map(option => (

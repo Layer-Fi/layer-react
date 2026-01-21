@@ -9,8 +9,8 @@
   .Layer__UI__Table-Row {
     display: grid;
     grid-template-columns:
-      minmax(2rem, 40%)
-      minmax(15rem, 60%);
+      minmax(15rem, 60%)
+      minmax(10rem, 40%);
 
     &.Layer__AdjustedGrossIncomeTable__DeductionsRow {
       background-color: var(--color-base-50);
@@ -28,5 +28,9 @@
       justify-content: flex-end;
       text-align: right;
     }
+  }
+
+  &__TotalRow {
+    border-top: 2px solid var(--color-border);
   }
 }

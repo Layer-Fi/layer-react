@@ -1,4 +1,4 @@
-import { type Ref, useMemo } from 'react'
+import { useMemo } from 'react'
 import classNames from 'classnames'
 import { Circle } from 'lucide-react'
 import {
@@ -30,28 +30,19 @@ type RadioGroupProps<T extends string> = Omit<ReactAriaRadioGroupProps, 'classNa
   value?: T
   defaultValue?: T
   onChange?: (value: T) => void
-  ref?: Ref<HTMLDivElement>
 }
 
 export function RadioGroup<T extends string>({
   children,
   className,
-  orientation = 'vertical',
   onChange,
-  ref,
-  ...props
+  ...restProps
 }: RadioGroupProps<T>) {
-  const dataProperties = useMemo(() => toDataProperties({
-    orientation,
-  }), [orientation])
-
   return (
     <ReactAriaRadioGroup
-      {...dataProperties}
-      {...props}
+      {...restProps}
       onChange={onChange as ((value: string) => void) | undefined}
       className={classNames(RADIO_GROUP_CLASS_NAME, className)}
-      ref={ref}
     >
       {children}
     </ReactAriaRadioGroup>
@@ -62,15 +53,13 @@ type RadioProps<T extends string> = Omit<ReactAriaRadioProps, 'className' | 'val
   className?: string
   size?: RadioSize
   value: T
-  ref?: Ref<HTMLLabelElement>
 }
 
 export function Radio<T extends string>({
   children,
   className,
   size = 'sm',
-  ref,
-  ...props
+  ...restProps
 }: RadioProps<T>) {
   const dataProperties = useMemo(() => toDataProperties({
     size,
@@ -79,10 +68,9 @@ export function Radio<T extends string>({
 
   return (
     <ReactAriaRadio
+      {...restProps}
       {...dataProperties}
-      {...props}
       className={classNames(RADIO_CLASS_NAME, className)}
-      ref={ref}
     >
       {withRenderProp(children, node => (
         <>

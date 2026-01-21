@@ -28,8 +28,8 @@ const ErrorState = () => (
   <DataState
     spacing
     status={DataStateStatus.failed}
-    title='Error loading tax payments'
-    description='There was an error loading the tax payments'
+    title='We couldnʼt load your tax payments'
+    description='An error occurred while loading your tax payments. Please check your connection and try again.'
   />
 )
 
@@ -38,7 +38,7 @@ const EmptyState = () => (
     spacing
     status={DataStateStatus.info}
     title='No tax payments found'
-    description='There are no tax payments to display'
+    description='There are no tax payments to display.'
   />
 )
 

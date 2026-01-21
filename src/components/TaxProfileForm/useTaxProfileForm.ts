@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
@@ -25,33 +25,41 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
   const formDefaults = useMemo(() => taxProfileToFormValues(taxProfile), [taxProfile])
 
   const defaultValuesRef = useRef<TaxProfileForm>(formDefaults)
-  const defaultValues = defaultValuesRef.current
+
+  const onSubmit = useCallback(async ({ value }: { value: TaxProfileForm }) => {
+    try {
+      const taxProfileValue = formValuesToTaxProfile(value)
+      const input = Schema.encodeSync(TaxProfileRequestSchema)(taxProfileValue)
+      const result = await upsertProfile(input)
+
+      setSubmitError(undefined)
+      setSubmitSuccess('Tax profile saved')
+      onSuccess?.(result.data)
+    }
+    catch (e) {
+      console.error(e)
+      setSubmitSuccess(undefined)
+      setSubmitError('Something went wrong. Please try again.')
+    }
+  }, [onSuccess, upsertProfile])
 
   const form = useAppForm<TaxProfileForm>({
-    defaultValues,
-    onSubmit: async ({ value }) => {
-      try {
-        const taxProfileValue = formValuesToTaxProfile(value)
-        const input = Schema.encodeSync(TaxProfileRequestSchema)(taxProfileValue)
-        const result = await upsertProfile(input)
-
-        setSubmitError(undefined)
-        setSubmitSuccess('Tax profile saved')
-        form.reset(value, { keepDefaultValues: false })
-        onSuccess?.(result.data)
-      }
-      catch (e) {
-        console.error(e)
-        setSubmitSuccess(undefined)
-        setSubmitError('Something went wrong. Please try again.')
-      }
-    },
+    defaultValues: defaultValuesRef.current,
+    onSubmit,
     validationLogic: revalidateLogic({
       mode: 'submit',
       modeAfterSubmission: 'submit',
     }),
     canSubmitWhenInvalid: true,
   })
+
+  // Update the default values for the form when the tax profile changes
+  useEffect(() => {
+    if (formDefaults !== defaultValuesRef.current) {
+      defaultValuesRef.current = formDefaults
+      form.reset(formDefaults)
+    }
+  }, [form, formDefaults])
 
   return useMemo(() => ({
     form,
