@@ -14,6 +14,7 @@ import { Switch } from '@ui/Switch/Switch'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
+import { Separator } from '@components/Separator/Separator'
 import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleForm'
 import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
 
@@ -29,7 +30,7 @@ const MobileVehicleManagementDetailHeader = ({
   onAddVehicle,
 }: VehicleManagementDetailHeaderProps) => {
   return (
-    <HStack justify='space-between' align='center' fluid pie='md' pb='md'>
+    <HStack justify='space-between' align='center' fluid pie='md'>
       <Heading size='sm'>Manage vehicles</Heading>
       <Button variant='solid' onPress={onAddVehicle}>
         Add Vehicle
@@ -134,17 +135,20 @@ export const VehicleManagementDetail = () => {
         onGoBack={toTripsTable}
       >
         {isMobileVariant && (
-          <HStack
-            justify='end'
-            align='center'
-            fluid
-            pie='md'
-            pbs='md'
-          >
-            <Switch isSelected={showArchived} onChange={setShowArchived}>
-              <Span size='sm' noWrap>Show archived</Span>
-            </Switch>
-          </HStack>
+          <>
+            <Separator />
+            <HStack
+              justify='end'
+              align='center'
+              fluid
+              pie='md'
+              pbs='md'
+            >
+              <Switch isSelected={showArchived} onChange={setShowArchived}>
+                <Span size='sm' noWrap>Show archived</Span>
+              </Switch>
+            </HStack>
+          </>
         )}
         <VehicleManagementGrid onEditVehicle={handleEditVehicle} showArchived={showArchived} />
       </BaseDetailView>
