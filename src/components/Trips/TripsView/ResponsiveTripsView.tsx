@@ -105,6 +105,8 @@ export const ResponsiveTripsView = () => {
     />
   ), [trips, isLoading, isError, paginationProps, onViewOrUpsertTrip, onDeleteTrip])
 
+  const onRecordTrip = useCallback(() => onViewOrUpsertTrip(null), [onViewOrUpsertTrip])
+
   const MobileView = useMemo(() => (
     <TripsMobileList
       data={trips}
@@ -112,12 +114,13 @@ export const ResponsiveTripsView = () => {
       isError={isError}
       paginationProps={paginationProps}
       onViewOrUpsertTrip={onViewOrUpsertTrip}
+      onRecordTrip={onRecordTrip}
       slots={{
         EmptyState: TripsViewEmptyState,
         ErrorState: TripsViewErrorState,
       }}
     />
-  ), [trips, isLoading, isError, onViewOrUpsertTrip, paginationProps])
+  ), [trips, isLoading, isError, onViewOrUpsertTrip, onRecordTrip, paginationProps])
 
   return (
     <>

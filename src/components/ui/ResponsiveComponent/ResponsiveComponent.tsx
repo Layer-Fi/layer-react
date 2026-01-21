@@ -1,4 +1,5 @@
 import { type ReactNode, useCallback, useState } from 'react'
+import classNames from 'classnames'
 
 import { type ElementSize, useElementSize } from '@hooks/useElementSize/useElementSize'
 
@@ -11,11 +12,15 @@ export type VariantResolver<T extends string> = ({ width }: { width: number }) =
 export interface ResponsiveComponentProps<T extends string = DefaultVariant> {
   slots: Record<T, ReactNode>
   resolveVariant: VariantResolver<T>
+  className?: string
 }
+
+const CLASS_NAME = 'Layer__UI__ResponsiveComponent'
 
 export const ResponsiveComponent = <T extends string = DefaultVariant>({
   slots,
   resolveVariant,
+  className,
 }: ResponsiveComponentProps<T>) => {
   const [currentVariant, setCurrentVariant] = useState<T | null>(null)
 
@@ -26,7 +31,7 @@ export const ResponsiveComponent = <T extends string = DefaultVariant>({
   const containerRef = useElementSize<HTMLDivElement>(handleResize)
 
   return (
-    <div ref={containerRef} className='Layer__ResponsiveComponent'>
+    <div ref={containerRef} className={classNames(CLASS_NAME, className)}>
       {currentVariant !== null && slots[currentVariant]}
     </div>
   )

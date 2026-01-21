@@ -1,5 +1,3 @@
-import { useMemo } from 'react'
-
 import { TripPurpose } from '@schemas/trip'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 
@@ -9,30 +7,31 @@ export enum TripPurposeFilterValue {
   Personal = TripPurpose.Personal,
 }
 
+const TRIP_PURPOSE_OPTIONS = [
+  { label: 'All', value: TripPurposeFilterValue.All },
+  { label: 'Business', value: TripPurposeFilterValue.Business },
+  { label: 'Personal', value: TripPurposeFilterValue.Personal },
+]
+
 export type TripPurposeToggleProps = {
   selected: TripPurposeFilterValue
   onChange: (value: TripPurposeFilterValue) => void
-  size?: ToggleSize
+  fullWidth?: boolean
 }
 
 export const TripPurposeToggle = ({
   selected,
   onChange,
-  size = ToggleSize.small,
+  fullWidth,
 }: TripPurposeToggleProps) => {
-  const options = useMemo(() => [
-    { label: 'All', value: TripPurposeFilterValue.All },
-    { label: 'Business', value: TripPurposeFilterValue.Business },
-    { label: 'Personal', value: TripPurposeFilterValue.Personal },
-  ], [])
-
   return (
     <Toggle
       ariaLabel='Trip purpose'
-      options={options}
+      options={TRIP_PURPOSE_OPTIONS}
       selectedKey={selected}
       onSelectionChange={key => onChange(key as TripPurposeFilterValue)}
-      size={size}
+      size={ToggleSize.small}
+      fullWidth={fullWidth}
     />
   )
 }
