@@ -22,7 +22,7 @@ type TaxEstimatesRouteStoreShape = {
 const TaxEstimatesRouteStoreContext = createContext(
   createStore<TaxEstimatesRouteStoreShape>(() => ({
     routeState: { route: TaxEstimatesRoute.Estimates },
-    isOnboarded: true,
+    isOnboarded: false,
     navigate: () => {},
   })),
 )
@@ -56,8 +56,8 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   )
 
   useEffect(() => {
-    store.setState({ isOnboarded: taxProfile?.userHasSavedTaxProfile ?? false })
-  }, [store, taxProfile?.userHasSavedTaxProfile])
+    store.setState({ isOnboarded: taxProfile !== undefined && taxProfile.userHasSavedTaxProfile === true })
+  }, [store, taxProfile])
 
   return (
     <TaxEstimatesRouteStoreContext.Provider value={store}>
