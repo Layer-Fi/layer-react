@@ -22,7 +22,7 @@ type TaxEstimatesRouteStoreShape = {
 const TaxEstimatesRouteStoreContext = createContext(
   createStore<TaxEstimatesRouteStoreShape>(() => ({
     routeState: { route: TaxEstimatesRoute.Estimates },
-    isOnboarded: false,
+    isOnboarded: true,
     navigate: () => {},
   })),
 )
