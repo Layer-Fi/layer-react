@@ -50,9 +50,9 @@ export const VehicleManagementDetail = () => {
   const [isVehicleDrawerOpen, setIsVehicleDrawerOpen] = useState(false)
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | undefined>(undefined)
   const [showArchived, setShowArchived] = useState(false)
-  const { isMobile, isTablet } = useSizeClass()
+  const { isDesktop } = useSizeClass()
 
-  const mobileHeader = isMobile || isTablet
+  const mobileHeader = !isDesktop
 
   const handleAddVehicle = useCallback(() => {
     setSelectedVehicle(undefined)
