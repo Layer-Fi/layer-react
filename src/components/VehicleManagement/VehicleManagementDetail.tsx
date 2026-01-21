@@ -19,6 +19,8 @@ import { Separator } from '@components/Separator/Separator'
 import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleForm'
 import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
 
+import './vehicleManagementDetail.scss'
+
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
   width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
 
@@ -129,7 +131,7 @@ export const VehicleManagementDetail = () => {
       <ResponsiveComponent
         resolveVariant={resolveVariant}
         slots={{ Desktop: DesktopHeader, Mobile: MobileHeader }}
-        className='Layer__ResponsiveComponent--centered'
+        className='Layer__VehicleManagementDetail__Header'
       />
     )
   })

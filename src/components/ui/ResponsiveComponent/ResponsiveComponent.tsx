@@ -15,7 +15,7 @@ export interface ResponsiveComponentProps<T extends string = DefaultVariant> {
   className?: string
 }
 
-const CLASS_NAME = 'Layer__ResponsiveComponent'
+const CLASS_NAME = 'Layer__UI__ResponsiveComponent'
 
 export const ResponsiveComponent = <T extends string = DefaultVariant>({
   slots,
