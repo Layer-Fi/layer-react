@@ -63,7 +63,6 @@ export function FormRadioGroupYesNoField({
         isReadOnly={isReadOnly}
         isInvalid={!isValid}
         {...additionalAriaProps}
-        aria-labelledby={labelId}
       >
         <Radio<YesNoValue> value='no' size='md'>
           <Span size='md' slot='description'>No</Span>
