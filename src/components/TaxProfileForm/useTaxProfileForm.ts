@@ -3,7 +3,7 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
 import { type TaxProfile, TaxProfileRequestSchema } from '@schemas/taxEstimates/profile'
-import { UpsertTaxProfileMode, useUpsertTaxProfile } from '@hooks/useTaxEstimates/useUpsertTaxProfile'
+import { UpsertTaxProfileMode, useUpsertTaxProfile } from '@hooks/taxEstimates/useUpsertTaxProfile'
 import { formValuesToTaxProfile, taxProfileToFormValues } from '@components/TaxProfileForm/formUtils'
 import { type TaxProfileForm } from '@components/TaxProfileForm/taxProfileFormSchema'
 import { useAppForm } from '@features/forms/hooks/useForm'

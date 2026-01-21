@@ -5,8 +5,8 @@ import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 
 import { type TaxProfileRequest, type TaxProfileResponse, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
 import { patch, post } from '@api/layer/authenticated_http'
+import { useTaxProfileGlobalCacheActions } from '@hooks/taxEstimates/useTaxProfile'
 import { useAuth } from '@hooks/useAuth'
-import { useTaxProfileGlobalCacheActions } from '@hooks/useTaxEstimates/useTaxProfile'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const UPSERT_TAX_PROFILE_TAG_KEY = '#upsert-tax-profile'

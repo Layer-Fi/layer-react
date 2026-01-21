@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 
-import { usePreloadTaxProfile } from '@hooks/useTaxEstimates/useTaxProfile'
+import { usePreloadTaxProfile } from '@hooks/taxEstimates/useTaxProfile'
 import {
   TaxEstimatesRoute,
   TaxEstimatesRouteStoreProvider,

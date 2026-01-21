@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { useTaxProfile } from '@hooks/useTaxEstimates/useTaxProfile'
+import { useTaxProfile } from '@hooks/taxEstimates/useTaxProfile'
 import {
   TaxEstimatesRoute,
   useTaxEstimatesNavigation,
