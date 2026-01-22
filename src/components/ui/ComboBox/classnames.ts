@@ -28,4 +28,7 @@ export const COMBO_BOX_CLASS_NAMES = {
   CLEAR_INDICATOR: 'Layer__ComboBoxClearIndicator',
   LOADING_INDICATOR: 'Layer__ComboBoxLoadingIndicator',
   DROPDOWN_INDICATOR: 'Layer__ComboBoxDropdownIndicator',
+
+  MULTI_VALUE: 'Layer__ComboBoxMultiValue',
+  MULTI_VALUE_LABEL: 'Layer__ComboBoxMultiValueLabel',
 }
