@@ -10,15 +10,32 @@ import './expandableCard.scss'
 type ExpandableCardProps = {
   children: ReactNode
   defaultExpanded?: boolean
+  isExpanded?: boolean
+  onToggle?: () => void
   slots: {
     Heading: ReactNode
   }
 }
 
-export const ExpandableCard = ({ children, defaultExpanded = true, slots }: ExpandableCardProps) => {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded)
+export const ExpandableCard = ({
+  children,
+  defaultExpanded = true,
+  isExpanded: controlledIsExpanded,
+  onToggle,
+  slots,
+}: ExpandableCardProps) => {
+  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
 
-  const toggleExpanded = useCallback(() => setIsExpanded(!isExpanded), [isExpanded])
+  const isControlled = controlledIsExpanded !== undefined
+  const isExpanded = isControlled ? controlledIsExpanded : internalExpanded
+
+  const toggleExpanded = useCallback(() => {
+    if (isControlled) {
+      onToggle?.()
+    } else {
+      setInternalExpanded(prev => !prev)
+    }
+  }, [isControlled, onToggle])
 
   return (
     <Card className='Layer__ExpandableCard'>

@@ -12,6 +12,7 @@ import { TaxSummaryCard } from '@components/TaxDetails/TaxSummaryCard/TaxSummary
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import { CardHeading } from './CardHeading'
+import type { ExpandedState } from './TaxDetails'
 import { TaxDetailsHeader } from './TaxDetailsHeader'
 
 export type TaxDetailsContentProps = {
@@ -20,6 +21,8 @@ export type TaxDetailsContentProps = {
   data: TaxDetailsData | undefined
   isLoading: boolean
   isError: boolean
+  expanded: ExpandedState
+  toggleExpanded: (key: keyof ExpandedState) => void
 }
 
 export const TaxDetailsDesktop = ({
@@ -28,6 +31,8 @@ export const TaxDetailsDesktop = ({
   data,
   isLoading,
   isError,
+  expanded,
+  toggleExpanded,
 }: TaxDetailsContentProps) => {
   return (
     <BaseDetailView name='TaxDetails' slots={{ Header: TaxDetailsHeader }}>
@@ -70,6 +75,8 @@ export const TaxDetailsDesktop = ({
           return (
             <VStack>
               <ExpandableCard
+                isExpanded={expanded.taxableIncome}
+                onToggle={() => toggleExpanded('taxableIncome')}
                 slots={{
                   Heading: (
                     <CardHeading
@@ -83,6 +90,8 @@ export const TaxDetailsDesktop = ({
               </ExpandableCard>
               {usFederal && (
                 <ExpandableCard
+                  isExpanded={expanded.federalTaxes}
+                  onToggle={() => toggleExpanded('federalTaxes')}
                   slots={{
                     Heading: (
                       <CardHeading
@@ -97,6 +106,8 @@ export const TaxDetailsDesktop = ({
               )}
               {usState && (
                 <ExpandableCard
+                  isExpanded={expanded.stateTaxes}
+                  onToggle={() => toggleExpanded('stateTaxes')}
                   slots={{
                     Heading: (
                       <CardHeading
