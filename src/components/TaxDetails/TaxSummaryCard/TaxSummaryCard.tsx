@@ -1,6 +1,5 @@
 import type { TaxSummary } from '@schemas/taxEstimates/summary'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
-import { ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 
 import './taxSummaryCard.scss'
 
@@ -14,13 +13,9 @@ type TaxSummaryCardProps = {
 export const TaxSummaryCard = ({ data }: TaxSummaryCardProps) => {
   const { isDesktop } = useSizeClass()
 
-  return (
-    <ResponsiveComponent
-      slots={{
-        Desktop: <TaxSummaryCardDesktop data={data} />,
-        Mobile: <TaxSummaryCardMobile data={data} />,
-      }}
-      resolveVariant={() => (isDesktop ? 'Desktop' : 'Mobile')}
-    />
-  )
+  if (isDesktop) {
+    return <TaxSummaryCardDesktop data={data} />
+  }
+
+  return <TaxSummaryCardMobile data={data} />
 }

@@ -4,10 +4,10 @@ import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 
 export const TaxDetailsHeader = () => {
-  const { isMobile } = useSizeClass()
+  const { isDesktop } = useSizeClass()
   return (
     <VStack gap='3xs'>
-      <Heading size={isMobile ? 'sm' : 'md'}>Estimated Business Income Taxes</Heading>
+      <Heading size={isDesktop ? 'md' : 'sm'}>Estimated Business Income Taxes</Heading>
       <Span size='md' variant='subtle'>
         Calculated based on your categorized transactions and tracked mileage
       </Span>
