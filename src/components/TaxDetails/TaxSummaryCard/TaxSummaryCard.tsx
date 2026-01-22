@@ -22,7 +22,7 @@ const TaxSummarySectionRowMobile = ({ section }: TaxSummarySectionRowProps) => {
         <Span size='sm' variant='subtle'>=</Span>
         <VStack gap='3xs' align='center'>
           <MoneySpan size='md' amount={section.total} />
-          <Span size='xs' variant='subtle'>Taxes Owed</Span>
+          <Span size='xs' variant='subtle'>Total</Span>
         </VStack>
         <Span size='sm' variant='subtle'>-</Span>
         <VStack gap='3xs' align='center'>
@@ -43,7 +43,7 @@ const TaxSummarySectionRowDesktop = ({ section }: TaxSummarySectionRowProps) => 
         <Span size='md' variant='subtle'>=</Span>
         <VStack gap='3xs' align='center'>
           <MoneySpan size='lg' amount={section.total} />
-          <Span size='sm' variant='subtle'>Taxes Owed</Span>
+          <Span size='sm' variant='subtle'>Total</Span>
         </VStack>
         <Span size='md' variant='subtle'>-</Span>
         <VStack gap='3xs' align='center'>
