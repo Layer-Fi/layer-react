@@ -10,8 +10,7 @@
     background: var(--color-base-50);
   }
 
-  .Layer__TaxProfileForm__Field {
+  .Layer__TaxProfileForm__Field--desktop {
     grid-template-columns: 16rem minmax(auto, 24rem);
-    width: 100%;
   }
 }
