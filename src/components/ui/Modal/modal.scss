@@ -56,7 +56,8 @@
     bottom: 0;
 
     overflow: hidden;
-    block-size: 80%;
+    block-size: min(80%, var(--visual-viewport-height, 100%));
+    max-block-size: var(--visual-viewport-height, 100%);
     inline-size: 100%;
 
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
@@ -101,8 +102,10 @@
   }
 
   &[data-variant='mobile-drawer'] {
+    overflow-y: auto;
     padding: 0;
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
+    overscroll-behavior: contain;
   }
 
   &[data-variant='mobile-popover'] {

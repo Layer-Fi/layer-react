@@ -1,4 +1,4 @@
-import { type ComponentProps, forwardRef, type PropsWithChildren } from 'react'
+import { type ComponentProps, forwardRef, type PropsWithChildren, useEffect, useRef } from 'react'
 import {
   Dialog as ReactAriaDialog,
   type DialogProps,
@@ -140,10 +140,60 @@ export function Drawer({
   isDismissable = false,
   role,
 }: DrawerProps) {
+  const dialogRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (!isOpen || variant !== 'mobile-drawer' || typeof window === 'undefined') return
+    const root = document.documentElement
+    const updateViewportHeight = () => {
+      const height = window.visualViewport?.height ?? window.innerHeight
+      root.style.setProperty('--visual-viewport-height', `${height}px`)
+      const activeElement = document.activeElement
+      if (
+        activeElement instanceof HTMLElement &&
+        dialogRef.current?.contains(activeElement) &&
+        (['INPUT', 'TEXTAREA', 'SELECT'].includes(activeElement.tagName) || activeElement.isContentEditable)
+      ) {
+        activeElement.scrollIntoView({ block: 'center', inline: 'nearest' })
+      }
+    }
+    updateViewportHeight()
+    const visualViewport = window.visualViewport
+    visualViewport?.addEventListener('resize', updateViewportHeight)
+    visualViewport?.addEventListener('scroll', updateViewportHeight)
+    window.addEventListener('resize', updateViewportHeight)
+    return () => {
+      visualViewport?.removeEventListener('resize', updateViewportHeight)
+      visualViewport?.removeEventListener('scroll', updateViewportHeight)
+      window.removeEventListener('resize', updateViewportHeight)
+    }
+  }, [isOpen, variant])
+
+  useEffect(() => {
+    if (!isOpen || variant !== 'mobile-drawer') return
+    const dialogElement = dialogRef.current
+    if (!dialogElement) return
+    const handleFocusIn = (event: FocusEvent) => {
+      const target = event.target
+      if (
+        target instanceof HTMLElement &&
+        (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable)
+      ) {
+        requestAnimationFrame(() => {
+          target.scrollIntoView({ block: 'center', inline: 'nearest' })
+        })
+      }
+    }
+    dialogElement.addEventListener('focusin', handleFocusIn)
+    return () => {
+      dialogElement.removeEventListener('focusin', handleFocusIn)
+    }
+  }, [isOpen, variant])
+
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
       <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
+        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant} ref={dialogRef}>
           {children}
         </Dialog>
       </InternalModal>
