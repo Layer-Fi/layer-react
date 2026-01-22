@@ -32,7 +32,8 @@ export const ExpandableCard = ({
   const toggleExpanded = useCallback(() => {
     if (isControlled) {
       onToggle?.()
-    } else {
+    }
+    else {
       setInternalExpanded(prev => !prev)
     }
   }, [isControlled, onToggle])
