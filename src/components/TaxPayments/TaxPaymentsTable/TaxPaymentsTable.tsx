@@ -1,14 +1,10 @@
-import { useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
 
-import { type TaxPaymentQuarter } from '@schemas/taxEstimates/payments'
-import { useTaxPayments } from '@hooks/taxEstimates/useTaxPayments'
-import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { SimpleDataTable } from '@components/SimpleDataTable/SimpleDataTable'
+import { type CommonTaxPaymentsListProps, getQuarterLabel, type TaxPaymentQuarterWithId } from '@components/TaxPayments/utils'
 
 import './taxPaymentsTable.scss'
 
@@ -20,30 +16,6 @@ enum TaxPaymentColumns {
   OwedThisQuarter = 'OwedThisQuarter',
   TotalPaid = 'TotalPaid',
   Total = 'Total',
-}
-
-type TaxPaymentQuarterWithId = TaxPaymentQuarter & { id: string }
-
-const ErrorState = () => (
-  <DataState
-    spacing
-    status={DataStateStatus.failed}
-    title='We couldnʼt load your tax payments'
-    description='An error occurred while loading your tax payments. Please check your connection and try again.'
-  />
-)
-
-const EmptyState = () => (
-  <DataState
-    spacing
-    status={DataStateStatus.info}
-    title='No tax payments found'
-    description='There are no tax payments to display.'
-  />
-)
-
-const getQuarterLabel = (quarter: number): string => {
-  return `Q${quarter}`
 }
 
 type TaxPaymentRowType = Row<TaxPaymentQuarterWithId>
@@ -87,27 +59,16 @@ const columnConfig: NestedColumnConfig<TaxPaymentQuarterWithId> = [
   },
 ]
 
-export const TaxPaymentsTable = () => {
-  const { year } = useTaxEstimatesYear()
-  const { data, isLoading, isError } = useTaxPayments({ year })
-
-  const dataWithIds = useMemo(
-    () => data?.quarters.map(q => ({ ...q, id: `Q${q.quarter}` })),
-    [data?.quarters],
-  )
-
+export const TaxPaymentsTable = ({ data, isLoading, isError, slots }: CommonTaxPaymentsListProps) => {
   return (
     <SimpleDataTable<TaxPaymentQuarterWithId>
       componentName={COMPONENT_NAME}
       ariaLabel='Tax payments'
       columnConfig={columnConfig}
-      data={dataWithIds}
+      data={data}
       isLoading={isLoading}
       isError={isError}
-      slots={{
-        EmptyState,
-        ErrorState,
-      }}
+      slots={slots}
     />
   )
 }
