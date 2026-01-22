@@ -22,6 +22,13 @@
   }
 }
 
+.Layer__ModalOverlay[data-variant='mobile-drawer'] .Layer__ModalTitleWithClose__Wrapper {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  background-color: inherit;
+}
+
 .Layer__ModalTitleWithClose > .Layer__UI__Button {
   margin: 0 0 auto;
 }

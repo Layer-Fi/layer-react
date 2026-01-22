@@ -50,7 +50,7 @@ export const ModalTitleWithClose = forwardRef<
   ModalTitleWithCloseProps
 >(function ModalTitleWithClose({ heading, description, onClose, hideCloseButton = false }, ref) {
   return (
-    <VStack>
+    <VStack className='Layer__ModalTitleWithClose__Wrapper'>
       <div
         className='Layer__ModalTitleWithClose'
         ref={ref}

@@ -140,18 +140,34 @@ export function Drawer({
   isDismissable = false,
   role,
 }: DrawerProps) {
+  const overlayRef = useRef<HTMLElementTagNameMap['div']>(null)
   const dialogRef = useRef<HTMLElement>(null)
+  const layoutViewportHeightRef = useRef<number | null>(null)
+  const layoutViewportWidthRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (!isOpen || variant !== 'mobile-drawer' || typeof window === 'undefined') return
-    const root = document.documentElement
+    const overlayElement = overlayRef.current
+    if (!overlayElement) return
+    layoutViewportHeightRef.current = window.innerHeight
+    layoutViewportWidthRef.current = window.innerWidth
     const updateViewportMetrics = () => {
       const visualViewport = window.visualViewport
       const height = visualViewport?.height ?? window.innerHeight
       const offsetTop = visualViewport?.offsetTop ?? 0
-      const offsetBottom = Math.max(0, window.innerHeight - height - offsetTop)
-      root.style.setProperty('--visual-viewport-height', `${height}px`)
-      root.style.setProperty('--visual-viewport-offset-bottom', `${offsetBottom}px`)
+      const currentInnerHeight = window.innerHeight
+      const currentInnerWidth = window.innerWidth
+      if (layoutViewportWidthRef.current !== currentInnerWidth) {
+        layoutViewportWidthRef.current = currentInnerWidth
+        layoutViewportHeightRef.current = currentInnerHeight
+      }
+      else {
+        layoutViewportHeightRef.current = Math.max(layoutViewportHeightRef.current ?? 0, currentInnerHeight)
+      }
+      const layoutViewportHeight = layoutViewportHeightRef.current ?? currentInnerHeight
+      const offsetBottom = Math.max(0, layoutViewportHeight - height - offsetTop)
+      overlayElement.style.setProperty('--visual-viewport-height', `${height}px`)
+      overlayElement.style.setProperty('--visual-viewport-offset-bottom', `${offsetBottom}px`)
       const activeElement = document.activeElement
       if (
         activeElement instanceof HTMLElement &&
@@ -170,6 +186,10 @@ export function Drawer({
       visualViewport?.removeEventListener('resize', updateViewportMetrics)
       visualViewport?.removeEventListener('scroll', updateViewportMetrics)
       window.removeEventListener('resize', updateViewportMetrics)
+      overlayElement.style.removeProperty('--visual-viewport-height')
+      overlayElement.style.removeProperty('--visual-viewport-offset-bottom')
+      layoutViewportHeightRef.current = null
+      layoutViewportWidthRef.current = null
     }
   }, [isOpen, variant])
 
@@ -195,7 +215,13 @@ export function Drawer({
   }, [isOpen, variant])
 
   return (
-    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
+    <ModalOverlay
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      variant={variant}
+      isDismissable={isDismissable}
+      ref={overlayRef}
+    >
       <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
         <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant} ref={dialogRef}>
           {children}

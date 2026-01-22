@@ -53,12 +53,13 @@
 
   &[data-variant='mobile-drawer'] {
     position: fixed;
-    bottom: var(--visual-viewport-offset-bottom, 0);
+    bottom: 0;
 
     overflow: hidden;
-    block-size: min(80%, var(--visual-viewport-height, 100%));
-    max-block-size: var(--visual-viewport-height, 100%);
+    block-size: calc(min(80%, var(--visual-viewport-height, 100%)) + var(--visual-viewport-offset-bottom, 0px));
+    max-block-size: calc(var(--visual-viewport-height, 100%) + var(--visual-viewport-offset-bottom, 0px));
     inline-size: 100%;
+    padding-bottom: var(--visual-viewport-offset-bottom, 0);
 
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
 
