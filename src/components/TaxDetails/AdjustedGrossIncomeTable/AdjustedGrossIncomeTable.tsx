@@ -1,10 +1,6 @@
 import { type AdjustedGrossIncome, type Deductions } from '@schemas/taxEstimates/details'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
-import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
-import { MoneySpan } from '@ui/Typography/MoneySpan'
-import { Span } from '@ui/Typography/Text'
-
-import './adjustedGrossIncomeTable.scss'
+import { Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
+import { TaxTableRow, TaxTableRowVariant } from '@components/TaxDetails/TaxTable/TaxTable'
 
 type DeductionRowConfig = {
   key: string
@@ -27,43 +23,23 @@ type AdjustedGrossIncomeTableProps = {
 
 export const AdjustedGrossIncomeTable = ({ data }: AdjustedGrossIncomeTableProps) => {
   const { income, deductions, totalAdjustedGrossIncome } = data
-  const { isMobile } = useSizeClass()
-
-  const NestedRowStyle = isMobile ? 'Layer__UI__Table-Row--mobile' : 'Layer__AdjustedGrossIncomeTable__DeductionsRow'
-  const RowStyle = isMobile ? 'Layer__UI__Table-Row--mobile' : 'Layer__UI__Table-Row'
-  const TotalRowStyle = isMobile ? 'Layer__UI__Table-Row--mobile' : 'Layer__AdjustedGrossIncomeTable__TotalRow'
 
   return (
-    <Table className='Layer__AdjustedGrossIncomeTable' aria-label='Adjusted Gross Income'>
-      <TableHeader className='Layer__AdjustedGrossIncomeTable__Header'>
+    <Table className='Layer__TaxTable' aria-label='Adjusted Gross Income'>
+      <TableHeader className='Layer__TaxTable__Header'>
         <Row>
           <Column isRowHeader>Description</Column>
           <Column>Amount</Column>
         </Row>
       </TableHeader>
       <TableBody>
-        <Row className={RowStyle}>
-          <Cell><Span>Business Income</Span></Cell>
-          <Cell><MoneySpan amount={income.businessRevenue} /></Cell>
-        </Row>
-        <Row className={RowStyle}>
-          <Cell><Span>W-2 Income</Span></Cell>
-          <Cell><MoneySpan amount={income.w2Income} /></Cell>
-        </Row>
-        <Row className={RowStyle}>
-          <Cell><Span>Deductions</Span></Cell>
-          <Cell><MoneySpan amount={-deductions.total} /></Cell>
-        </Row>
+        <TaxTableRow label='Business Income' value={income.businessRevenue} variant={TaxTableRowVariant.Standard} />
+        <TaxTableRow label='W-2 Income' value={income.w2Income} variant={TaxTableRowVariant.Standard} />
+        <TaxTableRow label='Deductions' value={-deductions.total} variant={TaxTableRowVariant.Standard} />
         {deductionRows.map(({ key, label, getAmount }) => (
-          <Row key={key} className={NestedRowStyle}>
-            <Cell><Span>{`- ${label}`}</Span></Cell>
-            <Cell><MoneySpan amount={-getAmount(deductions)} /></Cell>
-          </Row>
+          <TaxTableRow key={key} label={`- ${label}`} value={-getAmount(deductions)} variant={TaxTableRowVariant.Nested} />
         ))}
-        <Row className={TotalRowStyle}>
-          <Cell><Span weight='bold'>Adjusted Gross Income</Span></Cell>
-          <Cell><MoneySpan weight='bold' amount={totalAdjustedGrossIncome} /></Cell>
-        </Row>
+        <TaxTableRow label='Adjusted Gross Income' value={totalAdjustedGrossIncome} variant={TaxTableRowVariant.Total} />
       </TableBody>
     </Table>
   )

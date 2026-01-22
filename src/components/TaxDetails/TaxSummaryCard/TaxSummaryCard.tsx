@@ -1,6 +1,7 @@
 import type { TaxSummary, TaxSummarySection } from '@schemas/taxEstimates/summary'
 import { formatDate } from '@utils/format'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -12,26 +13,58 @@ type TaxSummarySectionRowProps = {
   section: TaxSummarySection
 }
 
-const TaxSummarySectionRow = ({ section }: TaxSummarySectionRowProps) => {
-  const { isMobile } = useSizeClass()
-
+const TaxSummarySectionRowMobile = ({ section }: TaxSummarySectionRowProps) => {
   return (
     <VStack className='Layer__TaxSummaryCard__Section' gap='3xs'>
-      <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>{section.label}</Span>
-      <HStack gap={isMobile ? 'sm' : 'md'} justify={isMobile ? 'space-between' : 'start'}>
-        <MoneySpan size={isMobile ? 'lg' : 'xl'} weight='bold' amount={section.taxesOwed} />
-        <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>=</Span>
+      <Span size='sm' variant='subtle'>{section.label}</Span>
+      <HStack gap='sm' justify='space-between'>
+        <MoneySpan size='lg' weight='bold' amount={section.taxesOwed} />
+        <Span size='sm' variant='subtle'>=</Span>
         <VStack gap='3xs' align='center'>
-          <MoneySpan size={isMobile ? 'md' : 'lg'} amount={section.total} />
-          <Span size={isMobile ? 'xs' : 'sm'} variant='subtle'>Taxes Owed</Span>
+          <MoneySpan size='md' amount={section.total} />
+          <Span size='xs' variant='subtle'>Taxes Owed</Span>
         </VStack>
-        <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>-</Span>
+        <Span size='sm' variant='subtle'>-</Span>
         <VStack gap='3xs' align='center'>
-          <MoneySpan size={isMobile ? 'md' : 'lg'} amount={section.taxesPaid} />
-          <Span size={isMobile ? 'xs' : 'sm'} variant='subtle'>Taxes Paid</Span>
+          <MoneySpan size='md' amount={section.taxesPaid} />
+          <Span size='xs' variant='subtle'>Taxes Paid</Span>
         </VStack>
       </HStack>
     </VStack>
+  )
+}
+
+const TaxSummarySectionRowDesktop = ({ section }: TaxSummarySectionRowProps) => {
+  return (
+    <VStack className='Layer__TaxSummaryCard__Section' gap='3xs'>
+      <Span size='md' variant='subtle'>{section.label}</Span>
+      <HStack gap='md' justify='start'>
+        <MoneySpan size='xl' weight='bold' amount={section.taxesOwed} />
+        <Span size='md' variant='subtle'>=</Span>
+        <VStack gap='3xs' align='center'>
+          <MoneySpan size='lg' amount={section.total} />
+          <Span size='sm' variant='subtle'>Taxes Owed</Span>
+        </VStack>
+        <Span size='md' variant='subtle'>-</Span>
+        <VStack gap='3xs' align='center'>
+          <MoneySpan size='lg' amount={section.taxesPaid} />
+          <Span size='sm' variant='subtle'>Taxes Paid</Span>
+        </VStack>
+      </HStack>
+    </VStack>
+  )
+}
+
+const TaxSummarySectionRow = ({ section }: TaxSummarySectionRowProps) => {
+  const { isDesktop } = useSizeClass()
+  return (
+    <ResponsiveComponent
+      slots={{
+        Desktop: <TaxSummarySectionRowDesktop section={section} />,
+        Mobile: <TaxSummarySectionRowMobile section={section} />,
+      }}
+      resolveVariant={() => (isDesktop ? 'Desktop' : 'Mobile')}
+    />
   )
 }
 
