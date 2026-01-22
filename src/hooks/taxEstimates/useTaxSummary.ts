@@ -94,10 +94,10 @@ export function useTaxSummary({ year, reportingBasis, fullYearProjection }: UseT
       reportingBasis,
       fullYearProjection,
     }),
-    async ({ year }) => {
+    async ({ accessToken, apiUrl, businessId, year, reportingBasis, fullYearProjection }) => {
       return getTaxSummary(
-        auth!.apiUrl,
-        auth!.access_token,
+        apiUrl,
+        accessToken,
         {
           params: {
             businessId,
