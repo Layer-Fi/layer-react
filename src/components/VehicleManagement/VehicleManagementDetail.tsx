@@ -2,14 +2,12 @@ import { useCallback, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
-import { BREAKPOINTS } from '@config/general'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
 import { Heading } from '@ui/Typography/Heading'
@@ -31,7 +29,7 @@ const MobileVehicleManagementDetailHeader = ({
   onAddVehicle,
 }: VehicleManagementDetailHeaderProps) => {
   return (
-    <HStack justify='space-between' align='center' fluid pie='md'>
+    <HStack justify='space-between' align='center' fluid pie='md' className='Layer__VehicleManagementDetail__Header'>
       <Heading size='sm'>Manage vehicles</Heading>
       <Button variant='solid' onPress={onAddVehicle}>
         Add Vehicle
@@ -47,7 +45,7 @@ const DesktopVehicleManagementDetailHeader = ({
   onShowArchivedChange,
 }: VehicleManagementDetailHeaderProps) => {
   return (
-    <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
+    <HStack justify='space-between' align='center' fluid pie='md' gap='3xl' className='Layer__VehicleManagementDetail__Header'>
       <Heading size='sm'>Manage vehicles</Heading>
       <HStack gap='md' align='center'>
         <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
@@ -86,13 +84,9 @@ export const VehicleManagementDetail = () => {
     setSelectedVehicle(undefined)
   }, [])
 
-  const resolveVariant = ({ width }: { width: number }): DefaultVariant => (
-    width <= BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
-  )
-
   // Use a ref to store the latest state values for the Header component
-  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, resolveVariant })
-  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, resolveVariant }
+  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, isMobileVariant })
+  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, isMobileVariant }
 
   // Header component is stable and reads from ref
   const HeaderRef = useRef(() => {
@@ -100,65 +94,29 @@ export const VehicleManagementDetail = () => {
       showArchived: currentShowArchived,
       setShowArchived: currentSetShowArchived,
       handleAddVehicle: currentHandleAddVehicle,
-      resolveVariant: currentResolveVariant,
+      isMobileVariant: currentIsMobileVariant,
     } = stateRef.current
 
-    const DesktopHeader = (
+    if (currentIsMobileVariant) {
+      return (
+        <MobileVehicleManagementDetailHeader
+          onAddVehicle={currentHandleAddVehicle}
+          showArchived={currentShowArchived}
+          onShowArchivedChange={currentSetShowArchived}
+        />
+      )
+    }
+
+    return (
       <DesktopVehicleManagementDetailHeader
         onAddVehicle={currentHandleAddVehicle}
         showArchived={currentShowArchived}
         onShowArchivedChange={currentSetShowArchived}
       />
     )
-
-    const MobileHeader = (
-      <MobileVehicleManagementDetailHeader
-        onAddVehicle={currentHandleAddVehicle}
-        showArchived={currentShowArchived}
-        onShowArchivedChange={currentSetShowArchived}
-      />
-    )
-
-    return (
-      <ResponsiveComponent
-        resolveVariant={currentResolveVariant}
-        slots={{ Desktop: DesktopHeader, Mobile: MobileHeader }}
-        className='Layer__VehicleManagementDetail__Header'
-      />
-    )
-  })
-
-  const ArchivedToggleRef = useRef(() => {
-    const {
-      showArchived: currentShowArchived,
-      setShowArchived: currentSetShowArchived,
-      resolveVariant: currentResolveVariant,
-    } = stateRef.current
-
-    const MobileToggle = (
-      <HStack
-        justify='end'
-        align='center'
-        fluid
-        pie='md'
-        pbs='md'
-      >
-        <Switch isSelected={currentShowArchived} onChange={currentSetShowArchived}>
-          <Span size='sm' noWrap>Show archived</Span>
-        </Switch>
-      </HStack>
-    )
-
-    return (
-      <ResponsiveComponent
-        resolveVariant={currentResolveVariant}
-        slots={{ Desktop: null, Mobile: MobileToggle }}
-      />
-    )
   })
 
   const Header = HeaderRef.current
-  const ArchivedToggle = ArchivedToggleRef.current
 
   return (
     <>
@@ -167,7 +125,21 @@ export const VehicleManagementDetail = () => {
         name='VehicleManagementDetail'
         onGoBack={toTripsTable}
       >
-        <ArchivedToggle />
+        {isMobileVariant && (
+          <>
+            <HStack
+              justify='end'
+              align='center'
+              fluid
+              pie='md'
+              pbs='md'
+            >
+              <Switch isSelected={showArchived} onChange={setShowArchived}>
+                <Span size='sm' noWrap>Show archived</Span>
+              </Switch>
+            </HStack>
+          </>
+        )}
         <VehicleManagementGrid onEditVehicle={handleEditVehicle} showArchived={showArchived} />
       </BaseDetailView>
       <Drawer
