@@ -56,11 +56,18 @@ export const TaxDetails = () => {
     <BaseDetailView name='TaxDetails' slots={{ Header: TaxDetailsHeader }}>
       <ConditionalBlock
         isLoading={isSummaryLoading}
-        isError={false}
+        isError={isError}
         data={summaryData}
         Loading={<Loader />}
         Inactive={null}
-        Error={null}
+        Error={(
+          <DataState
+            status={DataStateStatus.failed}
+            title="We couldn't load your tax summary"
+            description='An error occurred while loading your tax summary. Please check your connection and try again.'
+            spacing
+          />
+        )}
       >
         {({ data: summary }) => <TaxSummaryCard data={summary} />}
       </ConditionalBlock>
