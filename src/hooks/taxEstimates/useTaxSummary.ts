@@ -13,30 +13,6 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 const TAX_SUMMARY_TAG_KEY = '#tax-summary'
 type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
 
-// TODO: Remove mock data when backend endpoint is ready
-const USE_MOCK_DATA = true
-
-const createMockTaxSummary = (year: number): TaxSummary => ({
-  type: 'Tax_Summary',
-  year,
-  projectedTaxesOwed: 1500000,
-  taxesDueAt: new Date(`${year + 1}-04-15`),
-  sections: [
-    {
-      label: 'Federal Income & Self-Employment Tax',
-      total: 1200000,
-      taxesPaid: 500000,
-      taxesOwed: 700000,
-    },
-    {
-      label: 'State Income Tax',
-      total: 500000,
-      taxesPaid: 200000,
-      taxesOwed: 300000,
-    },
-  ],
-})
-
 type UseTaxSummaryOptions = {
   year: number
   reportingBasis?: TaxReportingBasis
@@ -119,11 +95,6 @@ export function useTaxSummary({ year, reportingBasis, fullYearProjection }: UseT
       fullYearProjection,
     }),
     async ({ year }) => {
-      // TODO: Remove mock data when backend endpoint is ready
-      if (USE_MOCK_DATA) {
-        return createMockTaxSummary(year)
-      }
-
       return getTaxSummary(
         auth!.apiUrl,
         auth!.access_token,
