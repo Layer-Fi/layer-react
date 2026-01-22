@@ -125,8 +125,8 @@ export function useTaxSummary({ year, reportingBasis, fullYearProjection }: UseT
       }
 
       return getTaxSummary(
-        auth!.apiUrl!,
-        auth!.access_token!,
+        auth!.apiUrl,
+        auth!.access_token,
         {
           params: {
             businessId,
