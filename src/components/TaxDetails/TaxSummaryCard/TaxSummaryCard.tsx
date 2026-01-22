@@ -13,12 +13,12 @@ type TaxSummarySectionRowProps = {
 }
 
 const TaxSummarySectionRow = ({ section }: TaxSummarySectionRowProps) => {
-  const { isDesktop, isMobile } = useSizeClass()
+  const { isMobile } = useSizeClass()
 
   return (
     <VStack className='Layer__TaxSummaryCard__Section' gap='3xs'>
       <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>{section.label}</Span>
-      <HStack gap='sm' justify={isDesktop ? 'space-between' : 'center'}>
+      <HStack gap={isMobile ? 'sm' : 'md'} justify={isMobile ? 'space-between' : 'start'}>
         <MoneySpan size={isMobile ? 'lg' : 'xl'} weight='bold' amount={section.taxesOwed} />
         <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>=</Span>
         <VStack gap='3xs' align='center'>
@@ -47,9 +47,11 @@ export const TaxSummaryCard = ({ data }: TaxSummaryCardProps) => {
     <Card className='Layer__TaxSummaryCard'>
       <Stack className='Layer__TaxSummaryCard__Content'>
         <VStack className='Layer__TaxSummaryCard__Overview' gap='xs' justify='center' align='center'>
-          <Span size='md' variant='subtle'>Projected Taxes Owed</Span>
-          <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
-          <VStack gap='3xs' align='center'>
+          <VStack justify='center' align='center'>
+            <Span size='md' variant='subtle'>Projected Taxes Owed</Span>
+            <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
+          </VStack>
+          <VStack align='center'>
             <Span size='sm' variant='subtle'>Taxes Due</Span>
             <Span size='md'>{formatDate(data.taxesDueAt)}</Span>
           </VStack>
