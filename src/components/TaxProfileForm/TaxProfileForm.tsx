@@ -4,6 +4,7 @@ import type React from 'react'
 
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import { flattenValidationErrors } from '@utils/form'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
@@ -24,6 +25,7 @@ type TaxProfileFormProps = {
 
 export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfileFormProps) => {
   const { form, submitError, submitSuccess } = useTaxProfileForm({ taxProfile, onSuccess })
+  const { isDesktop } = useSizeClass()
 
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -33,9 +35,9 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
   return (
     <Form className='Layer__TaxProfileForm' onSubmit={blockNativeOnSubmit}>
       <VStack className='Layer__TaxProfileForm__Content' gap='lg' pi='md' pb='md'>
-        <FederalTaxSection form={form} isReadOnly={isReadOnly} />
-        <StateTaxSection form={form} isReadOnly={isReadOnly} />
-        <DeductionsSection form={form} isReadOnly={isReadOnly} />
+        <FederalTaxSection form={form} isReadOnly={isReadOnly} isDesktop={isDesktop} />
+        <StateTaxSection form={form} isReadOnly={isReadOnly} isDesktop={isDesktop} />
+        <DeductionsSection form={form} isReadOnly={isReadOnly} isDesktop={isDesktop} />
 
         <HStack align='center'>
           <form.Subscribe selector={state => ({ errorMap: state.errorMap, isDirty: state.isDirty })}>

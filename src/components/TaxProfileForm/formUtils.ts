@@ -3,6 +3,20 @@ import { BigDecimal as BD } from 'effect'
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import { BIG_DECIMAL_ZERO, convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 import type { TaxProfileForm } from '@components/TaxProfileForm/taxProfileFormSchema'
+import type { AppForm } from '@features/forms/hooks/useForm'
+
+export type TaxProfileFormSectionProps = {
+  form: AppForm<TaxProfileForm>
+  isReadOnly?: boolean
+  isDesktop: boolean
+}
+
+export const getFormFieldProps = (isDesktop: boolean) => isDesktop
+  ? {
+    className: 'Layer__TaxProfileForm__Field--desktop',
+    inline: true,
+  }
+  : {}
 
 const centsToBigDecimalOrZero = (value: number | null | undefined): BD.BigDecimal => {
   if (value == null) return BIG_DECIMAL_ZERO
