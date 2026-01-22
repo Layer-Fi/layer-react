@@ -10,6 +10,7 @@ import { FederalTaxTable } from '@components/TaxDetails/FederalTaxTable/FederalT
 import { StateTaxTable } from '@components/TaxDetails/StateTaxTable/StateTaxTable'
 import { TaxSummaryCard } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCard'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
+
 import { CardHeading } from './CardHeading'
 import { TaxDetailsHeader } from './TaxDetailsHeader'
 

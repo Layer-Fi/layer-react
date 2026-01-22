@@ -13,7 +13,7 @@ export const TaxDetails = () => {
   const { year } = useTaxEstimatesYear()
   const { data, isLoading, isError } = useTaxDetails({ year })
   const { data: summaryData, isLoading: isSummaryLoading } = useTaxSummary({ year })
-  const { isDesktop } = useSizeClass()
+  const { isMobile } = useSizeClass()
 
   const contentProps: TaxDetailsContentProps = {
     summaryData,
@@ -29,7 +29,7 @@ export const TaxDetails = () => {
         Desktop: <TaxDetailsDesktop {...contentProps} />,
         Mobile: <TaxDetailsMobile {...contentProps} />,
       }}
-      resolveVariant={() => (isDesktop ? 'Desktop' : 'Mobile')}
+      resolveVariant={() => (isMobile ? 'Mobile' : 'Desktop')}
     />
   )
 }
