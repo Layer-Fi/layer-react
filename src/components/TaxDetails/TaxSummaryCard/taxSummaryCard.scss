@@ -1,0 +1,33 @@
+.Layer__TaxSummaryCard {
+  margin-block-end: var(--spacing-md);
+
+  &__Content {
+    width: 100%;
+  }
+
+  &__Overview {
+    min-width: 200px;
+    padding: var(--spacing-lg);
+    border-inline-end: 1px solid var(--color-base-200);
+  }
+
+  &__Breakdown {
+    flex: 1;
+    padding: var(--spacing-lg);
+  }
+
+  &__Section {
+    padding-block-end: var(--spacing-md);
+    border-block-end: 1px solid var(--color-base-100);
+
+    &:last-child {
+      padding-block-end: 0;
+      border-block-end: none;
+    }
+  }
+}
+
+.Layer__TaxDetails__CardHeading > .Layer__Span.Layer__MoneySpan {
+  height: fit-content;
+  margin-block: auto;
+}

@@ -12,6 +12,14 @@
       minmax(15rem, 60%)
       minmax(10rem, 40%);
 
+    &--mobile {
+      grid-template-columns:
+        minmax(6rem, 60%)
+        minmax(4rem, 40%);
+
+      height: auto;
+    }
+
     &.Layer__StateTaxTable_NestedRow {
       background-color: var(--color-base-50);
 

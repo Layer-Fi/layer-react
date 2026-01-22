@@ -1,4 +1,5 @@
 import { type AdjustedGrossIncome, type Deductions } from '@schemas/taxEstimates/details'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -26,6 +27,11 @@ type AdjustedGrossIncomeTableProps = {
 
 export const AdjustedGrossIncomeTable = ({ data }: AdjustedGrossIncomeTableProps) => {
   const { income, deductions, totalAdjustedGrossIncome } = data
+  const { isMobile } = useSizeClass()
+
+  const NestedRowStyle = isMobile ? 'Layer__UI__Table-Row--mobile' : 'Layer__AdjustedGrossIncomeTable__DeductionsRow'
+  const RowStyle = isMobile ? 'Layer__UI__Table-Row--mobile' : 'Layer__UI__Table-Row'
+  const TotalRowStyle = isMobile ? 'Layer__UI__Table-Row--mobile' : 'Layer__AdjustedGrossIncomeTable__TotalRow'
 
   return (
     <Table className='Layer__AdjustedGrossIncomeTable' aria-label='Adjusted Gross Income'>
@@ -36,25 +42,25 @@ export const AdjustedGrossIncomeTable = ({ data }: AdjustedGrossIncomeTableProps
         </Row>
       </TableHeader>
       <TableBody>
-        <Row>
+        <Row className={RowStyle}>
           <Cell><Span>Business Income</Span></Cell>
           <Cell><MoneySpan amount={income.businessRevenue} /></Cell>
         </Row>
-        <Row>
+        <Row className={RowStyle}>
           <Cell><Span>W-2 Income</Span></Cell>
           <Cell><MoneySpan amount={income.w2Income} /></Cell>
         </Row>
-        <Row>
+        <Row className={RowStyle}>
           <Cell><Span>Deductions</Span></Cell>
           <Cell><MoneySpan amount={-deductions.total} /></Cell>
         </Row>
         {deductionRows.map(({ key, label, getAmount }) => (
-          <Row key={key} className='Layer__AdjustedGrossIncomeTable__DeductionsRow'>
+          <Row key={key} className={NestedRowStyle}>
             <Cell><Span>{`- ${label}`}</Span></Cell>
             <Cell><MoneySpan amount={-getAmount(deductions)} /></Cell>
           </Row>
         ))}
-        <Row className='Layer__AdjustedGrossIncomeTable__TotalRow'>
+        <Row className={TotalRowStyle}>
           <Cell><Span weight='bold'>Adjusted Gross Income</Span></Cell>
           <Cell><MoneySpan weight='bold' amount={totalAdjustedGrossIncome} /></Cell>
         </Row>
