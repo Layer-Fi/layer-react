@@ -16,7 +16,7 @@
   font-size: var(--text-sm);
   text-align: justify;
   color: var(--color-base-300);
-  word-break: break-all;
+  overflow-wrap: break-word;
   white-space: normal;
 }
 
