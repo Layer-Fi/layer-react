@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { BREAKPOINTS } from '@config/general'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
@@ -85,7 +86,9 @@ export const VehicleManagementDetail = () => {
     setSelectedVehicle(undefined)
   }, [])
 
-  const resolveVariant = (): DefaultVariant => isMobileVariant ? 'Mobile' : 'Desktop'
+  const resolveVariant = ({ width }: { width: number }): DefaultVariant => (
+    width <= BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
+  )
 
   // Use a ref to store the latest state values for the Header component
   const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, resolveVariant })
@@ -125,7 +128,37 @@ export const VehicleManagementDetail = () => {
     )
   })
 
+  const ArchivedToggleRef = useRef(() => {
+    const {
+      showArchived: currentShowArchived,
+      setShowArchived: currentSetShowArchived,
+      resolveVariant: currentResolveVariant,
+    } = stateRef.current
+
+    const MobileToggle = (
+      <HStack
+        justify='end'
+        align='center'
+        fluid
+        pie='md'
+        pbs='md'
+      >
+        <Switch isSelected={currentShowArchived} onChange={currentSetShowArchived}>
+          <Span size='sm' noWrap>Show archived</Span>
+        </Switch>
+      </HStack>
+    )
+
+    return (
+      <ResponsiveComponent
+        resolveVariant={currentResolveVariant}
+        slots={{ Desktop: null, Mobile: MobileToggle }}
+      />
+    )
+  })
+
   const Header = HeaderRef.current
+  const ArchivedToggle = ArchivedToggleRef.current
 
   return (
     <>
@@ -134,21 +167,7 @@ export const VehicleManagementDetail = () => {
         name='VehicleManagementDetail'
         onGoBack={toTripsTable}
       >
-        {isMobileVariant && (
-          <>
-            <HStack
-              justify='end'
-              align='center'
-              fluid
-              pie='md'
-              pbs='md'
-            >
-              <Switch isSelected={showArchived} onChange={setShowArchived}>
-                <Span size='sm' noWrap>Show archived</Span>
-              </Switch>
-            </HStack>
-          </>
-        )}
+        <ArchivedToggle />
         <VehicleManagementGrid onEditVehicle={handleEditVehicle} showArchived={showArchived} />
       </BaseDetailView>
       <Drawer
