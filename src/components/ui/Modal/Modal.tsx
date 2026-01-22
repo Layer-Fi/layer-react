@@ -145,9 +145,13 @@ export function Drawer({
   useEffect(() => {
     if (!isOpen || variant !== 'mobile-drawer' || typeof window === 'undefined') return
     const root = document.documentElement
-    const updateViewportHeight = () => {
-      const height = window.visualViewport?.height ?? window.innerHeight
+    const updateViewportMetrics = () => {
+      const visualViewport = window.visualViewport
+      const height = visualViewport?.height ?? window.innerHeight
+      const offsetTop = visualViewport?.offsetTop ?? 0
+      const offsetBottom = Math.max(0, window.innerHeight - height - offsetTop)
       root.style.setProperty('--visual-viewport-height', `${height}px`)
+      root.style.setProperty('--visual-viewport-offset-bottom', `${offsetBottom}px`)
       const activeElement = document.activeElement
       if (
         activeElement instanceof HTMLElement &&
@@ -157,15 +161,15 @@ export function Drawer({
         activeElement.scrollIntoView({ block: 'center', inline: 'nearest' })
       }
     }
-    updateViewportHeight()
+    updateViewportMetrics()
     const visualViewport = window.visualViewport
-    visualViewport?.addEventListener('resize', updateViewportHeight)
-    visualViewport?.addEventListener('scroll', updateViewportHeight)
-    window.addEventListener('resize', updateViewportHeight)
+    visualViewport?.addEventListener('resize', updateViewportMetrics)
+    visualViewport?.addEventListener('scroll', updateViewportMetrics)
+    window.addEventListener('resize', updateViewportMetrics)
     return () => {
-      visualViewport?.removeEventListener('resize', updateViewportHeight)
-      visualViewport?.removeEventListener('scroll', updateViewportHeight)
-      window.removeEventListener('resize', updateViewportHeight)
+      visualViewport?.removeEventListener('resize', updateViewportMetrics)
+      visualViewport?.removeEventListener('scroll', updateViewportMetrics)
+      window.removeEventListener('resize', updateViewportMetrics)
     }
   }, [isOpen, variant])
 

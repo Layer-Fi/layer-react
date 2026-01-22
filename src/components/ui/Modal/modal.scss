@@ -53,7 +53,7 @@
 
   &[data-variant='mobile-drawer'] {
     position: fixed;
-    bottom: 0;
+    bottom: var(--visual-viewport-offset-bottom, 0);
 
     overflow: hidden;
     block-size: min(80%, var(--visual-viewport-height, 100%));
