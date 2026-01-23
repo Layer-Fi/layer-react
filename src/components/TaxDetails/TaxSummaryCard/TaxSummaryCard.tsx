@@ -1,10 +1,9 @@
 import type { TaxSummary } from '@schemas/taxEstimates/summary'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { TaxSummaryCardDesktop } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCardDesktop'
+import { TaxSummaryCardMobile } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCardMobile'
 
 import './taxSummaryCard.scss'
-
-import { TaxSummaryCardDesktop } from './TaxSummaryCardDesktop'
-import { TaxSummaryCardMobile } from './TaxSummaryCardMobile'
 
 type TaxSummaryCardProps = {
   data: TaxSummary

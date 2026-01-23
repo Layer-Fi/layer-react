@@ -12,15 +12,14 @@ import { Card } from '@components/Card/Card'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableCard } from '@components/ExpandableCard/ExpandableCard'
 import { Loader } from '@components/Loader/Loader'
+import { AdjustedGrossIncomeTable } from '@components/TaxDetails/AdjustedGrossIncomeTable/AdjustedGrossIncomeTable'
+import { CardHeading } from '@components/TaxDetails/CardHeading'
+import { FederalTaxTable } from '@components/TaxDetails/FederalTaxTable/FederalTaxTable'
+import { StateTaxTable } from '@components/TaxDetails/StateTaxTable/StateTaxTable'
+import { TaxSummaryCard } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCard'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxDetails.scss'
-
-import { AdjustedGrossIncomeTable } from './AdjustedGrossIncomeTable/AdjustedGrossIncomeTable'
-import { CardHeading } from './CardHeading'
-import { FederalTaxTable } from './FederalTaxTable/FederalTaxTable'
-import { StateTaxTable } from './StateTaxTable/StateTaxTable'
-import { TaxSummaryCard } from './TaxSummaryCard/TaxSummaryCard'
 
 type ExpandedState = {
   taxableIncome: boolean
