@@ -1,12 +1,20 @@
 import { useMemo } from 'react'
 
-import { BREAKPOINTS } from '@config/general'
 import { useTaxPayments } from '@hooks/taxEstimates/useTaxPayments'
+import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import { ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
+import { AdaptiveDetailHeader } from '@components/AdaptiveDetailView/AdaptiveDetailHeader'
+import { AdaptiveDetailView } from '@components/AdaptiveDetailView/AdaptiveDetailView'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { TaxPaymentsDesktopView } from '@components/TaxPayments/TaxPaymentsDesktopView'
-import { TaxPaymentsMobileView } from '@components/TaxPayments/TaxPaymentsMobileView'
+import { TaxPaymentsMobileList } from '@components/TaxPayments/TaxPaymentsMobileList/TaxPaymentsMobileList'
+import { TaxPaymentsTable } from '@components/TaxPayments/TaxPaymentsTable/TaxPaymentsTable'
+
+const TaxPaymentsHeader = () => (
+  <AdaptiveDetailHeader
+    title='Tax Payments'
+    description='Federal and state tax payments for the selected tax year'
+  />
+)
 
 const ErrorState = () => (
   <DataState
@@ -28,16 +36,10 @@ const EmptyState = () => (
   />
 )
 
-const resolveVariant = ({ width }: { width: number }) => {
-  if (width <= BREAKPOINTS.MOBILE) {
-    return 'Mobile'
-  }
-  return 'Desktop'
-}
-
 export const TaxPayments = () => {
   const { year } = useTaxEstimatesYear()
   const { data, isLoading, isError } = useTaxPayments({ year })
+  const { isDesktop } = useSizeClass()
 
   const dataWithIds = useMemo(
     () => data?.quarters.map(q => ({ ...q, id: `Q${q.quarter}` })),
@@ -55,9 +57,12 @@ export const TaxPayments = () => {
   }), [dataWithIds, isError, isLoading])
 
   return (
-    <ResponsiveComponent
-      resolveVariant={resolveVariant}
-      slots={{ Desktop: <TaxPaymentsDesktopView {...props} />, Mobile: <TaxPaymentsMobileView {...props} /> }}
-    />
+    <AdaptiveDetailView
+      name='TaxPayments'
+      Header={TaxPaymentsHeader}
+      mobileGap='xs'
+    >
+      {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
+    </AdaptiveDetailView>
   )
 }

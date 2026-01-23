@@ -1,20 +1,43 @@
 import { useCallback, useState } from 'react'
+import type { ReactNode } from 'react'
 
 import { useTaxDetails } from '@hooks/taxEstimates/useTaxDetails'
 import { useTaxSummary } from '@hooks/taxEstimates/useTaxSummary'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { VStack } from '@ui/Stack/Stack'
+import { AdaptiveDetailHeader } from '@components/AdaptiveDetailView/AdaptiveDetailHeader'
+import { AdaptiveDetailView } from '@components/AdaptiveDetailView/AdaptiveDetailView'
+import { Card } from '@components/Card/Card'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { ExpandableCard } from '@components/ExpandableCard/ExpandableCard'
+import { Loader } from '@components/Loader/Loader'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxDetails.scss'
 
-import { TaxDetailsDesktop } from './TaxDetailsDesktop'
-import { TaxDetailsMobile } from './TaxDetailsMobile'
+import { AdjustedGrossIncomeTable } from './AdjustedGrossIncomeTable/AdjustedGrossIncomeTable'
+import { CardHeading } from './CardHeading'
+import { FederalTaxTable } from './FederalTaxTable/FederalTaxTable'
+import { StateTaxTable } from './StateTaxTable/StateTaxTable'
+import { TaxSummaryCard } from './TaxSummaryCard/TaxSummaryCard'
 
-export type ExpandedState = {
+type ExpandedState = {
   taxableIncome: boolean
   federalTaxes: boolean
   stateTaxes: boolean
 }
+
+const TaxDetailsHeader = () => (
+  <AdaptiveDetailHeader
+    title='Estimated Business Income Taxes'
+    description='Calculated based on your categorized transactions and tracked mileage'
+  />
+)
+
+const ExpandableCardsCard = ({ children }: { children: ReactNode }) => (
+  <Card className='Layer__TaxDetails__ExpandableCardsWrapper'>{children}</Card>
+)
 
 export const TaxDetails = () => {
   const { year } = useTaxEstimatesYear()
@@ -32,19 +55,102 @@ export const TaxDetails = () => {
     setExpanded(prev => ({ ...prev, [key]: !prev[key] }))
   }, [])
 
-  const sharedProps = {
-    summaryData,
-    isSummaryLoading,
-    data,
-    isLoading,
-    isError,
-    expanded,
-    toggleExpanded,
-  }
+  const ExpandableCardsWrapper = isDesktop ? VStack : ExpandableCardsCard
 
-  if (isDesktop) {
-    return <TaxDetailsDesktop {...sharedProps} />
-  }
+  return (
+    <AdaptiveDetailView
+      name='TaxDetails'
+      Header={TaxDetailsHeader}
+      mobileClassName='Layer__TaxDetails--mobile'
+    >
+      <ConditionalBlock
+        isLoading={isSummaryLoading}
+        isError={isError}
+        data={summaryData}
+        Loading={<Loader />}
+        Inactive={null}
+        Error={(
+          <DataState
+            status={DataStateStatus.failed}
+            title="We couldn't load your tax summary"
+            description='An error occurred while loading your tax summary. Please check your connection and try again.'
+            spacing
+          />
+        )}
+      >
+        {({ data: summary }) => <TaxSummaryCard data={summary} />}
+      </ConditionalBlock>
+      <ConditionalBlock
+        isLoading={isLoading}
+        isError={isError}
+        data={data}
+        Loading={<Loader />}
+        Inactive={null}
+        Error={(
+          <DataState
+            status={DataStateStatus.failed}
+            title="We couldn't load your tax estimates"
+            description='An error occurred while loading your tax estimates. Please check your connection and try again.'
+            spacing
+          />
+        )}
+      >
+        {({ data: details }) => {
+          const usFederal = details.taxes.usFederal
+          const usState = details.taxes.usState
 
-  return <TaxDetailsMobile {...sharedProps} />
+          return (
+            <ExpandableCardsWrapper>
+              <ExpandableCard
+                isExpanded={expanded.taxableIncome}
+                onToggle={() => toggleExpanded('taxableIncome')}
+                slots={{
+                  Heading: (
+                    <CardHeading
+                      title='Taxable Business Income'
+                      amount={details.adjustedGrossIncome.totalAdjustedGrossIncome}
+                    />
+                  ),
+                }}
+              >
+                <AdjustedGrossIncomeTable data={details.adjustedGrossIncome} />
+              </ExpandableCard>
+              {usFederal && (
+                <ExpandableCard
+                  isExpanded={expanded.federalTaxes}
+                  onToggle={() => toggleExpanded('federalTaxes')}
+                  slots={{
+                    Heading: (
+                      <CardHeading
+                        title='Estimated Federal Taxes'
+                        amount={usFederal.totalFederalTax.totalFederalTaxOwed}
+                      />
+                    ),
+                  }}
+                >
+                  <FederalTaxTable data={usFederal} adjustedGrossIncome={details.adjustedGrossIncome.totalAdjustedGrossIncome} />
+                </ExpandableCard>
+              )}
+              {usState && (
+                <ExpandableCard
+                  isExpanded={expanded.stateTaxes}
+                  onToggle={() => toggleExpanded('stateTaxes')}
+                  slots={{
+                    Heading: (
+                      <CardHeading
+                        title={`Estimated State Taxes (${usState.stateName})`}
+                        amount={usState.totalStateTax.totalStateTaxOwed}
+                      />
+                    ),
+                  }}
+                >
+                  <StateTaxTable data={usState} />
+                </ExpandableCard>
+              )}
+            </ExpandableCardsWrapper>
+          )
+        }}
+      </ConditionalBlock>
+    </AdaptiveDetailView>
+  )
 }
