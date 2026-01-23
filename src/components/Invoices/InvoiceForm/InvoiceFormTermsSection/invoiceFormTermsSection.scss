@@ -1,0 +1,7 @@
+.Layer__InvoiceForm__Terms {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+
+  max-width: 64rem;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+}

@@ -1,0 +1,13 @@
+.Layer__InvoiceForm__TotalRow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+
+  height: 2.5rem;
+
+  &--withField {
+    grid-template-columns:
+      minmax(7.5rem, 1fr)
+      7.5rem
+      minmax(6rem, 0.8fr);
+  }
+}

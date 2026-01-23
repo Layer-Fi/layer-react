@@ -1,31 +1,18 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { HandCoins, Save, Send } from 'lucide-react'
+import { useCallback, useRef, useState } from 'react'
 
-import type { Awaitable } from '@internal-types/utility/promises'
-import { convertCentsToCurrency } from '@utils/format'
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { useInvoicesContext } from '@contexts/InvoicesContext/InvoicesContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import BackArrow from '@icons/BackArrow'
 import X from '@icons/X'
-import { Button } from '@ui/Button/Button'
-import { Drawer } from '@ui/Modal/Modal'
-import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { Heading } from '@ui/Typography/Heading'
-import { Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
-import { DataPoint } from '@components/DataPoint/DataPoint'
-import { InvoiceDetailHeaderMenu } from '@components/Invoices/InvoiceDetail/InvoiceDetailHeaderMenu'
+import { DiscardInvoiceChangesModal } from '@components/Invoices/InvoiceDetail/DiscardInvoiceChangesModal'
+import { InvoiceDetailHeader } from '@components/Invoices/InvoiceDetail/InvoiceDetailHeader'
+import { InvoiceDetailSubHeader } from '@components/Invoices/InvoiceDetail/InvoiceDetailSubHeader'
+import { InvoicePaymentDrawer } from '@components/Invoices/InvoiceDetail/InvoicePaymentDrawer'
 import type { InvoiceFormState } from '@components/Invoices/InvoiceForm/formUtils'
 import { InvoiceForm } from '@components/Invoices/InvoiceForm/InvoiceForm'
-import { InvoicePaymentForm } from '@components/Invoices/InvoicePaymentForm/InvoicePaymentForm'
-import { InvoiceStatusCell } from '@components/Invoices/InvoiceStatusCell/InvoiceStatusCell'
-import { updateInvoiceWithPayment, UpsertDedicatedInvoicePaymentMode } from '@features/invoices/api/useUpsertDedicatedInvoicePayment'
 import { UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
-import { type InvoicePayment } from '@features/invoices/invoicePaymentSchemas'
-import { type Invoice, InvoiceStatus } from '@features/invoices/invoiceSchemas'
+import { type Invoice } from '@features/invoices/invoiceSchemas'
 
 import './invoiceDetail.scss'
 
@@ -48,13 +35,6 @@ export const InvoiceDetail = () => {
     toViewInvoice(invoice)
     setIsReadOnly(true)
   }, [viewState.mode, addToast, toViewInvoice])
-
-  const onUpsertInvoicePaymentSuccess = useCallback((invoice: Invoice, invoicePayment: InvoicePayment) => {
-    addToast({ content: 'Invoice paid successfully', type: 'success' })
-    const updatedInvoice = updateInvoiceWithPayment(invoice, invoicePayment)
-
-    toViewInvoice(updatedInvoice)
-  }, [addToast, toViewInvoice])
 
   const onSubmit = useCallback(({ submitAction }: { submitAction: 'send' | null }) => formRef.current?.submit({ submitAction }), [])
   const [formState, setFormState] = useState<InvoiceFormState>({
@@ -99,150 +79,18 @@ export const InvoiceDetail = () => {
           ref={formRef}
         />
       </BaseDetailView>
-      <BaseConfirmationModal
+      <DiscardInvoiceChangesModal
         isOpen={isDiscardChangesModalOpen}
         onOpenChange={setIsDiscardChangesModalOpen}
-        title='Discard changes to this invoice?'
-        description='Any unsaved changes will be lost.'
         onConfirm={toInvoiceTable}
-        confirmLabel='Discard changes'
-        cancelLabel='Keep editing'
       />
       {viewState.mode === UpsertInvoiceMode.Update && (
-        <Drawer isOpen={isPaymentDrawerOpen} onOpenChange={setIsPaymentDrawerOpen}>
-          {({ close }) => (
-            <VStack pb='lg' gap='lg'>
-              <VStack pi='md'>
-                <ModalTitleWithClose
-                  heading={(
-                    <ModalHeading size='md'>
-                      Record invoice payment
-                    </ModalHeading>
-                  )}
-                  onClose={close}
-                />
-              </VStack>
-              <InvoicePaymentForm
-                onSuccess={(invoicePayment: InvoicePayment) => {
-                  onUpsertInvoicePaymentSuccess(viewState.invoice, invoicePayment)
-                  close()
-                }}
-                mode={UpsertDedicatedInvoicePaymentMode.Create}
-                invoice={viewState.invoice}
-              />
-            </VStack>
-          )}
-        </Drawer>
+        <InvoicePaymentDrawer
+          isOpen={isPaymentDrawerOpen}
+          onOpenChange={setIsPaymentDrawerOpen}
+          invoice={viewState.invoice}
+        />
       )}
     </>
-  )
-}
-
-type InvoiceDetailHeaderProps = {
-  onSubmit: ({ submitAction }: { submitAction: 'send' | null }) => Awaitable<void>
-  isReadOnly: boolean
-  formState: InvoiceFormState
-  setIsReadOnly: (isReadOnly: boolean) => void
-  openInvoicePaymentDrawer: () => void
-}
-const InvoiceDetailHeader = ({ onSubmit, formState, isReadOnly, setIsReadOnly, openInvoicePaymentDrawer }: InvoiceDetailHeaderProps) => {
-  const viewState = useInvoiceDetail()
-  const { onSendInvoice } = useInvoicesContext()
-  const { isSubmitting } = formState
-
-  const onEditInvoice = useCallback(() => {
-    setIsReadOnly(false)
-  }, [setIsReadOnly])
-
-  const onPressSave = useCallback(() => {
-    void onSubmit({ submitAction: null })
-  }, [onSubmit])
-
-  const saveButton = useMemo(() => (
-    <Button variant={onSendInvoice ? 'outlined' : 'solid'} isDisabled={isSubmitting} onPress={onPressSave}>
-      Save
-      <Save size={14} />
-    </Button>
-  ), [isSubmitting, onPressSave, onSendInvoice])
-
-  const onPressSend = useCallback(() => {
-    void onSubmit({ submitAction: 'send' })
-  }, [onSubmit])
-
-  const sendButton = useMemo(() => {
-    if (!onSendInvoice) return null
-    return (
-      <Button isDisabled={isSubmitting} onPress={onPressSend}>
-        Save and Send
-        <Send size={14} />
-      </Button>
-    )
-  }, [isSubmitting, onPressSend, onSendInvoice])
-
-  const saveAndSendButtons = useMemo(() => (
-    <HStack gap='xs'>
-      {saveButton}
-      {sendButton}
-    </HStack>
-  ), [saveButton, sendButton])
-
-  if (viewState.mode === UpsertInvoiceMode.Create) {
-    return (
-      <HStack justify='space-between' align='center' fluid pie='md'>
-        <Heading>Create Invoice</Heading>
-        {saveAndSendButtons}
-      </HStack>
-    )
-  }
-
-  const invoiceNumber = viewState.invoice.invoiceNumber
-
-  const headingContent = isReadOnly
-    ? (invoiceNumber ? `Invoice #${invoiceNumber}` : 'View Invoice')
-    : invoiceNumber ? `Editing Invoice #${invoiceNumber}` : 'Editing Invoice'
-
-  const canMarkAsPaid = viewState.mode === UpsertInvoiceMode.Update
-    && (viewState.invoice.status === InvoiceStatus.Sent || viewState.invoice.status === InvoiceStatus.PartiallyPaid)
-
-  return (
-    <HStack justify='space-between' align='center' fluid pie='md'>
-      <Heading className='Layer__InvoiceDetail__Heading' ellipsis>{headingContent}</Heading>
-      {isReadOnly
-        ? (
-          <HStack gap='xs'>
-            {canMarkAsPaid && (
-              <Button onPress={openInvoicePaymentDrawer}>
-                Mark as paid
-                <HandCoins size={14} />
-              </Button>
-            )}
-            <InvoiceDetailHeaderMenu onEditInvoice={onEditInvoice} />
-          </HStack>
-        )
-        : saveAndSendButtons}
-    </HStack>
-  )
-}
-type InvoiceDetailSubHeaderProps = {
-  invoice: Invoice
-}
-
-const InvoiceDetailSubHeader = ({ invoice }: InvoiceDetailSubHeaderProps) => {
-  const { outstandingBalance, totalAmount } = invoice
-
-  return (
-    <HStack className='Layer__InvoiceDetail__SubHeader'>
-      <HStack gap='5xl'>
-        <DataPoint label='Balance due'>
-          <Span>{convertCentsToCurrency(outstandingBalance)}</Span>
-        </DataPoint>
-        <DataPoint label='Open balance'>
-          <Span>{convertCentsToCurrency(totalAmount)}</Span>
-        </DataPoint>
-        <DataPoint label='Status'>
-          <InvoiceStatusCell invoice={invoice} inline />
-        </DataPoint>
-      </HStack>
-    </HStack>
   )
 }
