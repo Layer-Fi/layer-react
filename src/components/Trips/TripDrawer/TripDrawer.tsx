@@ -42,7 +42,7 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
       MobileHeader={
         isMobile
           ? () => (
-            <VStack pi='md' pbs='md'>
+            <VStack pi='md' pbs='sm'>
               <ModalTitleWithClose
                 heading={<ModalHeading>{title}</ModalHeading>}
               />
@@ -79,7 +79,7 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
 
         if (isMobile) {
           return (
-            <VStack gap='md' pb='lg'>
+            <VStack gap='md' pbe='lg'>
               {content}
             </VStack>
           )
