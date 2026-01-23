@@ -8,7 +8,6 @@ import BackArrow from '@icons/BackArrow'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
 import { Heading } from '@ui/Typography/Heading'
@@ -17,8 +16,6 @@ import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleForm'
 import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
 import { useListVehicles } from '@features/vehicles/api/useListVehicles'
-
-import './vehicleManagementDetail.scss'
 
 interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void
@@ -91,11 +88,9 @@ export const VehicleManagementDetail = () => {
     setSelectedVehicle(undefined)
   }, [])
 
-  const resolveVariant = (): DefaultVariant => isMobileVariant ? 'Mobile' : 'Desktop'
-
   // Use a ref to store the latest state values for the Header component
-  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, resolveVariant, hasArchivedVehicles })
-  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, resolveVariant, hasArchivedVehicles }
+  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, isMobileVariant, hasArchivedVehicles })
+  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, isMobileVariant, hasArchivedVehicles }
 
   // Header component is stable and reads from ref
   const HeaderRef = useRef(() => {
@@ -103,33 +98,27 @@ export const VehicleManagementDetail = () => {
       showArchived: currentShowArchived,
       setShowArchived: currentSetShowArchived,
       handleAddVehicle: currentHandleAddVehicle,
-      resolveVariant: currentResolveVariant,
+      isMobileVariant: currentIsMobileVariant,
       hasArchivedVehicles: currentHasArchivedVehicles,
     } = stateRef.current
 
-    const DesktopHeader = (
+    if (currentIsMobileVariant) {
+      return (
+        <MobileVehicleManagementDetailHeader
+          onAddVehicle={currentHandleAddVehicle}
+          showArchived={currentShowArchived}
+          onShowArchivedChange={currentSetShowArchived}
+          showArchivedToggle={currentHasArchivedVehicles}
+        />
+      )
+    }
+
+    return (
       <DesktopVehicleManagementDetailHeader
         onAddVehicle={currentHandleAddVehicle}
         showArchived={currentShowArchived}
         onShowArchivedChange={currentSetShowArchived}
         showArchivedToggle={currentHasArchivedVehicles}
-      />
-    )
-
-    const MobileHeader = (
-      <MobileVehicleManagementDetailHeader
-        onAddVehicle={currentHandleAddVehicle}
-        showArchived={currentShowArchived}
-        onShowArchivedChange={currentSetShowArchived}
-        showArchivedToggle={currentHasArchivedVehicles}
-      />
-    )
-
-    return (
-      <ResponsiveComponent
-        resolveVariant={currentResolveVariant}
-        slots={{ Desktop: DesktopHeader, Mobile: MobileHeader }}
-        className='Layer__VehicleManagementDetail__Header'
       />
     )
   })
