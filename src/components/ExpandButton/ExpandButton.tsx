@@ -6,7 +6,7 @@ import './expandButton.scss'
 
 type ExpandButtonProps = {
   isExpanded: boolean
-  onClick: () => void
+  onClick?: () => void
 }
 
 const baseClassName = 'Layer__ExpandButton'
