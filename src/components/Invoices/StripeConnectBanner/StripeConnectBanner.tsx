@@ -20,7 +20,8 @@ export const StripeConnectBanner = () => {
       const result = await trigger()
       if (result?.connectAccountUrl) {
         window.location.assign(result.connectAccountUrl)
-      } else {
+      }
+      else {
         addToast({ content: 'Stripe has sent a misconfigured connect account onboarding link. Please try again.', type: 'error' })
       }
     }
