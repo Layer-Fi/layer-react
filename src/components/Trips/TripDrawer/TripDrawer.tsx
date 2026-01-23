@@ -22,20 +22,20 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
   const [isEditMode, setIsEditMode] = useState(false)
   const isReadOnly = !isEditMode && !!trip && (isMobile || isTablet)
 
-  const handleOpenChange = useCallback((nextIsOpen: boolean) => {
-    if (!nextIsOpen) {
+  const handleOpenChange = useCallback((open: boolean) => {
+    if (!open) {
       setIsEditMode(false)
     }
-    onOpenChange(nextIsOpen)
+    onOpenChange(open)
   }, [onOpenChange])
 
   const title = trip ? 'Trip details' : 'Record trip'
 
-  const MobileHeader = ({ close }: { close: () => void }) => (
+  const DrawerHeader = () => (
     <VStack pi='md'>
       <ModalTitleWithClose
         heading={<ModalHeading size='md'>{title}</ModalHeading>}
-        onClose={close}
+        onClose={() => handleOpenChange(false)}
       />
     </VStack>
   )
@@ -48,51 +48,33 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
       variant={isMobile ? 'mobile-drawer' : 'drawer'}
       flexBlock={isMobile}
       aria-label={title}
-      MobileHeader={isMobile ? MobileHeader : undefined}
+      MobileHeader={isMobile ? <DrawerHeader /> : undefined}
     >
-      {({ close }) => {
-        const content = (
-          <>
-            <TripForm
-              isReadOnly={isReadOnly}
-              trip={trip ?? undefined}
-              onSuccess={() => {
-                onSuccess()
-                close()
-              }}
-            />
-            {isReadOnly && (
-              <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
-                <Button variant='outlined' onPress={() => onDeleteTrip(trip)}>
-                  <Trash2 size={16} />
-                  Delete Trip
-                </Button>
-                <Button onPress={() => setIsEditMode(true)}>
-                  <Edit size={16} />
-                  Edit Trip
-                </Button>
-              </HStack>
-            )}
-          </>
-        )
-
-        if (isMobile) {
-          return (
-            <VStack gap='md' pb='lg'>
-              {content}
-            </VStack>
-          )
-        }
-
-        return (
-          <VStack pb='lg'>
-            <MobileHeader close={close} />
-            <VStack gap='md'>
-              {content}
-            </VStack>
-          </VStack>
-        )
-      }}
+      <VStack pb='lg'>
+        {!isMobile && <DrawerHeader />}
+        <VStack gap='md'>
+          <TripForm
+            isReadOnly={isReadOnly}
+            trip={trip ?? undefined}
+            onSuccess={() => {
+              onSuccess()
+              handleOpenChange(false)
+            }}
+          />
+          {isReadOnly && (
+            <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
+              <Button variant='outlined' onPress={() => onDeleteTrip(trip)}>
+                <Trash2 size={16} />
+                Delete Trip
+              </Button>
+              <Button onPress={() => setIsEditMode(true)}>
+                <Edit size={16} />
+                Edit Trip
+              </Button>
+            </HStack>
+          )}
+        </VStack>
+      </VStack>
     </Drawer>
   )
 }
