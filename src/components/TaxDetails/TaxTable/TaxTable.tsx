@@ -1,3 +1,5 @@
+import classnames from 'classnames'
+
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { Cell, Row } from '@ui/Table/Table'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -34,7 +36,7 @@ export const TaxTableRow = ({ label, value, variant }: TaxTableRowProps) => {
   const isEmpty = variant === TaxTableRowVariant.Empty
   const isBold = BOLD_VARIANTS.has(variant)
   const mobileClass = isMobile ? 'Layer__UI__Table-Row--mobile' : ''
-  const className = `${VARIANT_CLASS_MAP[variant]} ${mobileClass}`.trim()
+  const className = classnames(VARIANT_CLASS_MAP[variant], mobileClass)
 
   const labelElement = isBold ? <Span weight='bold'>{label}</Span> : <Span>{label}</Span>
   const valueElement = typeof value === 'number'
