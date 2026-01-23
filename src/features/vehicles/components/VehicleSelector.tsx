@@ -1,5 +1,6 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import type { MenuPlacement } from 'react-select'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
@@ -47,6 +48,7 @@ export type VehicleSelectorProps = {
   className?: string
   containerClassName?: string
   showLabel?: boolean
+  menuPlacement?: MenuPlacement
 }
 
 export function VehicleSelector({
@@ -62,6 +64,7 @@ export function VehicleSelector({
   className,
   containerClassName,
   showLabel = true,
+  menuPlacement,
 }: VehicleSelectorProps) {
   const combinedClassName = classNames(
     'Layer__VehicleSelector',
@@ -135,6 +138,7 @@ export function VehicleSelector({
         isLoading={isLoadingWithoutFallback}
         isReadOnly={isReadOnly}
         isSearchable
+        menuPlacement={menuPlacement}
         className={className}
         {...additionalAriaProps}
       />

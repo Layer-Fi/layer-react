@@ -29,7 +29,7 @@ const MobileVehicleManagementDetailHeader = ({
   onAddVehicle,
 }: VehicleManagementDetailHeaderProps) => {
   return (
-    <HStack justify='space-between' align='center' fluid pie='md' pb='md'>
+    <HStack justify='space-between' align='center' fluid pie='md' pb='md' pis='sm'>
       <Heading size='sm'>Manage vehicles</Heading>
       <Button variant='solid' onPress={onAddVehicle}>
         Add Vehicle

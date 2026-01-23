@@ -19,11 +19,12 @@ import './tripForm.scss'
 export type TripFormProps = {
   trip?: Trip
   isReadOnly?: boolean
+  isMobileDrawer?: boolean
   onSuccess: (trip: Trip) => void
 }
 
 export const TripForm = (props: TripFormProps) => {
-  const { onSuccess, trip, isReadOnly } = props
+  const { onSuccess, trip, isReadOnly, isMobileDrawer } = props
   const { form, submitError } = useTripForm({ onSuccess, trip })
 
   // Prevents default browser form submission behavior
@@ -132,6 +133,7 @@ export const TripForm = (props: TripFormProps) => {
             isReadOnly={isReadOnly}
             inline
             placeholder='Add vehicle'
+            menuPlacement={isMobileDrawer ? 'top' : undefined}
             containerClassName='Layer__TripForm__Field__Vehicle'
           />
         )}
