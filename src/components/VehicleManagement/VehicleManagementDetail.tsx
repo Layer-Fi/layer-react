@@ -15,18 +15,20 @@ import { Span } from '@ui/Typography/Text'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleForm'
 import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
+import { useListVehicles } from '@features/vehicles/api/useListVehicles'
 
 interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void
   showArchived: boolean
   onShowArchivedChange: (value: boolean) => void
+  showArchivedToggle: boolean
 }
 
 const MobileVehicleManagementDetailHeader = ({
   onAddVehicle,
 }: VehicleManagementDetailHeaderProps) => {
   return (
-    <HStack justify='space-between' align='center' fluid pie='md'>
+    <HStack justify='space-between' align='center' fluid pie='md' pb='md'>
       <Heading size='sm'>Manage vehicles</Heading>
       <Button variant='solid' onPress={onAddVehicle}>
         Add Vehicle
@@ -40,14 +42,17 @@ const DesktopVehicleManagementDetailHeader = ({
   onAddVehicle,
   showArchived,
   onShowArchivedChange,
+  showArchivedToggle,
 }: VehicleManagementDetailHeaderProps) => {
   return (
     <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
       <Heading size='sm'>Manage vehicles</Heading>
       <HStack gap='md' align='center'>
-        <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
-          <Span size='sm' noWrap>Show archived</Span>
-        </Switch>
+        {showArchivedToggle && (
+          <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
+            <Span size='sm' noWrap>Show archived</Span>
+          </Switch>
+        )}
         <Button variant='solid' onPress={onAddVehicle}>
           Add Vehicle
           <Plus size={14} />
@@ -63,6 +68,8 @@ export const VehicleManagementDetail = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | undefined>(undefined)
   const [showArchived, setShowArchived] = useState(false)
   const { isDesktop } = useSizeClass()
+  const { data: allVehicles } = useListVehicles({ allowArchived: true })
+  const hasArchivedVehicles = allVehicles?.some(vehicle => vehicle.archivedAt != null) ?? false
 
   const isMobileVariant = !isDesktop
 
@@ -82,8 +89,8 @@ export const VehicleManagementDetail = () => {
   }, [])
 
   // Use a ref to store the latest state values for the Header component
-  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, isMobileVariant })
-  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, isMobileVariant }
+  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, isMobileVariant, hasArchivedVehicles })
+  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, isMobileVariant, hasArchivedVehicles }
 
   // Header component is stable and reads from ref
   const HeaderRef = useRef(() => {
@@ -92,6 +99,7 @@ export const VehicleManagementDetail = () => {
       setShowArchived: currentSetShowArchived,
       handleAddVehicle: currentHandleAddVehicle,
       isMobileVariant: currentIsMobileVariant,
+      hasArchivedVehicles: currentHasArchivedVehicles,
     } = stateRef.current
 
     if (currentIsMobileVariant) {
@@ -100,6 +108,7 @@ export const VehicleManagementDetail = () => {
           onAddVehicle={currentHandleAddVehicle}
           showArchived={currentShowArchived}
           onShowArchivedChange={currentSetShowArchived}
+          showArchivedToggle={currentHasArchivedVehicles}
         />
       )
     }
@@ -109,6 +118,7 @@ export const VehicleManagementDetail = () => {
         onAddVehicle={currentHandleAddVehicle}
         showArchived={currentShowArchived}
         onShowArchivedChange={currentSetShowArchived}
+        showArchivedToggle={currentHasArchivedVehicles}
       />
     )
   })
@@ -122,7 +132,7 @@ export const VehicleManagementDetail = () => {
         name='VehicleManagementDetail'
         onGoBack={toTripsTable}
       >
-        {isMobileVariant && (
+        {isMobileVariant && hasArchivedVehicles && (
           <HStack
             justify='end'
             align='center'
