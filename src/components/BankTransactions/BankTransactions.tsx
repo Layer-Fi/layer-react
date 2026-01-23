@@ -6,7 +6,7 @@ import { type BankTransaction, DisplayState } from '@internal-types/bank_transac
 import type { LayerError } from '@models/ErrorHandler'
 import { BREAKPOINTS } from '@config/general'
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { usePreloadCategories } from '@hooks/categories/useCategories'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
 import { useElementSize } from '@hooks/useElementSize/useElementSize'
@@ -102,6 +102,8 @@ export const BankTransactions = ({
   applyGlobalDateRange = false,
   mode,
   renderInAppLink,
+  categorizeView,
+  filters,
   ...props
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
@@ -116,6 +118,8 @@ export const BankTransactions = ({
           <BankTransactionsProvider
             monthlyView={monthlyView}
             applyGlobalDateRange={applyGlobalDateRange}
+            categorizeView={categorizeView}
+            filters={filters}
           >
             <LegacyModeProvider overrideMode={mode}>
               <BankTransactionTagVisibilityProvider showTags={showTags}>
@@ -139,71 +143,11 @@ export const BankTransactions = ({
 
 const BankTransactionsContent = (props: BankTransactionsProps) => {
   const routeState = useBankTransactionsRouteState()
-  const {
-    setFilters,
-    filters,
-    dateFilterMode,
-  } = useBankTransactionsFiltersContext()
+  const { filters, dateFilterMode } = useBankTransactionsFiltersContext()
   const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
-
-  useEffect(() => {
-    // Reset date range when switching from monthly view to non-monthly view
-    if (!isMonthlyViewMode && filters?.dateRange) {
-      setFilters({ ...filters, dateRange: undefined })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMonthlyViewMode])
 
   const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
-
-  const effectiveCategorizeView = props.categorizeView ?? categorizationEnabled
-
-  useEffect(() => {
-    if (JSON.stringify(props.filters) !== JSON.stringify(filters)) {
-      if (effectiveBookkeepingStatus === BookkeepingStatus.ACTIVE) {
-        setFilters({
-          ...filters,
-          ...props.filters,
-          categorizationStatus: DisplayState.all,
-        })
-      }
-      else if (!props.filters?.categorizationStatus && effectiveCategorizeView) {
-        setFilters({
-          ...filters,
-          ...props.filters,
-          categorizationStatus: DisplayState.review,
-        })
-      }
-      else if (
-        !props.filters?.categorizationStatus
-        && !categorizationEnabled
-      ) {
-        setFilters({
-          ...filters,
-          ...props.filters,
-          categorizationStatus: DisplayState.categorized,
-        })
-      }
-      else {
-        setFilters({ ...filters, ...props.filters })
-      }
-    }
-    else if (!props.filters?.categorizationStatus && effectiveCategorizeView) {
-      setFilters({
-        categorizationStatus: DisplayState.review,
-      })
-    }
-    else if (
-      !props.filters?.categorizationStatus
-      && !categorizationEnabled
-    ) {
-      setFilters({
-        categorizationStatus: DisplayState.categorized,
-      })
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [effectiveCategorizeView, categorizationEnabled])
 
   const { setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
   useEffect(() => {
