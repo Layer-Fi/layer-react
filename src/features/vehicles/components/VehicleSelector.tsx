@@ -1,11 +1,15 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
-import type { MenuPlacement } from 'react-select'
+import type { GroupBase, MenuListProps, MenuPlacement } from 'react-select'
+import { components } from 'react-select'
+import PlusIcon from '@icons/PlusIcon'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { VStack } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
+import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
+import type { ComboBoxOption } from '@ui/ComboBox/types'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { P, Span } from '@ui/Typography/Text'
 import { Label } from '@ui/Typography/Text'
 import { useListVehicles } from '@features/vehicles/api/useListVehicles'
 import { getVehicleDisplayName } from '@features/vehicles/utils'
@@ -49,6 +53,40 @@ export type VehicleSelectorProps = {
   containerClassName?: string
   showLabel?: boolean
   menuPlacement?: MenuPlacement
+  onCreateVehicle?: () => void
+}
+
+function buildMenuListWithFooter<T extends ComboBoxOption>(
+  onCreateVehicle?: () => void,
+) {
+  return function MenuListWithFooter(props: MenuListProps<T, false, GroupBase<T>>) {
+    return (
+      <>
+        <components.MenuList
+          {...props}
+          className={COMBO_BOX_CLASS_NAMES.MENU_LIST}
+        />
+        {onCreateVehicle && !props.isLoading && (
+          <div className='Layer__VehicleSelector__MenuFooter'>
+            <button
+              type='button'
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                onCreateVehicle()
+              }}
+              className='Layer__VehicleSelector__AddButton'
+            >
+              <HStack gap='xs' align='center'>
+                <PlusIcon size={14} />
+                <Span size='sm'>Add vehicle</Span>
+              </HStack>
+            </button>
+          </div>
+        )}
+      </>
+    )
+  }
 }
 
 export function VehicleSelector({
@@ -65,6 +103,7 @@ export function VehicleSelector({
   containerClassName,
   showLabel = true,
   menuPlacement,
+  onCreateVehicle,
 }: VehicleSelectorProps) {
   const combinedClassName = classNames(
     'Layer__VehicleSelector',
@@ -120,6 +159,11 @@ export function VehicleSelector({
   const isLoadingWithoutFallback = isLoading && !data
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
+  const MenuListComponent = useMemo(
+    () => buildMenuListWithFooter<VehicleAsOption>(onCreateVehicle),
+    [onCreateVehicle],
+  )
+
   return (
     <VStack className={combinedClassName}>
       {showLabel && <Label htmlFor={inputId} size='sm'>Vehicle</Label>}
@@ -131,7 +175,11 @@ export function VehicleSelector({
 
         inputId={inputId}
         placeholder={placeholder}
-        slots={{ EmptyMessage, ErrorMessage }}
+        slots={{
+          EmptyMessage,
+          ErrorMessage,
+          MenuList: MenuListComponent,
+        }}
 
         isDisabled={shouldDisableComboBox}
         isError={isError}

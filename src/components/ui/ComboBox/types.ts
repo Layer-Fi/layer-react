@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { GroupBase, MenuPlacement } from 'react-select'
+import type { GroupBase, MenuListProps, MenuPlacement } from 'react-select'
 
 import type { OneOf } from '@internal-types/utility/oneOf'
 
@@ -26,6 +26,7 @@ export type ComboBoxSlots<T extends ComboBoxOption> = {
   GroupHeading?: React.FC<{ group: GroupBase<T>, fallback: ReactNode }>
   Option?: React.FC<{ option: T, fallback: ReactNode }>
   SelectedValue?: ReactNode
+  MenuList?: React.FC<MenuListProps<T, false, GroupBase<T>>>
 }
 
 export type BaseComboBoxProps<T extends ComboBoxOption> = {

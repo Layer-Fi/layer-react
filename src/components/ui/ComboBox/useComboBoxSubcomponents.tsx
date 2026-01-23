@@ -7,6 +7,7 @@ import {
   type GroupBase,
   type GroupHeadingProps,
   type LoadingIndicatorProps,
+  type MenuListProps,
   type NoticeProps,
   type OptionProps,
   type PlaceholderProps,
@@ -27,6 +28,27 @@ type UseComboBoxSubcomponentsParams<T extends ComboBoxOption> = {
   placeholder?: string
   slots?: ComboBoxSlots<T>
   displayDisabledAsSelected?: boolean
+}
+
+type BuildCustomMenuListParams<T extends ComboBoxOption> = {
+  MenuList: ComboBoxSlots<T>['MenuList']
+}
+
+function buildCustomMenuList<T extends ComboBoxOption>({
+  MenuList,
+}: BuildCustomMenuListParams<T>) {
+  return function CustomMenuList(props: MenuListProps<T, false, GroupBase<T>>) {
+    if (MenuList) {
+      return <MenuList {...props} />
+    }
+
+    return (
+      <components.MenuList
+        {...props}
+        className={COMBO_BOX_CLASS_NAMES.MENU_LIST}
+      />
+    )
+  }
 }
 
 function buildCustomClearIndicator<T extends ComboBoxOption>() {
@@ -236,7 +258,7 @@ export function useComboBoxSubcomponents<T extends ComboBoxOption>({
   slots,
   displayDisabledAsSelected,
 }: UseComboBoxSubcomponentsParams<T>) {
-  const { EmptyMessage, SelectedValue, GroupHeading, Option } = slots ?? {}
+  const { EmptyMessage, SelectedValue, GroupHeading, Option, MenuList } = slots ?? {}
 
   const ClearIndicatorRef = useRef(buildCustomClearIndicator<T>())
   const DropdownIndicatorRef = useRef(buildCustomDropdownIndicator<T>())
@@ -268,11 +290,17 @@ export function useComboBoxSubcomponents<T extends ComboBoxOption>({
     [SelectedValue],
   )
 
+  const MenuListComponent = useMemo(
+    () => buildCustomMenuList<T>({ MenuList }),
+    [MenuList],
+  )
+
   return useMemo(() => ({
     ClearIndicator: ClearIndicatorRef.current,
     DropdownIndicator: DropdownIndicatorRef.current,
     GroupHeading: GroupHeadingComponent,
     LoadingIndicator: LoadingIndicatorRef.current,
+    MenuList: MenuListComponent,
     MenuPortal: MenuPortalRef.current,
     NoOptionsMessage: NoOptionsMessageComponent,
     Option: OptionComponent,
@@ -280,6 +308,7 @@ export function useComboBoxSubcomponents<T extends ComboBoxOption>({
     SingleValue: SingleValueComponent,
   }), [
     GroupHeadingComponent,
+    MenuListComponent,
     NoOptionsMessageComponent,
     OptionComponent,
     PlaceholderComponent,

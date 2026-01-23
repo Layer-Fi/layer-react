@@ -1,9 +1,10 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { type CalendarDate } from '@internationalized/date'
 import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
 
 import { type Trip, TripPurpose } from '@schemas/trip'
+import type { Vehicle } from '@schemas/vehicle'
 import { flattenValidationErrors } from '@utils/form'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
@@ -21,11 +22,23 @@ export type TripFormProps = {
   isReadOnly?: boolean
   isMobileDrawer?: boolean
   onSuccess: (trip: Trip) => void
+  onCreateVehicle?: () => void
+  onFormRefReady?: (ref: { setVehicle: (vehicle: Vehicle | null) => void }) => void
 }
 
 export const TripForm = (props: TripFormProps) => {
-  const { onSuccess, trip, isReadOnly, isMobileDrawer } = props
+  const { onSuccess, trip, isReadOnly, isMobileDrawer, onCreateVehicle, onFormRefReady } = props
   const { form, submitError } = useTripForm({ onSuccess, trip })
+
+  useEffect(() => {
+    if (onFormRefReady) {
+      onFormRefReady({
+        setVehicle: (vehicle: Vehicle | null) => {
+          form.setFieldValue('vehicle', vehicle)
+        },
+      })
+    }
+  }, [form, onFormRefReady])
 
   // Prevents default browser form submission behavior
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -135,6 +148,7 @@ export const TripForm = (props: TripFormProps) => {
             placeholder='Add vehicle'
             menuPlacement={isMobileDrawer ? 'top' : undefined}
             containerClassName='Layer__TripForm__Field__Vehicle'
+            onCreateVehicle={onCreateVehicle}
           />
         )}
       </form.Field>
