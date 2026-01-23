@@ -2,7 +2,6 @@ import { useCallback, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
-import { useListVehicles } from '@features/vehicles/api/useListVehicles'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
@@ -17,6 +16,7 @@ import { Span } from '@ui/Typography/Text'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { VehicleForm } from '@components/VehicleManagement/VehicleForm/VehicleForm'
 import { VehicleManagementGrid } from '@components/VehicleManagement/VehicleManagementGrid'
+import { useListVehicles } from '@features/vehicles/api/useListVehicles'
 
 import './vehicleManagementDetail.scss'
 
