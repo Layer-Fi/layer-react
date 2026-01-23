@@ -31,6 +31,15 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
 
   const title = trip ? 'Trip details' : 'Record trip'
 
+  const MobileHeader = ({ close }: { close: () => void }) => (
+    <VStack pi='md'>
+      <ModalTitleWithClose
+        heading={<ModalHeading size='md'>{title}</ModalHeading>}
+        onClose={close}
+      />
+    </VStack>
+  )
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -39,18 +48,7 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
       variant={isMobile ? 'mobile-drawer' : 'drawer'}
       flexBlock={isMobile}
       aria-label={title}
-      MobileHeader={
-        isMobile
-          ? ({ close }) => (
-            <VStack pi='md'>
-              <ModalTitleWithClose
-                heading={<ModalHeading size='md'>{title}</ModalHeading>}
-                onClose={close}
-              />
-            </VStack>
-          )
-          : undefined
-      }
+      MobileHeader={isMobile ? MobileHeader : undefined}
     >
       {({ close }) => {
         const content = (
@@ -88,12 +86,7 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
 
         return (
           <VStack pb='lg'>
-            <VStack pi='md'>
-              <ModalTitleWithClose
-                heading={<ModalHeading size='md'>{title}</ModalHeading>}
-                onClose={close}
-              />
-            </VStack>
+            <MobileHeader close={close} />
             <VStack gap='md'>
               {content}
             </VStack>
