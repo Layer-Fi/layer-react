@@ -13,9 +13,9 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableCard } from '@components/ExpandableCard/ExpandableCard'
 import { Loader } from '@components/Loader/Loader'
 import { AdjustedGrossIncomeTable } from '@components/TaxDetails/AdjustedGrossIncomeTable/AdjustedGrossIncomeTable'
-import { CardHeading } from '@components/TaxDetails/CardHeading'
 import { FederalTaxTable } from '@components/TaxDetails/FederalTaxTable/FederalTaxTable'
 import { StateTaxTable } from '@components/TaxDetails/StateTaxTable/StateTaxTable'
+import { TaxDetailsExpandableCardHeading } from '@components/TaxDetails/TaxDetailsExpandableCardHeading'
 import { TaxSummaryCard } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCard'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
@@ -105,7 +105,7 @@ export const TaxDetails = () => {
                 onToggle={() => toggleExpanded('taxableIncome')}
                 slots={{
                   Heading: (
-                    <CardHeading
+                    <TaxDetailsExpandableCardHeading
                       title='Taxable Business Income'
                       amount={details.adjustedGrossIncome.totalAdjustedGrossIncome}
                     />
@@ -120,7 +120,7 @@ export const TaxDetails = () => {
                   onToggle={() => toggleExpanded('federalTaxes')}
                   slots={{
                     Heading: (
-                      <CardHeading
+                      <TaxDetailsExpandableCardHeading
                         title='Estimated Federal Taxes'
                         amount={usFederal.totalFederalTax.totalFederalTaxOwed}
                       />
@@ -136,7 +136,7 @@ export const TaxDetails = () => {
                   onToggle={() => toggleExpanded('stateTaxes')}
                   slots={{
                     Heading: (
-                      <CardHeading
+                      <TaxDetailsExpandableCardHeading
                         title={`Estimated State Taxes (${usState.stateName})`}
                         amount={usState.totalStateTax.totalStateTaxOwed}
                       />
