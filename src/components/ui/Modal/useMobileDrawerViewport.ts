@@ -30,6 +30,7 @@ export function useMobileDrawerViewport(
       const currentInnerHeight = window.innerHeight
       const currentInnerWidth = window.innerWidth
 
+      // Reset viewport height if mobile device orientation changes
       if (layoutViewportWidthRef.current !== currentInnerWidth) {
         layoutViewportWidthRef.current = currentInnerWidth
         layoutViewportHeightRef.current = currentInnerHeight
