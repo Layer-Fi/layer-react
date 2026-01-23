@@ -1,0 +1,10 @@
+.Layer__TaxPaymentsMobileList {
+  .Layer__TaxPayments__ErrorState,
+  .Layer__TaxPayments__EmptyState {
+    padding: var(--spacing-sm);
+    padding-top: var(--spacing-lg);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    background-color: var(--color-base-0);
+  }
+}

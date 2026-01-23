@@ -29,11 +29,11 @@ type UseComboBoxSubcomponentsParams<T extends ComboBoxOption> = {
   displayDisabledAsSelected?: boolean
 }
 
-function buildCustomClearIndicator<T extends ComboBoxOption>() {
+function buildCustomClearIndicator<T extends ComboBoxOption, IsMulti extends boolean>() {
   return function CustomClearIndicator({
     children,
     ...restProps
-  }: ClearIndicatorProps<T, false, GroupBase<T>>) {
+  }: ClearIndicatorProps<T, IsMulti, GroupBase<T>>) {
     return (
       <components.ClearIndicator {...restProps} className={COMBO_BOX_CLASS_NAMES.CLEAR_INDICATOR}>
         <X size={16} />
@@ -42,11 +42,11 @@ function buildCustomClearIndicator<T extends ComboBoxOption>() {
   }
 }
 
-function buildCustomDropdownIndicator<T extends ComboBoxOption>() {
+function buildCustomDropdownIndicator<T extends ComboBoxOption, IsMulti extends boolean>() {
   return function CustomDropdownIndicator({
     children,
     ...restProps
-  }: DropdownIndicatorProps<T, false, GroupBase<T>>) {
+  }: DropdownIndicatorProps<T, IsMulti, GroupBase<T>>) {
     const { isDisabled } = restProps
 
     return (
@@ -60,9 +60,9 @@ function buildCustomDropdownIndicator<T extends ComboBoxOption>() {
   }
 }
 
-function buildCustomLoadingIndicator<T extends ComboBoxOption>() {
+function buildCustomLoadingIndicator<T extends ComboBoxOption, IsMulti extends boolean>() {
   return function CustomLoadingIndicator(
-    _props: LoadingIndicatorProps<T, false, GroupBase<T>>,
+    _props: LoadingIndicatorProps<T, IsMulti, GroupBase<T>>,
   ) {
     return (
       <div className={COMBO_BOX_CLASS_NAMES.LOADING_INDICATOR}>
@@ -72,11 +72,11 @@ function buildCustomLoadingIndicator<T extends ComboBoxOption>() {
   }
 }
 
-function buildCustomMenuPortal<T extends ComboBoxOption>() {
+function buildCustomMenuPortal<T extends ComboBoxOption, IsMulti extends boolean>() {
   return function CustomMenuPortal({
     children,
     ...restProps
-  }: ComponentProps<typeof components.MenuPortal<T, false, GroupBase<T>>>) {
+  }: ComponentProps<typeof components.MenuPortal<T, IsMulti, GroupBase<T>>>) {
     const dataProperties = toDataProperties({ 'react-aria-top-layer': true })
 
     return (
@@ -98,13 +98,13 @@ type BuildCustomGroupHeadingParams<T extends ComboBoxOption> = {
   GroupHeading: ComboBoxSlots<T>['GroupHeading']
 }
 
-function buildCustomGroupHeading<T extends ComboBoxOption>({
+function buildCustomGroupHeading<T extends ComboBoxOption, IsMulti extends boolean>({
   GroupHeading,
 }: BuildCustomGroupHeadingParams<T>) {
   return function CustomGroupHeading({
     children,
     ...restProps
-  }: GroupHeadingProps<T, false, GroupBase<T>>) {
+  }: GroupHeadingProps<T, IsMulti, GroupBase<T>>) {
     const defaultRenderedGroupHeading = (
       <Header size='xs' variant='subtle'>
         {children}
@@ -130,13 +130,13 @@ type BuildCustomNoOptionsMessageParams = {
   EmptyMessage: ComboBoxSlots<ComboBoxOption>['EmptyMessage']
 }
 
-function buildCustomNoOptionsMessage<T extends ComboBoxOption>({
+function buildCustomNoOptionsMessage<T extends ComboBoxOption, IsMulti extends boolean>({
   EmptyMessage,
 }: BuildCustomNoOptionsMessageParams) {
   return function CustomNoOptionsMessage({
     children,
     ...restProps
-  }: NoticeProps<T, false, GroupBase<T>>) {
+  }: NoticeProps<T, IsMulti, GroupBase<T>>) {
     return (
       <components.NoOptionsMessage
         {...restProps}
@@ -153,14 +153,14 @@ type BuildCustomOptionParams<T extends ComboBoxOption> = {
   Option: ComboBoxSlots<T>['Option']
 }
 
-function buildCustomOption<T extends ComboBoxOption>({
+function buildCustomOption<T extends ComboBoxOption, IsMulti extends boolean>({
   displayDisabledAsSelected,
   Option,
 }: BuildCustomOptionParams<T>) {
   return function CustomOption({
     children,
     ...restProps
-  }: OptionProps<T, false, GroupBase<T>>) {
+  }: OptionProps<T, IsMulti, GroupBase<T>>) {
     const { isSelected, isFocused, isDisabled } = restProps
 
     const effectiveIsSelected = isSelected || (displayDisabledAsSelected && isDisabled)
@@ -195,13 +195,13 @@ type BuildCustomPlaceholderParams = {
   placeholder?: string
 }
 
-function buildCustomPlaceholder<T extends ComboBoxOption>({
+function buildCustomPlaceholder<T extends ComboBoxOption, IsMulti extends boolean>({
   placeholder,
 }: BuildCustomPlaceholderParams) {
   return function CustomPlaceholder({
     children,
     ...restProps
-  }: PlaceholderProps<T, false, GroupBase<T>>) {
+  }: PlaceholderProps<T, IsMulti, GroupBase<T>>) {
     if (!placeholder) return null
 
     return (
@@ -216,13 +216,13 @@ type BuildCustomSingleValueParams = {
   SelectedValue: ComboBoxSlots<ComboBoxOption>['SelectedValue']
 }
 
-function buildCustomSingleValue<T extends ComboBoxOption>({
+function buildCustomSingleValue<T extends ComboBoxOption, IsMulti extends boolean>({
   SelectedValue,
 }: BuildCustomSingleValueParams) {
   return function CustomSingleValue({
     children,
     ...restProps
-  }: SingleValueProps<T, false, GroupBase<T>>) {
+  }: SingleValueProps<T, IsMulti, GroupBase<T>>) {
     return (
       <components.SingleValue {...restProps}>
         {SelectedValue ?? children}
@@ -231,40 +231,40 @@ function buildCustomSingleValue<T extends ComboBoxOption>({
   }
 }
 
-export function useComboBoxSubcomponents<T extends ComboBoxOption>({
+export function useComboBoxSubcomponents<T extends ComboBoxOption, IsMulti extends boolean>({
   placeholder,
   slots,
   displayDisabledAsSelected,
 }: UseComboBoxSubcomponentsParams<T>) {
   const { EmptyMessage, SelectedValue, GroupHeading, Option } = slots ?? {}
 
-  const ClearIndicatorRef = useRef(buildCustomClearIndicator<T>())
-  const DropdownIndicatorRef = useRef(buildCustomDropdownIndicator<T>())
-  const LoadingIndicatorRef = useRef(buildCustomLoadingIndicator<T>())
-  const MenuPortalRef = useRef(buildCustomMenuPortal<T>())
+  const ClearIndicatorRef = useRef(buildCustomClearIndicator<T, IsMulti>())
+  const DropdownIndicatorRef = useRef(buildCustomDropdownIndicator<T, IsMulti>())
+  const LoadingIndicatorRef = useRef(buildCustomLoadingIndicator<T, IsMulti>())
+  const MenuPortalRef = useRef(buildCustomMenuPortal<T, IsMulti>())
 
   const GroupHeadingComponent = useMemo(
-    () => buildCustomGroupHeading<T>({ GroupHeading }),
+    () => buildCustomGroupHeading<T, IsMulti>({ GroupHeading }),
     [GroupHeading],
   )
 
   const NoOptionsMessageComponent = useMemo(
-    () => buildCustomNoOptionsMessage<T>({ EmptyMessage }),
+    () => buildCustomNoOptionsMessage<T, IsMulti>({ EmptyMessage }),
     [EmptyMessage],
   )
 
   const OptionComponent = useMemo(
-    () => buildCustomOption<T>({ displayDisabledAsSelected, Option }),
+    () => buildCustomOption<T, IsMulti>({ displayDisabledAsSelected, Option }),
     [displayDisabledAsSelected, Option],
   )
 
   const PlaceholderComponent = useMemo(
-    () => buildCustomPlaceholder<T>({ placeholder }),
+    () => buildCustomPlaceholder<T, IsMulti>({ placeholder }),
     [placeholder],
   )
 
   const SingleValueComponent = useMemo(
-    () => buildCustomSingleValue<T>({ SelectedValue }),
+    () => buildCustomSingleValue<T, IsMulti>({ SelectedValue }),
     [SelectedValue],
   )
 
