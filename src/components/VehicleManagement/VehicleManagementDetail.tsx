@@ -157,7 +157,7 @@ export const VehicleManagementDetail = () => {
         MobileHeader={
           isMobileVariant
             ? ({ close }) => (
-              <VStack pi='md'>
+              <VStack pi='md' pbs='sm'>
                 <ModalTitleWithClose
                   bottomPadding={false}
                   heading={(
