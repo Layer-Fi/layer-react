@@ -10,7 +10,7 @@ import './expandableCard.scss'
 type ExpandableCardProps = {
   children: ReactNode
   isExpanded: boolean
-  onToggle: () => void
+  onToggleExpanded: () => void
   slots: {
     Heading: ReactNode
   }
@@ -19,7 +19,7 @@ type ExpandableCardProps = {
 export const ExpandableCard = ({
   children,
   isExpanded,
-  onToggle,
+  onToggleExpanded,
   slots,
 }: ExpandableCardProps) => {
   return (
@@ -27,7 +27,7 @@ export const ExpandableCard = ({
       <button
         type='button'
         className='Layer__ExpandableCard__Header'
-        onClick={onToggle}
+        onClick={onToggleExpanded}
       >
         <HStack justify='space-between' align='center'>
           {slots.Heading}
