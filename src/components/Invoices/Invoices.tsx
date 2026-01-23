@@ -15,11 +15,17 @@ interface InvoicesStringOverrides {
 
 export interface InvoicesProps {
   showTitle?: boolean
+  _showStripeConnectBanner?: boolean
   stringOverrides?: InvoicesStringOverrides
   onSendInvoice?: (invoiceId: string) => Awaitable<void>
 }
 
-export const Invoices = ({ showTitle = true, stringOverrides, onSendInvoice }: InvoicesProps) => {
+export const Invoices = ({
+  showTitle = true,
+  _showStripeConnectBanner = true,
+  stringOverrides,
+  onSendInvoice,
+}: InvoicesProps) => {
   usePreloadCustomers()
   usePreloadCategories({ mode: CategoriesListMode.Revenue })
   usePreloadTagDimensionByKey({ dimensionKey: INVOICE_MECE_TAG_DIMENSION })
@@ -27,16 +33,20 @@ export const Invoices = ({ showTitle = true, stringOverrides, onSendInvoice }: I
   return (
     <InvoicesProvider onSendInvoice={onSendInvoice}>
       <View title={stringOverrides?.title || 'Invoices'} showHeader={showTitle}>
-        <InvoicesContent />
+        <InvoicesContent _showStripeConnectBanner={_showStripeConnectBanner} />
       </View>
     </InvoicesProvider>
   )
 }
 
-const InvoicesContent = () => {
+interface InvoicesContentProps {
+  _showStripeConnectBanner: boolean
+}
+
+const InvoicesContent = ({ _showStripeConnectBanner }: InvoicesContentProps) => {
   const routeState = useInvoiceRouteState()
 
   return routeState.route === InvoiceRoute.Detail
     ? <InvoiceDetail />
-    : <InvoiceOverview />
+    : <InvoiceOverview _showStripeConnectBanner={_showStripeConnectBanner} />
 }
