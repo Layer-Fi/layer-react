@@ -126,6 +126,8 @@ export const VehicleManagementDetail = () => {
 
   const Header = HeaderRef.current
 
+  const title = selectedVehicle ? 'Edit vehicle' : 'Add vehicle'
+
   return (
     <>
       <BaseDetailView
@@ -162,7 +164,7 @@ export const VehicleManagementDetail = () => {
                   bottomPadding={false}
                   heading={(
                     <ModalHeading size='md'>
-                      {selectedVehicle ? 'Edit vehicle' : 'Add vehicle'}
+                      {title}
                     </ModalHeading>
                   )}
                   onClose={close}
@@ -173,8 +175,6 @@ export const VehicleManagementDetail = () => {
         }
       >
         {({ close }) => {
-          const title = selectedVehicle ? 'Edit vehicle' : 'Add vehicle'
-
           if (isMobileVariant) {
             return (
               <VStack pbs='sm' pbe='lg' pi='md'>

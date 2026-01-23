@@ -55,6 +55,7 @@
     position: fixed;
     bottom: var(--visual-viewport-offset-bottom, 0);
     overflow: hidden;
+    block-size: 80%;
     inline-size: 100%;
 
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
