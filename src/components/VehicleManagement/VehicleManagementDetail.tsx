@@ -154,24 +154,52 @@ export const VehicleManagementDetail = () => {
         aria-label={selectedVehicle ? 'Vehicle details' : 'Add vehicle'}
         variant={isMobileVariant ? 'mobile-drawer' : 'drawer'}
         flexBlock={isMobileVariant}
+        MobileHeader={
+          isMobileVariant
+            ? ({ close }) => (
+              <VStack pi='md'>
+                <ModalTitleWithClose
+                  heading={(
+                    <ModalHeading size='md'>
+                      {selectedVehicle ? 'Edit vehicle' : 'Add vehicle'}
+                    </ModalHeading>
+                  )}
+                  onClose={close}
+                />
+              </VStack>
+            )
+            : undefined
+        }
       >
-        {({ close }) => (
-          <VStack pb='lg'>
-            <VStack pi='md'>
-              <ModalTitleWithClose
-                heading={(
-                  <ModalHeading size='md'>
-                    {selectedVehicle ? 'Edit vehicle' : 'Add vehicle'}
-                  </ModalHeading>
-                )}
-                onClose={close}
-              />
+        {({ close }) => {
+          const title = selectedVehicle ? 'Edit vehicle' : 'Add vehicle'
+
+          if (isMobileVariant) {
+            return (
+              <VStack pb='lg' pi='md'>
+                <VehicleForm vehicle={selectedVehicle} onSuccess={handleVehicleSuccess} />
+              </VStack>
+            )
+          }
+
+          return (
+            <VStack pb='lg'>
+              <VStack pi='md'>
+                <ModalTitleWithClose
+                  heading={(
+                    <ModalHeading size='md'>
+                      {title}
+                    </ModalHeading>
+                  )}
+                  onClose={close}
+                />
+              </VStack>
+              <VStack pi='md'>
+                <VehicleForm vehicle={selectedVehicle} onSuccess={handleVehicleSuccess} />
+              </VStack>
             </VStack>
-            <VStack pi='md'>
-              <VehicleForm vehicle={selectedVehicle} onSuccess={handleVehicleSuccess} />
-            </VStack>
-          </VStack>
-        )}
+          )
+        }}
       </Drawer>
     </>
   )

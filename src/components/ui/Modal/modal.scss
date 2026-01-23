@@ -53,13 +53,12 @@
 
   &[data-variant='mobile-drawer'] {
     position: fixed;
-    bottom: 0;
+    bottom: var(--visual-viewport-offset-bottom, 0);
 
     overflow: hidden;
-    block-size: calc(min(80%, var(--visual-viewport-height, 100%)) + var(--visual-viewport-offset-bottom, 0px));
-    max-block-size: calc(var(--visual-viewport-height, 100%) + var(--visual-viewport-offset-bottom, 0px));
+    block-size: min(80%, var(--visual-viewport-height, 100%));
+    max-block-size: var(--visual-viewport-height, 100%);
     inline-size: 100%;
-    padding-bottom: var(--visual-viewport-offset-bottom, 0);
 
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
 
@@ -74,6 +73,11 @@
 
   &[data-flex-block] {
     block-size: auto;
+  }
+
+  &[data-variant='mobile-drawer'][data-flex-block] {
+    block-size: min(80%, var(--visual-viewport-height, 100%));
+    max-block-size: var(--visual-viewport-height, 100%);
   }
 
   &[data-flex-inline] {
@@ -97,15 +101,29 @@
     flex: 1;
   }
 
+  &[data-scrollable] {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &[data-scrollable] > :first-child {
+    position: sticky;
+    z-index: 1;
+    top: 0;
+    background-color: inherit;
+  }
+
   &[data-variant='drawer'] {
     padding: 0;
     border-radius: 0;
   }
 
   &[data-variant='mobile-drawer'] {
-    overflow-y: auto;
     padding: 0;
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
+  }
+
+  &[data-variant='mobile-drawer'][data-scrollable] {
     overscroll-behavior: contain;
   }
 

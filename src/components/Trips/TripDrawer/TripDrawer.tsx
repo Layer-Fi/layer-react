@@ -29,6 +29,8 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
     onOpenChange(nextIsOpen)
   }, [onOpenChange])
 
+  const title = trip ? 'Trip details' : 'Record trip'
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -36,38 +38,64 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
       isDismissable
       variant={isMobile ? 'mobile-drawer' : 'drawer'}
       flexBlock={isMobile}
-      aria-label={trip ? 'Trip details' : 'Record trip'}
+      aria-label={title}
+      MobileHeader={
+        isMobile
+          ? ({ close }) => (
+            <VStack pi='md'>
+              <ModalTitleWithClose
+                heading={<ModalHeading size='md'>{title}</ModalHeading>}
+                onClose={close}
+              />
+            </VStack>
+          )
+          : undefined
+      }
     >
       {({ close }) => {
+        const content = (
+          <>
+            <TripForm
+              isReadOnly={isReadOnly}
+              trip={trip ?? undefined}
+              onSuccess={() => {
+                onSuccess()
+                close()
+              }}
+            />
+            {isReadOnly && (
+              <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
+                <Button variant='outlined' onPress={() => onDeleteTrip(trip)}>
+                  <Trash2 size={16} />
+                  Delete Trip
+                </Button>
+                <Button onPress={() => setIsEditMode(true)}>
+                  <Edit size={16} />
+                  Edit Trip
+                </Button>
+              </HStack>
+            )}
+          </>
+        )
+
+        if (isMobile) {
+          return (
+            <VStack gap='md' pb='lg'>
+              {content}
+            </VStack>
+          )
+        }
+
         return (
           <VStack pb='lg'>
             <VStack pi='md'>
               <ModalTitleWithClose
-                heading={<ModalHeading size='md'>{trip ? 'Trip details' : 'Record trip'}</ModalHeading>}
+                heading={<ModalHeading size='md'>{title}</ModalHeading>}
                 onClose={close}
               />
             </VStack>
             <VStack gap='md'>
-              <TripForm
-                isReadOnly={isReadOnly}
-                trip={trip ?? undefined}
-                onSuccess={() => {
-                  onSuccess()
-                  close()
-                }}
-              />
-              {isReadOnly && (
-                <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
-                  <Button variant='outlined' onPress={() => onDeleteTrip(trip)}>
-                    <Trash2 size={16} />
-                    Delete Trip
-                  </Button>
-                  <Button onPress={() => setIsEditMode(true)}>
-                    <Edit size={16} />
-                    Edit Trip
-                  </Button>
-                </HStack>
-              )}
+              {content}
             </VStack>
           </VStack>
         )
