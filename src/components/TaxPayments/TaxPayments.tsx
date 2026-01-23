@@ -3,14 +3,14 @@ import { useMemo } from 'react'
 import { useTaxPayments } from '@hooks/taxEstimates/useTaxPayments'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import { AdaptiveDetailHeader } from '@components/AdaptiveDetailView/AdaptiveDetailHeader'
-import { AdaptiveDetailView } from '@components/AdaptiveDetailView/AdaptiveDetailView'
+import { ResponsiveDetailHeader } from '@components/ResponsiveDetailView/ResponsiveDetailHeader'
+import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TaxPaymentsMobileList } from '@components/TaxPayments/TaxPaymentsMobileList/TaxPaymentsMobileList'
 import { TaxPaymentsTable } from '@components/TaxPayments/TaxPaymentsTable/TaxPaymentsTable'
 
 const TaxPaymentsHeader = () => (
-  <AdaptiveDetailHeader
+  <ResponsiveDetailHeader
     title='Tax Payments'
     description='Federal and state tax payments for the selected tax year'
   />
@@ -57,11 +57,11 @@ export const TaxPayments = () => {
   }), [dataWithIds, isError, isLoading])
 
   return (
-    <AdaptiveDetailView
+    <ResponsiveDetailView
       name='TaxPayments'
       slots={{ Header: TaxPaymentsHeader }}
     >
       {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
-    </AdaptiveDetailView>
+    </ResponsiveDetailView>
   )
 }

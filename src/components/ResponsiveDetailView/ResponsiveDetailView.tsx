@@ -4,7 +4,7 @@ import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 
-type AdaptiveDetailViewProps = PropsWithChildren<{
+type ResponsiveDetailViewProps = PropsWithChildren<{
   name: string
   slots: {
     Header: React.FC
@@ -14,12 +14,12 @@ type AdaptiveDetailViewProps = PropsWithChildren<{
   }
 }>
 
-export const AdaptiveDetailView = ({
+export const ResponsiveDetailView = ({
   name,
   slots,
   children,
   mobileProps,
-}: AdaptiveDetailViewProps) => {
+}: ResponsiveDetailViewProps) => {
   const { isDesktop } = useSizeClass()
 
   if (isDesktop) {

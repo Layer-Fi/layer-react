@@ -6,12 +6,12 @@ import { useTaxSummary } from '@hooks/taxEstimates/useTaxSummary'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
-import { AdaptiveDetailHeader } from '@components/AdaptiveDetailView/AdaptiveDetailHeader'
-import { AdaptiveDetailView } from '@components/AdaptiveDetailView/AdaptiveDetailView'
 import { Card } from '@components/Card/Card'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableCard } from '@components/ExpandableCard/ExpandableCard'
 import { Loader } from '@components/Loader/Loader'
+import { ResponsiveDetailHeader } from '@components/ResponsiveDetailView/ResponsiveDetailHeader'
+import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { AdjustedGrossIncomeTable } from '@components/TaxDetails/AdjustedGrossIncomeTable/AdjustedGrossIncomeTable'
 import { FederalTaxTable } from '@components/TaxDetails/FederalTaxTable/FederalTaxTable'
 import { StateTaxTable } from '@components/TaxDetails/StateTaxTable/StateTaxTable'
@@ -28,7 +28,7 @@ type ExpandedState = {
 }
 
 const TaxDetailsHeader = () => (
-  <AdaptiveDetailHeader
+  <ResponsiveDetailHeader
     title='Estimated Business Income Taxes'
     description='Calculated based on your categorized transactions and tracked mileage'
   />
@@ -57,7 +57,7 @@ export const TaxDetails = () => {
   const ExpandableCardsWrapper = isDesktop ? VStack : MobileExpandableCardsWrapper
 
   return (
-    <AdaptiveDetailView
+    <ResponsiveDetailView
       name='TaxDetails'
       slots={{ Header: TaxDetailsHeader }}
       mobileProps={{ className: 'Layer__TaxDetails--mobile' }}
@@ -150,6 +150,6 @@ export const TaxDetails = () => {
           )
         }}
       </ConditionalBlock>
-    </AdaptiveDetailView>
+    </ResponsiveDetailView>
   )
 }

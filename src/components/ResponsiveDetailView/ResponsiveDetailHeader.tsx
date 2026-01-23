@@ -3,12 +3,12 @@ import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 
-type AdaptiveDetailHeaderProps = {
+type ResponsiveDetailHeaderProps = {
   title: string
   description: string
 }
 
-export const AdaptiveDetailHeader = ({ title, description }: AdaptiveDetailHeaderProps) => {
+export const ResponsiveDetailHeader = ({ title, description }: ResponsiveDetailHeaderProps) => {
   const { isDesktop } = useSizeClass()
   return (
     <VStack gap='3xs'>
