@@ -32,9 +32,10 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
   const title = trip ? 'Trip details' : 'Record trip'
 
   const DrawerHeader = () => (
-    <VStack pi='md' pbs='md'>
+    <VStack pi='md'>
       <ModalTitleWithClose
-        heading={<ModalHeading>{title}</ModalHeading>}
+        heading={<ModalHeading size='md'>{title}</ModalHeading>}
+        onClose={() => handleOpenChange(false)}
       />
     </VStack>
   )
