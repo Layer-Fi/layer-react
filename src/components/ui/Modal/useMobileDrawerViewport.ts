@@ -27,7 +27,6 @@ export function useMobileDrawerViewport(
     const updateViewportMetrics = () => {
       const visualViewport = window.visualViewport
       const height = visualViewport?.height ?? window.innerHeight
-      const offsetTop = visualViewport?.offsetTop ?? 0
       const currentInnerHeight = window.innerHeight
       const currentInnerWidth = window.innerWidth
 
@@ -40,6 +39,11 @@ export function useMobileDrawerViewport(
       }
 
       const layoutViewportHeight = layoutViewportHeightRef.current ?? currentInnerHeight
+
+      const pageTop = visualViewport?.pageTop ?? 0
+      const scrollY = window.scrollY ?? 0
+      const offsetTop = pageTop - scrollY
+
       const offsetBottom = Math.max(0, layoutViewportHeight - height - offsetTop)
 
       overlayElement.style.setProperty('--visual-viewport-height', `${height}px`)
