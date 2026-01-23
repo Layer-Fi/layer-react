@@ -96,7 +96,7 @@ export const VehicleForm = (props: VehicleFormProps) => {
             label='VIN'
             inline
             isReadOnly={isReadOnly}
-            placeholder='Enter VINasdfasdf'
+            placeholder='Enter VIN'
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Vin`}
           />
         )}
