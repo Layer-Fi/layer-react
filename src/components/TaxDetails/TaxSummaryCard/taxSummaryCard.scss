@@ -14,16 +14,6 @@
     padding-block-end: var(--spacing-xl);
   }
 
-  &__Section {
-    padding-block-end: var(--spacing-md);
-    border-block-end: 1px solid var(--color-base-100);
-
-    &:last-child {
-      padding-block-end: 0;
-      border-block-end: none;
-    }
-  }
-
   &__Grid {
     display: grid;
     grid-template-columns: repeat(5, auto);
