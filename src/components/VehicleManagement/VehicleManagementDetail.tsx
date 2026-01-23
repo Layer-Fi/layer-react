@@ -72,7 +72,7 @@ export const VehicleManagementDetail = () => {
   const [showArchived, setShowArchived] = useState(false)
   const { isDesktop } = useSizeClass()
   const { data: allVehicles } = useListVehicles({ allowArchived: true })
-  const hasVehicles = allVehicles && allVehicles.length > 0
+  const hasArchivedVehicles = allVehicles?.some(vehicle => vehicle.archivedAt != null) ?? false
 
   const isMobileVariant = !isDesktop
 
@@ -94,8 +94,8 @@ export const VehicleManagementDetail = () => {
   const resolveVariant = (): DefaultVariant => isMobileVariant ? 'Mobile' : 'Desktop'
 
   // Use a ref to store the latest state values for the Header component
-  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, resolveVariant, hasVehicles })
-  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, resolveVariant, hasVehicles }
+  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, resolveVariant, hasArchivedVehicles })
+  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, resolveVariant, hasArchivedVehicles }
 
   // Header component is stable and reads from ref
   const HeaderRef = useRef(() => {
@@ -104,7 +104,7 @@ export const VehicleManagementDetail = () => {
       setShowArchived: currentSetShowArchived,
       handleAddVehicle: currentHandleAddVehicle,
       resolveVariant: currentResolveVariant,
-      hasVehicles: currentHasVehicles,
+      hasArchivedVehicles: currentHasVehicles,
     } = stateRef.current
 
     const DesktopHeader = (
@@ -143,7 +143,7 @@ export const VehicleManagementDetail = () => {
         name='VehicleManagementDetail'
         onGoBack={toTripsTable}
       >
-        {isMobileVariant && hasVehicles && (
+        {isMobileVariant && hasArchivedVehicles && (
           <HStack
             justify='end'
             align='center'
