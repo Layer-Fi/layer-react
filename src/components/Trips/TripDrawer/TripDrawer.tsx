@@ -41,11 +41,10 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
       aria-label={title}
       MobileHeader={
         isMobile
-          ? ({ close }) => (
-            <VStack pi='md'>
+          ? () => (
+            <VStack pi='md' pbs='md'>
               <ModalTitleWithClose
-                heading={<ModalHeading size='md'>{title}</ModalHeading>}
-                onClose={close}
+                heading={<ModalHeading>{title}</ModalHeading>}
               />
             </VStack>
           )
