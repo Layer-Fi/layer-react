@@ -20,6 +20,8 @@ export const StripeConnectBanner = () => {
       const result = await trigger()
       if (result?.connectAccountUrl) {
         window.location.assign(result.connectAccountUrl)
+      } else {
+        addToast({ content: 'Stripe has sent a misconfigured connect account onboarding link. Please try again.', type: 'error' })
       }
     }
     catch {
@@ -44,7 +46,7 @@ export const StripeConnectBanner = () => {
           <Info size={20} className='Layer__StripeConnectBanner__icon' />
           <div className='Layer__StripeConnectBanner__content'>
             <Text size={TextSize.lg} className='Layer__StripeConnectBanner__description'>
-              Stripe is reviewing your account submission - once complete, you can start accepting card and bank payments
+              Stripe is reviewing your account submission - once complete, you can start accepting card and bank payments.
             </Text>
           </div>
         </div>
@@ -59,7 +61,7 @@ export const StripeConnectBanner = () => {
           <Info size={20} className='Layer__StripeConnectBanner__icon' />
           <div className='Layer__StripeConnectBanner__content'>
             <Text size={TextSize.lg} className='Layer__StripeConnectBanner__description'>
-              Stripe payments not enabled - set up your Stripe account to start accepting card and bank payments for your invoices
+              Stripe payments not enabled - set up your Stripe account to start accepting card and bank payments for your invoices.
             </Text>
           </div>
           <Button
@@ -83,7 +85,7 @@ export const StripeConnectBanner = () => {
           <AlertTriangle size={20} className='Layer__StripeConnectBanner__icon' />
           <div className='Layer__StripeConnectBanner__content'>
             <Text size={TextSize.lg} className='Layer__StripeConnectBanner__description'>
-              Stripe setup incomplete - finish setting up your Stripe account to start accepting card and bank payments for your invoices
+              Stripe setup incomplete - finish setting up your Stripe account to start accepting card and bank payments for your invoices.
             </Text>
           </div>
           <Button
