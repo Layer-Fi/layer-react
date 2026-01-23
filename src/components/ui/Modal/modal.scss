@@ -53,7 +53,7 @@
 
   &[data-variant='mobile-drawer'] {
     position: fixed;
-
+    bottom: var(--visual-viewport-offset-bottom, 0);
     overflow: hidden;
     inline-size: 100%;
 
@@ -73,7 +73,6 @@
   }
 
   &[data-variant='mobile-drawer'][data-flex-block] {
-    bottom: var(--visual-viewport-offset-bottom, 0);
     block-size: min(80%, var(--visual-viewport-height, 100%));
     max-block-size: var(--visual-viewport-height, 100%);
   }
@@ -106,6 +105,8 @@
 
   &[data-scrollable] > :first-child {
     position: sticky;
+    top: 0;
+    background-color: inherit;
   }
 
   &[data-variant='drawer'] {

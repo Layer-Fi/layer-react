@@ -159,6 +159,7 @@ export const VehicleManagementDetail = () => {
             ? ({ close }) => (
               <VStack pi='md'>
                 <ModalTitleWithClose
+                  bottomPadding={false}
                   heading={(
                     <ModalHeading size='md'>
                       {selectedVehicle ? 'Edit vehicle' : 'Add vehicle'}
@@ -176,7 +177,7 @@ export const VehicleManagementDetail = () => {
 
           if (isMobileVariant) {
             return (
-              <VStack pb='lg' pi='md'>
+              <VStack pbs='sm' pbe='lg' pi='md'>
                 <VehicleForm vehicle={selectedVehicle} onSuccess={handleVehicleSuccess} />
               </VStack>
             )
