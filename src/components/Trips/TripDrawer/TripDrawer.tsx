@@ -89,7 +89,7 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
           <VStack pb='lg'>
             <VStack pi='md'>
               <ModalTitleWithClose
-                heading={<ModalHeading size='md'>{title}</ModalHeading>}
+                heading={<ModalHeading>{title}</ModalHeading>}
                 onClose={close}
               />
             </VStack>
