@@ -5,9 +5,9 @@ import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
 import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { Header } from '@ui/Typography/Text'
 import { SearchField } from '@components/SearchField/SearchField'
 import { TripsTableHeaderMenu } from '@components/Trips/TripsTable/TripsTableHeaderMenu'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 import { type TripPurposeFilterValue, TripPurposeToggle } from '@features/trips/components/TripPurposeToggle'
 
 import './tripsMobileHeader.scss'
@@ -31,9 +31,9 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
   }, [setTableFilters])
 
   return (
-    <Heading className='Layer__TripsMobileHeader'>
+    <Header className='Layer__TripsMobileHeader'>
       <VStack gap='sm'>
-        <Heading size={HeadingSize.secondary} align='left'>Trips</Heading>
+        <Header size='lg'>Trips</Header>
 
         <HStack align='center' gap='xs'>
           <TripPurposeToggle
@@ -58,6 +58,6 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
         </HStack>
 
       </VStack>
-    </Heading>
+    </Header>
   )
 }
