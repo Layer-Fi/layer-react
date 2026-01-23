@@ -12,31 +12,4 @@
 
     align-items: center;
   }
-
-  &__MenuFooter {
-    padding: var(--spacing-xs);
-    border-top: 1px solid var(--border-color);
-  }
-
-  &__AddButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: var(--spacing-xs);
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    color: var(--color-base-600);
-    transition: background-color 0.15s ease, color 0.15s ease;
-
-    &:hover {
-      background-color: var(--color-base-50);
-      color: var(--color-base-900);
-    }
-
-    &:active {
-      background-color: var(--color-base-100);
-    }
-  }
 }

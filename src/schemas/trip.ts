@@ -29,7 +29,7 @@ const TransformedTripPurposeSchema = Schema.transform(
 export const TripSchema = Schema.Struct({
   id: Schema.UUID,
 
-  vehicle: Schema.NullOr(VehicleSchema),
+  vehicle: VehicleSchema,
 
   externalId: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
@@ -90,7 +90,7 @@ export type TripForm = typeof TripFormSchema.Type
 
 export const UpsertTripSchema = Schema.Struct({
   vehicleId: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('vehicle_id'),
   ),
   tripDate: pipe(

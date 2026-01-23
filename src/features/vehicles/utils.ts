@@ -1,4 +1,4 @@
 import type { Vehicle } from '@schemas/vehicle'
 
-export const getVehicleDisplayName = (vehicle: Vehicle | null | undefined): string =>
-  vehicle ? `${vehicle.year} ${vehicle.makeAndModel}` : ''
+export const getVehicleDisplayName = (vehicle: Vehicle): string =>
+  `${vehicle.year} ${vehicle.makeAndModel}`
