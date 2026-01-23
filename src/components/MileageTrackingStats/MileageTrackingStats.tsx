@@ -35,7 +35,7 @@ type MileageTrackingStatsCardProps = {
 const MileageTrackingStatsRow = ({ label, value }: { label: string, value: number }) => (
   <VStack gap='3xs'>
     <Span size='xs' variant='subtle'>{label}</Span>
-    <Span size='sm'>{value}</Span>
+    <Span size='sm'>{value.toLocaleString()}</Span>
   </VStack>
 )
 
@@ -44,7 +44,7 @@ const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdown }: M
     <Span size='md'>{title}</Span>
     {formatAsMoney
       ? <MoneySpan amount={amount} size='lg' weight='bold' />
-      : <Span size='lg' weight='bold'>{amount}</Span>}
+      : <Span size='lg' weight='bold'>{amount.toLocaleString()}</Span>}
     {breakdown && (
       <HStack gap='md'>
         <MileageTrackingStatsRow label='Business' value={breakdown.business} />
