@@ -88,12 +88,15 @@ const resolveDialogChildren = (children: DialogChildren, MobileHeader?: DialogCh
   if (!MobileHeader) return children
 
   if (typeof children === 'function' || typeof MobileHeader === 'function') {
-    return (renderProps: DialogRenderProps) => (
-      <>
-        {typeof MobileHeader === 'function' ? MobileHeader(renderProps) : MobileHeader}
-        {typeof children === 'function' ? children(renderProps) : children}
-      </>
-    )
+    function DialogChildrenWithMobileHeader(renderProps: DialogRenderProps) {
+      return (
+        <>
+          {typeof MobileHeader === 'function' ? MobileHeader(renderProps) : MobileHeader}
+          {typeof children === 'function' ? children(renderProps) : children}
+        </>
+      )
+    }
+    return DialogChildrenWithMobileHeader
   }
 
   return (
@@ -205,9 +208,9 @@ export function Drawer({
       overlayElement.style.setProperty('--visual-viewport-offset-bottom', `${offsetBottom}px`)
       const activeElement = document.activeElement
       if (
-        activeElement instanceof HTMLElement &&
-        dialogRef.current?.contains(activeElement) &&
-        (['INPUT', 'TEXTAREA', 'SELECT'].includes(activeElement.tagName) || activeElement.isContentEditable)
+        activeElement instanceof HTMLElement
+        && dialogRef.current?.contains(activeElement)
+        && (['INPUT', 'TEXTAREA', 'SELECT'].includes(activeElement.tagName) || activeElement.isContentEditable)
       ) {
         activeElement.scrollIntoView({ block: 'center', inline: 'nearest' })
       }
@@ -235,8 +238,8 @@ export function Drawer({
     const handleFocusIn = (event: FocusEvent) => {
       const target = event.target
       if (
-        target instanceof HTMLElement &&
-        (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable)
+        target instanceof HTMLElement
+        && (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable)
       ) {
         requestAnimationFrame(() => {
           target.scrollIntoView({ block: 'center', inline: 'nearest' })
