@@ -57,6 +57,7 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
           <>
             <TripForm
               isReadOnly={isReadOnly}
+              isMobileDrawer={isMobile}
               trip={trip ?? undefined}
               onSuccess={() => {
                 onSuccess()
