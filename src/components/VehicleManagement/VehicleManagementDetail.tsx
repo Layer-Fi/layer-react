@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { useListVehicles } from '@features/vehicles/api/useListVehicles'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
@@ -23,6 +24,7 @@ interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void
   showArchived: boolean
   onShowArchivedChange: (value: boolean) => void
+  showArchivedToggle: boolean
 }
 
 const MobileVehicleManagementDetailHeader = ({
@@ -43,14 +45,17 @@ const DesktopVehicleManagementDetailHeader = ({
   onAddVehicle,
   showArchived,
   onShowArchivedChange,
+  showArchivedToggle,
 }: VehicleManagementDetailHeaderProps) => {
   return (
     <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
       <Heading size='sm'>Manage vehicles</Heading>
       <HStack gap='md' align='center'>
-        <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
-          <Span size='sm' noWrap>Show archived</Span>
-        </Switch>
+        {showArchivedToggle && (
+          <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
+            <Span size='sm' noWrap>Show archived</Span>
+          </Switch>
+        )}
         <Button variant='solid' onPress={onAddVehicle}>
           Add Vehicle
           <Plus size={14} />
@@ -66,6 +71,8 @@ export const VehicleManagementDetail = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | undefined>(undefined)
   const [showArchived, setShowArchived] = useState(false)
   const { isDesktop } = useSizeClass()
+  const { data: allVehicles } = useListVehicles({ allowArchived: true })
+  const hasVehicles = allVehicles && allVehicles.length > 0
 
   const isMobileVariant = !isDesktop
 
@@ -87,8 +94,8 @@ export const VehicleManagementDetail = () => {
   const resolveVariant = (): DefaultVariant => isMobileVariant ? 'Mobile' : 'Desktop'
 
   // Use a ref to store the latest state values for the Header component
-  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, resolveVariant })
-  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, resolveVariant }
+  const stateRef = useRef({ showArchived, setShowArchived, handleAddVehicle, resolveVariant, hasVehicles })
+  stateRef.current = { showArchived, setShowArchived, handleAddVehicle, resolveVariant, hasVehicles }
 
   // Header component is stable and reads from ref
   const HeaderRef = useRef(() => {
@@ -97,6 +104,7 @@ export const VehicleManagementDetail = () => {
       setShowArchived: currentSetShowArchived,
       handleAddVehicle: currentHandleAddVehicle,
       resolveVariant: currentResolveVariant,
+      hasVehicles: currentHasVehicles,
     } = stateRef.current
 
     const DesktopHeader = (
@@ -104,6 +112,7 @@ export const VehicleManagementDetail = () => {
         onAddVehicle={currentHandleAddVehicle}
         showArchived={currentShowArchived}
         onShowArchivedChange={currentSetShowArchived}
+        showArchivedToggle={Boolean(currentHasVehicles)}
       />
     )
 
@@ -112,6 +121,7 @@ export const VehicleManagementDetail = () => {
         onAddVehicle={currentHandleAddVehicle}
         showArchived={currentShowArchived}
         onShowArchivedChange={currentSetShowArchived}
+        showArchivedToggle={Boolean(currentHasVehicles)}
       />
     )
 
@@ -133,7 +143,7 @@ export const VehicleManagementDetail = () => {
         name='VehicleManagementDetail'
         onGoBack={toTripsTable}
       >
-        {isMobileVariant && (
+        {isMobileVariant && hasVehicles && (
           <HStack
             justify='end'
             align='center'
