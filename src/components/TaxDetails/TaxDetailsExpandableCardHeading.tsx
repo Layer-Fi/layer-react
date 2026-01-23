@@ -3,6 +3,8 @@ import { HStack, Spacer } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 
+import './taxDetailsExpandableCardHeading.scss'
+
 type TaxDetailsExpandableCardHeadingProps = {
   title: string
   amount: number
