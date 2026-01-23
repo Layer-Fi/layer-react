@@ -104,7 +104,7 @@ export const VehicleManagementDetail = () => {
       setShowArchived: currentSetShowArchived,
       handleAddVehicle: currentHandleAddVehicle,
       resolveVariant: currentResolveVariant,
-      hasArchivedVehicles: currentHasVehicles,
+      hasArchivedVehicles: currentHasArchivedVehicles,
     } = stateRef.current
 
     const DesktopHeader = (
@@ -112,7 +112,7 @@ export const VehicleManagementDetail = () => {
         onAddVehicle={currentHandleAddVehicle}
         showArchived={currentShowArchived}
         onShowArchivedChange={currentSetShowArchived}
-        showArchivedToggle={Boolean(currentHasVehicles)}
+        showArchivedToggle={currentHasArchivedVehicles}
       />
     )
 
@@ -121,7 +121,7 @@ export const VehicleManagementDetail = () => {
         onAddVehicle={currentHandleAddVehicle}
         showArchived={currentShowArchived}
         onShowArchivedChange={currentSetShowArchived}
-        showArchivedToggle={Boolean(currentHasVehicles)}
+        showArchivedToggle={currentHasArchivedVehicles}
       />
     )
 
