@@ -34,7 +34,7 @@ const TaxDetailsHeader = () => (
   />
 )
 
-const ExpandableCardsCard = ({ children }: { children: ReactNode }) => (
+const MobileExpandableCardsWrapper = ({ children }: { children: ReactNode }) => (
   <Card className='Layer__TaxDetails__ExpandableCardsWrapper'>{children}</Card>
 )
 
@@ -54,13 +54,13 @@ export const TaxDetails = () => {
     setExpanded(prev => ({ ...prev, [key]: !prev[key] }))
   }, [])
 
-  const ExpandableCardsWrapper = isDesktop ? VStack : ExpandableCardsCard
+  const ExpandableCardsWrapper = isDesktop ? VStack : MobileExpandableCardsWrapper
 
   return (
     <AdaptiveDetailView
       name='TaxDetails'
-      Header={TaxDetailsHeader}
-      mobileClassName='Layer__TaxDetails--mobile'
+      slots={{ Header: TaxDetailsHeader }}
+      mobileProps={{ className: 'Layer__TaxDetails--mobile' }}
     >
       <ConditionalBlock
         isLoading={isSummaryLoading}
@@ -102,7 +102,7 @@ export const TaxDetails = () => {
             <ExpandableCardsWrapper>
               <ExpandableCard
                 isExpanded={expanded.taxableIncome}
-                onToggle={() => toggleExpanded('taxableIncome')}
+                onToggleExpanded={() => toggleExpanded('taxableIncome')}
                 slots={{
                   Heading: (
                     <TaxDetailsExpandableCardHeading
@@ -117,7 +117,7 @@ export const TaxDetails = () => {
               {usFederal && (
                 <ExpandableCard
                   isExpanded={expanded.federalTaxes}
-                  onToggle={() => toggleExpanded('federalTaxes')}
+                  onToggleExpanded={() => toggleExpanded('federalTaxes')}
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
@@ -133,7 +133,7 @@ export const TaxDetails = () => {
               {usState && (
                 <ExpandableCard
                   isExpanded={expanded.stateTaxes}
-                  onToggle={() => toggleExpanded('stateTaxes')}
+                  onToggleExpanded={() => toggleExpanded('stateTaxes')}
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading

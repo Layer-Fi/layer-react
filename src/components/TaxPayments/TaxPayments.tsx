@@ -59,8 +59,7 @@ export const TaxPayments = () => {
   return (
     <AdaptiveDetailView
       name='TaxPayments'
-      Header={TaxPaymentsHeader}
-      mobileGap='xs'
+      slots={{ Header: TaxPaymentsHeader }}
     >
       {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
     </AdaptiveDetailView>

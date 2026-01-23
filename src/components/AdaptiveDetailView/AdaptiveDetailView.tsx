@@ -1,37 +1,38 @@
 import type { PropsWithChildren } from 'react'
 
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
-import type { Spacing } from '@ui/sharedUITypes'
 import { VStack } from '@ui/Stack/Stack'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 
 type AdaptiveDetailViewProps = PropsWithChildren<{
   name: string
-  Header: React.FC
-  mobileClassName?: string
-  mobileGap?: Spacing
+  slots: {
+    Header: React.FC
+  }
+  mobileProps?: {
+    className?: string
+  }
 }>
 
 export const AdaptiveDetailView = ({
   name,
-  Header,
+  slots,
   children,
-  mobileClassName,
-  mobileGap = 'md',
+  mobileProps,
 }: AdaptiveDetailViewProps) => {
   const { isDesktop } = useSizeClass()
 
   if (isDesktop) {
     return (
-      <BaseDetailView name={name} slots={{ Header }}>
+      <BaseDetailView name={name} slots={slots}>
         {children}
       </BaseDetailView>
     )
   }
 
   return (
-    <VStack className={mobileClassName} gap={mobileGap}>
-      <Header />
+    <VStack className={mobileProps?.className} gap='md'>
+      <slots.Header />
       {children}
     </VStack>
   )
