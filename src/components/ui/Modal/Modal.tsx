@@ -143,12 +143,11 @@ export function Modal({
   MobileHeader,
 }: ModalProps) {
   const dialogChildren = resolveDialogChildren(children, MobileHeader)
-  const isScrollable = Boolean(MobileHeader)
 
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
       <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant} scrollable={isScrollable}>
+        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant} scrollable={!!MobileHeader}>
           {dialogChildren}
         </Dialog>
       </InternalModal>
@@ -186,7 +185,6 @@ export function Drawer({
   useMobileDrawerViewport(isOpen ?? false, variant, overlayRef, dialogRef)
 
   const dialogChildren = resolveDialogChildren(children, MobileHeader)
-  const isScrollable = Boolean(MobileHeader)
 
   return (
     <ModalOverlay
@@ -202,7 +200,7 @@ export function Drawer({
           aria-label={ariaLabel}
           variant={variant}
           ref={dialogRef}
-          scrollable={isScrollable}
+          scrollable={!!MobileHeader}
         >
           {dialogChildren}
         </Dialog>
