@@ -13,7 +13,7 @@ type TaxDetailsExpandableCardHeadingProps = {
 export const TaxDetailsExpandableCardHeading = ({ title, amount }: TaxDetailsExpandableCardHeadingProps) => {
   const { isMobile } = useSizeClass()
   return (
-    <HStack className='Layer__TaxDetails__CardHeading' pie='xs' gap='xs'>
+    <HStack className='Layer__TaxDetailsExpandableCardHeading' pie='xs' gap='xs'>
       <Heading size={isMobile ? 'sm' : 'md'}>{title}</Heading>
       <Spacer />
       <MoneySpan size='xl' weight='bold' amount={amount} />
