@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 import { DisplayState } from '@internal-types/bank_transactions'
@@ -8,6 +8,7 @@ import {
   type BankTransactionFilters,
   BankTransactionsDateFilterMode,
 } from '@hooks/useBankTransactions/types'
+import { useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type useBankTransactionsFiltersParams = {
@@ -18,12 +19,17 @@ export type useBankTransactionsFiltersParams = {
   filters?: BankTransactionFilters
 }
 
-export const useBankTransactionsFilters = (
-  params?: useBankTransactionsFiltersParams,
+export const useBankTransactionsFilters = ({
+  scope,
+  monthlyView,
+  applyGlobalDateRange,
+  categorizeView,
+  filters: paramsFilters,
+}: useBankTransactionsFiltersParams = {},
 ) => {
   const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
-  const effectiveCategorizeView = params?.categorizeView ?? categorizationEnabled
+  const effectiveCategorizeView = categorizeView ?? categorizationEnabled
 
   const defaultCategorizationStatus = useMemo(() => {
     if (effectiveBookkeepingStatus === BookkeepingStatus.ACTIVE) {
@@ -35,9 +41,9 @@ export const useBankTransactionsFilters = (
     return DisplayState.review
   }, [effectiveBookkeepingStatus, effectiveCategorizeView, categorizationEnabled])
 
-  const dateFilterMode = params?.applyGlobalDateRange
+  const dateFilterMode = applyGlobalDateRange
     ? BankTransactionsDateFilterMode.GlobalDateRange
-    : params?.monthlyView
+    : monthlyView
       ? BankTransactionsDateFilterMode.MonthlyView
       : undefined
 
@@ -49,7 +55,7 @@ export const useBankTransactionsFilters = (
   }
 
   const initialFilters: BankTransactionFilters = {
-    ...(params?.scope && { categorizationStatus: params?.scope }),
+    ...(scope && { categorizationStatus: scope }),
     ...(dateFilterMode === BankTransactionsDateFilterMode.MonthlyView && {
       dateRange: defaultDateRange,
     }),
@@ -64,14 +70,22 @@ export const useBankTransactionsFilters = (
       ? baseFilters.dateRange
       : undefined
 
+  // Defensively memoize passed filters to avoid re-renders when the object reference
+  // changes but the content is the same.
+  const stableParamsFilters = useMemo(
+    () => paramsFilters,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(paramsFilters)],
+  )
+
   const filters = useMemo(
     () => ({
       categorizationStatus: defaultCategorizationStatus,
       ...baseFilters,
       dateRange,
-      ...params?.filters,
+      ...stableParamsFilters,
     }),
-    [defaultCategorizationStatus, baseFilters, params?.filters, dateRange],
+    [defaultCategorizationStatus, baseFilters, stableParamsFilters, dateRange],
   )
 
   const setFilters = useCallback((newFilters: BankTransactionFilters) => {
@@ -80,6 +94,13 @@ export const useBankTransactionsFilters = (
       ...newFilters,
     }))
   }, [])
+
+  const { setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
+
+  // Reset page to 1 when any of the filters changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [filters, setCurrentPage])
 
   return useMemo(
     () => ({

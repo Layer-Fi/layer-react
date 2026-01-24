@@ -70,15 +70,18 @@ export interface BankTransactionsProps {
    */
   mode?: BankTransactionsMode
 
+  showCategorizationRules?: boolean
   showCustomerVendor?: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
+  showStatusToggle?: boolean
+  showTags?: boolean
   showTooltips?: boolean
   showUploadOptions?: boolean
-  showStatusToggle?: boolean
-  applyGlobalDateRange?: boolean
 
+  applyGlobalDateRange?: boolean
   monthlyView?: boolean
+
   categorizeView?: boolean
   mobileComponent?: MobileComponentType
   filters?: BankTransactionFilters
@@ -86,13 +89,13 @@ export interface BankTransactionsProps {
   collapseHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
-  showCategorizationRules?: boolean
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
   onError?: (error: LayerError) => void
-  showTags?: boolean
 }
+
+type BankTransactionsTableViewProps = Omit<BankTransactionsProps, 'filters'>
 
 export const BankTransactions = ({
   onError,
@@ -104,7 +107,7 @@ export const BankTransactions = ({
   renderInAppLink,
   categorizeView,
   filters,
-  ...props
+  ...restProps
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
   usePreloadCustomers({ isEnabled: showCustomerVendor })
@@ -127,7 +130,7 @@ export const BankTransactions = ({
                   <InAppLinkProvider renderInAppLink={renderInAppLink}>
                     <BulkSelectionStoreProvider>
                       <BankTransactionsCategoryStoreProvider>
-                        <BankTransactionsContent {...props} />
+                        <BankTransactionsContent {...restProps} categorizeView={categorizeView} />
                       </BankTransactionsCategoryStoreProvider>
                     </BulkSelectionStoreProvider>
                   </InAppLinkProvider>
@@ -141,27 +144,12 @@ export const BankTransactions = ({
   )
 }
 
-const BankTransactionsContent = (props: BankTransactionsProps) => {
+const BankTransactionsContent = (props: BankTransactionsTableViewProps) => {
   const routeState = useBankTransactionsRouteState()
-  const { filters, dateFilterMode } = useBankTransactionsFiltersContext()
-  const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
-
-  const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
-
-  const { setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [filters, setCurrentPage])
 
   return routeState.route === BankTransactionsRoute.BankTransactionsTable
-    ? <BankTransactionsTableView {...props} isMonthlyViewMode={isMonthlyViewMode} categorizationEnabled={categorizationEnabled} />
+    ? <BankTransactionsTableView {...props} />
     : <CategorizationRulesDrawer />
-}
-
-interface BankTransactionsTableViewProps extends BankTransactionsProps {
-  isMonthlyViewMode: boolean
-  categorizationEnabled?: boolean
 }
 
 const BankTransactionsTableView = ({
@@ -176,16 +164,19 @@ const BankTransactionsTableView = ({
 
   categorizeView,
   mobileComponent,
-  filters,
   hideHeader = false,
   collapseHeader = false,
   stringOverrides,
   showCategorizationRules = false,
-  isMonthlyViewMode,
-  categorizationEnabled,
 }: BankTransactionsTableViewProps) => {
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
+
+  const { filters, dateFilterMode } = useBankTransactionsFiltersContext()
+  const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
+
+  const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
 
   const { currentBankTransactionsPage: currentPage, setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
 
