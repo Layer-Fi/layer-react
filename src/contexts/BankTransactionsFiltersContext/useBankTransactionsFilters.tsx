@@ -78,14 +78,19 @@ export const useBankTransactionsFilters = ({
     [JSON.stringify(paramsFilters)],
   )
 
+  const isActiveBookkeeping = effectiveBookkeepingStatus === BookkeepingStatus.ACTIVE
+
   const filters = useMemo(
     () => ({
       categorizationStatus: defaultCategorizationStatus,
       ...baseFilters,
       dateRange,
       ...stableParamsFilters,
+      // If bookkeeping is active, we want to show all transactions, so we override any other
+      // passed categorization status filter to DisplayState.all.
+      ...(isActiveBookkeeping && { categorizationStatus: DisplayState.all }),
     }),
-    [defaultCategorizationStatus, baseFilters, stableParamsFilters, dateRange],
+    [defaultCategorizationStatus, baseFilters, stableParamsFilters, dateRange, isActiveBookkeeping],
   )
 
   const setFilters = useCallback((newFilters: BankTransactionFilters) => {
