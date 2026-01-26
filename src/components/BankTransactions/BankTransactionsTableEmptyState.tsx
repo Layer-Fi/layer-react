@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { SearchX } from 'lucide-react'
 
-import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { DisplayState } from '@internal-types/bank_transactions'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import InboxIcon from '@icons/Inbox'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
@@ -18,7 +19,8 @@ export function BankTransactionsTableEmptyStates({
   isFiltered,
   isLoadingWithoutData,
 }: BankTransactionsTableEmptyStatesProps) {
-  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
+  const { display } = useBankTransactionsContext()
+  const isCategorizationMode = display !== DisplayState.categorized
 
   const StateComponent = useMemo(() => {
     if (isError) {
@@ -40,16 +42,16 @@ export function BankTransactionsTableEmptyStates({
         <DataState
           status={DataStateStatus.allDone}
           title={
-            isCategorizationEnabled
+            isCategorizationMode
               ? 'You are up to date with transactions!'
               : 'You have no categorized transactions'
           }
           description={
-            isCategorizationEnabled
+            isCategorizationMode
               ? 'All uncategorized transactions will be displayed here'
               : 'All transactions will be displayed here once reviewed'
           }
-          icon={isCategorizationEnabled ? undefined : <InboxIcon />}
+          icon={isCategorizationMode ? undefined : <InboxIcon />}
         />
       )
     }
@@ -66,7 +68,7 @@ export function BankTransactionsTableEmptyStates({
     }
 
     return null
-  }, [isCategorizationEnabled, isError, isLoadingWithoutData, isFiltered, hasVisibleTransactions])
+  }, [isError, isLoadingWithoutData, hasVisibleTransactions, isFiltered, isCategorizationMode])
 
   if (StateComponent === null) {
     return null

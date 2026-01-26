@@ -54,7 +54,7 @@ export const BankTransactionsTable = ({
   lastPage,
 }: BankTransactionsTableProps) => {
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
-  const { mutate } = useBankTransactionsContext()
+  const { mutate, display } = useBankTransactionsContext()
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
@@ -115,7 +115,7 @@ export const BankTransactionsTable = ({
             className='Layer__table-header Layer__bank-transactions__documents-col'
             {...showReceiptDataProperties}
           />
-          {isCategorizationEnabled && !DisplayState.categorized
+          {isCategorizationEnabled && display !== DisplayState.categorized
             ? (
               <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
                 {stringOverrides?.transactionsTable?.categorizeColumnHeaderText
