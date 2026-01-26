@@ -43,13 +43,11 @@ export const CustomerFormDrawer = (props: CustomerFormDrawerProps) => {
       aria-label={title}
       slots={{ Header }}
     >
-      {() => (
-        <VStack pb='lg'>
-          <VStack pi='md'>
-            <CustomerForm onSuccess={onSuccess} {...formState} />
-          </VStack>
+      <VStack pb='lg'>
+        <VStack pi='md'>
+          <CustomerForm onSuccess={onSuccess} {...formState} />
         </VStack>
-      )}
+      </VStack>
     </Drawer>
   )
 }

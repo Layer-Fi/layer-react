@@ -38,11 +38,9 @@ export const VehicleDrawer = ({ isOpen, onOpenChange, vehicle, onSuccess }: Vehi
       flexBlock={isMobile}
       slots={{ Header }}
     >
-      {() => (
-        <VStack pb='lg' pi='md'>
-          <VehicleForm vehicle={vehicle} onSuccess={onSuccess} />
-        </VStack>
-      )}
+      <VStack pb='lg' pi='md'>
+        <VehicleForm vehicle={vehicle} onSuccess={onSuccess} />
+      </VStack>
     </Drawer>
   )
 }
