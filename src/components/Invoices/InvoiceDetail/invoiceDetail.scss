@@ -1,15 +1,3 @@
 .Layer__InvoiceDetail {
   width: clamp(62rem, 100%, 1406px);
 }
-
-.Layer__InvoiceDetail__SubHeader {
-  align-items: center;
-  height: 5.5rem;
-
-  padding-left: 2.25rem;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.Layer__InvoiceDetail__Heading {
-  max-inline-size: 30rem;
-}

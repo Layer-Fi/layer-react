@@ -14,81 +14,10 @@
     width: clamp(16rem, 100%, 24rem);
   }
 
-  .Layer__InvoiceForm__LineItem {
-    display: grid;
-
-    --grid-cols-base:
-      minmax(10rem, 3fr)
-      minmax(10rem, 3fr)
-      minmax(12rem, 4fr)
-      minmax(4rem, 1fr)
-      minmax(6rem, 2fr)
-      minmax(6rem, 2fr)
-      minmax(3rem, 0fr);
-
-    grid-template-columns:
-      var(--grid-cols-base)
-      auto;
-
-    width: 100%;
-
-    &--readonly {
-      grid-template-columns: var(--grid-cols-base);
-    }
-  }
-
   min-width: 54rem;
-}
-
-.Layer__InvoiceForm__Terms {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-
-  max-width: 64rem;
-  padding: var(--spacing-lg) var(--spacing-2xl);
-}
-
-.Layer__InvoiceForm__LineItems {
-  padding: var(--spacing-lg) var(--spacing-2xl);
-  background-color: var(--bg-subtle);
-}
-
-.Layer__InvoiceForm__Metadata {
-  border-top: 1px solid var(--color-base-300);
-}
-
-.Layer__InvoiceForm__TotalFields {
-  max-width: 28rem;
-}
-
-.Layer__InvoiceForm__AdditionalTextFields {
-  flex: 1;
-  min-width: 20rem;
-  max-width: 32rem;
-}
-
-.Layer__InvoiceForm__TotalRow {
-  display: grid;
-  grid-template-columns: auto 1fr;
-
-  height: 2.5rem;
-
-  &--withField {
-    grid-template-columns:
-      minmax(7.5rem, 1fr)
-      7.5rem
-      minmax(6rem, 0.8fr);
-  }
 }
 
 .Layer__InvoiceForm__TermsComboBox {
   display: grid;
   align-items: center;
-}
-
-.Layer__InvoiceForm__FormError {
-  height: 4rem;
-
-  padding-left: 2.25rem;
-  border-bottom: 1px solid var(--border-color);
 }

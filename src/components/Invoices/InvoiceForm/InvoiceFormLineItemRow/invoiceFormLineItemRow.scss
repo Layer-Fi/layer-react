@@ -1,0 +1,22 @@
+.Layer__InvoiceForm__LineItem {
+  display: grid;
+
+  --grid-cols-base:
+    minmax(10rem, 3fr)
+    minmax(10rem, 3fr)
+    minmax(12rem, 4fr)
+    minmax(4rem, 1fr)
+    minmax(6rem, 2fr)
+    minmax(6rem, 2fr)
+    minmax(3rem, 0fr);
+
+  grid-template-columns:
+    var(--grid-cols-base)
+    auto;
+
+  width: 100%;
+
+  &--readonly {
+    grid-template-columns: var(--grid-cols-base);
+  }
+}
