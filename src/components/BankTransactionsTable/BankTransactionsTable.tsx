@@ -1,13 +1,12 @@
 import { useCallback, useMemo } from 'react'
 
-import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type BankTransaction, DisplayState } from '@internal-types/bank_transactions'
 import { DATE_FORMAT } from '@config/general'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { BankTransactionRow } from '@components/BankTransactionRow/BankTransactionRow'
 import {
@@ -27,8 +26,6 @@ export interface BankTransactionsTableStringOverrides {
 
 interface BankTransactionsTableProps {
   bankTransactions?: BankTransaction[]
-  editable: boolean
-  categorizeView?: boolean
   isLoading?: boolean
   removeTransaction: (bt: BankTransaction) => void
 
@@ -43,8 +40,6 @@ interface BankTransactionsTableProps {
 }
 
 export const BankTransactionsTable = ({
-  categorizeView,
-  editable,
   isLoading,
   bankTransactions,
   removeTransaction,
@@ -58,12 +53,10 @@ export const BankTransactionsTable = ({
   page,
   lastPage,
 }: BankTransactionsTableProps) => {
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const { mutate } = useBankTransactionsContext()
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
-
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
   const showReceiptColumn =
   (showReceiptUploads
@@ -88,7 +81,7 @@ export const BankTransactionsTable = ({
     >
       <thead>
         <tr>
-          {categorizationEnabled && (
+          {isCategorizationEnabled && (
             <th className='Layer__table-header Layer__bank-transactions__checkbox-col' style={{ padding: 0 }}>
               <span className='Layer__table-cell-content'>
                 <Checkbox
@@ -122,7 +115,7 @@ export const BankTransactionsTable = ({
             className='Layer__table-header Layer__bank-transactions__documents-col'
             {...showReceiptDataProperties}
           />
-          {categorizeView && editable
+          {isCategorizationEnabled && !DisplayState.categorized
             ? (
               <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
                 {stringOverrides?.transactionsTable?.categorizeColumnHeaderText
@@ -145,7 +138,6 @@ export const BankTransactionsTable = ({
               <BankTransactionRow
                 key={bankTransaction.id}
                 index={index}
-                editable={editable}
                 dateFormat={DATE_FORMAT}
                 bankTransaction={bankTransaction}
                 removeTransaction={removeTransaction}

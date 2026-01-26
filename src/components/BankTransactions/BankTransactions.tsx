@@ -5,8 +5,6 @@ import { debounce } from 'lodash-es'
 import { type BankTransaction, DisplayState } from '@internal-types/bank_transactions'
 import type { LayerError } from '@models/ErrorHandler'
 import { BREAKPOINTS } from '@config/general'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { usePreloadCategories } from '@hooks/categories/useCategories'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
 import { useElementSize } from '@hooks/useElementSize/useElementSize'
@@ -21,6 +19,7 @@ import {
   useBankTransactionsContext,
 } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { BankTransactionsIsCategorizationEnabledProvider } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { HStack } from '@ui/Stack/Stack'
@@ -95,7 +94,7 @@ export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
   onError?: (error: LayerError) => void
 }
 
-type BankTransactionsTableViewProps = Omit<BankTransactionsProps, 'filters'>
+type BankTransactionsTableViewProps = Omit<BankTransactionsProps, 'filters' | 'categorizeView'>
 
 export const BankTransactions = ({
   onError,
@@ -116,30 +115,31 @@ export const BankTransactions = ({
 
   return (
     <ErrorBoundary onError={onError}>
-      <CategorizationRulesProvider>
-        <BankTransactionsRouteStoreProvider>
-          <BankTransactionsProvider
-            monthlyView={monthlyView}
-            applyGlobalDateRange={applyGlobalDateRange}
-            categorizeView={categorizeView}
-            filters={filters}
-          >
-            <LegacyModeProvider overrideMode={mode}>
-              <BankTransactionTagVisibilityProvider showTags={showTags}>
-                <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-                  <InAppLinkProvider renderInAppLink={renderInAppLink}>
-                    <BulkSelectionStoreProvider>
-                      <BankTransactionsCategoryStoreProvider>
-                        <BankTransactionsContent {...restProps} categorizeView={categorizeView} />
-                      </BankTransactionsCategoryStoreProvider>
-                    </BulkSelectionStoreProvider>
-                  </InAppLinkProvider>
-                </BankTransactionCustomerVendorVisibilityProvider>
-              </BankTransactionTagVisibilityProvider>
-            </LegacyModeProvider>
-          </BankTransactionsProvider>
-        </BankTransactionsRouteStoreProvider>
-      </CategorizationRulesProvider>
+      <BankTransactionsIsCategorizationEnabledProvider categorizeView={categorizeView}>
+        <CategorizationRulesProvider>
+          <BankTransactionsRouteStoreProvider>
+            <BankTransactionsProvider
+              monthlyView={monthlyView}
+              applyGlobalDateRange={applyGlobalDateRange}
+              filters={filters}
+            >
+              <LegacyModeProvider overrideMode={mode}>
+                <BankTransactionTagVisibilityProvider showTags={showTags}>
+                  <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
+                    <InAppLinkProvider renderInAppLink={renderInAppLink}>
+                      <BulkSelectionStoreProvider>
+                        <BankTransactionsCategoryStoreProvider>
+                          <BankTransactionsContent {...restProps} />
+                        </BankTransactionsCategoryStoreProvider>
+                      </BulkSelectionStoreProvider>
+                    </InAppLinkProvider>
+                  </BankTransactionCustomerVendorVisibilityProvider>
+                </BankTransactionTagVisibilityProvider>
+              </LegacyModeProvider>
+            </BankTransactionsProvider>
+          </BankTransactionsRouteStoreProvider>
+        </CategorizationRulesProvider>
+      </BankTransactionsIsCategorizationEnabledProvider>
     </ErrorBoundary>
   )
 }
@@ -162,7 +162,6 @@ const BankTransactionsTableView = ({
   showUploadOptions = false,
   showStatusToggle = true,
 
-  categorizeView,
   mobileComponent,
   hideHeader = false,
   collapseHeader = false,
@@ -174,9 +173,6 @@ const BankTransactionsTableView = ({
 
   const { filters, dateFilterMode } = useBankTransactionsFiltersContext()
   const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
-
-  const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
 
   const { currentBankTransactionsPage: currentPage, setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
 
@@ -276,9 +272,6 @@ const BankTransactionsTableView = ({
     }
   })
 
-  const editable =
-    display === DisplayState.review || display === DisplayState.all
-
   const isLastPage =
     data
     && !hasMore
@@ -305,8 +298,6 @@ const BankTransactionsTableView = ({
         <BankTransactionsHeader
           shiftStickyHeader={shiftStickyHeader}
           asWidget={asWidget}
-          categorizedOnly={!categorizationEnabled}
-          categorizeView={categorizeView}
           mobileComponent={mobileComponent}
           listView={listView}
           stringOverrides={stringOverrides?.bankTransactionsHeader}
@@ -322,8 +313,6 @@ const BankTransactionsTableView = ({
         <div className='Layer__bank-transactions__table-wrapper'>
           {rulesSuggestionModal}
           <BankTransactionsTable
-            categorizeView={categorizeView}
-            editable={editable}
             isLoading={isLoading}
             isSyncing={isSyncing}
             bankTransactions={bankTransactions}
@@ -345,7 +334,6 @@ const BankTransactionsTableView = ({
             {rulesSuggestionModal}
             <BankTransactionsList
               bankTransactions={bankTransactions}
-              editable={editable}
               removeTransaction={removeTransaction}
               stringOverrides={stringOverrides?.bankTransactionCTAs}
 
@@ -361,7 +349,6 @@ const BankTransactionsTableView = ({
           <>
             <BankTransactionsMobileList
               bankTransactions={bankTransactions}
-              editable={editable}
               removeTransaction={removeTransaction}
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
@@ -382,7 +369,6 @@ const BankTransactionsTableView = ({
         && (
           <BankTransactionsTableEmptyStates
             hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
-            isCategorizationMode={editable}
             isError={isError}
             isFiltered={Boolean(filters?.query)}
             isLoadingWithoutData={isLoadingWithoutData}

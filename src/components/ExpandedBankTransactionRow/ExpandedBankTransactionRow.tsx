@@ -16,10 +16,9 @@ import {
   hasMatch,
 } from '@utils/bankTransactions'
 import { getBankTransactionFirstSuggestedMatch } from '@utils/bankTransactions'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
@@ -196,10 +195,9 @@ export const ExpandedBankTransactionRow = ({
     }
   }
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
-  const effectiveSplits = categorizationEnabled
+  const effectiveSplits = isCategorizationEnabled
     ? localSplits
     : []
 
@@ -216,7 +214,7 @@ export const ExpandedBankTransactionRow = ({
           <Separator />
           <span className={`${className}__wrapper`} ref={bodyRef}>
             <VStack pis={variant === 'row' ? 'md' : undefined} pbs='sm' pbe='md'>
-              {categorizationEnabled
+              {isCategorizationEnabled
                 && (
                   <HStack pi='md' pbe='md' pbs='3xs'>
                     <Toggle
@@ -258,7 +256,7 @@ export const ExpandedBankTransactionRow = ({
                       <MatchForm
                         bankTransaction={bankTransaction}
                         selectedMatchId={selectedMatch?.id}
-                        readOnly={!categorizationEnabled}
+                        readOnly={!isCategorizationEnabled}
                         setSelectedMatch={(suggestedMatch) => {
                           setSelectedMatch(suggestedMatch)
                           setMatchFormError(!suggestedMatch ? 'Select an option to match the transaction' : undefined)
@@ -291,7 +289,7 @@ export const ExpandedBankTransactionRow = ({
                             <AmountInput
                               name={`split-${index}${asListItem ? '-li' : ''}`}
                               disabled={
-                                index === 0 || !categorizationEnabled
+                                index === 0 || !isCategorizationEnabled
                               }
                               onChange={updateSplitAmount(index)}
                               value={getInputValueForSplitAtIndex(index, split)}
@@ -305,7 +303,7 @@ export const ExpandedBankTransactionRow = ({
                               onSelectedValueChange={(value) => {
                                 changeCategoryForSplitAtIndex(index, value)
                               }}
-                              isDisabled={!categorizationEnabled}
+                              isDisabled={!isCategorizationEnabled}
                               includeSuggestedMatches={false}
                             />
                             {showTags && (
@@ -313,7 +311,7 @@ export const ExpandedBankTransactionRow = ({
                                 value={split.tags}
                                 onChange={tags => changeTags(index, tags)}
                                 showLabels={false}
-                                isReadOnly={!categorizationEnabled}
+                                isReadOnly={!isCategorizationEnabled}
                                 className={`${className}__table-cell--split-entry__tags`}
                               />
                             )}
@@ -323,7 +321,7 @@ export const ExpandedBankTransactionRow = ({
                                   selectedCustomerVendor={split.customerVendor}
                                   onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
                                   placeholder='Set customer or vendor'
-                                  isReadOnly={!categorizationEnabled}
+                                  isReadOnly={!isCategorizationEnabled}
                                   showLabel={false}
                                 />
                               </div>
@@ -356,7 +354,7 @@ export const ExpandedBankTransactionRow = ({
                             )}`}
                           />
                         )}
-                        {categorizationEnabled
+                        {isCategorizationEnabled
                           ? (
                             <div className={`${className}__splits-buttons`}>
                               {effectiveSplits.length > 1

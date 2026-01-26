@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 import { DisplayState } from '@internal-types/bank_transactions'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import {
   type BankTransactionFilters,
@@ -10,12 +9,12 @@ import {
 } from '@hooks/useBankTransactions/types'
 import { useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 
 export type useBankTransactionsFiltersParams = {
   scope?: DisplayState
   monthlyView?: boolean
   applyGlobalDateRange?: boolean
-  categorizeView?: boolean
   filters?: BankTransactionFilters
 }
 
@@ -23,23 +22,13 @@ export const useBankTransactionsFilters = ({
   scope,
   monthlyView,
   applyGlobalDateRange,
-  categorizeView,
   filters: paramsFilters,
-}: useBankTransactionsFiltersParams = {},
+}: useBankTransactionsFiltersParams,
 ) => {
   const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
-  const effectiveCategorizeView = categorizeView ?? categorizationEnabled
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
-  const defaultCategorizationStatus = useMemo(() => {
-    if (effectiveBookkeepingStatus === BookkeepingStatus.ACTIVE) {
-      return DisplayState.all
-    }
-    if (!categorizationEnabled && !effectiveCategorizeView) {
-      return DisplayState.categorized
-    }
-    return DisplayState.review
-  }, [effectiveBookkeepingStatus, effectiveCategorizeView, categorizationEnabled])
+  const defaultCategorizationStatus = isCategorizationEnabled ? DisplayState.review : DisplayState.all
 
   const dateFilterMode = applyGlobalDateRange
     ? BankTransactionsDateFilterMode.GlobalDateRange
@@ -90,7 +79,13 @@ export const useBankTransactionsFilters = ({
       // passed categorization status filter to DisplayState.all.
       ...(isActiveBookkeeping && { categorizationStatus: DisplayState.all }),
     }),
-    [defaultCategorizationStatus, baseFilters, stableParamsFilters, dateRange, isActiveBookkeeping],
+    [
+      defaultCategorizationStatus,
+      baseFilters,
+      stableParamsFilters,
+      dateRange,
+      isActiveBookkeeping,
+    ],
   )
 
   const setFilters = useCallback((newFilters: BankTransactionFilters) => {

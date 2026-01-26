@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useSetMetadataOnBankTransaction } from '@features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
 import { CustomerVendorSelector } from '@features/customerVendor/components/CustomerVendorSelector'
 import { type CustomerVendorSchema, decodeCustomerVendor } from '@features/customerVendor/customerVendorSchemas'
@@ -20,8 +20,7 @@ export function BankTransactionCustomerVendorSelector({
     vendor,
   } = bankTransaction
 
-  const status = useEffectiveBookkeepingStatus()
-  const isReadOnly = status === BookkeepingStatus.ACTIVE
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const selectedCustomerVendor = useMemo(
     () => {
@@ -92,7 +91,7 @@ export function BankTransactionCustomerVendorSelector({
       selectedCustomerVendor={selectedCustomerVendor}
       onSelectedCustomerVendorChange={triggerSetCustomerVendor}
       placeholder='Set transaction customer or vendor'
-      isReadOnly={isReadOnly}
+      isReadOnly={!isCategorizationEnabled}
       isMutating={isMutating || selectedCustomerVendor?._local?.isOptimistic}
     />
   )

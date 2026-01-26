@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import { SearchX } from 'lucide-react'
 
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import InboxIcon from '@icons/Inbox'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 type BankTransactionsTableEmptyStatesProps = {
   hasVisibleTransactions: boolean
-  isCategorizationMode: boolean
   isError: boolean
   isFiltered: boolean
   isLoadingWithoutData: boolean
@@ -14,11 +14,12 @@ type BankTransactionsTableEmptyStatesProps = {
 
 export function BankTransactionsTableEmptyStates({
   hasVisibleTransactions,
-  isCategorizationMode,
   isError,
   isFiltered,
   isLoadingWithoutData,
 }: BankTransactionsTableEmptyStatesProps) {
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
+
   const StateComponent = useMemo(() => {
     if (isError) {
       return (
@@ -39,16 +40,16 @@ export function BankTransactionsTableEmptyStates({
         <DataState
           status={DataStateStatus.allDone}
           title={
-            isCategorizationMode
+            isCategorizationEnabled
               ? 'You are up to date with transactions!'
               : 'You have no categorized transactions'
           }
           description={
-            isCategorizationMode
+            isCategorizationEnabled
               ? 'All uncategorized transactions will be displayed here'
               : 'All transactions will be displayed here once reviewed'
           }
-          icon={isCategorizationMode ? undefined : <InboxIcon />}
+          icon={isCategorizationEnabled ? undefined : <InboxIcon />}
         />
       )
     }
@@ -65,7 +66,7 @@ export function BankTransactionsTableEmptyStates({
     }
 
     return null
-  }, [isCategorizationMode, isError, isLoadingWithoutData, isFiltered, hasVisibleTransactions])
+  }, [isCategorizationEnabled, isError, isLoadingWithoutData, isFiltered, hasVisibleTransactions])
 
   if (StateComponent === null) {
     return null

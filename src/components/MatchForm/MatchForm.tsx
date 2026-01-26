@@ -6,8 +6,7 @@ import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schem
 import { centsToDollars as formatMoney } from '@models/Money'
 import { DATE_FORMAT } from '@config/general'
 import { isTransferMatch } from '@utils/bankTransactions'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { MatchBadge } from '@components/BankTransactionRow/MatchBadge'
 import { ErrorText } from '@components/Typography/ErrorText'
@@ -30,8 +29,7 @@ export const MatchForm = ({
   matchFormError,
   readOnly = false,
 }: MatchFormProps) => {
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const { renderInAppLink } = useInAppLinkContext()
 
   const {
@@ -39,13 +37,13 @@ export const MatchForm = ({
     match,
   } = bankTransaction
 
-  const effectiveSuggestedMatches = categorizationEnabled
+  const effectiveSuggestedMatches = isCategorizationEnabled
     ? suggestedMatches
     : suggestedMatches.filter(
       ({ details: { id } }) => id === match?.details.id,
     )
 
-  if (!categorizationEnabled && effectiveSuggestedMatches.length === 0) {
+  if (!isCategorizationEnabled && effectiveSuggestedMatches.length === 0) {
     return null
   }
 
