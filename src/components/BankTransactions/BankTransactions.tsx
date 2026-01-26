@@ -81,6 +81,9 @@ export interface BankTransactionsProps {
   applyGlobalDateRange?: boolean
   monthlyView?: boolean
 
+  /**
+   * @deprecated `categorizeView` is no longer used. Categorization is enabled based on the bookkeeping configuration of a business.
+   */
   categorizeView?: boolean
   mobileComponent?: MobileComponentType
   filters?: BankTransactionFilters
@@ -104,7 +107,6 @@ export const BankTransactions = ({
   applyGlobalDateRange = false,
   mode,
   renderInAppLink,
-  categorizeView,
   filters,
   ...restProps
 }: BankTransactionsWithErrorProps) => {
@@ -115,7 +117,7 @@ export const BankTransactions = ({
 
   return (
     <ErrorBoundary onError={onError}>
-      <BankTransactionsIsCategorizationEnabledProvider categorizeView={categorizeView}>
+      <BankTransactionsIsCategorizationEnabledProvider>
         <CategorizationRulesProvider>
           <BankTransactionsRouteStoreProvider>
             <BankTransactionsProvider

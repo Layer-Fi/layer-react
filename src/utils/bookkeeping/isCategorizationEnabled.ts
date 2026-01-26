@@ -1,7 +1,7 @@
-import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { safeAssertUnreachableWithFallback } from '@utils/switch/assertUnreachable'
 import { BookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 
-export function isCategorizationEnabledForStatus(status: BookkeepingStatus) {
+export function isCategorizationEnabledForStatus(status: BookkeepingStatus): boolean {
   switch (status) {
     case BookkeepingStatus.NOT_PURCHASED:
     case BookkeepingStatus.ONBOARDING:
@@ -12,7 +12,7 @@ export function isCategorizationEnabledForStatus(status: BookkeepingStatus) {
       return false
     }
     default: {
-      return safeAssertUnreachable({
+      return safeAssertUnreachableWithFallback({
         value: status,
         message: 'Unexpected bookkeeping status in `isCategorizationEnabledForStatus`',
         fallbackValue: true,

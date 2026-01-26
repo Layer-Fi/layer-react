@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useContext } from 'react'
+import { createContext, type PropsWithChildren, type ReactNode, useContext } from 'react'
 
 import { useBankTransactionsIsCategorizationEnabled } from '@hooks/useBankTransactions/useBankTransactionsIsCategorizationEnabled'
 
@@ -7,16 +7,9 @@ type BankTransactionsIsCategorizationEnabledContextType = boolean
 const BankTransactionsIsCategorizationEnabledContext =
   createContext<BankTransactionsIsCategorizationEnabledContextType>(false)
 
-interface BankTransactionsIsCategorizationEnabledProviderProps {
-  children: ReactNode
-  categorizeView?: boolean
-}
 
-export const BankTransactionsIsCategorizationEnabledProvider = ({
-  children,
-  categorizeView,
-}: BankTransactionsIsCategorizationEnabledProviderProps) => {
-  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabled({ categorizeView })
+export const BankTransactionsIsCategorizationEnabledProvider = ({ children}: PropsWithChildren) => {
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabled()
 
   return (
     <BankTransactionsIsCategorizationEnabledContext.Provider value={isCategorizationEnabled}>
