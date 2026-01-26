@@ -6,14 +6,13 @@ import { type BankTransaction } from '@internal-types/bank_transactions'
 import {
   isCredit,
 } from '@utils/bankTransactions'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import AlertCircle from '@icons/AlertCircle'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import FileIcon from '@icons/File'
@@ -41,7 +40,6 @@ import './bankTransactionRow.scss'
 
 type Props = {
   index: number
-  editable: boolean
   dateFormat: string
   bankTransaction: BankTransaction
   removeTransaction: (bt: BankTransaction) => void
@@ -57,7 +55,6 @@ export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
 
 export const BankTransactionRow = ({
   index,
-  editable,
   dateFormat,
   bankTransaction,
   removeTransaction,
@@ -75,8 +72,7 @@ export const BankTransactionRow = ({
     setOpen(!open)
   }, [open])
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const categorized = isCategorized(bankTransaction)
 
@@ -100,7 +96,7 @@ export const BankTransactionRow = ({
     : categorized
 
   useEffect(() => {
-    if (editable && isBeingRemoved) {
+    if (isBeingRemoved) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
       }, 300)
@@ -160,7 +156,7 @@ export const BankTransactionRow = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    editable && isBeingRemoved
+    isBeingRemoved
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
@@ -173,12 +169,12 @@ export const BankTransactionRow = ({
     [showReceiptUploadColumn],
   )
 
-  const colSpan = categorizationEnabled ? 7 : 6
+  const colSpan = isCategorizationEnabled ? 7 : 6
 
   return (
     <>
       <tr className={rowClassName} onClick={toggleOpen}>
-        {categorizationEnabled && (
+        {isCategorizationEnabled && (
           <td className='Layer__table-cell Layer__bank-transactions__checkbox-col' onClick={preventRowExpansion}>
             <span className='Layer__table-cell-content'>
               <Checkbox
@@ -278,8 +274,8 @@ export const BankTransactionRow = ({
                       <AlertCircle size={12} />
                     </Text>
                   )}
-                {categorizationEnabled && submitButton}
-                {!categorizationEnabled && !displayAsCategorized && (
+                {isCategorizationEnabled && submitButton}
+                {!isCategorizationEnabled && !displayAsCategorized && (
                   <VStack pis='lg' fluid>
                     <BankTransactionsProcessingInfo />
                   </VStack>
@@ -301,7 +297,7 @@ export const BankTransactionRow = ({
               <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
                 <AnimatedPresenceDiv
                   variant='fade'
-                  isOpen={categorizationEnabled && !categorized}
+                  isOpen={isCategorizationEnabled && !categorized}
                   className='Layer__BankTransactionRow__CategoryComboBoxMotionContent'
                   slotProps={{ AnimatePresence: { mode: 'wait', initial: false } }}
                   key='category-combobox'
@@ -322,8 +318,8 @@ export const BankTransactionRow = ({
                       className='Layer__bank-transaction-row__category'
                     />
                   )}
-                {!displayAsCategorized && categorizationEnabled && !isBeingRemoved && submitButton}
-                {!categorizationEnabled && !displayAsCategorized && !isBeingRemoved && (
+                {!displayAsCategorized && isCategorizationEnabled && !isBeingRemoved && submitButton}
+                {!isCategorizationEnabled && !displayAsCategorized && !isBeingRemoved && (
                   <VStack pis='xs' fluid>
                     <BankTransactionsProcessingInfo />
                   </VStack>

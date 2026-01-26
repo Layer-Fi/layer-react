@@ -5,11 +5,10 @@ import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { hasReceipts, isCredit } from '@utils/bankTransactions'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
 import FileIcon from '@icons/File'
 import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
@@ -28,7 +27,6 @@ import './bankTransactionsMobileListItem.scss'
 export interface BankTransactionsMobileListItemProps {
   index: number
   bankTransaction: BankTransaction
-  editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
   isFirstItem?: boolean
@@ -66,7 +64,6 @@ export const BankTransactionsMobileListItem = ({
   index,
   bankTransaction,
   removeTransaction,
-  editable,
   initialLoad,
   isFirstItem = false,
   bulkActionsEnabled = false,
@@ -93,7 +90,7 @@ export const BankTransactionsMobileListItem = ({
   const [open, setOpen] = useState(isFirstItem)
 
   const openNext = () => {
-    if (editable && itemRef.current && itemRef.current.nextSibling) {
+    if (itemRef.current && itemRef.current.nextSibling) {
       const txId = (itemRef.current.nextSibling as HTMLLIElement).getAttribute(
         'data-item',
       )
@@ -127,7 +124,7 @@ export const BankTransactionsMobileListItem = ({
 
   useEffect(() => {
     if (bankTransaction.recently_categorized) {
-      if (editable && shouldHideAfterCategorize) {
+      if (shouldHideAfterCategorize) {
         setTimeout(() => {
           removeTransaction(bankTransaction)
           openNext()
@@ -177,8 +174,7 @@ export const BankTransactionsMobileListItem = ({
 
   useEffect(() => {
     if (
-      editable
-      && bankTransaction.recently_categorized
+      bankTransaction.recently_categorized
       && shouldHideAfterCategorize
     ) {
       setTimeout(() => {
@@ -194,8 +190,7 @@ export const BankTransactionsMobileListItem = ({
     }
   }, [bulkActionsEnabled])
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
@@ -274,7 +269,7 @@ export const BankTransactionsMobileListItem = ({
             />
           </HStack>
           {!open && (
-            !categorizationEnabled && !displayAsCategorized
+            !isCategorizationEnabled && !displayAsCategorized
               ? (
                 <BankTransactionsProcessingInfo showAsBadge />
               )
@@ -290,7 +285,7 @@ export const BankTransactionsMobileListItem = ({
           <BankTransactionsMobileListItemExpandedRow
             bankTransaction={bankTransaction}
             isOpen={open}
-            showCategorization={categorizationEnabled}
+            showCategorization={isCategorizationEnabled}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}

@@ -12,7 +12,6 @@ import {
 
 export interface BankTransactionsMobileListProps {
   bankTransactions?: BankTransaction[]
-  editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
 
@@ -24,7 +23,6 @@ export interface BankTransactionsMobileListProps {
 export const BankTransactionsMobileList = ({
   bankTransactions,
   removeTransaction,
-  editable,
   initialLoad,
   showDescriptions,
   showReceiptUploads,
@@ -55,7 +53,6 @@ export const BankTransactionsMobileList = ({
               key={bankTransaction.id}
               index={index}
               bankTransaction={bankTransaction}
-              editable={editable}
               removeTransaction={removeTransaction}
               initialLoad={initialLoad}
               isFirstItem={index == 0}

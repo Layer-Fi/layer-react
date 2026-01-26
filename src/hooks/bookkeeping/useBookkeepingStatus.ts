@@ -82,7 +82,7 @@ export function useBookkeepingStatus() {
   )
 }
 
-export function useEffectiveBookkeepingStatus() {
+export function useEffectiveBookkeepingStatus(): BookkeepingStatus {
   const { overrideMode } = useLegacyMode()
   const { data } = useBookkeepingStatus()
 

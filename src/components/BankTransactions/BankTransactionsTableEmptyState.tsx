@@ -1,12 +1,13 @@
 import { useMemo } from 'react'
 import { SearchX } from 'lucide-react'
 
+import { DisplayState } from '@internal-types/bank_transactions'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import InboxIcon from '@icons/Inbox'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 type BankTransactionsTableEmptyStatesProps = {
   hasVisibleTransactions: boolean
-  isCategorizationMode: boolean
   isError: boolean
   isFiltered: boolean
   isLoadingWithoutData: boolean
@@ -14,11 +15,13 @@ type BankTransactionsTableEmptyStatesProps = {
 
 export function BankTransactionsTableEmptyStates({
   hasVisibleTransactions,
-  isCategorizationMode,
   isError,
   isFiltered,
   isLoadingWithoutData,
 }: BankTransactionsTableEmptyStatesProps) {
+  const { display } = useBankTransactionsContext()
+  const isCategorizationMode = display !== DisplayState.categorized
+
   const StateComponent = useMemo(() => {
     if (isError) {
       return (
@@ -65,7 +68,7 @@ export function BankTransactionsTableEmptyStates({
     }
 
     return null
-  }, [isCategorizationMode, isError, isLoadingWithoutData, isFiltered, hasVisibleTransactions])
+  }, [isError, isLoadingWithoutData, hasVisibleTransactions, isFiltered, isCategorizationMode])
 
   if (StateComponent === null) {
     return null

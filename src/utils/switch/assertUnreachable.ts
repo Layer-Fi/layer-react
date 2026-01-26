@@ -15,6 +15,23 @@ export function safeAssertUnreachable<T>({
   return fallbackValue
 }
 
+export function safeAssertUnreachableWithFallback<T>({
+  value,
+  message,
+  fallbackValue,
+}: {
+  value: never
+  message?: string
+  fallbackValue: T
+}): T {
+  console.error(
+    message ?? 'Unexpected value encountered in exhaustive check:',
+    value,
+  )
+
+  return fallbackValue
+}
+
 export function unsafeAssertUnreachable({
   message,
 }: {

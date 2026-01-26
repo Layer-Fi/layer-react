@@ -16,11 +16,13 @@ export const BankTransactionsProvider = ({
   scope,
   monthlyView,
   applyGlobalDateRange,
+  filters,
 }: BankTransactionsProviderProps) => {
   const filtersContextValue = useBankTransactionsFilters({
     scope,
     monthlyView,
     applyGlobalDateRange,
+    filters,
   })
 
   const bankTransactionsContextData = useAugmentedBankTransactions({ filters: filtersContextValue.filters })

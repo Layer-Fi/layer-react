@@ -1,9 +1,8 @@
 import { useRef } from 'react'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { VStack } from '@ui/Stack/Stack'
 
@@ -21,14 +20,13 @@ export const BankTransactionsMobileListItemCheckbox = ({
   const internalRef = useRef<HTMLDivElement>(null)
   const ref = checkboxContainerRef || internalRef
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
 
-  if (!categorizationEnabled || !bulkActionsEnabled) {
+  if (!isCategorizationEnabled || !bulkActionsEnabled) {
     return null
   }
 
