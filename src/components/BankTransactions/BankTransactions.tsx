@@ -117,15 +117,15 @@ export const BankTransactions = ({
 
   return (
     <ErrorBoundary onError={onError}>
-      <BankTransactionsIsCategorizationEnabledProvider>
-        <CategorizationRulesProvider>
-          <BankTransactionsRouteStoreProvider>
-            <BankTransactionsProvider
-              monthlyView={monthlyView}
-              applyGlobalDateRange={applyGlobalDateRange}
-              filters={filters}
-            >
-              <LegacyModeProvider overrideMode={mode}>
+      <LegacyModeProvider overrideMode={mode}>
+        <BankTransactionsIsCategorizationEnabledProvider>
+          <CategorizationRulesProvider>
+            <BankTransactionsRouteStoreProvider>
+              <BankTransactionsProvider
+                monthlyView={monthlyView}
+                applyGlobalDateRange={applyGlobalDateRange}
+                filters={filters}
+              >
                 <BankTransactionTagVisibilityProvider showTags={showTags}>
                   <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
                     <InAppLinkProvider renderInAppLink={renderInAppLink}>
@@ -137,11 +137,11 @@ export const BankTransactions = ({
                     </InAppLinkProvider>
                   </BankTransactionCustomerVendorVisibilityProvider>
                 </BankTransactionTagVisibilityProvider>
-              </LegacyModeProvider>
-            </BankTransactionsProvider>
-          </BankTransactionsRouteStoreProvider>
-        </CategorizationRulesProvider>
-      </BankTransactionsIsCategorizationEnabledProvider>
+              </BankTransactionsProvider>
+            </BankTransactionsRouteStoreProvider>
+          </CategorizationRulesProvider>
+        </BankTransactionsIsCategorizationEnabledProvider>
+      </LegacyModeProvider>
     </ErrorBoundary>
   )
 }
