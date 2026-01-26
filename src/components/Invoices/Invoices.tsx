@@ -33,7 +33,7 @@ export const Invoices = ({
   return (
     <InvoicesProvider onSendInvoice={onSendInvoice}>
       <View title={stringOverrides?.title || 'Invoices'} showHeader={showTitle}>
-        <InvoicesContent _showStripeConnectBanner={_showStripeConnectBanner} />
+        <InvoicesContent _showStripeConnectBanner />
       </View>
     </InvoicesProvider>
   )
@@ -48,5 +48,5 @@ const InvoicesContent = ({ _showStripeConnectBanner }: InvoicesContentProps) => 
 
   return routeState.route === InvoiceRoute.Detail
     ? <InvoiceDetail />
-    : <InvoiceOverview _showStripeConnectBanner={_showStripeConnectBanner} />
+    : <InvoiceOverview _showStripeConnectBanner />
 }

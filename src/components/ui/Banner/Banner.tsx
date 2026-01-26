@@ -1,5 +1,6 @@
 import { forwardRef, type PropsWithChildren, type ReactNode } from 'react'
 import classNames from 'classnames'
+import { AlertTriangle, CheckCircle, Info, XCircle } from 'lucide-react'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -24,7 +25,7 @@ export type BannerProps = PropsWithChildren<{
   icon?: ReactNode
   title?: string
   description?: string
-  action?: ReactNode
+  slots?: { Button?: ReactNode }
   className?: string
   ariaLabel?: string
 }>
@@ -49,6 +50,23 @@ function getAriaProperties(
     case 'default':
     default:
       return { 'role': 'region', 'aria-label': ariaLabel ?? 'Notification' }
+  }
+}
+
+const DEFAULT_ICON_SIZE = 20
+
+function getDefaultIcon(variant: BannerVariant): ReactNode {
+  switch (variant) {
+    case 'warning':
+      return <AlertTriangle size={DEFAULT_ICON_SIZE} />
+    case 'error':
+      return <XCircle size={DEFAULT_ICON_SIZE} />
+    case 'success':
+      return <CheckCircle size={DEFAULT_ICON_SIZE} />
+    case 'info':
+    case 'default':
+    default:
+      return <Info size={DEFAULT_ICON_SIZE} />
   }
 }
 
@@ -90,7 +108,7 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
     icon,
     title,
     description,
-    action,
+    slots,
     children,
     className,
     ariaLabel,
@@ -99,6 +117,8 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
 ) => {
   const dataProperties = toDataProperties({ variant })
   const ariaProperties = getAriaProperties(variant, ariaLabel)
+
+  const renderedIcon = icon ?? getDefaultIcon(variant)
 
   return (
     <HStack
@@ -110,15 +130,15 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
       {...dataProperties}
       {...ariaProperties}
     >
-      {icon && (
-        <span className={BANNER_CLASS_NAMES.ICON_CONTAINER}>{icon}</span>
-      )}
+      <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
+        {renderedIcon}
+      </HStack>
       <BannerContent title={title} description={description}>
         {children}
       </BannerContent>
-      {action && (
+      {slots?.Button && (
         <HStack gap='sm' align='center' className={BANNER_CLASS_NAMES.ACTIONS}>
-          {action}
+          {slots.Button}
         </HStack>
       )}
     </HStack>
