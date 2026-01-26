@@ -17,10 +17,18 @@ interface TripDrawerProps {
   onDeleteTrip: (trip: Trip) => void
 }
 
+const TripDrawerHeader = ({ title, close }: { title: string, close: () => void }) => (
+  <ModalTitleWithClose
+    heading={<ModalHeading size='md'>{title}</ModalHeading>}
+    onClose={close}
+  />
+)
+
 export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess }: TripDrawerProps) => {
   const { isMobile, isTablet } = useSizeClass()
   const [isEditMode, setIsEditMode] = useState(false)
   const isReadOnly = !isEditMode && !!trip && (isMobile || isTablet)
+  const title = trip ? 'Trip details' : 'Record trip'
 
   const handleOpenChange = useCallback((nextIsOpen: boolean) => {
     if (!nextIsOpen) {
@@ -29,6 +37,10 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
     onOpenChange(nextIsOpen)
   }, [onOpenChange])
 
+  const Header = useCallback(({ close }: { close: () => void }) => (
+    <TripDrawerHeader title={title} close={close} />
+  ), [title])
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -36,17 +48,12 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
       isDismissable
       variant={isMobile ? 'mobile-drawer' : 'drawer'}
       flexBlock={isMobile}
-      aria-label={trip ? 'Trip details' : 'Record trip'}
+      aria-label={title}
+      slots={{ Header }}
     >
       {({ close }) => {
         return (
           <VStack pb='lg'>
-            <VStack pi='md'>
-              <ModalTitleWithClose
-                heading={<ModalHeading size='md'>{trip ? 'Trip details' : 'Record trip'}</ModalHeading>}
-                onClose={close}
-              />
-            </VStack>
             <VStack gap='md'>
               <TripForm
                 isReadOnly={isReadOnly}

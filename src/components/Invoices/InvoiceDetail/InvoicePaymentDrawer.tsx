@@ -16,6 +16,17 @@ export type InvoicePaymentDrawerProps = {
   invoice: Invoice
 }
 
+const InvoicePaymentDrawerHeader = ({ close }: { close: () => void }) => (
+  <ModalTitleWithClose
+    heading={(
+      <ModalHeading size='md'>
+        Record invoice payment
+      </ModalHeading>
+    )}
+    onClose={close}
+  />
+)
+
 export const InvoicePaymentDrawer = ({
   isOpen,
   onOpenChange,
@@ -31,19 +42,9 @@ export const InvoicePaymentDrawer = ({
   }, [addToast, invoice, toViewInvoice])
 
   return (
-    <Drawer isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Drawer isOpen={isOpen} onOpenChange={onOpenChange} slots={{ Header: InvoicePaymentDrawerHeader }}>
       {({ close }) => (
         <VStack pb='lg' gap='lg'>
-          <VStack pi='md'>
-            <ModalTitleWithClose
-              heading={(
-                <ModalHeading size='md'>
-                  Record invoice payment
-                </ModalHeading>
-              )}
-              onClose={close}
-            />
-          </VStack>
           <InvoicePaymentForm
             onSuccess={(invoicePayment: InvoicePayment) => {
               onSuccess(invoicePayment)
