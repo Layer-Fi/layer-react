@@ -1,14 +1,33 @@
-import classNames from 'classnames'
 import { AlertTriangle, ExternalLink, Info, RotateCcw } from 'lucide-react'
 
 import { StripeAccountStatus } from '@schemas/stripeAccountStatus'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { Banner } from '@ui/Banner/Banner'
 import { Button } from '@ui/Button/Button'
-import { Text, TextSize } from '@components/Typography/Text'
 import { useStripeAccountStatus } from '@features/invoices/api/useStripeAccountStatus'
 import { useStripeConnectAccountLink } from '@features/invoices/api/useStripeConnectAccountLink'
 
 import './stripeConnectBanner.scss'
+
+const ConnectStripeButton = ({
+  isError,
+  isMutating,
+  onPress,
+}: {
+  isError: boolean
+  isMutating: boolean
+  onPress: () => void
+}) => (
+  <Button
+    variant='solid'
+    onPress={onPress}
+    isDisabled={isMutating}
+    isPending={isMutating}
+  >
+    {isError ? 'Retry' : 'Connect Stripe'}
+    {isError ? <RotateCcw size={16} /> : <ExternalLink size={16} />}
+  </Button>
+)
 
 export const StripeConnectBanner = () => {
   const { addToast } = useLayerContext()
@@ -43,14 +62,12 @@ export const StripeConnectBanner = () => {
   if (status === StripeAccountStatus.Pending) {
     return (
       <div className='Layer__StripeConnectBanner__wrapper'>
-        <div className={classNames('Layer__StripeConnectBanner', 'Layer__StripeConnectBanner--pending')}>
-          <Info size={20} className='Layer__StripeConnectBanner__icon' />
-          <div className='Layer__StripeConnectBanner__content'>
-            <Text size={TextSize.lg} className='Layer__StripeConnectBanner__description'>
-              Stripe is reviewing your account submission - once complete, you can start accepting card and bank payments.
-            </Text>
-          </div>
-        </div>
+        <Banner
+          variant='default'
+          icon={<Info size={20} />}
+          title='Stripe account under review'
+          description='Once complete, you can start accepting card and bank payments.'
+        />
       </div>
     )
   }
@@ -58,23 +75,19 @@ export const StripeConnectBanner = () => {
   if (status === StripeAccountStatus.NotCreated) {
     return (
       <div className='Layer__StripeConnectBanner__wrapper'>
-        <div className='Layer__StripeConnectBanner'>
-          <Info size={20} className='Layer__StripeConnectBanner__icon' />
-          <div className='Layer__StripeConnectBanner__content'>
-            <Text size={TextSize.lg} className='Layer__StripeConnectBanner__description'>
-              Stripe payments not enabled - set up your Stripe account to start accepting card and bank payments for your invoices.
-            </Text>
-          </div>
-          <Button
-            variant='solid'
-            onPress={() => void handleConnectStripe()}
-            isDisabled={isMutating}
-            isPending={isMutating}
-          >
-            {isConnectError ? 'Retry' : 'Connect Stripe'}
-            {isConnectError ? <RotateCcw size={16} /> : <ExternalLink size={16} />}
-          </Button>
-        </div>
+        <Banner
+          variant='info'
+          icon={<Info size={20} />}
+          title='Stripe payments not enabled'
+          description='Set up your Stripe account to start accepting card and bank payments for your invoices.'
+          action={(
+            <ConnectStripeButton
+              isError={isConnectError}
+              isMutating={isMutating}
+              onPress={() => void handleConnectStripe()}
+            />
+          )}
+        />
       </div>
     )
   }
@@ -82,23 +95,19 @@ export const StripeConnectBanner = () => {
   if (status === StripeAccountStatus.Incomplete) {
     return (
       <div className='Layer__StripeConnectBanner__wrapper'>
-        <div className={classNames('Layer__StripeConnectBanner', 'Layer__StripeConnectBanner--incomplete')}>
-          <AlertTriangle size={20} className='Layer__StripeConnectBanner__icon' />
-          <div className='Layer__StripeConnectBanner__content'>
-            <Text size={TextSize.lg} className='Layer__StripeConnectBanner__description'>
-              Stripe setup incomplete - finish setting up your Stripe account to start accepting card and bank payments for your invoices.
-            </Text>
-          </div>
-          <Button
-            variant='solid'
-            onPress={() => void handleConnectStripe()}
-            isDisabled={isMutating}
-            isPending={isMutating}
-          >
-            {isConnectError ? 'Retry' : 'Connect Stripe'}
-            {isConnectError ? <RotateCcw size={16} /> : <ExternalLink size={16} />}
-          </Button>
-        </div>
+        <Banner
+          variant='warning'
+          icon={<AlertTriangle size={20} />}
+          title='Stripe setup incomplete'
+          description='Finish setting up your Stripe account to start accepting card and bank payments for your invoices.'
+          action={(
+            <ConnectStripeButton
+              isError={isConnectError}
+              isMutating={isMutating}
+              onPress={() => void handleConnectStripe()}
+            />
+          )}
+        />
       </div>
     )
   }
