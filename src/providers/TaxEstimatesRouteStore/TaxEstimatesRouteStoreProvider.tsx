@@ -25,8 +25,10 @@ type TaxEstimatesRouteStoreShape = {
   onboardingStatus: OnboardingStatus
   navigate: (route: TaxEstimatesRoute) => void
   year: number
+  fullYearProjection: boolean
   actions: {
     setYear: (year: number) => void
+    setFullYearProjection: (value: boolean) => void
   }
 }
 
@@ -38,8 +40,10 @@ const TaxEstimatesRouteStoreContext = createContext(
     onboardingStatus: OnboardingStatus.Loading,
     navigate: () => {},
     year: currentYear,
+    fullYearProjection: false,
     actions: {
       setYear: () => {},
+      setFullYearProjection: () => {},
     },
   })),
 )
@@ -66,6 +70,19 @@ export function useTaxEstimatesYear() {
   return useMemo(() => ({ year, setYear }), [year, setYear])
 }
 
+export function useFullYearProjection() {
+  const store = useContext(TaxEstimatesRouteStoreContext)
+
+  const rawFullYearProjection = useStore(store, state => state.fullYearProjection)
+  const year = useStore(store, state => state.year)
+
+  const isCurrentYear = year === currentYear
+  const fullYearProjection = isCurrentYear ? rawFullYearProjection : false
+  const setFullYearProjection = useStore(store, state => state.actions.setFullYearProjection)
+
+  return useMemo(() => ({ fullYearProjection, setFullYearProjection }), [fullYearProjection, setFullYearProjection])
+}
+
 export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   const { data: taxProfile, isLoading, isError } = useTaxProfile()
   const [store] = useState(() =>
@@ -76,9 +93,13 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
         set({ routeState: { route } })
       },
       year: currentYear,
+      fullYearProjection: false,
       actions: {
         setYear: (year: number) => {
           set({ year })
+        },
+        setFullYearProjection: (fullYearProjection: boolean) => {
+          set({ fullYearProjection })
         },
       },
     })),

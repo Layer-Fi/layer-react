@@ -4,19 +4,19 @@ import type { ReactNode } from 'react'
 import { useTaxDetails } from '@hooks/taxEstimates/useTaxDetails'
 import { useTaxSummary } from '@hooks/taxEstimates/useTaxSummary'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
-import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Card } from '@components/Card/Card'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableCard } from '@components/ExpandableCard/ExpandableCard'
 import { Loader } from '@components/Loader/Loader'
-import { ResponsiveDetailHeader } from '@components/ResponsiveDetailView/ResponsiveDetailHeader'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { AdjustedGrossIncomeTable } from '@components/TaxDetails/AdjustedGrossIncomeTable/AdjustedGrossIncomeTable'
 import { FederalTaxTable } from '@components/TaxDetails/FederalTaxTable/FederalTaxTable'
 import { StateTaxTable } from '@components/TaxDetails/StateTaxTable/StateTaxTable'
 import { TaxDetailsExpandableCardHeading } from '@components/TaxDetails/TaxDetailsExpandableCardHeading'
 import { TaxSummaryCard } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCard'
+import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxDetails.scss'
@@ -27,12 +27,18 @@ type ExpandedState = {
   stateTaxes: boolean
 }
 
-const TaxDetailsHeader = () => (
-  <ResponsiveDetailHeader
-    title='Estimated Business Income Taxes'
-    description='Calculated based on your categorized transactions and tracked mileage'
-  />
-)
+const maybeAddProjectedToLabel = (label: string, fullYearProjection: boolean) => fullYearProjection ? `Projected ${label}` : label
+
+const TaxDetailsHeader = ({ isMobile }: { isMobile: boolean }) => {
+  const { fullYearProjection } = useFullYearProjection()
+  return (
+    <TaxEstimatesHeader
+      title={maybeAddProjectedToLabel('Business Income Taxes', fullYearProjection)}
+      description='Calculated based on your categorized transactions and tracked mileage'
+      isMobile={isMobile}
+    />
+  )
+}
 
 const MobileExpandableCardsWrapper = ({ children }: { children: ReactNode }) => (
   <Card className='Layer__TaxDetails__ExpandableCardsWrapper'>{children}</Card>
@@ -40,8 +46,9 @@ const MobileExpandableCardsWrapper = ({ children }: { children: ReactNode }) => 
 
 export const TaxDetails = () => {
   const { year } = useTaxEstimatesYear()
-  const { data, isLoading, isError } = useTaxDetails({ year })
-  const { data: summaryData, isLoading: isSummaryLoading } = useTaxSummary({ year })
+  const { fullYearProjection } = useFullYearProjection()
+  const { data, isLoading, isError } = useTaxDetails({ year, fullYearProjection })
+  const { data: summaryData, isLoading: isSummaryLoading } = useTaxSummary({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
 
   const [expanded, setExpanded] = useState<ExpandedState>({
@@ -56,10 +63,14 @@ export const TaxDetails = () => {
 
   const ExpandableCardsWrapper = isDesktop ? VStack : MobileExpandableCardsWrapper
 
+  const Header = useCallback(() => (
+    <TaxDetailsHeader isMobile={!isDesktop} />
+  ), [isDesktop])
+
   return (
     <ResponsiveDetailView
       name='TaxDetails'
-      slots={{ Header: TaxDetailsHeader }}
+      slots={{ Header }}
       mobileProps={{ className: 'Layer__TaxDetails--mobile' }}
     >
       <ConditionalBlock
@@ -106,7 +117,7 @@ export const TaxDetails = () => {
                 slots={{
                   Heading: (
                     <TaxDetailsExpandableCardHeading
-                      title='Taxable Business Income'
+                      title={maybeAddProjectedToLabel('Taxable Business Income', fullYearProjection)}
                       amount={details.adjustedGrossIncome.totalAdjustedGrossIncome}
                     />
                   ),
@@ -121,7 +132,7 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title='Estimated Federal Taxes'
+                        title={maybeAddProjectedToLabel('Federal Taxes', fullYearProjection)}
                         amount={usFederal.totalFederalTax.totalFederalTaxOwed}
                       />
                     ),
@@ -137,7 +148,7 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title={`Estimated State Taxes (${usState.stateName})`}
+                        title={maybeAddProjectedToLabel(`State Taxes (${usState.stateName})`, fullYearProjection)}
                         amount={usState.totalStateTax.totalStateTaxOwed}
                       />
                     ),

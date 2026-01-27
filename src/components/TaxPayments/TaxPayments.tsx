@@ -1,18 +1,19 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { useTaxPayments } from '@hooks/taxEstimates/useTaxPayments'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
-import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { ResponsiveDetailHeader } from '@components/ResponsiveDetailView/ResponsiveDetailHeader'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
+import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxPaymentsMobileList } from '@components/TaxPayments/TaxPaymentsMobileList/TaxPaymentsMobileList'
 import { TaxPaymentsTable } from '@components/TaxPayments/TaxPaymentsTable/TaxPaymentsTable'
 
-const TaxPaymentsHeader = () => (
-  <ResponsiveDetailHeader
+const TaxPaymentsHeader = ({ isMobile }: { isMobile: boolean }) => (
+  <TaxEstimatesHeader
     title='Tax Payments'
     description='Federal and state tax payments for the selected tax year'
+    isMobile={isMobile}
   />
 )
 
@@ -38,7 +39,8 @@ const EmptyState = () => (
 
 export const TaxPayments = () => {
   const { year } = useTaxEstimatesYear()
-  const { data, isLoading, isError } = useTaxPayments({ year })
+  const { fullYearProjection } = useFullYearProjection()
+  const { data, isLoading, isError } = useTaxPayments({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
 
   const dataWithIds = useMemo(
@@ -56,11 +58,12 @@ export const TaxPayments = () => {
     },
   }), [dataWithIds, isError, isLoading])
 
+  const Header = useCallback(() => (
+    <TaxPaymentsHeader isMobile={!isDesktop} />
+  ), [isDesktop])
+
   return (
-    <ResponsiveDetailView
-      name='TaxPayments'
-      slots={{ Header: TaxPaymentsHeader }}
-    >
+    <ResponsiveDetailView name='TaxPayments' slots={{ Header }}>
       {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
     </ResponsiveDetailView>
   )
