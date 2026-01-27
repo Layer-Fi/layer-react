@@ -1,9 +1,9 @@
 import { StripeAccountStatus } from '@schemas/stripeAccountStatus'
 import { Banner } from '@ui/Banner/Banner'
 import { VStack } from '@ui/Stack/Stack'
-import { useStripeAccountStatus } from '@features/invoices/api/useStripeAccountStatus'
 import { ConnectStripeButton } from '@components/Invoices/StripeConnectBanner/ConnectStripeButton'
 import { useStripeConnect } from '@components/Invoices/StripeConnectBanner/useStripeConnect'
+import { useStripeAccountStatus } from '@features/invoices/api/useStripeAccountStatus'
 
 import '@components/Invoices/StripeConnectBanner/stripeConnectBanner.scss'
 

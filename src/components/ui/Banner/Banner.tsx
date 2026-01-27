@@ -1,4 +1,5 @@
 import { forwardRef, type PropsWithChildren, type ReactNode } from 'react'
+import classNames from 'classnames'
 import { AlertTriangle, CheckCircle, Info, XCircle } from 'lucide-react'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
@@ -21,9 +22,11 @@ export type BannerVariant = 'default' | 'info' | 'warning' | 'error' | 'success'
 
 export type BannerProps = PropsWithChildren<{
   variant?: BannerVariant
-  title: string
+  icon?: ReactNode
+  title?: string
   description?: string
-  slots?: { Icon?: ReactNode; Button?: ReactNode }
+  slots?: { Button?: ReactNode }
+  className?: string
   ariaLabel?: string
 }>
 
@@ -102,10 +105,12 @@ function BannerContent({
 const Banner = forwardRef<HTMLDivElement, BannerProps>((
   {
     variant = 'info',
+    icon,
     title,
     description,
     slots,
     children,
+    className,
     ariaLabel,
   },
   ref,
@@ -113,7 +118,7 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
   const dataProperties = toDataProperties({ variant })
   const ariaProperties = getAriaProperties(variant, ariaLabel)
 
-  const renderedIcon = slots?.Icon ?? getDefaultIcon(variant)
+  const renderedIcon = icon ?? getDefaultIcon(variant)
 
   return (
     <HStack
@@ -121,7 +126,7 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
       gap='md'
       align='center'
       justify='space-between'
-      className={BANNER_CLASS_NAMES.DEFAULT}
+      className={classNames(BANNER_CLASS_NAMES.DEFAULT, className)}
       {...dataProperties}
       {...ariaProperties}
     >
