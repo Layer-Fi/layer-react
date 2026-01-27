@@ -4,7 +4,7 @@ import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransacti
 import { asMutable } from '@utils/asMutable'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 import { Separator } from '@components/Separator/Separator'
 import { AffectedTransactionsTable } from '@components/SuggestedCategorizationRuleUpdates/AffectedTransactionsTable'
 import { CreateRuleButton } from '@components/SuggestedCategorizationRuleUpdates/CreateRuleButton'
@@ -12,34 +12,33 @@ import { useWizard } from '@components/Wizard/Wizard'
 
 interface RuleUpdatesPromptReviewStepProps {
   ruleSuggestion: UpdateCategorizationRulesSuggestion
+  isDrawer?: boolean
 }
 
-export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptReviewStepProps) {
+export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesPromptReviewStepProps) {
   const { previous } = useWizard()
+  const ActionButtonsStack = isDrawer ? VStack : HStack
 
   return (
-    <VStack gap='lg'>
-      <Label size='md'>
+    <VStack gap='md' pbe={isDrawer ? '3xl' : undefined}>
+      <Span size='md'>
         {`The following ${pluralize('transaction', ruleSuggestion.transactionsThatWillBeAffected.length, ruleSuggestion.transactionsThatWillBeAffected.length !== 1)} will be affected:`}
-      </Label>
-      <AffectedTransactionsTable
-        transactions={asMutable(ruleSuggestion.transactionsThatWillBeAffected)}
-      />
+      </Span>
+      <AffectedTransactionsTable transactions={asMutable(ruleSuggestion.transactionsThatWillBeAffected)} />
       <Separator />
-      <HStack gap='sm'>
+      <ActionButtonsStack gap='xs' justify='end' className={isDrawer ? 'Layer__suggested-categorization-rule-updates__buttons--mobile' : undefined}>
         <Button
-          onClick={() => {
-            previous()
-          }}
+          onClick={previous}
           variant='outlined'
+          fullWidth={isDrawer}
         >
           Back
         </Button>
         <CreateRuleButton
           newRule={ruleSuggestion.newRule}
-          buttonText='Submit'
+          slotProps={{ fullWidth: isDrawer, children: 'Submit' }}
         />
-      </HStack>
+      </ActionButtonsStack>
     </VStack>
   )
 }

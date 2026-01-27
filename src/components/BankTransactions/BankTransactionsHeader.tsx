@@ -223,7 +223,7 @@ export const BankTransactionsHeader = ({
     return actions
   }, [withUploadMenu, showCategorizationRules])
 
-  const BulkActionsModuleSlot = useCallback(() => {
+  const BulkActions = useCallback(() => {
     return (
       <BankTransactionsBulkActions
         isMobileView={isMobileList}
@@ -264,19 +264,24 @@ export const BankTransactionsHeader = ({
         <VStack gap='sm'>
           {headerTopRow}
 
-          <TransactionsSearch isDisabled={showBulkActions} />
-
           <HStack justify='space-between' align='center' gap='xs'>
             {showBulkActions
               ? (
                 <BulkActionsModule
                   showSelectedLabel={false}
                   fullWidth
-                  slots={{ BulkActions: BulkActionsModuleSlot }}
+                  slots={{ BulkActions }}
                 />
               )
-              : statusToggle}
+              : (
+                <>
+                  {statusToggle}
+                  <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
+                </>
+              )}
           </HStack>
+
+          <TransactionsSearch isDisabled={showBulkActions} />
 
         </VStack>
       </Header>
@@ -297,12 +302,13 @@ export const BankTransactionsHeader = ({
 
           <HStack justify='space-between' align='center' gap='xs'>
             {showBulkActions
-              ? (
-                <BulkActionsModule
-                  slots={{ BulkActions: BulkActionsModuleSlot }}
-                />
-              )
-              : statusToggle}
+              ? <BulkActionsModule slots={{ BulkActions }} />
+              : (
+                <>
+                  {statusToggle}
+                  <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
+                </>
+              )}
           </HStack>
 
           <TransactionsSearch isDisabled={showBulkActions} />
@@ -312,44 +318,35 @@ export const BankTransactionsHeader = ({
     )
   }
 
-  else {
-    return (
-      <Header
-        className={classNames(
-          'Layer__bank-transactions__header',
-          withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
-          mobileComponent && listView
-            ? 'Layer__bank-transactions__header--mobile'
-            : undefined,
-        )}
-        style={{ top: shiftStickyHeader }}
-      >
-        {!collapseHeader && headerTopRow}
+  return (
+    <Header
+      className={classNames(
+        'Layer__bank-transactions__header',
+        withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
+      )}
+      style={{ top: shiftStickyHeader }}
+    >
+      {!collapseHeader && headerTopRow}
 
-        <BankTransactionsActions>
-          {showBulkActions
-            ? (
-              <BulkActionsModule
-                slots={{ BulkActions: BulkActionsModuleSlot }}
-              />
-            )
-            : (
-              <HStack slot='toggle' justify='center' gap='xs'>
-                {collapseHeader && headerTopRow}
-                {statusToggle}
-              </HStack>
-            )}
-          <TransactionsSearch slot='search' isDisabled={showBulkActions} />
-          <HStack slot='download-upload' justify='center' gap='xs'>
-            <DownloadButton
-              downloadButtonTextOverride={stringOverrides?.downloadButton}
-              iconOnly={listView}
-              disabled={showBulkActions}
-            />
-            <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
-          </HStack>
-        </BankTransactionsActions>
-      </Header>
-    )
-  }
+      <BankTransactionsActions>
+        {showBulkActions
+          ? <BulkActionsModule slots={{ BulkActions }} />
+          : (
+            <HStack slot='toggle' justify='center' gap='xs'>
+              {collapseHeader && headerTopRow}
+              {statusToggle}
+            </HStack>
+          )}
+        <TransactionsSearch slot='search' isDisabled={showBulkActions} />
+        <HStack slot='download-upload' justify='center' gap='xs'>
+          <DownloadButton
+            downloadButtonTextOverride={stringOverrides?.downloadButton}
+            iconOnly={listView}
+            disabled={showBulkActions}
+          />
+          <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
+        </HStack>
+      </BankTransactionsActions>
+    </Header>
+  )
 }

@@ -43,7 +43,7 @@ export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion, isDr
         onStepChange={undefined}
       >
         <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} close={close} isDrawer={isDrawer} />
-        {hasTransactions && <RuleUpdatesReviewStep ruleSuggestion={ruleSuggestion} />}
+        {hasTransactions && <RuleUpdatesReviewStep ruleSuggestion={ruleSuggestion} isDrawer={isDrawer} />}
       </Wizard>
     </section>
   )

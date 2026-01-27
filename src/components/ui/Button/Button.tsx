@@ -1,6 +1,5 @@
 import { forwardRef, type PropsWithChildren } from 'react'
-import { Button as ReactAriaButton } from 'react-aria-components'
-import { type ButtonProps } from 'react-aria-components'
+import { Button as ReactAriaButton, type ButtonProps as ReactAriaButtonProps } from 'react-aria-components'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
@@ -45,9 +44,11 @@ export type ButtonStyleProps = {
   flex?: boolean
 }
 
+export type ButtonProps = Omit<ReactAriaButtonProps, 'className'> & ButtonStyleProps
+
 const Button = forwardRef<
   HTMLButtonElement,
-  Omit<ButtonProps, 'className'> & ButtonStyleProps
+  ButtonProps
 >((
   {
     children,
