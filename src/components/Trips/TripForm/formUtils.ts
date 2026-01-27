@@ -7,7 +7,7 @@ import { BIG_DECIMAL_ZERO } from '@utils/bigDecimalUtils'
 export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
   if (trip) {
     return {
-      vehicle: trip.vehicle,
+      vehicle: trip.vehicle ?? null,
       tripDate: trip.tripDate,
       distance: trip.distance,
       purpose: trip.purpose,
