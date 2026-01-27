@@ -6,7 +6,7 @@ import type { CategorizationRule } from '@schemas/bankTransactions/categorizatio
 import type { NestedCategorization } from '@schemas/categorization'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
-import { CategoryDisplay } from '@components/CategorizationRules/CategoryDisplay'
+import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
 import { Container } from '@components/Container/Container'
 import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
@@ -58,7 +58,7 @@ export const CategorizationRulesTable = ({
         const accountIdentifier = row.original.category
         if (!accountIdentifier) return null
 
-        return <CategoryDisplay accountIdentifier={accountIdentifier} options={options} />
+        return <ResolvedCategoryName accountIdentifier={accountIdentifier} options={options} />
       },
       isRowHeader: true,
     },

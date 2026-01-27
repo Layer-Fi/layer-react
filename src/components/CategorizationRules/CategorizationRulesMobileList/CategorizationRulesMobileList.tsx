@@ -7,7 +7,7 @@ import { Button } from '@ui/Button/Button'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { CategoryDisplay } from '@components/CategorizationRules/CategoryDisplay'
+import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 import './categorizationRulesMobileList.scss'
@@ -24,9 +24,18 @@ const CategorizationRuleMobileListItem = ({
   onDeletePress,
 }: CategorizationRuleMobileListItemProps) => (
   <HStack justify='space-between' align='center' gap='sm' className='Layer__CategorizationRulesMobileListItem'>
-    <VStack gap='3xs' className='Layer__CategorizationRulesMobileListItem__Content'>
+    <VStack gap='2xs' className='Layer__CategorizationRulesMobileListItem__Content'>
       <Span weight='bold' ellipsis>{rule.counterpartyFilter?.name}</Span>
-      {rule.category && <CategoryDisplay accountIdentifier={rule.category} options={options} />}
+      {rule.category && (
+        <HStack gap='3xs' align='center'>
+          <Span size='sm' variant='subtle'>Category:</Span>
+          <ResolvedCategoryName
+            accountIdentifier={rule.category}
+            options={options}
+            slotProps={{ Span: { size: 'sm', variant: 'subtle' } }}
+          />
+        </HStack>
+      )}
     </VStack>
     <Button
       inset
