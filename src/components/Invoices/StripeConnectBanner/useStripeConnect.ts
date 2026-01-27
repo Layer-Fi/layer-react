@@ -11,7 +11,7 @@ export function useStripeConnect() {
     try {
       const result = await trigger()
       if (result?.connectAccountUrl) {
-        window.location.assign(result.connectAccountUrl)
+        window.open(result.connectAccountUrl, '_blank')
       }
       else {
         addToast({ content: 'Stripe has sent a misconfigured connect account onboarding link. Please try again.', type: 'error' })
