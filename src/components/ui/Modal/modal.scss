@@ -107,6 +107,14 @@
 
     padding: 0;
     border-radius: var(--border-radius-2xs) var(--border-radius-2xs) 0 0;
+
+    &[data-entering] {
+      animation: mobile-drawer-slide 250ms;
+    }
+
+    &[data-exiting] {
+      animation: mobile-drawer-slide 250ms reverse ease-in;
+    }
   }
 
   &[data-variant='mobile-popover'] {

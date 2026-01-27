@@ -1,4 +1,4 @@
-import { type ComponentProps, forwardRef, type PropsWithChildren } from 'react'
+import { type ComponentProps, forwardRef } from 'react'
 import {
   Dialog as ReactAriaDialog,
   type DialogProps,
@@ -33,32 +33,41 @@ const ModalOverlay = forwardRef<
       ref={ref}
     />
   )
-},
-)
+})
 ModalOverlay.displayName = 'ModalOverlay'
 
-const MODAL_CLASS_NAME = 'Layer__Modal'
-const InternalModal = forwardRef<
-  HTMLElementTagNameMap['div'],
-  PropsWithChildren<{
-    size?: ModalSize
-    flexBlock?: boolean
-    flexInline?: boolean
-    variant?: ModalVariant
-  }>
->(({ children, flexBlock, flexInline, size, variant = 'center' }, ref) => {
-  const dataProperties = toDataProperties({ size, 'flex-block': flexBlock, 'flex-inline': flexInline, variant })
+type ModalRenderProps = {
+  isEntering: boolean
+  isExiting: boolean
+}
 
-  return (
-    <ReactAriaModal
-      {...dataProperties}
-      className={MODAL_CLASS_NAME}
-      ref={ref}
-    >
-      {children}
-    </ReactAriaModal>
-  )
-})
+type InternalModalProps = {
+  size?: ModalSize
+  flexBlock?: boolean
+  flexInline?: boolean
+  variant?: ModalVariant
+  children: React.ReactNode | ((renderProps: ModalRenderProps) => React.ReactNode)
+}
+
+const MODAL_CLASS_NAME = 'Layer__Modal'
+const InternalModal = forwardRef<HTMLElementTagNameMap['div'], InternalModalProps>(
+  ({ children, flexBlock, flexInline, size, variant = 'center' }, ref) => {
+    const dataProperties = toDataProperties({ size, 'flex-block': flexBlock, 'flex-inline': flexInline, variant })
+
+    return (
+      <ReactAriaModal
+        {...dataProperties}
+        className={MODAL_CLASS_NAME}
+        ref={ref}
+      >
+        {({ isEntering, isExiting }) => {
+          const content = typeof children === 'function' ? children({ isEntering, isExiting }) : children
+          return content
+        }}
+      </ReactAriaModal>
+    )
+  },
+)
 InternalModal.displayName = 'Modal'
 
 const MobileDrawerKeyboardSpacer = () => {
@@ -76,11 +85,11 @@ type DialogSlots = {
 type DialogComponentProps = Omit<DialogProps, 'className'> & {
   variant: ModalVariant
   slots?: DialogSlots
-}
+} & Partial<ModalRenderProps>
 
 const Dialog = forwardRef<HTMLElement, DialogComponentProps>(
-  ({ variant = 'center', children, slots, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ variant })
+  ({ variant = 'center', children, slots, isEntering, isExiting, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ variant, entering: isEntering, exiting: isExiting })
     const Header = slots?.Header
 
     return (
@@ -182,9 +191,18 @@ export function Drawer({
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
       <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant} slots={slots}>
-          {children}
-        </Dialog>
+        {({ isEntering, isExiting }) => (
+          <Dialog
+            role={role ?? 'dialog'}
+            aria-label={ariaLabel}
+            variant={variant}
+            slots={slots}
+            isEntering={isEntering}
+            isExiting={isExiting}
+          >
+            {children}
+          </Dialog>
+        )}
       </InternalModal>
     </ModalOverlay>
   )
