@@ -4,7 +4,6 @@ import { useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRout
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { VStack } from '@ui/Stack/Stack'
 import { InvoicePaymentForm } from '@components/Invoices/InvoicePaymentForm/InvoicePaymentForm'
 import { updateInvoiceWithPayment, UpsertDedicatedInvoicePaymentMode } from '@features/invoices/api/useUpsertDedicatedInvoicePayment'
 import { type InvoicePayment } from '@features/invoices/invoicePaymentSchemas'
@@ -15,6 +14,17 @@ export type InvoicePaymentDrawerProps = {
   onOpenChange: (isOpen: boolean) => void
   invoice: Invoice
 }
+
+const InvoicePaymentDrawerHeader = ({ close }: { close: () => void }) => (
+  <ModalTitleWithClose
+    heading={(
+      <ModalHeading size='md'>
+        Record invoice payment
+      </ModalHeading>
+    )}
+    onClose={close}
+  />
+)
 
 export const InvoicePaymentDrawer = ({
   isOpen,
@@ -31,28 +41,16 @@ export const InvoicePaymentDrawer = ({
   }, [addToast, invoice, toViewInvoice])
 
   return (
-    <Drawer isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Drawer isOpen={isOpen} onOpenChange={onOpenChange} slots={{ Header: InvoicePaymentDrawerHeader }}>
       {({ close }) => (
-        <VStack pb='lg' gap='lg'>
-          <VStack pi='md'>
-            <ModalTitleWithClose
-              heading={(
-                <ModalHeading size='md'>
-                  Record invoice payment
-                </ModalHeading>
-              )}
-              onClose={close}
-            />
-          </VStack>
-          <InvoicePaymentForm
-            onSuccess={(invoicePayment: InvoicePayment) => {
-              onSuccess(invoicePayment)
-              close()
-            }}
-            mode={UpsertDedicatedInvoicePaymentMode.Create}
-            invoice={invoice}
-          />
-        </VStack>
+        <InvoicePaymentForm
+          onSuccess={(invoicePayment: InvoicePayment) => {
+            onSuccess(invoicePayment)
+            close()
+          }}
+          mode={UpsertDedicatedInvoicePaymentMode.Create}
+          invoice={invoice}
+        />
       )}
     </Drawer>
   )

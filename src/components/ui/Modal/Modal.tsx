@@ -1,13 +1,15 @@
-import { type ComponentProps, forwardRef, type PropsWithChildren } from 'react'
+import { type ComponentProps, forwardRef } from 'react'
 import {
   Dialog as ReactAriaDialog,
   type DialogProps,
+  type DialogRenderProps,
   Modal as ReactAriaModal,
   ModalOverlay as ReactAriaModalOverlay,
   type ModalOverlayProps,
 } from 'react-aria-components'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { useVirtualKeyboardHeight } from '@hooks/useVirtualKeyboardHeight/useVirtualKeyboardHeight'
 
 import './modal.scss'
 
@@ -31,50 +33,91 @@ const ModalOverlay = forwardRef<
       ref={ref}
     />
   )
-},
-)
+})
 ModalOverlay.displayName = 'ModalOverlay'
 
-const MODAL_CLASS_NAME = 'Layer__Modal'
-const InternalModal = forwardRef<
-  HTMLElementTagNameMap['div'],
-  PropsWithChildren<{
-    size?: ModalSize
-    flexBlock?: boolean
-    flexInline?: boolean
-    variant?: ModalVariant
-  }>
->(({ children, flexBlock, flexInline, size, variant = 'center' }, ref) => {
-  const dataProperties = toDataProperties({ size, 'flex-block': flexBlock, 'flex-inline': flexInline, variant })
+type ModalRenderProps = {
+  isEntering: boolean
+  isExiting: boolean
+}
 
-  return (
-    <ReactAriaModal
-      {...dataProperties}
-      className={MODAL_CLASS_NAME}
-      ref={ref}
-    >
-      {children}
-    </ReactAriaModal>
-  )
-})
+type InternalModalProps = {
+  size?: ModalSize
+  flexBlock?: boolean
+  flexInline?: boolean
+  variant?: ModalVariant
+  children: React.ReactNode | ((renderProps: ModalRenderProps) => React.ReactNode)
+}
+
+const MODAL_CLASS_NAME = 'Layer__Modal'
+const InternalModal = forwardRef<HTMLElementTagNameMap['div'], InternalModalProps>(
+  ({ children, flexBlock, flexInline, size, variant = 'center' }, ref) => {
+    const dataProperties = toDataProperties({ size, 'flex-block': flexBlock, 'flex-inline': flexInline, variant })
+
+    return (
+      <ReactAriaModal
+        {...dataProperties}
+        className={MODAL_CLASS_NAME}
+        ref={ref}
+      >
+        {({ isEntering, isExiting }) => {
+          const content = typeof children === 'function' ? children({ isEntering, isExiting }) : children
+          return content
+        }}
+      </ReactAriaModal>
+    )
+  },
+)
 InternalModal.displayName = 'Modal'
 
-const DIALOG_CLASS_NAME = 'Layer__Dialog'
-const Dialog = forwardRef<
-  HTMLElement,
-  Omit<DialogProps, 'className'> & { variant: ModalVariant }
->(({ variant = 'center', ...restProps }, ref) => {
-  const dataProperties = toDataProperties({ variant })
+const MobileDrawerKeyboardSpacer = () => {
+  const keyboardHeight = useVirtualKeyboardHeight()
 
-  return (
-    <ReactAriaDialog
-      {...dataProperties}
-      {...restProps}
-      className={DIALOG_CLASS_NAME}
-      ref={ref}
-    />
-  )
-},
+  return <div className='Layer__Dialog__KeyboardSpacer' style={{ height: keyboardHeight }} />
+}
+
+const DIALOG_CLASS_NAME = 'Layer__Dialog'
+
+type DialogSlots = {
+  Header?: React.FC<DialogRenderProps>
+}
+
+type DialogComponentProps = Omit<DialogProps, 'className'> & {
+  variant: ModalVariant
+  slots?: DialogSlots
+} & Partial<ModalRenderProps>
+
+const Dialog = forwardRef<HTMLElement, DialogComponentProps>(
+  ({ variant = 'center', children, slots, isEntering, isExiting, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ variant, entering: isEntering, exiting: isExiting })
+    const Header = slots?.Header
+
+    return (
+      <ReactAriaDialog
+        {...dataProperties}
+        {...restProps}
+        className={DIALOG_CLASS_NAME}
+        ref={ref}
+      >
+        {(renderProps) => {
+          const content = typeof children === 'function' ? children(renderProps) : children
+          return (
+            <>
+              {Header && (
+                <div className='Layer__Dialog__Header'>
+                  <Header {...renderProps} />
+                </div>
+              )}
+              <div className='Layer__Dialog__Content'>
+                {content}
+                {variant === 'mobile-drawer' && <MobileDrawerKeyboardSpacer />}
+              </div>
+            </>
+          )
+        }}
+      </ReactAriaDialog>
+    )
+  },
 )
 Dialog.displayName = 'Dialog'
 
@@ -123,10 +166,14 @@ type AllowedInternalDrawerProps = Pick<
   'size'
 > & { variant?: Extract<ModalVariant, 'drawer' | 'mobile-drawer'> }
 
+type DrawerSlots = DialogSlots
+
 export type DrawerProps = AllowedModalOverlayProps &
   AllowedInternalDrawerProps &
   AllowedDialogProps &
-  AllowedInternalModalProps
+  AllowedInternalModalProps & {
+    slots?: DrawerSlots
+  }
 
 export function Drawer({
   isOpen,
@@ -135,6 +182,7 @@ export function Drawer({
   flexBlock,
   flexInline,
   children,
+  slots,
   'aria-label': ariaLabel,
   variant = 'drawer',
   isDismissable = false,
@@ -143,9 +191,18 @@ export function Drawer({
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
       <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
-          {children}
-        </Dialog>
+        {({ isEntering, isExiting }) => (
+          <Dialog
+            role={role ?? 'dialog'}
+            aria-label={ariaLabel}
+            variant={variant}
+            slots={slots}
+            isEntering={isEntering}
+            isExiting={isExiting}
+          >
+            {children}
+          </Dialog>
+        )}
       </InternalModal>
     </ModalOverlay>
   )
