@@ -33,6 +33,11 @@ export const AccountingConfigurationSchema = Schema.Struct({
     Schema.propertySignature(Schema.Array(TagDimensionSchema)),
     Schema.fromKey('platform_display_tags'),
   ),
+
+  enableStripeOnboarding: pipe(
+    Schema.propertySignature(Schema.Boolean),
+    Schema.fromKey('enable_stripe_onboarding'),
+  ),
 })
 
 export type AccountingConfigurationSchemaType = typeof AccountingConfigurationSchema.Type

@@ -9,20 +9,19 @@ import { InvoiceOverview } from '@components/Invoices/InvoiceOverview/InvoiceOve
 import { View } from '@components/View/View'
 import { usePreloadCustomers } from '@features/customers/api/useListCustomers'
 import { usePreloadTagDimensionByKey } from '@features/tags/api/useTagDimensionByKey'
+
 interface InvoicesStringOverrides {
   title?: string
 }
 
 export interface InvoicesProps {
   showTitle?: boolean
-  _showStripeConnectBanner?: boolean
   stringOverrides?: InvoicesStringOverrides
   onSendInvoice?: (invoiceId: string) => Awaitable<void>
 }
 
 export const Invoices = ({
   showTitle = true,
-  _showStripeConnectBanner = true,
   stringOverrides,
   onSendInvoice,
 }: InvoicesProps) => {
@@ -33,20 +32,16 @@ export const Invoices = ({
   return (
     <InvoicesProvider onSendInvoice={onSendInvoice}>
       <View title={stringOverrides?.title || 'Invoices'} showHeader={showTitle}>
-        <InvoicesContent _showStripeConnectBanner={_showStripeConnectBanner} />
+        <InvoicesContent />
       </View>
     </InvoicesProvider>
   )
 }
 
-interface InvoicesContentProps {
-  _showStripeConnectBanner: boolean
-}
-
-const InvoicesContent = ({ _showStripeConnectBanner }: InvoicesContentProps) => {
+const InvoicesContent = () => {
   const routeState = useInvoiceRouteState()
 
   return routeState.route === InvoiceRoute.Detail
     ? <InvoiceDetail />
-    : <InvoiceOverview _showStripeConnectBanner={_showStripeConnectBanner} />
+    : <InvoiceOverview />
 }

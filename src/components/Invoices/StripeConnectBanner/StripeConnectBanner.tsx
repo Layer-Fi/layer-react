@@ -1,4 +1,5 @@
 import { StripeAccountStatus } from '@schemas/stripeAccountStatus'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Banner } from '@ui/Banner/Banner'
 import { VStack } from '@ui/Stack/Stack'
 import { ConnectStripeButton } from '@components/Invoices/StripeConnectBanner/ConnectStripeButton'
@@ -56,8 +57,13 @@ function getBannerProps(
 }
 
 export const StripeConnectBanner = () => {
+  const { accountingConfiguration } = useLayerContext()
   const { data, isLoading, isError } = useStripeAccountStatus()
   const { handleConnectStripe, isMutating, isStripeConnectError } = useStripeConnect()
+
+  if (!accountingConfiguration?.enableStripeOnboarding) {
+    return null
+  }
 
   if (isLoading || isError) {
     return null

@@ -3,15 +3,11 @@ import { InvoiceSummaryStats } from '@components/Invoices/InvoiceSummaryStats/In
 import { InvoiceTable } from '@components/Invoices/InvoiceTable/InvoiceTable'
 import { StripeConnectBanner } from '@components/Invoices/StripeConnectBanner/StripeConnectBanner'
 
-interface InvoiceOverviewProps {
-  _showStripeConnectBanner: boolean
-}
-
-export const InvoiceOverview = ({ _showStripeConnectBanner }: InvoiceOverviewProps) => {
+export const InvoiceOverview = () => {
   return (
     <VStack>
       <InvoiceSummaryStats />
-      {_showStripeConnectBanner && <StripeConnectBanner />}
+      <StripeConnectBanner />
       <InvoiceTable />
     </VStack>
   )
