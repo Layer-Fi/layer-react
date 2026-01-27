@@ -4,7 +4,6 @@ import { useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRout
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { VStack } from '@ui/Stack/Stack'
 import { InvoicePaymentForm } from '@components/Invoices/InvoicePaymentForm/InvoicePaymentForm'
 import { updateInvoiceWithPayment, UpsertDedicatedInvoicePaymentMode } from '@features/invoices/api/useUpsertDedicatedInvoicePayment'
 import { type InvoicePayment } from '@features/invoices/invoicePaymentSchemas'
@@ -44,16 +43,14 @@ export const InvoicePaymentDrawer = ({
   return (
     <Drawer isOpen={isOpen} onOpenChange={onOpenChange} slots={{ Header: InvoicePaymentDrawerHeader }}>
       {({ close }) => (
-        <VStack pb='lg' gap='lg'>
-          <InvoicePaymentForm
-            onSuccess={(invoicePayment: InvoicePayment) => {
-              onSuccess(invoicePayment)
-              close()
-            }}
-            mode={UpsertDedicatedInvoicePaymentMode.Create}
-            invoice={invoice}
-          />
-        </VStack>
+        <InvoicePaymentForm
+          onSuccess={(invoicePayment: InvoicePayment) => {
+            onSuccess(invoicePayment)
+            close()
+          }}
+          mode={UpsertDedicatedInvoicePaymentMode.Create}
+          invoice={invoice}
+        />
       )}
     </Drawer>
   )
