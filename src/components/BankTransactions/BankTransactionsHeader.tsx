@@ -15,6 +15,7 @@ import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
@@ -34,8 +35,6 @@ import InvisibleDownload, { useInvisibleDownload } from '@components/utility/Inv
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
   asWidget?: boolean
-  categorizedOnly?: boolean
-  categorizeView?: boolean
   mobileComponent?: MobileComponentType
   listView?: boolean
   isSyncing?: boolean
@@ -125,8 +124,6 @@ const DownloadButton = ({
 export const BankTransactionsHeader = ({
   shiftStickyHeader,
   asWidget,
-  categorizedOnly,
-  categorizeView = true,
   mobileComponent,
   listView,
   stringOverrides,
@@ -136,6 +133,7 @@ export const BankTransactionsHeader = ({
   collapseHeader,
   showCategorizationRules = false,
 }: BankTransactionsHeaderProps) => {
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const activationDate = useBusinessActivationDate()
   const { display } = useBankTransactionsContext()
   const {
@@ -238,7 +236,7 @@ export const BankTransactionsHeader = ({
     )
   }, [isMobileList])
 
-  const statusToggle = !categorizedOnly && categorizeView && showStatusToggle
+  const statusToggle = isCategorizationEnabled && showStatusToggle
     ? (
       <Toggle
         ariaLabel='Categorization status'

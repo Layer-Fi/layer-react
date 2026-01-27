@@ -1,9 +1,8 @@
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { DATE_FORMAT } from '@config/general'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -14,7 +13,6 @@ import { BankTransactionsListItem } from '@components/BankTransactionsList/BankT
 
 interface BankTransactionsListProps {
   bankTransactions?: BankTransaction[]
-  editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   stringOverrides?: BankTransactionCTAStringOverrides
 
@@ -25,7 +23,6 @@ interface BankTransactionsListProps {
 
 export const BankTransactionsList = ({
   bankTransactions,
-  editable,
   removeTransaction,
   stringOverrides,
 
@@ -36,12 +33,11 @@ export const BankTransactionsList = ({
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   return (
     <>
-      {categorizationEnabled && (
+      {isCategorizationEnabled && (
         <HStack
           gap='md'
           pi='md'
@@ -68,7 +64,6 @@ export const BankTransactionsList = ({
               index={index}
               dateFormat={DATE_FORMAT}
               bankTransaction={bankTransaction}
-              editable={editable}
               removeTransaction={removeTransaction}
               stringOverrides={stringOverrides}
 

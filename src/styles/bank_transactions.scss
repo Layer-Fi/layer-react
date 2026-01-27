@@ -67,6 +67,7 @@
 
 .Layer__bank-transactions__header__content {
   display: flex;
+  gap: var(--spacing-lg);
   align-items: center;
   justify-content: space-between;
   min-height: 40px;

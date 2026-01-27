@@ -1,10 +1,7 @@
 import { useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
-import {
-  BookkeepingStatus,
-  useEffectiveBookkeepingStatus,
-} from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { BankTransactionCustomerVendorSelector } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorSelector'
@@ -33,8 +30,8 @@ export function BankTransactionFormFields({
 }: BankTransactionFormFieldProps) {
   const { showTags } = useBankTransactionTagVisibility()
   const { showCustomerVendor } = useBankTransactionCustomerVendorVisibility()
-  const status = useEffectiveBookkeepingStatus()
-  const isReadOnly = status === BookkeepingStatus.ACTIVE
+
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   // Hooks for auto-saving tags
   const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
@@ -100,7 +97,7 @@ export function BankTransactionFormFields({
             value={selectedTags}
             onChange={handleTagsChange}
             showLabels={true}
-            isReadOnly={isReadOnly}
+            isReadOnly={!isCategorizationEnabled}
           />
         )}
       {showDescriptions

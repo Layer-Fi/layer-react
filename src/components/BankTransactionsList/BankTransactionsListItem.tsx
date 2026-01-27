@@ -7,14 +7,13 @@ import {
   hasReceipts,
   isCredit,
 } from '@utils/bankTransactions'
-import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { useEffectiveBookkeepingStatus } from '@hooks/bookkeeping/useBookkeepingStatus'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import FileIcon from '@icons/File'
 import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
@@ -38,7 +37,6 @@ type BankTransactionsListItemProps = {
   index: number
   dateFormat: string
   bankTransaction: BankTransaction
-  editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   stringOverrides?: BankTransactionCTAStringOverrides
 
@@ -51,7 +49,6 @@ export const BankTransactionsListItem = ({
   index,
   dateFormat,
   bankTransaction,
-  editable,
   removeTransaction,
   stringOverrides,
 
@@ -69,8 +66,7 @@ export const BankTransactionsListItem = ({
 
   const { isDesktop } = useSizeClass()
 
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const categorized = isCategorized(bankTransaction)
 
@@ -89,7 +85,7 @@ export const BankTransactionsListItem = ({
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
 
   useEffect(() => {
-    if (editable && isBeingRemoved) {
+    if (isBeingRemoved) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
       }, 300)
@@ -115,7 +111,7 @@ export const BankTransactionsListItem = ({
   const openClassName = openExpandedRow ? 'Layer__bank-transaction-list-item--expanded' : ''
   const rowClassName = classNames(
     'Layer__bank-transaction-list-item',
-    editable && isBeingRemoved
+    isBeingRemoved
       ? 'Layer__bank-transaction-row--removing'
       : '',
     openExpandedRow ? openClassName : '',
@@ -162,7 +158,7 @@ export const BankTransactionsListItem = ({
       </span>
       <HStack className='Layer__bank-transaction-list-item__body'>
         <HStack gap='sm' className='Layer__bank-transaction-list-item__body__name'>
-          {categorizationEnabled && (
+          {isCategorizationEnabled && (
             <div className='Layer__bank-transaction-list-item__checkbox' onClick={preventRowExpansion}>
               <Checkbox
                 isSelected={isTransactionSelected}
@@ -187,7 +183,7 @@ export const BankTransactionsListItem = ({
           size='md'
         />
       </HStack>
-      {!categorizationEnabled && !displayAsCategorized
+      {!isCategorizationEnabled && !displayAsCategorized
         && (
           <span className='Layer__bank-transaction-list-item__processing-info'>
             <BankTransactionsProcessingInfo />
@@ -209,7 +205,7 @@ export const BankTransactionsListItem = ({
           />
         </AnimatedPresenceDiv>
       </span>
-      {categorizationEnabled && !displayAsCategorized && (
+      {isCategorizationEnabled && !displayAsCategorized && (
         <div onClick={preventRowExpansion}>
           <HStack pi='md' gap='md' pbe='md' justify='end'>
             {!openExpandedRow && (

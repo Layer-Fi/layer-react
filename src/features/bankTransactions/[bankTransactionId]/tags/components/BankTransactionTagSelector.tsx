@@ -1,10 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
-import {
-  BookkeepingStatus,
-  useEffectiveBookkeepingStatus,
-} from '@hooks/bookkeeping/useBookkeepingStatus'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
 import { TagSelector } from '@features/tags/components/TagSelector'
@@ -15,8 +12,7 @@ type BankTransactionTagSelectorProps = {
 }
 
 export function BankTransactionTagSelector({ bankTransaction }: BankTransactionTagSelectorProps) {
-  const status = useEffectiveBookkeepingStatus()
-  const isReadOnly = status === BookkeepingStatus.ACTIVE
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const {
     id: bankTransactionId,
@@ -58,7 +54,7 @@ export function BankTransactionTagSelector({ bankTransaction }: BankTransactionT
   return (
     <TagSelector
       selectedTags={selectedTags}
-      isReadOnly={isReadOnly}
+      isReadOnly={!isCategorizationEnabled}
       onAddTag={handleAddTag}
       onRemoveTag={handleRemoveTag}
     />
