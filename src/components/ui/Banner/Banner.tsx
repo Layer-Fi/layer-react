@@ -23,7 +23,7 @@ export type BannerProps = PropsWithChildren<{
   variant?: BannerVariant
   title: string
   description?: string
-  slots?: { Icon?: ReactNode; Button?: ReactNode }
+  slots?: { Icon?: ReactNode, Button?: ReactNode }
   ariaLabel?: string
 }>
 
