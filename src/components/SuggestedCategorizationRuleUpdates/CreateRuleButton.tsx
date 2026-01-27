@@ -4,15 +4,15 @@ import { Schema } from 'effect/index'
 import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { useCreateCategorizationRule } from '@hooks/useCategorizationRules/useCreateCategorizationRule'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { Button } from '@ui/Button/Button'
+import { Button, type ButtonProps } from '@ui/Button/Button'
 import { useWizard } from '@components/Wizard/Wizard'
 
 interface CreateRuleButtonProps {
   newRule: CreateCategorizationRule
-  buttonText: string
+  slotProps?: ButtonProps
 }
 
-export const CreateRuleButton = ({ newRule: ruleSuggestion, buttonText }: CreateRuleButtonProps) => {
+export const CreateRuleButton = ({ newRule: ruleSuggestion, slotProps }: CreateRuleButtonProps) => {
   const { next } = useWizard()
   const { trigger: createCategorizationRule, isMutating } = useCreateCategorizationRule()
   const { addToast } = useLayerContext()
@@ -30,8 +30,7 @@ export const CreateRuleButton = ({ newRule: ruleSuggestion, buttonText }: Create
     <Button
       onPress={handlePress}
       isPending={isMutating}
-    >
-      {buttonText}
-    </Button>
+      {...slotProps}
+    />
   )
 }

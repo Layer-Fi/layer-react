@@ -29,19 +29,18 @@ import {
 } from '@components/BankTransactions/BankTransactionsHeader'
 import { BankTransactionsTableEmptyStates } from '@components/BankTransactions/BankTransactionsTableEmptyState'
 import { type MobileComponentType } from '@components/BankTransactions/constants'
-import { SuggestedCategorizationRuleUpdatesModal } from '@components/BankTransactions/SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
 import { BankTransactionsList } from '@components/BankTransactionsList/BankTransactionsList'
 import { BankTransactionsMobileList } from '@components/BankTransactionsMobileList/BankTransactionsMobileList'
 import {
   BankTransactionsTable,
   type BankTransactionsTableStringOverrides,
 } from '@components/BankTransactionsTable/BankTransactionsTable'
-import { CategorizationRulesDrawer } from '@components/CategorizationRules/CategorizationRulesDrawer'
+import { ResponsiveCategorizationRulesView } from '@components/CategorizationRules/CategorizationRulesView/ResponsiveCategorizationRulesView'
 import { Container } from '@components/Container/Container'
 import { ErrorBoundary } from '@components/ErrorBoundary/ErrorBoundary'
 import { Loader } from '@components/Loader/Loader'
 import { Pagination } from '@components/Pagination/Pagination'
-import { SuggestedCategorizationRuleUpdatesDrawer } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
+import { SuggestedCategorizationRuleUpdatesDialog } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDialog'
 import { BankTransactionCustomerVendorVisibilityProvider } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionTagVisibilityProvider } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import { usePreloadCustomers } from '@features/customers/api/useListCustomers'
@@ -151,7 +150,7 @@ const BankTransactionsContent = (props: BankTransactionsTableViewProps) => {
 
   return routeState.route === BankTransactionsRoute.BankTransactionsTable
     ? <BankTransactionsTableView {...props} />
-    : <CategorizationRulesDrawer />
+    : <ResponsiveCategorizationRulesView />
 }
 
 const BankTransactionsTableView = ({
@@ -188,7 +187,7 @@ const BankTransactionsTableView = ({
     removeAfterCategorize,
   } = useBankTransactionsContext()
 
-  const { ruleSuggestion, setRuleSuggestion } = useContext(CategorizationRulesContext)
+  const { setRuleSuggestion, ruleSuggestion } = useContext(CategorizationRulesContext)
 
   const { data: linkedAccounts } = useLinkedAccounts()
 
@@ -218,27 +217,14 @@ const BankTransactionsTableView = ({
     if (!isOpen) setRuleSuggestion(null)
   }, [setRuleSuggestion])
 
-  const rulesSuggestionModal = useMemo(() => {
-    if (!ruleSuggestion) return undefined
-    return (
-      <SuggestedCategorizationRuleUpdatesModal
-        isOpen={true}
-        ruleSuggestion={ruleSuggestion}
-        onOpenChange={handleRuleSuggestionOpenChange}
-      />
-    )
-  }, [ruleSuggestion, handleRuleSuggestionOpenChange])
-
-  const rulesSuggestionDrawer = useMemo(() => {
-    if (!ruleSuggestion) return undefined
-    return (
-      <SuggestedCategorizationRuleUpdatesDrawer
-        isOpen={true}
-        onOpenChange={handleRuleSuggestionOpenChange}
-        ruleSuggestion={ruleSuggestion}
-      />
-    )
-  }, [ruleSuggestion, handleRuleSuggestionOpenChange])
+  const rulesSuggestionModal = useMemo(() => (
+    <SuggestedCategorizationRuleUpdatesDialog
+      isOpen={!!ruleSuggestion}
+      ruleSuggestion={ruleSuggestion}
+      onOpenChange={handleRuleSuggestionOpenChange}
+      variant='modal'
+    />
+  ), [ruleSuggestion, handleRuleSuggestionOpenChange])
 
   const bankTransactions = useMemo(() => {
     if (isMonthlyViewMode) return data
@@ -313,7 +299,6 @@ const BankTransactionsTableView = ({
 
       {!listView && (
         <div className='Layer__bank-transactions__table-wrapper'>
-          {rulesSuggestionModal}
           <BankTransactionsTable
             isLoading={isLoading}
             isSyncing={isSyncing}
@@ -327,13 +312,13 @@ const BankTransactionsTableView = ({
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
           />
+          {rulesSuggestionModal}
         </div>
       )}
 
       {!isLoadingWithoutData && listView && mobileComponent !== 'mobileList'
         && (
           <div className='Layer__bank-transactions__list-wrapper'>
-            {rulesSuggestionModal}
             <BankTransactionsList
               bankTransactions={bankTransactions}
               removeTransaction={removeTransaction}
@@ -343,6 +328,7 @@ const BankTransactionsTableView = ({
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
             />
+            {rulesSuggestionModal}
           </div>
         )}
 
@@ -356,7 +342,12 @@ const BankTransactionsTableView = ({
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
             />
-            {rulesSuggestionDrawer}
+            <SuggestedCategorizationRuleUpdatesDialog
+              isOpen={!!ruleSuggestion}
+              onOpenChange={handleRuleSuggestionOpenChange}
+              ruleSuggestion={ruleSuggestion}
+              variant='drawer'
+            />
           </>
         )}
 

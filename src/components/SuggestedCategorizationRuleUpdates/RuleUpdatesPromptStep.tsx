@@ -21,57 +21,59 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
   const { addToast } = useLayerContext()
   const [dontAskAgain, setDontAskAgain] = useState(false)
   const { trigger: rejectRuleSuggestion, isMutating } = useRejectCategorizationRulesUpdateSuggestion()
-  const handleRejectRuleSuggestion = useCallback(() => {
-    void (async () => {
-      if (dontAskAgain) {
-        if (ruleSuggestion.newRule.createdBySuggestionId) {
-          await rejectRuleSuggestion(ruleSuggestion.newRule.createdBySuggestionId)
-            .then(() => {
-              close()
-            }).catch(() => {
-              addToast({ content: 'Failed to reject rule suggestion', type: 'error' })
-            })
-        }
-      }
-      else {
-        close()
-      }
-    })()
-  }, [addToast, close, dontAskAgain, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
+  const ActionButtonsStack = isDrawer ? VStack : HStack
+
+  const handleRejectRuleSuggestion = useCallback(async () => {
+    if (!dontAskAgain) {
+      close()
+      return
+    }
+
+    if (ruleSuggestion.newRule.createdBySuggestionId) {
+      await rejectRuleSuggestion(ruleSuggestion.newRule.createdBySuggestionId)
+        .then(() => {
+          close()
+        }).catch(() => {
+          addToast({ content: 'Failed to reject rule suggestion', type: 'error' })
+        })
+    }
+  },
+  [addToast, close, dontAskAgain, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
 
   return (
-    <VStack gap='3xl' pbe={isDrawer ? '5xl' : undefined}>
+    <VStack gap='xl' pbe={isDrawer ? '3xl' : undefined}>
       <Span size='md'>{ruleSuggestion.suggestionPrompt}</Span>
-      <VStack gap='sm' align='end'>
-        <HStack gap='sm' justify='end' align='end'>
+      <VStack gap='sm' align='end' fluid>
+        <ActionButtonsStack gap='xs' justify='end' className={isDrawer ? 'Layer__suggested-categorization-rule-updates__buttons--mobile' : undefined}>
           <Button
-            onClick={handleRejectRuleSuggestion}
+            onClick={() => void handleRejectRuleSuggestion()}
             isPending={isMutating}
             variant='outlined'
+            fullWidth={isDrawer}
           >
-            No, I`ll decide each time
+            No, I’ll decide each time
           </Button>
           {ruleSuggestion.transactionsThatWillBeAffected.length === 0
             ? (
               <CreateRuleButton
                 newRule={ruleSuggestion.newRule}
-                buttonText='Yes, always categorize'
+                slotProps={{ fullWidth: isDrawer, children: 'Yes, always categorize' }}
               />
             )
             : (
-              <Button
-                onPress={() => {
-                  void next()
-                }}
-              >
+              <Button onPress={() => void next()} fullWidth={isDrawer}>
                 Yes, always categorize
               </Button>
             )}
-        </HStack>
-        <HStack gap='3xs' justify='center'>
-          <CheckboxWithTooltip id='dont_ask_again' isSelected={dontAskAgain} onChange={(isSelected) => { setDontAskAgain(isSelected) }} />
+        </ActionButtonsStack>
+        <HStack gap='xs' justify='center'>
+          <CheckboxWithTooltip
+            id='dont_ask_again'
+            isSelected={dontAskAgain}
+            onChange={(isSelected) => { setDontAskAgain(isSelected) }}
+          />
           <Label size='sm' htmlFor='dont_ask_again'>
-            Don`t ask me about this again
+            Don’t ask me about this again
           </Label>
         </HStack>
       </VStack>

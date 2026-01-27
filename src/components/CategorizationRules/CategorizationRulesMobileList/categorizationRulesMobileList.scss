@@ -1,0 +1,19 @@
+.Layer__CategorizationRulesMobileList {
+  .Layer__CategorizationRulesView__EmptyState,
+  .Layer__CategorizationRulesView__ErrorState {
+    padding: var(--spacing-sm);
+    padding-top: var(--spacing-lg);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    background-color: var(--color-base-0);
+  }
+}
+
+.Layer__CategorizationRulesMobileListItem {
+  width: 100%;
+  min-width: 0;
+}
+
+.Layer__CategorizationRulesMobileListItem__Content {
+  min-width: 0;
+}
