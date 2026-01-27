@@ -14,10 +14,11 @@ interface VehicleDrawerProps {
   onSuccess: (vehicle: Vehicle) => void
 }
 
-const VehicleDrawerHeader = ({ title, close }: { title: string, close: () => void }) => (
+const VehicleDrawerHeader = ({ title, close, isMobile }: { title: string, close: () => void, isMobile?: boolean }) => (
   <ModalTitleWithClose
     heading={<ModalHeading size='md'>{title}</ModalHeading>}
     onClose={close}
+    hideBottomPadding={isMobile}
   />
 )
 
@@ -26,8 +27,8 @@ export const VehicleDrawer = ({ isOpen, onOpenChange, vehicle, onSuccess }: Vehi
   const title = vehicle ? 'Edit vehicle' : 'Add vehicle'
 
   const Header = useCallback(({ close }: { close: () => void }) => (
-    <VehicleDrawerHeader title={title} close={close} />
-  ), [title])
+    <VehicleDrawerHeader title={title} close={close} isMobile={isMobile} />
+  ), [title, isMobile])
 
   return (
     <Drawer
