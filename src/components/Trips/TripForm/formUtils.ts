@@ -7,7 +7,7 @@ import { BIG_DECIMAL_ZERO } from '@utils/bigDecimalUtils'
 export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
   if (trip) {
     return {
-      vehicle: trip.vehicle,
+      vehicle: trip.vehicle ?? null,
       tripDate: trip.tripDate,
       distance: trip.distance,
       purpose: trip.purpose,
@@ -29,7 +29,7 @@ export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
 }
 
 export const validateTripForm = ({ trip }: { trip: TripForm }) => {
-  const { vehicle, tripDate, distance, purpose } = trip
+  const { tripDate, distance, purpose } = trip
 
   const errors = []
 
@@ -47,10 +47,6 @@ export const validateTripForm = ({ trip }: { trip: TripForm }) => {
 
   if (!purpose) {
     errors.push({ purpose: 'Purpose is a required field.' })
-  }
-
-  if (vehicle === null) {
-    errors.push({ vehicle: 'Vehicle is a required field.' })
   }
 
   return errors.length > 0 ? errors : null
