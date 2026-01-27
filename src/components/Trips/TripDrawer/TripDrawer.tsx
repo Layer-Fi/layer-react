@@ -17,10 +17,11 @@ interface TripDrawerProps {
   onDeleteTrip: (trip: Trip) => void
 }
 
-const TripDrawerHeader = ({ title, close }: { title: string, close: () => void }) => (
+const TripDrawerHeader = ({ title, close, isMobile }: { title: string, close: () => void, isMobile?: boolean }) => (
   <ModalTitleWithClose
     heading={<ModalHeading size='md'>{title}</ModalHeading>}
     onClose={close}
+    hideBottomPadding={isMobile}
   />
 )
 
@@ -38,8 +39,8 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
   }, [onOpenChange])
 
   const Header = useCallback(({ close }: { close: () => void }) => (
-    <TripDrawerHeader title={title} close={close} />
-  ), [title])
+    <TripDrawerHeader title={title} close={close} isMobile={isMobile} />
+  ), [title, isMobile])
 
   return (
     <Drawer
