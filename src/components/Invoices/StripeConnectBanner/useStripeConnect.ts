@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useStripeConnectAccountLink } from '@features/invoices/api/useStripeConnectAccountLink'
@@ -22,9 +22,9 @@ export function useStripeConnect() {
     }
   }, [trigger, addToast])
 
-  return {
+  return useMemo(() => ({
     handleConnectStripe,
     isMutating,
-    isConnectError: isError,
-  }
+    isStripeConnectError: isError,
+  }), [handleConnectStripe, isMutating, isError])
 }
