@@ -4,12 +4,11 @@ import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEsti
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
+import { maybeAddProjectedToLabel } from '@components/TaxEstimates/utils'
 
 type TaxSummaryCardDesktopProps = {
   data: TaxSummary
 }
-
-const maybeAddProjectedToLabel = (label: string, fullYearProjection: boolean) => fullYearProjection ? `Projected ${label}` : label
 
 export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
   const { fullYearProjection } = useFullYearProjection()

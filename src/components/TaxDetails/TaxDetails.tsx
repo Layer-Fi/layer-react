@@ -17,6 +17,7 @@ import { StateTaxTable } from '@components/TaxDetails/StateTaxTable/StateTaxTabl
 import { TaxDetailsExpandableCardHeading } from '@components/TaxDetails/TaxDetailsExpandableCardHeading'
 import { TaxSummaryCard } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCard'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { maybeAddProjectedToLabel } from '@components/TaxEstimates/utils'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxDetails.scss'
@@ -26,8 +27,6 @@ type ExpandedState = {
   federalTaxes: boolean
   stateTaxes: boolean
 }
-
-const maybeAddProjectedToLabel = (label: string, fullYearProjection: boolean) => fullYearProjection ? `Projected ${label}` : label
 
 const TaxDetailsHeader = ({ isMobile }: { isMobile: boolean }) => {
   const { fullYearProjection } = useFullYearProjection()
