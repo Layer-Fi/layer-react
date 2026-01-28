@@ -103,7 +103,7 @@ export const BankTransactionsListItem = ({
   )
 
   return (
-    <AnimatedPresenceElement as='li' variant='fade' isOpen={!isBeingRemoved} key={`${bankTransaction.id}`} className={rowClassName} onClick={toggleExpandedRow}>
+    <AnimatedPresenceElement as='li' variant='fade' isOpen={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleExpandedRow}>
       <span className='Layer__bank-transaction-list-item__heading'>
         <div className='Layer__bank-transaction-list-item__heading__main'>
           <Span ellipsis size='sm'>
@@ -174,7 +174,7 @@ export const BankTransactionsListItem = ({
           </span>
         )}
       <span className='Layer__bank-transaction-list-item__expanded-row' onClick={preventRowExpansion}>
-        <AnimatedPresenceElement variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
+        <AnimatedPresenceElement variant='expand' isOpen={openExpandedRow} motionKey={`${bankTransaction.id}--expanded`}>
           <ExpandedBankTransactionRow
             bankTransaction={bankTransaction}
             isOpen={openExpandedRow}

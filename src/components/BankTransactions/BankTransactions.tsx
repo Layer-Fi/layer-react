@@ -5,6 +5,7 @@ import { debounce } from 'lodash-es'
 import { DisplayState } from '@internal-types/bank_transactions'
 import type { LayerError } from '@models/ErrorHandler'
 import { BREAKPOINTS } from '@config/general'
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { usePreloadCategories } from '@hooks/categories/useCategories'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
 import { useElementSize } from '@hooks/useElementSize/useElementSize'
@@ -217,15 +218,6 @@ const BankTransactionsTableView = ({
     if (!isOpen) setRuleSuggestion(null)
   }, [setRuleSuggestion])
 
-  const rulesSuggestionModal = useMemo(() => (
-    <SuggestedCategorizationRuleUpdatesDialog
-      isOpen={!!ruleSuggestion}
-      ruleSuggestion={ruleSuggestion}
-      onOpenChange={handleRuleSuggestionOpenChange}
-      variant='modal'
-    />
-  ), [ruleSuggestion, handleRuleSuggestionOpenChange])
-
   const bankTransactions = useMemo(() => {
     if (isMonthlyViewMode) return data
 
@@ -262,13 +254,49 @@ const BankTransactionsTableView = ({
     && !hasMore
     && Math.ceil((data?.length || 0) / pageSize) === currentPage
 
-  const tableViewContentMode = listView && mobileComponent === 'mobileList'
+  const tableContentMode = listView && mobileComponent === 'mobileList'
     ? BankTransactionsTableContent.MobileList
     : listView
       ? BankTransactionsTableContent.List
       : BankTransactionsTableContent.Table
 
-  const BankTransactionsListView = useCallback(() => {
+  const BankTransactionsTableViewContent = useMemo(() => {
+    return (
+      <div className='Layer__bank-transactions__table-wrapper'>
+        <BankTransactionsTable
+          isLoading={isLoading}
+          isSyncing={isSyncing}
+          bankTransactions={bankTransactions}
+          page={currentPage}
+          stringOverrides={stringOverrides}
+          lastPage={isLastPage}
+          showDescriptions={showDescriptions}
+          showReceiptUploads={showReceiptUploads}
+          showTooltips={showTooltips}
+        />
+      </div>
+    )
+  }, [
+    bankTransactions,
+    currentPage,
+    isLastPage,
+    isLoading,
+    isSyncing,
+    showDescriptions,
+    showReceiptUploads,
+    showTooltips,
+    stringOverrides,
+  ])
+
+  const BankTransactionsListLoader = useMemo(() => {
+    return (
+      <div className='Layer__bank-transactions__list-loader'>
+        <Loader />
+      </div>
+    )
+  }, [])
+
+  const BankTransactionsListView = useMemo(() => {
     return (
       <BankTransactionsList
         bankTransactions={bankTransactions}
@@ -281,7 +309,7 @@ const BankTransactionsTableView = ({
     )
   }, [bankTransactions, stringOverrides?.bankTransactionCTAs, showDescriptions, showReceiptUploads, showTooltips])
 
-  const BankTransactionsMobileListView = useCallback(() => {
+  const BankTransactionsMobileListView = useMemo(() => {
     return (
       <BankTransactionsMobileList
         bankTransactions={bankTransactions}
@@ -291,6 +319,36 @@ const BankTransactionsTableView = ({
       />
     )
   }, [bankTransactions, showDescriptions, showReceiptUploads, showTooltips])
+
+  const slots = useMemo(() => {
+    switch (tableContentMode) {
+      case BankTransactionsTableContent.Table:
+        return {
+          List: BankTransactionsTableViewContent,
+        }
+      case BankTransactionsTableContent.List:
+        return {
+          List: BankTransactionsListView,
+          Loader: BankTransactionsListLoader,
+        }
+      case BankTransactionsTableContent.MobileList:
+        return {
+          List: BankTransactionsMobileListView,
+          Loader: <MobileListSkeleton />,
+        }
+      default:
+        return unsafeAssertUnreachable({
+          value: tableContentMode,
+          message: 'Unexpected table view content mode',
+        })
+    }
+  }, [
+    tableContentMode,
+    BankTransactionsTableViewContent,
+    BankTransactionsListView,
+    BankTransactionsListLoader,
+    BankTransactionsMobileListView,
+  ])
 
   return (
     <Container
@@ -322,60 +380,16 @@ const BankTransactionsTableView = ({
         />
       )}
 
-      {tableViewContentMode === BankTransactionsTableContent.Table && (
-        <div className='Layer__bank-transactions__table-wrapper'>
-          <BankTransactionsTable
-            isLoading={isLoading}
-            isSyncing={isSyncing}
-            bankTransactions={bankTransactions}
-            page={currentPage}
-            stringOverrides={stringOverrides}
-            lastPage={isLastPage}
+      <BankTransactionsListWithEmptyStates isEmpty={(bankTransactions?.length ?? 0) === 0 && !isLoading} slots={slots} />
 
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-          />
-          {rulesSuggestionModal}
-        </div>
-      )}
+      <SuggestedCategorizationRuleUpdatesDialog
+        isOpen={!!ruleSuggestion}
+        onOpenChange={handleRuleSuggestionOpenChange}
+        ruleSuggestion={ruleSuggestion}
+        variant={tableContentMode === BankTransactionsTableContent.MobileList ? 'drawer' : 'modal'}
+      />
 
-      {tableViewContentMode === BankTransactionsTableContent.List
-        && (
-          <>
-            <BankTransactionsListWithEmptyStates
-              slots={{
-                List: BankTransactionsListView,
-                Loader: () => (
-                  <div className='Layer__bank-transactions__list-loader'>
-                    <Loader />
-                  </div>
-                ),
-              }}
-            />
-            {rulesSuggestionModal}
-          </>
-        )}
-
-      {tableViewContentMode === BankTransactionsTableContent.MobileList
-        && (
-          <>
-            <BankTransactionsListWithEmptyStates
-              slots={{
-                List: BankTransactionsMobileListView,
-                Loader: MobileListSkeleton,
-              }}
-            />
-            <SuggestedCategorizationRuleUpdatesDialog
-              isOpen={!!ruleSuggestion}
-              onOpenChange={handleRuleSuggestionOpenChange}
-              ruleSuggestion={ruleSuggestion}
-              variant='drawer'
-            />
-          </>
-        )}
-
-      {!isMonthlyViewMode && (
+      {!isMonthlyViewMode && !isLoading && (
         <HStack justify='end'>
           <Pagination
             currentPage={currentPage}

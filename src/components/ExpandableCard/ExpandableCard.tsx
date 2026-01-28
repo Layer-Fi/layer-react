@@ -35,7 +35,7 @@ export const ExpandableCard = ({
         </HStack>
       </button>
       <AnimatedPresenceElement
-        key='expandable-content'
+        motionKey='expandable-content'
         variant='expand'
         isOpen={isExpanded}
         style={{ overflow: 'hidden' }}

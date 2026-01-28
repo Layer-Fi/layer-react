@@ -128,7 +128,7 @@ export const BankTransactionsTable = ({
             )}
         </tr>
       </thead>
-      {isLoading && page && page === 1 && <BankTransactionsLoader />}
+      {isLoading && <BankTransactionsLoader />}
       <tbody>
         {!isLoading
           && bankTransactions?.map(

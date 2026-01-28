@@ -71,7 +71,7 @@ export const BankTransactionsMobileListItem = ({
   showTooltips,
 }: BankTransactionsMobileListItemProps) => {
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
-  const { setTransactionIdToOpen, transactionIdToOpen } = useContext(TransactionToOpenContext)
+  const { setTransactionIdToOpen, transactionIdToOpen, clearTransactionIdToOpen } = useContext(TransactionToOpenContext)
 
   const categorized = isCategorized(bankTransaction)
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
@@ -85,11 +85,8 @@ export const BankTransactionsMobileListItem = ({
   const itemRef = useRef<HTMLLIElement>(null)
 
   const openNext = useCallback(() => {
-    if (itemRef.current && itemRef.current.nextSibling) {
-      const txId = (itemRef.current.nextSibling as HTMLLIElement).getAttribute(
-        'data-item',
-      )
-
+    if (itemRef.current?.nextSibling) {
+      const txId = (itemRef.current.nextSibling as HTMLLIElement).getAttribute('data-item')
       if (txId) {
         setTransactionIdToOpen(txId)
       }
@@ -138,8 +135,9 @@ export const BankTransactionsMobileListItem = ({
   useEffect(() => {
     if (transactionIdToOpen === bankTransaction.id) {
       setOpen(true)
+      clearTransactionIdToOpen()
     }
-  }, [bankTransaction.id, transactionIdToOpen])
+  }, [bankTransaction.id, transactionIdToOpen, clearTransactionIdToOpen])
 
   // Close item when transaction is re-categorized/re-matched
   useEffect(() => {
@@ -182,7 +180,7 @@ export const BankTransactionsMobileListItem = ({
   )
 
   return (
-    <AnimatedPresenceElement as='li' variant='fade' isOpen={!isBeingRemoved} key={`${bankTransaction.id}`} ref={itemRef} className={rowClassName} data-item={bankTransaction.id}>
+    <AnimatedPresenceElement as='li' variant='fade' isOpen={!isBeingRemoved} motionKey={bankTransaction.id} ref={itemRef} className={rowClassName} data-item={bankTransaction.id}>
       <VStack>
         <div onClick={handleRowClick} role='button'>
           <HStack gap='sm' justify='space-between' pie='md'>
@@ -220,7 +218,6 @@ export const BankTransactionsMobileListItem = ({
                 </HStack>
               </VStack>
             </HStack>
-
             <BankTransactionsAmountDate
               amount={bankTransaction.amount}
               date={bankTransaction.date}
@@ -245,7 +242,7 @@ export const BankTransactionsMobileListItem = ({
               )
           )}
         </div>
-        <AnimatedPresenceElement variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+        <AnimatedPresenceElement variant='expand' isOpen={open} motionKey={`${bankTransaction.id}--expanded`}>
           <BankTransactionsMobileListItemExpandedRow
             bankTransaction={bankTransaction}
             isOpen={open}
@@ -255,9 +252,7 @@ export const BankTransactionsMobileListItem = ({
             showTooltips={showTooltips}
           />
         </AnimatedPresenceElement>
-
       </VStack>
-
     </AnimatedPresenceElement>
   )
 }
