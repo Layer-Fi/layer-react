@@ -1,4 +1,5 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import { getYear } from 'date-fns'
 import { createStore, useStore } from 'zustand'
 
 import { useTaxProfile } from '@hooks/taxEstimates/useTaxProfile'
@@ -32,14 +33,12 @@ type TaxEstimatesRouteStoreShape = {
   }
 }
 
-const currentYear = new Date().getFullYear()
-
 const TaxEstimatesRouteStoreContext = createContext(
   createStore<TaxEstimatesRouteStoreShape>(() => ({
     routeState: { route: TaxEstimatesRoute.Estimates },
     onboardingStatus: OnboardingStatus.Loading,
     navigate: () => {},
-    year: currentYear,
+    year: getYear(new Date()),
     fullYearProjection: false,
     actions: {
       setYear: () => {},
@@ -76,7 +75,7 @@ export function useFullYearProjection() {
   const rawFullYearProjection = useStore(store, state => state.fullYearProjection)
   const year = useStore(store, state => state.year)
 
-  const isCurrentYear = year === currentYear
+  const isCurrentYear = year === getYear(new Date())
   const fullYearProjection = isCurrentYear ? rawFullYearProjection : false
   const setFullYearProjection = useStore(store, state => state.actions.setFullYearProjection)
 
@@ -92,7 +91,7 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
       navigate: (route: TaxEstimatesRoute) => {
         set({ routeState: { route } })
       },
-      year: currentYear,
+      year: getYear(new Date()),
       fullYearProjection: false,
       actions: {
         setYear: (year: number) => {
