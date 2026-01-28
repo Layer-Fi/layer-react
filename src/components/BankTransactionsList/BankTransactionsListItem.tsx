@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
 
@@ -7,16 +7,16 @@ import {
   hasReceipts,
   isCredit,
 } from '@utils/bankTransactions'
+import { useDelayedRemoveBankTransaction } from '@hooks/useBankTransactions/useDelayedRemoveBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/useBankTransactions/useSaveBankTransactionRow'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import FileIcon from '@icons/File'
-import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
+import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -37,7 +37,6 @@ type BankTransactionsListItemProps = {
   index: number
   dateFormat: string
   bankTransaction: BankTransaction
-  removeTransaction: (bt: BankTransaction) => void
   stringOverrides?: BankTransactionCTAStringOverrides
 
   showDescriptions: boolean
@@ -49,14 +48,12 @@ export const BankTransactionsListItem = ({
   index,
   dateFormat,
   bankTransaction,
-  removeTransaction,
   stringOverrides,
 
   showDescriptions,
   showReceiptUploads,
   showTooltips,
 }: BankTransactionsListItemProps) => {
-  const { shouldHideAfterCategorize } = useBankTransactionsContext()
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
   const [openExpandedRow, setOpenExpandedRow] = useState(false)
   const [isExpandedRowValid, setIsExpandedRowValid] = useState(true)
@@ -70,11 +67,10 @@ export const BankTransactionsListItem = ({
 
   const categorized = isCategorized(bankTransaction)
 
-  const isBeingRemoved = bankTransaction.recently_categorized && shouldHideAfterCategorize
+  const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
+
   // Keep showing as uncategorized during removal animation to prevent UI flashing
-  const displayAsCategorized = isBeingRemoved
-    ? false
-    : categorized
+  const displayAsCategorized = isBeingRemoved ? false : categorized
 
   const { isVisible } = useDelayedVisibility({ delay: index * 80 })
 
@@ -83,15 +79,6 @@ export const BankTransactionsListItem = ({
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-
-  useEffect(() => {
-    if (isBeingRemoved) {
-      setTimeout(() => {
-        removeTransaction(bankTransaction)
-      }, 300)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bankTransaction.recently_categorized])
 
   const save = useCallback(async () => {
     if (openExpandedRow && !isExpandedRowValid) return
@@ -111,15 +98,12 @@ export const BankTransactionsListItem = ({
   const openClassName = openExpandedRow ? 'Layer__bank-transaction-list-item--expanded' : ''
   const rowClassName = classNames(
     'Layer__bank-transaction-list-item',
-    isBeingRemoved
-      ? 'Layer__bank-transaction-row--removing'
-      : '',
     openExpandedRow ? openClassName : '',
     isVisible ? 'show' : '',
   )
 
   return (
-    <li className={rowClassName} onClick={toggleExpandedRow}>
+    <AnimatedPresenceElement as='li' variant='fade' isOpen={!isBeingRemoved} key={`${bankTransaction.id}`} className={rowClassName} onClick={toggleExpandedRow}>
       <span className='Layer__bank-transaction-list-item__heading'>
         <div className='Layer__bank-transaction-list-item__heading__main'>
           <Span ellipsis size='sm'>
@@ -190,7 +174,7 @@ export const BankTransactionsListItem = ({
           </span>
         )}
       <span className='Layer__bank-transaction-list-item__expanded-row' onClick={preventRowExpansion}>
-        <AnimatedPresenceDiv variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
+        <AnimatedPresenceElement variant='expand' isOpen={openExpandedRow} key={`expanded-${bankTransaction.id}`}>
           <ExpandedBankTransactionRow
             bankTransaction={bankTransaction}
             isOpen={openExpandedRow}
@@ -203,7 +187,7 @@ export const BankTransactionsListItem = ({
             variant='list'
             onValidityChange={setIsExpandedRowValid}
           />
-        </AnimatedPresenceDiv>
+        </AnimatedPresenceElement>
       </span>
       {isCategorizationEnabled && !displayAsCategorized && (
         <div onClick={preventRowExpansion}>
@@ -249,6 +233,6 @@ export const BankTransactionsListItem = ({
             </ErrorText>
           </HStack>
         )}
-    </li>
+    </AnimatedPresenceElement>
   )
 }

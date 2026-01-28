@@ -1,17 +1,18 @@
-import { type ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { type ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { hasReceipts, isCredit } from '@utils/bankTransactions'
+import { useDelayedRemoveBankTransaction } from '@hooks/useBankTransactions/useDelayedRemoveBankTransaction'
 import { useDelayedVisibility } from '@hooks/visibility/useDelayedVisibility'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
 import FileIcon from '@icons/File'
-import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
+import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
@@ -27,7 +28,6 @@ import './bankTransactionsMobileListItem.scss'
 export interface BankTransactionsMobileListItemProps {
   index: number
   bankTransaction: BankTransaction
-  removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
   isFirstItem?: boolean
   bulkActionsEnabled?: boolean
@@ -63,7 +63,6 @@ const getInAppLink = (
 export const BankTransactionsMobileListItem = ({
   index,
   bankTransaction,
-  removeTransaction,
   initialLoad,
   isFirstItem = false,
   bulkActionsEnabled = false,
@@ -71,25 +70,21 @@ export const BankTransactionsMobileListItem = ({
   showReceiptUploads,
   showTooltips,
 }: BankTransactionsMobileListItemProps) => {
-  const {
-    transactionIdToOpen,
-    setTransactionIdToOpen,
-    clearTransactionIdToOpen,
-  } = useContext(TransactionToOpenContext)
-
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
+  const { setTransactionIdToOpen, transactionIdToOpen } = useContext(TransactionToOpenContext)
+
   const categorized = isCategorized(bankTransaction)
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
+
+  const { select, deselect } = useBulkSelectionActions()
+  const isSelected = useIdIsSelected()
+  const isTransactionSelected = isSelected(bankTransaction.id)
+
+  const { renderInAppLink } = useInAppLinkContext()
 
   const itemRef = useRef<HTMLLIElement>(null)
 
-  // Keep showing as uncategorized during removal animation to prevent UI flashing
-  const displayAsCategorized = bankTransaction.recently_categorized && shouldHideAfterCategorize
-    ? false
-    : categorized
-
-  const [open, setOpen] = useState(isFirstItem)
-
-  const openNext = () => {
+  const openNext = useCallback(() => {
     if (itemRef.current && itemRef.current.nextSibling) {
       const txId = (itemRef.current.nextSibling as HTMLLIElement).getAttribute(
         'data-item',
@@ -99,47 +94,14 @@ export const BankTransactionsMobileListItem = ({
         setTransactionIdToOpen(txId)
       }
     }
-  }
+  }, [setTransactionIdToOpen])
 
-  const fullAccountName = useMemo(() => {
-    return (
-      <Span ellipsis size='sm'>
-        {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
-        {bankTransaction.account_name}
-        {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
-      </Span>
-    )
-  }, [
-    bankTransaction.account_institution?.name,
-    bankTransaction.account_name,
-    bankTransaction.account_mask,
-  ])
+  const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction, onRemove: openNext })
 
-  useEffect(() => {
-    if (transactionIdToOpen && transactionIdToOpen === bankTransaction.id) {
-      setOpen(true)
-      clearTransactionIdToOpen()
-    }
-  }, [bankTransaction.id, clearTransactionIdToOpen, transactionIdToOpen])
+  // Keep showing as uncategorized during removal animation to prevent UI flashing
+  const displayAsCategorized = isBeingRemoved ? false : categorized
 
-  useEffect(() => {
-    if (bankTransaction.recently_categorized) {
-      if (shouldHideAfterCategorize) {
-        setTimeout(() => {
-          removeTransaction(bankTransaction)
-          openNext()
-        }, 300)
-      }
-      else {
-        close()
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    bankTransaction.recently_categorized,
-    bankTransaction.category,
-    bankTransaction.match,
-  ])
+  const [open, setOpen] = useState(isFirstItem)
 
   const toggleOpen = () => {
     setOpen(!open)
@@ -172,29 +134,35 @@ export const BankTransactionsMobileListItem = ({
     toggleOpen()
   }
 
+  // Open item when transaction set open by the context (e.g., when the last item is categorized)
   useEffect(() => {
-    if (
-      bankTransaction.recently_categorized
-      && shouldHideAfterCategorize
-    ) {
-      setTimeout(() => {
-        removeTransaction(bankTransaction)
-      }, 300)
+    if (transactionIdToOpen === bankTransaction.id) {
+      setOpen(true)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bankTransaction.recently_categorized])
+  }, [bankTransaction.id, transactionIdToOpen])
 
+  // Close item when transaction is re-categorized/re-matched
+  useEffect(() => {
+    if (bankTransaction.recently_categorized && !shouldHideAfterCategorize) {
+      close()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    bankTransaction.recently_categorized,
+    bankTransaction.match,
+    bankTransaction.category,
+  ])
+
+  // Close all rows when bulk actions enabled, open first item when bulk actions becomes disabled
   useEffect(() => {
     if (bulkActionsEnabled) {
       close()
     }
+    else if (isFirstItem) {
+      setOpen(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bulkActionsEnabled])
-
-  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
-  const { select, deselect } = useBulkSelectionActions()
-  const isSelected = useIdIsSelected()
-  const isTransactionSelected = isSelected(bankTransaction.id)
-  const { renderInAppLink } = useInAppLinkContext()
 
   const inAppLink = useMemo(() => {
     if (!displayAsCategorized) {
@@ -214,18 +182,10 @@ export const BankTransactionsMobileListItem = ({
   )
 
   return (
-    <li ref={itemRef} className={rowClassName} data-item={bankTransaction.id}>
-
+    <AnimatedPresenceElement as='li' variant='fade' isOpen={!isBeingRemoved} key={`${bankTransaction.id}`} ref={itemRef} className={rowClassName} data-item={bankTransaction.id}>
       <VStack>
-        <div
-          onClick={handleRowClick}
-          role='button'
-        >
-          <HStack
-            gap='sm'
-            justify='space-between'
-            pie='md'
-          >
+        <div onClick={handleRowClick} role='button'>
+          <HStack gap='sm' justify='space-between' pie='md'>
             <HStack align='center' overflow='hidden'>
               <BankTransactionsMobileListItemCheckbox
                 bulkActionsEnabled={bulkActionsEnabled}
@@ -250,7 +210,11 @@ export const BankTransactionsMobileListItem = ({
                 )}
                 <HStack gap='2xs' align='center'>
                   <Span size='sm' ellipsis>
-                    {fullAccountName}
+                    <Span ellipsis size='sm'>
+                      {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
+                      {bankTransaction.account_name}
+                      {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
+                    </Span>
                   </Span>
                   {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
                 </HStack>
@@ -281,7 +245,7 @@ export const BankTransactionsMobileListItem = ({
               )
           )}
         </div>
-        <AnimatedPresenceDiv variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
+        <AnimatedPresenceElement variant='expand' isOpen={open} key={`expanded-${bankTransaction.id}`}>
           <BankTransactionsMobileListItemExpandedRow
             bankTransaction={bankTransaction}
             isOpen={open}
@@ -290,10 +254,10 @@ export const BankTransactionsMobileListItem = ({
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
           />
-        </AnimatedPresenceDiv>
+        </AnimatedPresenceElement>
 
       </VStack>
 
-    </li>
+    </AnimatedPresenceElement>
   )
 }

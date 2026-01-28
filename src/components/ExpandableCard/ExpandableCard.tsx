@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 
-import { AnimatedPresenceDiv } from '@ui/AnimatedPresenceDiv/AnimatedPresenceDiv'
+import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Card } from '@components/Card/Card'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
@@ -34,7 +34,7 @@ export const ExpandableCard = ({
           <ExpandButton isExpanded={isExpanded} />
         </HStack>
       </button>
-      <AnimatedPresenceDiv
+      <AnimatedPresenceElement
         key='expandable-content'
         variant='expand'
         isOpen={isExpanded}
@@ -43,7 +43,7 @@ export const ExpandableCard = ({
         <VStack className='Layer__ExpandableCard__Content'>
           {children}
         </VStack>
-      </AnimatedPresenceDiv>
+      </AnimatedPresenceElement>
     </Card>
   )
 }

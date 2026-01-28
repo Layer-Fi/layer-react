@@ -3,26 +3,28 @@ import { SearchX } from 'lucide-react'
 
 import { DisplayState } from '@internal-types/bank_transactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import InboxIcon from '@icons/Inbox'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 type BankTransactionsTableEmptyStatesProps = {
-  hasVisibleTransactions: boolean
-  isError: boolean
-  isFiltered: boolean
-  isLoadingWithoutData: boolean
+  slots: {
+    Loader: React.FC
+    List: React.FC
+  }
 }
 
-export function BankTransactionsTableEmptyStates({
-  hasVisibleTransactions,
-  isError,
-  isFiltered,
-  isLoadingWithoutData,
+export function BankTransactionsListWithEmptyStates({
+  slots,
 }: BankTransactionsTableEmptyStatesProps) {
-  const { display } = useBankTransactionsContext()
-  const isCategorizationMode = display !== DisplayState.categorized
+  const { data, isLoading, isError, display } = useBankTransactionsContext()
+  const { filters } = useBankTransactionsFiltersContext()
 
-  const StateComponent = useMemo(() => {
+  const isCategorizationMode = display !== DisplayState.categorized
+  const isFiltered = Boolean(filters?.query)
+  const hasVisibleTransactions = (data?.length ?? 0) > 0
+
+  const DataStateComponent = useMemo(() => {
     if (isError) {
       return (
         <DataState
@@ -31,10 +33,6 @@ export function BankTransactionsTableEmptyStates({
           description='We couldn’t load your transactions'
         />
       )
-    }
-
-    if (isLoadingWithoutData) {
-      return null
     }
 
     if (!hasVisibleTransactions && !isFiltered) {
@@ -68,15 +66,19 @@ export function BankTransactionsTableEmptyStates({
     }
 
     return null
-  }, [isError, isLoadingWithoutData, hasVisibleTransactions, isFiltered, isCategorizationMode])
+  }, [isError, hasVisibleTransactions, isFiltered, isCategorizationMode])
 
-  if (StateComponent === null) {
-    return null
+  if (isLoading) {
+    return <slots.Loader />
+  }
+
+  if (DataStateComponent === null) {
+    return <slots.List />
   }
 
   return (
     <div className='Layer__table-state-container'>
-      {StateComponent}
+      {DataStateComponent}
     </div>
   )
 }

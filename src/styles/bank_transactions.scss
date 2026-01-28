@@ -103,14 +103,6 @@
     transform: scale(1);
     opacity: 1;
   }
-
-  &.Layer__bank-transaction-row--removing {
-    .Layer__table-cell-content {
-      overflow: hidden;
-      min-height: 0;
-      padding: 0 var(--spacing-md);
-    }
-  }
 }
 
 .Layer__bank-transaction-row:first-child .Layer__table-cell {
@@ -975,15 +967,5 @@
     & > .Layer__input-tooltip > .Layer__input-left-text {
       border-right-color: transparent;
     }
-  }
-}
-
-.Layer__bank-transaction-row--removing {
-  .Layer__table-cell-content {
-    top: 1px;
-    overflow: hidden;
-    max-height: 0;
-    padding-top: 0;
-    padding-bottom: 0;
   }
 }

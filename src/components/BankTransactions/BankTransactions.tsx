@@ -2,7 +2,7 @@ import { type ReactNode, useCallback, useContext, useEffect, useMemo, useRef, us
 import classNames from 'classnames'
 import { debounce } from 'lodash-es'
 
-import { type BankTransaction, DisplayState } from '@internal-types/bank_transactions'
+import { DisplayState } from '@internal-types/bank_transactions'
 import type { LayerError } from '@models/ErrorHandler'
 import { BREAKPOINTS } from '@config/general'
 import { usePreloadCategories } from '@hooks/categories/useCategories'
@@ -22,12 +22,12 @@ import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFil
 import { BankTransactionsIsCategorizationEnabledProvider } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
 import { HStack } from '@ui/Stack/Stack'
 import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,
 } from '@components/BankTransactions/BankTransactionsHeader'
-import { BankTransactionsTableEmptyStates } from '@components/BankTransactions/BankTransactionsTableEmptyState'
 import { type MobileComponentType } from '@components/BankTransactions/constants'
 import { BankTransactionsList } from '@components/BankTransactionsList/BankTransactionsList'
 import { BankTransactionsMobileList } from '@components/BankTransactionsMobileList/BankTransactionsMobileList'
@@ -46,6 +46,8 @@ import { BankTransactionTagVisibilityProvider } from '@features/bankTransactions
 import { usePreloadCustomers } from '@features/customers/api/useListCustomers'
 import { usePreloadTagDimensions } from '@features/tags/api/useTagDimensions'
 import { usePreloadVendors } from '@features/vendors/api/useListVendors'
+
+import { BankTransactionsListWithEmptyStates } from './BankTransactionsTableEmptyState'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -97,6 +99,12 @@ export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
 }
 
 type BankTransactionsTableViewProps = Omit<BankTransactionsProps, 'filters' | 'categorizeView'>
+
+enum BankTransactionsTableContent {
+  List = 'List',
+  MobileList = 'MobileList',
+  Table = 'Table',
+}
 
 export const BankTransactions = ({
   onError,
@@ -172,20 +180,12 @@ const BankTransactionsTableView = ({
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
 
-  const { filters, dateFilterMode } = useBankTransactionsFiltersContext()
+  const { dateFilterMode } = useBankTransactionsFiltersContext()
   const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
 
   const { currentBankTransactionsPage: currentPage, setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
 
-  const {
-    data,
-    isLoading,
-    isError,
-    display,
-    hasMore,
-    fetchMore,
-    removeAfterCategorize,
-  } = useBankTransactionsContext()
+  const { data, isLoading, display, hasMore, fetchMore } = useBankTransactionsContext()
 
   const { setRuleSuggestion, ruleSuggestion } = useContext(CategorizationRulesContext)
 
@@ -238,9 +238,6 @@ const BankTransactionsTableView = ({
   const debounceShiftStickyHeader = debounce(setShiftStickyHeader, 500)
   const [listView, setListView] = useState(false)
 
-  const removeTransaction = (bankTransaction: BankTransaction) =>
-    removeAfterCategorize([bankTransaction.id])
-
   const containerRef = useElementSize<HTMLDivElement>((size) => {
     if (size.height >= 90) {
       const newShift = -Math.floor(size.height / 2) + 6
@@ -265,7 +262,35 @@ const BankTransactionsTableView = ({
     && !hasMore
     && Math.ceil((data?.length || 0) / pageSize) === currentPage
 
-  const isLoadingWithoutData = isLoading && !data
+  const tableViewContentMode = listView && mobileComponent === 'mobileList'
+    ? BankTransactionsTableContent.MobileList
+    : listView
+      ? BankTransactionsTableContent.List
+      : BankTransactionsTableContent.Table
+
+  const BankTransactionsListView = useCallback(() => {
+    return (
+      <BankTransactionsList
+        bankTransactions={bankTransactions}
+        stringOverrides={stringOverrides?.bankTransactionCTAs}
+
+        showDescriptions={showDescriptions}
+        showReceiptUploads={showReceiptUploads}
+        showTooltips={showTooltips}
+      />
+    )
+  }, [bankTransactions, stringOverrides?.bankTransactionCTAs, showDescriptions, showReceiptUploads, showTooltips])
+
+  const BankTransactionsMobileListView = useCallback(() => {
+    return (
+      <BankTransactionsMobileList
+        bankTransactions={bankTransactions}
+        showDescriptions={showDescriptions}
+        showReceiptUploads={showReceiptUploads}
+        showTooltips={showTooltips}
+      />
+    )
+  }, [bankTransactions, showDescriptions, showReceiptUploads, showTooltips])
 
   return (
     <Container
@@ -297,13 +322,12 @@ const BankTransactionsTableView = ({
         />
       )}
 
-      {!listView && (
+      {tableViewContentMode === BankTransactionsTableContent.Table && (
         <div className='Layer__bank-transactions__table-wrapper'>
           <BankTransactionsTable
             isLoading={isLoading}
             isSyncing={isSyncing}
             bankTransactions={bankTransactions}
-            removeTransaction={removeTransaction}
             page={currentPage}
             stringOverrides={stringOverrides}
             lastPage={isLastPage}
@@ -316,31 +340,31 @@ const BankTransactionsTableView = ({
         </div>
       )}
 
-      {!isLoadingWithoutData && listView && mobileComponent !== 'mobileList'
-        && (
-          <div className='Layer__bank-transactions__list-wrapper'>
-            <BankTransactionsList
-              bankTransactions={bankTransactions}
-              removeTransaction={removeTransaction}
-              stringOverrides={stringOverrides?.bankTransactionCTAs}
-
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showTooltips={showTooltips}
-            />
-            {rulesSuggestionModal}
-          </div>
-        )}
-
-      {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
+      {tableViewContentMode === BankTransactionsTableContent.List
         && (
           <>
-            <BankTransactionsMobileList
-              bankTransactions={bankTransactions}
-              removeTransaction={removeTransaction}
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showTooltips={showTooltips}
+            <BankTransactionsListWithEmptyStates
+              slots={{
+                List: BankTransactionsListView,
+                Loader: () => (
+                  <div className='Layer__bank-transactions__list-loader'>
+                    <Loader />
+                  </div>
+                ),
+              }}
+            />
+            {rulesSuggestionModal}
+          </>
+        )}
+
+      {tableViewContentMode === BankTransactionsTableContent.MobileList
+        && (
+          <>
+            <BankTransactionsListWithEmptyStates
+              slots={{
+                List: BankTransactionsMobileListView,
+                Loader: MobileListSkeleton,
+              }}
             />
             <SuggestedCategorizationRuleUpdatesDialog
               isOpen={!!ruleSuggestion}
@@ -349,23 +373,6 @@ const BankTransactionsTableView = ({
               variant='drawer'
             />
           </>
-        )}
-
-      {listView && isLoadingWithoutData
-        && (
-          <div className='Layer__bank-transactions__list-loader'>
-            <Loader />
-          </div>
-        )}
-
-      {(!isSyncing || listView)
-        && (
-          <BankTransactionsTableEmptyStates
-            hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
-            isError={isError}
-            isFiltered={Boolean(filters?.query)}
-            isLoadingWithoutData={isLoadingWithoutData}
-          />
         )}
 
       {!isMonthlyViewMode && (
