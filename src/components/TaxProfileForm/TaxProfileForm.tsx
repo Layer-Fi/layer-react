@@ -77,7 +77,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
                 onPress={() => { void form.handleSubmit() }}
               >
                 <Save size={14} />
-                Save Tax Profile
+                Save Profile
               </Button>
             )}
           </form.Subscribe>

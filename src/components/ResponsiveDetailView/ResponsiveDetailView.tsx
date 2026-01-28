@@ -1,8 +1,11 @@
+import classNames from 'classnames'
 import type { PropsWithChildren } from 'react'
 
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
+
+import './responsiveDetailView.scss'
 
 type ResponsiveDetailViewProps = PropsWithChildren<{
   name: string
@@ -31,7 +34,7 @@ export const ResponsiveDetailView = ({
   }
 
   return (
-    <VStack className={mobileProps?.className} gap='md'>
+    <VStack className={classNames('Layer__ResponsiveDetailView', mobileProps?.className)} gap='md'>
       <slots.Header />
       {children}
     </VStack>

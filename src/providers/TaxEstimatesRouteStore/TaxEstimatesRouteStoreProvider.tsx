@@ -1,4 +1,5 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import { getYear } from 'date-fns'
 import { createStore, useStore } from 'zustand'
 
 import { useTaxProfile } from '@hooks/taxEstimates/useTaxProfile'
@@ -25,21 +26,23 @@ type TaxEstimatesRouteStoreShape = {
   onboardingStatus: OnboardingStatus
   navigate: (route: TaxEstimatesRoute) => void
   year: number
+  fullYearProjection: boolean
   actions: {
     setYear: (year: number) => void
+    setFullYearProjection: (value: boolean) => void
   }
 }
-
-const currentYear = new Date().getFullYear()
 
 const TaxEstimatesRouteStoreContext = createContext(
   createStore<TaxEstimatesRouteStoreShape>(() => ({
     routeState: { route: TaxEstimatesRoute.Estimates },
     onboardingStatus: OnboardingStatus.Loading,
     navigate: () => {},
-    year: currentYear,
+    year: getYear(new Date()),
+    fullYearProjection: false,
     actions: {
       setYear: () => {},
+      setFullYearProjection: () => {},
     },
   })),
 )
@@ -66,6 +69,19 @@ export function useTaxEstimatesYear() {
   return useMemo(() => ({ year, setYear }), [year, setYear])
 }
 
+export function useFullYearProjection() {
+  const store = useContext(TaxEstimatesRouteStoreContext)
+
+  const rawFullYearProjection = useStore(store, state => state.fullYearProjection)
+  const year = useStore(store, state => state.year)
+
+  const isCurrentYear = year === getYear(new Date())
+  const fullYearProjection = isCurrentYear ? rawFullYearProjection : false
+  const setFullYearProjection = useStore(store, state => state.actions.setFullYearProjection)
+
+  return useMemo(() => ({ fullYearProjection, setFullYearProjection }), [fullYearProjection, setFullYearProjection])
+}
+
 export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   const { data: taxProfile, isLoading, isError } = useTaxProfile()
   const [store] = useState(() =>
@@ -75,10 +91,14 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
       navigate: (route: TaxEstimatesRoute) => {
         set({ routeState: { route } })
       },
-      year: currentYear,
+      year: getYear(new Date()),
+      fullYearProjection: false,
       actions: {
         setYear: (year: number) => {
           set({ year })
+        },
+        setFullYearProjection: (fullYearProjection: boolean) => {
+          set({ fullYearProjection })
         },
       },
     })),

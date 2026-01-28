@@ -35,9 +35,9 @@ export const AdjustedGrossIncomeTable = ({ data }: AdjustedGrossIncomeTableProps
       <TableBody>
         <TaxTableRow label='Business Income' value={income.businessRevenue} variant={TaxTableRowVariant.Standard} />
         <TaxTableRow label='W-2 Income' value={income.w2Income} variant={TaxTableRowVariant.Standard} />
-        <TaxTableRow label='Deductions' value={-deductions.total} variant={TaxTableRowVariant.Standard} />
+        <TaxTableRow label='Deductions' value={deductions.total} variant={TaxTableRowVariant.Standard} />
         {deductionRows.map(({ key, label, getAmount }) => (
-          <TaxTableRow key={key} label={`- ${label}`} value={-getAmount(deductions)} variant={TaxTableRowVariant.Nested} />
+          <TaxTableRow key={key} label={`- ${label}`} value={getAmount(deductions)} variant={TaxTableRowVariant.Nested} />
         ))}
         <TaxTableRow label='Adjusted Gross Income' value={totalAdjustedGrossIncome} variant={TaxTableRowVariant.Total} />
       </TableBody>
