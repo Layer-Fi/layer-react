@@ -26,6 +26,10 @@
   &--readonly {
     background-color: var(--bg-muted);
   }
+
+  &--error {
+    border-color: var(--color-danger);
+  }
 }
 
 .Layer__ComboBoxContainer > .Layer__ComboBoxControl {
@@ -45,6 +49,10 @@
      * @see {https://github.com/JedWatson/react-select/blob/2a913698ad3d7759fb8e6bc5dd8a7d839227da2f/packages/react-select/src/components/Control.tsx#L49}
      */
     outline: 2px solid var(--outline-default) !important;
+
+    &.Layer__ComboBoxControl--error {
+      outline-color: var(--color-info-error-bg) !important;
+    }
   }
 }
 
@@ -195,4 +203,12 @@
 
 .Layer__ComboBoxNoOptionsMessage {
   padding-block: var(--spacing-sm);
+}
+
+.Layer__ComboBoxPlaceholder {
+  color: var(--color-base-600);
+
+  &--error {
+    color: var(--color-danger);
+  }
 }

@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
-import classNames from 'classnames'
-import type { FormatOptionLabelMeta } from 'react-select'
 
 import { humanizeEnum } from '@utils/format'
 import type { CustomAccount } from '@hooks/customAccounts/types'
 import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '@hooks/customAccounts/useCustomAccountParseCsv'
 import { useCustomAccounts } from '@hooks/customAccounts/useCustomAccounts'
+import Check from '@icons/Check'
+import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
+import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Label, P, Span } from '@ui/Typography/Text'
 import { SubmitButton } from '@components/Button/SubmitButton'
@@ -13,7 +14,6 @@ import { CopyTemplateHeadersButtonGroup } from '@components/CsvUpload/CopyTempla
 import { CsvUpload } from '@components/CsvUpload/CsvUpload'
 import { DownloadCsvTemplateButton } from '@components/CsvUpload/DownloadCsvTemplateButton'
 import { CustomAccountForm } from '@components/CustomAccountForm/CustomAccountForm'
-import { CreatableSelect } from '@components/Input/CreatableSelect'
 import { Separator } from '@components/Separator/Separator'
 import { allHeaders, templateExampleTransactions, templateHeaders } from '@components/UploadTransactions/template'
 import { useWizard } from '@components/Wizard/Wizard'
@@ -29,23 +29,32 @@ const formatCreateLabel = (inputValue: string) => {
   return inputValue ? `Create "${inputValue}"` : 'Create account'
 }
 
-const formatOptionLabel = (option: AccountOption, meta?: FormatOptionLabelMeta<AccountOption>) => {
+const AccountOption = ({ option, fallback }: { option: AccountOption, fallback: React.ReactNode }) => {
   if (option.account && !option.__isNew__) {
     return (
-      <VStack>
-        <Span ellipsis>{option.account.accountName}</Span>
-        {meta?.context === 'menu'
-          && (
-            <Span size='sm' variant='subtle' noWrap>
-              {option.account.institutionName}
-              {' · '}
-              {humanizeEnum(option.account.accountSubtype!)}
-            </Span>
-          )}
-      </VStack>
+      <HStack gap='xs' align='center'>
+        <Check size={16} className={COMBO_BOX_CLASS_NAMES.OPTION_CHECK_ICON} />
+        <VStack>
+          <Span ellipsis>{option.account.accountName}</Span>
+          <Span size='sm' variant='subtle' noWrap>
+            {option.account.institutionName}
+            {' · '}
+            {humanizeEnum(option.account.accountSubtype!)}
+          </Span>
+        </VStack>
+      </HStack>
     )
   }
-  return <Span>{option.label}</Span>
+
+  return fallback
+}
+
+const AccountSingleValue = ({ option, fallback }: { option: AccountOption, fallback: React.ReactNode }) => {
+  if (option.account && !option.__isNew__) {
+    return <Span ellipsis>{option.account.accountName}</Span>
+  }
+
+  return fallback
 }
 
 interface UploadTransactionsUploadCsvStepProps {
@@ -119,32 +128,28 @@ export function UploadTransactionsUploadCsvStep(
       .catch(() => { setHasParseCsvError(true) })
   }, [selectedAccount, isCreatingNewAccount, selectedFile, parseCsv, onParseCsv, next])
 
-  const inputClassName = classNames(
-    'Layer__upload-transactions__select-account-name-input',
-    !!customAccountsError && 'Layer__upload-transactions__select-account-name-input--error',
-  )
-
   const hasSelectedAccount = selectedAccount && !isCreatingNewAccount
   return (
     <VStack gap='lg'>
-      <VStack gap='xs' className='Layer__upload-transactions__select-account-name-field'>
+      <VStack pis='3xs' gap='xs'>
         <Label size='md' htmlFor='account_name'>
           Which account are these transactions from?
         </Label>
-        <CreatableSelect
+        <CreatableComboBox<AccountOption>
           inputId='account_name'
           placeholder={customAccountsError ? 'Failed to load options' : 'Select account...'}
           options={accountOptions}
-          formatOptionLabel={formatOptionLabel}
-          onChange={onSelectAccount}
+          onSelectedValueChange={onSelectAccount}
           onCreateOption={onCreateOption}
           formatCreateLabel={formatCreateLabel}
           isValidNewOption={() => true}
-          value={selectedAccount}
+          selectedValue={selectedAccount}
           isClearable
           isLoading={isLoadingCustomAccounts}
-          disabled={!!customAccountsError}
-          className={inputClassName}
+          isDisabled={!!customAccountsError}
+          isError={!!customAccountsError}
+          className='Layer__upload-transactions__select-account-name-input'
+          slots={{ Option: AccountOption, SingleValue: AccountSingleValue }}
         />
       </VStack>
       {isCreatingNewAccount

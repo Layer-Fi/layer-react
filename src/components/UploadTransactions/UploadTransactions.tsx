@@ -53,6 +53,7 @@ function UploadTransactionsHeader({ currentStep, isValid, onClose }: UploadTrans
       heading={<Heading level={1} size='sm'>{title}</Heading>}
       description={<Heading level={2} size='xs' variant='subtle' weight='normal'>{description}</Heading>}
       onClose={onClose}
+      hideBottomPadding
     />
   )
 }

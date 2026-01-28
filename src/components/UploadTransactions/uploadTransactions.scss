@@ -1,28 +1,8 @@
 .Layer__upload-transactions {
   container-type: inline-size;
 
-  .Layer__upload-transactions__select-account-name-field {
-    >.Layer__input-tooltip {
-      flex: auto;
-    }
-  }
-
-  .Layer__upload-transactions__select-account-name-input {
-    .Layer__select__control {
-      max-width: 24rem;
-    }
-
-    &--error {
-      .Layer__select__control {
-        box-shadow:
-          0 0 0 1px var(--color-base-300),
-          0 0 0 2px var(--color-danger);
-      }
-
-      .Layer__select__placeholder {
-        color: var(--color-danger);
-      }
-    }
+  .Layer__upload-transactions__select-account-name-input__Container {
+    max-width: 24rem;
   }
 
   .Layer__upload-transactions__create-account-form {

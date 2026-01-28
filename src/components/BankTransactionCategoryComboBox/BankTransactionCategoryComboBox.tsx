@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { GroupBase } from 'react-select'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
@@ -140,7 +140,7 @@ export const BankTransactionCategoryComboBox = ({
         ? 'Categorize or match...'
         : 'Select category'
 
-  const SelectedValue = useMemo(() => {
+  const SingleValue = useCallback(() => {
     return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} />
   }, [selectedValue])
 
@@ -153,7 +153,7 @@ export const BankTransactionCategoryComboBox = ({
       selectedValue={selectedValue}
       placeholder={placeholder}
       slots={{
-        SelectedValue,
+        SingleValue,
         Option: BankTransactionCategoryComboBoxOption,
         GroupHeading: BankTransactionCategoryComboBoxGroupHeading,
       }}

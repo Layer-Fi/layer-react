@@ -17,7 +17,7 @@ export function MultiSelectComboBox<T extends ComboBoxOption>({
   onSelectedValuesChange,
   ...props
 }: MultiSelectComboBoxProps<T>) {
-  const commonSelectProps = useCommonComboBoxProps<T, true>({ className, slots, ...props })
+  const commonSelectProps = useCommonComboBoxProps<T, true>({ className, slots, isError, ...props })
   const multiSelectComponents = useMultiSelectComboBoxSubcomponents<T>()
 
   const components = useMemo(() => ({

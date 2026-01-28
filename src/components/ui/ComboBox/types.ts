@@ -25,7 +25,7 @@ export type ComboBoxSlots<T extends ComboBoxOption> = {
   ErrorMessage?: ReactNode
   GroupHeading?: React.FC<{ group: GroupBase<T>, fallback: ReactNode }>
   Option?: React.FC<{ option: T, fallback: ReactNode }>
-  SelectedValue?: ReactNode
+  SingleValue?: React.FC<{ option: T, fallback: ReactNode }>
 }
 
 export type BaseComboBoxProps<T extends ComboBoxOption> = {

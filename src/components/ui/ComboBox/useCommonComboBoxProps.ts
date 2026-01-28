@@ -16,6 +16,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   slots,
   displayDisabledAsSelected,
   isDisabled,
+  isError,
   isReadOnly = false,
   isClearable = true,
   isSearchable = true,
@@ -35,6 +36,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   | 'slots'
   | 'displayDisabledAsSelected'
   | 'isDisabled'
+  | 'isError'
   | 'isReadOnly'
   | 'isClearable'
   | 'isSearchable'
@@ -56,10 +58,14 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
       COMBO_BOX_CLASS_NAMES.CONTROL,
       isFocused && `${COMBO_BOX_CLASS_NAMES.CONTROL}--focused`,
       isDisabled && `${COMBO_BOX_CLASS_NAMES.CONTROL}--disabled`,
+      isError && `${COMBO_BOX_CLASS_NAMES.CONTROL}--error`,
       isReadOnly && `${COMBO_BOX_CLASS_NAMES.CONTROL}--readonly`,
     ),
     valueContainer: () => COMBO_BOX_CLASS_NAMES.VALUE_CONTAINER,
-    placeholder: () => COMBO_BOX_CLASS_NAMES.PLACEHOLDER,
+    placeholder: () => classNames(
+      COMBO_BOX_CLASS_NAMES.PLACEHOLDER,
+      isError && `${COMBO_BOX_CLASS_NAMES.PLACEHOLDER}--error`,
+    ),
     indicatorsContainer: () => classNames(
       COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER,
       isReadOnly && `${COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER}--readonly`,
@@ -67,7 +73,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     menu: () => COMBO_BOX_CLASS_NAMES.MENU,
     menuList: () => COMBO_BOX_CLASS_NAMES.MENU_LIST,
     group: () => COMBO_BOX_CLASS_NAMES.GROUP,
-  }), [isReadOnly])
+  }), [isError, isReadOnly])
 
   const styles: StylesConfig<T, IsMulti, GroupBase<T>> = useMemo(() => ({
     menuPortal: (base: CSSObjectWithLabel) => ({ ...base, zIndex: 101 }),
