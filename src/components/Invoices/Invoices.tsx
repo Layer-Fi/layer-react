@@ -9,6 +9,7 @@ import { InvoiceOverview } from '@components/Invoices/InvoiceOverview/InvoiceOve
 import { View } from '@components/View/View'
 import { usePreloadCustomers } from '@features/customers/api/useListCustomers'
 import { usePreloadTagDimensionByKey } from '@features/tags/api/useTagDimensionByKey'
+
 interface InvoicesStringOverrides {
   title?: string
 }
@@ -19,7 +20,11 @@ export interface InvoicesProps {
   onSendInvoice?: (invoiceId: string) => Awaitable<void>
 }
 
-export const Invoices = ({ showTitle = true, stringOverrides, onSendInvoice }: InvoicesProps) => {
+export const Invoices = ({
+  showTitle = true,
+  stringOverrides,
+  onSendInvoice,
+}: InvoicesProps) => {
   usePreloadCustomers()
   usePreloadCategories({ mode: CategoriesListMode.Revenue })
   usePreloadTagDimensionByKey({ dimensionKey: INVOICE_MECE_TAG_DIMENSION })
