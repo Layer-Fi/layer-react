@@ -1,44 +1,55 @@
-import { useMemo } from 'react'
+import { type PropsWithChildren, type ReactNode } from 'react'
 import { SearchX } from 'lucide-react'
 
 import { DisplayState } from '@internal-types/bank_transactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import InboxIcon from '@icons/Inbox'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 type BankTransactionsTableEmptyStatesProps = {
-  hasVisibleTransactions: boolean
-  isError: boolean
-  isFiltered: boolean
-  isLoadingWithoutData: boolean
+  isEmpty: boolean
+  slots: {
+    Loader?: ReactNode
+    List: ReactNode
+  }
 }
 
-export function BankTransactionsTableEmptyStates({
-  hasVisibleTransactions,
-  isError,
-  isFiltered,
-  isLoadingWithoutData,
-}: BankTransactionsTableEmptyStatesProps) {
-  const { display } = useBankTransactionsContext()
-  const isCategorizationMode = display !== DisplayState.categorized
+const DataStateContainer = ({ children }: PropsWithChildren) => (
+  <div className='Layer__table-state-container'>
+    {children}
+  </div>
+)
 
-  const StateComponent = useMemo(() => {
-    if (isError) {
-      return (
+export function BankTransactionsListWithEmptyStates({
+  isEmpty,
+  slots,
+}: BankTransactionsTableEmptyStatesProps) {
+  const { isLoading, isError, display } = useBankTransactionsContext()
+  const { filters } = useBankTransactionsFiltersContext()
+
+  const isCategorizationMode = display !== DisplayState.categorized
+  const isFiltered = Boolean(filters?.query)
+
+  if (isError) {
+    return (
+      <DataStateContainer>
         <DataState
           status={DataStateStatus.failed}
           title='Something went wrong'
           description='We couldn’t load your transactions'
         />
-      )
-    }
+      </DataStateContainer>
+    )
+  }
 
-    if (isLoadingWithoutData) {
-      return null
-    }
+  if (isLoading && slots.Loader) {
+    return slots.Loader
+  }
 
-    if (!hasVisibleTransactions && !isFiltered) {
-      return (
+  if (isEmpty && !isFiltered) {
+    return (
+      <DataStateContainer>
         <DataState
           status={DataStateStatus.allDone}
           title={
@@ -53,30 +64,22 @@ export function BankTransactionsTableEmptyStates({
           }
           icon={isCategorizationMode ? undefined : <InboxIcon />}
         />
-      )
-    }
+      </DataStateContainer>
+    )
+  }
 
-    if (!hasVisibleTransactions && isFiltered) {
-      return (
+  if (isEmpty && isFiltered) {
+    return (
+      <DataStateContainer>
         <DataState
           status={DataStateStatus.info}
           title='No transactions found'
           description='Try adjusting your search filters'
           icon={<SearchX />}
         />
-      )
-    }
-
-    return null
-  }, [isError, isLoadingWithoutData, hasVisibleTransactions, isFiltered, isCategorizationMode])
-
-  if (StateComponent === null) {
-    return null
+      </DataStateContainer>
+    )
   }
 
-  return (
-    <div className='Layer__table-state-container'>
-      {StateComponent}
-    </div>
-  )
+  return slots.List
 }

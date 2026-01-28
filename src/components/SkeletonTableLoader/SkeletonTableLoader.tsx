@@ -40,7 +40,7 @@ export const SkeletonTableLoader = ({
                   : col.parts && col.parts > 1
                     ? (
                       <span className='Layer__skeleton-loader__row__group'>
-                        {Array(col.parts).map((_part, partIndex) => (
+                        {Array.from({ length: col.parts }).map((_, partIndex) => (
                           <SkeletonLoader
                             key={`part-${partIndex}`}
                             width='100%'

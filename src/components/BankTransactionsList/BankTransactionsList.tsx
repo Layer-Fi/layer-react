@@ -13,7 +13,6 @@ import { BankTransactionsListItem } from '@components/BankTransactionsList/BankT
 
 interface BankTransactionsListProps {
   bankTransactions?: BankTransaction[]
-  removeTransaction: (bt: BankTransaction) => void
   stringOverrides?: BankTransactionCTAStringOverrides
 
   showDescriptions: boolean
@@ -23,7 +22,6 @@ interface BankTransactionsListProps {
 
 export const BankTransactionsList = ({
   bankTransactions,
-  removeTransaction,
   stringOverrides,
 
   showDescriptions,
@@ -64,7 +62,6 @@ export const BankTransactionsList = ({
               index={index}
               dateFormat={DATE_FORMAT}
               bankTransaction={bankTransaction}
-              removeTransaction={removeTransaction}
               stringOverrides={stringOverrides}
 
               showDescriptions={showDescriptions}

@@ -325,16 +325,6 @@
   text-align: right;
 }
 
-.Layer__bank-transaction-row--removing {
-  .Layer__table-cell-content {
-    top: 1px;
-    overflow: hidden;
-    max-height: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-}
-
 @container (min-width: 1400px) {
   .Layer__table tr td:first-child .Layer__table-cell-content,
   .Layer__table tr th:first-child.Layer__table-cell .Layer__table-cell-content,

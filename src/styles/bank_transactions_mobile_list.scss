@@ -30,21 +30,6 @@
     opacity: 1;
     transform: scale(1);
   }
-
-  &.show.Layer__bank-transaction-row--removing {
-    opacity: 0;
-    transition:
-      all 500ms ease-in-out,
-      opacity 80ms ease-out;
-    overflow: hidden;
-    margin-top: 0;
-    margin-bottom: 0;
-
-    .Layer__bank-transaction-mobile-list-item__heading {
-      transition: height 180ms ease-out;
-      height: 0 !important;
-    }
-  }
 }
 
 .Layer__bank-transaction-mobile-list-item .Layer__text--error {

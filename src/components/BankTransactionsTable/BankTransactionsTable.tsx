@@ -27,7 +27,6 @@ export interface BankTransactionsTableStringOverrides {
 interface BankTransactionsTableProps {
   bankTransactions?: BankTransaction[]
   isLoading?: boolean
-  removeTransaction: (bt: BankTransaction) => void
 
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -42,7 +41,6 @@ interface BankTransactionsTableProps {
 export const BankTransactionsTable = ({
   isLoading,
   bankTransactions,
-  removeTransaction,
 
   showDescriptions,
   showReceiptUploads,
@@ -130,7 +128,7 @@ export const BankTransactionsTable = ({
             )}
         </tr>
       </thead>
-      {isLoading && page && page === 1 && <BankTransactionsLoader />}
+      {isLoading && <BankTransactionsLoader />}
       <tbody>
         {!isLoading
           && bankTransactions?.map(
@@ -140,7 +138,6 @@ export const BankTransactionsTable = ({
                 index={index}
                 dateFormat={DATE_FORMAT}
                 bankTransaction={bankTransaction}
-                removeTransaction={removeTransaction}
                 showDescriptions={showDescriptions}
                 showReceiptUploads={showReceiptUploads}
                 showReceiptUploadColumn={showReceiptColumn}
