@@ -29,14 +29,14 @@ export const AccountingConfigurationSchema = Schema.Struct({
     Schema.fromKey('enable_customer_management'),
   ),
 
-  platformDisplayTags: pipe(
-    Schema.propertySignature(Schema.Array(TagDimensionSchema)),
-    Schema.fromKey('platform_display_tags'),
-  ),
-
   enableStripeOnboarding: pipe(
     Schema.propertySignature(Schema.Boolean),
     Schema.fromKey('enable_stripe_onboarding'),
+  ),
+
+  platformDisplayTags: pipe(
+    Schema.propertySignature(Schema.Array(TagDimensionSchema)),
+    Schema.fromKey('platform_display_tags'),
   ),
 })
 
