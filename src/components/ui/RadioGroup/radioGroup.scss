@@ -1,14 +1,3 @@
-.Layer__RadioGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-
-  &[data-orientation='horizontal'] {
-    flex-direction: row;
-    gap: var(--spacing-md);
-  }
-}
-
 .Layer__Radio {
   position: relative;
   display: inline-flex;
@@ -33,7 +22,7 @@
 
     transition: all 100ms ease-out;
 
-    --size: 1rem;
+    --size: 1.25rem;
 
     &[data-pressed] {
       border-color: var(--outline-active);
@@ -44,14 +33,6 @@
       stroke: none;
       transition: all 100ms ease-out;
     }
-  }
-
-  &[data-size='md'] [slot='radio'] {
-    --size: 1.25rem;
-  }
-
-  &[data-size='lg'] [slot='radio'] {
-    --size: 1.5rem;
   }
 
   &[data-readonly] [slot='radio'] {
@@ -85,17 +66,5 @@
     [slot='radio'] {
       background-color: var(--color-base-200);
     }
-  }
-
-  &[data-labeled] {
-    gap: var(--spacing-xs);
-  }
-
-  &[data-invalid] [slot='radio'] {
-    border-color: var(--color-info-error);
-  }
-
-  &[data-selected][data-invalid] [slot='radio'] {
-    background-color: var(--color-info-error);
   }
 }

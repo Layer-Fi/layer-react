@@ -1,0 +1,25 @@
+.Layer__FormDatePickerField {
+  display: grid;
+
+  grid-template-areas:
+    'label'
+    'datepicker';
+
+  &--inline {
+    grid-template-areas: 'label datepicker';
+
+    align-items: center;
+
+    .Layer__UI__DatePicker {
+      display: contents;
+
+      > .Layer__UI__Label {
+        grid-area: label;
+      }
+    }
+  }
+
+  .Layer__UI__DatePicker {
+    grid-area: datepicker;
+  }
+}

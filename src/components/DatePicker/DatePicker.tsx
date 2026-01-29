@@ -21,6 +21,7 @@ type DatePickerProps = {
   onBlur?: () => void
   onChange: (date: ZonedDateTime | null) => void
   isDisabled?: boolean
+  className?: string
 }
 
 export const DatePicker = ({
@@ -34,6 +35,8 @@ export const DatePicker = ({
   onBlur,
   onChange,
   isDisabled,
+  isReadOnly,
+  className,
 }: DatePickerProps) => {
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   const { value } = useSizeClass()
@@ -50,9 +53,16 @@ export const DatePicker = ({
       isOpen={isPopoverOpen}
       onOpenChange={setPopoverOpen}
       isDisabled={isDisabled}
+      isReadOnly={isReadOnly}
+      className={className}
     >
-      {showLabel && <Label>{label}</Label>}
-      <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} />
+      {showLabel && <Label slot='label' size='sm'>{label}</Label>}
+      <DatePickerInput
+        errorText={errorText}
+        variant={value}
+        onClick={() => setPopoverOpen(true)}
+        isReadOnly={isReadOnly}
+      />
       <ResponsivePopover>
         <Dialog>
           <DateCalendar minDate={minDate} maxDate={maxDate} variant={value} />

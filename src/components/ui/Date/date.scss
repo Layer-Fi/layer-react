@@ -30,4 +30,8 @@
   &[data-disabled] {
     color: var(--color-base-500);
   }
+
+  &[data-readonly] [slot='input'] {
+    background-color: var(--bg-muted);
+  }
 }
