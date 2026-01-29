@@ -22,7 +22,7 @@
     max-inline-size: min(60rem, 100%);
   }
 
-  $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
+  $spacings: 4xs, 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
 
   @each $spacing in $spacings {
     &[data-pbe="#{$spacing}"] {

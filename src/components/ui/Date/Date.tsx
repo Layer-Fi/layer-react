@@ -86,7 +86,9 @@ export const DateSegment = forwardRef<HTMLDivElement, DateSegmentProps>(
 )
 
 const DATE_PICKER_CLASS_NAME = 'Layer__UI__DatePicker'
-type DatePickerProps = ReactAriaDatePickerProps<ZonedDateTime>
+type DatePickerProps = Omit<ReactAriaDatePickerProps<ZonedDateTime>, 'className'> & {
+  className?: string
+}
 
 export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
   function DatePicker({ className, ...restProps }, ref) {

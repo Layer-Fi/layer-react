@@ -9,10 +9,6 @@
     &.Layer__FormRadioGroupField--inline {
       grid-template-areas: 'label options';
       gap: 0;
-
-      > .Layer__UI__FieldError {
-        grid-column-start: 2;
-      }
     }
 
     > [slot='label'] {
@@ -21,10 +17,6 @@
 
     > [slot='options'] {
       grid-area: options;
-    }
-
-    > .Layer__UI__FieldError {
-      grid-area: error;
     }
   }
 }

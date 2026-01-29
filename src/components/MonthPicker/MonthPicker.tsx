@@ -56,7 +56,7 @@ export const MonthPicker = ({
         onClick={() => setPopoverOpen(true)}
       >
         <Input inset {...additionalAriaProps} value={inputValue} readOnly />
-        <PickerDropdownIndicator />
+        <PickerDropdownIndicator onClick={() => setPopoverOpen(true)} />
       </InputGroup>
       <ResponsivePopover triggerRef={triggerRef}>
         <Dialog>

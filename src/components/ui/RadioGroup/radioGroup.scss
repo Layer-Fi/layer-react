@@ -1,3 +1,14 @@
+.Layer__RadioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+
+  &[data-orientation='horizontal'] {
+    flex-direction: row;
+    gap: var(--spacing-sm);
+  }
+}
+
 .Layer__Radio {
   position: relative;
   display: inline-flex;

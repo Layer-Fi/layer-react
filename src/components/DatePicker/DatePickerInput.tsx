@@ -34,7 +34,7 @@ export const DatePickerInput = ({ errorText, variant, onClick, isReadOnly }: Dat
 
   if (variant === 'mobile') {
     return (
-      <InputGroup slot='input' isInvalid={!!errorText} onClick={onClick}>
+      <InputGroup slot='input' isInvalid={!!errorText} onClick={isReadOnly ? undefined : onClick}>
         <DateInput inset pointerEvents='none'>
           {segment => <DateSegment isReadOnly segment={segment} />}
         </DateInput>

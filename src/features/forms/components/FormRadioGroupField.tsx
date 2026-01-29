@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import { FieldError } from '@ui/Form/Form'
 import { Radio, RadioGroup } from '@ui/RadioGroup/RadioGroup'
-import { Stack } from '@ui/Stack/Stack'
+import { Stack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { useFieldContext } from '@features/forms/hooks/useForm'
 import type { CommonFormFieldProps } from '@features/forms/types'
@@ -66,14 +66,16 @@ export function FormRadioGroupField<T extends string>({
       {...additionalAriaProps}
     >
       {showLabel && <Label slot='label' size='sm' id={labelId}>{label}</Label>}
-      <Stack direction={orientation === 'horizontal' ? 'row' : 'column'} gap={orientation === 'horizontal' ? 'sm' : 'xs'}>
-        {options.map(option => (
-          <Radio<T> key={option.value} value={option.value}>
-            <Span slot='description'>{option.label}</Span>
-          </Radio>
-        ))}
-      </Stack>
-      {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
+      <VStack slot='options' gap='3xs'>
+        <Stack direction={orientation === 'horizontal' ? 'row' : 'column'} gap={orientation === 'horizontal' ? 'sm' : 'xs'}>
+          {options.map(option => (
+            <Radio<T> key={option.value} value={option.value}>
+              <Span slot='description'>{option.label}</Span>
+            </Radio>
+          ))}
+        </Stack>
+        {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
+      </VStack>
     </RadioGroup>
   )
 }

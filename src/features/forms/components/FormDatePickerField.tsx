@@ -41,10 +41,6 @@ export function FormDatePickerField({
     handleChange(newValue)
   }, [handleChange])
 
-  const onBlur = useCallback(() => {
-    handleBlur()
-  }, [handleBlur])
-
   const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
   const shouldShowErrorMessage = showFieldError && errorMessage
 
@@ -60,7 +56,7 @@ export function FormDatePickerField({
       showLabel={showLabel}
       date={localDate}
       onChange={onChange}
-      onBlur={onBlur}
+      onBlur={handleBlur}
       minDate={minDate}
       maxDate={maxDate}
       isInvalid={!isValid}
