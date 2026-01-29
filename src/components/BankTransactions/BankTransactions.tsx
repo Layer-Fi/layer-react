@@ -29,7 +29,7 @@ import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,
 } from '@components/BankTransactions/BankTransactionsHeader'
-import { type MobileComponentType } from '@components/BankTransactions/constants'
+import { BankTransactionsTableContent, type MobileComponentType } from '@components/BankTransactions/constants'
 import { BankTransactionsList } from '@components/BankTransactionsList/BankTransactionsList'
 import { BankTransactionsMobileList } from '@components/BankTransactionsMobileList/BankTransactionsMobileList'
 import {
@@ -100,12 +100,6 @@ export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
 }
 
 type BankTransactionsTableViewProps = Omit<BankTransactionsProps, 'filters' | 'categorizeView'>
-
-enum BankTransactionsTableContent {
-  List = 'List',
-  MobileList = 'MobileList',
-  Table = 'Table',
-}
 
 export const BankTransactions = ({
   onError,
@@ -369,8 +363,7 @@ const BankTransactionsTableView = ({
         <BankTransactionsHeader
           shiftStickyHeader={shiftStickyHeader}
           asWidget={asWidget}
-          mobileComponent={mobileComponent}
-          listView={listView}
+          tableContentMode={tableContentMode}
           stringOverrides={stringOverrides?.bankTransactionsHeader}
           isSyncing={isSyncing}
           withUploadMenu={showUploadOptions}

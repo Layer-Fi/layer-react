@@ -2,6 +2,12 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 
 export type MobileComponentType = 'regularList' | 'mobileList'
 
+export enum BankTransactionsTableContent {
+  List = 'List',
+  MobileList = 'MobileList',
+  Table = 'Table',
+}
+
 export const CategorizedCategories = [
   CategorizationStatus.CATEGORIZED,
   CategorizationStatus.SPLIT,
