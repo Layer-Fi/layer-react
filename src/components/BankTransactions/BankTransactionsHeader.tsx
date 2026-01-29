@@ -20,7 +20,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
-import { type MobileComponentType } from '@components/BankTransactions/constants'
+import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
 import { ButtonVariant } from '@components/Button/Button'
@@ -35,8 +35,7 @@ import InvisibleDownload, { useInvisibleDownload } from '@components/utility/Inv
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
   asWidget?: boolean
-  mobileComponent?: MobileComponentType
-  listView?: boolean
+  tableContentMode: BankTransactionsTableContent
   isSyncing?: boolean
   stringOverrides?: BankTransactionsHeaderStringOverrides
   withUploadMenu?: boolean
@@ -124,8 +123,7 @@ const DownloadButton = ({
 export const BankTransactionsHeader = ({
   shiftStickyHeader,
   asWidget,
-  mobileComponent,
-  listView,
+  tableContentMode,
   stringOverrides,
   isSyncing,
   withUploadMenu,
@@ -158,7 +156,8 @@ export const BankTransactionsHeader = ({
   const { count } = useCountSelectedIds()
 
   const showBulkActions = count > 0
-  const isMobileList = listView && mobileComponent === 'mobileList'
+  const isMobileList = tableContentMode === BankTransactionsTableContent.MobileList
+  const isListView = isMobileList || tableContentMode === BankTransactionsTableContent.List
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
@@ -173,7 +172,7 @@ export const BankTransactionsHeader = ({
           <SyncingComponent
             timeSync={5}
             inProgress={true}
-            hideContent={listView}
+            hideContent={isListView}
           />
         )}
       </HStack>
@@ -193,7 +192,7 @@ export const BankTransactionsHeader = ({
     activationDate,
     asWidget,
     isSyncing,
-    listView,
+    isListView,
     monthPickerDate,
     setDateRange,
     stringOverrides?.header,
@@ -236,7 +235,8 @@ export const BankTransactionsHeader = ({
     )
   }, [isMobileList])
 
-  const statusToggle = isCategorizationEnabled && showStatusToggle
+  const isStatusToggleVisible = isCategorizationEnabled && showStatusToggle
+  const statusToggle = isStatusToggleVisible
     ? (
       <Toggle
         ariaLabel='Categorization status'
@@ -251,67 +251,37 @@ export const BankTransactionsHeader = ({
     )
     : null
 
-  if (isMobileList) {
+  if (isListView) {
     return (
       <Header
         className={classNames(
           'Layer__bank-transactions__header',
           withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
-          'Layer__bank-transactions__header--mobile',
-        )}
-        style={{ top: shiftStickyHeader }}
-      >
-        <VStack gap='sm'>
-          {headerTopRow}
-
-          <HStack justify='space-between' align='center' gap='xs'>
-            {showBulkActions
-              ? (
-                <BulkActionsModule
-                  showSelectedLabel={false}
-                  fullWidth
-                  slots={{ BulkActions }}
-                />
-              )
-              : (
-                <>
-                  {statusToggle}
-                  <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
-                </>
-              )}
-          </HStack>
-
-          <TransactionsSearch isDisabled={showBulkActions} />
-
-        </VStack>
-      </Header>
-    )
-  }
-
-  if (listView) {
-    return (
-      <Header
-        className={classNames(
-          'Layer__bank-transactions__header',
-          withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
+          isMobileList && 'Layer__bank-transactions__header--mobile',
         )}
         style={{ top: shiftStickyHeader }}
       >
         <VStack gap='xs'>
           {headerTopRow}
 
-          <HStack justify='space-between' align='center' gap='xs'>
-            {showBulkActions
-              ? <BulkActionsModule slots={{ BulkActions }} />
-              : (
-                <>
-                  {statusToggle}
-                  <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
-                </>
-              )}
-          </HStack>
+          {showBulkActions && (
+            <BulkActionsModule
+              showSelectedLabel={!isMobileList}
+              fullWidth={isMobileList}
+              slots={{ BulkActions }}
+            />
+          )}
+          {!showBulkActions && isStatusToggleVisible && (
+            <HStack justify='space-between' align='center' gap='xs'>
+              {statusToggle}
+              <BankTransactionsHeaderMenu actions={headerMenuActions} />
+            </HStack>
+          )}
 
-          <TransactionsSearch isDisabled={showBulkActions} />
+          <HStack className='Layer__bank-transactions__header__search-and-menu' align='center' gap='xs'>
+            <TransactionsSearch isDisabled={showBulkActions} />
+            {!isStatusToggleVisible && <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />}
+          </HStack>
 
         </VStack>
       </Header>
@@ -341,7 +311,7 @@ export const BankTransactionsHeader = ({
         <HStack slot='download-upload' justify='center' gap='xs'>
           <DownloadButton
             downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={listView}
+            iconOnly={isListView}
             disabled={showBulkActions}
           />
           <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />

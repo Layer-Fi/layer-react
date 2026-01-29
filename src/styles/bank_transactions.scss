@@ -91,6 +91,12 @@
   margin-right: 4px;
 }
 
+.Layer__bank-transactions__header__search-and-menu {
+  > :first-child {
+    flex: 1;
+  }
+}
+
 .Layer__bank-transaction-row {
   transition: all var(--transition-speed) ease-in-out;
   opacity: 0.3;
