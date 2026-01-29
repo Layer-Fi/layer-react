@@ -205,27 +205,31 @@ function buildCustomPlaceholder<T extends ComboBoxOption, IsMulti extends boolea
     if (!placeholder) return null
 
     return (
-      <components.Placeholder {...restProps} className={COMBO_BOX_CLASS_NAMES.PLACEHOLDER}>
-        <Span variant='placeholder' ellipsis>{placeholder}</Span>
+      <components.Placeholder {...restProps}>
+        <Span variant='inherit' ellipsis>{placeholder}</Span>
       </components.Placeholder>
     )
   }
 }
 
-type BuildCustomSingleValueParams = {
-  SelectedValue: ComboBoxSlots<ComboBoxOption>['SelectedValue']
+type BuildCustomSingleValueParams<T extends ComboBoxOption> = {
+  SingleValue: ComboBoxSlots<T>['SingleValue']
 }
 
 function buildCustomSingleValue<T extends ComboBoxOption, IsMulti extends boolean>({
-  SelectedValue,
-}: BuildCustomSingleValueParams) {
+  SingleValue,
+}: BuildCustomSingleValueParams<T>) {
   return function CustomSingleValue({
     children,
     ...restProps
   }: SingleValueProps<T, IsMulti, GroupBase<T>>) {
+    const defaultRenderedSingleValue = <Span ellipsis>{children}</Span>
+
     return (
       <components.SingleValue {...restProps}>
-        {SelectedValue ?? children}
+        {SingleValue
+          ? <SingleValue option={restProps.data} fallback={defaultRenderedSingleValue} />
+          : defaultRenderedSingleValue}
       </components.SingleValue>
     )
   }
@@ -236,7 +240,7 @@ export function useComboBoxSubcomponents<T extends ComboBoxOption, IsMulti exten
   slots,
   displayDisabledAsSelected,
 }: UseComboBoxSubcomponentsParams<T>) {
-  const { EmptyMessage, SelectedValue, GroupHeading, Option } = slots ?? {}
+  const { EmptyMessage, SingleValue, GroupHeading, Option } = slots ?? {}
 
   const ClearIndicatorRef = useRef(buildCustomClearIndicator<T, IsMulti>())
   const DropdownIndicatorRef = useRef(buildCustomDropdownIndicator<T, IsMulti>())
@@ -264,8 +268,8 @@ export function useComboBoxSubcomponents<T extends ComboBoxOption, IsMulti exten
   )
 
   const SingleValueComponent = useMemo(
-    () => buildCustomSingleValue<T, IsMulti>({ SelectedValue }),
-    [SelectedValue],
+    () => buildCustomSingleValue<T, IsMulti>({ SingleValue }),
+    [SingleValue],
   )
 
   return useMemo(() => ({

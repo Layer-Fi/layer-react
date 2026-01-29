@@ -212,7 +212,7 @@ export const InvoiceTable = () => {
 
   const options: InvoiceStatusOption[] = useMemo(() => Object.values(InvoiceStatusOptionConfig), [])
 
-  const SelectedValue = useMemo(() => {
+  const SingleValue = useCallback(() => {
     const label = selectedInvoiceStatusOption.label
     return label ? `Status: ${label}` : 'Status'
   }, [selectedInvoiceStatusOption.label])
@@ -226,11 +226,11 @@ export const InvoiceTable = () => {
       isSearchable={false}
       isClearable={false}
       placeholder='Status'
-      slots={{ SelectedValue }}
+      slots={{ SingleValue }}
       aria-label='Status Filter'
     />
   ),
-  [SelectedValue, options, selectedInvoiceStatusOption, setTableFilters])
+  [SingleValue, options, selectedInvoiceStatusOption, setTableFilters])
 
   const CreateInvoiceButton = useCallback(() => (
     <Button onPress={toCreateInvoice}>

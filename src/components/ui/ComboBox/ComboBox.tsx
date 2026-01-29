@@ -15,7 +15,7 @@ export function ComboBox<T extends ComboBoxOption>({
   onSelectedValueChange,
   ...props
 }: SingleSelectComboBoxProps<T>) {
-  const commonSelectProps = useCommonComboBoxProps<T, false>({ className, slots, ...props })
+  const commonSelectProps = useCommonComboBoxProps<T, false>({ className, slots, isError, ...props })
 
   return (
     <VStack gap='3xs' fluid className={className ? `${className}__Container` : undefined}>
