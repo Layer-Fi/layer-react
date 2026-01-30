@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { HandCoins, Save, Send } from 'lucide-react'
+import { ChevronRight, HandCoins, Save, Send } from 'lucide-react'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
@@ -10,7 +10,7 @@ import { Heading } from '@ui/Typography/Heading'
 import { InvoiceDetailHeaderMenu } from '@components/Invoices/InvoiceDetail/InvoiceDetailHeaderMenu'
 import type { InvoiceFormState } from '@components/Invoices/InvoiceForm/formUtils'
 import { UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
-import { InvoiceStatus } from '@features/invoices/invoiceSchemas'
+import { InvoiceFormStep, InvoiceStatus } from '@features/invoices/invoiceSchemas'
 
 import './invoiceDetailHeader.scss'
 
@@ -20,6 +20,8 @@ export type InvoiceDetailHeaderProps = {
   formState: InvoiceFormState
   setIsReadOnly: (isReadOnly: boolean) => void
   openInvoicePaymentDrawer: () => void
+  currentStep: InvoiceFormStep
+  onGoToNextStep: () => void
 }
 
 export const InvoiceDetailHeader = ({
@@ -28,6 +30,8 @@ export const InvoiceDetailHeader = ({
   isReadOnly,
   setIsReadOnly,
   openInvoicePaymentDrawer,
+  currentStep,
+  onGoToNextStep,
 }: InvoiceDetailHeaderProps) => {
   const viewState = useInvoiceDetail()
   const { onSendInvoice } = useInvoicesContext()
@@ -45,20 +49,33 @@ export const InvoiceDetailHeader = ({
     void onSubmit({ submitAction: 'send' })
   }, [onSubmit])
 
-  const actionButtons = useMemo(() => (
-    <HStack gap='xs'>
-      <Button variant={onSendInvoice ? 'outlined' : 'solid'} isDisabled={isSubmitting} onPress={onPressSave}>
-        Save
-        <Save size={14} />
-      </Button>
-      {onSendInvoice && (
-        <Button isDisabled={isSubmitting} onPress={onPressSend}>
-          Save and Send
-          <Send size={14} />
+  const actionButtons = useMemo(() => {
+    if (currentStep === InvoiceFormStep.Details) {
+      return (
+        <HStack gap='xs'>
+          <Button isDisabled={isSubmitting} onPress={onGoToNextStep}>
+            Next
+            <ChevronRight size={14} />
+          </Button>
+        </HStack>
+      )
+    }
+
+    return (
+      <HStack gap='xs'>
+        <Button variant={onSendInvoice ? 'outlined' : 'solid'} isDisabled={isSubmitting} onPress={onPressSave}>
+          Save
+          <Save size={14} />
         </Button>
-      )}
-    </HStack>
-  ), [isSubmitting, onPressSave, onPressSend, onSendInvoice])
+        {onSendInvoice && (
+          <Button isDisabled={isSubmitting} onPress={onPressSend}>
+            Save and Send
+            <Send size={14} />
+          </Button>
+        )}
+      </HStack>
+    )
+  }, [isSubmitting, onPressSave, onPressSend, onSendInvoice, currentStep, onGoToNextStep])
 
   if (viewState.mode === UpsertInvoiceMode.Create) {
     return (

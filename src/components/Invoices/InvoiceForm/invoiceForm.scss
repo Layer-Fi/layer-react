@@ -21,3 +21,27 @@
   display: grid;
   align-items: center;
 }
+
+.Layer__InvoiceForm__PaymentMethodsLayout {
+  width: 100%;
+}
+
+.Layer__InvoiceForm__PreviewSection {
+  flex: 2;
+  min-width: 0;
+}
+
+.Layer__InvoiceForm__PreviewPlaceholder {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 8.5 / 11;
+  border-radius: var(--border-radius-md);
+  border: 1px dashed var(--color-base-300);
+  background-color: var(--color-base-50);
+}
+
+.Layer__InvoiceFormPaymentMethodsStep {
+  flex: 1;
+  min-width: 280px;
+  max-width: 320px;
+}

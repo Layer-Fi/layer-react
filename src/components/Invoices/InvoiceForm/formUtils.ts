@@ -12,7 +12,16 @@ import {
   getGrandTotalFromInvoice,
 } from '@components/Invoices/InvoiceForm/totalsUtils'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@features/invoices/invoiceSchemas'
+import { InvoicePaymentMethodType } from '@features/invoices/api/useInvoicePaymentMethods'
+import {
+  type Invoice,
+  type InvoiceForm,
+  type InvoiceFormLineItem,
+  InvoiceFormLineItemEquivalence,
+  InvoiceFormStep,
+  type InvoiceLineItem,
+  type InvoicePaymentMethodsForm,
+} from '@features/invoices/invoiceSchemas'
 import { makeTagFromTransactionTag, makeTagKeyValueFromTag, type Tag } from '@features/tags/tagSchemas'
 
 export const INVOICE_MECE_TAG_DIMENSION = 'Job'
@@ -20,6 +29,7 @@ export const INVOICE_MECE_TAG_DIMENSION = 'Job'
 export type InvoiceFormState = {
   isDirty: boolean
   isSubmitting: boolean
+  hasActualChanges: boolean
 }
 
 export const EMPTY_LINE_ITEM: InvoiceFormLineItem = {
@@ -30,6 +40,12 @@ export const EMPTY_LINE_ITEM: InvoiceFormLineItem = {
   isTaxable: false,
   accountIdentifier: null,
   tags: [],
+}
+
+export const EMPTY_PAYMENT_METHODS: InvoicePaymentMethodsForm = {
+  enableACH: false,
+  enableCreditCard: false,
+  customPaymentInstructions: '',
 }
 
 export const getEmptyInvoiceFormValues = (): InvoiceForm => {
@@ -48,6 +64,8 @@ export const getEmptyInvoiceFormValues = (): InvoiceForm => {
     memo: '',
     discountRate: BIG_DECIMAL_ZERO,
     taxRate: BIG_DECIMAL_ZERO,
+    step: InvoiceFormStep.Details,
+    paymentMethods: EMPTY_PAYMENT_METHODS,
   }
 }
 
@@ -109,11 +127,29 @@ export const getInvoiceFormInitialValues = (invoice: Invoice): InvoiceForm => {
     discountRate,
     taxRate,
     memo: invoice.memo || '',
+    step: InvoiceFormStep.Details,
+    paymentMethods: {
+      ...EMPTY_PAYMENT_METHODS,
+      customPaymentInstructions: invoice.customPaymentInstructions || '',
+    },
   }
 }
 
-export const getInvoiceFormDefaultValues = (invoice: Invoice | null): InvoiceForm => {
-  return invoice ? getInvoiceFormInitialValues(invoice) : getEmptyInvoiceFormValues()
+export const getInvoiceFormDefaultValues = (
+  invoice: Invoice | null,
+  paymentMethods?: InvoicePaymentMethodsForm,
+): InvoiceForm => {
+  const defaultValues = invoice ? getInvoiceFormInitialValues(invoice) : getEmptyInvoiceFormValues()
+  if (paymentMethods) {
+    return {
+      ...defaultValues,
+      paymentMethods: {
+        ...paymentMethods,
+        customPaymentInstructions: defaultValues.paymentMethods.customPaymentInstructions,
+      },
+    }
+  }
+  return defaultValues
 }
 
 export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) => {
@@ -177,6 +213,7 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
   sentAt: form.sentAt?.toDate(),
   invoiceNumber: form.invoiceNumber.trim(),
   memo: form.memo.trim(),
+  customPaymentInstructions: form.paymentMethods.customPaymentInstructions.trim() || undefined,
 
   lineItems: form.lineItems
     .filter(item => !InvoiceFormLineItemEquivalence(EMPTY_LINE_ITEM, item))
@@ -203,3 +240,21 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
     ),
   }),
 })
+
+export const getPaymentMethodsFromApiResponse = (
+  methods: readonly InvoicePaymentMethodType[],
+  customPaymentInstructions?: string,
+): InvoicePaymentMethodsForm => ({
+  enableACH: methods.includes(InvoicePaymentMethodType.ACH),
+  enableCreditCard: methods.includes(InvoicePaymentMethodType.CreditCard),
+  customPaymentInstructions: customPaymentInstructions ?? '',
+})
+
+export const convertPaymentMethodsToApiRequest = (
+  paymentMethods: InvoicePaymentMethodsForm,
+): InvoicePaymentMethodType[] => {
+  const methods: InvoicePaymentMethodType[] = []
+  if (paymentMethods.enableACH) methods.push(InvoicePaymentMethodType.ACH)
+  if (paymentMethods.enableCreditCard) methods.push(InvoicePaymentMethodType.CreditCard)
+  return methods
+}

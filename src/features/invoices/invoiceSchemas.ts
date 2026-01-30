@@ -169,6 +169,11 @@ export const InvoiceSchema = Schema.Struct({
   ),
 
   memo: Schema.NullOr(Schema.String),
+
+  customPaymentInstructions: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('custom_payment_instructions'),
+  ),
 })
 export type Invoice = typeof InvoiceSchema.Type
 
@@ -219,6 +224,10 @@ export const UpsertInvoiceSchema = Schema.Struct({
   ),
 
   memo: Schema.optional(Schema.String),
+
+  customPaymentInstructions: Schema.optional(Schema.String).pipe(
+    Schema.fromKey('custom_payment_instructions'),
+  ),
 
   lineItems: pipe(
     Schema.propertySignature(Schema.Array(UpsertInvoiceLineItemSchema)),
@@ -276,7 +285,21 @@ export const InvoiceFormSchema = Schema.Struct({
 export type InvoiceForm = Omit<typeof InvoiceFormSchema.Type, 'lineItems'> & {
   // Purposefully allow lineItems to be mutable for `field.pushValue` in the form
   lineItems: InvoiceFormLineItem[]
+  step: InvoiceFormStep
+  paymentMethods: InvoicePaymentMethodsForm
 }
+
+export enum InvoiceFormStep {
+  Details = 'details',
+  PaymentMethods = 'paymentMethods',
+}
+
+export const InvoicePaymentMethodsFormSchema = Schema.Struct({
+  enableACH: Schema.Boolean,
+  enableCreditCard: Schema.Boolean,
+  customPaymentInstructions: Schema.String,
+})
+export type InvoicePaymentMethodsForm = typeof InvoicePaymentMethodsFormSchema.Type
 
 const InvoiceSummaryStatsSchema = Schema.Struct({
   overdueCount: pipe(
