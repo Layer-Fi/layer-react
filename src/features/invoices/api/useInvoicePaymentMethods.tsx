@@ -1,4 +1,4 @@
-import { Schema } from 'effect'
+import { Schema, pipe } from 'effect'
 import useSWR, { type SWRResponse } from 'swr'
 
 import { get } from '@api/layer/authenticated_http'
@@ -14,8 +14,16 @@ export enum InvoicePaymentMethodType {
 
 const InvoicePaymentMethodTypeSchema = Schema.Enums(InvoicePaymentMethodType)
 
+const InvoicePaymentMethodsDataSchema = Schema.Struct({
+  type: Schema.String,
+  paymentMethods: pipe(
+    Schema.propertySignature(Schema.Array(InvoicePaymentMethodTypeSchema)),
+    Schema.fromKey('payment_methods'),
+  ),
+})
+
 export const InvoicePaymentMethodsResponseSchema = Schema.Struct({
-  data: Schema.Array(InvoicePaymentMethodTypeSchema),
+  data: InvoicePaymentMethodsDataSchema,
 })
 export type InvoicePaymentMethodsResponse = typeof InvoicePaymentMethodsResponseSchema.Type
 
@@ -88,6 +96,5 @@ export function useInvoicePaymentMethods({ invoiceId }: { invoiceId: string | nu
       },
     )().then(Schema.decodeUnknownPromise(InvoicePaymentMethodsResponseSchema)),
   )
-
   return new InvoicePaymentMethodsSWRResponse(response)
 }

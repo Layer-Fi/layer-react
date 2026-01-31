@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -56,6 +56,11 @@ export const InvoiceDetail = () => {
     hasActualChanges: false,
   })
 
+  useEffect(() => {
+    console.log('paymentMethodsData:', paymentMethodsData)
+    console.log('isLoadingPaymentMethods:', isLoadingPaymentMethods)
+  }, [paymentMethodsData, isLoadingPaymentMethods])
+
   const onChangeFormState = useCallback((nextState: InvoiceFormState) => {
     setFormState(nextState)
   }, [])
@@ -108,7 +113,7 @@ export const InvoiceDetail = () => {
           isReadOnly={isReadOnly}
           onSuccess={onUpsertInvoiceSuccess}
           onChangeFormState={onChangeFormState}
-          initialPaymentMethods={paymentMethodsData?.data}
+          initialPaymentMethods={paymentMethodsData?.data.paymentMethods}
           ref={formRef}
         />
       </BaseDetailView>

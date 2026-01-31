@@ -7,6 +7,7 @@ import {
 import { Schema } from 'effect'
 
 import { useAuth } from '@hooks/useAuth'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useInvoicesContext } from '@contexts/InvoicesContext/InvoicesContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { convertInvoiceFormToParams, convertPaymentMethodsToApiRequest, getInvoiceFormDefaultValues, getPaymentMethodsFromApiResponse, validateInvoiceForm } from '@components/Invoices/InvoiceForm/formUtils'
@@ -20,7 +21,7 @@ import {
 } from '@components/Invoices/InvoiceForm/totalsUtils'
 import { validateInvoiceFormByStep } from '@components/Invoices/InvoiceForm/validators'
 import { useRawAppForm } from '@features/forms/hooks/useForm'
-import { type InvoicePaymentMethodType } from '@features/invoices/api/useInvoicePaymentMethods'
+import { INVOICE_PAYMENT_METHODS_TAG_KEY, type InvoicePaymentMethodsResponse, type InvoicePaymentMethodType } from '@features/invoices/api/useInvoicePaymentMethods'
 import { updateInvoicePaymentMethods } from '@features/invoices/api/useUpdateInvoicePaymentMethods'
 import { UpsertInvoiceMode, useUpsertInvoice } from '@features/invoices/api/useUpsertInvoice'
 import { type Invoice, type InvoiceForm, InvoiceFormStep, UpsertInvoiceSchema } from '@features/invoices/invoiceSchemas'
@@ -64,6 +65,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const { onSendInvoice } = useInvoicesContext()
   const { businessId } = useLayerContext()
   const { data: authData } = useAuth()
+  const { patchCache } = useGlobalCacheActions()
 
   const upsertInvoiceProps = mode === UpsertInvoiceMode.Update ? { mode, invoiceId: props.invoice.id } : { mode }
   const { trigger: upsertInvoice } = useUpsertInvoice(upsertInvoiceProps)
@@ -92,6 +94,26 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
             body: { payment_methods: paymentMethodsToSave },
           },
         )
+        void patchCache<InvoicePaymentMethodsResponse | undefined, { invoiceId: string }>(
+          ({ tags, key }) =>
+            tags.includes(INVOICE_PAYMENT_METHODS_TAG_KEY)
+            && typeof key !== 'string'
+            && key.invoiceId === invoice.id,
+          (currentData) => {
+            if (!currentData) {
+              return currentData
+            }
+
+            return {
+              ...currentData,
+              data: {
+                ...currentData.data,
+                paymentMethods: paymentMethodsToSave,
+              },
+            }
+          },
+          { withRevalidate: false },
+        )
       }
 
       setSubmitError(undefined)
@@ -105,7 +127,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
       console.error(e)
       setSubmitError('Something went wrong. Please try again.')
     }
-  }, [onSendInvoice, onSuccess, upsertInvoice, authData, businessId])
+  }, [onSendInvoice, onSuccess, upsertInvoice, authData, businessId, patchCache])
 
   const validators = useMemo(() => ({
     onDynamic: validateInvoiceFormByStep,
