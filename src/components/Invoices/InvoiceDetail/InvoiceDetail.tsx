@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -55,11 +55,6 @@ export const InvoiceDetail = () => {
     isSubmitting: false,
     hasActualChanges: false,
   })
-
-  useEffect(() => {
-    console.log('paymentMethodsData:', paymentMethodsData)
-    console.log('isLoadingPaymentMethods:', isLoadingPaymentMethods)
-  }, [paymentMethodsData, isLoadingPaymentMethods])
 
   const onChangeFormState = useCallback((nextState: InvoiceFormState) => {
     setFormState(nextState)

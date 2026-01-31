@@ -1,4 +1,4 @@
-import { Schema, pipe } from 'effect'
+import { pipe, Schema } from 'effect'
 import useSWR, { type SWRResponse } from 'swr'
 
 import { get } from '@api/layer/authenticated_http'
