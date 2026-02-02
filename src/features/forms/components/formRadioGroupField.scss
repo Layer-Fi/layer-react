@@ -1,41 +1,22 @@
 .Layer__FormRadioGroupField {
-  display: grid;
-  grid-template-areas:
-    'label'
-    'radiogroup'
-    'error';
+  &.Layer__RadioGroup {
+    display: grid;
+    grid-template-areas:
+      'label'
+      'options';
+    gap: var(--spacing-3xs);
 
-  > [slot='label'] {
-    grid-area: label;
-    padding-block-end: var(--spacing-3xs);
-  }
-
-  > [slot='radiogroup'] {
-    grid-area: radiogroup;
-    margin-block: var(--spacing-2xs);
-  }
-
-  > [slot='error'] {
-    grid-area: error;
-  }
-
-  &__Error {
-    font-size: var(--font-size-xs);
-    color: var(--color-info-error);
-  }
-
-  &--inline {
-    grid-template-areas: 'label radiogroup';
-    grid-template-columns: auto 1fr;
-    align-items: start;
-
-    > [slot='label'] {
-      padding-block-start: var(--spacing-3xs);
-      padding-block-end: 0;
+    &.Layer__FormRadioGroupField--inline {
+      grid-template-areas: 'label options';
+      gap: 0;
     }
 
-    > [slot='radiogroup'] {
-      margin-block: 0;
+    > [slot='label'] {
+      grid-area: label;
+    }
+
+    > [slot='options'] {
+      grid-area: options;
     }
   }
 }

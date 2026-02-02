@@ -28,7 +28,7 @@ type InternalStackProps = StackProps & {
 
 const CLASS_NAME = 'Layer__Stack'
 
-const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
+export const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
   function Stack(
     {
       align,

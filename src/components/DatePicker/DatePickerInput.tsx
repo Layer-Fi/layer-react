@@ -2,11 +2,10 @@ import { useMemo } from 'react'
 import { TriangleAlert } from 'lucide-react'
 
 import type { View } from '@internal-types/general'
-import ChevronDown from '@icons/ChevronDown'
-import { Button } from '@ui/Button/Button'
 import { DateInput, DateSegment } from '@ui/Date/Date'
 import { FieldError } from '@ui/Form/Form'
 import { InputGroup } from '@ui/Input/InputGroup'
+import { PickerDropdownIndicator } from '@ui/PickerDropdownIndicator/PickerDropdownIndicator'
 import { HStack } from '@ui/Stack/Stack'
 import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
@@ -14,9 +13,10 @@ type DatePickerInputProps = {
   errorText?: string | null
   onClick?: () => void
   variant: View
+  isReadOnly?: boolean
 }
 
-export const DatePickerInput = ({ errorText, variant, onClick }: DatePickerInputProps) => {
+export const DatePickerInput = ({ errorText, variant, onClick, isReadOnly }: DatePickerInputProps) => {
   const errorTriangle = useMemo(() => {
     if (variant === 'mobile' || !errorText) return null
 
@@ -34,7 +34,7 @@ export const DatePickerInput = ({ errorText, variant, onClick }: DatePickerInput
 
   if (variant === 'mobile') {
     return (
-      <InputGroup slot='input' isInvalid={!!errorText} onClick={onClick}>
+      <InputGroup slot='input' isInvalid={!!errorText} onClick={isReadOnly ? undefined : onClick}>
         <DateInput inset pointerEvents='none'>
           {segment => <DateSegment isReadOnly segment={segment} />}
         </DateInput>
@@ -45,13 +45,11 @@ export const DatePickerInput = ({ errorText, variant, onClick }: DatePickerInput
   return (
     <InputGroup slot='input' isInvalid={!!errorText}>
       <DateInput inset>
-        {segment => <DateSegment segment={segment} />}
+        {segment => <DateSegment segment={segment} isReadOnly={isReadOnly} />}
       </DateInput>
-      <HStack gap='3xs' align='center'>
+      <HStack gap='3xs' align='center' pie='4xs'>
         {errorTriangle}
-        <Button icon inset variant='ghost' onClick={onClick}>
-          <ChevronDown size={20} />
-        </Button>
+        {!isReadOnly && <PickerDropdownIndicator onClick={onClick} />}
       </HStack>
     </InputGroup>
   )

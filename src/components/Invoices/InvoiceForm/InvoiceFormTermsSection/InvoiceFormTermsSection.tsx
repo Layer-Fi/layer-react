@@ -133,7 +133,7 @@ export const InvoiceFormTermsSection = ({
             },
           }}
         >
-          {field => <field.FormDateField label='Invoice date' inline className='Layer__InvoiceForm__Field__SentAt' isReadOnly={isReadOnly} />}
+          {field => <field.FormDatePickerField label='Invoice date' inline className='Layer__InvoiceForm__Field__SentAt' isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField
           name='dueAt'
@@ -152,7 +152,7 @@ export const InvoiceFormTermsSection = ({
           }}
         >
           {field => (
-            <field.FormDateField label='Due date' inline className='Layer__InvoiceForm__Field__DueAt' isReadOnly={isReadOnly} />
+            <field.FormDatePickerField label='Due date' inline className='Layer__InvoiceForm__Field__DueAt' isReadOnly={isReadOnly} />
           )}
         </form.AppField>
       </VStack>
