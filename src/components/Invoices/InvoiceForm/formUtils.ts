@@ -243,11 +243,10 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
 
 export const getPaymentMethodsFromApiResponse = (
   methods: readonly InvoicePaymentMethodType[],
-  customPaymentInstructions?: string,
 ): InvoicePaymentMethodsForm => ({
   enableACH: methods.includes(InvoicePaymentMethodType.ACH),
   enableCreditCard: methods.includes(InvoicePaymentMethodType.CreditCard),
-  customPaymentInstructions: customPaymentInstructions ?? '',
+  customPaymentInstructions: '',
 })
 
 export const convertPaymentMethodsToApiRequest = (
