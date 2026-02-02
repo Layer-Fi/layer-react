@@ -59,14 +59,14 @@ export const InvoiceDetail = () => {
   const [formState, setFormState] = useState<InvoiceFormState>({
     isDirty: false,
     isSubmitting: false,
-    hasActualChanges: false,
+    hasChanges: false,
   })
 
   const onChangeFormState = useCallback((nextState: InvoiceFormState) => {
     setFormState(nextState)
   }, [])
 
-  const onGoToNextStep = useCallback(() => {
+  const onNextStep = useCallback(() => {
     formRef.current?.goToNextStep()
   }, [])
 
@@ -79,32 +79,32 @@ export const InvoiceDetail = () => {
         setIsReadOnly={setIsReadOnly}
         openInvoicePaymentDrawer={() => setIsPaymentDrawerOpen(true)}
         currentStep={currentStep}
-        onGoToNextStep={onGoToNextStep}
+        onNextStep={onNextStep}
       />
     )
-  }, [onSubmit, isReadOnly, formState, currentStep, onGoToNextStep])
+  }, [onSubmit, isReadOnly, formState, currentStep, onNextStep])
 
-  const hasActualChanges = !isReadOnly && formState.hasActualChanges
-  const showXButton = hasActualChanges && currentStep === InvoiceFormStep.Details
+  const hasChanges = !isReadOnly && formState.hasChanges
+  const showXButton = hasChanges && currentStep === InvoiceFormStep.Details
 
-  const onGoBack = useCallback(() => {
+  const onBack = useCallback(() => {
     if (!isReadOnly && currentStep === InvoiceFormStep.PaymentMethods) {
       formRef.current?.goToPreviousStep()
       setCurrentStep(InvoiceFormStep.Details)
       return
     }
 
-    if (hasActualChanges) {
+    if (hasChanges) {
       setIsDiscardChangesModalOpen(true)
     }
     else {
       toInvoiceTable()
     }
-  }, [hasActualChanges, toInvoiceTable, isReadOnly, currentStep])
+  }, [hasChanges, toInvoiceTable, isReadOnly, currentStep])
 
   return (
     <>
-      <BaseDetailView slots={{ Header, BackIcon: showXButton ? X : BackArrow }} name='InvoiceDetail' onGoBack={onGoBack}>
+      <BaseDetailView slots={{ Header, BackIcon: showXButton ? X : BackArrow }} name='InvoiceDetail' onBack={onBack}>
         {viewState.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={viewState.invoice} />}
         <InvoiceForm
           isReadOnly={isReadOnly}

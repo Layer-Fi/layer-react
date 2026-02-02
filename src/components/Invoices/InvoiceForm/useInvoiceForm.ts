@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
+import { compareWithStableHash } from '@utils/swr/compareWithStableHash'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/useAuth'
 import { useInvoicesContext } from '@contexts/InvoicesContext/InvoicesContext'
@@ -75,6 +76,15 @@ const onSubmitMeta: InvoiceFormMeta = {
   submitAction: null,
 }
 
+const normalizeValuesForCompare = (values: InvoiceForm) => {
+  const { step: _step, ...rest } = values
+  return {
+    ...rest,
+    sentAt: rest.sentAt?.toString() ?? null,
+    dueAt: rest.dueAt?.toString() ?? null,
+  }
+}
+
 export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const { onSuccess, mode, initialPaymentMethods, paymentMethodsLoaded } = props
 
@@ -115,8 +125,10 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
     onSuccess(invoice)
 
     let shouldWarnAboutPaymentMethods = false
+    const canUpdatePaymentMethods = paymentMethodsLoaded
+      && (mode === UpsertInvoiceMode.Create || hasAppliedInitialPaymentMethodsRef.current)
     if (authData?.apiUrl && authData?.access_token) {
-      if (paymentMethodsLoaded) {
+      if (canUpdatePaymentMethods) {
         const paymentMethodsToSave = convertPaymentMethodsToApiRequest(value.paymentMethods)
         try {
           await updateInvoicePaymentMethods(
@@ -216,7 +228,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
 
     const currentPaymentMethods = form.getFieldValue('paymentMethods')
     const defaultPaymentMethods = defaultValuesRef.current.paymentMethods
-    const isUsingDefaultPaymentMethods = JSON.stringify(currentPaymentMethods) === JSON.stringify(defaultPaymentMethods)
+    const isUsingDefaultPaymentMethods = compareWithStableHash(currentPaymentMethods, defaultPaymentMethods)
 
     if (isUsingDefaultPaymentMethods) {
       const nextPaymentMethods = {
@@ -236,17 +248,17 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const isDirty = useStore(form.store, state => state.isDirty)
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
-  const hasActualChanges = useStore(form.store, (state) => {
-    const { step: _currentStep, ...currentValues } = state.values
-    const { step: _defaultStep, ...initialValues } = defaultValuesRef.current
-    return JSON.stringify(currentValues) !== JSON.stringify(initialValues)
+  const hasChanges = useStore(form.store, (state) => {
+    const currentValues = normalizeValuesForCompare(state.values)
+    const initialValues = normalizeValuesForCompare(defaultValuesRef.current)
+    return !compareWithStableHash(currentValues, initialValues)
   })
 
   const formState = useMemo(() => ({
     isDirty,
     isSubmitting,
-    hasActualChanges,
-  }), [isDirty, isSubmitting, hasActualChanges])
+    hasChanges,
+  }), [isDirty, isSubmitting, hasChanges])
 
   const discountRate = useStore(form.store, state => state.values.discountRate)
   const taxRate = useStore(form.store, state => state.values.taxRate)

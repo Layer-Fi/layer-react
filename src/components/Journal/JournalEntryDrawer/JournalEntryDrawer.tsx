@@ -55,7 +55,7 @@ export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true 
       <BaseDetailView
         slots={{ Header, BackIcon: hasChanges ? X : BackArrow }}
         name='JournalEntryDrawer'
-        onGoBack={onGoBack}
+        onBack={onGoBack}
       >
         <JournalEntryForm
           isReadOnly={false}

@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo } from 'react'
 import type React from 'react'
 
 import { useAccountingConfiguration } from '@hooks/useAccountingConfiguration/useAccountingConfiguration'
@@ -8,6 +8,7 @@ import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { CustomerFormDrawer } from '@components/CustomerForm/CustomerFormDrawer'
 import { type InvoiceFormState } from '@components/Invoices/InvoiceForm/formUtils'
+import { InvoiceFormContextProvider } from '@components/Invoices/InvoiceForm/InvoiceFormContext'
 import { InvoiceFormDetailsStep } from '@components/Invoices/InvoiceForm/InvoiceFormDetailsStep/InvoiceFormDetailsStep'
 import { InvoiceFormErrorBanner } from '@components/Invoices/InvoiceForm/InvoiceFormErrorBanner/InvoiceFormErrorBanner'
 import { InvoiceFormPaymentMethodsStep } from '@components/Invoices/InvoiceForm/InvoiceFormPaymentMethodsStep/InvoiceFormPaymentMethodsStep'
@@ -90,7 +91,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
     goToPreviousStep,
     goToNextStep,
     currentStep,
-  }))
+  }), [form, goToPreviousStep, goToNextStep, currentStep])
 
   useEffect(() => {
     onChangeFormState?.(formState)
@@ -100,48 +101,57 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
     onStepChange?.(currentStep)
   }, [currentStep, onStepChange])
 
-  return (
-    <>
-      <Form className='Layer__InvoiceForm' onSubmit={blockNativeOnSubmit}>
-        <InvoiceFormErrorBanner form={form} submitError={submitError} />
+  const contextValue = useMemo(() => ({
+    form,
+    isReadOnly,
+    totals,
+    enableCustomerManagement,
+    initialDueAt,
+    onClickEditCustomer: editCustomer,
+    onClickCreateNewCustomer: createCustomer,
+    paymentMethodsIsLoading: Boolean(paymentMethodsIsLoading),
+    paymentMethodsIsError: Boolean(paymentMethodsIsError),
+  }), [
+    form,
+    isReadOnly,
+    totals,
+    enableCustomerManagement,
+    initialDueAt,
+    editCustomer,
+    createCustomer,
+    paymentMethodsIsLoading,
+    paymentMethodsIsError,
+  ])
 
-        {currentStep === InvoiceFormStep.Details && (
-          <InvoiceFormDetailsStep
-            form={form}
-            isReadOnly={isReadOnly}
-            totals={totals}
-            enableCustomerManagement={enableCustomerManagement}
-            initialDueAt={initialDueAt}
-            onClickEditCustomer={editCustomer}
-            onClickCreateNewCustomer={createCustomer}
+  return (
+    <InvoiceFormContextProvider value={contextValue}>
+      <>
+        <Form className='Layer__InvoiceForm' onSubmit={blockNativeOnSubmit}>
+          <InvoiceFormErrorBanner form={form} submitError={submitError} />
+
+          {currentStep === InvoiceFormStep.Details && <InvoiceFormDetailsStep />}
+
+          {currentStep === InvoiceFormStep.PaymentMethods && (
+            <HStack className='Layer__InvoiceForm__PaymentMethodsLayout' gap='lg'>
+              <VStack className='Layer__InvoiceForm__PreviewSection' align='center' justify='center'>
+                <VStack className='Layer__InvoiceForm__PreviewPlaceholder' align='center' justify='center'>
+                  {/* Invoice PDF preview will be added here */}
+                </VStack>
+              </VStack>
+              <InvoiceFormPaymentMethodsStep />
+            </HStack>
+          )}
+        </Form>
+        {enableCustomerManagement && (
+          <CustomerFormDrawer
+            isOpen={isCustomerDrawerOpen}
+            onOpenChange={onCustomerDrawerOpenChange}
+            onSuccess={onCustomerDrawerSuccess}
+            formState={customerFormState}
           />
         )}
-
-        {currentStep === InvoiceFormStep.PaymentMethods && (
-          <HStack className='Layer__InvoiceForm__PaymentMethodsLayout' gap='lg'>
-            <VStack className='Layer__InvoiceForm__PreviewSection' align='center' justify='center'>
-              <VStack className='Layer__InvoiceForm__PreviewPlaceholder' align='center' justify='center'>
-                {/* Invoice PDF preview will be added here */}
-              </VStack>
-            </VStack>
-            <InvoiceFormPaymentMethodsStep
-              form={form}
-              isReadOnly={isReadOnly}
-              isLoading={paymentMethodsIsLoading}
-              isError={paymentMethodsIsError}
-            />
-          </HStack>
-        )}
-      </Form>
-      {enableCustomerManagement && (
-        <CustomerFormDrawer
-          isOpen={isCustomerDrawerOpen}
-          onOpenChange={onCustomerDrawerOpenChange}
-          onSuccess={onCustomerDrawerSuccess}
-          formState={customerFormState}
-        />
-      )}
-    </>
+      </>
+    </InvoiceFormContextProvider>
   )
 })
 InvoiceForm.displayName = 'InvoiceForm'

@@ -21,7 +21,7 @@ export type InvoiceDetailHeaderProps = {
   setIsReadOnly: (isReadOnly: boolean) => void
   openInvoicePaymentDrawer: () => void
   currentStep: InvoiceFormStep
-  onGoToNextStep: () => void
+  onNextStep: () => void
 }
 
 export const InvoiceDetailHeader = ({
@@ -31,7 +31,7 @@ export const InvoiceDetailHeader = ({
   setIsReadOnly,
   openInvoicePaymentDrawer,
   currentStep,
-  onGoToNextStep,
+  onNextStep: onNextStep,
 }: InvoiceDetailHeaderProps) => {
   const viewState = useInvoiceDetail()
   const { onSendInvoice } = useInvoicesContext()
@@ -53,7 +53,7 @@ export const InvoiceDetailHeader = ({
     if (currentStep === InvoiceFormStep.Details) {
       return (
         <HStack gap='xs'>
-          <Button isDisabled={isSubmitting} onPress={onGoToNextStep}>
+          <Button isDisabled={isSubmitting} onPress={onNextStep}>
             Next
             <ChevronRight size={14} />
           </Button>
@@ -75,7 +75,7 @@ export const InvoiceDetailHeader = ({
         )}
       </HStack>
     )
-  }, [isSubmitting, onPressSave, onPressSend, onSendInvoice, currentStep, onGoToNextStep])
+  }, [isSubmitting, onPressSave, onPressSend, onSendInvoice, currentStep, onNextStep])
 
   if (viewState.mode === UpsertInvoiceMode.Create) {
     return (

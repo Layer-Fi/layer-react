@@ -2,26 +2,23 @@ import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import type { InvoiceFormType } from '@components/Invoices/InvoiceForm/useInvoiceForm'
+import { useInvoiceFormContext } from '@components/Invoices/InvoiceForm/InvoiceFormContext'
 import { Loader } from '@components/Loader/Loader'
 
 import './invoiceFormPaymentMethodsStep.scss'
 
-type InvoiceFormPaymentMethodsStepProps = {
-  form: InvoiceFormType
-  isReadOnly: boolean
-  isLoading?: boolean
-  isError?: boolean
-}
-
 const CLASSNAME = 'Layer__InvoiceFormPaymentMethodsStep'
 
-export const InvoiceFormPaymentMethodsStep = ({
-  form,
-  isReadOnly,
-  isLoading = false,
-  isError = false,
-}: InvoiceFormPaymentMethodsStepProps) => {
+export const InvoiceFormPaymentMethodsStep = () => {
+  const {
+    form,
+    isReadOnly,
+    paymentMethodsIsLoading,
+    paymentMethodsIsError,
+  } = useInvoiceFormContext()
+
+  const isLoading = paymentMethodsIsLoading
+  const isError = paymentMethodsIsError
   const showFormFields = !isLoading && !isError
   const isFieldsReadOnly = isReadOnly || isLoading || isError
   const showHint = isLoading || isError

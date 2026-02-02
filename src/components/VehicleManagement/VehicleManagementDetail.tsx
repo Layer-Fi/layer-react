@@ -128,7 +128,7 @@ export const VehicleManagementDetail = () => {
       <BaseDetailView
         slots={{ Header, BackIcon: BackArrow }}
         name='VehicleManagementDetail'
-        onGoBack={toTripsTable}
+        onBack={toTripsTable}
       >
         {isMobileVariant && hasArchivedVehicles && (
           <HStack

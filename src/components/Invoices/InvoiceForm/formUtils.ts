@@ -29,7 +29,7 @@ export const INVOICE_MECE_TAG_DIMENSION = 'Job'
 export type InvoiceFormState = {
   isDirty: boolean
   isSubmitting: boolean
-  hasActualChanges: boolean
+  hasChanges: boolean
 }
 
 export const EMPTY_LINE_ITEM: InvoiceFormLineItem = {

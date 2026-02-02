@@ -29,7 +29,7 @@ export const TaxProfile = () => {
     <BaseDetailView
       slots={{ Header: TaxProfileHeader, BackIcon: BackArrow }}
       name='TaxProfile'
-      onGoBack={onboardingStatus === OnboardingStatus.Onboarded ? handleGoBack : undefined}
+      onBack={onboardingStatus === OnboardingStatus.Onboarded ? handleGoBack : undefined}
     >
       <TaxProfileForm taxProfile={taxProfile} />
     </BaseDetailView>

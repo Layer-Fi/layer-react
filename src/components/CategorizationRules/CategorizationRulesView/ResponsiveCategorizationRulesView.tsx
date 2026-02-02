@@ -117,7 +117,7 @@ export const ResponsiveCategorizationRulesView = () => {
     <BaseDetailView
       slots={{ Header: CategorizationRulesHeader, BackIcon: BackArrow }}
       name='CategorizationRulesDrawer'
-      onGoBack={toBankTransactionsTable}
+      onBack={toBankTransactionsTable}
     >
       <CategorizationRulesTable
         data={categorizationRules}
