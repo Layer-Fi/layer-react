@@ -38,8 +38,12 @@ export function FormDatePickerField({
 
   const onChange = useCallback((newValue: ZonedDateTime | null) => {
     setLocalDate(newValue)
-    handleChange(newValue)
-  }, [handleChange])
+  }, [])
+
+  const onBlur = useCallback(() => {
+    handleChange(localDate)
+    handleBlur()
+  }, [handleBlur, handleChange, localDate])
 
   const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
   const shouldShowErrorMessage = showFieldError && errorMessage
@@ -56,7 +60,7 @@ export function FormDatePickerField({
       showLabel={showLabel}
       date={localDate}
       onChange={onChange}
-      onBlur={handleBlur}
+      onBlur={onBlur}
       minDate={minDate}
       maxDate={maxDate}
       isInvalid={!isValid}

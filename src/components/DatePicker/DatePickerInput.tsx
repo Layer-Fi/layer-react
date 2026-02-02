@@ -45,7 +45,7 @@ export const DatePickerInput = ({ errorText, variant, onClick, isReadOnly }: Dat
   return (
     <InputGroup slot='input' isInvalid={!!errorText}>
       <DateInput inset>
-        {segment => <DateSegment segment={segment} />}
+        {segment => <DateSegment segment={segment} isReadOnly={isReadOnly} />}
       </DateInput>
       <HStack gap='3xs' align='center' pie='4xs'>
         {errorTriangle}

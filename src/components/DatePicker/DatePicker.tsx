@@ -57,12 +57,7 @@ export const DatePicker = ({
       className={className}
     >
       {showLabel && <Label slot='label' size='sm'>{label}</Label>}
-      <DatePickerInput
-        errorText={errorText}
-        variant={value}
-        onClick={() => setPopoverOpen(true)}
-        isReadOnly={isReadOnly}
-      />
+      <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} isReadOnly={isReadOnly} />
       <ResponsivePopover>
         <Dialog>
           <DateCalendar minDate={minDate} maxDate={maxDate} variant={value} />
