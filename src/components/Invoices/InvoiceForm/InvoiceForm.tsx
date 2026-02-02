@@ -24,14 +24,27 @@ export type InvoiceFormProps = {
   isReadOnly: boolean
   onSuccess: (invoice: Invoice) => void
   onChangeFormState?: (formState: InvoiceFormState) => void
+  onStepChange?: (step: InvoiceFormStep) => void
   initialPaymentMethods?: readonly InvoicePaymentMethodType[]
+  paymentMethodsLoaded: boolean
+  paymentMethodsIsLoading?: boolean
+  paymentMethodsIsError?: boolean
 }
 
 export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   const viewState: InvoiceFormMode = useInvoiceDetail()
   const { mode } = viewState
 
-  const { onSuccess, onChangeFormState, isReadOnly, initialPaymentMethods } = props
+  const {
+    onSuccess,
+    onChangeFormState,
+    onStepChange,
+    isReadOnly,
+    initialPaymentMethods,
+    paymentMethodsLoaded,
+    paymentMethodsIsLoading,
+    paymentMethodsIsError,
+  } = props
   const { businessId } = useLayerContext()
   const { data: accountingConfig } = useAccountingConfiguration({ businessId })
   const enableCustomerManagement = accountingConfig?.enableCustomerManagement ?? false
@@ -45,7 +58,12 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
     goToPreviousStep,
     goToNextStep,
   } = useInvoiceForm(
-    { onSuccess, initialPaymentMethods, ...viewState },
+    {
+      onSuccess,
+      initialPaymentMethods,
+      paymentMethodsLoaded,
+      ...viewState,
+    },
   )
 
   const initialDueAt = mode === UpsertInvoiceMode.Update ? viewState.invoice.dueAt : null
@@ -78,6 +96,10 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
     onChangeFormState?.(formState)
   }, [formState, onChangeFormState])
 
+  useEffect(() => {
+    onStepChange?.(currentStep)
+  }, [currentStep, onStepChange])
+
   return (
     <>
       <Form className='Layer__InvoiceForm' onSubmit={blockNativeOnSubmit}>
@@ -105,6 +127,8 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
             <InvoiceFormPaymentMethodsStep
               form={form}
               isReadOnly={isReadOnly}
+              isLoading={paymentMethodsIsLoading}
+              isError={paymentMethodsIsError}
             />
           </HStack>
         )}

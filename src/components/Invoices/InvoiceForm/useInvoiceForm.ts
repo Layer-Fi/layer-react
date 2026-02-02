@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import {
   type FormAsyncValidateOrFn,
@@ -28,10 +28,27 @@ import { type Invoice, type InvoiceForm, InvoiceFormStep, UpsertInvoiceSchema } 
 
 type onSuccessFn = (invoice: Invoice) => void
 type UseInvoiceFormProps =
-  | { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Create, initialPaymentMethods?: readonly InvoicePaymentMethodType[] }
-  | { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Update, invoice: Invoice, initialPaymentMethods?: readonly InvoicePaymentMethodType[] }
+  | {
+    onSuccess: onSuccessFn
+    mode: UpsertInvoiceMode.Create
+    initialPaymentMethods?: readonly InvoicePaymentMethodType[]
+    paymentMethodsLoaded: boolean
+  }
+  | {
+    onSuccess: onSuccessFn
+    mode: UpsertInvoiceMode.Update
+    invoice: Invoice
+    initialPaymentMethods?: readonly InvoicePaymentMethodType[]
+    paymentMethodsLoaded: boolean
+  }
 
-function isUpdateMode(props: UseInvoiceFormProps): props is { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Update, invoice: Invoice } {
+function isUpdateMode(props: UseInvoiceFormProps): props is {
+  onSuccess: onSuccessFn
+  mode: UpsertInvoiceMode.Update
+  invoice: Invoice
+  initialPaymentMethods?: readonly InvoicePaymentMethodType[]
+  paymentMethodsLoaded: boolean
+} {
   return props.mode === UpsertInvoiceMode.Update
 }
 
@@ -59,11 +76,11 @@ const onSubmitMeta: InvoiceFormMeta = {
 }
 
 export const useInvoiceForm = (props: UseInvoiceFormProps) => {
-  const { onSuccess, mode, initialPaymentMethods } = props
+  const { onSuccess, mode, initialPaymentMethods, paymentMethodsLoaded } = props
 
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSendInvoice } = useInvoicesContext()
-  const { businessId } = useLayerContext()
+  const { businessId, addToast } = useLayerContext()
   const { data: authData } = useAuth()
   const { patchCache } = useGlobalCacheActions()
 
@@ -71,63 +88,93 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const { trigger: upsertInvoice } = useUpsertInvoice(upsertInvoiceProps)
 
   const invoice = isUpdateMode(props) ? props.invoice : null
-  const initialPaymentMethodsForm = initialPaymentMethods
-    ? getPaymentMethodsFromApiResponse(initialPaymentMethods)
-    : undefined
+  const initialPaymentMethodsForm = useMemo(() => {
+    if (!initialPaymentMethods) return undefined
+    return getPaymentMethodsFromApiResponse(initialPaymentMethods)
+  }, [initialPaymentMethods])
+  const hasAppliedInitialPaymentMethodsRef = useRef(false)
   const defaultValuesRef = useRef<InvoiceForm>(getInvoiceFormDefaultValues(invoice, initialPaymentMethodsForm))
   const defaultValues = defaultValuesRef.current
 
   const onSubmit = useCallback(async ({ value, meta }: { value: InvoiceForm, meta: InvoiceFormMeta }) => {
+    let invoice: Invoice
     try {
       const upsertInvoiceParams = convertInvoiceFormToParams(value)
       const upsertInvoiceRequest = Schema.encodeUnknownSync(UpsertInvoiceSchema)(upsertInvoiceParams)
 
-      const { data: invoice } = await upsertInvoice(upsertInvoiceRequest)
-
-      if (authData?.apiUrl && authData?.access_token) {
-        const paymentMethodsToSave = convertPaymentMethodsToApiRequest(value.paymentMethods)
-        await updateInvoicePaymentMethods(
-          authData.apiUrl,
-          authData.access_token,
-          {
-            params: { businessId, invoiceId: invoice.id },
-            body: { payment_methods: paymentMethodsToSave },
-          },
-        )
-        void patchCache<InvoicePaymentMethodsResponse | undefined, { invoiceId: string }>(
-          ({ tags, key }) =>
-            tags.includes(INVOICE_PAYMENT_METHODS_TAG_KEY)
-            && typeof key !== 'string'
-            && key.invoiceId === invoice.id,
-          (currentData) => {
-            if (!currentData) {
-              return currentData
-            }
-
-            return {
-              ...currentData,
-              data: {
-                ...currentData.data,
-                paymentMethods: paymentMethodsToSave,
-              },
-            }
-          },
-          { withRevalidate: false },
-        )
-      }
-
-      setSubmitError(undefined)
-      onSuccess(invoice)
-
-      if (meta.submitAction === 'send' && onSendInvoice) {
-        await onSendInvoice(invoice.id)
-      }
+      const { data } = await upsertInvoice(upsertInvoiceRequest)
+      invoice = data
     }
     catch (e) {
       console.error(e)
       setSubmitError('Something went wrong. Please try again.')
+      return
     }
-  }, [onSendInvoice, onSuccess, upsertInvoice, authData, businessId, patchCache])
+
+    setSubmitError(undefined)
+    onSuccess(invoice)
+
+    let shouldWarnAboutPaymentMethods = false
+    if (authData?.apiUrl && authData?.access_token) {
+      if (paymentMethodsLoaded) {
+        const paymentMethodsToSave = convertPaymentMethodsToApiRequest(value.paymentMethods)
+        try {
+          await updateInvoicePaymentMethods(
+            authData.apiUrl,
+            authData.access_token,
+            {
+              params: { businessId, invoiceId: invoice.id },
+              body: { payment_methods: paymentMethodsToSave },
+            },
+          )
+          void patchCache<InvoicePaymentMethodsResponse | undefined, { invoiceId: string }>(
+            ({ tags, key }) =>
+              tags.includes(INVOICE_PAYMENT_METHODS_TAG_KEY)
+              && typeof key !== 'string'
+              && key.invoiceId === invoice.id,
+            (currentData) => {
+              if (!currentData) {
+                return currentData
+              }
+
+              return {
+                ...currentData,
+                data: {
+                  ...currentData.data,
+                  paymentMethods: paymentMethodsToSave,
+                },
+              }
+            },
+            { withRevalidate: false },
+          )
+        }
+        catch (e) {
+          console.error(e)
+          shouldWarnAboutPaymentMethods = true
+        }
+      }
+      else if (mode === UpsertInvoiceMode.Update) {
+        shouldWarnAboutPaymentMethods = true
+      }
+    }
+
+    if (shouldWarnAboutPaymentMethods) {
+      addToast({
+        content: 'Invoice saved, but payment methods could not be updated. Please try again.',
+        type: 'error',
+      })
+    }
+
+    if (meta.submitAction === 'send' && onSendInvoice) {
+      try {
+        await onSendInvoice(invoice.id)
+      }
+      catch (e) {
+        console.error(e)
+        setSubmitError('Something went wrong. Please try again.')
+      }
+    }
+  }, [onSendInvoice, onSuccess, upsertInvoice, authData, businessId, patchCache, paymentMethodsLoaded, addToast, mode])
 
   const validators = useMemo(() => ({
     onDynamic: validateInvoiceFormByStep,
@@ -158,12 +205,40 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
     canSubmitWhenInvalid: true,
   })
 
+  useEffect(() => {
+    hasAppliedInitialPaymentMethodsRef.current = false
+  }, [invoice?.id])
+
+  useEffect(() => {
+    if (!initialPaymentMethodsForm || hasAppliedInitialPaymentMethodsRef.current) {
+      return
+    }
+
+    const currentPaymentMethods = form.getFieldValue('paymentMethods')
+    const defaultPaymentMethods = defaultValuesRef.current.paymentMethods
+    const isUsingDefaultPaymentMethods = JSON.stringify(currentPaymentMethods) === JSON.stringify(defaultPaymentMethods)
+
+    if (isUsingDefaultPaymentMethods) {
+      const nextPaymentMethods = {
+        ...initialPaymentMethodsForm,
+        customPaymentInstructions: currentPaymentMethods.customPaymentInstructions,
+      }
+      form.setFieldValue('paymentMethods', nextPaymentMethods)
+      defaultValuesRef.current = {
+        ...defaultValuesRef.current,
+        paymentMethods: nextPaymentMethods,
+      }
+    }
+
+    hasAppliedInitialPaymentMethodsRef.current = true
+  }, [form, initialPaymentMethodsForm])
+
   const isDirty = useStore(form.store, state => state.isDirty)
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
   const hasActualChanges = useStore(form.store, (state) => {
     const { step: _currentStep, ...currentValues } = state.values
-    const { step: _defaultStep, ...initialValues } = defaultValues
+    const { step: _defaultStep, ...initialValues } = defaultValuesRef.current
     return JSON.stringify(currentValues) !== JSON.stringify(initialValues)
   })
 

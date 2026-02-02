@@ -31,9 +31,13 @@ export const InvoiceDetail = () => {
   }>(null)
 
   const invoiceId = viewState.mode === UpsertInvoiceMode.Update ? viewState.invoice.id : null
-  const { data: paymentMethodsData, isLoading: isLoadingPaymentMethods } = useInvoicePaymentMethods({ invoiceId })
+  const {
+    data: paymentMethodsData,
+    isLoading: isLoadingPaymentMethods,
+    isError: isPaymentMethodsError,
+  } = useInvoicePaymentMethods({ invoiceId })
 
-  const paymentMethodsLoaded = !invoiceId || (!isLoadingPaymentMethods && paymentMethodsData !== undefined)
+  const paymentMethodsLoaded = !invoiceId || (!isLoadingPaymentMethods && !isPaymentMethodsError && paymentMethodsData !== undefined)
 
   const [currentStep, setCurrentStep] = useState<InvoiceFormStep>(InvoiceFormStep.Details)
 
@@ -45,6 +49,8 @@ export const InvoiceDetail = () => {
       : 'Invoice created successfully'
     addToast({ content: toastContent, type: 'success' })
 
+    formRef.current?.goToPreviousStep()
+    setCurrentStep(InvoiceFormStep.Details)
     toViewInvoice(invoice)
     setIsReadOnly(true)
   }, [viewState.mode, addToast, toViewInvoice])
@@ -61,10 +67,7 @@ export const InvoiceDetail = () => {
   }, [])
 
   const onGoToNextStep = useCallback(() => {
-    const success = formRef.current?.goToNextStep()
-    if (success) {
-      setCurrentStep(InvoiceFormStep.PaymentMethods)
-    }
+    formRef.current?.goToNextStep()
   }, [])
 
   const Header = useCallback(() => {
@@ -104,10 +107,13 @@ export const InvoiceDetail = () => {
       <BaseDetailView slots={{ Header, BackIcon: showXButton ? X : BackArrow }} name='InvoiceDetail' onGoBack={onGoBack}>
         {viewState.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={viewState.invoice} />}
         <InvoiceForm
-          key={paymentMethodsLoaded ? 'loaded' : 'loading'}
           isReadOnly={isReadOnly}
           onSuccess={onUpsertInvoiceSuccess}
           onChangeFormState={onChangeFormState}
+          onStepChange={setCurrentStep}
+          paymentMethodsLoaded={paymentMethodsLoaded}
+          paymentMethodsIsLoading={isLoadingPaymentMethods}
+          paymentMethodsIsError={isPaymentMethodsError}
           initialPaymentMethods={paymentMethodsData?.data.paymentMethods}
           ref={formRef}
         />

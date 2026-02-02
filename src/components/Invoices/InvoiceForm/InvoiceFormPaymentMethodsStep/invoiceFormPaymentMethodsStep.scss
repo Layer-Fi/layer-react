@@ -1,3 +1,7 @@
 .Layer__InvoiceFormPaymentMethodsStep {
   padding: var(--spacing-md);
+
+  &__State {
+    padding: var(--spacing-md) 0;
+  }
 }
