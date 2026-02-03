@@ -18,10 +18,3 @@
     grid-template-columns: var(--grid-cols-base);
   }
 }
-
-.Layer__InvoiceForm__LineItem__ExpandedContent {
-  display: grid;
-  grid-template-columns: minmax(10rem, 14rem) auto;
-
-  width: fit-content;
-}
