@@ -11,8 +11,8 @@ import {
 const DECORATOR_CHARS_REGEX = /[,%$]/g
 
 type UseBigDecimalInputOptions = {
-  bdValue: BD.BigDecimal
-  onValueChange: (bd: BD.BigDecimal) => void
+  value: BD.BigDecimal
+  onChange: (bd: BD.BigDecimal) => void
   onBlur: () => void
   mode: 'percent' | 'currency' | 'decimal'
   maxValue: BD.BigDecimal
@@ -22,8 +22,8 @@ type UseBigDecimalInputOptions = {
 }
 
 export function useBigDecimalInput({
-  bdValue,
-  onValueChange,
+  value,
+  onChange,
   onBlur,
   mode,
   maxValue,
@@ -37,7 +37,7 @@ export function useBigDecimalInput({
     mode,
   }), [maxDecimalPlaces, minDecimalPlaces, mode])
 
-  const [inputValue, setInputValue] = useState<string>(formatBigDecimalToString(bdValue, formattingProps))
+  const [inputValue, setInputValue] = useState<string>(formatBigDecimalToString(value, formattingProps))
 
   const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
@@ -61,13 +61,13 @@ export function useBigDecimalInput({
     const normalized = BD.normalize(adjustedForPercent)
     const clamped = BD.min(normalized, maxValue)
 
-    if (!BD.equals(clamped, bdValue)) {
-      onValueChange(clamped)
+    if (!BD.equals(clamped, value)) {
+      onChange(clamped)
     }
     onBlur()
 
     setInputValue(formatBigDecimalToString(clamped, formattingProps))
-  }, [inputValue, mode, maxValue, maxDecimalPlaces, bdValue, onBlur, formattingProps, onValueChange])
+  }, [inputValue, maxDecimalPlaces, mode, maxValue, value, onBlur, formattingProps, onChange])
 
   const allowedChars = useMemo(() =>
     buildDecimalCharRegex({ allowNegative, allowPercent: mode === 'percent', allowDollar: mode === 'currency' }),
@@ -88,8 +88,8 @@ export function useBigDecimalInput({
   }, [allowedChars])
 
   useEffect(() => {
-    setInputValue(formatBigDecimalToString(bdValue, formattingProps))
-  }, [bdValue, formattingProps])
+    setInputValue(formatBigDecimalToString(value, formattingProps))
+  }, [value, formattingProps])
 
   return {
     inputValue,

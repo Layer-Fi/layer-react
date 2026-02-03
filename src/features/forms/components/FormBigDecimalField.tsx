@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback } from 'react'
+import { type ReactNode } from 'react'
 import { BigDecimal as BD } from 'effect'
 
 import { BIG_DECIMAL_ONE } from '@utils/bigDecimalUtils'
@@ -23,15 +23,6 @@ const DEFAULT_MAX_VALUE = BD.fromBigInt(BigInt(10_000_000))
 const DEFAULT_MIN_DECIMAL_PLACES = 0
 const DEFAULT_MAX_DECIMAL_PLACES = 3
 
-export const withForceUpdate = (value: BD.BigDecimal): BD.BigDecimal => {
-  return Object.defineProperty(value, '__forceUpdate', {
-    value: Symbol(),
-    enumerable: true,
-    configurable: true,
-    writable: false,
-  })
-}
-
 export function FormBigDecimalField({
   mode = 'decimal',
   allowNegative = false,
@@ -46,13 +37,9 @@ export function FormBigDecimalField({
   const { name, state, handleChange, handleBlur } = field
   const { value } = state
 
-  const onValueChange = useCallback((bd: BD.BigDecimal) => {
-    handleChange(withForceUpdate(bd))
-  }, [handleChange])
-
   const { inputValue, onInputChange, onInputBlur, onBeforeInput, onPaste } = useBigDecimalInput({
-    bdValue: value,
-    onValueChange,
+    value,
+    onChange: handleChange,
     onBlur: handleBlur,
     mode,
     maxValue,

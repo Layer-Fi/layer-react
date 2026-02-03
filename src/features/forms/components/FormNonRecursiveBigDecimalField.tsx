@@ -40,17 +40,17 @@ export function FormNonRecursiveBigDecimalField({
 }: FormNonRecursiveBigDecimalFieldProps) {
   const field = useFieldContext<NonRecursiveBigDecimal>()
   const { name, state, handleChange, handleBlur } = field
-  const { value } = state
+  const { value: nrbdValue } = state
 
-  const bdValue = useMemo(() => fromNonRecursiveBigDecimal(value), [value])
+  const value = useMemo(() => fromNonRecursiveBigDecimal(nrbdValue), [nrbdValue])
 
-  const onValueChange = useCallback((bd: BD.BigDecimal) => {
+  const onChange = useCallback((bd: BD.BigDecimal) => {
     handleChange(toNonRecursiveBigDecimal(bd))
   }, [handleChange])
 
   const { inputValue, onInputChange, onInputBlur, onBeforeInput, onPaste } = useBigDecimalInput({
-    bdValue,
-    onValueChange,
+    value,
+    onChange,
     onBlur: handleBlur,
     mode,
     maxValue,
