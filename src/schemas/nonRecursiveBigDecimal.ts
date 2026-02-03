@@ -4,7 +4,7 @@ export type NonRecursiveBigDecimal = { value: bigint, scale: number }
 
 export const NonRecursiveBigDecimalSchema = Schema.Struct({
   value: Schema.BigIntFromSelf,
-  scale: Schema.Number,
+  scale: Schema.Int,
 })
 
 export const NRBD_ZERO: NonRecursiveBigDecimal = { value: 0n, scale: 0 }
