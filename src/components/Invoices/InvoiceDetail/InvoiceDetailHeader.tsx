@@ -31,7 +31,7 @@ export const InvoiceDetailHeader = ({
   setIsReadOnly,
   openInvoicePaymentDrawer,
   currentStep,
-  onNextStep: onNextStep,
+  onNextStep,
 }: InvoiceDetailHeaderProps) => {
   const viewState = useInvoiceDetail()
   const { onSendInvoice } = useInvoicesContext()

@@ -7,8 +7,6 @@ import { Loader } from '@components/Loader/Loader'
 
 import './invoiceFormPaymentMethodsStep.scss'
 
-const CLASSNAME = 'Layer__InvoiceFormPaymentMethodsStep'
-
 export const InvoiceFormPaymentMethodsStep = () => {
   const {
     form,
@@ -28,7 +26,7 @@ export const InvoiceFormPaymentMethodsStep = () => {
     : 'Payment methods are loading. Saving now will only update invoice details.'
 
   return (
-    <VStack className={CLASSNAME} gap='md'>
+    <VStack className='Layer__InvoiceFormPaymentMethodsStep' gap='md'>
       <VStack gap='xs'>
         <Heading level={3} size='sm'>Payment Methods</Heading>
         <Span variant='subtle'>Select which payment methods to enable for this invoice</Span>
@@ -40,14 +38,14 @@ export const InvoiceFormPaymentMethodsStep = () => {
       </VStack>
 
       {isLoading && (
-        <VStack className={`${CLASSNAME}__State`} gap='xs' align='center'>
+        <VStack className='Layer__InvoiceFormPaymentMethodsStep__State' gap='xs' align='center'>
           <Loader />
           <Span variant='subtle'>Loading payment methods</Span>
         </VStack>
       )}
 
       {isError && (
-        <VStack className={`${CLASSNAME}__State`} gap='xs'>
+        <VStack className='Layer__InvoiceFormPaymentMethodsStep__State' gap='xs'>
           <DataState
             status={DataStateStatus.failed}
             title='Failed to load payment methods'

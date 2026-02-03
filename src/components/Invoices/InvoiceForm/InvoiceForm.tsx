@@ -43,8 +43,8 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
     isReadOnly,
     initialPaymentMethods,
     paymentMethodsLoaded,
-    paymentMethodsIsLoading,
-    paymentMethodsIsError,
+    paymentMethodsIsLoading = false,
+    paymentMethodsIsError = false,
   } = props
   const { businessId } = useLayerContext()
   const { data: accountingConfig } = useAccountingConfiguration({ businessId })
@@ -109,8 +109,8 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
     initialDueAt,
     onClickEditCustomer: editCustomer,
     onClickCreateNewCustomer: createCustomer,
-    paymentMethodsIsLoading: Boolean(paymentMethodsIsLoading),
-    paymentMethodsIsError: Boolean(paymentMethodsIsError),
+    paymentMethodsIsLoading,
+    paymentMethodsIsError,
   }), [
     form,
     isReadOnly,

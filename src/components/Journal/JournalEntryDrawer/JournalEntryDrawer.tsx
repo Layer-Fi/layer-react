@@ -41,7 +41,7 @@ export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true 
   }, [onSubmit, formState])
 
   const hasChanges = formState.isDirty
-  const onGoBack = useCallback(() => {
+  const onBack = useCallback(() => {
     if (hasChanges) {
       setIsDiscardChangesModalOpen(true)
     }
@@ -55,7 +55,7 @@ export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true 
       <BaseDetailView
         slots={{ Header, BackIcon: hasChanges ? X : BackArrow }}
         name='JournalEntryDrawer'
-        onBack={onGoBack}
+        onBack={onBack}
       >
         <JournalEntryForm
           isReadOnly={false}
