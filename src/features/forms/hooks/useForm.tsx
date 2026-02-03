@@ -12,6 +12,7 @@ import { FormBigDecimalField } from '@features/forms/components/FormBigDecimalFi
 import { FormCheckboxField } from '@features/forms/components/FormCheckboxField'
 import { FormDateField } from '@features/forms/components/FormDateField'
 import { FormDatePickerField } from '@features/forms/components/FormDatePickerField'
+import { FormNonRecursiveBigDecimalField } from '@features/forms/components/FormNonRecursiveBigDecimalField'
 import { FormNumberField } from '@features/forms/components/FormNumberField'
 import { FormRadioGroupField } from '@features/forms/components/FormRadioGroupField'
 import { FormRadioGroupYesNoField } from '@features/forms/components/FormRadioGroupYesNoField'
@@ -29,6 +30,7 @@ const { useAppForm: useRawAppForm } = createFormHook({
     FormCheckboxField,
     FormDateField,
     FormDatePickerField,
+    FormNonRecursiveBigDecimalField,
     FormNumberField,
     FormRadioGroupField,
     FormRadioGroupYesNoField,

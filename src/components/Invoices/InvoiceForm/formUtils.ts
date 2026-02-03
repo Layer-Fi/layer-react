@@ -2,7 +2,18 @@ import { fromDate, getLocalTimeZone, toCalendarDate } from '@internationalized/d
 import { startOfToday } from 'date-fns'
 import { BigDecimal as BD } from 'effect'
 
-import { BIG_DECIMAL_ONE, BIG_DECIMAL_ZERO, convertBigDecimalToCents, convertCentsToBigDecimal, safeDivide } from '@utils/bigDecimalUtils'
+import {
+  fromNonRecursiveBigDecimal,
+  NRBD_ONE,
+  NRBD_ZERO,
+  toNonRecursiveBigDecimal,
+} from '@schemas/nonRecursiveBigDecimal'
+import {
+  BIG_DECIMAL_ZERO,
+  convertBigDecimalToCents,
+  convertCentsToBigDecimal,
+  safeDivide,
+} from '@utils/bigDecimalUtils'
 import {
   computeAdditionalDiscount,
   computeRawTaxableSubtotal,
@@ -13,9 +24,6 @@ import {
 } from '@components/Invoices/InvoiceForm/totalsUtils'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@features/invoices/invoiceSchemas'
-import { makeTagFromTransactionTag, makeTagKeyValueFromTag, type Tag } from '@features/tags/tagSchemas'
-
-export const INVOICE_MECE_TAG_DIMENSION = 'Job'
 
 export type InvoiceFormState = {
   isDirty: boolean
@@ -24,12 +32,26 @@ export type InvoiceFormState = {
 
 export const EMPTY_LINE_ITEM: InvoiceFormLineItem = {
   description: '',
-  unitPrice: BIG_DECIMAL_ZERO,
-  quantity: BIG_DECIMAL_ONE,
-  amount: BIG_DECIMAL_ZERO,
+  unitPrice: NRBD_ZERO,
+  quantity: NRBD_ONE,
+  amount: NRBD_ZERO,
   isTaxable: false,
-  accountIdentifier: null,
-  tags: [],
+}
+
+export const isEmptyLineItem = (item: InvoiceFormLineItem): boolean => {
+  return InvoiceFormLineItemEquivalence(EMPTY_LINE_ITEM, item)
+}
+
+export const computeLineItemAmount = (unitPrice: InvoiceFormLineItem['unitPrice'], quantity: InvoiceFormLineItem['quantity']) => {
+  const bdUnitPrice = fromNonRecursiveBigDecimal(unitPrice)
+  const bdQuantity = fromNonRecursiveBigDecimal(quantity)
+  return toNonRecursiveBigDecimal(BD.round(BD.normalize(BD.multiply(bdUnitPrice, bdQuantity)), { scale: 2 }))
+}
+
+export const computeLineItemUnitPrice = (amount: InvoiceFormLineItem['amount'], quantity: InvoiceFormLineItem['quantity']) => {
+  const bdAmount = fromNonRecursiveBigDecimal(amount)
+  const bdQuantity = fromNonRecursiveBigDecimal(quantity)
+  return toNonRecursiveBigDecimal(BD.round(BD.normalize(safeDivide(bdAmount, bdQuantity)), { scale: 2 }))
 }
 
 export const getEmptyInvoiceFormValues = (): InvoiceForm => {
@@ -51,14 +73,6 @@ export const getEmptyInvoiceFormValues = (): InvoiceForm => {
   }
 }
 
-export const getAdditionalTags = (tags: readonly Tag[]): Tag[] => {
-  return tags.filter(obj => obj.key.toLowerCase() !== INVOICE_MECE_TAG_DIMENSION.toLowerCase())
-}
-
-export const getSelectedTag = (tags: readonly Tag[]): Tag | null => {
-  return tags.find(obj => obj.key.toLowerCase() === INVOICE_MECE_TAG_DIMENSION.toLowerCase()) ?? null
-}
-
 const getInvoiceLineItemAmount = (lineItem: InvoiceLineItem): BD.BigDecimal => {
   const { unitPrice, quantity } = lineItem
 
@@ -70,12 +84,10 @@ const getInvoiceFormLineItem = (lineItem: InvoiceLineItem): InvoiceFormLineItem 
 
   return {
     description: description || '',
-    quantity: BD.normalize(quantity),
-    unitPrice: convertCentsToBigDecimal(unitPrice),
-    amount: getInvoiceLineItemAmount(lineItem),
+    quantity: toNonRecursiveBigDecimal(quantity),
+    unitPrice: toNonRecursiveBigDecimal(convertCentsToBigDecimal(unitPrice)),
+    amount: toNonRecursiveBigDecimal(getInvoiceLineItemAmount(lineItem)),
     isTaxable: lineItem.salesTaxTotal > 0,
-    accountIdentifier: lineItem.accountIdentifier,
-    tags: lineItem.transactionTags.map(makeTagFromTransactionTag),
   }
 }
 
@@ -147,16 +159,6 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) 
   }
 
   nonEmptyLineItems.some((item) => {
-    if (item.accountIdentifier === null) {
-      errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field: Revenue account.' })
-      return true
-    }
-
-    if (getSelectedTag(item.tags) === null) {
-      errors.push({ lineItems: `Invoice has incomplete line items. Please include required field: ${INVOICE_MECE_TAG_DIMENSION}.` })
-      return true
-    }
-
     if (item.description.trim() === '') {
       errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field: Description.' })
       return true
@@ -183,15 +185,14 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
     .map((item) => {
       const baseLineItem = {
         description: item.description.trim(),
-        unitPrice: convertBigDecimalToCents(item.unitPrice),
-        quantity: item.quantity,
-        tags: item.tags.map(makeTagKeyValueFromTag),
-        ...(item.accountIdentifier && { accountIdentifier: item.accountIdentifier }),
+        unitPrice: convertBigDecimalToCents(fromNonRecursiveBigDecimal(item.unitPrice)),
+        quantity: fromNonRecursiveBigDecimal(item.quantity),
       }
 
       if (!item.isTaxable || BD.equals(form.taxRate, BIG_DECIMAL_ZERO)) return baseLineItem
 
-      const itemTaxableSubtotal = computeTaxableSubtotal({ rawTaxableSubtotal: item.amount, discountRate: form.discountRate })
+      const itemAmount = fromNonRecursiveBigDecimal(item.amount)
+      const itemTaxableSubtotal = computeTaxableSubtotal({ rawTaxableSubtotal: itemAmount, discountRate: form.discountRate })
       const itemTaxes = computeTaxes({ taxableSubtotal: itemTaxableSubtotal, taxRate: form.taxRate })
 
       return { ...baseLineItem, salesTaxes: [{ amount: convertBigDecimalToCents(itemTaxes) }] }

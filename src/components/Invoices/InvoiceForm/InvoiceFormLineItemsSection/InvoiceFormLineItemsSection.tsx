@@ -21,8 +21,14 @@ export const InvoiceFormLineItemsSection = ({
     <form.Field name='lineItems' mode='array'>
       {field => (
         <VStack gap='xs' align='baseline'>
-          {field.state.value.map((_value, index) => (
-            <InvoiceFormLineItemRow key={index} form={form} index={index} isReadOnly={isReadOnly} onDeleteLine={() => field.removeValue(index)} />
+          {field.state.value.map((_lineItem, index) => (
+            <InvoiceFormLineItemRow
+              key={index}
+              form={form}
+              index={index}
+              isReadOnly={isReadOnly}
+              onDeleteLine={() => field.removeValue(index)}
+            />
           ))}
           {!isReadOnly
             && (

@@ -1,5 +1,6 @@
 import { BigDecimal as BD } from 'effect'
 
+import { fromNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { BIG_DECIMAL_ZERO, roundDecimalToCents } from '@utils/bigDecimalUtils'
 import type { InvoiceForm, InvoiceFormLineItem } from '@features/invoices/invoiceSchemas'
 
@@ -9,13 +10,13 @@ export function computeSubtotal(lineItems: readonly InvoiceFormLineItem[]): BD.B
 export function computeSubtotal(
   lineItems: readonly InvoiceFormLineItem[],
 ): BD.BigDecimal {
-  return lineItems.reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
+  return lineItems.reduce((sum, item) => BD.sum(sum, fromNonRecursiveBigDecimal(item.amount)), BIG_DECIMAL_ZERO)
 }
 
 export const computeRawTaxableSubtotal = (lineItems: InvoiceFormLineItem[]): BD.BigDecimal =>
   lineItems
     .filter(item => item.isTaxable)
-    .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
+    .reduce((sum, item) => BD.sum(sum, fromNonRecursiveBigDecimal(item.amount)), BIG_DECIMAL_ZERO)
 
 export function computeAdditionalDiscount({
   subtotal,

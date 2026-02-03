@@ -3,17 +3,18 @@ import { AlertTriangle } from 'lucide-react'
 import { flattenValidationErrors } from '@utils/form'
 import { HStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import type { InvoiceFormType } from '@components/Invoices/InvoiceForm/useInvoiceForm'
 import { TextSize } from '@components/Typography/Text'
+import { useFormContext } from '@features/forms/hooks/useForm'
 
 import './invoiceFormErrorBanner.scss'
 
 type InvoiceFormErrorBannerProps = {
-  form: InvoiceFormType
   submitError?: string
 }
 
-export const InvoiceFormErrorBanner = ({ form, submitError }: InvoiceFormErrorBannerProps) => {
+export const InvoiceFormErrorBanner = ({ submitError }: InvoiceFormErrorBannerProps) => {
+  const form = useFormContext()
+
   return (
     <form.Subscribe selector={state => state.errorMap}>
       {(errorMap) => {
