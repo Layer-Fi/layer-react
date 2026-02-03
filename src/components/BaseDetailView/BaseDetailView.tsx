@@ -17,7 +17,7 @@ export type BaseDetailViewProps = PropsWithChildren<{
   }
 }>
 
-export const BaseDetailView = ({ name, onBack: onBack, slots, children, borderless = false }: BaseDetailViewProps) => {
+export const BaseDetailView = ({ name, onBack, slots, children, borderless = false }: BaseDetailViewProps) => {
   const { Header, BackIcon } = slots
 
   return (
