@@ -104,7 +104,8 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   }, [initialPaymentMethods])
   const hasAppliedInitialPaymentMethodsRef = useRef(false)
   const defaultValuesRef = useRef<InvoiceForm>(getInvoiceFormDefaultValues(invoice, initialPaymentMethodsForm))
-  const defaultValues = defaultValuesRef.current
+  const formDefaultValuesRef = useRef(defaultValuesRef.current)
+  const defaultValues = formDefaultValuesRef.current
 
   const onSubmit = useCallback(async ({ value, meta }: { value: InvoiceForm, meta: InvoiceFormMeta }) => {
     let invoice: Invoice
@@ -122,6 +123,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
     }
 
     setSubmitError(undefined)
+    defaultValuesRef.current = value
     onSuccess(invoice)
 
     let shouldWarnAboutPaymentMethods = false

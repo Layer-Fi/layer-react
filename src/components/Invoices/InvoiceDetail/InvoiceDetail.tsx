@@ -27,7 +27,6 @@ export const InvoiceDetail = () => {
     submit: ({ submitAction }: { submitAction: 'send' | null }) => Promise<void>
     goToPreviousStep: () => void
     goToNextStep: () => boolean
-    currentStep: InvoiceFormStep
   }>(null)
 
   const invoiceId = viewState.mode === UpsertInvoiceMode.Update ? viewState.invoice.id : null

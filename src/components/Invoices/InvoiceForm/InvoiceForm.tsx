@@ -90,8 +90,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
     submit: ({ submitAction }: { submitAction: 'send' | null }) => form.handleSubmit({ submitAction }),
     goToPreviousStep,
     goToNextStep,
-    currentStep,
-  }), [form, goToPreviousStep, goToNextStep, currentStep])
+  }), [form, goToPreviousStep, goToNextStep])
 
   useEffect(() => {
     onChangeFormState?.(formState)
