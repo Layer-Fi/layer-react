@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import {
   type FormAsyncValidateOrFn,
@@ -62,30 +62,38 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const { trigger: upsertInvoice } = useUpsertInvoice(upsertInvoiceProps)
 
   const invoice = isUpdateMode(props) ? props.invoice : null
-  const defaultValuesRef = useRef<InvoiceForm>(getInvoiceFormDefaultValues(invoice))
-  const defaultValues = defaultValuesRef.current
+  const defaultValues = useMemo(() => getInvoiceFormDefaultValues(invoice), [invoice])
 
-  const onSubmit = useCallback(async ({ value, meta }: { value: InvoiceForm, meta: InvoiceFormMeta }) => {
-    try {
-      // Convert the `InvoiceForm` schema to the request shape for `upsertInvoice`. This will
-      // throw an error if the request shape is not valid.
-      const upsertInvoiceParams = convertInvoiceFormToParams(value)
-      const upsertInvoiceRequest = Schema.encodeUnknownSync(UpsertInvoiceSchema)(upsertInvoiceParams)
+  const onSubmit = useCallback(
+    async (
+      { value, meta, formApi }: {
+        value: InvoiceForm
+        meta: InvoiceFormMeta
+        formApi: { reset: () => void }
+      },
+    ) => {
+      try {
+        // Convert the `InvoiceForm` schema to the request shape for `upsertInvoice`. This will
+        // throw an error if the request shape is not valid.
+        const upsertInvoiceParams = convertInvoiceFormToParams(value)
+        const upsertInvoiceRequest = Schema.encodeUnknownSync(UpsertInvoiceSchema)(upsertInvoiceParams)
 
-      const { data: invoice } = await upsertInvoice(upsertInvoiceRequest)
+        const { data: invoice } = await upsertInvoice(upsertInvoiceRequest)
 
-      setSubmitError(undefined)
-      onSuccess(invoice)
+        setSubmitError(undefined)
+        onSuccess(invoice)
 
-      if (meta.submitAction === 'send' && onSendInvoice) {
-        await onSendInvoice(invoice.id)
+        formApi.reset()
+
+        if (meta.submitAction === 'send' && onSendInvoice) {
+          await onSendInvoice(invoice.id)
+        }
       }
-    }
-    catch (e) {
-      console.error(e)
-      setSubmitError('Something went wrong. Please try again.')
-    }
-  }, [onSendInvoice, onSuccess, upsertInvoice])
+      catch (e) {
+        console.error(e)
+        setSubmitError('Something went wrong. Please try again.')
+      }
+    }, [onSendInvoice, onSuccess, upsertInvoice])
 
   const validators = useMemo(() => ({
     onDynamic: validateInvoiceForm,
