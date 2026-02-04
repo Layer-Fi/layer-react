@@ -69,7 +69,9 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   return (
     <>
       <Form className='Layer__InvoiceForm' onSubmit={blockNativeOnSubmit}>
-        <InvoiceFormErrorBanner form={form} submitError={submitError} />
+        <form.AppForm>
+          <InvoiceFormErrorBanner submitError={submitError} />
+        </form.AppForm>
         <InvoiceFormTermsSection
           form={form}
           isReadOnly={isReadOnly}

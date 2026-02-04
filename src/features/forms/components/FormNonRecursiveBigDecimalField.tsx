@@ -1,6 +1,11 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useCallback, useMemo } from 'react'
 import { BigDecimal as BD } from 'effect'
 
+import {
+  fromNonRecursiveBigDecimal,
+  type NonRecursiveBigDecimal,
+  toNonRecursiveBigDecimal,
+} from '@schemas/nonRecursiveBigDecimal'
 import { BIG_DECIMAL_ONE } from '@utils/bigDecimalUtils'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
@@ -9,7 +14,7 @@ import { BaseFormTextField, type BaseFormTextFieldProps } from '@features/forms/
 import { useBigDecimalInput } from '@features/forms/hooks/useBigDecimalInput'
 import { useFieldContext } from '@features/forms/hooks/useForm'
 
-type FormBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTextArea'> & {
+type FormNonRecursiveBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTextArea'> & {
   maxValue?: BD.BigDecimal
   minDecimalPlaces?: number
   maxDecimalPlaces?: number
@@ -23,7 +28,7 @@ const DEFAULT_MAX_VALUE = BD.fromBigInt(BigInt(10_000_000))
 const DEFAULT_MIN_DECIMAL_PLACES = 0
 const DEFAULT_MAX_DECIMAL_PLACES = 3
 
-export function FormBigDecimalField({
+export function FormNonRecursiveBigDecimalField({
   mode = 'decimal',
   allowNegative = false,
   maxValue = mode === 'percent' ? BIG_DECIMAL_ONE : DEFAULT_MAX_VALUE,
@@ -32,14 +37,20 @@ export function FormBigDecimalField({
   slots,
   placeholder,
   ...restProps
-}: FormBigDecimalFieldProps) {
-  const field = useFieldContext<BD.BigDecimal>()
+}: FormNonRecursiveBigDecimalFieldProps) {
+  const field = useFieldContext<NonRecursiveBigDecimal>()
   const { name, state, handleChange, handleBlur } = field
-  const { value } = state
+  const { value: nrbdValue } = state
+
+  const value = useMemo(() => fromNonRecursiveBigDecimal(nrbdValue), [nrbdValue])
+
+  const onChange = useCallback((bd: BD.BigDecimal) => {
+    handleChange(toNonRecursiveBigDecimal(bd))
+  }, [handleChange])
 
   const { inputValue, onInputChange, onInputBlur, onBeforeInput, onPaste } = useBigDecimalInput({
     value,
-    onChange: handleChange,
+    onChange,
     onBlur: handleBlur,
     mode,
     maxValue,
