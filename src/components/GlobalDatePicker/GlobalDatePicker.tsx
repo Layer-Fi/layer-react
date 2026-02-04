@@ -24,7 +24,6 @@ export const GlobalDatePicker = () => {
   return (
     <DatePicker
       label='Effective Date'
-      showLabel={false}
       date={localDate}
       onChange={onChange}
       minDate={minDateZdt}
