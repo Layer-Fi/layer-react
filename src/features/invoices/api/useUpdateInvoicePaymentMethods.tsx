@@ -9,22 +9,18 @@ import { put } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import {
+  type InvoicePaymentMethodsEncoded,
   type InvoicePaymentMethodsResponse,
   InvoicePaymentMethodsResponseSchema,
-  type InvoicePaymentMethodType,
 } from '@features/invoices/invoicePaymentMethodSchemas'
 
 import { INVOICE_PAYMENT_METHODS_TAG_KEY } from './useInvoicePaymentMethods'
-
-type UpdateInvoicePaymentMethodsBody = {
-  payment_methods: InvoicePaymentMethodType[]
-}
 
 const UPDATE_INVOICE_PAYMENT_METHODS_TAG_KEY = '#update-invoice-payment-methods'
 
 export const updateInvoicePaymentMethods = put<
   InvoicePaymentMethodsResponse,
-  UpdateInvoicePaymentMethodsBody,
+  InvoicePaymentMethodsEncoded,
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/payment-methods`)
 
@@ -51,7 +47,7 @@ function buildKey({
 }
 
 type UpdateInvoicePaymentMethodsSWRMutationResponse =
-    SWRMutationResponse<InvoicePaymentMethodsResponse, unknown, Key, UpdateInvoicePaymentMethodsBody>
+    SWRMutationResponse<InvoicePaymentMethodsResponse, unknown, Key, InvoicePaymentMethodsEncoded>
 
 class UpdateInvoicePaymentMethodsSWRResponse {
   private swrResponse: UpdateInvoicePaymentMethodsSWRMutationResponse
@@ -77,11 +73,11 @@ class UpdateInvoicePaymentMethodsSWRResponse {
   }
 }
 
-type UseUpdatePaymentMethodsProps = {
+type UseUpdateInvoicePaymentMethodsProps = {
   invoiceId: string
 }
 
-export function useUpdatePaymentMethods({ invoiceId }: UseUpdatePaymentMethodsProps) {
+export function useUpdateInvoicePaymentMethods({ invoiceId }: UseUpdateInvoicePaymentMethodsProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
@@ -94,7 +90,7 @@ export function useUpdatePaymentMethods({ invoiceId }: UseUpdatePaymentMethodsPr
     }),
     (
       { accessToken, apiUrl, businessId, invoiceId },
-      { arg: body }: { arg: UpdateInvoicePaymentMethodsBody },
+      { arg: body }: { arg: InvoicePaymentMethodsEncoded },
     ) => updateInvoicePaymentMethods(
       apiUrl,
       accessToken,

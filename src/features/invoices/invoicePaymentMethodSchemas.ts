@@ -1,22 +1,36 @@
 import { pipe, Schema } from 'effect'
 
-export enum InvoicePaymentMethodType {
+export enum InvoicePaymentMethod {
   ACH = 'ACH',
   CreditCard = 'CREDIT_CARD',
+  Unknown = 'UNKNOWN',
 }
 
-export const InvoicePaymentMethodTypeSchema = Schema.Enums(InvoicePaymentMethodType)
+export const InvoicePaymentMethodTypeSchema = Schema.Enums(InvoicePaymentMethod)
 
-export const InvoicePaymentMethodsDataSchema = Schema.Struct({
-  type: Schema.String,
+export const TransformedInvoicePaymentMethodSchema = Schema.transform(
+  Schema.NonEmptyTrimmedString,
+  Schema.typeSchema(InvoicePaymentMethodTypeSchema),
+  {
+    decode: (input) => {
+      if (Object.values(InvoicePaymentMethodTypeSchema.enums).includes(input as InvoicePaymentMethod)) {
+        return input as InvoicePaymentMethod
+      }
+      return InvoicePaymentMethod.Unknown
+    },
+    encode: input => input,
+  },
+)
+
+export const InvoicePaymentMethodsSchema = Schema.Struct({
   paymentMethods: pipe(
-    Schema.propertySignature(Schema.Array(InvoicePaymentMethodTypeSchema)),
+    Schema.propertySignature(Schema.Array(TransformedInvoicePaymentMethodSchema)),
     Schema.fromKey('payment_methods'),
   ),
 })
-export type InvoicePaymentMethodsData = typeof InvoicePaymentMethodsDataSchema.Type
-
+export type InvoicePaymentMethods = typeof InvoicePaymentMethodsSchema.Type
+export type InvoicePaymentMethodsEncoded = typeof InvoicePaymentMethodsSchema.Encoded
 export const InvoicePaymentMethodsResponseSchema = Schema.Struct({
-  data: InvoicePaymentMethodsDataSchema,
+  data: InvoicePaymentMethodsSchema,
 })
 export type InvoicePaymentMethodsResponse = typeof InvoicePaymentMethodsResponseSchema.Type
