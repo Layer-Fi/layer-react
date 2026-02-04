@@ -62,7 +62,11 @@ const getInvoicePaymentMethods = get<
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/payment-methods`)
 
-export function useInvoicePaymentMethods({ invoiceId }: { invoiceId: string | null }) {
+interface UseInvoicePaymentMethodsProps {
+  invoiceId: string
+}
+
+export function useInvoicePaymentMethods({ invoiceId }: UseInvoicePaymentMethodsProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -81,4 +85,12 @@ export function useInvoicePaymentMethods({ invoiceId }: { invoiceId: string | nu
     )().then(Schema.decodeUnknownPromise(InvoicePaymentMethodsResponseSchema)),
   )
   return new InvoicePaymentMethodsSWRResponse(response)
+}
+
+export function usePreloadInvoicePaymentMethods(props: UseInvoicePaymentMethodsProps) {
+  /*
+   * This will initiate a network request to fill the cache, but will not
+   * cause a re-render when `data` changes.
+   */
+  useInvoicePaymentMethods(props)
 }
