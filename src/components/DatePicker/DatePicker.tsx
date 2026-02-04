@@ -4,10 +4,13 @@ import { Dialog } from 'react-aria-components'
 
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { DatePicker as BaseDatePicker } from '@ui/Date/Date'
+import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { DateCalendar } from '@components/DateCalendar/DateCalendar'
 import { DatePickerInput } from '@components/DatePicker/DatePickerInput'
 import { ResponsivePopover } from '@components/ResponsivePopover/ResponsivePopover'
+
+import './datePicker.scss'
 
 type DatePickerProps = {
   label: string
@@ -56,13 +59,15 @@ export const DatePicker = ({
       isReadOnly={isReadOnly}
       className={className}
     >
-      {showLabel && <Label slot='label' size='sm'>{label}</Label>}
-      <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} isReadOnly={isReadOnly} />
-      <ResponsivePopover>
-        <Dialog>
-          <DateCalendar minDate={minDate} maxDate={maxDate} variant={value} />
-        </Dialog>
-      </ResponsivePopover>
+      <VStack gap='4xs'>
+        {showLabel && <Label slot='label' size='2xs' className='Layer__DatePicker__Label'>{label}</Label>}
+        <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} isReadOnly={isReadOnly} />
+        <ResponsivePopover>
+          <Dialog>
+            <DateCalendar minDate={minDate} maxDate={maxDate} variant={value} />
+          </Dialog>
+        </ResponsivePopover>
+      </VStack>
     </BaseDatePicker>
   )
 }
