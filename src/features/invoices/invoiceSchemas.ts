@@ -170,6 +170,11 @@ export const InvoiceSchema = Schema.Struct({
   ),
 
   memo: Schema.NullOr(Schema.String),
+
+  customPaymentInstructions: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('custom_payment_instructions'),
+  ),
 })
 export type Invoice = typeof InvoiceSchema.Type
 
@@ -220,6 +225,10 @@ export const UpsertInvoiceSchema = Schema.Struct({
   ),
 
   memo: Schema.optional(Schema.String),
+
+  customPaymentInstructions: Schema.optional(Schema.String).pipe(
+    Schema.fromKey('custom_payment_instructions'),
+  ),
 
   lineItems: pipe(
     Schema.propertySignature(Schema.Array(UpsertInvoiceLineItemSchema)),
