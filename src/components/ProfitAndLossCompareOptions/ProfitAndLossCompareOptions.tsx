@@ -8,9 +8,6 @@ import { CompareTagsMultiSelect } from '@components/ProfitAndLossCompareOptions/
 
 export const ProfitAndLossCompareOptions = () => {
   const {
-    setSelectedCompareOptions,
-    compareOptions,
-    selectedCompareOptions,
     comparisonConfig,
     comparisonPeriodMode,
     setComparisonPeriodMode,
@@ -27,11 +24,7 @@ export const ProfitAndLossCompareOptions = () => {
       {dateSelectionMode === 'full' && (
         <DateGroupByComboBox value={comparisonPeriodMode} onValueChange={setComparisonPeriodMode} />
       )}
-      <CompareTagsMultiSelect
-        options={compareOptions}
-        selectedOptions={selectedCompareOptions}
-        onChange={setSelectedCompareOptions}
-      />
+      <CompareTagsMultiSelect />
     </HStack>
   )
 }

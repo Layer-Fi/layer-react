@@ -1,7 +1,7 @@
-import { useId } from 'react'
-import type { MultiValue, StylesConfig } from 'react-select'
+import { useContext, useId } from 'react'
+import type { StylesConfig } from 'react-select'
 
-import { type TagComparisonOption } from '@internal-types/profit_and_loss'
+import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { MultiSelect } from '@components/Input/MultiSelect'
@@ -19,20 +19,16 @@ const selectStyles = {
   },
 } satisfies StylesConfig<SelectOption, true>
 
-type CompareTagsMultiSelectProps = {
-  options: TagComparisonOption[]
-  selectedOptions: TagComparisonOption[]
-  onChange: (values: MultiValue<SelectOption>) => void
-}
+export const CompareTagsMultiSelect = () => {
+  const {
+    compareOptions,
+    selectedCompareOptions,
+    setSelectedCompareOptions,
+  } = useContext(ProfitAndLossComparisonContext)
 
-export const CompareTagsMultiSelect = ({
-  options,
-  selectedOptions,
-  onChange,
-}: CompareTagsMultiSelectProps) => {
   const inputId = useId()
 
-  const selectOptions = options.map((tagComparisonOption) => {
+  const selectOptions = compareOptions.map((tagComparisonOption) => {
     return {
       value: JSON.stringify(tagComparisonOption.tagFilterConfig),
       label: tagComparisonOption.displayName,
@@ -45,12 +41,12 @@ export const CompareTagsMultiSelect = ({
       <MultiSelect
         inputId={inputId}
         options={selectOptions}
-        onChange={onChange}
-        defaultValue={selectedOptions?.map(option => ({
+        onChange={setSelectedCompareOptions}
+        defaultValue={selectedCompareOptions?.map(option => ({
           value: JSON.stringify(option.tagFilterConfig),
           label: option.displayName,
         }))}
-        value={selectedOptions.map((tagComparisonOption) => {
+        value={selectedCompareOptions.map((tagComparisonOption) => {
           return {
             value: JSON.stringify(tagComparisonOption.tagFilterConfig),
             label: tagComparisonOption.displayName,
