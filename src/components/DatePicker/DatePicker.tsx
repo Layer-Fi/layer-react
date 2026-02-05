@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { Dialog } from 'react-aria-components'
 
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
-import { DatePicker as BaseDatePicker, DATE_PICKER_CLASS_NAME } from '@ui/Date/Date'
+import { DATE_PICKER_CLASS_NAME, DatePicker as BaseDatePicker } from '@ui/Date/Date'
 import { Label, type TextStyleProps } from '@ui/Typography/Text'
 import { DateCalendar } from '@components/DateCalendar/DateCalendar'
 import { DatePickerInput } from '@components/DatePicker/DatePickerInput'
