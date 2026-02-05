@@ -57,7 +57,6 @@ export const GlobalDateRangePicker = () => {
         isInvalid={startDateInvalid}
         errorText={startDateErrorText}
         onBlur={onBlurStartDate}
-        className='Layer__GlobalDateRangePicker__StartDate'
         slotProps={{
           Label: {
             size: '2xs',
