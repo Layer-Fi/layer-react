@@ -10,8 +10,8 @@ import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useInvoiceSummaryStatsCacheActions } from '@features/invoices/api/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@features/invoices/api/useListInvoices'
-import { InvoiceSchema } from '@features/invoices/invoiceSchemas'
 import { InvoicePaymentMethodsSchema } from '@features/invoices/invoicePaymentMethodSchemas'
+import { InvoiceSchema } from '@features/invoices/invoiceSchemas'
 
 import { INVOICE_PAYMENT_METHODS_TAG_KEY } from './useInvoicePaymentMethods'
 
@@ -164,6 +164,7 @@ export function useFinalizeInvoice({ invoiceId }: UseFinalizeInvoiceProps) {
         return stableProxiedTrigger
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return Reflect.get(target, prop)
     },
   })
