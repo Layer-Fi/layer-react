@@ -39,8 +39,8 @@ export const LayerProvider = ({
   const [cache] = useState(() => new Map())
 
   return (
-    <I18nProvider locale='en-US'>
-      <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
+    <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
+      <I18nProvider locale='en-US'>
         <EnvironmentInputProvider environment={environment} usePlaidSandbox={usePlaidSandbox}>
           <AuthInputProvider
             appId={appId}
@@ -52,7 +52,7 @@ export const LayerProvider = ({
             </GlobalDateStoreProvider>
           </AuthInputProvider>
         </EnvironmentInputProvider>
-      </SWRConfig>
-    </I18nProvider>
+      </I18nProvider>
+    </SWRConfig>
   )
 }
