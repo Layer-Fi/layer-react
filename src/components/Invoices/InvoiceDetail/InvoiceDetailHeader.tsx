@@ -60,7 +60,7 @@ export const InvoiceDetailHeader = ({
 
   const previewButton = useMemo(() => (
     <Button isDisabled={formState.isSubmitting} onPress={onPressNext}>
-      Preview Invoice
+      Next
       <ArrowRight size={14} />
     </Button>
   ), [formState.isSubmitting, onPressNext])
@@ -85,7 +85,7 @@ export const InvoiceDetailHeader = ({
       <Heading className='Layer__InvoiceDetail__Heading' ellipsis>{headingContent}</Heading>
       {headerMode === HeaderMode.Preview && (
         <Button>
-          Send
+          Save and Send
           <Send size={14} />
         </Button>
       )}
