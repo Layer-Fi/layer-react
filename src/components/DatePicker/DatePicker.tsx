@@ -10,7 +10,9 @@ import { DateCalendar } from '@components/DateCalendar/DateCalendar'
 import { DatePickerInput } from '@components/DatePicker/DatePickerInput'
 import { ResponsivePopover } from '@components/ResponsivePopover/ResponsivePopover'
 
-const DATE_PICKER_CLASS_NAME = 'Layer__DatePicker'
+import './datePicker.scss'
+
+const DATE_PICKER_CLASS_NAME = 'Layer__UI__DatePicker'
 
 type DatePickerProps = {
   label: string
