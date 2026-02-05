@@ -1,4 +1,16 @@
+.Layer__DateSelectionComboBox {
+  display: grid;
+  grid-template-areas:
+    'label'
+    'combobox';
+
+  .Layer__ComboBox__Container,
+  .Layer__UI__ComboBox {
+    grid-area: combobox;
+  }
+}
+
 .Layer__DateSelectionComboBox__Label {
+  grid-area: label;
   padding-left: var(--spacing-xs);
-  font-size: var(--text-sm);
 }

@@ -1,4 +1,15 @@
+.Layer__DatePicker {
+  display: grid;
+  grid-template-areas:
+    'label'
+    'datepicker';
+
+  .Layer__UI__DatePicker {
+    grid-area: datepicker;
+  }
+}
+
 .Layer__DatePicker__Label {
+  grid-area: label;
   padding-left: var(--spacing-xs);
-  font-size: var(--text-sm);
 }

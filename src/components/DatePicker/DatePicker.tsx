@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
+import classNames from 'classnames'
 import { Dialog } from 'react-aria-components'
 
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { DatePicker as BaseDatePicker } from '@ui/Date/Date'
-import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { DateCalendar } from '@components/DateCalendar/DateCalendar'
 import { DatePickerInput } from '@components/DatePicker/DatePickerInput'
@@ -46,28 +46,27 @@ export const DatePicker = ({
   const [isPopoverOpen, setPopoverOpen] = useState(false)
 
   return (
-    <BaseDatePicker
-      granularity='day'
-      value={date}
-      onBlur={onBlur}
-      onChange={onChange}
-      isInvalid={isInvalid}
-      {...additionalAriaProps}
-      isOpen={isPopoverOpen}
-      onOpenChange={setPopoverOpen}
-      isDisabled={isDisabled}
-      isReadOnly={isReadOnly}
-      className={className}
-    >
-      <VStack gap='4xs'>
-        {showLabel && <Label slot='label' size='2xs' className='Layer__DatePicker__Label'>{label}</Label>}
+    <div className={classNames('Layer__DatePicker', className)}>
+      {showLabel && <Label size='2xs' className='Layer__DatePicker__Label'>{label}</Label>}
+      <BaseDatePicker
+        granularity='day'
+        value={date}
+        onBlur={onBlur}
+        onChange={onChange}
+        isInvalid={isInvalid}
+        {...additionalAriaProps}
+        isOpen={isPopoverOpen}
+        onOpenChange={setPopoverOpen}
+        isDisabled={isDisabled}
+        isReadOnly={isReadOnly}
+      >
         <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} isReadOnly={isReadOnly} />
         <ResponsivePopover>
           <Dialog>
             <DateCalendar minDate={minDate} maxDate={maxDate} variant={value} />
           </Dialog>
         </ResponsivePopover>
-      </VStack>
-    </BaseDatePicker>
+      </BaseDatePicker>
+    </div>
   )
 }
