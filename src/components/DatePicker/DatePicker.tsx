@@ -12,7 +12,7 @@ import { ResponsivePopover } from '@components/ResponsivePopover/ResponsivePopov
 
 import './datePicker.scss'
 
-const DATE_PICKER_CLASS_NAME = 'Layer__UI__DatePicker'
+export const DATE_PICKER_CLASS_NAME = 'Layer__UI__DatePicker'
 
 type DatePickerProps = {
   label: string
