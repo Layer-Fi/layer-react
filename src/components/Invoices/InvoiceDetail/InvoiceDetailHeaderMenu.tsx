@@ -55,7 +55,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
   const [openModal, setOpenModal] = useState<InvoiceActionModalType>()
 
   const onSuccessUpdateInvoice = useCallback((updatedInvoice: Invoice) => {
-    toViewInvoice(updatedInvoice, { isReadOnly: true })
+    toViewInvoice(updatedInvoice)
   }, [toViewInvoice])
 
   const onOpenChangeByMode = useCallback((mode: InvoiceActionModalType) =>

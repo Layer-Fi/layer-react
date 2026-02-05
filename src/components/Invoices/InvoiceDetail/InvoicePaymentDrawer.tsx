@@ -37,7 +37,7 @@ export const InvoicePaymentDrawer = ({
   const onSuccess = useCallback((invoicePayment: InvoicePayment) => {
     addToast({ content: 'Invoice paid successfully', type: 'success' })
     const updatedInvoice = updateInvoiceWithPayment(invoice, invoicePayment)
-    toViewInvoice(updatedInvoice, { isReadOnly: true })
+    toViewInvoice(updatedInvoice)
   }, [addToast, invoice, toViewInvoice])
 
   return (

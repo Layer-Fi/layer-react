@@ -21,7 +21,7 @@ export const InvoiceDetail = () => {
   const viewState = useInvoiceDetail()
   const [isPaymentDrawerOpen, setIsPaymentDrawerOpen] = useState(false)
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
-  const { toInvoiceTable, toPreviewInvoice, toViewInvoice } = useInvoiceNavigation()
+  const { toInvoiceTable, toPreviewInvoice, toEditInvoice } = useInvoiceNavigation()
   const { addToast } = useLayerContext()
   const invoiceFormRef = useRef<{ submit: () => Promise<void> }>(null)
 
@@ -67,9 +67,9 @@ export const InvoiceDetail = () => {
       toInvoiceTable()
     }
     else {
-      toViewInvoice(viewState.invoice, { isReadOnly: false })
+      toEditInvoice(viewState.invoice)
     }
-  }, [invoiceFormHasChanges, showInvoiceForm, toInvoiceTable, toViewInvoice, viewState])
+  }, [invoiceFormHasChanges, showInvoiceForm, toInvoiceTable, toEditInvoice, viewState])
 
   return (
     <>

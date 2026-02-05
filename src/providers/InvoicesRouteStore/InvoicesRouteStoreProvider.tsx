@@ -45,9 +45,10 @@ type InvoicesRouteStoreShape = {
   setTableFilters: (patchFilters: Partial<InvoiceTableFilters>) => void
   navigate: {
     toCreateInvoice: () => void
+    toEditInvoice: (invoice: Invoice) => void
     toInvoiceTable: () => void
     toPreviewInvoice: (invoice: Invoice) => void
-    toViewInvoice: (invoice: Invoice, { isReadOnly }: { isReadOnly: boolean }) => void
+    toViewInvoice: (invoice: Invoice) => void
   }
 }
 
@@ -58,6 +59,7 @@ const InvoicesRouteStoreContext = createContext(
     setTableFilters: () => {},
     navigate: {
       toCreateInvoice: () => {},
+      toEditInvoice: () => {},
       toInvoiceTable: () => {},
       toPreviewInvoice: () => {},
       toViewInvoice: () => {},
@@ -118,6 +120,17 @@ export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
             },
           }))
         },
+        toEditInvoice: (invoice: Invoice) => {
+          set(() => ({
+            routeState: {
+              route: InvoiceRoute.Detail,
+              step: InvoiceDetailStep.Form,
+              mode: UpsertInvoiceMode.Update,
+              invoice,
+              isReadOnly: false,
+            },
+          }))
+        },
         toInvoiceTable: () => {
           set(() => ({
             routeState: {
@@ -136,14 +149,14 @@ export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
             },
           }))
         },
-        toViewInvoice: (invoice: Invoice, { isReadOnly }: { isReadOnly: boolean }) => {
+        toViewInvoice: (invoice: Invoice) => {
           set(() => ({
             routeState: {
               route: InvoiceRoute.Detail,
               step: InvoiceDetailStep.Form,
               mode: UpsertInvoiceMode.Update,
               invoice,
-              isReadOnly,
+              isReadOnly: true,
             },
           }))
         },

@@ -52,7 +52,7 @@ export const InvoiceDetailHeader = ({
   openInvoicePaymentDrawer,
 }: InvoiceDetailHeaderProps) => {
   const viewState = useInvoiceDetail()
-  const { toViewInvoice } = useInvoiceNavigation()
+  const { toEditInvoice } = useInvoiceNavigation()
 
   const onPressNext = useCallback(() => {
     void onSubmitInvoiceForm()
@@ -98,7 +98,7 @@ export const InvoiceDetailHeader = ({
               <HandCoins size={14} />
             </Button>
           )}
-          <InvoiceDetailHeaderMenu onEditInvoice={() => toViewInvoice(viewState.invoice, { isReadOnly: false })} />
+          <InvoiceDetailHeaderMenu onEditInvoice={() => toEditInvoice(viewState.invoice)} />
         </HStack>
       )}
     </HStack>
