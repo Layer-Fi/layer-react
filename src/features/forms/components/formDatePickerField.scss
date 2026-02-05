@@ -10,20 +10,16 @@
 
     align-items: center;
 
-    .Layer__DatePicker {
+    .Layer__UI__DatePicker {
       display: contents;
 
-      > .Layer__Label {
+      > .Layer__UI__Label {
         grid-area: label;
-      }
-
-      > .Layer__UI__DatePicker {
-        grid-area: datepicker;
       }
     }
   }
 
-  .Layer__DatePicker {
+  .Layer__UI__DatePicker {
     grid-area: datepicker;
   }
 }
