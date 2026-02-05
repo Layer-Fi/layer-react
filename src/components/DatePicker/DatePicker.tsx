@@ -65,7 +65,7 @@ export const DatePicker = ({
       isReadOnly={isReadOnly}
       className={classNames(DATE_PICKER_CLASS_NAME, className)}
     >
-      {showLabel && <Label slot='label' size={slotProps?.Label?.size ?? 'sm'}>{label}</Label>}
+      {showLabel && <Label slot='label' size='sm' {...slotProps?.Label}>{label}</Label>}
       <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} isReadOnly={isReadOnly} />
       <ResponsivePopover>
         <Dialog>
