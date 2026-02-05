@@ -54,27 +54,26 @@ export const DatePicker = ({
   const [isPopoverOpen, setPopoverOpen] = useState(false)
 
   return (
-    <div className={classNames(DATE_PICKER_CLASS_NAME, className)}>
-      {showLabel && <Label size={slotProps?.Label?.size ?? 'sm'}>{label}</Label>}
-      <BaseDatePicker
-        granularity='day'
-        value={date}
-        onBlur={onBlur}
-        onChange={onChange}
-        isInvalid={isInvalid}
-        {...additionalAriaProps}
-        isOpen={isPopoverOpen}
-        onOpenChange={setPopoverOpen}
-        isDisabled={isDisabled}
-        isReadOnly={isReadOnly}
-      >
-        <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} isReadOnly={isReadOnly} />
-        <ResponsivePopover>
-          <Dialog>
-            <DateCalendar minDate={minDate} maxDate={maxDate} variant={value} />
-          </Dialog>
-        </ResponsivePopover>
-      </BaseDatePicker>
-    </div>
+    <BaseDatePicker
+      granularity='day'
+      value={date}
+      onBlur={onBlur}
+      onChange={onChange}
+      isInvalid={isInvalid}
+      {...additionalAriaProps}
+      isOpen={isPopoverOpen}
+      onOpenChange={setPopoverOpen}
+      isDisabled={isDisabled}
+      isReadOnly={isReadOnly}
+      className={classNames(DATE_PICKER_CLASS_NAME, className)}
+    >
+      {showLabel && <Label slot='label' size={slotProps?.Label?.size ?? 'sm'}>{label}</Label>}
+      <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} isReadOnly={isReadOnly} />
+      <ResponsivePopover>
+        <Dialog>
+          <DateCalendar minDate={minDate} maxDate={maxDate} variant={value} />
+        </Dialog>
+      </ResponsivePopover>
+    </BaseDatePicker>
   )
 }
