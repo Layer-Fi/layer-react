@@ -4,10 +4,9 @@ import { getActivationDate } from '@utils/business'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { DatePreset, presetForDateRange, rangeForPreset } from '@components/DateSelection/utils'
-
-import './dateSelectionComboBox.scss'
 
 type DateSelectionOption = {
   label: string
@@ -49,8 +48,8 @@ export const DateSelectionComboBox = () => {
   const inputId = useId()
 
   return (
-    <div className='Layer__DateSelectionComboBox'>
-      <Label size='2xs' className='Layer__DateSelectionComboBox__Label' htmlFor={inputId}>Date Range</Label>
+    <VStack>
+      <Label size='2xs' htmlFor={inputId}>Date Range</Label>
       <ComboBox
         options={options}
         onSelectedValueChange={onSelectedValueChange}
@@ -60,6 +59,6 @@ export const DateSelectionComboBox = () => {
         aria-label='Date Range'
         inputId={inputId}
       />
-    </div>
+    </VStack>
   )
 }
