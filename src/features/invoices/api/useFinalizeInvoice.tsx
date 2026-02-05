@@ -21,7 +21,7 @@ export const FinalizeInvoiceBodySchema = Schema.extend(
   InvoicePaymentMethodsSchema,
   Schema.Struct({
     customPaymentInstructions: pipe(
-      Schema.propertySignature(Schema.String),
+      Schema.propertySignature(Schema.NullOr(Schema.String)),
       Schema.fromKey('custom_payment_instructions'),
     ),
   }),
