@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { pipe, Schema } from 'effect'
+import { Schema } from 'effect'
 import type { Key } from 'swr'
 import { useSWRConfig } from 'swr'
 import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
@@ -20,8 +20,7 @@ const FINALIZE_INVOICE_TAG_KEY = '#finalize-invoice'
 export const FinalizeInvoiceBodySchema = Schema.extend(
   InvoicePaymentMethodsSchema,
   Schema.Struct({
-    customPaymentInstructions: pipe(
-      Schema.propertySignature(Schema.NullOr(Schema.String)),
+    customPaymentInstructions: Schema.optional(Schema.String).pipe(
       Schema.fromKey('custom_payment_instructions'),
     ),
   }),
