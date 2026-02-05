@@ -8,21 +8,43 @@ import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { put } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import {
-  type InvoicePaymentMethodsEncoded,
-  type InvoicePaymentMethodsResponse,
-  InvoicePaymentMethodsResponseSchema,
-} from '@features/invoices/invoicePaymentMethodSchemas'
+import { useInvoiceSummaryStatsCacheActions } from '@features/invoices/api/useInvoiceSummaryStats'
+import { useInvoicesGlobalCacheActions } from '@features/invoices/api/useListInvoices'
+import { InvoicePaymentMethodsSchema } from '@features/invoices/invoicePaymentMethodSchemas'
+import { InvoiceSchema } from '@features/invoices/invoiceSchemas'
 
 import { INVOICE_PAYMENT_METHODS_TAG_KEY } from './useInvoicePaymentMethods'
 
-const UPDATE_INVOICE_PAYMENT_METHODS_TAG_KEY = '#update-invoice-payment-methods'
+const FINALIZE_INVOICE_TAG_KEY = '#finalize-invoice'
 
-export const updateInvoicePaymentMethods = put<
-  InvoicePaymentMethodsResponse,
-  InvoicePaymentMethodsEncoded,
+export const FinalizeInvoiceBodySchema = Schema.extend(
+  InvoicePaymentMethodsSchema,
+  Schema.Struct({
+    customPaymentInstructions: Schema.optional(Schema.String).pipe(
+      Schema.fromKey('custom_payment_instructions'),
+    ),
+  }),
+)
+
+export type FinalizeInvoiceBody = typeof FinalizeInvoiceBodySchema.Type
+export type FinalizeInvoiceBodyEncoded = typeof FinalizeInvoiceBodySchema.Encoded
+
+export const FinalizeInvoiceResponseSchema = Schema.Struct({
+  data: Schema.extend(
+    InvoicePaymentMethodsSchema,
+    Schema.Struct({
+      invoice: InvoiceSchema,
+    }),
+  ),
+})
+
+type FinalizeInvoiceResponse = typeof FinalizeInvoiceResponseSchema.Type
+
+export const finalizeInvoice = put<
+  FinalizeInvoiceResponse,
+  FinalizeInvoiceBodyEncoded,
   { businessId: string, invoiceId: string }
->(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/payment-methods`)
+>(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/finalize-invoice`)
 
 function buildKey({
   access_token: accessToken,
@@ -41,18 +63,18 @@ function buildKey({
       apiUrl,
       businessId,
       invoiceId,
-      tags: [UPDATE_INVOICE_PAYMENT_METHODS_TAG_KEY],
+      tags: [FINALIZE_INVOICE_TAG_KEY],
     } as const
   }
 }
 
-type UpdateInvoicePaymentMethodsSWRMutationResponse =
-    SWRMutationResponse<InvoicePaymentMethodsResponse, unknown, Key, InvoicePaymentMethodsEncoded>
+type FinalizeInvoiceSWRMutationResponse =
+    SWRMutationResponse<FinalizeInvoiceResponse, unknown, Key, FinalizeInvoiceBodyEncoded>
 
-class UpdateInvoicePaymentMethodsSWRResponse {
-  private swrResponse: UpdateInvoicePaymentMethodsSWRMutationResponse
+class FinalizeInvoiceSWRResponse {
+  private swrResponse: FinalizeInvoiceSWRMutationResponse
 
-  constructor(swrResponse: UpdateInvoicePaymentMethodsSWRMutationResponse) {
+  constructor(swrResponse: FinalizeInvoiceSWRMutationResponse) {
     this.swrResponse = swrResponse
   }
 
@@ -73,11 +95,11 @@ class UpdateInvoicePaymentMethodsSWRResponse {
   }
 }
 
-type UseUpdateInvoicePaymentMethodsProps = {
+type UseFinalizeInvoiceProps = {
   invoiceId: string
 }
 
-export function useUpdateInvoicePaymentMethods({ invoiceId }: UseUpdateInvoicePaymentMethodsProps) {
+export function useFinalizeInvoice({ invoiceId }: UseFinalizeInvoiceProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
@@ -90,28 +112,35 @@ export function useUpdateInvoicePaymentMethods({ invoiceId }: UseUpdateInvoicePa
     }),
     (
       { accessToken, apiUrl, businessId, invoiceId },
-      { arg: body }: { arg: InvoicePaymentMethodsEncoded },
-    ) => updateInvoicePaymentMethods(
+      { arg: body }: { arg: FinalizeInvoiceBodyEncoded },
+    ) => finalizeInvoice(
       apiUrl,
       accessToken,
       {
         params: { businessId, invoiceId },
         body,
       },
-    ).then(Schema.decodeUnknownPromise(InvoicePaymentMethodsResponseSchema)),
+    ).then(Schema.decodeUnknownPromise(FinalizeInvoiceResponseSchema)),
     {
       revalidate: false,
       throwOnError: true,
     },
   )
 
-  const mutationResponse = new UpdateInvoicePaymentMethodsSWRResponse(rawMutationResponse)
+  const mutationResponse = new FinalizeInvoiceSWRResponse(rawMutationResponse)
+
+  const { patchInvoiceByKey } = useInvoicesGlobalCacheActions()
+  const { forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
+
+      void patchInvoiceByKey(triggerResult.data.invoice)
+
+      void forceReloadInvoiceSummaryStats()
 
       void mutate(key => withSWRKeyTags(
         key,
@@ -120,7 +149,12 @@ export function useUpdateInvoicePaymentMethods({ invoiceId }: UseUpdateInvoicePa
 
       return triggerResult
     },
-    [originalTrigger, mutate],
+    [
+      originalTrigger,
+      patchInvoiceByKey,
+      forceReloadInvoiceSummaryStats,
+      mutate,
+    ],
   )
 
   return new Proxy(mutationResponse, {
