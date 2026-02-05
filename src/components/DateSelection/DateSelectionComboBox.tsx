@@ -56,7 +56,6 @@ export const DateSelectionComboBox = () => {
         selectedValue={selectedOption}
         isSearchable={false}
         isClearable={false}
-        aria-label='Date Range'
         inputId={inputId}
       />
     </VStack>
