@@ -1,10 +1,9 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useId, useState } from 'react'
 
 import { getActivationDate } from '@utils/business'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { DatePreset, presetForDateRange, rangeForPreset } from '@components/DateSelection/utils'
 
@@ -25,15 +24,7 @@ const dateSelectionOptionConfig = {
 }
 const options = Object.values(dateSelectionOptionConfig).filter(opt => opt.value !== DatePreset.Custom)
 
-type DateSelectionComboBoxProps = {
-  label?: string
-  showLabel?: boolean
-}
-
-export const DateSelectionComboBox = ({
-  label = 'Date Range',
-  showLabel = true,
-}: DateSelectionComboBoxProps) => {
+export const DateSelectionComboBox = () => {
   const [lastPreset, setLastPreset] = useState<DatePreset | null>(null)
   const { business } = useLayerContext()
 
@@ -55,18 +46,20 @@ export const DateSelectionComboBox = ({
     setDateRange(nextRange)
   }, [setDateRange])
 
-  return (
-    <VStack gap='4xs'>
-      {showLabel && <Label size='2xs' className='Layer__DateSelectionComboBox__Label'>{label}</Label>}
+  const inputId = useId()
 
+  return (
+    <div className='Layer__DateSelectionComboBox'>
+      <Label size='2xs' className='Layer__DateSelectionComboBox__Label' htmlFor={inputId}>Date Range</Label>
       <ComboBox
         options={options}
         onSelectedValueChange={onSelectedValueChange}
         selectedValue={selectedOption}
         isSearchable={false}
         isClearable={false}
-        aria-label={label}
+        aria-label='Date Range'
+        inputId={inputId}
       />
-    </VStack>
+    </div>
   )
 }
