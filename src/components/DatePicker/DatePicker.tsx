@@ -28,9 +28,7 @@ type DatePickerProps = {
   isDisabled?: boolean
   className?: string
   slotProps?: {
-    Label?: {
-      size?: TextStyleProps['size']
-    }
+    Label?: TextStyleProps
   }
 }
 
