@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react'
 import { fromDate, toCalendarDate, type ZonedDateTime } from '@internationalized/date'
 
+import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -17,7 +18,6 @@ const getDueAtChanged = (dueAt: ZonedDateTime | null, previousDueAt: ZonedDateTi
 
 type InvoiceFormTermsSectionProps = {
   form: InvoiceFormType
-  isReadOnly: boolean
   enableCustomerManagement: boolean
   initialDueAt: Date | null
   onClickEditCustomer: () => void
@@ -26,12 +26,13 @@ type InvoiceFormTermsSectionProps = {
 
 export const InvoiceFormTermsSection = ({
   form,
-  isReadOnly,
   enableCustomerManagement,
   initialDueAt,
   onClickEditCustomer,
   onClickCreateNewCustomer,
 }: InvoiceFormTermsSectionProps) => {
+  const { isReadOnly } = useInvoiceDetail()
+
   const initialLastDueAt = initialDueAt !== null ? fromDate(initialDueAt, 'UTC') : null
   const lastDueAtRef = useRef<ZonedDateTime | null>(initialLastDueAt)
 

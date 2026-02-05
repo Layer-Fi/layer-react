@@ -6,7 +6,6 @@ import {
 } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
-import { useInvoicesContext } from '@contexts/InvoicesContext/InvoicesContext'
 import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, validateInvoiceForm } from '@components/Invoices/InvoiceForm/formUtils'
 import {
   computeAdditionalDiscount,
@@ -48,15 +47,9 @@ export type InvoiceFormType = ReturnType<typeof useRawAppForm<
   InvoiceFormMeta
 >>
 
-const onSubmitMeta: InvoiceFormMeta = {
-  submitAction: null,
-}
-
 export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const { onSuccess, mode } = props
-
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
-  const { onSendInvoice } = useInvoicesContext()
 
   const upsertInvoiceProps = mode === UpsertInvoiceMode.Update ? { mode, invoiceId: props.invoice.id } : { mode }
   const { trigger: upsertInvoice } = useUpsertInvoice(upsertInvoiceProps)
@@ -66,11 +59,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
 
   const onSubmit = useCallback(
     async (
-      { value, meta, formApi }: {
-        value: InvoiceForm
-        meta: InvoiceFormMeta
-        formApi: { reset: () => void }
-      },
+      { value, formApi }: { value: InvoiceForm, formApi: { reset: () => void } },
     ) => {
       try {
         // Convert the `InvoiceForm` schema to the request shape for `upsertInvoice`. This will
@@ -84,16 +73,12 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
         onSuccess(invoice)
 
         formApi.reset()
-
-        if (meta.submitAction === 'send' && onSendInvoice) {
-          await onSendInvoice(invoice.id)
-        }
       }
       catch (e) {
         console.error(e)
         setSubmitError('Something went wrong. Please try again.')
       }
-    }, [onSendInvoice, onSuccess, upsertInvoice])
+    }, [onSuccess, upsertInvoice])
 
   const validators = useMemo(() => ({
     onDynamic: validateInvoiceForm,
@@ -115,7 +100,6 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   >({
     defaultValues,
     onSubmit,
-    onSubmitMeta,
     validators,
     validationLogic: revalidateLogic({
       mode: 'submit',

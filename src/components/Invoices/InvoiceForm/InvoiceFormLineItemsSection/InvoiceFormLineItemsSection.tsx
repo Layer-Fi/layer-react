@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react'
 
+import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
 import { EMPTY_LINE_ITEM } from '@components/Invoices/InvoiceForm/formUtils'
@@ -10,13 +11,13 @@ import './invoiceFormLineItemsSection.scss'
 
 type InvoiceFormLineItemsSectionProps = {
   form: InvoiceFormType
-  isReadOnly: boolean
 }
 
 export const InvoiceFormLineItemsSection = ({
   form,
-  isReadOnly,
 }: InvoiceFormLineItemsSectionProps) => {
+  const { isReadOnly } = useInvoiceDetail()
+
   return (
     <form.Field name='lineItems' mode='array'>
       {field => (
