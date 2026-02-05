@@ -1,4 +1,5 @@
 import { type PropsWithChildren, useState } from 'react'
+import { I18nProvider } from 'react-aria-components'
 import { SWRConfig } from 'swr'
 
 import { type LayerThemeConfig } from '@internal-types/layer_context'
@@ -39,17 +40,19 @@ export const LayerProvider = ({
 
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
-      <EnvironmentInputProvider environment={environment} usePlaidSandbox={usePlaidSandbox}>
-        <AuthInputProvider
-          appId={appId}
-          appSecret={appSecret}
-          businessAccessToken={businessAccessToken}
-        >
-          <GlobalDateStoreProvider>
-            <BusinessProvider {...restProps} />
-          </GlobalDateStoreProvider>
-        </AuthInputProvider>
-      </EnvironmentInputProvider>
+      <I18nProvider locale='en-US'>
+        <EnvironmentInputProvider environment={environment} usePlaidSandbox={usePlaidSandbox}>
+          <AuthInputProvider
+            appId={appId}
+            appSecret={appSecret}
+            businessAccessToken={businessAccessToken}
+          >
+            <GlobalDateStoreProvider>
+              <BusinessProvider {...restProps} />
+            </GlobalDateStoreProvider>
+          </AuthInputProvider>
+        </EnvironmentInputProvider>
+      </I18nProvider>
     </SWRConfig>
   )
 }
