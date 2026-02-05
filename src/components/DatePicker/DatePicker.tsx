@@ -4,15 +4,13 @@ import classNames from 'classnames'
 import { Dialog } from 'react-aria-components'
 
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
-import { DatePicker as BaseDatePicker } from '@ui/Date/Date'
+import { DatePicker as BaseDatePicker, DATE_PICKER_CLASS_NAME } from '@ui/Date/Date'
 import { Label, type TextStyleProps } from '@ui/Typography/Text'
 import { DateCalendar } from '@components/DateCalendar/DateCalendar'
 import { DatePickerInput } from '@components/DatePicker/DatePickerInput'
 import { ResponsivePopover } from '@components/ResponsivePopover/ResponsivePopover'
 
 import './datePicker.scss'
-
-export const DATE_PICKER_CLASS_NAME = 'Layer__UI__DatePicker'
 
 type DatePickerProps = {
   label: string
