@@ -109,16 +109,17 @@ const BalanceSheetView = ({
           <Header>
             <HeaderRow>
               <HeaderCol fluid>
-                <HStack pb='sm' align='end' fluid gap='xs'>
+                <HStack pb='sm' align='end' gap='xs' justify='space-between'>
                   <CombinedDateSelection mode={dateSelectionMode} />
-                  <Spacer />
-                  {withExpandAllButton && (
-                    <BalanceSheetExpandAllButton view={view} />
-                  )}
-                  <BalanceSheetDownloadButton
-                    effectiveDate={effectiveDate}
-                    iconOnly={view === 'mobile'}
-                  />
+                  <HStack gap='xs'>
+                    {withExpandAllButton && (
+                      <BalanceSheetExpandAllButton view={view} />
+                    )}
+                    <BalanceSheetDownloadButton
+                      effectiveDate={effectiveDate}
+                      iconOnly={view === 'mobile'}
+                    />
+                  </HStack>
                 </HStack>
               </HeaderCol>
             </HeaderRow>

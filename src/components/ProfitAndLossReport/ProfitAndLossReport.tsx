@@ -4,7 +4,7 @@ import { type View as ViewType } from '@internal-types/general'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { HStack, Spacer } from '@ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { type BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { Header } from '@components/Header/Header'
@@ -36,7 +36,7 @@ export const ProfitAndLossReport = ({
   stringOverrides,
   dateSelectionMode = 'full',
   csvMoneyFormat,
-  view: _view,
+  view,
   renderInAppLink,
   hideHeader,
 }: ProfitAndLossReportProps) => {
@@ -85,10 +85,11 @@ export const ProfitAndLossReport = ({
       <Header>
         <HeaderRow>
           <HeaderCol fluid>
-            <HStack pb='sm' align='end' fluid gap='xs'>
-              <CombinedDateRangeSelection mode={dateSelectionMode} />
-              {useComparisonPnl && <ProfitAndLossCompareOptions />}
-              <Spacer />
+            <HStack pb='sm' align='end' fluid gap='xs' justify='space-between'>
+              <HStack gap='xs'>
+                <CombinedDateRangeSelection mode={dateSelectionMode} />
+                {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions />}
+              </HStack>
               <ProfitAndLossDownloadButton
                 stringOverrides={stringOverrides?.downloadButton}
                 moneyFormat={csvMoneyFormat}
@@ -96,15 +97,19 @@ export const ProfitAndLossReport = ({
             </HStack>
           </HeaderCol>
         </HeaderRow>
+        {view !== 'desktop' && useComparisonPnl
+          && (
+            <HeaderRow>
+              <HeaderCol fluid>
+                <HStack pb='sm' fluid>
+                  <ProfitAndLossCompareOptions />
+                </HStack>
+              </HeaderCol>
+            </HeaderRow>
+          )}
       </Header>
     )
-  }, [
-    csvMoneyFormat,
-    dateSelectionMode,
-    hideHeader,
-    stringOverrides?.downloadButton,
-    useComparisonPnl,
-  ])
+  }, [csvMoneyFormat, dateSelectionMode, hideHeader, stringOverrides?.downloadButton, useComparisonPnl, view])
 
   return (
     <InAppLinkProvider renderInAppLink={renderInAppLink}>

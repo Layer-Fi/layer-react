@@ -2,7 +2,7 @@ import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize
 import { useStatementOfCashFlow } from '@hooks/useStatementOfCashFlow/useStatementOfCashFlow'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TableProvider } from '@contexts/TableContext/TableContext'
-import { HStack, Spacer } from '@ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
@@ -52,9 +52,8 @@ const StatementOfCashFlowView = ({
           <Header>
             <HeaderRow>
               <HeaderCol fluid>
-                <HStack pb='sm' align='end' fluid gap='xs'>
+                <HStack pb='sm' align='end' fluid gap='xs' justify='space-between'>
                   <CombinedDateRangeSelection mode={dateSelectionMode} />
-                  <Spacer />
                   <CashflowStatementDownloadButton
                     startDate={dateRange.startDate}
                     endDate={dateRange.endDate}
