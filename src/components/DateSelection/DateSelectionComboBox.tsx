@@ -1,9 +1,11 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useId, useState } from 'react'
 
 import { getActivationDate } from '@utils/business'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
 import { DatePreset, presetForDateRange, rangeForPreset } from '@components/DateSelection/utils'
 
 type DateSelectionOption = {
@@ -43,13 +45,19 @@ export const DateSelectionComboBox = () => {
     setDateRange(nextRange)
   }, [setDateRange])
 
+  const inputId = useId()
+
   return (
-    <ComboBox
-      options={options}
-      onSelectedValueChange={onSelectedValueChange}
-      selectedValue={selectedOption}
-      isSearchable={false}
-      isClearable={false}
-    />
+    <VStack>
+      <Label size='2xs' htmlFor={inputId}>Date Range</Label>
+      <ComboBox
+        options={options}
+        onSelectedValueChange={onSelectedValueChange}
+        selectedValue={selectedOption}
+        isSearchable={false}
+        isClearable={false}
+        inputId={inputId}
+      />
+    </VStack>
   )
 }

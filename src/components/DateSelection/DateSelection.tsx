@@ -11,9 +11,10 @@ export const DateSelection = () => {
   const { value } = useSizeClass()
 
   return (
-    <HStack className={classNames('Layer__DateSelection', {
-      'Layer__DateSelection--mobile': value === 'mobile',
-    })}
+    <HStack
+      className={classNames('Layer__DateSelection', {
+        'Layer__DateSelection--mobile': value === 'mobile',
+      })}
     >
       <DateSelectionComboBox />
       <GlobalDatePicker />
