@@ -1,0 +1,10 @@
+.Layer__CompareTagsMultiSelect__Container {
+  min-inline-size: 12rem;
+  max-inline-size: 20rem;
+}
+
+.Layer__CompareTagsMultiSelect {
+  :is(.Layer__input-tooltip:has(&)) {
+    flex: 1;
+  }
+}

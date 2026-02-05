@@ -24,7 +24,7 @@ export const DownloadButton = ({
   text = 'Download',
   retryText = 'Retry',
   errorText = 'Download failed. Check connection and retry in few seconds.',
-  variant = iconOnly ? ButtonVariant.secondary : ButtonVariant.tertiary,
+  variant = ButtonVariant.secondary,
   disabled = false,
 }: DownloadButtonProps) => {
   if (requestFailed) {

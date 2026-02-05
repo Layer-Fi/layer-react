@@ -4,6 +4,7 @@ import { useBalanceSheet } from '@hooks/balanceSheet/useBalanceSheet'
 import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
 import { type DateSelectionMode, useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TableProvider } from '@contexts/TableContext/TableContext'
+import { HStack, Spacer } from '@ui/Stack/Stack'
 import { BALANCE_SHEET_ROWS } from '@components/BalanceSheet/constants'
 import { BalanceSheetDownloadButton } from '@components/BalanceSheet/download/BalanceSheetDownloadButton'
 import { BalanceSheetExpandAllButton } from '@components/BalanceSheetExpandAllButton/BalanceSheetExpandAllButton'
@@ -67,14 +68,15 @@ const BalanceSheetView = ({
             header={(
               <Header>
                 <HeaderRow>
-                  <HeaderCol>
-                    <CombinedDateSelection mode={dateSelectionMode} />
+                  <HeaderCol fluid>
+                    <HStack pb='sm' align='end' gap='xs'>
+                      <CombinedDateSelection mode={dateSelectionMode} />
+                      <Spacer />
+                      {withExpandAllButton && (
+                        <BalanceSheetExpandAllButton view={view} />
+                      )}
+                    </HStack>
                   </HeaderCol>
-                  {withExpandAllButton && (
-                    <HeaderCol>
-                      <BalanceSheetExpandAllButton view={view} />
-                    </HeaderCol>
-                  )}
                 </HeaderRow>
               </Header>
             )}
@@ -106,17 +108,18 @@ const BalanceSheetView = ({
         header={(
           <Header>
             <HeaderRow>
-              <HeaderCol>
-                <CombinedDateSelection mode={dateSelectionMode} />
-              </HeaderCol>
-              <HeaderCol>
-                {withExpandAllButton && (
-                  <BalanceSheetExpandAllButton view={view} />
-                )}
-                <BalanceSheetDownloadButton
-                  effectiveDate={effectiveDate}
-                  iconOnly={view === 'mobile'}
-                />
+              <HeaderCol fluid>
+                <HStack pb='sm' align='end' fluid gap='xs'>
+                  <CombinedDateSelection mode={dateSelectionMode} />
+                  <Spacer />
+                  {withExpandAllButton && (
+                    <BalanceSheetExpandAllButton view={view} />
+                  )}
+                  <BalanceSheetDownloadButton
+                    effectiveDate={effectiveDate}
+                    iconOnly={view === 'mobile'}
+                  />
+                </HStack>
               </HeaderCol>
             </HeaderRow>
           </Header>

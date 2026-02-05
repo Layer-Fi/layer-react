@@ -8,7 +8,7 @@ export type CombinedDateSelectionProps = {
 
 export const CombinedDateSelection = ({ mode }: CombinedDateSelectionProps) => {
   if (mode === 'month') {
-    return <GlobalMonthPicker />
+    return <GlobalMonthPicker showLabel />
   }
 
   return <DateSelection />

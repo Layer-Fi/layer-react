@@ -6,12 +6,6 @@
   background-color: white;
 }
 
-.Layer__ProfitAndLoss__TagMultiSelect {
-  :is(.Layer__input-tooltip:has(&)) {
-    flex: 1;
-  }
-}
-
 .Layer__profit-and-loss__main-panel {
   flex: 1;
 }

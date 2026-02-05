@@ -49,7 +49,7 @@ export const DateSelectionComboBox = () => {
 
   return (
     <VStack>
-      <Label size='2xs' htmlFor={inputId}>Date Range</Label>
+      <Label pbe='3xs' size='sm' htmlFor={inputId}>Report period</Label>
       <ComboBox
         options={options}
         onSelectedValueChange={onSelectedValueChange}
