@@ -1,9 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
-import {
-  type FormAsyncValidateOrFn,
-  type FormValidateOrFn,
-} from '@tanstack/react-form'
 import { Schema } from 'effect'
 
 import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, validateInvoiceForm } from '@components/Invoices/InvoiceForm/formUtils'
@@ -15,7 +11,7 @@ import {
   computeTaxableSubtotal,
   computeTaxes,
 } from '@components/Invoices/InvoiceForm/totalsUtils'
-import { useRawAppForm } from '@features/forms/hooks/useForm'
+import { useAppForm } from '@features/forms/hooks/useForm'
 import { UpsertInvoiceMode, useUpsertInvoice } from '@features/invoices/api/useUpsertInvoice'
 import { type Invoice, type InvoiceForm, UpsertInvoiceSchema } from '@features/invoices/invoiceSchemas'
 
@@ -28,24 +24,7 @@ function isUpdateMode(props: UseInvoiceFormProps): props is { onSuccess: onSucce
   return props.mode === UpsertInvoiceMode.Update
 }
 
-export type InvoiceFormMeta = {
-  submitAction: 'send' | null
-}
-
-export type InvoiceFormType = ReturnType<typeof useRawAppForm<
-  InvoiceForm,
-  FormValidateOrFn<InvoiceForm>,
-  FormValidateOrFn<InvoiceForm>,
-  FormAsyncValidateOrFn<InvoiceForm>,
-  FormValidateOrFn<InvoiceForm>,
-  FormAsyncValidateOrFn<InvoiceForm>,
-  FormValidateOrFn<InvoiceForm>,
-  FormAsyncValidateOrFn<InvoiceForm>,
-  FormValidateOrFn<InvoiceForm>,
-  FormAsyncValidateOrFn<InvoiceForm>,
-  FormAsyncValidateOrFn<InvoiceForm>,
-  InvoiceFormMeta
->>
+export type InvoiceFormType = ReturnType<typeof useAppForm<InvoiceForm>>
 
 export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const { onSuccess, mode } = props
@@ -84,20 +63,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
     onDynamic: validateInvoiceForm,
   }), [])
 
-  const form = useRawAppForm<
-    InvoiceForm,
-    FormValidateOrFn<InvoiceForm>,
-    FormValidateOrFn<InvoiceForm>,
-    FormAsyncValidateOrFn<InvoiceForm>,
-    FormValidateOrFn<InvoiceForm>,
-    FormAsyncValidateOrFn<InvoiceForm>,
-    FormValidateOrFn<InvoiceForm>,
-    FormAsyncValidateOrFn<InvoiceForm>,
-    FormValidateOrFn<InvoiceForm>,
-    FormAsyncValidateOrFn<InvoiceForm>,
-    FormAsyncValidateOrFn<InvoiceForm>,
-    InvoiceFormMeta
-  >({
+  const form = useAppForm<InvoiceForm>({
     defaultValues,
     onSubmit,
     validators,

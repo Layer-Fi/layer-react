@@ -57,7 +57,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   }, [])
 
   useImperativeHandle(ref, () => ({
-    submit: ({ submitAction }: { submitAction: 'send' | null }) => form.handleSubmit({ submitAction }),
+    submit: () => form.handleSubmit(),
   }))
 
   useEffect(() => {
