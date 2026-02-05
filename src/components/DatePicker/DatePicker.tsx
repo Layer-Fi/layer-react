@@ -5,12 +5,12 @@ import { Dialog } from 'react-aria-components'
 
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { DatePicker as BaseDatePicker } from '@ui/Date/Date'
-import { Label } from '@ui/Typography/Text'
+import { Label, type TextStyleProps } from '@ui/Typography/Text'
 import { DateCalendar } from '@components/DateCalendar/DateCalendar'
 import { DatePickerInput } from '@components/DatePicker/DatePickerInput'
 import { ResponsivePopover } from '@components/ResponsivePopover/ResponsivePopover'
 
-import './datePicker.scss'
+const DATE_PICKER_CLASS_NAME = 'Layer__DatePicker'
 
 type DatePickerProps = {
   label: string
@@ -25,6 +25,11 @@ type DatePickerProps = {
   onChange: (date: ZonedDateTime | null) => void
   isDisabled?: boolean
   className?: string
+  slotProps?: {
+    Label?: {
+      size?: TextStyleProps['size']
+    }
+  }
 }
 
 export const DatePicker = ({
@@ -40,14 +45,15 @@ export const DatePicker = ({
   isDisabled,
   isReadOnly,
   className,
+  slotProps,
 }: DatePickerProps) => {
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   const { value } = useSizeClass()
   const [isPopoverOpen, setPopoverOpen] = useState(false)
 
   return (
-    <div className={classNames('Layer__DatePicker', className)}>
-      {showLabel && <Label size='2xs' className='Layer__DatePicker__Label'>{label}</Label>}
+    <div className={classNames(DATE_PICKER_CLASS_NAME, className)}>
+      {showLabel && <Label size={slotProps?.Label?.size ?? 'sm'}>{label}</Label>}
       <BaseDatePicker
         granularity='day'
         value={date}

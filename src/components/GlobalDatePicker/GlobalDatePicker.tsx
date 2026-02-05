@@ -31,6 +31,11 @@ export const GlobalDatePicker = () => {
       isInvalid={isInvalid}
       errorText={errorText}
       onBlur={onBlur}
+      slotProps={{
+        Label: {
+          size: '2xs',
+        },
+      }}
     />
   )
 }
