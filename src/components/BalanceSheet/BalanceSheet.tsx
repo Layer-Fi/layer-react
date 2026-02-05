@@ -109,7 +109,7 @@ const BalanceSheetView = ({
           <Header>
             <HeaderRow>
               <HeaderCol fluid>
-                <HStack pb='sm' align='end' gap='xs' justify='space-between'>
+                <HStack pb='sm' align='end' gap='xs' justify='space-between' fluid>
                   <CombinedDateSelection mode={dateSelectionMode} />
                   <HStack gap='xs'>
                     {withExpandAllButton && (
