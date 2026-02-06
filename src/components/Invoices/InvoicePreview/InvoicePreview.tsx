@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react'
 
 import { useInvoicePreviewRoute } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { HStack } from '@ui/Stack/Stack'
 import { useInvoicePreview } from '@features/invoices/api/useInvoicePreview'
 
 import './invoicePreview.scss'
@@ -23,20 +22,18 @@ export const InvoicePreview = () => {
   if (!srcDoc) return null
 
   return (
-    <HStack pb='lg' pi='lg'>
-      <div className='Layer__InvoicePreview__Container'>
-        <div
-          className='Layer__InvoicePreview__Inner'
-          style={{ height: scaledHeight ? `${scaledHeight}px` : undefined }}
-        >
-          <iframe
-            className='Layer__InvoicePreview__IFrame'
-            srcDoc={srcDoc}
-            onLoad={handleLoad}
-            style={{ height: height ? `${height}px` : undefined }}
-          />
-        </div>
+    <div className='Layer__InvoicePreview__Container'>
+      <div
+        className='Layer__InvoicePreview__Inner'
+        style={{ height: scaledHeight ? `${scaledHeight}px` : undefined }}
+      >
+        <iframe
+          className='Layer__InvoicePreview__IFrame'
+          srcDoc={srcDoc}
+          onLoad={handleLoad}
+          style={{ height: height ? `${height}px` : undefined }}
+        />
       </div>
-    </HStack>
+    </div>
   )
 }

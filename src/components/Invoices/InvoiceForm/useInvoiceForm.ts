@@ -41,15 +41,15 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
       { value, formApi }: { value: InvoiceForm, formApi: { reset: () => void } },
     ) => {
       try {
-        // Convert the `InvoiceForm` schema to the request shape for `upsertInvoice`. This will
-        // throw an error if the request shape is not valid.
-        const upsertInvoiceParams = convertInvoiceFormToParams(value)
+        const upsertInvoiceParams = convertInvoiceFormToParams(value, {
+          customPaymentInstructions: invoice?.customPaymentInstructions,
+        })
         const upsertInvoiceRequest = Schema.encodeUnknownSync(UpsertInvoiceSchema)(upsertInvoiceParams)
 
-        const { data: invoice } = await upsertInvoice(upsertInvoiceRequest)
+        const { data: upsertedInvoice } = await upsertInvoice(upsertInvoiceRequest)
 
         setSubmitError(undefined)
-        onSuccess(invoice)
+        onSuccess(upsertedInvoice)
 
         formApi.reset()
       }
@@ -57,7 +57,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
         console.error(e)
         setSubmitError('Something went wrong. Please try again.')
       }
-    }, [onSuccess, upsertInvoice])
+    }, [invoice, onSuccess, upsertInvoice])
 
   const validators = useMemo(() => ({
     onDynamic: validateInvoiceForm,
