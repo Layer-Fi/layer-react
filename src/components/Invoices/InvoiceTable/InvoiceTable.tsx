@@ -97,7 +97,7 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
 }
 
 type InvoiceRowType = Row<Invoice>
-const getColumnConfig = (onSelectInvoice: (invoice: Invoice) => void): NestedColumnConfig<Invoice> => [
+const getColumnConfig = (onViewInvoice: (invoice: Invoice) => void): NestedColumnConfig<Invoice> => [
   {
     id: InvoiceColumns.SentAt,
     header: 'Sent Date',
@@ -127,7 +127,7 @@ const getColumnConfig = (onSelectInvoice: (invoice: Invoice) => void): NestedCol
   {
     id: InvoiceColumns.Expand,
     cell: (row: InvoiceRowType) => (
-      <Button inset icon onPress={() => onSelectInvoice(row.original)} aria-label='View invoice' variant='ghost'>
+      <Button inset icon onPress={() => onViewInvoice(row.original)} aria-label='View invoice' variant='ghost'>
         <ChevronRightFill />
       </Button>
     ),

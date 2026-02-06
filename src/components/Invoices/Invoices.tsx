@@ -1,6 +1,4 @@
-import type { Awaitable } from '@internal-types/utility/promises'
-import { InvoiceRoute, useInvoiceRouteState } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { InvoicesProvider } from '@contexts/InvoicesContext/InvoicesContext'
+import { InvoiceRoute, InvoicesRouteStoreProvider, useInvoiceRouteState } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { InvoiceDetail } from '@components/Invoices/InvoiceDetail/InvoiceDetail'
 import { InvoiceOverview } from '@components/Invoices/InvoiceOverview/InvoiceOverview'
 import { View } from '@components/View/View'
@@ -12,18 +10,17 @@ interface InvoicesStringOverrides {
 
 export interface InvoicesProps {
   stringOverrides?: InvoicesStringOverrides
-  onSendInvoice?: (invoiceId: string) => Awaitable<void>
 }
 
-export const Invoices = ({ stringOverrides, onSendInvoice }: InvoicesProps) => {
+export const Invoices = ({ stringOverrides }: InvoicesProps) => {
   usePreloadCustomers()
 
   return (
-    <InvoicesProvider onSendInvoice={onSendInvoice}>
+    <InvoicesRouteStoreProvider>
       <View title={stringOverrides?.title || 'Invoices'}>
         <InvoicesContent />
       </View>
-    </InvoicesProvider>
+    </InvoicesRouteStoreProvider>
   )
 }
 

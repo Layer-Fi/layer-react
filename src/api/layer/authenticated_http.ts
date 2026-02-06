@@ -48,6 +48,31 @@ export const get =
           .then(res => handleResponse<Return>(res))
           .catch((error: Error | APIError) => handleException(error))
 
+export const getText =
+  <
+    Params extends Record<string, ParameterValues | null | undefined> = Record<
+      string,
+      string | undefined
+    >,
+  >(
+    url: (params: Params) => string,
+  ) =>
+    (
+      baseUrl: string,
+      accessToken: string | undefined,
+      options?: { params?: Params },
+    ) =>
+      (): Promise<string> =>
+        fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
+          headers: {
+            Authorization: 'Bearer ' + (accessToken || ''),
+            ...CUSTOM_HEADERS,
+          },
+          method: 'GET',
+        })
+          .then(res => handleTextResponse(res))
+          .catch((error: Error | APIError) => handleException(error))
+
 export const request =
   (verb: Exclude<HTTPVerb, 'get'>) =>
     <
@@ -132,6 +157,19 @@ const handleResponse = async <Return>(res: Response) => {
   }
 
   return parsedResponse as Return
+}
+
+const handleTextResponse = async (res: Response): Promise<string> => {
+  if (!res.ok) {
+    const apiError = new APIError(
+      'An error occurred while fetching data from the API.',
+      res.status,
+      [],
+    )
+    throw apiError
+  }
+
+  return res.text()
 }
 
 const handleException = (error: Error | APIError) => {

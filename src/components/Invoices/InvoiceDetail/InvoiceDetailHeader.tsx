@@ -1,9 +1,8 @@
 import { useCallback, useMemo } from 'react'
-import { HandCoins, Save, Send } from 'lucide-react'
+import { ArrowRight, HandCoins, Send } from 'lucide-react'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { useInvoicesContext } from '@contexts/InvoicesContext/InvoicesContext'
+import { type InvoiceDetailRouteState, InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -14,86 +13,94 @@ import { InvoiceStatus } from '@features/invoices/invoiceSchemas'
 
 import './invoiceDetailHeader.scss'
 
+enum HeaderMode {
+  View = 'View',
+  Edit = 'Edit',
+  Preview = 'Preview',
+}
+
+const getHeaderMode = (viewState: InvoiceDetailRouteState): HeaderMode => {
+  if (viewState.step === InvoiceDetailStep.Preview) {
+    return HeaderMode.Preview
+  }
+  if (viewState.isReadOnly) {
+    return HeaderMode.View
+  }
+  return HeaderMode.Edit
+}
+
+const getHeadingContent = (headerMode: HeaderMode, invoiceNumber: string | null) => {
+  switch (headerMode) {
+    case HeaderMode.Preview:
+      return invoiceNumber ? `Previewing Invoice #${invoiceNumber}` : 'Previewing Invoice'
+    case HeaderMode.View:
+      return invoiceNumber ? `Invoice #${invoiceNumber}` : 'View Invoice'
+    case HeaderMode.Edit:
+      return invoiceNumber ? `Editing Invoice #${invoiceNumber}` : 'Editing Invoice'
+  }
+}
+
 export type InvoiceDetailHeaderProps = {
-  onSubmit: ({ submitAction }: { submitAction: 'send' | null }) => Awaitable<void>
-  isReadOnly: boolean
+  onSubmitInvoiceForm: () => Awaitable<void>
   formState: InvoiceFormState
-  setIsReadOnly: (isReadOnly: boolean) => void
   openInvoicePaymentDrawer: () => void
 }
 
 export const InvoiceDetailHeader = ({
-  onSubmit,
+  onSubmitInvoiceForm,
   formState,
-  isReadOnly,
-  setIsReadOnly,
   openInvoicePaymentDrawer,
 }: InvoiceDetailHeaderProps) => {
   const viewState = useInvoiceDetail()
-  const { onSendInvoice } = useInvoicesContext()
-  const { isSubmitting } = formState
+  const { toEditInvoice } = useInvoiceNavigation()
 
-  const onEditInvoice = useCallback(() => {
-    setIsReadOnly(false)
-  }, [setIsReadOnly])
+  const onPressNext = useCallback(() => {
+    void onSubmitInvoiceForm()
+  }, [onSubmitInvoiceForm])
 
-  const onPressSave = useCallback(() => {
-    void onSubmit({ submitAction: null })
-  }, [onSubmit])
-
-  const onPressSend = useCallback(() => {
-    void onSubmit({ submitAction: 'send' })
-  }, [onSubmit])
-
-  const actionButtons = useMemo(() => (
-    <HStack gap='xs'>
-      <Button variant={onSendInvoice ? 'outlined' : 'solid'} isDisabled={isSubmitting} onPress={onPressSave}>
-        Save
-        <Save size={14} />
-      </Button>
-      {onSendInvoice && (
-        <Button isDisabled={isSubmitting} onPress={onPressSend}>
-          Save and Send
-          <Send size={14} />
-        </Button>
-      )}
-    </HStack>
-  ), [isSubmitting, onPressSave, onPressSend, onSendInvoice])
+  const previewButton = useMemo(() => (
+    <Button isDisabled={formState.isSubmitting} onPress={onPressNext}>
+      Next
+      <ArrowRight size={14} />
+    </Button>
+  ), [formState.isSubmitting, onPressNext])
 
   if (viewState.mode === UpsertInvoiceMode.Create) {
     return (
       <HStack justify='space-between' align='center' fluid pie='md'>
         <Heading>Create Invoice</Heading>
-        {actionButtons}
+        {previewButton}
       </HStack>
     )
   }
 
-  const invoiceNumber = viewState.invoice.invoiceNumber
+  const headerMode = getHeaderMode(viewState)
+  const headingContent = getHeadingContent(headerMode, viewState.invoice.invoiceNumber)
 
-  const headingContent = isReadOnly
-    ? (invoiceNumber ? `Invoice #${invoiceNumber}` : 'View Invoice')
-    : invoiceNumber ? `Editing Invoice #${invoiceNumber}` : 'Editing Invoice'
-
-  const canMarkAsPaid = viewState.mode === UpsertInvoiceMode.Update
-    && (viewState.invoice.status === InvoiceStatus.Sent || viewState.invoice.status === InvoiceStatus.PartiallyPaid)
+  const canMarkAsPaid = viewState.invoice.status === InvoiceStatus.Sent
+    || viewState.invoice.status === InvoiceStatus.PartiallyPaid
 
   return (
     <HStack justify='space-between' align='center' fluid pie='md'>
       <Heading className='Layer__InvoiceDetail__Heading' ellipsis>{headingContent}</Heading>
-      {isReadOnly
-        ? (
-          <HStack gap='xs'>
-            {canMarkAsPaid && (
-              <Button onPress={openInvoicePaymentDrawer}>
-                Mark as paid
-                <HandCoins size={14} />
-              </Button>
-            )}
-            <InvoiceDetailHeaderMenu onEditInvoice={onEditInvoice} />
-          </HStack>
-        )
-        : actionButtons}
+      {headerMode === HeaderMode.Preview && (
+        <Button>
+          Save and Send
+          <Send size={14} />
+        </Button>
+      )}
+      {headerMode === HeaderMode.Edit && previewButton}
+      {headerMode === HeaderMode.View && (
+        <HStack gap='xs'>
+          {canMarkAsPaid && (
+            <Button onPress={openInvoicePaymentDrawer}>
+              Mark as paid
+              <HandCoins size={14} />
+            </Button>
+          )}
+          <InvoiceDetailHeaderMenu onEditInvoice={() => toEditInvoice(viewState.invoice)} />
+        </HStack>
+      )}
     </HStack>
   )
 }

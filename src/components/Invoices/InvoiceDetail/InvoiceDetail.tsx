@@ -1,7 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 
-import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
 import X from '@icons/X'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
@@ -11,6 +10,7 @@ import { InvoiceDetailSubHeader } from '@components/Invoices/InvoiceDetail/Invoi
 import { InvoicePaymentDrawer } from '@components/Invoices/InvoiceDetail/InvoicePaymentDrawer'
 import type { InvoiceFormState } from '@components/Invoices/InvoiceForm/formUtils'
 import { InvoiceForm } from '@components/Invoices/InvoiceForm/InvoiceForm'
+import { InvoicePreview } from '@components/Invoices/InvoicePreview/InvoicePreview'
 import { UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
 import { type Invoice } from '@features/invoices/invoiceSchemas'
 
@@ -20,23 +20,14 @@ export const InvoiceDetail = () => {
   const viewState = useInvoiceDetail()
   const [isPaymentDrawerOpen, setIsPaymentDrawerOpen] = useState(false)
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
-  const { toViewInvoice, toInvoiceTable } = useInvoiceNavigation()
-  const { addToast } = useLayerContext()
-  const formRef = useRef<{ submit: ({ submitAction }: { submitAction: 'send' | null }) => Promise<void> }>(null)
-
-  const [isReadOnly, setIsReadOnly] = useState(viewState.mode === UpsertInvoiceMode.Update)
+  const { toInvoiceTable, toPreviewInvoice, toEditInvoice } = useInvoiceNavigation()
+  const invoiceFormRef = useRef<{ submit: () => Promise<void> }>(null)
 
   const onUpsertInvoiceSuccess = useCallback((invoice: Invoice) => {
-    const toastContent = viewState.mode === UpsertInvoiceMode.Update
-      ? 'Invoice updated successfully'
-      : 'Invoice created successfully'
-    addToast({ content: toastContent, type: 'success' })
+    toPreviewInvoice(invoice)
+  }, [toPreviewInvoice])
 
-    toViewInvoice(invoice)
-    setIsReadOnly(true)
-  }, [viewState.mode, addToast, toViewInvoice])
-
-  const onSubmit = useCallback(({ submitAction }: { submitAction: 'send' | null }) => formRef.current?.submit({ submitAction }), [])
+  const onSubmitInvoiceForm = useCallback(() => invoiceFormRef.current?.submit(), [])
   const [formState, setFormState] = useState<InvoiceFormState>({
     isDirty: false,
     isSubmitting: false,
@@ -49,35 +40,42 @@ export const InvoiceDetail = () => {
   const Header = useCallback(() => {
     return (
       <InvoiceDetailHeader
-        onSubmit={onSubmit}
-        isReadOnly={isReadOnly}
         formState={formState}
-        setIsReadOnly={setIsReadOnly}
+        onSubmitInvoiceForm={onSubmitInvoiceForm}
         openInvoicePaymentDrawer={() => setIsPaymentDrawerOpen(true)}
       />
     )
-  }, [onSubmit, isReadOnly, formState])
+  }, [onSubmitInvoiceForm, formState])
 
-  const hasChanges = !isReadOnly && formState.isDirty
+  const showInvoiceForm = viewState.step === InvoiceDetailStep.Form
+  const showInvoicePreview = viewState.step === InvoiceDetailStep.Preview
+
+  const invoiceFormHasChanges = showInvoiceForm && !viewState.isReadOnly && formState.isDirty
+
   const onGoBack = useCallback(() => {
-    if (hasChanges) {
+    if (invoiceFormHasChanges) {
       setIsDiscardChangesModalOpen(true)
     }
-    else {
+    else if (showInvoiceForm) {
       toInvoiceTable()
     }
-  }, [hasChanges, toInvoiceTable])
+    else {
+      toEditInvoice(viewState.invoice)
+    }
+  }, [invoiceFormHasChanges, showInvoiceForm, toInvoiceTable, toEditInvoice, viewState])
 
   return (
     <>
-      <BaseDetailView slots={{ Header, BackIcon: hasChanges ? X : BackArrow }} name='InvoiceDetail' onGoBack={onGoBack}>
+      <BaseDetailView slots={{ Header, BackIcon: invoiceFormHasChanges ? X : BackArrow }} name='InvoiceDetail' onGoBack={onGoBack}>
         {viewState.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={viewState.invoice} />}
-        <InvoiceForm
-          isReadOnly={isReadOnly}
-          onSuccess={onUpsertInvoiceSuccess}
-          onChangeFormState={onChangeFormState}
-          ref={formRef}
-        />
+        {showInvoiceForm && (
+          <InvoiceForm
+            onSuccess={onUpsertInvoiceSuccess}
+            onChangeFormState={onChangeFormState}
+            ref={invoiceFormRef}
+          />
+        )}
+        {showInvoicePreview && <InvoicePreview />}
       </BaseDetailView>
       <DiscardInvoiceChangesModal
         isOpen={isDiscardChangesModalOpen}

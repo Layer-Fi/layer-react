@@ -1,7 +1,6 @@
 import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
-import type { InvoiceFormMode } from '@components/Invoices/InvoiceForm/InvoiceForm'
 import { ALL_OPTION, type InvoiceStatusOption } from '@components/Invoices/InvoiceTable/InvoiceTable'
 import { UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
 import type { Invoice } from '@features/invoices/invoiceSchemas'
@@ -16,7 +15,27 @@ export enum InvoiceRoute {
   Detail = 'Detail',
 }
 
-type InvoiceDetailRouteState = { route: InvoiceRoute.Detail } & InvoiceFormMode
+export enum InvoiceDetailStep {
+  Form = 'Form',
+  Preview = 'Preview',
+}
+
+type InvoiceFormModeCreate = { mode: UpsertInvoiceMode.Create, isReadOnly: false }
+type InvoiceFormModeUpdate = { mode: UpsertInvoiceMode.Update, invoice: Invoice, isReadOnly: boolean }
+
+export type InvoiceFormMode = InvoiceFormModeCreate | InvoiceFormModeUpdate
+
+type InvoiceDetailFormRouteState = {
+  route: InvoiceRoute.Detail
+  step: InvoiceDetailStep.Form
+} & InvoiceFormMode
+
+type InvoiceDetailPreviewRouteState = {
+  route: InvoiceRoute.Detail
+  step: InvoiceDetailStep.Preview
+} & InvoiceFormModeUpdate
+
+export type InvoiceDetailRouteState = InvoiceDetailFormRouteState | InvoiceDetailPreviewRouteState
 type InvoiceTableRouteState = { route: InvoiceRoute.Table }
 type InvoiceRouteState = InvoiceDetailRouteState | InvoiceTableRouteState
 
@@ -26,7 +45,9 @@ type InvoicesRouteStoreShape = {
   setTableFilters: (patchFilters: Partial<InvoiceTableFilters>) => void
   navigate: {
     toCreateInvoice: () => void
+    toEditInvoice: (invoice: Invoice) => void
     toInvoiceTable: () => void
+    toPreviewInvoice: (invoice: Invoice) => void
     toViewInvoice: (invoice: Invoice) => void
   }
 }
@@ -38,7 +59,9 @@ const InvoicesRouteStoreContext = createContext(
     setTableFilters: () => {},
     navigate: {
       toCreateInvoice: () => {},
+      toEditInvoice: () => {},
       toInvoiceTable: () => {},
+      toPreviewInvoice: () => {},
       toViewInvoice: () => {},
     },
   })),
@@ -48,17 +71,27 @@ const isInvoiceDetail = (routeState: InvoiceRouteState): routeState is InvoiceDe
   return routeState.route === InvoiceRoute.Detail
 }
 
+const isInvoicePreview = (routeState: InvoiceRouteState): routeState is InvoiceDetailPreviewRouteState => {
+  return isInvoiceDetail(routeState) && routeState.step === InvoiceDetailStep.Preview
+}
+
 export function useInvoiceRouteState() {
   const store = useContext(InvoicesRouteStoreContext)
   return useStore(store, state => state.routeState)
 }
 
-export function useInvoiceDetail(): InvoiceFormMode {
+export function useInvoiceDetail(): InvoiceDetailRouteState {
   const routeState = useInvoiceRouteState()
   if (!isInvoiceDetail(routeState)) throw new Error('Invoice detail view required')
 
-  const { route, ...invoiceDetail } = routeState
-  return invoiceDetail
+  return routeState
+}
+
+export function useInvoicePreviewRoute(): InvoiceDetailPreviewRouteState {
+  const routeState = useInvoiceRouteState()
+  if (!isInvoicePreview(routeState)) throw new Error('Invoice preview view required')
+
+  return routeState
 }
 
 export function useInvoiceTableFilters() {
@@ -92,7 +125,20 @@ export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
           set(() => ({
             routeState: {
               route: InvoiceRoute.Detail,
+              step: InvoiceDetailStep.Form,
               mode: UpsertInvoiceMode.Create,
+              isReadOnly: false,
+            },
+          }))
+        },
+        toEditInvoice: (invoice: Invoice) => {
+          set(() => ({
+            routeState: {
+              route: InvoiceRoute.Detail,
+              step: InvoiceDetailStep.Form,
+              mode: UpsertInvoiceMode.Update,
+              invoice,
+              isReadOnly: false,
             },
           }))
         },
@@ -103,12 +149,25 @@ export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
             },
           }))
         },
+        toPreviewInvoice: (invoice: Invoice) => {
+          set(() => ({
+            routeState: {
+              route: InvoiceRoute.Detail,
+              step: InvoiceDetailStep.Preview,
+              mode: UpsertInvoiceMode.Update,
+              invoice,
+              isReadOnly: false,
+            },
+          }))
+        },
         toViewInvoice: (invoice: Invoice) => {
           set(() => ({
             routeState: {
               route: InvoiceRoute.Detail,
+              step: InvoiceDetailStep.Form,
               mode: UpsertInvoiceMode.Update,
               invoice,
+              isReadOnly: true,
             },
           }))
         },

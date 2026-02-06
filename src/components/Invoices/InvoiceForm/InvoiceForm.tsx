@@ -19,18 +19,16 @@ import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 import './invoiceForm.scss'
 
-export type InvoiceFormMode = { mode: UpsertInvoiceMode.Update, invoice: Invoice } | { mode: UpsertInvoiceMode.Create }
 export type InvoiceFormProps = {
-  isReadOnly: boolean
   onSuccess: (invoice: Invoice) => void
   onChangeFormState?: (formState: InvoiceFormState) => void
 }
 
 export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
-  const viewState: InvoiceFormMode = useInvoiceDetail()
+  const { isReadOnly, ...viewState } = useInvoiceDetail()
   const { mode } = viewState
 
-  const { onSuccess, onChangeFormState, isReadOnly } = props
+  const { onSuccess, onChangeFormState } = props
   const { businessId } = useLayerContext()
   const { data: accountingConfig } = useAccountingConfiguration({ businessId })
   const enableCustomerManagement = accountingConfig?.enableCustomerManagement ?? false
@@ -59,7 +57,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   }, [])
 
   useImperativeHandle(ref, () => ({
-    submit: ({ submitAction }: { submitAction: 'send' | null }) => form.handleSubmit({ submitAction }),
+    submit: () => form.handleSubmit(),
   }))
 
   useEffect(() => {
@@ -74,15 +72,14 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
         </form.AppForm>
         <InvoiceFormTermsSection
           form={form}
-          isReadOnly={isReadOnly}
           enableCustomerManagement={enableCustomerManagement}
           initialDueAt={initialDueAt}
           onClickEditCustomer={editCustomer}
           onClickCreateNewCustomer={createCustomer}
         />
         <VStack className='Layer__InvoiceForm__Body' gap='md'>
-          <InvoiceFormLineItemsSection form={form} isReadOnly={isReadOnly} />
-          <InvoiceFormMetadataSection form={form} isReadOnly={isReadOnly} totals={totals} />
+          <InvoiceFormLineItemsSection form={form} />
+          <InvoiceFormMetadataSection form={form} totals={totals} />
         </VStack>
       </Form>
       {enableCustomerManagement && (

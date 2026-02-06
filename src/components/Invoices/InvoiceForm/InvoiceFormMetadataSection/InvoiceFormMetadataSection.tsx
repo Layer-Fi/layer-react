@@ -1,6 +1,7 @@
 import { type BigDecimal as BD } from 'effect'
 
 import { negate } from '@utils/bigDecimalUtils'
+import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { InvoiceFormTotalRow } from '@components/Invoices/InvoiceForm/InvoiceFormTotalRow/InvoiceFormTotalRow'
 import type { InvoiceFormType } from '@components/Invoices/InvoiceForm/useInvoiceForm'
@@ -9,7 +10,6 @@ import './invoiceFormMetadataSection.scss'
 
 type InvoiceFormMetadataSectionProps = {
   form: InvoiceFormType
-  isReadOnly: boolean
   totals: {
     subtotal: BD.BigDecimal
     additionalDiscount: BD.BigDecimal
@@ -21,9 +21,9 @@ type InvoiceFormMetadataSectionProps = {
 
 export const InvoiceFormMetadataSection = ({
   form,
-  isReadOnly,
   totals,
 }: InvoiceFormMetadataSectionProps) => {
+  const { isReadOnly } = useInvoiceDetail()
   const { subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal } = totals
 
   return (
