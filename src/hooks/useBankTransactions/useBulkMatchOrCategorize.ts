@@ -57,7 +57,6 @@ const bulkMatchOrCategorize = post<
   ({ businessId }) => {
     const parameters = toDefinedSearchParameters({
       categorization_source: 'API_FROM_COMPONENT',
-      match_source: 'API_CONFIRM_MATCH_FROM_COMPONENT',
     })
 
     return `/v1/businesses/${businessId}/bank-transactions/bulk-match-or-categorize?${parameters}`
