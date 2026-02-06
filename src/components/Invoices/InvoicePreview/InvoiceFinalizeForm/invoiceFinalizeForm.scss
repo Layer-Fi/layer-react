@@ -1,0 +1,31 @@
+.Layer__InvoiceFinalizeForm {
+  height: 100%;
+
+  .Layer__InvoiceFinalizeForm__FormError {
+    min-height: 4rem;
+    padding-inline: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .Layer__InvoiceFinalizeForm__Section {
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+
+  .Layer__InvoiceFinalizeForm__Field__Ach,
+  .Layer__InvoiceFinalizeForm__Field__CreditCard {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .Layer__InvoiceFinalizeForm__Field__CustomPaymentInstructions {
+    min-width: 18rem;
+  }
+
+  .Layer__InvoiceFinalizeForm__Submit {
+    padding-block-start: var(--spacing-xs);
+  }
+}

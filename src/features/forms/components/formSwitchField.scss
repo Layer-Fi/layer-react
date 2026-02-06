@@ -4,6 +4,14 @@
     'label'
     'switch';
 
+  .Layer__FormSwitchField__LabelContent {
+    width: max-content;
+  }
+
+  .Layer__FormSwitchField__LabelIcon {
+    color: var(--color-base-700);
+  }
+
   > [slot='switch'] {
     grid-area: switch;
     justify-self: center;
