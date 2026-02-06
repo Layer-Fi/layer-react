@@ -1,7 +1,6 @@
-import { type PropsWithChildren, type ReactNode } from 'react'
+import { type PropsWithChildren } from 'react'
 import classNames from 'classnames'
 
-import { HStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
 import { Label } from '@ui/Typography/Text'
 import { useFieldContext } from '@features/forms/hooks/useForm'
@@ -9,13 +8,10 @@ import type { CommonFormFieldProps } from '@features/forms/types'
 
 import './formSwitchField.scss'
 
-export type FormSwitchFieldProps = CommonFormFieldProps & {
-  labelIcon?: ReactNode
-}
+export type FormSwitchFieldProps = CommonFormFieldProps
 const FORM_SWITCH_FIELD_CLASSNAME = 'Layer__FormSwitchField'
 export function FormSwitchField({
   label,
-  labelIcon,
   className,
   inline = false,
   showLabel = true,
@@ -44,18 +40,7 @@ export function FormSwitchField({
       slot='switch'
       {...additionalAriaProps}
     >
-      {showLabel && (
-        <Label slot='label' size='sm' htmlFor={name}>
-          <HStack className={`${FORM_SWITCH_FIELD_CLASSNAME}__LabelContent`} align='center' gap='2xs'>
-            {labelIcon && (
-              <HStack className={`${FORM_SWITCH_FIELD_CLASSNAME}__LabelIcon`} align='center'>
-                {labelIcon}
-              </HStack>
-            )}
-            {label}
-          </HStack>
-        </Label>
-      )}
+      {showLabel && <Label slot='label' size='sm' htmlFor={name}>{label}</Label>}
     </Switch>
   )
 }

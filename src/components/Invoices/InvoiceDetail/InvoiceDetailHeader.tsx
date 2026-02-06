@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { ArrowRight, HandCoins } from 'lucide-react'
+import { ArrowRight, HandCoins, Send } from 'lucide-react'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type InvoiceDetailRouteState, InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
@@ -83,6 +83,12 @@ export const InvoiceDetailHeader = ({
   return (
     <HStack justify='space-between' align='center' fluid pie='md'>
       <Heading className='Layer__InvoiceDetail__Heading' ellipsis>{headingContent}</Heading>
+      {headerMode === HeaderMode.Preview && (
+        <Button>
+          Save and Send
+          <Send size={14} />
+        </Button>
+      )}
       {headerMode === HeaderMode.Edit && previewButton}
       {headerMode === HeaderMode.View && (
         <HStack gap='xs'>
