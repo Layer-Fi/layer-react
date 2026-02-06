@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
@@ -35,13 +35,10 @@ export const useInvoiceFinalizeForm = ({
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { trigger: finalizeInvoice } = useFinalizeInvoice({ invoiceId: invoice.id })
 
-  const defaultValuesRef = useRef<InvoiceFinalizeFormValues>(
-    getInvoiceFinalizeFormDefaultValues({
-      invoice,
-      paymentMethods: initialPaymentMethods,
-    }),
-  )
-  const defaultValues = defaultValuesRef.current
+  const defaultValues = useMemo(() => getInvoiceFinalizeFormDefaultValues({
+    invoice,
+    paymentMethods: initialPaymentMethods,
+  }), [invoice, initialPaymentMethods])
 
   const onSubmit = useCallback(
     async ({ value }: { value: InvoiceFinalizeFormValues }) => {

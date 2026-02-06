@@ -41,9 +41,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
       { value, formApi }: { value: InvoiceForm, formApi: { reset: () => void } },
     ) => {
       try {
-        const upsertInvoiceParams = convertInvoiceFormToParams(value, {
-          customPaymentInstructions: invoice?.customPaymentInstructions,
-        })
+        const upsertInvoiceParams = convertInvoiceFormToParams(value)
         const upsertInvoiceRequest = Schema.encodeUnknownSync(UpsertInvoiceSchema)(upsertInvoiceParams)
 
         const { data: upsertedInvoice } = await upsertInvoice(upsertInvoiceRequest)
@@ -57,7 +55,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
         console.error(e)
         setSubmitError('Something went wrong. Please try again.')
       }
-    }, [invoice, onSuccess, upsertInvoice])
+    }, [onSuccess, upsertInvoice])
 
   const validators = useMemo(() => ({
     onDynamic: validateInvoiceForm,

@@ -1,5 +1,5 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react'
-import { AlertTriangle, Send } from 'lucide-react'
+import { useCallback, useEffect } from 'react'
+import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
 
 import { flattenValidationErrors } from '@utils/form'
@@ -20,13 +20,6 @@ import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 import './invoiceFinalizeForm.scss'
 
-const INVOICE_FINALIZE_FORM_CSS_PREFIX = 'Layer__InvoiceFinalizeForm'
-const INVOICE_FINALIZE_FORM_FIELD_CSS_PREFIX = `${INVOICE_FINALIZE_FORM_CSS_PREFIX}__Field`
-
-export type InvoiceFinalizeFormRef = {
-  submit: () => Promise<void>
-}
-
 type InvoiceFinalizeFormProps = {
   invoice: Invoice
   initialPaymentMethods: readonly InvoicePaymentMethod[]
@@ -34,15 +27,12 @@ type InvoiceFinalizeFormProps = {
   onChangeFormState?: (formState: InvoiceFinalizeFormState) => void
 }
 
-export const InvoiceFinalizeForm = forwardRef<
-  InvoiceFinalizeFormRef,
-  InvoiceFinalizeFormProps
->(({
+export const InvoiceFinalizeForm = ({
   invoice,
   initialPaymentMethods,
   onSuccess,
   onChangeFormState,
-}, ref) => {
+}: InvoiceFinalizeFormProps) => {
   const { form, formState, submitError } = useInvoiceFinalizeForm({
     invoice,
     initialPaymentMethods,
@@ -54,22 +44,18 @@ export const InvoiceFinalizeForm = forwardRef<
     e.stopPropagation()
   }, [])
 
-  useImperativeHandle(ref, () => ({
-    submit: () => form.handleSubmit(),
-  }))
-
   useEffect(() => {
     onChangeFormState?.(formState)
   }, [formState, onChangeFormState])
 
   return (
-    <Form className={INVOICE_FINALIZE_FORM_CSS_PREFIX} onSubmit={blockNativeOnSubmit}>
+    <Form className='Layer__InvoiceFinalizeForm' onSubmit={blockNativeOnSubmit}>
       <form.Subscribe selector={state => state.errorMap}>
         {(errorMap) => {
           const validationErrors = flattenValidationErrors(errorMap)
           if (validationErrors.length > 0 || submitError) {
             return (
-              <HStack className={`${INVOICE_FINALIZE_FORM_CSS_PREFIX}__FormError`}>
+              <HStack className='Layer__InvoiceFinalizeForm__FormError'>
                 <DataState
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
@@ -82,15 +68,14 @@ export const InvoiceFinalizeForm = forwardRef<
           }
         }}
       </form.Subscribe>
-      <VStack className={`${INVOICE_FINALIZE_FORM_CSS_PREFIX}__Section`} gap='sm'>
+      <VStack className='Layer__InvoiceFinalizeForm__Section' gap='sm'>
         <Heading level={3} size='sm'>Payment methods</Heading>
         <form.AppField name='achEnabled'>
           {field => (
             <field.FormSwitchField
               label='ACH'
-              labelIcon={<InstitutionIcon size={14} />}
+              slot={{ LabelIcon: <InstitutionIcon size={14} /> }}
               inline
-              className={`${INVOICE_FINALIZE_FORM_FIELD_CSS_PREFIX}__Ach`}
             />
           )}
         </form.AppField>
@@ -98,31 +83,30 @@ export const InvoiceFinalizeForm = forwardRef<
           {field => (
             <field.FormSwitchField
               label='Credit Card'
-              labelIcon={<CreditCardIcon size={14} />}
+              slot={{ LabelIcon: <CreditCardIcon size={14} /> }}
               inline
-              className={`${INVOICE_FINALIZE_FORM_FIELD_CSS_PREFIX}__CreditCard`}
             />
           )}
         </form.AppField>
       </VStack>
-      <VStack className={`${INVOICE_FINALIZE_FORM_CSS_PREFIX}__Section`} gap='sm'>
+      <VStack className='Layer__InvoiceFinalizeForm__Section' gap='sm'>
         <Heading level={3} size='sm'>Custom Payment Instructions</Heading>
         <form.AppField name='customPaymentInstructions'>
           {field => (
             <field.FormTextAreaField
               label='Instructions'
               showLabel={false}
-              className={`${INVOICE_FINALIZE_FORM_FIELD_CSS_PREFIX}__CustomPaymentInstructions`}
+              className='Layer__InvoiceFinalizeForm__Field__CustomPaymentInstructions'
               placeholder='Add custom payment instructions'
             />
           )}
         </form.AppField>
         <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
           {([canSubmit, isSubmitting]) => (
-            <HStack className={`${INVOICE_FINALIZE_FORM_CSS_PREFIX}__Submit`} justify='start'>
+            <HStack className='Layer__InvoiceFinalizeForm__Submit' justify='end'>
               <Button type='submit' isDisabled={!canSubmit} isPending={isSubmitting} onPress={() => { void form.handleSubmit() }}>
                 Save
-                <Send size={14} />
+                <Save size={14} />
               </Button>
             </HStack>
           )}
@@ -130,6 +114,4 @@ export const InvoiceFinalizeForm = forwardRef<
       </VStack>
     </Form>
   )
-})
-
-InvoiceFinalizeForm.displayName = 'InvoiceFinalizeForm'
+}

@@ -16,8 +16,7 @@
     }
   }
 
-  .Layer__InvoiceFinalizeForm__Field__Ach,
-  .Layer__InvoiceFinalizeForm__Field__CreditCard {
+  .Layer__FormSwitchField.Layer__FormSwitchField--inline {
     grid-template-columns: minmax(0, 1fr) auto;
   }
 

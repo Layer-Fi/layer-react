@@ -173,13 +173,8 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) 
   return errors.length > 0 ? errors : null
 }
 
-type ConvertInvoiceFormToParamsOptions = {
-  customPaymentInstructions?: string | null
-}
-
 export const convertInvoiceFormToParams = (
   form: InvoiceForm,
-  options?: ConvertInvoiceFormToParamsOptions,
 ): unknown => ({
   customerId: form.customer?.id,
   dueAt: form.dueAt?.toDate(),
@@ -209,8 +204,5 @@ export const convertInvoiceFormToParams = (
     additionalDiscount: convertBigDecimalToCents(
       computeAdditionalDiscount({ subtotal: computeSubtotal(form.lineItems), discountRate: form.discountRate }),
     ),
-  }),
-  ...(options?.customPaymentInstructions !== undefined && options.customPaymentInstructions !== null && {
-    customPaymentInstructions: options.customPaymentInstructions,
   }),
 })
