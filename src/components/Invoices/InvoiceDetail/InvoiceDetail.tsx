@@ -1,7 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 
 import { InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import BackArrow from '@icons/BackArrow'
 import X from '@icons/X'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
@@ -22,17 +21,11 @@ export const InvoiceDetail = () => {
   const [isPaymentDrawerOpen, setIsPaymentDrawerOpen] = useState(false)
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
   const { toInvoiceTable, toPreviewInvoice, toEditInvoice } = useInvoiceNavigation()
-  const { addToast } = useLayerContext()
   const invoiceFormRef = useRef<{ submit: () => Promise<void> }>(null)
 
   const onUpsertInvoiceSuccess = useCallback((invoice: Invoice) => {
-    const toastContent = viewState.mode === UpsertInvoiceMode.Update
-      ? 'Invoice updated successfully'
-      : 'Invoice created successfully'
-    addToast({ content: toastContent, type: 'success' })
-
     toPreviewInvoice(invoice)
-  }, [viewState.mode, addToast, toPreviewInvoice])
+  }, [toPreviewInvoice])
 
   const onSubmitInvoiceForm = useCallback(() => invoiceFormRef.current?.submit(), [])
   const [formState, setFormState] = useState<InvoiceFormState>({

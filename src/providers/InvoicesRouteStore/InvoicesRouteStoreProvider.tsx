@@ -71,6 +71,10 @@ const isInvoiceDetail = (routeState: InvoiceRouteState): routeState is InvoiceDe
   return routeState.route === InvoiceRoute.Detail
 }
 
+const isInvoicePreview = (routeState: InvoiceRouteState): routeState is InvoiceDetailPreviewRouteState => {
+  return isInvoiceDetail(routeState) && routeState.step === InvoiceDetailStep.Preview
+}
+
 export function useInvoiceRouteState() {
   const store = useContext(InvoicesRouteStoreContext)
   return useStore(store, state => state.routeState)
@@ -79,6 +83,13 @@ export function useInvoiceRouteState() {
 export function useInvoiceDetail(): InvoiceDetailRouteState {
   const routeState = useInvoiceRouteState()
   if (!isInvoiceDetail(routeState)) throw new Error('Invoice detail view required')
+
+  return routeState
+}
+
+export function useInvoicePreviewRoute(): InvoiceDetailPreviewRouteState {
+  const routeState = useInvoiceRouteState()
+  if (!isInvoicePreview(routeState)) throw new Error('Invoice preview view required')
 
   return routeState
 }

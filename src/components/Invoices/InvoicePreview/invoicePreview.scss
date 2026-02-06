@@ -1,0 +1,16 @@
+.Layer__InvoicePreview__Container {
+  overflow-y: auto;
+  max-height: 52rem;
+  width: 40rem;
+}
+
+.Layer__InvoicePreview__Inner {
+  overflow: hidden;
+}
+
+.Layer__InvoicePreview__IFrame {
+  width: 125%;
+  border: none;
+  transform: scale(0.8);
+  transform-origin: top left;
+}
