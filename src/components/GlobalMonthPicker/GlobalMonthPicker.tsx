@@ -6,7 +6,12 @@ import { useGlobalDatePickerBounds } from '@hooks/useGlobalDatePickerBounds/useG
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 
-export const GlobalMonthPicker = ({ truncateMonth }: { truncateMonth?: boolean }) => {
+type GlobalMonthPickerProps = {
+  truncateMonth?: boolean
+  showLabel?: boolean
+}
+
+export const GlobalMonthPicker = ({ truncateMonth, showLabel = false }: GlobalMonthPickerProps) => {
   const { minDate, maxDate } = useGlobalDatePickerBounds()
   const { setMonth } = useGlobalDateRangeActions()
   const { date } = useGlobalDate({ dateSelectionMode: 'month' })
@@ -21,8 +26,8 @@ export const GlobalMonthPicker = ({ truncateMonth }: { truncateMonth?: boolean }
 
   return (
     <MonthPicker
-      label='Select a month'
-      showLabel={false}
+      label='Month'
+      showLabel={showLabel}
       date={dateZdt}
       onChange={onChange}
       minDate={minDateZdt}

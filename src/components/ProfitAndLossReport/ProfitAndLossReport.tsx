@@ -4,6 +4,7 @@ import { type View as ViewType } from '@internal-types/general'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { HStack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { type BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { Header } from '@components/Header/Header'
@@ -83,35 +84,32 @@ export const ProfitAndLossReport = ({
     return (
       <Header>
         <HeaderRow>
-          <HeaderCol>
-            <CombinedDateRangeSelection mode={dateSelectionMode} />
-            {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions />}
-          </HeaderCol>
-          <HeaderCol>
-            <ProfitAndLossDownloadButton
-              stringOverrides={stringOverrides?.downloadButton}
-              moneyFormat={csvMoneyFormat}
-            />
+          <HeaderCol fluid>
+            <HStack pb='sm' align='end' fluid gap='xs' justify='space-between'>
+              <HStack gap='xs'>
+                <CombinedDateRangeSelection mode={dateSelectionMode} />
+                {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions />}
+              </HStack>
+              <ProfitAndLossDownloadButton
+                stringOverrides={stringOverrides?.downloadButton}
+                moneyFormat={csvMoneyFormat}
+              />
+            </HStack>
           </HeaderCol>
         </HeaderRow>
         {view !== 'desktop' && useComparisonPnl
           && (
             <HeaderRow>
-              <HeaderCol>
-                <ProfitAndLossCompareOptions />
+              <HeaderCol fluid>
+                <HStack pb='sm' fluid>
+                  <ProfitAndLossCompareOptions />
+                </HStack>
               </HeaderCol>
             </HeaderRow>
           )}
       </Header>
     )
-  }, [
-    csvMoneyFormat,
-    dateSelectionMode,
-    hideHeader,
-    stringOverrides?.downloadButton,
-    useComparisonPnl,
-    view,
-  ])
+  }, [csvMoneyFormat, dateSelectionMode, hideHeader, stringOverrides?.downloadButton, useComparisonPnl, view])
 
   return (
     <InAppLinkProvider renderInAppLink={renderInAppLink}>
