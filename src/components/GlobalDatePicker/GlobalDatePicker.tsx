@@ -23,8 +23,7 @@ export const GlobalDatePicker = () => {
 
   return (
     <DatePicker
-      label='Effective Date'
-      showLabel={false}
+      label='Effective date'
       date={localDate}
       onChange={onChange}
       minDate={minDateZdt}
@@ -32,6 +31,7 @@ export const GlobalDatePicker = () => {
       isInvalid={isInvalid}
       errorText={errorText}
       onBlur={onBlur}
+      slotProps={{ Label: { size: 'sm', pbe: '3xs' } }}
     />
   )
 }

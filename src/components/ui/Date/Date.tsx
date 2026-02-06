@@ -16,6 +16,8 @@ import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
 import './date.scss'
 
+export const DATE_PICKER_CLASS_NAME = 'Layer__UI__DatePicker'
+
 const DATE_FIELD_CLASS_NAME = 'Layer__UI__DateField'
 type DateFieldProps<T extends DateValue> = ReactAriaDateFieldProps<T> & {
   inline?: boolean
@@ -85,7 +87,6 @@ export const DateSegment = forwardRef<HTMLDivElement, DateSegmentProps>(
   },
 )
 
-const DATE_PICKER_CLASS_NAME = 'Layer__UI__DatePicker'
 type DatePickerProps = Omit<ReactAriaDatePickerProps<ZonedDateTime>, 'className'> & {
   className?: string
 }

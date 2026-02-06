@@ -1,7 +1,9 @@
-import { useCallback } from 'react'
+import { useCallback, useId } from 'react'
 
 import { DateGroupBy } from '@schemas/reports/unifiedReport'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
 
 import './dateGroupByComboBox.scss'
 
@@ -28,14 +30,20 @@ export const DateGroupByComboBox = ({ value, onValueChange }: DateGroupByComboBo
     onValueChange(option?.value || null)
   }, [onValueChange])
 
+  const inputId = useId()
+
   return (
-    <ComboBox
-      className='Layer__DateGroupByComboBox'
-      options={options}
-      onSelectedValueChange={onSelectedValueChange}
-      selectedValue={selectedOption}
-      isSearchable={false}
-      isClearable={false}
-    />
+    <VStack className='Layer__DateGroupByComboBox__Container'>
+      <Label pbe='3xs' size='sm' htmlFor={inputId}>Group by</Label>
+      <ComboBox
+        className='Layer__DateGroupByComboBox'
+        options={options}
+        onSelectedValueChange={onSelectedValueChange}
+        selectedValue={selectedOption}
+        isSearchable={false}
+        isClearable={false}
+        inputId={inputId}
+      />
+    </VStack>
   )
 }

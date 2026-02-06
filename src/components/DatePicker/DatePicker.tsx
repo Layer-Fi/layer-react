@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
+import classNames from 'classnames'
 import { Dialog } from 'react-aria-components'
 
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
-import { DatePicker as BaseDatePicker } from '@ui/Date/Date'
-import { Label } from '@ui/Typography/Text'
+import { DATE_PICKER_CLASS_NAME, DatePicker as BaseDatePicker } from '@ui/Date/Date'
+import { Label, type TextStyleProps } from '@ui/Typography/Text'
 import { DateCalendar } from '@components/DateCalendar/DateCalendar'
 import { DatePickerInput } from '@components/DatePicker/DatePickerInput'
 import { ResponsivePopover } from '@components/ResponsivePopover/ResponsivePopover'
+
+import './datePicker.scss'
 
 type DatePickerProps = {
   label: string
@@ -22,6 +25,9 @@ type DatePickerProps = {
   onChange: (date: ZonedDateTime | null) => void
   isDisabled?: boolean
   className?: string
+  slotProps?: {
+    Label?: TextStyleProps
+  }
 }
 
 export const DatePicker = ({
@@ -37,6 +43,7 @@ export const DatePicker = ({
   isDisabled,
   isReadOnly,
   className,
+  slotProps,
 }: DatePickerProps) => {
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   const { value } = useSizeClass()
@@ -54,9 +61,9 @@ export const DatePicker = ({
       onOpenChange={setPopoverOpen}
       isDisabled={isDisabled}
       isReadOnly={isReadOnly}
-      className={className}
+      className={classNames(DATE_PICKER_CLASS_NAME, className)}
     >
-      {showLabel && <Label slot='label' size='sm'>{label}</Label>}
+      {showLabel && <Label slot='label' size='sm' {...slotProps?.Label}>{label}</Label>}
       <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} isReadOnly={isReadOnly} />
       <ResponsivePopover>
         <Dialog>

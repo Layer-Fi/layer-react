@@ -26,9 +26,7 @@ export const ExpandCollapseButton = ({
         variant={
           variant
             ? variant
-            : iconOnly
-              ? ButtonVariant.secondary
-              : ButtonVariant.tertiary
+            : ButtonVariant.secondary
         }
         className={classNames(
           iconOnly

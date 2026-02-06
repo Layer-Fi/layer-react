@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useId, useRef, useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { format as formatTime } from 'date-fns'
@@ -9,6 +9,7 @@ import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { PickerDropdownIndicator } from '@ui/PickerDropdownIndicator/PickerDropdownIndicator'
+import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { MonthCalendar } from '@components/MonthCalendar/MonthCalendar'
 import { ResponsivePopover } from '@components/ResponsivePopover/ResponsivePopover'
@@ -46,29 +47,32 @@ export const MonthPicker = ({
   const inputValue = formatTime(date.toDate(), truncateMonth ? MONTH_YEAR_FORMAT_SHORT : MONTH_YEAR_FORMAT)
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
+  const inputId = useId()
   return (
-    <DialogTrigger isOpen={isPopoverOpen} onOpenChange={setPopoverOpen}>
-      {showLabel && <Label slot='label' size='sm'>{label}</Label>}
-      <InputGroup
-        ref={triggerRef}
-        slot='input'
-        className={classNames('Layer__MonthPicker__InputGroup', { 'Layer__MonthPicker__InputGroup--truncated': truncateMonth })}
-        onClick={() => setPopoverOpen(true)}
-      >
-        <Input inset {...additionalAriaProps} value={inputValue} readOnly />
-        <PickerDropdownIndicator onClick={() => setPopoverOpen(true)} />
-      </InputGroup>
-      <ResponsivePopover triggerRef={triggerRef}>
-        <Dialog>
-          <MonthCalendar
-            date={date}
-            onChange={onChangeMonth}
-            minDate={minDate}
-            maxDate={maxDate}
-            variant={value}
-          />
-        </Dialog>
-      </ResponsivePopover>
-    </DialogTrigger>
+    <VStack>
+      {showLabel && <Label pbe='3xs' size='sm' htmlFor={inputId}>{label}</Label>}
+      <DialogTrigger isOpen={isPopoverOpen} onOpenChange={setPopoverOpen}>
+        <InputGroup
+          ref={triggerRef}
+          slot='input'
+          className={classNames('Layer__MonthPicker__InputGroup', { 'Layer__MonthPicker__InputGroup--truncated': truncateMonth })}
+          onClick={() => setPopoverOpen(true)}
+        >
+          <Input inset {...additionalAriaProps} value={inputValue} readOnly id={inputId} />
+          <PickerDropdownIndicator onClick={() => setPopoverOpen(true)} />
+        </InputGroup>
+        <ResponsivePopover triggerRef={triggerRef}>
+          <Dialog>
+            <MonthCalendar
+              date={date}
+              onChange={onChangeMonth}
+              minDate={minDate}
+              maxDate={maxDate}
+              variant={value}
+            />
+          </Dialog>
+        </ResponsivePopover>
+      </DialogTrigger>
+    </VStack>
   )
 }

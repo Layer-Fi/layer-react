@@ -49,8 +49,7 @@ export const GlobalDateRangePicker = () => {
   return (
     <>
       <DatePicker
-        label='Start Date'
-        showLabel={false}
+        label='Start date'
         date={localStartDate}
         onChange={onChangeStartDate}
         minDate={minStartDate}
@@ -58,10 +57,10 @@ export const GlobalDateRangePicker = () => {
         isInvalid={startDateInvalid}
         errorText={startDateErrorText}
         onBlur={onBlurStartDate}
+        slotProps={{ Label: { size: 'sm', pbe: '3xs' } }}
       />
       <DatePicker
-        label='End Date'
-        showLabel={false}
+        label='End date'
         date={localEndDate}
         onChange={onChangeEndDate}
         minDate={minEndDate}
@@ -69,6 +68,7 @@ export const GlobalDateRangePicker = () => {
         isInvalid={endDateInvalid}
         errorText={endDateErrorText}
         onBlur={onBlurEndDate}
+        slotProps={{ Label: { size: 'sm', pbe: '3xs' } }}
       />
     </>
   )
