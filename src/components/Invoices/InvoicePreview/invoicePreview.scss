@@ -10,6 +10,7 @@
 }
 
 .Layer__InvoicePreview__IFrame {
+  flex-shrink: 0;
   width: 125%;
   border: none;
   transform: scale(0.8);

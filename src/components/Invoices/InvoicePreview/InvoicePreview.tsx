@@ -1,7 +1,7 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef } from 'react'
 
 import { useInvoicePreviewRoute } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { HStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { useInvoicePreview } from '@features/invoices/api/useInvoicePreview'
 
 import './invoicePreview.scss'
@@ -9,36 +9,50 @@ import './invoicePreview.scss'
 export const InvoicePreview = () => {
   const { invoice } = useInvoicePreviewRoute()
   const { data: srcDoc } = useInvoicePreview({ invoiceId: invoice.id })
-  const [height, setHeight] = useState<number | undefined>(undefined)
-  const scaledHeight = height ? (height * 0.8) : undefined
+  const innerRef = useRef<HTMLDivElement>(null)
+
+  const getDocumentHeight = useCallback((doc: Document) => {
+    const { body, documentElement } = doc
+
+    return Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      documentElement.clientHeight,
+      documentElement.scrollHeight,
+      documentElement.offsetHeight,
+    )
+  }, [])
 
   const handleLoad = useCallback((event: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = event.currentTarget
     const doc = iframe.contentDocument
-    if (doc) {
-      setHeight(doc.body.scrollHeight)
-    }
-  }, [])
+
+    if (!doc || !innerRef.current) return
+
+    const height = getDocumentHeight(doc)
+
+    iframe.style.height = `${height}px`
+    innerRef.current.style.height = `${height * 0.8}px`
+  }, [getDocumentHeight])
 
   if (!srcDoc) return null
 
   return (
     <HStack pb='lg' pi='lg'>
-      <div className='Layer__InvoicePreview__Container'>
-        <div
+      <VStack className='Layer__InvoicePreview__Container'>
+        <VStack
           className='Layer__InvoicePreview__Inner'
-          style={{ height: scaledHeight ? `${scaledHeight}px` : undefined }}
+          ref={innerRef}
         >
           <iframe
             className='Layer__InvoicePreview__IFrame'
             srcDoc={srcDoc}
-            sandbox=''
+            sandbox='allow-same-origin'
             referrerPolicy='no-referrer'
             onLoad={handleLoad}
-            style={{ height: height ? `${height}px` : undefined }}
           />
-        </div>
-      </div>
+        </VStack>
+      </VStack>
     </HStack>
   )
 }
