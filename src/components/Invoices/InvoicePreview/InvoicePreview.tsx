@@ -32,7 +32,7 @@ export const InvoicePreview = () => {
           <iframe
             className='Layer__InvoicePreview__IFrame'
             srcDoc={srcDoc}
-            sandbox=''
+            sandbox='allow-same-origin'
             referrerPolicy='no-referrer'
             onLoad={handleLoad}
             style={{ height: height ? `${height}px` : undefined }}
