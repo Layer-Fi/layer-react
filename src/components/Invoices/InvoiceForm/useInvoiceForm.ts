@@ -41,6 +41,8 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
       { value, formApi }: { value: InvoiceForm, formApi: { reset: () => void } },
     ) => {
       try {
+        // Convert the `InvoiceForm` schema to the request shape for `upsertInvoice`. This will
+        // throw an error if the request shape is not valid.
         const upsertInvoiceParams = convertInvoiceFormToParams(value)
         const upsertInvoiceRequest = Schema.encodeUnknownSync(UpsertInvoiceSchema)(upsertInvoiceParams)
 

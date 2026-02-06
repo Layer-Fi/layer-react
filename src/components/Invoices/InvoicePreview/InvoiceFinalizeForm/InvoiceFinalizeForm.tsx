@@ -94,7 +94,7 @@ export const InvoiceFinalizeForm = ({
         <form.AppField name='customPaymentInstructions'>
           {field => (
             <field.FormTextAreaField
-              label='Instructions'
+              label='Custom Payment Instructions'
               showLabel={false}
               className='Layer__InvoiceFinalizeForm__Field__CustomPaymentInstructions'
               placeholder='Add custom payment instructions'
