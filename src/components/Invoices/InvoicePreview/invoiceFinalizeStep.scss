@@ -1,0 +1,36 @@
+.Layer__InvoiceFinalizeStep {
+  display: grid;
+  grid-template-columns: minmax(44rem, 1fr) minmax(22rem, 28rem);
+  min-height: 36rem;
+}
+
+.Layer__InvoiceFinalizeStep__PreviewPanel,
+.Layer__InvoiceFinalizeStep__PaymentMethodsPanel,
+.Layer__InvoiceFinalizeStep__PaymentMethodsPanelLoading {
+  min-height: inherit;
+}
+
+.Layer__InvoiceFinalizeStep__PreviewPanel {
+  padding: var(--spacing-xl);
+  border-right: 1px solid var(--border-color);
+}
+
+.Layer__InvoiceFinalizeStep__PaymentMethodsPanelError {
+  padding: var(--spacing-md);
+}
+
+@container (width <= 72rem) {
+  .Layer__InvoiceFinalizeStep {
+    grid-template-columns: 1fr;
+  }
+
+  .Layer__InvoiceFinalizeStep__PaymentMethodsPanel {
+    order: 1;
+  }
+
+  .Layer__InvoiceFinalizeStep__PreviewPanel {
+    order: 2;
+    border-top: 1px solid var(--border-color);
+    border-right: none;
+  }
+}

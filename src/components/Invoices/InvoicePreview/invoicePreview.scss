@@ -1,7 +1,9 @@
 .Layer__InvoicePreview__Container {
+  overflow: hidden;
   overflow-y: auto;
   max-height: 52rem;
   width: 40rem;
+  margin-inline: auto;
 }
 
 .Layer__InvoicePreview__Inner {
@@ -9,6 +11,7 @@
 }
 
 .Layer__InvoicePreview__IFrame {
+  overflow-y: scroll;
   width: 125%;
   border: none;
   transform: scale(0.8);
