@@ -1,4 +1,5 @@
 .Layer__InvoicePreview__Container {
+  overflow: hidden;
   overflow-y: auto;
   max-height: 52rem;
   width: 40rem;
@@ -10,7 +11,7 @@
 }
 
 .Layer__InvoicePreview__IFrame {
-  flex-shrink: 0;
+  overflow-y: scroll;
   width: 125%;
   border: none;
   transform: scale(0.8);

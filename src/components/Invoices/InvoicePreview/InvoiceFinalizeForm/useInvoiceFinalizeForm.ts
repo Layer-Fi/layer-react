@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { revalidateLogic, useStore } from '@tanstack/react-form'
+import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
 import {
@@ -19,12 +19,6 @@ type UseInvoiceFinalizeFormProps = {
   invoice: Invoice
   initialPaymentMethods: readonly InvoicePaymentMethod[]
   onSuccess: (invoice: Invoice) => void
-}
-
-export type InvoiceFinalizeFormState = {
-  canSubmit: boolean
-  isDirty: boolean
-  isSubmitting: boolean
 }
 
 export const useInvoiceFinalizeForm = ({
@@ -70,21 +64,8 @@ export const useInvoiceFinalizeForm = ({
     canSubmitWhenInvalid: true,
   })
 
-  const canSubmit = useStore(form.store, state => state.canSubmit)
-  const isDirty = useStore(form.store, state => state.isDirty)
-  const isSubmitting = useStore(form.store, state => state.isSubmitting)
-
-  const formState = useMemo(
-    () => ({
-      canSubmit,
-      isDirty,
-      isSubmitting,
-    }),
-    [canSubmit, isDirty, isSubmitting],
-  )
-
   return useMemo(
-    () => ({ form, formState, submitError }),
-    [form, formState, submitError],
+    () => ({ form, submitError }),
+    [form, submitError],
   )
 }

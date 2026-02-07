@@ -1,10 +1,11 @@
 import { useCallback, useState } from 'react'
 
 import { useInvoicePreviewRoute } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { VStack } from '@ui/Stack/Stack'
 import { useInvoicePreview } from '@features/invoices/api/useInvoicePreview'
 
 import './invoicePreview.scss'
+
+const INVOICE_PREVIEW_SCALE = 0.8
 
 export const InvoicePreview = () => {
   const { invoice } = useInvoicePreviewRoute()
@@ -14,7 +15,7 @@ export const InvoicePreview = () => {
   const getDocumentHeight = useCallback((doc: Document) => {
     return Math.max(
       doc.body.scrollHeight,
-      doc.documentElement.scrollHeight,
+      // doc.documentElement.scrollHeight,
     )
   }, [])
 
@@ -31,8 +32,11 @@ export const InvoicePreview = () => {
   if (!srcDoc) return null
 
   return (
-    <VStack className='Layer__InvoicePreview__Container'>
-      <VStack className='Layer__InvoicePreview__Inner'>
+    <div className='Layer__InvoicePreview__Container'>
+      <div
+        className='Layer__InvoicePreview__Inner'
+        style={{ height: previewHeight ? `${previewHeight * INVOICE_PREVIEW_SCALE}px` : undefined }}
+      >
         <iframe
           className='Layer__InvoicePreview__IFrame'
           srcDoc={srcDoc}
@@ -41,7 +45,7 @@ export const InvoicePreview = () => {
           onLoad={handleLoad}
           height={previewHeight || undefined}
         />
-      </VStack>
-    </VStack>
+      </div>
+    </div>
   )
 }

@@ -1,15 +1,13 @@
 import { AlertTriangle } from 'lucide-react'
 
 import {
-  InvoiceDetailStep,
-  useInvoiceDetail,
+  useInvoicePreviewRoute,
 } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import {
   InvoiceFinalizeForm,
 } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/InvoiceFinalizeForm'
-import type { InvoiceFinalizeFormState } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/useInvoiceFinalizeForm'
 import { InvoicePreview } from '@components/Invoices/InvoicePreview/InvoicePreview'
 import { Loader } from '@components/Loader/Loader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
@@ -20,24 +18,13 @@ import './invoiceFinalizeStep.scss'
 
 type InvoiceFinalizeStepProps = {
   onSuccess: (invoice: Invoice) => void
-  onChangeFormState?: (formState: InvoiceFinalizeFormState) => void
 }
 
 export const InvoiceFinalizeStep = ({
   onSuccess,
-  onChangeFormState,
 }: InvoiceFinalizeStepProps) => {
-  const viewState = useInvoiceDetail()
-  const invoiceId = viewState.step === InvoiceDetailStep.Preview
-    ? viewState.invoice.id
-    : ''
-  const { data, isLoading, isError } = useInvoicePaymentMethods({ invoiceId })
-
-  if (viewState.step !== InvoiceDetailStep.Preview) {
-    return null
-  }
-
-  const { invoice } = viewState
+  const { invoice } = useInvoicePreviewRoute()
+  const { data, isLoading, isError } = useInvoicePaymentMethods({ invoiceId: invoice.id })
 
   return (
     <HStack className='Layer__InvoiceFinalizeStep'>
@@ -55,12 +42,7 @@ export const InvoiceFinalizeStep = ({
             </VStack>
           )}
           Inactive={(
-            <InvoiceFinalizeForm
-              invoice={invoice}
-              initialPaymentMethods={[]}
-              onSuccess={onSuccess}
-              onChangeFormState={onChangeFormState}
-            />
+            null
           )}
           Error={(
             <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelError'>
@@ -78,7 +60,6 @@ export const InvoiceFinalizeStep = ({
               invoice={invoice}
               initialPaymentMethods={invoicePaymentMethods.paymentMethods}
               onSuccess={onSuccess}
-              onChangeFormState={onChangeFormState}
             />
           )}
         </ConditionalBlock>

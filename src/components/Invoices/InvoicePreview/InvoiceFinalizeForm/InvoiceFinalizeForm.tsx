@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
 
@@ -11,7 +11,6 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import {
-  type InvoiceFinalizeFormState,
   useInvoiceFinalizeForm,
 } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/useInvoiceFinalizeForm'
 import { TextSize } from '@components/Typography/Text'
@@ -24,16 +23,14 @@ type InvoiceFinalizeFormProps = {
   invoice: Invoice
   initialPaymentMethods: readonly InvoicePaymentMethod[]
   onSuccess: (invoice: Invoice) => void
-  onChangeFormState?: (formState: InvoiceFinalizeFormState) => void
 }
 
 export const InvoiceFinalizeForm = ({
   invoice,
   initialPaymentMethods,
   onSuccess,
-  onChangeFormState,
 }: InvoiceFinalizeFormProps) => {
-  const { form, formState, submitError } = useInvoiceFinalizeForm({
+  const { form, submitError } = useInvoiceFinalizeForm({
     invoice,
     initialPaymentMethods,
     onSuccess,
@@ -43,10 +40,6 @@ export const InvoiceFinalizeForm = ({
     e.preventDefault()
     e.stopPropagation()
   }, [])
-
-  useEffect(() => {
-    onChangeFormState?.(formState)
-  }, [formState, onChangeFormState])
 
   return (
     <Form className='Layer__InvoiceFinalizeForm' onSubmit={blockNativeOnSubmit}>
