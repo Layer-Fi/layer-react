@@ -23,7 +23,7 @@
     "build": "vite build --config vite/vite.config.ts --mode esm && vite build --config vite/vite.config.ts --mode cjs",
     "build:clean": "rm -rf ./dist && npm run build",
     "dev:js": "vite build --config vite/vite.config.ts --mode esm --watch",
-    "dev:types": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && tsc -p tsconfig.build.json --watch --preserveWatchOutput & chokidar 'dist/**/*.d.ts' -c 'tsc-alias -p tsconfig.build.json'",
+    "dev:types": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && tsc -p tsconfig.build.json --watch --preserveWatchOutput & chokidar 'dist/**/*.d.ts' --silent -c 'tsc-alias -p tsconfig.build.json'",
     "dev": "npm run dev:js & npm run dev:types",
     "prepack": "npm run typecheck && npm run build:clean",
     "lint": "eslint . && stylelint '**/*.{css,scss}'",
