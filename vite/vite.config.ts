@@ -23,15 +23,11 @@ export default defineConfig(({ mode, command }) => {
     plugins: [
       react(),
       tsConfigPaths(),
-      isESM
+      isESM && !isWatch
         ? dts({
-          entryRoot: 'src',
-          outDir: OUT_DIR,
           tsconfigPath: './tsconfig.json',
           rollupTypes: true,
-          insertTypesEntry: true,
-          logLevel: 'error',
-          include: ['src/**/*.ts', 'src/**/*.tsx'],
+          outDir: path.resolve(__dirname, `../${OUT_DIR}`),
         })
         : null,
       isESM ? bundleCss() : null,
@@ -61,7 +57,7 @@ export default defineConfig(({ mode, command }) => {
           formats: ['cjs'],
           fileName: () => 'index.cjs',
         },
-      rollupOptions: {
+      rolldownOptions: {
         external: externalDeps,
         output: {
           dir: path.resolve(__dirname, `../${OUT_DIR}/${mode}`),
