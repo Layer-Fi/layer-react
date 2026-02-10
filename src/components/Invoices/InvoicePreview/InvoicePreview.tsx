@@ -15,7 +15,7 @@ export const InvoicePreview = () => {
   const getDocumentHeight = useCallback((doc: Document) => {
     return Math.max(
       doc.body.scrollHeight,
-      // doc.documentElement.scrollHeight,
+      doc.documentElement.scrollHeight,
     )
   }, [])
 

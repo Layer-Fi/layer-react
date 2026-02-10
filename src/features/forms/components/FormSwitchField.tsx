@@ -10,14 +10,14 @@ import type { CommonFormFieldProps } from '@features/forms/types'
 import './formSwitchField.scss'
 
 export type FormSwitchFieldProps = CommonFormFieldProps & {
-  slot?: {
+  slots?: {
     LabelIcon?: ReactNode
   }
 }
 const FORM_SWITCH_FIELD_CLASSNAME = 'Layer__FormSwitchField'
 export function FormSwitchField({
   label,
-  slot,
+  slots,
   className,
   inline = false,
   showLabel = true,
@@ -49,7 +49,7 @@ export function FormSwitchField({
       {showLabel
         && (
           <HStack slot='label' gap='xs' align='center'>
-            {slot?.LabelIcon}
+            {slots?.LabelIcon}
             <Label size='sm' htmlFor={name}>{label}</Label>
           </HStack>
         )}
