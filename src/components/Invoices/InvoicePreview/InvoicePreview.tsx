@@ -6,18 +6,17 @@ import { useInvoicePreview } from '@features/invoices/api/useInvoicePreview'
 import './invoicePreview.scss'
 
 const INVOICE_PREVIEW_SCALE = 0.8
+const getDocumentHeight = (doc: Document) => {
+  return Math.max(
+    doc.body.scrollHeight,
+    doc.documentElement.scrollHeight,
+  )
+}
 
 export const InvoicePreview = () => {
   const { invoice } = useInvoicePreviewRoute()
   const { data: srcDoc } = useInvoicePreview({ invoiceId: invoice.id })
   const [previewHeight, setPreviewHeight] = useState<number | null>(null)
-
-  const getDocumentHeight = useCallback((doc: Document) => {
-    return Math.max(
-      doc.body.scrollHeight,
-      doc.documentElement.scrollHeight,
-    )
-  }, [])
 
   const handleLoad = useCallback((event: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = event.currentTarget
@@ -27,7 +26,7 @@ export const InvoicePreview = () => {
 
     const height = getDocumentHeight(doc)
     setPreviewHeight(height)
-  }, [getDocumentHeight])
+  }, [])
 
   if (!srcDoc) return null
 
