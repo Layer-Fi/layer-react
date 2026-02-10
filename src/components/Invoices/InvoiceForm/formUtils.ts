@@ -173,7 +173,9 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) 
   return errors.length > 0 ? errors : null
 }
 
-export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
+export const convertInvoiceFormToParams = (
+  form: InvoiceForm,
+): unknown => ({
   customerId: form.customer?.id,
   dueAt: form.dueAt?.toDate(),
   sentAt: form.sentAt?.toDate(),

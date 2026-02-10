@@ -46,10 +46,10 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
         const upsertInvoiceParams = convertInvoiceFormToParams(value)
         const upsertInvoiceRequest = Schema.encodeUnknownSync(UpsertInvoiceSchema)(upsertInvoiceParams)
 
-        const { data: invoice } = await upsertInvoice(upsertInvoiceRequest)
+        const { data: upsertedInvoice } = await upsertInvoice(upsertInvoiceRequest)
 
         setSubmitError(undefined)
-        onSuccess(invoice)
+        onSuccess(upsertedInvoice)
 
         formApi.reset()
       }

@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
 
 import { InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import BackArrow from '@icons/BackArrow'
 import X from '@icons/X'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
@@ -10,7 +11,7 @@ import { InvoiceDetailSubHeader } from '@components/Invoices/InvoiceDetail/Invoi
 import { InvoicePaymentDrawer } from '@components/Invoices/InvoiceDetail/InvoicePaymentDrawer'
 import type { InvoiceFormState } from '@components/Invoices/InvoiceForm/formUtils'
 import { InvoiceForm } from '@components/Invoices/InvoiceForm/InvoiceForm'
-import { InvoicePreview } from '@components/Invoices/InvoicePreview/InvoicePreview'
+import { InvoiceFinalizeStep } from '@components/Invoices/InvoicePreview/InvoiceFinalizeStep'
 import { UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
 import { type Invoice } from '@features/invoices/invoiceSchemas'
 
@@ -20,7 +21,8 @@ export const InvoiceDetail = () => {
   const viewState = useInvoiceDetail()
   const [isPaymentDrawerOpen, setIsPaymentDrawerOpen] = useState(false)
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
-  const { toInvoiceTable, toPreviewInvoice, toEditInvoice } = useInvoiceNavigation()
+  const { toInvoiceTable, toPreviewInvoice, toEditInvoice, toViewInvoice } = useInvoiceNavigation()
+  const { addToast } = useLayerContext()
   const invoiceFormRef = useRef<{ submit: () => Promise<void> }>(null)
 
   const onUpsertInvoiceSuccess = useCallback((invoice: Invoice) => {
@@ -36,6 +38,11 @@ export const InvoiceDetail = () => {
   const onChangeFormState = useCallback((nextState: InvoiceFormState) => {
     setFormState(nextState)
   }, [])
+
+  const onFinalizeInvoiceSuccess = useCallback((invoice: Invoice) => {
+    addToast({ content: 'Invoice saved and sent successfully', type: 'success' })
+    toViewInvoice(invoice)
+  }, [addToast, toViewInvoice])
 
   const Header = useCallback(() => {
     return (
@@ -75,7 +82,11 @@ export const InvoiceDetail = () => {
             ref={invoiceFormRef}
           />
         )}
-        {showInvoicePreview && <InvoicePreview />}
+        {showInvoicePreview && (
+          <InvoiceFinalizeStep
+            onSuccess={onFinalizeInvoiceSuccess}
+          />
+        )}
       </BaseDetailView>
       <DiscardInvoiceChangesModal
         isOpen={isDiscardChangesModalOpen}

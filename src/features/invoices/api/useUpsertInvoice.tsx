@@ -3,7 +3,7 @@ import { Effect, Schema } from 'effect'
 import type { Key } from 'swr'
 import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 
-import { post, put } from '@api/layer/authenticated_http'
+import { patch, post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useInvoiceSummaryStatsCacheActions } from '@features/invoices/api/useInvoiceSummaryStats'
@@ -25,7 +25,7 @@ const createInvoice = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/invoices`)
 
-const updateInvoice = put<
+const updateInvoice = patch<
   UpsertInvoiceReturn,
   UpsertInvoiceBody,
   { businessId: string, invoiceId: string }
