@@ -67,7 +67,7 @@ export const InvoiceFinalizeForm = ({
           {field => (
             <field.FormSwitchField
               label='ACH'
-              slot={{ LabelIcon: <InstitutionIcon size={14} /> }}
+              slots={{ LabelIcon: <InstitutionIcon size={14} /> }}
               inline
             />
           )}
@@ -76,7 +76,7 @@ export const InvoiceFinalizeForm = ({
           {field => (
             <field.FormSwitchField
               label='Credit Card'
-              slot={{ LabelIcon: <CreditCardIcon size={14} /> }}
+              slots={{ LabelIcon: <CreditCardIcon size={14} /> }}
               inline
             />
           )}
