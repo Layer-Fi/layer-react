@@ -26,7 +26,7 @@ export function toDefinedSearchParameters(
   input: Record<string, ParameterValues | null | undefined>,
 ) {
   const definedParameterPairs = Object.entries(input)
-    .flatMap(([key, value]) => {
+    .flatMap(([key, value]): [string, string][] => {
       if (value === null || value === undefined) {
         return []
       }
@@ -36,7 +36,7 @@ export function toDefinedSearchParameters(
       }
 
       if (isStringArray(value)) {
-        return value.map(item => [key, item])
+        return value.map((item): [string, string] => [key, item])
       }
 
       if (typeof value !== 'string') {

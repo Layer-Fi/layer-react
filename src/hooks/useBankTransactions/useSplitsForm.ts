@@ -116,7 +116,9 @@ export const useSplitsForm = ({
     if (newCategory === null) return
 
     const newLocalSplits = [...localSplits]
-    newLocalSplits[index].category = newCategory
+    const split = newLocalSplits[index]
+    if (!split) return
+    split.category = newCategory
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
 
@@ -125,7 +127,9 @@ export const useSplitsForm = ({
 
   const updateSplitAtIndex = useCallback((index: number, updater: (split: Split) => Split) => {
     const newLocalSplits = [...localSplits]
-    newLocalSplits[index] = updater(newLocalSplits[index])
+    const split = newLocalSplits[index]
+    if (!split) return
+    newLocalSplits[index] = updater(split)
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
 

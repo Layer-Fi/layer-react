@@ -44,15 +44,16 @@ interface ChartTooltipCursorProps {
 }
 
 export const ChartTooltipCursor = ({ width, points, height }: ChartTooltipCursorProps) => {
-  if (!points || points.length === 0 || height === undefined) return null
+  const firstPoint = points?.[0]
+  if (!firstPoint || height === undefined) return null
 
   return (
     <ZIndexLayer zIndex={DefaultZIndexes.cursorRectangle}>
       <Rectangle
         fill='#F7F8FA'
         stroke='none'
-        x={points[0].x - width / 2}
-        y={points[0].y}
+        x={firstPoint.x - width / 2}
+        y={firstPoint.y}
         width={width}
         height={height + CURSOR_Y_OFFSET}
         radius={6}

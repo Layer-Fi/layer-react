@@ -59,9 +59,10 @@ export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
     })
   }, [bookkeepingConfiguration?.onboardingCallUrl])
 
-  const [step, setStep] = useState<PlatformOnboardingStep>(platformOnboardingSteps[0].id)
+  const firstStep = platformOnboardingSteps[0]
+  const [step, setStep] = useState<PlatformOnboardingStep>(firstStep?.id ?? PlatformOnboardingStep.WELCOME)
 
-  const isFirstStep = platformOnboardingSteps[0].id === step
+  const isFirstStep = firstStep?.id === step
 
   const nextStep = () => {
     const currentStepIndex = platformOnboardingSteps.findIndex(s => s.id === step)

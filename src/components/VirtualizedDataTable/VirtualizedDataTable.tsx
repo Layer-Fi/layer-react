@@ -151,6 +151,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
         <TableBody style={{ height: totalSize }}>
           {virtualItems.map((virtualRow) => {
             const row = rows[virtualRow.index]
+            if (!row) return null
             return (
               <Row
                 key={row.id}

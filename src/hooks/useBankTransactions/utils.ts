@@ -142,10 +142,11 @@ export const buildBulkMatchOrCategorizePayload = (
 }
 
 export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): CategoryUpdate => {
-  return splits.length === 1 && splits[0].category
+  const firstSplit = splits[0]
+  return splits.length === 1 && firstSplit?.category
     ? ({
       type: 'Category',
-      category: splits[0].category.classification!,
+      category: firstSplit.category.classification!,
     })
     : ({
       type: 'Split',
