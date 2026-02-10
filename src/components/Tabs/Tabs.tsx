@@ -29,7 +29,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
   const [thumbPos, setThumbPos] = useState({ left: 0, width: 0 })
   const [currentWidth, setCurrentWidth] = useState(0)
 
-  const selectedValue = selected || options[0].value
+  const selectedValue: string | undefined = selected || options[0]?.value
 
   const baseClassName = classNames(
     'Layer__tabs',

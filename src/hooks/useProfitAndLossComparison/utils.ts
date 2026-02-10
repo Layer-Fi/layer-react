@@ -42,7 +42,7 @@ export function prepareFiltersBody(compareOptions: TagComparisonOption[]): Reado
   }
 
   const allFilters = [
-    noneFilters.length > 0
+    noneFilters[0]
       ? {
         structure: noneFilters[0].tagFilterConfig.structure,
         required_tags: [],

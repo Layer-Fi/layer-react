@@ -47,7 +47,7 @@ export const YearPicker = ({
   }, [minYear, maxYear])
 
   const selectedYearOption = useMemo(() => {
-    return yearOptions.find(opt => opt.value === String(year)) ?? yearOptions[0]
+    return yearOptions.find(opt => opt.value === String(year)) ?? yearOptions[0] ?? null
   }, [yearOptions, year])
 
   const handleChange = useCallback((option: YearOption | null) => {

@@ -128,7 +128,7 @@ export const BankTransactionsMobileListPersonalForm = ({
       <HStack gap='md'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
+            onUpload={file => receiptsRef.current?.uploadReceipt(file)}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}

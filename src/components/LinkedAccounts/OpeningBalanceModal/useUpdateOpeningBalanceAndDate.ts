@@ -144,10 +144,11 @@ export function useBulkSetOpeningBalanceAndDate(
       )
     )
       .then((results) => {
-        const resultsWithIds: OpeningBalanceAPIResponseResult[] = results.map((r, i) => ({
-          ...r,
-          accountId: data[i].accountId,
-        }))
+        const resultsWithIds: OpeningBalanceAPIResponseResult[] = results.flatMap((r, i) => {
+          const entry = data[i]
+          if (!entry) return []
+          return [{ ...r, accountId: entry.accountId }]
+        })
         return onSuccess?.(resultsWithIds)
       })
       .then(() => true as const),

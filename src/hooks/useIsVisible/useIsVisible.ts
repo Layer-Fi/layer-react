@@ -17,9 +17,11 @@ export const useIsVisible = (ref: React.RefObject<HTMLElement>) => {
       return
     }
 
-    const observer = new IntersectionObserver(([entry]) =>
-      setIntersecting(entry.isIntersecting),
-    )
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry) {
+        setIntersecting(entry.isIntersecting)
+      }
+    })
 
     observer.observe(ref.current)
     return () => {

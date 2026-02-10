@@ -109,7 +109,10 @@ export const getDefaultSelectedCategoryForBankTransaction = (
   }
 
   if (hasSuggestions(bankTransaction.categorization_flow)) {
-    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.categorization_flow.suggestions[0])
+    const firstSuggestion = bankTransaction.categorization_flow.suggestions[0]
+    if (firstSuggestion) {
+      return convertApiCategorizationToCategoryOrSplitAsOption(firstSuggestion)
+    }
   }
 
   return null

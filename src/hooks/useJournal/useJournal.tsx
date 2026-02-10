@@ -154,8 +154,8 @@ export const useJournal: UseJournal = () => {
     if (paginatedData && paginatedData.length > 0) {
       const lastPage = paginatedData[paginatedData.length - 1]
       return Boolean(
-        lastPage.meta?.pagination.cursor
-        && lastPage.meta?.pagination.has_more,
+        lastPage?.meta?.pagination.cursor
+        && lastPage?.meta?.pagination.has_more,
       )
     }
     return false

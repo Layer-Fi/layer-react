@@ -70,8 +70,8 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
 
     const lastPage = paginatedData[paginatedData.length - 1]
     return Boolean(
-      lastPage.meta?.pagination.cursor
-      && lastPage.meta?.pagination.has_more,
+      lastPage?.meta?.pagination.cursor
+      && lastPage?.meta?.pagination.has_more,
     )
   }, [paginatedData, shouldFetch])
 

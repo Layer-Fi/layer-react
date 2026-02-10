@@ -51,7 +51,9 @@ class ListCategorizationRulesSWRResponse {
   }
 
   get paginationMeta() {
-    return this.data && this.data.length > 0 ? this.data[this.data.length - 1].meta.pagination : undefined
+    if (!this.data || this.data.length === 0) return undefined
+    const lastPage = this.data[this.data.length - 1]
+    return lastPage?.meta.pagination
   }
 
   get hasMore() {

@@ -61,9 +61,9 @@ class BankTransactionsSWRResponse {
   }
 
   get hasMore() {
-    return this.data && this.data.length > 0
-      ? this.data[this.data.length - 1].meta.pagination.has_more
-      : false
+    if (!this.data || this.data.length === 0) return false
+    const lastPage = this.data[this.data.length - 1]
+    return lastPage?.meta.pagination.has_more ?? false
   }
 }
 

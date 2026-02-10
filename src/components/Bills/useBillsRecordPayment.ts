@@ -88,11 +88,15 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
       return
     }
 
-    setBillsToPay(prev => [
-      ...prev.slice(0, index),
-      { bill, amount: prev[index].amount },
-      ...prev.slice(index + 1),
-    ])
+    setBillsToPay((prev) => {
+      const existing = prev[index]
+      if (!existing) return prev
+      return [
+        ...prev.slice(0, index),
+        { bill, amount: existing.amount },
+        ...prev.slice(index + 1),
+      ]
+    })
   }
 
   const addBill = (bill?: Bill) => {

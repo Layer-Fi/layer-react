@@ -180,8 +180,9 @@ export class SplitAsOption extends BaseCategorizationOption<Split[]> {
   }
 
   get value(): string {
-    if (this.internalValue.length == 1) {
-      return this.internalValue[0].category?.value ?? ''
+    const firstSplit = this.internalValue[0]
+    if (this.internalValue.length == 1 && firstSplit) {
+      return firstSplit.category?.value ?? ''
     }
     return 'split'
   }

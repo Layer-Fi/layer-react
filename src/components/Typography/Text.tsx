@@ -98,10 +98,11 @@ export const DeprecatedTextWithTooltip = ({
 }: TextProps) => {
   const textElementRef = useRef<HTMLElement>()
   const compareSize = () => {
-    if (textElementRef.current) {
+    const firstChild = textElementRef.current?.children[0]
+    if (firstChild) {
       const compare =
-        textElementRef.current.children[0].scrollWidth
-        > textElementRef.current.children[0].clientWidth
+        firstChild.scrollWidth
+        > firstChild.clientWidth
       setHover(compare)
     }
   }

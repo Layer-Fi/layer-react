@@ -108,6 +108,7 @@ export function ProfitAndLossSummariesMiniChart({
       >
         {chartData.map((entry, index) => {
           const colorConfig = typeColorMapping[index]
+          if (!colorConfig) return null
 
           return (
             <Cell

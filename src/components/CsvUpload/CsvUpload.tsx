@@ -97,7 +97,8 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
   }
 
   const onDrop = useCallback(
-    ([firstFile, ...restFiles]: File[], rejections: FileRejection[] = []) => {
+    (files: File[], rejections: FileRejection[] = []) => {
+      const [firstFile, ...restFiles] = files
       const hasTooManyFiles = rejections.some(r => r.errors.some(e => e.code === 'too-many-files'))
       if (restFiles.length > 0 || hasTooManyFiles) {
         onFileSelected(null)
@@ -108,6 +109,12 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
       if (rejections.length > 0) {
         onFileSelected(null)
         setErrorMessage('Unknown upload error')
+        return
+      }
+
+      if (!firstFile) {
+        onFileSelected(null)
+        setErrorMessage('No file selected')
         return
       }
 

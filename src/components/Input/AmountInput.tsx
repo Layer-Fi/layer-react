@@ -18,9 +18,11 @@ const transformCurrencyValue = (rawValue: string): string => {
 
   // If there are more than 2 digits after decimal, shift them left
   const parts = cleaned.split('.')
-  if (parts.length === 2 && parts[1].length > 2) {
-    const integerPart = parts[0] + parts[1].slice(0, -2)
-    const decimalPart = parts[1].slice(-2)
+  const integerPartRaw = parts[0]
+  const decimalPartRaw = parts[1]
+  if (parts.length === 2 && integerPartRaw !== undefined && decimalPartRaw !== undefined && decimalPartRaw.length > 2) {
+    const integerPart = integerPartRaw + decimalPartRaw.slice(0, -2)
+    const decimalPart = decimalPartRaw.slice(-2)
     return `${integerPart}.${decimalPart}`
   }
 

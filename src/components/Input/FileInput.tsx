@@ -5,27 +5,38 @@ import { ButtonVariant } from '@components/Button/Button'
 import { Button } from '@components/Button/Button'
 import { TextButton } from '@components/Button/TextButton'
 
-export interface FileInputProps {
+interface FileInputBaseProps {
   text?: string
-  onUpload?: (files: File[]) => void
   disabled?: boolean
   secondary?: boolean
   iconOnly?: boolean
   icon?: React.ReactNode
-  allowMultipleUploads?: boolean
   accept?: string
 }
 
-export const FileInput = ({
-  text = 'Upload',
-  onUpload,
-  disabled = false,
-  secondary,
-  iconOnly = false,
-  icon,
-  allowMultipleUploads = false,
-  accept,
-}: FileInputProps) => {
+interface FileInputSingleProps extends FileInputBaseProps {
+  allowMultipleUploads?: false
+  onUpload?: (file: File) => void
+}
+
+interface FileInputMultipleProps extends FileInputBaseProps {
+  allowMultipleUploads: true
+  onUpload?: (files: File[]) => void
+}
+
+export type FileInputProps = FileInputSingleProps | FileInputMultipleProps
+
+export const FileInput = (props: FileInputProps) => {
+  const {
+    text = 'Upload',
+    disabled = false,
+    secondary,
+    iconOnly = false,
+    icon,
+    allowMultipleUploads = false,
+    accept,
+  } = props
+
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
   const onClick = () => {
@@ -35,9 +46,17 @@ export const FileInput = ({
   }
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0 && onUpload) {
+    if (event.target.files && event.target.files.length > 0) {
       const filesUploaded = Array.from(event.target.files)
-      onUpload(filesUploaded)
+      if (props.allowMultipleUploads) {
+        props.onUpload?.(filesUploaded)
+      }
+      else {
+        const firstFile = filesUploaded[0]
+        if (firstFile) {
+          props.onUpload?.(firstFile)
+        }
+      }
     }
     event.target.value = ''
   }

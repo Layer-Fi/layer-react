@@ -55,24 +55,28 @@ export const getMatchedTextIndices = (
   // Locate the starting index in the original text that corresponds to the beginning of the normalized match
   let positionInNormalizedText = 0, matchStartIdx = 0
   while (positionInNormalizedText < normalizedMatchStartIdx && matchStartIdx < text.length) {
-    if (!skippedChars.includes(text[matchStartIdx])) positionInNormalizedText++
+    const char = text[matchStartIdx]
+    if (char !== undefined && !skippedChars.includes(char)) positionInNormalizedText++
     matchStartIdx++
   }
 
   // Adjust forward to skip a leading '$' or ',' if it wasn't part of the original query
-  if (skippedChars.includes(text[matchStartIdx]) && query[0] !== text[matchStartIdx]) {
+  const startChar = text[matchStartIdx]
+  if (startChar !== undefined && skippedChars.includes(startChar) && query[0] !== startChar) {
     matchStartIdx++
   }
 
   // Advance through the original text to cover all characters that map to the original query
   let charsMatched = 0, matchEndIdx = matchStartIdx
   while (charsMatched < normalizedQuery.length && matchEndIdx < text.length) {
-    if (!skippedChars.includes(text[matchEndIdx])) charsMatched++
+    const char = text[matchEndIdx]
+    if (char !== undefined && !skippedChars.includes(char)) charsMatched++
     matchEndIdx++
   }
 
   // Optionally include a trailing '$' or ',' if it was explicitly included in the query
-  if (skippedChars.includes(text[matchEndIdx]) && query[query.length - 1] === text[matchEndIdx]) {
+  const endChar = text[matchEndIdx]
+  if (endChar !== undefined && skippedChars.includes(endChar) && query[query.length - 1] === endChar) {
     matchEndIdx++
   }
 
