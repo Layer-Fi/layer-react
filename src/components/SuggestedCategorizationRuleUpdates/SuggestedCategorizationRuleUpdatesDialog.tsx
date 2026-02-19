@@ -8,8 +8,6 @@ import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { RuleSuggestionHeader, SuggestedCategorizationRuleUpdates } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
 
-import './suggestedCategorizationRuleUpdatesDialog.scss'
-
 type SuggestedCategorizationRuleUpdatesDialogProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
@@ -89,7 +87,7 @@ export const SuggestedCategorizationRuleUpdatesDialog = ({
   }
 
   return (
-    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='lg' aria-label='Update categorization rules'>
+    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} aria-label='Update categorization rules'>
       {({ close }) => (
         <>
           <SuggestedCategorizationRuleUpdatesDialogDesktopHeader close={close} ruleSuggestion={ruleSuggestion} />
