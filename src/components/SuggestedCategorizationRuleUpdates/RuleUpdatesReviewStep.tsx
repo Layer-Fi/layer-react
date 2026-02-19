@@ -22,7 +22,7 @@ export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesP
   const ActionButtonsStack = isDrawer ? VStack : HStack
 
   return (
-    <VStack gap='md' pbe={isDrawer ? 'xl' : undefined}>
+    <VStack pbe={isDrawer ? 'xl' : undefined}>
       <Span size='md'>
         {`The following ${pluralize('transaction', ruleSuggestion.transactionsThatWillBeAffected.length, ruleSuggestion.transactionsThatWillBeAffected.length !== 1)} will be affected:`}
       </Span>
