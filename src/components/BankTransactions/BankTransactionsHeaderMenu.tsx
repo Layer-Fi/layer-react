@@ -1,16 +1,16 @@
 import { useCallback, useMemo, useState } from 'react'
 import { MenuIcon, PencilRuler } from 'lucide-react'
 
+import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
+import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
-import UploadCloud from '@icons/UploadCloud'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import DownloadCloud from '@icons/DownloadCloud'
+import UploadCloud from '@icons/UploadCloud'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
-import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
-import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
-import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 interface BankTransactionsHeaderMenuProps {
   actions: BankTransactionsHeaderMenuActions[]
@@ -78,7 +78,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
     }
 
     return items
-  }, [actions, toCategorizationRulesTable])
+  }, [actions, toCategorizationRulesTable, handleDownloadTransactions])
 
   const Icon = useCallback(() => {
     if (actions.length === 1 && actions[0] === BankTransactionsHeaderMenuActions.UploadTransactions) {
