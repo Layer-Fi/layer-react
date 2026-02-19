@@ -26,7 +26,7 @@ const SuggestedCategorizationRuleUpdatesDialogDesktopHeader = ({ close, ruleSugg
   if (!ruleSuggestion) return null
 
   return (
-    <VStack className='Layer__SuggestedCategorizationRuleUpdatesDialog__desktop-header'>
+    <VStack>
       <ModalTitleWithClose
         heading={<RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />}
         onClose={close}

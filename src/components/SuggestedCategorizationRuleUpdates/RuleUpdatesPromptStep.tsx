@@ -43,7 +43,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
 
   return (
     <VStack gap='xl' pbe={isDrawer ? '3xl' : undefined}>
-      <Span size='md' variant='subtle'>{ruleSuggestion.suggestionPrompt}</Span>
+      <Span size='md'>{ruleSuggestion.suggestionPrompt}</Span>
       <VStack
         gap='sm'
       >
