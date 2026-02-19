@@ -1,11 +1,10 @@
 import { useCallback } from 'react'
-import { X } from 'lucide-react'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { Button } from '@ui/Button/Button'
 import { Drawer, Modal } from '@ui/Modal/Modal'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { VStack } from '@ui/Stack/Stack'
+import { Separator } from '@components/Separator/Separator'
 import { RuleSuggestionHeader, SuggestedCategorizationRuleUpdates } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
 
 type SuggestedCategorizationRuleUpdatesDialogProps = {
@@ -15,12 +14,16 @@ type SuggestedCategorizationRuleUpdatesDialogProps = {
   variant: 'modal' | 'drawer'
 }
 
-type SuggestedCategorizationRuleUpdatesDialogHeaderProps = {
+type SuggestedCategorizationRuleUpdatesDialogDesktopHeaderProps = {
   close: () => void
   ruleSuggestion?: UpdateCategorizationRulesSuggestion | null
 }
 
-const SuggestedCategorizationRuleUpdatesDialogDesktopHeader = ({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesDialogHeaderProps) => {
+type SuggestedCategorizationRuleUpdatesDialogDrawerHeaderProps = {
+  ruleSuggestion?: UpdateCategorizationRulesSuggestion | null
+}
+
+const SuggestedCategorizationRuleUpdatesDialogDesktopHeader = ({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesDialogDesktopHeaderProps) => {
   if (!ruleSuggestion) return null
 
   return (
@@ -33,22 +36,14 @@ const SuggestedCategorizationRuleUpdatesDialogDesktopHeader = ({ close, ruleSugg
   )
 }
 
-const SuggestedCategorizationRuleUpdatesDialogDrawerHeader = ({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesDialogHeaderProps) => {
+const SuggestedCategorizationRuleUpdatesDialogDrawerHeader = ({ ruleSuggestion }: SuggestedCategorizationRuleUpdatesDialogDrawerHeaderProps) => {
   if (!ruleSuggestion) return null
 
   return (
-    <HStack justify='space-between' align='start' className='Layer__SuggestedCategorizationRuleUpdatesDialog__header'>
+    <VStack pbe='sm' gap='xs'>
       <RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />
-      <Button
-        icon
-        inset
-        variant='ghost'
-        onPress={close}
-        aria-label='Close Modal'
-      >
-        <X size={20} />
-      </Button>
-    </HStack>
+      <Separator />
+    </VStack>
   )
 }
 
@@ -60,9 +55,9 @@ export const SuggestedCategorizationRuleUpdatesDialog = ({
 }: SuggestedCategorizationRuleUpdatesDialogProps) => {
   const isDrawer = variant === 'drawer'
 
-  const DrawerHeader = useCallback(({ close }: { close: () => void }) => {
+  const DrawerHeader = useCallback(() => {
     if (!ruleSuggestion) return null
-    return <SuggestedCategorizationRuleUpdatesDialogDrawerHeader close={close} ruleSuggestion={ruleSuggestion} />
+    return <SuggestedCategorizationRuleUpdatesDialogDrawerHeader ruleSuggestion={ruleSuggestion} />
   }, [ruleSuggestion])
 
   if (!ruleSuggestion) return null
