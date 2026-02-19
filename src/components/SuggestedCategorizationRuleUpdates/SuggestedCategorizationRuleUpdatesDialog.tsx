@@ -1,10 +1,14 @@
 import { useCallback } from 'react'
+import { X } from 'lucide-react'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { Button } from '@ui/Button/Button'
 import { Drawer, Modal } from '@ui/Modal/Modal'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { VStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { RuleSuggestionHeader, SuggestedCategorizationRuleUpdates } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
+
+import './suggestedCategorizationRuleUpdatesDialog.scss'
 
 type SuggestedCategorizationRuleUpdatesDialogProps = {
   isOpen: boolean
@@ -17,13 +21,36 @@ type SuggestedCategorizationRuleUpdatesDialogHeaderProps = {
   close: () => void
   ruleSuggestion?: UpdateCategorizationRulesSuggestion | null
 }
-const SuggestedCategorizationRuleUpdatesDialogHeader = ({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesDialogHeaderProps) => {
+
+const SuggestedCategorizationRuleUpdatesDialogDesktopHeader = ({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesDialogHeaderProps) => {
   if (!ruleSuggestion) return null
+
   return (
-    <ModalTitleWithClose
-      heading={<RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />}
-      onClose={close}
-    />
+    <VStack className='Layer__SuggestedCategorizationRuleUpdatesDialog__desktop-header'>
+      <ModalTitleWithClose
+        heading={<RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />}
+        onClose={close}
+      />
+    </VStack>
+  )
+}
+
+const SuggestedCategorizationRuleUpdatesDialogDrawerHeader = ({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesDialogHeaderProps) => {
+  if (!ruleSuggestion) return null
+
+  return (
+    <HStack justify='space-between' align='start' className='Layer__SuggestedCategorizationRuleUpdatesDialog__header'>
+      <RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />
+      <Button
+        icon
+        inset
+        variant='ghost'
+        onPress={close}
+        aria-label='Close Modal'
+      >
+        <X size={20} />
+      </Button>
+    </HStack>
   )
 }
 
@@ -37,7 +64,7 @@ export const SuggestedCategorizationRuleUpdatesDialog = ({
 
   const DrawerHeader = useCallback(({ close }: { close: () => void }) => {
     if (!ruleSuggestion) return null
-    return <SuggestedCategorizationRuleUpdatesDialogHeader close={close} ruleSuggestion={ruleSuggestion} />
+    return <SuggestedCategorizationRuleUpdatesDialogDrawerHeader close={close} ruleSuggestion={ruleSuggestion} />
   }, [ruleSuggestion])
 
   if (!ruleSuggestion) return null
@@ -65,7 +92,7 @@ export const SuggestedCategorizationRuleUpdatesDialog = ({
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='lg' aria-label='Update categorization rules'>
       {({ close }) => (
         <>
-          <SuggestedCategorizationRuleUpdatesDialogHeader close={close} ruleSuggestion={ruleSuggestion} />
+          <SuggestedCategorizationRuleUpdatesDialogDesktopHeader close={close} ruleSuggestion={ruleSuggestion} />
           <SuggestedCategorizationRuleUpdates close={close} ruleSuggestion={ruleSuggestion} />
         </>
       )}

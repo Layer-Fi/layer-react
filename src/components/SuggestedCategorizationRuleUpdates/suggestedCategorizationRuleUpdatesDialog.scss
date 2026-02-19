@@ -1,0 +1,12 @@
+.Layer__SuggestedCategorizationRuleUpdatesDialog {
+  &__desktop-header {
+    .Layer__separator {
+      background-color: var(--color-base-300);
+    }
+  }
+
+  &__header {
+    align-items: flex-start;
+    padding-bottom: var(--spacing-sm);
+  }
+}
