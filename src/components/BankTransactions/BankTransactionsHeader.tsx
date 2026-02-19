@@ -216,11 +216,14 @@ export const BankTransactionsHeader = ({
     if (withUploadMenu) {
       actions.push(BankTransactionsHeaderMenuActions.UploadTransactions)
     }
+    if (isListView) {
+      actions.push(BankTransactionsHeaderMenuActions.DownloadTransactions)
+    }
     if (showCategorizationRules) {
       actions.push(BankTransactionsHeaderMenuActions.ManageCategorizationRules)
     }
     return actions
-  }, [withUploadMenu, showCategorizationRules])
+  }, [withUploadMenu, isListView, showCategorizationRules])
 
   const BulkActions = useCallback(() => {
     return (

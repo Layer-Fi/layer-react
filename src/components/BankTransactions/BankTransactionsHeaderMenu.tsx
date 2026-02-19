@@ -3,8 +3,13 @@ import { MenuIcon, PencilRuler } from 'lucide-react'
 
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import UploadCloud from '@icons/UploadCloud'
+import DownloadCloud from '@icons/DownloadCloud'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
+import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
+import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 interface BankTransactionsHeaderMenuProps {
   actions: BankTransactionsHeaderMenuActions[]
@@ -14,11 +19,25 @@ interface BankTransactionsHeaderMenuProps {
 export enum BankTransactionsHeaderMenuActions {
   UploadTransactions = 'UploadTransactions',
   ManageCategorizationRules = 'ManageCategorizationRules',
+  DownloadTransactions = 'DownloadTransactions',
 }
 
 export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransactionsHeaderMenuProps) => {
   const { toCategorizationRulesTable } = useBankTransactionsNavigation()
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const { trigger } = useBankTransactionsDownload()
+  const { filters } = useBankTransactionsFiltersContext()
+  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
+
+  const handleDownloadTransactions = () => {
+    void trigger(bankTransactionFiltersToHookOptions(filters))
+      .then((result) => {
+        if (result?.presignedUrl) {
+          triggerInvisibleDownload({ url: result.presignedUrl })
+        }
+      })
+  }
 
   const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
     const items: DataTableHeaderMenuItem[] = []
@@ -29,6 +48,15 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
         onClick: () => setIsModalOpen(true),
         icon: <UploadCloud size={16} />,
         label: 'Upload transactions manually',
+      })
+    }
+
+    if (actions.includes(BankTransactionsHeaderMenuActions.DownloadTransactions)) {
+      items.push({
+        key: BankTransactionsHeaderMenuActions.DownloadTransactions,
+        onClick: () => handleDownloadTransactions(),
+        icon: <DownloadCloud size={16} />,
+        label: 'Download transactions',
       })
     }
 
@@ -63,7 +91,12 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
         isDisabled={isDisabled}
         slots={{ Icon }}
       />
-      {isModalOpen && <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />}
+      {actions.includes(
+        BankTransactionsHeaderMenuActions.DownloadTransactions,
+      ) && <InvisibleDownload ref={invisibleDownloadRef} />}
+      {isModalOpen && (
+        <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />
+      )}
     </>
-  )
+  );
 }
