@@ -10,6 +10,8 @@ import { AffectedTransactionsTable } from '@components/SuggestedCategorizationRu
 import { CreateRuleButton } from '@components/SuggestedCategorizationRuleUpdates/CreateRuleButton'
 import { useWizard } from '@components/Wizard/Wizard'
 
+import './ruleUpdatesReviewStep.scss'
+
 interface RuleUpdatesPromptReviewStepProps {
   ruleSuggestion: UpdateCategorizationRulesSuggestion
   isDrawer?: boolean
@@ -26,7 +28,7 @@ export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesP
       </Span>
       <AffectedTransactionsTable transactions={asMutable(ruleSuggestion.transactionsThatWillBeAffected)} />
       <Separator />
-      <ActionButtonsStack gap='xs' justify='end' className={isDrawer ? 'Layer__suggested-categorization-rule-updates__buttons--mobile' : undefined}>
+      <ActionButtonsStack gap='xs' justify='end' className={isDrawer ? 'Layer__RuleUpdatesReviewStep__buttons--mobile' : undefined}>
         <Button
           onClick={previous}
           variant='outlined'
