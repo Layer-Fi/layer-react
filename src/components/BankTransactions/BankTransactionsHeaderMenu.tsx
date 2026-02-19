@@ -94,9 +94,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
       {actions.includes(
         BankTransactionsHeaderMenuActions.DownloadTransactions,
       ) && <InvisibleDownload ref={invisibleDownloadRef} />}
-      {isModalOpen && (
-        <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />
-      )}
+      {isModalOpen && <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />}
     </>
-  );
+  )
 }
