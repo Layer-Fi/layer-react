@@ -10,6 +10,7 @@ import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankT
 import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 interface BankTransactionsHeaderMenuProps {
   actions: BankTransactionsHeaderMenuActions[]
@@ -24,6 +25,7 @@ export enum BankTransactionsHeaderMenuActions {
 
 export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransactionsHeaderMenuProps) => {
   const { toCategorizationRulesTable } = useBankTransactionsNavigation()
+  const { addToast } = useLayerContext()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const { trigger } = useBankTransactionsDownload()
@@ -36,6 +38,12 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
         if (result?.presignedUrl) {
           triggerInvisibleDownload({ url: result.presignedUrl })
         }
+        else {
+          addToast({ content: 'Download Failed, Please Retry', type: 'error' })
+        }
+      })
+      .catch(() => {
+        addToast({ content: 'Download Failed, Please Retry', type: 'error' })
       })
   }
 
