@@ -4,7 +4,7 @@ import { runDelayedSync } from '@utils/delay/runDelayed'
 
 import './invisibleDownload.scss'
 
-type InvisibleDownloadHandle = {
+export type InvisibleDownloadHandle = {
   trigger: (options: { url: string, filename?: string }) => Promise<void>
 }
 
