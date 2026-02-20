@@ -56,7 +56,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
             </Button>
           )}
         <Button onPress={close} variant='outlined' fullWidth>
-          No, I&apos;ll decide each time
+          No, I’ll decide each time
         </Button>
         <HStack align='center' gap='xs'>
           <Separator />
@@ -69,7 +69,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
           <Separator />
         </HStack>
         <Button onPress={() => void handleDisableSuggestionPrompt()} isPending={isMutating} variant='outlined' fullWidth>
-          Don&apos;t ask again
+          Don’t ask again
         </Button>
       </VStack>
     </VStack>
