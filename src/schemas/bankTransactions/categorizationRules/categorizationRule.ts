@@ -3,6 +3,13 @@ import { pipe, Schema } from 'effect/index'
 import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
 import { BankTransactionCounterpartySchema, MinimalBankTransactionSchema } from '@schemas/bankTransactions/base'
 
+export enum BankDirectionFilter {
+  MONEY_IN = 'MONEY_IN',
+  MONEY_OUT = 'MONEY_OUT',
+}
+
+export const BankDirectionFilterSchema = Schema.Enums(BankDirectionFilter)
+
 export enum BankTransactionType {
   REVENUE = 'REVENUE',
   LOAN_DISBURSEMENT = 'LOAN_DISBURSEMENT',
@@ -84,7 +91,7 @@ export const CreateCategorizationRuleSchema = Schema.Struct({
     Schema.fromKey('transaction_type_filter'),
   ),
   bankDirectionFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(BankDirectionFilterSchema)),
     Schema.fromKey('bank_direction_filter'),
   ),
   amountMinFilter: pipe(
@@ -151,6 +158,10 @@ export const CategorizationRuleSchema = Schema.Struct({
   counterpartyFilter: pipe(
     Schema.propertySignature(Schema.NullishOr(BankTransactionCounterpartySchema)),
     Schema.fromKey('counterparty_filter'),
+  ),
+  bankDirectionFilter: pipe(
+    Schema.propertySignature(Schema.NullishOr(BankDirectionFilterSchema)),
+    Schema.fromKey('bank_direction_filter'),
   ),
   createdAt: pipe(
     Schema.propertySignature(Schema.Date),

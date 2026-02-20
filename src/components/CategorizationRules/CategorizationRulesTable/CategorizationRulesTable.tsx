@@ -7,6 +7,7 @@ import type { NestedCategorization } from '@schemas/categorization'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
 import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
+import { getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 import { Container } from '@components/Container/Container'
 import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
@@ -16,6 +17,7 @@ import './categorizationRulesTable.scss'
 enum CategorizationRuleColumns {
   Category = 'Category',
   Counterparty = 'Counterparty',
+  Direction = 'Direction',
   Delete = 'Delete',
 }
 
@@ -49,6 +51,13 @@ export const CategorizationRulesTable = ({
       header: 'Counterparty',
       cell: (row: Row<CategorizationRule>) => (
         <Span ellipsis>{row.original.counterpartyFilter?.name}</Span>
+      ),
+    },
+    {
+      id: CategorizationRuleColumns.Direction,
+      header: 'Direction',
+      cell: (row: Row<CategorizationRule>) => (
+        <Span ellipsis>{getCategorizationRuleDirectionLabel(row.original.bankDirectionFilter)}</Span>
       ),
     },
     {
