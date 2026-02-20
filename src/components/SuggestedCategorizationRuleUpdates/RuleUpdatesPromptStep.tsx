@@ -21,10 +21,6 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
   const { addToast } = useLayerContext()
   const { trigger: rejectRuleSuggestion, isMutating } = useRejectCategorizationRulesUpdateSuggestion()
 
-  const handleDismissSuggestion = useCallback(() => {
-    close()
-  }, [close])
-
   const handleDisableSuggestionPrompt = useCallback(async () => {
     const suggestionId = ruleSuggestion.newRule.createdBySuggestionId
     if (!suggestionId) {
@@ -40,6 +36,10 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
       })
   },
   [addToast, close, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
+
+  const handleDisableSuggestionPromptPress = useCallback(() => {
+    void handleDisableSuggestionPrompt()
+  }, [handleDisableSuggestionPrompt])
 
   return (
     <VStack gap='md' pbe={isDrawer ? 'xl' : undefined}>
@@ -59,7 +59,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
               Yes, always categorize
             </Button>
           )}
-        <Button onPress={handleDismissSuggestion} variant='outlined' fullWidth>
+        <Button onPress={close} variant='outlined' fullWidth>
           No, I&apos;ll decide each time
         </Button>
         <HStack align='center' gap='xs'>
@@ -72,7 +72,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
           </Span>
           <Separator />
         </HStack>
-        <Button onPress={() => void handleDisableSuggestionPrompt()} isPending={isMutating} variant='outlined' fullWidth>
+        <Button onPress={handleDisableSuggestionPromptPress} isPending={isMutating} variant='outlined' fullWidth>
           Don&apos;t ask again
         </Button>
       </VStack>
