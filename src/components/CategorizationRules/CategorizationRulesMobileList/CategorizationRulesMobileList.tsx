@@ -8,6 +8,7 @@ import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
+import { getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 import './categorizationRulesMobileList.scss'
@@ -26,6 +27,10 @@ const CategorizationRuleMobileListItem = ({
   <HStack justify='space-between' align='center' gap='sm' className='Layer__CategorizationRulesMobileListItem'>
     <VStack gap='2xs' className='Layer__CategorizationRulesMobileListItem__Content'>
       <Span weight='bold' ellipsis>{rule.counterpartyFilter?.name}</Span>
+      <HStack gap='3xs' align='center'>
+        <Span size='sm' variant='subtle'>Direction:</Span>
+        <Span size='sm' variant='subtle'>{getCategorizationRuleDirectionLabel(rule.bankDirectionFilter)}</Span>
+      </HStack>
       {rule.category && (
         <HStack gap='3xs' align='center'>
           <Span size='sm' variant='subtle'>Category:</Span>
