@@ -88,6 +88,7 @@ const DownloadButton = ({
   disabled,
   handleDownload,
   error,
+  isMutating,
   invisibleDownloadRef,
 }: {
   downloadButtonTextOverride?: string
@@ -95,10 +96,9 @@ const DownloadButton = ({
   disabled?: boolean
   handleDownload?: () => void
   error?: boolean
+  isMutating?: boolean
   invisibleDownloadRef?: React.RefObject<InvisibleDownloadHandle>
 }) => {
-  const { isMutating } = useBankTransactionsDownload()
-
   return (
     <>
       <DownloadButtonComponent
@@ -158,7 +158,7 @@ export const BankTransactionsHeader = ({
 
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
-  const { trigger, error } = useBankTransactionsDownload()
+  const { trigger, error, isMutating } = useBankTransactionsDownload()
 
   const handleDownloadTransactions = useCallback(() => {
     if (isListView) {
@@ -316,7 +316,14 @@ export const BankTransactionsHeader = ({
 
           <HStack className='Layer__bank-transactions__header__search-and-menu' align='center' gap='xs'>
             <TransactionsSearch isDisabled={showBulkActions} />
-            {!isStatusToggleVisible && <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />}
+            {!isStatusToggleVisible && (
+              <BankTransactionsHeaderMenu
+                actions={headerMenuActions}
+                isDisabled={showBulkActions}
+                handleDownloadTransactions={handleDownloadTransactions}
+                invisibleDownloadRef={invisibleDownloadRef}
+              />
+            )}
           </HStack>
 
         </VStack>
@@ -351,6 +358,7 @@ export const BankTransactionsHeader = ({
             disabled={showBulkActions}
             handleDownload={handleDownloadTransactions}
             error={Boolean(error)}
+            isMutating={isMutating}
             invisibleDownloadRef={invisibleDownloadRef}
           />
           <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
