@@ -31,6 +31,7 @@ import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
+import type { InvisibleDownloadHandle } from '@components/utility/InvisibleDownload'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 export interface BankTransactionsHeaderProps {
@@ -53,10 +54,6 @@ export interface BankTransactionsHeaderStringOverrides {
 type TransactionsSearchProps = {
   slot?: string
   isDisabled?: boolean
-}
-
-type InvisibleDownloadHandle = {
-  trigger: (options: { url: string, filename?: string }) => Promise<void>
 }
 
 function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {

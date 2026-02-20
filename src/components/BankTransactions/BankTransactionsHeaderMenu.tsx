@@ -6,11 +6,8 @@ import DownloadCloud from '@icons/DownloadCloud'
 import UploadCloud from '@icons/UploadCloud'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
+import type { InvisibleDownloadHandle } from '@components/utility/InvisibleDownload'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
-
-type InvisibleDownloadHandle = {
-  trigger: (options: { url: string, filename?: string }) => Promise<void>
-}
 
 interface BankTransactionsHeaderMenuProps {
   actions: BankTransactionsHeaderMenuActions[]
