@@ -8,15 +8,13 @@ import { DisplayState } from '@internal-types/bank_transactions'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
 import { BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
-import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
-import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
+import { useHandleDownloadTransactions } from '@hooks/useBankTransactions/useHandleBankTransactionsDownload'
 import { useDebounce } from '@hooks/useDebounce/useDebounce'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
@@ -31,8 +29,7 @@ import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
-import type { InvisibleDownloadHandle } from '@components/utility/InvisibleDownload'
-import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
+import InvisibleDownload from '@components/utility/InvisibleDownload'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -86,25 +83,21 @@ const DownloadButton = ({
   downloadButtonTextOverride,
   iconOnly,
   disabled,
-  handleDownload,
-  error,
-  isMutating,
-  invisibleDownloadRef,
+  isListView = false,
 }: {
   downloadButtonTextOverride?: string
   iconOnly?: boolean
   disabled?: boolean
-  handleDownload?: () => void
-  error?: boolean
-  isMutating?: boolean
-  invisibleDownloadRef?: React.RefObject<InvisibleDownloadHandle>
+  isListView?: boolean
 }) => {
+  const { handleDownloadTransactions, invisibleDownloadRef, isMutating, error } = useHandleDownloadTransactions({ isListView })
+
   return (
     <>
       <DownloadButtonComponent
         variant={ButtonVariant.secondary}
         iconOnly={iconOnly}
-        onClick={handleDownload}
+        onClick={handleDownloadTransactions}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
         text={downloadButtonTextOverride ?? 'Download'}
@@ -154,40 +147,6 @@ export const BankTransactionsHeader = ({
   const isMobileList = tableContentMode === BankTransactionsTableContent.MobileList
   const isListView = isMobileList || tableContentMode === BankTransactionsTableContent.List
 
-  const { addToast } = useLayerContext()
-
-  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-
-  const { trigger, error, isMutating } = useBankTransactionsDownload()
-
-  const handleDownloadTransactions = useCallback(() => {
-    if (isListView) {
-      return void trigger(bankTransactionFiltersToHookOptions(filters))
-        .then((result) => {
-          if (result?.presignedUrl) {
-            triggerInvisibleDownload({ url: result.presignedUrl })
-          }
-          else {
-            addToast({
-              content: 'Download Failed, Please Retry',
-              type: 'error',
-            })
-          }
-        })
-        .catch(() => {
-          addToast({ content: 'Download Failed, Please Retry', type: 'error' })
-        })
-    }
-    else {
-      return void trigger(bankTransactionFiltersToHookOptions(filters)).then(
-        (result) => {
-          if (result?.presignedUrl) {
-            triggerInvisibleDownload({ url: result.presignedUrl })
-          }
-        },
-      )
-    }
-  }, [addToast, filters, isListView, trigger, triggerInvisibleDownload])
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
       <HStack align='center'>
@@ -308,8 +267,7 @@ export const BankTransactionsHeader = ({
               {statusToggle}
               <BankTransactionsHeaderMenu
                 actions={headerMenuActions}
-                handleDownloadTransactions={handleDownloadTransactions}
-                invisibleDownloadRef={invisibleDownloadRef}
+                isListView={isListView}
               />
             </HStack>
           )}
@@ -320,8 +278,7 @@ export const BankTransactionsHeader = ({
               <BankTransactionsHeaderMenu
                 actions={headerMenuActions}
                 isDisabled={showBulkActions}
-                handleDownloadTransactions={handleDownloadTransactions}
-                invisibleDownloadRef={invisibleDownloadRef}
+                isListView={isListView}
               />
             )}
           </HStack>
@@ -356,10 +313,7 @@ export const BankTransactionsHeader = ({
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={isListView}
             disabled={showBulkActions}
-            handleDownload={handleDownloadTransactions}
-            error={Boolean(error)}
-            isMutating={isMutating}
-            invisibleDownloadRef={invisibleDownloadRef}
+            isListView={isListView}
           />
           <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
         </HStack>

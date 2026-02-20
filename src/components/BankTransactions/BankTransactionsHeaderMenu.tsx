@@ -1,19 +1,18 @@
 import { useCallback, useMemo, useState } from 'react'
 import { MenuIcon, PencilRuler } from 'lucide-react'
 
+import { useHandleDownloadTransactions } from '@hooks/useBankTransactions/useHandleBankTransactionsDownload'
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import DownloadCloud from '@icons/DownloadCloud'
 import UploadCloud from '@icons/UploadCloud'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
-import type { InvisibleDownloadHandle } from '@components/utility/InvisibleDownload'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
 
 interface BankTransactionsHeaderMenuProps {
   actions: BankTransactionsHeaderMenuActions[]
   isDisabled?: boolean
-  handleDownloadTransactions?: () => void
-  invisibleDownloadRef?: React.RefObject<InvisibleDownloadHandle>
+  isListView?: boolean
 }
 
 export enum BankTransactionsHeaderMenuActions {
@@ -22,9 +21,10 @@ export enum BankTransactionsHeaderMenuActions {
   DownloadTransactions = 'DownloadTransactions',
 }
 
-export const BankTransactionsHeaderMenu = ({ actions, isDisabled, handleDownloadTransactions, invisibleDownloadRef }: BankTransactionsHeaderMenuProps) => {
+export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = false }: BankTransactionsHeaderMenuProps) => {
   const { toCategorizationRulesTable } = useBankTransactionsNavigation()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { handleDownloadTransactions, invisibleDownloadRef } = useHandleDownloadTransactions({ isListView })
 
   const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
     const items: DataTableHeaderMenuItem[] = []
