@@ -4,6 +4,7 @@ import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransacti
 import { Drawer, Modal } from '@ui/Modal/Modal'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
+import { Separator } from '@components/Separator/Separator'
 import { RuleSuggestionHeader, SuggestedCategorizationRuleUpdates } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
 
 type SuggestedCategorizationRuleUpdatesDialogProps = {
@@ -13,17 +14,34 @@ type SuggestedCategorizationRuleUpdatesDialogProps = {
   variant: 'modal' | 'drawer'
 }
 
-type SuggestedCategorizationRuleUpdatesDialogHeaderProps = {
+type SuggestedCategorizationRuleUpdatesDialogDesktopHeaderProps = {
   close: () => void
   ruleSuggestion?: UpdateCategorizationRulesSuggestion | null
 }
-const SuggestedCategorizationRuleUpdatesDialogHeader = ({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesDialogHeaderProps) => {
+
+type SuggestedCategorizationRuleUpdatesDialogDrawerHeaderProps = {
+  ruleSuggestion?: UpdateCategorizationRulesSuggestion | null
+}
+
+const SuggestedCategorizationRuleUpdatesDialogDesktopHeader = ({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesDialogDesktopHeaderProps) => {
   if (!ruleSuggestion) return null
+
   return (
     <ModalTitleWithClose
       heading={<RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />}
       onClose={close}
     />
+  )
+}
+
+const SuggestedCategorizationRuleUpdatesDialogDrawerHeader = ({ ruleSuggestion }: SuggestedCategorizationRuleUpdatesDialogDrawerHeaderProps) => {
+  if (!ruleSuggestion) return null
+
+  return (
+    <VStack pbe='sm' gap='xs'>
+      <RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />
+      <Separator />
+    </VStack>
   )
 }
 
@@ -35,9 +53,9 @@ export const SuggestedCategorizationRuleUpdatesDialog = ({
 }: SuggestedCategorizationRuleUpdatesDialogProps) => {
   const isDrawer = variant === 'drawer'
 
-  const DrawerHeader = useCallback(({ close }: { close: () => void }) => {
+  const DrawerHeader = useCallback(() => {
     if (!ruleSuggestion) return null
-    return <SuggestedCategorizationRuleUpdatesDialogHeader close={close} ruleSuggestion={ruleSuggestion} />
+    return <SuggestedCategorizationRuleUpdatesDialogDrawerHeader ruleSuggestion={ruleSuggestion} />
   }, [ruleSuggestion])
 
   if (!ruleSuggestion) return null
@@ -62,10 +80,10 @@ export const SuggestedCategorizationRuleUpdatesDialog = ({
   }
 
   return (
-    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='lg' aria-label='Update categorization rules'>
+    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} aria-label='Update categorization rules'>
       {({ close }) => (
         <>
-          <SuggestedCategorizationRuleUpdatesDialogHeader close={close} ruleSuggestion={ruleSuggestion} />
+          <SuggestedCategorizationRuleUpdatesDialogDesktopHeader close={close} ruleSuggestion={ruleSuggestion} />
           <SuggestedCategorizationRuleUpdates close={close} ruleSuggestion={ruleSuggestion} />
         </>
       )}

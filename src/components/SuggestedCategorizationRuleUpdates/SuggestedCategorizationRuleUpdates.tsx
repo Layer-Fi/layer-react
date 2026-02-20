@@ -5,8 +5,6 @@ import { RuleUpdatesPromptStep } from '@components/SuggestedCategorizationRuleUp
 import { RuleUpdatesReviewStep } from '@components/SuggestedCategorizationRuleUpdates/RuleUpdatesReviewStep'
 import { Wizard } from '@components/Wizard/Wizard'
 
-import './suggestedCategorizationRuleUpdates.scss'
-
 type SuggestedCategorizationRuleUpdatesProps = {
   close: () => void
   ruleSuggestion: UpdateCategorizationRulesSuggestion
@@ -35,7 +33,7 @@ export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion, isDr
   const hasTransactions = ruleSuggestion.transactionsThatWillBeAffected.length > 0
 
   return (
-    <section className='Layer__component Layer__suggested-categorization-rule-updates'>
+    <section className='Layer__component'>
       <Wizard
         Header={undefined}
         Footer={undefined}

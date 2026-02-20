@@ -10,6 +10,8 @@ import { AffectedTransactionsTable } from '@components/SuggestedCategorizationRu
 import { CreateRuleButton } from '@components/SuggestedCategorizationRuleUpdates/CreateRuleButton'
 import { useWizard } from '@components/Wizard/Wizard'
 
+import './ruleUpdatesReviewStep.scss'
+
 interface RuleUpdatesPromptReviewStepProps {
   ruleSuggestion: UpdateCategorizationRulesSuggestion
   isDrawer?: boolean
@@ -20,13 +22,13 @@ export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesP
   const ActionButtonsStack = isDrawer ? VStack : HStack
 
   return (
-    <VStack gap='md' pbe={isDrawer ? '3xl' : undefined}>
+    <VStack pbe={isDrawer ? 'xl' : undefined}>
       <Span size='md'>
         {`The following ${pluralize('transaction', ruleSuggestion.transactionsThatWillBeAffected.length, ruleSuggestion.transactionsThatWillBeAffected.length !== 1)} will be affected:`}
       </Span>
       <AffectedTransactionsTable transactions={asMutable(ruleSuggestion.transactionsThatWillBeAffected)} />
       <Separator />
-      <ActionButtonsStack gap='xs' justify='end' className={isDrawer ? 'Layer__suggested-categorization-rule-updates__buttons--mobile' : undefined}>
+      <ActionButtonsStack gap='xs' justify='end' className={isDrawer ? 'Layer__RuleUpdatesReviewStep__buttons--mobile' : undefined}>
         <Button
           onClick={previous}
           variant='outlined'
