@@ -37,10 +37,6 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
   },
   [addToast, close, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
 
-  const handleDisableSuggestionPromptPress = useCallback(() => {
-    void handleDisableSuggestionPrompt()
-  }, [handleDisableSuggestionPrompt])
-
   return (
     <VStack gap='md' pbe={isDrawer ? 'xl' : undefined}>
       <Span size='md'>{ruleSuggestion.suggestionPrompt}</Span>
@@ -72,7 +68,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
           </Span>
           <Separator />
         </HStack>
-        <Button onPress={handleDisableSuggestionPromptPress} isPending={isMutating} variant='outlined' fullWidth>
+        <Button onPress={() => void handleDisableSuggestionPrompt()} isPending={isMutating} variant='outlined' fullWidth>
           Don&apos;t ask again
         </Button>
       </VStack>
