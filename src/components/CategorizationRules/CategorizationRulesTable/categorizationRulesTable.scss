@@ -10,8 +10,9 @@
   .Layer__UI__Table-TableHeader > tr {
     display: grid;
     grid-template-columns:
-      minmax(8rem, 45%)
-      minmax(8rem, 45%)
+      minmax(8rem, 32%)
+      minmax(7rem, 20%)
+      minmax(8rem, 40%)
       auto;
   }
 
