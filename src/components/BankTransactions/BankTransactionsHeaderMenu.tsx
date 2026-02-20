@@ -32,7 +32,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
   const { filters } = useBankTransactionsFiltersContext()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
-  const handleDownloadTransactions = () => {
+  const handleDownloadTransactions = useCallback(() => {
     void trigger(bankTransactionFiltersToHookOptions(filters))
       .then((result) => {
         if (result?.presignedUrl) {
@@ -45,7 +45,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
       .catch(() => {
         addToast({ content: 'Download Failed, Please Retry', type: 'error' })
       })
-  }
+  }, [addToast, filters, trigger, triggerInvisibleDownload])
 
   const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
     const items: DataTableHeaderMenuItem[] = []
