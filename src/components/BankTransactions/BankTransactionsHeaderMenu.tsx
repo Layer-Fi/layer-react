@@ -62,7 +62,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
     if (actions.includes(BankTransactionsHeaderMenuActions.DownloadTransactions)) {
       items.push({
         key: BankTransactionsHeaderMenuActions.DownloadTransactions,
-        onClick: () => handleDownloadTransactions(),
+        onClick: handleDownloadTransactions,
         icon: <DownloadCloud size={16} />,
         label: 'Download transactions',
       })
