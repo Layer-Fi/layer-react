@@ -90,6 +90,7 @@ const DownloadButton = ({
   iconOnly,
   disabled,
   handleDownload,
+  error,
   invisibleDownloadRef,
 }: {
   downloadButtonTextOverride?: string
@@ -352,7 +353,7 @@ export const BankTransactionsHeader = ({
             iconOnly={isListView}
             disabled={showBulkActions}
             handleDownload={handleDownloadTransactions}
-            error={error}
+            error={Boolean(error)}
             invisibleDownloadRef={invisibleDownloadRef}
           />
           <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
