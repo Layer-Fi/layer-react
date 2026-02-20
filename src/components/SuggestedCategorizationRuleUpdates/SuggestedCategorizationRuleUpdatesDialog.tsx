@@ -27,12 +27,10 @@ const SuggestedCategorizationRuleUpdatesDialogDesktopHeader = ({ close, ruleSugg
   if (!ruleSuggestion) return null
 
   return (
-    <VStack>
-      <ModalTitleWithClose
-        heading={<RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />}
-        onClose={close}
-      />
-    </VStack>
+    <ModalTitleWithClose
+      heading={<RuleSuggestionHeader ruleSuggestion={ruleSuggestion} />}
+      onClose={close}
+    />
   )
 }
 
