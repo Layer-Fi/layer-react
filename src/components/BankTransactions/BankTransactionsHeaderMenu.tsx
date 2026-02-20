@@ -29,21 +29,21 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
   const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
     const items: DataTableHeaderMenuItem[] = []
 
-    if (actions.includes(BankTransactionsHeaderMenuActions.UploadTransactions)) {
-      items.push({
-        key: BankTransactionsHeaderMenuActions.UploadTransactions,
-        onClick: () => setIsModalOpen(true),
-        icon: <UploadCloud size={16} />,
-        label: 'Upload transactions manually',
-      })
-    }
-
     if (actions.includes(BankTransactionsHeaderMenuActions.DownloadTransactions) && handleDownloadTransactions) {
       items.push({
         key: BankTransactionsHeaderMenuActions.DownloadTransactions,
         onClick: handleDownloadTransactions,
         icon: <DownloadCloud size={16} />,
         label: 'Download transactions',
+      })
+    }
+
+    if (actions.includes(BankTransactionsHeaderMenuActions.UploadTransactions)) {
+      items.push({
+        key: BankTransactionsHeaderMenuActions.UploadTransactions,
+        onClick: () => setIsModalOpen(true),
+        icon: <UploadCloud size={16} />,
+        label: 'Upload transactions manually',
       })
     }
 
