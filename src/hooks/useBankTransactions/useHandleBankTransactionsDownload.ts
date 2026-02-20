@@ -14,32 +14,21 @@ export function useHandleDownloadTransactions({ isListView }: { isListView: bool
   const { trigger, error, isMutating } = useBankTransactionsDownload()
 
   const handleDownloadTransactions = useCallback(() => {
-    if (isListView) {
-      return void trigger(bankTransactionFiltersToHookOptions(filters))
-        .then((result) => {
-          if (result?.presignedUrl) {
-            triggerInvisibleDownload({ url: result.presignedUrl })
-          }
-          else {
-            addToast({
-              content: 'Download Failed, Please Retry',
-              type: 'error',
-            })
-          }
-        })
-        .catch(() => {
-          addToast({ content: 'Download Failed, Please Retry', type: 'error' })
-        })
-    }
-    else {
-      return void trigger(bankTransactionFiltersToHookOptions(filters)).then(
-        (result) => {
-          if (result?.presignedUrl) {
-            triggerInvisibleDownload({ url: result.presignedUrl })
-          }
-        },
-      )
-    }
+    return void trigger(bankTransactionFiltersToHookOptions(filters))
+      .then((result) => {
+        if (result?.presignedUrl) {
+          triggerInvisibleDownload({ url: result.presignedUrl })
+        }
+        else if (isListView) {
+          addToast({
+            content: 'Download Failed, Please Retry',
+            type: 'error',
+          })
+        }
+      })
+      .catch(() => {
+        addToast({ content: 'Download Failed, Please Retry', type: 'error' })
+      })
   }, [addToast, filters, isListView, trigger, triggerInvisibleDownload])
 
   return useMemo(() => ({

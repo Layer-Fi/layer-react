@@ -29,7 +29,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
   const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
     const items: DataTableHeaderMenuItem[] = []
 
-    if (actions.includes(BankTransactionsHeaderMenuActions.DownloadTransactions) && handleDownloadTransactions) {
+    if (actions.includes(BankTransactionsHeaderMenuActions.DownloadTransactions) {
       items.push({
         key: BankTransactionsHeaderMenuActions.DownloadTransactions,
         onClick: handleDownloadTransactions,
