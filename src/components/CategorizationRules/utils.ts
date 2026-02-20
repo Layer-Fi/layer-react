@@ -1,12 +1,15 @@
-const DIRECTION_LABELS: Record<string, string> = {
-  MONEY_IN: 'Money In',
-  MONEY_OUT: 'Money Out',
+import { BankDirectionFilter } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+
+const DIRECTION_LABELS: Record<BankDirectionFilter, string> = {
+  [BankDirectionFilter.MONEY_IN]: 'Money In',
+  [BankDirectionFilter.MONEY_OUT]: 'Money Out',
 }
 
-export const getCategorizationRuleDirectionLabel = (bankDirectionFilter: string | null | undefined) => {
+export const getCategorizationRuleDirectionLabel = (
+  bankDirectionFilter: BankDirectionFilter | null | undefined,
+) => {
   if (!bankDirectionFilter) {
     return 'Any direction'
   }
-  const normalized = bankDirectionFilter.replace(/\s+/g, '_').toUpperCase()
-  return DIRECTION_LABELS[normalized] ?? bankDirectionFilter
+  return DIRECTION_LABELS[bankDirectionFilter]
 }
