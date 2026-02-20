@@ -1,20 +1,22 @@
 import { useCallback, useMemo, useState } from 'react'
 import { MenuIcon, PencilRuler } from 'lucide-react'
 
-import { bankTransactionFiltersToHookOptions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
-import { useBankTransactionsDownload } from '@hooks/useBankTransactions/useBankTransactionsDownload'
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
-import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import DownloadCloud from '@icons/DownloadCloud'
 import UploadCloud from '@icons/UploadCloud'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
-import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
+import InvisibleDownload from '@components/utility/InvisibleDownload'
+
+type InvisibleDownloadHandle = {
+  trigger: (options: { url: string, filename?: string }) => Promise<void>
+}
 
 interface BankTransactionsHeaderMenuProps {
   actions: BankTransactionsHeaderMenuActions[]
   isDisabled?: boolean
+  handleDownloadTransactions?: () => void
+  invisibleDownloadRef?: React.RefObject<InvisibleDownloadHandle>
 }
 
 export enum BankTransactionsHeaderMenuActions {
@@ -23,29 +25,9 @@ export enum BankTransactionsHeaderMenuActions {
   DownloadTransactions = 'DownloadTransactions',
 }
 
-export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransactionsHeaderMenuProps) => {
+export const BankTransactionsHeaderMenu = ({ actions, isDisabled, handleDownloadTransactions, invisibleDownloadRef }: BankTransactionsHeaderMenuProps) => {
   const { toCategorizationRulesTable } = useBankTransactionsNavigation()
-  const { addToast } = useLayerContext()
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const { trigger } = useBankTransactionsDownload()
-  const { filters } = useBankTransactionsFiltersContext()
-  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-
-  const handleDownloadTransactions = useCallback(() => {
-    void trigger(bankTransactionFiltersToHookOptions(filters))
-      .then((result) => {
-        if (result?.presignedUrl) {
-          triggerInvisibleDownload({ url: result.presignedUrl })
-        }
-        else {
-          addToast({ content: 'Download Failed, Please Retry', type: 'error' })
-        }
-      })
-      .catch(() => {
-        addToast({ content: 'Download Failed, Please Retry', type: 'error' })
-      })
-  }, [addToast, filters, trigger, triggerInvisibleDownload])
 
   const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
     const items: DataTableHeaderMenuItem[] = []
@@ -59,7 +41,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled }: BankTransact
       })
     }
 
-    if (actions.includes(BankTransactionsHeaderMenuActions.DownloadTransactions)) {
+    if (actions.includes(BankTransactionsHeaderMenuActions.DownloadTransactions) && handleDownloadTransactions) {
       items.push({
         key: BankTransactionsHeaderMenuActions.DownloadTransactions,
         onClick: handleDownloadTransactions,

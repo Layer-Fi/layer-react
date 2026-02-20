@@ -16,6 +16,7 @@ import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelection
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
@@ -54,6 +55,10 @@ type TransactionsSearchProps = {
   isDisabled?: boolean
 }
 
+type InvisibleDownloadHandle = {
+  trigger: (options: { url: string, filename?: string }) => Promise<void>
+}
+
 function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   const { filters, setFilters } = useBankTransactionsFiltersContext()
 
@@ -84,32 +89,24 @@ const DownloadButton = ({
   downloadButtonTextOverride,
   iconOnly,
   disabled,
+  handleDownload,
+  invisibleDownloadRef,
 }: {
   downloadButtonTextOverride?: string
   iconOnly?: boolean
   disabled?: boolean
+  handleDownload?: () => void
+  error?: boolean
+  invisibleDownloadRef?: React.RefObject<InvisibleDownloadHandle>
 }) => {
-  const { filters } = useBankTransactionsFiltersContext()
-
-  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { trigger, isMutating, error } = useBankTransactionsDownload()
-
-  const handleClick = () => {
-    void trigger(bankTransactionFiltersToHookOptions(filters))
-      .then((result) => {
-        if (result?.presignedUrl) {
-          triggerInvisibleDownload({ url: result.presignedUrl })
-        }
-      })
-  }
+  const { isMutating } = useBankTransactionsDownload()
 
   return (
     <>
       <DownloadButtonComponent
         variant={ButtonVariant.secondary}
         iconOnly={iconOnly}
-        onClick={handleClick}
+        onClick={handleDownload}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
         text={downloadButtonTextOverride ?? 'Download'}
@@ -159,6 +156,40 @@ export const BankTransactionsHeader = ({
   const isMobileList = tableContentMode === BankTransactionsTableContent.MobileList
   const isListView = isMobileList || tableContentMode === BankTransactionsTableContent.List
 
+  const { addToast } = useLayerContext()
+
+  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
+
+  const { trigger, error } = useBankTransactionsDownload()
+
+  const handleDownloadTransactions = useCallback(() => {
+    if (isListView) {
+      return void trigger(bankTransactionFiltersToHookOptions(filters))
+        .then((result) => {
+          if (result?.presignedUrl) {
+            triggerInvisibleDownload({ url: result.presignedUrl })
+          }
+          else {
+            addToast({
+              content: 'Download Failed, Please Retry',
+              type: 'error',
+            })
+          }
+        })
+        .catch(() => {
+          addToast({ content: 'Download Failed, Please Retry', type: 'error' })
+        })
+    }
+    else {
+      return void trigger(bankTransactionFiltersToHookOptions(filters)).then(
+        (result) => {
+          if (result?.presignedUrl) {
+            triggerInvisibleDownload({ url: result.presignedUrl })
+          }
+        },
+      )
+    }
+  }, [addToast, filters, isListView, trigger, triggerInvisibleDownload])
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
       <HStack align='center'>
@@ -277,7 +308,11 @@ export const BankTransactionsHeader = ({
           {!showBulkActions && isStatusToggleVisible && (
             <HStack justify='space-between' align='center' gap='xs'>
               {statusToggle}
-              <BankTransactionsHeaderMenu actions={headerMenuActions} />
+              <BankTransactionsHeaderMenu
+                actions={headerMenuActions}
+                handleDownloadTransactions={handleDownloadTransactions}
+                invisibleDownloadRef={invisibleDownloadRef}
+              />
             </HStack>
           )}
 
@@ -316,6 +351,9 @@ export const BankTransactionsHeader = ({
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={isListView}
             disabled={showBulkActions}
+            handleDownload={handleDownloadTransactions}
+            error={error}
+            invisibleDownloadRef={invisibleDownloadRef}
           />
           <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
         </HStack>
