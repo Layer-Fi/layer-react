@@ -134,7 +134,6 @@ export const BookkeepingOverview = ({
             <ProfitAndLoss.Header
               text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
               withStatus
-              dateSelectionMode='month'
             />
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
