@@ -86,7 +86,7 @@ export function BankTransactionsListWithEmptyStates({
     return slots.Loader
   }
 
-  if (isEmpty) {
+  if (!isLoading && isEmpty) {
     return <BankTransactionsTableEmptyState />
   }
 
