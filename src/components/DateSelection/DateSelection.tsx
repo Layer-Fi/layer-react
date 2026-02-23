@@ -7,7 +7,7 @@ import { GlobalDatePicker } from '@components/GlobalDatePicker/GlobalDatePicker'
 
 import './dateSelection.scss'
 
-export const DateSelection = () => {
+export const DateSelection = ({ showLabels = false }: { showLabels?: boolean }) => {
   const { value } = useSizeClass()
 
   return (
@@ -16,8 +16,8 @@ export const DateSelection = () => {
         'Layer__DateSelection--mobile': value === 'mobile',
       })}
     >
-      <DateSelectionComboBox />
-      <GlobalDatePicker />
+      <DateSelectionComboBox showLabel={showLabels} />
+      <GlobalDatePicker showLabel={showLabels} />
     </HStack>
   )
 }

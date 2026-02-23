@@ -28,7 +28,7 @@ type MonthPickerProps = {
 
 export const MonthPicker = ({
   label,
-  showLabel = true,
+  showLabel = false,
   date,
   onChange,
   minDate = null,

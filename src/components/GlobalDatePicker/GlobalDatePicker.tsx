@@ -5,7 +5,7 @@ import { useGlobalDate, useGlobalDateActions } from '@providers/GlobalDateStore/
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 
-export const GlobalDatePicker = () => {
+export const GlobalDatePicker = ({ showLabel = false }: { showLabel?: boolean }) => {
   const { date } = useGlobalDate({ dateSelectionMode: 'full' })
   const { setDate: setGlobalDate } = useGlobalDateActions()
   const { minDate, maxDate } = useGlobalDatePickerBounds()
@@ -32,6 +32,7 @@ export const GlobalDatePicker = () => {
       errorText={errorText}
       onBlur={onBlur}
       slotProps={{ Label: { size: 'sm', pbe: '3xs' } }}
+      showLabel={showLabel}
     />
   )
 }

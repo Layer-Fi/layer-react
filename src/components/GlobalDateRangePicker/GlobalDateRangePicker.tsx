@@ -5,7 +5,7 @@ import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/Global
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 
-export const GlobalDateRangePicker = () => {
+export const GlobalDateRangePicker = ({ showLabels = false }: { showLabels?: boolean }) => {
   const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange: setGlobalDateRange } = useGlobalDateRangeActions()
   const { minDate, maxDate } = useGlobalDatePickerBounds()
@@ -58,6 +58,7 @@ export const GlobalDateRangePicker = () => {
         errorText={startDateErrorText}
         onBlur={onBlurStartDate}
         slotProps={{ Label: { size: 'sm', pbe: '3xs' } }}
+        showLabel={showLabels}
       />
       <DatePicker
         label='End date'
@@ -69,6 +70,7 @@ export const GlobalDateRangePicker = () => {
         errorText={endDateErrorText}
         onBlur={onBlurEndDate}
         slotProps={{ Label: { size: 'sm', pbe: '3xs' } }}
+        showLabel={showLabels}
       />
     </>
   )

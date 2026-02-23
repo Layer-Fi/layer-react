@@ -167,7 +167,6 @@ export const BankTransactionsHeader = ({
       {withDatePicker && monthPickerDate && (
         <MonthPicker
           label='Select a month'
-          showLabel={false}
           date={monthPickerDate}
           onChange={setDateRange}
           minDate={activationDate ? convertDateToZonedDateTime(activationDate) : null}
