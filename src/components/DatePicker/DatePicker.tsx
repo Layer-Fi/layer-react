@@ -32,7 +32,7 @@ type DatePickerProps = {
 
 export const DatePicker = ({
   label,
-  showLabel = true,
+  showLabel = false,
   date,
   minDate,
   maxDate,

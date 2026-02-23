@@ -118,7 +118,6 @@ export const AccountFormBox = ({
           <InputGroup label='Opening date'>
             <DatePicker
               label='Opening date'
-              showLabel={false}
               date={date}
               onChange={onChangeDate}
               onBlur={onBlurDate}

@@ -66,7 +66,7 @@ export const ProfitAndLossHeader = ({
         )}
       </span>
       <HStack gap='xs'>
-        {withDatePicker && <CombinedDateRangeSelection mode={dateSelectionMode} />}
+        {withDatePicker && <CombinedDateRangeSelection mode={dateSelectionMode} showLabels={false} />}
         {withDownloadButton && <ProfitAndLossDownloadButton stringOverrides={stringOverrides?.downloadButton} />}
       </HStack>
     </Header>

@@ -23,7 +23,7 @@ const dateSelectionOptionConfig = {
 }
 const options = Object.values(dateSelectionOptionConfig).filter(opt => opt.value !== DatePreset.Custom)
 
-export const DateSelectionComboBox = () => {
+export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boolean }) => {
   const [lastPreset, setLastPreset] = useState<DatePreset | null>(null)
   const { business } = useLayerContext()
 
@@ -47,9 +47,12 @@ export const DateSelectionComboBox = () => {
 
   const inputId = useId()
 
+  const label = 'Report period'
+  const additionalAriaProps = !showLabel && { 'aria-label': label }
+
   return (
     <VStack>
-      <Label pbe='3xs' size='sm' htmlFor={inputId}>Report period</Label>
+      {showLabel && <Label pbe='3xs' size='sm' htmlFor={inputId}>{label}</Label>}
       <ComboBox
         options={options}
         onSelectedValueChange={onSelectedValueChange}
@@ -57,6 +60,7 @@ export const DateSelectionComboBox = () => {
         isSearchable={false}
         isClearable={false}
         inputId={inputId}
+        {...additionalAriaProps}
       />
     </VStack>
   )

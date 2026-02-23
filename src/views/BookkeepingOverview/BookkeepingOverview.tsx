@@ -5,18 +5,21 @@ import { PopupModal } from 'react-calendly'
 import { type CallBooking as CallBookingData } from '@schemas/callBookings'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
 import { useCalendly } from '@hooks/useCalendly/useCalendly'
-import { useWindowSize } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass, useWindowSize } from '@hooks/useWindowSize/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { CallBooking } from '@components/CallBooking/CallBooking'
 import { Container } from '@components/Container/Container'
+import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
+import { Header } from '@components/Header/Header'
+import { HeaderCol } from '@components/Header/HeaderCol'
+import { HeaderRow } from '@components/Header/HeaderRow'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
 import { useCallBookings } from '@features/callBookings/api/useCallBookings'
-import { BookkeepingProfitAndLossSummariesContainer } from '@views/BookkeepingOverview/internal/BookkeepingProfitAndLossSummariesContainer'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
 
 export interface BookkeepingOverviewProps {
@@ -56,6 +59,7 @@ export const BookkeepingOverview = ({
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
+  const { value: sizeClass } = useSizeClass()
   const { isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly } = useCalendly()
 
   const profitAndLossSummariesVariants =
@@ -75,6 +79,15 @@ export const BookkeepingOverview = ({
       <View
         viewClassName='Layer__bookkeeping-overview--view'
         title={stringOverrides?.title || title || 'Bookkeeping overview'}
+        header={(
+          <Header>
+            <HeaderRow>
+              <HeaderCol>
+                <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
+              </HeaderCol>
+            </HeaderRow>
+          </Header>
+        )}
         withSidebar={width > 1100}
         sidebar={(
           <VStack gap='lg'>
@@ -120,16 +133,14 @@ export const BookkeepingOverview = ({
           >
             <ProfitAndLoss.Header
               text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
-              withDatePicker
               withStatus
-              dateSelectionMode='month'
             />
-            <BookkeepingProfitAndLossSummariesContainer>
+            <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
                 variants={profitAndLossSummariesVariants}
               />
-            </BookkeepingProfitAndLossSummariesContainer>
+            </VStack>
             <ProfitAndLoss.Chart />
           </Container>
         </div>
