@@ -21,15 +21,53 @@ const DataStateContainer = ({ children }: PropsWithChildren) => (
   </div>
 )
 
-export function BankTransactionsListWithEmptyStates({
-  isEmpty,
-  slots,
-}: BankTransactionsTableEmptyStatesProps) {
-  const { isLoading, isError, display } = useBankTransactionsContext()
+export const BankTransactionsTableEmptyState = () => {
+  const { display } = useBankTransactionsContext()
   const { filters } = useBankTransactionsFiltersContext()
 
   const isCategorizationMode = display !== DisplayState.categorized
   const isFiltered = Boolean(filters?.query)
+
+  if (isFiltered) {
+    return (
+      <DataStateContainer>
+        <DataState
+          status={DataStateStatus.info}
+          title='No transactions found'
+          description='Try adjusting your search filters'
+          icon={<SearchX />}
+          spacing
+        />
+      </DataStateContainer>
+    )
+  }
+
+  return (
+    <DataStateContainer>
+      <DataState
+        status={DataStateStatus.allDone}
+        title={
+          isCategorizationMode
+            ? 'You are up to date with transactions!'
+            : 'You have no categorized transactions'
+        }
+        description={
+          isCategorizationMode
+            ? 'All uncategorized transactions will be displayed here'
+            : 'All transactions will be displayed here once reviewed'
+        }
+        icon={isCategorizationMode ? undefined : <InboxIcon />}
+        spacing
+      />
+    </DataStateContainer>
+  )
+}
+
+export function BankTransactionsListWithEmptyStates({
+  isEmpty,
+  slots,
+}: BankTransactionsTableEmptyStatesProps) {
+  const { isLoading, isError } = useBankTransactionsContext()
 
   if (isError) {
     return (
@@ -38,6 +76,7 @@ export function BankTransactionsListWithEmptyStates({
           status={DataStateStatus.failed}
           title='Something went wrong'
           description='We couldn’t load your transactions'
+          spacing
         />
       </DataStateContainer>
     )
@@ -47,38 +86,8 @@ export function BankTransactionsListWithEmptyStates({
     return slots.Loader
   }
 
-  if (isEmpty && !isFiltered) {
-    return (
-      <DataStateContainer>
-        <DataState
-          status={DataStateStatus.allDone}
-          title={
-            isCategorizationMode
-              ? 'You are up to date with transactions!'
-              : 'You have no categorized transactions'
-          }
-          description={
-            isCategorizationMode
-              ? 'All uncategorized transactions will be displayed here'
-              : 'All transactions will be displayed here once reviewed'
-          }
-          icon={isCategorizationMode ? undefined : <InboxIcon />}
-        />
-      </DataStateContainer>
-    )
-  }
-
-  if (isEmpty && isFiltered) {
-    return (
-      <DataStateContainer>
-        <DataState
-          status={DataStateStatus.info}
-          title='No transactions found'
-          description='Try adjusting your search filters'
-          icon={<SearchX />}
-        />
-      </DataStateContainer>
-    )
+  if (!isLoading && isEmpty) {
+    return <BankTransactionsTableEmptyState />
   }
 
   return slots.List

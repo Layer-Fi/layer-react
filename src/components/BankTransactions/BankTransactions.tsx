@@ -344,6 +344,10 @@ const BankTransactionsTableView = ({
     BankTransactionsMobileListView,
   ])
 
+  const isEmpty = tableContentMode === BankTransactionsTableContent.Table
+    ? false
+    : (bankTransactions?.length ?? 0) === 0
+
   return (
     <Container
       className={
@@ -373,7 +377,7 @@ const BankTransactionsTableView = ({
         />
       )}
 
-      <BankTransactionsListWithEmptyStates isEmpty={(bankTransactions?.length ?? 0) === 0 && !isLoading} slots={slots} />
+      <BankTransactionsListWithEmptyStates isEmpty={isEmpty} slots={slots} />
 
       <SuggestedCategorizationRuleUpdatesDialog
         isOpen={!!ruleSuggestion}

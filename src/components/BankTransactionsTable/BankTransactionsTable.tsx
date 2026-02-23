@@ -12,6 +12,7 @@ import { BankTransactionRow } from '@components/BankTransactionRow/BankTransacti
 import {
   type BankTransactionsStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
+import { BankTransactionsTableEmptyState } from '@components/BankTransactions/BankTransactionsTableEmptyState'
 import { BankTransactionsLoader } from '@components/BankTransactionsLoader/BankTransactionsLoader'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 
@@ -55,6 +56,8 @@ export const BankTransactionsTable = ({
   const { mutate, display } = useBankTransactionsContext()
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
+
+  const isEmpty = (bankTransactions?.length ?? 0) === 0
 
   const showReceiptColumn =
   (showReceiptUploads
@@ -130,6 +133,13 @@ export const BankTransactionsTable = ({
       </thead>
       {isLoading && <BankTransactionsLoader />}
       <tbody>
+        {!isLoading && isEmpty && (
+          <tr>
+            <td colSpan={isCategorizationEnabled ? 7 : 6}>
+              <BankTransactionsTableEmptyState />
+            </td>
+          </tr>
+        )}
         {!isLoading
           && bankTransactions?.map(
             (bankTransaction: BankTransaction, index: number) => (
@@ -146,10 +156,7 @@ export const BankTransactionsTable = ({
               />
             ),
           )}
-        {isSyncing
-          && (lastPage
-            || ((!bankTransactions || bankTransactions.length === 0)
-              && page === 1))
+        {isSyncing && (lastPage || (isEmpty && page === 1))
           ? (
             <tr>
               <td colSpan={3}>
