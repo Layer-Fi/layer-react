@@ -1,6 +1,6 @@
 {
   "name": "@layerfi/components",
-  "version": "0.1.123-alpha",
+  "version": "0.1.123",
   "description": "Layer React Components",
   "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.mjs",
