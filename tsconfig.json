@@ -61,7 +61,5 @@
       "@models/*": ["src/models/*"]
     }
   },
-  "include": [
-    "src/**/*"
-  ]
+ "include": ["src/**/*.tsx", "src/**/*.ts", "src/**/*.d.ts"]
 }

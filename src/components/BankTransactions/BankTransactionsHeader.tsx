@@ -3,6 +3,7 @@ import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import type { Key } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bank_transactions'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
@@ -119,6 +120,7 @@ export const BankTransactionsHeader = ({
   collapseHeader,
   showCategorizationRules = false,
 }: BankTransactionsHeaderProps) => {
+  const { t } = useTranslation()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const activationDate = useBusinessActivationDate()
   const { display } = useBankTransactionsContext()
@@ -229,10 +231,10 @@ export const BankTransactionsHeader = ({
   const statusToggle = isStatusToggleVisible
     ? (
       <Toggle
-        ariaLabel='Categorization status'
+        ariaLabel={t('bankTransactions.categorizationStatusAriaLabel')}
         options={[
-          { label: 'To Review', value: DisplayState.review },
-          { label: 'Categorized', value: DisplayState.categorized },
+          { label: t('bankTransactions.toReview'), value: DisplayState.review },
+          { label: t('bankTransactions.categorized'), value: DisplayState.categorized },
         ]}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}

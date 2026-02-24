@@ -4,11 +4,6 @@
 ==========================================================
 */
 
-/* ------------------ UI Primitives ------------------ */
-export { Button, ButtonVariant, type ButtonProps } from './components/Button/Button'
-export { DataState, DataStateStatus, type DataStateProps } from './components/DataState/DataState'
-export { Text, TextSize, TextWeight } from './components/Typography/Text'
-
 /* ------------------ Onboarding ------------------ */
 export { Onboarding } from './components/Onboarding/Onboarding'
 
@@ -67,10 +62,10 @@ export { TaxEstimatesView } from './views/TaxEstimates/TaxEstimates'
 ======================= Layer Provider & Context =======================
 */
 export { EntityName, type LinkingMetadata } from './contexts/InAppLinkContext'
-export { useLayerContext } from './contexts/LayerContext/LayerContext'
 export { useIntlSettings } from './contexts/IntlContext/IntlContext'
-export { LayerProvider } from './providers/LayerProvider/LayerProvider'
+export { useLayerContext } from './contexts/LayerContext/LayerContext'
+export type { I18nResources, IntlSettings, IntlSettingsInput } from './i18n/types'
 export { IntlProvider } from './providers/IntlProvider/IntlProvider'
-export type { IntlSettings, IntlSettingsInput, I18nResources } from './i18n/types'
+export { LayerProvider } from './providers/LayerProvider/LayerProvider'
 export { DisplayState } from './types/bank_transactions'
 export { Direction } from './types/general'

@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { MenuIcon, PencilRuler } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { useHandleDownloadTransactions } from '@hooks/useBankTransactions/useHandleBankTransactionsDownload'
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
@@ -22,6 +23,7 @@ export enum BankTransactionsHeaderMenuActions {
 }
 
 export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = false }: BankTransactionsHeaderMenuProps) => {
+  const { t } = useTranslation()
   const { toCategorizationRulesTable } = useBankTransactionsNavigation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { handleDownloadTransactions, invisibleDownloadRef } = useHandleDownloadTransactions({ isListView })
@@ -34,7 +36,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
         key: BankTransactionsHeaderMenuActions.DownloadTransactions,
         onClick: handleDownloadTransactions,
         icon: <DownloadCloud size={16} />,
-        label: 'Download transactions',
+        label: t('bankTransactions.downloadTransactions'),
       })
     }
 
@@ -43,7 +45,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
         key: BankTransactionsHeaderMenuActions.UploadTransactions,
         onClick: () => setIsModalOpen(true),
         icon: <UploadCloud size={16} />,
-        label: 'Upload transactions manually',
+        label: t('bankTransactions.uploadTransactionsManually'),
       })
     }
 
@@ -52,12 +54,12 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
         key: BankTransactionsHeaderMenuActions.ManageCategorizationRules,
         onClick: toCategorizationRulesTable,
         icon: <PencilRuler size={16} strokeWidth={1.25} />,
-        label: 'Manage categorization rules',
+        label: t('bankTransactions.manageCategorizationRules'),
       })
     }
 
     return items
-  }, [actions, toCategorizationRulesTable, handleDownloadTransactions])
+  }, [actions, toCategorizationRulesTable, handleDownloadTransactions, t])
 
   const Icon = useCallback(() => {
     if (actions.length === 1 && actions[0] === BankTransactionsHeaderMenuActions.UploadTransactions) {
@@ -73,7 +75,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
   return (
     <>
       <DataTableHeaderMenu
-        ariaLabel='Additional bank transactions actions'
+        ariaLabel={t('bankTransactions.additionalActionsAriaLabel')}
         items={menuItems}
         isDisabled={isDisabled}
         slots={{ Icon }}

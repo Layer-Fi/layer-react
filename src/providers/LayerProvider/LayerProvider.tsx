@@ -1,5 +1,5 @@
 import { type PropsWithChildren, useState } from 'react'
-import { I18nProvider } from 'react-aria-components'
+import type { I18nResources, IntlSettingsInput } from '@i18n/types'
 import { SWRConfig } from 'swr'
 
 import { type LayerThemeConfig } from '@internal-types/layer_context'
@@ -11,7 +11,6 @@ import type { Environment } from '@providers/Environment/environmentConfigs'
 import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInputProvider'
 import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { IntlProvider } from '@providers/IntlProvider/IntlProvider'
-import type { IntlSettingsInput, I18nResources } from '@i18n/types'
 
 export type EventCallbacks = {
   onTransactionCategorized?: () => void

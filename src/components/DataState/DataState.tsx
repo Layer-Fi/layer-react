@@ -120,7 +120,7 @@ export const DataState = ({
             onClick={onRefresh}
             disabled={isLoading}
           >
-            {t('common.refresh', 'Refresh')}
+            {t('common.refresh')}
           </Button>
         </span>
       )}

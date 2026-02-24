@@ -1,12 +1,19 @@
 import i18next, { type Resource } from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import en from './locales/en'
+import es from './locales/es'
 import { DEFAULT_INTL_SETTINGS } from './types'
 
 export const i18nInstance = i18next.createInstance()
-const defaultNamespace = 'common'
+const defaultNamespace = 'translation'
 const defaultFallbackLanguage = 'en'
 let isInitialized = false
+
+const builtInResources: Resource = {
+  en,
+  es,
+}
 
 const ensureInitialized = (
   fallbackLanguage: string = defaultFallbackLanguage,
@@ -19,7 +26,7 @@ const ensureInitialized = (
   void i18nInstance
     .use(initReactI18next)
     .init({
-      resources: {},
+      resources: builtInResources,
       lng: DEFAULT_INTL_SETTINGS.language,
       fallbackLng: fallbackLanguage,
       defaultNS: namespace,
