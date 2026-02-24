@@ -1,6 +1,7 @@
 import { APIError, type APIErrorMessage } from '@models/APIError'
 import { reportError } from '@models/ErrorHandler'
 import type { ParameterValues } from '@utils/request/toDefinedSearchParameters'
+import { getIntlHeaderValue } from '@utils/intl/settingsStore'
 
 // eslint-disable-next-line import/no-relative-parent-imports
 import pkg from '../../../package.json'
@@ -10,6 +11,9 @@ const CUSTOM_HEADERS = {
   [`${CUSTOM_PREFIX}React-Version`]: pkg.version,
 } as const
 
+const getIntlHeaders = () => ({
+  'X-Layer-Intl': getIntlHeaderValue(),
+})
 type APIResponseError = {
   description?: string
   type?: string
@@ -42,6 +46,7 @@ export const get =
             'Authorization': 'Bearer ' + (accessToken || ''),
             'Content-Type': 'application/json',
             ...CUSTOM_HEADERS,
+            ...getIntlHeaders(),
           },
           method: 'GET',
         })
@@ -99,6 +104,7 @@ export const request =
             'Content-Type': 'application/json',
             'Cache-Control': 'no-cache',
             ...CUSTOM_HEADERS,
+            ...getIntlHeaders(),
           },
           method: verb.toUpperCase(),
           body: JSON.stringify(options?.body),
@@ -124,6 +130,7 @@ export const postWithFormData = <
     headers: {
       Authorization: 'Bearer ' + (accessToken || ''),
       ...CUSTOM_HEADERS,
+      ...getIntlHeaders(),
     },
     body: formData,
   })

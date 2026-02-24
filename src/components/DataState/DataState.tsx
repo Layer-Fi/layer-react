@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import AlertOctagon from '@icons/AlertOctagon'
@@ -77,6 +78,8 @@ export const DataState = ({
   titleSize = inline ? TextSize.sm : TextSize.lg,
   className,
 }: DataStateProps) => {
+  const { t } = useTranslation()
+
   const baseClassName = classNames(
     'Layer__data-state', {
       'Layer__data-state--spacing': spacing,
@@ -117,7 +120,7 @@ export const DataState = ({
             onClick={onRefresh}
             disabled={isLoading}
           >
-            Refresh
+            {t('common.refresh', 'Refresh')}
           </Button>
         </span>
       )}

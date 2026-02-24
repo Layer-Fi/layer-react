@@ -10,6 +10,8 @@ import { BusinessProvider } from '@providers/BusinessProvider/BusinessProvider'
 import type { Environment } from '@providers/Environment/environmentConfigs'
 import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInputProvider'
 import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { IntlProvider } from '@providers/IntlProvider/IntlProvider'
+import type { IntlSettingsInput, I18nResources } from '@i18n/types'
 
 export type EventCallbacks = {
   onTransactionCategorized?: () => void
@@ -26,6 +28,8 @@ export type LayerProviderProps = {
   usePlaidSandbox?: boolean
   onError?: (error: LayerError) => void
   eventCallbacks?: EventCallbacks
+  locale?: IntlSettingsInput
+  resources?: I18nResources
 }
 
 export const LayerProvider = ({
@@ -34,13 +38,15 @@ export const LayerProvider = ({
   businessAccessToken,
   environment,
   usePlaidSandbox,
+  locale,
+  resources,
   ...restProps
 }: PropsWithChildren<LayerProviderProps>) => {
   const [cache] = useState(() => new Map())
 
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
-      <I18nProvider locale='en-US'>
+      <IntlProvider locale={locale} resources={resources}>
         <EnvironmentInputProvider environment={environment} usePlaidSandbox={usePlaidSandbox}>
           <AuthInputProvider
             appId={appId}
@@ -52,7 +58,7 @@ export const LayerProvider = ({
             </GlobalDateStoreProvider>
           </AuthInputProvider>
         </EnvironmentInputProvider>
-      </I18nProvider>
+      </IntlProvider>
     </SWRConfig>
   )
 }
