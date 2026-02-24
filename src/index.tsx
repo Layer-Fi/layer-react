@@ -62,7 +62,10 @@ export { TaxEstimatesView } from './views/TaxEstimates/TaxEstimates'
 ======================= Layer Provider & Context =======================
 */
 export { EntityName, type LinkingMetadata } from './contexts/InAppLinkContext'
+export { useIntlSettings } from './contexts/IntlContext/IntlContext'
 export { useLayerContext } from './contexts/LayerContext/LayerContext'
+export type { I18nResources, IntlSettings, IntlSettingsInput } from './i18n/types'
+export { IntlProvider } from './providers/IntlProvider/IntlProvider'
 export { LayerProvider } from './providers/LayerProvider/LayerProvider'
 export { DisplayState } from './types/bank_transactions'
 export { Direction } from './types/general'

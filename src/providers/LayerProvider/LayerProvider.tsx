@@ -1,5 +1,5 @@
 import { type PropsWithChildren, useState } from 'react'
-import { I18nProvider } from 'react-aria-components'
+import type { I18nResources, IntlSettingsInput } from '@i18n/types'
 import { SWRConfig } from 'swr'
 
 import { type LayerThemeConfig } from '@internal-types/layer_context'
@@ -10,6 +10,7 @@ import { BusinessProvider } from '@providers/BusinessProvider/BusinessProvider'
 import type { Environment } from '@providers/Environment/environmentConfigs'
 import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInputProvider'
 import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { IntlProvider } from '@providers/IntlProvider/IntlProvider'
 
 export type EventCallbacks = {
   onTransactionCategorized?: () => void
@@ -26,6 +27,8 @@ export type LayerProviderProps = {
   usePlaidSandbox?: boolean
   onError?: (error: LayerError) => void
   eventCallbacks?: EventCallbacks
+  locale?: IntlSettingsInput
+  resources?: I18nResources
 }
 
 export const LayerProvider = ({
@@ -34,13 +37,15 @@ export const LayerProvider = ({
   businessAccessToken,
   environment,
   usePlaidSandbox,
+  locale,
+  resources,
   ...restProps
 }: PropsWithChildren<LayerProviderProps>) => {
   const [cache] = useState(() => new Map())
 
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
-      <I18nProvider locale='en-US'>
+      <IntlProvider locale={locale} resources={resources}>
         <EnvironmentInputProvider environment={environment} usePlaidSandbox={usePlaidSandbox}>
           <AuthInputProvider
             appId={appId}
@@ -52,7 +57,7 @@ export const LayerProvider = ({
             </GlobalDateStoreProvider>
           </AuthInputProvider>
         </EnvironmentInputProvider>
-      </I18nProvider>
+      </IntlProvider>
     </SWRConfig>
   )
 }

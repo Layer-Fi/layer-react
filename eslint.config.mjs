@@ -104,6 +104,7 @@ export default tsEslint.config(
           '@contexts/',
           '@features/',
           '@hooks/',
+          '@i18n/',
           '@providers/',
           '@utils/',
           '@internal-types/',

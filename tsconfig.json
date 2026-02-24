@@ -49,6 +49,7 @@
       "@contexts/*": ["src/contexts/*"],
       "@features/*": ["src/features/*"],
       "@hooks/*": ["src/hooks/*"],
+      "@i18n/*": ["src/i18n/*"],
       "@providers/*": ["src/providers/*"],
       "@utils/*": ["src/utils/*"],
       "@internal-types/*": ["src/types/*"],
@@ -60,6 +61,5 @@
       "@models/*": ["src/models/*"]
     }
   },
-
-  "include": ["src/**/*.tsx", "src/**/*.ts", "src/**/*.d.ts"]
+ "include": ["src/**/*.tsx", "src/**/*.ts", "src/**/*.d.ts"]
 }
