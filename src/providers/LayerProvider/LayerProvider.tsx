@@ -11,6 +11,8 @@ import type { Environment, EnvironmentConfig } from '@providers/Environment/envi
 import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInputProvider'
 import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
+type EnvironmentConfigOverride = Omit<EnvironmentConfig, 'usePlaidSandbox'>
+
 export type EventCallbacks = {
   onTransactionCategorized?: () => void
   onTransactionsFetched?: () => void
@@ -22,7 +24,7 @@ export type LayerProviderProps = {
   appSecret?: string
   businessAccessToken?: string
   environment?: Environment
-  environmentConfigOverride?: EnvironmentConfig
+  environmentConfigOverride?: EnvironmentConfigOverride
   theme?: LayerThemeConfig
   usePlaidSandbox?: boolean
   onError?: (error: LayerError) => void

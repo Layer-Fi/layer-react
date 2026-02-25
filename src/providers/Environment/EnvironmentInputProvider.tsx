@@ -2,10 +2,12 @@ import { createContext, type PropsWithChildren, useContext, useMemo } from 'reac
 
 import { type Environment, type EnvironmentConfig, EnvironmentConfigs } from '@providers/Environment/environmentConfigs'
 
+type EnvironmentConfigOverride = Omit<EnvironmentConfig, 'usePlaidSandbox'>
+
 type EnvironmentInputShape = {
   environment?: Environment
   usePlaidSandbox?: boolean
-  environmentConfigOverride?: EnvironmentConfig
+  environmentConfigOverride?: EnvironmentConfigOverride
 }
 
 const AuthInputContext = createContext<EnvironmentInputShape>({
@@ -16,19 +18,20 @@ const AuthInputContext = createContext<EnvironmentInputShape>({
 
 export function useEnvironment() {
   const { environment = 'production', usePlaidSandbox, environmentConfigOverride = undefined } = useContext(AuthInputContext)
+  const resolvedEnvironment = environmentConfigOverride?.environment ?? environment
 
   const {
-    apiUrl,
-    authUrl,
-    scope,
+    apiUrl: defaultApiUrl,
+    authUrl: defaultAuthUrl,
+    scope: defaultScope,
     usePlaidSandbox: defaultUsePlaidSandbox,
-  } = EnvironmentConfigs[environment]
+  } = EnvironmentConfigs[resolvedEnvironment]
 
   return {
-    environment: environmentConfigOverride?.environment ?? environment,
-    apiUrl: environmentConfigOverride?.apiUrl ?? apiUrl,
-    authUrl: environmentConfigOverride?.authUrl ?? authUrl,
-    scope: environmentConfigOverride?.scope ?? scope,
+    environment: resolvedEnvironment,
+    apiUrl: environmentConfigOverride?.apiUrl ?? defaultApiUrl,
+    authUrl: environmentConfigOverride?.authUrl ?? defaultAuthUrl,
+    scope: environmentConfigOverride?.scope ?? defaultScope,
     usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
   }
 }
@@ -38,7 +41,7 @@ export function EnvironmentInputProvider({
   environment,
   environmentConfigOverride,
   usePlaidSandbox,
-}: PropsWithChildren<EnvironmentInputShape & { environmentConfigOverride?: EnvironmentConfig }>) {
+}: PropsWithChildren<EnvironmentInputShape>) {
   const memoizedValue = useMemo(
     () => ({ environment, environmentConfigOverride, usePlaidSandbox }),
     [environment, environmentConfigOverride, usePlaidSandbox],
