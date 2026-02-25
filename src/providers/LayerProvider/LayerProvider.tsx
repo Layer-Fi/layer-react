@@ -7,7 +7,7 @@ import { type LayerError } from '@models/ErrorHandler'
 import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
 import { AuthInputProvider } from '@providers/AuthInputProvider'
 import { BusinessProvider } from '@providers/BusinessProvider/BusinessProvider'
-import type { Environment } from '@providers/Environment/environmentConfigs'
+import type { Environment, EnvironmentConfig } from '@providers/Environment/environmentConfigs'
 import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInputProvider'
 import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
@@ -22,6 +22,7 @@ export type LayerProviderProps = {
   appSecret?: string
   businessAccessToken?: string
   environment?: Environment
+  environmentConfigOverride?: EnvironmentConfig
   theme?: LayerThemeConfig
   usePlaidSandbox?: boolean
   onError?: (error: LayerError) => void
@@ -32,6 +33,7 @@ export const LayerProvider = ({
   appId,
   appSecret,
   businessAccessToken,
+  environmentConfigOverride,
   environment,
   usePlaidSandbox,
   ...restProps
@@ -41,7 +43,7 @@ export const LayerProvider = ({
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
       <I18nProvider locale='en-US'>
-        <EnvironmentInputProvider environment={environment} usePlaidSandbox={usePlaidSandbox}>
+        <EnvironmentInputProvider environment={environment} environmentConfigOverride={environmentConfigOverride} usePlaidSandbox={usePlaidSandbox}>
           <AuthInputProvider
             appId={appId}
             appSecret={appSecret}

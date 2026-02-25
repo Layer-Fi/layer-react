@@ -1,21 +1,21 @@
 import { createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 
-import { type Environment, EnvironmentConfigs } from '@providers/Environment/environmentConfigs'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { type Environment, type EnvironmentConfig, EnvironmentConfigs } from '@providers/Environment/environmentConfigs'
 
 type EnvironmentInputShape = {
   environment?: Environment
   usePlaidSandbox?: boolean
+  environmentConfigOverride?: EnvironmentConfig
 }
 
 const AuthInputContext = createContext<EnvironmentInputShape>({
   environment: undefined,
   usePlaidSandbox: undefined,
+  environmentConfigOverride: undefined,
 })
 
 export function useEnvironment() {
-  const { environment: environmentOverride } = useLayerContext()
-  const { environment = 'production', usePlaidSandbox } = useContext(AuthInputContext)
+  const { environment = 'production', usePlaidSandbox, environmentConfigOverride = undefined } = useContext(AuthInputContext)
 
   const {
     apiUrl,
@@ -25,10 +25,10 @@ export function useEnvironment() {
   } = EnvironmentConfigs[environment]
 
   return {
-    environment: environmentOverride?.environment ?? environment,
-    apiUrl: environmentOverride?.apiUrl ?? apiUrl,
-    authUrl: environmentOverride?.authUrl ?? authUrl,
-    scope: environmentOverride?.scope ?? scope,
+    environment: environmentConfigOverride?.environment ?? environment,
+    apiUrl: environmentConfigOverride?.apiUrl ?? apiUrl,
+    authUrl: environmentConfigOverride?.authUrl ?? authUrl,
+    scope: environmentConfigOverride?.scope ?? scope,
     usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
   }
 }
@@ -36,11 +36,12 @@ export function useEnvironment() {
 export function EnvironmentInputProvider({
   children,
   environment,
+  environmentConfigOverride,
   usePlaidSandbox,
-}: PropsWithChildren<EnvironmentInputShape>) {
+}: PropsWithChildren<EnvironmentInputShape & { environmentConfigOverride?: EnvironmentConfig }>) {
   const memoizedValue = useMemo(
-    () => ({ environment, usePlaidSandbox }),
-    [environment, usePlaidSandbox],
+    () => ({ environment, environmentConfigOverride, usePlaidSandbox }),
+    [environment, environmentConfigOverride, usePlaidSandbox],
   )
 
   return (
