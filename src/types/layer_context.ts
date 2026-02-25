@@ -3,10 +3,12 @@ import { type DateRange } from '@internal-types/general'
 import { type DataModel } from '@internal-types/general'
 import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { type LayerError } from '@models/ErrorHandler'
+import { type EnvironmentConfig } from '@providers/Environment/environmentConfigs'
 import type { EventCallbacks } from '@providers/LayerProvider/LayerProvider'
 import { type ToastProps } from '@components/Toast/Toast'
 
 export type LayerContextValues = {
+  environment?: Pick<EnvironmentConfig, 'environment' | 'apiUrl' | 'authUrl' | 'scope'>
   businessId: string
   business?: Business
   theme?: LayerThemeConfig

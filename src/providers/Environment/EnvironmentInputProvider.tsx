@@ -1,6 +1,7 @@
 import { createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 
 import { type Environment, EnvironmentConfigs } from '@providers/Environment/environmentConfigs'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type EnvironmentInputShape = {
   environment?: Environment
@@ -13,6 +14,7 @@ const AuthInputContext = createContext<EnvironmentInputShape>({
 })
 
 export function useEnvironment() {
+  const { environment: environmentOverride } = useLayerContext()
   const { environment = 'production', usePlaidSandbox } = useContext(AuthInputContext)
 
   const {
@@ -23,10 +25,10 @@ export function useEnvironment() {
   } = EnvironmentConfigs[environment]
 
   return {
-    environment,
-    apiUrl,
-    authUrl,
-    scope,
+    environment: environmentOverride?.environment ?? environment,
+    apiUrl: environmentOverride?.apiUrl ?? apiUrl,
+    authUrl: environmentOverride?.authUrl ?? authUrl,
+    scope: environmentOverride?.scope ?? scope,
     usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
   }
 }
