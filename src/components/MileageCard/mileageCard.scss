@@ -28,7 +28,7 @@
       }
     }
 
-    .Layer__mileage-card__panel-value {
+    .Layer__MileageCard__panel-value {
       display: flex;
       align-items: center;
       padding: var(--spacing-lg);
@@ -36,6 +36,17 @@
 
     .Layer__mileage-card__panel-left {
       border-right: 1px solid var(--base-transparent-10);
+    }
+
+    .Layer__mileage-card__panel-header.Layer__mileage-card__panel-left {
+      position: relative;
+    }
+
+    .Layer__StupidArrowIcon {
+      position: absolute;
+      top: 30%;
+      right: -12px;
+      background-color: var(--color-base-50);
     }
   }
 }
