@@ -14,6 +14,6 @@
   }
 
   &.Layer__MoneySpan-green {
-    color: #1b7742;
+    color: var(--color-info-success-fg, #1b7742);
   }
 }
