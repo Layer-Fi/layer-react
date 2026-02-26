@@ -12,8 +12,8 @@
   &[data-display-plus-sign]::before {
     content: '+$';
   }
-}
 
-.Layer__green-money-span {
-  color: var(--info-green-fg, #1b7742);
+  &.Layer__MoneySpan-green {
+    color: #1b7742;
+  }
 }

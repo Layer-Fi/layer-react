@@ -91,7 +91,7 @@ export const MileageSummaryCard = () => {
             size='xl'
             weight={TextWeight.bold}
             amount={currentMonthMileageData?.estimatedDeduction ?? 0}
-            className='Layer__green-money-span'
+            className='Layer__MoneySpan-green'
           />
         </div>
       </HStack>
