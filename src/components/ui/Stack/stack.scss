@@ -21,7 +21,7 @@
     }
   }
 
-  $justifications: start, center, end, space-between, space-around;
+  $justifications: start, center, end, space-between;
 
   @each $justification in $justifications {
     &[data-justify="#{$justification}"] {
