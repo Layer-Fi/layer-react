@@ -1,7 +1,7 @@
-.Layer__mileage-card {
+.Layer__MileageSummaryCard {
   width: 100%;
 
-  .Layer__mileage-card__panel {
+  .Layer__MileageSummaryCard__Panel {
     display: grid;
     grid-template-rows: auto auto;
     grid-template-columns: 1fr 1.5fr;
@@ -10,39 +10,39 @@
     border: 1px solid var(--base-transparent-10);
     background: var(--color-base-50);
 
-    .Layer__mileage-card__panel-header {
+    .Layer__MileageSummaryCard__Panel-header {
       display: flex;
       align-items: center;
       padding: var(--spacing-lg);
       border-bottom: 1px solid var(--base-transparent-10);
     }
 
-    .Layer__mileage-card__panel-header-content {
+    .Layer__MileageSummaryCard__Panel-header-content {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       justify-content: space-between;
 
-      .Layer__mileage-card__tax-deduction-label {
+      .Layer__MileageSummaryCard__tax-deduction-label {
         padding-block: var(--spacing-4xs);
       }
     }
 
-    .Layer__MileageCard__panel-value {
+    .Layer__MileageSummaryCard__Panel-value {
       display: flex;
       align-items: center;
       padding: var(--spacing-lg);
     }
 
-    .Layer__mileage-card__panel-left {
+    .Layer__MileageSummaryCard__Panel-left {
       border-right: 1px solid var(--base-transparent-10);
     }
 
-    .Layer__mileage-card__panel-header.Layer__mileage-card__panel-left {
+    .Layer__MileageSummaryCard__Panel-header.Layer__MileageSummaryCard__Panel-left {
       position: relative;
     }
 
-    .Layer__StupidArrowIcon {
+    .Layer__MileageSummaryCard__arrow-icon {
       position: absolute;
       top: 30%;
       right: -12px;

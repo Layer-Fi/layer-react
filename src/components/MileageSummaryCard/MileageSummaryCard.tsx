@@ -13,9 +13,9 @@ import { TripDrawer } from '@components/Trips/TripDrawer/TripDrawer'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import { useMileageSummary } from '@features/mileage/api/useMileageSummary'
 
-import './mileageCard.scss'
+import './mileageSummaryCard.scss'
 
-export const MileageCard = () => {
+export const MileageSummaryCard = () => {
   const { data: mileageData } = useMileageSummary()
   const { date } = useGlobalDate({ dateSelectionMode: 'full' })
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
@@ -54,19 +54,19 @@ export const MileageCard = () => {
   }
   const onDeleteTrip = () => {}
 
-  const mileageSummaryCard = (
-    <Card className='Layer__mileage-card'>
-      <HStack className='Layer__mileage-card__panel'>
+  const mileageSummaryCardContent = (
+    <Card className='Layer__MileageSummaryCard'>
+      <HStack className='Layer__MileageSummaryCard__Panel'>
         {/* Header */}
-        <div className='Layer__mileage-card__panel-header Layer__mileage-card__panel-left'>
+        <div className='Layer__MileageSummaryCard__Panel-header Layer__MileageSummaryCard__Panel-left'>
           <Text size={TextSize.lg}>Miles this month</Text>
-          <ArrowRightCircle size={24} className='Layer__StupidArrowIcon' color='var(--color-base-500)' />
+          <ArrowRightCircle size={24} className='Layer__MileageSummaryCard__arrow-icon' color='var(--color-base-500)' />
         </div>
-        <div className='Layer__mileage-card__panel-header'>
-          <div className='Layer__mileage-card__panel-header-content'>
+        <div className='Layer__MileageSummaryCard__Panel-header'>
+          <div className='Layer__MileageSummaryCard__Panel-header-content'>
             <Text
               size={TextSize.lg}
-              className='Layer__mileage-card__tax-deduction-label'
+              className='Layer__MileageSummaryCard__tax-deduction-label'
             >
               Tax Deduction
             </Text>
@@ -79,14 +79,14 @@ export const MileageCard = () => {
         </div>
 
         {/* Value */}
-        <div className='Layer__MileageCard__panel-value Layer__mileage-card__panel-left'>
+        <div className='Layer__MileageSummaryCard__Panel-value Layer__MileageSummaryCard__Panel-left'>
           <Span size='xl' weight={TextWeight.bold}>
             {currentMonthMileageData?.miles ?? 0}
             {' '}
             mi
           </Span>
         </div>
-        <div className='Layer__MileageCard__panel-value'>
+        <div className='Layer__MileageSummaryCard__Panel-value'>
           <MoneySpan
             size='xl'
             weight={TextWeight.bold}
@@ -109,7 +109,7 @@ export const MileageCard = () => {
           <Plus size={16} />
         </Button>
       </HStack>
-      {mileageSummaryCard}
+      {mileageSummaryCardContent}
       <HStack gap='md' justify='space-between'>
         <HStack gap='xs'>
           <Span size='sm' variant='subtle'>
