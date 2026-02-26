@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import ArrowRightCircle from '@icons/ArrowRightCircle'
+import ArrowRightCircleAlt from '@icons/ArrowRightCircleAlt'
 import Plus from '@icons/Plus'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -60,7 +60,7 @@ export const MileageSummaryCard = () => {
         {/* Header */}
         <div className='Layer__MileageSummaryCard__Panel-header Layer__MileageSummaryCard__Panel-left'>
           <Text size={TextSize.lg}>Miles this month</Text>
-          <ArrowRightCircle size={24} className='Layer__MileageSummaryCard__Panel-header-arrow-icon' color='var(--color-base-500)' />
+          <ArrowRightCircleAlt size={24} className='Layer__MileageSummaryCard__Panel-header-arrow-icon' arrowColor='var(--color-base-500)' outerCircleColor='var(--color-base-400)' />
         </div>
         <div className='Layer__MileageSummaryCard__Panel-header'>
           <div className='Layer__MileageSummaryCard__Panel-header-content'>
