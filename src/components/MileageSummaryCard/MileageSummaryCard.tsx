@@ -71,9 +71,7 @@ export const MileageSummaryCard = () => {
               Tax Deduction
             </Text>
             <Badge size={BadgeSize.MEDIUM} variant={BadgeVariant.STANDARD}>
-              Standard Rate: $
-              {formattedDeductionRate}
-              /mile
+              {`Standard Rate: $${formattedDeductionRate}/mile`}
             </Badge>
           </div>
         </div>
