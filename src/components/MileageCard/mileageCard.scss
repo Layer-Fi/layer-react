@@ -1,0 +1,10 @@
+.Layer__card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--spacing-sm);
+  box-shadow:
+    0 4px 12px 0 var(--base-transparent-8),
+    0 2px 4px 0 var(--base-transparent-6),
+    0 0 0 1px var(--base-transparent-4);
+  background: var(--color-base-0);
+}

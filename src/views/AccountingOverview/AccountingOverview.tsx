@@ -10,6 +10,7 @@ import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPick
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
+import { MileageCard } from '@components/MileageCard/MileageCard'
 import { Onboarding } from '@components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -170,6 +171,11 @@ export const AccountingOverview = ({
             />
           </Container>
         </div>
+
+        <Container name='mileage-card'>
+          <MileageCard />
+        </Container>
+
       </View>
     </ProfitAndLoss>
   )
