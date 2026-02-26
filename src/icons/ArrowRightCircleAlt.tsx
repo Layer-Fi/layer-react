@@ -1,6 +1,11 @@
 import { type IconSvgProps } from '@icons/types'
 
-const ArrowRightCircleAlt = ({ size = 18, arrowColor = 'black', outerCircleColor = 'black', ...props }: IconSvgProps) => (
+type ArrowRightCircleAltProps = IconSvgProps & {
+  arrowColor?: string
+  outerCircleColor?: string
+}
+
+const ArrowRightCircleAlt = ({ size = 18, arrowColor = 'black', outerCircleColor = 'black', ...props }: ArrowRightCircleAltProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     viewBox='0 0 18 18'
