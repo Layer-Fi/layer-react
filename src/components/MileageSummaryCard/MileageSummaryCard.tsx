@@ -35,8 +35,7 @@ export const MileageSummaryCard = () => {
       month => month.month === currentMonth,
     )
     const rawDeductionRate = currentMonthMileageData?.deductionRate ?? 0
-    const normalizedDeductionRate =
-      rawDeductionRate > 1 ? rawDeductionRate / 100 : rawDeductionRate
+    const normalizedDeductionRate = rawDeductionRate / 100
 
     return {
       currentYear,
