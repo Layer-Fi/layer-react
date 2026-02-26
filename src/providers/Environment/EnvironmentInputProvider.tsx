@@ -1,10 +1,17 @@
 import { createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 
-import { type Environment, type EnvironmentConfig, EnvironmentConfigs } from '@providers/Environment/environmentConfigs'
-
-type EnvironmentConfigOverride = Omit<EnvironmentConfig, 'usePlaidSandbox'>
+import { type Environment, type EnvironmentConfigOverride, EnvironmentConfigs } from '@providers/Environment/environmentConfigs'
 
 type EnvironmentInputShape = {
+  environment?: Environment
+  usePlaidSandbox?: boolean
+  environmentOverride?: Environment
+  apiUrlOverride?: string
+  authUrlOverride?: string
+  scopeOverride?: string
+}
+
+type EnvironmentInputProviderProps = {
   environment?: Environment
   usePlaidSandbox?: boolean
   environmentConfigOverride?: EnvironmentConfigOverride
@@ -13,12 +20,22 @@ type EnvironmentInputShape = {
 const AuthInputContext = createContext<EnvironmentInputShape>({
   environment: undefined,
   usePlaidSandbox: undefined,
-  environmentConfigOverride: undefined,
+  environmentOverride: undefined,
+  apiUrlOverride: undefined,
+  authUrlOverride: undefined,
+  scopeOverride: undefined,
 })
 
 export function useEnvironment() {
-  const { environment = 'production', usePlaidSandbox, environmentConfigOverride = undefined } = useContext(AuthInputContext)
-  const resolvedEnvironment = environmentConfigOverride?.environment ?? environment
+  const {
+    environment = 'production',
+    usePlaidSandbox,
+    environmentOverride,
+    apiUrlOverride,
+    authUrlOverride,
+    scopeOverride,
+  } = useContext(AuthInputContext)
+  const resolvedEnvironment = environmentOverride ?? environment
 
   const {
     apiUrl: defaultApiUrl,
@@ -29,9 +46,9 @@ export function useEnvironment() {
 
   return {
     environment: resolvedEnvironment,
-    apiUrl: environmentConfigOverride?.apiUrl ?? defaultApiUrl,
-    authUrl: environmentConfigOverride?.authUrl ?? defaultAuthUrl,
-    scope: environmentConfigOverride?.scope ?? defaultScope,
+    apiUrl: apiUrlOverride ?? defaultApiUrl,
+    authUrl: authUrlOverride ?? defaultAuthUrl,
+    scope: scopeOverride ?? defaultScope,
     usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
   }
 }
@@ -41,10 +58,22 @@ export function EnvironmentInputProvider({
   environment,
   environmentConfigOverride,
   usePlaidSandbox,
-}: PropsWithChildren<EnvironmentInputShape>) {
+}: PropsWithChildren<EnvironmentInputProviderProps>) {
+  const environmentOverride = environmentConfigOverride?.environment
+  const apiUrlOverride = environmentConfigOverride?.apiUrl
+  const authUrlOverride = environmentConfigOverride?.authUrl
+  const scopeOverride = environmentConfigOverride?.scope
+
   const memoizedValue = useMemo(
-    () => ({ environment, environmentConfigOverride, usePlaidSandbox }),
-    [environment, environmentConfigOverride, usePlaidSandbox],
+    () => ({
+      environment,
+      usePlaidSandbox,
+      environmentOverride,
+      apiUrlOverride,
+      authUrlOverride,
+      scopeOverride,
+    }),
+    [environment, usePlaidSandbox, environmentOverride, apiUrlOverride, authUrlOverride, scopeOverride],
   )
 
   return (

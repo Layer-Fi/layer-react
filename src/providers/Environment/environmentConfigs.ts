@@ -8,6 +8,8 @@ export type EnvironmentConfig = {
   usePlaidSandbox: boolean
 }
 
+export type EnvironmentConfigOverride = Omit<EnvironmentConfig, 'usePlaidSandbox'>
+
 export const EnvironmentConfigs = {
   production: {
     environment: 'production',
