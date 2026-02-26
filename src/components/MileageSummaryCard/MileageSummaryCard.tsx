@@ -60,13 +60,13 @@ export const MileageSummaryCard = () => {
         {/* Header */}
         <div className='Layer__MileageSummaryCard__Panel-header Layer__MileageSummaryCard__Panel-left'>
           <Text size={TextSize.lg}>Miles this month</Text>
-          <ArrowRightCircle size={24} className='Layer__MileageSummaryCard__arrow-icon' color='var(--color-base-500)' />
+          <ArrowRightCircle size={24} className='Layer__MileageSummaryCard__Panel-header-arrow-icon' color='var(--color-base-500)' />
         </div>
         <div className='Layer__MileageSummaryCard__Panel-header'>
           <div className='Layer__MileageSummaryCard__Panel-header-content'>
             <Text
               size={TextSize.lg}
-              className='Layer__MileageSummaryCard__tax-deduction-label'
+              className='Layer__MileageSummaryCard__Panel-header-tax-deduction-label'
             >
               Tax Deduction
             </Text>

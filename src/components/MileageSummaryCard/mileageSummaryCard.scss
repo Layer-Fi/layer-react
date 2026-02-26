@@ -23,7 +23,7 @@
       gap: 0.5rem;
       justify-content: space-between;
 
-      .Layer__MileageSummaryCard__tax-deduction-label {
+      .Layer__MileageSummaryCard__Panel-header-tax-deduction-label {
         padding-block: var(--spacing-4xs);
       }
     }
@@ -42,7 +42,7 @@
       position: relative;
     }
 
-    .Layer__MileageSummaryCard__arrow-icon {
+    .Layer__MileageSummaryCard__Panel-header-arrow-icon {
       position: absolute;
       top: 30%;
       right: -12px;
