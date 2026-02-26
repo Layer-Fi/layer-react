@@ -16,14 +16,14 @@ interface CopyTemplateHeadersButtonGroupProps {
 export const CopyTemplateHeadersButtonGroup = ({ headers, className }: CopyTemplateHeadersButtonGroupProps) => {
   return (
     <HStack gap='3xs' className={classNames('Layer__csv-upload__copy-template-headers-button-group', className)}>
-      {Object.keys(headers).map(key => (
+      {Object.entries(headers).map(([key, value]) => (
         <Button
           key={key}
-          onClick={() => copyTextToClipboard(headers[key])}
+          onClick={() => copyTextToClipboard(value)}
           rightIcon={<CopyIcon strokeWidth={1} size={12} />}
           variant={ButtonVariant.secondary}
         >
-          {headers[key]}
+          {value}
         </Button>
       ))}
     </HStack>

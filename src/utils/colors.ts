@@ -195,11 +195,12 @@ const hexToRgb = (hex: string) => {
     return
   }
 
-  return {
-    r: values[0],
-    g: values[1],
-    b: values[2],
+  const [r, g, b] = values
+  if (r === undefined || g === undefined || b === undefined) {
+    return
   }
+
+  return { r, g, b }
 }
 
 /**

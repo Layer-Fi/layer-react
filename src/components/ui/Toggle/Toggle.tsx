@@ -48,8 +48,9 @@ export const Toggle = ({
       selectedKeys={selectedKeys}
       onSelectionChange={(keys) => {
         const selectedKeysArray = Array.from(keys)
-        if (selectedKeysArray.length > 0 && onSelectionChange) {
-          onSelectionChange(selectedKeysArray[0])
+        const firstKey = selectedKeysArray[0]
+        if (firstKey !== undefined && onSelectionChange) {
+          onSelectionChange(firstKey)
         }
       }}
     >

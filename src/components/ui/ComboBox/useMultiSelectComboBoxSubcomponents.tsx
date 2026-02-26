@@ -33,20 +33,7 @@ const getSelectedLabels = <T extends ComboBoxOption>(selectedValues: T | readonl
 
   if (Array.isArray(selectedValues)) {
     const labels = (selectedValues as T[]).map(v => v.label)
-
-    if (labels.length === 0) {
-      return ''
-    }
-
-    if (labels.length === 1) {
-      return labels[0]
-    }
-
-    if (labels.length === 2) {
-      return `${labels[0]} and ${labels[1]}`
-    }
-
-    return `${labels.slice(0, -1).join(', ')}, and ${labels[labels.length - 1]}`
+    return new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(labels)
   }
 
   return (selectedValues as T).label

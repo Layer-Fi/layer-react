@@ -99,7 +99,7 @@ export const ProfitAndLossCompareTable = ({
         rowData as LineItemEncoded[],
       )[0]
 
-      lineItem = 'display_name' in mergedLineItems ? mergedLineItems : undefined
+      lineItem = mergedLineItems && 'display_name' in mergedLineItems ? mergedLineItems : undefined
     }
 
     const expandable =

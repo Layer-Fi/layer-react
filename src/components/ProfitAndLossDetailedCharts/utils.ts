@@ -28,20 +28,20 @@ export const mapTypesToColors = (
     }
 
     const name = lineItem.name
-    if (!nameToColor[name]) {
-      nameToColor[name] = colorList[colorIndex % colorList.length]
-      colorIndex++
+    const existingColor = nameToColor[name]
+
+    // First occurrence of this name — assign the next color at full opacity
+    if (!existingColor) {
+      const color = colorList[colorIndex % colorList.length] ?? '#000000'
+      nameToColor[name] = color
       nameToLastOpacity[name] = 1
-    }
-    else {
-      nameToLastOpacity[name] -= 0.1
+      colorIndex++
+      return { color, opacity: 1 }
     }
 
-    const opacity = nameToLastOpacity[name]
-
-    return {
-      color: nameToColor[name],
-      opacity: opacity,
-    }
+    // Repeated occurrence — reuse the same color but fade opacity
+    const opacity = (nameToLastOpacity[name] ?? 1) - 0.1
+    nameToLastOpacity[name] = opacity
+    return { color: existingColor, opacity }
   })
 }

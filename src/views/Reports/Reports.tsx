@@ -35,7 +35,7 @@ export interface ReportsProps {
   title?: string // deprecated
   showTitle?: boolean
   stringOverrides?: ReportsStringOverrides
-  enabledReports?: ReportType[]
+  enabledReports?: [ReportType, ...ReportType[]]
   comparisonConfig?: ProfitAndLossCompareConfig
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig

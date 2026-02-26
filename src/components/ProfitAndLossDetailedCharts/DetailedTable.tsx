@@ -77,12 +77,13 @@ const ValueIcon = ({
     )
   }
 
+  const colorMapping = typeColorMapping[idx]
   return (
     <div
       className='share-icon'
       style={{
-        background: typeColorMapping[idx].color,
-        opacity: typeColorMapping[idx].opacity,
+        background: colorMapping?.color,
+        opacity: colorMapping?.opacity,
       }}
     />
   )

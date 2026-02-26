@@ -61,7 +61,10 @@ export const calculateRemoveSplit = (
     return sum + splitAmount
   }, 0)
   const remaining = totalAmount - splitTotal
-  newSplits[0].amount = remaining
+  const firstSplit = newSplits[0]
+  if (firstSplit) {
+    firstSplit.amount = remaining
+  }
 
   return newSplits
 }
@@ -78,8 +81,14 @@ export const calculateUpdatedAmounts = (
 
   const remaining = totalAmount - splitTotal
 
-  initialRowSplits[index].amount = newAmount
-  initialRowSplits[0].amount = remaining
+  const splitAtIndex = initialRowSplits[index]
+  if (splitAtIndex) {
+    splitAtIndex.amount = newAmount
+  }
+  const firstSplit = initialRowSplits[0]
+  if (firstSplit) {
+    firstSplit.amount = remaining
+  }
 
   return [...initialRowSplits]
 }
