@@ -51,7 +51,7 @@ export const MileageCard = () => {
   const mileageSummaryCard = (
     <Card className='Layer__mileage-card'>
       <HStack className='Layer__mileage-card__panelGrid'>
-        {/* Header Row */}
+        {/* Header */}
         <div>
           <HStack align='center' gap='sm'>
             <Text size={TextSize.lg}>Miles this month</Text>
@@ -68,7 +68,7 @@ export const MileageCard = () => {
           </HStack>
         </div>
 
-        {/* Value Row */}
+        {/* Value */}
         <div>
           <HStack align='center'>
             <Span size='xl' weight={TextWeight.bold}>
