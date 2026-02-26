@@ -2,25 +2,12 @@
   width: 100%;
 }
 
-.Layer__mileage-card__panel {
-  display: flex;
+.Layer__mileage-card__panelGrid {
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1.5fr;
   min-height: 150px;
   border-radius: var(--spacing-sm);
   border: 1px solid var(--base-transparent-10);
   background: var(--color-base-50);
-}
-
-.Layer__mileage-card__panel-body {
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding: var(--spacing-lg);
-  border-bottom: 1px solid var(--base-transparent-10);
-}
-
-.Layer__mileage-card__panel-body-miles {
-  flex: 1;
-}
-
-.Layer__mileage-card__panel-body-deduction {
-  flex: 2;
 }

@@ -48,23 +48,16 @@ export const MileageCard = () => {
   }
   const onDeleteTrip = () => {}
 
-  const mileageContent = (
+  const mileageSummaryCard = (
     <Card className='Layer__mileage-card'>
-      <HStack className='Layer__mileage-card__panel' justify='space-around'>
-        <VStack className='Layer__mileage-card__panel-body Layer__mileage-card__panel-body-miles' align='center'>
+      <HStack className='Layer__mileage-card__panelGrid'>
+        {/* Header Row */}
+        <div>
           <HStack align='center' gap='sm'>
             <Text size={TextSize.lg}>Miles this month</Text>
           </HStack>
-          <HStack align='center'>
-            <Span size='xl' weight={TextWeight.bold}>
-              {currentMonthMileageData?.miles ?? 0}
-              {' '}
-              mi
-            </Span>
-          </HStack>
-        </VStack>
-
-        <VStack className='Layer__mileage-card__panel-body Layer__mileage-card__panel-body-deduction' align='center'>
+        </div>
+        <div>
           <HStack align='center' gap='sm'>
             <Text size={TextSize.lg}>Tax Deduction</Text>
             <Badge size={BadgeSize.SMALL} variant={BadgeVariant.DEFAULT}>
@@ -73,6 +66,19 @@ export const MileageCard = () => {
               /mile
             </Badge>
           </HStack>
+        </div>
+
+        {/* Value Row */}
+        <div>
+          <HStack align='center'>
+            <Span size='xl' weight={TextWeight.bold}>
+              {currentMonthMileageData?.miles ?? 0}
+              {' '}
+              mi
+            </Span>
+          </HStack>
+        </div>
+        <div>
           <HStack align='center'>
             <MoneySpan
               size='xl'
@@ -81,7 +87,8 @@ export const MileageCard = () => {
               className='Layer__green-money-span'
             />
           </HStack>
-        </VStack>
+        </div>
+
       </HStack>
     </Card>
   )
@@ -95,7 +102,7 @@ export const MileageCard = () => {
           <Plus size={16} />
         </Button>
       </HStack>
-      {mileageContent}
+      {mileageSummaryCard}
       <HStack gap='md' justify='space-between'>
         <HStack gap='xs'>
           <Span size='sm' variant='subtle'>
