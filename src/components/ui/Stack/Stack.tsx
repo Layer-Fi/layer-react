@@ -9,7 +9,7 @@ import './stack.scss'
 export type StackProps = PropsWithChildren<{
   align?: 'start' | 'center' | 'baseline' | 'end'
   gap?: Spacing
-  justify?: 'start' | 'center' | 'end' | 'space-between'
+  justify?: 'start' | 'center' | 'end' | 'space-between' | 'space-around'
   overflow?: 'scroll' | 'hidden' | 'auto' | 'clip' | 'visible'
   pb?: Spacing
   pbs?: Spacing

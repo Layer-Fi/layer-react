@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import Plus from '@icons/Plus'
@@ -15,58 +15,76 @@ import { useMileageSummary } from '@features/mileage/api/useMileageSummary'
 import './mileageCard.scss'
 
 export const MileageCard = () => {
-  const { data: mileageData, isLoading, isError } = useMileageSummary()
+  const { data: mileageData } = useMileageSummary()
   const { date } = useGlobalDate({ dateSelectionMode: 'full' })
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
-  console.log('date', date)
-  console.log('isLoading', isLoading)
-  console.log('isError', isError)
-  // Need to compare the current date and grab the month and year after this I need to grab that specific mileage data from mileageData
-  // Note that the date will change so we need to reredner the component if it does
-  const currentYear = date.getFullYear()
-  const currentMonth = date.getMonth() + 1
-  const currentMileageData = mileageData?.years.find(year => year.year === currentYear)
-  const currentMonthMileageData = currentMileageData?.months.find(month => month.month === currentMonth)
-  console.log('currentMonthMileageData', currentMonthMileageData)
 
-  const onViewOrUpsertTrip = useCallback(() => {
+  const {
+    currentYear,
+    currentMileageData,
+    currentMonthMileageData,
+    formattedDeductionRate,
+  } = useMemo(() => {
+    const nextCurrentYear = date.getFullYear()
+    const currentMonth = date.getMonth() + 1
+    const nextCurrentMileageData = mileageData?.years.find(year => year.year === nextCurrentYear)
+    const nextCurrentMonthMileageData = nextCurrentMileageData?.months.find(month => month.month === currentMonth)
+    const rawDeductionRate = nextCurrentMonthMileageData?.deductionRate ?? 0
+    const normalizedDeductionRate = rawDeductionRate > 1 ? rawDeductionRate / 100 : rawDeductionRate
+
+    return {
+      currentYear: nextCurrentYear,
+      currentMileageData: nextCurrentMileageData,
+      currentMonthMileageData: nextCurrentMonthMileageData,
+      formattedDeductionRate: normalizedDeductionRate.toFixed(2),
+    }
+  }, [date, mileageData])
+
+  const onRecordTrip = () => {
     setIsTripDrawerOpen(true)
-  }, [])
+  }
+  const onTripDrawerSuccess = () => {
+    setIsTripDrawerOpen(false)
+  }
+  const onDeleteTrip = () => {}
 
-  const onRecordTrip = useCallback(() => onViewOrUpsertTrip(), [onViewOrUpsertTrip])
+  const mileageContent = (
+    <>
+      <Card className='Layer__mileage-card'>
+        <HStack className='Layer__mileage-card__panel' justify='space-around'>
+          <VStack className='Layer__mileage-card__panel-body Layer__mileage-card__panel-body-miles' align='center'>
+            <HStack align='center' gap='sm'>
+              <Text size={TextSize.lg}>Miles this month</Text>
+            </HStack>
+            <HStack align='center'>
+              <Span size='xl' weight={TextWeight.bold}>
+                {currentMonthMileageData?.miles ?? 0}
+                {' '}
+                mi
+              </Span>
+            </HStack>
+          </VStack>
 
-  return (
-    <VStack gap='md' pb='lg' pi='lg'>
-      <HStack gap='md' justify='space-between'>
-        <Text size={TextSize.lg} weight={TextWeight.bold}>Mileage Tracking</Text>
-        <Button onPress={onRecordTrip}>
-          Add Trip
-          <Plus size={16} />
-        </Button>
-      </HStack>
-      <HStack>
-        <Card>
-
-          <HStack justify='space-between'>
-            <Text size={TextSize.lg} weight={TextWeight.bold}>Miles this month</Text>
-            <Text size={TextSize.lg} weight={TextWeight.bold}>Tax Deduction</Text>
-            <Badge size={BadgeSize.EXTRA_SMALL} variant={BadgeVariant.INFO}>
-              Standard Rate $0.
-              {currentMonthMileageData?.deductionRate}
-              /mile
-            </Badge>
-          </HStack>
-
-          <HStack>
-            <Text size={TextSize.lg} weight={TextWeight.bold}>
-              {currentMonthMileageData?.miles}
-              {' '}
-              mi
-            </Text>
-            <MoneySpan size='sm' amount={currentMonthMileageData?.estimatedDeduction ?? 0} className='Layer__green-money-span' />
-          </HStack>
-        </Card>
-      </HStack>
+          <VStack className='Layer__mileage-card__panel-body Layer__mileage-card__panel-body-deduction' align='center'>
+            <HStack align='center' gap='sm'>
+              <Text size={TextSize.lg}>Tax Deduction</Text>
+              <Badge size={BadgeSize.SMALL} variant={BadgeVariant.DEFAULT}>
+                Standard Rate: $
+                {formattedDeductionRate}
+                /mile
+              </Badge>
+            </HStack>
+            <HStack align='center'>
+              <MoneySpan
+                size='xl'
+                weight={TextWeight.bold}
+                amount={currentMonthMileageData?.estimatedDeduction ?? 0}
+                className='Layer__green-money-span'
+              />
+            </HStack>
+          </VStack>
+        </HStack>
+      </Card>
       <HStack gap='md' justify='space-between'>
         <HStack gap='xs'>
           <Span size='sm' variant='subtle'>
@@ -76,19 +94,32 @@ export const MileageCard = () => {
             :
             {' '}
           </Span>
-          <Span size='sm'>{currentMileageData?.miles}</Span>
+          <Span size='sm'>{currentMileageData?.miles ?? 0}</Span>
         </HStack>
         <HStack gap='xs'>
           <Span size='sm' variant='subtle'>Total tax deduction: </Span>
           <MoneySpan size='sm' amount={currentMileageData?.estimatedDeduction ?? 0} />
         </HStack>
       </HStack>
+    </>
+  )
+
+  return (
+    <VStack gap='md' pb='lg' pi='lg'>
+      <HStack gap='md' justify='space-between'>
+        <Text size={TextSize.lg} weight={TextWeight.bold} pb='xs'>Mileage Tracking</Text>
+        <Button onPress={onRecordTrip}>
+          Add Trip
+          <Plus size={16} />
+        </Button>
+      </HStack>
+      {mileageContent}
       <TripDrawer
         isOpen={isTripDrawerOpen}
         onOpenChange={setIsTripDrawerOpen}
         trip={null}
-        onSuccess={() => setIsTripDrawerOpen(false)}
-        onDeleteTrip={() => {}}
+        onSuccess={onTripDrawerSuccess}
+        onDeleteTrip={onDeleteTrip}
       />
     </VStack>
   )
