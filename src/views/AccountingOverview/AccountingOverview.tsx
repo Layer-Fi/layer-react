@@ -171,10 +171,14 @@ export const AccountingOverview = ({
             />
           </Container>
         </div>
-
-        <Container name='mileage-card'>
-          <MileageCard />
-        </Container>
+        <div className='Layer__accounting-overview-profit-and-loss-charts'>
+          <Container name='mileage-card'>
+            <MileageCard />
+          </Container>
+          <Container name='mileage-card'>
+            <MileageCard />
+          </Container>
+        </div>
 
       </View>
     </ProfitAndLoss>

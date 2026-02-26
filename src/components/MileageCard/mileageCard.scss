@@ -1,13 +1,41 @@
 .Layer__mileage-card {
   width: 100%;
-}
 
-.Layer__mileage-card__panelGrid {
-  display: grid;
-  grid-template-rows: auto auto;
-  grid-template-columns: 1fr 1.5fr;
-  min-height: 150px;
-  border-radius: var(--spacing-sm);
-  border: 1px solid var(--base-transparent-10);
-  background: var(--color-base-50);
+  .Layer__mileage-card__panel {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr 1.5fr;
+    min-height: 150px;
+    border-radius: var(--spacing-sm);
+    border: 1px solid var(--base-transparent-10);
+    background: var(--color-base-50);
+
+    .Layer__mileage-card__panel-header {
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-lg);
+      border-bottom: 1px solid var(--base-transparent-10);
+    }
+
+    .Layer__mileage-card__panel-header-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: space-between;
+
+      .Layer__mileage-card__tax-deduction-label {
+        padding-block: var(--spacing-4xs);
+      }
+    }
+
+    .Layer__mileage-card__panel-value {
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-lg);
+    }
+
+    .Layer__mileage-card__panel-left {
+      border-right: 1px solid var(--base-transparent-10);
+    }
+  }
 }

@@ -50,26 +50,26 @@ export const MileageCard = () => {
 
   const mileageSummaryCard = (
     <Card className='Layer__mileage-card'>
-      <HStack className='Layer__mileage-card__panelGrid'>
+      <HStack className='Layer__mileage-card__panel'>
         {/* Header */}
-        <div>
+        <div className='Layer__mileage-card__panel-header Layer__mileage-card__panel-left'>
           <HStack align='center' gap='sm'>
             <Text size={TextSize.lg}>Miles this month</Text>
           </HStack>
         </div>
-        <div>
-          <HStack align='center' gap='sm'>
-            <Text size={TextSize.lg}>Tax Deduction</Text>
-            <Badge size={BadgeSize.SMALL} variant={BadgeVariant.DEFAULT}>
+        <div className='Layer__mileage-card__panel-header'>
+          <div className='Layer__mileage-card__panel-header-content'>
+            <Text size={TextSize.lg} className='Layer__mileage-card__tax-deduction-label'>Tax Deduction</Text>
+            <Badge size={BadgeSize.MEDIUM} variant={BadgeVariant.STANDARD}>
               Standard Rate: $
               {formattedDeductionRate}
               /mile
             </Badge>
-          </HStack>
+          </div>
         </div>
 
         {/* Value */}
-        <div>
+        <div className='Layer__mileage-card__panel-value Layer__mileage-card__panel-left'>
           <HStack align='center'>
             <Span size='xl' weight={TextWeight.bold}>
               {currentMonthMileageData?.miles ?? 0}
@@ -78,7 +78,7 @@ export const MileageCard = () => {
             </Span>
           </HStack>
         </div>
-        <div>
+        <div className='Layer__mileage-card__panel-value'>
           <HStack align='center'>
             <MoneySpan
               size='xl'
@@ -94,9 +94,9 @@ export const MileageCard = () => {
   )
 
   return (
-    <VStack gap='md' pb='lg' pi='lg'>
+    <VStack gap='md' pb='md' pi='lg'>
       <HStack gap='md' justify='space-between'>
-        <Text size={TextSize.lg} weight={TextWeight.bold} pb='xs'>Mileage Tracking</Text>
+        <Text size={TextSize.lg} weight={TextWeight.bold} pb='2xs'>Mileage Tracking</Text>
         <Button onPress={onRecordTrip}>
           Add Trip
           <Plus size={16} />
