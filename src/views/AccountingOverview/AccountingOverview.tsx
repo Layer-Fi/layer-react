@@ -170,7 +170,6 @@ export const AccountingOverview = ({
             />
           </Container>
         </div>
-
       </View>
     </ProfitAndLoss>
   )
