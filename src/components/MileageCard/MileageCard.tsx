@@ -25,17 +25,17 @@ export const MileageCard = () => {
     currentMonthMileageData,
     formattedDeductionRate,
   } = useMemo(() => {
-    const nextCurrentYear = date.getFullYear()
+    const currentYear = date.getFullYear()
     const currentMonth = date.getMonth() + 1
-    const nextCurrentMileageData = mileageData?.years.find(year => year.year === nextCurrentYear)
-    const nextCurrentMonthMileageData = nextCurrentMileageData?.months.find(month => month.month === currentMonth)
-    const rawDeductionRate = nextCurrentMonthMileageData?.deductionRate ?? 0
+    const currentMileageData = mileageData?.years.find(year => year.year === currentYear)
+    const currentMonthMileageData = currentMileageData?.months.find(month => month.month === currentMonth)
+    const rawDeductionRate = currentMonthMileageData?.deductionRate ?? 0
     const normalizedDeductionRate = rawDeductionRate > 1 ? rawDeductionRate / 100 : rawDeductionRate
 
     return {
-      currentYear: nextCurrentYear,
-      currentMileageData: nextCurrentMileageData,
-      currentMonthMileageData: nextCurrentMonthMileageData,
+      currentYear,
+      currentMileageData,
+      currentMonthMileageData,
       formattedDeductionRate: normalizedDeductionRate.toFixed(2),
     }
   }, [date, mileageData])
