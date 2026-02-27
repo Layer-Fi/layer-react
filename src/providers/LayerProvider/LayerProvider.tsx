@@ -28,10 +28,10 @@ type BaseLayerProviderProps = {
   eventCallbacks?: EventCallbacks
 }
 
-type LayerProviderPropsWithLayer = BaseLayerProviderProps & { environment?: Environment }
+type LayerProviderPropsWithLayerEnv = BaseLayerProviderProps & { environment?: Environment }
 type LayerProviderPropsWithEnvironmentConfigOverride = BaseLayerProviderProps & { environmentConfigOverride?: EnvironmentConfigOverride }
 
-export type LayerProviderProps = LayerProviderPropsWithLayer | LayerProviderPropsWithEnvironmentConfigOverride
+export type LayerProviderProps = LayerProviderPropsWithLayerEnv | LayerProviderPropsWithEnvironmentConfigOverride
 
 export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
   const [cache] = useState(() => new Map())
