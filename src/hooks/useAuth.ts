@@ -9,7 +9,7 @@ type ClientSpecificOptions = {
   appId: string
   appSecret: string
 }
-type EnvironmentDerivedOptions = Pick<(typeof EnvironmentConfigs)[Environment], 'authUrl' | 'scope'>
+type EnvironmentDerivedOptions = OverrideableAuthURLs & OverrideableScope
 
 type RequestOptions = ClientSpecificOptions & EnvironmentDerivedOptions
 
@@ -34,8 +34,15 @@ async function requestOAuthToken({
     .then(res => res.json() as Promise<OAuthResponse>)
 }
 
+type AuthURLs = Pick<(typeof EnvironmentConfigs)[Environment], 'authUrl'>
+type OverrideableAuthURLs = AuthURLs | { authUrl: string }
+type APIURLs = Pick<(typeof EnvironmentConfigs)[Environment], 'apiUrl'>
+type OverrideableAPIURLs = APIURLs | { apiUrl: string }
+type Scopes = Pick<(typeof EnvironmentConfigs)[Environment], 'scope'>
+type OverrideableScope = Scopes | { scope: string }
+
 type KeyBuilderOptions = Partial<ClientSpecificOptions>
-  & Pick<(typeof EnvironmentConfigs)[Environment], 'authUrl' | 'apiUrl' | 'scope'>
+  & OverrideableAuthURLs & OverrideableAPIURLs & OverrideableScope
   & { businessAccessToken?: string }
 
 function buildKey({
