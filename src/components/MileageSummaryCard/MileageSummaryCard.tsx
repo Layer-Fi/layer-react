@@ -86,7 +86,7 @@ export const MileageSummaryCard = () => {
         <div className='Layer__MileageSummaryCard__Panel-value'>
           <MoneySpan
             size='xl'
-            weight={TextWeight.bold}
+            weight='bold'
             amount={currentMonthMileageData?.estimatedDeduction ?? 0}
             className='Layer__MoneySpan-green'
           />
