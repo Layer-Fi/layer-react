@@ -20,7 +20,7 @@
     .Layer__MileageSummaryCard__Panel-header-content {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: var(--spacing-xs)
       justify-content: space-between;
 
       .Layer__MileageSummaryCard__Panel-header-tax-deduction-label {
