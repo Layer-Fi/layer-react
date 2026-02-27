@@ -11,16 +11,12 @@
     background: var(--color-base-50);
 
     .Layer__MileageSummaryCard__Panel-header {
-      display: flex;
-      align-items: center;
       padding: var(--spacing-lg);
       border-bottom: 1px solid var(--base-transparent-10);
     }
 
     .Layer__MileageSummaryCard__Panel-header-content {
-      display: flex;
       flex-wrap: wrap;
-      gap: var(--spacing-xs)
       justify-content: space-between;
 
       .Layer__MileageSummaryCard__Panel-header-tax-deduction-label {
@@ -29,8 +25,6 @@
     }
 
     .Layer__MileageSummaryCard__Panel-value {
-      display: flex;
-      align-items: center;
       padding: var(--spacing-lg);
     }
 

@@ -70,9 +70,9 @@
     color: var(--badge-fg-color-error);
   }
 
-  &.Layer__badge--standard {
-    background-color: var(--badge-bg-color-standard);
-    color: var(--badge-fg-color-standard);
+  &.Layer__badge--neutral {
+    background-color: var(--badge-bg-color-neutral);
+    color: var(--badge-fg-color-neutral);
   }
 
   &.Layer__badge--with-hover:hover {

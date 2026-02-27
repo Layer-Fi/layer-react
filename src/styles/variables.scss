@@ -24,9 +24,9 @@
   --color-info-error: hsl(0deg 76% 50%);
   --color-info-error-bg: hsl(0deg 83% 86%);
   --color-info-error-fg: hsl(0deg 88% 32%);
-  --color-info-standard: hsl(217deg 100% 92%);
-  --color-info-standard-bg: hsl(0deg 0% 7% / 6%);
-  --color-info-standard-fg: hsl(0deg 0% 27% / 100%);
+  --color-info-neutral: hsl(217deg 100% 92%);
+  --color-info-neutral-bg: hsl(0deg 0% 7% / 6%);
+  --color-info-neutral-fg: hsl(0deg 0% 27% / 100%);
   --color-dark-h: 0;
   --color-dark-s: 0%;
   --color-dark-l: 7%;
@@ -177,8 +177,8 @@
   --badge-color-error: var(--color-info-error);
   --badge-fg-color-error: var(--color-info-error-fg);
   --badge-bg-color-error: var(--color-info-error-bg);
-  --badge-fg-color-standard: var(--color-info-standard-fg);
-  --badge-bg-color-standard: var(--color-info-standard-bg);
+  --badge-fg-color-neutral: var(--color-info-neutral-fg);
+  --badge-bg-color-neutral: var(--color-info-neutral-bg);
   --badge-border-radius: var(--border-radius-sm);
   --table-bg: var(--color-white);
   --tooltip-color: var(--color-white);

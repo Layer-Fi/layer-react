@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 
+import { convertCentsToCurrency } from '@utils/format'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import ArrowRightCircleAlt from '@icons/ArrowRightCircleAlt'
 import Plus from '@icons/Plus'
@@ -10,7 +11,6 @@ import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { Card } from '@components/Card/Card'
 import { TripDrawer } from '@components/Trips/TripDrawer/TripDrawer'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 import { useMileageSummary } from '@features/mileage/api/useMileageSummary'
 
 import './mileageSummaryCard.scss'
@@ -34,14 +34,15 @@ export const MileageSummaryCard = () => {
     const currentMonthMileageData = currentMileageData?.months.find(
       month => month.month === currentMonth,
     )
-    const rawDeductionRate = currentMonthMileageData?.deductionRate ?? 0
-    const normalizedDeductionRate = rawDeductionRate / 100
+    const formattedDeductionRate = convertCentsToCurrency(
+      currentMonthMileageData?.deductionRate ?? 0,
+    )
 
     return {
       currentYear,
       currentMileageData,
       currentMonthMileageData,
-      formattedDeductionRate: normalizedDeductionRate.toFixed(2),
+      formattedDeductionRate,
     }
   }, [date, mileageData])
 
@@ -57,40 +58,40 @@ export const MileageSummaryCard = () => {
     <Card className='Layer__MileageSummaryCard'>
       <HStack className='Layer__MileageSummaryCard__Panel'>
         {/* Header */}
-        <div className='Layer__MileageSummaryCard__Panel-header Layer__MileageSummaryCard__Panel-left'>
-          <Text size={TextSize.lg}>Miles this month</Text>
-          <ArrowRightCircleAlt size={24} className='Layer__MileageSummaryCard__Panel-header-arrow-icon' arrowColor='var(--color-base-500)' outerCircleColor='var(--color-base-400)' />
-        </div>
-        <div className='Layer__MileageSummaryCard__Panel-header'>
-          <div className='Layer__MileageSummaryCard__Panel-header-content'>
-            <Text
-              size={TextSize.lg}
+        <HStack align='center' className='Layer__MileageSummaryCard__Panel-header Layer__MileageSummaryCard__Panel-left'>
+          <Span size='lg'>Miles this month</Span>
+          <ArrowRightCircleAlt size={24} className='Layer__MileageSummaryCard__Panel-header-arrow-icon' />
+        </HStack>
+        <HStack align='center' className='Layer__MileageSummaryCard__Panel-header'>
+          <HStack gap='xs' className='Layer__MileageSummaryCard__Panel-header-content'>
+            <Span
+              size='lg'
               className='Layer__MileageSummaryCard__Panel-header-tax-deduction-label'
             >
               Tax Deduction
-            </Text>
-            <Badge size={BadgeSize.MEDIUM} variant={BadgeVariant.STANDARD}>
-              {`Standard Rate: $${formattedDeductionRate}/mile`}
+            </Span>
+            <Badge size={BadgeSize.MEDIUM} variant={BadgeVariant.NEUTRAL}>
+              {`Standard Rate: ${formattedDeductionRate}/mile`}
             </Badge>
-          </div>
-        </div>
+          </HStack>
+        </HStack>
 
         {/* Value */}
-        <div className='Layer__MileageSummaryCard__Panel-value Layer__MileageSummaryCard__Panel-left'>
-          <Span size='xl' weight={TextWeight.bold}>
+        <HStack align='center' className='Layer__MileageSummaryCard__Panel-value Layer__MileageSummaryCard__Panel-left'>
+          <Span size='xl' weight='bold'>
             {currentMonthMileageData?.miles ?? 0}
             {' '}
             mi
           </Span>
-        </div>
-        <div className='Layer__MileageSummaryCard__Panel-value'>
+        </HStack>
+        <HStack align='center' className='Layer__MileageSummaryCard__Panel-value'>
           <MoneySpan
             size='xl'
             weight='bold'
             amount={currentMonthMileageData?.estimatedDeduction ?? 0}
-            className='Layer__MoneySpan-green'
+            status='success'
           />
-        </div>
+        </HStack>
       </HStack>
     </Card>
   )
@@ -98,9 +99,9 @@ export const MileageSummaryCard = () => {
   return (
     <VStack gap='md' pb='md' pi='lg'>
       <HStack gap='md' justify='space-between'>
-        <Text size={TextSize.lg} weight={TextWeight.bold} pb='2xs'>
+        <Span size='lg' weight='bold' pb='2xs'>
           Mileage Tracking
-        </Text>
+        </Span>
         <Button onPress={onRecordTrip}>
           Add Trip
           <Plus size={16} />

@@ -12,8 +12,4 @@
   &[data-display-plus-sign]::before {
     content: '+$';
   }
-
-  &.Layer__MoneySpan-green {
-    color: var(--color-info-success-fg, #1b7742);
-  }
 }

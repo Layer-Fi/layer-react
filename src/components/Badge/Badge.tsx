@@ -18,7 +18,7 @@ export enum BadgeVariant {
   SUCCESS = 'success',
   WARNING = 'warning',
   ERROR = 'error',
-  STANDARD = 'standard',
+  NEUTRAL = 'neutral',
 }
 
 export interface BadgeProps {
