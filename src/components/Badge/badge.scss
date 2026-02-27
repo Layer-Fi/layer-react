@@ -9,7 +9,7 @@
   min-inline-size: fit-content;
 
   padding: var(--spacing-3xs) var(--spacing-xs);
-  border-radius: var(--border-radius-5xl);
+  border-radius: var(--border-radius-2xs);
 
   background-color: var(--badge-bg-color);
 
@@ -36,6 +36,7 @@
     justify-content: center;
     min-width: var(--size);
     padding: 0;
+    border-radius: var(--border-radius-5xl);
   }
 
   &.Layer__badge--clickable {
@@ -67,6 +68,11 @@
   &.Layer__badge--error {
     background-color: var(--badge-bg-color-error);
     color: var(--badge-fg-color-error);
+  }
+
+  &.Layer__badge--neutral {
+    background-color: var(--badge-bg-color-neutral);
+    color: var(--badge-fg-color-neutral);
   }
 
   &.Layer__badge--with-hover:hover {
