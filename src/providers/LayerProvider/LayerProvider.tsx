@@ -16,29 +16,46 @@ export type EventCallbacks = {
   onTransactionsFetched?: () => void
 }
 
-export type LayerProviderProps = {
+type BaseLayerProviderProps = {
   businessId: string
   appId?: string
   appSecret?: string
   businessAccessToken?: string
-  environment?: Environment
-  environmentConfigOverride?: EnvironmentConfigOverride
+
   theme?: LayerThemeConfig
   usePlaidSandbox?: boolean
   onError?: (error: LayerError) => void
   eventCallbacks?: EventCallbacks
 }
 
-export const LayerProvider = ({
-  appId,
-  appSecret,
-  businessAccessToken,
-  environmentConfigOverride,
-  environment,
-  usePlaidSandbox,
-  ...restProps
-}: PropsWithChildren<LayerProviderProps>) => {
+type LayerProviderPropsWithLayer = BaseLayerProviderProps & { environment?: Environment }
+type LayerProviderPropsWithEnvironmentConfigOverride = BaseLayerProviderProps & { environmentConfigOverride?: EnvironmentConfigOverride }
+
+export type LayerProviderProps = LayerProviderPropsWithLayer | LayerProviderPropsWithEnvironmentConfigOverride
+
+export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
   const [cache] = useState(() => new Map())
+
+  const {
+    appId,
+    appSecret,
+    businessAccessToken,
+    usePlaidSandbox,
+    ...restProps
+  } = props
+
+  let environment: Environment | undefined
+  let environmentConfigOverride: EnvironmentConfigOverride | undefined
+
+  if ('environmentConfigOverride' in props) {
+    environmentConfigOverride = props.environmentConfigOverride
+  }
+  else if ('environment' in props) {
+    environment = props.environment
+  }
+  else {
+    environment = 'production'
+  }
 
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
