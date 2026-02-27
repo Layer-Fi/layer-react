@@ -11,7 +11,7 @@ import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { Card } from '@components/Card/Card'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { Loader } from '@components/Loader/Loader'
+import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { TripDrawer } from '@components/Trips/TripDrawer/TripDrawer'
 import { useMileageSummary } from '@features/mileage/api/useMileageSummary'
 
@@ -61,7 +61,7 @@ export const MileageSummaryCard = () => {
       <VStack gap='md' pb='md' pi='lg'>
         <DataState
           status={DataStateStatus.failed}
-          title='Failed to load mileage data'
+          title='An error occurred while loading your mileage data. Please check your connection and try again.'
           spacing
         />
       </VStack>
@@ -71,13 +71,27 @@ export const MileageSummaryCard = () => {
   if (isLoading || !mileageData) {
     return (
       <VStack gap='md' pb='md' pi='lg'>
+        <HStack gap='md' justify='space-between'>
+          <SkeletonLoader height='24px' width='160px' />
+          <SkeletonLoader height='32px' width='100px' />
+        </HStack>
         <Card className='Layer__MileageSummaryCard'>
-          <HStack
-            className='Layer__MileageSummaryCard__Panel'
-            justify='center'
-            align='center'
-          >
-            <Loader />
+          <HStack className='Layer__MileageSummaryCard__Panel'>
+            <HStack align='center' className='Layer__MileageSummaryCard__Panel-header Layer__MileageSummaryCard__Panel-left'>
+              <SkeletonLoader height='20px' width='120px' />
+            </HStack>
+            <HStack align='center' className='Layer__MileageSummaryCard__Panel-header'>
+              <HStack gap='xs' className='Layer__MileageSummaryCard__Panel-header-content'>
+                <SkeletonLoader height='20px' width='110px' />
+                <SkeletonLoader height='24px' width='180px' />
+              </HStack>
+            </HStack>
+            <HStack align='center' className='Layer__MileageSummaryCard__Panel-value Layer__MileageSummaryCard__Panel-left'>
+              <SkeletonLoader height='28px' width='80px' />
+            </HStack>
+            <HStack align='center' className='Layer__MileageSummaryCard__Panel-value'>
+              <SkeletonLoader height='28px' width='100px' />
+            </HStack>
           </HStack>
         </Card>
       </VStack>
