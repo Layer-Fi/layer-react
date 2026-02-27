@@ -10,13 +10,15 @@ import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { Card } from '@components/Card/Card'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { Loader } from '@components/Loader/Loader'
 import { TripDrawer } from '@components/Trips/TripDrawer/TripDrawer'
 import { useMileageSummary } from '@features/mileage/api/useMileageSummary'
 
 import './mileageSummaryCard.scss'
 
 export const MileageSummaryCard = () => {
-  const { data: mileageData } = useMileageSummary()
+  const { data: mileageData, isLoading, isError } = useMileageSummary()
   const { date } = useGlobalDate({ dateSelectionMode: 'full' })
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
 
@@ -53,6 +55,34 @@ export const MileageSummaryCard = () => {
     setIsTripDrawerOpen(false)
   }
   const onDeleteTrip = () => {}
+
+  if (isError) {
+    return (
+      <VStack gap='md' pb='md' pi='lg'>
+        <DataState
+          status={DataStateStatus.failed}
+          title='Failed to load mileage data'
+          spacing
+        />
+      </VStack>
+    )
+  }
+
+  if (isLoading || !mileageData) {
+    return (
+      <VStack gap='md' pb='md' pi='lg'>
+        <Card className='Layer__MileageSummaryCard'>
+          <HStack
+            className='Layer__MileageSummaryCard__Panel'
+            justify='center'
+            align='center'
+          >
+            <Loader />
+          </HStack>
+        </Card>
+      </VStack>
+    )
+  }
 
   const mileageSummaryCardContent = (
     <Card className='Layer__MileageSummaryCard'>
