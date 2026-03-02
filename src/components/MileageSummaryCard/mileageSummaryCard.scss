@@ -1,0 +1,46 @@
+.Layer__MileageSummaryCard {
+  width: 100%;
+
+  .Layer__MileageSummaryCard__Panel {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr 1.5fr;
+    min-height: 150px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    background: var(--color-base-50);
+
+    .Layer__MileageSummaryCard__Panel-header {
+      padding: var(--spacing-lg);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .Layer__MileageSummaryCard__Panel-header-content {
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .Layer__MileageSummaryCard__Panel-header-tax-deduction-label {
+        padding-block: var(--spacing-4xs);
+      }
+    }
+
+    .Layer__MileageSummaryCard__Panel-value {
+      padding: var(--spacing-lg);
+    }
+
+    .Layer__MileageSummaryCard__Panel-left {
+      border-right: 1px solid var(--border-color);
+    }
+
+    .Layer__MileageSummaryCard__Panel-header.Layer__MileageSummaryCard__Panel-left {
+      position: relative;
+    }
+
+    .Layer__MileageSummaryCard__Panel-header-arrow-icon {
+      position: absolute;
+      top: 30%;
+      right: -12px;
+      background-color: var(--color-base-50);
+    }
+  }
+}

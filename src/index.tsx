@@ -42,6 +42,9 @@ export { BookkeepingUpsellBar } from './components/BookkeepingUpsellBar/Bookkeep
 /* --------------------- Date Pickers -------------------------- */
 export { GlobalMonthPicker } from './components/GlobalMonthPicker/GlobalMonthPicker'
 
+/* --------------------- Cards -------------------------- */
+export { MileageSummaryCard as unstable_MileageSummaryCard } from './components/MileageSummaryCard/MileageSummaryCard'
+
 /*
 ======================= Composite Views =======================
 */
