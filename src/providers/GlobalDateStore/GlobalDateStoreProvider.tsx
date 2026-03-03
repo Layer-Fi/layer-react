@@ -21,7 +21,7 @@ export function clampToAfterActivationDate(date: Date | number, activationDate: 
 export function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
   return min([date, cutoff])
 }
-
+// Here is where we need to make changes to the month mode clamp
 const RANGE_MODE_LOOKUP = {
   full: {
     getStartDate: ({ startDate }: { startDate: Date }) => startDate,

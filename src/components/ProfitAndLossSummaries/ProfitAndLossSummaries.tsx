@@ -61,16 +61,20 @@ function Internal_ProfitAndLossSummaries({
     isLoading,
     setSidebarScope,
     sidebarScope,
+    tagFilter,
   } = useContext(ProfitAndLossContext)
 
-  const { startDate, endDate: _endDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
+  const { endDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
 
-  const previousMonthStart = sub(startDate, { months: 1 })
-  const { data: previousData } = useProfitAndLossSummaries({
+  const currentMonthStart = endDate
+  const previousMonthStart = sub(currentMonthStart, { months: 1 })
+  const { data: comparisonMonthsData } = useProfitAndLossSummaries({
     startYear: previousMonthStart.getFullYear(),
     startMonth: previousMonthStart.getMonth() + 1,
-    endYear: previousMonthStart.getFullYear(),
-    endMonth: previousMonthStart.getMonth() + 1,
+    endYear: currentMonthStart.getFullYear(),
+    endMonth: currentMonthStart.getMonth() + 1,
+    tagKey: tagFilter?.key,
+    tagValues: tagFilter?.values?.join(','),
   })
 
   const { revenueChartData, expensesChartData } = useMemo(
@@ -87,34 +91,49 @@ function Internal_ProfitAndLossSummaries({
   )
 
   const comparisonData = useMemo(() => {
-    const previousMonthData = previousData?.months?.[0]
+    const currentMonthData = comparisonMonthsData?.months?.find(({ year, month }) => {
+      return year === currentMonthStart.getFullYear() && month === currentMonthStart.getMonth() + 1
+    })
+    const previousMonthData = comparisonMonthsData?.months?.find(({ year, month }) => {
+      return year === previousMonthStart.getFullYear() && month === previousMonthStart.getMonth() + 1
+    })
+
+    const revenueAmount = currentMonthData?.income ?? (effectiveData.income.value ?? 0)
+    const expensesAmount = currentMonthData?.totalExpenses ?? ((effectiveData.income.value ?? 0) - effectiveData.netProfit)
+    const netProfitAmount = currentMonthData?.netProfit ?? (effectiveData.netProfit ?? 0)
 
     if (!previousMonthData) {
-      return null
+      return {
+        revenueAmount,
+        expensesAmount,
+        netProfitAmount,
+        revenuePercentChange: null,
+        expensesPercentChange: null,
+        netProfitPercentChange: null,
+        comparisonMonth: null,
+      }
     }
-
-    const currentRevenue = effectiveData.income.value ?? 0
-    const previousRevenue = previousMonthData.income ?? 0
-    const currentExpenses = (effectiveData.income.value ?? 0) - effectiveData.netProfit
-    const previousExpenses = previousMonthData.totalExpenses ?? 0
-
-    const currentNetProfit = effectiveData.netProfit ?? 0
-    const previousNetProfit = previousMonthData.netProfit ?? 0
 
     return {
-      revenuePercentChange: calculatePercentageChange(currentRevenue, previousRevenue),
-      expensesPercentChange: calculatePercentageChange(currentExpenses, previousExpenses),
-      netProfitPercentChange: calculatePercentageChange(currentNetProfit, previousNetProfit),
+      revenueAmount,
+      expensesAmount,
+      netProfitAmount,
+      revenuePercentChange: calculatePercentageChange(revenueAmount, previousMonthData.income ?? 0),
+      expensesPercentChange: calculatePercentageChange(expensesAmount, previousMonthData.totalExpenses ?? 0),
+      netProfitPercentChange: calculatePercentageChange(netProfitAmount, previousMonthData.netProfit ?? 0),
       comparisonMonth: format(previousMonthStart, MONTH_FORMAT_SHORT),
     }
-  }, [previousData, effectiveData, previousMonthStart])
+  }, [comparisonMonthsData, currentMonthStart, effectiveData, previousMonthStart])
 
   const {
+    revenueAmount,
+    expensesAmount,
+    netProfitAmount,
     revenuePercentChange = null,
     expensesPercentChange = null,
     netProfitPercentChange = null,
     comparisonMonth = null,
-  } = comparisonData ?? {}
+  } = comparisonData
 
   const { unstable_AdditionalListItems = [] } = slots ?? {}
   const listItemCount = unstable_AdditionalListItems.length + 3
@@ -128,7 +147,7 @@ function Internal_ProfitAndLossSummaries({
         >
           <ProfitAndLossSummariesSummary
             label={stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
-            amount={effectiveData.income.value ?? 0}
+            amount={revenueAmount}
             isLoading={isLoading}
             percentChange={revenuePercentChange}
             comparisonMonth={comparisonMonth ?? undefined}
@@ -150,7 +169,7 @@ function Internal_ProfitAndLossSummaries({
         >
           <ProfitAndLossSummariesSummary
             label={stringOverrides?.expensesLabel || 'Expenses'}
-            amount={(effectiveData?.income?.value ?? 0) - effectiveData.netProfit}
+            amount={expensesAmount}
             isLoading={isLoading}
             percentChange={expensesPercentChange}
             comparisonMonth={comparisonMonth ?? undefined}
@@ -170,7 +189,7 @@ function Internal_ProfitAndLossSummaries({
         <ProfitAndLossSummariesListItem>
           <ProfitAndLossSummariesSummary
             label={stringOverrides?.netProfitLabel || 'Net Profit'}
-            amount={data?.netProfit ?? 0}
+            amount={netProfitAmount}
             variants={variants}
             isLoading={isLoading}
             percentChange={netProfitPercentChange}

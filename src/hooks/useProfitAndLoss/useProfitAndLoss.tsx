@@ -82,6 +82,7 @@ type UseProfitAndLossOptions = {
 }
 
 export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLossOptions) => {
+  // This needs to be toggled to full when the user is on custom mode and month mode when the user is on month mode
   const [dateSelectionMode, setDateSelectionMode] = useState<DateSelectionMode>('month')
   const dateRange = useGlobalDateRange({ dateSelectionMode })
 
