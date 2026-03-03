@@ -4,7 +4,6 @@ import type React from 'react'
 
 import { flattenValidationErrors } from '@utils/form'
 import CreditCardIcon from '@icons/CreditCard'
-import InstitutionIcon from '@icons/InstitutionIcon'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -63,15 +62,6 @@ export const InvoiceFinalizeForm = ({
       </form.Subscribe>
       <VStack className='Layer__InvoiceFinalizeForm__Section' gap='sm'>
         <Heading level={3} size='sm'>Payment methods</Heading>
-        <form.AppField name='achEnabled'>
-          {field => (
-            <field.FormSwitchField
-              label='ACH'
-              slots={{ LabelIcon: <InstitutionIcon size={14} /> }}
-              inline
-            />
-          )}
-        </form.AppField>
         <form.AppField name='creditCardEnabled'>
           {field => (
             <field.FormSwitchField
