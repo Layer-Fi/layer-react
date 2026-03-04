@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react'
 
-import type { LinkedAccount } from '@internal-types/linked_accounts'
+import type { ExternalAccountConnection } from '@internal-types/linked_accounts'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -26,7 +26,7 @@ export function BasicLinkedAccountContainer({ children, isSelected }: BasicLinke
 }
 
 type BasicLinkedAccountLogoProps = {
-  account: Pick<LinkedAccount, 'institution' | 'external_account_name'>
+  account: Pick<ExternalAccountConnection, 'institution' | 'external_account_name'>
 }
 
 function BasicLinkedAccountLogo({ account }: BasicLinkedAccountLogoProps) {
@@ -53,7 +53,7 @@ function BasicLinkedAccountLogo({ account }: BasicLinkedAccountLogoProps) {
 }
 
 type BasicLinkedAccountContainerProps = {
-  account: Pick<LinkedAccount, 'external_account_name' | 'mask' | 'institution'>
+  account: Pick<ExternalAccountConnection, 'external_account_name' | 'mask' | 'institution'>
 }
 
 export function BasicLinkedAccountContent({ account }: BasicLinkedAccountContainerProps) {

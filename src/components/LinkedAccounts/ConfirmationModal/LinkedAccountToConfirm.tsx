@@ -1,10 +1,10 @@
-import type { LinkedAccount } from '@internal-types/linked_accounts'
+import type { ExternalAccountConnection } from '@internal-types/linked_accounts'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { VStack } from '@ui/Stack/Stack'
 import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '@components/LinkedAccounts/BasicLinkedAccount/BasicLinkedAccount'
 
 type LinkedAccountConfirmationProps = {
-  account: LinkedAccount
+  account: ExternalAccountConnection
   isConfirmed: boolean
   onChangeConfirmed: (isConfirmed: boolean) => void
 }
