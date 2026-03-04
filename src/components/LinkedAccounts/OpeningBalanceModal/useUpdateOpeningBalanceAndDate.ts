@@ -5,22 +5,22 @@ import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-export type OpeningBalanceData = { accountId: string, openingDate?: Date, openingBalance?: number, isDateInvalid: boolean }
+export type OpeningBalanceData = { bankAccountId: string, openingDate?: Date, openingBalance?: number, isDateInvalid: boolean }
 
 type OpeningBalanceAPIResponseValidationError = {
-  accountId: string
+  bankAccountId: string
   status: 'rejected'
   reason: {
     cause: {
       type: 'validation'
       errors: string[]
-      accountId: string
+      bankAccountId: string
     }
   }
 }
 
 type OpeningBalanceAPIResponseError = {
-  accountId: string
+  bankAccountId: string
   status: 'rejected'
   reason: {
     code?: number
@@ -31,7 +31,7 @@ type OpeningBalanceAPIResponseError = {
 }
 
 export type OpeningBalanceAPIResponseResult =
-  | { accountId: string, status: 'fulfilled', value: { data: { type: string } } }
+  | { bankAccountId: string, status: 'fulfilled', value: { data: { type: string } } }
   | OpeningBalanceAPIResponseValidationError
   | OpeningBalanceAPIResponseError
 
@@ -52,33 +52,33 @@ function buildKey({
       apiUrl,
       businessId,
       data,
-      tags: ['#linked-accounts', '#opening-balance'],
+      tags: ['#bank-accounts', '#opening-balance'],
     } as const
   }
 }
 
-function setOpeningBalanceOnAccount({
+function setOpeningBalanceOnBankAccount({
   apiUrl,
   accessToken,
   businessId,
-  accountId,
+  bankAccountId,
   openingDate,
   openingBalance,
 }: {
   apiUrl: string
   accessToken: string
   businessId: string
-  accountId: string
+  bankAccountId: string
   openingDate: Date
   openingBalance: number
 }) {
-  return Layer.updateOpeningBalance(
+  return Layer.updateBankAccountOpeningBalance(
     apiUrl,
     accessToken,
     {
       params: {
         businessId,
-        accountId,
+        bankAccountId,
       },
       body: {
         effective_at: openingDate.toISOString(),
@@ -118,25 +118,25 @@ export function useBulkSetOpeningBalanceAndDate(
     ({ accessToken, apiUrl, businessId, data }) => (
       Promise.allSettled(
         data.map(
-          ({ accountId, openingDate, openingBalance, isDateInvalid }) => {
-            const errors = validate({ accountId, openingDate, openingBalance, isDateInvalid })
+          ({ bankAccountId, openingDate, openingBalance, isDateInvalid }) => {
+            const errors = validate({ bankAccountId, openingDate, openingBalance, isDateInvalid })
             if (errors.length > 0) {
               return Promise.reject(
                 new Error('Invalid data', {
                   cause: {
                     type: 'validation',
                     errors,
-                    accountId,
+                    bankAccountId,
                   },
                 }),
               )
             }
 
-            return setOpeningBalanceOnAccount({
+            return setOpeningBalanceOnBankAccount({
               accessToken,
               apiUrl,
               businessId,
-              accountId,
+              bankAccountId,
               openingDate: openingDate as Date,
               openingBalance: openingBalance as number,
             })
@@ -146,7 +146,7 @@ export function useBulkSetOpeningBalanceAndDate(
       .then((results) => {
         const resultsWithIds: OpeningBalanceAPIResponseResult[] = results.map((r, i) => ({
           ...r,
-          accountId: data[i].accountId,
+          bankAccountId: data[i].bankAccountId,
         }))
         return onSuccess?.(resultsWithIds)
       })

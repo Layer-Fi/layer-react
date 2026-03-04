@@ -93,9 +93,18 @@ export function LinkAccountsLinkStep() {
         isLoading={loadingStatus === 'loading' || loadingStatus === 'initial'}
         Loading={<Loader />}
       >
-        {({ item: account }) => (
-          <BasicLinkedAccountContainer key={account.id} isSelected>
-            <BasicLinkedAccountContent account={account} />
+        {({ item: bankAccount }) => (
+          <BasicLinkedAccountContainer key={bankAccount.id} isSelected>
+            <BasicLinkedAccountContent account={{
+              external_account_name: bankAccount.account_name
+                ?? bankAccount.external_accounts[0]?.external_account_name
+                ?? 'Unknown Account',
+              mask: bankAccount.mask,
+              institution: bankAccount.institution
+                ?? bankAccount.external_accounts[0]?.institution
+                ?? null,
+            }}
+            />
           </BasicLinkedAccountContainer>
         )}
       </ConditionalList>

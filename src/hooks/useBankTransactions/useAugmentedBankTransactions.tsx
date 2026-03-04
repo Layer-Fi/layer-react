@@ -180,7 +180,7 @@ export const useAugmentedBankTransactions = (
 
   const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
   const anyAccountSyncing = useMemo(
-    () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+    () => Boolean(linkedAccounts?.some(ba => ba.external_accounts.some(ea => ea.is_syncing))),
     [linkedAccounts],
   )
 

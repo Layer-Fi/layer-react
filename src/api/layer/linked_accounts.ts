@@ -1,6 +1,6 @@
-import { type LinkedAccounts, type PublicToken } from '@internal-types/linked_accounts'
+import { type BankAccount, type LinkedAccounts, type PublicToken } from '@internal-types/linked_accounts'
 import type { OneOf } from '@internal-types/utility/oneOf'
-import { get, post } from '@api/layer/authenticated_http'
+import { del, get, post } from '@api/layer/authenticated_http'
 
 export const syncConnection = post<
   Record<string, unknown>,
@@ -166,6 +166,54 @@ export const breakPlaidItemConnection = post<
     `/v1/businesses/${businessId}/plaid/items/${plaidItemPlaidId}/sandbox-reset-item-login`,
 )
 
-// export const createAccount = post<{ data: LinkedAccount }, NewAccount>(
-//   ({ businessId }) => `/v1/businesses/${businessId}/external-accounts`,
-// )
+/************************
+ * Bank Accounts API     *
+ ************************/
+
+export const listBankAccounts = get<
+  { data: BankAccount[] },
+  {
+    businessId: string
+  }
+>(({ businessId }) => `/v1/businesses/${businessId}/bank-accounts`)
+
+export const unlinkBankAccount = del<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  {
+    businessId: string
+    bankAccountId: string
+  }
+>(
+  ({ businessId, bankAccountId }) =>
+    `/v1/businesses/${businessId}/bank-accounts/${bankAccountId}`,
+)
+
+export const uncategorizeAndArchiveBankAccount = post<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  {
+    businessId: string
+    bankAccountId: string
+  }
+>(
+  ({ businessId, bankAccountId }) =>
+    `/v1/businesses/${businessId}/bank-accounts/${bankAccountId}/uncategorize-and-archive`,
+)
+
+type UpdateBankAccountOpeningBalanceBody = {
+  effective_at: string
+  balance: number
+}
+
+export const updateBankAccountOpeningBalance = post<
+  never,
+  UpdateBankAccountOpeningBalanceBody,
+  {
+    businessId: string
+    bankAccountId: string
+  }
+>(
+  ({ businessId, bankAccountId }) =>
+    `/v1/businesses/${businessId}/bank-accounts/${bankAccountId}/opening-balance`,
+)

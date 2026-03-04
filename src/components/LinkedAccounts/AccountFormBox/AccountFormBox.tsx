@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { endOfDay } from 'date-fns'
 
-import { type LinkedAccount } from '@internal-types/linked_accounts'
+import { type BankAccount } from '@internal-types/linked_accounts'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import CheckCircle from '@icons/CheckCircle'
 import InstitutionIcon from '@icons/InstitutionIcon'
@@ -16,7 +16,7 @@ import { Text, TextSize } from '@components/Typography/Text'
 import './accountFormBox.scss'
 
 export type AccountFormBoxData = {
-  account: LinkedAccount
+  bankAccount: BankAccount
   isConfirmed: boolean
   openingDate: Date
   openingBalance?: string
@@ -25,7 +25,7 @@ export type AccountFormBoxData = {
 }
 
 type AccountFormProps = {
-  account: LinkedAccount
+  bankAccount: BankAccount
   value: AccountFormBoxData
   isSaved?: boolean
   disableConfirmExclude?: boolean
@@ -36,13 +36,21 @@ type AccountFormProps = {
 const CLASS_NAME = 'Layer__caobfb'
 
 export const AccountFormBox = ({
-  account,
+  bankAccount,
   value,
   isSaved = false,
   disableConfirmExclude = false,
   onChange,
   errors = [],
 }: AccountFormProps) => {
+  const displayName = bankAccount.account_name
+    ?? bankAccount.external_accounts[0]?.external_account_name
+    ?? 'Unknown Account'
+  const institution = bankAccount.institution
+    ?? bankAccount.external_accounts[0]?.institution
+  const institutionName = institution?.name
+  const institutionLogo = institution?.logo
+
   const dataProps = useMemo(() => (
     toDataProperties({
       saved: isSaved,
@@ -76,17 +84,13 @@ export const AccountFormBox = ({
   return (
     <div {...dataProps} className={CLASS_NAME}>
       <div className={`${CLASS_NAME}__icon-col`}>
-        {account.institution?.logo != undefined
+        {institutionLogo != undefined
           ? (
             <img
               width={32}
               height={32}
-              src={`data:image/png;base64,${account.institution.logo}`}
-              alt={
-                account.institution?.name
-                  ? account.institution?.name
-                  : account.external_account_name
-              }
+              src={`data:image/png;base64,${institutionLogo}`}
+              alt={institutionName ?? displayName}
             />
           )
           : (
@@ -100,18 +104,18 @@ export const AccountFormBox = ({
               className={`${CLASS_NAME}__details-col__name__institution-name`}
               size={TextSize.sm}
             >
-              {account.institution?.name}
+              {institutionName}
             </Text>
             <Text
               className={`${CLASS_NAME}__details-col__name__account-name`}
               size={TextSize.sm}
             >
-              {account.external_account_name}
+              {displayName}
             </Text>
           </div>
           <Text size={TextSize.sm}>
             •••
-            {account.mask}
+            {bankAccount.mask}
           </Text>
         </div>
         <div className={`${CLASS_NAME}__details-col__inputs`}>

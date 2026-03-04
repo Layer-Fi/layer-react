@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 
-import { type LinkedAccount } from '@internal-types/linked_accounts'
+import { type BankAccount } from '@internal-types/linked_accounts'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import type { HoverMenuProps } from '@components/HoverMenu/HoverMenu'
@@ -9,20 +9,32 @@ import { LinkedAccountPill } from '@components/LinkedAccountPill/LinkedAccountPi
 import { UnlinkAccountConfirmationModal } from '@components/LinkedAccounts/UnlinkAccountConfirmationModal/UnlinkAccountConfirmationModal'
 import { LinkedAccountThumb } from '@components/LinkedAccountThumb/LinkedAccountThumb'
 
-function accountNeedsUniquenessConfirmation({
-  notifications,
-}: Pick<LinkedAccount, 'notifications'>) {
-  return notifications?.some(({ type }) => type === 'CONFIRM_UNIQUE')
+function accountNeedsUniquenessConfirmation(bankAccount: BankAccount) {
+  return bankAccount.external_accounts.some(
+    ea => ea.notifications?.some(({ type }) => type === 'CONFIRM_UNIQUE'),
+  )
 }
 
-function accountMissingOpeningBalance({
-  notifications,
-}: Pick<LinkedAccount, 'notifications'>) {
-  return notifications?.some(({ type }) => type === 'OPENING_BALANCE_MISSING')
+function accountMissingOpeningBalance(bankAccount: BankAccount) {
+  return bankAccount.notifications.some(({ type }) => type === 'OPENING_BALANCE_MISSING')
+}
+
+function getConnectionRepairInfo(bankAccount: BankAccount) {
+  const brokenAccount = bankAccount.external_accounts.find(ea => ea.connection_needs_repair_as_of)
+  if (!brokenAccount) return null
+  return {
+    connectionExternalId: brokenAccount.connection_external_id,
+    source: brokenAccount.external_account_source,
+    reconnectWithNewCredentials: brokenAccount.reconnect_with_new_credentials,
+  }
+}
+
+function getPlaidAccount(bankAccount: BankAccount) {
+  return bankAccount.external_accounts.find(ea => ea.external_account_source === 'PLAID')
 }
 
 export interface LinkedAccountItemThumbProps {
-  account: LinkedAccount
+  account: BankAccount
   asWidget?: boolean
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
@@ -30,7 +42,7 @@ export interface LinkedAccountItemThumbProps {
 }
 
 export const LinkedAccountItemThumb = ({
-  account,
+  account: bankAccount,
   asWidget,
   showLedgerBalance,
   showUnlinkItem,
@@ -48,52 +60,48 @@ export const LinkedAccountItemThumb = ({
   const { environment } = useEnvironment()
   const [isUnlinkConfirmationModalOpen, setIsUnlinkConfirmationModalOpen] = useState(false)
 
+  const plaidAccount = getPlaidAccount(bankAccount)
+  const repairInfo = getConnectionRepairInfo(bankAccount)
+
   let pillConfig
-  if (accountNeedsUniquenessConfirmation(account)) {
-    pillConfig = {
-      text: 'Confirm account',
-      config: [
-        {
-          name: 'Mark as a duplicate account',
-          action: () => {
-            // TODO: trigger some sort of loading spinner here
-            void excludeAccount(account.external_account_source, account.id)
-            // TODO: turn off loading spinner
+  if (accountNeedsUniquenessConfirmation(bankAccount)) {
+    const plaidAccountForConfirm = bankAccount.external_accounts.find(
+      ea => ea.notifications?.some(({ type }) => type === 'CONFIRM_UNIQUE'),
+    )
+    if (plaidAccountForConfirm) {
+      pillConfig = {
+        text: 'Confirm account',
+        config: [
+          {
+            name: 'Mark as a duplicate account',
+            action: () => {
+              void excludeAccount(plaidAccountForConfirm.external_account_source, plaidAccountForConfirm.id)
+            },
           },
-        },
-        {
-          name: 'Mark as not a duplicate account',
-          action: () => {
-            // TODO: trigger some sort of loading spinner here
-            void confirmAccount(account.external_account_source, account.id)
-            // TODO: turn off loading spinner
+          {
+            name: 'Mark as not a duplicate account',
+            action: () => {
+              void confirmAccount(plaidAccountForConfirm.external_account_source, plaidAccountForConfirm.id)
+            },
           },
-        },
-      ],
+        ],
+      }
     }
   }
-  else if (account.connection_needs_repair_as_of) {
+  else if (repairInfo) {
     pillConfig = {
       text: 'Fix account',
       config: [
         {
           name: 'Repair connection',
           action: () => {
-            if (account.connection_external_id) {
-              // TODO: trigger some sort of loading spinner here
-              // An account is "broken" when its connection is broken
-              if (account.reconnect_with_new_credentials) {
-                void addConnection(
-                  account.external_account_source,
-                )
+            if (repairInfo.connectionExternalId) {
+              if (repairInfo.reconnectWithNewCredentials) {
+                void addConnection(repairInfo.source)
               }
               else {
-                void repairConnection(
-                  account.external_account_source,
-                  account.connection_external_id,
-                )
+                void repairConnection(repairInfo.source, repairInfo.connectionExternalId)
               }
-              // TODO: turn off loading spinner
             }
           },
         },
@@ -103,65 +111,59 @@ export const LinkedAccountItemThumb = ({
 
   const additionalConfigs: HoverMenuProps['config'] = []
 
-  const canUnlinkAccount =
-    account.external_account_source === 'PLAID'
-    || (account.external_account_source === 'CUSTOM' && account.user_created)
+  additionalConfigs.push({
+    name: 'Unlink account',
+    action: () => {
+      setIsUnlinkConfirmationModalOpen(true)
+    },
+  })
 
-  if (canUnlinkAccount) {
+  if (showUnlinkItem && plaidAccount?.connection_external_id) {
+    const institutionName = bankAccount.institution?.name
+      ?? plaidAccount.institution?.name
     additionalConfigs.push({
-      name: account.external_account_source === 'CUSTOM' ? 'Delete account' : 'Unlink account',
-      action: () => {
-        setIsUnlinkConfirmationModalOpen(true)
-      },
-    })
-  }
-
-  if (showUnlinkItem) {
-    additionalConfigs.push({
-      name: `Unlink all accounts under this ${account.institution?.name} connection`,
+      name: `Unlink all accounts under this ${institutionName} connection`,
       action: () => {
         // TODO: replace with better confirm dialog
         if (
-          account.connection_external_id
+          plaidAccount.connection_external_id
           && confirm(
             `Please confirm you wish to remove all accounts belonging to ${
-              account.institution?.name || 'this institution'
+              institutionName || 'this institution'
             }`,
           )
         ) {
-          // TODO: trigger some sort of loading spinner here
           void removeConnection(
-            account.external_account_source,
-            account.connection_external_id,
+            plaidAccount.external_account_source,
+            plaidAccount.connection_external_id,
           )
-          // TODO: turn off loading spinner
         }
       },
     })
   }
 
-  if (accountMissingOpeningBalance(account)) {
+  if (accountMissingOpeningBalance(bankAccount)) {
     additionalConfigs.push({
       name: 'Add opening balance',
       action: () => {
-        setAccountsToAddOpeningBalanceInModal([account])
+        setAccountsToAddOpeningBalanceInModal([bankAccount])
       },
     })
   }
 
   if (
     environment === 'staging'
-    && !account.connection_needs_repair_as_of
-    && account.external_account_source === 'PLAID'
+    && !repairInfo
+    && plaidAccount
     && showBreakConnection
   ) {
     additionalConfigs.push({
       name: 'Break connection (test utility)',
       action: () => {
-        if (account.connection_external_id) {
+        if (plaidAccount.connection_external_id) {
           void breakConnection(
-            account.external_account_source,
-            account.connection_external_id,
+            plaidAccount.external_account_source,
+            plaidAccount.connection_external_id,
           )
         }
         else {
@@ -177,7 +179,7 @@ export const LinkedAccountItemThumb = ({
       showLedgerBalance={showLedgerBalance}
     >
       <LinkedAccountThumb
-        account={account}
+        bankAccount={bankAccount}
         asWidget={asWidget}
         showLedgerBalance={showLedgerBalance}
         slots={{
@@ -190,7 +192,7 @@ export const LinkedAccountItemThumb = ({
         <UnlinkAccountConfirmationModal
           isOpen
           onOpenChange={setIsUnlinkConfirmationModalOpen}
-          account={account}
+          bankAccount={bankAccount}
         />
       )}
     </LinkedAccountOptions>

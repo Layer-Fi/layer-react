@@ -48,7 +48,7 @@ export const ProfitAndLossHeader = ({
   const activePeriodStatus = activePeriod?.status
 
   const isSyncing = useMemo(
-    () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+    () => Boolean(linkedAccounts?.some(ba => ba.external_accounts.some(ea => ea.is_syncing))),
     [linkedAccounts],
   )
 
