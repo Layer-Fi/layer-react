@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { differenceInCalendarMonths, differenceInCalendarYears } from 'date-fns'
 import { type MultiValue } from 'react-select'
 
@@ -88,11 +88,15 @@ export function useProfitAndLossComparison({
     ? prepareFiltersBody(selectedCompareOptions)
     : undefined
 
-  const { data, isLoading, isValidating } = useProfitAndLossComparisonReport({
+  const { data, isLoading, isValidating, error, mutate } = useProfitAndLossComparisonReport({
     periods,
     tagFilters,
     reportingBasis,
   })
+
+  const refetch = useCallback(() => {
+    void mutate()
+  }, [mutate])
 
   const getProfitAndLossComparisonCsv = (
     dateRange: DateRange,
@@ -117,6 +121,8 @@ export function useProfitAndLossComparison({
     data: data?.pnls,
     isLoading,
     isValidating,
+    isError: Boolean(error),
+    refetch,
     compareModeActive,
     comparePeriods,
     compareOptions: comparisonConfig?.tagComparisonOptions ?? [],

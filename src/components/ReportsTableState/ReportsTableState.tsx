@@ -10,22 +10,26 @@ import { VStack } from '@ui/Stack/Stack'
 type ReportsTableLoaderProps = {
   typeColumnHeader?: string
   totalColumnHeader?: string
+  showHeader?: boolean
 }
 
 export const ReportsTableLoader = ({
   typeColumnHeader = 'Type',
   totalColumnHeader = 'Total',
+  showHeader = true,
 }: ReportsTableLoaderProps) => {
   return (
     <Table borderCollapse='collapse'>
-      <TableHead>
-        <TableRow rowKey='report-table-loader-header' isHeadRow>
-          <TableCell isHeaderCell>{typeColumnHeader}</TableCell>
-          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {totalColumnHeader}
-          </TableCell>
-        </TableRow>
-      </TableHead>
+      {showHeader && (
+        <TableHead>
+          <TableRow rowKey='report-table-loader-header' isHeadRow>
+            <TableCell isHeaderCell>{typeColumnHeader}</TableCell>
+            <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
+              {totalColumnHeader}
+            </TableCell>
+          </TableRow>
+        </TableHead>
+      )}
       <SkeletonTableLoader
         rows={6}
         cols={[
