@@ -64,9 +64,9 @@ function Internal_ProfitAndLossSummaries({
     tagFilter,
   } = useContext(ProfitAndLossContext)
 
-  const { endDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
+  const { startDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
 
-  const currentMonthStart = endDate
+  const currentMonthStart = startDate
   const previousMonthStart = useMemo(() => sub(currentMonthStart, { months: 1 }), [currentMonthStart])
   const { data: comparisonMonthsData } = useProfitAndLossSummaries({
     startYear: previousMonthStart.getFullYear(),

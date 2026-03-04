@@ -81,9 +81,18 @@ const getEffectiveDateRangeForMode = (
   { startDate, endDate }: { startDate: Date, endDate: Date },
 ): { startDate: Date, endDate: Date } => {
   const rangeModifierForMode = RANGE_MODE_LOOKUP[mode]
+  const effectiveEndDate = rangeModifierForMode.getEndDate({ endDate })
+
+  if (mode === 'full') {
+    return {
+      startDate: rangeModifierForMode.getStartDate({ startDate }),
+      endDate: effectiveEndDate,
+    }
+  }
+
   return {
-    startDate: rangeModifierForMode.getStartDate({ startDate }),
-    endDate: rangeModifierForMode.getEndDate({ endDate }),
+    startDate: rangeModifierForMode.getStartDate({ startDate: effectiveEndDate }),
+    endDate: effectiveEndDate,
   }
 }
 
@@ -109,10 +118,8 @@ function buildStore() {
     }
 
     const setDateRange = withCorrectedRange(({ startDate, endDate }): DateRange => {
-      const { dateMode } = get()
-      const s = RANGE_MODE_LOOKUP[dateMode].getStartDate({ startDate })
-      const e = RANGE_MODE_LOOKUP[dateMode].getEndDate({ endDate })
-      return apply({ startDate: s, endDate: e })
+      const range = getEffectiveDateRangeForMode('full', { startDate, endDate })
+      return apply(range)
     })
 
     const setMonth = ({ startDate }: { startDate: Date }): DateRange => {
