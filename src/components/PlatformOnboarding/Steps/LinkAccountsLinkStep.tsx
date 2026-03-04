@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import pluralize from 'pluralize'
 
+import { getBankAccountDisplayName, getBankAccountInstitution } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import ChevronRight from '@icons/ChevronRight'
 import LinkIcon from '@icons/Link'
@@ -96,13 +97,9 @@ export function LinkAccountsLinkStep() {
         {({ item: bankAccount }) => (
           <BasicLinkedAccountContainer key={bankAccount.id} isSelected>
             <BasicLinkedAccountContent account={{
-              external_account_name: bankAccount.account_name
-                ?? bankAccount.external_accounts[0]?.external_account_name
-                ?? 'Unknown Account',
+              external_account_name: getBankAccountDisplayName(bankAccount),
               mask: bankAccount.mask,
-              institution: bankAccount.institution
-                ?? bankAccount.external_accounts[0]?.institution
-                ?? null,
+              institution: getBankAccountInstitution(bankAccount),
             }}
             />
           </BasicLinkedAccountContainer>

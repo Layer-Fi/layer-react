@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 
 import { type BankAccount } from '@internal-types/linked_accounts'
+import { getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import type { HoverMenuProps } from '@components/HoverMenu/HoverMenu'
@@ -95,13 +96,12 @@ export const LinkedAccountItemThumb = ({
         {
           name: 'Repair connection',
           action: () => {
-            if (repairInfo.connectionExternalId) {
-              if (repairInfo.reconnectWithNewCredentials) {
-                void addConnection(repairInfo.source)
-              }
-              else {
-                void repairConnection(repairInfo.source, repairInfo.connectionExternalId)
-              }
+            if (!repairInfo.connectionExternalId) return
+            if (repairInfo.reconnectWithNewCredentials) {
+              void addConnection(repairInfo.source)
+            }
+            else {
+              void repairConnection(repairInfo.source, repairInfo.connectionExternalId)
             }
           },
         },
@@ -111,21 +111,19 @@ export const LinkedAccountItemThumb = ({
 
   const additionalConfigs: HoverMenuProps['config'] = []
 
-  const allExternalAccountsAreUserCreatedCustom = bankAccount.external_accounts.length > 0
-    && bankAccount.external_accounts.every(ea => ea.external_account_source === 'CUSTOM' && ea.user_created)
-
   additionalConfigs.push({
-    name: allExternalAccountsAreUserCreatedCustom ? 'Delete account' : 'Unlink account',
+    name: isAllExternalAccountsUserCreatedCustom(bankAccount) ? 'Delete account' : 'Unlink account',
     action: () => {
       setIsUnlinkConfirmationModalOpen(true)
     },
   })
 
   if (showUnlinkItem && plaidAccount?.connection_external_id) {
-    const institutionName = bankAccount.institution?.name
-      ?? plaidAccount.institution?.name ?? ''
+    const institutionName = getBankAccountInstitution(bankAccount)?.name
     additionalConfigs.push({
-      name: `Unlink all accounts under this ${institutionName} connection`,
+      name: institutionName
+        ? `Unlink all accounts under this ${institutionName} connection`
+        : 'Unlink all accounts under this connection',
       action: () => {
         // TODO: replace with better confirm dialog
         if (

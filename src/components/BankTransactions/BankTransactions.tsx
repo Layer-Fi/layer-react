@@ -10,6 +10,7 @@ import { usePreloadCategories } from '@hooks/categories/useCategories'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
 import { useElementSize } from '@hooks/useElementSize/useElementSize'
 import { useIsVisible } from '@hooks/useIsVisible/useIsVisible'
+import { isAnyBankAccountSyncing } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { BankTransactionsCategoryStoreProvider } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { BankTransactionsProvider } from '@providers/BankTransactionsProvider/BankTransactionsProvider'
@@ -187,7 +188,7 @@ const BankTransactionsTableView = ({
   const { data: linkedAccounts } = useLinkedAccounts()
 
   const isSyncing = useMemo(
-    () => Boolean(linkedAccounts?.some(ba => ba.external_accounts.some(ea => ea.is_syncing))),
+    () => isAnyBankAccountSyncing(linkedAccounts ?? []),
     [linkedAccounts],
   )
 

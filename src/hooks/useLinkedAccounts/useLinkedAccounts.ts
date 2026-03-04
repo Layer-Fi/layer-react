@@ -6,6 +6,7 @@ import { type AccountSource, type BankAccount, type ExternalAccountConnection } 
 import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
 import { useListBankAccounts } from '@hooks/useLinkedAccounts/useListBankAccounts'
+import { useUnlinkBankAccount } from '@hooks/useLinkedAccounts/useUnlinkBankAccount'
 import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -66,14 +67,16 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
 
+  const bankAccountsResponse = useListBankAccounts()
   const {
     data: bankAccounts,
     isLoading,
     isValidating,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error: responseError,
     mutate,
-  } = useListBankAccounts()
+  } = bankAccountsResponse
+
+  const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
 
   useEffect(() => {
     if (!isLoading && bankAccounts) {
@@ -221,9 +224,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const unlinkBankAccount = async (bankAccountId: string) => {
-    await Layer.unlinkBankAccount(apiUrl, auth?.access_token, {
-      params: { businessId, bankAccountId },
-    })
+    await triggerUnlinkBankAccount(bankAccountId)
     await refetchAccounts()
     touch(DataModel.LINKED_ACCOUNTS)
   }

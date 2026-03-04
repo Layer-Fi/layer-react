@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
+import { isAnyBankAccountSyncing } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { HStack } from '@ui/Stack/Stack'
@@ -48,7 +49,7 @@ export const ProfitAndLossHeader = ({
   const activePeriodStatus = activePeriod?.status
 
   const isSyncing = useMemo(
-    () => Boolean(linkedAccounts?.some(ba => ba.external_accounts.some(ea => ea.is_syncing))),
+    () => isAnyBankAccountSyncing(linkedAccounts ?? []),
     [linkedAccounts],
   )
 

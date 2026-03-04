@@ -4,10 +4,10 @@ import useSWRMutation from 'swr/mutation'
 
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { post } from '@api/layer/authenticated_http'
-import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/bookkeeping/useBankAccounts'
 import { mapRawCustomAccountToCustomAccount, type RawCustomAccount } from '@hooks/customAccounts/types'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/customAccounts/useCustomAccounts'
 import { useAuth } from '@hooks/useAuth'
+import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListBankAccounts'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExternalAccounts'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

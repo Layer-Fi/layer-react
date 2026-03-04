@@ -16,6 +16,7 @@ import {
   applyAmountFilter,
   applyCategorizationStatusFilter,
 } from '@hooks/useBankTransactions/utils'
+import { isAnyBankAccountSyncing } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -180,7 +181,7 @@ export const useAugmentedBankTransactions = (
 
   const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
   const anyAccountSyncing = useMemo(
-    () => Boolean(linkedAccounts?.some(ba => ba.external_accounts.some(ea => ea.is_syncing))),
+    () => isAnyBankAccountSyncing(linkedAccounts ?? []),
     [linkedAccounts],
   )
 

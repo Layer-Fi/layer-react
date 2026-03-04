@@ -2,6 +2,7 @@ import classNames from 'classnames'
 
 import { type BankAccount } from '@internal-types/linked_accounts'
 import { centsToDollars as formatMoney } from '@models/Money'
+import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import LoaderIcon from '@icons/Loader'
 import { Text, type TextSize } from '@components/Typography/Text'
@@ -30,12 +31,9 @@ export const LinkedAccountThumb = ({
   showLedgerBalance,
   slots,
 }: LinkedAccountThumbProps) => {
-  const isSyncing = bankAccount.external_accounts.some(ea => ea.is_syncing)
-  const displayName = bankAccount.account_name
-    ?? bankAccount.external_accounts[0]?.external_account_name
-    ?? 'Unknown Account'
-  const institution = bankAccount.institution
-    ?? bankAccount.external_accounts[0]?.institution
+  const isSyncing = isBankAccountSyncing(bankAccount)
+  const displayName = getBankAccountDisplayName(bankAccount)
+  const institution = getBankAccountInstitution(bankAccount)
   const institutionName = institution?.name
   const institutionLogo = institution?.logo
 

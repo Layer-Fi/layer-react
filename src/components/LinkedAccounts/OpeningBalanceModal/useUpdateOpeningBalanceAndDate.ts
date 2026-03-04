@@ -1,9 +1,26 @@
 import useSWRMutation from 'swr/mutation'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { Layer } from '@api/layer'
+import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+type UpdateBankAccountOpeningBalanceBody = {
+  effective_at: string
+  balance: number
+}
+
+const updateBankAccountOpeningBalance = post<
+  never,
+  UpdateBankAccountOpeningBalanceBody,
+  {
+    businessId: string
+    bankAccountId: string
+  }
+>(
+  ({ businessId, bankAccountId }) =>
+    `/v1/businesses/${businessId}/bank-accounts/${bankAccountId}/opening-balance`,
+)
 
 export type OpeningBalanceData = { bankAccountId: string, openingDate?: Date, openingBalance?: number, isDateInvalid: boolean }
 
@@ -72,7 +89,7 @@ function setOpeningBalanceOnBankAccount({
   openingDate: Date
   openingBalance: number
 }) {
-  return Layer.updateBankAccountOpeningBalance(
+  return updateBankAccountOpeningBalance(
     apiUrl,
     accessToken,
     {

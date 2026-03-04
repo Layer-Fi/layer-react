@@ -3,6 +3,7 @@ import { endOfDay } from 'date-fns'
 
 import { type BankAccount } from '@internal-types/linked_accounts'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { getBankAccountDisplayName, getBankAccountInstitution } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import CheckCircle from '@icons/CheckCircle'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
@@ -43,11 +44,8 @@ export const AccountFormBox = ({
   onChange,
   errors = [],
 }: AccountFormProps) => {
-  const displayName = bankAccount.account_name
-    ?? bankAccount.external_accounts[0]?.external_account_name
-    ?? 'Unknown Account'
-  const institution = bankAccount.institution
-    ?? bankAccount.external_accounts[0]?.institution
+  const displayName = getBankAccountDisplayName(bankAccount)
+  const institution = getBankAccountInstitution(bankAccount)
   const institutionName = institution?.name
   const institutionLogo = institution?.logo
 
