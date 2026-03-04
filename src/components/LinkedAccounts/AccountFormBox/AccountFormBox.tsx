@@ -88,7 +88,7 @@ export const AccountFormBox = ({
               width={32}
               height={32}
               src={`data:image/png;base64,${institutionLogo}`}
-              alt={institutionName ?? displayName}
+              alt={institutionName || displayName}
             />
           )
           : (

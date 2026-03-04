@@ -72,7 +72,7 @@ export const LinkedAccountThumb = ({
             className='account-institution'
             size={'sm' as TextSize}
           >
-            {institutionName ?? displayName}
+            {institutionName || displayName}
           </Text>
         </div>
         <div className='topbar-logo'>
@@ -82,7 +82,7 @@ export const LinkedAccountThumb = ({
                 width={28}
                 height={28}
                 src={`data:image/png;base64,${institutionLogo}`}
-                alt={institutionName ?? displayName}
+                alt={institutionName || displayName}
               />
             )
             : (
