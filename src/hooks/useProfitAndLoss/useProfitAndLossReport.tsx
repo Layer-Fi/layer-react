@@ -49,6 +49,7 @@ function buildKey({
   tagValues,
   reportingBasis,
   includeUncategorized,
+  includeTransactionCounts,
 }: {
   access_token?: string
   apiUrl?: string
@@ -64,6 +65,7 @@ function buildKey({
       tagValues,
       reportingBasis,
       includeUncategorized,
+      includeTransactionCounts,
       tags: [PNL_REPORT_TAG_KEY],
     } as const
   }
@@ -81,13 +83,22 @@ const getProfitAndLoss = get<
     tagValues,
     reportingBasis,
     includeUncategorized,
+    includeTransactionCounts,
   }) => {
-    const parameters = toDefinedSearchParameters({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized })
+    const parameters = toDefinedSearchParameters({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized, includeTransactionCounts })
     return `/v1/businesses/${businessId}/reports/profit-and-loss?${parameters}`
   })
 
 type UseProfitAndLossReportProps = Omit<ProfitAndLossReportRequestParams, 'businessId'>
-export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized }: UseProfitAndLossReportProps) {
+export function useProfitAndLossReport({
+  startDate,
+  endDate,
+  tagKey,
+  tagValues,
+  reportingBasis,
+  includeUncategorized,
+  includeTransactionCounts,
+}: UseProfitAndLossReportProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -101,12 +112,13 @@ export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, 
       tagValues,
       reportingBasis,
       includeUncategorized,
+      includeTransactionCounts,
     }),
     ({ accessToken, apiUrl, businessId }) => getProfitAndLoss(
       apiUrl,
       accessToken,
       {
-        params: { businessId, startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized },
+        params: { businessId, startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized, includeTransactionCounts },
       },
     )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossReportSchema)(data)),
   )

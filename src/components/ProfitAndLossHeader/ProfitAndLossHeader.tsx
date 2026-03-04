@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { type ReactNode, useMemo } from 'react'
 
 import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
@@ -30,6 +30,7 @@ export interface ProfitAndLossHeaderProps {
   withDownloadButton?: boolean
   withStatus?: boolean
   dateSelectionMode?: DateSelectionMode
+  rightContent?: ReactNode
 }
 
 export const ProfitAndLossHeader = ({
@@ -41,6 +42,7 @@ export const ProfitAndLossHeader = ({
   withStatus = true,
   stringOverrides,
   dateSelectionMode = 'full',
+  rightContent,
 }: ProfitAndLossHeaderProps) => {
   const { data: linkedAccounts } = useLinkedAccounts()
 
@@ -66,6 +68,11 @@ export const ProfitAndLossHeader = ({
         )}
       </span>
       <HStack gap='xs'>
+        {rightContent && (
+          <div className='Layer__profit-and-loss-header__right-content'>
+            {rightContent}
+          </div>
+        )}
         {withDatePicker && <CombinedDateRangeSelection mode={dateSelectionMode} showLabels={false} />}
         {withDownloadButton && <ProfitAndLossDownloadButton stringOverrides={stringOverrides?.downloadButton} />}
       </HStack>

@@ -4,13 +4,20 @@ import classNames from 'classnames'
 import { type OnboardingStep } from '@internal-types/layer_context'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useGlobalDateMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Container } from '@components/Container/Container'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
+import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
+import { GlobalDateModeToggle } from '@components/DateSelection/GlobalDateModeToggle'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { Onboarding } from '@components/Onboarding/Onboarding'
+import {
+  PnLHorizontalBarChart,
+  PnLHorizontalBarChartLegend,
+} from '@components/PnLHorizontalBarChart/PnLHorizontalBarChart'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import {
@@ -66,6 +73,7 @@ export const AccountingOverview = ({
   slotProps,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
+  const dateSelectionMode = useGlobalDateMode()
   const { value: sizeClass } = useSizeClass()
 
   const profitAndLossSummariesVariants =
@@ -83,11 +91,23 @@ export const AccountingOverview = ({
       <View
         title={stringOverrides?.title || title}
         showHeader={showTitle}
+        viewClassName='Layer__AccountingOverviewView'
         header={(
           <Header>
             <HeaderRow>
-              <HeaderCol>
-                <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
+              <HeaderCol fluid>
+                <VStack
+                  className='Layer__AccountingOverview__DateControls'
+                  gap='xs'
+                  align='end'
+                >
+                  <GlobalDateModeToggle />
+                  <CombinedDateRangeSelection
+                    mode={dateSelectionMode}
+                    showLabels={false}
+                    truncateMonth={sizeClass === 'mobile'}
+                  />
+                </VStack>
               </HeaderCol>
             </HeaderRow>
           </Header>
@@ -99,27 +119,44 @@ export const AccountingOverview = ({
             onboardingStepOverride={onboardingStepOverride}
           />
         )}
-        <ProfitAndLossSummaries
-          stringOverrides={stringOverrides?.profitAndLoss?.summaries}
-          chartColorsList={chartColorsList}
-          onTransactionsToReviewClick={onTransactionsToReviewClick}
-          variants={profitAndLossSummariesVariants}
-        />
-        <Container
-          name='accounting-overview-profit-and-loss'
-          asWidget
-        >
-          <ProfitAndLoss.Header
-            text={stringOverrides?.header || 'Profit & Loss'}
-          />
-          <ProfitAndLoss.Chart
-            tagFilter={
-              tagFilter
-                ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-                : undefined
-            }
-          />
-        </Container>
+        {dateSelectionMode === 'month'
+          ? (
+            <>
+              <ProfitAndLossSummaries
+                stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                chartColorsList={chartColorsList}
+                onTransactionsToReviewClick={onTransactionsToReviewClick}
+                variants={profitAndLossSummariesVariants}
+              />
+              <Container
+                name='accounting-overview-profit-and-loss'
+                asWidget
+              >
+                <ProfitAndLoss.Header
+                  text={stringOverrides?.header || 'Profit & Loss'}
+                />
+                <ProfitAndLoss.Chart
+                  tagFilter={
+                    tagFilter
+                      ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+                      : undefined
+                  }
+                />
+              </Container>
+            </>
+          )
+          : (
+            <Container
+              name='PnLHorizontalBarChart'
+              asWidget
+            >
+              <ProfitAndLoss.Header
+                text='Profit & Loss'
+                rightContent={<PnLHorizontalBarChartLegend />}
+              />
+              <PnLHorizontalBarChart onTransactionsToReviewClick={onTransactionsToReviewClick} />
+            </Container>
+          )}
         {middleBanner && (
           <Container name='accounting-overview-middle-banner'>
             {middleBanner}

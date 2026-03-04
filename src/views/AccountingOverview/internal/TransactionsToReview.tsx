@@ -1,9 +1,7 @@
-import { useMemo } from 'react'
-import { getMonth, getYear } from 'date-fns'
+import { useContext, useMemo } from 'react'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import BellIcon from '@icons/Bell'
 import CheckIcon from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'
@@ -19,45 +17,22 @@ const CLASS_NAME = 'Layer__TransactionsToReview'
 
 type TransactionsToReviewProps = {
   onClick?: () => void
-  tagFilter?: {
-    key: string
-    values: string[]
-  }
   variants?: Variants
 }
 
 export function TransactionsToReview({
   onClick,
-  tagFilter = undefined,
   variants,
 }: TransactionsToReviewProps) {
   const { size = 'sm' } = variants ?? {}
 
-  const dateRange = useGlobalDateRange({ dateSelectionMode: 'month' })
+  const { data: pnlData, isLoading, isError, refetch } = useContext(ProfitAndLossContext)
 
-  const { data, isLoading, isError, mutate } = useProfitAndLossSummaries({
-    startYear: dateRange.startDate.getFullYear(),
-    startMonth: dateRange.startDate.getMonth() + 1,
-    endYear: dateRange.endDate.getFullYear(),
-    endMonth: dateRange.endDate.getMonth() + 1,
-    tagKey: tagFilter?.key,
-    tagValues: tagFilter?.values?.join(','),
-  })
-
-  // Making change to only take into consideration the end date month when in month mode
-  const activeMonth = useMemo(() => {
-    if (!data || !dateRange) return undefined
-    const { endDate } = dateRange
-
-    return data.months.find(
-      summary =>
-        summary.month - 1 === getMonth(endDate)
-        && summary.year === getYear(endDate),
-    )
-  }, [data, dateRange])
-
-  const hasLoadedData = !isLoading && activeMonth
-  const numTransactionsToReview = activeMonth?.uncategorizedTransactions ?? 0
+  const transactionCounts = pnlData?.transactionCounts
+  const hasLoadedData = !isLoading && pnlData !== undefined
+  const numTransactionsToReview =
+    (transactionCounts?.uncategorizedInflows ?? 0)
+    + (transactionCounts?.uncategorizedOutflows ?? 0)
 
   const transactionsToReviewBadge = useMemo(() => {
     if (!hasLoadedData) {
@@ -70,7 +45,7 @@ export function TransactionsToReview({
           variant={BadgeVariant.ERROR}
           size={BadgeSize.SMALL}
           icon={<RefreshCcw size={12} />}
-          onClick={() => void mutate()}
+          onClick={() => refetch()}
         >
           Refresh
         </Badge>
@@ -100,7 +75,7 @@ export function TransactionsToReview({
         All done
       </Badge>
     )
-  }, [hasLoadedData, isError, mutate, numTransactionsToReview])
+  }, [hasLoadedData, isError, refetch, numTransactionsToReview])
 
   let verticalGap: StackProps['gap'] = '3xs'
   switch (size) {

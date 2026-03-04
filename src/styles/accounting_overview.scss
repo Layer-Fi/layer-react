@@ -1,5 +1,28 @@
 @forward '../views/AccountingOverview/internal/transactions_to_review';
 
+.Layer__AccountingOverview__DateControls {
+  inline-size: 34rem;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  padding-block: var(--spacing-2xs);
+}
+
+.Layer__AccountingOverview__DateControls .Layer__DateRangeSelection {
+  grid-template-columns: minmax(8.5rem, 1fr) repeat(2, minmax(9rem, 1fr));
+  inline-size: 100%;
+}
+
+.Layer__AccountingOverviewView .Layer__view-header {
+  overflow: visible;
+}
+
+.Layer__AccountingOverviewView .Layer__view-header__title + .Layer__view-header__children,
+.Layer__AccountingOverviewView .Layer__view-header__children {
+  width: max-content;
+  max-width: 100%;
+  margin-left: auto;
+}
+
 .Layer__accounting-overview-profit-and-loss-charts {
   display: flex;
   gap: var(--spacing-md);
@@ -31,6 +54,18 @@
 
   .Layer__component.Layer__accounting-overview-profit-and-loss-chart.accounting-overview-profit-and-loss-chart--hidden {
     display: none;
+  }
+}
+
+@container (max-width: 960px) {
+  .Layer__AccountingOverview__DateControls {
+    overflow-x: auto;
+    overflow-y: hidden;
+    inline-size: 100%;
+  }
+
+  .Layer__AccountingOverview__DateControls .Layer__DateRangeSelection {
+    grid-template-columns: 1fr;
   }
 }
 

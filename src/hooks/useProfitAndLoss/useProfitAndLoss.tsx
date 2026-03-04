@@ -13,6 +13,7 @@ import {
 import { useProfitAndLossReport } from '@hooks/useProfitAndLoss/useProfitAndLossReport'
 import {
   type DateSelectionMode,
+  useGlobalDateMode,
   useGlobalDateRange,
 } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import type { BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
@@ -82,8 +83,13 @@ type UseProfitAndLossOptions = {
 }
 
 export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLossOptions) => {
-  // This needs to be toggled to full when the user is on custom mode and month mode when the user is on month mode
-  const [dateSelectionMode, setDateSelectionMode] = useState<DateSelectionMode>('month')
+  const globalDateSelectionMode = useGlobalDateMode()
+  const [localModeOverride, setLocalModeOverride] = useState<DateSelectionMode | null>(null)
+  const dateSelectionMode = localModeOverride ?? globalDateSelectionMode
+  const setDateSelectionMode = useCallback(
+    (mode: DateSelectionMode) => setLocalModeOverride(mode),
+    [],
+  )
   const dateRange = useGlobalDateRange({ dateSelectionMode })
 
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
@@ -101,6 +107,7 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
       tagValues: tagFilter?.values?.join(','),
       reportingBasis,
       includeUncategorized: true,
+      includeTransactionCounts: true,
     })
 
   const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {

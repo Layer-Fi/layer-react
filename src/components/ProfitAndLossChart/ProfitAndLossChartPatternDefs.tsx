@@ -1,12 +1,19 @@
 export const STRIPE_PATTERN_ID = 'layer-bar-stripe-pattern'
 export const STRIPE_PATTERN_DARK_ID = 'layer-bar-stripe-pattern-dark'
 
+export const getStripePatternId = (idPrefix?: string) => idPrefix ? `${idPrefix}-${STRIPE_PATTERN_ID}` : STRIPE_PATTERN_ID
+export const getStripePatternDarkId = (idPrefix?: string) => idPrefix ? `${idPrefix}-${STRIPE_PATTERN_DARK_ID}` : STRIPE_PATTERN_DARK_ID
+
 export const STRIPE_PATTERN_FILL = `url(#${STRIPE_PATTERN_ID})`
 export const STRIPE_PATTERN_DARK_FILL = `url(#${STRIPE_PATTERN_DARK_ID})`
 
-const StripePattern = ({ id }: { id: string }) => (
+export const getStripePatternFill = (idPrefix?: string) => `url(#${getStripePatternId(idPrefix)})`
+export const getStripePatternDarkFill = (idPrefix?: string) => `url(#${getStripePatternDarkId(idPrefix)})`
+
+const StripePattern = ({ id, variant = 'light' }: { id: string, variant?: 'light' | 'dark' }) => (
   <pattern
     id={id}
+    className={`Layer__stripe-pattern--${variant}`}
     x='0'
     y='0'
     width='4'
@@ -19,9 +26,9 @@ const StripePattern = ({ id }: { id: string }) => (
   </pattern>
 )
 
-export const ProfitAndLossChartPatternDefs = () => (
+export const ProfitAndLossChartPatternDefs = ({ idPrefix }: { idPrefix?: string }) => (
   <defs>
-    <StripePattern id={STRIPE_PATTERN_ID} />
-    <StripePattern id={STRIPE_PATTERN_DARK_ID} />
+    <StripePattern id={getStripePatternId(idPrefix)} variant='light' />
+    <StripePattern id={getStripePatternDarkId(idPrefix)} variant='dark' />
   </defs>
 )

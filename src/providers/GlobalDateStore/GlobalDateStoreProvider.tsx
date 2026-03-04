@@ -21,7 +21,6 @@ export function clampToAfterActivationDate(date: Date | number, activationDate: 
 export function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
   return min([date, cutoff])
 }
-// Here is where we need to make changes to the month mode clamp
 const RANGE_MODE_LOOKUP = {
   full: {
     getStartDate: ({ startDate }: { startDate: Date }) => startDate,
@@ -57,38 +56,61 @@ function withCorrectedRange<TDateRange extends DateRange, TOut>(fn: (options: TD
   }
 }
 
-export type GlobalDateState = DateRange
+export type GlobalDateState = DateRange & { dateMode: DateSelectionMode }
 
 type GlobalDateActions = {
   setDate: (options: { date: Date }) => DateRange
   setDateRange: (options: { startDate: Date, endDate: Date }) => DateRange
   setMonth: (options: { startDate: Date }) => DateRange
   setYear: (options: { startDate: Date }) => DateRange
+  setDateMode: (options: { dateMode: DateSelectionMode }) => GlobalDateState
 
   setMonthByPeriod: (options: { monthNumber: number, yearNumber: number }) => DateRange
 }
 
 type GlobalDateStore = GlobalDateState & { actions: GlobalDateActions }
 
+const getEffectiveDateForMode = (mode: DateSelectionMode, { date }: { date: Date }): { date: Date } => {
+  const rangeModifierForMode = RANGE_MODE_LOOKUP[mode]
+  return { date: rangeModifierForMode.getEndDate({ endDate: date }) }
+}
+
+const getEffectiveDateRangeForMode = (
+  mode: DateSelectionMode,
+  { startDate, endDate }: { startDate: Date, endDate: Date },
+): { startDate: Date, endDate: Date } => {
+  const rangeModifierForMode = RANGE_MODE_LOOKUP[mode]
+  return {
+    startDate: rangeModifierForMode.getStartDate({ startDate }),
+    endDate: rangeModifierForMode.getEndDate({ endDate }),
+  }
+}
+
 function buildStore() {
   const now = new Date()
 
-  return createStore<GlobalDateStore>((set) => {
+  return createStore<GlobalDateStore>((set, get) => {
     const apply = (next: DateRange): DateRange => {
+      set({ startDate: next.startDate, endDate: next.endDate })
+      return next
+    }
+
+    const applyState = (next: GlobalDateState): GlobalDateState => {
       set(next)
       return next
     }
 
     const setDate = ({ date }: { date: Date }): DateRange => {
-      // Always clamp to start of month for date.
-      const s = RANGE_MODE_LOOKUP.month.getStartDate({ startDate: date })
-      const e = RANGE_MODE_LOOKUP.full.getEndDate({ endDate: date })
+      const { dateMode } = get()
+      const s = RANGE_MODE_LOOKUP[dateMode].getStartDate({ startDate: date })
+      const e = RANGE_MODE_LOOKUP[dateMode].getEndDate({ endDate: date })
       return apply({ startDate: s, endDate: e })
     }
 
     const setDateRange = withCorrectedRange(({ startDate, endDate }): DateRange => {
-      const s = RANGE_MODE_LOOKUP.full.getStartDate({ startDate })
-      const e = RANGE_MODE_LOOKUP.full.getEndDate({ endDate })
+      const { dateMode } = get()
+      const s = RANGE_MODE_LOOKUP[dateMode].getStartDate({ startDate })
+      const e = RANGE_MODE_LOOKUP[dateMode].getEndDate({ endDate })
       return apply({ startDate: s, endDate: e })
     })
 
@@ -104,15 +126,24 @@ function buildStore() {
       return apply({ startDate: s, endDate: e })
     }
 
+    const setDateMode = ({ dateMode }: { dateMode: DateSelectionMode }) => {
+      const { startDate, endDate } = get()
+      const anchor = dateMode === 'month' ? { startDate: endDate, endDate } : { startDate, endDate }
+      const range = getEffectiveDateRangeForMode(dateMode, anchor)
+      return applyState({ ...range, dateMode })
+    }
+
     return {
       startDate: startOfMonth(now),
       endDate: clampToPresentOrPast(endOfMonth(now)),
+      dateMode: 'month',
 
       actions: {
         setDate,
         setDateRange,
         setMonth,
         setYear,
+        setDateMode,
 
         setMonthByPeriod: ({ monthNumber, yearNumber }) => {
           const effectiveMonthNumber = Math.min(Math.max(monthNumber, 1), 12)
@@ -125,11 +156,6 @@ function buildStore() {
 }
 
 const GlobalDateStoreContext = createContext(buildStore())
-
-const getEffectiveDateForMode = (mode: DateSelectionMode, { date }: { date: Date }): { date: Date } => {
-  const rangeModifierForMode = RANGE_MODE_LOOKUP[mode]
-  return { date: rangeModifierForMode.getEndDate({ endDate: date }) }
-}
 
 export function useGlobalDate({ dateSelectionMode = 'full' }: { dateSelectionMode?: DateSelectionMode } = {}) {
   const store = useContext(GlobalDateStoreContext)
@@ -148,17 +174,6 @@ export function useGlobalDateActions() {
   const setDate = useStore(store, ({ actions: { setDate } }) => setDate)
 
   return { setDate }
-}
-
-const getEffectiveDateRangeForMode = (
-  mode: DateSelectionMode,
-  { startDate, endDate }: { startDate: Date, endDate: Date },
-): { startDate: Date, endDate: Date } => {
-  const rangeModifierForMode = RANGE_MODE_LOOKUP[mode]
-  return {
-    startDate: rangeModifierForMode.getStartDate({ startDate }),
-    endDate: rangeModifierForMode.getEndDate({ endDate }),
-  }
 }
 
 export function useGlobalDateRange({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }) {
@@ -181,12 +196,25 @@ export function useGlobalDateRangeActions() {
   const setDateRange = useStore(store, ({ actions: { setDateRange } }) => setDateRange)
   const setMonth = useStore(store, ({ actions: { setMonth } }) => setMonth)
   const setYear = useStore(store, ({ actions: { setYear } }) => setYear)
+  const setDateMode = useStore(store, ({ actions: { setDateMode } }) => setDateMode)
 
   return {
     setDateRange,
     setMonth,
     setYear,
+    setDateMode,
   }
+}
+
+export function useGlobalDateMode() {
+  const store = useContext(GlobalDateStoreContext)
+  return useStore(store, ({ dateMode }) => dateMode)
+}
+
+export function useGlobalDateModeActions() {
+  const store = useContext(GlobalDateStoreContext)
+  const setDateMode = useStore(store, ({ actions: { setDateMode } }) => setDateMode)
+  return { setDateMode }
 }
 
 export function useGlobalDatePeriodAlignedActions() {

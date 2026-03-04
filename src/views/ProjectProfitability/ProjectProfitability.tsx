@@ -4,7 +4,10 @@ import Select, { type Options } from 'react-select'
 import { DisplayState } from '@internal-types/bank_transactions'
 import { type MoneyFormat } from '@internal-types/general'
 import { type PnlTagFilter } from '@hooks/useProfitAndLoss/useProfitAndLoss'
-import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import {
+  type DateSelectionMode,
+  useGlobalDateMode,
+} from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactions } from '@components/BankTransactions/BankTransactions'
 import { Container } from '@components/Container/Container'
@@ -42,11 +45,13 @@ export const ProjectProfitabilityView = ({
   valueOptions,
   showTitle,
   stringOverrides,
-  dateSelectionMode = 'month',
+  dateSelectionMode,
   csvMoneyFormat = 'DOLLAR_STRING',
 }: ProjectProfitabilityProps) => {
   const [activeTab, setActiveTab] = useState<ProjectTab>('overview')
   const [tagFilter, setTagFilter] = useState<TagOption | null>(null)
+  const globalDateSelectionMode = useGlobalDateMode()
+  const effectiveDateSelectionMode = dateSelectionMode ?? globalDateSelectionMode
   const [pnlTagFilter, setPnlTagFilter] = useState<PnlTagFilter | undefined>(
     undefined,
   )
@@ -148,7 +153,7 @@ export const ProjectProfitabilityView = ({
             <ProfitAndLoss asContainer={false} tagFilter={pnlTagFilter}>
               <ProfitAndLoss.Report
                 stringOverrides={stringOverrides}
-                dateSelectionMode={dateSelectionMode}
+                dateSelectionMode={effectiveDateSelectionMode}
                 csvMoneyFormat={csvMoneyFormat}
               />
             </ProfitAndLoss>

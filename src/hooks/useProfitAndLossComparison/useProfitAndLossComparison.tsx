@@ -35,7 +35,7 @@ export function useProfitAndLossComparison({
 }: Props) {
   const [comparisonPeriodMode, setComparisonPeriodMode] = useState<DateGroupBy | null>(DateGroupBy.AllTime)
   const { dateSelectionMode } = useContext(ProfitAndLossContext)
-  const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
+  const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode })
 
   const comparePeriods = useMemo(() => {
     if (!comparisonPeriodMode || comparisonPeriodMode === DateGroupBy.AllTime) {

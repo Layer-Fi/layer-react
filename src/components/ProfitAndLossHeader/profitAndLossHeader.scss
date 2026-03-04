@@ -9,6 +9,11 @@
   gap: var(--spacing-2xs);
 }
 
+.Layer__profit-and-loss-header__right-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 @container (width < 460px) {
   .Layer__profit-and-loss-header__bookkeeping-status {
     position: static;

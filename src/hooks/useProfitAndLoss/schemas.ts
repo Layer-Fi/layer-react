@@ -114,10 +114,31 @@ export const ProfitAndLossReportRequestParamsSchema = Schema.Struct({
   startDate: Schema.Date,
   endDate: Schema.Date,
   includeUncategorized: Schema.optional(Schema.Boolean),
+  includeTransactionCounts: Schema.optional(Schema.Boolean),
 })
 
 export type ProfitAndLossReportRequestParams =
   typeof ProfitAndLossReportRequestParamsSchema.Type
+
+export const TransactionCountsSchema = Schema.Struct({
+  uncategorizedInflows: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('uncategorized_inflows'),
+  ),
+  categorizedInflows: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('categorized_inflows'),
+  ),
+  uncategorizedOutflows: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('uncategorized_outflows'),
+  ),
+  categorizedOutflows: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('categorized_outflows'),
+  ),
+})
+export type TransactionCounts = typeof TransactionCountsSchema.Type
 
 export const ProfitAndLossReportSchema = Schema.Struct({
   businessId: pipe(
@@ -202,6 +223,10 @@ export const ProfitAndLossReportSchema = Schema.Struct({
   personalExpenses: pipe(
     Schema.propertySignature(Schema.NullOr(LineItemSchema)),
     Schema.fromKey('personal_expenses'),
+  ),
+
+  transactionCounts: Schema.optional(TransactionCountsSchema).pipe(
+    Schema.fromKey('transaction_counts'),
   ),
 })
 export type ProfitAndLoss = typeof ProfitAndLossReportSchema.Type

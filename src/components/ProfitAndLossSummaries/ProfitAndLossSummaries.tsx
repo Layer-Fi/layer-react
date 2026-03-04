@@ -173,7 +173,6 @@ function Internal_ProfitAndLossSummaries({
             isLoading={isLoading}
             percentChange={expensesPercentChange}
             comparisonMonth={comparisonMonth ?? undefined}
-            isExpense
             slots={{
               Chart: (
                 <ProfitAndLossSummariesMiniChart
