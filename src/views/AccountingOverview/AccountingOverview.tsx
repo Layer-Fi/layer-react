@@ -91,7 +91,10 @@ export const AccountingOverview = ({
       <View
         title={stringOverrides?.title || title}
         showHeader={showTitle}
-        viewClassName='Layer__AccountingOverviewView'
+        viewClassName={classNames(
+          'Layer__AccountingOverviewView',
+          dateSelectionMode === 'full' && 'Layer__AccountingOverviewView--range',
+        )}
         header={(
           <Header>
             <HeaderRow>

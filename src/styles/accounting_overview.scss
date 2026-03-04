@@ -13,8 +13,6 @@
 
 .Layer__AccountingOverview__DateControls__DateSelection {
   flex: 1 1 auto;
-  overflow-x: auto;
-  overflow-y: hidden;
   min-inline-size: 0;
 }
 
@@ -54,6 +52,24 @@
 }
 
 @container (max-width: 1040px) {
+  .Layer__AccountingOverviewView--range .Layer__view-header__content {
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .Layer__AccountingOverviewView--range .Layer__view-header__title {
+    width: 100%;
+  }
+
+  .Layer__AccountingOverviewView--range .Layer__view-header__title + .Layer__view-header__children,
+  .Layer__AccountingOverviewView--range .Layer__view-header__children {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+@container (max-width: 700px) {
   .Layer__AccountingOverviewView .Layer__view-header__content {
     flex-direction: column;
     gap: 0;
@@ -71,7 +87,7 @@
   }
 }
 
-@container (max-width: 640px) {
+@container (max-width: 900px) {
   .Layer__AccountingOverview__DateControls--range {
     grid-template-columns: 1fr;
     row-gap: var(--spacing-xs);
@@ -82,6 +98,18 @@
     justify-self: end;
   }
 
+  .Layer__AccountingOverview__DateControls--range .Layer__AccountingOverview__DateControls__DateSelection {
+    overflow: visible;
+    inline-size: 100%;
+  }
+
+  .Layer__AccountingOverview__DateControls--range .Layer__DateRangeSelection {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    inline-size: 100%;
+  }
+}
+
+@container (max-width: 640px) {
   .Layer__AccountingOverview__DateControls--range .Layer__AccountingOverview__DateControls__DateSelection {
     inline-size: 100%;
   }

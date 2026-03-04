@@ -12,19 +12,15 @@ import {
 import { centsToDollars } from '@models/Money'
 import { useGlobalDateMode, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import BellIcon from '@icons/Bell'
-import CheckIcon from '@icons/Check'
-import ChevronRight from '@icons/ChevronRight'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
-import { TextButton } from '@components/Button/TextButton'
 import {
   getStripePatternDarkFill,
   getStripePatternFill,
   ProfitAndLossChartPatternDefs,
 } from '@components/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
+import { TransactionsToReview } from '@views/AccountingOverview/internal/TransactionsToReview'
 
 import './pnLHorizontalBarChart.scss'
 
@@ -33,7 +29,6 @@ type PnLHorizontalBarChartDatum = {
   label: 'Revenue' | 'Expenses'
   categorized: number
   uncategorized: number
-  uncategorizedTransactionCount?: number
   total: number
   categorizedColor: string
   uncategorizedColor: string
@@ -105,7 +100,6 @@ export const PnLHorizontalBarChart = ({ onTransactionsToReviewClick }: PnLHorizo
   const dateRange = useGlobalDateRange({ dateSelectionMode })
   const { data: profitAndLossData } = useContext(ProfitAndLossContext)
 
-  const transactionCounts = profitAndLossData?.transactionCounts
   const netProfit = profitAndLossData?.netProfit ?? 0
 
   const data = useMemo<PnLHorizontalBarChartDatum[]>(() => {
@@ -123,7 +117,6 @@ export const PnLHorizontalBarChart = ({ onTransactionsToReviewClick }: PnLHorizo
       label: 'Revenue',
       categorized: categorizedRevenue,
       uncategorized: uncategorizedRevenue,
-      uncategorizedTransactionCount: transactionCounts?.uncategorizedInflows,
       total: categorizedRevenue + uncategorizedRevenue,
       categorizedColor: CATEGORIZED_REVENUE_COLOR,
       uncategorizedColor: getStripePatternFill(`horizontal-bar-${'income'}`),
@@ -132,7 +125,6 @@ export const PnLHorizontalBarChart = ({ onTransactionsToReviewClick }: PnLHorizo
       label: 'Expenses',
       categorized: categorizedExpenses,
       uncategorized: uncategorizedExpenses,
-      uncategorizedTransactionCount: transactionCounts?.uncategorizedOutflows,
       total: categorizedExpenses + uncategorizedExpenses,
       categorizedColor: CATEGORIZED_EXPENSES_COLOR,
       uncategorizedColor: getStripePatternDarkFill(`horizontal-bar-${'expenses'}`),
@@ -144,7 +136,6 @@ export const PnLHorizontalBarChart = ({ onTransactionsToReviewClick }: PnLHorizo
     profitAndLossData?.taxes?.value,
     profitAndLossData?.uncategorizedInflows?.value,
     profitAndLossData?.uncategorizedOutflows?.value,
-    transactionCounts,
   ])
 
   const maxTotal = useMemo(() => {
@@ -158,42 +149,23 @@ export const PnLHorizontalBarChart = ({ onTransactionsToReviewClick }: PnLHorizo
           {`${format(dateRange.startDate, 'MMM d, yyyy')} - ${format(dateRange.endDate, 'MMM d, yyyy')}`}
         </Span>
       </VStack>
-      <VStack gap='4xs' className='Layer__PnLHorizontalBarChart__net-profit'>
-        <Span size='xs' variant='subtle' className='Layer__PnLHorizontalBarChart__net-profit-label'>Net Profit</Span>
-        <MoneySpan slot='amount' amount={netProfit} size='xl' weight='bold' />
-      </VStack>
+      <HStack className='Layer__PnLHorizontalBarChart__net-profit-row' justify='space-between' align='center'>
+        <VStack gap='4xs' className='Layer__PnLHorizontalBarChart__net-profit'>
+          <Span size='xs' variant='subtle' className='Layer__PnLHorizontalBarChart__net-profit-label'>Net Profit</Span>
+          <MoneySpan slot='amount' amount={netProfit} size='xl' weight='bold' />
+        </VStack>
+        {onTransactionsToReviewClick && (
+          <TransactionsToReview onClick={onTransactionsToReviewClick} />
+        )}
+      </HStack>
       <VStack className='Layer__PnLHorizontalBarChart__bars-container' gap='sm'>
         {data.map((item) => {
-          const showUncategorizedStatus = item.uncategorized > 0
-          const categorizedPercentage = item.total > 0
-            ? Math.round((item.categorized / item.total) * 100)
-            : (showUncategorizedStatus ? 0 : 100)
-          const statusText = showUncategorizedStatus
-            ? `${formatAmount(item.uncategorized)} uncategorized${item.uncategorizedTransactionCount !== undefined
-              ? ` (${item.uncategorizedTransactionCount} ${item.uncategorizedTransactionCount === 1 ? 'transaction' : 'transactions'})`
-              : ''}`
-            : 'Fully categorized'
-
           return (
             <VStack key={item.id} className='Layer__PnLHorizontalBarChart__row' gap='xs'>
-              <HStack justify='space-between' align='start' className='Layer__PnLHorizontalBarChart__row-header'>
-                <VStack gap='4xs' className='Layer__PnLHorizontalBarChart__row-summary'>
-                  <Span size='xs' variant='subtle' className='Layer__PnLHorizontalBarChart__row-label'>{item.label}</Span>
-                  <Span size='xl' weight='bold'>{formatAmount(item.categorized)}</Span>
-                </VStack>
-                <VStack gap='2xs' align='end' className='Layer__PnLHorizontalBarChart__status-group'>
-                  <Span size='sm' variant='subtle' className='Layer__PnLHorizontalBarChart__completion'>
-                    {`${categorizedPercentage}% categorized`}
-                  </Span>
-                  <Badge
-                    size={BadgeSize.SMALL}
-                    variant={showUncategorizedStatus ? BadgeVariant.WARNING : BadgeVariant.SUCCESS}
-                    icon={showUncategorizedStatus ? <BellIcon size={12} /> : <CheckIcon size={12} />}
-                  >
-                    {statusText}
-                  </Badge>
-                </VStack>
-              </HStack>
+              <VStack gap='4xs' className='Layer__PnLHorizontalBarChart__row-summary'>
+                <Span size='xs' variant='subtle' className='Layer__PnLHorizontalBarChart__row-label'>{item.label}</Span>
+                <Span size='xl' weight='bold'>{formatAmount(item.categorized)}</Span>
+              </VStack>
               <HStack className='Layer__PnLHorizontalBarChart__bar-wrapper'>
                 <ResponsiveContainer width='100%' height={BAR_CHART_HEIGHT}>
                   <BarChart data={[item]} layout='vertical' className='Layer__PnLHorizontalBarChart__chart'>
@@ -221,14 +193,6 @@ export const PnLHorizontalBarChart = ({ onTransactionsToReviewClick }: PnLHorizo
           )
         })}
       </VStack>
-      {onTransactionsToReviewClick && (
-        <HStack justify='end' className='Layer__PnLHorizontalBarChart__cta'>
-          <TextButton onClick={onTransactionsToReviewClick} className='Layer__PnLHorizontalBarChart__cta-button'>
-            <Span size='sm'>Review transactions</Span>
-            <ChevronRight width={16} height={16} />
-          </TextButton>
-        </HStack>
-      )}
     </VStack>
   )
 }
