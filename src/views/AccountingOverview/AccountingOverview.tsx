@@ -5,7 +5,7 @@ import { type OnboardingStep } from '@internal-types/layer_context'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useGlobalDateMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { VStack } from '@ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Container } from '@components/Container/Container'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
@@ -96,18 +96,27 @@ export const AccountingOverview = ({
           <Header>
             <HeaderRow>
               <HeaderCol fluid>
-                <VStack
-                  className='Layer__AccountingOverview__DateControls'
+                <HStack
+                  className={classNames(
+                    'Layer__AccountingOverview__DateControls',
+                    dateSelectionMode === 'full' && 'Layer__AccountingOverview__DateControls--range',
+                  )}
                   gap='xs'
-                  align='end'
+                  align='center'
+                  justify='end'
                 >
+                  <HStack
+                    className='Layer__AccountingOverview__DateControls__DateSelection'
+                    justify='end'
+                  >
+                    <CombinedDateRangeSelection
+                      mode={dateSelectionMode}
+                      showLabels={false}
+                      truncateMonth={sizeClass === 'mobile'}
+                    />
+                  </HStack>
                   <GlobalDateModeToggle />
-                  <CombinedDateRangeSelection
-                    mode={dateSelectionMode}
-                    showLabels={false}
-                    truncateMonth={sizeClass === 'mobile'}
-                  />
-                </VStack>
+                </HStack>
               </HeaderCol>
             </HeaderRow>
           </Header>

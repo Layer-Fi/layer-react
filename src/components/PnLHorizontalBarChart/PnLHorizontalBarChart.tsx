@@ -157,10 +157,10 @@ export const PnLHorizontalBarChart = ({ onTransactionsToReviewClick }: PnLHorizo
         <Span size='sm' variant='subtle'>
           {`${format(dateRange.startDate, 'MMM d, yyyy')} - ${format(dateRange.endDate, 'MMM d, yyyy')}`}
         </Span>
-        <VStack gap='4xs' className='Layer__PnLHorizontalBarChart__net-profit'>
-          <Span size='xs' variant='subtle' className='Layer__PnLHorizontalBarChart__net-profit-label'>Net Profit</Span>
-          <MoneySpan slot='amount' amount={netProfit} size='xl' weight='bold' />
-        </VStack>
+      </VStack>
+      <VStack gap='4xs' className='Layer__PnLHorizontalBarChart__net-profit'>
+        <Span size='xs' variant='subtle' className='Layer__PnLHorizontalBarChart__net-profit-label'>Net Profit</Span>
+        <MoneySpan slot='amount' amount={netProfit} size='xl' weight='bold' />
       </VStack>
       <VStack className='Layer__PnLHorizontalBarChart__bars-container' gap='sm'>
         {data.map((item) => {

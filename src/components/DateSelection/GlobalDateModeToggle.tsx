@@ -10,8 +10,8 @@ import { Toggle } from '@ui/Toggle/Toggle'
 type DateModeToggleValue = Extract<DateSelectionMode, 'full' | 'month'>
 
 const options = [
-  { value: 'month', label: 'Month' },
-  { value: 'full', label: 'Custom' },
+  { value: 'month', label: 'Monthly' },
+  { value: 'full', label: 'Range' },
 ] as const satisfies { value: DateModeToggleValue, label: string }[]
 
 type GlobalDateModeToggleProps = {

@@ -1,26 +1,95 @@
 @forward '../views/AccountingOverview/internal/transactions_to_review';
 
 .Layer__AccountingOverview__DateControls {
-  inline-size: 34rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--spacing-xs);
+  align-items: center;
+  inline-size: 100%;
   min-inline-size: 0;
   max-inline-size: 100%;
   padding-block: var(--spacing-2xs);
 }
 
+.Layer__AccountingOverview__DateControls__DateSelection {
+  flex: 1 1 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-inline-size: 0;
+}
+
+.Layer__AccountingOverview__DateControls__DateSelection > * {
+  flex: 0 0 auto;
+}
+
 .Layer__AccountingOverview__DateControls .Layer__DateRangeSelection {
   grid-template-columns: minmax(8.5rem, 1fr) repeat(2, minmax(9rem, 1fr));
-  inline-size: 100%;
+  inline-size: max-content;
+}
+
+.Layer__AccountingOverview__DateControls .Layer__UI__Toggle {
+  flex: 0 0 auto;
 }
 
 .Layer__AccountingOverviewView .Layer__view-header {
   overflow: visible;
 }
 
+.Layer__AccountingOverviewView .Layer__view-header__content {
+  gap: var(--spacing-sm);
+  justify-content: flex-start;
+}
+
+.Layer__AccountingOverviewView .Layer__view-header__title {
+  flex: 0 0 auto;
+  width: auto;
+}
+
 .Layer__AccountingOverviewView .Layer__view-header__title + .Layer__view-header__children,
 .Layer__AccountingOverviewView .Layer__view-header__children {
-  width: max-content;
-  max-width: 100%;
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
   margin-left: auto;
+}
+
+@container (max-width: 1040px) {
+  .Layer__AccountingOverviewView .Layer__view-header__content {
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .Layer__AccountingOverviewView .Layer__view-header__title {
+    width: 100%;
+  }
+
+  .Layer__AccountingOverviewView .Layer__view-header__title + .Layer__view-header__children,
+  .Layer__AccountingOverviewView .Layer__view-header__children {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+@container (max-width: 640px) {
+  .Layer__AccountingOverview__DateControls--range {
+    grid-template-columns: 1fr;
+    row-gap: var(--spacing-xs);
+  }
+
+  .Layer__AccountingOverview__DateControls--range .Layer__UI__Toggle {
+    order: -1;
+    justify-self: end;
+  }
+
+  .Layer__AccountingOverview__DateControls--range .Layer__AccountingOverview__DateControls__DateSelection {
+    inline-size: 100%;
+  }
+
+  .Layer__AccountingOverview__DateControls--range .Layer__DateRangeSelection {
+    grid-template-columns: 1fr;
+    inline-size: 100%;
+  }
 }
 
 .Layer__accounting-overview-profit-and-loss-charts {
@@ -54,18 +123,6 @@
 
   .Layer__component.Layer__accounting-overview-profit-and-loss-chart.accounting-overview-profit-and-loss-chart--hidden {
     display: none;
-  }
-}
-
-@container (max-width: 960px) {
-  .Layer__AccountingOverview__DateControls {
-    overflow-x: auto;
-    overflow-y: hidden;
-    inline-size: 100%;
-  }
-
-  .Layer__AccountingOverview__DateControls .Layer__DateRangeSelection {
-    grid-template-columns: 1fr;
   }
 }
 
