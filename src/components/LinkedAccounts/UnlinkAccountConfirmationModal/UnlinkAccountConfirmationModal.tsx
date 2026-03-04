@@ -10,10 +10,9 @@ type UnlinkAccountConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenCh
 }
 export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, bankAccount }: UnlinkAccountConfirmationModalProps) {
   const { unlinkBankAccount } = useContext(LinkedAccountsContext)
-  const hasUserCreatedCustomAccount = bankAccount.external_accounts.some(
-    ea => ea.external_account_source === 'CUSTOM' && ea.user_created,
-  )
-  const variant = hasUserCreatedCustomAccount ? 'DELETE' : 'UNLINK'
+  const allExternalAccountsAreUserCreatedCustom = bankAccount.external_accounts.length > 0
+    && bankAccount.external_accounts.every(ea => ea.external_account_source === 'CUSTOM' && ea.user_created)
+  const variant = allExternalAccountsAreUserCreatedCustom ? 'DELETE' : 'UNLINK'
 
   const modalContent = useMemo(() => {
     switch (variant) {

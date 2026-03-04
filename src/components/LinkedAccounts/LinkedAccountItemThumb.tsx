@@ -111,8 +111,11 @@ export const LinkedAccountItemThumb = ({
 
   const additionalConfigs: HoverMenuProps['config'] = []
 
+  const allExternalAccountsAreUserCreatedCustom = bankAccount.external_accounts.length > 0
+    && bankAccount.external_accounts.every(ea => ea.external_account_source === 'CUSTOM' && ea.user_created)
+
   additionalConfigs.push({
-    name: 'Unlink account',
+    name: allExternalAccountsAreUserCreatedCustom ? 'Delete account' : 'Unlink account',
     action: () => {
       setIsUnlinkConfirmationModalOpen(true)
     },
@@ -120,7 +123,7 @@ export const LinkedAccountItemThumb = ({
 
   if (showUnlinkItem && plaidAccount?.connection_external_id) {
     const institutionName = bankAccount.institution?.name
-      ?? plaidAccount.institution?.name
+      ?? plaidAccount.institution?.name ?? ''
     additionalConfigs.push({
       name: `Unlink all accounts under this ${institutionName} connection`,
       action: () => {
