@@ -35,7 +35,6 @@ export const ReportsTableLoader = ({
           { colSpan: 1, trimLastXRows: 4 },
           { colSpan: 1, parts: 2 },
         ]}
-        height={20}
       />
     </Table>
   )
