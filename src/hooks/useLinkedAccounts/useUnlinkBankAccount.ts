@@ -54,7 +54,6 @@ export function useUnlinkBankAccount() {
       }),
     {
       revalidate: false,
-      throwOnError: false,
     },
   )
 }

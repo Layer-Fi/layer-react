@@ -67,14 +67,13 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
 
-  const bankAccountsResponse = useListBankAccounts()
   const {
     data: bankAccounts,
     isLoading,
     isValidating,
     error: responseError,
     mutate,
-  } = bankAccountsResponse
+  } = useListBankAccounts()
 
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
 
