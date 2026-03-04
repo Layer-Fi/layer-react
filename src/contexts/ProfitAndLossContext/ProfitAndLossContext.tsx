@@ -27,8 +27,6 @@ export const ProfitAndLossContext = createContext<ReturnType<typeof useProfitAnd
   tagFilter: undefined,
   selectedLineItem: null,
   setSelectedLineItem: () => {},
-  setDateSelectionMode: () => {
-    throw new Error('ProfitAndLossContext is uninitialized')
-  },
+  setDateSelectionMode: () => {},
   dateSelectionMode: 'month',
 })
