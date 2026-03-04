@@ -1,10 +1,12 @@
+import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
-import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListBankAccounts'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+const UNLINK_BANK_ACCOUNT_TAG_KEY = '#unlink-bank-account'
 
 const unlinkBankAccount = del<
   Record<string, unknown>,
@@ -32,7 +34,7 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: [BANK_ACCOUNTS_TAG_KEY],
+      tags: [UNLINK_BANK_ACCOUNT_TAG_KEY],
     } as const
   }
 }
@@ -42,7 +44,7 @@ export function useUnlinkBankAccount() {
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  return useSWRMutation(
+  const { trigger: rawTrigger, ...rest } = useSWRMutation(
     () => buildKey({
       access_token: auth?.access_token,
       apiUrl,
@@ -56,4 +58,11 @@ export function useUnlinkBankAccount() {
       revalidate: false,
     },
   )
+
+  const trigger = useCallback(
+    (bankAccountId: string) => rawTrigger(bankAccountId),
+    [rawTrigger],
+  )
+
+  return { trigger, ...rest }
 }
