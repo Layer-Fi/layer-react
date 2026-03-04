@@ -18,6 +18,7 @@ type ProfitAndLossSummariesSummaryProps = {
   isLoading?: boolean
   percentChange?: number | null
   comparisonMonth?: string
+  isExpense?: boolean
   slots?: {
     Chart: ReactNode
   }
@@ -30,6 +31,7 @@ export function ProfitAndLossSummariesSummary({
   isLoading,
   percentChange,
   comparisonMonth,
+  isExpense = false,
   slots,
   variants,
 }: ProfitAndLossSummariesSummaryProps) {
@@ -37,7 +39,7 @@ export function ProfitAndLossSummariesSummary({
 
   const showPercentChange = percentChange !== undefined && percentChange !== null && comparisonMonth
 
-  const isGoodChange = showPercentChange && percentChange >= 0
+  const isGoodChange = showPercentChange && (isExpense ? percentChange < 0 : percentChange >= 0)
   const arrow = showPercentChange && percentChange >= 0 ? '↑' : '↓'
 
   return (
