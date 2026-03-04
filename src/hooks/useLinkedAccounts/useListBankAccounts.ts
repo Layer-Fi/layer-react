@@ -2,10 +2,9 @@ import useSWR from 'swr'
 
 import { listBankAccounts } from '@api/layer/linked_accounts'
 import { useAuth } from '@hooks/useAuth'
+import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/bookkeeping/useBankAccounts'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-
-export const BANK_ACCOUNTS_TAG_KEY = '#bank-accounts'
 
 function buildKey({
   access_token: accessToken,
