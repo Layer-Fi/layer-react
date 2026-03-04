@@ -31,7 +31,11 @@ const ProfitAndLoss = ({
   asContainer = true,
 }: Props) => {
   const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
-  const comparisonContextData = useProfitAndLossComparison({ comparisonConfig, reportingBasis })
+  const comparisonContextData = useProfitAndLossComparison({
+    comparisonConfig,
+    reportingBasis,
+    dateSelectionMode: contextData.dateSelectionMode,
+  })
 
   return (
     <ProfitAndLossContext.Provider value={contextData}>
