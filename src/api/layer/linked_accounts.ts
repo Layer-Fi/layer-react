@@ -166,9 +166,6 @@ export const breakPlaidItemConnection = post<
     `/v1/businesses/${businessId}/plaid/items/${plaidItemPlaidId}/sandbox-reset-item-login`,
 )
 
-/************************
- * Bank Accounts API     *
- ************************/
 
 export const listBankAccounts = get<
   { data: BankAccount[] },
