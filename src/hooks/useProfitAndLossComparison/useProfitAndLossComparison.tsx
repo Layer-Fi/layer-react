@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { differenceInCalendarMonths, differenceInCalendarYears } from 'date-fns'
 import { type MultiValue } from 'react-select'
 
@@ -10,9 +10,8 @@ import { useAuth } from '@hooks/useAuth'
 import { useProfitAndLossComparisonReport } from '@hooks/useProfitAndLossComparison/useProfitAndLossComparisonReport'
 import { prepareFiltersBody, preparePeriodsBody } from '@hooks/useProfitAndLossComparison/utils'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { type DateSelectionMode, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -21,6 +20,7 @@ export type SidebarScope = Scope | undefined
 type Props = {
   reportingBasis?: ReportingBasis
   comparisonConfig?: ProfitAndLossCompareConfig
+  dateSelectionMode: DateSelectionMode
 }
 
 const isNotOnlyNoneTag = (compareOptions?: TagComparisonOption[]) => {
@@ -32,9 +32,9 @@ const isNotOnlyNoneTag = (compareOptions?: TagComparisonOption[]) => {
 export function useProfitAndLossComparison({
   reportingBasis,
   comparisonConfig,
+  dateSelectionMode,
 }: Props) {
   const [comparisonPeriodMode, setComparisonPeriodMode] = useState<DateGroupBy | null>(DateGroupBy.AllTime)
-  const { dateSelectionMode } = useContext(ProfitAndLossContext)
   const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode })
 
   const comparePeriods = useMemo(() => {
