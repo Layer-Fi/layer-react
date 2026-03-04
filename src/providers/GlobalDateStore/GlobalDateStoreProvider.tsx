@@ -197,13 +197,11 @@ export function useGlobalDateRangeActions() {
   const setDateRange = useStore(store, ({ actions: { setDateRange } }) => setDateRange)
   const setMonth = useStore(store, ({ actions: { setMonth } }) => setMonth)
   const setYear = useStore(store, ({ actions: { setYear } }) => setYear)
-  const setDateMode = useStore(store, ({ actions: { setDateMode } }) => setDateMode)
 
   return {
     setDateRange,
     setMonth,
     setYear,
-    setDateMode,
   }
 }
 
