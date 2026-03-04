@@ -26,17 +26,17 @@ export function ConditionalBlock<T>({
   isError,
   Error,
 }: ConditionalBlockProps<T>) {
-  if (data) {
-    return children({ data })
-  }
-
   if (isError) {
     return Error
   }
 
-  if (isLoading) {
+  if (!data && isLoading) {
     return Loading
   }
 
-  return Inactive
+  if (!data) {
+    return Inactive
+  }
+
+  return children({ data })
 }
