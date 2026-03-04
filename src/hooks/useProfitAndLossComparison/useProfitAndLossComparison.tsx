@@ -88,11 +88,16 @@ export function useProfitAndLossComparison({
     ? prepareFiltersBody(selectedCompareOptions)
     : undefined
 
-  const { data, isLoading, isValidating, error, mutate } = useProfitAndLossComparisonReport({
+  const comparisonReport = useProfitAndLossComparisonReport({
     periods,
     tagFilters,
     reportingBasis,
   })
+  const data = comparisonReport.data
+  const isLoading = comparisonReport.isLoading
+  const isValidating = comparisonReport.isValidating
+  const error = comparisonReport.error
+  const mutate = comparisonReport.mutate
 
   const refetch = useCallback(() => {
     void mutate()

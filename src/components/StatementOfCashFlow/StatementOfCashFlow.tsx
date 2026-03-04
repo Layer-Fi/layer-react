@@ -39,7 +39,12 @@ const StatementOfCashFlowView = ({
   dateSelectionMode = 'full',
 }: StatementOfCashFlowViewProps) => {
   const dateRange = useGlobalDateRange({ dateSelectionMode })
-  const { data, isLoading, isValidating, error, mutate } = useStatementOfCashFlow(dateRange)
+  const statementOfCashFlow = useStatementOfCashFlow(dateRange)
+  const data = statementOfCashFlow.data
+  const isLoading = statementOfCashFlow.isLoading
+  const isValidating = statementOfCashFlow.isValidating
+  const error = statementOfCashFlow.error
+  const mutate = statementOfCashFlow.mutate
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (

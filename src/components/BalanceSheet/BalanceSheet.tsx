@@ -56,7 +56,12 @@ const BalanceSheetView = ({
   dateSelectionMode = 'full',
 }: BalanceSheetViewProps) => {
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
-  const { data, isLoading, isValidating, error, mutate } = useBalanceSheet({ effectiveDate })
+  const balanceSheet = useBalanceSheet({ effectiveDate })
+  const data = balanceSheet.data
+  const isLoading = balanceSheet.isLoading
+  const isValidating = balanceSheet.isValidating
+  const error = balanceSheet.error
+  const mutate = balanceSheet.mutate
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   const content = (
