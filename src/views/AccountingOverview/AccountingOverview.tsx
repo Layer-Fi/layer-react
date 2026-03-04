@@ -3,7 +3,6 @@ import classNames from 'classnames'
 
 import { type OnboardingStep } from '@internal-types/layer_context'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { useGlobalDateMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
@@ -74,7 +73,6 @@ export const AccountingOverview = ({
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const dateSelectionMode = useGlobalDateMode()
-  const { value: sizeClass } = useSizeClass()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -115,7 +113,6 @@ export const AccountingOverview = ({
                     <CombinedDateRangeSelection
                       mode={dateSelectionMode}
                       showLabels={false}
-                      truncateMonth={sizeClass === 'mobile'}
                     />
                   </HStack>
                   <GlobalDateModeToggle />

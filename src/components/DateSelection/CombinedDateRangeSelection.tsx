@@ -5,16 +5,14 @@ import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPick
 export type CombinedDateRangeSelectionProps = {
   mode: DateSelectionMode
   showLabels?: boolean
-  truncateMonth?: boolean
 }
 
 export const CombinedDateRangeSelection = ({
   mode,
   showLabels = true,
-  truncateMonth = false,
 }: CombinedDateRangeSelectionProps) => {
   if (mode === 'month') {
-    return <GlobalMonthPicker showLabel={showLabels} truncateMonth={truncateMonth} />
+    return <GlobalMonthPicker showLabel={showLabels} />
   }
 
   return <DateRangeSelection showLabels={showLabels} />
