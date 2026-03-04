@@ -5,7 +5,6 @@ import { Table } from '@components/Table/Table'
 import { TableCell } from '@components/TableCell/TableCell'
 import { TableHead } from '@components/TableHead/TableHead'
 import { TableRow } from '@components/TableRow/TableRow'
-import { VStack } from '@ui/Stack/Stack'
 
 type ReportsTableLoaderProps = {
   typeColumnHeader?: string
@@ -52,7 +51,7 @@ export const ReportsTableErrorState = ({
   onRefresh,
 }: ReportsTableErrorStateProps) => {
   return (
-    <VStack className='Layer__table-state-container'>
+    <div className='Layer__table-state-container'>
       <DataState
         status={DataStateStatus.failed}
         title='Something went wrong'
@@ -60,6 +59,6 @@ export const ReportsTableErrorState = ({
         onRefresh={onRefresh}
         isLoading={isLoading}
       />
-    </VStack>
+    </div>
   )
 }
