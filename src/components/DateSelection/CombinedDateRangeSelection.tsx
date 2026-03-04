@@ -7,10 +7,7 @@ export type CombinedDateRangeSelectionProps = {
   showLabels?: boolean
 }
 
-export const CombinedDateRangeSelection = ({
-  mode,
-  showLabels = true,
-}: CombinedDateRangeSelectionProps) => {
+export const CombinedDateRangeSelection = ({ mode, showLabels = true }: CombinedDateRangeSelectionProps) => {
   if (mode === 'month') {
     return <GlobalMonthPicker showLabel={showLabels} />
   }

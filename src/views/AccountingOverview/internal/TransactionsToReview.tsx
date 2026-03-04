@@ -29,6 +29,7 @@ export function TransactionsToReview({
   const { data: pnlData, isLoading, isError, refetch } = useContext(ProfitAndLossContext)
 
   const transactionCounts = pnlData?.transactionCounts
+  const hasTransactionCounts = transactionCounts !== undefined
   const hasLoadedData = !isLoading && pnlData !== undefined
   const numTransactionsToReview =
     (transactionCounts?.uncategorizedInflows ?? 0)
@@ -39,7 +40,7 @@ export function TransactionsToReview({
       return <BadgeLoader />
     }
 
-    if (isError) {
+    if (isError || !hasTransactionCounts) {
       return (
         <Badge
           variant={BadgeVariant.ERROR}
@@ -75,7 +76,7 @@ export function TransactionsToReview({
         All done
       </Badge>
     )
-  }, [hasLoadedData, isError, refetch, numTransactionsToReview])
+  }, [hasLoadedData, hasTransactionCounts, isError, refetch, numTransactionsToReview])
 
   let verticalGap: StackProps['gap'] = '3xs'
   switch (size) {
