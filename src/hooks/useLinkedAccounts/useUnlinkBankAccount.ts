@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@api/layer/authenticated_http'
@@ -59,9 +59,12 @@ export function useUnlinkBankAccount() {
     },
   )
 
+  const triggerRef = useRef(rawTrigger)
+  triggerRef.current = rawTrigger
+
   const trigger = useCallback(
-    (bankAccountId: string) => rawTrigger(bankAccountId),
-    [rawTrigger],
+    (bankAccountId: string) => triggerRef.current(bankAccountId),
+    [],
   )
 
   return { trigger, ...rest }

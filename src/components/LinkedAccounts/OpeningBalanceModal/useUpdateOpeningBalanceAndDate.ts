@@ -69,7 +69,7 @@ function buildKey({
       apiUrl,
       businessId,
       data,
-      tags: ['#bank-accounts', '#opening-balance'],
+      tags: ['#update-opening-balance'],
     } as const
   }
 }
