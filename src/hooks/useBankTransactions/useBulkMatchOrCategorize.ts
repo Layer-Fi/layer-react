@@ -3,7 +3,6 @@ import { pipe, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
@@ -55,11 +54,7 @@ const bulkMatchOrCategorize = post<
   BulkMatchOrCategorizeParams
 >(
   ({ businessId }) => {
-    const parameters = toDefinedSearchParameters({
-      categorization_source: 'API_FROM_COMPONENT',
-    })
-
-    return `/v1/businesses/${businessId}/bank-transactions/bulk-match-or-categorize?${parameters}`
+    return `/v1/businesses/${businessId}/bank-transactions/bulk-match-or-categorize`
   },
 )
 

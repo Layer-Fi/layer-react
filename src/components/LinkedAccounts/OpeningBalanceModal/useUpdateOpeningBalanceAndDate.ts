@@ -149,13 +149,21 @@ export function useBulkSetOpeningBalanceAndDate(
               )
             }
 
+            if (!openingDate || openingBalance === undefined) {
+              return Promise.reject(
+                new Error('Invalid data', {
+                  cause: { type: 'validation', errors: ['MISSING_FIELDS'], bankAccountId },
+                }),
+              )
+            }
+
             return setOpeningBalanceOnBankAccount({
               accessToken,
               apiUrl,
               businessId,
               bankAccountId,
-              openingDate: openingDate as Date,
-              openingBalance: openingBalance as number,
+              openingDate,
+              openingBalance,
             })
           }),
       )
