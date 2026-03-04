@@ -163,7 +163,7 @@ export const AccountingOverview = ({
               asWidget
             >
               <ProfitAndLoss.Header
-                text='Profit & Loss'
+                text={stringOverrides?.header || 'Profit & Loss'}
                 rightContent={<PnLHorizontalBarChartLegend />}
               />
               <PnLHorizontalBarChart onTransactionsToReviewClick={onTransactionsToReviewClick} />
