@@ -3,7 +3,6 @@ import { InvoicePaymentMethod } from '@features/invoices/invoicePaymentMethodSch
 import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 export type InvoiceFinalizeFormValues = {
-  achEnabled: boolean
   creditCardEnabled: boolean
   customPaymentInstructions: string
 }
@@ -17,7 +16,6 @@ export const getInvoiceFinalizeFormDefaultValues = ({
   invoice,
   paymentMethods,
 }: GetInvoiceFinalizeFormDefaultValuesProps): InvoiceFinalizeFormValues => ({
-  achEnabled: paymentMethods.includes(InvoicePaymentMethod.ACH),
   creditCardEnabled: paymentMethods.includes(InvoicePaymentMethod.CreditCard),
   customPaymentInstructions: invoice.customPaymentInstructions || '',
 })
@@ -26,7 +24,6 @@ export const convertInvoiceFinalizeFormToParams = (
   form: InvoiceFinalizeFormValues,
 ): unknown => ({
   paymentMethods: [
-    ...(form.achEnabled ? [InvoicePaymentMethod.ACH] : []),
     ...(form.creditCardEnabled ? [InvoicePaymentMethod.CreditCard] : []),
   ],
   customPaymentInstructions: form.customPaymentInstructions.trim(),
