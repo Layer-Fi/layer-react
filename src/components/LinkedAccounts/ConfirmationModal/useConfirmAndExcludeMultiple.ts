@@ -1,37 +1,8 @@
 import useSWRMutation from 'swr/mutation'
 
-import type { OneOf } from '@internal-types/utility/oneOf'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { post } from '@utils/authenticatedHttp'
-
-type ConfirmAccountBodyStrict = OneOf<[
-  { is_unique: true },
-  { is_relevant: true },
-]>
-
-const confirmAccountApi = post<
-  never,
-  ConfirmAccountBodyStrict,
-  { businessId: string, accountId: string }
->(
-  ({ businessId, accountId }) =>
-    `/v1/businesses/${businessId}/external-accounts/${accountId}/confirm`,
-)
-
-type ExcludeAccountBodyStrict = OneOf<[
-  { is_irrelevant: true },
-  { is_duplicate: true },
-]>
-
-const excludeAccountApi = post<
-  never,
-  ExcludeAccountBodyStrict,
-  { businessId: string, accountId: string }
->(
-  ({ businessId, accountId }) =>
-    `/v1/businesses/${businessId}/external-accounts/${accountId}/exclude`,
-)
 import { useAuth } from '@hooks/useAuth'
+import { confirmAccountApi, excludeAccountApi } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type AccountConfirmExcludeFormState = Record<string, boolean>

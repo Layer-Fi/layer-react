@@ -9,7 +9,7 @@ import { type Vendor } from '@internal-types/vendors'
 import { type APIError } from '@models/APIError'
 import { get } from '@utils/authenticatedHttp'
 
-type GetBillsReturn = {
+export type GetBillsReturn = {
   data?: Bill[]
   meta?: Metadata
   error?: unknown
@@ -24,7 +24,7 @@ interface GetBillsParams extends Record<string, string | undefined> {
   vendorId?: string
 }
 
-const getBills = get<GetBillsReturn, GetBillsParams>(
+export const getBills = get<GetBillsReturn, GetBillsParams>(
   ({ businessId, startDate, endDate, status, vendorId, cursor, limit = 15 }) => `/v1/businesses/${businessId}/bills?${
     vendorId ? `&vendor_id=${vendorId}` : ''
   }${

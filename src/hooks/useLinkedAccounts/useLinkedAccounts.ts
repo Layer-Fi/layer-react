@@ -25,12 +25,12 @@ const exchangePlaidPublicTokenApi = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/plaid/link/exchange`)
 
-type ConfirmAccountBodyStrict = OneOf<[
+export type ConfirmAccountBodyStrict = OneOf<[
   { is_unique: true },
   { is_relevant: true },
 ]>
 
-const confirmAccountApi = post<
+export const confirmAccountApi = post<
   never,
   ConfirmAccountBodyStrict,
   { businessId: string, accountId: string }
@@ -39,12 +39,12 @@ const confirmAccountApi = post<
     `/v1/businesses/${businessId}/external-accounts/${accountId}/confirm`,
 )
 
-type ExcludeAccountBodyStrict = OneOf<[
+export type ExcludeAccountBodyStrict = OneOf<[
   { is_irrelevant: true },
   { is_duplicate: true },
 ]>
 
-const excludeAccountApi = post<
+export const excludeAccountApi = post<
   never,
   ExcludeAccountBodyStrict,
   { businessId: string, accountId: string }
