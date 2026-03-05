@@ -37,7 +37,6 @@ export const ProfitAndLossTableComponent = ({
     isLoading,
     isError,
     isValidating,
-    refetch,
   } = useContext(ProfitAndLossContext)
 
   const { isOpen, setIsOpen } = useTableExpandRow()
@@ -52,10 +51,9 @@ export const ProfitAndLossTableComponent = ({
       isLoading={isLoading}
       isError={isError}
       Loading={<ReportsTableLoader showHeader={false} />}
-      Inactive={<ReportsTableLoader showHeader={false} />}
+      Inactive={null}
       Error={(
         <ReportsTableErrorState
-          onRefresh={refetch}
           isLoading={isValidating}
         />
       )}
