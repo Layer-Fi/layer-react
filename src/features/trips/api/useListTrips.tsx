@@ -28,16 +28,6 @@ const ListTripsResponseSchema = Schema.Struct({
 })
 type ListTripsResponse = typeof ListTripsResponseSchema.Type
 
-class ListTripsSWRResponse extends SWRInfiniteResult<ListTripsResponse> {
-  get size() {
-    return this.swrResponse.size
-  }
-
-  get setSize() {
-    return this.swrResponse.setSize
-  }
-}
-
 function keyLoader(
   previousPageData: ListTripsResponse | null,
   {
@@ -124,7 +114,7 @@ export function useListTrips(filterParams: ListTripsFilterParams = {}) {
     },
   )
 
-  return new ListTripsSWRResponse(swrResponse)
+  return new SWRInfiniteResult(swrResponse)
 }
 
 const withUpdatedTrip = (updated: Trip) =>

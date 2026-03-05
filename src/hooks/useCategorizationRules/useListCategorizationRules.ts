@@ -48,18 +48,6 @@ class ListCategorizationRulesSWRResponse extends SWRInfiniteResult<ListCategoriz
   get hasMore() {
     return this.paginationMeta?.hasMore
   }
-
-  get size() {
-    return this.swrResponse.size
-  }
-
-  get setSize() {
-    return this.swrResponse.setSize
-  }
-
-  get refetch() {
-    return this.swrResponse.mutate
-  }
 }
 
 export const listCategorizationRules = get<

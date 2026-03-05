@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -84,7 +84,7 @@ export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, 
     )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossReportSchema)(data)),
   )
 
-  return new SWRQueryResultWithMutate(response)
+  return new SWRQueryResult(response)
 }
 
 export const useProfitAndLossReportCacheActions = () => {

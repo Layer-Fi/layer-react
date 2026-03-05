@@ -42,20 +42,6 @@ const ListInvoicesReturnSchema = Schema.Struct({
 
 type ListInvoicesReturn = typeof ListInvoicesReturnSchema.Type
 
-class ListInvoicesSWRResponse extends SWRInfiniteResult<ListInvoicesReturn> {
-  get size() {
-    return this.swrResponse.size
-  }
-
-  get setSize() {
-    return this.swrResponse.setSize
-  }
-
-  get refetch() {
-    return this.swrResponse.mutate
-  }
-}
-
 export const listInvoices = get<
   ListInvoicesReturn,
   ListInvoicesParams
@@ -183,7 +169,7 @@ export function useListInvoices({
     },
   )
 
-  return new ListInvoicesSWRResponse(swrResponse)
+  return new SWRInfiniteResult(swrResponse)
 }
 
 const withUpdatedInvoice = (updated: Invoice) =>

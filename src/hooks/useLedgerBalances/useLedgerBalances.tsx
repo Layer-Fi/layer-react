@@ -4,7 +4,7 @@ import useSWR from 'swr'
 
 import { LedgerBalancesSchema, type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerAccount'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -74,7 +74,7 @@ export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate
     )().then(({ data }) => Schema.decodeUnknownPromise(LedgerBalancesSchema)(data)),
   )
 
-  return new SWRQueryResultWithMutate(response)
+  return new SWRQueryResult(response)
 }
 
 export function useLedgerBalancesCacheActions() {

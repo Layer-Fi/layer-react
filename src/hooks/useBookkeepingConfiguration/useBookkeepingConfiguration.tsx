@@ -7,7 +7,7 @@ import {
   BookkeepingStatus,
   TransactionTaggingStrategy,
 } from '@schemas/bookkeepingConfiguration'
-import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -71,5 +71,5 @@ export function useBookkeepingConfiguration() {
         .then(({ data }) => data),
   )
 
-  return new SWRQueryResultWithMutate(response)
+  return new SWRQueryResult(response)
 }

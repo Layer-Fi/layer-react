@@ -1,7 +1,7 @@
 import { endOfMonth, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
 
-import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { getStatementOfCashFlow } from '@api/layer/statement-of-cash-flow'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -63,5 +63,5 @@ export function useStatementOfCashFlow({
       })().then(({ data }) => data),
   )
 
-  return new SWRQueryResultWithMutate(response)
+  return new SWRQueryResult(response)
 }

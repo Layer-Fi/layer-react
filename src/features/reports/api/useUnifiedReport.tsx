@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import type { DateGroupBy, ReportEnum, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { UnifiedReportSchema } from '@schemas/reports/unifiedReport'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -73,5 +73,5 @@ export function useUnifiedReport({ report, groupBy, ...dateParams }: UseUnifiedR
     })().then(({ data }) => Schema.decodeUnknownPromise(UnifiedReportSchema)(data)),
   )
 
-  return new SWRQueryResultWithMutate(swrResponse)
+  return new SWRQueryResult(swrResponse)
 }

@@ -27,18 +27,6 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
 ])
 
 class BankTransactionsSWRResponse extends SWRInfiniteResult<GetBankTransactionsReturn> {
-  get size() {
-    return this.swrResponse.size
-  }
-
-  get setSize() {
-    return this.swrResponse.setSize
-  }
-
-  get mutate() {
-    return this.swrResponse.mutate
-  }
-
   get hasMore() {
     return this.data && this.data.length > 0
       ? this.data[this.data.length - 1].meta.pagination.has_more

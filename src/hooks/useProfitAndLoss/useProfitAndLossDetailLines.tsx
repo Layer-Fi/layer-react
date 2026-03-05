@@ -4,7 +4,7 @@ import useSWR from 'swr'
 
 import { type ReportingBasis } from '@internal-types/general'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -123,7 +123,7 @@ export function useProfitAndLossDetailLines({
     },
   )
 
-  return new SWRQueryResultWithMutate(swrResponse)
+  return new SWRQueryResult(swrResponse)
 }
 
 export function usePnlDetailLinesInvalidator() {
