@@ -6,7 +6,7 @@ import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type TagDimension, TagDimensionSchema } from '@features/tags/tagSchemas'
+import { TagDimensionSchema } from '@features/tags/tagSchemas'
 
 export const TAG_DIMENSION_BY_KEY_TAG_KEY = '#tag-dimension-by-key'
 

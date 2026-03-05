@@ -1,8 +1,8 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { type StripeAccountStatusResponse, StripeAccountStatusResponseSchema } from '@schemas/stripeAccountStatus'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'

@@ -1,13 +1,13 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
 import {
   type BookkeepingConfiguration,
   BookkeepingConfigurationResponseSchema,
   BookkeepingStatus,
   TransactionTaggingStrategy,
 } from '@schemas/bookkeepingConfiguration'
+import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'

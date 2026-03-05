@@ -1,8 +1,8 @@
 import { Schema } from 'effect/index'
 import useSWR from 'swr'
 
-import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
 import { AccountingConfigurationSchema, type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
+import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'

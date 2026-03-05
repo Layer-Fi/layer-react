@@ -3,7 +3,6 @@ import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import type { BankTransactionMatch } from '@internal-types/bank_transactions'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { matchBankTransaction, type MatchBankTransactionBody } from '@api/layer/bankTransactions'
 import { useAuth } from '@hooks/useAuth'
