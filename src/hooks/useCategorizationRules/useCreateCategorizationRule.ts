@@ -3,7 +3,7 @@ import { Schema } from 'effect/index'
 import useSWRMutation from 'swr/mutation'
 
 import { CategorizationRuleSchema, type CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { post } from '@utils/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/useCategorizationRules/useListCategorizationRules'

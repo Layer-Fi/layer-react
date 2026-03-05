@@ -4,9 +4,12 @@ import useSWRMutation from 'swr/mutation'
 
 import type { BankTransactionMetadata } from '@internal-types/bank_transactions'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { put } from '@utils/authenticatedHttp'
+import { put } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { useAuth } from '@hooks/useAuth'
+import { GET_BANK_TRANSACTION_METADATA_TAG_KEY } from '@hooks/useBankTransactions/useBankTransactionsMetadata'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const updateBankTransactionMetadata = put<
   { data: BankTransactionMetadata, errors: unknown },
@@ -15,9 +18,6 @@ const updateBankTransactionMetadata = put<
   ({ businessId, bankTransactionId }) =>
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`,
 )
-import { useAuth } from '@hooks/useAuth'
-import { GET_BANK_TRANSACTION_METADATA_TAG_KEY } from '@hooks/useBankTransactions/useBankTransactionsMetadata'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type UpdateBankTransactionMetadataBody = { memo: string }
 

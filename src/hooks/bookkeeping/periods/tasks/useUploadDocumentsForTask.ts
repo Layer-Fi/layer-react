@@ -3,8 +3,11 @@ import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
 import type { FileMetadata } from '@internal-types/file_upload'
-import { postWithFormData } from '@utils/authenticatedHttp'
+import { postWithFormData } from '@utils/api/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 function completeTaskWithUpload(
   baseUrl: string,
@@ -35,9 +38,6 @@ function completeTaskWithUpload(
     accessToken,
   )
 }
-import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { useAuth } from '@hooks/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 function buildKey({
   access_token: accessToken,

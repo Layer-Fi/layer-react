@@ -6,7 +6,14 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import { type DateRange, type MoneyFormat, type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossCompareConfig, type TagComparisonOption } from '@internal-types/profit_and_loss'
 import { DateGroupBy } from '@schemas/reports/unifiedReport'
-import { post } from '@utils/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
+import { useAuth } from '@hooks/useAuth'
+import { useProfitAndLossComparisonReport } from '@hooks/useProfitAndLossComparison/useProfitAndLossComparisonReport'
+import { prepareFiltersBody, preparePeriodsBody } from '@hooks/useProfitAndLossComparison/utils'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 const profitAndLossComparisonCsv = post<{
   data?: S3PresignedUrl
@@ -17,13 +24,6 @@ const profitAndLossComparisonCsv = post<{
       moneyFormat ? moneyFormat : 'DOLLAR_STRING'
     }`,
 )
-import { useAuth } from '@hooks/useAuth'
-import { useProfitAndLossComparisonReport } from '@hooks/useProfitAndLossComparison/useProfitAndLossComparisonReport'
-import { prepareFiltersBody, preparePeriodsBody } from '@hooks/useProfitAndLossComparison/utils'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 export type Scope = 'expenses' | 'revenue'
 

@@ -6,7 +6,7 @@ import useSWRMutation from 'swr/mutation'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
 import { type CategoryUpdate, type CategoryUpdateEncoded, CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
-import { put } from '@utils/authenticatedHttp'
+import { put } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { useAuth } from '@hooks/useAuth'

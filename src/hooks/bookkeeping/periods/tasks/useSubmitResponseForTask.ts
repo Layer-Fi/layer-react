@@ -3,8 +3,11 @@ import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
 import type { RawTask } from '@internal-types/tasks'
-import { post } from '@utils/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type SubmitUserResponseForTaskBody = {
   type: 'FreeResponse'
@@ -21,9 +24,6 @@ const submitUserResponseForTask = post<
 >(
   ({ businessId, taskId }) => `/v1/businesses/${businessId}/tasks/${taskId}/user-response`,
 )
-import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { useAuth } from '@hooks/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 function buildKey({
   access_token: accessToken,

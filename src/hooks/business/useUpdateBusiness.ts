@@ -3,8 +3,10 @@ import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
 import type { Business } from '@internal-types/business'
-import { put } from '@utils/authenticatedHttp'
+import { put } from '@utils/api/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type UpdateBusinessBody = Partial<Business>
 
@@ -14,8 +16,6 @@ const updateBusiness = put<
   { businessId: string }>(
   ({ businessId }) => `/v1/businesses/${businessId}`,
 )
-import { useAuth } from '@hooks/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const BUSINESS_TAG_KEY = 'business'
 

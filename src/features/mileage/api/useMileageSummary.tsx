@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/useAuth'

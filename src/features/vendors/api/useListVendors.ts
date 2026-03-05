@@ -3,7 +3,7 @@ import useSWRInfinite from 'swr/infinite'
 
 import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { VendorSchema } from '@schemas/vendor'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/useAuth'

@@ -2,8 +2,15 @@ import { useContext, useState } from 'react'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import { type MoneyFormat } from '@internal-types/general'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { toLocalDateString } from '@utils/time/timeUtils'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
+import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
 
 type GetProfitAndLossExcelParams = {
   businessId: string
@@ -34,13 +41,6 @@ const getProfitAndLossExcel = (apiUrl: string, accessToken: string | undefined, 
     }${moneyFormat ? `&money_format=${moneyFormat}` : ''}`,
   )(apiUrl, accessToken, { params: { businessId } })
 }
-import { useAuth } from '@hooks/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
-import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
 
 export interface ProfitAndLossReportDownloadButtonProps {
   stringOverrides?: ProfitAndLossDownloadButtonStringOverrides

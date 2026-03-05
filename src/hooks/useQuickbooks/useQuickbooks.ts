@@ -2,7 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { format } from 'date-fns'
 
 import { QuickbooksConnectionLastSyncStatus, type StatusOfQuickbooksConnection } from '@internal-types/quickbooks'
-import { get, post } from '@utils/authenticatedHttp'
+import { get, post } from '@utils/api/authenticatedHttp'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const statusOfQuickbooksConnection = get<
   { data: StatusOfQuickbooksConnection },
@@ -34,9 +37,6 @@ const unlinkQuickbooksConnection = post<
   Record<string, unknown>,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/quickbooks/unlink`)
-import { useAuth } from '@hooks/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type UseQuickbooks = () => {
   linkQuickbooks: () => Promise<string>

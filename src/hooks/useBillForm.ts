@@ -4,8 +4,13 @@ import { useStore } from '@tanstack/react-form'
 import type { BillLineItem, SalesTax } from '@internal-types/bills'
 import { type Bill } from '@internal-types/bills'
 import { type Vendor } from '@internal-types/vendors'
-import { post } from '@utils/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { convertFromCents, convertToCents } from '@utils/format'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useBillsContext } from '@contexts/BillsContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useForm } from '@features/forms/hooks/useForm'
 
 type SaveBillPayload = {
   bill_number?: string
@@ -25,11 +30,6 @@ const updateBill = post<{ data: Bill }, SaveBillPayload>(
 const createBill = post<{ data: Bill }, SaveBillPayload>(
   ({ businessId }) => `/v1/businesses/${businessId}/bills`,
 )
-import { useAuth } from '@hooks/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useBillsContext } from '@contexts/BillsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useForm } from '@features/forms/hooks/useForm'
 
 export type BillForm = {
   bill_number?: string

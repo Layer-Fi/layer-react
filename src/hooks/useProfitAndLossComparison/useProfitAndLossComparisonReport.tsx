@@ -3,7 +3,7 @@ import useSWR from 'swr'
 
 import { type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossComparison, type ProfitAndLossComparisonRequestBody } from '@internal-types/profit_and_loss'
-import { post } from '@utils/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/useAuth'

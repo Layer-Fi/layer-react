@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { type TaxProfileRequest, type TaxProfileResponse, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
-import { patch, post } from '@utils/authenticatedHttp'
+import { patch, post } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTaxDetailsGlobalCacheActions } from '@hooks/taxEstimates/useTaxDetails'
 import { useTaxPaymentsGlobalCacheActions } from '@hooks/taxEstimates/useTaxPayments'

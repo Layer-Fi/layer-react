@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
-import { post } from '@utils/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import type { BusinessPersonnel, PersonnelRole, RawBusinessPersonnel } from '@hooks/businessPersonnel/types'
 import { BUSINESS_PERSONNEL_TAG_KEY } from '@hooks/businessPersonnel/useBusinessPersonnel'

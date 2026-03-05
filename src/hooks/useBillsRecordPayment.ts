@@ -4,8 +4,12 @@ import useSWRMutation from 'swr/mutation'
 import { type Bill, type BillPayment, type BillPaymentMethod } from '@internal-types/bills'
 import { type Vendor } from '@internal-types/vendors'
 import { type APIError } from '@models/APIError'
-import { get, post } from '@utils/authenticatedHttp'
+import { get, post } from '@utils/api/authenticatedHttp'
 import { convertFromCents, convertToCents } from '@utils/format'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useBillsContext } from '@contexts/BillsContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const createBillPayment = post<{ data: BillPayment }, BillPayment>(
   ({ businessId }) => `/v1/businesses/${businessId}/bills/bill-payments`,
@@ -14,10 +18,6 @@ const createBillPayment = post<{ data: BillPayment }, BillPayment>(
 const getBill = get<{ data: Bill }, { businessId: string, billId: string }>(
   ({ businessId, billId }) => `/v1/businesses/${businessId}/bills/${billId}`,
 )
-import { useAuth } from '@hooks/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useBillsContext } from '@contexts/BillsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type BillsRecordPaymentFormRecord = {
   bill?: Bill

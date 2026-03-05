@@ -2,8 +2,11 @@ import useSWRMutation from 'swr/mutation'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import { type APIError } from '@models/APIError'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useAuth } from '@hooks/useAuth'
+import type { UseBankTransactionsOptions } from '@hooks/useBankTransactions/useBankTransactions'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type GetBankTransactionsExportParams = {
   businessId: string
@@ -42,9 +45,6 @@ const getBankTransactionsExcel = get<
 
   return `/v1/businesses/${businessId}/reports/transactions/exports/excel?${parameters}`
 })
-import { useAuth } from '@hooks/useAuth'
-import type { UseBankTransactionsOptions } from '@hooks/useBankTransactions/useBankTransactions'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 function buildKey({
   access_token: accessToken,

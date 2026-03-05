@@ -7,7 +7,7 @@ import {
   BookkeepingStatus,
   TransactionTaggingStrategy,
 } from '@schemas/bookkeepingConfiguration'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'

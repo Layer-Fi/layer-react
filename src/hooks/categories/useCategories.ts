@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { type CategoriesListMode, CategoryListSchema, type NestedCategorization } from '@schemas/categorization'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

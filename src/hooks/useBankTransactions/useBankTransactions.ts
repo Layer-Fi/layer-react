@@ -3,11 +3,13 @@ import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { useAuth } from '@hooks/useAuth'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type GetBankTransactionsReturn = {
   data: ReadonlyArray<BankTransaction>
@@ -65,8 +67,6 @@ const getBankTransactions = get<
     return `/v1/businesses/${businessId}/bank-transactions?${parameters}${tagFilterQueryString ? `&${tagFilterQueryString}` : ''}`
   },
 )
-import { useAuth } from '@hooks/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
 

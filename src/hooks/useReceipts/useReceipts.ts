@@ -6,8 +6,13 @@ import { type BankTransaction } from '@internal-types/bank_transactions'
 import type { FileMetadata } from '@internal-types/file_upload'
 import { type Awaitable } from '@internal-types/utility/promises'
 import { DATE_FORMAT } from '@config/general'
-import { get, post, postWithFormData } from '@utils/authenticatedHttp'
+import { get, post, postWithFormData } from '@utils/api/authenticatedHttp'
 import { hasReceipts } from '@utils/bankTransactions'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { type DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 
 const listBankTransactionDocuments = get<{
   data: DocumentS3Urls
@@ -50,11 +55,6 @@ const uploadBankTransactionDocument =
         accessToken,
       )
     }
-import { useAuth } from '@hooks/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 
 export interface UseReceiptsProps {
   bankTransaction: BankTransaction

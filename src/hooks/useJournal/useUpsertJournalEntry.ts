@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { DataModel } from '@internal-types/general'
-import { post } from '@utils/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/useAuth'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'

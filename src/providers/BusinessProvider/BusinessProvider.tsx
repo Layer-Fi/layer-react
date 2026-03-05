@@ -12,13 +12,9 @@ import {
   type OnboardingStep,
 } from '@internal-types/layer_context'
 import { errorHandler, type LayerError } from '@models/ErrorHandler'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { buildColorsPalette } from '@utils/colors'
 import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
-
-const getBusiness = get<{ data: Business }>(
-  ({ businessId }) => `/v1/businesses/${businessId}`,
-)
 import { useAccountingConfiguration } from '@hooks/useAccountingConfiguration/useAccountingConfiguration'
 import { useAuth } from '@hooks/useAuth'
 import { useDataSync } from '@hooks/useDataSync/useDataSync'
@@ -27,6 +23,10 @@ import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/Global
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
+
+const getBusiness = get<{ data: Business }>(
+  ({ businessId }) => `/v1/businesses/${businessId}`,
+)
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,

@@ -1,6 +1,6 @@
 import useSWRMutation from 'swr/mutation'
 
-import { del } from '@utils/authenticatedHttp'
+import { del } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

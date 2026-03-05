@@ -3,7 +3,7 @@ import { Effect, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customer'
-import { patch, post } from '@utils/authenticatedHttp'
+import { patch, post } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

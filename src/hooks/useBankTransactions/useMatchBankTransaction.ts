@@ -3,9 +3,16 @@ import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
 import type { BankTransactionMatch } from '@internal-types/bank_transactions'
-import { put } from '@utils/authenticatedHttp'
+import { put } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
+import { useAuth } from '@hooks/useAuth'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
+import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListBankAccounts'
+import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExternalAccounts'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type MatchBankTransactionBody = {
   match_id: string
@@ -23,13 +30,6 @@ const matchBankTransaction = put<
   ({ businessId, bankTransactionId }) =>
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/match`,
 )
-import { useAuth } from '@hooks/useAuth'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
-import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListBankAccounts'
-import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListExternalAccounts'
-import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const MATCH_BANK_TRANSACTION_TAG = '#match-bank-transaction'
 

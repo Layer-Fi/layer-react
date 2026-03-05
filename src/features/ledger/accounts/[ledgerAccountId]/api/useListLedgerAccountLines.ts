@@ -3,7 +3,7 @@ import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
 import { type LedgerAccountLineItem, type LedgerAccountLineItems } from '@internal-types/ledger_accounts'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/useAuth'

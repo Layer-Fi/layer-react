@@ -12,7 +12,7 @@ import {
   CallBookingType,
   ListCallBookingsResponseSchema,
 } from '@schemas/callBookings'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/useAuth'

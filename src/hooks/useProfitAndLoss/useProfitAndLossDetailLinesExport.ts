@@ -2,7 +2,7 @@ import useSWRMutation from 'swr/mutation'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useAuth } from '@hooks/useAuth'
 import { type GetProfitAndLossDetailLinesParams, type PnlDetailLinesBaseParams, type PnlDetailLinesFilterParams } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'

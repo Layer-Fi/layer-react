@@ -4,7 +4,7 @@ import useSWR from 'swr'
 
 import type { ReportingBasis } from '@internal-types/general'
 import { type TaxSummaryResponse, TaxSummaryResponseSchema } from '@schemas/taxEstimates/summary'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'

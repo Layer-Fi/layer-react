@@ -3,7 +3,7 @@ import useSWR from 'swr'
 
 import type { DateGroupBy, ReportEnum, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { UnifiedReportSchema } from '@schemas/reports/unifiedReport'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/useAuth'

@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
-import { post } from '@utils/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

@@ -7,7 +7,10 @@ import { type Bill } from '@internal-types/bills'
 import { type DateRange } from '@internal-types/general'
 import { type Vendor } from '@internal-types/vendors'
 import { type APIError } from '@models/APIError'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
+import { useAuth } from '@hooks/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type GetBillsReturn = {
   data?: Bill[]
@@ -37,9 +40,6 @@ export const getBills = get<GetBillsReturn, GetBillsParams>(
     status ? `&status=${status}` : ''
   }&limit=${limit}&sort_by=received_at&sort_order=DESC`,
 )
-import { useAuth } from '@hooks/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type BillStatusFilter = 'PAID' | 'UNPAID'
 

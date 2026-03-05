@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
-import { get } from '@utils/authenticatedHttp'
+import { get } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

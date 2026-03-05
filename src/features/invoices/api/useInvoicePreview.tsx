@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import useSWR from 'swr'
 
-import { getText } from '@utils/authenticatedHttp'
+import { getText } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/useAuth'

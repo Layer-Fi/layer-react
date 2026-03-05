@@ -5,7 +5,13 @@ import { DataModel, type LoadedStatus } from '@internal-types/general'
 import type { PublicToken } from '@internal-types/linked_accounts'
 import { type AccountSource, type BankAccount, type ExternalAccountConnection } from '@internal-types/linked_accounts'
 import type { OneOf } from '@internal-types/utility/oneOf'
-import { post } from '@utils/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
+import { useAuth } from '@hooks/useAuth'
+import { useListBankAccounts } from '@hooks/useLinkedAccounts/useListBankAccounts'
+import { useUnlinkBankAccount } from '@hooks/useLinkedAccounts/useUnlinkBankAccount'
+import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const getPlaidLinkToken = post<
   { data: { type: 'Link_Token', link_token: string } },
@@ -85,12 +91,6 @@ const unlinkPlaidItemApi = post<
   ({ businessId, plaidItemPlaidId }) =>
     `/v1/businesses/${businessId}/plaid/items/${plaidItemPlaidId}/unlink`,
 )
-import { useAuth } from '@hooks/useAuth'
-import { useListBankAccounts } from '@hooks/useLinkedAccounts/useListBankAccounts'
-import { useUnlinkBankAccount } from '@hooks/useLinkedAccounts/useUnlinkBankAccount'
-import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
   return bankAccounts.flatMap(ba =>

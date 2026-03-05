@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 
+import { get } from '@utils/api/authenticatedHttp'
 import { filterReadonly, mapReadonly } from '@utils/array/readonlyTransformations'
-import { get } from '@utils/authenticatedHttp'
 import {
   type BusinessPersonnel,
   isPersonnelRole,

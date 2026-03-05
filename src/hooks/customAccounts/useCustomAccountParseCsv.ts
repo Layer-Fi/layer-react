@@ -1,7 +1,7 @@
 import useSWRMutation from 'swr/mutation'
 
 import { type APIError } from '@models/APIError'
-import { postWithFormData } from '@utils/authenticatedHttp'
+import { postWithFormData } from '@utils/api/authenticatedHttp'
 import type { CustomAccountTransactionRow, RawCustomTransaction } from '@hooks/customAccounts/types'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/customAccounts/useCustomAccounts'
 import { useAuth } from '@hooks/useAuth'

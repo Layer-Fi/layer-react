@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { VehicleSchema } from '@schemas/vehicle'
-import { post } from '@utils/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
