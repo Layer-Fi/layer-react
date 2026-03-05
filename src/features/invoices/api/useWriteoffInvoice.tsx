@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -50,33 +50,6 @@ const WriteoffInvoiceReturnSchema = Schema.Struct({
 
 type WriteoffInvoiceReturn = typeof WriteoffInvoiceReturnSchema.Type
 
-type WriteoffInvoiceSWRMutationResponse =
-    SWRMutationResponse<WriteoffInvoiceReturn, unknown, Key, CreateInvoiceWriteoff>
-
-class WriteoffInvoiceSWRResponse {
-  private swrResponse: WriteoffInvoiceSWRMutationResponse
-
-  constructor(swrResponse: WriteoffInvoiceSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 export const updateInvoiceWithWriteoff = (invoice: Invoice): Invoice => {
   const status = invoice.status === InvoiceStatus.PartiallyPaid ? InvoiceStatus.PartiallyWrittenOff : InvoiceStatus.WrittenOff
 
@@ -117,7 +90,7 @@ export const useWriteoffInvoice = ({ invoiceId }: UseWriteoffInvoiceProps) => {
     },
   )
 
-  const mutationResponse = new WriteoffInvoiceSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const { patchInvoiceWithTransformation } = useInvoicesGlobalCacheActions()
   const { forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()

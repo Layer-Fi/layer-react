@@ -1,10 +1,11 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
+import useSWRInfinite from 'swr/infinite'
 
 import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { type Trip, TripSchema } from '@schemas/trip'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -27,35 +28,13 @@ const ListTripsResponseSchema = Schema.Struct({
 })
 type ListTripsResponse = typeof ListTripsResponseSchema.Type
 
-class ListTripsSWRResponse {
-  private swrResponse: SWRInfiniteResponse<ListTripsResponse>
-
-  constructor(swrResponse: SWRInfiniteResponse<ListTripsResponse>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
+class ListTripsSWRResponse extends SWRInfiniteResult<ListTripsResponse> {
   get size() {
     return this.swrResponse.size
   }
 
   get setSize() {
     return this.swrResponse.setSize
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
   }
 }
 

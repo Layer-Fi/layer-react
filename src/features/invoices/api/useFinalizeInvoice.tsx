@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import type { Key } from 'swr'
 import { useSWRConfig } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { put } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -68,33 +68,6 @@ function buildKey({
   }
 }
 
-type FinalizeInvoiceSWRMutationResponse =
-    SWRMutationResponse<FinalizeInvoiceResponse, unknown, Key, FinalizeInvoiceBodyEncoded>
-
-class FinalizeInvoiceSWRResponse {
-  private swrResponse: FinalizeInvoiceSWRMutationResponse
-
-  constructor(swrResponse: FinalizeInvoiceSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 type UseFinalizeInvoiceProps = {
   invoiceId: string
 }
@@ -127,7 +100,7 @@ export function useFinalizeInvoice({ invoiceId }: UseFinalizeInvoiceProps) {
     },
   )
 
-  const mutationResponse = new FinalizeInvoiceSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const { patchInvoiceByKey } = useInvoicesGlobalCacheActions()
   const { forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()

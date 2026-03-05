@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { Effect, Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { type UpsertVehicleEncoded, VehicleSchema } from '@schemas/vehicle'
 import { patch, post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -57,33 +57,6 @@ const UpsertVehicleReturnSchema = Schema.Struct({
   data: VehicleSchema,
 })
 type UpsertVehicleReturn = typeof UpsertVehicleReturnSchema.Type
-
-type UpsertVehicleSWRMutationResponse =
-  SWRMutationResponse<UpsertVehicleReturn, unknown, Key, UpsertVehicleBody>
-
-class UpsertVehicleSWRResponse {
-  private swrResponse: UpsertVehicleSWRMutationResponse
-
-  constructor(swrResponse: UpsertVehicleSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get error() {
-    return this.swrResponse.error
-  }
-}
 
 type RequestArgs = {
   apiUrl: string
@@ -180,7 +153,7 @@ export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
     },
   )
 
-  const mutationResponse = new UpsertVehicleSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const { patchVehicleByKey, forceReloadVehicles } = useVehiclesGlobalCacheActions()
   const { forceReloadTrips } = useTripsGlobalCacheActions()

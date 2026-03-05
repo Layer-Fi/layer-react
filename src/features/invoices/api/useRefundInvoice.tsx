@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -49,33 +49,6 @@ function buildKey({
   }
 }
 
-type RefundInvoiceSWRMutationResponse =
-    SWRMutationResponse<RefundInvoiceReturn, unknown, Key, RefundInvoiceBody>
-
-class RefundInvoiceSWRResponse {
-  private swrResponse: RefundInvoiceSWRMutationResponse
-
-  constructor(swrResponse: RefundInvoiceSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 export const updateInvoiceWithRefund = (invoice: Invoice): Invoice => {
   return { ...invoice, status: InvoiceStatus.Refunded }
 }
@@ -113,7 +86,7 @@ export const useRefundInvoice = ({ invoiceId }: UseRefundInvoiceProps) => {
     },
   )
 
-  const mutationResponse = new RefundInvoiceSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const { patchInvoiceWithTransformation } = useInvoicesGlobalCacheActions()
   const { forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()

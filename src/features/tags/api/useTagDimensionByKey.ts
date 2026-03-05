@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -42,30 +43,6 @@ const getTagDimensionByKey = get<
   { businessId: string, dimensionKey: string }
 >(({ businessId, dimensionKey }) => `/v1/businesses/${businessId}/tags/dimensions/key/${dimensionKey}`)
 
-class TagDimensionByKeySWRResponse {
-  private swrResponse: SWRResponse<TagDimension>
-
-  constructor(swrResponse: SWRResponse<TagDimension>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 type UseTagDimensionByKeyParameters = {
   isEnabled?: boolean
   dimensionKey: string
@@ -97,7 +74,7 @@ export function useTagDimensionByKey({ isEnabled = true, dimensionKey }: UseTagD
       .then(({ data }) => Schema.decodeUnknownPromise(TagDimensionSchema)(data)),
   )
 
-  return new TagDimensionByKeySWRResponse(swrResponse)
+  return new SWRQueryResult(swrResponse)
 }
 
 export function usePreloadTagDimensionByKey(parameters: UseTagDimensionByKeyParameters) {

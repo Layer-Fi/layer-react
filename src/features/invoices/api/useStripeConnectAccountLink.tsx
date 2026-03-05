@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -55,33 +55,6 @@ function buildKey({
   }
 }
 
-type StripeConnectAccountLinkSWRMutationResponse =
-  SWRMutationResponse<StripeConnectAccountLinkResponse, unknown, Key, never>
-
-class StripeConnectAccountLinkSWRResponse {
-  private swrResponse: StripeConnectAccountLinkSWRMutationResponse
-
-  constructor(swrResponse: StripeConnectAccountLinkSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 export function useStripeConnectAccountLink() {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
@@ -106,5 +79,5 @@ export function useStripeConnectAccountLink() {
     },
   )
 
-  return new StripeConnectAccountLinkSWRResponse(rawMutationResponse)
+  return new SWRMutationResult(rawMutationResponse)
 }

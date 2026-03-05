@@ -1,40 +1,13 @@
 import { Schema } from 'effect/index'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
 import { AccountingConfigurationSchema, type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 
 export const ACCOUNTING_CONFIGURATION_TAG_KEY = '#accounting-configuration'
-
-class AccountingConfigurationSWRResponse {
-  private swrResponse: SWRResponse<AccountingConfigurationSchemaType>
-
-  constructor(swrResponse: SWRResponse<AccountingConfigurationSchemaType>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
-  get mutate() {
-    return this.swrResponse.mutate
-  }
-}
 
 type GetAccountingConfigurationParams = {
   businessId: string
@@ -87,5 +60,5 @@ export function useAccountingConfiguration({ businessId }: GetAccountingConfigur
       },
     )().then(({ data }) => Schema.decodeUnknownPromise(AccountingConfigurationSchema)(data)),
   )
-  return new AccountingConfigurationSWRResponse(response)
+  return new SWRQueryResultWithMutate(response)
 }

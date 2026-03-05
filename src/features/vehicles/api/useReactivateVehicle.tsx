@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { VehicleSchema } from '@schemas/vehicle'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -45,33 +45,6 @@ function buildKey({
   }
 }
 
-type ReactivateVehicleSWRMutationResponse =
-    SWRMutationResponse<ReactivateVehicleReturn, unknown, Key, never>
-
-class ReactivateVehicleSWRResponse {
-  private swrResponse: ReactivateVehicleSWRMutationResponse
-
-  constructor(swrResponse: ReactivateVehicleSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 type UseReactivateVehicleProps = {
   vehicleId: string
 }
@@ -101,7 +74,7 @@ export const useReactivateVehicle = ({ vehicleId }: UseReactivateVehicleProps) =
     },
   )
 
-  const mutationResponse = new ReactivateVehicleSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const { patchVehicleByKey } = useVehiclesGlobalCacheActions()
 

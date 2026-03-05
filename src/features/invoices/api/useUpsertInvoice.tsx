@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { Effect, Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { patch, post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -58,33 +58,6 @@ const UpsertInvoiceReturnSchema = Schema.Struct({
 })
 
 type UpsertInvoiceReturn = typeof UpsertInvoiceReturnSchema.Type
-
-type UpsertInvoiceSWRMutationResponse =
-    SWRMutationResponse<UpsertInvoiceReturn, unknown, Key, UpsertInvoiceBody>
-
-class UpsertInvoiceSWRResponse {
-  private swrResponse: UpsertInvoiceSWRMutationResponse
-
-  constructor(swrResponse: UpsertInvoiceSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
 
 const CreateParamsSchema = Schema.Struct({
   businessId: Schema.String,
@@ -180,7 +153,7 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
     },
   )
 
-  const mutationResponse = new UpsertInvoiceSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const { patchInvoiceByKey, forceReloadInvoices } = useInvoicesGlobalCacheActions()
   const { forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()

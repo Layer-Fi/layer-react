@@ -1,9 +1,10 @@
 import { Schema } from 'effect'
-import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
+import useSWRInfinite from 'swr/infinite'
 
 import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { VendorSchema } from '@schemas/vendor'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -78,30 +79,6 @@ function keyLoader(
   }
 }
 
-class ListVendorsSWRResponse {
-  private swrResponse: SWRInfiniteResponse<ListVendorsRawResult>
-
-  constructor(swrResponse: SWRInfiniteResponse<ListVendorsRawResult>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 type UseListVendorsParameters = {
   query?: string
   isEnabled?: boolean
@@ -146,7 +123,7 @@ export function useListVendors({ query, isEnabled = true }: UseListVendorsParame
     },
   )
 
-  return new ListVendorsSWRResponse(swrResponse)
+  return new SWRInfiniteResult(swrResponse)
 }
 
 export function usePreloadVendors(parameters?: UseListVendorsParameters) {

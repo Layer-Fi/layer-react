@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -9,30 +10,6 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@features/invoices/invoiceSchemas'
 
 export const INVOICE_SUMMARY_STATS_TAG_KEY = '#invoices-summary-stats'
-
-class InvoiceSummaryStatsSWRResponse {
-  private swrResponse: SWRResponse<InvoiceSummaryStatsResponse>
-
-  constructor(swrResponse: SWRResponse<InvoiceSummaryStatsResponse>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
 
 function buildKey({
   access_token: accessToken,
@@ -76,7 +53,7 @@ export function useInvoiceSummaryStats() {
     )().then(({ data }) => Schema.decodeUnknownPromise(InvoiceSummaryStatsResponseSchema)(data)),
   )
 
-  return new InvoiceSummaryStatsSWRResponse(response)
+  return new SWRQueryResult(response)
 }
 
 export const useInvoiceSummaryStatsCacheActions = () => {

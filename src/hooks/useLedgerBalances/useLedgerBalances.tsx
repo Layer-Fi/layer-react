@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect/index'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
 import { LedgerBalancesSchema, type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerAccount'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -10,36 +11,6 @@ import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const LEDGER_BALANCES_TAG_KEY = '#ledger-balances'
-
-class LedgerBalancesSWRResponse {
-  private swrResponse: SWRResponse<LedgerBalancesSchemaType>
-
-  constructor(
-    swrResponse: SWRResponse<LedgerBalancesSchemaType>,
-  ) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
-  get mutate() {
-    return this.swrResponse.mutate
-  }
-}
 
 type GetLedgerAccountBalancesParams = {
   businessId: string
@@ -103,7 +74,7 @@ export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate
     )().then(({ data }) => Schema.decodeUnknownPromise(LedgerBalancesSchema)(data)),
   )
 
-  return new LedgerBalancesSWRResponse(response)
+  return new SWRQueryResultWithMutate(response)
 }
 
 export function useLedgerBalancesCacheActions() {

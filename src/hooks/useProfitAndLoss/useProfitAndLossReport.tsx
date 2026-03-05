@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
@@ -10,34 +11,6 @@ import { type ProfitAndLoss, type ProfitAndLossReportRequestParams, ProfitAndLos
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const PNL_REPORT_TAG_KEY = '#profit-and-loss-report'
-
-class ProfitAndLossReportSWRResponse {
-  private swrResponse: SWRResponse<ProfitAndLoss>
-
-  constructor(swrResponse: SWRResponse<ProfitAndLoss>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
-  get mutate() {
-    return this.swrResponse.mutate
-  }
-}
 
 function buildKey({
   access_token: accessToken,
@@ -111,7 +84,7 @@ export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, 
     )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossReportSchema)(data)),
   )
 
-  return new ProfitAndLossReportSWRResponse(response)
+  return new SWRQueryResultWithMutate(response)
 }
 
 export const useProfitAndLossReportCacheActions = () => {

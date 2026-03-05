@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import type { DateGroupBy, ReportEnum, UnifiedReport, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { UnifiedReportSchema } from '@schemas/reports/unifiedReport'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -48,29 +49,7 @@ const getUnifiedReport = get<
   return `/v1/businesses/${businessId}/reports/unified/${report}?${parameters}`
 })
 
-class UnifiedReportSWRResponse {
-  private swrResponse: SWRResponse<UnifiedReport>
-
-  constructor(swrResponse: SWRResponse<UnifiedReport>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
+class UnifiedReportSWRResponse extends SWRQueryResult<UnifiedReport> {
   get refetch() {
     return this.swrResponse.mutate
   }

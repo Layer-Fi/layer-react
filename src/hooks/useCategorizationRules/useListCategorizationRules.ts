@@ -1,10 +1,11 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
+import useSWRInfinite from 'swr/infinite'
 
 import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -39,17 +40,7 @@ const ListCategorizationRulesReturnSchema = Schema.Struct({
 
 type ListCategorizationRulesReturn = typeof ListCategorizationRulesReturnSchema.Type
 
-class ListCategorizationRulesSWRResponse {
-  private swrResponse: SWRInfiniteResponse<ListCategorizationRulesReturn>
-
-  constructor(swrResponse: SWRInfiniteResponse<ListCategorizationRulesReturn>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
+class ListCategorizationRulesSWRResponse extends SWRInfiniteResult<ListCategorizationRulesReturn> {
   get paginationMeta() {
     return this.data && this.data.length > 0 ? this.data[this.data.length - 1].meta.pagination : undefined
   }
@@ -64,18 +55,6 @@ class ListCategorizationRulesSWRResponse {
 
   get setSize() {
     return this.swrResponse.setSize
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
   }
 
   get refetch() {

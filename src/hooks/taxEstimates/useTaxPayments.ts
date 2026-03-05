@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import type { ReportingBasis } from '@internal-types/general'
 import { type TaxPayments, type TaxPaymentsResponse, TaxPaymentsResponseSchema } from '@schemas/taxEstimates/payments'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -58,30 +59,6 @@ function buildKey({
   }
 }
 
-class TaxPaymentsSWRResponse {
-  private swrResponse: SWRResponse<TaxPayments>
-
-  constructor(swrResponse: SWRResponse<TaxPayments>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 export function useTaxPayments({ year, reportingBasis, fullYearProjection }: UseTaxPaymentsOptions) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
@@ -112,7 +89,7 @@ export function useTaxPayments({ year, reportingBasis, fullYearProjection }: Use
     },
   )
 
-  return new TaxPaymentsSWRResponse(swrResponse)
+  return new SWRQueryResult(swrResponse)
 }
 
 export function useTaxPaymentsGlobalCacheActions() {

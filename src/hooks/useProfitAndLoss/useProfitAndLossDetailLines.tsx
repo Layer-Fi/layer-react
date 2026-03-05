@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { type ReportingBasis } from '@internal-types/general'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -36,29 +37,7 @@ type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParam
 export type PnlDetailLine = typeof PnlDetailLineSchema.Type
 export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
 
-class PnlDetailLinesSWRResponse {
-  private swrResponse: SWRResponse<PnlDetailLinesReturn>
-
-  constructor(swrResponse: SWRResponse<PnlDetailLinesReturn>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data(): PnlDetailLinesReturn | undefined {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
+class PnlDetailLinesSWRResponse extends SWRQueryResult<PnlDetailLinesReturn> {
   get refetch() {
     return this.swrResponse.mutate
   }

@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -10,30 +11,6 @@ import {
 } from '@features/invoices/invoicePaymentMethodSchemas'
 
 export const INVOICE_PAYMENT_METHODS_TAG_KEY = '#invoice-payment-methods'
-
-class InvoicePaymentMethodsSWRResponse {
-  private swrResponse: SWRResponse<InvoicePaymentMethodsResponse>
-
-  constructor(swrResponse: SWRResponse<InvoicePaymentMethodsResponse>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
 
 function buildKey({
   access_token: accessToken,
@@ -84,7 +61,7 @@ export function useInvoicePaymentMethods({ invoiceId }: UseInvoicePaymentMethods
       },
     )().then(Schema.decodeUnknownPromise(InvoicePaymentMethodsResponseSchema)),
   )
-  return new InvoicePaymentMethodsSWRResponse(response)
+  return new SWRQueryResult(response)
 }
 
 export function usePreloadInvoicePaymentMethods(props: UseInvoicePaymentMethodsProps) {

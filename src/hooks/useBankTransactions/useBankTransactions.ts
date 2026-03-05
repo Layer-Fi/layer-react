@@ -1,8 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash-es'
-import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
+import useSWRInfinite from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
+import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { getBankTransactions, type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
@@ -25,35 +26,13 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
   { key: 'tagFilterQueryString' },
 ])
 
-class BankTransactionsSWRResponse {
-  private swrResponse: SWRInfiniteResponse<GetBankTransactionsReturn>
-
-  constructor(swrResponse: SWRInfiniteResponse<GetBankTransactionsReturn>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
+class BankTransactionsSWRResponse extends SWRInfiniteResult<GetBankTransactionsReturn> {
   get size() {
     return this.swrResponse.size
   }
 
   get setSize() {
     return this.swrResponse.setSize
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
   }
 
   get mutate() {

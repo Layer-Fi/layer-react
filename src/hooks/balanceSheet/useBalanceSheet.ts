@@ -1,6 +1,7 @@
 import { endOfDay } from 'date-fns'
 import useSWR from 'swr'
 
+import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
 import { getBalanceSheet } from '@api/layer/balance_sheet'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -56,11 +57,5 @@ export function useBalanceSheet({
     )().then(({ data }) => data),
   )
 
-  return {
-    data: response.data,
-    isLoading: response.isLoading,
-    isValidating: response.isValidating,
-    isError: response.error !== undefined,
-    mutate: response.mutate,
-  }
+  return new SWRQueryResultWithMutate(response)
 }

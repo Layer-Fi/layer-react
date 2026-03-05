@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -41,30 +42,6 @@ const getTagDimensions = get<
 
 const TagDimensionsListSchema = Schema.Array(TagDimensionSchema)
 
-class TagDimensionsSWRResponse {
-  private swrResponse: SWRResponse<typeof TagDimensionsListSchema.Type>
-
-  constructor(swrResponse: SWRResponse<typeof TagDimensionsListSchema.Type>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 type UseTagDimensionsParameters = {
   isEnabled?: boolean
 }
@@ -99,7 +76,7 @@ export function useTagDimensions({ isEnabled = true }: UseTagDimensionsParameter
       .then(({ dimensions }) => dimensions),
   )
 
-  return new TagDimensionsSWRResponse(swrResponse)
+  return new SWRQueryResult(swrResponse)
 }
 
 export function usePreloadTagDimensions(parameters?: UseTagDimensionsParameters) {

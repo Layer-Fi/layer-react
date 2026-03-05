@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
@@ -10,34 +11,6 @@ import { type ProfitAndLossSummaries, type ProfitAndLossSummariesRequestParams, 
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const PNL_SUMMARIES_TAG_KEY = '#profit-and-loss-summaries'
-
-class ProfitAndLossSummariesSWRResponse {
-  private swrResponse: SWRResponse<ProfitAndLossSummaries>
-
-  constructor(swrResponse: SWRResponse<ProfitAndLossSummaries>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
-  get mutate() {
-    return this.swrResponse.mutate
-  }
-}
 
 function buildKey({
   access_token: accessToken,
@@ -127,7 +100,7 @@ export function useProfitAndLossSummaries({
     { keepPreviousData },
   )
 
-  return new ProfitAndLossSummariesSWRResponse(response)
+  return new SWRQueryResultWithMutate(response)
 }
 
 export const useProfitAndLossSummariesCacheActions = () => {

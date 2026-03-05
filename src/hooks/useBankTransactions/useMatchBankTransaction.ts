@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import type { Key } from 'swr'
 import { useSWRConfig } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import type { BankTransactionMatch } from '@internal-types/bank_transactions'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { matchBankTransaction, type MatchBankTransactionBody } from '@api/layer/bankTransactions'
@@ -37,37 +37,6 @@ function buildKey({
 
 type MatchBankTransactionArgs = MatchBankTransactionBody & {
   bankTransactionId: string
-}
-
-type MatchBankTransactionSWRMutationResponse =
-  SWRMutationResponse<BankTransactionMatch, unknown, Key, MatchBankTransactionArgs>
-
-class MatchBankTransactionSWRResponse {
-  private swrResponse: MatchBankTransactionSWRMutationResponse
-
-  constructor(swrResponse: MatchBankTransactionSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get error() {
-    return this.swrResponse.error
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
 }
 
 export function useMatchBankTransaction() {
@@ -105,7 +74,7 @@ export function useMatchBankTransaction() {
     },
   )
 
-  const mutationResponse = new MatchBankTransactionSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const originalTrigger = mutationResponse.trigger
 
