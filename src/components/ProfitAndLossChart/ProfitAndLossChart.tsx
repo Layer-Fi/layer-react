@@ -18,6 +18,7 @@ import {
 
 import { isDateAllowedToBrowse } from '@utils/business'
 import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
+import { isAnyBankAccountSyncing } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { useProfitAndLossLTM } from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -68,7 +69,7 @@ export const ProfitAndLossChart = ({ tagFilter }: ProfitAndLossChartProps) => {
   const { data: linkedAccounts } = useLinkedAccounts()
 
   const isSyncing = useMemo(
-    () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+    () => isAnyBankAccountSyncing(linkedAccounts ?? []),
     [linkedAccounts],
   )
 

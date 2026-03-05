@@ -63,6 +63,50 @@ export type LinkedAccounts = {
   external_accounts: Array<LinkedAccount>
 }
 
+export type BalanceTimestamp = {
+  external_account_external_id: string
+  external_account_source: AccountSource
+  balance: number
+  at: string
+  created_at: string
+}
+
+export type OpeningBalance = {
+  external_account_external_id: string | null
+  external_account_source: AccountSource
+  balance: number
+  effective_at: string
+  created_at: string
+  updated_at: string
+}
+
+export type ExternalAccountConnection = {
+  id: string
+  external_account_external_id: string | null
+  external_account_source: AccountSource
+  external_account_name: string
+  latest_balance_timestamp: BalanceTimestamp | null
+  mask: string | null
+  institution: {
+    name: string
+    logo: string | null
+  } | null
+  notifications?: ReadonlyArray<AccountNotification>
+  connection_needs_repair_as_of: string | null
+  reconnect_with_new_credentials: boolean
+  requires_user_confirmation_as_of: string | null
+  connection_id: string | null
+  connection_external_id: string | null
+  user_created: boolean
+  is_syncing: boolean
+  ledger_account_id: string | null
+  archived_at: string | null
+  account_type: AccountType
+  account_subtype: AccountSubtype
+  show_transactions_on_or_after: string | null
+  show_transactions_on_or_before: string | null
+}
+
 export type FinancialAccountInstitution = {
   id: string
   name: string
@@ -80,7 +124,14 @@ export type BankAccount = {
   notify_when_disconnected: boolean
   is_disconnected: boolean
   archived_at: string | null
-  external_accounts: LinkedAccount[]
+  external_accounts: ExternalAccountConnection[]
+  opening_balance: OpeningBalance | null
+  latest_balance_timestamp: BalanceTimestamp | null
+  current_ledger_balance: number
+  uncategorized_transaction_sum: number
+  balance_difference: number | null
+  mask: string | null
+  notifications: ReadonlyArray<AccountNotification>
 }
 
 export type AccountType = 'DEPOSITORY' | 'CREDIT' | 'LOAN'

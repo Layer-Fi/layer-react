@@ -1,7 +1,7 @@
 import { useContext, useMemo, useState } from 'react'
 import { startOfYear } from 'date-fns'
 
-import { type LinkedAccount } from '@internal-types/linked_accounts'
+import { type BankAccount } from '@internal-types/linked_accounts'
 import { getActivationDate } from '@utils/business'
 import { convertToCents } from '@utils/format'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
@@ -28,13 +28,13 @@ type ResultsState = Record<string, OpeningBalanceAPIResponseResult>
 
 function extractErrors(
   results: ResultsState,
-  accountId: string,
+  bankAccountId: string,
 ): string[] | undefined {
   if (!results) {
     return
   }
 
-  const result = results[accountId]
+  const result = results[bankAccountId]
   if (!result || result?.status === 'fulfilled') {
     return undefined
   }
@@ -50,7 +50,7 @@ function ignoreAlreadySaved(
   formsData: AccountFormBoxData[],
   results: ResultsState,
 ) {
-  return formsData.filter(f => results[f.account.id]?.status !== 'fulfilled')
+  return formsData.filter(f => results[f.bankAccount.id]?.status !== 'fulfilled')
 }
 
 function LinkedAccountsOpeningBalanceModalContent({
@@ -59,7 +59,7 @@ function LinkedAccountsOpeningBalanceModalContent({
   stringOverrides,
 }: {
   onClose: () => void
-  accounts: LinkedAccount[]
+  accounts: BankAccount[]
   stringOverrides?: OpeningBalanceModalStringOverrides
 }) {
   const { business } = useLayerContext()
@@ -72,7 +72,7 @@ function LinkedAccountsOpeningBalanceModalContent({
 
   const [formsData, setFormsData] = useState<AccountFormBoxData[]>(accounts.map(item => (
     {
-      account: item,
+      bankAccount: item,
       isConfirmed: true,
       openingDate: getActivationDate(business) ?? startOfYear(new Date()),
     }
@@ -85,7 +85,7 @@ function LinkedAccountsOpeningBalanceModalContent({
 
   const { trigger, isMutating } = useBulkSetOpeningBalanceAndDate(
     formsDataToSave.map(x => ({
-      accountId: x.account.id,
+      bankAccountId: x.bankAccount.id,
       openingDate: x.openingDate,
       openingBalance: convertToCents(x.openingBalance)?.toString(),
       isDateInvalid: x.isDateInvalid,
@@ -98,7 +98,7 @@ function LinkedAccountsOpeningBalanceModalContent({
         // which records have been already saved.
         const newResults = { ...results }
         responses.forEach((r) => {
-          newResults[r.accountId] = r
+          newResults[r.bankAccountId] = r
         })
 
         setResults(newResults)
@@ -134,14 +134,14 @@ function LinkedAccountsOpeningBalanceModalContent({
           <VStack gap='md'>
             {formsData.map(item => (
               <AccountFormBox
-                key={item.account.id}
-                account={item.account}
+                key={item.bankAccount.id}
+                bankAccount={item.bankAccount}
                 value={item}
                 disableConfirmExclude={true}
-                isSaved={results[item.account.id]?.status === 'fulfilled'}
-                errors={extractErrors(results, item.account.id)}
+                isSaved={results[item.bankAccount.id]?.status === 'fulfilled'}
+                errors={extractErrors(results, item.bankAccount.id)}
                 onChange={v => setFormsData(formsData.map(
-                  item => item.account.id === v.account.id ? v : item,
+                  item => item.bankAccount.id === v.bankAccount.id ? v : item,
                 ))}
               />
             ),

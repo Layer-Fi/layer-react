@@ -125,7 +125,7 @@
 .Layer__ComboBoxMenu {
   overflow: hidden;
   border-radius: var(--border-radius-xs);
-  border: 1px solid var(--border-color);
+  outline: 1px solid var(--color-base-300);
 
   margin-block-start: var(--spacing-2xs);
 

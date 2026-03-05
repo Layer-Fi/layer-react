@@ -2,37 +2,40 @@ import { useEffect, useState } from 'react'
 import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
 import { DataModel, type LoadedStatus } from '@internal-types/general'
-import { type AccountSource, type LinkedAccount } from '@internal-types/linked_accounts'
+import { type AccountSource, type BankAccount, type ExternalAccountConnection } from '@internal-types/linked_accounts'
 import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
-import { useListExternalAccounts } from '@hooks/useLinkedAccounts/useListExternalAccounts'
+import { useListBankAccounts } from '@hooks/useLinkedAccounts/useListBankAccounts'
+import { useUnlinkBankAccount } from '@hooks/useLinkedAccounts/useUnlinkBankAccount'
 import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
-  return linkedAccounts.filter(
-    ({ notifications }) => notifications?.some(({ type }) => type === 'CONFIRM_RELEVANT'),
+export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
+  return bankAccounts.flatMap(ba =>
+    ba.external_accounts.filter(
+      ({ notifications }) => notifications?.some(({ type }) => type === 'CONFIRM_RELEVANT'),
+    ),
   )
 }
 
 type UseLinkedAccounts = () => {
-  data?: LinkedAccount[]
+  data?: BankAccount[]
   isLoading: boolean
   loadingStatus: LoadedStatus
   isValidating: boolean
   error: unknown
   addConnection: (source: AccountSource) => Promise<void>
-  removeConnection: (source: AccountSource, sourceId: string) => Promise<void> // means, "unlink institution"
+  removeConnection: (source: AccountSource, sourceId: string) => Promise<void>
   repairConnection: (source: AccountSource, sourceId: string) => Promise<void>
   updateConnectionStatus: () => Promise<void>
   refetchAccounts: () => Promise<void>
   syncAccounts: () => Promise<void>
-  unlinkAccount: (source: AccountSource, userCreated: boolean, accountId: string) => Promise<void>
+  unlinkBankAccount: (bankAccountId: string) => Promise<void>
   confirmAccount: (source: AccountSource, accountId: string) => Promise<void>
   excludeAccount: (source: AccountSource, accountId: string) => Promise<void>
-  accountsToAddOpeningBalanceInModal: LinkedAccount[]
-  setAccountsToAddOpeningBalanceInModal: (accounts: LinkedAccount[]) => void
+  accountsToAddOpeningBalanceInModal: BankAccount[]
+  setAccountsToAddOpeningBalanceInModal: (accounts: BankAccount[]) => void
 
   // Only works in non-production environments for test purposes
   breakConnection: (source: AccountSource, connectionExternalId: string) => Promise<void>
@@ -60,21 +63,22 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
   const [accountsToAddOpeningBalanceInModal, setAccountsToAddOpeningBalanceInModal] =
-    useState<LinkedAccount[]>([])
+    useState<BankAccount[]>([])
 
   const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
 
   const {
-    data: externalAccounts,
+    data: bankAccounts,
     isLoading,
     isValidating,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error: responseError,
     mutate,
-  } = useListExternalAccounts()
+  } = useListBankAccounts()
+
+  const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
 
   useEffect(() => {
-    if (!isLoading && externalAccounts) {
+    if (!isLoading && bankAccounts) {
       setLoadingStatus('complete')
       return
     }
@@ -218,24 +222,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const unlinkAccount = async (source: AccountSource, userCreated: boolean, accountId: string) => {
-    if (source === 'PLAID' || (source === 'CUSTOM' && userCreated)) {
-      await Layer.unlinkAccount(apiUrl, auth?.access_token, {
-        params: { businessId, accountId },
-      })
-      await refetchAccounts()
-      touch(DataModel.LINKED_ACCOUNTS)
-    }
-    else if (source === 'CUSTOM') {
-      console.error(
-        'Deleting a custom account that is not user-created is not yet supported',
-      )
-    }
-    else {
-      console.error(
-        `Unlinking an account with source ${source} not yet supported`,
-      )
-    }
+  const unlinkBankAccount = async (bankAccountId: string) => {
+    await triggerUnlinkBankAccount(bankAccountId)
+    await refetchAccounts()
+    touch(DataModel.LINKED_ACCOUNTS)
   }
 
   const confirmAccount = async (source: AccountSource, accountId: string) => {
@@ -342,7 +332,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }, [syncTimestamps])
 
   return {
-    data: externalAccounts ?? [],
+    data: bankAccounts ?? [],
     isLoading,
     loadingStatus,
     isValidating,
@@ -351,7 +341,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     removeConnection,
     repairConnection,
     refetchAccounts,
-    unlinkAccount,
+    unlinkBankAccount,
     confirmAccount,
     excludeAccount,
     breakConnection,

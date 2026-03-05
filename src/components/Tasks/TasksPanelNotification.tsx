@@ -1,7 +1,7 @@
 import pluralize from 'pluralize'
 
 import { useBookkeepingYearsStatus } from '@hooks/bookkeeping/periods/useBookkeepingYearsStatus'
-import { useBankAccounts } from '@hooks/bookkeeping/useBankAccounts'
+import { useListBankAccounts } from '@hooks/useLinkedAccounts/useListBankAccounts'
 import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import AlertCircle from '@icons/AlertCircle'
 import ArrowRightCircle from '@icons/ArrowRightCircle'
@@ -18,7 +18,7 @@ export const TasksPanelNotification = ({
   const { anyPreviousYearIncomplete, earliestIncompletePeriod } =
     useBookkeepingYearsStatus()
   const { disconnectedAccountsRequiringNotification, isLoading } =
-    useBankAccounts()
+    useListBankAccounts()
 
   if (!isLoading && disconnectedAccountsRequiringNotification > 0) {
     return (

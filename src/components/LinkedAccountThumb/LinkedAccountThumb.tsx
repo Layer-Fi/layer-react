@@ -1,13 +1,14 @@
 import classNames from 'classnames'
 
-import { type LinkedAccount } from '@internal-types/linked_accounts'
+import { type BankAccount } from '@internal-types/linked_accounts'
 import { centsToDollars as formatMoney } from '@models/Money'
+import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import LoaderIcon from '@icons/Loader'
 import { Text, type TextSize } from '@components/Typography/Text'
 
 export interface LinkedAccountThumbProps {
-  account: LinkedAccount
+  bankAccount: BankAccount
   asWidget?: boolean
   showLedgerBalance?: boolean
   slots: {
@@ -25,28 +26,34 @@ const AccountNumber = ({ accountNumber }: { accountNumber: string }) => (
 )
 
 export const LinkedAccountThumb = ({
-  account,
+  bankAccount,
   asWidget,
   showLedgerBalance,
   slots,
 }: LinkedAccountThumbProps) => {
+  const isSyncing = isBankAccountSyncing(bankAccount)
+  const displayName = getBankAccountDisplayName(bankAccount)
+  const institution = getBankAccountInstitution(bankAccount)
+  const institutionName = institution?.name
+  const institutionLogo = institution?.logo
+
   const linkedAccountThumbClassName = classNames(
     'Layer__linked-account-thumb',
     asWidget && '--as-widget',
-    account.is_syncing && '--is-syncing',
-    account.is_syncing && 'skeleton-loader',
+    isSyncing && '--is-syncing',
+    isSyncing && 'skeleton-loader',
     showLedgerBalance && '--show-ledger-balance',
   )
 
   const linkedAccountInfoClassName = classNames(
     'topbar',
-    account.is_syncing && '--is-syncing',
-    !(showLedgerBalance || account.is_syncing) && '--hide-ledger-balance',
+    isSyncing && '--is-syncing',
+    !(showLedgerBalance || isSyncing) && '--hide-ledger-balance',
   )
 
   const bankBalance = slots.Pill ?? (
     <Text as='span' className='account-balance'>
-      {`${formatMoney(account.latest_balance_timestamp?.balance)}`}
+      {`${formatMoney(bankAccount.latest_balance_timestamp?.balance)}`}
     </Text>
   )
 
@@ -55,33 +62,27 @@ export const LinkedAccountThumb = ({
       <div className={linkedAccountInfoClassName}>
         <div className='topbar-details'>
           <Text as='div' className='account-name'>
-            {account.external_account_name}
+            {displayName}
           </Text>
-          {!asWidget && account.mask && (
-            <AccountNumber accountNumber={account.mask} />
+          {!asWidget && bankAccount.mask && (
+            <AccountNumber accountNumber={bankAccount.mask} />
           )}
           <Text
             as='span'
             className='account-institution'
             size={'sm' as TextSize}
           >
-            {account.institution?.name
-              ? account.institution?.name
-              : account.external_account_name}
+            {institutionName || displayName}
           </Text>
         </div>
         <div className='topbar-logo'>
-          {account.institution?.logo != undefined
+          {institutionLogo != undefined
             ? (
               <img
                 width={28}
                 height={28}
-                src={`data:image/png;base64,${account.institution.logo}`}
-                alt={
-                  account.institution?.name
-                    ? account.institution?.name
-                    : account.external_account_name
-                }
+                src={`data:image/png;base64,${institutionLogo}`}
+                alt={institutionName || displayName}
               />
             )
             : (
@@ -89,7 +90,7 @@ export const LinkedAccountThumb = ({
             )}
         </div>
       </div>
-      {account.is_syncing
+      {isSyncing
         ? (
           <div className='loadingbar'>
             <div className='loading-text Layer__text--sm'>
@@ -122,9 +123,9 @@ export const LinkedAccountThumb = ({
             )}
             {showLedgerBalance && (
               <div className='bottombar'>
-                {asWidget && account.mask
+                {asWidget && bankAccount.mask
                   ? (
-                    <AccountNumber accountNumber={account.mask} />
+                    <AccountNumber accountNumber={bankAccount.mask} />
                   )
                   : (
                     <Text
@@ -136,7 +137,7 @@ export const LinkedAccountThumb = ({
                     </Text>
                   )}
                 <Text as='span' className='account-balance'>
-                  {`${formatMoney(account.current_ledger_balance)}`}
+                  {`${formatMoney(bankAccount.current_ledger_balance)}`}
                 </Text>
               </div>
             )}

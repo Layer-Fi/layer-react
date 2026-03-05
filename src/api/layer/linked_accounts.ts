@@ -165,7 +165,3 @@ export const breakPlaidItemConnection = post<
   ({ businessId, plaidItemPlaidId }) =>
     `/v1/businesses/${businessId}/plaid/items/${plaidItemPlaidId}/sandbox-reset-item-login`,
 )
-
-// export const createAccount = post<{ data: LinkedAccount }, NewAccount>(
-//   ({ businessId }) => `/v1/businesses/${businessId}/external-accounts`,
-// )

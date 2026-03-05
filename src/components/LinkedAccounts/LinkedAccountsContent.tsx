@@ -33,9 +33,9 @@ export const LinkedAccountsContent = ({
   return (
     <>
       <div className='Layer__linked-accounts__list'>
-        {data?.map((account, index) => (
+        {data?.map(account => (
           <LinkedAccountItemThumb
-            key={index}
+            key={account.id}
             account={account}
             showLedgerBalance={showLedgerBalance}
             showUnlinkItem={showUnlinkItem}

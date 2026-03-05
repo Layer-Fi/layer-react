@@ -1,16 +1,17 @@
 import { useContext, useMemo } from 'react'
 
-import type { LinkedAccount } from '@internal-types/linked_accounts'
+import type { BankAccount } from '@internal-types/linked_accounts'
+import { isAllExternalAccountsUserCreatedCustom } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
 type UnlinkAccountConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
-  account: LinkedAccount
+  bankAccount: BankAccount
 }
-export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, account }: UnlinkAccountConfirmationModalProps) {
-  const { unlinkAccount } = useContext(LinkedAccountsContext)
-  const variant = account.external_account_source === 'CUSTOM' ? 'DELETE' : 'UNLINK'
+export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, bankAccount }: UnlinkAccountConfirmationModalProps) {
+  const { unlinkBankAccount } = useContext(LinkedAccountsContext)
+  const variant = isAllExternalAccountsUserCreatedCustom(bankAccount) ? 'DELETE' : 'UNLINK'
 
   const modalContent = useMemo(() => {
     switch (variant) {
@@ -38,7 +39,7 @@ export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, account }
       onOpenChange={onOpenChange}
       title={modalContent.title}
       description={modalContent.description}
-      onConfirm={() => unlinkAccount(account.external_account_source, account.user_created, account.id)}
+      onConfirm={() => unlinkBankAccount(bankAccount.id)}
       confirmLabel={modalContent.confirmLabel}
       errorText={modalContent.errorText}
     />
