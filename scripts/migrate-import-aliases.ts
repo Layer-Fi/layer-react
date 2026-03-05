@@ -18,19 +18,16 @@ const ALIAS_MAP: Array<{ abs: string, alias: string }> = [
   { abs: path.join(SRC, 'components', 'ui'), alias: '@ui' },
   { abs: path.join(SRC, 'components', 'blocks'), alias: '@blocks' },
   { abs: path.join(SRC, 'components'), alias: '@components' },
-  { abs: path.join(SRC, 'api'), alias: '@api' },
   { abs: path.join(SRC, 'contexts'), alias: '@contexts' },
   { abs: path.join(SRC, 'providers'), alias: '@providers' },
   { abs: path.join(SRC, 'hooks'), alias: '@hooks' },
   { abs: path.join(SRC, 'utils'), alias: '@utils' },
   { abs: path.join(SRC, 'schemas'), alias: '@schemas' },
   { abs: path.join(SRC, 'views'), alias: '@views' },
-  { abs: path.join(SRC, 'config'), alias: '@config' },
   { abs: path.join(SRC, 'icons'), alias: '@icons' },
   { abs: path.join(SRC, 'features'), alias: '@features' },
   { abs: path.join(SRC, 'types'), alias: '@internal-types' },
   { abs: path.join(SRC, 'assets'), alias: '@assets' },
-  { abs: path.join(SRC, 'models'), alias: '@models' },
 ]
 
 const isRelative = (s: string) => s.startsWith('./') || s.startsWith('../')

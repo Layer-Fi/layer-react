@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction, DisplayState } from '@internal-types/bank_transactions'
-import { DATE_FORMAT } from '@config/general'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { DATE_FORMAT } from '@utils/time/timeFormats'
 import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'

@@ -1,4 +1,4 @@
-import { MONTH_DAY_FORMAT } from '@config/general'
+import { MONTH_DAY_FORMAT } from '@utils/time/timeFormats'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { DateTime } from '@components/DateTime/DateTime'

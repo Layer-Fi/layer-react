@@ -2,7 +2,7 @@ import {
   format,
 } from 'date-fns'
 
-import { MONTH_FORMAT_ABBREVIATED, MONTH_FORMAT_NARROW } from '@config/general'
+import { MONTH_FORMAT_ABBREVIATED, MONTH_FORMAT_NARROW } from '@utils/time/timeFormats'
 import { type ProfitAndLossSummaryData } from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
 import type { ChartDataPoint } from '@components/ProfitAndLossChart/chartDataPoint'
 

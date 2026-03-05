@@ -2,7 +2,7 @@ import { format as formatTime, parseISO } from 'date-fns'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { centsToDollars as formatMoney } from '@models/Money'
+import { centsToDollars as formatMoney } from '@utils/money'
 import MinimizeTwo from '@icons/MinimizeTwo'
 import { Badge } from '@components/Badge/Badge'
 

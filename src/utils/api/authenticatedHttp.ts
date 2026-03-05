@@ -1,5 +1,5 @@
-import { APIError, type APIErrorMessage } from '@models/APIError'
-import { reportError } from '@models/ErrorHandler'
+import { APIError, type APIErrorMessage } from '@utils/api/apiError'
+import { reportError } from '@utils/api/errorHandler'
 import type { ParameterValues } from '@utils/request/toDefinedSearchParameters'
 
 // eslint-disable-next-line import/no-relative-parent-imports

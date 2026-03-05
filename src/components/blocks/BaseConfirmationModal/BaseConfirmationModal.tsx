@@ -1,7 +1,7 @@
 import { memo, type ReactNode, useCallback, useState } from 'react'
 
 import { type Awaitable } from '@internal-types/utility/promises'
-import { APIError } from '@models/APIError'
+import { APIError } from '@utils/api/apiError'
 import { Drawer, Modal, type ModalProps } from '@ui/Modal/Modal'
 import {
   ModalActions,

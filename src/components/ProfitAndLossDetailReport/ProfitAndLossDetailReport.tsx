@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 
 import { Direction } from '@internal-types/general'
 import { convertLedgerEntrySourceToLinkingMetadata, type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
-import { MONTH_DAY_FORMAT_SHORT } from '@config/general'
+import { MONTH_DAY_FORMAT_SHORT } from '@utils/time/timeFormats'
 import type { PnlDetailLine } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useProfitAndLossDetailLines } from '@hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'

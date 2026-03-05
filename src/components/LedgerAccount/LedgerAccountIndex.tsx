@@ -8,7 +8,7 @@ import classNames from 'classnames'
 
 import { LedgerAccountNodeType } from '@internal-types/chart_of_accounts'
 import { type View } from '@internal-types/general'
-import { centsToDollars } from '@models/Money'
+import { centsToDollars } from '@utils/money'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { BackButton } from '@components/Button/BackButton'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'

@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 
 import { type BankAccount } from '@internal-types/linked_accounts'
-import { centsToDollars as formatMoney } from '@models/Money'
+import { centsToDollars as formatMoney } from '@utils/money'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import LoaderIcon from '@icons/Loader'

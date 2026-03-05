@@ -108,10 +108,8 @@ export default tsEslint.config(
           '@internal-types/',
           '@schemas/',
           '@views/',
-          '@config/',
           '@icons/',
           '@assets/',
-          '@models/',
         ],
         },
       ],
@@ -145,10 +143,6 @@ export default tsEslint.config(
             // Domain & data contracts
             '^(?:type:)?@internal-types/',
             '^(?:type:)?@schemas/',
-            '^(?:type:)?@models/',
-
-            // App/environment configuration
-            '^(?:type:)?@config/',
 
             // Cross-cutting helpers (used by api, hooks, components, etc.)
             '^(?:type:)?@utils/',

@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { format, isValid } from 'date-fns'
 
-import { MONTH_FORMAT } from '@config/general'
+import { MONTH_FORMAT } from '@utils/time/timeFormats'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
