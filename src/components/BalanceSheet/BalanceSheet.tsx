@@ -56,12 +56,7 @@ const BalanceSheetView = ({
   dateSelectionMode = 'full',
 }: BalanceSheetViewProps) => {
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
-  const balanceSheet = useBalanceSheet({ effectiveDate })
-  const data = balanceSheet.data
-  const isLoading = balanceSheet.isLoading
-  const isValidating = balanceSheet.isValidating
-  const error = balanceSheet.error
-  const mutate = balanceSheet.mutate
+  const { data, isLoading, isValidating, error } = useBalanceSheet({ effectiveDate })
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   const content = (
@@ -75,15 +70,9 @@ const BalanceSheetView = ({
           totalColumnHeader={stringOverrides?.balanceSheetTable?.totalColumnHeader}
         />
       )}
-      Inactive={(
-        <ReportsTableLoader
-          typeColumnHeader={stringOverrides?.balanceSheetTable?.typeColumnHeader}
-          totalColumnHeader={stringOverrides?.balanceSheetTable?.totalColumnHeader}
-        />
-      )}
+      Inactive={null}
       Error={(
         <ReportsTableErrorState
-          onRefresh={() => void mutate()}
           isLoading={isValidating}
         />
       )}
