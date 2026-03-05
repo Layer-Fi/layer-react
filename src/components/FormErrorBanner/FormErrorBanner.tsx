@@ -18,7 +18,7 @@ export const FormErrorBanner = ({ message, className }: FormErrorBannerProps) =>
   }
 
   return (
-    <HStack className={classNames('Layer__FormErrorBanner', className)}>
+    <HStack pis='2xl' className={classNames('Layer__FormErrorBanner', className)}>
       <DataState
         icon={<AlertTriangle size={16} />}
         status={DataStateStatus.failed}
