@@ -70,8 +70,22 @@ type GlobalDateActions = {
 
 type GlobalDateStore = GlobalDateState & { actions: GlobalDateActions }
 
-function buildStore() {
+type BuildStoreOptions = {
+  initialDateRange?: DateRange
+}
+
+function buildStore({ initialDateRange }: BuildStoreOptions = {}) {
   const now = new Date()
+
+  const defaultStartDate = startOfMonth(now)
+  const defaultEndDate = clampToPresentOrPast(endOfMonth(now))
+
+  const rawInitialStartDate = initialDateRange?.startDate ?? defaultStartDate
+  const rawInitialEndDate = clampToPresentOrPast(initialDateRange?.endDate ?? defaultEndDate)
+
+  const [initialStartDate, initialEndDate] = rawInitialStartDate <= rawInitialEndDate
+    ? [rawInitialStartDate, rawInitialEndDate]
+    : [rawInitialEndDate, rawInitialStartDate]
 
   return createStore<GlobalDateStore>((set) => {
     const apply = (next: DateRange): DateRange => {
@@ -105,8 +119,8 @@ function buildStore() {
     }
 
     return {
-      startDate: startOfMonth(now),
-      endDate: clampToPresentOrPast(endOfMonth(now)),
+      startDate: initialStartDate,
+      endDate: initialEndDate,
 
       actions: {
         setDate,
@@ -197,12 +211,15 @@ export function useGlobalDatePeriodAlignedActions() {
   return { setMonthByPeriod }
 }
 
-type GlobalDateStoreProviderProps = PropsWithChildren
+type GlobalDateStoreProviderProps = PropsWithChildren<{
+  initialDateRange?: DateRange
+}>
 
 export function GlobalDateStoreProvider({
+  initialDateRange,
   children,
 }: GlobalDateStoreProviderProps) {
-  const [store] = useState(() => buildStore())
+  const [store] = useState(() => buildStore({ initialDateRange }))
 
   return (
     <GlobalDateStoreContext.Provider value={store}>

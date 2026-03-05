@@ -5,7 +5,6 @@ import { MONTH_FORMAT_SHORT } from '@config/general'
 import { calculatePercentageChange } from '@utils/percentageChange'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import {
   ProfitAndLossSummariesList,
@@ -61,9 +60,10 @@ function Internal_ProfitAndLossSummaries({
     isLoading,
     setSidebarScope,
     sidebarScope,
+    dateRange,
   } = useContext(ProfitAndLossContext)
 
-  const { startDate, endDate: _endDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
+  const { startDate } = dateRange
 
   const previousMonthStart = sub(startDate, { months: 1 })
   const { data: previousData } = useProfitAndLossSummaries({

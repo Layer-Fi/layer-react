@@ -1,9 +1,11 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 import classNames from 'classnames'
+import { startOfMonth } from 'date-fns'
 
 import { type OnboardingStep } from '@internal-types/layer_context'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { GlobalDateStoreProvider, useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
@@ -67,110 +69,117 @@ export const AccountingOverview = ({
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const { value: sizeClass } = useSizeClass()
+  const { date: inheritedMonthDate } = useGlobalDate({ dateSelectionMode: 'month' })
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
+  const initialDateRange = useMemo(() => ({
+    startDate: startOfMonth(inheritedMonthDate),
+    endDate: inheritedMonthDate,
+  }), [inheritedMonthDate])
 
   return (
-    <ProfitAndLoss
-      asContainer={false}
-      tagFilter={
-        tagFilter
-          ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-          : undefined
-      }
-    >
-      <View
-        title={stringOverrides?.title || title}
-        showHeader={showTitle}
-        header={(
-          <Header>
-            <HeaderRow>
-              <HeaderCol>
-                <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
-              </HeaderCol>
-            </HeaderRow>
-          </Header>
-        )}
+    <GlobalDateStoreProvider initialDateRange={initialDateRange}>
+      <ProfitAndLoss
+        asContainer={false}
+        tagFilter={
+          tagFilter
+            ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+            : undefined
+        }
       >
-        {enableOnboarding && (
-          <Onboarding
-            onTransactionsToReviewClick={onTransactionsToReviewClick}
-            onboardingStepOverride={onboardingStepOverride}
-          />
-        )}
-        <ProfitAndLossSummaries
-          stringOverrides={stringOverrides?.profitAndLoss?.summaries}
-          chartColorsList={chartColorsList}
-          onTransactionsToReviewClick={onTransactionsToReviewClick}
-          variants={profitAndLossSummariesVariants}
-        />
-        <Container
-          name='accounting-overview-profit-and-loss'
-          asWidget
+        <View
+          title={stringOverrides?.title || title}
+          showHeader={showTitle}
+          header={(
+            <Header>
+              <HeaderRow>
+                <HeaderCol>
+                  <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
+                </HeaderCol>
+              </HeaderRow>
+            </Header>
+          )}
         >
-          <ProfitAndLoss.Header
-            text={stringOverrides?.header || 'Profit & Loss'}
-          />
-          <ProfitAndLoss.Chart
-            tagFilter={
-              tagFilter
-                ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-                : undefined
-            }
-          />
-        </Container>
-        {middleBanner && (
-          <Container name='accounting-overview-middle-banner'>
-            {middleBanner}
-          </Container>
-        )}
-        <div className='Layer__accounting-overview-profit-and-loss-charts'>
-          <Toggle
-            ariaLabel='Chart type'
-            options={[
-              {
-                value: 'revenue',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
-              },
-              {
-                value: 'expenses',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
-              },
-            ]}
-            selectedKey={pnlToggle}
-            onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
+          {enableOnboarding && (
+            <Onboarding
+              onTransactionsToReviewClick={onTransactionsToReviewClick}
+              onboardingStepOverride={onboardingStepOverride}
+            />
+          )}
+          <ProfitAndLossSummaries
+            stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+            chartColorsList={chartColorsList}
+            onTransactionsToReviewClick={onTransactionsToReviewClick}
+            variants={profitAndLossSummariesVariants}
           />
           <Container
-            name={classNames(
-              'accounting-overview-profit-and-loss-chart',
-              pnlToggle !== 'revenue'
-              && 'accounting-overview-profit-and-loss-chart--hidden',
-            )}
+            name='accounting-overview-profit-and-loss'
+            asWidget
           >
-            <ProfitAndLoss.DetailedCharts
-              scope='revenue'
-              hideClose={true}
-              stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-              chartColorsList={chartColorsList}
+            <ProfitAndLoss.Header
+              text={stringOverrides?.header || 'Profit & Loss'}
+            />
+            <ProfitAndLoss.Chart
+              tagFilter={
+                tagFilter
+                  ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+                  : undefined
+              }
             />
           </Container>
-          <Container
-            name={classNames(
-              'accounting-overview-profit-and-loss-chart',
-              pnlToggle !== 'expenses'
-              && 'accounting-overview-profit-and-loss-chart--hidden',
-            )}
-          >
-            <ProfitAndLoss.DetailedCharts
-              scope='expenses'
-              hideClose={true}
-              stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-              chartColorsList={chartColorsList}
+          {middleBanner && (
+            <Container name='accounting-overview-middle-banner'>
+              {middleBanner}
+            </Container>
+          )}
+          <div className='Layer__accounting-overview-profit-and-loss-charts'>
+            <Toggle
+              ariaLabel='Chart type'
+              options={[
+                {
+                  value: 'revenue',
+                  label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
+                },
+                {
+                  value: 'expenses',
+                  label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
+                },
+              ]}
+              selectedKey={pnlToggle}
+              onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
             />
-          </Container>
-        </div>
-      </View>
-    </ProfitAndLoss>
+            <Container
+              name={classNames(
+                'accounting-overview-profit-and-loss-chart',
+                pnlToggle !== 'revenue'
+                && 'accounting-overview-profit-and-loss-chart--hidden',
+              )}
+            >
+              <ProfitAndLoss.DetailedCharts
+                scope='revenue'
+                hideClose={true}
+                stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+                chartColorsList={chartColorsList}
+              />
+            </Container>
+            <Container
+              name={classNames(
+                'accounting-overview-profit-and-loss-chart',
+                pnlToggle !== 'expenses'
+                && 'accounting-overview-profit-and-loss-chart--hidden',
+              )}
+            >
+              <ProfitAndLoss.DetailedCharts
+                scope='expenses'
+                hideClose={true}
+                stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+                chartColorsList={chartColorsList}
+              />
+            </Container>
+          </div>
+        </View>
+      </ProfitAndLoss>
+    </GlobalDateStoreProvider>
   )
 }
