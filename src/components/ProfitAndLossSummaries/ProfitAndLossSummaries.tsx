@@ -63,9 +63,9 @@ function Internal_ProfitAndLossSummaries({
     dateRange,
   } = useContext(ProfitAndLossContext)
 
-  const startDate = startOfMonth(dateRange.startDate)
+  const startDate = useMemo(() => startOfMonth(dateRange.startDate), [dateRange.startDate])
 
-  const previousMonthStart = sub(startDate, { months: 1 })
+  const previousMonthStart = useMemo(() => sub(startDate, { months: 1 }), [startDate])
   const { data: previousData } = useProfitAndLossSummaries({
     startYear: previousMonthStart.getFullYear(),
     startMonth: previousMonthStart.getMonth() + 1,

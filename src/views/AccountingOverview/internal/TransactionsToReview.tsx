@@ -35,8 +35,8 @@ export function TransactionsToReview({
 
   const { dateRange } = useContext(ProfitAndLossContext)
 
-  const monthStartDate = startOfMonth(dateRange.startDate)
-  const monthEndDate = endOfMonth(dateRange.startDate)
+  const monthStartDate = useMemo(() => startOfMonth(dateRange.startDate), [dateRange.startDate])
+  const monthEndDate = useMemo(() => endOfMonth(dateRange.startDate), [dateRange.startDate])
 
   const { data, isLoading, isError, mutate } = useProfitAndLossSummaries({
     startYear: monthStartDate.getFullYear(),
