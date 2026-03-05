@@ -35,7 +35,6 @@ export const ProfitAndLossCompareTable = ({
     isLoading,
     isError,
     isValidating,
-    refetch,
     comparePeriods,
     selectedCompareOptions,
     comparisonPeriodMode,
@@ -57,7 +56,6 @@ export const ProfitAndLossCompareTable = ({
       Inactive={<ReportsTableLoader showHeader={false} />}
       Error={(
         <ReportsTableErrorState
-          onRefresh={refetch}
           isLoading={isValidating}
         />
       )}
