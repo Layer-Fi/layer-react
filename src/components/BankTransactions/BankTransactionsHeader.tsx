@@ -48,6 +48,11 @@ export interface BankTransactionsHeaderStringOverrides {
   downloadButton?: string
 }
 
+const STATUS_TOGGLE_OPTIONS = [
+  { label: 'To Review', value: DisplayState.review },
+  { label: 'Categorized', value: DisplayState.categorized },
+]
+
 type TransactionsSearchProps = {
   slot?: string
   isDisabled?: boolean
@@ -230,10 +235,7 @@ export const BankTransactionsHeader = ({
     ? (
       <Toggle
         ariaLabel='Categorization status'
-        options={[
-          { label: 'To Review', value: DisplayState.review },
-          { label: 'Categorized', value: DisplayState.categorized },
-        ]}
+        options={STATUS_TOGGLE_OPTIONS}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}
         fullWidth={isMobileList}

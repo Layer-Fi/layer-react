@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { Toggle } from '@ui/Toggle/Toggle'
@@ -43,6 +43,17 @@ export const GeneralLedgerView = ({
 }: GeneralLedgerProps) => {
   const [activeTab, setActiveTab] = useState('chartOfAccounts')
 
+  const toggleOptions = useMemo(() => [
+    {
+      value: 'chartOfAccounts',
+      label: stringOverrides?.chartOfAccountsToggleOption || 'Chart of Accounts',
+    },
+    {
+      value: 'journal',
+      label: stringOverrides?.journalToggleOption || 'Journal',
+    },
+  ], [stringOverrides?.chartOfAccountsToggleOption, stringOverrides?.journalToggleOption])
+
   return (
     <ProfitAndLoss asContainer={false}>
       <View
@@ -51,18 +62,7 @@ export const GeneralLedgerView = ({
       >
         <Toggle
           ariaLabel='Ledger view'
-          options={[
-            {
-              value: 'chartOfAccounts',
-              label:
-                stringOverrides?.chartOfAccountsToggleOption
-                || 'Chart of Accounts',
-            },
-            {
-              value: 'journal',
-              label: stringOverrides?.journalToggleOption || 'Journal',
-            },
-          ]}
+          options={toggleOptions}
           selectedKey={activeTab}
           onSelectionChange={key => setActiveTab(key as string)}
         />

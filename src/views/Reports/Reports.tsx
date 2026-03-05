@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 
 import { type View as ViewType } from '@internal-types/general'
 import { type ProfitAndLossCompareConfig } from '@internal-types/profit_and_loss'
@@ -89,7 +89,7 @@ export const Reports = ({
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
-  const options = getOptions(enabledReports)
+  const options = useMemo(() => getOptions(enabledReports), [enabledReports])
   const defaultTitle =
     enabledReports.length > 1
       ? 'Reports'
