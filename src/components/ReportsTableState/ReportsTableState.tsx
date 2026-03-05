@@ -42,12 +42,10 @@ export const ReportsTableLoader = ({
 
 type ReportsTableErrorStateProps = {
   isLoading?: boolean
-  onRefresh?: () => void
 }
 
 export const ReportsTableErrorState = ({
   isLoading,
-  onRefresh,
 }: ReportsTableErrorStateProps) => {
   return (
     <div className='Layer__table-state-container'>
