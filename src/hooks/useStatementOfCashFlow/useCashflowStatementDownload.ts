@@ -5,13 +5,8 @@ import type { Awaitable } from '@internal-types/utility/promises'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useAuth } from '@hooks/useAuth'
+import type { GetStatementOfCashFlowParams } from '@hooks/useStatementOfCashFlow/useStatementOfCashFlow'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-
-type GetStatementOfCashFlowParams = {
-  businessId: string
-  startDate: Date
-  endDate: Date
-}
 
 const getCashflowStatementCSV = get<
   { data: S3PresignedUrl },

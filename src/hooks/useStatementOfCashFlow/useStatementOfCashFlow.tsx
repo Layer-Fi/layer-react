@@ -9,7 +9,7 @@ import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-type GetStatementOfCashFlowParams = {
+export type GetStatementOfCashFlowParams = {
   businessId: string
   startDate: Date
   endDate: Date
