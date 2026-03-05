@@ -6,10 +6,6 @@
   background-color: white;
 }
 
-.Layer__profit-and-loss__main-panel {
-  flex: 1;
-}
-
 .Layer__profit-and-loss__title {
   margin-right: 1.5rem;
   margin-bottom: 1.5rem;
@@ -97,16 +93,6 @@
 
 .Layer__profit-and-loss-chart__bar--expenses {
   fill: var(--bar-color-expenses);
-}
-
-.Layer__chart-container--loading .Layer__profit-and-loss-chart__bar--expenses {
-  fill: var(--color-base-50);
-  animation: layer_chart_bar_loading_anim 2s linear infinite;
-}
-
-.Layer__chart-container--loading .Layer__profit-and-loss-chart__bar--income {
-  fill: var(--color-base-100);
-  animation: layer_chart_bar_loading_anim 2s linear infinite;
 }
 
 /* stylelint-disable-next-line keyframes-name-pattern */
