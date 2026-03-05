@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
 import { type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossComparison, type ProfitAndLossComparisonRequestBody } from '@internal-types/profit_and_loss'
@@ -11,16 +11,6 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const PNL_COMPARISON_REPORT_TAG_KEY = '#profit-and-loss-comparison-report'
 
-type ProfitAndLossComparisonKey = {
-  accessToken: string
-  apiUrl: string
-  businessId: string
-  periods: ProfitAndLossComparisonRequestBody['periods']
-  tagFilters?: ProfitAndLossComparisonRequestBody['tag_filters']
-  reportingBasis?: ReportingBasis
-  tags: [typeof PNL_COMPARISON_REPORT_TAG_KEY]
-}
-
 type ProfitAndLossComparisonRequestParams = {
   businessId: string
   periods?: ProfitAndLossComparisonRequestBody['periods']
@@ -29,16 +19,16 @@ type ProfitAndLossComparisonRequestParams = {
 }
 
 function buildKey({
-  accessToken,
+  access_token: accessToken,
   apiUrl,
   businessId,
   periods,
   tagFilters,
   reportingBasis,
 }: {
-  accessToken?: string
+  access_token?: string
   apiUrl?: string
-} & ProfitAndLossComparisonRequestParams): ProfitAndLossComparisonKey | null {
+} & ProfitAndLossComparisonRequestParams) {
   if (accessToken && apiUrl && periods) {
     return {
       accessToken,
@@ -48,10 +38,8 @@ function buildKey({
       tagFilters,
       reportingBasis,
       tags: [PNL_COMPARISON_REPORT_TAG_KEY],
-    }
+    } as const
   }
-
-  return null
 }
 
 const compareProfitAndLoss = post<
@@ -68,31 +56,29 @@ export function useProfitAndLossComparisonReport({
   periods,
   tagFilters,
   reportingBasis,
-}: UseProfitAndLossComparisonReportProps): SWRResponse<ProfitAndLossComparison | undefined, unknown> {
+}: UseProfitAndLossComparisonReportProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
-  const authData = data as { access_token?: string } | undefined
-  const key = buildKey({
-    accessToken: authData?.access_token,
-    apiUrl,
-    businessId,
-    periods,
-    tagFilters,
-    reportingBasis,
-  })
 
-  const response = useSWR<ProfitAndLossComparison | undefined, unknown, ProfitAndLossComparisonKey | null>(
-    key,
-    key => compareProfitAndLoss(
-      key.apiUrl,
-      key.accessToken,
+  const response = useSWR(
+    () => buildKey({
+      ...data,
+      apiUrl,
+      businessId,
+      periods,
+      tagFilters,
+      reportingBasis,
+    }),
+    ({ accessToken, apiUrl, businessId }) => compareProfitAndLoss(
+      apiUrl,
+      accessToken,
       {
-        params: { businessId: key.businessId },
+        params: { businessId },
         body: {
-          periods: key.periods,
-          tag_filters: key.tagFilters,
-          reporting_basis: key.reportingBasis,
+          periods: periods!,
+          tag_filters: tagFilters,
+          reporting_basis: reportingBasis,
         },
       },
     ).then(({ data }) => data),
