@@ -39,12 +39,7 @@ const StatementOfCashFlowView = ({
   dateSelectionMode = 'full',
 }: StatementOfCashFlowViewProps) => {
   const dateRange = useGlobalDateRange({ dateSelectionMode })
-  const statementOfCashFlow = useStatementOfCashFlow(dateRange)
-  const data = statementOfCashFlow.data
-  const isLoading = statementOfCashFlow.isLoading
-  const isValidating = statementOfCashFlow.isValidating
-  const error = statementOfCashFlow.error
-  const mutate = statementOfCashFlow.mutate
+  const { data, isLoading, isValidating, error } = useStatementOfCashFlow(dateRange)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
@@ -79,15 +74,9 @@ const StatementOfCashFlowView = ({
               totalColumnHeader={stringOverrides?.statementOfCashFlowTable?.totalColumnHeader}
             />
           )}
-          Inactive={(
-            <ReportsTableLoader
-              typeColumnHeader={stringOverrides?.statementOfCashFlowTable?.typeColumnHeader}
-              totalColumnHeader={stringOverrides?.statementOfCashFlowTable?.totalColumnHeader}
-            />
-          )}
+          Inactive={null}
           Error={(
             <ReportsTableErrorState
-              onRefresh={() => void mutate()}
               isLoading={isValidating}
             />
           )}
