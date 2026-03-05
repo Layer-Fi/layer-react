@@ -80,7 +80,7 @@ function buildStore({ initialDateRange }: BuildStoreOptions = {}) {
   const defaultStartDate = startOfMonth(now)
   const defaultEndDate = clampToPresentOrPast(endOfMonth(now))
 
-  const rawInitialStartDate = initialDateRange?.startDate ?? defaultStartDate
+  const rawInitialStartDate = clampToPresentOrPast(initialDateRange?.startDate ?? defaultStartDate)
   const rawInitialEndDate = clampToPresentOrPast(initialDateRange?.endDate ?? defaultEndDate)
 
   const [initialStartDate, initialEndDate] = rawInitialStartDate <= rawInitialEndDate
