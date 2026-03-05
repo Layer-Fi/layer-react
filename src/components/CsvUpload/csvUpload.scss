@@ -86,9 +86,8 @@
     grid-auto-flow: column;
   }
 
-  .Layer__UI__Table-Column {
-    padding: 0;
-    border-bottom: 1px solid var(--border-color);
+  .Layer__UI__Table-Column,
+  .Layer__UI__Table-Cell {
     border-left: 1px solid var(--border-color);
 
     &:first-child {
@@ -97,14 +96,12 @@
     }
   }
 
+  .Layer__UI__Table-Column {
+    padding: 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
   .Layer__UI__Table-Cell {
-    border-left: 1px solid var(--border-color);
-
-    &:first-child {
-      padding-left: 0;
-      border-left: none;
-    }
-
     &:has(.Layer__CsvUpload__Table__cell-content--row-error) {
       background-color: var(--color-info-error-bg);
     }
