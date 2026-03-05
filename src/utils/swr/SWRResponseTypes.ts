@@ -31,6 +31,10 @@ export class SWRQueryResultWithMutate<T> extends SWRQueryResult<T> {
   get mutate() {
     return this.swrResponse.mutate
   }
+
+  get refetch() {
+    return this.swrResponse.mutate
+  }
 }
 
 export class SWRInfiniteResult<T> {

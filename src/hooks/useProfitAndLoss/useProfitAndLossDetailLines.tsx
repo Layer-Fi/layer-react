@@ -4,7 +4,7 @@ import useSWR from 'swr'
 
 import { type ReportingBasis } from '@internal-types/general'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
+import { SWRQueryResultWithMutate } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -36,12 +36,6 @@ type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParam
 
 export type PnlDetailLine = typeof PnlDetailLineSchema.Type
 export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
-
-class PnlDetailLinesSWRResponse extends SWRQueryResult<PnlDetailLinesReturn> {
-  get refetch() {
-    return this.swrResponse.mutate
-  }
-}
 
 function keyLoader(
   {
@@ -129,7 +123,7 @@ export function useProfitAndLossDetailLines({
     },
   )
 
-  return new PnlDetailLinesSWRResponse(swrResponse)
+  return new SWRQueryResultWithMutate(swrResponse)
 }
 
 export function usePnlDetailLinesInvalidator() {
