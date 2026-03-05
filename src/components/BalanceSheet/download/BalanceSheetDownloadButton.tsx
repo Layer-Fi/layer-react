@@ -1,4 +1,4 @@
-import { useBalanceSheetDownload } from '@components/BalanceSheet/download/useBalanceSheetDownload'
+import { useBalanceSheetDownload } from '@hooks/balanceSheet/useBalanceSheetDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 

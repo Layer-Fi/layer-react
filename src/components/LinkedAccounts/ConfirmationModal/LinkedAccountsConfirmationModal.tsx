@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/useLinkedAccounts/useConfirmAndExcludeMultiple'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { getAccountsNeedingConfirmation } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { useAccountConfirmationStore } from '@providers/AccountConfirmationStoreProvider'
@@ -10,7 +11,6 @@ import { ModalActions, ModalContent, ModalDescription, ModalHeading, ModalTitleW
 import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { LinkedAccountToConfirm } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
-import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@components/LinkedAccounts/ConfirmationModal/useConfirmAndExcludeMultiple'
 import { ConditionalList } from '@components/utility/ConditionalList'
 
 function getButtonLabel(

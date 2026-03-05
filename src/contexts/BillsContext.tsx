@@ -4,7 +4,7 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 import type React from 'react'
 
 import { useBills } from '@hooks/useBills'
-import { useBillsRecordPayment } from '@components/Bills/useBillsRecordPayment'
+import { useBillsRecordPayment } from '@hooks/useBillsRecordPayment'
 
 type BillsProviderProps = {
   children: ReactNode

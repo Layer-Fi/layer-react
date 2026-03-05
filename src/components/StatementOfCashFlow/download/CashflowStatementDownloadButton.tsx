@@ -1,5 +1,5 @@
+import { useCashflowStatementDownload } from '@hooks/useStatementOfCashFlow/useCashflowStatementDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
-import { useCashflowStatementDownload } from '@components/StatementOfCashFlow/download/useCashflowStatementDownload'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type CashflowStatementDownloadButtonProps = {

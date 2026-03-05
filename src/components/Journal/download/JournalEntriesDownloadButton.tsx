@@ -1,5 +1,5 @@
+import { useJournalEntriesDownload } from '@hooks/useJournal/useJournalEntriesDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
-import { useJournalEntriesDownload } from '@components/Journal/download/useJournalEntriesDownload'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type JournalEntriesDownloadButtonProps = {
