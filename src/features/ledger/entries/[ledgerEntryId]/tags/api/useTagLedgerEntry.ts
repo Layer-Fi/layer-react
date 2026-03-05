@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 import { v4 as uuidv4 } from 'uuid'
 
-import { post } from '@api/layer/authenticated_http'
+import { post } from '@utils/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

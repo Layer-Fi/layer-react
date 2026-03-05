@@ -1,9 +1,27 @@
 import { endOfDay } from 'date-fns'
 import useSWR from 'swr'
 
+import type { BalanceSheet } from '@internal-types/balance_sheet'
+import { get } from '@utils/authenticatedHttp'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { getBalanceSheet } from '@api/layer/balance_sheet'
 import { useAuth } from '@hooks/useAuth'
+
+type GetBalanceSheetParams = {
+  businessId: string
+  effectiveDate: Date
+}
+
+const getBalanceSheet = get<
+  { data: BalanceSheet },
+  GetBalanceSheetParams
+>(
+  ({ businessId, effectiveDate }) => {
+    const parameters = toDefinedSearchParameters({ effectiveDate })
+
+    return `/v1/businesses/${businessId}/reports/balance-sheet?${parameters}`
+  },
+)
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 
-import { get } from '@api/layer/authenticated_http'
+import { get } from '@utils/authenticatedHttp'
 import { mapRawCustomAccountToCustomAccount, type RawCustomAccount } from '@hooks/customAccounts/types'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

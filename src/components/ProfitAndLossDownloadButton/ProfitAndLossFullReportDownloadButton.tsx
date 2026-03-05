@@ -1,7 +1,39 @@
 import { useContext, useState } from 'react'
 
+import type { S3PresignedUrl } from '@internal-types/general'
 import { type MoneyFormat } from '@internal-types/general'
-import { Layer } from '@api/layer'
+import { get } from '@utils/authenticatedHttp'
+import { toLocalDateString } from '@utils/time/timeUtils'
+
+type GetProfitAndLossExcelParams = {
+  businessId: string
+  startDate?: Date
+  endDate?: Date
+  month?: string
+  year?: string
+  tagKey?: string
+  tagValues?: string
+  reportingBasis?: string
+  moneyFormat?: string
+}
+
+const getProfitAndLossExcel = (apiUrl: string, accessToken: string | undefined, params: GetProfitAndLossExcelParams) => {
+  const { businessId, startDate, endDate, month, year, tagKey, tagValues, reportingBasis, moneyFormat } = params
+  return get<{
+    data?: S3PresignedUrl
+    error?: unknown
+  }>(({ businessId }) =>
+    `/v1/businesses/${businessId}/reports/profit-and-loss/exports/excel?${
+      startDate ? `start_date=${encodeURIComponent(toLocalDateString(startDate))}` : ''
+    }${endDate ? `&end_date=${encodeURIComponent(toLocalDateString(endDate))}` : ''}${
+      month ? `&month=${month}` : ''
+    }${year ? `&year=${year}` : ''}${
+      reportingBasis ? `&reporting_basis=${reportingBasis}` : ''
+    }${tagKey ? `&tag_key=${tagKey}` : ''}${
+      tagValues ? `&tag_values=${tagValues}` : ''
+    }${moneyFormat ? `&money_format=${moneyFormat}` : ''}`,
+  )(apiUrl, accessToken, { params: { businessId } })
+}
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -43,7 +75,7 @@ export const ProfitAndLossFullReportDownloadButton = ({
 
   const handleClick = async () => {
     setIsDownloading(true)
-    const getProfitAndLossExcel = Layer.getProfitAndLossExcel(
+    const getProfitAndLossExcelCall = getProfitAndLossExcel(
       apiUrl,
       auth?.access_token,
       {
@@ -58,7 +90,7 @@ export const ProfitAndLossFullReportDownloadButton = ({
     try {
       const result = comparisonConfig
         ? await getProfitAndLossComparisonCsv(dateRange, moneyFormat)
-        : await getProfitAndLossExcel()
+        : await getProfitAndLossExcelCall()
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)

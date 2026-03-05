@@ -1,11 +1,55 @@
 import { useEffect, useRef, useState } from 'react'
 import { format as formatTime, parseISO } from 'date-fns'
 
+import type { DocumentS3Urls } from '@internal-types/bank_transactions'
 import { type BankTransaction } from '@internal-types/bank_transactions'
+import type { FileMetadata } from '@internal-types/file_upload'
 import { type Awaitable } from '@internal-types/utility/promises'
 import { DATE_FORMAT } from '@config/general'
+import { get, post, postWithFormData } from '@utils/authenticatedHttp'
 import { hasReceipts } from '@utils/bankTransactions'
-import { Layer } from '@api/layer'
+
+const listBankTransactionDocuments = get<{
+  data: DocumentS3Urls
+  errors: unknown
+}>(
+  ({ businessId, bankTransactionId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents?content_disposition=ATTACHMENT`,
+)
+
+const archiveBankTransactionDocument = post<{
+  data: Record<never, never>
+  errors: unknown
+}>(
+  ({ businessId, bankTransactionId, documentId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents/${documentId}/archive`,
+)
+
+const uploadBankTransactionDocument =
+  (baseUrl: string, accessToken?: string) =>
+    ({
+      businessId,
+      bankTransactionId,
+      file,
+      documentType,
+    }: {
+      businessId: string
+      bankTransactionId: string
+      file: File
+      documentType: string
+    }) => {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('documentType', documentType)
+
+      const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents`
+      return postWithFormData<{ data: FileMetadata, errors: unknown }>(
+        endpoint,
+        formData,
+        baseUrl,
+        accessToken,
+      )
+    }
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -89,7 +133,7 @@ export const useReceipts: UseReceipts = ({
   }, [isActive])
 
   const fetchDocuments = async () => {
-    const listBankTransactionDocuments = Layer.listBankTransactionDocuments(
+    const listBankTransactionDocumentsCall = listBankTransactionDocuments(
       apiUrl,
       auth?.access_token,
       {
@@ -99,7 +143,7 @@ export const useReceipts: UseReceipts = ({
         },
       },
     )
-    const result = await listBankTransactionDocuments()
+    const result = await listBankTransactionDocumentsCall()
     const retrievedDocs = result.data.documentUrls.map(docUrl => ({
       id: docUrl.documentId,
       url: docUrl.presignedUrl,
@@ -153,7 +197,7 @@ export const useReceipts: UseReceipts = ({
 
     try {
       setReceiptUrls(prev => [...prev, newReceipt])
-      const uploadDocument = Layer.uploadBankTransactionDocument(
+      const uploadDocument = uploadBankTransactionDocument(
         apiUrl,
         auth?.access_token,
       )
@@ -215,7 +259,7 @@ export const useReceipts: UseReceipts = ({
             return url
           }),
         )
-        await Layer.archiveBankTransactionDocument(apiUrl, auth?.access_token, {
+        await archiveBankTransactionDocument(apiUrl, auth?.access_token, {
           params: {
             businessId: businessId,
             bankTransactionId: bankTransaction.id,

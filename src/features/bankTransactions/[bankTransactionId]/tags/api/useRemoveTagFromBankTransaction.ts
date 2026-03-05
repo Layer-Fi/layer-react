@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
-import { del } from '@api/layer/authenticated_http'
+import { del } from '@utils/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

@@ -2,7 +2,25 @@ import useSWRMutation from 'swr/mutation'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { getCashflowStatementCSV } from '@api/layer/statement-of-cash-flow'
+import { get } from '@utils/authenticatedHttp'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+
+type GetStatementOfCashFlowParams = {
+  businessId: string
+  startDate: Date
+  endDate: Date
+}
+
+const getCashflowStatementCSV = get<
+  { data: S3PresignedUrl },
+  GetStatementOfCashFlowParams
+>(
+  ({ businessId, startDate, endDate }) => {
+    const parameters = toDefinedSearchParameters({ startDate, endDate })
+
+    return `/v1/businesses/${businessId}/reports/cashflow-statement/exports/csv?${parameters}`
+  },
+)
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

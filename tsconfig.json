@@ -42,7 +42,6 @@
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
-      "@api/*": ["src/api/*"],
       "@ui/*": ["src/components/ui/*"],
       "@blocks/*": ["src/components/blocks/*"],
       "@components/*": ["src/components/*"],

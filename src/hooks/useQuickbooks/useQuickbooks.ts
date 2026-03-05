@@ -2,7 +2,38 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { format } from 'date-fns'
 
 import { QuickbooksConnectionLastSyncStatus, type StatusOfQuickbooksConnection } from '@internal-types/quickbooks'
-import { Layer } from '@api/layer'
+import { get, post } from '@utils/authenticatedHttp'
+
+const statusOfQuickbooksConnection = get<
+  { data: StatusOfQuickbooksConnection },
+  { businessId: string }
+>(
+  ({ businessId }) =>
+    `/v1/businesses/${businessId}/quickbooks/connection-status`,
+)
+
+const syncFromQuickbooksApi = post<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/quickbooks/sync-from`)
+
+const initQuickbooksOAuth = post<
+  {
+    data: {
+      type: 'Quickbooks_Authorization_Params'
+      redirect_url: string
+    }
+  },
+  Record<string, unknown>,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/quickbooks/authorize`)
+
+const unlinkQuickbooksConnection = post<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/quickbooks/unlink`)
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -25,7 +56,7 @@ export const useQuickbooks: UseQuickbooks = () => {
 
   const fetchQuickbooksConnectionStatus = useCallback(async () => {
     const newQuickbooksConnectionStatus = (
-      await Layer.statusOfQuickbooksConnection(apiUrl, auth?.access_token, {
+      await statusOfQuickbooksConnection(apiUrl, auth?.access_token, {
         params: { businessId },
       })()
     ).data
@@ -67,19 +98,19 @@ export const useQuickbooks: UseQuickbooks = () => {
       : undefined
     setQuickbooksConnectionStatus(newQuickbooksConnectionStatus)
 
-    void Layer.syncFromQuickbooks(apiUrl, auth?.access_token, {
+    void syncFromQuickbooksApi(apiUrl, auth?.access_token, {
       params: { businessId },
     }).catch(handleSyncError)
   }, [apiUrl, auth?.access_token, businessId, quickbooksConnectionStatus, handleSyncError])
 
   const linkQuickbooks = useCallback(async () => {
-    return Layer.initQuickbooksOAuth(apiUrl, auth?.access_token, {
+    return initQuickbooksOAuth(apiUrl, auth?.access_token, {
       params: { businessId },
     }).then(res => res.data.redirect_url)
   }, [apiUrl, auth?.access_token, businessId])
 
   const unlinkQuickbooks = useCallback(async () => {
-    return Layer.unlinkQuickbooksConnection(apiUrl, auth?.access_token, {
+    return unlinkQuickbooksConnection(apiUrl, auth?.access_token, {
       params: { businessId },
     })
       .then(() => fetchQuickbooksConnectionStatus())

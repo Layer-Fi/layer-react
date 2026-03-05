@@ -2,9 +2,27 @@ import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
+import type { BankTransactionMatch } from '@internal-types/bank_transactions'
+import { put } from '@utils/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { matchBankTransaction, type MatchBankTransactionBody } from '@api/layer/bankTransactions'
+
+export type MatchBankTransactionBody = {
+  match_id: string
+  type: 'Confirm_Match'
+}
+
+const matchBankTransaction = put<
+  { data: BankTransactionMatch },
+  MatchBankTransactionBody,
+  {
+    businessId: string
+    bankTransactionId: string
+  }
+>(
+  ({ businessId, bankTransactionId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/match`,
+)
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/useLinkedAccounts/useListBankAccounts'

@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 
 import { type FormError, type FormErrorWithId } from '@internal-types/general'
 import { type BaseSelectOption } from '@internal-types/general'
+import type { JournalEntry as JournalEntryType } from '@internal-types/journal'
 import {
   type JournalEntry,
   type JournalEntryLineItem,
@@ -10,8 +11,17 @@ import {
 } from '@internal-types/journal'
 import { type LedgerAccountBalance } from '@internal-types/journal'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { post } from '@utils/authenticatedHttp'
 import { getAccountIdentifierPayload } from '@utils/journal'
-import { Layer } from '@api/layer'
+
+const createJournalEntries = post<{ data: JournalEntryType[] }>(
+  ({ businessId }) => `/v1/businesses/${businessId}/ledger/manual-entries`,
+)
+
+const reverseJournalEntry = post<Record<never, never>>(
+  ({ businessId, entryId }) =>
+    `/v1/businesses/${businessId}/ledger/entries/${entryId}/reverse`,
+)
 import { useAuth } from '@hooks/useAuth'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -46,7 +56,7 @@ type UseJournal = () => {
   setForm: (form?: JournalFormTypes) => void
   addEntryLine: () => void
   removeEntryLine: (index: number) => void
-  reverseEntry: (entryId: string) => ReturnType<typeof Layer.reverseJournalEntry>
+  reverseEntry: (entryId: string) => ReturnType<typeof reverseJournalEntry>
   hasMore: boolean
   fetchMore: () => void
 }
@@ -180,7 +190,7 @@ export const useJournal: UseJournal = () => {
     setApiError(undefined)
 
     try {
-      await Layer.createJournalEntries(apiUrl, auth?.access_token, {
+      await createJournalEntries(apiUrl, auth?.access_token, {
         params: { businessId },
         body: newJournalEntry,
       })
@@ -396,7 +406,7 @@ export const useJournal: UseJournal = () => {
   }, [form])
 
   const reverseEntry = useCallback(async (entryId: string) =>
-    Layer.reverseJournalEntry(apiUrl, auth?.access_token, {
+    reverseJournalEntry(apiUrl, auth?.access_token, {
       params: { businessId, entryId },
     }), [apiUrl, auth?.access_token, businessId])
 

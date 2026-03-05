@@ -2,7 +2,11 @@ import useSWRMutation from 'swr/mutation'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { getLedgerAccountBalancesCSV } from '@api/layer/chart_of_accounts'
+import { get } from '@utils/authenticatedHttp'
+
+const getLedgerAccountBalancesCSV = get<{ data: S3PresignedUrl }>(
+  ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances/exports/csv`,
+)
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

@@ -2,8 +2,26 @@ import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
+import type { RawTask } from '@internal-types/tasks'
+import { post } from '@utils/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { updateTaskUploadsDescription } from '@api/layer/tasks'
+
+type UpdateTaskUploadsDescriptionBody = {
+  type: 'FreeResponse'
+  user_response: string
+}
+
+const updateTaskUploadsDescription = post<
+  { data: RawTask },
+  UpdateTaskUploadsDescriptionBody,
+  {
+    businessId: string
+    taskId: string
+  }
+>(
+  ({ businessId, taskId }) =>
+    `/v1/businesses/${businessId}/tasks/${taskId}/upload/update-description`,
+)
 import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

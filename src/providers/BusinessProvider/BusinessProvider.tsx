@@ -1,6 +1,7 @@
 import { type PropsWithChildren, type Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import useSWR from 'swr'
 
+import type { Business } from '@internal-types/business'
 import {
   type ColorConfig,
   type ColorsPaletteOption,
@@ -11,9 +12,13 @@ import {
   type OnboardingStep,
 } from '@internal-types/layer_context'
 import { errorHandler, type LayerError } from '@models/ErrorHandler'
+import { get } from '@utils/authenticatedHttp'
 import { buildColorsPalette } from '@utils/colors'
 import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
-import { Layer } from '@api/layer'
+
+const getBusiness = get<{ data: Business }>(
+  ({ businessId }) => `/v1/businesses/${businessId}`,
+)
 import { useAccountingConfiguration } from '@hooks/useAccountingConfiguration/useAccountingConfiguration'
 import { useAuth } from '@hooks/useAuth'
 import { useDataSync } from '@hooks/useDataSync/useDataSync'
@@ -124,7 +129,7 @@ export const BusinessProvider = ({
 
   const { data: businessData } = useSWR(
     businessId && auth?.access_token && `business-${businessId}`,
-    Layer.getBusiness(apiUrl, auth?.access_token, {
+    getBusiness(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
     {

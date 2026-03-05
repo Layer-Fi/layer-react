@@ -2,8 +2,89 @@ import { useEffect, useState } from 'react'
 import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
 import { DataModel, type LoadedStatus } from '@internal-types/general'
+import type { PublicToken } from '@internal-types/linked_accounts'
 import { type AccountSource, type BankAccount, type ExternalAccountConnection } from '@internal-types/linked_accounts'
-import { Layer } from '@api/layer'
+import type { OneOf } from '@internal-types/utility/oneOf'
+import { post } from '@utils/authenticatedHttp'
+
+const getPlaidLinkToken = post<
+  { data: { type: 'Link_Token', link_token: string } },
+  Record<string, unknown>,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/plaid/link`)
+
+const getPlaidUpdateModeLinkToken = post<
+  { data: { type: 'Link_Token', link_token: string } },
+  Record<string, unknown>,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/plaid/update-mode-link`)
+
+const exchangePlaidPublicTokenApi = post<
+  Record<string, unknown>,
+  PublicToken,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/plaid/link/exchange`)
+
+type ConfirmAccountBodyStrict = OneOf<[
+  { is_unique: true },
+  { is_relevant: true },
+]>
+
+const confirmAccountApi = post<
+  never,
+  ConfirmAccountBodyStrict,
+  { businessId: string, accountId: string }
+>(
+  ({ businessId, accountId }) =>
+    `/v1/businesses/${businessId}/external-accounts/${accountId}/confirm`,
+)
+
+type ExcludeAccountBodyStrict = OneOf<[
+  { is_irrelevant: true },
+  { is_duplicate: true },
+]>
+
+const excludeAccountApi = post<
+  never,
+  ExcludeAccountBodyStrict,
+  { businessId: string, accountId: string }
+>(
+  ({ businessId, accountId }) =>
+    `/v1/businesses/${businessId}/external-accounts/${accountId}/exclude`,
+)
+
+const breakPlaidItemConnection = post<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  { businessId: string, plaidItemPlaidId: string }
+>(
+  ({ businessId, plaidItemPlaidId }) =>
+    `/v1/businesses/${businessId}/plaid/items/${plaidItemPlaidId}/sandbox-reset-item-login`,
+)
+
+const syncConnection = post<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/sync`)
+
+const updateConnectionStatusApi = post<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  { businessId: string }
+>(
+  ({ businessId }) =>
+    `/v1/businesses/${businessId}/external-accounts/update-connection-status`,
+)
+
+const unlinkPlaidItemApi = post<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  { businessId: string, plaidItemPlaidId: string }
+>(
+  ({ businessId, plaidItemPlaidId }) =>
+    `/v1/businesses/${businessId}/plaid/items/${plaidItemPlaidId}/unlink`,
+)
 import { useAuth } from '@hooks/useAuth'
 import { useListBankAccounts } from '@hooks/useLinkedAccounts/useListBankAccounts'
 import { useUnlinkBankAccount } from '@hooks/useLinkedAccounts/useUnlinkBankAccount'
@@ -100,7 +181,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const fetchPlaidLinkToken = async () => {
     if (auth?.access_token) {
       const linkToken = (
-        await Layer.getPlaidLinkToken(apiUrl, auth.access_token, {
+        await getPlaidLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
         })
       ).data.link_token
@@ -115,7 +196,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const fetchPlaidUpdateModeLinkToken = async (plaidItemPlaidId: string) => {
     if (auth?.access_token) {
       const linkToken = (
-        await Layer.getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
+        await getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
           body: { plaid_item_id: plaidItemPlaidId },
         })
@@ -137,7 +218,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     preloadAccountConfirmation()
 
     try {
-      await Layer.exchangePlaidPublicToken(apiUrl, auth?.access_token, {
+      await exchangePlaidPublicTokenApi(apiUrl, auth?.access_token, {
         params: { businessId },
         body: { public_token: publicToken, institution: metadata.institution },
       })
@@ -230,7 +311,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const confirmAccount = async (source: AccountSource, accountId: string) => {
     if (source === 'PLAID') {
-      await Layer.confirmAccount(apiUrl, auth?.access_token, {
+      await confirmAccountApi(apiUrl, auth?.access_token, {
         params: {
           businessId,
           accountId,
@@ -248,7 +329,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const excludeAccount = async (source: AccountSource, accountId: string) => {
     if (source === 'PLAID') {
-      await Layer.excludeAccount(apiUrl, auth?.access_token, {
+      await excludeAccountApi(apiUrl, auth?.access_token, {
         params: {
           businessId,
           accountId,
@@ -276,7 +357,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     connectionExternalId: string,
   ) => {
     if (source === 'PLAID') {
-      await Layer.breakPlaidItemConnection(apiUrl, auth?.access_token, {
+      await breakPlaidItemConnection(apiUrl, auth?.access_token, {
         params: {
           businessId,
           plaidItemPlaidId: connectionExternalId,
@@ -297,19 +378,19 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const syncAccounts = async () => {
-    await Layer.syncConnection(apiUrl, auth?.access_token, {
+    await syncConnection(apiUrl, auth?.access_token, {
       params: { businessId },
     })
   }
 
   const updateConnectionStatus = async () => {
-    await Layer.updateConnectionStatus(apiUrl, auth?.access_token, {
+    await updateConnectionStatusApi(apiUrl, auth?.access_token, {
       params: { businessId },
     })
   }
 
   const unlinkPlaidItem = async (plaidItemPlaidId: string) => {
-    await Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
+    await unlinkPlaidItemApi(apiUrl, auth?.access_token, {
       params: { businessId, plaidItemPlaidId },
     })
     await refetchAccounts()

@@ -2,7 +2,24 @@ import useSWRMutation from 'swr/mutation'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { getBalanceSheetExcel } from '@api/layer/balance_sheet'
+import { get } from '@utils/authenticatedHttp'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+
+type GetBalanceSheetParams = {
+  businessId: string
+  effectiveDate: Date
+}
+
+const getBalanceSheetExcel = get<
+  { data: S3PresignedUrl },
+  GetBalanceSheetParams
+>(
+  ({ businessId, effectiveDate }) => {
+    const parameters = toDefinedSearchParameters({ effectiveDate })
+
+    return `/v1/businesses/${businessId}/reports/balance-sheet/exports/excel?${parameters}`
+  },
+)
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

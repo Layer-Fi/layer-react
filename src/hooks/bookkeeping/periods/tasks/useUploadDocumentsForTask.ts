@@ -2,8 +2,39 @@ import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
+import type { FileMetadata } from '@internal-types/file_upload'
+import { postWithFormData } from '@utils/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { completeTaskWithUpload } from '@api/layer/tasks'
+
+function completeTaskWithUpload(
+  baseUrl: string,
+  accessToken: string,
+  {
+    businessId,
+    taskId,
+    files,
+    description,
+  }: {
+    businessId: string
+    taskId: string
+    files: ReadonlyArray<File>
+    description?: string
+  },
+) {
+  const formData = new FormData()
+  files.forEach(file => formData.append('file', file))
+  if (description) {
+    formData.append('description', description)
+  }
+
+  const endpoint = `/v1/businesses/${businessId}/tasks/${taskId}/upload`
+  return postWithFormData<{ data: FileMetadata }>(
+    endpoint,
+    formData,
+    baseUrl,
+    accessToken,
+  )
+}
 import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

@@ -1,7 +1,11 @@
 import useSWR from 'swr'
 
 import { type Vendor } from '@internal-types/vendors'
-import { Layer } from '@api/layer'
+import { get } from '@utils/authenticatedHttp'
+
+const getVendors = get<{ data: Vendor[] }>(
+  ({ businessId }) => `/v1/businesses/${businessId}/vendors`,
+)
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -22,7 +26,7 @@ export const useVendors: UseVendors = () => {
 
   const { data } = useSWR(
     queryKey,
-    Layer.getVendors(apiUrl, auth?.access_token, {
+    getVendors(apiUrl, auth?.access_token, {
       params: {
         businessId,
       },

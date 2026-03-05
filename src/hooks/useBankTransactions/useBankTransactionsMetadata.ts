@@ -1,7 +1,15 @@
 import useSWR from 'swr'
 
-import { type BankTransaction } from '@internal-types/bank_transactions'
-import { getBankTransactionMetadata } from '@api/layer/bankTransactions'
+import { type BankTransaction, type BankTransactionMetadata } from '@internal-types/bank_transactions'
+import { get } from '@utils/authenticatedHttp'
+
+const getBankTransactionMetadata = get<{
+  data: BankTransactionMetadata
+  errors: unknown
+}>(
+  ({ businessId, bankTransactionId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`,
+)
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

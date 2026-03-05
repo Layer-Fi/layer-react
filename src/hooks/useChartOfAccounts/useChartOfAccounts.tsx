@@ -1,14 +1,21 @@
 import { useState } from 'react'
 
-import {
-  type EditAccount,
-  type NewAccount,
-} from '@internal-types/chart_of_accounts'
+import type { EditAccount, NewAccount } from '@internal-types/chart_of_accounts'
 import type { Direction } from '@internal-types/general'
 import { type FormError } from '@internal-types/general'
 import { type BaseSelectOption } from '@internal-types/general'
+import type { SingleChartAccountEncodedType } from '@schemas/generalLedger/ledgerAccount'
 import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { Layer } from '@api/layer'
+import { post, put } from '@utils/authenticatedHttp'
+
+const createAccount = post<{ data: SingleChartAccountEncodedType }, NewAccount>(
+  ({ businessId }) => `/v1/businesses/${businessId}/ledger/accounts`,
+)
+
+const updateAccount = put<{ data: SingleChartAccountEncodedType }, EditAccount>(
+  ({ businessId, accountId }) =>
+    `/v1/businesses/${businessId}/ledger/accounts/${accountId}`,
+)
 import { useAuth } from '@hooks/useAuth'
 import { useLedgerBalances, useLedgerBalancesCacheActions } from '@hooks/useLedgerBalances/useLedgerBalances'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -211,7 +218,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
     setApiError(undefined)
 
     try {
-      await Layer.createAccount(apiUrl, auth?.access_token, {
+      await createAccount(apiUrl, auth?.access_token, {
         params: { businessId },
         body: newAccount,
       })
@@ -235,7 +242,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
     }
 
     try {
-      await Layer.updateAccount(apiUrl, auth?.access_token, {
+      await updateAccount(apiUrl, auth?.access_token, {
         params: { businessId, accountId },
         body: newAccountData,
       })

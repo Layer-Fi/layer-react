@@ -2,10 +2,10 @@ import useSWR from 'swr'
 
 import type { RawTask } from '@internal-types/tasks'
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
+import { get } from '@utils/authenticatedHttp'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
 import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { get } from '@api/layer/authenticated_http'
 import {
   BOOKKEEPING_TAG_KEY,
   useBookkeepingStatus,

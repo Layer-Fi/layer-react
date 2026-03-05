@@ -1,8 +1,8 @@
 import useSWR from 'swr'
 
 import { type BankAccount } from '@internal-types/linked_accounts'
+import { get } from '@utils/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -39,6 +39,11 @@ function buildKey({
 }
 
 export class ListBankAccountsSWRResponse extends SWRQueryResult<BankAccount[]> {
+  get error(): unknown {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.swrResponse.error
+  }
+
   get disconnectedAccountsRequiringNotification() {
     return (this.data ?? []).filter(requiresNotification).length
   }
