@@ -55,7 +55,6 @@ export const ReportsTableErrorState = ({
         status={DataStateStatus.failed}
         title='Something went wrong'
         description='We couldn’t load your data.'
-        onRefresh={onRefresh}
         isLoading={isLoading}
       />
     </div>
