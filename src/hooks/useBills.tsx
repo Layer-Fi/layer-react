@@ -7,11 +7,39 @@ import { type Bill } from '@internal-types/bills'
 import { type DateRange } from '@internal-types/general'
 import { type Vendor } from '@internal-types/vendors'
 import { type APIError } from '@models/APIError'
-import { Layer } from '@api/layer'
-import type { GetBillsReturn } from '@api/layer/bills'
+import { get } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+export type GetBillsReturn = {
+  data?: Bill[]
+  meta?: Metadata
+  error?: unknown
+}
+
+interface GetBillsParams extends Record<string, string | undefined> {
+  businessId: string
+  cursor?: string
+  startDate?: string
+  endDate?: string
+  status?: string
+  vendorId?: string
+}
+
+export const getBills = get<GetBillsReturn, GetBillsParams>(
+  ({ businessId, startDate, endDate, status, vendorId, cursor, limit = 15 }) => `/v1/businesses/${businessId}/bills?${
+    vendorId ? `&vendor_id=${vendorId}` : ''
+  }${
+    cursor ? `&cursor=${cursor}` : ''
+  }${
+    startDate ? `&received_at_start=${startDate}` : ''
+  }${
+    endDate ? `&received_at_end=${endDate}` : ''
+  }${
+    status ? `&status=${status}` : ''
+  }&limit=${limit}&sort_by=received_at&sort_order=DESC`,
+)
 
 export type BillStatusFilter = 'PAID' | 'UNPAID'
 
@@ -102,7 +130,7 @@ export const useBills: UseBills = () => {
     getKey,
     async ([_query, nextCursor]) => {
       if (auth?.access_token) {
-        return Layer.getBills(apiUrl, auth?.access_token, {
+        return getBills(apiUrl, auth?.access_token, {
           params: {
             businessId,
             cursor: nextCursor as string ?? '',

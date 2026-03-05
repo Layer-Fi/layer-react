@@ -1,9 +1,17 @@
 import useSWR from 'swr'
 
-import { listExternalAccounts } from '@api/layer/linked_accounts'
+import type { LinkedAccounts } from '@internal-types/linked_accounts'
+import { get } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+const listExternalAccounts = get<
+  { data: LinkedAccounts },
+  {
+    businessId: string
+  }
+>(({ businessId }) => `/v1/businesses/${businessId}/external-accounts`)
 
 export const EXTERNAL_ACCOUNTS_TAG_KEY = '#external-accounts'
 

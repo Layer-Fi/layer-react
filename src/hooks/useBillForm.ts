@@ -1,16 +1,35 @@
 import { useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 
-import { type Bill, type BillLineItem } from '@internal-types/bills'
+import type { BillLineItem, SalesTax } from '@internal-types/bills'
+import { type Bill } from '@internal-types/bills'
 import { type Vendor } from '@internal-types/vendors'
+import { post } from '@utils/api/authenticatedHttp'
 import { convertFromCents, convertToCents } from '@utils/format'
-import { Layer } from '@api/layer'
-import { type SaveBillPayload } from '@api/layer/bills'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useBillsContext } from '@contexts/BillsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useForm } from '@features/forms/hooks/useForm'
+
+type SaveBillPayload = {
+  bill_number?: string
+  terms?: string
+  due_at?: string
+  received_at?: string
+  vendor_id?: string
+  vendor_external_id?: string
+  sales_taxes?: SalesTax[]
+  line_items?: Partial<BillLineItem>[]
+}
+
+const updateBill = post<{ data: Bill }, SaveBillPayload>(
+  ({ businessId, billId }) => `/v1/businesses/${businessId}/bills/${billId}/update`,
+)
+
+const createBill = post<{ data: Bill }, SaveBillPayload>(
+  ({ businessId }) => `/v1/businesses/${businessId}/bills`,
+)
 
 export type BillForm = {
   bill_number?: string
@@ -90,7 +109,7 @@ export const useBillForm = (bill?: EditableBill) => {
 
         let response
         if (bill?.id) {
-          response = await Layer.updateBill(apiUrl, auth?.access_token, {
+          response = await updateBill(apiUrl, auth?.access_token, {
             params: {
               businessId,
               billId: bill.id,
@@ -99,7 +118,7 @@ export const useBillForm = (bill?: EditableBill) => {
           })
         }
         else {
-          response = await Layer.createBill(apiUrl, auth?.access_token, {
+          response = await createBill(apiUrl, auth?.access_token, {
             params: { businessId },
             body: formattedValue,
           })

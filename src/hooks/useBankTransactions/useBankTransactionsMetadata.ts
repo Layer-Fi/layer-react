@@ -1,9 +1,17 @@
 import useSWR from 'swr'
 
-import { type BankTransaction } from '@internal-types/bank_transactions'
-import { getBankTransactionMetadata } from '@api/layer/bankTransactions'
+import { type BankTransaction, type BankTransactionMetadata } from '@internal-types/bank_transactions'
+import { get } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+const getBankTransactionMetadata = get<{
+  data: BankTransactionMetadata
+  errors: unknown
+}>(
+  ({ businessId, bankTransactionId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`,
+)
 
 export const GET_BANK_TRANSACTION_METADATA_TAG_KEY = '#bank-transaction-metadata'
 

@@ -2,10 +2,11 @@ import { useContext, useMemo, useState } from 'react'
 import { differenceInCalendarMonths, differenceInCalendarYears } from 'date-fns'
 import { type MultiValue } from 'react-select'
 
+import type { S3PresignedUrl } from '@internal-types/general'
 import { type DateRange, type MoneyFormat, type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossCompareConfig, type TagComparisonOption } from '@internal-types/profit_and_loss'
 import { DateGroupBy } from '@schemas/reports/unifiedReport'
-import { Layer } from '@api/layer'
+import { post } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useProfitAndLossComparisonReport } from '@hooks/useProfitAndLossComparison/useProfitAndLossComparisonReport'
 import { prepareFiltersBody, preparePeriodsBody } from '@hooks/useProfitAndLossComparison/utils'
@@ -13,6 +14,16 @@ import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+
+const profitAndLossComparisonCsv = post<{
+  data?: S3PresignedUrl
+  error?: unknown
+}>(
+  ({ businessId, moneyFormat }) =>
+    `/v1/businesses/${businessId}/reports/profit-and-loss/exports/comparison-csv?money_format=${
+      moneyFormat ? moneyFormat : 'DOLLAR_STRING'
+    }`,
+)
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -100,7 +111,7 @@ export function useProfitAndLossComparison({
   ) => {
     const periods = preparePeriodsBody(dateRange, comparePeriods, comparisonPeriodMode)
     const tagFilters = prepareFiltersBody(selectedCompareOptions)
-    return Layer.profitAndLossComparisonCsv(apiUrl, auth?.access_token, {
+    return profitAndLossComparisonCsv(apiUrl, auth?.access_token, {
       params: {
         businessId,
         moneyFormat,

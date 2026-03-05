@@ -1,11 +1,30 @@
 import { endOfMonth, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
 
+import type { StatementOfCashFlow } from '@internal-types/statement_of_cash_flow'
+import { get } from '@utils/api/authenticatedHttp'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { getStatementOfCashFlow } from '@api/layer/statement-of-cash-flow'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+export type GetStatementOfCashFlowParams = {
+  businessId: string
+  startDate: Date
+  endDate: Date
+}
+
+const getStatementOfCashFlow = get<
+  { data: StatementOfCashFlow },
+  GetStatementOfCashFlowParams
+>(
+  ({ businessId, startDate, endDate }) => {
+    const parameters = toDefinedSearchParameters({ startDate, endDate })
+
+    return `/v1/businesses/${businessId}/reports/cashflow-statement?${parameters}`
+  },
+)
 
 function buildKey({
   access_token: accessToken,

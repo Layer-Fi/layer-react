@@ -2,8 +2,8 @@ import { Schema } from 'effect/index'
 import useSWR from 'swr'
 
 import { AccountingConfigurationSchema, type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
+import { get } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 

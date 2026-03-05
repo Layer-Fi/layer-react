@@ -97,7 +97,6 @@ export default tsEslint.config(
       'import/no-relative-parent-imports': [
         'error',
         { ignore: [
-          '@api/',
           '@components/',
           '@ui/',
           '@blocks/',
@@ -154,8 +153,7 @@ export default tsEslint.config(
             // Cross-cutting helpers (used by api, hooks, components, etc.)
             '^(?:type:)?@utils/',
 
-            // Data layer: API definitions, then hooks that consume them
-            '^(?:type:)?@api/',
+            // Data layer: hooks
             '^(?:type:)?@hooks/',
 
             // App wiring & global state (can depend on hooks/api)

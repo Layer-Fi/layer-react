@@ -4,11 +4,16 @@ import useSWR from 'swr'
 import type { LedgerAccountBalanceWithNodeType } from '@internal-types/chart_of_accounts'
 import { DataModel } from '@internal-types/general'
 import { type LedgerAccountLineItem, type LedgerAccountsEntry } from '@internal-types/ledger_accounts'
-import { Layer } from '@api/layer'
+import { get } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ListLedgerAccountLinesReturn, useListLedgerAccountLines } from '@features/ledger/accounts/[ledgerAccountId]/api/useListLedgerAccountLines'
+
+const getLedgerAccountsEntry = get<{ data: LedgerAccountsEntry }>(
+  ({ businessId, entryId }) =>
+    `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
+)
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
   data?: LedgerAccountLineItem[] | undefined
@@ -93,7 +98,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     && selectedEntryId
     && auth?.access_token
     && `ledger-accounts-entry-${businessId}-${selectedEntryId}}`,
-    Layer.getLedgerAccountsEntry(apiUrl, auth?.access_token, {
+    getLedgerAccountsEntry(apiUrl, auth?.access_token, {
       params: { businessId, entryId: selectedEntryId },
     }),
   )

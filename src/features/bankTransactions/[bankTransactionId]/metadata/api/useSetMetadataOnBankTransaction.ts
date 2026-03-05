@@ -3,7 +3,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { type CustomerSchema, encodeCustomer } from '@schemas/customer'
 import { encodeVendor, type VendorSchema } from '@schemas/vendor'
-import { patch } from '@api/layer/authenticated_http'
+import { patch } from '@utils/api/authenticatedHttp'
 import { useMinMutatingMutation } from '@hooks/mutation/useMinMutatingMutation'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'

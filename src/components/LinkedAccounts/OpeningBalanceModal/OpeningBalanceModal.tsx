@@ -5,6 +5,11 @@ import { type BankAccount } from '@internal-types/linked_accounts'
 import { getActivationDate } from '@utils/business'
 import { convertToCents } from '@utils/format'
 import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import {
+  type OpeningBalanceAPIResponseResult,
+  type OpeningBalanceData,
+  useBulkSetOpeningBalanceAndDate,
+} from '@hooks/useLinkedAccounts/useUpdateOpeningBalanceAndDate'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Button } from '@ui/Button/Button'
@@ -12,11 +17,6 @@ import { Modal } from '@ui/Modal/Modal'
 import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
 import { AccountFormBox, type AccountFormBoxData } from '@components/LinkedAccounts/AccountFormBox/AccountFormBox'
-import {
-  type OpeningBalanceAPIResponseResult,
-  type OpeningBalanceData,
-  useBulkSetOpeningBalanceAndDate,
-} from '@components/LinkedAccounts/OpeningBalanceModal/useUpdateOpeningBalanceAndDate'
 
 type OpeningBalanceModalStringOverrides = {
   title?: string

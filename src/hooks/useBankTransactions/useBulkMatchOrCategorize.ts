@@ -3,7 +3,7 @@ import { pipe, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
-import { post } from '@api/layer/authenticated_http'
+import { post } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
 import { buildBulkMatchOrCategorizePayload } from '@hooks/useBankTransactions/utils'

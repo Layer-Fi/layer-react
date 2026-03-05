@@ -1,8 +1,8 @@
 import useSWRMutation from 'swr/mutation'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
+import { confirmAccountApi, excludeAccountApi } from '@hooks/useLinkedAccounts/useLinkedAccounts'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type AccountConfirmExcludeFormState = Record<string, boolean>
@@ -37,7 +37,7 @@ function exclude({
   businessId: string
   accountId: string
 }) {
-  return Layer.excludeAccount(
+  return excludeAccountApi(
     apiUrl,
     accessToken,
     {
@@ -63,7 +63,7 @@ function confirm({
   businessId: string
   accountId: string
 }) {
-  return Layer.confirmAccount(
+  return confirmAccountApi(
     apiUrl,
     accessToken,
     {

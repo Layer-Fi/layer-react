@@ -1,7 +1,8 @@
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
 import { type BankAccount } from '@internal-types/linked_accounts'
-import { get } from '@api/layer/authenticated_http'
+import { get } from '@utils/api/authenticatedHttp'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -37,36 +38,10 @@ function buildKey({
   }
 }
 
-export class ListBankAccountsSWRResponse {
-  private swrResponse: SWRResponse<BankAccount[]>
-
-  constructor(swrResponse: SWRResponse<BankAccount[]>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
+export class ListBankAccountsSWRResponse extends SWRQueryResult<BankAccount[]> {
   get error(): unknown {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.swrResponse.error
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
-  get mutate() {
-    return this.swrResponse.mutate
   }
 
   get disconnectedAccountsRequiringNotification() {

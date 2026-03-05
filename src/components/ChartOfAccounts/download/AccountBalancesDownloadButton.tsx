@@ -1,5 +1,5 @@
+import { useAccountBalancesDownload } from '@hooks/useChartOfAccounts/useAccountBalancesDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
-import { useAccountBalancesDownload } from '@components/ChartOfAccounts/download/useAccountBalancesDownload'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type AccountBalancesDownloadButtonProps = {

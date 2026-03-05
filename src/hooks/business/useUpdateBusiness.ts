@@ -2,13 +2,20 @@ import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
+import type { Business } from '@internal-types/business'
+import { put } from '@utils/api/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import {
-  updateBusiness,
-  type UpdateBusinessBody,
-} from '@api/layer/business'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+export type UpdateBusinessBody = Partial<Business>
+
+const updateBusiness = put<
+  { data: Business },
+  UpdateBusinessBody,
+  { businessId: string }>(
+  ({ businessId }) => `/v1/businesses/${businessId}`,
+)
 
 export const BUSINESS_TAG_KEY = 'business'
 

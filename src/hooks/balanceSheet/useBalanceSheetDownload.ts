@@ -2,9 +2,22 @@ import useSWRMutation from 'swr/mutation'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { getBalanceSheetExcel } from '@api/layer/balance_sheet'
+import { get } from '@utils/api/authenticatedHttp'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import type { GetBalanceSheetParams } from '@hooks/balanceSheet/useBalanceSheet'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+const getBalanceSheetExcel = get<
+  { data: S3PresignedUrl },
+  GetBalanceSheetParams
+>(
+  ({ businessId, effectiveDate }) => {
+    const parameters = toDefinedSearchParameters({ effectiveDate })
+
+    return `/v1/businesses/${businessId}/reports/balance-sheet/exports/excel?${parameters}`
+  },
+)
 
 const DOWNLOAD_BALANCE_SHEET_TAG_KEY = '#download-balance-sheet'
 

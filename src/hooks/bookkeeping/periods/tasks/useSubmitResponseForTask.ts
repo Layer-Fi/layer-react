@@ -2,11 +2,28 @@ import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
+import type { RawTask } from '@internal-types/tasks'
+import { post } from '@utils/api/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { submitUserResponseForTask } from '@api/layer/tasks'
 import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+type SubmitUserResponseForTaskBody = {
+  type: 'FreeResponse'
+  user_response: string
+}
+
+const submitUserResponseForTask = post<
+  { data: RawTask },
+  SubmitUserResponseForTaskBody,
+  {
+    businessId: string
+    taskId: string
+  }
+>(
+  ({ businessId, taskId }) => `/v1/businesses/${businessId}/tasks/${taskId}/user-response`,
+)
 
 function buildKey({
   access_token: accessToken,

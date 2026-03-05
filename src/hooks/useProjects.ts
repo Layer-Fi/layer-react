@@ -15,7 +15,6 @@ type TagState = Record<
   }
 >
 
-// We should tweak this for the demo
 const DEFAULT_TAG_STATE: TagState = {
   project: {
     label: 'Projects',

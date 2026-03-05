@@ -4,12 +4,20 @@ import useSWRMutation from 'swr/mutation'
 import { type Bill, type BillPayment, type BillPaymentMethod } from '@internal-types/bills'
 import { type Vendor } from '@internal-types/vendors'
 import { type APIError } from '@models/APIError'
+import { get, post } from '@utils/api/authenticatedHttp'
 import { convertFromCents, convertToCents } from '@utils/format'
-import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useBillsContext } from '@contexts/BillsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+const createBillPayment = post<{ data: BillPayment }, BillPayment>(
+  ({ businessId }) => `/v1/businesses/${businessId}/bills/bill-payments`,
+)
+
+const getBill = get<{ data: Bill }, { businessId: string, billId: string }>(
+  ({ businessId, billId }) => `/v1/businesses/${businessId}/bills/${billId}`,
+)
 
 export type BillsRecordPaymentFormRecord = {
   bill?: Bill
@@ -156,7 +164,7 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
       access_token: auth?.access_token, apiUrl: auth?.apiUrl, businessId, data: payload,
     }),
     ({ accessToken, apiUrl, businessId, data }) => (
-      Layer.createBillPayment(apiUrl, accessToken, {
+      createBillPayment(apiUrl, accessToken, {
         params: {
           businessId,
         },
@@ -183,7 +191,7 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
         return
       }
 
-      const response = await (Layer.getBill(apiUrl, auth?.access_token, {
+      const response = await (getBill(apiUrl, auth?.access_token, {
         params: {
           businessId,
           billId: item.bill.id,

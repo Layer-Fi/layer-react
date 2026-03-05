@@ -2,14 +2,36 @@ import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
+import { post } from '@utils/api/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import {
-  updateBusinessPersonnel,
-  type UpdateBusinessPersonnelBody,
-} from '@api/layer/businessPersonnel/updateBusinessPersonnel'
+import type { BusinessPersonnel, PersonnelRole, RawBusinessPersonnel } from '@hooks/businessPersonnel/types'
 import { BUSINESS_PERSONNEL_TAG_KEY } from '@hooks/businessPersonnel/useBusinessPersonnel'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+export type UpdateBusinessPersonnelBody = {
+  id: string
+} & Partial<
+  Pick<
+    RawBusinessPersonnel,
+    'full_name' | 'preferred_name' | 'external_id'
+  > & {
+    email_addresses: ReadonlyArray<{ email_address: string }>
+    phone_numbers: ReadonlyArray<{ phone_number: string }>
+    roles: ReadonlyArray<{ role: PersonnelRole }>
+  }
+>
+
+const updateBusinessPersonnel = post<
+  { data: BusinessPersonnel },
+  UpdateBusinessPersonnelBody,
+  {
+    businessId: string
+    businessPersonnelId: string
+  }
+>(({ businessId, businessPersonnelId }) => {
+  return `/v1/businesses/${businessId}/personnel/${businessPersonnelId}/update`
+})
 
 function buildKey({
   access_token: accessToken,

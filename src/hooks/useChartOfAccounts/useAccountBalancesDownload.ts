@@ -2,48 +2,50 @@ import useSWRMutation from 'swr/mutation'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { getCashflowStatementCSV } from '@api/layer/statement-of-cash-flow'
+import { get } from '@utils/api/authenticatedHttp'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const DOWNLOAD_CASHFLOW_STATEMENT_TAG_KEY = '#download-cashflow-statement'
+const getLedgerAccountBalancesCSV = get<{ data: S3PresignedUrl }>(
+  ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances/exports/csv`,
+)
 
 function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
-  startDate,
-  endDate,
+  startCutoff,
+  endCutoff,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
-  startDate: Date
-  endDate: Date
+  startCutoff?: Date
+  endCutoff?: Date
 }) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
-      startDate,
-      endDate,
-      tags: [DOWNLOAD_CASHFLOW_STATEMENT_TAG_KEY],
+      startCutoff,
+      endCutoff,
+      tags: ['#account-balances', '#exports', '#csv'],
     }
   }
 }
 
-type UseCashflowStatementDownloadOptions = {
-  startDate: Date
-  endDate: Date
+type UseAccountBalancesDownloadOptions = {
+  startCutoff?: Date
+  endCutoff?: Date
   onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
 }
 
-export function useCashflowStatementDownload({
-  startDate,
-  endDate,
+export function useAccountBalancesDownload({
+  startCutoff,
+  endCutoff,
   onSuccess,
-}: UseCashflowStatementDownloadOptions) {
+}: UseAccountBalancesDownloadOptions) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -51,17 +53,17 @@ export function useCashflowStatementDownload({
     () => buildKey({
       ...auth,
       businessId,
-      startDate,
-      endDate,
+      startCutoff,
+      endCutoff,
     }),
-    ({ accessToken, apiUrl, businessId, startDate, endDate }) => getCashflowStatementCSV(
+    ({ accessToken, apiUrl, businessId, startCutoff, endCutoff }) => getLedgerAccountBalancesCSV(
       apiUrl,
       accessToken,
       {
         params: {
           businessId,
-          startDate,
-          endDate,
+          startCutoff: startCutoff?.toISOString(),
+          endCutoff: endCutoff?.toISOString(),
         },
       })().then(({ data }) => {
       if (onSuccess) {

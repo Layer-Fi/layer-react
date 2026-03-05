@@ -3,12 +3,70 @@ import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
+import { get } from '@utils/api/authenticatedHttp'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { getBankTransactions, type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+export type GetBankTransactionsReturn = {
+  data: ReadonlyArray<BankTransaction>
+  meta: {
+    pagination: {
+      cursor?: string
+      has_more: boolean
+    }
+  }
+}
+
+type GetBankTransactionsPaginatedParams = {
+  businessId: string
+  categorized?: boolean
+  direction?: 'INFLOW' | 'OUTFLOW'
+  query?: string
+  startDate?: Date
+  endDate?: Date
+  tagFilterQueryString?: string
+  sortOrder?: 'ASC' | 'DESC'
+  sortBy?: string
+  cursor?: string
+  limit?: number
+}
+
+const getBankTransactions = get<
+  GetBankTransactionsReturn,
+  GetBankTransactionsPaginatedParams
+>(
+  ({
+    businessId,
+    cursor,
+    categorized,
+    direction,
+    limit,
+    query,
+    startDate,
+    endDate,
+    sortBy = 'date',
+    sortOrder = 'DESC',
+    tagFilterQueryString,
+  }: GetBankTransactionsPaginatedParams) => {
+    const parameters = toDefinedSearchParameters({
+      cursor,
+      categorized,
+      direction,
+      q: query,
+      startDate,
+      endDate,
+      sortBy,
+      sortOrder,
+      limit,
+    })
+
+    return `/v1/businesses/${businessId}/bank-transactions?${parameters}${tagFilterQueryString ? `&${tagFilterQueryString}` : ''}`
+  },
+)
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
 

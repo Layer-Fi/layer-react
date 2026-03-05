@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 
-import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
+import { getBills } from '@hooks/useBills'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -42,7 +42,7 @@ export const useUnpaidBillsByVendor = (
       vendorId,
     }),
     ({ accessToken, apiUrl, businessId, vendorId }) =>
-      Layer.getBills(apiUrl, accessToken, {
+      getBills(apiUrl, accessToken, {
         params: {
           businessId,
           status: 'RECEIVED,PARTIALLY_PAID',
