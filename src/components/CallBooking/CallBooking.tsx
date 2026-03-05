@@ -3,7 +3,7 @@ import { Link as LinkIcon } from 'lucide-react'
 import { Clock, Milestone, Users, Video } from 'lucide-react'
 
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBookings'
-import { DATE_FORMAT_WITH_TIME_READABLE } from '@config/general'
+import { DATE_FORMAT_WITH_TIME_READABLE } from '@utils/time/timeFormats'
 import { getTimezoneDisplay } from '@utils/time/timezoneUtils'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'

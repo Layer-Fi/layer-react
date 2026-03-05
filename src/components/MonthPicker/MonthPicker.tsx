@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { format as formatTime } from 'date-fns'
 import { Dialog, DialogTrigger } from 'react-aria-components'
 
-import { MONTH_YEAR_FORMAT, MONTH_YEAR_FORMAT_SHORT } from '@config/general'
+import { MONTH_YEAR_FORMAT, MONTH_YEAR_FORMAT_SHORT } from '@utils/time/timeFormats'
 import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'

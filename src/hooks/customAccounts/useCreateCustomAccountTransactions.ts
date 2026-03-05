@@ -1,7 +1,7 @@
 import useSWRMutation from 'swr/mutation'
 
 import { type BankTransaction } from '@internal-types/bank_transactions'
-import { type APIError } from '@models/APIError'
+import { type APIError } from '@utils/api/apiError'
 import { post } from '@utils/api/authenticatedHttp'
 import type { RawCustomTransaction } from '@hooks/customAccounts/types'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/customAccounts/useCustomAccounts'

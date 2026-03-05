@@ -2,7 +2,7 @@ import { format, subMonths, subYears } from 'date-fns'
 
 import { type LineItemEncoded } from '@schemas/common/lineItem'
 import { DateGroupBy } from '@schemas/reports/unifiedReport'
-import { DATE_FORMAT, MONTH_YEAR_FORMAT_SHORT } from '@config/general'
+import { DATE_FORMAT, MONTH_YEAR_FORMAT_SHORT } from '@utils/time/timeFormats'
 
 export type ComparisonPeriodParams = { endDate: Date, numberOfPeriods: number } & (
   | { mode: Exclude<DateGroupBy, DateGroupBy.AllTime> }

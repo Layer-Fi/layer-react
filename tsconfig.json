@@ -53,10 +53,8 @@
       "@internal-types/*": ["src/types/*"],
       "@schemas/*": ["src/schemas/*"],
       "@views/*": ["src/views/*"],
-      "@config/*": ["src/config/*"],
       "@icons/*": ["src/icons/*"],
-      "@assets/*": ["src/assets/*"],
-      "@models/*": ["src/models/*"]
+      "@assets/*": ["src/assets/*"]
     }
   },
 

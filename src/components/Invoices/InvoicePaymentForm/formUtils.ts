@@ -2,8 +2,8 @@ import { fromDate, getLocalTimeZone, toCalendarDate, today } from '@internationa
 import { formatDate, startOfToday } from 'date-fns'
 import { BigDecimal as BD } from 'effect'
 
-import { DATE_FORMAT_SHORT } from '@config/general'
 import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
+import { DATE_FORMAT_SHORT } from '@utils/time/timeFormats'
 import { type DedicatedInvoicePaymentForm } from '@features/invoices/invoicePaymentSchemas'
 import { type Invoice } from '@features/invoices/invoiceSchemas'
 

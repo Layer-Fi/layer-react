@@ -3,7 +3,7 @@ import { getYear } from 'date-fns'
 import { Car } from 'lucide-react'
 
 import type { Trip } from '@schemas/trip'
-import { BREAKPOINTS } from '@config/general'
+import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useAutoResetPageIndex } from '@hooks/pagination/useAutoResetPageIndex'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'

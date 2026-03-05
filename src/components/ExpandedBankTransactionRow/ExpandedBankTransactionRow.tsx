@@ -11,11 +11,11 @@ import {
 } from '@internal-types/bank_transactions'
 import { type Split } from '@internal-types/bank_transactions'
 import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
-import { centsToDollars as formatMoney } from '@models/Money'
 import {
   hasMatch,
 } from '@utils/bankTransactions'
 import { getBankTransactionFirstSuggestedMatch } from '@utils/bankTransactions'
+import { centsToDollars as formatMoney } from '@utils/money'
 import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'

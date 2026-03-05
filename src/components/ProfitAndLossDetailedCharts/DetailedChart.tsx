@@ -11,8 +11,8 @@ import {
 } from 'recharts'
 import type { CartesianViewBox } from 'recharts/types/util/types'
 
-import { centsToDollars as formatMoney } from '@models/Money'
 import { formatPercent } from '@utils/format'
+import { centsToDollars as formatMoney } from '@utils/money'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { type SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'

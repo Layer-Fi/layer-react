@@ -1,4 +1,4 @@
-import { type APIError } from '@models/APIError'
+import { type APIError } from '@utils/api/apiError'
 
 type LayerErrorType = 'unauthenticated' | 'api' | 'render'
 type LayerErrorScope = 'BankTransaction' | 'ChartOfAccounts'

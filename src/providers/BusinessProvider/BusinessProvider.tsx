@@ -11,8 +11,8 @@ import {
   type LayerThemeConfig,
   type OnboardingStep,
 } from '@internal-types/layer_context'
-import { errorHandler, type LayerError } from '@models/ErrorHandler'
 import { get } from '@utils/api/authenticatedHttp'
+import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
 import { useAccountingConfiguration } from '@hooks/useAccountingConfiguration/useAccountingConfiguration'

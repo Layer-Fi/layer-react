@@ -1,5 +1,5 @@
 import { type BankTransaction } from '@internal-types/bank_transactions'
-import { DATE_FORMAT } from '@config/general'
+import { DATE_FORMAT } from '@utils/time/timeFormats'
 import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'

@@ -18,8 +18,3 @@ export const DATE_FORMAT_SHORT_PADDED = 'MM/dd/yyyy'
 export const DATE_FORMAT_WITH_TIME = 'LLL d, yyyy h:mm a'
 export const DATE_FORMAT_WITH_TIME_READABLE = 'LLLL do, yyyy \'at\' h:mm a'
 export const TIME_FORMAT = 'p'
-
-export const BREAKPOINTS = {
-  TABLET: 760,
-  MOBILE: 500,
-}

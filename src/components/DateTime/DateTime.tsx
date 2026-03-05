@@ -1,6 +1,6 @@
 import { format as formatTime, parseISO } from 'date-fns'
 
-import { DATE_FORMAT, TIME_FORMAT } from '@config/general'
+import { DATE_FORMAT, TIME_FORMAT } from '@utils/time/timeFormats'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
 import { Text } from '@components/Typography/Text'
 

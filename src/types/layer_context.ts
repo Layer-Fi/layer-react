@@ -2,7 +2,7 @@ import { type Business } from '@internal-types/business'
 import { type DateRange } from '@internal-types/general'
 import { type DataModel } from '@internal-types/general'
 import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
-import { type LayerError } from '@models/ErrorHandler'
+import { type LayerError } from '@utils/api/errorHandler'
 import type { EventCallbacks } from '@providers/LayerProvider/LayerProvider'
 import { type ToastProps } from '@components/Toast/Toast'
 
