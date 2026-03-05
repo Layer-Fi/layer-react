@@ -27,11 +27,19 @@ export const InvoiceFinalizeStep = ({
 }: InvoiceFinalizeStepProps) => {
   const { invoice } = useInvoicePreviewRoute()
   const { data, isLoading, isError } = useInvoicePaymentMethods({ invoiceId: invoice.id })
+  const paymentMethodsData = data?.data
+  const showFinalizeForm = !isError && paymentMethodsData !== undefined
   const [formErrorMessage, setFormErrorMessage] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     setFormErrorMessage(undefined)
   }, [invoice.id])
+
+  useEffect(() => {
+    if (!showFinalizeForm) {
+      setFormErrorMessage(undefined)
+    }
+  }, [showFinalizeForm])
 
   const onErrorMessageChange = useCallback((message?: string) => {
     setFormErrorMessage(message)
@@ -46,7 +54,7 @@ export const InvoiceFinalizeStep = ({
         </VStack>
         <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanel' fluid>
           <ConditionalBlock
-            data={data?.data}
+            data={paymentMethodsData}
             isLoading={isLoading}
             isError={isError}
             Loading={(
