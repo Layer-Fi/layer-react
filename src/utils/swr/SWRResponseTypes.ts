@@ -25,9 +25,7 @@ export class SWRQueryResult<T> {
   get isError() {
     return this.swrResponse.error !== undefined
   }
-}
 
-export class SWRQueryResultWithMutate<T> extends SWRQueryResult<T> {
   get mutate() {
     return this.swrResponse.mutate
   }
@@ -58,6 +56,22 @@ export class SWRInfiniteResult<T> {
 
   get isError() {
     return this.swrResponse.error !== undefined
+  }
+
+  get mutate() {
+    return this.swrResponse.mutate
+  }
+
+  get refetch() {
+    return this.swrResponse.mutate
+  }
+
+  get size() {
+    return this.swrResponse.size
+  }
+
+  get setSize() {
+    return this.swrResponse.setSize
   }
 }
 
