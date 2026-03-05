@@ -36,6 +36,10 @@
   }
 
   &[data-size='xl'] {
+    inline-size: min(54rem, 100%);
+  }
+
+  &[data-size='2xl'] {
     inline-size: min(70rem, 100%);
   }
 
