@@ -105,6 +105,7 @@ type UseLinkedAccounts = () => {
   isLoading: boolean
   loadingStatus: LoadedStatus
   isValidating: boolean
+  isLinking: boolean
   error: unknown
   addConnection: (source: AccountSource) => Promise<void>
   removeConnection: (source: AccountSource, sourceId: string) => Promise<void>
@@ -143,6 +144,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
+  const [isLinking, setIsLinking] = useState(false)
   const [accountsToAddOpeningBalanceInModal, setAccountsToAddOpeningBalanceInModal] =
     useState<BankAccount[]>([])
 
@@ -215,6 +217,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     publicToken: string,
     metadata: PlaidLinkOnSuccessMetadata,
   ) => {
+    setIsLinking(true)
     preloadAccountConfirmation()
 
     try {
@@ -225,6 +228,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       await refetchAccounts()
     }
     finally {
+      setIsLinking(false)
       resetAccountConfirmation()
     }
   }
@@ -417,6 +421,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     isLoading,
     loadingStatus,
     isValidating,
+    isLinking,
     error: responseError,
     addConnection,
     removeConnection,

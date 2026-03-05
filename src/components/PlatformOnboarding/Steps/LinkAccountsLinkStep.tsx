@@ -5,6 +5,7 @@ import { getBankAccountDisplayName, getBankAccountInstitution } from '@hooks/use
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import ChevronRight from '@icons/ChevronRight'
 import LinkIcon from '@icons/Link'
+import { ElevatedLoadingSpinner, ElevatedLoadingSpinnerContainer } from '@ui/Loading/ElevatedLoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { ActionableRow } from '@components/ActionableRow/ActionableRow'
@@ -22,6 +23,7 @@ export function LinkAccountsLinkStep() {
   const {
     data,
     loadingStatus,
+    isLinking,
     error,
     refetchAccounts,
     addConnection,
@@ -52,35 +54,38 @@ export function LinkAccountsLinkStep() {
           </VStack>
         )}
         Container={({ children }) => (
-          <VStack>
-            <VStack gap='2xs' pbe='md'>
-              <Heading level={3} size='sm'>
-                {`We've found ${pluralize('account', effectiveAccounts.length, true)}`}
-              </Heading>
-              <Text status='disabled'>
-                {'You\'ll have the chance to remove any accounts you don\'t use for your business in the next step.'}
-              </Text>
+          <ElevatedLoadingSpinnerContainer>
+            {isLinking && <ElevatedLoadingSpinner />}
+            <VStack>
+              <VStack gap='2xs' pbe='md'>
+                <Heading level={3} size='sm'>
+                  {`We've found ${pluralize('account', effectiveAccounts.length, true)}`}
+                </Heading>
+                <Text status='disabled'>
+                  You’ll have the chance to remove any accounts you don’t use for your business in the next step.
+                </Text>
+              </VStack>
+              <LinkAccountsListContainer>
+                {children}
+              </LinkAccountsListContainer>
+              <VStack pbs='xl'>
+                <ActionableRow
+                  title='Do you use any other bank accounts or credit cards for your business?'
+                  button={(
+                    <Button
+                      onClick={() => { void addConnection('PLAID') }}
+                      rightIcon={<LinkIcon size={12} />}
+                      disabled={loadingStatus !== 'complete'}
+                      fullWidth={false}
+                      style={{ width: 'auto', minWidth: 'fit-content' }}
+                    >
+                      Link another bank
+                    </Button>
+                  )}
+                />
+              </VStack>
             </VStack>
-            <LinkAccountsListContainer>
-              {children}
-            </LinkAccountsListContainer>
-            <VStack pbs='xl'>
-              <ActionableRow
-                title='Do you use any other bank accounts or credit cards for your business?'
-                button={(
-                  <Button
-                    onClick={() => { void addConnection('PLAID') }}
-                    rightIcon={<LinkIcon size={12} />}
-                    disabled={loadingStatus !== 'complete'}
-                    fullWidth={false}
-                    style={{ width: 'auto', minWidth: 'fit-content' }}
-                  >
-                    Link another bank
-                  </Button>
-                )}
-              />
-            </VStack>
-          </VStack>
+          </ElevatedLoadingSpinnerContainer>
         )}
         isError={Boolean(error)}
         Error={(
