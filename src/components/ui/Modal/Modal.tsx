@@ -13,7 +13,7 @@ import { useVirtualKeyboardHeight } from '@hooks/useVirtualKeyboardHeight/useVir
 
 import './modal.scss'
 
-type ModalSize = 'md' | 'lg' | 'xl'
+type ModalSize = 'md' | 'lg' | 'xl' | '2xl'
 type ModalVariant = 'center' | 'drawer' | 'mobile-drawer' | 'mobile-popover'
 
 const BASE_MODAL_OVERLAY_CLASS_NAME = 'Layer__ModalOverlay'

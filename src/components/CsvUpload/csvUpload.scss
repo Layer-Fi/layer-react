@@ -62,41 +62,56 @@
   }
 }
 
-.Layer__csv-upload__validate-csv-table__container {
-  position: relative;
-  overflow: auto;
+.Layer__CsvUpload__Table__wrapper {
   border-radius: var(--border-radius-3xs);
   border: 1px solid var(--border-color);
   outline-offset: 1px;
-}
 
-.Layer__csv-upload__validate-csv-table__header {
-  position: sticky;
-  z-index: 1;
-  top: 0;
-  background-color: var(--bg-subtle);
-}
+  .Layer__UI__VirtualizedTable__container {
+    border-radius: inherit;
+  }
 
-.Layer__csv-upload__validate-csv-table__header-row {
-  display: flex;
-  width: 100%;
-}
+  .Layer__UI__VirtualizedTable__header {
+    background-color: var(--bg-subtle);
+  }
 
-.Layer__table-header.Layer__csv-upload__validate-csv-table__header-cell {
-  box-sizing: border-box;
-  display: flex;
-  flex: 1 1 0;
-  padding: 0;
-  border-bottom: 1px solid var(--border-color);
-  border-left: 1px solid var(--border-color);
+  .Layer__UI__VirtualizedTable__header > tr {
+    display: grid;
+  }
 
-  &--row {
-    flex: 0 0 68px;
-    border-left: none;
+  .Layer__UI__VirtualizedTable__header > tr,
+  .Layer__UI__VirtualizedTable__row {
+    grid-template-columns: 68px;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+  }
+
+  .Layer__UI__Table-Column {
+    padding: 0;
+    border-bottom: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color);
+
+    &:first-child {
+      padding-left: 0;
+      border-left: none;
+    }
+  }
+
+  .Layer__UI__Table-Cell {
+    border-left: 1px solid var(--border-color);
+
+    &:first-child {
+      padding-left: 0;
+      border-left: none;
+    }
+
+    &:has(.Layer__CsvUpload__Table__cell-content--row-error) {
+      background-color: var(--color-info-error-bg);
+    }
   }
 }
 
-.Layer__csv-upload__validate-csv-table__header-cell-content {
+.Layer__CsvUpload__Table__header-cell-content {
   padding: var(--spacing-sm) var(--spacing-md);
 
   &--row {
@@ -104,33 +119,7 @@
   }
 }
 
-.Layer__table-row.Layer__csv-upload__validate-csv-table__row {
-  position: absolute;
-  display: flex;
-  width: 100%;
-
-  &--error {
-    background-color: var(--color-info-error-bg);
-  }
-
-  &--bottom-border {
-    border-bottom: 1px solid var(--border-color);
-  }
-}
-
-.Layer__table-cell.Layer__csv-upload__validate-csv-table__cell {
-  box-sizing: border-box;
-  flex: 1 1 0%;
-  min-width: 0;
-  border-left: 1px solid var(--border-color);
-
-  &--row {
-    flex: 0 0 68px;
-    border-left: none;
-  }
-}
-
-.Layer__table .Layer__table-cell .Layer__table-cell-content.Layer__csv-upload__validate-csv-table__cell-content {
+.Layer__CsvUpload__Table__cell-content {
   display: block;
   align-content: center;
   overflow: hidden;

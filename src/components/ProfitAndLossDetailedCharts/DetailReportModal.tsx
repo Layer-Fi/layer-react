@@ -28,7 +28,7 @@ export function DetailReportModal({
   return (
     <Drawer
       isOpen={isOpen}
-      size='xl'
+      size='2xl'
       onOpenChange={onOpenChange}
       aria-label='Profit and Loss Detail Report'
       variant={shouldUseMobileDrawer ? 'mobile-drawer' : 'drawer'}
