@@ -84,7 +84,13 @@ export function useProfitAndLossComparisonReport({
     ).then(({ data }) => data),
   )
 
-  return response
+  return {
+    data: response.data,
+    isLoading: response.isLoading,
+    isValidating: response.isValidating,
+    isError: response.error !== undefined,
+    mutate: response.mutate,
+  }
 }
 
 export const useProfitAndLossComparisonReportCacheActions = () => {

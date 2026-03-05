@@ -56,14 +56,14 @@ const BalanceSheetView = ({
   dateSelectionMode = 'full',
 }: BalanceSheetViewProps) => {
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
-  const { data, isLoading, isValidating, error } = useBalanceSheet({ effectiveDate })
+  const { data, isLoading, isValidating, isError } = useBalanceSheet({ effectiveDate })
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   const content = (
     <ConditionalBlock
       data={data}
       isLoading={isLoading}
-      isError={Boolean(error)}
+      isError={isError}
       Loading={(
         <ReportsTableLoader
           typeColumnHeader={stringOverrides?.balanceSheetTable?.typeColumnHeader}

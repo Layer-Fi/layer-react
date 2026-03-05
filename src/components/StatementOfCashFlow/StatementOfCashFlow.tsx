@@ -39,7 +39,7 @@ const StatementOfCashFlowView = ({
   dateSelectionMode = 'full',
 }: StatementOfCashFlowViewProps) => {
   const dateRange = useGlobalDateRange({ dateSelectionMode })
-  const { data, isLoading, isValidating, error } = useStatementOfCashFlow(dateRange)
+  const { data, isLoading, isValidating, isError } = useStatementOfCashFlow(dateRange)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
   const isMobileView = view === 'mobile'
   const tableStringOverrides = stringOverrides?.statementOfCashFlowTable
@@ -78,7 +78,7 @@ const StatementOfCashFlowView = ({
         <ConditionalBlock
           data={data}
           isLoading={isLoading}
-          isError={Boolean(error)}
+          isError={isError}
           Loading={(
             <ReportsTableLoader
               typeColumnHeader={tableStringOverrides?.typeColumnHeader}

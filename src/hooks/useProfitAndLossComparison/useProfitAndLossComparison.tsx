@@ -88,7 +88,7 @@ export function useProfitAndLossComparison({
     ? prepareFiltersBody(selectedCompareOptions)
     : undefined
 
-  const { data, isLoading, isValidating, error } = useProfitAndLossComparisonReport({
+  const { data, isLoading, isValidating, isError } = useProfitAndLossComparisonReport({
     periods,
     tagFilters,
     reportingBasis,
@@ -117,7 +117,7 @@ export function useProfitAndLossComparison({
     data: data?.pnls,
     isLoading,
     isValidating,
-    isError: Boolean(error),
+    isError,
     compareModeActive,
     comparePeriods,
     compareOptions: comparisonConfig?.tagComparisonOptions ?? [],

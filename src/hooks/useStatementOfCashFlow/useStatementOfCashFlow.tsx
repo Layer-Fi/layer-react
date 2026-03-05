@@ -42,7 +42,7 @@ export function useStatementOfCashFlow({
   const { apiUrl } = useEnvironment()
   const { businessId } = useLayerContext()
 
-  return useSWR(
+  const response = useSWR(
     buildKey({
       ...auth,
       apiUrl,
@@ -61,4 +61,12 @@ export function useStatementOfCashFlow({
         },
       })().then(({ data }) => data),
   )
+
+  return {
+    data: response.data,
+    isLoading: response.isLoading,
+    isValidating: response.isValidating,
+    isError: response.error !== undefined,
+    mutate: response.mutate,
+  }
 }
