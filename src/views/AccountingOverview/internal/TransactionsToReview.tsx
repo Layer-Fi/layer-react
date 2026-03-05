@@ -1,5 +1,5 @@
 import { useContext, useMemo } from 'react'
-import { getMonth, getYear } from 'date-fns'
+import { endOfMonth, getMonth, getYear, startOfMonth } from 'date-fns'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
@@ -35,25 +35,27 @@ export function TransactionsToReview({
 
   const { dateRange } = useContext(ProfitAndLossContext)
 
+  const monthStartDate = startOfMonth(dateRange.startDate)
+  const monthEndDate = endOfMonth(dateRange.startDate)
+
   const { data, isLoading, isError, mutate } = useProfitAndLossSummaries({
-    startYear: dateRange.startDate.getFullYear(),
-    startMonth: dateRange.startDate.getMonth() + 1,
-    endYear: dateRange.endDate.getFullYear(),
-    endMonth: dateRange.endDate.getMonth() + 1,
+    startYear: monthStartDate.getFullYear(),
+    startMonth: monthStartDate.getMonth() + 1,
+    endYear: monthEndDate.getFullYear(),
+    endMonth: monthEndDate.getMonth() + 1,
     tagKey: tagFilter?.key,
     tagValues: tagFilter?.values?.join(','),
   })
 
   const activeMonth = useMemo(() => {
-    if (!data || !dateRange) return undefined
-    const { startDate } = dateRange
+    if (!data) return undefined
 
     return data.months.find(
       summary =>
-        summary.month - 1 === getMonth(startDate)
-        && summary.year === getYear(startDate),
+        summary.month - 1 === getMonth(monthStartDate)
+        && summary.year === getYear(monthStartDate),
     )
-  }, [data, dateRange])
+  }, [data, monthStartDate])
 
   const hasLoadedData = !isLoading && activeMonth
   const numTransactionsToReview = activeMonth?.uncategorizedTransactions ?? 0

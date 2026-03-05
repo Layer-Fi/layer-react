@@ -1,5 +1,5 @@
 import { type ReactNode, useContext, useMemo } from 'react'
-import { format, sub } from 'date-fns'
+import { format, startOfMonth, sub } from 'date-fns'
 
 import { MONTH_FORMAT_SHORT } from '@config/general'
 import { calculatePercentageChange } from '@utils/percentageChange'
@@ -63,7 +63,7 @@ function Internal_ProfitAndLossSummaries({
     dateRange,
   } = useContext(ProfitAndLossContext)
 
-  const { startDate } = dateRange
+  const startDate = startOfMonth(dateRange.startDate)
 
   const previousMonthStart = sub(startDate, { months: 1 })
   const { data: previousData } = useProfitAndLossSummaries({
