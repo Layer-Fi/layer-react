@@ -8,7 +8,7 @@ import { VirtualizedDataTable } from '@components/VirtualizedDataTable/Virtualiz
 
 const ROW_HEIGHT = 52
 const MAX_NUM_ROWS = 8
-const TABLE_HEIGHT = ROW_HEIGHT * MAX_NUM_ROWS + ROW_HEIGHT + 1
+const TABLE_HEIGHT = ROW_HEIGHT * (MAX_NUM_ROWS + 1) - 1
 
 const EmptyState: React.FC = () => null
 const ErrorState: React.FC = () => null
