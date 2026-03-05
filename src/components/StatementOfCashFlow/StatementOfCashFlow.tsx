@@ -7,7 +7,8 @@ import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDa
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
-import { ReportsTableErrorState, ReportsTableLoader } from '@components/ReportsTableState/ReportsTableState'
+import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTableErrorState'
+import { ReportsTableLoader } from '@components/ReportsTableState/ReportsTableLoader'
 import { STATEMENT_OF_CASH_FLOW_ROWS } from '@components/StatementOfCashFlow/constants'
 import { CashflowStatementDownloadButton } from '@components/StatementOfCashFlow/download/CashflowStatementDownloadButton'
 import { StatementOfCashFlowTable } from '@components/StatementOfCashFlowTable/StatementOfCashFlowTable'
@@ -43,15 +44,6 @@ const StatementOfCashFlowView = ({
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
   const isMobileView = view === 'mobile'
   const tableStringOverrides = stringOverrides?.statementOfCashFlowTable
-  const renderStatementOfCashFlowTable = (
-    statementOfCashFlowData: NonNullable<typeof data>,
-  ) => (
-    <StatementOfCashFlowTable
-      data={statementOfCashFlowData}
-      config={STATEMENT_OF_CASH_FLOW_ROWS}
-      stringOverrides={tableStringOverrides}
-    />
-  )
 
   return (
     <TableProvider>
@@ -92,7 +84,15 @@ const StatementOfCashFlowView = ({
             />
           )}
         >
-          {({ data }) => renderStatementOfCashFlowTable(data)}
+          {({ data }) => ((
+            statementOfCashFlowData: NonNullable<typeof data>,
+          ) => (
+            <StatementOfCashFlowTable
+              data={statementOfCashFlowData}
+              config={STATEMENT_OF_CASH_FLOW_ROWS}
+              stringOverrides={tableStringOverrides}
+            />
+          ))(data)}
         </ConditionalBlock>
       </View>
     </TableProvider>

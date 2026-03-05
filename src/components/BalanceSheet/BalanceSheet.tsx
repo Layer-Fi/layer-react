@@ -15,7 +15,8 @@ import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSel
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
-import { ReportsTableErrorState, ReportsTableLoader } from '@components/ReportsTableState/ReportsTableState'
+import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTableErrorState'
+import { ReportsTableLoader } from '@components/ReportsTableState/ReportsTableLoader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { View } from '@components/View/View'
 

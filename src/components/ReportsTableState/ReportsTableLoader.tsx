@@ -1,5 +1,4 @@
 import { TableCellAlign } from '@internal-types/table'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { SkeletonTableLoader } from '@components/SkeletonTableLoader/SkeletonTableLoader'
 import { Table } from '@components/Table/Table'
 import { TableCell } from '@components/TableCell/TableCell'
@@ -37,24 +36,5 @@ export const ReportsTableLoader = ({
         ]}
       />
     </Table>
-  )
-}
-
-type ReportsTableErrorStateProps = {
-  isLoading?: boolean
-}
-
-export const ReportsTableErrorState = ({
-  isLoading,
-}: ReportsTableErrorStateProps) => {
-  return (
-    <div className='Layer__table-state-container'>
-      <DataState
-        status={DataStateStatus.failed}
-        title='Something went wrong'
-        description='We couldn’t load your data.'
-        isLoading={isLoading}
-      />
-    </div>
   )
 }
