@@ -1,5 +1,5 @@
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
 import {
   type BookkeepingConfiguration,
@@ -7,6 +7,7 @@ import {
   BookkeepingStatus,
   TransactionTaggingStrategy,
 } from '@schemas/bookkeepingConfiguration'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -16,34 +17,6 @@ export type { BookkeepingConfiguration }
 export { BookkeepingStatus, TransactionTaggingStrategy }
 
 export const BOOKKEEPING_CONFIGURATION_TAG_KEY = '#bookkeeping-configuration'
-
-class BookkeepingConfigurationSWRResponse {
-  private swrResponse: SWRResponse<BookkeepingConfiguration>
-
-  constructor(swrResponse: SWRResponse<BookkeepingConfiguration>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
-  get mutate() {
-    return this.swrResponse.mutate
-  }
-}
 
 type GetBookkeepingConfigurationParams = {
   businessId: string
@@ -98,5 +71,5 @@ export function useBookkeepingConfiguration() {
         .then(({ data }) => data),
   )
 
-  return new BookkeepingConfigurationSWRResponse(response)
+  return new SWRQueryResult(response)
 }

@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { Effect, Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
 import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customer'
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { patch, post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -57,33 +57,6 @@ const UpsertCustomerReturnSchema = Schema.Struct({
   data: CustomerSchema,
 })
 type UpsertCustomerReturn = typeof UpsertCustomerReturnSchema.Type
-
-type UpsertCustomerSWRMutationResponse =
-  SWRMutationResponse<UpsertCustomerReturn, unknown, Key, UpsertCustomerBody>
-
-class UpsertCustomerSWRResponse {
-  private swrResponse: UpsertCustomerSWRMutationResponse
-
-  constructor(swrResponse: UpsertCustomerSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get error() {
-    return this.swrResponse.error
-  }
-}
 
 type RequestArgs = {
   apiUrl: string
@@ -180,7 +153,7 @@ export const useUpsertCustomer = (props: UseUpsertCustomerProps) => {
     },
   )
 
-  const mutationResponse = new UpsertCustomerSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const { patchCustomerByKey, forceReloadCustomers } = useCustomersGlobalCacheActions()
   const { forceReloadInvoices } = useInvoicesGlobalCacheActions()

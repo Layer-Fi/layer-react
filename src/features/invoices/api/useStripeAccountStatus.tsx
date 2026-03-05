@@ -1,37 +1,14 @@
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
 import { type StripeAccountStatusResponse, StripeAccountStatusResponseSchema } from '@schemas/stripeAccountStatus'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const STRIPE_ACCOUNT_STATUS_TAG_KEY = '#stripe-account-status'
-
-class StripeAccountStatusSWRResponse {
-  private swrResponse: SWRResponse<StripeAccountStatusResponse>
-
-  constructor(swrResponse: SWRResponse<StripeAccountStatusResponse>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
 
 function buildKey({
   access_token: accessToken,
@@ -77,5 +54,5 @@ export function useStripeAccountStatus() {
     )().then(Schema.decodeUnknownPromise(StripeAccountStatusResponseSchema)).then(({ data }) => data),
   )
 
-  return new StripeAccountStatusSWRResponse(response)
+  return new SWRQueryResult(response)
 }

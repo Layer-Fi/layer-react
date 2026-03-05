@@ -1,36 +1,13 @@
 import { useCallback } from 'react'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { getText } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const INVOICE_PREVIEW_TAG_KEY = '#invoices-preview'
-
-class InvoicePreviewSWRResponse {
-  private swrResponse: SWRResponse<string>
-
-  constructor(swrResponse: SWRResponse<string>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
 
 function buildKey({
   access_token: accessToken,
@@ -80,7 +57,7 @@ export function useInvoicePreview({ invoiceId }: UseInvoicePreviewProps) {
     )(),
   )
 
-  return new InvoicePreviewSWRResponse(response)
+  return new SWRQueryResult(response)
 }
 
 export const useInvoicePreviewCacheActions = () => {

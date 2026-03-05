@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { Effect, Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
 import { TripSchema, type UpsertTripEncoded } from '@schemas/trip'
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { patch, post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -59,33 +59,6 @@ const UpsertTripReturnSchema = Schema.Struct({
 })
 
 type UpsertTripReturn = typeof UpsertTripReturnSchema.Type
-
-type UpsertTripSWRMutationResponse =
-    SWRMutationResponse<UpsertTripReturn, unknown, Key, UpsertTripBody>
-
-class UpsertTripSWRResponse {
-  private swrResponse: UpsertTripSWRMutationResponse
-
-  constructor(swrResponse: UpsertTripSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
 
 const CreateParamsSchema = Schema.Struct({
   businessId: Schema.String,
@@ -181,7 +154,7 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
     },
   )
 
-  const mutationResponse = new UpsertTripSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const { patchTripByKey, forceReloadTrips } = useTripsGlobalCacheActions()
   const { forceReloadVehicles } = useVehiclesGlobalCacheActions()

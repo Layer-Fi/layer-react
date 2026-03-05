@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
 import { type ReportingBasis } from '@internal-types/general'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -35,34 +36,6 @@ type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParam
 
 export type PnlDetailLine = typeof PnlDetailLineSchema.Type
 export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
-
-class PnlDetailLinesSWRResponse {
-  private swrResponse: SWRResponse<PnlDetailLinesReturn>
-
-  constructor(swrResponse: SWRResponse<PnlDetailLinesReturn>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data(): PnlDetailLinesReturn | undefined {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
-  get refetch() {
-    return this.swrResponse.mutate
-  }
-}
 
 function keyLoader(
   {
@@ -150,7 +123,7 @@ export function useProfitAndLossDetailLines({
     },
   )
 
-  return new PnlDetailLinesSWRResponse(swrResponse)
+  return new SWRQueryResult(swrResponse)
 }
 
 export function usePnlDetailLinesInvalidator() {

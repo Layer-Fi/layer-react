@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
+import useSWRInfinite from 'swr/infinite'
 
 import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -40,42 +41,6 @@ const ListInvoicesReturnSchema = Schema.Struct({
 })
 
 type ListInvoicesReturn = typeof ListInvoicesReturnSchema.Type
-
-class ListInvoicesSWRResponse {
-  private swrResponse: SWRInfiniteResponse<ListInvoicesReturn>
-
-  constructor(swrResponse: SWRInfiniteResponse<ListInvoicesReturn>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get size() {
-    return this.swrResponse.size
-  }
-
-  get setSize() {
-    return this.swrResponse.setSize
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-
-  get refetch() {
-    return this.swrResponse.mutate
-  }
-}
 
 export const listInvoices = get<
   ListInvoicesReturn,
@@ -204,7 +169,7 @@ export function useListInvoices({
     },
   )
 
-  return new ListInvoicesSWRResponse(swrResponse)
+  return new SWRInfiniteResult(swrResponse)
 }
 
 const withUpdatedInvoice = (updated: Invoice) =>

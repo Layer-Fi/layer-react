@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { del } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -38,29 +38,6 @@ function buildKey({
   }
 }
 
-type DeleteTripSWRMutationResponse =
-    SWRMutationResponse<Record<string, never>, unknown, Key, never>
-
-class DeleteTripSWRResponse {
-  private swrResponse: DeleteTripSWRMutationResponse
-
-  constructor(swrResponse: DeleteTripSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 type UseDeleteTripProps = {
   tripId: string
 }
@@ -90,7 +67,7 @@ export const useDeleteTrip = ({ tripId }: UseDeleteTripProps) => {
     },
   )
 
-  const mutationResponse = new DeleteTripSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const { forceReloadTrips } = useTripsGlobalCacheActions()
   const { forceReloadVehicles } = useVehiclesGlobalCacheActions()

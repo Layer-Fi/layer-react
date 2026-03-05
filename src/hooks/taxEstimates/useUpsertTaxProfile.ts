@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
 import { type TaxProfileRequest, type TaxProfileResponse, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { patch, post } from '@api/layer/authenticated_http'
 import { useTaxDetailsGlobalCacheActions } from '@hooks/taxEstimates/useTaxDetails'
 import { useTaxPaymentsGlobalCacheActions } from '@hooks/taxEstimates/useTaxPayments'
@@ -49,37 +49,6 @@ function buildKey({
   }
 }
 
-type UpsertTaxProfileSWRMutationResponse =
-  SWRMutationResponse<TaxProfileResponse, unknown, Key, TaxProfileRequest>
-
-class UpsertTaxProfileSWRResponse {
-  private swrResponse: UpsertTaxProfileSWRMutationResponse
-
-  constructor(swrResponse: UpsertTaxProfileSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get error() {
-    return this.swrResponse.error
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 function getRequestFn(mode: UpsertTaxProfileMode) {
   return mode === UpsertTaxProfileMode.Update ? updateTaxProfile : createTaxProfile
 }
@@ -113,7 +82,7 @@ export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
     },
   )
 
-  const mutationResponse = new UpsertTaxProfileSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const originalTrigger = mutationResponse.trigger
 

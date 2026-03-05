@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
 import { VehicleSchema } from '@schemas/vehicle'
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -45,33 +45,6 @@ function buildKey({
   }
 }
 
-type ArchiveVehicleSWRMutationResponse =
-    SWRMutationResponse<ArchiveVehicleReturn, unknown, Key, never>
-
-class ArchiveVehicleSWRResponse {
-  private swrResponse: ArchiveVehicleSWRMutationResponse
-
-  constructor(swrResponse: ArchiveVehicleSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 type UseArchiveVehicleProps = {
   vehicleId: string
 }
@@ -101,7 +74,7 @@ export const useArchiveVehicle = ({ vehicleId }: UseArchiveVehicleProps) => {
     },
   )
 
-  const mutationResponse = new ArchiveVehicleSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const { patchVehicleByKey } = useVehiclesGlobalCacheActions()
 

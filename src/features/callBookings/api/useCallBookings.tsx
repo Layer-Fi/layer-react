@@ -1,5 +1,5 @@
 import { Schema } from 'effect'
-import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
+import useSWRInfinite from 'swr/infinite'
 
 import type {
   CallBooking,
@@ -13,6 +13,7 @@ import {
   ListCallBookingsResponseSchema,
 } from '@schemas/callBookings'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -38,30 +39,6 @@ const listCallBookings = get<
 
   return `/v1/businesses/${businessId}/call-bookings?${parameters}`
 })
-
-class ListCallBookingsSWRResponse {
-  private swrResponse: SWRInfiniteResponse<ListCallBookingsResponse>
-
-  constructor(swrResponse: SWRInfiniteResponse<ListCallBookingsResponse>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
 
 function keyLoader(
   previousPageData: ListCallBookingsResponse | null,
@@ -120,7 +97,7 @@ export function useCallBookings({ limit }: { limit?: number } = {}) {
     },
   )
 
-  return new ListCallBookingsSWRResponse(swrResponse)
+  return new SWRInfiniteResult(swrResponse)
 }
 
 export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'

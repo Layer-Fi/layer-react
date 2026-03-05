@@ -1,10 +1,9 @@
 import { useCallback } from 'react'
-import type { Key } from 'swr'
 import { useSWRConfig } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
-import type { BankTransactionMetadata } from '@internal-types/bank_transactions'
 import type { Awaitable } from '@internal-types/utility/promises'
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { Layer } from '@api/layer'
 import { useAuth } from '@hooks/useAuth'
@@ -14,33 +13,6 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 export type UpdateBankTransactionMetadataBody = { memo: string }
 
 const UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY = '#update-bank-transaction-metadata'
-
-type UpdateBankTransactionMetadataSWRMutationResponse =
-    SWRMutationResponse<BankTransactionMetadata, unknown, Key, UpdateBankTransactionMetadataBody>
-
-class UpdateBankTransactionMetadataSWRResponse {
-  private swrResponse: UpdateBankTransactionMetadataSWRMutationResponse
-
-  constructor(swrResponse: UpdateBankTransactionMetadataSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
 
 function buildKey({
   access_token: accessToken,
@@ -97,7 +69,7 @@ export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess 
     },
   )
 
-  const mutationResponse = new UpdateBankTransactionMetadataSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(

@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
 import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -53,27 +54,10 @@ function buildKey({
   }
 }
 
-class ListVehiclesSWRResponse {
-  private swrResponse: SWRResponse<ListVehiclesResponse>
-
-  constructor(swrResponse: SWRResponse<ListVehiclesResponse>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
+class ListVehiclesSWRResponse extends SWRQueryResult<ListVehiclesResponse> {
+  // @ts-expect-error override narrows return type to unwrap nested data
+  override get data() {
     return this.swrResponse.data?.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
   }
 }
 

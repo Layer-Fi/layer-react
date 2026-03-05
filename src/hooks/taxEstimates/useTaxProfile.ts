@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWR, { type SWRResponse } from 'swr'
+import useSWR from 'swr'
 
 import { type TaxProfile, type TaxProfileResponse, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -35,30 +36,6 @@ function buildKey({
   }
 }
 
-class TaxProfileSWRResponse {
-  private swrResponse: SWRResponse<TaxProfile>
-
-  constructor(swrResponse: SWRResponse<TaxProfile>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 export function useTaxProfile() {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
@@ -76,7 +53,7 @@ export function useTaxProfile() {
     },
   )
 
-  return new TaxProfileSWRResponse(swrResponse)
+  return new SWRQueryResult(swrResponse)
 }
 
 export function useTaxProfileGlobalCacheActions() {

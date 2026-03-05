@@ -3,6 +3,7 @@ import useSWR from 'swr'
 
 import { type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossComparison, type ProfitAndLossComparisonRequestBody } from '@internal-types/profit_and_loss'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { post } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -84,13 +85,7 @@ export function useProfitAndLossComparisonReport({
     ).then(({ data }) => data),
   )
 
-  return {
-    data: response.data,
-    isLoading: response.isLoading,
-    isValidating: response.isValidating,
-    isError: response.error !== undefined,
-    mutate: response.mutate,
-  }
+  return new SWRQueryResult(response)
 }
 
 export const useProfitAndLossComparisonReportCacheActions = () => {

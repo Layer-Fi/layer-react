@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import type { Key } from 'swr'
 import { useSWRConfig } from 'swr'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
 import type { BankTransaction } from '@internal-types/bank_transactions'
 import { type CategoryUpdate, type CategoryUpdateEncoded, CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { put } from '@api/layer/authenticated_http'
 import { type GetBankTransactionsReturn } from '@api/layer/bankTransactions'
@@ -55,37 +55,6 @@ type CategorizeBankTransactionArgs = CategoryUpdate & {
   bankTransactionId: string
 }
 
-type CategorizeBankTransactionSWRMutationResponse =
-  SWRMutationResponse<BankTransaction, unknown, Key, CategorizeBankTransactionArgs>
-
-class CategorizeBankTransactionSWRResponse {
-  private swrResponse: CategorizeBankTransactionSWRMutationResponse
-
-  constructor(swrResponse: CategorizeBankTransactionSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get error() {
-    return this.swrResponse.error
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 export type UseCategorizeBankTransactionOptions = {
   mutateBankTransactions: SWRInfiniteKeyedMutator<
     Array<GetBankTransactionsReturn>
@@ -127,7 +96,7 @@ export function useCategorizeBankTransaction() {
     },
   )
 
-  const mutationResponse = new CategorizeBankTransactionSWRResponse(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
   const originalTrigger = mutationResponse.trigger
 

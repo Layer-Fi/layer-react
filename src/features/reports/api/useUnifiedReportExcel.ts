@@ -1,10 +1,10 @@
 import { Schema } from 'effect'
-import type { Key } from 'swr'
-import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
 import type { DateGroupBy, ReportEnum, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -34,33 +34,6 @@ const getTag = (report: ReportEnum) => `#unified-${report}-report-excel`
 const UnifiedReportExcelReturnSchema = Schema.Struct({
   data: S3PresignedUrlSchema,
 })
-
-type UnifiedReportExcelSWRMutationResponse =
-  SWRMutationResponse<S3PresignedUrlSchemaType, unknown, Key, never>
-
-class UnifiedReportExcelSWRResponse {
-  private swrResponse: UnifiedReportExcelSWRMutationResponse
-
-  constructor(swrResponse: UnifiedReportExcelSWRMutationResponse) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get trigger() {
-    return this.swrResponse.trigger
-  }
-
-  get isMutating() {
-    return this.swrResponse.isMutating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
 
 function buildKey({
   access_token: accessToken,
@@ -112,5 +85,5 @@ export function useUnifiedReportExcel({ dateSelectionMode, onSuccess }: UseUnifi
     { revalidate: false, throwOnError: false },
   )
 
-  return new UnifiedReportExcelSWRResponse(rawMutationResponse)
+  return new SWRMutationResult(rawMutationResponse)
 }

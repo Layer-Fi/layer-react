@@ -1,10 +1,11 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
+import useSWRInfinite from 'swr/infinite'
 
 import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { type Customer, CustomerSchema } from '@schemas/customer'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { get } from '@api/layer/authenticated_http'
 import { useAuth } from '@hooks/useAuth'
@@ -81,30 +82,6 @@ function keyLoader(
   }
 }
 
-class ListCustomersSWRResponse {
-  private swrResponse: SWRInfiniteResponse<ListCustomersRawResult>
-
-  constructor(swrResponse: SWRInfiniteResponse<ListCustomersRawResult>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
 type UseListCustomersParams = {
   query?: string
   isEnabled?: boolean
@@ -149,7 +126,7 @@ export function useListCustomers({ query, isEnabled = true }: UseListCustomersPa
     },
   )
 
-  return new ListCustomersSWRResponse(swrResponse)
+  return new SWRInfiniteResult(swrResponse)
 }
 
 export function usePreloadCustomers(parameters?: UseListCustomersParams) {
