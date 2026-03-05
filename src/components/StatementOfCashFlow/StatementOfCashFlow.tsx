@@ -7,15 +7,15 @@ import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDa
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
-import { Loader } from '@components/Loader/Loader'
+import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTableErrorState'
+import { ReportsTableLoader } from '@components/ReportsTableState/ReportsTableLoader'
 import { STATEMENT_OF_CASH_FLOW_ROWS } from '@components/StatementOfCashFlow/constants'
 import { CashflowStatementDownloadButton } from '@components/StatementOfCashFlow/download/CashflowStatementDownloadButton'
 import { StatementOfCashFlowTable } from '@components/StatementOfCashFlowTable/StatementOfCashFlowTable'
 import { type StatementOfCashFlowTableStringOverrides } from '@components/StatementOfCashFlowTable/StatementOfCashFlowTable'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { View } from '@components/View/View'
 import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
-
-const COMPONENT_NAME = 'statement-of-cash-flow'
 
 export interface StatementOfCashFlowStringOverrides {
   statementOfCashFlowTable?: StatementOfCashFlowTableStringOverrides
@@ -40,8 +40,10 @@ const StatementOfCashFlowView = ({
   dateSelectionMode = 'full',
 }: StatementOfCashFlowViewProps) => {
   const dateRange = useGlobalDateRange({ dateSelectionMode })
-  const { data, isLoading } = useStatementOfCashFlow(dateRange)
+  const { data, isLoading, isValidating, isError } = useStatementOfCashFlow(dateRange)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+  const isMobileView = view === 'mobile'
+  const tableStringOverrides = stringOverrides?.statementOfCashFlowTable
 
   return (
     <TableProvider>
@@ -57,7 +59,7 @@ const StatementOfCashFlowView = ({
                   <CashflowStatementDownloadButton
                     startDate={dateRange.startDate}
                     endDate={dateRange.endDate}
-                    iconOnly={view === 'mobile'}
+                    iconOnly={isMobileView}
                   />
                 </HStack>
               </HeaderCol>
@@ -65,19 +67,33 @@ const StatementOfCashFlowView = ({
           </Header>
         )}
       >
-        {!data || isLoading
-          ? (
-            <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-              <Loader />
-            </div>
-          )
-          : (
-            <StatementOfCashFlowTable
-              data={data}
-              config={STATEMENT_OF_CASH_FLOW_ROWS}
-              stringOverrides={stringOverrides?.statementOfCashFlowTable}
+        <ConditionalBlock
+          data={data}
+          isLoading={isLoading}
+          isError={isError}
+          Loading={(
+            <ReportsTableLoader
+              typeColumnHeader={tableStringOverrides?.typeColumnHeader}
+              totalColumnHeader={tableStringOverrides?.totalColumnHeader}
             />
           )}
+          Inactive={null}
+          Error={(
+            <ReportsTableErrorState
+              isLoading={isValidating}
+            />
+          )}
+        >
+          {({ data }) => ((
+            statementOfCashFlowData: NonNullable<typeof data>,
+          ) => (
+            <StatementOfCashFlowTable
+              data={statementOfCashFlowData}
+              config={STATEMENT_OF_CASH_FLOW_ROWS}
+              stringOverrides={tableStringOverrides}
+            />
+          ))(data)}
+        </ConditionalBlock>
       </View>
     </TableProvider>
   )

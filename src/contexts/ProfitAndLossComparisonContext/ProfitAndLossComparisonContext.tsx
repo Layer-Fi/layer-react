@@ -7,6 +7,7 @@ export const ProfitAndLossComparisonContext = createContext<ReturnType<typeof us
   data: undefined,
   isLoading: true,
   isValidating: false,
+  isError: false,
   compareModeActive: false,
   comparePeriods: 0,
   compareOptions: [],

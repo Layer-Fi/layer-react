@@ -15,7 +15,9 @@ import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSel
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
-import { Loader } from '@components/Loader/Loader'
+import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTableErrorState'
+import { ReportsTableLoader } from '@components/ReportsTableState/ReportsTableLoader'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { View } from '@components/View/View'
 
 export interface BalanceSheetStringOverrides {
@@ -55,8 +57,36 @@ const BalanceSheetView = ({
   dateSelectionMode = 'full',
 }: BalanceSheetViewProps) => {
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
-  const { data, isLoading } = useBalanceSheet({ effectiveDate })
+  const { data, isLoading, isValidating, isError } = useBalanceSheet({ effectiveDate })
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+
+  const content = (
+    <ConditionalBlock
+      data={data}
+      isLoading={isLoading}
+      isError={isError}
+      Loading={(
+        <ReportsTableLoader
+          typeColumnHeader={stringOverrides?.balanceSheetTable?.typeColumnHeader}
+          totalColumnHeader={stringOverrides?.balanceSheetTable?.totalColumnHeader}
+        />
+      )}
+      Inactive={null}
+      Error={(
+        <ReportsTableErrorState
+          isLoading={isValidating}
+        />
+      )}
+    >
+      {({ data }) => (
+        <BalanceSheetTable
+          data={data}
+          config={BALANCE_SHEET_ROWS}
+          stringOverrides={stringOverrides?.balanceSheetTable}
+        />
+      )}
+    </ConditionalBlock>
+  )
 
   if (asWidget) {
     return (
@@ -80,19 +110,7 @@ const BalanceSheetView = ({
               </Header>
             )}
           >
-            {!data || isLoading
-              ? (
-                <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-                  <Loader />
-                </div>
-              )
-              : (
-                <BalanceSheetTable
-                  data={data}
-                  config={BALANCE_SHEET_ROWS}
-                  stringOverrides={stringOverrides?.balanceSheetTable}
-                />
-              )}
+            {content}
           </View>
         </Container>
       </TableProvider>
@@ -125,19 +143,7 @@ const BalanceSheetView = ({
           </Header>
         )}
       >
-        {!data || isLoading
-          ? (
-            <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-              <Loader />
-            </div>
-          )
-          : (
-            <BalanceSheetTable
-              data={data}
-              config={BALANCE_SHEET_ROWS}
-              stringOverrides={stringOverrides?.balanceSheetTable}
-            />
-          )}
+        {content}
       </View>
     </TableProvider>
   )
