@@ -1,6 +1,9 @@
 import { Fragment, useContext, useEffect } from 'react'
 
-import { type ProfitAndLossComparisonPnl } from '@internal-types/profit_and_loss'
+import {
+  type ProfitAndLossComparisonItem,
+  type ProfitAndLossComparisonPnl,
+} from '@internal-types/profit_and_loss'
 import { type LineItemEncoded } from '@schemas/common/lineItem'
 import {
   generateComparisonPeriods,
@@ -13,8 +16,8 @@ import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossCompariso
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { HStack } from '@ui/Stack/Stack'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
-import { ReportsTableErrorState, ReportsTableLoader } from '@components/ReportsTableState/ReportsTableState'
 import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
+import { ReportsTableErrorState, ReportsTableLoader } from '@components/ReportsTableState/ReportsTableState'
 import { Table } from '@components/Table/Table'
 import { TableBody } from '@components/TableBody/TableBody'
 import { TableCell } from '@components/TableCell/TableCell'
@@ -47,6 +50,112 @@ export const ProfitAndLossCompareTable = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const getBookkeepingPeriodStatus = (date: Date) => {
+    if (!bookkeepingPeriods || dateSelectionMode !== 'month') {
+      return
+    }
+
+    const currentMonth = date.getMonth() + 1
+    const currentYear = date.getFullYear()
+
+    const period = bookkeepingPeriods.find(
+      period => period.year === currentYear && period.month === currentMonth,
+    )
+
+    if (!period) {
+      return
+    }
+
+    return <BookkeepingStatus status={period.status} monthNumber={currentMonth} iconOnly />
+  }
+
+  const renderRow = ({
+    comparisonData,
+    rowKey,
+    depth,
+    rowDisplayName,
+    lineItem,
+    data,
+  }: {
+    comparisonData: ProfitAndLossComparisonItem[]
+    rowKey: string
+    depth: number
+    rowDisplayName: string
+    lineItem?: LineItemEncoded
+    data?: (string | number | LineItemEncoded)[]
+  }): React.ReactNode => {
+    const rowData: (string | number | boolean | LineItemEncoded | null | undefined)[] =
+      data ? data : []
+
+    if (!lineItem) {
+      comparisonData.forEach((item) => {
+        if (
+          rowKey in item.pnl
+          && item.pnl[rowKey as keyof ProfitAndLossComparisonPnl] !== null
+        ) {
+          rowData.push(item.pnl[rowKey as keyof ProfitAndLossComparisonPnl])
+        }
+      })
+
+      if (rowData.length === 0) {
+        return <></>
+      }
+
+      const mergedLineItems = mergeComparisonLineItemsAtDepth(
+        rowData as LineItemEncoded[],
+      )[0]
+
+      lineItem = 'display_name' in mergedLineItems ? mergedLineItems : undefined
+    }
+
+    const expandable =
+      lineItem?.line_items && lineItem.line_items.length > 0 ? true : false
+    const expanded = expandable ? isOpen(rowKey) : true
+
+    return (
+      <Fragment key={rowKey}>
+        <TableRow
+          rowKey={rowKey}
+          expandable={expandable}
+          isExpanded={expanded}
+          depth={depth}
+          variant={expandable ? 'expandable' : 'default'}
+          handleExpand={() => setIsOpen(rowKey)}
+        >
+          <TableCell
+            primary
+            withExpandIcon={expandable}
+            nowrap
+            className='Layer__profit-and-loss-compare-table__sticky-cell'
+          >
+            {lineItem ? lineItem.display_name : rowDisplayName}
+          </TableCell>
+          {rowData.map((cell, i) => (
+            <TableCell key={'compare-value' + i} isCurrency>
+              {getComparisonValue(
+                lineItem ? lineItem.display_name : rowDisplayName,
+                depth,
+                cell as string | number | LineItemEncoded,
+              )}
+            </TableCell>
+          ))}
+        </TableRow>
+        {expanded && lineItem?.line_items
+          ? lineItem.line_items.map(child =>
+            renderRow({
+              comparisonData,
+              rowKey: child.display_name,
+              depth: depth + 1,
+              rowDisplayName: child.display_name,
+              lineItem: child,
+              data: rowData as (string | number | LineItemEncoded)[],
+            }),
+          )
+          : null}
+      </Fragment>
+    )
+  }
+
   return (
     <ConditionalBlock
       data={comparisonData}
@@ -60,194 +169,128 @@ export const ProfitAndLossCompareTable = ({
         />
       )}
     >
-      {({ data: comparisonData }) => {
-        const getBookkeepingPeriodStatus = (date: Date) => {
-          if (!bookkeepingPeriods || dateSelectionMode !== 'month') {
-            return
-          }
-
-          const currentMonth = date.getMonth() + 1
-          const currentYear = date.getFullYear()
-
-          const period = bookkeepingPeriods.find(
-            period => period.year === currentYear && period.month === currentMonth,
-          )
-
-          if (!period) {
-            return
-          }
-
-          return <BookkeepingStatus status={period.status} monthNumber={currentMonth} iconOnly />
-        }
-
-        const renderRow = (
-          rowKey: string,
-          depth: number,
-          rowDisplayName: string,
-          lineItem?: LineItemEncoded,
-          data?: (string | number | LineItemEncoded)[],
-        ): React.ReactNode => {
-          const rowData: (string | number | boolean | LineItemEncoded | null | undefined)[] =
-            data ? data : []
-
-          if (!lineItem) {
-            comparisonData.forEach((item) => {
-              if (
-                rowKey in item.pnl
-                && item.pnl[rowKey as keyof ProfitAndLossComparisonPnl] !== null
-              ) {
-                rowData.push(item.pnl[rowKey as keyof ProfitAndLossComparisonPnl])
-              }
-            })
-
-            if (rowData.length === 0) {
-              return <></>
-            }
-
-            const mergedLineItems = mergeComparisonLineItemsAtDepth(
-              rowData as LineItemEncoded[],
-            )[0]
-
-            lineItem = 'display_name' in mergedLineItems ? mergedLineItems : undefined
-          }
-
-          const expandable =
-            lineItem?.line_items && lineItem.line_items.length > 0 ? true : false
-          const expanded = expandable ? isOpen(rowKey) : true
-
-          return (
-            <Fragment key={rowKey}>
-              <TableRow
-                rowKey={rowKey}
-                expandable={expandable}
-                isExpanded={expanded}
-                depth={depth}
-                variant={expandable ? 'expandable' : 'default'}
-                handleExpand={() => setIsOpen(rowKey)}
-              >
+      {({ data: resolvedComparisonData }) => (
+        <Table borderCollapse='collapse' bottomSpacing={false}>
+          <TableHead>
+            {selectedCompareOptions && selectedCompareOptions.length > 1 && (
+              <TableRow rowKey=''>
                 <TableCell
-                  primary
-                  withExpandIcon={expandable}
-                  nowrap
+                  isHeaderCell
                   className='Layer__profit-and-loss-compare-table__sticky-cell'
-                >
-                  {lineItem ? lineItem.display_name : rowDisplayName}
-                </TableCell>
-                {rowData.map((cell, i) => (
-                  <TableCell key={'compare-value' + i} isCurrency>
-                    {getComparisonValue(
-                      lineItem ? lineItem.display_name : rowDisplayName,
-                      depth,
-                      cell as string | number | LineItemEncoded,
-                    )}
-                  </TableCell>
+                />
+                {selectedCompareOptions.map((option, i) => (
+                  <Fragment key={option.displayName + '-' + i}>
+                    <TableCell key={option.displayName + '-' + i} primary isHeaderCell>
+                      {option.displayName}
+                    </TableCell>
+                    {comparePeriods
+                      && Array.from({ length: comparePeriods - 1 }, (_, index) => (
+                        <TableCell key={option.displayName + '-' + index} isHeaderCell />
+                      ))}
+                  </Fragment>
                 ))}
               </TableRow>
-              {expanded && lineItem?.line_items
-                ? lineItem.line_items.map(child =>
-                  renderRow(
-                    child.display_name,
-                    depth + 1,
-                    child.display_name,
-                    child,
-                    rowData as (string | number | LineItemEncoded)[],
-                  ),
-                )
-                : null}
-            </Fragment>
-          )
-        }
-
-        return (
-          <Table borderCollapse='collapse' bottomSpacing={false}>
-            <TableHead>
-              {selectedCompareOptions && selectedCompareOptions.length > 1 && (
-                <TableRow rowKey=''>
-                  <TableCell
-                    isHeaderCell
-                    className='Layer__profit-and-loss-compare-table__sticky-cell'
-                  />
-                  {selectedCompareOptions.map((option, i) => (
-                    <Fragment key={option.displayName + '-' + i}>
-                      <TableCell key={option.displayName + '-' + i} primary isHeaderCell>
-                        {option.displayName}
-                      </TableCell>
-                      {comparePeriods
-                        && Array.from({ length: comparePeriods - 1 }, (_, index) => (
-                          <TableCell key={option.displayName + '-' + index} isHeaderCell />
-                        ))}
-                    </Fragment>
-                  ))}
-                </TableRow>
-              )}
-            </TableHead>
-            <TableBody>
-              {comparePeriods && (
-                <TableRow rowKey=''>
-                  <TableCell
-                    isHeaderCell
-                    className='Layer__profit-and-loss-compare-table__sticky-cell'
-                  />
-                  {selectedCompareOptions && selectedCompareOptions.length > 0
-                    ? (
-                      selectedCompareOptions.map((option, i) => (
-                        <Fragment key={option.displayName + '-' + i}>
-                          {generateComparisonPeriods({
-                            numberOfPeriods: comparePeriods,
-                            mode: comparisonPeriodMode,
-                            ...dateRange,
-                          }).map((month, index) => (
-                            <TableCell key={option.displayName + '-' + index} isHeaderCell>
-                              <HStack gap='2xs'>
-                                {month.label}
-                                {' '}
-                                {getBookkeepingPeriodStatus(month.date)}
-                              </HStack>
-                            </TableCell>
-                          ))}
-                        </Fragment>
-                      ))
-                    )
-                    : (
-                      <Fragment key='total-1'>
+            )}
+          </TableHead>
+          <TableBody>
+            {comparePeriods && (
+              <TableRow rowKey=''>
+                <TableCell
+                  isHeaderCell
+                  className='Layer__profit-and-loss-compare-table__sticky-cell'
+                />
+                {selectedCompareOptions && selectedCompareOptions.length > 0
+                  ? (
+                    selectedCompareOptions.map((option, i) => (
+                      <Fragment key={option.displayName + '-' + i}>
                         {generateComparisonPeriods({
                           numberOfPeriods: comparePeriods,
                           mode: comparisonPeriodMode,
                           ...dateRange,
                         }).map((month, index) => (
-                          <TableCell key={'total-' + index + '-cell'} isHeaderCell>
-                            {month.label}
+                          <TableCell key={option.displayName + '-' + index} isHeaderCell>
+                            <HStack gap='2xs'>
+                              {month.label}
+                              {' '}
+                              {getBookkeepingPeriodStatus(month.date)}
+                            </HStack>
                           </TableCell>
                         ))}
                       </Fragment>
-                    )}
-                </TableRow>
-              )}
-              {renderRow('income', 0, 'Income')}
-              {renderRow('cost_of_goods_sold', 0, 'Cost of Goods Sold')}
-              {renderRow(
-                'gross_profit',
-                0,
-                stringOverrides?.grossProfitLabel || 'Gross Profit',
-              )}
-              {renderRow('expenses', 0, 'Expenses')}
-              {renderRow(
-                'profit_before_taxes',
-                0,
-                stringOverrides?.netProfitLabel || 'Profit Before Taxes',
-              )}
-              {renderRow('taxes', 0, 'Taxes')}
-              {renderRow(
-                'net_profit',
-                0,
-                stringOverrides?.netProfitLabel || 'Net Profit',
-              )}
-              {renderRow('personal_expenses', 0, 'Personal Expenses')}
-              {renderRow('other_outflows', 0, 'Other Outflows')}
-            </TableBody>
-          </Table>
-        )
-      }}
+                    ))
+                  )
+                  : (
+                    <Fragment key='total-1'>
+                      {generateComparisonPeriods({
+                        numberOfPeriods: comparePeriods,
+                        mode: comparisonPeriodMode,
+                        ...dateRange,
+                      }).map((month, index) => (
+                        <TableCell key={'total-' + index + '-cell'} isHeaderCell>
+                          {month.label}
+                        </TableCell>
+                      ))}
+                    </Fragment>
+                  )}
+              </TableRow>
+            )}
+            {renderRow({
+              comparisonData: resolvedComparisonData,
+              rowKey: 'income',
+              depth: 0,
+              rowDisplayName: 'Income',
+            })}
+            {renderRow({
+              comparisonData: resolvedComparisonData,
+              rowKey: 'cost_of_goods_sold',
+              depth: 0,
+              rowDisplayName: 'Cost of Goods Sold',
+            })}
+            {renderRow({
+              comparisonData: resolvedComparisonData,
+              rowKey: 'gross_profit',
+              depth: 0,
+              rowDisplayName: stringOverrides?.grossProfitLabel || 'Gross Profit',
+            })}
+            {renderRow({
+              comparisonData: resolvedComparisonData,
+              rowKey: 'expenses',
+              depth: 0,
+              rowDisplayName: 'Expenses',
+            })}
+            {renderRow({
+              comparisonData: resolvedComparisonData,
+              rowKey: 'profit_before_taxes',
+              depth: 0,
+              rowDisplayName: stringOverrides?.netProfitLabel || 'Profit Before Taxes',
+            })}
+            {renderRow({
+              comparisonData: resolvedComparisonData,
+              rowKey: 'taxes',
+              depth: 0,
+              rowDisplayName: 'Taxes',
+            })}
+            {renderRow({
+              comparisonData: resolvedComparisonData,
+              rowKey: 'net_profit',
+              depth: 0,
+              rowDisplayName: stringOverrides?.netProfitLabel || 'Net Profit',
+            })}
+            {renderRow({
+              comparisonData: resolvedComparisonData,
+              rowKey: 'personal_expenses',
+              depth: 0,
+              rowDisplayName: 'Personal Expenses',
+            })}
+            {renderRow({
+              comparisonData: resolvedComparisonData,
+              rowKey: 'other_outflows',
+              depth: 0,
+              rowDisplayName: 'Other Outflows',
+            })}
+          </TableBody>
+        </Table>
+      )}
     </ConditionalBlock>
   )
 }

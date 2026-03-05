@@ -41,6 +41,17 @@ const StatementOfCashFlowView = ({
   const dateRange = useGlobalDateRange({ dateSelectionMode })
   const { data, isLoading, isValidating, error } = useStatementOfCashFlow(dateRange)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+  const isMobileView = view === 'mobile'
+  const tableStringOverrides = stringOverrides?.statementOfCashFlowTable
+  const renderStatementOfCashFlowTable = (
+    statementOfCashFlowData: NonNullable<typeof data>,
+  ) => (
+    <StatementOfCashFlowTable
+      data={statementOfCashFlowData}
+      config={STATEMENT_OF_CASH_FLOW_ROWS}
+      stringOverrides={tableStringOverrides}
+    />
+  )
 
   return (
     <TableProvider>
@@ -56,7 +67,7 @@ const StatementOfCashFlowView = ({
                   <CashflowStatementDownloadButton
                     startDate={dateRange.startDate}
                     endDate={dateRange.endDate}
-                    iconOnly={view === 'mobile'}
+                    iconOnly={isMobileView}
                   />
                 </HStack>
               </HeaderCol>
@@ -70,8 +81,8 @@ const StatementOfCashFlowView = ({
           isError={Boolean(error)}
           Loading={(
             <ReportsTableLoader
-              typeColumnHeader={stringOverrides?.statementOfCashFlowTable?.typeColumnHeader}
-              totalColumnHeader={stringOverrides?.statementOfCashFlowTable?.totalColumnHeader}
+              typeColumnHeader={tableStringOverrides?.typeColumnHeader}
+              totalColumnHeader={tableStringOverrides?.totalColumnHeader}
             />
           )}
           Inactive={null}
@@ -81,13 +92,7 @@ const StatementOfCashFlowView = ({
             />
           )}
         >
-          {({ data }) => (
-            <StatementOfCashFlowTable
-              data={data}
-              config={STATEMENT_OF_CASH_FLOW_ROWS}
-              stringOverrides={stringOverrides?.statementOfCashFlowTable}
-            />
-          )}
+          {({ data }) => renderStatementOfCashFlowTable(data)}
         </ConditionalBlock>
       </View>
     </TableProvider>
