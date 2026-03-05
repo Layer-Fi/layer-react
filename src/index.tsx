@@ -53,7 +53,6 @@ export { ProfitAndLossView } from './components/ProfitAndLossView/ProfitAndLossV
 export { UnifiedReport as unstable_UnifiedReports } from './components/UnifiedReport/UnifiedReport'
 export { AccountingOverview } from './views/AccountingOverview/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
-export { unstable_BillsView } from './views/Bills'
 export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOverview'
 export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
 export { unstable_MileageTracking } from './views/MileageTracking'
