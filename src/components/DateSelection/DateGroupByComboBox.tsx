@@ -14,8 +14,8 @@ type DateGroupByOption = {
 
 const DateGroupByOptionConfig = {
   [DateGroupBy.AllTime]: { label: 'All time', value: DateGroupBy.AllTime },
-  [DateGroupBy.Month]: { label: 'Compare by month', value: DateGroupBy.Month },
-  [DateGroupBy.Year]: { label: 'Compare by year', value: DateGroupBy.Year },
+  [DateGroupBy.Month]: { label: 'Month', value: DateGroupBy.Month },
+  [DateGroupBy.Year]: { label: 'Year', value: DateGroupBy.Year },
 }
 const options = Object.values(DateGroupByOptionConfig)
 
