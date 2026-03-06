@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { Save } from 'lucide-react'
 import type React from 'react'
@@ -9,6 +9,7 @@ import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
+import { FormErrorBanner } from '@components/FormErrorBanner/FormErrorBanner'
 import {
   useInvoiceFinalizeForm,
 } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/useInvoiceFinalizeForm'
@@ -21,14 +22,12 @@ type InvoiceFinalizeFormProps = {
   invoice: Invoice
   initialPaymentMethods: readonly InvoicePaymentMethod[]
   onSuccess: (invoice: Invoice) => void
-  onErrorMessageChange: (message?: string) => void
 }
 
 export const InvoiceFinalizeForm = ({
   invoice,
   initialPaymentMethods,
   onSuccess,
-  onErrorMessageChange,
 }: InvoiceFinalizeFormProps) => {
   const { form, submitError } = useInvoiceFinalizeForm({
     invoice,
@@ -39,10 +38,6 @@ export const InvoiceFinalizeForm = ({
   const validationErrors = useMemo(() => flattenValidationErrors(errorMap), [errorMap])
   const topError = validationErrors[0] || submitError
 
-  useEffect(() => {
-    onErrorMessageChange(topError)
-  }, [onErrorMessageChange, topError])
-
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     e.stopPropagation()
@@ -50,6 +45,7 @@ export const InvoiceFinalizeForm = ({
 
   return (
     <Form className='Layer__InvoiceFinalizeForm' onSubmit={blockNativeOnSubmit}>
+      <FormErrorBanner message={topError} className='Layer__InvoiceFinalizeForm__ErrorBanner' />
       <VStack className='Layer__InvoiceFinalizeForm__Section' gap='sm'>
         <Heading level={3} size='sm'>Payment methods</Heading>
         <form.AppField name='creditCardEnabled'>

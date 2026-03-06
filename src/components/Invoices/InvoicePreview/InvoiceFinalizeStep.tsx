@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle } from 'lucide-react'
 
 import {
@@ -6,7 +5,6 @@ import {
 } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { FormErrorBanner } from '@components/FormErrorBanner/FormErrorBanner'
 import {
   InvoiceFinalizeForm,
 } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/InvoiceFinalizeForm'
@@ -28,63 +26,43 @@ export const InvoiceFinalizeStep = ({
   const { invoice } = useInvoicePreviewRoute()
   const { data, isLoading, isError } = useInvoicePaymentMethods({ invoiceId: invoice.id })
   const paymentMethodsData = data?.data
-  const showFinalizeForm = !isError && paymentMethodsData !== undefined
-  const [formErrorMessage, setFormErrorMessage] = useState<string | undefined>(undefined)
-
-  useEffect(() => {
-    setFormErrorMessage(undefined)
-  }, [invoice.id])
-
-  useEffect(() => {
-    if (!showFinalizeForm) {
-      setFormErrorMessage(undefined)
-    }
-  }, [showFinalizeForm])
-
-  const onErrorMessageChange = useCallback((message?: string) => {
-    setFormErrorMessage(message)
-  }, [])
 
   return (
-    <VStack>
-      <FormErrorBanner message={formErrorMessage} />
-      <HStack className='Layer__InvoiceFinalizeStep'>
-        <VStack className='Layer__InvoiceFinalizeStep__PreviewPanel' fluid>
-          <InvoicePreview />
-        </VStack>
-        <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanel' fluid>
-          <ConditionalBlock
-            data={paymentMethodsData}
-            isLoading={isLoading}
-            isError={isError}
-            Loading={(
-              <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelLoading' justify='center' align='center' fluid>
-                <Loader />
-              </VStack>
-            )}
-            Inactive={null}
-            Error={(
-              <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelError'>
-                <DataState
-                  icon={<AlertTriangle size={16} />}
-                  status={DataStateStatus.failed}
-                  title="We couldn't load payment methods"
-                  description='Please try again.'
-                />
-              </VStack>
-            )}
-          >
-            {({ data: invoicePaymentMethods }) => (
-              <InvoiceFinalizeForm
-                invoice={invoice}
-                initialPaymentMethods={invoicePaymentMethods.paymentMethods}
-                onSuccess={onSuccess}
-                onErrorMessageChange={onErrorMessageChange}
+    <HStack className='Layer__InvoiceFinalizeStep'>
+      <VStack className='Layer__InvoiceFinalizeStep__PreviewPanel' fluid>
+        <InvoicePreview />
+      </VStack>
+      <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanel' fluid>
+        <ConditionalBlock
+          data={paymentMethodsData}
+          isLoading={isLoading}
+          isError={isError}
+          Loading={(
+            <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelLoading' justify='center' align='center' fluid>
+              <Loader />
+            </VStack>
+          )}
+          Inactive={null}
+          Error={(
+            <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelError'>
+              <DataState
+                icon={<AlertTriangle size={16} />}
+                status={DataStateStatus.failed}
+                title="We couldn't load payment methods"
+                description='Please try again.'
               />
-            )}
-          </ConditionalBlock>
-        </VStack>
-      </HStack>
-    </VStack>
+            </VStack>
+          )}
+        >
+          {({ data: invoicePaymentMethods }) => (
+            <InvoiceFinalizeForm
+              invoice={invoice}
+              initialPaymentMethods={invoicePaymentMethods.paymentMethods}
+              onSuccess={onSuccess}
+            />
+          )}
+        </ConditionalBlock>
+      </VStack>
+    </HStack>
   )
 }
