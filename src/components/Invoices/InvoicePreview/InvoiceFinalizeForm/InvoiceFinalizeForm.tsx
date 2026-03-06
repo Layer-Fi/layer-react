@@ -45,7 +45,7 @@ export const InvoiceFinalizeForm = ({
 
   return (
     <Form className='Layer__InvoiceFinalizeForm' onSubmit={blockNativeOnSubmit}>
-      <FormErrorBanner message={topError} className='Layer__InvoiceFinalizeForm__ErrorBanner' />
+      {topError ? <FormErrorBanner message={topError} className='Layer__InvoiceFinalizeForm__ErrorBanner' /> : null}
       <VStack className='Layer__InvoiceFinalizeForm__Section' gap='sm'>
         <Heading level={3} size='sm'>Payment methods</Heading>
         <form.AppField name='creditCardEnabled'>

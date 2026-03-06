@@ -13,7 +13,8 @@ export const InvoiceFormErrorBanner = ({ submitError }: InvoiceFormErrorBannerPr
     <form.Subscribe selector={state => state.errorMap}>
       {(errorMap) => {
         const validationErrors = flattenValidationErrors(errorMap)
-        return <FormErrorBanner message={validationErrors[0] || submitError} />
+        const message = validationErrors[0] || submitError
+        return message ? <FormErrorBanner message={message} /> : null
       }}
     </form.Subscribe>
   )

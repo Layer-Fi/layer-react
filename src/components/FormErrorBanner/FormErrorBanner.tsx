@@ -8,15 +8,11 @@ import { TextSize } from '@components/Typography/Text'
 import './formErrorBanner.scss'
 
 type FormErrorBannerProps = {
-  message?: string
+  message: string
   className?: string
 }
 
 export const FormErrorBanner = ({ message, className }: FormErrorBannerProps) => {
-  if (!message) {
-    return null
-  }
-
   return (
     <HStack pis='2xl' className={classNames('Layer__FormErrorBanner', className)}>
       <DataState
