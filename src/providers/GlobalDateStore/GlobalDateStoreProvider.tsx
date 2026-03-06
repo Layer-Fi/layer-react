@@ -26,8 +26,7 @@ export function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new 
 export type DateRange = { startDate: Date, endDate: Date }
 type GetDateRangeOptions =
   | { mode: 'full', startDate: Date, endDate: Date }
-  | { mode: 'month', endDate: Date }
-  | { mode: 'year', endDate: Date }
+  | { mode: Exclude<DateSelectionMode, 'full'>, startDate?: Date, endDate: Date }
 
 function getDateRange(options: GetDateRangeOptions): DateRange {
   const mode = options.mode
