@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { type Vehicle } from '@schemas/vehicle'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'

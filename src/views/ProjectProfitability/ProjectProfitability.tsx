@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import Select, { type Options } from 'react-select'
 
-import { DisplayState } from '@internal-types/bank_transactions'
+import { DisplayState } from '@internal-types/bankTransactions'
 import { type MoneyFormat } from '@internal-types/general'
-import { type PnlTagFilter } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import { type PnlTagFilter } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactions } from '@components/BankTransactions/BankTransactions'

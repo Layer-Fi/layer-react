@@ -1,6 +1,6 @@
 import { Schema } from 'effect/index'
 
-import type { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
+import type { BankTransaction, SuggestedMatch } from '@internal-types/bankTransactions'
 import { CategorizationType, hasSuggestions } from '@internal-types/categories'
 import { ApiCategorizationAsOption, CategoryAsOption, PlaceholderAsOption, SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'

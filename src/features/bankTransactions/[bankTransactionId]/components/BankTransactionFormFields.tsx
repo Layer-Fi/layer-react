@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import type { BankTransaction } from '@internal-types/bank_transactions'
+import type { BankTransaction } from '@internal-types/bankTransactions'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'

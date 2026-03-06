@@ -15,7 +15,7 @@ import {
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type { CallBooking, CreateCallBookingBody }

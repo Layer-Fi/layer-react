@@ -1,7 +1,7 @@
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const deleteAccountFromLedger = del<

@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react'
 
-import { type BankTransaction, DisplayState } from '@internal-types/bank_transactions'
+import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { DATE_FORMAT } from '@utils/time/timeFormats'
-import { useBankTransactionsTableCheckboxState } from '@hooks/useBankTransactions/useBankTransactionsTableCheckboxState'
-import { useUpsertBankTransactionsDefaultCategories } from '@hooks/useBankTransactions/useUpsertBankTransactionsDefaultCategories'
+import { useBankTransactionsTableCheckboxState } from '@hooks/features/bankTransactions/useBankTransactionsTableCheckboxState'
+import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { Checkbox } from '@ui/Checkbox/Checkbox'

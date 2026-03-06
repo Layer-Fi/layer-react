@@ -4,7 +4,7 @@ import { Cell, Pie, PieChart } from 'recharts'
 
 import { getCompletedTasks, getIncompleteTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { MONTH_YEAR_FORMAT } from '@utils/time/timeFormats'
-import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
+import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/useActiveBookkeepingPeriod'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { BookkeepingStatusDescription } from '@components/BookkeepingStatus/BookkeepingStatusDescription'

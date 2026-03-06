@@ -6,7 +6,7 @@ import type { DateGroupBy, ReportEnum, UnifiedReportDateQueryParams } from '@sch
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import {
   type UnifiedReportState,

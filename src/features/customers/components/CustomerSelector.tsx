@@ -2,7 +2,7 @@ import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
 
 import { type Customer } from '@schemas/customer'
-import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'

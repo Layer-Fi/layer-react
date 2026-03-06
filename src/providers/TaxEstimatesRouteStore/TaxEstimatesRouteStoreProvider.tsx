@@ -2,7 +2,7 @@ import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, 
 import { getYear } from 'date-fns'
 import { createStore, useStore } from 'zustand'
 
-import { useTaxProfile } from '@hooks/taxEstimates/useTaxProfile'
+import { useTaxProfile } from '@hooks/api/businesses/business-id/tax-estimates/profile/useTaxProfile'
 
 export enum TaxEstimatesRoute {
   Estimates = 'Estimates',

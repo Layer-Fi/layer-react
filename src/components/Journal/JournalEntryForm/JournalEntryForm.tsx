@@ -4,7 +4,7 @@ import type React from 'react'
 
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { flattenValidationErrors } from '@utils/form'
-import { UpsertJournalEntryMode } from '@hooks/useJournal/useUpsertJournalEntry'
+import { UpsertJournalEntryMode } from '@hooks/api/businesses/business-id/ledger/journal-entries/useUpsertJournalEntry'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'

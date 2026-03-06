@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 
-import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
-import { isAnyBankAccountSyncing } from '@hooks/useLinkedAccounts/bankAccountUtils'
-import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { isAnyBankAccountSyncing } from '@utils/bankAccount'
+import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/useActiveBookkeepingPeriod'
+import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'

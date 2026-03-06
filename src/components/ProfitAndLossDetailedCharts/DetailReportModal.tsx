@@ -1,4 +1,4 @@
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Drawer } from '@ui/Modal/Modal'
 import { ProfitAndLossDetailReport, type ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'

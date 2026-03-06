@@ -1,4 +1,4 @@
-import type { AugmentedLedgerAccountBalance } from '@internal-types/chart_of_accounts'
+import type { AugmentedLedgerAccountBalance } from '@internal-types/chartOfAccounts'
 import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { convertCentsToCurrency } from '@utils/format'
 import { centsToDollars, centsToDollarsWithoutCommas } from '@utils/money'

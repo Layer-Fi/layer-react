@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
 
-import { type BankTransaction, type SuggestedMatch } from '@internal-types/bank_transactions'
+import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { isTransferMatch } from '@utils/bankTransactions'
 import { centsToDollars as formatMoney } from '@utils/money'

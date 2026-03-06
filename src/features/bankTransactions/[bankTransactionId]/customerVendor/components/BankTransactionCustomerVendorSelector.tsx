@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import type { BankTransaction } from '@internal-types/bank_transactions'
+import type { BankTransaction } from '@internal-types/bankTransactions'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useSetMetadataOnBankTransaction } from '@features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'

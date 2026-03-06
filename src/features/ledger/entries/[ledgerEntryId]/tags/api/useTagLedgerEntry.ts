@@ -3,8 +3,8 @@ import useSWRMutation from 'swr/mutation'
 import { v4 as uuidv4 } from 'uuid'
 
 import { post } from '@utils/api/authenticatedHttp'
-import { useAuth } from '@hooks/useAuth'
-import { useProfitAndLossGlobalInvalidator } from '@hooks/useProfitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useLedgerEntriesCacheActions, useLedgerEntriesOptimisticUpdater } from '@features/ledger/entries/api/useListLedgerEntries'
 

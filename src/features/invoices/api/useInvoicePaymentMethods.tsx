@@ -3,7 +3,7 @@ import useSWR from 'swr'
 
 import { get } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import {
   type InvoicePaymentMethodsResponse,

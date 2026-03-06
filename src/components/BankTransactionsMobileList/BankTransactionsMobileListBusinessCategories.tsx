@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 
 import type { CategoryAsOption } from '@internal-types/categorizationOption'
-import { useCategories } from '@hooks/categories/useCategories'
+import { useCategories } from '@hooks/api/businesses/business-id/categories/useCategories'
 import { Button } from '@ui/Button/Button'
 import { ModalHeading } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'

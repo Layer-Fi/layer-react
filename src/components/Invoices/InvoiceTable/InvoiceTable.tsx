@@ -5,7 +5,7 @@ import { HandCoins, Plus, Search } from 'lucide-react'
 
 import { convertCentsToCurrency, formatDate } from '@utils/format'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { type InvoiceTableFilters, useInvoiceNavigation, useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import ChevronRightFill from '@icons/ChevronRightFill'
 import { Button } from '@ui/Button/Button'

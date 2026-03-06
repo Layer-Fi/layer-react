@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useForm } from '@tanstack/react-form'
 
-import { type BankTransaction } from '@internal-types/bank_transactions'
-import { useBankTransactionMetadata } from '@hooks/useBankTransactions/useBankTransactionsMetadata'
-import { useUpdateBankTransactionMetadata } from '@hooks/useBankTransactions/useUpdateBankTransactionMetadata'
+import { type BankTransaction } from '@internal-types/bankTransactions'
+import { useBankTransactionMetadata } from '@hooks/api/businesses/business-id/bank-transactions/bank-transaction-id/metadata/useBankTransactionsMetadata'
+import { useUpdateBankTransactionMetadata } from '@hooks/api/businesses/business-id/bank-transactions/bank-transaction-id/metadata/useUpdateBankTransactionMetadata'
 
 interface BankTransactionMemoProps {
   bankTransactionId: BankTransaction['id']

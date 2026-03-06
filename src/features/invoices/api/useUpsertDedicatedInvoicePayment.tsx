@@ -4,7 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { post, put } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useInvoiceSummaryStatsCacheActions } from '@features/invoices/api/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@features/invoices/api/useListInvoices'

@@ -1,6 +1,6 @@
 import { useCallback, useId, useMemo } from 'react'
 
-import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import type { BankTransaction } from '@internal-types/bank_transactions'
+import type { BankTransaction } from '@internal-types/bankTransactions'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'

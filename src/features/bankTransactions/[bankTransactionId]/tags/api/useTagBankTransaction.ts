@@ -3,10 +3,10 @@ import useSWRMutation from 'swr/mutation'
 import { v4 as uuidv4 } from 'uuid'
 
 import { post } from '@utils/api/authenticatedHttp'
-import { useAuth } from '@hooks/useAuth'
 import {
   useBankTransactionsGlobalCacheActions,
-} from '@hooks/useBankTransactions/useBankTransactions'
+} from '@hooks/api/businesses/business-id/bank-transactions/useBankTransactions'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import type { TransactionTagEncoded } from '@features/tags/tagSchemas'
 

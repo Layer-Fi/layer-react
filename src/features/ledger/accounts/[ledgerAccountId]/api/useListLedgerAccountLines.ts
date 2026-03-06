@@ -2,11 +2,11 @@ import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
-import { type LedgerAccountLineItem, type LedgerAccountLineItems } from '@internal-types/ledger_accounts'
+import { type LedgerAccountLineItem, type LedgerAccountLineItems } from '@internal-types/ledgerAccounts'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 
 import { convertCentsToCurrency } from '@utils/format'
-import { flattenAccounts } from '@hooks/useChartOfAccounts/useChartOfAccounts'
+import { flattenAccounts } from '@hooks/legacy/useChartOfAccounts'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { RetryButton } from '@components/Button/RetryButton'

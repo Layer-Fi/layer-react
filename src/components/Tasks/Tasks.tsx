@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useBookkeepingPeriods } from '@hooks/api/businesses/business-id/bookkeeping/periods/useBookkeepingPeriods'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P, Span } from '@ui/Typography/Text'

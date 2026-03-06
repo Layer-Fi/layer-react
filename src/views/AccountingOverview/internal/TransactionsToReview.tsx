@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { getMonth, getYear } from 'date-fns'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
+import { useProfitAndLossSummaries } from '@hooks/api/businesses/business-id/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import BellIcon from '@icons/Bell'
 import CheckIcon from '@icons/Check'

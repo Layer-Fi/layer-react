@@ -5,7 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import { VehicleSchema } from '@schemas/vehicle'
 import { post } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useVehiclesGlobalCacheActions } from '@features/vehicles/api/useListVehicles'
 

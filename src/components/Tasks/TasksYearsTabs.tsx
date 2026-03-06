@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { getMonth } from 'date-fns'
 
-import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { useBookkeepingYearsStatus } from '@hooks/bookkeeping/periods/useBookkeepingYearsStatus'
+import { BookkeepingPeriodStatus } from '@hooks/api/businesses/business-id/bookkeeping/periods/useBookkeepingPeriods'
+import { useBookkeepingYearsStatus } from '@hooks/bookkeeping/useBookkeepingYearsStatus'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Tabs } from '@components/Tabs/Tabs'
 import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'

@@ -1,7 +1,7 @@
 import { Schema } from 'effect/index'
 import { uniqBy } from 'lodash-es'
 
-import { type BankTransaction, type Split } from '@internal-types/bank_transactions'
+import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { type SplitCategorizationEntryEncoded } from '@schemas/categorization'
 import { isSplitCategorizationEncoded } from '@schemas/categorization'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'

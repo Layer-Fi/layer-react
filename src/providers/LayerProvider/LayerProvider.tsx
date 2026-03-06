@@ -2,7 +2,7 @@ import { type PropsWithChildren, useState } from 'react'
 import { I18nProvider } from 'react-aria-components'
 import { SWRConfig } from 'swr'
 
-import { type LayerThemeConfig } from '@internal-types/layer_context'
+import { type LayerThemeConfig } from '@internal-types/layerContext'
 import { type LayerError } from '@utils/api/errorHandler'
 import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
 import { AuthInputProvider } from '@providers/AuthInputProvider'

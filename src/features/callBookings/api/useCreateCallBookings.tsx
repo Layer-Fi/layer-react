@@ -6,7 +6,7 @@ import useSWRMutation from 'swr/mutation'
 import { CallBookingItemResponseSchema, type CreateCallBookingBodyEncoded } from '@schemas/callBookings'
 import { post } from '@utils/api/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { CALL_BOOKINGS_TAG_KEY } from '@features/callBookings/api/useCallBookings'
 

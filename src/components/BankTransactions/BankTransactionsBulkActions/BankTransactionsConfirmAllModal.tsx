@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import pluralize from 'pluralize'
 
-import { useBulkMatchOrCategorize } from '@hooks/useBankTransactions/useBulkMatchOrCategorize'
+import { useBulkMatchOrCategorize } from '@hooks/api/businesses/business-id/bank-transactions/bulk-match-or-categorize/useBulkMatchOrCategorize'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

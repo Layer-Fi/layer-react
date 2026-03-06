@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import type { ComponentProps } from 'react'
 
-import { Dots, usePaginationRange } from '@hooks/pagination/usePaginationRange'
+import { Dots, usePaginationRange } from '@hooks/utils/pagination/usePaginationRange'
 import ChevronLeft from '@icons/ChevronLeft'
 import ChevronRight from '@icons/ChevronRight'
 import { Button } from '@ui/Button/Button'

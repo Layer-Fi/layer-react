@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Schema } from 'effect/index'
 
 import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { useCreateCategorizationRule } from '@hooks/useCategorizationRules/useCreateCategorizationRule'
+import { useCreateCategorizationRule } from '@hooks/api/businesses/business-id/categorization-rules/useCreateCategorizationRule'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button, type ButtonProps } from '@ui/Button/Button'
 import { useWizard } from '@components/Wizard/Wizard'

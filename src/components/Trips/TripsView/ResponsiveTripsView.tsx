@@ -4,7 +4,7 @@ import { Car } from 'lucide-react'
 
 import type { Trip } from '@schemas/trip'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
-import { useAutoResetPageIndex } from '@hooks/pagination/useAutoResetPageIndex'
+import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'

@@ -3,7 +3,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useMileageSummaryGlobalCacheActions } from '@features/mileage/api/useMileageSummary'
 import { useTripsGlobalCacheActions } from '@features/trips/api/useListTrips'

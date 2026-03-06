@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 
-import { type BankAccount } from '@internal-types/linked_accounts'
-import { getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@hooks/useLinkedAccounts/bankAccountUtils'
+import { type BankAccount } from '@internal-types/linkedAccounts'
+import { getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import type { HoverMenuProps } from '@components/HoverMenu/HoverMenu'

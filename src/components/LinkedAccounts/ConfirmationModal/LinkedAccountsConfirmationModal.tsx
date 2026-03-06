@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/useLinkedAccounts/useConfirmAndExcludeMultiple'
-import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
-import { getAccountsNeedingConfirmation } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
+import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
 import { useAccountConfirmationStore } from '@providers/AccountConfirmationStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'

@@ -1,8 +1,8 @@
 import { type ReactNode, useState } from 'react'
 
 import { type View as ViewType } from '@internal-types/general'
-import { type ProfitAndLossCompareConfig } from '@internal-types/profit_and_loss'
-import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
+import { type ProfitAndLossCompareConfig } from '@internal-types/profitAndLoss'
+import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BalanceSheet } from '@components/BalanceSheet/BalanceSheet'

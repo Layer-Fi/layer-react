@@ -8,15 +8,15 @@ import classNames from 'classnames'
 import {
   type BankTransaction,
   type SuggestedMatch,
-} from '@internal-types/bank_transactions'
-import { type Split } from '@internal-types/bank_transactions'
+} from '@internal-types/bankTransactions'
+import { type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import {
   hasMatch,
 } from '@utils/bankTransactions'
 import { getBankTransactionFirstSuggestedMatch } from '@utils/bankTransactions'
 import { centsToDollars as formatMoney } from '@utils/money'
-import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
+import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import Scissors from '@icons/ScissorsFullOpen'

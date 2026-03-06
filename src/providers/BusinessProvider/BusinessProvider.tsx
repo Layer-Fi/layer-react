@@ -10,14 +10,14 @@ import {
   type LayerContextValues,
   type LayerThemeConfig,
   type OnboardingStep,
-} from '@internal-types/layer_context'
+} from '@internal-types/layerContext'
 import { get } from '@utils/api/authenticatedHttp'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
-import { useAccountingConfiguration } from '@hooks/useAccountingConfiguration/useAccountingConfiguration'
-import { useAuth } from '@hooks/useAuth'
-import { useDataSync } from '@hooks/useDataSync/useDataSync'
+import { useAccountingConfiguration } from '@hooks/api/businesses/business-id/accounting-config/useAccountingConfiguration'
+import { useDataSync } from '@hooks/legacy/useDataSync'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'

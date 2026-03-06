@@ -3,7 +3,7 @@ import pluralize from 'pluralize'
 
 import { getMonthNameFromNumber } from '@utils/date'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingPeriodStatus } from '@hooks/api/businesses/business-id/bookkeeping/periods/useBookkeepingPeriods'
 import AlertCircle from '@icons/AlertCircle'
 import CheckCircle from '@icons/CheckCircle'
 import Clock from '@icons/Clock'

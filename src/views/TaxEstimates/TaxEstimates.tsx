@@ -4,7 +4,7 @@ import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
-import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
+import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import {
   OnboardingStatus,
   TaxEstimatesRoute,

@@ -1,4 +1,4 @@
-import { BookkeepingPeriodStatus } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingPeriodStatus } from '@hooks/api/businesses/business-id/bookkeeping/periods/useBookkeepingPeriods'
 import Clock from '@icons/Clock'
 import { HStack } from '@ui/Stack/Stack'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'

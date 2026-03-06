@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
 import { Button } from '@ui/Button/Button'

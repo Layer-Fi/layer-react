@@ -1,9 +1,9 @@
 import { type PropsWithChildren } from 'react'
 
 import { type ReportingBasis } from '@internal-types/general'
-import { type ProfitAndLossCompareConfig } from '@internal-types/profit_and_loss'
-import { useProfitAndLoss } from '@hooks/useProfitAndLoss/useProfitAndLoss'
-import { useProfitAndLossComparison } from '@hooks/useProfitAndLossComparison/useProfitAndLossComparison'
+import { type ProfitAndLossCompareConfig } from '@internal-types/profitAndLoss'
+import { useProfitAndLoss } from '@hooks/features/profitAndLoss/useProfitAndLoss'
+import { useProfitAndLossComparison } from '@hooks/features/profitAndLoss/useProfitAndLossComparison'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { Container } from '@components/Container/Container'

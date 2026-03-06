@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 
 import type { MoneyFormat } from '@internal-types/general'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { ProfitAndLossDetailLinesDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDetailLinesDownloadButton'
 import { ProfitAndLossFullReportDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossFullReportDownloadButton'

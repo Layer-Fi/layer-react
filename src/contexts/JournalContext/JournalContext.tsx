@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-import { type useJournal } from '@hooks/useJournal/useJournal'
+import { type useJournal } from '@hooks/legacy/useJournal'
 
 export type JournalContextType = ReturnType<typeof useJournal>
 export const JournalContext = createContext<JournalContextType>({

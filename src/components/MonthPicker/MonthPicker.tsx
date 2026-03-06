@@ -5,7 +5,7 @@ import { format as formatTime } from 'date-fns'
 import { Dialog, DialogTrigger } from 'react-aria-components'
 
 import { MONTH_YEAR_FORMAT, MONTH_YEAR_FORMAT_SHORT } from '@utils/time/timeFormats'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { PickerDropdownIndicator } from '@ui/PickerDropdownIndicator/PickerDropdownIndicator'

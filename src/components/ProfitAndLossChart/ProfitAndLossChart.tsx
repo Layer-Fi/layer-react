@@ -16,11 +16,11 @@ import {
   XAxis,
 } from 'recharts'
 
+import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { isDateAllowedToBrowse } from '@utils/business'
-import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
-import { isAnyBankAccountSyncing } from '@hooks/useLinkedAccounts/bankAccountUtils'
-import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
-import { useProfitAndLossLTM } from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
+import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
+import { useProfitAndLossLTM } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
+import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ChartYAxis } from '@components/Chart/ChartYAxis'

@@ -2,8 +2,8 @@ import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
-import { useAuth } from '@hooks/useAuth'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/useBankTransactions/useBankTransactions'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/business-id/bank-transactions/useBankTransactions'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY = '#remove-tag-from-bank-transaction'

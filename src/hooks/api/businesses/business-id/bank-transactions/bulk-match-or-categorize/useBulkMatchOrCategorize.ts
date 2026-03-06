@@ -1,0 +1,218 @@
+import { useCallback } from 'react'
+import { pipe, Schema } from 'effect'
+import useSWRMutation from 'swr/mutation'
+
+import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
+import { post } from '@utils/api/authenticatedHttp'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/business-id/bank-transactions/useBankTransactions'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useGetAllBankTransactionsCategories } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+
+const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
+
+type MatchOrCategorizeTransaction = typeof MatchOrCategorizeTransactionRequestSchema.Type
+
+const buildBulkMatchOrCategorizePayload = (
+  selectedIds: Iterable<string>,
+  transactionCategories: Map<string, BankTransactionCategoryComboBoxOption | null>,
+): Record<string, MatchOrCategorizeTransaction> => {
+  const transactions: Record<string, MatchOrCategorizeTransaction> = {}
+
+  for (const transactionId of selectedIds) {
+    const transactionCategory = transactionCategories.get(transactionId) ?? null
+
+    if (!transactionCategory || isPlaceholderAsOption(transactionCategory)) {
+      continue
+    }
+
+    if (isSuggestedMatchAsOption(transactionCategory)) {
+      transactions[transactionId] = {
+        type: 'match',
+        suggestedMatchId: transactionCategory.value,
+      }
+    }
+
+    else if (isSplitAsOption(transactionCategory)) {
+      const splitEntries = transactionCategory.original
+        .map((split) => {
+          if (!split.category || !(isCategoryAsOption(split.category) || isApiCategorizationAsOption(split.category))) {
+            return null
+          }
+          const classification = split.category.classification
+          if (!classification) {
+            return null
+          }
+          return {
+            amount: split.amount,
+            category: classification,
+            tags: split.tags,
+            customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
+            vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
+          }
+        })
+        .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
+
+      if (splitEntries.length > 0) {
+        transactions[transactionId] = {
+          type: 'categorize',
+          categorization: {
+            type: 'Split',
+            entries: splitEntries,
+          },
+        }
+      }
+    }
+
+    else if (isCategoryAsOption(transactionCategory) || isApiCategorizationAsOption(transactionCategory)) {
+      const classification = transactionCategory.classification
+      if (classification) {
+        transactions[transactionId] = {
+          type: 'categorize',
+          categorization: {
+            type: 'Category',
+            category: classification,
+          },
+        }
+      }
+    }
+  }
+
+  return transactions
+}
+
+export const MatchTransactionRequestSchema = Schema.Struct({
+  type: Schema.Literal('match'),
+  suggestedMatchId: pipe(
+    Schema.propertySignature(Schema.UUID),
+    Schema.fromKey('suggested_match_id'),
+  ),
+})
+
+export const CategorizeTransactionRequestSchema = Schema.Struct({
+  type: Schema.Literal('categorize'),
+  categorization: CategoryUpdateSchema,
+})
+
+export const MatchOrCategorizeTransactionRequestSchema = Schema.Union(
+  MatchTransactionRequestSchema,
+  CategorizeTransactionRequestSchema,
+)
+
+export const BulkMatchOrCategorizeRequestSchema = Schema.Struct({
+  transactions: Schema.Record({
+    key: Schema.UUID,
+    value: MatchOrCategorizeTransactionRequestSchema,
+  }),
+})
+
+type BulkMatchOrCategorizeRequest = typeof BulkMatchOrCategorizeRequestSchema.Type
+type BulkMatchOrCategorizeRequestEncoded = typeof BulkMatchOrCategorizeRequestSchema.Encoded
+
+const _BulkMatchOrCategorizeParamsSchema = Schema.Struct({
+  businessId: Schema.String,
+})
+
+type BulkMatchOrCategorizeParams = typeof _BulkMatchOrCategorizeParamsSchema.Type
+
+const bulkMatchOrCategorize = post<
+  Record<string, unknown>,
+  BulkMatchOrCategorizeRequestEncoded,
+  BulkMatchOrCategorizeParams
+>(
+  ({ businessId }) => {
+    return `/v1/businesses/${businessId}/bank-transactions/bulk-match-or-categorize`
+  },
+)
+
+function buildKey({
+  access_token: accessToken,
+  apiUrl,
+  businessId,
+}: {
+  access_token?: string
+  apiUrl?: string
+  businessId: string
+}) {
+  if (accessToken && apiUrl) {
+    return {
+      accessToken,
+      apiUrl,
+      businessId,
+      tags: [BULK_MATCH_OR_CATEGORIZE_TAG],
+    } as const
+  }
+}
+
+export const useBulkMatchOrCategorize = () => {
+  const { data } = useAuth()
+  const { businessId, eventCallbacks } = useLayerContext()
+  const { selectedIds } = useSelectedIds()
+  const { transactionCategories } = useGetAllBankTransactionsCategories()
+
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
+
+  const buildTransactionsPayload: () => BulkMatchOrCategorizeRequest = useCallback(() => {
+    const transactions = buildBulkMatchOrCategorizePayload(selectedIds, transactionCategories)
+    return { transactions }
+  }, [selectedIds, transactionCategories])
+
+  const mutationResponse = useSWRMutation(
+    () => buildKey({
+      ...data,
+      businessId,
+    }),
+    (
+      { accessToken, apiUrl, businessId },
+      { arg }: { arg: BulkMatchOrCategorizeRequest },
+    ) => bulkMatchOrCategorize(
+      apiUrl,
+      accessToken,
+      {
+        params: { businessId },
+        body: Schema.encodeSync(BulkMatchOrCategorizeRequestSchema)(arg),
+      },
+    ).then(({ data }) => data),
+    {
+      revalidate: false,
+      throwOnError: true,
+    },
+  )
+
+  const { trigger: originalTrigger } = mutationResponse
+
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const triggerResult = await originalTrigger(...triggerParameters)
+
+      void forceReloadBankTransactions()
+
+      void debouncedInvalidateProfitAndLoss()
+
+      eventCallbacks?.onTransactionCategorized?.()
+
+      return triggerResult
+    },
+    [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
+  )
+
+  const proxiedResponse = new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
+
+  return {
+    ...proxiedResponse,
+    buildTransactionsPayload,
+  }
+}

@@ -1,4 +1,4 @@
-import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type BankTransaction } from '@internal-types/bankTransactions'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { useBankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/useBankTransactionMemo'

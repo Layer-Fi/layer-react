@@ -4,7 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { TAG_DIMENSIONS_TAG_KEY } from '@features/tags/api/useTagDimensions'

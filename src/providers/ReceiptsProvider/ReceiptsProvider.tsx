@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 
-import { type BankTransaction } from '@internal-types/bank_transactions'
-import { useReceipts } from '@hooks/useReceipts/useReceipts'
+import { type BankTransaction } from '@internal-types/bankTransactions'
+import { useReceipts } from '@hooks/legacy/useReceipts'
 import { ReceiptsContext } from '@contexts/ReceiptsContext/ReceiptsContext'
 
 interface ReceiptsProviderProps {

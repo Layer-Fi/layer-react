@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import { type StripeAccountStatusResponse, StripeAccountStatusResponseSchema } from '@schemas/stripeAccountStatus'
 import { get } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

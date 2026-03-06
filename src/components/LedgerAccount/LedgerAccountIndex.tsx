@@ -6,7 +6,7 @@ import {
 } from 'react'
 import classNames from 'classnames'
 
-import { LedgerAccountNodeType } from '@internal-types/chart_of_accounts'
+import { LedgerAccountNodeType } from '@internal-types/chartOfAccounts'
 import { type View } from '@internal-types/general'
 import { centsToDollars } from '@utils/money'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'

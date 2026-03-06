@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 
-import { useAugmentedBankTransactions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
+import { useAugmentedBankTransactions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
 import { BankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import {
   BankTransactionsFiltersContext,

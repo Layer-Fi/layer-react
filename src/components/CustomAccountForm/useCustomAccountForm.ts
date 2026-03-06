@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 
+import { type CustomAccount, CustomAccountSubtype, CustomAccountType } from '@internal-types/customAccounts'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { type CustomAccount, CustomAccountSubtype, CustomAccountType } from '@hooks/customAccounts/types'
-import { useCreateCustomAccount } from '@hooks/customAccounts/useCreateCustomAccount'
+import { useCreateCustomAccount } from '@hooks/api/businesses/business-id/custom-accounts/useCreateCustomAccount'
 import { useForm } from '@features/forms/hooks/useForm'
 
 export const getCustomAccountTypeFromSubtype = (subtype: CustomAccountSubtype): CustomAccountType => {

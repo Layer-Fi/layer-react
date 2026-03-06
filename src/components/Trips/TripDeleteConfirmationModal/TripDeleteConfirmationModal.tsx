@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { type Trip } from '@schemas/trip'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { useDeleteTrip } from '@features/trips/api/useDeleteTrip'

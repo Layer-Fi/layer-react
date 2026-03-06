@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
-import { useGlobalDatePickerBounds } from '@hooks/useGlobalDatePickerBounds/useGlobalDatePickerBounds'
+import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 

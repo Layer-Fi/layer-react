@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle } from 'react'
 
-import { type BankTransaction } from '@internal-types/bank_transactions'
-import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/useReceipts/useReceipts'
+import { type BankTransaction } from '@internal-types/bankTransactions'
+import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { ReceiptsProvider } from '@providers/ReceiptsProvider/ReceiptsProvider'
 import { useReceiptsContext } from '@contexts/ReceiptsContext/ReceiptsContext'
 import { FileThumb } from '@components/FileThumb/FileThumb'

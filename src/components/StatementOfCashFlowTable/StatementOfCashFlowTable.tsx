@@ -1,9 +1,9 @@
 import { Fragment, type ReactNode } from 'react'
 
-import { type LineItem } from '@internal-types/line_item'
-import { type StatementOfCashFlow } from '@internal-types/statement_of_cash_flow'
+import { type LineItem } from '@internal-types/lineItem'
+import { type StatementOfCashFlow } from '@internal-types/statementOfCashFlow'
 import { TableCellAlign } from '@internal-types/table'
-import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
+import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { Table } from '@components/Table/Table'
 import { TableBody } from '@components/TableBody/TableBody'
 import { TableCell } from '@components/TableCell/TableCell'

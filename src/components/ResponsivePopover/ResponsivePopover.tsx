@@ -1,6 +1,6 @@
 import { type PropsWithChildren, type RefObject } from 'react'
 
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Modal } from '@ui/Modal/Modal'
 import { Popover } from '@ui/Popover/Popover'
 
