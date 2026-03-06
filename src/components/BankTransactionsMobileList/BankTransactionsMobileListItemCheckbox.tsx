@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type BankTransaction } from '@internal-types/bankTransactions'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { Checkbox } from '@ui/Checkbox/Checkbox'

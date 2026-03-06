@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-import { type useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { type useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 
 export type LinkedAccountsContextType = ReturnType<typeof useLinkedAccounts>
 export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({

@@ -14,7 +14,7 @@ import {
   type ListBoxSectionProps as ReactAriaListBoxSectionProps,
 } from 'react-aria-components'
 
-import { useStopClickEventsRefCallback } from '@hooks/ref/useStopClickEventsRef'
+import { useStopClickEventsRefCallback } from '@hooks/utils/react/useStopClickEventsRef'
 import { Header } from '@ui/Typography/Text'
 
 import './listBox.scss'

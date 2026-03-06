@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Archive, Car, Edit, RotateCcw, Trash2 } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'

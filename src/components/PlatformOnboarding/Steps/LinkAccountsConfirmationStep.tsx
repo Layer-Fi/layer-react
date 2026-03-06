@@ -1,8 +1,8 @@
 import { useContext } from 'react'
 import { useForm } from '@tanstack/react-form'
 
-import { useConfirmAndExcludeMultiple } from '@hooks/useLinkedAccounts/useConfirmAndExcludeMultiple'
-import { getAccountsNeedingConfirmation } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
+import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'

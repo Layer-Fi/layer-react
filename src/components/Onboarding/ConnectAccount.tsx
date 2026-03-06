@@ -1,9 +1,9 @@
 import { useContext, useMemo } from 'react'
 
-import { DisplayState } from '@internal-types/bank_transactions'
-import { type OnboardingStep } from '@internal-types/layer_context'
+import { DisplayState } from '@internal-types/bankTransactions'
+import { type OnboardingStep } from '@internal-types/layerContext'
 import { countTransactionsToReview } from '@utils/bankTransactions'
-import { useAugmentedBankTransactions } from '@hooks/useBankTransactions/useAugmentedBankTransactions'
+import { useAugmentedBankTransactions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
 import { useBankTransactionsFilters } from '@contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import BellIcon from '@icons/Bell'

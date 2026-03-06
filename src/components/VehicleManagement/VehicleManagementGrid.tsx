@@ -3,11 +3,11 @@ import { Car } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { asMutable } from '@utils/asMutable'
+import { useListVehicles } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
 import { VehicleCard } from '@components/VehicleManagement/VehicleCard'
-import { useListVehicles } from '@features/vehicles/api/useListVehicles'
 
 import './vehicleManagementGrid.scss'
 

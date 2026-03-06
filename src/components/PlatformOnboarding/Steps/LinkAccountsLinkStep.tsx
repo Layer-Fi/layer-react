@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import pluralize from 'pluralize'
 
-import { getBankAccountDisplayName, getBankAccountInstitution } from '@hooks/useLinkedAccounts/bankAccountUtils'
+import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import ChevronRight from '@icons/ChevronRight'
 import LinkIcon from '@icons/Link'

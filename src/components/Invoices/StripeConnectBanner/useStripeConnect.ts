@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
+import { useStripeConnectAccountLink } from '@hooks/api/businesses/[business-id]/stripe/connect-account-link/useStripeConnectAccountLink'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { useStripeConnectAccountLink } from '@features/invoices/api/useStripeConnectAccountLink'
 
 export function useStripeConnect() {
   const { addToast } = useLayerContext()

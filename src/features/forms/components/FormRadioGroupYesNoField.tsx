@@ -1,11 +1,11 @@
 import { type PropsWithChildren, useId } from 'react'
 import classNames from 'classnames'
 
+import { useFieldContext } from '@hooks/features/forms/useForm'
 import { FieldError } from '@ui/Form/Form'
 import { Radio, RadioGroup } from '@ui/RadioGroup/RadioGroup'
 import { Stack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
-import { useFieldContext } from '@features/forms/hooks/useForm'
 import type { CommonFormFieldProps } from '@features/forms/types'
 
 import './formRadioGroupField.scss'

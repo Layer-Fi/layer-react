@@ -1,7 +1,7 @@
 import { useContext, useId } from 'react'
 import type { StylesConfig } from 'react-select'
 
-import { type TagComparisonOption } from '@internal-types/profit_and_loss'
+import { type TagComparisonOption } from '@internal-types/profitAndLoss'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'

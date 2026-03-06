@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react'
 
-import type { BankTransaction } from '@internal-types/bank_transactions'
+import type { BankTransaction } from '@internal-types/bankTransactions'
+import { type CustomerVendorSchema, decodeCustomerVendor } from '@schemas/customerVendor'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { useSetMetadataOnBankTransaction } from '@features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
 import { CustomerVendorSelector } from '@features/customerVendor/components/CustomerVendorSelector'
-import { type CustomerVendorSchema, decodeCustomerVendor } from '@features/customerVendor/customerVendorSchemas'
 
 type BankTransactionCustomerVendorSelectorProps = {
   bankTransaction: Pick<BankTransaction, 'id' | 'customer' | 'vendor'>

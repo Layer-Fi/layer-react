@@ -8,8 +8,8 @@ import {
   type ProfitAndLossFilters,
   type Scope,
   type SidebarScope,
-} from '@hooks/useProfitAndLoss/useProfitAndLoss'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+} from '@hooks/features/profitAndLoss/useProfitAndLoss'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
 import { MoneySpan } from '@ui/Typography/MoneySpan'

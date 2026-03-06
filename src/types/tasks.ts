@@ -1,4 +1,4 @@
-import { type DocumentType } from '@internal-types/file_upload'
+import { type DocumentType } from '@internal-types/fileUpload'
 import { type S3PresignedUrl } from '@internal-types/general'
 
 type Document = {

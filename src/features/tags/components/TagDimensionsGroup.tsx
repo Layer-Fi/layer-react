@@ -1,7 +1,7 @@
+import { type Tag } from '@schemas/tag'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { HStack } from '@ui/Stack/Stack'
 import { TagDimensionCombobox } from '@features/tags/components/TagDimensionCombobox'
-import { type Tag } from '@features/tags/tagSchemas'
 
 import './tagDimensionsGroup.scss'
 

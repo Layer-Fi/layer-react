@@ -1,4 +1,4 @@
-import { useAccountBalancesDownload } from '@hooks/useChartOfAccounts/useAccountBalancesDownload'
+import { useAccountBalancesDownload } from '@hooks/api/businesses/[business-id]/ledger/balances/exports/csv/useAccountBalancesDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 

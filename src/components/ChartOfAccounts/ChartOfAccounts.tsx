@@ -1,8 +1,8 @@
 import { type ReactNode, useContext } from 'react'
 
-import { useChartOfAccounts } from '@hooks/useChartOfAccounts/useChartOfAccounts'
-import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
-import { useLedgerAccounts } from '@hooks/useLedgerAccounts/useLedgerAccounts'
+import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
+import { useLedgerAccounts } from '@hooks/legacy/useLedgerAccounts'
+import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'

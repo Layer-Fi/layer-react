@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { getYear } from 'date-fns'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
-import { useGlobalDatePickerBounds } from '@hooks/useGlobalDatePickerBounds/useGlobalDatePickerBounds'
+import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { YearPicker } from '@components/YearPicker/YearPicker'
 

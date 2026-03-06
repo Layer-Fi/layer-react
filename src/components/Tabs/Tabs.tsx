@@ -1,7 +1,7 @@
 import { type ChangeEvent, type ReactNode, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
-import { useElementSize } from '@hooks/useElementSize/useElementSize'
+import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { HStack } from '@ui/Stack/Stack'
 import { Tab } from '@components/Tabs/Tab'
 

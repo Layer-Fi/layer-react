@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-import { type useQuickbooks } from '@hooks/useQuickbooks/useQuickbooks'
+import { type useQuickbooks } from '@hooks/features/quickbooks/useQuickbooks'
 
 export type QuickbooksContextType = ReturnType<typeof useQuickbooks>
 export const QuickbooksContext = createContext<QuickbooksContextType>({

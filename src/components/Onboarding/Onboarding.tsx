@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 
-import { type OnboardingStep } from '@internal-types/layer_context'
+import { type OnboardingStep } from '@internal-types/layerContext'
 import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

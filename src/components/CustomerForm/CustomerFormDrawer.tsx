@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 
 import { type Customer } from '@schemas/customer'
+import { UpsertCustomerMode } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
 import { CustomerForm } from '@components/CustomerForm/CustomerForm'
 import { type CustomerFormState } from '@components/CustomerForm/formUtils'
-import { UpsertCustomerMode } from '@features/customers/api/useUpsertCustomer'
 
 export type CustomerFormDrawerProps = {
   isOpen: boolean

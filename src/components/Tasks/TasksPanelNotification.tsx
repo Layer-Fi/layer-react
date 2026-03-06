@@ -1,7 +1,7 @@
 import pluralize from 'pluralize'
 
-import { useBookkeepingYearsStatus } from '@hooks/bookkeeping/periods/useBookkeepingYearsStatus'
-import { useListBankAccounts } from '@hooks/useLinkedAccounts/useListBankAccounts'
+import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
+import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import AlertCircle from '@icons/AlertCircle'
 import ArrowRightCircle from '@icons/ArrowRightCircle'

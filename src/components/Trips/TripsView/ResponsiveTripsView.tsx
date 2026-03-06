@@ -4,7 +4,8 @@ import { Car } from 'lucide-react'
 
 import type { Trip } from '@schemas/trip'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
-import { useAutoResetPageIndex } from '@hooks/pagination/useAutoResetPageIndex'
+import { useListTrips } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
+import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
@@ -13,7 +14,6 @@ import { TripDeleteConfirmationModal } from '@components/Trips/TripDeleteConfirm
 import { TripDrawer } from '@components/Trips/TripDrawer/TripDrawer'
 import { TripsMobileList } from '@components/Trips/TripsMobileList/TripsMobileList'
 import { TripsTable } from '@components/Trips/TripsTable/TripsTable'
-import { useListTrips } from '@features/trips/api/useListTrips'
 import { TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
 
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>

@@ -1,9 +1,9 @@
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 import { getMonth, getYear } from 'date-fns'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
+import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import BellIcon from '@icons/Bell'
 import CheckIcon from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'
@@ -33,7 +33,7 @@ export function TransactionsToReview({
 }: TransactionsToReviewProps) {
   const { size = 'sm' } = variants ?? {}
 
-  const { dateRange } = useContext(ProfitAndLossContext)
+  const dateRange = useGlobalDateRange({ dateSelectionMode: 'month' })
 
   const { data, isLoading, isError, mutate } = useProfitAndLossSummaries({
     startYear: dateRange.startDate.getFullYear(),
@@ -46,12 +46,12 @@ export function TransactionsToReview({
 
   const activeMonth = useMemo(() => {
     if (!data || !dateRange) return undefined
-    const { endDate } = dateRange
+    const { startDate } = dateRange
 
     return data.months.find(
       summary =>
-        summary.month - 1 === getMonth(endDate)
-        && summary.year === getYear(endDate),
+        summary.month - 1 === getMonth(startDate)
+        && summary.year === getYear(startDate),
     )
   }, [data, dateRange])
 

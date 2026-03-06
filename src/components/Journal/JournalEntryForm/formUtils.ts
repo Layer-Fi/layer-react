@@ -2,9 +2,9 @@ import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import { BigDecimal as BD } from 'effect'
 
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { makeTagFromTransactionTag, makeTagKeyValueFromTag } from '@schemas/tag'
 import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 import type { ApiCustomJournalEntryWithEntry, CreateCustomJournalEntry, JournalEntryForm, JournalEntryFormLineItem } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
-import { makeTagFromTransactionTag, makeTagKeyValueFromTag } from '@features/tags/tagSchemas'
 
 /**
  * Determines if a line item is blank (empty).

@@ -3,15 +3,15 @@ import { Fragment, useContext, useEffect } from 'react'
 import {
   type ProfitAndLossComparisonItem,
   type ProfitAndLossComparisonPnl,
-} from '@internal-types/profit_and_loss'
+} from '@internal-types/profitAndLoss'
 import { type LineItemEncoded } from '@schemas/common/lineItem'
 import {
   generateComparisonPeriods,
   getComparisonValue,
   mergeComparisonLineItemsAtDepth,
 } from '@utils/profitAndLossComparisonUtils'
-import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { useTableExpandRow } from '@hooks/useTableExpandRow/useTableExpandRow'
+import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { HStack } from '@ui/Stack/Stack'

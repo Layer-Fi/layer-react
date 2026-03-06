@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { getYear } from 'date-fns'
 
+import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -9,7 +10,6 @@ import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
 import { MileageDeductionChart } from '@components/MileageDeductionChart/MileageDeductionChart'
-import { useMileageSummary } from '@features/mileage/api/useMileageSummary'
 
 import './mileageTrackingStats.scss'
 

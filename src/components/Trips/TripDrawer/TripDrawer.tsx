@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { Edit, Trash2 } from 'lucide-react'
 
 import type { Trip } from '@schemas/trip'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'

@@ -2,7 +2,7 @@ import {
   GridList,
 } from 'react-aria-components'
 
-import { type BankTransaction, type SuggestedMatch } from '@internal-types/bank_transactions'
+import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { ErrorText } from '@components/Typography/ErrorText'

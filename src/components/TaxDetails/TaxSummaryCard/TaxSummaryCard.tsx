@@ -1,5 +1,5 @@
 import type { TaxSummary } from '@schemas/taxEstimates/summary'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { TaxSummaryCardDesktop } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCardDesktop'
 import { TaxSummaryCardMobile } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCardMobile'
 

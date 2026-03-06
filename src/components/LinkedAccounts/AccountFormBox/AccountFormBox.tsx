@@ -1,9 +1,9 @@
 import { useEffect, useMemo } from 'react'
 import { endOfDay } from 'date-fns'
 
-import { type BankAccount } from '@internal-types/linked_accounts'
+import { type BankAccount } from '@internal-types/linkedAccounts'
+import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { getBankAccountDisplayName, getBankAccountInstitution } from '@hooks/useLinkedAccounts/bankAccountUtils'
 import CheckCircle from '@icons/CheckCircle'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import { Checkbox } from '@ui/Checkbox/Checkbox'

@@ -9,7 +9,7 @@ import {
 } from 'react-aria-components'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { useVirtualKeyboardHeight } from '@hooks/useVirtualKeyboardHeight/useVirtualKeyboardHeight'
+import { useVirtualKeyboardHeight } from '@hooks/utils/size/useVirtualKeyboardHeight'
 
 import './modal.scss'
 

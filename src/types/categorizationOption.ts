@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import type { Split, SuggestedMatch } from '@internal-types/bank_transactions'
+import type { Split, SuggestedMatch } from '@internal-types/bankTransactions'
 import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
 import {
   type CategorizationEncoded,

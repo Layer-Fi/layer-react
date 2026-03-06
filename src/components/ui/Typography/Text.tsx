@@ -7,7 +7,7 @@ import { Header as ReactAriaHeader, Label as ReactAriaLabel } from 'react-aria-c
 import { mergeRefs } from 'react-merge-refs'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { useTruncationDetection } from '@hooks/useTruncationDetection/useTruncationDetection'
+import { useTruncationDetection } from '@hooks/utils/size/useTruncationDetection'
 import type { Spacing } from '@ui/sharedUITypes'
 import { Tooltip, type TooltipCapableComponentProps, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 

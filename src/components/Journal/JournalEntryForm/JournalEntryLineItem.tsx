@@ -2,12 +2,12 @@ import classNames from 'classnames'
 import { X } from 'lucide-react'
 
 import { CategoriesListMode, type Classification, isClassificationAccountIdentifier } from '@schemas/categorization'
+import type { AppForm } from '@hooks/features/forms/useForm'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
 import { DebitCreditPill } from '@components/DebitCreditPill/DebitCreditPill'
 import type { JournalEntryForm } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
-import type { AppForm } from '@features/forms/hooks/useForm'
 import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
 
 import './journalEntryLineItem.scss'

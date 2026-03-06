@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import classNames from 'classnames'
 import { Check } from 'lucide-react'
 
-import { isCalendlyLink } from '@hooks/useCalendly/useCalendly'
+import { isCalendlyLink } from '@hooks/features/calendly/useCalendly'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'

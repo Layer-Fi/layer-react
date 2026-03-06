@@ -1,8 +1,8 @@
+import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { InvoiceRoute, InvoicesRouteStoreProvider, useInvoiceRouteState } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { InvoiceDetail } from '@components/Invoices/InvoiceDetail/InvoiceDetail'
 import { InvoiceOverview } from '@components/Invoices/InvoiceOverview/InvoiceOverview'
 import { View } from '@components/View/View'
-import { usePreloadCustomers } from '@features/customers/api/useListCustomers'
 
 interface InvoicesStringOverrides {
   title?: string

@@ -3,7 +3,7 @@ import {
 } from 'date-fns'
 
 import { MONTH_FORMAT_ABBREVIATED, MONTH_FORMAT_NARROW } from '@utils/time/timeFormats'
-import { type ProfitAndLossSummaryData } from '@hooks/useProfitAndLoss/useProfitAndLossLTM'
+import { type ProfitAndLossSummaryData } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
 import type { ChartDataPoint } from '@components/ProfitAndLossChart/chartDataPoint'
 
 const BASE_LOADING_DEFAULT = 90000

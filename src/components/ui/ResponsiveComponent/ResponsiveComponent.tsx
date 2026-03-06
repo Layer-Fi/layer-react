@@ -1,7 +1,7 @@
 import { type ReactNode, useCallback, useState } from 'react'
 import classNames from 'classnames'
 
-import { type ElementSize, useElementSize } from '@hooks/useElementSize/useElementSize'
+import { type ElementSize, useElementSize } from '@hooks/utils/size/useElementSize'
 
 import './responsiveComponent.scss'
 

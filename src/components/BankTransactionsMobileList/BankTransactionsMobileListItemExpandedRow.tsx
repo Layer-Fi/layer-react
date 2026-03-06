@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { Key } from 'react-aria-components'
 
-import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasMatch } from '@utils/bankTransactions'
 import { VStack } from '@ui/Stack/Stack'

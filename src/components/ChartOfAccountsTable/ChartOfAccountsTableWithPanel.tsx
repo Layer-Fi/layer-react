@@ -1,7 +1,7 @@
 import { type RefObject, useContext, useState } from 'react'
 
 import { type View } from '@internal-types/general'
-import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import PlusIcon from '@icons/Plus'
 import { HStack } from '@ui/Stack/Stack'

@@ -1,11 +1,11 @@
 import { useCallback, useId, useMemo } from 'react'
 
+import { type Tag, type TagValueDefinition } from '@schemas/tag'
+import { useTagDimensionByKey } from '@hooks/api/businesses/[business-id]/tags/dimensions/key/[dimension-key]/useTagDimensionByKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
-import { useTagDimensionByKey } from '@features/tags/api/useTagDimensionByKey'
-import { type Tag, type TagValueDefinition } from '@features/tags/tagSchemas'
 
 class TagValueDefinitionAsOption {
   private tagValueDefinition: TagValueDefinition

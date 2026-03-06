@@ -1,15 +1,15 @@
 import { useContext, useMemo, useState } from 'react'
 import { startOfYear } from 'date-fns'
 
-import { type BankAccount } from '@internal-types/linked_accounts'
+import { type BankAccount } from '@internal-types/linkedAccounts'
 import { getActivationDate } from '@utils/business'
 import { convertToCents } from '@utils/format'
-import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import {
   type OpeningBalanceAPIResponseResult,
   type OpeningBalanceData,
   useBulkSetOpeningBalanceAndDate,
-} from '@hooks/useLinkedAccounts/useUpdateOpeningBalanceAndDate'
+} from '@hooks/legacy/useUpdateOpeningBalanceAndDate'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Button } from '@ui/Button/Button'

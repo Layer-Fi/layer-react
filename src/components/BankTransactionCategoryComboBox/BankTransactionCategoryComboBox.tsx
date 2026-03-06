@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import type { GroupBase } from 'react-select'
 
-import type { BankTransaction } from '@internal-types/bank_transactions'
+import type { BankTransaction } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
-import { useCategories } from '@hooks/categories/useCategories'
+import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'

@@ -9,15 +9,20 @@ import classNames from 'classnames'
 import {
   type BankTransaction,
   type SuggestedMatch,
-} from '@internal-types/bank_transactions'
-import { type Split } from '@internal-types/bank_transactions'
+} from '@internal-types/bankTransactions'
+import { type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { type CustomerVendorSchema } from '@schemas/customerVendor'
+import { type Tag } from '@schemas/tag'
 import {
   hasMatch,
 } from '@utils/bankTransactions'
 import { getBankTransactionFirstSuggestedMatch } from '@utils/bankTransactions'
 import { centsToDollars as formatMoney } from '@utils/money'
-import { useSplitsForm } from '@hooks/useBankTransactions/useSplitsForm'
+import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
+import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
+import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
+import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import Scissors from '@icons/ScissorsFullOpen'
@@ -35,14 +40,9 @@ import { Separator } from '@components/Separator/Separator'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { useSetMetadataOnBankTransaction } from '@features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
-import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
-import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
 import { useBankTransactionTagVisibility } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import { CustomerVendorSelector } from '@features/customerVendor/components/CustomerVendorSelector'
-import { type CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
 import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
-import { type Tag } from '@features/tags/tagSchemas'
 
 import './expandedBankTransactionRow.scss'
 

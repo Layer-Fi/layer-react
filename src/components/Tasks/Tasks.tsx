@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
-import { useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { CallBookingPurpose, useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P, Span } from '@ui/Typography/Text'
@@ -14,7 +15,6 @@ import { TasksPanelNotification } from '@components/Tasks/TasksPanelNotification
 import { TasksPending } from '@components/Tasks/TasksPending'
 import { TasksYearsTabs } from '@components/Tasks/TasksYearsTabs'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
-import { CallBookingPurpose, useCallBookings } from '@features/callBookings/api/useCallBookings'
 
 const TasksOnboardingEmptyState = () => {
   return (

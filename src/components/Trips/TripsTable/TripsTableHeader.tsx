@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react'
 import { Plus } from 'lucide-react'
 
 import type { Vehicle } from '@schemas/vehicle'
-import { useDebouncedSearchInput } from '@hooks/search/useDebouncedSearchQuery'
+import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'

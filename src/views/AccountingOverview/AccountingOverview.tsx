@@ -1,9 +1,9 @@
 import { type ReactNode, useMemo, useState } from 'react'
 import classNames from 'classnames'
 
-import { type OnboardingStep } from '@internal-types/layer_context'
+import { type OnboardingStep } from '@internal-types/layerContext'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'

@@ -1,9 +1,35 @@
 import { isWithinInterval, parseISO } from 'date-fns'
 
-import { type BankTransaction, DisplayState, type SuggestedMatch } from '@internal-types/bank_transactions'
+import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { type DateRange } from '@internal-types/general'
 import { Direction } from '@internal-types/general'
-import { filterVisibility } from '@components/BankTransactions/utils'
+import type { TagFilterInput } from '@internal-types/tags'
+import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
+import { makeTagKeyValueFromTag } from '@schemas/tag'
+import { CategorizedCategories, ReviewCategories } from '@components/BankTransactions/constants'
+
+export const filterVisibility = (
+  scope: DisplayState,
+  bankTransaction: BankTransaction,
+) => {
+  const categorized = CategorizedCategories.includes(
+    bankTransaction.categorization_status,
+  )
+  const inReview = ReviewCategories.includes(
+    bankTransaction.categorization_status,
+  )
+
+  return (
+    scope === DisplayState.all
+    || (scope === DisplayState.review && inReview)
+    || (scope === DisplayState.categorized && categorized)
+  )
+}
+
+export interface NumericRangeFilter {
+  min?: number
+  max?: number
+}
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
   return Boolean(
@@ -76,4 +102,37 @@ export const getBankTransactionMatchAsSuggestedMatch = (bankTransaction?: BankTr
 
 export const getBankTransactionFirstSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
   return getBankTransactionMatchAsSuggestedMatch(bankTransaction) ?? bankTransaction?.suggested_matches?.[0]
+}
+
+export enum BankTransactionsDateFilterMode {
+  MonthlyView = 'MonthlyView',
+  GlobalDateRange = 'GlobalDateRange',
+}
+export type BankTransactionFilters = {
+  amount?: NumericRangeFilter
+  account?: string[]
+  direction?: Direction[]
+  categorizationStatus?: DisplayState
+  dateRange?: DateRange
+  query?: string
+  tagFilter?: TagFilterInput
+}
+export const isCategorized = (bankTransaction: BankTransaction) => CategorizedCategories.includes(bankTransaction.categorization_status)
+export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): CategoryUpdate => {
+  return splits.length === 1 && splits[0].category
+    ? ({
+      type: 'Category',
+      category: splits[0].category.classification!,
+    })
+    : ({
+      type: 'Split',
+      entries: splits.map(split => ({
+        // TODO: enforce upstream in the category combobox that split.category is non-null
+        category: split.category!.classification!,
+        amount: split.amount,
+        tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
+        customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
+        vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
+      })),
+    })
 }
