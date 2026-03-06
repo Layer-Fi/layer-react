@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -197,6 +198,19 @@ export const ExpandedBankTransactionRow = ({
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
+  const toggleOptions = useMemo(() => [
+    {
+      value: 'categorize',
+      label: 'Categorize',
+    },
+    {
+      value: 'match',
+      label: 'Match',
+      disabled: !hasMatch(bankTransaction),
+      disabledMessage: 'We could not find matching transactions',
+    },
+  ], [bankTransaction])
+
   const effectiveSplits = isCategorizationEnabled
     ? localSplits
     : []
@@ -220,19 +234,7 @@ export const ExpandedBankTransactionRow = ({
                     <Toggle
                       ariaLabel='Transaction action'
                       size={ToggleSize.small}
-                      options={[
-                        {
-                          value: 'categorize',
-                          label: 'Categorize',
-                        },
-                        {
-                          value: 'match',
-                          label: 'Match',
-                          disabled: !hasMatch(bankTransaction),
-                          disabledMessage:
-                        'We could not find matching transactions',
-                        },
-                      ]}
+                      options={toggleOptions}
                       selectedKey={purpose}
                       onSelectionChange={onChangePurpose}
                     />

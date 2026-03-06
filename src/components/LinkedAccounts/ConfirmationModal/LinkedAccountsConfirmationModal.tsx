@@ -96,7 +96,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
     <VStack gap='2xs'>
       <ModalTitleWithClose
         heading={(
-          <ModalHeading size='xl'>
+          <ModalHeading size='md'>
             Loading Your Accounts...
           </ModalHeading>
         )}
@@ -139,7 +139,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     <>
       <ModalTitleWithClose
         heading={(
-          <ModalHeading pbe='2xs' size='xl'>
+          <ModalHeading pbe='2xs' size='md'>
             Confirm Business Accounts
           </ModalHeading>
         )}

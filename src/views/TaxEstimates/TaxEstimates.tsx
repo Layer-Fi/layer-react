@@ -127,6 +127,17 @@ const TaxEstimatesViewHeader = () => {
   )
 }
 
+const TAX_ESTIMATES_TAB_OPTIONS = [
+  {
+    value: TaxEstimatesRoute.Estimates,
+    label: 'Estimates',
+  },
+  {
+    value: TaxEstimatesRoute.Payments,
+    label: 'Payments',
+  },
+]
+
 const TaxEstimatesOnboardedViewContent = () => {
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
@@ -143,16 +154,7 @@ const TaxEstimatesOnboardedViewContent = () => {
     <>
       <Toggle
         ariaLabel='Tax estimate view'
-        options={[
-          {
-            value: TaxEstimatesRoute.Estimates,
-            label: 'Estimates',
-          },
-          {
-            value: TaxEstimatesRoute.Payments,
-            label: 'Payments',
-          },
-        ]}
+        options={TAX_ESTIMATES_TAB_OPTIONS}
         selectedKey={route}
         onSelectionChange={handleTabChange}
       />
