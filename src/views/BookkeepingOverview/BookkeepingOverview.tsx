@@ -2,8 +2,9 @@ import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 
-import { type CallBooking as CallBookingData } from '@schemas/callBookings'
+import { type CallBooking as CallBookingData } from '@schemas/callBooking'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
+import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
 import { useCalendly } from '@hooks/features/calendly/useCalendly'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
@@ -19,7 +20,6 @@ import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/Pro
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
-import { useCallBookings } from '@features/callBookings/api/useCallBookings'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
 
 export interface BookkeepingOverviewProps {

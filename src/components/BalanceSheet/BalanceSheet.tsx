@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 
-import { useBalanceSheet } from '@hooks/api/businesses/business-id/reports/balance-sheet/useBalanceSheet'
+import { useBalanceSheet } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { type DateSelectionMode, useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TableProvider } from '@contexts/TableContext/TableContext'

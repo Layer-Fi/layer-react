@@ -2,11 +2,11 @@ import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { useListVehicles } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { Label } from '@ui/Typography/Text'
-import { useListVehicles } from '@features/vehicles/api/useListVehicles'
 import { getVehicleDisplayName } from '@features/vehicles/utils'
 
 import './vehicleSelector.scss'

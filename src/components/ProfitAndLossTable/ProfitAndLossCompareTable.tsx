@@ -10,7 +10,7 @@ import {
   getComparisonValue,
   mergeComparisonLineItemsAtDepth,
 } from '@utils/profitAndLossComparisonUtils'
-import { useBookkeepingPeriods } from '@hooks/api/businesses/business-id/bookkeeping/periods/useBookkeepingPeriods'
+import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'

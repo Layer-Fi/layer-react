@@ -12,7 +12,7 @@ import { isArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFall
 import { type ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLeastOneOrFallback'
 import { range } from '@utils/array/range'
 import { toLocalDateString } from '@utils/time/timeUtils'
-import { useProfitAndLossComparisonReport } from '@hooks/api/businesses/business-id/reports/profit-and-loss-comparison/useProfitAndLossComparisonReport'
+import { useProfitAndLossComparisonReport } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-comparison/useProfitAndLossComparisonReport'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'

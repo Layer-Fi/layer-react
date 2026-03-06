@@ -4,8 +4,8 @@ import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
 import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
 import { CustomerSchema } from '@schemas/customer'
 import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
+import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '@schemas/tag'
 import { VendorSchema } from '@schemas/vendor'
-import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '@features/tags/tagSchemas'
 
 export const JournalEntryFormLineItemSchema = Schema.Struct({
   externalId: Schema.NullOr(Schema.String),

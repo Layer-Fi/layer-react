@@ -5,10 +5,10 @@ import { type UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTra
 import { type MatchDetailsType, type MatchType } from '@schemas/bankTransactions/match'
 import type { CategorizationEncoded } from '@schemas/categorization'
 import type { CustomerSchema } from '@schemas/customer'
+import type { CustomerVendorSchema } from '@schemas/customerVendor'
+import type { Tag, TransactionTagEncoded } from '@schemas/tag'
 import type { VendorSchema } from '@schemas/vendor'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import type { CustomerVendorSchema } from '@features/customerVendor/customerVendorSchemas'
-import type { Tag, TransactionTagEncoded } from '@features/tags/tagSchemas'
 
 export enum BankTransactionMatchType {
   CONFIRM_MATCH = 'Confirm_Match',

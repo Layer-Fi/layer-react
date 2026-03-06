@@ -10,7 +10,7 @@ import {
   collectRevenueItems,
   type PnlChartLineItem,
 } from '@utils/profitAndLossUtils'
-import { useProfitAndLossReport } from '@hooks/api/businesses/business-id/reports/profit-and-loss/useProfitAndLossReport'
+import { useProfitAndLossReport } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossReport'
 import {
   type DateSelectionMode,
   useGlobalDateRange,

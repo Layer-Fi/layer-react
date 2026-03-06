@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 
-import { useBookkeepingConfiguration } from '@hooks/api/businesses/business-id/bookkeeping/config/useBookkeepingConfiguration'
+import { useBookkeepingConfiguration } from '@hooks/api/businesses/[business-id]/bookkeeping/config/useBookkeepingConfiguration'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { LinkAccounts } from '@components/PlatformOnboarding/LinkAccounts'
 import { BookOnboardingCallStep } from '@components/PlatformOnboarding/Steps/BookOnboardingCallStep'

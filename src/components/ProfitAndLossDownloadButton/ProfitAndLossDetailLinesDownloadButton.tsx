@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 
 import type { S3PresignedUrl } from '@internal-types/general'
-import { useProfitAndLossDetailLinesExport } from '@hooks/api/businesses/business-id/reports/profit-and-loss/lines/exports/excel/useProfitAndLossDetailLinesExport'
+import { useProfitAndLossDetailLinesExport } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/exports/excel/useProfitAndLossDetailLinesExport'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { DownloadButton } from '@components/Button/DownloadButton'

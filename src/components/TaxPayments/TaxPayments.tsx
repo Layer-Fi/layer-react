@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { useTaxPayments } from '@hooks/api/businesses/business-id/tax-estimates/payments/useTaxPayments'
+import { useTaxPayments } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'

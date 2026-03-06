@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { useBankTransactionsDownload } from '@hooks/api/businesses/business-id/reports/transactions/exports/excel/useBankTransactionsDownload'
+import { useBankTransactionsDownload } from '@hooks/api/businesses/[business-id]/reports/transactions/exports/excel/useBankTransactionsDownload'
 import { bankTransactionFiltersToHookOptions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

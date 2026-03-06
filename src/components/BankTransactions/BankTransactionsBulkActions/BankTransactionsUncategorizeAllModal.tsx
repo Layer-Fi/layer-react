@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import pluralize from 'pluralize'
 
-import { useBulkUncategorize } from '@hooks/api/businesses/business-id/bank-transactions/bulk-uncategorize/useBulkUncategorize'
+import { useBulkUncategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-uncategorize/useBulkUncategorize'
 import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { Span } from '@ui/Typography/Text'

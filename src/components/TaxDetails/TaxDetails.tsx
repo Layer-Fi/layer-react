@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
 import type { ReactNode } from 'react'
 
-import { useTaxDetails } from '@hooks/api/businesses/business-id/tax-estimates/details/useTaxDetails'
-import { useTaxSummary } from '@hooks/api/businesses/business-id/tax-estimates/summary/useTaxSummary'
+import { useTaxDetails } from '@hooks/api/businesses/[business-id]/tax-estimates/details/useTaxDetails'
+import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'

@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
+import { makeTag, type Tag, type TagValue } from '@schemas/tag'
+import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
+import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
-import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
 import { TagSelector } from '@features/tags/components/TagSelector'
-import { makeTag, type Tag, type TagValue } from '@features/tags/tagSchemas'
 
 type BankTransactionTagSelectorProps = {
   bankTransaction: Pick<BankTransaction, 'id' | 'transaction_tags'>

@@ -1,5 +1,5 @@
 import { type Customer, type CustomerForm } from '@schemas/customer'
-import { UpsertCustomerMode } from '@features/customers/api/useUpsertCustomer'
+import { UpsertCustomerMode } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
 
 export type CustomerFormState =
   | { mode: UpsertCustomerMode.Update, customer: Customer }

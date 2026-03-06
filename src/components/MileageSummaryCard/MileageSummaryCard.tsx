@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 
 import { convertCentsToCurrency } from '@utils/format'
+import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import ArrowRightCircleAlt from '@icons/ArrowRightCircleAlt'
 import Plus from '@icons/Plus'
@@ -13,7 +14,6 @@ import { Card } from '@components/Card/Card'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { TripDrawer } from '@components/Trips/TripDrawer/TripDrawer'
-import { useMileageSummary } from '@features/mileage/api/useMileageSummary'
 
 import './mileageSummaryCard.scss'
 

@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 
+import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import BackArrow from '@icons/BackArrow'
@@ -12,7 +13,6 @@ import { InvoicePaymentDrawer } from '@components/Invoices/InvoiceDetail/Invoice
 import type { InvoiceFormState } from '@components/Invoices/InvoiceForm/formUtils'
 import { InvoiceForm } from '@components/Invoices/InvoiceForm/InvoiceForm'
 import { InvoiceFinalizeStep } from '@components/Invoices/InvoicePreview/InvoiceFinalizeStep'
-import { UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
 import { type Invoice } from '@features/invoices/invoiceSchemas'
 
 import './invoiceDetail.scss'

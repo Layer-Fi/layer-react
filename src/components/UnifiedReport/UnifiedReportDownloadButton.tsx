@@ -1,9 +1,9 @@
+import { useUnifiedReportExcel } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/exports/excel/useUnifiedReportExcel'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import DownloadCloud from '@icons/DownloadCloud'
 import RefreshCcw from '@icons/RefreshCcw'
 import { Button } from '@ui/Button/Button'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
-import { useUnifiedReportExcel } from '@features/reports/api/useUnifiedReportExcel'
 
 type UnifiedReportDownloadButtonProps = {
   dateSelectionMode: DateSelectionMode

@@ -1,4 +1,4 @@
-import { useStatementOfCashFlow } from '@hooks/api/businesses/business-id/reports/cashflow-statement/useStatementOfCashFlow'
+import { useStatementOfCashFlow } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TableProvider } from '@contexts/TableContext/TableContext'

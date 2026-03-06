@@ -1,4 +1,4 @@
-import { useBalanceSheetDownload } from '@hooks/api/businesses/business-id/reports/balance-sheet/exports/excel/useBalanceSheetDownload'
+import { useBalanceSheetDownload } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/exports/excel/useBalanceSheetDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 

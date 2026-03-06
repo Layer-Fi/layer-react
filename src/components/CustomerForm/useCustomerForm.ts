@@ -3,9 +3,9 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
 import { type Customer, type CustomerForm, UpsertCustomerSchema } from '@schemas/customer'
+import { UpsertCustomerMode, useUpsertCustomer } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
+import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertCustomerFormToUpsertCustomer, type CustomerFormState, getCustomerFormDefaultValues, validateCustomerForm } from '@components/CustomerForm/formUtils'
-import { UpsertCustomerMode, useUpsertCustomer } from '@features/customers/api/useUpsertCustomer'
-import { useAppForm } from '@features/forms/hooks/useForm'
 
 type onSuccessFn = (customer: Customer) => void
 type UseCustomerFormProps = { onSuccess: onSuccessFn } & CustomerFormState
