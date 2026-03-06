@@ -40,6 +40,7 @@ export { PlatformOnboarding } from './components/PlatformOnboarding/PlatformOnbo
 export { BookkeepingUpsellBar } from './components/BookkeepingUpsellBar/BookkeepingUpsellBar'
 
 /* --------------------- Date Pickers -------------------------- */
+export { GlobalDateRangeSelection } from './components/DateSelection/GlobalDateRangeSelection'
 export { GlobalMonthPicker } from './components/GlobalMonthPicker/GlobalMonthPicker'
 
 /* --------------------- Cards -------------------------- */
