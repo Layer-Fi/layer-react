@@ -1,6 +1,6 @@
-import type { InvoicePaymentMethod as InvoicePaymentMethodType } from '@features/invoices/invoicePaymentMethodSchemas'
-import { InvoicePaymentMethod } from '@features/invoices/invoicePaymentMethodSchemas'
-import type { Invoice } from '@features/invoices/invoiceSchemas'
+import type { Invoice } from '@schemas/invoices/invoice'
+import type { InvoicePaymentMethod as InvoicePaymentMethodType } from '@schemas/invoices/invoicePaymentMethod'
+import { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
 
 export type InvoiceFinalizeFormValues = {
   creditCardEnabled: boolean

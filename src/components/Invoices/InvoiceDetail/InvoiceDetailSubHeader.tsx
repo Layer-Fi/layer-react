@@ -1,9 +1,9 @@
+import { type Invoice } from '@schemas/invoices/invoice'
 import { convertCentsToCurrency } from '@utils/format'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { DataPoint } from '@components/DataPoint/DataPoint'
 import { InvoiceStatusCell } from '@components/Invoices/InvoiceStatusCell/InvoiceStatusCell'
-import { type Invoice } from '@features/invoices/invoiceSchemas'
 
 import './invoiceDetailSubHeader.scss'
 

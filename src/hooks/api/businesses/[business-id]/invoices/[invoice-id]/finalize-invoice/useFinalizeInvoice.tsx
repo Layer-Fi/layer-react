@@ -3,6 +3,8 @@ import { Schema } from 'effect'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
+import { InvoiceSchema } from '@schemas/invoices/invoice'
+import { InvoicePaymentMethodsSchema } from '@schemas/invoices/invoicePaymentMethod'
 import { put } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
@@ -11,8 +13,6 @@ import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[busin
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { InvoicePaymentMethodsSchema } from '@features/invoices/invoicePaymentMethodSchemas'
-import { InvoiceSchema } from '@features/invoices/invoiceSchemas'
 
 const FINALIZE_INVOICE_TAG_KEY = '#finalize-invoice'
 

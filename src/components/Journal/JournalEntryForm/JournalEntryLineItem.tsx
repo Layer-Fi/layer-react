@@ -8,7 +8,7 @@ import { VStack } from '@ui/Stack/Stack'
 import { DebitCreditPill } from '@components/DebitCreditPill/DebitCreditPill'
 import type { JournalEntryForm } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
-import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
+import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 
 import './journalEntryLineItem.scss'
 

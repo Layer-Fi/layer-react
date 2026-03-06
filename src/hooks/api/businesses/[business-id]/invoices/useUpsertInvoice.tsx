@@ -2,13 +2,13 @@ import { useCallback } from 'react'
 import { Effect, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
+import { InvoiceSchema, type UpsertInvoiceSchema } from '@schemas/invoices/invoice'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { InvoiceSchema, type UpsertInvoiceSchema } from '@features/invoices/invoiceSchemas'
 
 const UPSERT_INVOICE_TAG_KEY = '#upsert-invoice'
 

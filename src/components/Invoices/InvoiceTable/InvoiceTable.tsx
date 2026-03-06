@@ -3,6 +3,8 @@ import type { Row } from '@tanstack/react-table'
 import { endOfYesterday, startOfToday } from 'date-fns'
 import { HandCoins, Plus, Search } from 'lucide-react'
 
+import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
+import { getCustomerName } from '@utils/customerVendor'
 import { convertCentsToCurrency, formatDate } from '@utils/format'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type ListInvoicesFilterParams, useListInvoices } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
@@ -19,8 +21,6 @@ import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { DataTableHeader } from '@components/DataTable/DataTableHeader'
 import { InvoiceStatusCell } from '@components/Invoices/InvoiceStatusCell/InvoiceStatusCell'
 import { PaginatedTable } from '@components/PaginatedDataTable/PaginatedDataTable'
-import { getCustomerName } from '@features/customers/util'
-import { type Invoice, InvoiceStatus } from '@features/invoices/invoiceSchemas'
 
 import './invoiceTable.scss'
 

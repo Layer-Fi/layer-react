@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
 
+import { type Invoice } from '@schemas/invoices/invoice'
+import { type InvoicePayment } from '@schemas/invoices/invoicePayment'
 import { updateInvoiceWithPayment, UpsertDedicatedInvoicePaymentMode } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment/useUpsertDedicatedInvoicePayment'
 import { useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { InvoicePaymentForm } from '@components/Invoices/InvoicePaymentForm/InvoicePaymentForm'
-import { type InvoicePayment } from '@features/invoices/invoicePaymentSchemas'
-import { type Invoice } from '@features/invoices/invoiceSchemas'
 
 export type InvoicePaymentDrawerProps = {
   isOpen: boolean

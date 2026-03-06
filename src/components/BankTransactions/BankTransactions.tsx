@@ -30,6 +30,7 @@ import { CategorizationRulesContext, CategorizationRulesProvider } from '@contex
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
 import { HStack } from '@ui/Stack/Stack'
+import { BankTransactionCustomerVendorVisibilityProvider } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,
@@ -41,14 +42,13 @@ import {
   BankTransactionsTable,
   type BankTransactionsTableStringOverrides,
 } from '@components/BankTransactionsTable/BankTransactionsTable'
+import { BankTransactionTagVisibilityProvider } from '@components/BankTransactionTagSelector/BankTransactionTagVisibilityProvider'
 import { ResponsiveCategorizationRulesView } from '@components/CategorizationRules/CategorizationRulesView/ResponsiveCategorizationRulesView'
 import { Container } from '@components/Container/Container'
 import { ErrorBoundary } from '@components/ErrorBoundary/ErrorBoundary'
 import { Loader } from '@components/Loader/Loader'
 import { Pagination } from '@components/Pagination/Pagination'
 import { SuggestedCategorizationRuleUpdatesDialog } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDialog'
-import { BankTransactionCustomerVendorVisibilityProvider } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { BankTransactionTagVisibilityProvider } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 
 import { BankTransactionsListWithEmptyStates } from './BankTransactionsTableEmptyState'
 

@@ -1,6 +1,7 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react'
 import type React from 'react'
 
+import type { Invoice } from '@schemas/invoices/invoice'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
@@ -15,7 +16,6 @@ import { InvoiceFormMetadataSection } from '@components/Invoices/InvoiceForm/Inv
 import { InvoiceFormTermsSection } from '@components/Invoices/InvoiceForm/InvoiceFormTermsSection/InvoiceFormTermsSection'
 import { useCustomerFormDrawer } from '@components/Invoices/InvoiceForm/useCustomerFormDrawer'
 import { useInvoiceForm } from '@components/Invoices/InvoiceForm/useInvoiceForm'
-import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 import './invoiceForm.scss'
 

@@ -2,6 +2,7 @@ import { fromDate, getLocalTimeZone, toCalendarDate } from '@internationalized/d
 import { startOfToday } from 'date-fns'
 import { BigDecimal as BD } from 'effect'
 
+import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@schemas/invoices/invoice'
 import {
   fromNonRecursiveBigDecimal,
   NRBD_ONE,
@@ -23,7 +24,6 @@ import {
   getGrandTotalFromInvoice,
 } from '@components/Invoices/InvoiceForm/totalsUtils'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@features/invoices/invoiceSchemas'
 
 export type InvoiceFormState = {
   isDirty: boolean

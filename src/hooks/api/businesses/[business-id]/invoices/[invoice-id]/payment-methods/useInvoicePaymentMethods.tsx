@@ -1,14 +1,14 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
+import {
+  type InvoicePaymentMethodsResponse,
+  InvoicePaymentMethodsResponseSchema,
+} from '@schemas/invoices/invoicePaymentMethod'
 import { get } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import {
-  type InvoicePaymentMethodsResponse,
-  InvoicePaymentMethodsResponseSchema,
-} from '@features/invoices/invoicePaymentMethodSchemas'
 
 export const INVOICE_PAYMENT_METHODS_TAG_KEY = '#invoice-payment-methods'
 

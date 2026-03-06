@@ -2,14 +2,14 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
+import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
+import { type CreateInvoiceWriteoff, CreateInvoiceWriteoffSchema, InvoiceWriteoffSchema } from '@schemas/invoices/invoiceWriteoff'
 import { post } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type Invoice, InvoiceStatus } from '@features/invoices/invoiceSchemas'
-import { type CreateInvoiceWriteoff, CreateInvoiceWriteoffSchema, InvoiceWriteoffSchema } from '@features/invoices/invoiceWriteoffSchemas'
 
 const CREATE_INVOICE_WRITEOFF_TAG_KEY = '#writeoff-invoice'
 
