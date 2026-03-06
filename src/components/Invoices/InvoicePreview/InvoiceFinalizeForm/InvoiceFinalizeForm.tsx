@@ -15,9 +15,6 @@ import { FormErrorBanner } from '@components/FormErrorBanner/FormErrorBanner'
 import {
   useInvoiceFinalizeForm,
 } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/useInvoiceFinalizeForm'
-import { TextSize } from '@components/Typography/Text'
-import type { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
-import type { Invoice } from '@schemas/invoices/invoice'
 
 import './invoiceFinalizeForm.scss'
 
