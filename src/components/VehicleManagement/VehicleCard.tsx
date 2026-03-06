@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Archive, Car, Edit, RotateCcw, Trash2 } from 'lucide-react'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { getVehicleDisplayName } from '@utils/vehicles'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -13,7 +14,6 @@ import { Separator } from '@components/Separator/Separator'
 import { VehicleArchiveConfirmationModal } from '@components/VehicleManagement/VehicleArchiveConfirmationModal'
 import { VehicleDeleteConfirmationModal } from '@components/VehicleManagement/VehicleDeleteConfirmationModal'
 import { VehicleReactivateConfirmationModal } from '@components/VehicleManagement/VehicleReactivateConfirmationModal'
-import { getVehicleDisplayName } from '@features/vehicles/utils'
 
 import './vehicleCard.scss'
 

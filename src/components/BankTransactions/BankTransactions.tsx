@@ -14,8 +14,8 @@ import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/custome
 import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useIsVisible } from '@hooks/utils/react/visibility/useIsVisible'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
-import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { BankTransactionsCategoryStoreProvider } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { BankTransactionsProvider } from '@providers/BankTransactionsProvider/BankTransactionsProvider'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
@@ -30,6 +30,7 @@ import { CategorizationRulesContext, CategorizationRulesProvider } from '@contex
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
 import { HStack } from '@ui/Stack/Stack'
+import { BankTransactionCustomerVendorVisibilityProvider } from '@components/BankTransactionCustomerVendorSeleector/BankTransactionCustomerVendorVisibilityProvider'
 import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,
@@ -41,14 +42,13 @@ import {
   BankTransactionsTable,
   type BankTransactionsTableStringOverrides,
 } from '@components/BankTransactionsTable/BankTransactionsTable'
+import { BankTransactionTagVisibilityProvider } from '@components/BankTransactionTagSelector/BankTransactionTagVisibilityProvider'
 import { ResponsiveCategorizationRulesView } from '@components/CategorizationRules/CategorizationRulesView/ResponsiveCategorizationRulesView'
 import { Container } from '@components/Container/Container'
 import { ErrorBoundary } from '@components/ErrorBoundary/ErrorBoundary'
 import { Loader } from '@components/Loader/Loader'
 import { Pagination } from '@components/Pagination/Pagination'
 import { SuggestedCategorizationRuleUpdatesDialog } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDialog'
-import { BankTransactionCustomerVendorVisibilityProvider } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { BankTransactionTagVisibilityProvider } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 
 import { BankTransactionsListWithEmptyStates } from './BankTransactionsTableEmptyState'
 

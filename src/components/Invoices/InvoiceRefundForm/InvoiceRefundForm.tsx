@@ -2,6 +2,8 @@ import { forwardRef, useCallback, useImperativeHandle } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import type React from 'react'
 
+import type { CustomerRefund } from '@schemas/invoices/customerRefund'
+import type { Invoice } from '@schemas/invoices/invoice'
 import { flattenValidationErrors } from '@utils/form'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -10,8 +12,6 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useInvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/useInvoiceRefundForm'
 import { PaymentMethodComboBox } from '@components/PaymentMethod/PaymentMethodComboBox'
 import { TextSize } from '@components/Typography/Text'
-import type { CustomerRefund } from '@features/invoices/customerRefundSchemas'
-import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 import './invoiceRefundForm.scss'
 

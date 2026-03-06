@@ -3,6 +3,8 @@ import { BigDecimal as BD } from 'effect'
 import { AlertTriangle } from 'lucide-react'
 import type React from 'react'
 
+import type { Invoice } from '@schemas/invoices/invoice'
+import type { InvoicePayment } from '@schemas/invoices/invoicePayment'
 import { convertCentsToBigDecimal, formatBigDecimalToString } from '@utils/bigDecimalUtils'
 import { flattenValidationErrors } from '@utils/form'
 import type { UpsertDedicatedInvoicePaymentMode } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment/useUpsertDedicatedInvoicePayment'
@@ -15,8 +17,6 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useInvoicePaymentForm } from '@components/Invoices/InvoicePaymentForm/useInvoicePaymentForm'
 import { PaymentMethodComboBox } from '@components/PaymentMethod/PaymentMethodComboBox'
 import { TextSize } from '@components/Typography/Text'
-import type { InvoicePayment } from '@features/invoices/invoicePaymentSchemas'
-import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 import './invoicePaymentForm.scss'
 

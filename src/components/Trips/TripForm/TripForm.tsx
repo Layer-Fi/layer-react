@@ -12,7 +12,7 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useTripForm } from '@components/Trips/TripForm/useTripForm'
 import { TripPurposeComboBox } from '@components/Trips/TripPurposeComboBox/TripPurposeComboBox'
 import { TextSize } from '@components/Typography/Text'
-import { VehicleSelector } from '@features/vehicles/components/VehicleSelector'
+import { VehicleSelector } from '@components/VehicleManagement/VehicleSelector/VehicleSelector'
 
 import './tripForm.scss'
 

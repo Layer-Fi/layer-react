@@ -1,0 +1,74 @@
+import { type PropsWithChildren, useCallback } from 'react'
+
+import { useFieldContext } from '@hooks/features/forms/useForm'
+import { FieldError } from '@ui/Form/Form'
+import { Input } from '@ui/Input/Input'
+import { InputGroup } from '@ui/Input/InputGroup'
+import { NumberField } from '@ui/NumberField/NumberField'
+import { Label } from '@ui/Typography/Text'
+import type { CommonFormFieldProps } from '@components/forms/types'
+
+export type FormNumberFieldProps = CommonFormFieldProps & {
+  minValue?: number
+  maxValue?: number
+  placeholder?: string
+}
+
+export function FormNumberField({
+  label,
+  className,
+  inline = false,
+  showLabel = true,
+  showFieldError = true,
+  isReadOnly = false,
+  minValue,
+  maxValue,
+  placeholder,
+}: PropsWithChildren<FormNumberFieldProps>) {
+  const field = useFieldContext<number>()
+
+  const { name, state, handleChange, handleBlur } = field
+  const { meta, value } = state
+  const { errors, isValid } = meta
+
+  const onChange = useCallback((newValue: number) => {
+    handleChange(newValue)
+  }, [handleChange])
+
+  const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
+  const shouldShowErrorMessage = showFieldError && errorMessage
+
+  const additionalAriaProps = !showLabel && { 'aria-label': label }
+
+  return (
+    <NumberField
+      name={name}
+      value={value}
+      isInvalid={!isValid}
+      inline={inline}
+      className={className}
+      onChange={onChange}
+      onBlur={handleBlur}
+      isReadOnly={isReadOnly}
+      minValue={minValue}
+      maxValue={maxValue}
+      formatOptions={{ useGrouping: false }}
+      {...additionalAriaProps}
+    >
+      {showLabel && (
+        <Label
+          slot='label'
+          size='sm'
+          htmlFor={name}
+          {...(!inline && { pbe: '3xs' })}
+        >
+          {label}
+        </Label>
+      )}
+      <InputGroup slot='input'>
+        <Input inset placeholder={placeholder} />
+      </InputGroup>
+      {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
+    </NumberField>
+  )
+}

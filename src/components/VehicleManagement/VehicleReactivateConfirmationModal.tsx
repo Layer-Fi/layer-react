@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { getVehicleDisplayName } from '@utils/vehicles'
 import { useReactivateVehicle } from '@hooks/api/businesses/[business-id]/mileage/vehicles/[vehicle-id]/reactivate/useReactivateVehicle'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
-import { getVehicleDisplayName } from '@features/vehicles/utils'
 
 type VehicleReactivateConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   vehicle: Vehicle

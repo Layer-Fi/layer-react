@@ -12,9 +12,9 @@ import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponen
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TripDeleteConfirmationModal } from '@components/Trips/TripDeleteConfirmationModal/TripDeleteConfirmationModal'
 import { TripDrawer } from '@components/Trips/TripDrawer/TripDrawer'
+import { TripPurposeFilterValue } from '@components/Trips/TripPurposeToggle/TripPurposeToggle'
 import { TripsMobileList } from '@components/Trips/TripsMobileList/TripsMobileList'
 import { TripsTable } from '@components/Trips/TripsTable/TripsTable'
-import { TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
 
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
   width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'

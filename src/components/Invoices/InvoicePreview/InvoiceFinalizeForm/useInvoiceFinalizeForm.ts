@@ -2,6 +2,8 @@ import { useCallback, useMemo, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
+import type { Invoice } from '@schemas/invoices/invoice'
+import type { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
 import {
   FinalizeInvoiceBodySchema,
   useFinalizeInvoice,
@@ -12,8 +14,6 @@ import {
   getInvoiceFinalizeFormDefaultValues,
   type InvoiceFinalizeFormValues,
 } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/formUtils'
-import type { InvoicePaymentMethod } from '@features/invoices/invoicePaymentMethodSchemas'
-import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 type UseInvoiceFinalizeFormProps = {
   invoice: Invoice

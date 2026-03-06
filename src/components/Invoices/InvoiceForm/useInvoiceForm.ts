@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
+import { type Invoice, type InvoiceForm, UpsertInvoiceSchema } from '@schemas/invoices/invoice'
 import { UpsertInvoiceMode, useUpsertInvoice } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, validateInvoiceForm } from '@components/Invoices/InvoiceForm/formUtils'
@@ -13,7 +14,6 @@ import {
   computeTaxableSubtotal,
   computeTaxes,
 } from '@components/Invoices/InvoiceForm/totalsUtils'
-import { type Invoice, type InvoiceForm, UpsertInvoiceSchema } from '@features/invoices/invoiceSchemas'
 
 type onSuccessFn = (invoice: Invoice) => void
 type UseInvoiceFormProps =

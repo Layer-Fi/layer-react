@@ -2,7 +2,7 @@ import { createContext, type PropsWithChildren, useContext, useMemo, useState } 
 import { createStore, useStore } from 'zustand'
 
 import type { Vehicle } from '@schemas/vehicle'
-import { TripPurposeFilterValue } from '@features/trips/components/TripPurposeToggle'
+import { TripPurposeFilterValue } from '@components/Trips/TripPurposeToggle/TripPurposeToggle'
 
 export type TripsTableFilters = {
   query: string

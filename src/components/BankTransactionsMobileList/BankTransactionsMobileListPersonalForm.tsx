@@ -10,11 +10,11 @@ import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { BankTransactionFormFields } from '@features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 import { LegacyPersonalCategories, PersonalStableName } from './constants'
 

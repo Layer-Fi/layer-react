@@ -2,12 +2,12 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
+import { CreateCustomerRefundSchema, type CustomerRefund } from '@schemas/invoices/customerRefund'
+import { type Invoice } from '@schemas/invoices/invoice'
 import { useRefundInvoice } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/refund/useRefundInvoice'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertInvoiceRefundFormToParams, getInvoiceRefundFormDefaultValues, validateInvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/formUtils'
 import type { InvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/invoiceRefundFormSchemas'
-import { CreateCustomerRefundSchema, type CustomerRefund } from '@features/invoices/customerRefundSchemas'
-import { type Invoice } from '@features/invoices/invoiceSchemas'
 
 type onSuccessFn = (refund: CustomerRefund) => void
 type UseInvoiceRefundFormProps = { onSuccess: onSuccessFn, invoice: Invoice }

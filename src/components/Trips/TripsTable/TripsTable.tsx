@@ -4,6 +4,7 @@ import { Edit, Trash2 } from 'lucide-react'
 
 import { type Trip, type TripPurpose } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
+import { getVehicleDisplayName } from '@utils/vehicles'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -13,7 +14,6 @@ import { PaginatedTable, type TablePaginationProps } from '@components/Paginated
 import { TripsAddressCell } from '@components/Trips/TripAddressCell/TripAddressCell'
 import { TripsTableHeader } from '@components/Trips/TripsTable/TripsTableHeader'
 import { formatDistance, getPurposeLabel } from '@components/Trips/utils'
-import { getVehicleDisplayName } from '@features/vehicles/utils'
 
 import './tripsTable.scss'
 

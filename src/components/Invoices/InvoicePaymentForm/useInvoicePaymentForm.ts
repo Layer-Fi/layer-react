@@ -2,11 +2,11 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
+import { type Invoice } from '@schemas/invoices/invoice'
+import { type DedicatedInvoicePaymentForm, type InvoicePayment, UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
 import { UpsertDedicatedInvoicePaymentMode, useUpsertDedicatedInvoicePayment } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment/useUpsertDedicatedInvoicePayment'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertInvoicePaymentFormToParams, getInvoicePaymentFormDefaultValues, validateInvoicePaymentForm } from '@components/Invoices/InvoicePaymentForm/formUtils'
-import { type DedicatedInvoicePaymentForm, type InvoicePayment, UpsertDedicatedInvoicePaymentSchema } from '@features/invoices/invoicePaymentSchemas'
-import { type Invoice } from '@features/invoices/invoiceSchemas'
 
 type onSuccessFn = (invoicePayment: InvoicePayment) => void
 type UseInvoicePaymentFormProps = { onSuccess: onSuccessFn, invoice: Invoice }

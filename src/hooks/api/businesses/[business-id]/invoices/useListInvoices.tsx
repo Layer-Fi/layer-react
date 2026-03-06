@@ -3,6 +3,7 @@ import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
 import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { type Invoice, InvoiceSchema, type InvoiceStatus } from '@schemas/invoices/invoice'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
@@ -10,7 +11,6 @@ import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type Invoice, InvoiceSchema, type InvoiceStatus } from '@features/invoices/invoiceSchemas'
 
 export const LIST_INVOICES_TAG_KEY = '#list-invoices'
 

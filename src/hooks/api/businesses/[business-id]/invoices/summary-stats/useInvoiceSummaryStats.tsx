@@ -2,12 +2,12 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
+import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@schemas/invoices/invoice'
 import { get } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@features/invoices/invoiceSchemas'
 
 export const INVOICE_SUMMARY_STATS_TAG_KEY = '#invoices-summary-stats'
 

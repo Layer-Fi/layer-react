@@ -8,8 +8,8 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Header } from '@ui/Typography/Text'
 import { SearchField } from '@components/SearchField/SearchField'
+import { type TripPurposeFilterValue, TripPurposeToggle } from '@components/Trips/TripPurposeToggle/TripPurposeToggle'
 import { TripsTableHeaderMenu } from '@components/Trips/TripsTable/TripsTableHeaderMenu'
-import { type TripPurposeFilterValue, TripPurposeToggle } from '@features/trips/components/TripPurposeToggle'
 
 import './tripsMobileHeader.scss'
 

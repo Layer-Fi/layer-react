@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { ArrowRight, HandCoins } from 'lucide-react'
 
 import type { Awaitable } from '@internal-types/utility/promises'
+import { InvoiceStatus } from '@schemas/invoices/invoice'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { type InvoiceDetailRouteState, InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -9,7 +10,6 @@ import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { InvoiceDetailHeaderMenu } from '@components/Invoices/InvoiceDetail/InvoiceDetailHeaderMenu'
 import type { InvoiceFormState } from '@components/Invoices/InvoiceForm/formUtils'
-import { InvoiceStatus } from '@features/invoices/invoiceSchemas'
 
 import './invoiceDetailHeader.scss'
 

@@ -1,5 +1,6 @@
 import { AlertTriangle } from 'lucide-react'
 
+import type { Invoice } from '@schemas/invoices/invoice'
 import { useInvoicePaymentMethods } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
 import {
   useInvoicePreviewRoute,
@@ -12,7 +13,6 @@ import {
 import { InvoicePreview } from '@components/Invoices/InvoicePreview/InvoicePreview'
 import { Loader } from '@components/Loader/Loader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
-import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 import './invoiceFinalizeStep.scss'
 

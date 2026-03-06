@@ -2,6 +2,8 @@ import { useCallback } from 'react'
 import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
 
+import type { Invoice } from '@schemas/invoices/invoice'
+import type { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
 import { flattenValidationErrors } from '@utils/form'
 import CreditCardIcon from '@icons/CreditCard'
 import { Button } from '@ui/Button/Button'
@@ -13,8 +15,6 @@ import {
   useInvoiceFinalizeForm,
 } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/useInvoiceFinalizeForm'
 import { TextSize } from '@components/Typography/Text'
-import type { InvoicePaymentMethod } from '@features/invoices/invoicePaymentMethodSchemas'
-import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 import './invoiceFinalizeForm.scss'
 

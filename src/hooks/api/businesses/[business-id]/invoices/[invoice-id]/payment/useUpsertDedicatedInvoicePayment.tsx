@@ -2,14 +2,14 @@ import { useCallback } from 'react'
 import { Effect, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
+import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
+import { type InvoicePayment, InvoicePaymentSchema, type UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
 import { post, put } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type InvoicePayment, InvoicePaymentSchema, type UpsertDedicatedInvoicePaymentSchema } from '@features/invoices/invoicePaymentSchemas'
-import { type Invoice, InvoiceStatus } from '@features/invoices/invoiceSchemas'
 
 const UPSERT_INVOICE_PAYMENT_TAG_KEY = '#upsert-dedicated-invoice-payment'
 
