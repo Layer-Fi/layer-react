@@ -30,7 +30,7 @@ import { CategorizationRulesContext, CategorizationRulesProvider } from '@contex
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
 import { HStack } from '@ui/Stack/Stack'
-import { BankTransactionCustomerVendorVisibilityProvider } from '@components/BankTransactionCustomerVendorSeleector/BankTransactionCustomerVendorVisibilityProvider'
+import { BankTransactionCustomerVendorVisibilityProvider } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,
