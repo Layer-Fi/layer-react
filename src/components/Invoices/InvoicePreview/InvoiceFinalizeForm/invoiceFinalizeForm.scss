@@ -1,19 +1,12 @@
 .Layer__InvoiceFinalizeForm {
   height: 100%;
 
-  .Layer__InvoiceFinalizeForm__FormError {
-    min-height: 4rem;
-    padding-inline: var(--spacing-md);
-    border-top: 1px solid var(--border-color);
-  }
-
   .Layer__InvoiceFinalizeForm__Section {
     padding: var(--spacing-md);
-    border-top: 1px solid var(--border-color);
+  }
 
-    &:first-child {
-      border-top: none;
-    }
+  .Layer__InvoiceFinalizeForm__Section + .Layer__InvoiceFinalizeForm__Section {
+    border-top: 1px solid var(--border-color);
   }
 
   .Layer__FormSwitchField.Layer__FormSwitchField--inline {
@@ -26,5 +19,15 @@
 
   .Layer__InvoiceFinalizeForm__Submit {
     padding-block-start: var(--spacing-xs);
+  }
+
+  .Layer__InvoiceFinalizeForm__ErrorBanner {
+    height: auto;
+    min-height: 4rem;
+    padding-block: var(--spacing-sm);
+
+    .Layer__data-state__icon {
+      flex-shrink: 0;
+    }
   }
 }

@@ -11,6 +11,7 @@ import {
   convertInvoiceFinalizeFormToParams,
   getInvoiceFinalizeFormDefaultValues,
   type InvoiceFinalizeFormValues,
+  validateInvoiceFinalizeForm,
 } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/formUtils'
 import type { InvoicePaymentMethod } from '@features/invoices/invoicePaymentMethodSchemas'
 import type { Invoice } from '@features/invoices/invoiceSchemas'
@@ -54,9 +55,14 @@ export const useInvoiceFinalizeForm = ({
     [finalizeInvoice, onSuccess],
   )
 
+  const validators = useMemo(() => ({
+    onDynamic: validateInvoiceFinalizeForm,
+  }), [])
+
   const form = useAppForm<InvoiceFinalizeFormValues>({
     defaultValues,
     onSubmit,
+    validators,
     validationLogic: revalidateLogic({
       mode: 'submit',
       modeAfterSubmission: 'submit',

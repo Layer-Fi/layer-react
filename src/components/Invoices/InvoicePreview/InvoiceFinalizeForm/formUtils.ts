@@ -28,3 +28,16 @@ export const convertInvoiceFinalizeFormToParams = (
   ],
   customPaymentInstructions: form.customPaymentInstructions.trim(),
 })
+
+export const validateInvoiceFinalizeForm = (
+  { value }: { value: InvoiceFinalizeFormValues },
+) => {
+  const { creditCardEnabled, customPaymentInstructions } = value
+
+  const errors = []
+  if (!creditCardEnabled && !customPaymentInstructions.trim()) {
+    errors.push({ creditCardEnabled: 'Either a payment method or custom payment instructions must be set on an invoice' })
+  }
+
+  return errors.length > 0 ? errors : null
+}

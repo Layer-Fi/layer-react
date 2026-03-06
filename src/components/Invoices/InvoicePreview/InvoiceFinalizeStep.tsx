@@ -25,6 +25,7 @@ export const InvoiceFinalizeStep = ({
 }: InvoiceFinalizeStepProps) => {
   const { invoice } = useInvoicePreviewRoute()
   const { data, isLoading, isError } = useInvoicePaymentMethods({ invoiceId: invoice.id })
+  const paymentMethodsData = data?.data
 
   return (
     <HStack className='Layer__InvoiceFinalizeStep'>
@@ -33,7 +34,7 @@ export const InvoiceFinalizeStep = ({
       </VStack>
       <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanel' fluid>
         <ConditionalBlock
-          data={data?.data}
+          data={paymentMethodsData}
           isLoading={isLoading}
           isError={isError}
           Loading={(
