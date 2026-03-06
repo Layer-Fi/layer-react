@@ -76,11 +76,12 @@ const getOptions = (enabledReports: ReportType[]) => {
   ].filter(o => !!o) as ReportOption[]
 }
 
+const defaultEnabledReports: ReportType[] = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow']
 export const Reports = ({
   title,
   showTitle = true,
   stringOverrides,
-  enabledReports = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow'],
+  enabledReports = defaultEnabledReports,
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
