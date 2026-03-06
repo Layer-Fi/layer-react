@@ -14,7 +14,7 @@ import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/custome
 import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
-import { useIsVisible } from '@hooks/utils/react/visibility/useIsVisible'
+import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { BankTransactionsCategoryStoreProvider } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { BankTransactionsProvider } from '@providers/BankTransactionsProvider/BankTransactionsProvider'

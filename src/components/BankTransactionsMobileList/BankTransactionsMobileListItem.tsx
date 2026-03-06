@@ -7,7 +7,7 @@ import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schem
 import { hasReceipts, isCredit } from '@utils/bankTransactions'
 import { isCategorized } from '@utils/bankTransactions'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
-import { useDelayedVisibility } from '@hooks/utils/react/visibility/useDelayedVisibility'
+import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'

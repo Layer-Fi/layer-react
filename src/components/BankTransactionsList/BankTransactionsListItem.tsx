@@ -10,7 +10,7 @@ import {
 import { isCategorized } from '@utils/bankTransactions'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
-import { useDelayedVisibility } from '@hooks/utils/react/visibility/useDelayedVisibility'
+import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
