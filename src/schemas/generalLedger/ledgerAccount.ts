@@ -49,88 +49,6 @@ export enum LedgerAccountType {
 }
 export const LedgerAccountTypeSchema = Schema.Enums(LedgerAccountType)
 
-export enum LedgerAccountSubtype {
-  // Assets
-  BankAccounts = 'BANK_ACCOUNTS',
-  AccountsReceivable = 'ACCOUNTS_RECEIVABLE',
-  Inventory = 'INVENTORY',
-  PaymentProcessorClearingAccount = 'PAYMENT_PROCESSOR_CLEARING_ACCOUNT',
-  FixedAsset = 'FIXED_ASSET',
-  AccumulatedDepreciation = 'ACCUMULATED_DEPRECIATION',
-  Cash = 'CASH',
-  UndepositedFunds = 'UNDEPOSITED_FUNDS',
-  CurrentAsset = 'CURRENT_ASSET',
-  NonCurrentAsset = 'NON_CURRENT_ASSET',
-  PrepaidExpenses = 'PREPAID_EXPENSES',
-  DevelopmentCosts = 'DEVELOPMENT_COSTS',
-  LoansReceivable = 'LOANS_RECEIVABLE',
-  RefundsReceivable = 'REFUNDS_RECEIVABLE',
-  IntangibleAsset = 'INTANGIBLE_ASSET',
-
-  // Liabilities
-  Liability = 'LIABILITY', // @Deprecated
-  AccountsPayable = 'ACCOUNTS_PAYABLE',
-  CreditCard = 'CREDIT_CARD',
-  TaxesPayable = 'TAXES_PAYABLE', // @Deprecated
-  IncomeTaxesPayable = 'INCOME_TAXES_PAYABLE',
-  SalesTaxesPayable = 'SALES_TAXES_PAYABLE',
-  OtherTaxesPayable = 'OTHER_TAXES_PAYABLE',
-  PayrollTaxesPayable = 'PAYROLL_TAXES_PAYABLE',
-  TaxLiability = 'TAX_LIABILITY', // @Deprecated
-  UnearnedRevenue = 'UNEARNED_REVENUE',
-  PayrollLiability = 'PAYROLL_LIABILITY',
-  PayrollClearing = 'PAYROLL_CLEARING',
-  LineOfCredit = 'LINE_OF_CREDIT',
-  Tips = 'TIPS',
-  RefundLiabilities = 'REFUND_LIABILITIES',
-  UndepositedOutflows = 'UNDEPOSITED_OUTFLOWS',
-  OutgoingPaymentClearingAccount = 'OUTGOING_PAYMENT_CLEARING_ACCOUNT',
-  CurrentLiability = 'CURRENT_LIABILITY', // @Deprecated
-  OtherCurrentLiability = 'OTHER_CURRENT_LIABILITY',
-  LoansPayable = 'LOANS_PAYABLE',
-  NotesPayable = 'NOTES_PAYABLE',
-  ShareholderLoan = 'SHAREHOLDER_LOAN',
-  NonCurrentLiability = 'NON_CURRENT_LIABILITY',
-
-  // Equity
-  Contributions = 'CONTRIBUTIONS',
-  Distributions = 'DISTRIBUTIONS',
-  CommonStock = 'COMMON_STOCK',
-  PreferredStock = 'PREFERRED_STOCK',
-  AdditionalPaidInCapital = 'ADDITIONAL_PAID_IN_CAPITAL',
-  RetainedEarnings = 'RETAINED_EARNINGS',
-  AccumulatedAdjustments = 'ACCUMULATED_ADJUSTMENTS',
-  OpeningBalanceEquity = 'OPENING_BALANCE_EQUITY',
-  OtherEquity = 'OTHER_EQUITY',
-  Equity = 'EQUITY', // @Deprecated
-
-  // Revenue
-  Revenue = 'REVENUE',
-  Sales = 'SALES',
-  UncategorizedRevenue = 'UNCATEGORIZED_REVENUE',
-  ReturnsAllowances = 'RETURNS_ALLOWANCES',
-  DividendIncome = 'DIVIDEND_INCOME',
-  InterestIncome = 'INTEREST_INCOME',
-  OtherIncome = 'OTHER_INCOME',
-
-  // Expenses
-  Expense = 'EXPENSE', // @Deprecated
-  Cogs = 'COGS',
-  OperatingExpenses = 'OPERATING_EXPENSES',
-  Payroll = 'PAYROLL',
-  TaxesLicenses = 'TAXES_LICENSES',
-  UncategorizedExpense = 'UNCATEGORIZED_EXPENSE',
-  CharitableContributions = 'CHARITABLE_CONTRIBUTIONS',
-  LoanExpenses = 'LOAN_EXPENSES',
-  FinanceCosts = 'FINANCE_COSTS',
-  InterestExpenses = 'INTEREST_EXPENSES',
-  Depreciation = 'DEPRECIATION',
-  Amortization = 'AMORTIZATION',
-  BadDebt = 'BAD_DEBT',
-  OtherExpenses = 'OTHER_EXPENSES',
-}
-export const LedgerAccountSubtypeSchema = Schema.Enums(LedgerAccountSubtype)
-
 export const LedgerAccountTypeWithDisplayNameSchema = Schema.Struct({
   value: LedgerAccountTypeSchema,
   displayName: pipe(
@@ -140,7 +58,7 @@ export const LedgerAccountTypeWithDisplayNameSchema = Schema.Struct({
 })
 
 export const LedgerAccountSubtypeWithDisplayNameSchema = Schema.Struct({
-  value: LedgerAccountSubtypeSchema,
+  value: Schema.String,
   displayName: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('display_name'),
