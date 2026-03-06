@@ -11,20 +11,21 @@ import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerA
 import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
 
 import './journalEntryLineItem.scss'
-import './journalEntryLineItem.scss'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 
 export interface JournalEntryLineItemProps {
   form: AppForm<JournalEntryForm>
   index: number
+  displayIndex: number
   isReadOnly: boolean
   onDeleteLine: () => void
-  showLabels?: boolean
   showTags?: boolean
 }
 
-export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, showLabels = false, showTags = false }: JournalEntryLineItemProps) => {
+export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, onDeleteLine, showTags = false }: JournalEntryLineItemProps) => {
+  const showLabels = displayIndex === 0
+
   return (
     <VStack gap='xs'>
       <div
@@ -100,11 +101,10 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, sh
           )}
         </form.AppField>
 
-        {!isReadOnly && (
+        {!isReadOnly && displayIndex !== 0 && (
           <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--removeButton`}>
             <Button
               variant='outlined'
-              inset
               icon
               aria-label='Delete line item'
               onPress={onDeleteLine}

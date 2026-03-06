@@ -62,9 +62,9 @@ export const JournalEntryLineItemsTable = ({
                     key={originalIndex}
                     form={form}
                     index={originalIndex}
+                    displayIndex={displayIndex}
                     isReadOnly={isReadOnly}
                     onDeleteLine={() => field.removeValue(originalIndex)}
-                    showLabels={displayIndex === 0}
                     showTags={showTags}
                   />
                 ))}
@@ -82,11 +82,13 @@ export const JournalEntryLineItemsTable = ({
                 </VStack>
               )}
               {!isReadOnly && (
-                <Button onPress={() => field.pushValue(getJournalEntryLineItemFormDefaultValues(direction))} variant='text'>
-                  <Span weight='normal' size='sm' variant='subtle'>
-                    Add next line
-                  </Span>
-                </Button>
+                <HStack justify='start'>
+                  <Button onPress={() => field.pushValue(getJournalEntryLineItemFormDefaultValues(direction))} variant='text'>
+                    <Span weight='normal' size='sm' variant='subtle'>
+                      Add next line
+                    </Span>
+                  </Button>
+                </HStack>
               )}
             </>
           )
