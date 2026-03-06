@@ -201,7 +201,7 @@ export function useProfitAndLossComparison({
 
   const setSelectedCompareOptions = (values: MultiValue<{ value: string, label: string }>) => {
     const options: TagComparisonOption[] = values.map(option =>
-      comparisonConfig?.tagComparisonOptions.find(
+      comparisonConfig?.tagComparisonOptions?.find(
         t => JSON.stringify(t.tagFilterConfig) === option.value,
       ),
     ).filter(Boolean) as TagComparisonOption[]

@@ -19,12 +19,19 @@ export const ProfitAndLossCompareOptions = () => {
     return null
   }
 
+  const showGroupBy = comparisonConfig.showTimeSeriesComparison !== false && dateSelectionMode === 'full'
+  const showTags = comparisonConfig.showTagComparison !== false
+
+  if (!showGroupBy && !showTags) {
+    return null
+  }
+
   return (
     <HStack align='end' gap='xs'>
-      {dateSelectionMode === 'full' && (
+      {showGroupBy && (
         <DateGroupByComboBox value={comparisonPeriodMode} onValueChange={setComparisonPeriodMode} />
       )}
-      <CompareTagsMultiSelect />
+      {showTags && <CompareTagsMultiSelect />}
     </HStack>
   )
 }

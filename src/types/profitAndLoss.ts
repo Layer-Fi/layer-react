@@ -8,15 +8,27 @@ export interface TagComparisonOption {
   tagFilterConfig: TagViewConfig
 }
 
-export interface ProfitAndLossCompareConfig {
-  tagComparisonOptions: TagComparisonOption[]
-  defaultTagFilter: TagComparisonOption
+type ProfitAndLossCompareConfigBase = {
+  showTimeSeriesComparison?: boolean
 
   /**
    * @deprecated This is a deprecated property - the number of periods to compare is derived from the date range.
    */
   defaultPeriods?: number
 }
+
+export type ProfitAndLossCompareConfig = ProfitAndLossCompareConfigBase & (
+  | {
+    showTagComparison?: true
+    tagComparisonOptions: TagComparisonOption[]
+    defaultTagFilter: TagComparisonOption
+  }
+  | {
+    showTagComparison: false
+    tagComparisonOptions?: never
+    defaultTagFilter?: never
+  }
+)
 
 export interface ProfitAndLossComparison {
   type: string
