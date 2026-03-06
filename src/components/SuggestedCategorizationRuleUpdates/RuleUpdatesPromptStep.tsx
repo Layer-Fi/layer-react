@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { useRejectCategorizationRulesUpdateSuggestion } from '@hooks/useCategorizationRules/useRejectCategorizationRulesUpdateSuggestion'
+import { useRejectCategorizationRulesUpdateSuggestion } from '@hooks/api/businesses/[business-id]/categorization-rules/suggestions/useRejectCategorizationRulesUpdateSuggestion'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'

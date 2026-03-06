@@ -1,7 +1,7 @@
 import { type FormEvent, useCallback, useEffect } from 'react'
 
+import { type CustomAccount, CustomAccountSubtype } from '@internal-types/customAccounts'
 import { notEmpty } from '@utils/form'
-import { type CustomAccount, CustomAccountSubtype } from '@hooks/customAccounts/types'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { SubmitButton } from '@components/Button/SubmitButton'

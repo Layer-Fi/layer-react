@@ -1,4 +1,4 @@
-import type { ExternalAccountConnection } from '@internal-types/linked_accounts'
+import type { ExternalAccountConnection } from '@internal-types/linkedAccounts'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { VStack } from '@ui/Stack/Stack'
 import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '@components/LinkedAccounts/BasicLinkedAccount/BasicLinkedAccount'

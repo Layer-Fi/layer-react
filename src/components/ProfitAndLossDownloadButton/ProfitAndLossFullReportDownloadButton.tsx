@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react'
 
 import { type MoneyFormat } from '@internal-types/general'
-import { Layer } from '@api/layer'
-import { useAuth } from '@hooks/useAuth'
+import { getProfitAndLossExcel } from '@hooks/legacy/useDownloadProfitAndLoss'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
@@ -43,7 +43,7 @@ export const ProfitAndLossFullReportDownloadButton = ({
 
   const handleClick = async () => {
     setIsDownloading(true)
-    const getProfitAndLossExcel = Layer.getProfitAndLossExcel(
+    const getProfitAndLossExcelCall = getProfitAndLossExcel(
       apiUrl,
       auth?.access_token,
       {
@@ -58,7 +58,7 @@ export const ProfitAndLossFullReportDownloadButton = ({
     try {
       const result = comparisonConfig
         ? await getProfitAndLossComparisonCsv(dateRange, moneyFormat)
-        : await getProfitAndLossExcel()
+        : await getProfitAndLossExcelCall()
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)

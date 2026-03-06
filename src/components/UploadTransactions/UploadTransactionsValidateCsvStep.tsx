@@ -1,11 +1,12 @@
 import { useCallback } from 'react'
+import classNames from 'classnames'
 import { RefreshCcw } from 'lucide-react'
 
-import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type CustomAccountTransactionRow } from '@internal-types/customAccounts'
 import { convertCentsToCurrency, formatDate } from '@utils/format'
-import { type CustomAccountTransactionRow } from '@hooks/customAccounts/types'
-import { useCreateCustomAccountTransactions } from '@hooks/customAccounts/useCreateCustomAccountTransactions'
-import type { CustomAccountParseCsvResponse } from '@hooks/customAccounts/useCustomAccountParseCsv'
+import type { CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
+import { useCreateCustomAccountTransactions } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/useCreateCustomAccountTransactions'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { Button, ButtonVariant } from '@components/Button/Button'
@@ -36,9 +37,13 @@ const generateDynamicHeaders = (transactionsPreview: PreviewCsv<CustomAccountTra
     transaction.reference_number?.parsed != null,
   )
   return {
-    ...(hasExternalId && { external_id: 'External ID' }),
-    ...(hasReferenceNumber && { reference_number: 'Reference No.' }),
-    ...templateHeaders,
+    hasExternalId,
+    hasReferenceNumber,
+    headers: {
+      ...(hasExternalId && { external_id: 'External ID' }),
+      ...(hasReferenceNumber && { reference_number: 'Reference No.' }),
+      ...templateHeaders,
+    },
   }
 }
 
@@ -61,7 +66,7 @@ export function UploadTransactionsValidateCsvStep(
     total_transactions_count: totalTransactionsCount,
   } = parseCsvResponse!
 
-  const dynamicHeaders = generateDynamicHeaders(transactionsPreview)
+  const { headers: dynamicHeaders, hasExternalId, hasReferenceNumber } = generateDynamicHeaders(transactionsPreview)
 
   const onClickUploadTransactions = useCallback(() => {
     void uploadTransactions({
@@ -88,7 +93,11 @@ export function UploadTransactionsValidateCsvStep(
           <Badge>{`Total transactions: ${totalTransactionsCount}`}</Badge>
         </HStack>
         <ValidateCsvTable
-          className='Layer__upload-transactions__preview_table'
+          className={classNames(
+            'Layer__upload-transactions__preview_table',
+            hasExternalId && 'Layer__upload-transactions__preview_table--has-external-id',
+            hasReferenceNumber && 'Layer__upload-transactions__preview_table--has-reference-number',
+          )}
           data={transactionsPreview}
           headers={dynamicHeaders}
           formatters={formatters}

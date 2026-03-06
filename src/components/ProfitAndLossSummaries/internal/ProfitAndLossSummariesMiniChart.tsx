@@ -1,14 +1,14 @@
 import { useMemo } from 'react'
 import { Cell, Pie, PieChart } from 'recharts'
 
+import type { ProfitAndLoss } from '@schemas/reports/profitAndLoss'
 import {
   collectExpensesItems,
   collectRevenueItems,
   type PnlChartLineItem,
 } from '@utils/profitAndLossUtils'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
-import type { ProfitAndLoss } from '@hooks/useProfitAndLoss/schemas'
-import type { Scope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import type { Scope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 
 const CHART_PLACEHOLDER: Array<PnlChartLineItem> = [{

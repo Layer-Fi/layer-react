@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react'
 
 import type { Customer } from '@schemas/customer'
+import { UpsertCustomerMode } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
 import type { CustomerFormState } from '@components/CustomerForm/formUtils'
 import type { InvoiceFormType } from '@components/Invoices/InvoiceForm/useInvoiceForm'
-import { UpsertCustomerMode } from '@features/customers/api/useUpsertCustomer'
 
 export const useCustomerFormDrawer = (form: InvoiceFormType) => {
   const [customerFormState, setCustomerFormState] = useState<CustomerFormState | null>(null)

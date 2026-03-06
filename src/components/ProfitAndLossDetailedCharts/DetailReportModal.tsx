@@ -1,4 +1,4 @@
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Drawer } from '@ui/Modal/Modal'
 import { ProfitAndLossDetailReport, type ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
@@ -28,7 +28,7 @@ export function DetailReportModal({
   return (
     <Drawer
       isOpen={isOpen}
-      size='xl'
+      size='2xl'
       onOpenChange={onOpenChange}
       aria-label='Profit and Loss Detail Report'
       variant={shouldUseMobileDrawer ? 'mobile-drawer' : 'drawer'}

@@ -1,14 +1,14 @@
 import { Schema } from 'effect/index'
 
-import type { BankTransaction, SuggestedMatch } from '@internal-types/bank_transactions'
+import type { BankTransaction, SuggestedMatch } from '@internal-types/bankTransactions'
 import { CategorizationType, hasSuggestions } from '@internal-types/categories'
 import { ApiCategorizationAsOption, CategoryAsOption, PlaceholderAsOption, SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { type CategorizationEncoded, isSplitCategorizationEncoded, type NestedCategorization } from '@schemas/categorization'
+import { decodeCustomerVendor } from '@schemas/customerVendor'
+import { TransactionTagSchema } from '@schemas/tag'
+import { makeTagFromTransactionTag } from '@schemas/tag'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { decodeCustomerVendor } from '@features/customerVendor/customerVendorSchemas'
-import { TransactionTagSchema } from '@features/tags/tagSchemas'
-import { makeTagFromTransactionTag } from '@features/tags/tagSchemas'
 
 export enum BankTransactionCategoryComboBoxGroupLabel {
   TRANSFER = 'TRANSFER',

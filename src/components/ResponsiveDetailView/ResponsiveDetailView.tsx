@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import type { PropsWithChildren } from 'react'
 
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 

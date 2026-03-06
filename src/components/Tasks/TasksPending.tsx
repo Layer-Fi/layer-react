@@ -2,15 +2,19 @@ import classNames from 'classnames'
 import { format } from 'date-fns'
 import { Cell, Pie, PieChart } from 'recharts'
 
-import { TASKS_CHARTS_COLORS } from '@config/charts'
-import { MONTH_YEAR_FORMAT } from '@config/general'
 import { getCompletedTasks, getIncompleteTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
+import { MONTH_YEAR_FORMAT } from '@utils/time/timeFormats'
+import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { BookkeepingStatusDescription } from '@components/BookkeepingStatus/BookkeepingStatusDescription'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
 import { Text, TextSize } from '@components/Typography/Text'
+
+const TASKS_CHARTS_COLORS = {
+  done: '#3B9C63',
+  pending: '#DFA000',
+}
 
 export const TasksPending = () => {
   const { date } = useGlobalDate()

@@ -4,13 +4,13 @@ import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import type { Key } from 'react-aria-components'
 
-import { DisplayState } from '@internal-types/bank_transactions'
+import { DisplayState } from '@internal-types/bankTransactions'
+import { BankTransactionsDateFilterMode } from '@utils/bankTransactions'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
-import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
-import { BankTransactionsDateFilterMode } from '@hooks/useBankTransactions/types'
-import { useHandleDownloadTransactions } from '@hooks/useBankTransactions/useHandleBankTransactionsDownload'
-import { useDebounce } from '@hooks/useDebounce/useDebounce'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
+import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
+import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
@@ -47,6 +47,11 @@ export interface BankTransactionsHeaderStringOverrides {
   header?: string
   downloadButton?: string
 }
+
+const STATUS_TOGGLE_OPTIONS = [
+  { label: 'To Review', value: DisplayState.review },
+  { label: 'Categorized', value: DisplayState.categorized },
+]
 
 type TransactionsSearchProps = {
   slot?: string
@@ -230,10 +235,7 @@ export const BankTransactionsHeader = ({
     ? (
       <Toggle
         ariaLabel='Categorization status'
-        options={[
-          { label: 'To Review', value: DisplayState.review },
-          { label: 'Categorized', value: DisplayState.categorized },
-        ]}
+        options={STATUS_TOGGLE_OPTIONS}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}
         fullWidth={isMobileList}

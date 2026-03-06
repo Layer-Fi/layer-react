@@ -1,8 +1,8 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 
 import { type View as ViewType } from '@internal-types/general'
-import { type ProfitAndLossCompareConfig } from '@internal-types/profit_and_loss'
-import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
+import { type ProfitAndLossCompareConfig } from '@internal-types/profitAndLoss'
+import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BalanceSheet } from '@components/BalanceSheet/BalanceSheet'
@@ -76,11 +76,12 @@ const getOptions = (enabledReports: ReportType[]) => {
   ].filter(o => !!o) as ReportOption[]
 }
 
+const defaultEnabledReports: ReportType[] = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow']
 export const Reports = ({
   title,
   showTitle = true,
   stringOverrides,
-  enabledReports = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow'],
+  enabledReports = defaultEnabledReports,
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
@@ -89,7 +90,7 @@ export const Reports = ({
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
-  const options = getOptions(enabledReports)
+  const options = useMemo(() => getOptions(enabledReports), [enabledReports])
   const defaultTitle =
     enabledReports.length > 1
       ? 'Reports'

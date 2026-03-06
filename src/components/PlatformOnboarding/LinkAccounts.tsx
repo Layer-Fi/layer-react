@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { getAccountsNeedingConfirmation } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Heading } from '@ui/Typography/Heading'

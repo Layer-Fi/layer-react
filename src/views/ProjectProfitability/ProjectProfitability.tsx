@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import Select, { type Options } from 'react-select'
 
-import { DisplayState } from '@internal-types/bank_transactions'
+import { DisplayState } from '@internal-types/bankTransactions'
 import { type MoneyFormat } from '@internal-types/general'
-import { type PnlTagFilter } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import { type PnlTagFilter } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactions } from '@components/BankTransactions/BankTransactions'
@@ -15,6 +15,12 @@ import { AccountingOverview } from '@views/AccountingOverview/AccountingOverview
 import './projectProfitability.scss'
 
 type ProjectTab = 'overview' | 'transactions' | 'report'
+
+const PROJECT_TAB_OPTIONS = [
+  { value: 'overview', label: 'Overview' },
+  { value: 'transactions', label: 'Transactions' },
+  { value: 'report', label: 'Report' },
+]
 
 export type TagOption = {
   label: string
@@ -86,20 +92,7 @@ export const ProjectProfitabilityView = ({
         <div className='Layer__component'>
           <Toggle
             ariaLabel='Project view'
-            options={[
-              {
-                value: 'overview',
-                label: 'Overview',
-              },
-              {
-                value: 'transactions',
-                label: 'Transactions',
-              },
-              {
-                value: 'report',
-                label: 'Report',
-              },
-            ]}
+            options={PROJECT_TAB_OPTIONS}
             selectedKey={activeTab}
             onSelectionChange={key => setActiveTab(key as ProjectTab)}
           />

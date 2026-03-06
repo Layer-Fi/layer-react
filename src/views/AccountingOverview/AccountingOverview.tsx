@@ -1,9 +1,9 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 import classNames from 'classnames'
 
-import { type OnboardingStep } from '@internal-types/layer_context'
+import { type OnboardingStep } from '@internal-types/layerContext'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
@@ -71,6 +71,19 @@ export const AccountingOverview = ({
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
 
+  const toggleOptions = useMemo(() => (
+    [
+      {
+        value: 'revenue',
+        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
+      },
+      {
+        value: 'expenses',
+        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
+      },
+    ]
+  ), [stringOverrides])
+
   return (
     <ProfitAndLoss
       asContainer={false}
@@ -128,16 +141,7 @@ export const AccountingOverview = ({
         <div className='Layer__accounting-overview-profit-and-loss-charts'>
           <Toggle
             ariaLabel='Chart type'
-            options={[
-              {
-                value: 'revenue',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
-              },
-              {
-                value: 'expenses',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
-              },
-            ]}
+            options={toggleOptions}
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
           />

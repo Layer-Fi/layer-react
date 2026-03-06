@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react'
 
-import { usePaginatedList } from '@hooks/array/usePaginatedList'
+import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import { MobileList, type MobileListProps } from '@ui/MobileList/MobileList'
 import { VStack } from '@ui/Stack/Stack'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'

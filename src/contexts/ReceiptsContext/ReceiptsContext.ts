@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-import { type useReceipts } from '@hooks/useReceipts/useReceipts'
+import { type useReceipts } from '@hooks/legacy/useReceipts'
 
 export type ReceiptsContextType = ReturnType<typeof useReceipts>
 export const ReceiptsContext = createContext<ReceiptsContextType>({

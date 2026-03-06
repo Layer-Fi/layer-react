@@ -5,8 +5,8 @@ import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransact
 import { MatchSchema, SuggestedMatchSchema } from '@schemas/bankTransactions/match'
 import { ClassificationSchema } from '@schemas/categorization'
 import { CustomerSchema } from '@schemas/customer'
+import { TransactionTagSchema } from '@schemas/tag'
 import { VendorSchema } from '@schemas/vendor'
-import { TransactionTagSchema } from '@features/tags/tagSchemas'
 
 export enum CategorizationStatus {
   PENDING = 'PENDING',

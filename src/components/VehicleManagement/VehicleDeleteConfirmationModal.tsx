@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { useDeleteVehicle } from '@hooks/api/businesses/[business-id]/mileage/vehicles/[vehicle-id]/useDeleteVehicle'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
-import { useDeleteVehicle } from '@features/vehicles/api/useDeleteVehicle'
 import { getVehicleDisplayName } from '@features/vehicles/utils'
 
 type VehicleDeleteConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {

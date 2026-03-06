@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-import { type useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { type useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 
 export type LinkedAccountsContextType = ReturnType<typeof useLinkedAccounts>
 export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
@@ -8,6 +8,7 @@ export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
   isLoading: false,
   loadingStatus: 'initial',
   isValidating: false,
+  isLinking: false,
   error: undefined,
   updateConnectionStatus: () => Promise.resolve(),
   addConnection: () => Promise.resolve(),

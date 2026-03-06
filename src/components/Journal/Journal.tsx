@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react'
 
-import { useChartOfAccounts } from '@hooks/useChartOfAccounts/useChartOfAccounts'
-import { useElementViewSize } from '@hooks/useElementViewSize/useElementViewSize'
-import { useJournal } from '@hooks/useJournal/useJournal'
+import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
+import { useJournal } from '@hooks/legacy/useJournal'
+import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { JournalRoute, JournalStoreProvider, useJournalRouteState } from '@providers/JournalStore/JournalStoreProvider'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'

@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react'
 
-import type { ExternalAccountConnection } from '@internal-types/linked_accounts'
+import type { ExternalAccountConnection } from '@internal-types/linkedAccounts'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import { HStack, VStack } from '@ui/Stack/Stack'

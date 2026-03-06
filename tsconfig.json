@@ -42,7 +42,6 @@
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
-      "@api/*": ["src/api/*"],
       "@ui/*": ["src/components/ui/*"],
       "@blocks/*": ["src/components/blocks/*"],
       "@components/*": ["src/components/*"],
@@ -54,10 +53,8 @@
       "@internal-types/*": ["src/types/*"],
       "@schemas/*": ["src/schemas/*"],
       "@views/*": ["src/views/*"],
-      "@config/*": ["src/config/*"],
       "@icons/*": ["src/icons/*"],
-      "@assets/*": ["src/assets/*"],
-      "@models/*": ["src/models/*"]
+      "@assets/*": ["src/assets/*"]
     }
   },
 

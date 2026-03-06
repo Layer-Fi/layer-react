@@ -4,7 +4,7 @@ import { List, Trash2 } from 'lucide-react'
 import {
   type AugmentedLedgerAccountBalance,
   LedgerAccountNodeType,
-} from '@internal-types/chart_of_accounts'
+} from '@internal-types/chartOfAccounts'
 import { type View } from '@internal-types/general'
 import { TableCellAlign } from '@internal-types/table'
 import { type LedgerBalancesSchemaType, type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'

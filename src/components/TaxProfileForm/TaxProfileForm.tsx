@@ -4,7 +4,7 @@ import type React from 'react'
 
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import { flattenValidationErrors } from '@utils/form'
-import { useSizeClass } from '@hooks/useWindowSize/useWindowSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'

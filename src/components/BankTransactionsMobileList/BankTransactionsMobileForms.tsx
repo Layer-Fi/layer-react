@@ -1,4 +1,4 @@
-import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type BankTransaction } from '@internal-types/bankTransactions'
 import { ReceiptsProvider } from '@providers/ReceiptsProvider/ReceiptsProvider'
 import { BankTransactionsMobileListBusinessForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListBusinessForm'
 import { Purpose } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'

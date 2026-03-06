@@ -3,9 +3,9 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 
 import { UpsertVehicleSchema, type Vehicle, type VehicleForm } from '@schemas/vehicle'
+import { UpsertVehicleMode, useUpsertVehicle } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useUpsertVehicle'
+import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertVehicleFormToUpsertVehicle, getVehicleFormDefaultValues, validateVehicleForm } from '@components/VehicleManagement/VehicleForm/formUtils'
-import { useAppForm } from '@features/forms/hooks/useForm'
-import { UpsertVehicleMode, useUpsertVehicle } from '@features/vehicles/api/useUpsertVehicle'
 
 type onSuccessFn = (vehicle: Vehicle) => void
 type UseVehicleFormProps = { onSuccess: onSuccessFn, vehicle?: Vehicle }

@@ -3,6 +3,7 @@ import { type Row } from '@tanstack/react-table'
 
 import { isAmountCellValue, isEmptyCellValue, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 import { asMutable } from '@utils/asMutable'
+import { useUnifiedReport } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/useUnifiedReport'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useUnifiedReportState } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -11,7 +12,6 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { type ColumnNode, type GroupColumn, type LeafColumn, type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
-import { useUnifiedReport } from '@features/reports/api/useUnifiedReport'
 
 import './unifiedReportTable.scss'
 

@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 
+import { updateInvoiceWithWriteoff, useWriteoffInvoice } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/write-off/useWriteoffInvoice'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
-import { updateInvoiceWithWriteoff, useWriteoffInvoice } from '@features/invoices/api/useWriteoffInvoice'
 import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 type InvoiceWriteoffModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {

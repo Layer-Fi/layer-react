@@ -53,38 +53,38 @@
   }
 
   .Layer__upload-transactions__preview_table {
-    .Layer__csv-upload__validate-csv-table__cell--date,
-    .Layer__csv-upload__validate-csv-table__header-cell--date {
-      min-width: 7.5rem;
+    // Base: row | date | description | amount
+    .Layer__UI__VirtualizedTable__header > tr,
+    .Layer__UI__VirtualizedTable__row {
+      grid-template-columns: 68px 108px minmax(0, 3fr) minmax(0, 1fr);
     }
 
-    .Layer__csv-upload__validate-csv-table__cell--amount,
-    .Layer__csv-upload__validate-csv-table__header-cell--amount {
-      min-width: 7.5rem;
+    // One optional column: row | (ext_id or ref_no) | date | description | amount
+    &--has-external-id,
+    &--has-reference-number {
+      .Layer__UI__VirtualizedTable__header > tr,
+      .Layer__UI__VirtualizedTable__row {
+        grid-template-columns: 68px 100px 108px minmax(0, 3fr) minmax(0, 1fr);
+      }
+    }
 
-      .Layer__csv-upload__validate-csv-table__header-cell-content {
+    // Both optional columns: row | ext_id | ref_no | date | description | amount
+    &--has-external-id.Layer__upload-transactions__preview_table--has-reference-number {
+      .Layer__UI__VirtualizedTable__header > tr,
+      .Layer__UI__VirtualizedTable__row {
+        grid-template-columns: 68px 100px 100px 108px minmax(0, 3fr) minmax(0, 1fr);
+      }
+    }
+
+    .Layer__UI__Table-Cell__ValidateCsvTable--amount,
+    .Layer__UI__Table-Column__ValidateCsvTable--amount {
+      .Layer__CsvUpload__Table__header-cell-content {
         margin-left: auto;
       }
 
-      .Layer__csv-upload__validate-csv-table__cell-content {
+      .Layer__CsvUpload__Table__cell-content {
         text-align: right;
       }
-    }
-
-    .Layer__csv-upload__validate-csv-table__cell--description,
-    .Layer__csv-upload__validate-csv-table__header-cell--description {
-      flex: 3 1 0;
-      min-width: 12rem;
-    }
-
-    .Layer__csv-upload__validate-csv-table__cell--external_id,
-    .Layer__csv-upload__validate-csv-table__header-cell--external_id {
-      min-width: 7.5rem;
-    }
-
-    .Layer__csv-upload__validate-csv-table__cell--reference_number,
-    .Layer__csv-upload__validate-csv-table__header-cell--reference_number {
-      min-width: 7.5rem;
     }
   }
 }

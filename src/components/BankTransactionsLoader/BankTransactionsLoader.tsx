@@ -10,7 +10,6 @@ export const BankTransactionsLoader = () => {
         { colSpan: isCategorizationEnabled ? 6 : 5, trimLastXRows: 4 },
         { colSpan: 1, parts: 2 },
       ]}
-      height={20}
     />
   )
 }

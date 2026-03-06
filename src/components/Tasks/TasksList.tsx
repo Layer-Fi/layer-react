@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { isCompletedTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { usePaginatedList } from '@hooks/array/usePaginatedList'
-import { useActiveBookkeepingPeriod } from '@hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
+import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
+import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import SmileIcon from '@icons/SmileIcon'
 import { VStack } from '@ui/Stack/Stack'
 import { Pagination } from '@components/Pagination/Pagination'

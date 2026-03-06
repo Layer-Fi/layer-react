@@ -2,8 +2,8 @@ import { BigDecimal as BD } from 'effect'
 
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import { BIG_DECIMAL_ZERO, convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
+import type { AppForm } from '@hooks/features/forms/useForm'
 import type { TaxProfileForm } from '@components/TaxProfileForm/taxProfileFormSchema'
-import type { AppForm } from '@features/forms/hooks/useForm'
 
 export type TaxProfileFormSectionProps = {
   form: AppForm<TaxProfileForm>

@@ -1,15 +1,15 @@
 import { Schema } from 'effect/index'
 import { uniqBy } from 'lodash-es'
 
-import { type BankTransaction, type Split } from '@internal-types/bank_transactions'
+import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { type SplitCategorizationEntryEncoded } from '@schemas/categorization'
 import { isSplitCategorizationEncoded } from '@schemas/categorization'
+import { decodeCustomerVendor } from '@schemas/customerVendor'
+import { makeTagFromTransactionTag, TransactionTagSchema } from '@schemas/tag'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
-import { decodeCustomerVendor } from '@features/customerVendor/customerVendorSchemas'
-import { makeTagFromTransactionTag, TransactionTagSchema } from '@features/tags/tagSchemas'
 
 export enum ValidateSplitError {
   AmountsMustBeGreaterThanZero = 'All splits must have an amount greater than $0.00',

@@ -1,6 +1,7 @@
 import { type PropsWithChildren, type Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import useSWR from 'swr'
 
+import type { Business } from '@internal-types/business'
 import {
   type ColorConfig,
   type ColorsPaletteOption,
@@ -9,19 +10,23 @@ import {
   type LayerContextValues,
   type LayerThemeConfig,
   type OnboardingStep,
-} from '@internal-types/layer_context'
-import { errorHandler, type LayerError } from '@models/ErrorHandler'
+} from '@internal-types/layerContext'
+import { get } from '@utils/api/authenticatedHttp'
+import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
-import { Layer } from '@api/layer'
-import { useAccountingConfiguration } from '@hooks/useAccountingConfiguration/useAccountingConfiguration'
-import { useAuth } from '@hooks/useAuth'
-import { useDataSync } from '@hooks/useDataSync/useDataSync'
+import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
+import { useDataSync } from '@hooks/legacy/useDataSync'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
+
+const getBusiness = get<{ data: Business }>(
+  ({ businessId }) => `/v1/businesses/${businessId}`,
+)
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -124,7 +129,7 @@ export const BusinessProvider = ({
 
   const { data: businessData } = useSWR(
     businessId && auth?.access_token && `business-${businessId}`,
-    Layer.getBusiness(apiUrl, auth?.access_token, {
+    getBusiness(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
     {

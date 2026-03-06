@@ -4,8 +4,8 @@ import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
 import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
 import { CustomerSchema } from '@schemas/customer'
 import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
+import { TagKeyValueSchema, TransactionTagSchema } from '@schemas/tag'
 import { InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { TagKeyValueSchema, TransactionTagSchema } from '@features/tags/tagSchemas'
 
 export enum InvoiceStatus {
   Voided = 'VOIDED',

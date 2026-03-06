@@ -11,10 +11,10 @@ import {
 } from 'recharts'
 import type { CartesianViewBox } from 'recharts/types/util/types'
 
-import { centsToDollars as formatMoney } from '@models/Money'
 import { formatPercent } from '@utils/format'
+import { centsToDollars as formatMoney } from '@utils/money'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
-import { type SidebarScope } from '@hooks/useProfitAndLoss/useProfitAndLoss'
+import { type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { isLineItemUncategorized, mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 

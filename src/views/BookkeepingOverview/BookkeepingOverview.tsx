@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 
-import { type CallBooking as CallBookingData } from '@schemas/callBookings'
+import { type CallBooking as CallBookingData } from '@schemas/callBooking'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
-import { useCalendly } from '@hooks/useCalendly/useCalendly'
-import { useSizeClass, useWindowSize } from '@hooks/useWindowSize/useWindowSize'
+import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
+import { useCalendly } from '@hooks/features/calendly/useCalendly'
+import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { CallBooking } from '@components/CallBooking/CallBooking'
@@ -19,7 +20,6 @@ import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/Pro
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
-import { useCallBookings } from '@features/callBookings/api/useCallBookings'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
 
 export interface BookkeepingOverviewProps {
@@ -64,6 +64,17 @@ export const BookkeepingOverview = ({
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
+
+  const toggleOptions = useMemo(() => [
+    {
+      value: 'revenue',
+      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
+    },
+    {
+      value: 'expenses',
+      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
+    },
+  ], [stringOverrides])
 
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
@@ -147,16 +158,7 @@ export const BookkeepingOverview = ({
         <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>
           <Toggle
             ariaLabel='Chart type'
-            options={[
-              {
-                value: 'revenue',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
-              },
-              {
-                value: 'expenses',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
-              },
-            ]}
+            options={toggleOptions}
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
           />

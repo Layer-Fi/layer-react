@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { useTaxProfile } from '@hooks/taxEstimates/useTaxProfile'
+import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import {
   OnboardingStatus,
   TaxEstimatesRoute,

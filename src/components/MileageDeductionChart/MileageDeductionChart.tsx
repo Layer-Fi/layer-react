@@ -8,7 +8,7 @@ import {
   XAxis,
 } from 'recharts'
 
-import { centsToDollars } from '@models/Money'
+import { centsToDollars } from '@utils/money'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { VStack } from '@ui/Stack/Stack'
 import { ChartYAxis } from '@components/Chart/ChartYAxis'

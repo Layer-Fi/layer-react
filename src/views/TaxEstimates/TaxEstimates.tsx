@@ -4,7 +4,7 @@ import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
-import { useBusinessActivationDate } from '@hooks/business/useBusinessActivationDate'
+import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import {
   OnboardingStatus,
   TaxEstimatesRoute,
@@ -127,6 +127,17 @@ const TaxEstimatesViewHeader = () => {
   )
 }
 
+const TAX_ESTIMATES_TAB_OPTIONS = [
+  {
+    value: TaxEstimatesRoute.Estimates,
+    label: 'Estimates',
+  },
+  {
+    value: TaxEstimatesRoute.Payments,
+    label: 'Payments',
+  },
+]
+
 const TaxEstimatesOnboardedViewContent = () => {
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
@@ -143,16 +154,7 @@ const TaxEstimatesOnboardedViewContent = () => {
     <>
       <Toggle
         ariaLabel='Tax estimate view'
-        options={[
-          {
-            value: TaxEstimatesRoute.Estimates,
-            label: 'Estimates',
-          },
-          {
-            value: TaxEstimatesRoute.Payments,
-            label: 'Payments',
-          },
-        ]}
+        options={TAX_ESTIMATES_TAB_OPTIONS}
         selectedKey={route}
         onSelectionChange={handleTabChange}
       />

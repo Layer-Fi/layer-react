@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 
-import { type BankTransaction } from '@internal-types/bank_transactions'
-import { type CustomAccountParseCsvResponse } from '@hooks/customAccounts/useCustomAccountParseCsv'
+import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { Heading } from '@ui/Typography/Heading'
 import { UploadTransactionsStep } from '@components/UploadTransactions/types'

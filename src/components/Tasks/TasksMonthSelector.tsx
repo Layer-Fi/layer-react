@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { format, getMonth, getYear, set } from 'date-fns'
 
-import { MONTH_FORMAT_SHORT } from '@config/general'
 import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { MONTH_FORMAT_SHORT } from '@utils/time/timeFormats'
+import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TaskMonthTile } from '@components/Tasks/TaskMonthTile'
 import { type MonthData } from '@components/Tasks/types'

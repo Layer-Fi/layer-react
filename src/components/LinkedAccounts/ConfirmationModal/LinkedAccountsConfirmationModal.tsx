@@ -1,7 +1,8 @@
 import { useState } from 'react'
 
-import { useLinkedAccounts } from '@hooks/useLinkedAccounts/useLinkedAccounts'
-import { getAccountsNeedingConfirmation } from '@hooks/useLinkedAccounts/useLinkedAccounts'
+import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
+import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
 import { useAccountConfirmationStore } from '@providers/AccountConfirmationStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
@@ -10,7 +11,6 @@ import { ModalActions, ModalContent, ModalDescription, ModalHeading, ModalTitleW
 import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { LinkedAccountToConfirm } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
-import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@components/LinkedAccounts/ConfirmationModal/useConfirmAndExcludeMultiple'
 import { ConditionalList } from '@components/utility/ConditionalList'
 
 function getButtonLabel(
@@ -96,7 +96,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
     <VStack gap='2xs'>
       <ModalTitleWithClose
         heading={(
-          <ModalHeading size='xl'>
+          <ModalHeading size='md'>
             Loading Your Accounts...
           </ModalHeading>
         )}
@@ -139,7 +139,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     <>
       <ModalTitleWithClose
         heading={(
-          <ModalHeading pbe='2xs' size='xl'>
+          <ModalHeading pbe='2xs' size='md'>
             Confirm Business Accounts
           </ModalHeading>
         )}

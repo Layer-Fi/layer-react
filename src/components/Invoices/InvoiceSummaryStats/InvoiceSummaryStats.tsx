@@ -1,6 +1,7 @@
 import { BigDecimal as BD } from 'effect'
 
 import { convertBigIntCentsToBigDecimal, convertDecimalToPercent, formatBigDecimalToString, safeDivide } from '@utils/bigDecimalUtils'
+import { useInvoiceSummaryStats } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import Check from '@icons/Check'
 import { Meter } from '@ui/Meter/Meter'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -8,7 +9,6 @@ import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
 import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
-import { useInvoiceSummaryStats } from '@features/invoices/api/useInvoiceSummaryStats'
 
 import './invoiceSummaryStats.scss'
 

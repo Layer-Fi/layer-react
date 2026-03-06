@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 
-import type { BankAccount } from '@internal-types/linked_accounts'
-import { isAllExternalAccountsUserCreatedCustom } from '@hooks/useLinkedAccounts/bankAccountUtils'
+import type { BankAccount } from '@internal-types/linkedAccounts'
+import { isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'

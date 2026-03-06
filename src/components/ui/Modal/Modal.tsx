@@ -9,11 +9,11 @@ import {
 } from 'react-aria-components'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { useVirtualKeyboardHeight } from '@hooks/useVirtualKeyboardHeight/useVirtualKeyboardHeight'
+import { useVirtualKeyboardHeight } from '@hooks/utils/size/useVirtualKeyboardHeight'
 
 import './modal.scss'
 
-type ModalSize = 'md' | 'lg' | 'xl'
+type ModalSize = 'md' | 'lg' | 'xl' | '2xl'
 type ModalVariant = 'center' | 'drawer' | 'mobile-drawer' | 'mobile-popover'
 
 const BASE_MODAL_OVERLAY_CLASS_NAME = 'Layer__ModalOverlay'

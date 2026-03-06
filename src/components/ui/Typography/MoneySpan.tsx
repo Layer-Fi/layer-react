@@ -1,7 +1,7 @@
 import { type ComponentPropsWithoutRef, forwardRef } from 'react'
 import classNames from 'classnames'
 
-import { centsToDollars as formatMoney } from '@models/Money'
+import { centsToDollars as formatMoney } from '@utils/money'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
 

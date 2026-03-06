@@ -1,7 +1,7 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
 import { SearchX } from 'lucide-react'
 
-import { DisplayState } from '@internal-types/bank_transactions'
+import { DisplayState } from '@internal-types/bankTransactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import InboxIcon from '@icons/Inbox'

@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 
 import { type TableCellProps } from '@internal-types/table'
-import { centsToDollars } from '@models/Money'
+import { centsToDollars } from '@utils/money'
 import ChevronDownFill from '@icons/ChevronDownFill'
 
 export const TableCell = ({

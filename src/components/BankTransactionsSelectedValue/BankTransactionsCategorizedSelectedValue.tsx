@@ -1,4 +1,4 @@
-import { type BankTransaction } from '@internal-types/bank_transactions'
+import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { type CategorizationEncoded, isSplitCategorizationEncoded } from '@schemas/categorization'
 import { isTransferMatch } from '@utils/bankTransactions'
