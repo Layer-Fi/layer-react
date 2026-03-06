@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 
@@ -64,6 +64,17 @@ export const BookkeepingOverview = ({
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
+
+  const toggleOptions = useMemo(() => [
+    {
+      value: 'revenue',
+      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
+    },
+    {
+      value: 'expenses',
+      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
+    },
+  ], [stringOverrides])
 
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
@@ -147,16 +158,7 @@ export const BookkeepingOverview = ({
         <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>
           <Toggle
             ariaLabel='Chart type'
-            options={[
-              {
-                value: 'revenue',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
-              },
-              {
-                value: 'expenses',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
-              },
-            ]}
+            options={toggleOptions}
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
           />

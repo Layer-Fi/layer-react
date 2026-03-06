@@ -16,6 +16,12 @@ import './projectProfitability.scss'
 
 type ProjectTab = 'overview' | 'transactions' | 'report'
 
+const PROJECT_TAB_OPTIONS = [
+  { value: 'overview', label: 'Overview' },
+  { value: 'transactions', label: 'Transactions' },
+  { value: 'report', label: 'Report' },
+]
+
 export type TagOption = {
   label: string
   tagKey: string
@@ -86,20 +92,7 @@ export const ProjectProfitabilityView = ({
         <div className='Layer__component'>
           <Toggle
             ariaLabel='Project view'
-            options={[
-              {
-                value: 'overview',
-                label: 'Overview',
-              },
-              {
-                value: 'transactions',
-                label: 'Transactions',
-              },
-              {
-                value: 'report',
-                label: 'Report',
-              },
-            ]}
+            options={PROJECT_TAB_OPTIONS}
             selectedKey={activeTab}
             onSelectionChange={key => setActiveTab(key as ProjectTab)}
           />

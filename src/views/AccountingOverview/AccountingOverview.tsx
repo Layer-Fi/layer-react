@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 import classNames from 'classnames'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
@@ -71,6 +71,19 @@ export const AccountingOverview = ({
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
 
+  const toggleOptions = useMemo(() => (
+    [
+      {
+        value: 'revenue',
+        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
+      },
+      {
+        value: 'expenses',
+        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
+      },
+    ]
+  ), [stringOverrides])
+
   return (
     <ProfitAndLoss
       asContainer={false}
@@ -128,16 +141,7 @@ export const AccountingOverview = ({
         <div className='Layer__accounting-overview-profit-and-loss-charts'>
           <Toggle
             ariaLabel='Chart type'
-            options={[
-              {
-                value: 'revenue',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
-              },
-              {
-                value: 'expenses',
-                label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
-              },
-            ]}
+            options={toggleOptions}
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
           />

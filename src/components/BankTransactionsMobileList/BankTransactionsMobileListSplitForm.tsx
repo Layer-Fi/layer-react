@@ -111,6 +111,7 @@ export const BankTransactionsMobileListSplitForm = ({
                   gap='xs'
                   align='center'
                   justify='space-between'
+                  className='Layer__BankTransactionsMobileSplitForm__SplitRow'
                 >
                   <CategorySelectDrawerWithTrigger
                     value={split.category}

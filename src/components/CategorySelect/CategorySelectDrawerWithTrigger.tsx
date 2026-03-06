@@ -2,10 +2,12 @@ import { useState } from 'react'
 
 import ChevronDown from '@icons/ChevronDown'
 import { Button } from '@ui/Button/Button'
-import { HStack, Spacer } from '@ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
+
+import './categorySelectDrawerWithTrigger.scss'
 
 type Props = {
   value: BankTransactionCategoryComboBoxOption | null
@@ -18,16 +20,14 @@ export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   return (
-    <HStack fluid>
+    <HStack fluid className='Layer__CategorySelectDrawerWithTrigger'>
       <Button
-        flex
         fullWidth
         aria-label='Select category'
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
       >
-        <Span>{value?.label ?? 'Select...'}</Span>
-        <Spacer />
+        <Span ellipsis>{value?.label ?? 'Select...'}</Span>
         <ChevronDown size={16} />
       </Button>
 

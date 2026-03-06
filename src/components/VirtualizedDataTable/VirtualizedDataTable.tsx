@@ -27,7 +27,7 @@ const DEFAULT_ROW_HEIGHT = 52
 const DEFAULT_OVERSCAN = 5
 const DEFAULT_NUM_ROWS = 15
 const HEADER_HEIGHT = 52
-const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HEIGHT - 2
+const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HEIGHT - 1
 
 const CSS_PREFIX = 'Layer__UI__VirtualizedTable'
 const EMPTY_ARRAY: never[] = []
@@ -70,7 +70,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
     if (!data) return height
     if (!shrinkHeightToFitRows) return height
     const actualRowCount = data.length
-    const calculatedHeight = (actualRowCount * rowHeight) + HEADER_HEIGHT + 1
+    const calculatedHeight = (actualRowCount * rowHeight) + HEADER_HEIGHT
     return Math.min(height, calculatedHeight)
   }, [data, height, rowHeight, shrinkHeightToFitRows])
 
