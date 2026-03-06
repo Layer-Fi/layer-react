@@ -10,6 +10,7 @@ import {
 } from 'date-fns'
 import { createStore, useStore } from 'zustand'
 
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
 
 export type DateSelectionMode = 'full' | 'month' | 'year'
@@ -45,11 +46,15 @@ function getDateRange({
         endDate: clampToPresentOrPast(endOfYear(endDate)),
       }
     case 'full':
-    default:
       return {
         startDate: startDate ?? endDate,
         endDate: clampToPresentOrPast(endOfDay(endDate)),
       }
+    default:
+      unsafeAssertUnreachable({
+        value: mode,
+        message: 'Invalid provider',
+      })
   }
 }
 
