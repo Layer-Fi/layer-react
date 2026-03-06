@@ -1,9 +1,9 @@
-import { useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { getMonth, getYear } from 'date-fns'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useProfitAndLossSummaries } from '@hooks/useProfitAndLoss/useProfitAndLossSummaries'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import BellIcon from '@icons/Bell'
 import CheckIcon from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'
@@ -33,7 +33,7 @@ export function TransactionsToReview({
 }: TransactionsToReviewProps) {
   const { size = 'sm' } = variants ?? {}
 
-  const dateRange = useGlobalDateRange({ dateSelectionMode: 'month' })
+  const { dateRange } = useContext(ProfitAndLossContext)
 
   const { data, isLoading, isError, mutate } = useProfitAndLossSummaries({
     startYear: dateRange.startDate.getFullYear(),
