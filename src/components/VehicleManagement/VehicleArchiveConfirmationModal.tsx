@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 
 import { type Vehicle } from '@schemas/vehicle'
+import { useArchiveVehicle } from '@hooks/api/businesses/[business-id]/mileage/vehicles/[vehicle-id]/useArchiveVehicle'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
-import { useArchiveVehicle } from '@features/vehicles/api/useArchiveVehicle'
 import { getVehicleDisplayName } from '@features/vehicles/utils'
 
 type VehicleArchiveConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {

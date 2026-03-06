@@ -1,16 +1,16 @@
 import { useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
+import { makeTag, type Tag } from '@schemas/tag'
+import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
+import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { BankTransactionCustomerVendorSelector } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorSelector'
 import { useBankTransactionCustomerVendorVisibility } from '@features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { useRemoveTagFromBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
-import { useTagBankTransaction } from '@features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
 import { useBankTransactionTagVisibility } from '@features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import { TagDimensionsGroup } from '@features/tags/components/TagDimensionsGroup'
-import { makeTag, type Tag } from '@features/tags/tagSchemas'
 
 type BankTransactionFormFieldProps = {
   bankTransaction: Pick<

@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 
+import { useVoidInvoice } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/void/useVoidInvoice'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
-import { useVoidInvoice } from '@features/invoices/api/useVoidInvoice'
 import type { Invoice } from '@features/invoices/invoiceSchemas'
 
 type InvoiceVoidModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {

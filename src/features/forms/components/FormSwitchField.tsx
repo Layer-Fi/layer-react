@@ -1,10 +1,10 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
 import classNames from 'classnames'
 
+import { useFieldContext } from '@hooks/features/forms/useForm'
 import { HStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
 import { Label } from '@ui/Typography/Text'
-import { useFieldContext } from '@features/forms/hooks/useForm'
 import type { CommonFormFieldProps } from '@features/forms/types'
 
 import './formSwitchField.scss'

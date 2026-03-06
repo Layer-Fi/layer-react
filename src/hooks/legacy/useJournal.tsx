@@ -13,11 +13,11 @@ import { type LedgerAccountBalance } from '@internal-types/journal'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { post } from '@utils/api/authenticatedHttp'
 import { getAccountIdentifierPayload } from '@utils/journal'
+import { type ListLedgerEntriesReturn, useListLedgerEntries } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type ListLedgerEntriesReturn, useListLedgerEntries } from '@features/ledger/entries/api/useListLedgerEntries'
 
 const createJournalEntries = post<{ data: JournalEntryType[] }>(
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/manual-entries`,

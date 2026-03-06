@@ -7,14 +7,14 @@ import { type BaseSelectOption } from '@internal-types/general'
 import type { SingleChartAccountEncodedType } from '@schemas/generalLedger/ledgerAccount'
 import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { post, put } from '@utils/api/authenticatedHttp'
-import { useLedgerBalances, useLedgerBalancesCacheActions } from '@hooks/api/businesses/business-id/ledger/balances/useLedgerBalances'
+import { useDeleteAccountFromLedger } from '@hooks/api/businesses/[business-id]/ledger/accounts/[account-id]/useDeleteLedgerAccount'
+import { useLedgerBalances, useLedgerBalancesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
+import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { NORMALITY_OPTIONS } from '@components/ChartOfAccountsForm/constants'
-import { useDeleteAccountFromLedger } from '@features/ledger/accounts/[ledgerAccountId]/api/useDeleteLedgerAccount'
-import { useLedgerEntriesCacheActions } from '@features/ledger/entries/api/useListLedgerEntries'
 
 const createAccount = post<{ data: SingleChartAccountEncodedType }, NewAccount>(
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/accounts`,

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Menu as MenuIcon } from 'lucide-react'
 
+import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
@@ -9,7 +10,6 @@ import { InvoiceRefundModal } from '@components/Invoices/modals/InvoiceRefundMod
 import { InvoiceResetModal } from '@components/Invoices/modals/InvoiceResetModal'
 import { InvoiceVoidModal } from '@components/Invoices/modals/InvoiceVoidModal'
 import { InvoiceWriteoffModal } from '@components/Invoices/modals/InvoiceWriteoffModal'
-import { UpsertInvoiceMode } from '@features/invoices/api/useUpsertInvoice'
 import { type Invoice, InvoiceStatus } from '@features/invoices/invoiceSchemas'
 
 enum InvoiceDetailHeaderMenuActions {

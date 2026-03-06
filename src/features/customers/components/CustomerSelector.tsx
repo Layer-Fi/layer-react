@@ -2,11 +2,11 @@ import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
 
 import { type Customer } from '@schemas/customer'
+import { useListCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
-import { useListCustomers } from '@features/customers/api/useListCustomers'
 import { getCustomerName } from '@features/customers/util'
 
 import './customerSelector.scss'

@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
-import { useCategorizeBankTransaction } from '@hooks/api/businesses/business-id/bank-transactions/bank-transaction-id/categorize/useCategorizeBankTransaction'
+import { useCategorizeBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/categorize/useCategorizeBankTransaction'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

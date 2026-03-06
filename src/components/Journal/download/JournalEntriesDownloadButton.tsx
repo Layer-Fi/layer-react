@@ -1,4 +1,4 @@
-import { useJournalEntriesDownload } from '@hooks/api/businesses/business-id/ledger/entries/exports/csv/useJournalEntriesDownload'
+import { useJournalEntriesDownload } from '@hooks/api/businesses/[business-id]/ledger/entries/exports/csv/useJournalEntriesDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 

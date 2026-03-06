@@ -5,8 +5,8 @@ import { type DateRange } from '@internal-types/general'
 import { Direction } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
+import { makeTagKeyValueFromTag } from '@schemas/tag'
 import { CategorizedCategories, ReviewCategories } from '@components/BankTransactions/constants'
-import { makeTagKeyValueFromTag } from '@features/tags/tagSchemas'
 
 export const filterVisibility = (
   scope: DisplayState,

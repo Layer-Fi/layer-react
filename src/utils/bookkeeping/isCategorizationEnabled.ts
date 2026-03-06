@@ -1,5 +1,5 @@
 import { safeAssertUnreachableWithFallback } from '@utils/switch/assertUnreachable'
-import { BookkeepingStatus } from '@hooks/api/businesses/business-id/bookkeeping/status/useBookkeepingStatus'
+import { BookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 
 export function isCategorizationEnabledForStatus(status: BookkeepingStatus): boolean {
   switch (status) {

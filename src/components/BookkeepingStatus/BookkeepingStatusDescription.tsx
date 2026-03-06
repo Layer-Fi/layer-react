@@ -1,4 +1,4 @@
-import { type BookkeepingPeriodStatus } from '@hooks/api/businesses/business-id/bookkeeping/periods/useBookkeepingPeriods'
+import { type BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { getBookkeepingStatusConfig } from '@components/BookkeepingStatus/utils'
 import { Text, TextSize } from '@components/Typography/Text'
 

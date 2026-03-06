@@ -1,7 +1,7 @@
 import { createContext, type PropsWithChildren, useContext } from 'react'
 
 import { isCategorizationEnabledForStatus } from '@utils/bookkeeping/isCategorizationEnabled'
-import { useEffectiveBookkeepingStatus } from '@hooks/api/businesses/business-id/bookkeeping/status/useBookkeepingStatus'
+import { useEffectiveBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 
 const useBankTransactionsIsCategorizationEnabled = () => {
   const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()

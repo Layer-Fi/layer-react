@@ -1,10 +1,10 @@
 import { StripeAccountStatus } from '@schemas/stripeAccountStatus'
+import { useStripeAccountStatus } from '@hooks/api/businesses/[business-id]/stripe/status/useStripeAccountStatus'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Banner, type BannerVariant } from '@ui/Banner/Banner'
 import { VStack } from '@ui/Stack/Stack'
 import { ConnectStripeButton } from '@components/Invoices/StripeConnectBanner/ConnectStripeButton'
 import { useStripeConnect } from '@components/Invoices/StripeConnectBanner/useStripeConnect'
-import { useStripeAccountStatus } from '@features/invoices/api/useStripeAccountStatus'
 
 import '@components/Invoices/StripeConnectBanner/stripeConnectBanner.scss'
 

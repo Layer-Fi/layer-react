@@ -2,15 +2,15 @@ import { useCallback, useState } from 'react'
 import classNames from 'classnames'
 import { InlineWidget as CalendlyInlineWidget, PopupModal } from 'react-calendly'
 
-import { CallBookingPurpose, CallBookingType } from '@schemas/callBookings'
-import { useBookkeepingConfiguration } from '@hooks/api/businesses/business-id/bookkeeping/config/useBookkeepingConfiguration'
+import { CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
+import { useBookkeepingConfiguration } from '@hooks/api/businesses/[business-id]/bookkeeping/config/useBookkeepingConfiguration'
+import { useCreateCallBooking } from '@hooks/api/businesses/[business-id]/call-bookings/useCreateCallBookings'
 import { useCalendly } from '@hooks/features/calendly/useCalendly'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { useCreateCallBooking } from '@features/callBookings/api/useCreateCallBookings'
 
 import './bookOnboardingCallStep.scss'
 

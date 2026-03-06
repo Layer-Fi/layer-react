@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { MatchType } from '@schemas/bankTransactions/match'
-import { useMatchBankTransaction } from '@hooks/api/businesses/business-id/bank-transactions/bank-transaction-id/match/useMatchBankTransaction'
+import { useMatchBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/match/useMatchBankTransaction'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 

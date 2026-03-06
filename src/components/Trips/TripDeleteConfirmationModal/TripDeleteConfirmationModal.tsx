@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 
 import { type Trip } from '@schemas/trip'
+import { useDeleteTrip } from '@hooks/api/businesses/[business-id]/mileage/trips/[trip-id]/useDeleteTrip'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
-import { useDeleteTrip } from '@features/trips/api/useDeleteTrip'
 
 type TripDeleteConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   trip: Trip

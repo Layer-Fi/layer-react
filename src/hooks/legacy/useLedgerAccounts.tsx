@@ -5,10 +5,10 @@ import type { LedgerAccountBalanceWithNodeType } from '@internal-types/chartOfAc
 import { DataModel } from '@internal-types/general'
 import { type LedgerAccountLineItem, type LedgerAccountsEntry } from '@internal-types/ledgerAccounts'
 import { get } from '@utils/api/authenticatedHttp'
+import { type ListLedgerAccountLinesReturn, useListLedgerAccountLines } from '@hooks/api/businesses/[business-id]/ledger/accounts/[account-id]/lines/useListLedgerAccountLines'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type ListLedgerAccountLinesReturn, useListLedgerAccountLines } from '@features/ledger/accounts/[ledgerAccountId]/api/useListLedgerAccountLines'
 
 const getLedgerAccountsEntry = get<{ data: LedgerAccountsEntry }>(
   ({ businessId, entryId }) =>

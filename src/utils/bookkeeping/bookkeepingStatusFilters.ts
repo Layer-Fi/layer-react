@@ -1,4 +1,4 @@
-import { BookkeepingStatus } from '@hooks/api/businesses/business-id/bookkeeping/status/useBookkeepingStatus'
+import { BookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 
 type ActiveBookkeepingStatus = BookkeepingStatus.ACTIVE | BookkeepingStatus.ONBOARDING
 export function isActiveBookkeepingStatus(status: BookkeepingStatus): status is ActiveBookkeepingStatus {
