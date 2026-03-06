@@ -130,19 +130,7 @@ function buildStore() {
 const GlobalDateStoreContext = createContext(buildStore())
 
 const getEffectiveDateForMode = (mode: DateSelectionMode, { date }: { date: Date }): { date: Date } => {
-  switch (mode) {
-    case 'month':
-      return { date: getDateRange({ mode, endDate: date }).endDate }
-    case 'year':
-      return { date: getDateRange({ mode, endDate: date }).endDate }
-    case 'full':
-      return { date: getDateRange({ mode, startDate: date, endDate: date }).endDate }
-    default:
-      unsafeAssertUnreachable({
-        value: mode,
-        message: 'Invalid provider',
-      })
-  }
+  return { date: getDateRange({ mode, startDate: date, endDate: date }).endDate }
 }
 
 export function useGlobalDate({ dateSelectionMode = 'full' }: { dateSelectionMode?: DateSelectionMode } = {}) {
