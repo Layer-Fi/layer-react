@@ -46,12 +46,12 @@ export function TransactionsToReview({
 
   const activeMonth = useMemo(() => {
     if (!data || !dateRange) return undefined
-    const { startDate } = dateRange
+    const { endDate } = dateRange
 
     return data.months.find(
       summary =>
-        summary.month - 1 === getMonth(startDate)
-        && summary.year === getYear(startDate),
+        summary.month - 1 === getMonth(endDate)
+        && summary.year === getYear(endDate),
     )
   }, [data, dateRange])
 

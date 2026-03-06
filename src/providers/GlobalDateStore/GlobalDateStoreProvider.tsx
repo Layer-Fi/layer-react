@@ -24,36 +24,33 @@ export function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new 
 }
 
 export type DateRange = { startDate: Date, endDate: Date }
+type GetDateRangeOptions =
+  | { mode: 'full', startDate: Date, endDate: Date }
+  | { mode: 'month', endDate: Date }
+  | { mode: 'year', endDate: Date }
 
-function getDateRange({
-  mode,
-  startDate,
-  endDate,
-}: {
-  mode: DateSelectionMode
-  startDate?: Date
-  endDate: Date
-}): DateRange {
+function getDateRange(options: GetDateRangeOptions): DateRange {
+  const mode = options.mode
   switch (mode) {
     case 'month':
       return {
-        startDate: startOfMonth(endDate),
-        endDate: clampToPresentOrPast(endOfMonth(endDate)),
+        startDate: startOfMonth(options.endDate),
+        endDate: clampToPresentOrPast(endOfMonth(options.endDate)),
       }
     case 'year':
       return {
-        startDate: startOfYear(endDate),
-        endDate: clampToPresentOrPast(endOfYear(endDate)),
+        startDate: startOfYear(options.endDate),
+        endDate: clampToPresentOrPast(endOfYear(options.endDate)),
       }
     case 'full':
       return {
-        startDate: startDate ?? endDate,
-        endDate: clampToPresentOrPast(endOfDay(endDate)),
+        startDate: options.startDate,
+        endDate: clampToPresentOrPast(endOfDay(options.endDate)),
       }
     default:
       unsafeAssertUnreachable({
         value: mode,
-        message: 'Invalid provider',
+        message: 'Invalid mode',
       })
   }
 }
@@ -95,7 +92,7 @@ function buildStore() {
     const setDate = ({ date }: { date: Date }): DateRange => {
       // Always clamp to start of month for date.
       const monthRange = getDateRange({ mode: 'month', endDate: date })
-      const fullRange = getDateRange({ mode: 'full', endDate: date })
+      const fullRange = getDateRange({ mode: 'full', startDate: date, endDate: date })
       return apply({ startDate: monthRange.startDate, endDate: fullRange.endDate })
     }
 
@@ -108,7 +105,7 @@ function buildStore() {
     }
 
     const setYear = ({ startDate }: { startDate: Date }): DateRange => {
-      return apply(getDateRange({ mode: 'year', startDate, endDate: startDate }))
+      return apply(getDateRange({ mode: 'year', endDate: startDate }))
     }
 
     return {
@@ -134,7 +131,19 @@ function buildStore() {
 const GlobalDateStoreContext = createContext(buildStore())
 
 const getEffectiveDateForMode = (mode: DateSelectionMode, { date }: { date: Date }): { date: Date } => {
-  return { date: getDateRange({ mode, endDate: date }).endDate }
+  switch (mode) {
+    case 'month':
+      return { date: getDateRange({ mode, endDate: date }).endDate }
+    case 'year':
+      return { date: getDateRange({ mode, endDate: date }).endDate }
+    case 'full':
+      return { date: getDateRange({ mode, startDate: date, endDate: date }).endDate }
+    default:
+      unsafeAssertUnreachable({
+        value: mode,
+        message: 'Invalid provider',
+      })
+  }
 }
 
 export function useGlobalDate({ dateSelectionMode = 'full' }: { dateSelectionMode?: DateSelectionMode } = {}) {
@@ -159,7 +168,21 @@ export function useGlobalDateActions() {
 const getEffectiveDateRangeForMode = (
   mode: DateSelectionMode,
   { startDate, endDate }: { startDate: Date, endDate: Date },
-): { startDate: Date, endDate: Date } => getDateRange({ mode, startDate, endDate })
+): { startDate: Date, endDate: Date } => {
+  switch (mode) {
+    case 'month':
+      return getDateRange({ mode, endDate })
+    case 'year':
+      return getDateRange({ mode, endDate })
+    case 'full':
+      return getDateRange({ mode, startDate, endDate })
+    default:
+      unsafeAssertUnreachable({
+        value: mode,
+        message: 'Invalid provider',
+      })
+  }
+}
 
 export function useGlobalDateRange({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }) {
   const store = useContext(GlobalDateStoreContext)
