@@ -5,14 +5,14 @@ import { HStack } from '@ui/Stack/Stack'
 import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 import { GlobalDateRangePicker } from '@components/GlobalDateRangePicker/GlobalDateRangePicker'
 
-import './dateRangeSelection.scss'
+import './globalDateRangeSelection.scss'
 
-export const DateRangeSelection = ({ showLabels = false }: { showLabels?: boolean }) => {
+export const GlobalDateRangeSelection = ({ showLabels = false }: { showLabels?: boolean }) => {
   const { value } = useSizeClass()
 
   return (
-    <HStack className={classNames('Layer__DateRangeSelection', {
-      'Layer__DateRangeSelection--mobile': value === 'mobile',
+    <HStack className={classNames('Layer__GlobalDateRangeSelection', {
+      'Layer__GlobalDateRangeSelection--mobile': value === 'mobile',
     })}
     >
       <DateSelectionComboBox showLabel={showLabels} />

@@ -1,5 +1,5 @@
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { DateSelection } from '@components/DateSelection/DateSelection'
+import { GlobalDateSelection } from '@components/DateSelection/GlobalDateSelection'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 export type CombinedDateSelectionProps = {
@@ -12,5 +12,5 @@ export const CombinedDateSelection = ({ mode, showLabels = true }: CombinedDateS
     return <GlobalMonthPicker showLabel={showLabels} />
   }
 
-  return <DateSelection showLabels={showLabels} />
+  return <GlobalDateSelection showLabels={showLabels} />
 }

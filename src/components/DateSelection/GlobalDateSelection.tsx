@@ -5,15 +5,15 @@ import { HStack } from '@ui/Stack/Stack'
 import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 import { GlobalDatePicker } from '@components/GlobalDatePicker/GlobalDatePicker'
 
-import './dateSelection.scss'
+import './globalDateSelection.scss'
 
-export const DateSelection = ({ showLabels = false }: { showLabels?: boolean }) => {
+export const GlobalDateSelection = ({ showLabels = false }: { showLabels?: boolean }) => {
   const { value } = useSizeClass()
 
   return (
     <HStack
-      className={classNames('Layer__DateSelection', {
-        'Layer__DateSelection--mobile': value === 'mobile',
+      className={classNames('Layer__GlobalDateSelection', {
+        'Layer__GlobalDateSelection--mobile': value === 'mobile',
       })}
     >
       <DateSelectionComboBox showLabel={showLabels} />
