@@ -156,19 +156,7 @@ const getEffectiveDateRangeForMode = (
   mode: DateSelectionMode,
   { startDate, endDate }: { startDate: Date, endDate: Date },
 ): { startDate: Date, endDate: Date } => {
-  switch (mode) {
-    case 'month':
-      return getDateRange({ mode, endDate })
-    case 'year':
-      return getDateRange({ mode, endDate })
-    case 'full':
-      return getDateRange({ mode, startDate, endDate })
-    default:
-      unsafeAssertUnreachable({
-        value: mode,
-        message: 'Invalid provider',
-      })
-  }
+  return getDateRange({ mode, startDate, endDate })
 }
 
 export function useGlobalDateRange({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }) {
