@@ -107,7 +107,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
             <form.AppField name='referenceNumber'>
               {field => (
                 <field.FormTextField
-                  label='Reference Number'
+                  label='Reference number'
                   isReadOnly={isReadOnly}
                 />
               )}
@@ -118,7 +118,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
             <form.AppField name='createdBy'>
               {field => (
                 <field.FormTextField
-                  label='Created By'
+                  label='Created by'
                   isReadOnly={isReadOnly}
                 />
               )}
