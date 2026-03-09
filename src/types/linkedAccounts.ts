@@ -72,8 +72,8 @@ export type BalanceTimestamp = {
 }
 
 export type OpeningBalance = {
-  external_account_external_id: string | null
-  external_account_source: AccountSource
+  ledger_account_id: string
+  ledger_account_name: string
   balance: number
   effective_at: string
   created_at: string
