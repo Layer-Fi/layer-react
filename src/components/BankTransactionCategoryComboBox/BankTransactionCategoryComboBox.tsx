@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { GroupBase } from 'react-select'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
@@ -23,12 +24,13 @@ type BankTransactionCategoryComboBoxOptionProps = {
 }
 
 const BankTransactionCategoryComboBoxOption = ({ option, fallback }: BankTransactionCategoryComboBoxOptionProps) => {
+  const { t } = useTranslation()
   const { renderInAppLink } = useInAppLinkContext()
 
   if (option.value === 'LOADING_SUGGESTIONS') {
     return (
       <HStack justify='space-between' align='center' className='Layer__BankTransactionCategoryComboBox__LoadingSuggestionsOption'>
-        <Span>Generating suggestions...</Span>
+        <Span>{t('generatingSuggestions', 'Generating suggestions...')}</Span>
         <LoadingSpinner size={16} />
       </HStack>
     )
@@ -100,6 +102,7 @@ export const BankTransactionCategoryComboBox = ({
   isLoading = false,
   inputId,
 }: BankTransactionCategoryComboBoxProps) => {
+  const { t } = useTranslation()
   const { data: categories } = useCategories()
 
   const matchGroup = useMemo(() => {
@@ -135,10 +138,10 @@ export const BankTransactionCategoryComboBox = ({
   const placeholder = numMatchOptions > 1
     ? `${numMatchOptions} possible matches...`
     : loadingSuggestions
-      ? 'Generating suggestions...'
+      ? t('generatingSuggestions', 'Generating suggestions...')
       : includeSuggestedMatches
-        ? 'Categorize or match...'
-        : 'Select category'
+        ? t('categorizeOrMatch', 'Categorize or match...')
+        : t('selectCategory', 'Select category')
 
   const SingleValue = useCallback(() => {
     return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} />

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { useBankTransactionsTableCheckboxState } from '@hooks/features/bankTransactions/useBankTransactionsTableCheckboxState'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -17,6 +19,7 @@ export const BankTransactionsMobileBulkActionsHeader = ({
   bulkActionsEnabled,
   onBulkActionsToggle,
 }: BankTransactionsMobileBulkActionsHeaderProps) => {
+  const { t } = useTranslation()
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
@@ -43,24 +46,24 @@ export const BankTransactionsMobileBulkActionsHeader = ({
               isSelected={isAllSelected}
               isIndeterminate={isPartiallySelected}
               onChange={onHeaderCheckboxChange}
-              aria-label='Select all transactions on this page'
+              aria-label={t('selectAllTransactionsOnThisPage', 'Select all transactions on this page')}
             />
             <Span
               size='md'
             >
-              Select all
+              {t('selectAll', 'Select all')}
             </Span>
           </>
         )}
       </HStack>
       <HStack align='center' gap='xs'>
         <Span size='md' noWrap>
-          Bulk Actions
+          {t('bulkActions', 'Bulk Actions')}
         </Span>
         <Switch
           isSelected={bulkActionsEnabled}
           onChange={onBulkActionsToggle}
-          aria-label='Toggle bulk actions'
+          aria-label={t('toggleBulkActions', 'Toggle bulk actions')}
         />
       </HStack>
 

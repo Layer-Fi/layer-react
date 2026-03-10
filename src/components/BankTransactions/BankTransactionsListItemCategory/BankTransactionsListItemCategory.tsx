@@ -6,6 +6,7 @@ import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransa
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
 
 import './bankTransactionsListItemCategory.scss'
+import { useTranslation } from 'react-i18next'
 
 export interface BankTransactionsListItemCategoryProps {
   bankTransaction: BankTransaction
@@ -16,6 +17,7 @@ export const BankTransactionsListItemCategory = ({
   bankTransaction,
   mobile = false,
 }: BankTransactionsListItemCategoryProps) => {
+  const { t } = useTranslation()
   const className = mobile
     ? 'Layer__bankTransactionsListItemCategory__Mobile'
     : 'Layer__bankTransactionsListItemCategory__List'
@@ -46,7 +48,7 @@ export const BankTransactionsListItemCategory = ({
       : (
         <BankTransactionsBaseSelectedValue
           type='placeholder'
-          label='No category selected'
+          label={t('noCategorySelected', 'No category selected')}
           className={className}
           slotProps={{ Label: { size: 'sm' } }}
           showCategoryBadge={mobile}

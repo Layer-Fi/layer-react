@@ -2,7 +2,9 @@ import { useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import i18next from 'i18next'
 import type { Key } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { BankTransactionsDateFilterMode } from '@utils/bankTransactions'
@@ -49,8 +51,8 @@ export interface BankTransactionsHeaderStringOverrides {
 }
 
 const STATUS_TOGGLE_OPTIONS = [
-  { label: 'To Review', value: DisplayState.review },
-  { label: 'Categorized', value: DisplayState.categorized },
+  { label: i18next.t('toReview', 'To Review'), value: DisplayState.review },
+  { label: i18next.t('categorized', 'Categorized'), value: DisplayState.categorized },
 ]
 
 type TransactionsSearchProps = {
@@ -59,6 +61,7 @@ type TransactionsSearchProps = {
 }
 
 function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
+  const { t } = useTranslation()
   const { filters, setFilters } = useBankTransactionsFiltersContext()
 
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
@@ -76,7 +79,7 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   return (
     <SearchField
       slot={slot}
-      label='Search transactions'
+      label={t('searchTransactions', 'Search transactions')}
       value={localSearch}
       onChange={handleSearch}
       isDisabled={isDisabled}
@@ -124,6 +127,7 @@ export const BankTransactionsHeader = ({
   collapseHeader,
   showCategorizationRules = false,
 }: BankTransactionsHeaderProps) => {
+  const { t } = useTranslation()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const activationDate = useBusinessActivationDate()
   const { display } = useBankTransactionsContext()
@@ -171,7 +175,7 @@ export const BankTransactionsHeader = ({
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
-          label='Select a month'
+          label={t('selectAMonth', 'Select a month')}
           date={monthPickerDate}
           onChange={setDateRange}
           minDate={activationDate ? convertDateToZonedDateTime(activationDate) : null}
@@ -181,6 +185,7 @@ export const BankTransactionsHeader = ({
       )}
     </div>
   ), [
+    t,
     activationDate,
     asWidget,
     isSyncing,
@@ -223,12 +228,12 @@ export const BankTransactionsHeader = ({
         isMobileView={isMobileList}
         slotProps={{
           ConfirmAllModal: {
-            label: isMobileList ? 'Confirm' : 'Confirm all',
+            label: isMobileList ? t('confirm', 'Confirm') : t('confirmAll', 'Confirm all'),
           },
         }}
       />
     )
-  }, [isMobileList])
+  }, [t, isMobileList])
 
   const isStatusToggleVisible = isCategorizationEnabled && showStatusToggle
   const statusToggle = isStatusToggleVisible

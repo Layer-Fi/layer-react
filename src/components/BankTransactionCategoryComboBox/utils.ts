@@ -1,4 +1,5 @@
 import { Schema } from 'effect/index'
+import i18next from 'i18next'
 
 import type { BankTransaction, SuggestedMatch } from '@internal-types/bankTransactions'
 import { CategorizationType, hasSuggestions } from '@internal-types/categories'
@@ -81,7 +82,7 @@ export const getSuggestedCategoriesGroup = (bankTransaction: BankTransaction) =>
   if (isLoadingSuggestions(bankTransaction)) {
     return {
       label: BankTransactionCategoryComboBoxGroupLabel.SUGGESTIONS,
-      options: [new PlaceholderAsOption({ label: 'Generating suggestions for transaction...', value: 'LOADING_SUGGESTIONS' })],
+      options: [new PlaceholderAsOption({ label: i18next.t('generatingSuggestionsForTransaction', 'Generating suggestions for transaction...'), value: 'LOADING_SUGGESTIONS' })],
     }
   }
 

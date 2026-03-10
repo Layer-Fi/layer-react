@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import i18next from 'i18next'
 import type { Key } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
@@ -14,17 +16,17 @@ import { PersonalStableName } from './constants'
 const PURPOSE_TOGGLE_OPTIONS = [
   {
     value: 'business',
-    label: 'Business',
+    label: i18next.t('business', 'Business'),
     style: { minWidth: 84 },
   },
   {
     value: 'personal',
-    label: 'Personal',
+    label: i18next.t('personal', 'Personal'),
     style: { minWidth: 84 },
   },
   {
     value: 'more',
-    label: 'More',
+    label: i18next.t('more', 'More'),
     style: { minWidth: 84 },
   },
 ]
@@ -46,6 +48,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   showReceiptUploads,
   showTooltips,
 }: BankTransactionsMobileListItemExpandedRowProps) => {
+  const { t } = useTranslation()
   const [purpose, setPurpose] = useState<Purpose>(getInitialPurpose(bankTransaction))
 
   const onChangePurpose = (key: Key) =>
@@ -56,7 +59,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
       {showCategorization
         && (
           <Toggle
-            ariaLabel='Purpose'
+            ariaLabel={t('purpose', 'Purpose')}
             options={PURPOSE_TOGGLE_OPTIONS}
             selectedKey={purpose}
             onSelectionChange={onChangePurpose}

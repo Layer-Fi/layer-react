@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { type CalendarEvent, google, outlook, yahoo } from 'calendar-link'
 import { uniqueId } from 'lodash-es'
 import { Calendar, ChevronDown, Download } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { type IcsCalendar, type IcsEvent } from 'ts-ics'
 
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
@@ -43,6 +44,7 @@ export const AddToCalendar = ({
   endDate,
   organizer,
 }: AddToCalendarProps) => {
+  const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   const effectiveEndDate = useMemo(() => endDate ?? new Date(startDate.getTime() + DEFAULT_DURATION_MS), [endDate, startDate])
   const calendarEvent: CalendarEvent = useMemo(() => ({
@@ -106,11 +108,11 @@ export const AddToCalendar = ({
     return (
       <Button variant='outlined'>
         <Calendar size={16} />
-        Add to Calendar
+        {t('addToCalendar', 'Add to Calendar')}
         <ChevronDown size={16} />
       </Button>
     )
-  }, [])
+  }, [t])
 
   return (
     <>
@@ -125,26 +127,26 @@ export const AddToCalendar = ({
         <MenuList>
           <MenuItem key='google' onClick={() => handleCalendarClick('google')}>
             <HStack gap='sm'>
-              <img className='Layer__AddToCalendar__CalendarIcon' src={GoogleIcon} alt='Google Calendar' />
-              <Span size='sm'>Google Calendar</Span>
+              <img className='Layer__AddToCalendar__CalendarIcon' src={GoogleIcon} alt={t('googleCalendar', 'Google Calendar')} />
+              <Span size='sm'>{t('googleCalendar', 'Google Calendar')}</Span>
             </HStack>
           </MenuItem>
           <MenuItem key='outlook' onClick={() => handleCalendarClick('outlook')}>
             <HStack gap='sm'>
-              <img className='Layer__AddToCalendar__CalendarIcon' src={OutlookIcon} alt='Outlook Calendar' />
-              <Span size='sm'>Outlook</Span>
+              <img className='Layer__AddToCalendar__CalendarIcon' src={OutlookIcon} alt={t('outlookCalendar', 'Outlook Calendar')} />
+              <Span size='sm'>{t('outlook', 'Outlook')}</Span>
             </HStack>
           </MenuItem>
           <MenuItem key='yahoo' onClick={() => handleCalendarClick('yahoo')}>
             <HStack gap='sm'>
-              <img className='Layer__AddToCalendar__CalendarIcon' src={YahooIcon} alt='Yahoo Calendar' />
-              <Span size='sm'>Yahoo</Span>
+              <img className='Layer__AddToCalendar__CalendarIcon' src={YahooIcon} alt={t('yahooCalendar', 'Yahoo Calendar')} />
+              <Span size='sm'>{t('yahoo', 'Yahoo')}</Span>
             </HStack>
           </MenuItem>
           <MenuItem key='ics' onClick={() => handleCalendarClick('ics')}>
             <HStack gap='sm'>
               <Download size={16} />
-              <Span size='sm'>Download .ics file</Span>
+              <Span size='sm'>{t('downloadIcsFile', 'Download .ics file')}</Span>
             </HStack>
           </MenuItem>
         </MenuList>

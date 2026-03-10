@@ -25,6 +25,7 @@ import { ErrorText } from '@components/Typography/ErrorText'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 import './bankTransactionsMobileListSplitForm.scss'
+import { useTranslation } from 'react-i18next'
 
 interface BankTransactionsMobileListSplitFormProps {
   bankTransaction: BankTransaction
@@ -41,6 +42,7 @@ export const BankTransactionsMobileListSplitForm = ({
   showReceiptUploads,
   showDescriptions,
 }: BankTransactionsMobileListSplitFormProps) => {
+  const { t } = useTranslation()
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -72,8 +74,8 @@ export const BankTransactionsMobileListSplitForm = ({
     : []
 
   const addSplitButtonText = effectiveSplits.length > 1
-    ? 'Add new split'
-    : 'Split'
+    ? t('addNewSplit', 'Add new split')
+    : t('split', 'Split')
 
   useEffect(() => {
     if (isErrorCategorizing) {
@@ -102,7 +104,7 @@ export const BankTransactionsMobileListSplitForm = ({
         && (
           <VStack gap='sm'>
             <Text weight={TextWeight.bold} size={TextSize.sm}>
-              Split transaction
+              {t('splitTransaction', 'Split transaction')}
             </Text>
             <VStack gap='sm'>
               {localSplits.map((split, index) => (
@@ -170,7 +172,7 @@ export const BankTransactionsMobileListSplitForm = ({
             ref={receiptsRef}
             floatingActions={false}
             hideUploadButtons={true}
-            label='Receipts'
+            label={t('receipts', 'Receipts')}
           />
         )}
       </div>
@@ -178,7 +180,7 @@ export const BankTransactionsMobileListSplitForm = ({
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-            text='Upload receipt'
+            text={t('uploadReceipt', 'Upload receipt')}
             iconOnly={true}
             icon={<PaperclipIcon />}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -191,15 +193,15 @@ export const BankTransactionsMobileListSplitForm = ({
             isDisabled={isCategorizing || !isValid}
           >
             {isCategorizing
-              ? (isCategorized(bankTransaction) ? 'Updating...' : 'Confirming...')
-              : (isCategorized(bankTransaction) ? 'Update' : 'Confirm')}
+              ? (isCategorized(bankTransaction) ? t('updating', 'Updating...') : t('confirming', 'Confirming...'))
+              : (isCategorized(bankTransaction) ? t('update', 'Update') : t('confirm', 'Confirm'))}
           </Button>
         )}
       </HStack>
       {(isErrorCategorizing && showRetry)
         && (
           <ErrorText>
-            Approval failed. Check connection and retry in few seconds.
+            {t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
           </ErrorText>
         )}
     </VStack>

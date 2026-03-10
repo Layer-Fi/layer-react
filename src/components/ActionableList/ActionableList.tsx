@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import CheckIcon from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'
@@ -30,6 +31,7 @@ export const ActionableList = <T,>({
   showDescriptions = false,
   className,
 }: ActionableListProps<T>) => {
+  const { t } = useTranslation()
   return (
     <ul className={classNames('Layer__actionable-list', className)}>
       {options.map((x, idx) => (
@@ -49,7 +51,7 @@ export const ActionableList = <T,>({
               /* TODO: Replace 'See all categories' with something more generic */
               showDescriptions
               && x.description
-              && x.label !== 'See all categories' && (
+              && x.label !== t('seeAllCategories', 'See all categories') && (
                 <Text
                   className='Layer__actionable-list__content-description'
                   size={TextSize.sm}

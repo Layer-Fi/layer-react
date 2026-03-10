@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { BalanceSheet } from '@internal-types/balanceSheet'
 import type { LineItem } from '@internal-types/lineItem'
@@ -31,6 +32,7 @@ export const BalanceSheetTable = ({
   config: BalanceSheetRowProps[]
   stringOverrides?: BalanceSheetTableStringOverrides
 }) => {
+  const { t } = useTranslation()
   const { isOpen, setIsOpen, expandedAllRows } = useTableExpandRow()
   const allRowKeys: string[] = []
 
@@ -98,7 +100,7 @@ export const BalanceSheetTable = ({
             depth={depth + 1}
             variant='summation'
           >
-            <TableCell primary>{`Total of ${lineItem.display_name}`}</TableCell>
+            <TableCell primary>{t('totalOfDisplayName', 'Total of {{displayName}}', { displayName: lineItem.display_name })}</TableCell>
             <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
               {lineItem.value}
             </TableCell>

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import {
@@ -54,6 +55,7 @@ export const BankTransactionsListItem = ({
   showReceiptUploads,
   showTooltips,
 }: BankTransactionsListItemProps) => {
+  const { t } = useTranslation()
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
   const [openExpandedRow, setOpenExpandedRow] = useState(false)
   const [isExpandedRowValid, setIsExpandedRowValid] = useState(true)
@@ -209,7 +211,7 @@ export const BankTransactionsListItem = ({
               processing={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
               withRetry
-              error={isError ? 'Approval failed. Check connection and retry in few seconds.' : undefined}
+              error={isError ? t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.') : undefined}
             >
               {isError
                 ? 'Retry'
@@ -229,7 +231,7 @@ export const BankTransactionsListItem = ({
         && (
           <HStack pis='md' pbe='md'>
             <ErrorText>
-              Approval failed. Check connection and retry in few seconds.
+              {t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
             </ErrorText>
           </HStack>
         )}
