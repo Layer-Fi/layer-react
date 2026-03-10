@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { useListVehicles } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
@@ -25,11 +26,12 @@ interface VehicleManagementDetailHeaderProps {
 const MobileVehicleManagementDetailHeader = ({
   onAddVehicle,
 }: VehicleManagementDetailHeaderProps) => {
+  const { t } = useTranslation()
   return (
     <HStack justify='space-between' align='center' fluid pie='md' pb='md'>
-      <Heading size='sm'>Manage vehicles</Heading>
+      <Heading size='sm'>{t('manageVehicles', 'Manage vehicles')}</Heading>
       <Button variant='solid' onPress={onAddVehicle}>
-        Add
+        {t('add', 'Add')}
         <Plus size={14} />
       </Button>
     </HStack>
@@ -42,17 +44,18 @@ const DesktopVehicleManagementDetailHeader = ({
   onShowArchivedChange,
   showArchivedToggle,
 }: VehicleManagementDetailHeaderProps) => {
+  const { t } = useTranslation()
   return (
     <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
-      <Heading size='sm'>Manage vehicles</Heading>
+      <Heading size='sm'>{t('manageVehicles', 'Manage vehicles')}</Heading>
       <HStack gap='md' align='center'>
         {showArchivedToggle && (
           <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
-            <Span size='sm' noWrap>Show archived</Span>
+            <Span size='sm' noWrap>{t('showArchived', 'Show archived')}</Span>
           </Switch>
         )}
         <Button variant='solid' onPress={onAddVehicle}>
-          Add Vehicle
+          {t('addVehicle', 'Add Vehicle')}
           <Plus size={14} />
         </Button>
       </HStack>
@@ -61,6 +64,7 @@ const DesktopVehicleManagementDetailHeader = ({
 }
 
 export const VehicleManagementDetail = () => {
+  const { t } = useTranslation()
   const { toTripsTable } = useTripsNavigation()
   const [isVehicleDrawerOpen, setIsVehicleDrawerOpen] = useState(false)
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | undefined>(undefined)
@@ -139,7 +143,7 @@ export const VehicleManagementDetail = () => {
             pbs='md'
           >
             <Switch isSelected={showArchived} onChange={setShowArchived}>
-              <Span size='sm' noWrap>Show archived</Span>
+              <Span size='sm' noWrap>{t('showArchived', 'Show archived')}</Span>
             </Switch>
           </HStack>
         )}

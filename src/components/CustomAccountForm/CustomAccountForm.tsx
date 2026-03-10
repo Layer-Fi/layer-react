@@ -1,4 +1,6 @@
 import { type FormEvent, useCallback, useEffect } from 'react'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { type CustomAccount, CustomAccountSubtype } from '@internal-types/customAccounts'
 import { notEmpty } from '@utils/form'
@@ -14,9 +16,9 @@ import { ErrorText } from '@components/Typography/ErrorText'
 import './customAccountForm.scss'
 
 const accountTypeOptions = [
-  { value: CustomAccountSubtype.CHECKING, label: 'Checking' },
-  { value: CustomAccountSubtype.SAVINGS, label: 'Savings' },
-  { value: CustomAccountSubtype.CREDIT_CARD, label: 'Credit Card' },
+  { value: CustomAccountSubtype.CHECKING, label: i18next.t('checking', 'Checking') },
+  { value: CustomAccountSubtype.SAVINGS, label: i18next.t('savings', 'Savings') },
+  { value: CustomAccountSubtype.CREDIT_CARD, label: i18next.t('creditCard', 'Credit Card') },
 ]
 
 export type CustomAccountsFormProps = {
@@ -26,6 +28,7 @@ export type CustomAccountsFormProps = {
 }
 
 export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: CustomAccountsFormProps) => {
+  const { t } = useTranslation()
   const { form, submitError, isFormValid } = useCustomAccountForm({ onSuccess })
 
   const { isSubmitting } = form.state
@@ -48,15 +51,15 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         <form.Field
           name='account_name'
           validators={{
-            onSubmit: ({ value }) => notEmpty(value) ? undefined : 'Account name is required',
+            onSubmit: ({ value }) => notEmpty(value) ? undefined : t('accountNameIsRequired', 'Account name is required'),
           }}
         >
           {field => (
-            <InputGroup name='account_name' label='Account name' className='Layer__custom-account-form__field'>
+            <InputGroup name='account_name' label={t('accountName', 'Account name')} className='Layer__custom-account-form__field'>
               <Input
                 className='Layer__custom-account-form__input'
                 name='account_name'
-                placeholder='Enter account name...'
+                placeholder={t('enterAccountName', 'Enter account name...')}
                 value={field.state.value}
                 onChange={e =>
                   field.handleChange((e.target as HTMLInputElement).value)}
@@ -70,15 +73,15 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         <form.Field
           name='institution_name'
           validators={{
-            onSubmit: ({ value }) => notEmpty(value) ? undefined : 'Institution name is required',
+            onSubmit: ({ value }) => notEmpty(value) ? undefined : t('institutionNameIsRequired', 'Institution name is required'),
           }}
         >
           {field => (
-            <InputGroup name='institution_name' label='Institution name' className='Layer__custom-account-form__field'>
+            <InputGroup name='institution_name' label={t('institutionName', 'Institution name')} className='Layer__custom-account-form__field'>
               <Input
                 className='Layer__custom-account-form__input'
                 name='institution_name'
-                placeholder='Enter institution name...'
+                placeholder={t('enterInstitutionName', 'Enter institution name...')}
                 value={field.state.value}
                 onChange={e =>
                   field.handleChange((e.target as HTMLInputElement).value)}
@@ -92,15 +95,15 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         <form.Field
           name='account_type'
           validators={{
-            onSubmit: ({ value }) => notEmpty(value) ? undefined : 'Account type is required',
+            onSubmit: ({ value }) => notEmpty(value) ? undefined : t('accountTypeIsRequired', 'Account type is required'),
           }}
         >
           {field => (
-            <InputGroup name='account_type' label='Account type' className='Layer__custom-account-form__field'>
+            <InputGroup name='account_type' label={t('accountType', 'Account type')} className='Layer__custom-account-form__field'>
               <Select
                 className='Layer__custom-account-form__input'
                 name='account_type'
-                placeholder='Select account type...'
+                placeholder={t('selectAccountType', 'Select account type...')}
                 options={accountTypeOptions}
                 value={accountTypeOptions.find(opt => opt.value === field.state.value) || null}
                 onChange={option => field.handleChange(option?.value)}
@@ -114,7 +117,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         <HStack gap='xs' pbs='xs'>
           {!isFormValid && (
             <ErrorText pb='xs'>
-              Please check all fields.
+              {t('pleaseCheckAllFields', 'Please check all fields.')}
             </ErrorText>
           )}
           {submitError && (
@@ -125,7 +128,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           <Spacer />
           {onCancel && (
             <Button type='button' variant={ButtonVariant.secondary} onClick={onCancel}>
-              Cancel
+              {t('cancel', 'Cancel')}
             </Button>
           )}
           <SubmitButton
@@ -135,7 +138,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
             withRetry
             error={submitError}
           >
-            {submitError ? 'Retry' : 'Save Account'}
+            {submitError ? t('retry', 'Retry') : t('saveAccount', 'Save Account')}
           </SubmitButton>
         </HStack>
       </VStack>

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -31,6 +33,7 @@ interface DataTableHeaderProps {
 }
 
 export const DataTableHeader = ({ name, count, slotProps = {}, slots = {} }: DataTableHeaderProps) => {
+  const { t } = useTranslation()
   const { showCount, totalCount } = count ?? {}
   const { Filters, HeaderActions, HeaderFilters } = slots
 
@@ -57,7 +60,7 @@ export const DataTableHeader = ({ name, count, slotProps = {}, slots = {} }: Dat
           <Filters />
           {slotProps.ClearFiltersButton && (
             <Button variant='outlined' {...slotProps.ClearFiltersButton}>
-              Clear All Filters
+              {t('clearAllFilters', 'Clear All Filters')}
             </Button>
           )}
         </HStack>

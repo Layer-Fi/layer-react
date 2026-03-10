@@ -1,5 +1,7 @@
 import { useCallback, useMemo } from 'react'
+import i18next from 'i18next'
 import { ArrowRight, HandCoins } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { InvoiceStatus } from '@schemas/invoices/invoice'
@@ -32,11 +34,11 @@ const getHeaderMode = (viewState: InvoiceDetailRouteState): HeaderMode => {
 const getHeadingContent = (headerMode: HeaderMode, invoiceNumber: string | null) => {
   switch (headerMode) {
     case HeaderMode.Preview:
-      return invoiceNumber ? `Previewing Invoice #${invoiceNumber}` : 'Previewing Invoice'
+      return invoiceNumber ? i18next.t('previewingInvoiceInvoicenumber', 'Previewing Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('previewingInvoice', 'Previewing Invoice')
     case HeaderMode.View:
-      return invoiceNumber ? `Invoice #${invoiceNumber}` : 'View Invoice'
+      return invoiceNumber ? i18next.t('invoiceInvoicenumber', 'Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('viewInvoice', 'View Invoice')
     case HeaderMode.Edit:
-      return invoiceNumber ? `Editing Invoice #${invoiceNumber}` : 'Editing Invoice'
+      return invoiceNumber ? i18next.t('editingInvoiceInvoicenumber', 'Editing Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('editingInvoice', 'Editing Invoice')
   }
 }
 
@@ -51,6 +53,7 @@ export const InvoiceDetailHeader = ({
   formState,
   openInvoicePaymentDrawer,
 }: InvoiceDetailHeaderProps) => {
+  const { t } = useTranslation()
   const viewState = useInvoiceDetail()
   const { toEditInvoice } = useInvoiceNavigation()
 
@@ -60,15 +63,15 @@ export const InvoiceDetailHeader = ({
 
   const previewButton = useMemo(() => (
     <Button isDisabled={formState.isSubmitting} onPress={onPressNext}>
-      Next
+      {t('next', 'Next')}
       <ArrowRight size={14} />
     </Button>
-  ), [formState.isSubmitting, onPressNext])
+  ), [t, formState.isSubmitting, onPressNext])
 
   if (viewState.mode === UpsertInvoiceMode.Create) {
     return (
       <HStack justify='space-between' align='center' fluid pie='md'>
-        <Heading>Create Invoice</Heading>
+        <Heading>{t('createInvoice', 'Create Invoice')}</Heading>
         {previewButton}
       </HStack>
     )
@@ -88,7 +91,7 @@ export const InvoiceDetailHeader = ({
         <HStack gap='xs'>
           {canMarkAsPaid && (
             <Button onPress={openInvoicePaymentDrawer}>
-              Mark as paid
+              {t('markAsPaid', 'Mark as paid')}
               <HandCoins size={14} />
             </Button>
           )}

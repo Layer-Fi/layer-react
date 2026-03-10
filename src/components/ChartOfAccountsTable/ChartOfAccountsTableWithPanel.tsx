@@ -1,4 +1,5 @@
 import { type RefObject, useContext, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type View } from '@internal-types/general'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
@@ -55,6 +56,7 @@ export const ChartOfAccountsTableWithPanel = ({
   stringOverrides?: ChartOfAccountsTableStringOverrides
   templateAccountsEditable?: boolean
 }) => {
+  const { t } = useTranslation()
   const { data, isLoading, addAccount, isError, isValidating, refetch, form } =
     useContext(ChartOfAccountsContext)
 
@@ -79,7 +81,7 @@ export const ChartOfAccountsTableWithPanel = ({
               className={`Layer__${COMPONENT_NAME}__title`}
               size={asWidget ? HeadingSize.view : HeadingSize.primary}
             >
-              {stringOverrides?.headerText || 'Chart of Accounts'}
+              {stringOverrides?.headerText || t('chartOfAccounts', 'Chart of Accounts')}
             </Heading>
           </HeaderCol>
         </HeaderRow>
@@ -114,7 +116,7 @@ export const ChartOfAccountsTableWithPanel = ({
             </Heading>
           </HeaderCol>
           <HeaderCol className='Layer__chart-of-accounts__actions'>
-            <SearchField label='Search accounts' value={inputValue} onChange={handleInputChange} />
+            <SearchField label={t('searchAccounts', 'Search accounts')} value={inputValue} onChange={handleInputChange} />
             <AccountBalancesDownloadButton
               iconOnly={['mobile', 'tablet'].includes(view)}
             />
@@ -126,7 +128,7 @@ export const ChartOfAccountsTableWithPanel = ({
                   ['mobile', 'tablet'].includes(view) && <PlusIcon size={14} />
                 }
               >
-                {stringOverrides?.addAccountButtonText || 'Add Account'}
+                {stringOverrides?.addAccountButtonText || t('addAccount', 'Add Account')}
               </Button>
             )}
           </HeaderCol>
@@ -149,8 +151,8 @@ export const ChartOfAccountsTableWithPanel = ({
           <div className='Layer__table-state-container'>
             <DataState
               status={DataStateStatus.failed}
-              title='Something went wrong'
-              description='We couldn’t load your data.'
+              title={t('somethingWentWrong', 'Something went wrong')}
+              description={t('weCouldntLoadYourData2', 'We couldn’t load your data.')}
               onRefresh={() => void refetch()}
               isLoading={isValidating || isLoading}
             />

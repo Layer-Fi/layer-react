@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import i18next from 'i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
@@ -21,9 +22,9 @@ type UploadTransactionsHeaderProps = {
 function getTitle(currentStep: UploadTransactionsStep, isValid: boolean | undefined) {
   switch (currentStep) {
     case UploadTransactionsStep.UploadCsv:
-      return 'Upload transactions'
+      return i18next.t('uploadTransactions', 'Upload transactions')
     case UploadTransactionsStep.ValidateCsv:
-      return isValid ? 'Review transactions' : 'Some transactions couldn’t be parsed'
+      return isValid ? i18next.t('reviewTransactions', 'Review transactions') : i18next.t('someTransactionsCouldntBeParsed', 'Some transactions couldn’t be parsed')
     case UploadTransactionsStep.Confirmation:
       return ''
   }
@@ -32,12 +33,12 @@ function getTitle(currentStep: UploadTransactionsStep, isValid: boolean | undefi
 function getDescription(currentStep: UploadTransactionsStep, isValid: boolean | undefined) {
   switch (currentStep) {
     case UploadTransactionsStep.UploadCsv:
-      return 'Import a file of transactions from your bank account or credit card'
+      return i18next.t('importAFileOfTransactionsFromYourBankAccountOrCreditCard', 'Import a file of transactions from your bank account or credit card')
     case UploadTransactionsStep.ValidateCsv:
       if (isValid) {
-        return 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.'
+        return i18next.t('allTransactionsWereParsedSuccessfullyClickUploadTransactionsToFinalizeTheImport', 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.')
       }
-      return 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.'
+      return i18next.t('weFoundFormattingErrorsInSomeTransactionsPleaseCorrectTheHighlightedRowsInYourFileAndReuploadIt', 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.')
     case UploadTransactionsStep.Confirmation:
       return ''
   }

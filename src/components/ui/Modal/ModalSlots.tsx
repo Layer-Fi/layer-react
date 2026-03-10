@@ -1,6 +1,8 @@
 import { type ComponentProps, forwardRef, type PropsWithChildren, type ReactElement } from 'react'
 import classNames from 'classnames'
+import i18next from 'i18next'
 import { X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
@@ -31,7 +33,7 @@ export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalClo
       variant='ghost'
       slot='close'
       onPress={onClose}
-      aria-label='Close Modal'
+      aria-label={i18next.t('closeModal', 'Close Modal')}
     >
       <X size={24} />
     </Button>
@@ -50,6 +52,7 @@ export const ModalTitleWithClose = forwardRef<
   HTMLElementTagNameMap['div'],
   ModalTitleWithCloseProps
 >(function ModalTitleWithClose({ heading, description, onClose, hideCloseButton = false, hideBottomPadding = false }, ref) {
+  const { t } = useTranslation()
   return (
     <VStack>
       <div
@@ -66,7 +69,7 @@ export const ModalTitleWithClose = forwardRef<
             variant='outlined'
             slot='close'
             onPress={onClose}
-            aria-label='Close Modal'
+            aria-label={t('closeModal', 'Close Modal')}
           >
             <X size={16} />
           </Button>

@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
+import { useTranslation } from 'react-i18next'
 
 import { isAmountCellValue, isEmptyCellValue, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 import { asMutable } from '@utils/asMutable'
@@ -80,6 +81,7 @@ type UnifiedReportTableProps = {
 }
 
 export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProps) => {
+  const { t } = useTranslation()
   const { report, groupBy, ...dateParams } = useUnifiedReportState({ dateSelectionMode })
   const { data, isLoading, isError, refetch } = useUnifiedReport({ report, groupBy, ...dateParams })
   const { setExpanded } = useContext(ExpandableDataTableContext)
@@ -98,26 +100,26 @@ export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProp
     return (
       <DataState
         status={DataStateStatus.allDone}
-        title='No rows found'
-        description='This report has no rows.'
+        title={t('noRowsFound', 'No rows found')}
+        description={t('thisReportHasNoRows', 'This report has no rows.')}
         spacing
       />
     )
-  }, [])
+  }, [t])
 
   const UnifiedReportErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
-      title='We couldn’t load your report'
-      description='An error occurred while loading your report. Please check your connection and try again.'
+      title={t('weCouldntLoadYourReport', 'We couldn’t load your report')}
+      description={t('anErrorOccurredWhileLoadingYourReportPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your report. Please check your connection and try again.')}
       onRefresh={() => { void refetch() }}
       spacing
     />
-  ), [refetch])
+  ), [t, refetch])
 
   return (
     <ExpandableDataTable
-      ariaLabel='Report'
+      ariaLabel={t('report', 'Report')}
       data={mutableRows}
       isLoading={data === undefined || isLoading}
       isError={isError}

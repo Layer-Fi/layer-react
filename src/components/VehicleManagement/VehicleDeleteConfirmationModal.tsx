@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { getVehicleDisplayName } from '@utils/vehicles'
@@ -17,6 +18,7 @@ export function VehicleDeleteConfirmationModal({
   vehicle,
   useDrawer,
 }: VehicleDeleteConfirmationModalProps) {
+  const { t } = useTranslation()
   const { trigger: deleteVehicle } = useDeleteVehicle({ vehicleId: vehicle.id })
 
   const onConfirm = useCallback(async () => {
@@ -29,12 +31,12 @@ export function VehicleDeleteConfirmationModal({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title='Delete this vehicle?'
-      description={`${vehicleName} will be permanently deleted. This action cannot be undone.`}
+      title={t('deleteThisVehicle', 'Delete this vehicle?')}
+      description={t('vehiclenameWillBePermanentlyDeletedThisActionCannotBeUndone', '{{vehicleName}} will be permanently deleted. This action cannot be undone.', { vehicleName })}
       onConfirm={onConfirm}
-      confirmLabel='Delete vehicle'
-      cancelLabel='Cancel'
-      errorText='Failed to delete vehicle. Please check your connection and try again.'
+      confirmLabel={t('deleteVehicle', 'Delete vehicle')}
+      cancelLabel={t('cancel', 'Cancel')}
+      errorText={t('failedToDeleteVehicleTryAgain', 'Failed to delete vehicle. Please check your connection and try again.')}
       useDrawer={useDrawer}
     />
   )

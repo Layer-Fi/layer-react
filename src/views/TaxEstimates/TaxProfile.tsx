@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import {
@@ -13,6 +14,7 @@ import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { TaxProfileForm } from '@components/TaxProfileForm/TaxProfileForm'
 
 export const TaxProfile = () => {
+  const { t } = useTranslation()
   const onboardingStatus = useTaxEstimatesOnboardingStatus()
   const navigate = useTaxEstimatesNavigation()
   const { data: taxProfile } = useTaxProfile()
@@ -22,8 +24,8 @@ export const TaxProfile = () => {
   }, [navigate])
 
   const TaxProfileHeader = useCallback(() => {
-    return <Heading size='md'>Tax Profile</Heading>
-  }, [])
+    return <Heading size='md'>{t('taxProfile', 'Tax Profile')}</Heading>
+  }, [t])
 
   return (
     <BaseDetailView

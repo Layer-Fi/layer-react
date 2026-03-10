@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { Edit, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import type { Trip } from '@schemas/trip'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -26,10 +27,11 @@ const TripDrawerHeader = ({ title, close, isMobile }: { title: string, close: ()
 )
 
 export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess }: TripDrawerProps) => {
+  const { t } = useTranslation()
   const { isMobile, isTablet } = useSizeClass()
   const [isEditMode, setIsEditMode] = useState(false)
   const isReadOnly = !isEditMode && !!trip && (isMobile || isTablet)
-  const title = trip ? 'Trip details' : 'Record trip'
+  const title = trip ? t('tripDetails', 'Trip details') : t('recordTrip', 'Record trip')
 
   const handleOpenChange = useCallback((nextIsOpen: boolean) => {
     if (!nextIsOpen) {
@@ -68,11 +70,11 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
                 <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
                   <Button variant='outlined' onPress={() => onDeleteTrip(trip)}>
                     <Trash2 size={16} />
-                    Delete Trip
+                    {t('deleteTrip', 'Delete Trip')}
                   </Button>
                   <Button onPress={() => setIsEditMode(true)}>
                     <Edit size={16} />
-                    Edit Trip
+                    {t('editTrip', 'Edit Trip')}
                   </Button>
                 </HStack>
               )}

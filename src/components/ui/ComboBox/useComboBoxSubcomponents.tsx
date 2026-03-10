@@ -1,5 +1,6 @@
 import { type ComponentProps, useMemo, useRef } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import {
   type ClearIndicatorProps,
   components,
@@ -137,12 +138,13 @@ function buildCustomNoOptionsMessage<T extends ComboBoxOption, IsMulti extends b
     children,
     ...restProps
   }: NoticeProps<T, IsMulti, GroupBase<T>>) {
+    const { t } = useTranslation()
     return (
       <components.NoOptionsMessage
         {...restProps}
         className={COMBO_BOX_CLASS_NAMES.NO_OPTIONS_MESSAGE}
       >
-        {EmptyMessage ?? <Span>No matching options</Span>}
+        {EmptyMessage ?? <Span>{t('noMatchingOptions', 'No matching options')}</Span>}
       </components.NoOptionsMessage>
     )
   }

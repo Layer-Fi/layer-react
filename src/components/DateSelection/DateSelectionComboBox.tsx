@@ -1,4 +1,6 @@
 import { useCallback, useId, useState } from 'react'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { getActivationDate } from '@utils/business'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -13,17 +15,18 @@ type DateSelectionOption = {
   value: DatePreset
 }
 const dateSelectionOptionConfig = {
-  [DatePreset.ThisMonth]: { label: 'This Month', value: DatePreset.ThisMonth },
-  [DatePreset.LastMonth]: { label: 'Last Month', value: DatePreset.LastMonth },
-  [DatePreset.ThisQuarter]: { label: 'This Quarter', value: DatePreset.ThisQuarter },
-  [DatePreset.LastQuarter]: { label: 'Last Quarter', value: DatePreset.LastQuarter },
-  [DatePreset.ThisYear]: { label: 'This Year', value: DatePreset.ThisYear },
-  [DatePreset.LastYear]: { label: 'Last Year', value: DatePreset.LastYear },
-  [DatePreset.Custom]: { label: 'Custom', value: DatePreset.Custom },
+  [DatePreset.ThisMonth]: { label: i18next.t('thisMonth', 'This Month'), value: DatePreset.ThisMonth },
+  [DatePreset.LastMonth]: { label: i18next.t('lastMonth', 'Last Month'), value: DatePreset.LastMonth },
+  [DatePreset.ThisQuarter]: { label: i18next.t('thisQuarter', 'This Quarter'), value: DatePreset.ThisQuarter },
+  [DatePreset.LastQuarter]: { label: i18next.t('lastQuarter', 'Last Quarter'), value: DatePreset.LastQuarter },
+  [DatePreset.ThisYear]: { label: i18next.t('thisYear', 'This Year'), value: DatePreset.ThisYear },
+  [DatePreset.LastYear]: { label: i18next.t('lastYear', 'Last Year'), value: DatePreset.LastYear },
+  [DatePreset.Custom]: { label: i18next.t('custom', 'Custom'), value: DatePreset.Custom },
 }
 const options = Object.values(dateSelectionOptionConfig).filter(opt => opt.value !== DatePreset.Custom)
 
 export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boolean }) => {
+  const { t } = useTranslation()
   const [lastPreset, setLastPreset] = useState<DatePreset | null>(null)
   const { business } = useLayerContext()
 
@@ -47,7 +50,7 @@ export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boole
 
   const inputId = useId()
 
-  const label = 'Report period'
+  const label = t('reportPeriod', 'Report period')
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
   return (

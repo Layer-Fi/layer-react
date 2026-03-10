@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { format as formatTime, parseISO } from 'date-fns'
+import i18next from 'i18next'
 
 import type { DocumentS3Urls } from '@internal-types/bankTransactions'
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -168,7 +169,7 @@ export const useReceipts: UseReceipts = ({
           status: 'failed' as const,
           name: file.name,
           date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
-          error: 'Invalid file type. Please upload an image or PDF.',
+          error: i18next.t('invalidFileTypePleaseUploadAnImageOrPdf', 'Invalid file type. Please upload an image or PDF.'),
         },
       ])
       return
@@ -228,7 +229,7 @@ export const useReceipts: UseReceipts = ({
           if (url.id === id) {
             return {
               ...url,
-              error: 'Failed to upload',
+              error: i18next.t('failedToUpload', 'Failed to upload'),
               status: 'failed' as const,
             }
           }
@@ -276,7 +277,7 @@ export const useReceipts: UseReceipts = ({
             return {
               ...url,
               status: 'failed',
-              error: 'Failed to delete',
+              error: i18next.t('failedToDelete', 'Failed to delete'),
             }
           }
 

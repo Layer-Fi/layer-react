@@ -1,4 +1,6 @@
 import { useCallback, useContext, useState } from 'react'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
@@ -14,12 +16,13 @@ import { Span } from '@ui/Typography/Text'
 
 const MenuTriggerButton = () => (
   <Button variant='outlined'>
-    Manage
+    {i18next.t('manage', 'Manage')}
     <Cog size={16} />
   </Button>
 )
 
 export const IntegrationsConnectMenu = () => {
+  const { t } = useTranslation()
   const { addToast } = useLayerContext()
 
   const { quickbooksConnectionStatus, linkQuickbooks } = useContext(QuickbooksContext)
@@ -32,23 +35,23 @@ export const IntegrationsConnectMenu = () => {
       .then((res) => { window.location.href = res })
       .catch(() => {
         setIsLinkQuickbooksError(true)
-        addToast({ content: 'Failed to connect QuickBooks', type: 'error' })
+        addToast({ content: t('failedToConnectQuickbooks', 'Failed to connect QuickBooks'), type: 'error' })
       })
-  }, [linkQuickbooks, addToast])
+  }, [linkQuickbooks, addToast, t])
 
   return (
     <DropdownMenu
-      ariaLabel='Connect Integration'
+      ariaLabel={t('connectIntegration', 'Connect Integration')}
       slots={{ Trigger: MenuTriggerButton }}
       slotProps={{ Dialog: { width: 280 } }}
     >
-      <Heading size='2xs' weight='bold'>Integrations</Heading>
+      <Heading size='2xs' weight='bold'>{t('integrations', 'Integrations')}</Heading>
       <MenuList>
         {quickbooksIsConnected
           ? (
             <MenuItem key='quickbooks-connected' isDisabled>
               <QuickbooksIcon size={20} />
-              <Span size='sm'>QuickBooks connected</Span>
+              <Span size='sm'>{t('quickbooksConnected', 'QuickBooks connected')}</Span>
               <Spacer />
               <CheckIcon size={16} />
             </MenuItem>
@@ -57,7 +60,7 @@ export const IntegrationsConnectMenu = () => {
             <MenuItem key='connect-quickbooks' onClick={initiateQuickbooksOAuth}>
               <QuickbooksIcon size={20} />
               <Span {...isLinkQuickbooksError && { status: 'error' }} size='sm'>
-                { isLinkQuickbooksError ? 'Retry Connect QuickBooks' : 'Connect QuickBooks' }
+                { isLinkQuickbooksError ? t('retryConnectQuickbooks', 'Retry Connect QuickBooks') : t('connectQuickbooks', 'Connect QuickBooks') }
               </Span>
               <Spacer />
               <LinkIcon size={12} />
