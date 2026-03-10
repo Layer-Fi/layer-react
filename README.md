@@ -31,17 +31,18 @@ yarn install @layerfi/components
 
 Nest the components you want to use under the `LayerProvider` component. You should provide the component with a few props:
 
-- `businessId` The ID of the business whose information you're showing.
-- `businessAccessToken` Temporary authentication token scoped to this specific business. See the [getting started guide](https://docs.layerfi.com/guides/embedded-components#backend-setup) for how to fetch these tokens on your backend.
-- `environment` (Optional, defaults to "production") the Layer environment you're attempting to access [`staging` or `production`]
-- `theme` (Optional) to customize the look of components
-- `onError` (Optional) to get notified about exceptions
+- `businessId` - The ID of the business whose information you're showing.
+- `businessAccessToken` - Temporary authentication token scoped to this specific business. See the [getting started guide](https://docs.layerfi.com/guides/embedded-components#backend-setup) for how to fetch these tokens on your backend.
+- `environment` (Optional, defaults to `"production"`) - Predefined Layer environment: `'production'`, `'sandbox'`, `'staging'`, or `'internalStaging'`. See [Environment Configuration](#environment-configuration) below.
+- `environmentConfigOverride` (Optional) - Custom configuration object to override API/auth URLs. See [Environment Configuration](#environment-configuration) below.
+- `theme` (Optional) - Customize component styling.
+- `onError` (Optional) - Error callback handler.
 
 ```tsx
 import { LayerProvider } from "@layerfi/components";
 ...
 <LayerProvider
-  businesId="..."
+  businessId="..."
   businessAccessToken="..."
   environment={'staging'}
 >
@@ -57,7 +58,7 @@ In development, it's often convenient to avoid fetching business-scoped tokens. 
 import { LayerProvider } from "@layerfi/components";
 ...
 <LayerProvider
-  businesId="..."
+  businessId="..."
   appId="..."
   appSecret="..."
   environment={'staging'}
@@ -65,6 +66,54 @@ import { LayerProvider } from "@layerfi/components";
   {...}
 </LayerProvider>
 ```
+
+#### Environment Configuration
+
+There are two ways to configure which Layer environment your components connect to:
+
+**Approach 1: Use a predefined environment**
+
+```tsx
+<LayerProvider
+  businessId="..."
+  businessAccessToken="..."
+  environment="sandbox"
+>
+  {...}
+</LayerProvider>
+```
+
+Available values: `'production'` (default), `'sandbox'`, `'staging'`, `'internalStaging'`.
+
+**Approach 2: Override specific URLs**
+
+For custom deployments or advanced use cases, you can supply an `environmentConfigOverride` object to point components at arbitrary API and auth endpoints:
+
+```tsx
+<LayerProvider
+  businessId="..."
+  businessAccessToken="..."
+  environmentConfigOverride={{
+    environment: 'staging',
+    apiUrl: 'https://custom-api.example.com',
+    authUrl: 'https://custom-auth.example.com/token',
+    scope: 'https://custom-api.example.com/scope'
+  }}
+>
+  {...}
+</LayerProvider>
+```
+
+`environmentConfigOverride` fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `environment` | `'production' \| 'sandbox' \| 'staging' \| 'internalStaging'` | Base environment name |
+| `apiUrl` | `string` | Custom API base URL |
+| `authUrl` | `string` | Custom OAuth token endpoint |
+| `scope` | `string` | OAuth scope for the token request |
+
+> **Note:** `environment` and `environmentConfigOverride` are mutually exclusive. If `environmentConfigOverride` is provided, it takes precedence.
 
 <br />
 
