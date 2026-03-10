@@ -37,6 +37,7 @@ export default tsEslint.config(
         projectService: {
           allowDefaultProject: [
             'eslint.config.mjs',
+            'i18next.config.ts',
             '*.js',
             '*.cjs',
             '*.mjs',
