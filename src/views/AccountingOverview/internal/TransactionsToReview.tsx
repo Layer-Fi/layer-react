@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { getMonth, getYear } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
@@ -31,6 +32,7 @@ export function TransactionsToReview({
   tagFilter = undefined,
   variants,
 }: TransactionsToReviewProps) {
+  const { t } = useTranslation()
   const { size = 'sm' } = variants ?? {}
 
   const dateRange = useGlobalDateRange({ dateSelectionMode: 'month' })
@@ -71,7 +73,7 @@ export function TransactionsToReview({
           icon={<RefreshCcw size={12} />}
           onClick={() => void mutate()}
         >
-          Refresh
+          {t('refresh', 'Refresh')}
         </Badge>
       )
     }
@@ -96,10 +98,10 @@ export function TransactionsToReview({
         size={BadgeSize.SMALL}
         icon={<CheckIcon size={12} />}
       >
-        All done
+        {t('allDone', 'All done')}
       </Badge>
     )
-  }, [hasLoadedData, isError, mutate, numTransactionsToReview])
+  }, [t, hasLoadedData, isError, mutate, numTransactionsToReview])
 
   let verticalGap: StackProps['gap'] = '3xs'
   switch (size) {
@@ -114,7 +116,7 @@ export function TransactionsToReview({
     <div onClick={onClick} className={CLASS_NAME}>
       <VStack gap={verticalGap} align='start'>
         <ProfitAndLossSummariesHeading variants={variants}>
-          Transactions to review
+          {t('transactionsToReview', 'Transactions to review')}
         </ProfitAndLossSummariesHeading>
         {transactionsToReviewBadge}
       </VStack>

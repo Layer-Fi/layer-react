@@ -1,3 +1,5 @@
+import i18next from 'i18next'
+
 import { type USStateCode } from '@internal-types/location'
 
 export interface Business {
@@ -19,11 +21,11 @@ export interface Business {
 }
 
 export const ENTITY_TYPES = [
-  { value: 'SOLE_PROP', label: 'Sole Proprietorship' },
-  { value: 'C_CORP', label: 'C Corporation' },
-  { value: 'LLC', label: 'Limited Liability Company' },
-  { value: 'S_CORP', label: 'S Corporation' },
-  { value: 'PARTNERSHIP', label: 'Partnership' },
+  { value: 'SOLE_PROP', label: i18next.t('soleProprietorship', 'Sole Proprietorship') },
+  { value: 'C_CORP', label: i18next.t('cCorporation', 'C Corporation') },
+  { value: 'LLC', label: i18next.t('limitedLiabilityCompany', 'Limited Liability Company') },
+  { value: 'S_CORP', label: i18next.t('sCorporation', 'S Corporation') },
+  { value: 'PARTNERSHIP', label: i18next.t('partnership', 'Partnership') },
 ] as const
 
 export type EntityType = (typeof ENTITY_TYPES)[number]['value']

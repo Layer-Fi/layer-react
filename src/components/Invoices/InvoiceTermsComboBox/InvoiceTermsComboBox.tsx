@@ -1,6 +1,8 @@
 import { useCallback, useId } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import { differenceInDays, startOfDay } from 'date-fns'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
@@ -20,12 +22,12 @@ type InvoiceTermsOption = {
   value: InvoiceTermsValues
 }
 const InvoiceTermsOptionConfig = {
-  [InvoiceTermsValues.Net10]: { label: 'Net 10', value: InvoiceTermsValues.Net10 },
-  [InvoiceTermsValues.Net15]: { label: 'Net 15', value: InvoiceTermsValues.Net15 },
-  [InvoiceTermsValues.Net30]: { label: 'Net 30', value: InvoiceTermsValues.Net30 },
-  [InvoiceTermsValues.Net60]: { label: 'Net 60', value: InvoiceTermsValues.Net60 },
-  [InvoiceTermsValues.Net90]: { label: 'Net 90', value: InvoiceTermsValues.Net90 },
-  [InvoiceTermsValues.Custom]: { label: 'Custom', value: InvoiceTermsValues.Custom },
+  [InvoiceTermsValues.Net10]: { label: i18next.t('net10', 'Net 10'), value: InvoiceTermsValues.Net10 },
+  [InvoiceTermsValues.Net15]: { label: i18next.t('net15', 'Net 15'), value: InvoiceTermsValues.Net15 },
+  [InvoiceTermsValues.Net30]: { label: i18next.t('net30', 'Net 30'), value: InvoiceTermsValues.Net30 },
+  [InvoiceTermsValues.Net60]: { label: i18next.t('net60', 'Net 60'), value: InvoiceTermsValues.Net60 },
+  [InvoiceTermsValues.Net90]: { label: i18next.t('net90', 'Net 90'), value: InvoiceTermsValues.Net90 },
+  [InvoiceTermsValues.Custom]: { label: i18next.t('custom', 'Custom'), value: InvoiceTermsValues.Custom },
 }
 const options = Object.values(InvoiceTermsOptionConfig)
 
@@ -78,6 +80,7 @@ type InvoiceTermsComboBoxProps = {
 }
 
 export const InvoiceTermsComboBox = ({ value, onValueChange, isReadOnly }: InvoiceTermsComboBoxProps) => {
+  const { t } = useTranslation()
   const selectedOption = InvoiceTermsOptionConfig[value]
   const onSelectedValueChange = useCallback((option: InvoiceTermsOption | null) => {
     onValueChange(option?.value || null)
@@ -88,7 +91,7 @@ export const InvoiceTermsComboBox = ({ value, onValueChange, isReadOnly }: Invoi
   return (
     <HStack className='Layer__InvoiceForm__TermsComboBox Layer__InvoiceForm__Field__Terms'>
       <Label size='sm' htmlFor={inputId}>
-        Terms
+        {t('terms', 'Terms')}
       </Label>
       <ComboBox
         options={options}

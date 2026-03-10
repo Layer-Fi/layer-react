@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
 import classNames from 'classnames'
+import i18next from 'i18next'
 import { RefreshCcw } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type CustomAccountTransactionRow } from '@internal-types/customAccounts'
@@ -41,7 +43,7 @@ const generateDynamicHeaders = (transactionsPreview: PreviewCsv<CustomAccountTra
     hasReferenceNumber,
     headers: {
       ...(hasExternalId && { external_id: 'External ID' }),
-      ...(hasReferenceNumber && { reference_number: 'Reference No.' }),
+      ...(hasReferenceNumber && { reference_number: i18next.t('referenceNo', 'Reference No.') }),
       ...templateHeaders,
     },
   }
@@ -50,6 +52,7 @@ const generateDynamicHeaders = (transactionsPreview: PreviewCsv<CustomAccountTra
 export function UploadTransactionsValidateCsvStep(
   { parseCsvResponse, selectedAccountId, onSelectFile, onUploadTransactionsSuccess }: UploadTransactionsValidateCsvStepProps,
 ) {
+  const { t } = useTranslation()
   const { previous, next } = useWizard()
   const { trigger: uploadTransactions, isMutating, error: uploadTransactionsError } = useCreateCustomAccountTransactions()
 
@@ -87,10 +90,10 @@ export function UploadTransactionsValidateCsvStep(
           {!isValidCsv
             && (
               <Badge variant={BadgeVariant.ERROR}>
-                {`Invalid transactions: ${invalidTransactionsCount}`}
+                {t('invalidTransactionsInvalidtransactionscount', 'Invalid transactions: {{invalidTransactionsCount}}', { invalidTransactionsCount })}
               </Badge>
             )}
-          <Badge>{`Total transactions: ${totalTransactionsCount}`}</Badge>
+          <Badge>{t('totalTransactionsTotaltransactionscount', 'Total transactions: {{totalTransactionsCount}}', { totalTransactionsCount })}</Badge>
         </HStack>
         <ValidateCsvTable
           className={classNames(
@@ -105,7 +108,7 @@ export function UploadTransactionsValidateCsvStep(
       </VStack>
       <Separator />
       <HStack gap='xs'>
-        <Button onClick={() => { void previous() }} variant={ButtonVariant.secondary}>Back</Button>
+        <Button onClick={() => { void previous() }} variant={ButtonVariant.secondary}>{t('back', 'Back')}</Button>
         <Spacer />
         {isValidCsv
           ? (
@@ -117,7 +120,7 @@ export function UploadTransactionsValidateCsvStep(
               withRetry
               iconAsPrimary={false}
             >
-              {uploadTransactionsError ? 'Retry' : 'Upload transactions'}
+              {uploadTransactionsError ? t('retry', 'Retry') : t('uploadTransactions', 'Upload transactions')}
             </SubmitButton>
           )
           : (
@@ -126,7 +129,7 @@ export function UploadTransactionsValidateCsvStep(
               rightIcon={<RefreshCcw size={12} />}
               variant={ButtonVariant.primary}
             >
-              Reupload
+              {t('reupload', 'Reupload')}
             </Button>
           )}
       </HStack>

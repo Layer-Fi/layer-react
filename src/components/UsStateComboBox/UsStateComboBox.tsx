@@ -1,5 +1,6 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { US_STATES, type USState, type USStateCode } from '@internal-types/location'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
@@ -23,6 +24,7 @@ export const UsStateComboBox = ({
   className,
   inline,
 }: UsStateComboBoxProps) => {
+  const { t } = useTranslation()
   const combinedClassName = classNames(
     'Layer__UsStateComboBox',
     inline && 'Layer__UsStateComboBox--inline',
@@ -44,7 +46,7 @@ export const UsStateComboBox = ({
   return (
     <HStack className={combinedClassName}>
       <Label size='sm' htmlFor={inputId}>
-        US state
+        {t('usState', 'US state')}
       </Label>
       <ComboBox<USState>
         options={US_STATES}

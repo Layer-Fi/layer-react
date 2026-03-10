@@ -108,7 +108,7 @@ const DownloadButton = ({
         onClick={handleDownloadTransactions}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text={downloadButtonTextOverride ?? 'Download'}
+        text={downloadButtonTextOverride}
         disabled={disabled}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
@@ -163,7 +163,7 @@ export const BankTransactionsHeader = ({
           className='Layer__bank-transactions__title'
           size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
         >
-          {stringOverrides?.header || 'Transactions'}
+          {stringOverrides?.header || t('transactions', 'Transactions')}
         </Heading>
         {isSyncing && (
           <SyncingComponent
@@ -239,7 +239,7 @@ export const BankTransactionsHeader = ({
   const statusToggle = isStatusToggleVisible
     ? (
       <Toggle
-        ariaLabel='Categorization status'
+        ariaLabel={t('categorizationStatus', 'Categorization status')}
         options={STATUS_TOGGLE_OPTIONS}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}

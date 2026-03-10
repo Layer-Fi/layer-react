@@ -1,3 +1,5 @@
+import i18next from 'i18next'
+
 import DownloadCloud from '@icons/DownloadCloud'
 import { Button, type ButtonProps, ButtonVariant } from '@components/Button/Button'
 import { RetryButton } from '@components/Button/RetryButton'
@@ -23,7 +25,7 @@ export const DownloadButton = ({
   tooltip,
   text = 'Download',
   retryText = 'Retry',
-  errorText = 'Download failed. Check connection and retry in few seconds.',
+  errorText = i18next.t('downloadFailedCheckConnectionAndRetryInFewSeconds', 'Download failed. Check connection and retry in few seconds.'),
   variant = ButtonVariant.secondary,
   disabled = false,
 }: DownloadButtonProps) => {

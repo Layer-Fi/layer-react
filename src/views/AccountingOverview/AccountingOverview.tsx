@@ -1,5 +1,7 @@
 import { type ReactNode, useMemo, useState } from 'react'
 import classNames from 'classnames'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
@@ -54,7 +56,7 @@ export interface AccountingOverviewProps {
 type PnlToggleOption = 'revenue' | 'expenses'
 
 export const AccountingOverview = ({
-  title = 'Accounting overview',
+  title = i18next.t('accountingOverview', 'Accounting overview'),
   showTitle = true,
   enableOnboarding = false,
   onboardingStepOverride = undefined,
@@ -65,6 +67,7 @@ export const AccountingOverview = ({
   tagFilter = undefined,
   slotProps,
 }: AccountingOverviewProps) => {
+  const { t } = useTranslation()
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const { value: sizeClass } = useSizeClass()
 
@@ -75,14 +78,14 @@ export const AccountingOverview = ({
     [
       {
         value: 'revenue',
-        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
+        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || t('revenue', 'Revenue'),
       },
       {
         value: 'expenses',
-        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
+        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || t('expenses', 'Expenses'),
       },
     ]
-  ), [stringOverrides])
+  ), [t, stringOverrides])
 
   return (
     <ProfitAndLoss
@@ -123,7 +126,7 @@ export const AccountingOverview = ({
           asWidget
         >
           <ProfitAndLoss.Header
-            text={stringOverrides?.header || 'Profit & Loss'}
+            text={stringOverrides?.header || t('profitLoss', 'Profit & Loss')}
           />
           <ProfitAndLoss.Chart
             tagFilter={
@@ -140,7 +143,7 @@ export const AccountingOverview = ({
         )}
         <div className='Layer__accounting-overview-profit-and-loss-charts'>
           <Toggle
-            ariaLabel='Chart type'
+            ariaLabel={t('chartType', 'Chart type')}
             options={toggleOptions}
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}

@@ -1,3 +1,5 @@
+import i18next from 'i18next'
+
 import { StripeAccountStatus } from '@schemas/stripeAccountStatus'
 import { useStripeAccountStatus } from '@hooks/api/businesses/[business-id]/stripe/status/useStripeAccountStatus'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -15,18 +17,18 @@ const BANNER_PROP_CONFIG: Partial<Record<StripeAccountStatus, {
 }>> = {
   [StripeAccountStatus.Pending]: {
     variant: 'default',
-    title: 'Stripe account under review',
-    description: 'Once complete, you can start accepting card and bank payments.',
+    title: i18next.t('stripeAccountUnderReview', 'Stripe account under review'),
+    description: i18next.t('onceCompleteYouCanStartAcceptingCardAndBankPayments', 'Once complete, you can start accepting card and bank payments.'),
   },
   [StripeAccountStatus.NotCreated]: {
     variant: 'info',
-    title: 'Stripe payments not enabled',
-    description: 'Set up your Stripe account to start accepting card and bank payments for your invoices.',
+    title: i18next.t('stripePaymentsNotEnabled', 'Stripe payments not enabled'),
+    description: i18next.t('setUpYourStripeAccountToStartAcceptingCardAndBankPaymentsForYourInvoices', 'Set up your Stripe account to start accepting card and bank payments for your invoices.'),
   },
   [StripeAccountStatus.Incomplete]: {
     variant: 'warning',
-    title: 'Stripe setup incomplete',
-    description: 'Finish setting up your Stripe account to start accepting card and bank payments for your invoices.',
+    title: i18next.t('stripeSetupIncomplete', 'Stripe setup incomplete'),
+    description: i18next.t('finishSettingUpYourStripeAccountToStartAcceptingCardAndBankPaymentsForYourInvoices', 'Finish setting up your Stripe account to start accepting card and bank payments for your invoices.'),
   },
 }
 

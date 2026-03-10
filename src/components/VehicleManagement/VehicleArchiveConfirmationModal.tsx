@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { getVehicleDisplayName } from '@utils/vehicles'
@@ -17,6 +18,7 @@ export function VehicleArchiveConfirmationModal({
   vehicle,
   useDrawer,
 }: VehicleArchiveConfirmationModalProps) {
+  const { t } = useTranslation()
   const { trigger: archiveVehicle } = useArchiveVehicle({ vehicleId: vehicle.id })
 
   const onConfirm = useCallback(async () => {
@@ -29,12 +31,12 @@ export function VehicleArchiveConfirmationModal({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title='Archive this vehicle?'
-      description={`${vehicleName} will be hidden from your active vehicles list. You can reactivate it at any time.`}
+      title={t('archiveThisVehicle', 'Archive this vehicle?')}
+      description={t('vehiclenameWillBeHiddenFromYourActiveVehiclesListYouCanReactivateItAtAnyTime', '{{vehicleName}} will be hidden from your active vehicles list. You can reactivate it at any time.', { vehicleName })}
       onConfirm={onConfirm}
-      confirmLabel='Archive vehicle'
-      cancelLabel='Cancel'
-      errorText='Failed to archive vehicle. Please check your connection and try again.'
+      confirmLabel={t('archiveVehicle', 'Archive vehicle')}
+      cancelLabel={t('cancel', 'Cancel')}
+      errorText={t('failedToArchiveVehicleTryAgain', 'Failed to archive vehicle. Please check your connection and try again.')}
       useDrawer={useDrawer}
     />
   )

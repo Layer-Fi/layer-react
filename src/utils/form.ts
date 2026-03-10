@@ -8,14 +8,6 @@ export const notEmpty = (value?: string | null) => {
   return value.trim().length > 0
 }
 
-export const validateEmailFormat = (email?: string, required = false) => {
-  if (!email) {
-    return !required
-  }
-
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-}
-
 export function flattenValidationErrors(errors: ValidationErrorMap): string[] {
   return Object.values(errors)
     .filter((value): value is { [key: string]: string }[] =>
