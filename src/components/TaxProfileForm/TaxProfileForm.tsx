@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { AlertTriangle, CheckCircle, Save } from 'lucide-react'
 import type React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import { flattenValidationErrors } from '@utils/form'
@@ -24,6 +25,7 @@ type TaxProfileFormProps = {
 }
 
 export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfileFormProps) => {
+  const { t } = useTranslation()
   const { form, submitError, submitSuccess } = useTaxProfileForm({ taxProfile, onSuccess })
   const { isDesktop } = useSizeClass()
 
@@ -77,7 +79,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
                 onPress={() => { void form.handleSubmit() }}
               >
                 <Save size={14} />
-                Save Profile
+                {t('saveProfile', 'Save Profile')}
               </Button>
             )}
           </form.Subscribe>

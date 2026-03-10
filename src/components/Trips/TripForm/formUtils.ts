@@ -1,5 +1,6 @@
 import { getLocalTimeZone, today } from '@internationalized/date'
 import { BigDecimal as BD } from 'effect'
+import i18next from 'i18next'
 
 import { type Trip, type TripForm, TripPurpose } from '@schemas/trip'
 import { BIG_DECIMAL_ZERO } from '@utils/bigDecimalUtils'
@@ -34,19 +35,19 @@ export const validateTripForm = ({ trip }: { trip: TripForm }) => {
   const errors = []
 
   if (tripDate === null) {
-    errors.push({ tripDate: 'Trip date is a required field.' })
+    errors.push({ tripDate: i18next.t('tripDateIsARequiredField', 'Trip date is a required field.') })
   }
 
   if (tripDate && tripDate.compare(today(getLocalTimeZone())) > 0) {
-    errors.push({ tripDate: 'Trip date cannot be in the future.' })
+    errors.push({ tripDate: i18next.t('tripDateCannotBeInTheFuture', 'Trip date cannot be in the future.') })
   }
 
   if (!BD.isPositive(distance)) {
-    errors.push({ distance: 'Distance must be greater than zero.' })
+    errors.push({ distance: i18next.t('distanceMustBeGreaterThanZero', 'Distance must be greater than zero.') })
   }
 
   if (!purpose) {
-    errors.push({ purpose: 'Purpose is a required field.' })
+    errors.push({ purpose: i18next.t('purposeIsARequiredField', 'Purpose is a required field.') })
   }
 
   return errors.length > 0 ? errors : null

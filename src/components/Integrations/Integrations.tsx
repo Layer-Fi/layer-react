@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { QuickbooksContextProvider } from '@providers/QuickbooksContextProvider/QuickbooksContextProvider'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
@@ -29,6 +30,7 @@ export const Integrations = (props: IntegrationsProps) => {
 export const IntegrationsComponent = ({
   stringOverrides,
 }: IntegrationsProps) => {
+  const { t } = useTranslation()
   const { quickbooksConnectionStatus } = useContext(QuickbooksContext)
   const isLoading = quickbooksConnectionStatus === undefined
 
@@ -39,7 +41,7 @@ export const IntegrationsComponent = ({
           className='Layer__linked-accounts__title'
           size={HeadingSize.secondary}
         >
-          {stringOverrides?.title || 'Integrations'}
+          {stringOverrides?.title || t('integrations', 'Integrations')}
         </Heading>
         <IntegrationsConnectMenu />
       </Header>
@@ -51,7 +53,7 @@ export const IntegrationsComponent = ({
       {!isLoading && !quickbooksConnectionStatus.is_connected && (
         <DataState
           status={DataStateStatus.info}
-          title='No active integrations'
+          title={t('noActiveIntegrations', 'No active integrations')}
         />
       )}
       {quickbooksConnectionStatus?.is_connected && <IntegrationsContent />}

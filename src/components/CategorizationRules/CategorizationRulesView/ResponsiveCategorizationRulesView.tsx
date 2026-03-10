@@ -1,5 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
+import i18next from 'i18next'
 import { PencilRuler } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { getLeafCategories } from '@internal-types/categories'
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
@@ -25,8 +27,8 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 const CategorizationRulesEmptyState = () => (
   <DataState
     status={DataStateStatus.allDone}
-    title='No rules found'
-    description='No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.'
+    title={i18next.t('noRulesFound', 'No rules found')}
+    description={i18next.t('noCategorizationRulesHaveBeenCreatedYetYouWillReceiveSuggestionsForRulesToCreateAsYouCategorizeTransactionsInTheBankFeed', 'No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.')}
     icon={<PencilRuler />}
     spacing
     className='Layer__CategorizationRulesView__EmptyState'
@@ -36,8 +38,8 @@ const CategorizationRulesEmptyState = () => (
 const CategorizationRulesErrorState = () => (
   <DataState
     status={DataStateStatus.failed}
-    title='We couldn’t load your categorization rules'
-    description='An error occurred while loading your categorization rules. Please check your connection and try again.'
+    title={i18next.t('weCouldntLoadYourCategorizationRules', 'We couldn’t load your categorization rules')}
+    description={i18next.t('anErrorOccurredWhileLoadingYourCategorizationRulesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your categorization rules. Please check your connection and try again.')}
     spacing
     className='Layer__CategorizationRulesView__ErrorState'
   />
@@ -48,6 +50,7 @@ type CategorizationRulesHeaderProps = {
 }
 
 const CategorizationRulesHeader = ({ onGoBack }: CategorizationRulesHeaderProps) => {
+  const { t } = useTranslation()
   return (
     <HStack align='center' gap='md'>
       {onGoBack && (
@@ -55,7 +58,7 @@ const CategorizationRulesHeader = ({ onGoBack }: CategorizationRulesHeaderProps)
           <BackArrow />
         </Button>
       )}
-      <Heading size='sm'>Categorization Rules</Heading>
+      <Heading size='sm'>{t('categorizationRules', 'Categorization Rules')}</Heading>
     </HStack>
   )
 }
@@ -63,6 +66,7 @@ const CategorizationRulesHeader = ({ onGoBack }: CategorizationRulesHeaderProps)
 const resolveVariant = ({ width }: { width: number }) => width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
 
 export const ResponsiveCategorizationRulesView = () => {
+  const { t } = useTranslation()
   const [selectedRule, setSelectedRule] = useState<CategorizationRule | null>(null)
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState(false)
   const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
@@ -105,10 +109,10 @@ export const ResponsiveCategorizationRulesView = () => {
         setShowDeletionConfirmationModal(false)
         setSelectedRule(null)
       }).catch(() => {
-        addToast({ content: 'Failed to archive categorization rule', type: 'error' })
+        addToast({ content: t('failedToArchiveCategorizationRule', 'Failed to archive categorization rule'), type: 'error' })
       })
     }
-  }, [addToast, archiveCategorizationRuleTrigger, selectedRule?.id])
+  }, [t, addToast, archiveCategorizationRuleTrigger, selectedRule?.id])
 
   const isLoading = data === undefined || rulesAreLoading || categoriesAreLoading
   const { toBankTransactionsTable } = useBankTransactionsNavigation()
@@ -161,11 +165,11 @@ export const ResponsiveCategorizationRulesView = () => {
       <BaseConfirmationModal
         isOpen={showDeletionConfirmationModal}
         onOpenChange={setShowDeletionConfirmationModal}
-        title='Delete categorization rule?'
-        description={`Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to ${selectedRule?.counterpartyFilter?.name ?? 'this counterparty'} will not be affected.`}
+        title={t('deleteCategorizationRule', 'Delete categorization rule?')}
+        description={t('transactionsWillNoLongerBeCategorizedByThisRuleCounterpartyUnaffected', 'Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.', { counterparty: selectedRule?.counterpartyFilter?.name ?? t('thisCounterparty', 'this counterparty') })}
         onConfirm={archiveCategorizationRule}
-        confirmLabel='Delete'
-        cancelLabel='Cancel'
+        confirmLabel={t('delete', 'Delete')}
+        cancelLabel={t('cancel', 'Cancel')}
         useDrawer={isMobile}
       />
     </>

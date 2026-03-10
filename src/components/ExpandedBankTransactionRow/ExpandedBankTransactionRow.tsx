@@ -5,6 +5,7 @@ import {
   useState,
 } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import {
   type BankTransaction,
@@ -90,6 +91,7 @@ export const ExpandedBankTransactionRow = ({
   variant = 'row',
   onValidityChange,
 }: ExpandedBankTransactionRowProps) => {
+  const { t } = useTranslation()
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
   // Hooks for auto-saving tags and customer/vendor in unsplit state
@@ -201,15 +203,15 @@ export const ExpandedBankTransactionRow = ({
   const toggleOptions = useMemo(() => [
     {
       value: 'categorize',
-      label: 'Categorize',
+      label: t('categorize', 'Categorize'),
     },
     {
       value: 'match',
-      label: 'Match',
+      label: t('match', 'Match'),
       disabled: !hasMatch(bankTransaction),
-      disabledMessage: 'We could not find matching transactions',
+      disabledMessage: t('weCouldNotFindMatchingTransactions', 'We could not find matching transactions'),
     },
-  ], [bankTransaction])
+  ], [t, bankTransaction])
 
   const effectiveSplits = isCategorizationEnabled
     ? localSplits
@@ -232,7 +234,7 @@ export const ExpandedBankTransactionRow = ({
                 && (
                   <HStack pi='md' pbe='md' pbs='3xs'>
                     <Toggle
-                      ariaLabel='Transaction action'
+                      ariaLabel={t('transactionAction', 'Transaction action')}
                       size={ToggleSize.small}
                       options={toggleOptions}
                       selectedKey={purpose}
@@ -261,7 +263,7 @@ export const ExpandedBankTransactionRow = ({
                         readOnly={!isCategorizationEnabled}
                         setSelectedMatch={(suggestedMatch) => {
                           setSelectedMatch(suggestedMatch)
-                          setMatchFormError(!suggestedMatch ? 'Select an option to match the transaction' : undefined)
+                          setMatchFormError(!suggestedMatch ? t('selectAnOptionToMatchTheTransaction', 'Select an option to match the transaction') : undefined)
                           setTransactionCategory(
                             bankTransaction.id,
                             suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null,
@@ -322,7 +324,7 @@ export const ExpandedBankTransactionRow = ({
                                 <CustomerVendorSelector
                                   selectedCustomerVendor={split.customerVendor}
                                   onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
-                                  placeholder='Set customer or vendor'
+                                  placeholder={t('setCustomerOrVendor', 'Set customer or vendor')}
                                   isReadOnly={!isCategorizationEnabled}
                                   showLabel={false}
                                 />
@@ -346,7 +348,7 @@ export const ExpandedBankTransactionRow = ({
                         {effectiveSplits.length > 1 && (
                           <Input
                             disabled={true}
-                            leftText='Total'
+                            leftText={t('total', 'Total')}
                             inputMode='numeric'
                             value={`$${formatMoney(
                               effectiveSplits.reduce(
@@ -364,7 +366,7 @@ export const ExpandedBankTransactionRow = ({
                                   <TextButton
                                     onClick={addSplit}
                                   >
-                                    Add new split
+                                    {t('addNewSplit', 'Add new split')}
                                   </TextButton>
                                 )
                                 : (
@@ -373,7 +375,7 @@ export const ExpandedBankTransactionRow = ({
                                     variant='outlined'
                                   >
                                     <Scissors size={14} />
-                                    Split
+                                    {t('split', 'Split')}
                                   </Button>
                                 )}
                             </div>

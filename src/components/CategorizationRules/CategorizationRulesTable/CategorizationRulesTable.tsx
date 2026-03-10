@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
 import { Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import type { NestedCategorization } from '@schemas/categorization'
@@ -45,24 +46,25 @@ export const CategorizationRulesTable = ({
   onDeleteRule,
   slots,
 }: CategorizationRulesTableProps) => {
+  const { t } = useTranslation()
   const columnConfig: NestedColumnConfig<CategorizationRule> = useMemo(() => [
     {
       id: CategorizationRuleColumns.Counterparty,
-      header: 'Counterparty',
+      header: t('counterparty', 'Counterparty'),
       cell: (row: Row<CategorizationRule>) => (
         <Span ellipsis>{row.original.counterpartyFilter?.name}</Span>
       ),
     },
     {
       id: CategorizationRuleColumns.Direction,
-      header: 'Direction',
+      header: t('direction', 'Direction'),
       cell: (row: Row<CategorizationRule>) => (
         <Span ellipsis>{getCategorizationRuleDirectionLabel(row.original.bankDirectionFilter)}</Span>
       ),
     },
     {
       id: CategorizationRuleColumns.Category,
-      header: 'Category',
+      header: t('category', 'Category'),
       cell: (row: Row<CategorizationRule>) => {
         const accountIdentifier = row.original.category
         if (!accountIdentifier) return null
@@ -78,19 +80,19 @@ export const CategorizationRulesTable = ({
           inset
           icon
           onPress={() => onDeleteRule(row.original)}
-          aria-label='Delete rule'
+          aria-label={t('deleteRule', 'Delete rule')}
           variant='ghost'
         >
           <Trash2 size={16} />
         </Button>
       ),
     },
-  ], [options, onDeleteRule])
+  ], [t, options, onDeleteRule])
 
   return (
     <Container name='CategorizationRulesTable'>
       <PaginatedTable
-        ariaLabel='Categorization rules'
+        ariaLabel={t('categorizationRules', 'Categorization rules')}
         data={data}
         isLoading={isLoading}
         isError={isError}

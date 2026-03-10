@@ -1,6 +1,7 @@
 import { useContext, useMemo } from 'react'
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { LedgerAccountNodeType } from '@internal-types/chartOfAccounts'
 import { Direction } from '@internal-types/general'
@@ -26,6 +27,7 @@ export const LedgerAccountRow = ({
   view,
   nodeType,
 }: LedgerAccountRowProps) => {
+  const { t } = useTranslation()
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(LedgerAccountsContext)
   const ledgerEntrySource = useMemo(() => {
@@ -132,7 +134,7 @@ export const LedgerAccountRow = ({
             <div className='Layer__ledger_account-table__balances-mobile'>
               <div className='Layer__ledger_account-table__balance-item'>
                 <span className='Layer__ledger_account-table__balances-mobile__label'>
-                  Debit
+                  {t('debit', 'Debit')}
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
                   {' '}
@@ -142,7 +144,7 @@ export const LedgerAccountRow = ({
               </div>
               <div className='Layer__ledger_account-table__balance-item'>
                 <span className='Layer__ledger_account-table__balances-mobile__label'>
-                  Credit
+                  {t('credit', 'Credit')}
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
                   {row.direction === Direction.CREDIT
@@ -151,7 +153,7 @@ export const LedgerAccountRow = ({
               </div>
               <div className='Layer__ledger_account-table__balance-item'>
                 <span className='Layer__ledger_account-table__balances-mobile__label'>
-                  Running balance
+                  {t('runningBalance', 'Running balance')}
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
                   {`$${centsToDollars(row.running_balance)}`}

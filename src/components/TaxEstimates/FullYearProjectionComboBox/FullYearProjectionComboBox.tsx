@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { getYear } from 'date-fns'
+import i18next from 'i18next'
 
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
@@ -12,8 +13,8 @@ type ProjectionOption = {
   valueBool: boolean
 }
 
-const YearToDateOption = { label: 'Year to date', value: 'ytd', valueBool: false }
-const FullYearProjectionOption = { label: 'Full year projection', value: 'full-year', valueBool: true }
+const YearToDateOption = { label: i18next.t('yearToDate', 'Year to date'), value: 'ytd', valueBool: false }
+const FullYearProjectionOption = { label: i18next.t('fullYearProjection', 'Full year projection'), value: 'full-year', valueBool: true }
 
 const PROJECTION_OPTIONS: ReadonlyArray<ProjectionOption> = [
   YearToDateOption,

@@ -1,4 +1,5 @@
 import { AlertTriangle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
 import { useInvoicePaymentMethods } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
@@ -23,6 +24,7 @@ type InvoiceFinalizeStepProps = {
 export const InvoiceFinalizeStep = ({
   onSuccess,
 }: InvoiceFinalizeStepProps) => {
+  const { t } = useTranslation()
   const { invoice } = useInvoicePreviewRoute()
   const { data, isLoading, isError } = useInvoicePaymentMethods({ invoiceId: invoice.id })
   const paymentMethodsData = data?.data
@@ -48,8 +50,8 @@ export const InvoiceFinalizeStep = ({
               <DataState
                 icon={<AlertTriangle size={16} />}
                 status={DataStateStatus.failed}
-                title="We couldn't load payment methods"
-                description='Please try again.'
+                title={t('weCouldntLoadPaymentMethods', 'We couldn\'t load payment methods')}
+                description={t('pleaseTryAgain', 'Please try again.')}
               />
             </VStack>
           )}

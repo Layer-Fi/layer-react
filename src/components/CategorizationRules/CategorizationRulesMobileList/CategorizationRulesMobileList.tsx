@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import i18next from 'i18next'
 import { Trash2 } from 'lucide-react'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
@@ -28,12 +29,12 @@ const CategorizationRuleMobileListItem = ({
     <VStack gap='2xs' className='Layer__CategorizationRulesMobileListItem__Content'>
       <Span weight='bold' ellipsis>{rule.counterpartyFilter?.name}</Span>
       <HStack gap='3xs' align='center'>
-        <Span size='sm' variant='subtle'>Direction:</Span>
+        <Span size='sm' variant='subtle'>{i18next.t('direction', 'Direction:')}</Span>
         <Span size='sm' variant='subtle'>{getCategorizationRuleDirectionLabel(rule.bankDirectionFilter)}</Span>
       </HStack>
       {rule.category && (
         <HStack gap='3xs' align='center'>
-          <Span size='sm' variant='subtle'>Category:</Span>
+          <Span size='sm' variant='subtle'>{i18next.t('category', 'Category:')}</Span>
           <ResolvedCategoryName
             accountIdentifier={rule.category}
             options={options}
@@ -46,7 +47,7 @@ const CategorizationRuleMobileListItem = ({
       inset
       icon
       onPress={() => onDeletePress(rule)}
-      aria-label='Delete rule'
+      aria-label={i18next.t('deleteRule', 'Delete rule')}
       variant='ghost'
     >
       <Trash2 size={16} />
@@ -83,7 +84,7 @@ export const CategorizationRulesMobileList = ({
   return (
     <div className='Layer__CategorizationRulesMobileList'>
       <PaginatedMobileList
-        ariaLabel='Categorization rules'
+        ariaLabel={i18next.t('categorizationRules', 'Categorization rules')}
         data={data}
         isLoading={isLoading}
         isError={isError}

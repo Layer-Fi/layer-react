@@ -1,5 +1,7 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { FilingStatus } from '@schemas/taxEstimates/filingStatus'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
@@ -9,11 +11,11 @@ import { Label } from '@ui/Typography/Text'
 import './filingStatusComboBox.scss'
 
 const FILING_STATUS_OPTIONS = [
-  { value: FilingStatus.SINGLE, label: 'Single' },
-  { value: FilingStatus.MARRIED, label: 'Married filing jointly' },
-  { value: FilingStatus.MARRIED_SEPARATELY, label: 'Married filing separately' },
-  { value: FilingStatus.HEAD, label: 'Head of household' },
-  { value: FilingStatus.WIDOWER, label: 'Qualifying widow(er)' },
+  { value: FilingStatus.SINGLE, label: i18next.t('single', 'Single') },
+  { value: FilingStatus.MARRIED, label: i18next.t('marriedFilingJointly', 'Married filing jointly') },
+  { value: FilingStatus.MARRIED_SEPARATELY, label: i18next.t('marriedFilingSeparately', 'Married filing separately') },
+  { value: FilingStatus.HEAD, label: i18next.t('headOfHousehold', 'Head of household') },
+  { value: FilingStatus.WIDOWER, label: i18next.t('qualifyingWidower', 'Qualifying widow(er)') },
 ] as const
 
 type FilingStatusOption = typeof FILING_STATUS_OPTIONS[number]
@@ -33,6 +35,7 @@ export const FilingStatusComboBox = ({
   className,
   inline,
 }: FilingStatusComboBoxProps) => {
+  const { t } = useTranslation()
   const combinedClassName = classNames(
     'Layer__FilingStatusComboBox',
     inline && 'Layer__FilingStatusComboBox--inline',
@@ -54,7 +57,7 @@ export const FilingStatusComboBox = ({
   return (
     <HStack className={combinedClassName}>
       <Label size='sm' htmlFor={inputId}>
-        Filing status
+        {t('filingStatus', 'Filing status')}
       </Label>
       <ComboBox<FilingStatusOption>
         options={FILING_STATUS_OPTIONS}
