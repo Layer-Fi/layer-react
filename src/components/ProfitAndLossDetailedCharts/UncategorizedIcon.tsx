@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next'
 interface UncategorizedIconProps {
   variant: 'desktop' | 'mobile'
 }
 
 export const UncategorizedIcon = ({ variant }: UncategorizedIconProps) => {
+  const { t } = useTranslation()
   const patternId = `layer-pie-dots-pattern-legend${variant === 'mobile' ? '-mobile' : ''}`
   const bgRectId = `layer-pie-dots-pattern-bg${variant === 'mobile' ? '-mobile' : ''}`
 
@@ -14,7 +16,7 @@ export const UncategorizedIcon = ({ variant }: UncategorizedIconProps) => {
       width='12'
       height='12'
       role='img'
-      aria-label='Uncategorized item indicator'
+      aria-label={t('uncategorizedItemIndicator', 'Uncategorized item indicator')}
     >
       <defs>
         <pattern

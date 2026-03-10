@@ -1,4 +1,5 @@
 import { useContext, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { BankAccount } from '@internal-types/linkedAccounts'
 import { isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
@@ -10,6 +11,7 @@ type UnlinkAccountConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenCh
   bankAccount: BankAccount
 }
 export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, bankAccount }: UnlinkAccountConfirmationModalProps) {
+  const { t } = useTranslation()
   const { unlinkBankAccount } = useContext(LinkedAccountsContext)
   const variant = isAllExternalAccountsUserCreatedCustom(bankAccount) ? 'DELETE' : 'UNLINK'
 
@@ -17,21 +19,21 @@ export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, bankAccou
     switch (variant) {
       case 'DELETE':
         return {
-          title: 'Delete account',
-          description: 'This account and any unmatched transactions will be deleted.',
-          confirmLabel: 'Delete Account',
-          errorText: 'Deletion failed. Please check your connection and try again in a few seconds.',
+          title: t('deleteAccount', 'Delete account'),
+          description: t('thisAccountAndAnyUnmatchedTransactionsWillBeDeleted', 'This account and any unmatched transactions will be deleted.'),
+          confirmLabel: t('deleteAccount2', 'Delete Account'),
+          errorText: t('deletionFailedPleaseCheckYourConnectionAndTryAgainInAFewSeconds', 'Deletion failed. Please check your connection and try again in a few seconds.'),
         }
       case 'UNLINK':
         return {
-          title: 'Unlink account',
+          title: t('unlinkAccount', 'Unlink account'),
           description:
-            'This account will stop syncing new data, and any unmatched transactions will be deleted.',
-          confirmLabel: 'Unlink Account',
-          errorText: 'Unlink failed. Please check your connection and try again in a few seconds.',
+            t('thisAccountWillStopSyncingNewDataAndAnyUnmatchedTransactionsWillBeDeleted', 'This account will stop syncing new data, and any unmatched transactions will be deleted.'),
+          confirmLabel: t('unlinkAccount2', 'Unlink Account'),
+          errorText: t('unlinkFailedPleaseCheckYourConnectionAndTryAgainInAFewSeconds', 'Unlink failed. Please check your connection and try again in a few seconds.'),
         }
     }
-  }, [variant])
+  }, [variant, t])
 
   return (
     <BaseConfirmationModal

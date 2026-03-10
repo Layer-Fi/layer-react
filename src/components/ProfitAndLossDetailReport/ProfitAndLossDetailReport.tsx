@@ -27,6 +27,8 @@ import { Text, TextSize, TextUseTooltip, TextWeight } from '@components/Typograp
 import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
 
 import './profitAndLossDetailReport.scss'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
@@ -63,8 +65,8 @@ const ErrorState = () => (
   <DataState
     spacing
     status={DataStateStatus.failed}
-    title='Error loading detail lines'
-    description='There was an error loading the profit and loss detail lines'
+    title={i18next.t('errorLoadingDetailLines', 'Error loading detail lines')}
+    description={i18next.t('thereWasAnErrorLoadingTheProfitAndLossDetailLines', 'There was an error loading the profit and loss detail lines')}
   />
 )
 
@@ -72,8 +74,8 @@ const EmptyState = () => (
   <DataState
     spacing
     status={DataStateStatus.info}
-    title='No detail lines found'
-    description='There are no detail lines for this profit and loss item'
+    title={i18next.t('noDetailLinesFound', 'No detail lines found')}
+    description={i18next.t('thereAreNoDetailLinesForThisProfitAndLossItem', 'There are no detail lines for this profit and loss item')}
   />
 )
 
@@ -84,6 +86,7 @@ export const ProfitAndLossDetailReport = ({
   onBreadcrumbClick,
   stringOverrides,
 }: ProfitAndLossDetailReportProps) => {
+  const { t } = useTranslation()
   const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLossContext)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySourceType | null>(null)
@@ -149,7 +152,7 @@ export const ProfitAndLossDetailReport = ({
   const columnConfig: NestedColumnConfig<ProcessedPnlDetailLine> = useMemo(() => [
     {
       id: PnlDetailColumns.Date,
-      header: stringOverrides?.dateColumnHeader || 'Date',
+      header: stringOverrides?.dateColumnHeader || t('date', 'Date'),
       cell: (row: PnlDetailRowType) => (
         <DateTime
           value={row.original.date}
@@ -162,7 +165,7 @@ export const ProfitAndLossDetailReport = ({
     },
     {
       id: PnlDetailColumns.Type,
-      header: stringOverrides?.typeColumnHeader || 'Type',
+      header: stringOverrides?.typeColumnHeader || t('type', 'Type'),
       cell: (row: PnlDetailRowType) => {
         const { source } = row.original
         return source
@@ -179,7 +182,7 @@ export const ProfitAndLossDetailReport = ({
     },
     {
       id: PnlDetailColumns.Account,
-      header: stringOverrides?.accountColumnHeader || 'Account',
+      header: stringOverrides?.accountColumnHeader || t('account', 'Account'),
       cell: (row: PnlDetailRowType) => (
         <Text
           as='span'
@@ -192,7 +195,7 @@ export const ProfitAndLossDetailReport = ({
     },
     {
       id: PnlDetailColumns.Description,
-      header: stringOverrides?.descriptionColumnHeader || 'Description',
+      header: stringOverrides?.descriptionColumnHeader || t('description', 'Description'),
       cell: (row: PnlDetailRowType) => (
         <Text
           as='span'
@@ -206,7 +209,7 @@ export const ProfitAndLossDetailReport = ({
     },
     {
       id: PnlDetailColumns.Amount,
-      header: stringOverrides?.amountColumnHeader || 'Amount',
+      header: stringOverrides?.amountColumnHeader || t('amount', 'Amount'),
       cell: (row: PnlDetailRowType) => {
         return (
           <MoneySpan amount={row.original.direction === Direction.CREDIT ? row.original.amount : -row.original.amount} />
@@ -215,14 +218,14 @@ export const ProfitAndLossDetailReport = ({
     },
     {
       id: PnlDetailColumns.Balance,
-      header: stringOverrides?.balanceColumnHeader || 'Balance',
+      header: stringOverrides?.balanceColumnHeader || t('balance', 'Balance'),
       cell: (row: PnlDetailRowType) => {
         return (
           <MoneySpan amount={row.original.runningBalance} />
         )
       },
     },
-  ], [stringOverrides, handleSourceClick])
+  ], [stringOverrides, handleSourceClick, t])
 
   const Header = useCallback(() => {
     return (
@@ -239,9 +242,9 @@ export const ProfitAndLossDetailReport = ({
       <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={handleBackToList} borderless>
         <VStack pi='md'>
           <DetailsList
-            title={stringOverrides?.sourceDetailsTitle || 'Transaction source'}
+            title={stringOverrides?.sourceDetailsTitle || t('transactionSource', 'Transaction source')}
           >
-            <DetailsListItem label='Source'>
+            <DetailsListItem label={t('source', 'Source')}>
               {badgeOrInAppLink}
             </DetailsListItem>
             <SourceDetailView source={selectedSource} />
@@ -256,7 +259,7 @@ export const ProfitAndLossDetailReport = ({
       <VStack className='Layer__ProfitAndLossDetailReport'>
         <VirtualizedDataTable<ProcessedPnlDetailLine>
           componentName={COMPONENT_NAME}
-          ariaLabel={`${lineItemName} detail lines`}
+          ariaLabel={t('lineitemnameDetailLines', '{{lineItemName}} detail lines', { lineItemName })}
           columnConfig={columnConfig}
           data={rowsWithRunningBalance.lines}
           isLoading={isLoading}
@@ -270,7 +273,7 @@ export const ProfitAndLossDetailReport = ({
         {rowsWithRunningBalance.lines.length > 0 && (
           <HStack pb='sm' align='center' className='Layer__profit-and-loss-detail-report__total-row'>
             <HStack className='Layer__profit-and-loss-detail-report__total-label'>
-              <Label weight='bold' size='md'>Total</Label>
+              <Label weight='bold' size='md'>{t('total', 'Total')}</Label>
             </HStack>
             <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
               <MoneySpan weight='bold' size='md' amount={rowsWithRunningBalance.total} />

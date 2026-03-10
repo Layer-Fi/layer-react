@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Trip } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
@@ -50,13 +51,14 @@ export const TripsMobileList = ({
   paginationProps,
   slots,
 }: TripsMobileListProps) => {
+  const { t } = useTranslation()
   const renderItem = useCallback((trip: Trip) => <TripsMobileListItem trip={trip} />, [])
 
   return (
     <div className='Layer__TripsMobileList'>
       <TripsMobileHeader onRecordTrip={onRecordTrip} />
       <PaginatedMobileList
-        ariaLabel='Trips'
+        ariaLabel={t('trips', 'Trips')}
         data={data}
         isLoading={isLoading}
         isError={isError}

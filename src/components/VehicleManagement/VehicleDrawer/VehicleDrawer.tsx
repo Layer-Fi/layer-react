@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -23,8 +24,9 @@ const VehicleDrawerHeader = ({ title, close, isMobile }: { title: string, close:
 )
 
 export const VehicleDrawer = ({ isOpen, onOpenChange, vehicle, onSuccess }: VehicleDrawerProps) => {
+  const { t } = useTranslation()
   const { isMobile } = useSizeClass()
-  const title = vehicle ? 'Edit vehicle' : 'Add vehicle'
+  const title = vehicle ? t('editVehicle', 'Edit vehicle') : t('addVehicle2', 'Add vehicle')
 
   const Header = useCallback(({ close }: { close: () => void }) => (
     <VehicleDrawerHeader title={title} close={close} isMobile={isMobile} />

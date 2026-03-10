@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import type { Vehicle } from '@schemas/vehicle'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
@@ -18,6 +19,7 @@ interface TripsTableHeaderProps {
 }
 
 export const TripsTableHeader = ({ onRecordTrip }: TripsTableHeaderProps) => {
+  const { t } = useTranslation()
   const { tableFilters, setTableFilters } = useTripsTableFilters()
   const { query, selectedVehicle, purposeFilter } = tableFilters
 
@@ -43,22 +45,22 @@ export const TripsTableHeader = ({ onRecordTrip }: TripsTableHeaderProps) => {
     <VehicleSelector
       selectedVehicle={selectedVehicle}
       onSelectedVehicleChange={handleVehicleChange}
-      placeholder='All vehicles'
+      placeholder={t('allVehicles', 'All vehicles')}
       showLabel={false}
       className='Layer__TripsTable__VehicleSelector'
       inline
     />
-  ), [selectedVehicle, handleVehicleChange])
+  ), [t, selectedVehicle, handleVehicleChange])
 
   const HeaderActions = useCallback(() => (
     <HStack gap='xs'>
       <Button onPress={onRecordTrip}>
-        Record Trip
+        {t('recordTrip', 'Record Trip')}
         <Plus size={16} />
       </Button>
       <TripsTableHeaderMenu />
     </HStack>
-  ), [onRecordTrip])
+  ), [t, onRecordTrip])
 
   const HeaderFilters = useCallback(() => (
     <HStack gap='sm' align='center'>
@@ -69,11 +71,11 @@ export const TripsTableHeader = ({ onRecordTrip }: TripsTableHeaderProps) => {
 
   return (
     <DataTableHeader
-      name='Trips'
+      name={t('trips', 'Trips')}
       slots={{ HeaderActions, HeaderFilters }}
       slotProps={{
         SearchField: {
-          label: 'Search trips',
+          label: t('searchTrips', 'Search trips'),
           value: inputValue,
           onChange: handleInputChange,
           className: 'Layer__TripsTable__SearchField',

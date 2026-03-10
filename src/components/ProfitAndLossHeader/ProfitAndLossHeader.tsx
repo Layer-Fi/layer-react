@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
@@ -43,6 +44,7 @@ export const ProfitAndLossHeader = ({
   stringOverrides,
   dateSelectionMode = 'full',
 }: ProfitAndLossHeaderProps) => {
+  const { t } = useTranslation()
   const { data: linkedAccounts } = useLinkedAccounts()
 
   const { activePeriod } = useActiveBookkeepingPeriod()
@@ -57,7 +59,7 @@ export const ProfitAndLossHeader = ({
     <Header className={className}>
       <span className='Layer__component-header__title-wrapper Layer__profit-and-loss__header'>
         <Heading size={HeadingSize.secondary} className={headingClassName} align='left'>
-          {stringOverrides?.title || text || 'Profit & Loss'}
+          {stringOverrides?.title || text || t('profitLoss', 'Profit & Loss')}
         </Heading>
         {isSyncing && <SyncingBadge />}
         {withStatus && activePeriodStatus && (

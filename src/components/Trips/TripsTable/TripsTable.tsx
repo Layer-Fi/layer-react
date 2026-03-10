@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
+import i18next from 'i18next'
 import { Edit, Trash2 } from 'lucide-react'
 
 import { type Trip, type TripPurpose } from '@schemas/trip'
@@ -38,43 +39,43 @@ type TripsRowType = Row<Trip>
 const getColumnConfig = ({ onViewOrUpsertTrip, onDeleteTrip }: TripActions): NestedColumnConfig<Trip> => [
   {
     id: TripColumns.TripDate,
-    header: 'Date',
+    header: i18next.t('date', 'Date'),
     cell: (row: TripsRowType) => formatCalendarDate(row.original.tripDate),
   },
   {
     id: TripColumns.Vehicle,
-    header: 'Vehicle',
+    header: i18next.t('vehicle', 'Vehicle'),
     cell: (row: TripsRowType) => <Span ellipsis withTooltip>{getVehicleDisplayName(row.original.vehicle)}</Span>,
     isRowHeader: true,
   },
   {
     id: TripColumns.Distance,
-    header: 'Distance',
+    header: i18next.t('distance', 'Distance'),
     cell: (row: TripsRowType) => <Span align='right'>{formatDistance(row.original.distance)}</Span>,
   },
   {
     id: TripColumns.Purpose,
-    header: 'Purpose',
+    header: i18next.t('purpose', 'Purpose'),
     cell: (row: TripsRowType) => getPurposeLabel(row.original.purpose as TripPurpose),
   },
   {
     id: TripColumns.Address,
-    header: 'Address',
+    header: i18next.t('address', 'Address'),
     cell: (row: TripsRowType) => <TripsAddressCell trip={row.original} />,
   },
   {
     id: TripColumns.Description,
-    header: 'Description',
+    header: i18next.t('description', 'Description'),
     cell: (row: TripsRowType) => <Span ellipsis withTooltip>{row.original.description}</Span>,
   },
   {
     id: TripColumns.Actions,
     cell: (row: TripsRowType) => (
       <HStack gap='3xs'>
-        <Button inset icon onPress={() => onViewOrUpsertTrip(row.original)} aria-label='View Trip' variant='ghost'>
+        <Button inset icon onPress={() => onViewOrUpsertTrip(row.original)} aria-label={i18next.t('viewTrip', 'View Trip')} variant='ghost'>
           <Edit size={20} />
         </Button>
-        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label='Delete Trip' variant='ghost'>
+        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label={i18next.t('deleteTrip', 'Delete Trip')} variant='ghost'>
           <Trash2 size={20} />
         </Button>
       </HStack>
@@ -111,7 +112,7 @@ export const TripsTable = ({
     <Container name='TripsTable'>
       <TripsTableHeader onRecordTrip={onRecordTrip} />
       <PaginatedTable
-        ariaLabel='Trips'
+        ariaLabel={i18next.t('trips', 'Trips')}
         data={data}
         isLoading={isLoading}
         isError={isError}

@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type LineItem } from '@internal-types/lineItem'
 import { type StatementOfCashFlow } from '@internal-types/statementOfCashFlow'
@@ -32,6 +33,7 @@ export const StatementOfCashFlowTable = ({
   config: StatementOfCashFlowRowProps[]
   stringOverrides?: StatementOfCashFlowTableStringOverrides
 }) => {
+  const { t } = useTranslation()
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   const renderLineItem = (
@@ -79,7 +81,7 @@ export const StatementOfCashFlowTable = ({
             depth={depth + 1}
             variant='summation'
           >
-            <TableCell primary>{`Total of ${lineItem.display_name}`}</TableCell>
+            <TableCell primary>{t('totalOfDisplayName', 'Total of {{displayName}}', { displayName: lineItem.display_name })}</TableCell>
             <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
               {lineItem.value}
             </TableCell>
@@ -94,10 +96,10 @@ export const StatementOfCashFlowTable = ({
       <TableHead>
         <TableRow rowKey='soc-flow-head-row' isHeadRow>
           <TableCell isHeaderCell>
-            {stringOverrides?.typeColumnHeader || 'Type'}
+            {stringOverrides?.typeColumnHeader || t('type', 'Type')}
           </TableCell>
           <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.totalColumnHeader || 'Total'}
+            {stringOverrides?.totalColumnHeader || t('total', 'Total')}
           </TableCell>
         </TableRow>
       </TableHead>

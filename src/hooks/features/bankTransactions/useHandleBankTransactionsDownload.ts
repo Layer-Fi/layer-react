@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import i18next from 'i18next'
 
 import { useBankTransactionsDownload } from '@hooks/api/businesses/[business-id]/reports/transactions/exports/excel/useBankTransactionsDownload'
 import { bankTransactionFiltersToHookOptions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
@@ -21,13 +22,13 @@ export function useHandleDownloadTransactions({ isListView }: { isListView: bool
         }
         else if (isListView) {
           addToast({
-            content: 'Download Failed, Please Retry',
+            content: i18next.t('downloadFailedPleaseRetry', 'Download Failed, Please Retry'),
             type: 'error',
           })
         }
       })
       .catch(() => {
-        addToast({ content: 'Download Failed, Please Retry', type: 'error' })
+        addToast({ content: i18next.t('downloadFailedPleaseRetry', 'Download Failed, Please Retry'), type: 'error' })
       })
   }, [addToast, filters, isListView, trigger, triggerInvisibleDownload])
 

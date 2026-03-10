@@ -1,5 +1,6 @@
 import { useCallback, useId } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { TripPurpose } from '@schemas/trip'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
@@ -30,6 +31,7 @@ type TripPurposeComboBoxProps = {
 }
 
 export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, className }: TripPurposeComboBoxProps) => {
+  const { t } = useTranslation()
   const combinedClassName = classNames(
     'Layer__TripPurposeComboBox',
     'Layer__TripPurposeComboBox--inline',
@@ -46,7 +48,7 @@ export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, classNam
   return (
     <HStack className={combinedClassName}>
       <Label size='sm' htmlFor={inputId}>
-        Purpose
+        {t('purpose2', 'Purpose')}
       </Label>
       <ComboBox
         options={options}

@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { getYear } from 'date-fns'
+import i18next from 'i18next'
 import { Car } from 'lucide-react'
 
 import type { Trip } from '@schemas/trip'
@@ -22,8 +23,8 @@ const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
 const TripsViewEmptyState = () => (
   <DataState
     status={DataStateStatus.allDone}
-    title='No trips yet'
-    description='Add your first trip to start tracking mileage.'
+    title={i18next.t('noTripsYet', 'No trips yet')}
+    description={i18next.t('addYourFirstTripToStartTrackingMileage', 'Add your first trip to start tracking mileage.')}
     icon={<Car />}
     spacing
     className='Layer__TripsView__EmptyState'
@@ -33,8 +34,8 @@ const TripsViewEmptyState = () => (
 const TripsViewErrorState = () => (
   <DataState
     status={DataStateStatus.failed}
-    title="We couldn't load your trips"
-    description='An error occurred while loading your trips. Please check your connection and try again.'
+    title={i18next.t('weCouldntLoadYourTrips', 'We couldn\'t load your trips')}
+    description={i18next.t('anErrorOccurredWhileLoadingYourTripsPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your trips. Please check your connection and try again.')}
     spacing
     className='Layer__TripsView__ErrorState'
   />

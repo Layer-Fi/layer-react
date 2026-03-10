@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Drawer } from '@ui/Modal/Modal'
 import { ProfitAndLossDetailReport, type ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
@@ -18,6 +20,7 @@ export function DetailReportModal({
   onBreadcrumbClick,
   stringOverrides,
 }: DetailReportModalProps) {
+  const { t } = useTranslation()
   const { isMobile, isTablet } = useSizeClass()
   const handleClose = () => {
     onOpenChange(false)
@@ -30,7 +33,7 @@ export function DetailReportModal({
       isOpen={isOpen}
       size='2xl'
       onOpenChange={onOpenChange}
-      aria-label='Profit and Loss Detail Report'
+      aria-label={t('profitAndLossDetailReport', 'Profit and Loss Detail Report')}
       variant={shouldUseMobileDrawer ? 'mobile-drawer' : 'drawer'}
     >
       <div className={shouldUseMobileDrawer ? 'Layer__ProfitAndLossReport__Modal--mobile' : 'Layer__ProfitAndLossReport__Modal--drawer'}>

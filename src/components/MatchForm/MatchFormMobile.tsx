@@ -1,15 +1,15 @@
 import {
   GridList,
 } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { MatchFormMobileItem } from '@components/MatchForm/MatchFormMobileItem'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 import './matchFormMobile.scss'
-
-import { MatchFormMobileItem } from './MatchFormMobileItem'
 
 export interface MatchFormMobileProps {
   bankTransaction: BankTransaction
@@ -26,12 +26,13 @@ export const MatchFormMobile = ({
   matchFormError,
   readOnly,
 }: MatchFormMobileProps) => {
+  const { t } = useTranslation()
   const { renderInAppLink } = useInAppLinkContext()
   const suggestedMatches = bankTransaction.suggested_matches
 
   return (
     <GridList
-      aria-label='Select a match'
+      aria-label={t('selectAMatch', 'Select a match')}
       selectionMode='single'
       selectedKeys={selectedMatchId ? new Set([selectedMatchId]) : new Set()}
       onSelectionChange={(keys) => {
