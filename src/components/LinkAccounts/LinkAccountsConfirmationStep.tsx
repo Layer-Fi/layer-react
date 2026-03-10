@@ -9,7 +9,7 @@ import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { LinkedAccountToConfirm } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
-import { LinkAccountsListContainer } from '@components/PlatformOnboarding/Container/LinkAccountsListContainer'
+import { LinkAccountsListContainer } from '@components/LinkAccounts/LinkAccountsListContainer'
 import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
