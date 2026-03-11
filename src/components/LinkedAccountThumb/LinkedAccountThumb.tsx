@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@internal-types/linkedAccounts'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/bankAccount'
@@ -31,6 +32,7 @@ export const LinkedAccountThumb = ({
   showLedgerBalance,
   slots,
 }: LinkedAccountThumbProps) => {
+  const { t } = useTranslation()
   const isSyncing = isBankAccountSyncing(bankAccount)
   const displayName = getBankAccountDisplayName(bankAccount)
   const institution = getBankAccountInstitution(bankAccount)
@@ -94,9 +96,9 @@ export const LinkedAccountThumb = ({
         ? (
           <div className='loadingbar'>
             <div className='loading-text Layer__text--sm'>
-              <div>Syncing account data</div>
+              <div>{t('syncingAccountData', 'Syncing account data')}</div>
               <div className='syncing-data-description'>
-                This may take up to 5 minutes
+                {t('thisMayTakeUpTo5Minutes', 'This may take up to 5 minutes')}
               </div>
             </div>
             <div className='loading-wrapper'>
@@ -116,7 +118,7 @@ export const LinkedAccountThumb = ({
                   )}
                   size={'sm' as TextSize}
                 >
-                  Bank balance
+                  {t('bankBalance', 'Bank balance')}
                 </Text>
                 {bankBalance}
               </div>
@@ -133,7 +135,7 @@ export const LinkedAccountThumb = ({
                       className='account-balance-text'
                       size={'sm' as TextSize}
                     >
-                      Ledger balance
+                      {t('ledgerBalance', 'Ledger balance')}
                     </Text>
                   )}
                 <Text as='span' className='account-balance'>

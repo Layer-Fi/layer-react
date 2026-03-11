@@ -22,7 +22,14 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
       <Card className='Layer__TaxSummaryCard__OverviewCard'>
         <VStack gap='xs' justify='center' align='center'>
           <VStack justify='center' align='center'>
-            <Span size='md' variant='subtle'>{maybeAddProjectedToLabel('Taxes Owed', fullYearProjection)}</Span>
+            <Span size='md' variant='subtle'>
+              {maybeAddProjectedToLabel(t, {
+                key: 'taxesOwed',
+                isProjected: fullYearProjection,
+                defaultCase: 'Taxes Owed',
+                projectedCase: 'Projected Taxes Owed',
+              })}
+            </Span>
             <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
           </VStack>
           <VStack align='center'>

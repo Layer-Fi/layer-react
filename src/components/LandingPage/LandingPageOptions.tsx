@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import classNames from 'classnames'
 import { Check } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { isCalendlyLink } from '@hooks/features/calendly/useCalendly'
 import { Button } from '@ui/Button/Button'
@@ -27,6 +28,7 @@ export const LandingPageOffer = ({
   openCalendly,
   className,
 }: LandingPageOptionsProps) => {
+  const { t } = useTranslation()
   const handleCtaClick = useCallback(() => {
     if (isCalendlyLink(config.cta.primary)) {
       openCalendly(config.cta.primary.url)
@@ -38,15 +40,15 @@ export const LandingPageOffer = ({
 
   const features = useMemo(() => type === 'bookkeeping'
     ? [
-      'Personalized setup with your bookkeeper',
-      'Monthly books done for you',
-      'Complete financial reports and end of year tax packet',
+      t('personalizedSetupWithYourBookkeeper', 'Personalized setup with your bookkeeper'),
+      t('monthlyBooksDoneForYou', 'Monthly books done for you'),
+      t('completeFinancialReportsAndEndOfYearTaxPacket', 'Complete financial reports and end of year tax packet'),
     ]
     : [
-      'Direct integration with {platformName}',
-      'Track expenses and receipts',
-      'Easy to understand profitability charts and reports',
-    ], [type])
+      t('directIntegrationWithPlatformname', 'Direct integration with {{platformName}}', { platformName: platformConfig.platformName }),
+      t('trackExpensesAndReceipts', 'Track expenses and receipts'),
+      t('easyToUnderstandProfitabilityChartsAndReports', 'Easy to understand profitability charts and reports'),
+    ], [platformConfig.platformName, t, type])
 
   const baseClassName = classNames(className)
   const badgeVariant = type === 'bookkeeping' ? BadgeVariant.SUCCESS : BadgeVariant.INFO
@@ -57,14 +59,14 @@ export const LandingPageOffer = ({
         <VStack gap='md'>
           <HStack>
             <Badge size={BadgeSize.SMALL} variant={badgeVariant}>
-              {LandingPageHelper.bindTextValues(config.stringOverrides.badge, platformConfig)}
+              {LandingPageHelper.interpolateTemplate(config.stringOverrides.badge, platformConfig)}
             </Badge>
           </HStack>
           <Heading size='sm'>
-            {LandingPageHelper.bindTextValues(config.stringOverrides.title, platformConfig)}
+            {LandingPageHelper.interpolateTemplate(config.stringOverrides.title, platformConfig)}
           </Heading>
           <P variant='subtle'>
-            {LandingPageHelper.bindTextValues(config.stringOverrides.subtitle, platformConfig)}
+            {LandingPageHelper.interpolateTemplate(config.stringOverrides.subtitle, platformConfig)}
           </P>
         </VStack>
         <Separator />
@@ -74,9 +76,7 @@ export const LandingPageOffer = ({
               return (
                 <HStack key={i} gap='xs'>
                   <Check size={14} className='Layer__LandingPage-options__feature-check' />
-                  <Span size='sm' variant='subtle'>
-                    {LandingPageHelper.bindTextValues(f, platformConfig)}
-                  </Span>
+                  <Span size='sm' variant='subtle'>{f}</Span>
                 </HStack>
               )
             })}
@@ -85,7 +85,7 @@ export const LandingPageOffer = ({
 
         <HStack justify='space-between' align='end'>
           <VStack gap='2xs'>
-            {config.showStartingAtLabel && <Span size='sm' variant='subtle'>Starting at</Span>}
+            {config.showStartingAtLabel && <Span size='sm' variant='subtle'>{t('startingAt', 'Starting at')}</Span>}
             <HStack align='baseline'>
               <Span size='xl' weight='bold'>{config.stringOverrides.priceAmount}</Span>
               {config.stringOverrides.priceAmount != '' && (

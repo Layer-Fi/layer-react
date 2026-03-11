@@ -163,7 +163,7 @@ export const BankTransactionsTable = ({
             <tr>
               <td colSpan={3}>
                 <SyncingComponent
-                  title={t('syncingHistoricalAccountData', 'Syncing historical account data')}
+                  titleVariant='historical'
                   timeSync={5}
                   onRefresh={onRefresh}
                 />

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { tPlural } from '@utils/i18nPlural'
+import { tPlural } from '@utils/i18n/plural'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'

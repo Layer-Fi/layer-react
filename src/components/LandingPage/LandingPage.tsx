@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
+import { useTranslation } from 'react-i18next'
 
 import { isCalendlyLink, useCalendly } from '@hooks/features/calendly/useCalendly'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
@@ -17,13 +18,6 @@ import { View } from '@components/View/View'
 
 import './landingPage.scss'
 
-/**
- * Props for the LandingPage component.
- *
- * Requires only a single parameter, which is `config` which holds on to all the customizable
- * settings for the landing page component such as textual content on the accounting and bookkeeping
- * services, with varied pricing options and book-a-call calendly integration.
- */
 export interface LandingPageProps {
   platform: LandingPagePlatformConfig
   availableOffers: ('accounting' | 'bookkeeping')[]
@@ -37,20 +31,13 @@ export interface LandingPageProps {
   }
 }
 
-/**
- * The LandingPage component provides a page-level component that surfaces the Layer accounting
- * and bookkeeping services. It acts as a landing page allowing platforms to showcase the core value proposition
- * and offers/pricing for the platform's end users.
- * @see LandingPageMainConfig
- @param config Allows you to customize the page component.
- @returns A React JSX component
- */
 export const LandingPage = ({
   platform,
   availableOffers,
   heroOverrides,
   offeringOverrides,
 }: LandingPageProps) => {
+  const { t } = useTranslation()
   const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly()
   const { isMobile } = useSizeClass()
   const [width] = useWindowSize()
@@ -97,38 +84,38 @@ export const LandingPage = ({
                   {platform.platformName}
                   <br />
                 </Heading>
-                <Heading size={isMobile ? 'xl' : '3xl'} variant='subtle' weight='normal'>Accounting</Heading>
+                <Heading size={isMobile ? 'xl' : '3xl'} variant='subtle' weight='normal'>{t('accounting', 'Accounting')}</Heading>
               </>
             )}
             {heroConfig.stringOverrides?.title != '' && (
               <>
                 <Heading size={isMobile ? 'xl' : '3xl'}>
-                  {LandingPageHelper.bindTextValues(heroConfig.stringOverrides.title, platform)}
+                  {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.title, platform)}
                 </Heading>
               </>
             )}
           </VStack>
           <Heading variant='subtle' size={isMobile ? 'sm' : 'md'}>
-            {LandingPageHelper.bindTextValues(heroConfig.stringOverrides.subtitle, platform)}
+            {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.subtitle, platform)}
           </Heading>
           <VStack>
             <HStack gap='lg' pb={isMobile ? '3xs' : 'xs'}>
               <VStack gap='xs'>
                 <Heading size={isMobile ? 'md' : 'lg'}>
-                  {LandingPageHelper.bindTextValues(heroConfig.stringOverrides.heading1, platform)}
+                  {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.heading1, platform)}
                 </Heading>
                 <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>
-                  {LandingPageHelper.bindTextValues(heroConfig.stringOverrides.heading1Desc, platform)}
+                  {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.heading1Desc, platform)}
                 </Span>
               </VStack>
             </HStack>
             <HStack gap='lg' pb='xs'>
               <VStack gap='xs'>
                 <Heading size={isMobile ? 'md' : 'lg'}>
-                  {LandingPageHelper.bindTextValues(heroConfig.stringOverrides.heading2, platform)}
+                  {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.heading2, platform)}
                 </Heading>
                 <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>
-                  {LandingPageHelper.bindTextValues(heroConfig.stringOverrides.heading2Desc, platform)}
+                  {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.heading2Desc, platform)}
                 </Span>
               </VStack>
             </HStack>
@@ -143,7 +130,7 @@ export const LandingPage = ({
             className='Layer__LandingPage__media-image'
             key={`hero-image-${isStackedLayout}`}
             src={heroConfig.mediaUrls.topOfFoldImage}
-            alt={`${platform.platformName} Accounting dashboard interface showing financial data and business insights`}
+            alt={t('platformnameAccountingDashboardInterfaceShowingFinancialDataAndBusinessInsights', '{{platformName}} Accounting dashboard interface showing financial data and business insights', { platformName: platform.platformName })}
           />
         </VStack>
       </div>
@@ -163,17 +150,17 @@ export const LandingPage = ({
         </HStack>
       )}
     </VStack>
-  ), [platform, heroConfig, isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly, handleLearnMore, handleMainCta, isMobile, isStackedLayout])
+  ), [t, platform, heroConfig, isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly, handleLearnMore, handleMainCta, isMobile, isStackedLayout])
 
   const RenderOffers = useMemo(() => (
     <VStack gap={isMobile ? 'lg' : '2xl'} className='Layer__LandingPage--offers'>
       <HStack align='center'>
         <Heading size='md' align='center' style={{ maxWidth: '480px', margin: '0 auto' }}>
-          {LandingPageHelper.bindTextValues(offeringSectionTitle, platform)}
+          {LandingPageHelper.interpolateTemplate(offeringSectionTitle, platform)}
         </Heading>
       </HStack>
       <div className='Layer__LandingPage-options__grid'>
-        { hasAccountingEnabled && (
+        {hasAccountingEnabled && (
           <LandingPageOffer
             type='accounting'
             config={accountingOfferingConfig}
@@ -182,7 +169,7 @@ export const LandingPage = ({
             className='Layer__LandingPage__offers'
           />
         )}
-        { hasBookkeepingEnabled && (
+        {hasBookkeepingEnabled && (
           <LandingPageOffer
             type='bookkeeping'
             config={bookkeepingOfferingConfig}
@@ -202,7 +189,6 @@ export const LandingPage = ({
       <div className='Layer__LandingPage__content'>
         {renderMainContent()}
         {RenderOffers}
-        {/* {RenderCarousel} */}
       </div>
     </View>
   )

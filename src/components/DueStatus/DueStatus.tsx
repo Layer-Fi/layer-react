@@ -1,6 +1,8 @@
 import { useMemo } from 'react'
 import { differenceInDays, parseISO } from 'date-fns'
+import i18next from 'i18next'
 
+import { i18nextPlural } from '@utils/i18n/plural'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
@@ -17,8 +19,12 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'paid',
       diff: daysDiff,
-      title: 'Paid',
-      diffText: `${daysDiff} ${daysDiff === 1 ? 'day' : 'days'} ago`,
+      title: i18next.t('paid', 'Paid'),
+      diffText: i18nextPlural('daysAgo', {
+        count: daysDiff,
+        one: '{{count}} day ago',
+        other: '{{count}} days ago',
+      }),
     }
   }
 
@@ -26,8 +32,8 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'paid',
       diff: daysDiff,
-      title: 'Paid',
-      diffText: 'Today',
+      title: i18next.t('paid', 'Paid'),
+      diffText: i18next.t('today', 'Today'),
     }
   }
 
@@ -35,7 +41,7 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'paid',
       diff: daysDiff,
-      title: 'Paid',
+      title: i18next.t('paid', 'Paid'),
     }
   }
 
@@ -43,7 +49,7 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'today',
       diff: daysDiff,
-      title: 'Due today',
+      title: i18next.t('dueToday', 'Due today'),
     }
   }
 
@@ -51,8 +57,12 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'overdue',
       diff: daysDiff,
-      title: 'Overdue',
-      diffText: `${daysDiff} ${daysDiff === 1 ? 'day' : 'days'} ago`,
+      title: i18next.t('overdue', 'Overdue'),
+      diffText: i18nextPlural('daysAgo', {
+        count: daysDiff,
+        one: '{{count}} day ago',
+        other: '{{count}} days ago',
+      }),
     }
   }
 
@@ -60,17 +70,23 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'soon',
       diff: daysDiff,
-      title: 'Due soon',
-      diffText: `Due in ${Math.abs(daysDiff)} ${
-        daysDiff === -1 ? 'day' : 'days'
-      }`,
+      title: i18next.t('dueSoon', 'Due soon'),
+      diffText: i18nextPlural('dueInDays', {
+        count: Math.abs(daysDiff),
+        one: 'Due in {{count}} day',
+        other: 'Due in {{count}} days',
+      }),
     }
   }
 
   return {
     type: 'before',
     diff: daysDiff,
-    diffText: `Due in ${Math.abs(daysDiff)} days`,
+    diffText: i18nextPlural('dueInDays', {
+      count: Math.abs(daysDiff),
+      one: 'Due in {{count}} day',
+      other: 'Due in {{count}} days',
+    }),
   }
 }
 

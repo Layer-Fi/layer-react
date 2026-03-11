@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { tPlural } from '@utils/i18nPlural'
+import { tPlural } from '@utils/i18n/plural'
 import ChevronRight from '@icons/ChevronRight'
 import UploadCloud from '@icons/UploadCloud'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'

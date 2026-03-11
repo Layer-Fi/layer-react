@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { asMutable } from '@utils/asMutable'
-import { tPlural } from '@utils/i18nPlural'
+import { tPlural } from '@utils/i18n/plural'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

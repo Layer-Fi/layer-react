@@ -1,7 +1,7 @@
 import i18next from 'i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
-import { i18nextPlural } from '@utils/i18nPlural'
+import { i18nextPlural } from '@utils/i18n/plural'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { getDueDifference } from '@utils/time/timeUtils'
 import AlertCircle from '@icons/AlertCircle'

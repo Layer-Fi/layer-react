@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useTaxDetails } from '@hooks/api/businesses/[business-id]/tax-estimates/details/useTaxDetails'
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
@@ -29,11 +30,17 @@ type ExpandedState = {
 }
 
 const TaxDetailsHeader = ({ isMobile }: { isMobile: boolean }) => {
+  const { t } = useTranslation()
   const { fullYearProjection } = useFullYearProjection()
   return (
     <TaxEstimatesHeader
-      title={maybeAddProjectedToLabel('Business Income Taxes', fullYearProjection)}
-      description='Calculated based on your categorized transactions and tracked mileage'
+      title={maybeAddProjectedToLabel(t, {
+        key: 'businessIncomeTaxes',
+        isProjected: fullYearProjection,
+        defaultCase: 'Business Income Taxes',
+        projectedCase: 'Projected Business Income Taxes',
+      })}
+      description={t('calculatedBasedOnYourCategorizedTransactionsAndTrackedMileage', 'Calculated based on your categorized transactions and tracked mileage')}
       isMobile={isMobile}
     />
   )
@@ -44,6 +51,7 @@ const MobileExpandableCardsWrapper = ({ children }: { children: ReactNode }) => 
 )
 
 export const TaxDetails = () => {
+  const { t } = useTranslation()
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
   const { data, isLoading, isError } = useTaxDetails({ year, fullYearProjection })
@@ -81,8 +89,8 @@ export const TaxDetails = () => {
         Error={(
           <DataState
             status={DataStateStatus.failed}
-            title="We couldn't load your tax summary"
-            description='An error occurred while loading your tax summary. Please check your connection and try again.'
+            title={t('weCouldntLoadYourTaxSummary', 'We couldn\'t load your tax summary')}
+            description={t('anErrorOccurredWhileLoadingYourTaxSummaryPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
             spacing
           />
         )}
@@ -98,8 +106,8 @@ export const TaxDetails = () => {
         Error={(
           <DataState
             status={DataStateStatus.failed}
-            title="We couldn't load your tax estimates"
-            description='An error occurred while loading your tax estimates. Please check your connection and try again.'
+            title={t('weCouldntLoadYourTaxEstimates', 'We couldn\'t load your tax estimates')}
+            description={t('anErrorOccurredWhileLoadingYourTaxEstimatesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
             spacing
           />
         )}
@@ -116,7 +124,12 @@ export const TaxDetails = () => {
                 slots={{
                   Heading: (
                     <TaxDetailsExpandableCardHeading
-                      title={maybeAddProjectedToLabel('Taxable Business Income', fullYearProjection)}
+                      title={maybeAddProjectedToLabel(t, {
+                        key: 'taxableBusinessIncome',
+                        isProjected: fullYearProjection,
+                        defaultCase: 'Taxable Business Income',
+                        projectedCase: 'Projected Taxable Business Income',
+                      })}
                       amount={details.adjustedGrossIncome.totalAdjustedGrossIncome}
                     />
                   ),
@@ -131,7 +144,12 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title={maybeAddProjectedToLabel('Federal Taxes', fullYearProjection)}
+                        title={maybeAddProjectedToLabel(t, {
+                          key: 'federalTaxes',
+                          isProjected: fullYearProjection,
+                          defaultCase: 'Federal Taxes',
+                          projectedCase: 'Projected Federal Taxes',
+                        })}
                         amount={usFederal.totalFederalTax.totalFederalTaxOwed}
                       />
                     ),
@@ -147,7 +165,13 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title={maybeAddProjectedToLabel(`State Taxes (${usState.stateName})`, fullYearProjection)}
+                        title={maybeAddProjectedToLabel(t, {
+                          key: 'stateTaxesStateName',
+                          isProjected: fullYearProjection,
+                          defaultCase: 'State Taxes ({{stateName}})',
+                          projectedCase: 'Projected State Taxes ({{stateName}})',
+                          stateName: usState.stateName,
+                        })}
                         amount={usState.totalStateTax.totalStateTaxOwed}
                       />
                     ),

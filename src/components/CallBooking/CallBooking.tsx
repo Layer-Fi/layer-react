@@ -1,6 +1,8 @@
 import { format as formatTime } from 'date-fns'
+import i18next from 'i18next'
 import { Link as LinkIcon } from 'lucide-react'
 import { Clock, Milestone, Users, Video } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
 import { DATE_FORMAT_WITH_TIME_READABLE } from '@utils/time/timeFormats'
@@ -18,12 +20,12 @@ import './callBooking.scss'
 
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
   <VStack gap='md' align='center'>
-    <Heading size='sm'>Have any questions?</Heading>
+    <Heading size='sm'>{i18next.t('haveAnyQuestions', 'Have any questions?')}</Heading>
     <Span variant='subtle'>
-      Book a call with your bookkeeper
+      {i18next.t('bookACallWithYourBookkeeper', 'Book a call with your bookkeeper')}
     </Span>
     <VStack gap='xs'>
-      <Button variant='solid' onClick={onBookCall}>Book a call</Button>
+      <Button variant='solid' onClick={onBookCall}>{i18next.t('bookACall', 'Book a call')}</Button>
     </VStack>
   </VStack>
 )
@@ -33,31 +35,41 @@ const ScheduledCallState = ({
 }: {
   callBooking: CallBookingData
 }) => {
-  const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? 'Onboarding call' : 'Ad hoc call'
+  const { t } = useTranslation()
+  const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? t('onboardingCall', 'Onboarding call') : t('adHocCall', 'Ad hoc call')
 
   return (
     <VStack gap='md' align='center'>
       <Users size={36} strokeWidth={1.5} />
-      <Heading size='sm'>Upcoming Call</Heading>
+      <Heading size='sm'>{t('upcomingCall', 'Upcoming Call')}</Heading>
       <Span variant='subtle'>
-        Meet with our bookkeeping team
+        {t('meetWithOurBookkeepingTeam', 'Meet with our bookkeeping team')}
       </Span>
       <Separator />
       <VStack align='start' className='Layer__call-booking-details' gap='xs'>
         <HStack align='center' gap='sm'>
           <Milestone size={16} />
-          <Span>Purpose: </Span>
+          <Span>
+            {t('purpose', 'Purpose:')}
+            {' '}
+          </Span>
           <Span>{purpose}</Span>
         </HStack>
         <HStack align='center' gap='sm'>
           <Video size={16} />
-          <Span>Location: </Span>
-          <Span size='md'>{callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'}</Span>
+          <Span>
+            {t('location', 'Location:')}
+            {' '}
+          </Span>
+          <Span size='md'>{callBooking.callType === CallBookingType.ZOOM ? t('zoom', 'Zoom') : t('googleMeet', 'Google Meet')}</Span>
         </HStack>
         <HStack align='center' gap='sm'>
           <Clock size={16} />
           <HStack gap='xs' align='center'>
-            <Span>Date: </Span>
+            <Span>
+              {t('date2', 'Date:')}
+              {' '}
+            </Span>
             <Span size='md'>
               {formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME_READABLE)}
               {' '}
@@ -70,8 +82,8 @@ const ScheduledCallState = ({
       <HStack gap='xs' align='start' justify='start' className='Layer__call-booking-actions'>
         <VStack>
           <AddToCalendar
-            title={callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? 'Onboarding call' : 'Adhoc call'}
-            description={callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'}
+            title={callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? t('onboardingCall', 'Onboarding call') : t('adhocCall', 'Adhoc call')}
+            description={callBooking.callType === CallBookingType.ZOOM ? t('zoom', 'Zoom') : t('googleMeet', 'Google Meet')}
             location={callBooking.callLink.toString()}
             startDate={callBooking.eventStartAt}
             endDate={callBooking.eventEndAt}
@@ -81,7 +93,7 @@ const ScheduledCallState = ({
 
         <LinkButton href={callBooking.callLink.toString()} external variant='outlined'>
           <LinkIcon size={16} />
-          Join call
+          {t('joinCall', 'Join call')}
         </LinkButton>
 
       </HStack>

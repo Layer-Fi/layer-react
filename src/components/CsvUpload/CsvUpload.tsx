@@ -1,7 +1,9 @@
 import { useCallback, useRef, useState } from 'react'
 import classNames from 'classnames'
+import i18next from 'i18next'
 import { FileSpreadsheet } from 'lucide-react'
 import { type FileRejection, useDropzone } from 'react-dropzone'
+import { Trans, useTranslation } from 'react-i18next'
 
 import CloseIcon from '@icons/CloseIcon'
 import UploadCloud from '@icons/UploadCloud'
@@ -22,16 +24,16 @@ const validateCsvFile = (file: File) => {
   )
 
   if (!isValidExtension) {
-    return 'File extension must end in .csv'
+    return i18next.t('fileExtensionMustEndInCsv', 'File extension must end in .csv')
   }
 
   // Check MIME type if it exists
   if (file.type && !VALID_FILE_TYPES.includes(file.type)) {
-    return `Invalid file type: ${file.type}`
+    return i18next.t('invalidFileTypeType', 'Invalid file type: {{type}}', { type: file.type })
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    return 'File exceeds the size limit of 2MB'
+    return i18next.t('fileExceedsTheSizeLimitOf2mb', 'File exceeds the size limit of 2MB')
   }
 
   return null
@@ -80,6 +82,7 @@ type CsvUploadProps = {
 }
 
 export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: CsvUploadProps) => {
+  const { t } = useTranslation()
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -101,13 +104,13 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
       const hasTooManyFiles = rejections.some(r => r.errors.some(e => e.code === 'too-many-files'))
       if (restFiles.length > 0 || hasTooManyFiles) {
         onFileSelected(null)
-        setErrorMessage('Too many files selected')
+        setErrorMessage(t('tooManyFilesSelected', 'Too many files selected'))
         return
       }
 
       if (rejections.length > 0) {
         onFileSelected(null)
-        setErrorMessage('Unknown upload error')
+        setErrorMessage(t('unknownUploadError', 'Unknown upload error'))
         return
       }
 
@@ -121,7 +124,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
         setErrorMessage(maybeErrorMessage)
       }
     },
-    [onFileSelected],
+    [onFileSelected, t],
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -151,19 +154,22 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
         <HStack align='center' gap='xs'>
           <UploadCloud size={12} />
           <P size='sm'>
-            {'Drag and drop a file, or click '}
-            <button className='Layer__csv-upload__browse-link' onClick={handleBrowseClick}>
-              Browse
-            </button>
+            <Trans
+              i18nKey='dragAndDropFileOrClickBrowse'
+              defaults='Drag and drop a file, or <browse>Browse</browse>.'
+              components={{
+                browse: <button type='button' className='Layer__csv-upload__browse-link' onClick={handleBrowseClick} />,
+              }}
+            />
           </P>
           <input type='file' ref={fileInputRef} style={{ display: 'none' }} accept='.csv' onChange={handleFileChange} />
         </HStack>
-        <P size='sm' variant='subtle'>File must be in CSV format</P>
+        <P size='sm' variant='subtle'>{t('fileMustBeInCsvFormat', 'File must be in CSV format')}</P>
         {errorMessage && (
           <DataState
             className='Layer__csv-upload__error-message'
             status={DataStateStatus.failed}
-            title='Cannot upload file'
+            title={t('cannotUploadFile', 'Cannot upload file')}
             description={errorMessage}
             inline
           />

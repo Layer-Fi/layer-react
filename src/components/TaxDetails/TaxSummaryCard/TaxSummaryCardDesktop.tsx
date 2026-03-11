@@ -20,7 +20,14 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
     <HStack className='Layer__TaxSummaryCard'>
       <VStack className='Layer__TaxSummaryCard__Overview' gap='xs' justify='center' align='center'>
         <VStack justify='center' align='center'>
-          <Span size='md' variant='subtle'>{maybeAddProjectedToLabel('Taxes Owed', fullYearProjection)}</Span>
+          <Span size='md' variant='subtle'>
+            {maybeAddProjectedToLabel(t, {
+              key: 'taxesOwed',
+              isProjected: fullYearProjection,
+              defaultCase: 'Taxes Owed',
+              projectedCase: 'Projected Taxes Owed',
+            })}
+          </Span>
           <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
         </VStack>
         <VStack align='center'>
