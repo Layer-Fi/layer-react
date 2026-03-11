@@ -2,9 +2,7 @@ import { type PropsWithChildren } from 'react'
 import { I18nProvider as AriaI18nProvider } from 'react-aria-components'
 import { I18nextProvider } from 'react-i18next'
 
-import i18next, { initI18n } from '@utils/i18n/init'
-
-void initI18n()
+import i18next from '@utils/i18n/init'
 
 export function LayerI18nProvider({ children }: PropsWithChildren) {
   const locale = i18next.resolvedLanguage || i18next.language || 'en-US'

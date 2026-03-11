@@ -19,6 +19,7 @@ export const initI18n = async () => {
       .use(initReactI18next)
       .init({
         returnEmptyString: false,
+        initImmediate: false,
         fallbackLng: 'en-US',
         defaultNS: 'translation',
         resources: {
@@ -34,3 +35,5 @@ export const initI18n = async () => {
 }
 
 export default i18next
+
+void initI18n()
