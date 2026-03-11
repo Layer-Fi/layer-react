@@ -1,4 +1,6 @@
 import { useCallback, useId, useMemo } from 'react'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { type Tag, type TagValueDefinition } from '@schemas/tag'
 import { useTagDimensionByKey } from '@hooks/api/businesses/[business-id]/tags/dimensions/key/[dimension-key]/useTagDimensionByKey'
@@ -21,7 +23,7 @@ class TagValueDefinitionAsOption {
   get label() {
     const label = (this.valueDisplayName ?? this.tagValueDefinition.value)
     if (this.isArchived) {
-      return `${label} (Archived)`
+      return i18next.t('labelArchived', '{{label}} (Archived)', { label })
     }
     return label
   }
@@ -62,6 +64,7 @@ export const TagDimensionCombobox = ({
   className,
   isClearable = true,
 }: TagDimensionComboboxProps) => {
+  const { t } = useTranslation()
   const { data: tagDimension, isLoading } = useTagDimensionByKey({ dimensionKey })
 
   const options = useMemo(() => {
@@ -120,7 +123,7 @@ export const TagDimensionCombobox = ({
           inputId={inputId}
           isReadOnly={isReadOnly}
           isLoading={isLoading}
-          placeholder={`Select ${tagDimension?.displayName ?? dimensionKey}`}
+          placeholder={t('selectVal', 'Select {{val}}', { val: tagDimension?.displayName ?? dimensionKey })}
           isClearable={isClearable}
           {...additionalAriaProps}
         />

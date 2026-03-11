@@ -1,3 +1,5 @@
+import i18next from 'i18next'
+
 import { type Customer, type CustomerForm } from '@schemas/customer'
 import { UpsertCustomerMode } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
 
@@ -31,11 +33,11 @@ export const validateCustomerForm = ({ customer }: { customer: CustomerForm }) =
 
   // At least one of individual name or company name is required
   if (!individualName.trim() && !companyName.trim()) {
-    errors.push({ individualName: 'Either individual name or company name is required.' })
+    errors.push({ individualName: i18next.t('eitherIndividualNameOrCompanyNameIsRequired', 'Either individual name or company name is required.') })
   }
 
   if (!email.trim()) {
-    errors.push({ email: 'Email is a required field.' })
+    errors.push({ email: i18next.t('emailIsARequiredField', 'Email is a required field.') })
   }
 
   return errors.length > 0 ? errors : null

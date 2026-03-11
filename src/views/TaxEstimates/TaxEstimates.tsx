@@ -1,7 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { getYear } from 'date-fns'
+import i18next from 'i18next'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
@@ -39,6 +41,7 @@ export const TaxEstimatesView = () => {
 }
 
 const TaxEstimatesViewContent = () => {
+  const { t } = useTranslation()
   const onboardingStatus = useTaxEstimatesOnboardingStatus()
   const header = useMemo(
     () => onboardingStatus === OnboardingStatus.Onboarded && <TaxEstimatesViewHeader />,
@@ -59,8 +62,8 @@ const TaxEstimatesViewContent = () => {
           <Container name='tax-estimates'>
             <DataState
               status={DataStateStatus.failed}
-              title='Unable to load tax information'
-              description='We couldn’t retrieve your tax profile. Please check your connection and try again.'
+              title={t('unableToLoadTaxInformation', 'Unable to load tax information')}
+              description={t('weCouldntRetrieveYourTaxProfilePleaseCheckYourConnectionAndTryAgain', 'We couldn’t retrieve your tax profile. Please check your connection and try again.')}
               spacing
             />
           </Container>
@@ -73,7 +76,7 @@ const TaxEstimatesViewContent = () => {
       default:
         return <TaxProfile />
     }
-  }, [onboardingStatus])
+  }, [onboardingStatus, t])
 
   return (
     <View title='Taxes' header={header}>
@@ -83,6 +86,7 @@ const TaxEstimatesViewContent = () => {
 }
 
 const TaxEstimatesViewHeader = () => {
+  const { t } = useTranslation()
   const navigate = useTaxEstimatesNavigation()
   const { year, setYear } = useTaxEstimatesYear()
   const activationDate = useBusinessActivationDate()
@@ -112,14 +116,14 @@ const TaxEstimatesViewHeader = () => {
         maxDate={maxDateZdt}
       />
       <DropdownMenu
-        ariaLabel='Additional actions'
+        ariaLabel={t('additionalActions', 'Additional actions')}
         slots={{ Trigger }}
         slotProps={{ Dialog: { width: 160 } }}
       >
         <MenuList>
           <MenuItem key={TaxEstimatesRoute.Profile} onClick={() => navigate(TaxEstimatesRoute.Profile)}>
             <UserRoundPen size={20} strokeWidth={1.25} />
-            <Span size='sm'>Update tax profile</Span>
+            <Span size='sm'>{t('updateTaxProfile', 'Update tax profile')}</Span>
           </MenuItem>
         </MenuList>
       </DropdownMenu>
@@ -130,15 +134,16 @@ const TaxEstimatesViewHeader = () => {
 const TAX_ESTIMATES_TAB_OPTIONS = [
   {
     value: TaxEstimatesRoute.Estimates,
-    label: 'Estimates',
+    label: i18next.t('estimates', 'Estimates'),
   },
   {
     value: TaxEstimatesRoute.Payments,
-    label: 'Payments',
+    label: i18next.t('payments', 'Payments'),
   },
 ]
 
 const TaxEstimatesOnboardedViewContent = () => {
+  const { t } = useTranslation()
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
 
@@ -153,7 +158,7 @@ const TaxEstimatesOnboardedViewContent = () => {
   return (
     <>
       <Toggle
-        ariaLabel='Tax estimate view'
+        ariaLabel={t('taxEstimateView', 'Tax estimate view')}
         options={TAX_ESTIMATES_TAB_OPTIONS}
         selectedKey={route}
         onSelectionChange={handleTabChange}

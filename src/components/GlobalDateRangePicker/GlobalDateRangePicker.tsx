@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -6,6 +7,7 @@ import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 
 export const GlobalDateRangePicker = ({ showLabels = false }: { showLabels?: boolean }) => {
+  const { t } = useTranslation()
   const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange: setGlobalDateRange } = useGlobalDateRangeActions()
   const { minDate, maxDate } = useGlobalDatePickerBounds()
@@ -49,7 +51,7 @@ export const GlobalDateRangePicker = ({ showLabels = false }: { showLabels?: boo
   return (
     <>
       <DatePicker
-        label='Start date'
+        label={t('startDate', 'Start date')}
         date={localStartDate}
         onChange={onChangeStartDate}
         minDate={minStartDate}
@@ -61,7 +63,7 @@ export const GlobalDateRangePicker = ({ showLabels = false }: { showLabels?: boo
         showLabel={showLabels}
       />
       <DatePicker
-        label='End date'
+        label={t('endDate', 'End date')}
         date={localEndDate}
         onChange={onChangeEndDate}
         minDate={minEndDate}

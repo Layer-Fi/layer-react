@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { hasMatch } from '@utils/bankTransactions'
@@ -26,6 +27,7 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
   showDescriptions,
   showCategorization,
 }: BankTransactionsMobileListSplitAndMatchFormProps) => {
+  const { t } = useTranslation()
   const anyMatch = hasMatch(bankTransaction)
   const [formType, setFormType] = useState(
     bankTransaction.category
@@ -58,12 +60,12 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
         formType === Purpose.match
           ? (
             <TextButton onClick={() => setFormType(Purpose.categorize)}>
-              or split transaction
+              {t('orSplitTransaction', 'or split transaction')}
             </TextButton>
           )
           : (
             <TextButton onClick={() => setFormType(Purpose.match)}>
-              or find match
+              {t('orFindMatch', 'or find match')}
             </TextButton>
           )
       )}

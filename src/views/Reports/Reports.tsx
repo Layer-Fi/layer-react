@@ -1,4 +1,6 @@
 import { type ReactNode, useMemo, useState } from 'react'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { type View as ViewType } from '@internal-types/general'
 import { type ProfitAndLossCompareConfig } from '@internal-types/profitAndLoss'
@@ -58,19 +60,19 @@ const getOptions = (enabledReports: ReportType[]) => {
     enabledReports.includes('profitAndLoss')
       ? {
         value: 'profitAndLoss',
-        label: 'Profit & Loss',
+        label: i18next.t('profitLoss', 'Profit & Loss'),
       }
       : null,
     enabledReports.includes('balanceSheet')
       ? {
         value: 'balanceSheet',
-        label: 'Balance Sheet',
+        label: i18next.t('balanceSheet', 'Balance Sheet'),
       }
       : null,
     enabledReports.includes('statementOfCashFlow')
       ? {
         value: 'statementOfCashFlow',
-        label: 'Statement of Cash Flow',
+        label: i18next.t('statementOfCashFlow', 'Statement of Cash Flow'),
       }
       : null,
   ].filter(o => !!o) as ReportOption[]
@@ -87,13 +89,14 @@ export const Reports = ({
   statementOfCashFlowConfig,
   renderInAppLink,
 }: ReportsProps) => {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   const options = useMemo(() => getOptions(enabledReports), [enabledReports])
   const defaultTitle =
     enabledReports.length > 1
-      ? 'Reports'
+      ? t('reports', 'Reports')
       : options.find(option => (option.value === enabledReports[0]))?.label
 
   return (
@@ -104,7 +107,7 @@ export const Reports = ({
       {enabledReports.length > 1 && (
         <div className='Layer__component Layer__header__actions'>
           <Toggle
-            ariaLabel='Report type'
+            ariaLabel={t('reportType', 'Report type')}
             options={options}
             selectedKey={activeTab}
             onSelectionChange={key => setActiveTab(key as ReportType)}

@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { format, isValid } from 'date-fns'
+import i18next from 'i18next'
 
 import { MONTH_FORMAT } from '@utils/time/timeFormats'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
@@ -12,28 +13,31 @@ const formatLastSyncedAt = (datetime: string) => {
   const parsed = new Date(datetime)
   if (!isValid(parsed)) return ''
 
-  return `${format(parsed, `${MONTH_FORMAT} d, yyyy`)} at ${format(parsed, 'h:mm a')}`
+  return i18next.t('dateAtTime', '{{date}} at {{time}}', {
+    date: format(parsed, `${MONTH_FORMAT} d, yyyy`),
+    time: format(parsed, 'h:mm a'),
+  })
 }
 
 const getFooterConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, lastSyncedAt?: string) => {
   switch (quickbooksUiState) {
     case QuickbooksConnectionSyncUiState.Syncing: {
       return {
-        title: 'Syncing account data',
-        description: 'This may take up to 5 minutes',
+        title: i18next.t('syncingAccountData', 'Syncing account data'),
+        description: i18next.t('thisMayTakeUpTo5Minutes', 'This may take up to 5 minutes'),
         badgeVariant: 'info',
       } as const
     }
     case QuickbooksConnectionSyncUiState.SyncFailed: {
       return {
-        title: 'Last sync failed at',
+        title: i18next.t('lastSyncFailedAt', 'Last sync failed at'),
         description: formatLastSyncedAt(lastSyncedAt!),
         badgeVariant: 'error',
       } as const
     }
     case QuickbooksConnectionSyncUiState.SyncSuccess: {
       return {
-        title: 'Last synced on',
+        title: i18next.t('lastSyncedOn', 'Last synced on'),
         description: formatLastSyncedAt(lastSyncedAt!),
         badgeVariant: 'success',
       } as const
@@ -41,7 +45,7 @@ const getFooterConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, las
     case QuickbooksConnectionSyncUiState.Connected:
     default: {
       return {
-        title: 'Connected to QuickBooks',
+        title: i18next.t('connectedToQuickbooks', 'Connected to QuickBooks'),
         badgeVariant: 'success',
       } as const
     }

@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 import Select, { type Options } from 'react-select'
 
 import { DisplayState } from '@internal-types/bankTransactions'
@@ -17,9 +19,9 @@ import './projectProfitability.scss'
 type ProjectTab = 'overview' | 'transactions' | 'report'
 
 const PROJECT_TAB_OPTIONS = [
-  { value: 'overview', label: 'Overview' },
-  { value: 'transactions', label: 'Transactions' },
-  { value: 'report', label: 'Report' },
+  { value: 'overview', label: i18next.t('overview', 'Overview') },
+  { value: 'transactions', label: i18next.t('transactions', 'Transactions') },
+  { value: 'report', label: i18next.t('report', 'Report') },
 ]
 
 export type TagOption = {
@@ -51,6 +53,7 @@ export const ProjectProfitabilityView = ({
   dateSelectionMode = 'month',
   csvMoneyFormat = 'DOLLAR_STRING',
 }: ProjectProfitabilityProps) => {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<ProjectTab>('overview')
   const [tagFilter, setTagFilter] = useState<TagOption | null>(null)
   const [pnlTagFilter, setPnlTagFilter] = useState<PnlTagFilter | undefined>(
@@ -91,7 +94,7 @@ export const ProjectProfitabilityView = ({
       <div className='Layer__component Layer__header__actions'>
         <div className='Layer__component'>
           <Toggle
-            ariaLabel='Project view'
+            ariaLabel={t('projectView', 'Project view')}
             options={PROJECT_TAB_OPTIONS}
             selectedKey={activeTab}
             onSelectionChange={key => setActiveTab(key as ProjectTab)}
@@ -101,7 +104,7 @@ export const ProjectProfitabilityView = ({
           className='Layer__category-menu Layer__select'
           classNamePrefix='Layer__select'
           options={valueOptions}
-          placeholder='Select a project...'
+          placeholder={t('selectAProject', 'Select a project...')}
           isOptionSelected={isOptionSelected}
           defaultValue={valueOptions.length > 0 ? valueOptions[0] : undefined}
           value={valueOptions.find(
@@ -121,7 +124,7 @@ export const ProjectProfitabilityView = ({
         <>
           {activeTab === 'overview' && (
             <AccountingOverview
-              stringOverrides={{ header: 'Project Overview' }}
+              stringOverrides={{ header: t('projectOverview', 'Project Overview') }}
               tagFilter={tagFilter ? tagFilter : undefined}
               onTransactionsToReviewClick={() => setActiveTab('transactions')}
               enableOnboarding={false}

@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import i18next from 'i18next'
 
 import { useTaxPayments } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -11,8 +12,8 @@ import { TaxPaymentsTable } from '@components/TaxPayments/TaxPaymentsTable/TaxPa
 
 const TaxPaymentsHeader = ({ isMobile }: { isMobile: boolean }) => (
   <TaxEstimatesHeader
-    title='Tax Payments'
-    description='Federal and state tax payments for the selected tax year'
+    title={i18next.t('taxPayments', 'Tax Payments')}
+    description={i18next.t('federalAndStateTaxPaymentsForTheSelectedTaxYear', 'Federal and state tax payments for the selected tax year')}
     isMobile={isMobile}
   />
 )
@@ -21,8 +22,8 @@ const ErrorState = () => (
   <DataState
     spacing
     status={DataStateStatus.failed}
-    title='We couldnʼt load your tax payments'
-    description='An error occurred while loading your tax payments. Please check your connection and try again.'
+    title={i18next.t('weCouldntLoadYourTaxPayments', 'We couldnʼt load your tax payments')}
+    description={i18next.t('anErrorOccurredWhileLoadingYourTaxPaymentsPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax payments. Please check your connection and try again.')}
     className='Layer__TaxPayments__ErrorState'
   />
 )
@@ -31,8 +32,8 @@ const EmptyState = () => (
   <DataState
     spacing
     status={DataStateStatus.info}
-    title='No tax payments found'
-    description='There are no tax payments to display.'
+    title={i18next.t('noTaxPaymentsFound', 'No tax payments found')}
+    description={i18next.t('thereAreNoTaxPaymentsToDisplay', 'There are no tax payments to display.')}
     className='Layer__TaxPayments__EmptyState'
   />
 )

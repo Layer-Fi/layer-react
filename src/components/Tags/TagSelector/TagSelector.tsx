@@ -6,6 +6,7 @@ import {
 } from 'react'
 import { X } from 'lucide-react'
 import { Group } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import type { OneOf } from '@internal-types/utility/oneOf'
 import { getDimensionDisplayName, getTagDisplayNameForDimension, getTagDisplayNameForValue, getTagValueDisplayName, type Tag as TagType, type TagValue } from '@schemas/tag'
@@ -46,13 +47,14 @@ function TagSelectorSelection({
   onRemoveTag,
   isReadOnly,
 }: TagSelectorSelectionProps) {
+  const { t } = useTranslation()
   if (selectedTags.length === 0) {
     return null
   }
 
   return (
     <TagGroup
-      aria-label='Active Tags'
+      aria-label={t('activeTags', 'Active Tags')}
       selectionMode='none'
       onRemove={
         onRemoveTag
@@ -135,13 +137,14 @@ function LabeledTagSelectorContainer({
   children,
   forInputId,
 }: LabeledTagSelectorContainerProps) {
+  const { t } = useTranslation()
   return (
     <VStack gap='3xs'>
       <Label
         htmlFor={forInputId}
         size='sm'
       >
-        Tags
+        {t('tags', 'Tags')}
       </Label>
       {children}
     </VStack>
@@ -162,6 +165,7 @@ export function TagSelector({
   onRemoveTag,
   isReadOnly,
 }: TagSelectorProps) {
+  const { t } = useTranslation()
   const { data, isLoading, isError } = useTagDimensions()
 
   const groups = useMemo(
@@ -223,10 +227,10 @@ export function TagSelector({
         variant='subtle'
         nonAria
       >
-        No matching tags found
+        {t('noMatchingTagsFound', 'No matching tags found')}
       </Span>
     ),
-    [],
+    [t],
   )
   const ErrorMessage = useMemo(
     () => (
@@ -235,10 +239,10 @@ export function TagSelector({
         status='error'
         nonAria
       >
-        An error occurred while loading tag options.
+        {t('anErrorOccurredWhileLoadingTagOptions', 'An error occurred while loading tag options.')}
       </Span>
     ),
-    [],
+    [t],
   )
 
   const noDimensionsExist = !isLoading
@@ -278,7 +282,7 @@ export function TagSelector({
           groups={groups}
           inputId={inputId}
 
-          placeholder='Add a tag to this transaction...'
+          placeholder={t('addATagToThisTransaction', 'Add a tag to this transaction...')}
           slots={{
             EmptyMessage,
             ErrorMessage,

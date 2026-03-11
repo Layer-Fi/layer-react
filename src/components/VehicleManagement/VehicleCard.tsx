@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import i18next from 'i18next'
 import { Archive, Car, Edit, RotateCcw, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { getVehicleDisplayName } from '@utils/vehicles'
@@ -23,14 +25,15 @@ interface VehicleCardProps {
 }
 
 const VEHICLE_CARD_FIELDS = [
-  { label: 'Make and model', key: 'makeAndModel' as const },
-  { label: 'Year', key: 'year' as const },
-  { label: 'License plate', key: 'licensePlate' as const },
-  { label: 'VIN', key: 'vin' as const },
-  { label: 'Description', key: 'description' as const },
+  { label: i18next.t('makeAndModel', 'Make and model'), key: 'makeAndModel' as const },
+  { label: i18next.t('year', 'Year'), key: 'year' as const },
+  { label: i18next.t('licensePlate', 'License plate'), key: 'licensePlate' as const },
+  { label: i18next.t('vin', 'VIN'), key: 'vin' as const },
+  { label: i18next.t('description', 'Description'), key: 'description' as const },
 ]
 
 export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
+  const { t } = useTranslation()
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false)
   const [isReactivateModalOpen, setIsReactivateModalOpen] = useState(false)
@@ -49,12 +52,12 @@ export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
                 <Heading size='sm' ellipsis>{vehicleName}</Heading>
                 {vehicle.isPrimary && (
                   <Badge size={BadgeSize.SMALL} variant={BadgeVariant.INFO}>
-                    Primary
+                    {t('primary', 'Primary')}
                   </Badge>
                 )}
                 {isArchived && (
                   <Badge size={BadgeSize.SMALL} variant={BadgeVariant.WARNING}>
-                    Archived
+                    {t('archived', 'Archived')}
                   </Badge>
                 )}
               </HStack>
@@ -76,27 +79,27 @@ export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
             {!isArchived && (
               <Button variant='ghost' onPress={() => onEdit(vehicle)}>
                 <Edit size={16} />
-                Edit
+                {t('edit', 'Edit')}
               </Button>
             )}
             {isArchived
               ? (
                 <Button variant='ghost' onPress={() => setIsReactivateModalOpen(true)}>
                   <RotateCcw size={16} />
-                  Reactivate
+                  {t('reactivate', 'Reactivate')}
                 </Button>
               )
               : vehicle.isEligibleForDeletion
                 ? (
                   <Button variant='ghost' onPress={() => setIsDeleteModalOpen(true)}>
                     <Trash2 size={16} />
-                    Delete
+                    {t('delete', 'Delete')}
                   </Button>
                 )
                 : (
                   <Button variant='ghost' onPress={() => setIsArchiveModalOpen(true)}>
                     <Archive size={16} />
-                    Archive
+                    {t('archive', 'Archive')}
                   </Button>
                 )}
           </HStack>

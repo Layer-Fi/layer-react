@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+import i18next from 'i18next'
 
 import { type FormError, type FormErrorWithId } from '@internal-types/general'
 import { type BaseSelectOption } from '@internal-types/general'
@@ -91,7 +92,7 @@ const validateLineItems = (lineItems?: JournalEntryLineItem[]) => {
       errors.push({
         id: idx,
         field: 'account',
-        message: 'Account is required',
+        message: i18next.t('accountIsRequired', 'Account is required'),
       })
     }
 
@@ -99,7 +100,7 @@ const validateLineItems = (lineItems?: JournalEntryLineItem[]) => {
       errors.push({
         id: idx,
         field: 'amount',
-        message: 'Amount cannot be empty or zero',
+        message: i18next.t('amountCannotBeEmptyOrZero', 'Amount cannot be empty or zero'),
       })
     }
   })
@@ -199,7 +200,7 @@ export const useJournal: UseJournal = () => {
       setForm(undefined)
     }
     catch (_err) {
-      setApiError('Submit failed. Please, check your connection and try again.')
+      setApiError(i18next.t('submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
     }
     finally {
       setSendingForm(false)

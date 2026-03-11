@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { Schema } from 'effect'
+import i18next from 'i18next'
 
 import { UpsertJournalEntryMode, useUpsertJournalEntry } from '@hooks/api/businesses/[business-id]/ledger/journal-entries/useUpsertJournalEntry'
 import { useAppForm } from '@hooks/features/forms/useForm'
@@ -44,7 +45,7 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
 
       const journalEntryNumber = journalEntry.entry.entryNumber
       addToast({
-        content: `Journal entry #${journalEntryNumber} posted`,
+        content: i18next.t('journalEntryJournalentrynumberPosted', 'Journal entry #{{journalEntryNumber}} posted', { journalEntryNumber }),
         type: 'success',
       })
 
@@ -53,7 +54,7 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
     }
     catch (e) {
       console.error(e)
-      setSubmitError('Something went wrong. Please try again.')
+      setSubmitError(i18next.t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
     }
   }, [onSuccess, upsertJournalEntry, addToast])
 

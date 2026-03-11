@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import type { ComponentProps } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Dots, usePaginationRange } from '@hooks/utils/pagination/usePaginationRange'
 import ChevronLeft from '@icons/ChevronLeft'
@@ -44,6 +45,7 @@ export const Pagination = ({
   fetchMore,
   className,
 }: PaginationProps) => {
+  const { t } = useTranslation()
   const paginationRange = usePaginationRange({
     currentPage,
     totalCount,
@@ -58,13 +60,13 @@ export const Pagination = ({
 
   return (
     <VStack className={classNames('Layer__pagination-container', className)} fluid>
-      <nav aria-label='Pagination' className='Layer__pagination-nav'>
+      <nav aria-label={t('pagination', 'Pagination')} className='Layer__pagination-nav'>
         <ul className='Layer__pagination' role='list'>
           <li key='page-prev'>
             <PaginationButton
               onPress={() => onPageChange(currentPage - 1)}
               isDisabled={currentPage === 1}
-              aria-label='Go to previous page'
+              aria-label={t('goToPreviousPage', 'Go to previous page')}
             >
               <ChevronLeft size={12} />
             </PaginationButton>
@@ -88,7 +90,7 @@ export const Pagination = ({
                 <PaginationButton
                   isSelected={pageNumber === currentPage}
                   onPress={() => onPageChange(Number(pageNumber))}
-                  aria-label={`Go to page ${pageNumber}`}
+                  aria-label={t('goToPagePagenumber', 'Go to page {{pageNumber}}', { pageNumber })}
                 >
                   {pageNumber}
                 </PaginationButton>
@@ -100,7 +102,7 @@ export const Pagination = ({
               <li key='page-has-more'>
                 <PaginationButton
                   onPress={fetchMore}
-                  aria-label='Get more results'
+                  aria-label={t('getMoreResults', 'Get more results')}
                 >
                   &hellip;
                 </PaginationButton>
@@ -111,7 +113,7 @@ export const Pagination = ({
             <PaginationButton
               onPress={() => onPageChange(currentPage + 1)}
               isDisabled={currentPage === lastPage}
-              aria-label='Go to next page'
+              aria-label={t('goToNextPage', 'Go to next page')}
             >
               <ChevronRight size={12} />
             </PaginationButton>

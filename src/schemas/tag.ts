@@ -1,4 +1,5 @@
 import { pipe, Schema } from 'effect'
+import i18next from 'i18next'
 
 export const TagDimensionStrictnessSchema = Schema.Literal(
   'BALANCING',
@@ -94,7 +95,7 @@ export const TagSchema = Schema.Data(
 
 export function getTagDisplayNameForValue(tag: Tag): string {
   const valueBaseLabel = tag.valueDisplayName ?? tag.value
-  const archiveAwareLabel = tag.archivedAt ? `${valueBaseLabel} (Archived)` : valueBaseLabel
+  const archiveAwareLabel = tag.archivedAt ? i18next.t('valueBaseLabelArchived', '{{valueBaseLabel}} (Archived)', { valueBaseLabel }) : valueBaseLabel
   return archiveAwareLabel
 }
 
@@ -104,7 +105,7 @@ export function getTagDisplayNameForDimension(tag: Tag): string {
 
 export function getTagValueDisplayNameForValue(tagValue: TagValue): string {
   const valueBaseLabel = tagValue.valueDisplayName ?? tagValue.value
-  const archiveAwareLabel = tagValue.isArchived ? `${valueBaseLabel} (Archived)` : valueBaseLabel
+  const archiveAwareLabel = tagValue.isArchived ? i18next.t('valueBaseLabelArchived', '{{valueBaseLabel}} (Archived)', { valueBaseLabel }) : valueBaseLabel
 
   return archiveAwareLabel
 }
@@ -119,7 +120,7 @@ export function getDimensionDisplayName(dimension: TagDimension): string {
 
 export function getTagValueDisplayName(tag: { value: string, displayName?: string | null, archivedAt?: Date | null }): string {
   const valueBaseLabel = tag.displayName ?? tag.value
-  const archiveAwareLabel = tag.archivedAt ? `${valueBaseLabel} (Archived)` : valueBaseLabel
+  const archiveAwareLabel = tag.archivedAt ? i18next.t('valueBaseLabelArchived', '{{valueBaseLabel}} (Archived)', { valueBaseLabel }) : valueBaseLabel
   return archiveAwareLabel
 }
 
