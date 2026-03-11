@@ -1,7 +1,7 @@
 import { memo, type ReactNode, useCallback, useState } from 'react'
 
 import { type Awaitable } from '@internal-types/utility/promises'
-import { APIError } from '@utils/api/apiError'
+import { type APIError } from '@utils/api/apiError'
 import { Drawer, Modal, type ModalProps } from '@ui/Modal/Modal'
 import {
   ModalActions,
@@ -26,16 +26,6 @@ export type BaseConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChan
   closeOnConfirm?: boolean
   confirmDisabled?: boolean
   useDrawer?: boolean
-}
-
-function getErrorMessage(error: APIError | Error | null, errorText?: string) {
-  if (error === null) return null
-
-  if (errorText) return errorText
-
-  return error instanceof APIError
-    ? error?.getAllMessages()?.[0] || error?.getMessage()
-    : error?.message
 }
 
 type BaseConfirmationModalContentProps = Omit<
@@ -104,7 +94,7 @@ const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent(
             onClick={onClickConfirm}
             processing={isProcessing}
             disabled={confirmDisabled}
-            error={getErrorMessage(error, errorText) ?? ''}
+            error={error ? errorText : undefined}
             withRetry
             noIcon={!isProcessing}
           >

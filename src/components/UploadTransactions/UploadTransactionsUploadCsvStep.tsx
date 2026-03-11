@@ -80,7 +80,7 @@ export function UploadTransactionsUploadCsvStep(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error: customAccountsError,
   } = useCustomAccounts({ userCreated: true })
-  const { trigger: parseCsv, isMutating: isParsingCsv, error: parseCsvError } = useCustomAccountParseCsv()
+  const { trigger: parseCsv, isMutating: isParsingCsv } = useCustomAccountParseCsv()
   const [hasParseCsvError, setHasParseCsvError] = useState(false)
 
   const accountOptions = useMemo(() => {
@@ -187,7 +187,7 @@ export function UploadTransactionsUploadCsvStep(
             </VStack>
             <HStack align='center' gap='xs'>
               <HStack className='Layer__upload-transactions__parse-csv-error-message'>
-                {hasParseCsvError && <P status='error'>{parseCsvError?.getAllMessages()?.[0] || parseCsvError?.getMessage()}</P>}
+                {hasParseCsvError && <P status='error'>{t('weCouldNotParseThisCsvPleaseReviewTheFileAndTryAgain', 'We could not parse this CSV. Please review the file and try again.')}</P>}
               </HStack>
               <Spacer />
               <SubmitButton
