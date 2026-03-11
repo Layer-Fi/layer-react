@@ -1,6 +1,7 @@
 import { useCallback, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/i18nPlural'
 import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
@@ -100,17 +101,17 @@ export const BankTransactionsCategorizeAllModal = ({
           {selectedCategory && isCategoryAsOption(selectedCategory) && (
             <Span>
               {mode === CategorizationMode.Categorize
-                ? t('thisWillCategorizeCountSelectedTransactionsAsCategory', {
+                ? tPlural(t, 'thisWillCategorizeCountSelectedTransactionsAsCategory', {
                   count,
                   category: selectedCategory.original.displayName,
-                  defaultValue_one: 'This will categorize {{count}} selected transaction as {{category}}.',
-                  defaultValue_other: 'This will categorize {{count}} selected transactions as {{category}}.',
+                  one: 'This will categorize {{count}} selected transaction as {{category}}.',
+                  other: 'This will categorize {{count}} selected transactions as {{category}}.',
                 })
-                : t('thisWillRecategorizeCountSelectedTransactionsAsCategory', {
+                : tPlural(t, 'thisWillRecategorizeCountSelectedTransactionsAsCategory', {
                   count,
                   category: selectedCategory.original.displayName,
-                  defaultValue_one: 'This will recategorize {{count}} selected transaction as {{category}}.',
-                  defaultValue_other: 'This will recategorize {{count}} selected transactions as {{category}}.',
+                  one: 'This will recategorize {{count}} selected transaction as {{category}}.',
+                  other: 'This will recategorize {{count}} selected transactions as {{category}}.',
                 })}
             </Span>
           )}

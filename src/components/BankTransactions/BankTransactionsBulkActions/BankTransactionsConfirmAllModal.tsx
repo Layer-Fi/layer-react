@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
-import pluralize from 'pluralize'
+import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/i18nPlural'
 import { useBulkMatchOrCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-match-or-categorize/useBulkMatchOrCategorize'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
@@ -14,6 +15,7 @@ interface BankTransactionsConfirmAllModalProps {
 }
 
 export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobileView = false }: BankTransactionsConfirmAllModalProps) => {
+  const { t } = useTranslation()
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   const { trigger, buildTransactionsPayload } = useBulkMatchOrCategorize()
@@ -36,29 +38,42 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title='Confirm all suggestions?'
+      title={t('confirmAllSuggestions', 'Confirm all suggestions?')}
       content={(
         skippedCount === 0
           ? (
             <Span>
-              {`This will confirm ${pluralize('transaction', count, true)}.`}
+              {tPlural(t, 'thisWillConfirmCountTransactions', {
+                count,
+                one: 'This will confirm {{count}} transaction.',
+                other: 'This will confirm {{count}} transactions.',
+              })}
             </Span>
           )
           : (
             <VStack gap='xs'>
               <Span>
-                {`${actionableCount} of ${pluralize('transaction', count, true)} will be confirmed.`}
+                {tPlural(t, 'actionableCountOfCountTransactionsWillBeConfirmed', {
+                  count,
+                  actionableCount,
+                  one: '{{actionableCount}} of {{count}} transaction will be confirmed.',
+                  other: '{{actionableCount}} of {{count}} transactions will be confirmed.',
+                })}
               </Span>
               <Span>
-                {`${pluralize('transaction', skippedCount, true)} will be skipped due to missing category.`}
+                {tPlural(t, 'countTransactionsWillBeSkippedDueToMissingCategory', {
+                  count: skippedCount,
+                  one: '{{count}} transaction will be skipped due to missing category.',
+                  other: '{{count}} transactions will be skipped due to missing category.',
+                })}
               </Span>
             </VStack>
           )
       )}
       onConfirm={handleConfirm}
-      confirmLabel='Confirm all'
-      cancelLabel='Cancel'
-      errorText='Failed to confirm transactions'
+      confirmLabel={t('confirmAll', 'Confirm all')}
+      cancelLabel={t('cancel', 'Cancel')}
+      errorText={t('failedToConfirmTransactions', 'Failed to confirm transactions')}
       closeOnConfirm
       confirmDisabled={actionableCount === 0}
       useDrawer={isMobileView}

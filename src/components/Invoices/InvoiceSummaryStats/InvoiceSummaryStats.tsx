@@ -1,4 +1,5 @@
 import { BigDecimal as BD } from 'effect'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { convertBigIntCentsToBigDecimal, convertDecimalToPercent, formatBigDecimalToString, safeDivide } from '@utils/bigDecimalUtils'
 import { useInvoiceSummaryStats } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
@@ -28,6 +29,7 @@ const getPercentageOverdue = (sentTotal: bigint | undefined, overdueTotal: bigin
 }
 
 export const InvoiceSummaryStats = () => {
+  const { t } = useTranslation()
   const { data, isLoading, isError } = useInvoiceSummaryStats()
 
   const showSkeleton = !data || isLoading || isError
@@ -41,9 +43,14 @@ export const InvoiceSummaryStats = () => {
     <HStack className='Layer__InvoiceSummaryStats__Container' gap='lg'>
       <VStack className='Layer__InvoiceSummaryStats__Payments' gap='3xs'>
         <HStack align='center'>
-          <Span size='sm'>Paid</Span>
-          &nbsp;
-          <Span size='sm' variant='subtle'>last 30 days</Span>
+          <Trans
+            i18nKey='paidLast30Days'
+            defaults='<paid>Paid</paid> <period>last 30 days</period>'
+            components={{
+              paid: <Span size='sm' />,
+              period: <Span size='sm' variant='subtle' />,
+            }}
+          />
         </HStack>
         <HStack align='center' gap='xs'>
           <Badge variant={BadgeVariant.SUCCESS} size={BadgeSize.EXTRA_SMALL} icon={<Check size={11} />} iconOnly />
@@ -57,9 +64,14 @@ export const InvoiceSummaryStats = () => {
       <VStack gap='sm' fluid>
         <HStack gap='md' align='end'>
           <HStack align='center'>
-            <Span size='sm' pbe='3xs'>Owed to you</Span>
-            &nbsp;
-            <Span size='sm' pbe='3xs' variant='subtle'>last 12 months</Span>
+            <Trans
+              i18nKey='owedToYouLast12Months'
+              defaults='<owed>Owed to you</owed> <period>last 12 months</period>'
+              components={{
+                owed: <Span size='sm' pbe='3xs' />,
+                period: <Span size='sm' pbe='3xs' variant='subtle' />,
+              }}
+            />
           </HStack>
           <FallbackWithSkeletonLoader isLoading={showSkeleton} height='24px' width='120px'>
             <Span size='xl'>
@@ -77,7 +89,7 @@ export const InvoiceSummaryStats = () => {
             {!showSkeleton && overdueCount !== undefined
               ? (
                 <Badge variant={BadgeVariant.WARNING} size={BadgeSize.SMALL}>
-                  {`Overdue invoices: ${overdueCount}`}
+                  {t('overdueInvoicesOverduecount', 'Overdue invoices: {{overdueCount}}', { overdueCount })}
                 </Badge>
               )
               : <BadgeLoader variant={BadgeVariant.WARNING} showLoading />}
@@ -86,7 +98,7 @@ export const InvoiceSummaryStats = () => {
             {!showSkeleton && sentCount !== undefined
               ? (
                 <Badge variant={BadgeVariant.INFO} size={BadgeSize.SMALL}>
-                  {`Upcoming invoices: ${sentCount}`}
+                  {t('upcomingInvoicesSentcount', 'Upcoming invoices: {{sentCount}}', { sentCount })}
                 </Badge>
               )
               : <BadgeLoader variant={BadgeVariant.INFO} showLoading />}
@@ -97,7 +109,7 @@ export const InvoiceSummaryStats = () => {
             </FallbackWithSkeletonLoader>
           </HStack>
         </HStack>
-        <Meter label='Invoices meter' minValue={0} maxValue={100} value={percentageOverdue} meterOnly className='Layer__InvoiceSummaryStats__Meter' />
+        <Meter label={t('invoicesMeter', 'Invoices meter')} minValue={0} maxValue={100} value={percentageOverdue} meterOnly className='Layer__InvoiceSummaryStats__Meter' />
       </VStack>
     </HStack>
   )

@@ -1,3 +1,5 @@
+import i18next from 'i18next'
+
 import type { LineItem } from '@schemas/common/lineItem'
 import type { ProfitAndLoss } from '@schemas/reports/profitAndLoss'
 import { type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
@@ -49,11 +51,11 @@ export const collectRevenueItems = (data: ProfitAndLoss): PnlChartLineItem[] => 
 export const humanizeTitle = (sidebarView: SidebarScope, overrides: DetailedChartStringOverrides | undefined) => {
   switch (sidebarView) {
     case 'expenses':
-      return overrides?.expenseChartHeader || 'Expenses'
+      return overrides?.expenseChartHeader || i18next.t('expenses', 'Expenses')
     case 'revenue':
-      return overrides?.revenueChartHeader || 'Revenue'
+      return overrides?.revenueChartHeader || i18next.t('revenue', 'Revenue')
     default:
-      return 'Profit & Loss'
+      return i18next.t('profitLoss', 'Profit & Loss')
   }
 }
 

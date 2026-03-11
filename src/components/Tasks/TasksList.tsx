@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
+import i18next from 'i18next'
 
 import { isCompletedTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
@@ -16,10 +17,10 @@ const TasksEmptyState = () => (
       <SmileIcon />
     </div>
     <Text size={TextSize.sm}>
-      There are no pending tasks!
+      {i18next.t('thereAreNoPendingTasks', 'There are no pending tasks!')}
       <br />
       {' '}
-      Great job!
+      {i18next.t('greatJob', 'Great job!')}
     </Text>
   </div>
 )

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { type TooltipContentProps } from 'recharts'
 
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -15,6 +16,7 @@ const ProfitAndLossTooltipContent = ({
   active,
   payload,
 }: ProfitAndLossTooltipContentProps) => {
+  const { t } = useTranslation()
   if (!active || !payload || !payload[0]) {
     return null
   }
@@ -32,7 +34,7 @@ const ProfitAndLossTooltipContent = ({
   if (isLoading) {
     return (
       <div className='Layer__ChartTooltip'>
-        <Span variant='white' size='sm'>Loading...</Span>
+        <Span variant='white' size='sm'>{t('loading', 'Loading...')}</Span>
       </div>
     )
   }
@@ -40,15 +42,15 @@ const ProfitAndLossTooltipContent = ({
   return (
     <ChartTooltipContent>
       <ChartTooltipRow
-        label='Revenue'
+        label={t('revenue', 'Revenue')}
         value={<MoneySpan amount={revenue} variant='white' size='sm' />}
       />
       <ChartTooltipRow
-        label='Expenses'
+        label={t('expenses', 'Expenses')}
         value={<MoneySpan amount={expenses} variant='white' size='sm' />}
       />
       <ChartTooltipRow
-        label='Net Profit'
+        label={t('netProfit', 'Net Profit')}
         value={<MoneySpan amount={netProfit} variant='white' status={status} size='sm' />}
       />
     </ChartTooltipContent>

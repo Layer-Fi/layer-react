@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { CallBookingPurpose, useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
@@ -17,9 +18,10 @@ import { TasksYearsTabs } from '@components/Tasks/TasksYearsTabs'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 const TasksOnboardingEmptyState = () => {
+  const { t } = useTranslation()
   return (
     <VStack gap='lg' pi='md' pbe='md'>
-      <Span>Once you complete your bookkeeping onboarding call, you will see your bookkeeping tasks here.</Span>
+      <Span>{t('onceYouCompleteYourBookkeepingOnboardingCallYouWillSeeYourBookkeepingTasksHere', 'Once you complete your bookkeeping onboarding call, you will see your bookkeeping tasks here.')}</Span>
     </VStack>
   )
 }
@@ -46,6 +48,7 @@ export function Tasks({
   onClickReconnectAccounts,
   stringOverrides,
 }: TasksProps) {
+  const { t } = useTranslation()
   const { data, isLoading } = useBookkeepingPeriods()
   const { data: callBookings, isLoading: isLoadingCallBookings } = useCallBookings()
 
@@ -94,9 +97,9 @@ export function Tasks({
               <TasksEmptyContainer>
                 <VStack gap='sm' align='center'>
                   <Heading size='xs' level={4}>
-                    Not Enrolled in Bookkeeping
+                    {t('notEnrolledInBookkeeping', 'Not Enrolled in Bookkeeping')}
                   </Heading>
-                  <P>If you believe this is an error, please contact support.</P>
+                  <P>{t('ifYouBelieveThisIsAnErrorPleaseContactSupport', 'If you believe this is an error, please contact support.')}</P>
                 </VStack>
               </TasksEmptyContainer>
             )}

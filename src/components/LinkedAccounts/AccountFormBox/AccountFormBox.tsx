@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { endOfDay } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@internal-types/linkedAccounts'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
@@ -44,6 +45,7 @@ export const AccountFormBox = ({
   onChange,
   errors = [],
 }: AccountFormProps) => {
+  const { t } = useTranslation()
   const displayName = getBankAccountDisplayName(bankAccount)
   const institution = getBankAccountInstitution(bankAccount)
   const institutionName = institution?.name
@@ -117,9 +119,9 @@ export const AccountFormBox = ({
           </Text>
         </div>
         <div className={`${CLASS_NAME}__details-col__inputs`}>
-          <InputGroup label='Opening date'>
+          <InputGroup label={t('openingDate', 'Opening date')}>
             <DatePicker
-              label='Opening date'
+              label={t('openingDate', 'Opening date')}
               date={date}
               onChange={onChangeDate}
               onBlur={onBlurDate}
@@ -129,7 +131,7 @@ export const AccountFormBox = ({
               errorText={dateErrorText}
             />
           </InputGroup>
-          <InputGroup label='Opening balance'>
+          <InputGroup label={t('openingBalance2', 'Opening balance')}>
             <AmountInput
               name='openingBalance'
               defaultValue={value.openingBalance}
@@ -137,14 +139,13 @@ export const AccountFormBox = ({
                 onChange({ ...value, openingBalance: newValue })}
               disabled={!disableConfirmExclude && !value.isConfirmed}
               isInvalid={errors.includes('MISSING_BALANCE')}
-              errorMessage='Field is required'
+              errorMessage={t('fieldIsRequired', 'Field is required')}
             />
           </InputGroup>
         </div>
         {errors.includes('API_ERROR') && (
           <ErrorText>
-            An error occurred while saving data.
-            You will have an opportunity to try again later.
+            {t('anErrorOccurredWhileSavingDataYouWillHaveAnOpportunityToTryAgainLater', 'An error occurred while saving data. You will have an opportunity to try again later.')}
           </ErrorText>
         )}
       </div>
@@ -154,7 +155,7 @@ export const AccountFormBox = ({
             size='lg'
             isSelected={value.isConfirmed}
             onChange={v => onChange({ ...value, isConfirmed: v })}
-            aria-label='Confirm Account Inclusion'
+            aria-label={t('confirmAccountInclusion', 'Confirm Account Inclusion')}
           />
         </div>
       )}
