@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { Save } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
 import BackArrow from '@icons/BackArrow'
@@ -12,6 +13,7 @@ import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { JournalEntryForm, type JournalEntryFormState } from '@components/Journal/JournalEntryForm/JournalEntryForm'
 
 export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true }: { showTags?: boolean, showCustomerVendor?: boolean }) => {
+  const { t } = useTranslation()
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
   const { toJournalTable } = useJournalNavigation()
   const formRef = useRef<{ submit: () => Promise<void> }>(null)
@@ -69,11 +71,11 @@ export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true 
       <BaseConfirmationModal
         isOpen={isDiscardChangesModalOpen}
         onOpenChange={setIsDiscardChangesModalOpen}
-        title='Discard changes to this journal entry?'
-        description='Any unsaved changes will be lost.'
+        title={t('discardChangesToThisJournalEntry', 'Discard changes to this journal entry?')}
+        description={t('anyUnsavedChangesWillBeLost', 'Any unsaved changes will be lost.')}
         onConfirm={toJournalTable}
-        confirmLabel='Discard changes'
-        cancelLabel='Keep editing'
+        confirmLabel={t('discardChanges', 'Discard changes')}
+        cancelLabel={t('keepEditing', 'Keep editing')}
       />
     </>
   )
@@ -85,25 +87,26 @@ type JournalEntryDrawerHeaderProps = {
 }
 
 const JournalEntryDrawerHeader = ({ onSubmit, formState }: JournalEntryDrawerHeaderProps) => {
+  const { t } = useTranslation()
   const { toJournalTable } = useJournalNavigation()
   const { isSubmitting } = formState
 
   const saveButton = useMemo(() => (
     <Button isPending={isSubmitting} onPress={onSubmit}>
-      Post
+      {t('post', 'Post')}
       <Save size={14} />
     </Button>
-  ), [isSubmitting, onSubmit])
+  ), [t, isSubmitting, onSubmit])
 
   const cancelButton = useMemo(() => (
     <Button variant='outlined' onPress={toJournalTable}>
-      Cancel
+      {t('cancel', 'Cancel')}
     </Button>
-  ), [toJournalTable])
+  ), [t, toJournalTable])
 
   return (
     <HStack justify='space-between' align='center' fluid pie='md'>
-      <Heading size='sm'>Add new entry</Heading>
+      <Heading size='sm'>{t('addNewEntry', 'Add new entry')}</Heading>
       <HStack gap='xs'>
         {cancelButton}
         {saveButton}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import i18next from 'i18next'
 
 import type { EditAccount, NewAccount } from '@internal-types/chartOfAccounts'
 import type { Direction } from '@internal-types/general'
@@ -112,7 +113,7 @@ const validateSubType = (formData?: ChartOfAccountsForm) => {
   if (!formData?.data.subType?.value) {
     return {
       field: 'subType',
-      message: 'Must be selected',
+      message: i18next.t('mustBeSelected', 'Must be selected'),
     }
   }
 
@@ -123,7 +124,7 @@ const validateType = (formData?: ChartOfAccountsForm) => {
   if (!formData?.data.type?.value) {
     return {
       field: 'type',
-      message: 'Must be selected',
+      message: i18next.t('mustBeSelected', 'Must be selected'),
     }
   }
 
@@ -135,13 +136,13 @@ const validateNormality = (formData?: ChartOfAccountsForm) => {
   if (stringValueNormality === undefined) {
     return {
       field: 'normality',
-      message: 'Must be selected',
+      message: i18next.t('mustBeSelected', 'Must be selected'),
     }
   }
   else if (!['DEBIT', 'CREDIT'].includes(stringValueNormality)) {
     return {
       field: 'normality',
-      message: 'Must be selected',
+      message: i18next.t('mustBeSelected', 'Must be selected'),
     }
   }
 
@@ -152,7 +153,7 @@ const validateParentId = (formData?: ChartOfAccountsForm) => {
   if (!formData?.data.parent?.value) {
     return {
       field: 'parent',
-      message: 'Must be selected',
+      message: i18next.t('mustBeSelected', 'Must be selected'),
     }
   }
 
@@ -163,7 +164,7 @@ const validateName = (formData?: ChartOfAccountsForm) => {
   if (!formData?.data.name?.trim()) {
     return {
       field: 'name',
-      message: 'Cannot be blank',
+      message: i18next.t('cannotBeBlank', 'Cannot be blank'),
     }
   }
 
@@ -226,7 +227,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
       setForm(undefined)
     }
     catch (_err) {
-      setApiError('Submit failed. Please, check your connection and try again.')
+      setApiError(i18next.t('submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
     }
     finally {
       setSendingForm(false)
@@ -250,7 +251,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
       setForm(undefined)
     }
     catch (_err) {
-      setApiError('Submit failed. Please, check your connection and try again.')
+      setApiError(i18next.t('submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
     }
     finally {
       setSendingForm(false)

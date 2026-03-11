@@ -1,5 +1,6 @@
 import { fromDate, getLocalTimeZone, toCalendarDate, today } from '@internationalized/date'
 import { formatDate, startOfToday } from 'date-fns'
+import i18next from 'i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
@@ -21,19 +22,19 @@ export const validateInvoiceRefundForm = ({ invoiceRefund, invoice }: { invoiceR
 
   const errors = []
   if (completedAt === null) {
-    errors.push({ completedAt: 'Refund date is a required field.' })
+    errors.push({ completedAt: i18next.t('refundDateIsARequiredField', 'Refund date is a required field.') })
   }
 
   if (completedAt && invoice.paidAt && toCalendarDate(completedAt).compare(toCalendarDate(fromDate(invoice.paidAt, 'UTC'))) < 0) {
-    errors.push({ completedAt: `Refund date cannot be before the last invoice payment (${formatDate(invoice.paidAt, DATE_FORMAT_SHORT)}).` })
+    errors.push({ completedAt: i18next.t('refundDateCannotBeBeforeTheLastInvoicePaymentVal', 'Refund date cannot be before the last invoice payment ({{val}}).', { val: formatDate(invoice.paidAt, DATE_FORMAT_SHORT) }) })
   }
 
   if (completedAt && toCalendarDate(completedAt).compare(today(getLocalTimeZone())) > 0) {
-    errors.push({ completedAt: 'Refund date cannot be in the future.' })
+    errors.push({ completedAt: i18next.t('refundDateCannotBeInTheFuture', 'Refund date cannot be in the future.') })
   }
 
   if (method === null) {
-    errors.push({ method: 'Payment method is a required field.' })
+    errors.push({ method: i18next.t('paymentMethodIsARequiredField', 'Payment method is a required field.') })
   }
 
   return errors.length > 0 ? errors : null

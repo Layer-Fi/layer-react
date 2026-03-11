@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
 import { endOfYesterday, startOfToday } from 'date-fns'
+import i18next from 'i18next'
 import { HandCoins, Plus, Search } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { getCustomerName } from '@utils/customerVendor'
@@ -51,20 +53,22 @@ export type InvoiceStatusOption = {
   value: InvoiceStatusFilter
 }
 const InvoiceStatusOptionConfig = {
-  [InvoiceStatusFilter.All]: { label: 'All', value: InvoiceStatusFilter.All },
-  [InvoiceStatusFilter.Unpaid]: { label: 'Unpaid', value: InvoiceStatusFilter.Unpaid },
-  [InvoiceStatusFilter.Overdue]: { label: 'Overdue', value: InvoiceStatusFilter.Overdue },
-  [InvoiceStatusFilter.Sent]: { label: 'Sent', value: InvoiceStatusFilter.Sent },
-  [InvoiceStatusFilter.Paid]: { label: 'Paid', value: InvoiceStatusFilter.Paid },
-  [InvoiceStatusFilter.Voided]: { label: 'Voided', value: InvoiceStatusFilter.Voided },
-  [InvoiceStatusFilter.Refunded]: { label: 'Refunded', value: InvoiceStatusFilter.Refunded },
-  [InvoiceStatusFilter.WrittenOff]: { label: 'Written Off', value: InvoiceStatusFilter.WrittenOff },
+  [InvoiceStatusFilter.All]: { label: i18next.t('all', 'All'), value: InvoiceStatusFilter.All },
+  [InvoiceStatusFilter.Unpaid]: { label: i18next.t('unpaid', 'Unpaid'), value: InvoiceStatusFilter.Unpaid },
+  [InvoiceStatusFilter.Overdue]: { label: i18next.t('overdue', 'Overdue'), value: InvoiceStatusFilter.Overdue },
+  [InvoiceStatusFilter.Sent]: { label: i18next.t('sent', 'Sent'), value: InvoiceStatusFilter.Sent },
+  [InvoiceStatusFilter.Paid]: { label: i18next.t('paid', 'Paid'), value: InvoiceStatusFilter.Paid },
+  [InvoiceStatusFilter.Voided]: { label: i18next.t('voided', 'Voided'), value: InvoiceStatusFilter.Voided },
+  [InvoiceStatusFilter.Refunded]: { label: i18next.t('refunded', 'Refunded'), value: InvoiceStatusFilter.Refunded },
+  [InvoiceStatusFilter.WrittenOff]: { label: i18next.t('writtenOff', 'Written Off'), value: InvoiceStatusFilter.WrittenOff },
 }
 export const ALL_OPTION = InvoiceStatusOptionConfig[InvoiceStatusFilter.All]
 
 const AmountCell = ({ invoice }: { invoice: Invoice }) => {
+  const { t } = useTranslation()
   const totalAmount = convertCentsToCurrency(invoice.totalAmount)
   const outstandingBalance = convertCentsToCurrency(invoice.outstandingBalance)
+  const outstandingBalanceLabel = t('invoiceOutstandingBalance', '{{amount}} outstanding', { amount: outstandingBalance })
 
   switch (invoice.status) {
     case InvoiceStatus.Paid:
@@ -80,9 +84,7 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
         <VStack>
           <Span align='right'>{totalAmount}</Span>
           <Span align='right' variant='subtle' size='sm'>
-            {outstandingBalance}
-            {' '}
-            outstanding
+            {outstandingBalanceLabel}
           </Span>
         </VStack>
       )
@@ -100,34 +102,34 @@ type InvoiceRowType = Row<Invoice>
 const getColumnConfig = (onViewInvoice: (invoice: Invoice) => void): NestedColumnConfig<Invoice> => [
   {
     id: InvoiceColumns.SentAt,
-    header: 'Sent Date',
+    header: i18next.t('sentDate', 'Sent Date'),
     cell: (row: InvoiceRowType) => row.original.sentAt ? formatDate(row.original.sentAt) : null,
   },
   {
     id: InvoiceColumns.InvoiceNo,
-    header: 'No.',
+    header: i18next.t('numberAbbreviation', 'No.'),
     cell: (row: InvoiceRowType) => <Span ellipsis>{row.original.invoiceNumber}</Span>,
     isRowHeader: true,
   },
   {
     id: InvoiceColumns.Customer,
-    header: 'Customer',
+    header: i18next.t('customer', 'Customer'),
     cell: (row: InvoiceRowType) => <Span ellipsis>{getCustomerName(row.original.customer)}</Span>,
   },
   {
     id: InvoiceColumns.Total,
-    header: 'Amount',
+    header: i18next.t('amount', 'Amount'),
     cell: (row: InvoiceRowType) => <AmountCell invoice={row.original} />,
   },
   {
     id: InvoiceColumns.Status,
-    header: 'Status',
+    header: i18next.t('status', 'Status'),
     cell: (row: InvoiceRowType) => <InvoiceStatusCell invoice={row.original} />,
   },
   {
     id: InvoiceColumns.Expand,
     cell: (row: InvoiceRowType) => (
-      <Button inset icon onPress={() => onViewInvoice(row.original)} aria-label='View invoice' variant='ghost'>
+      <Button inset icon onPress={() => onViewInvoice(row.original)} aria-label={i18next.t('viewInvoice', 'View invoice')} variant='ghost'>
         <ChevronRightFill />
       </Button>
     ),
@@ -175,6 +177,7 @@ const getListInvoiceParams = ({ status, query }: InvoiceTableFilters): ListInvoi
 }
 
 export const InvoiceTable = () => {
+  const { t } = useTranslation()
   const { toCreateInvoice, toViewInvoice } = useInvoiceNavigation()
   const { tableFilters, setTableFilters } = useInvoiceTableFilters()
   const { status: selectedInvoiceStatusOption, query } = tableFilters
@@ -214,8 +217,8 @@ export const InvoiceTable = () => {
 
   const SingleValue = useCallback(() => {
     const label = selectedInvoiceStatusOption.label
-    return label ? `Status: ${label}` : 'Status'
-  }, [selectedInvoiceStatusOption.label])
+    return label ? t('statusColonLabel', 'Status: {{label}}', { label }) : t('status', 'Status')
+  }, [selectedInvoiceStatusOption.label, t])
 
   const StatusFilter = useCallback(() => (
     <ComboBox
@@ -225,20 +228,20 @@ export const InvoiceTable = () => {
       selectedValue={selectedInvoiceStatusOption}
       isSearchable={false}
       isClearable={false}
-      placeholder='Status'
+      placeholder={t('status', 'Status')}
       slots={{ SingleValue }}
-      aria-label='Status Filter'
+      aria-label={t('statusFilter', 'Status Filter')}
     />
   ),
-  [SingleValue, options, selectedInvoiceStatusOption, setTableFilters])
+  [SingleValue, options, selectedInvoiceStatusOption, setTableFilters, t])
 
   const CreateInvoiceButton = useCallback(() => (
     <Button onPress={toCreateInvoice}>
-      Create Invoice
+      {t('createInvoice', 'Create Invoice')}
       <Plus size={16} />
     </Button>
   ),
-  [toCreateInvoice])
+  [t, toCreateInvoice])
 
   const InvoiceTableEmptyState = useCallback(() => {
     const isFiltered = selectedInvoiceStatusOption && selectedInvoiceStatusOption !== ALL_OPTION
@@ -246,27 +249,27 @@ export const InvoiceTable = () => {
     return (
       <DataState
         status={DataStateStatus.allDone}
-        title={isFiltered ? 'No results found' : 'No invoices yet'}
+        title={isFiltered ? t('noResultsFound', 'No results found') : t('noInvoicesYet', 'No invoices yet')}
         description={
           isFiltered
-            ? 'We couldn’t find any invoices with the current filters. Try changing or clearing them to see more results.'
-            : 'Add your first invoice to start tracking what your customers owe you.'
+            ? t('weCouldntFindAnyInvoicesWithTheCurrentFiltersTryChangingOrClearingThemToSeeMoreResults', 'We couldn’t find any invoices with the current filters. Try changing or clearing them to see more results.')
+            : t('addYourFirstInvoiceToStartTrackingWhatYourCustomersOweYou', 'Add your first invoice to start tracking what your customers owe you.')
         }
         icon={isFiltered ? <Search /> : <HandCoins />}
         spacing
       />
     )
-  }, [selectedInvoiceStatusOption])
+  }, [selectedInvoiceStatusOption, t])
 
   const InvoiceTableErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
-      title='We couldn’t load your invoices'
-      description='An error occurred while loading your invoices. Please check your connection and try again.'
+      title={t('weCouldntLoadYourInvoices', 'We couldn’t load your invoices')}
+      description={t('anErrorOccurredWhileLoadingYourInvoicesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your invoices. Please check your connection and try again.')}
       onRefresh={() => { void refetch() }}
       spacing
     />
-  ), [refetch])
+  ), [refetch, t])
 
   const columnConfig = useMemo(() => getColumnConfig(toViewInvoice), [toViewInvoice])
 
@@ -280,7 +283,7 @@ export const InvoiceTable = () => {
         }}
         slotProps={{
           SearchField: {
-            label: 'Search invoices',
+            label: t('searchInvoices', 'Search invoices'),
             value: inputValue,
             onChange: handleInputChange,
             className: 'Layer__InvoiceTable__SearchField',
@@ -288,7 +291,7 @@ export const InvoiceTable = () => {
         }}
       />
       <PaginatedTable
-        ariaLabel='Invoices'
+        ariaLabel={t('invoices', 'Invoices')}
         data={invoices}
         isLoading={data === undefined || isLoading}
         isError={isError}

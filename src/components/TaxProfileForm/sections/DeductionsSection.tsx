@@ -1,4 +1,5 @@
 import { BigDecimal as BD } from 'effect'
+import { useTranslation } from 'react-i18next'
 
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -7,16 +8,17 @@ import { getFormFieldProps, type TaxProfileFormSectionProps } from '@components/
 const MAX_HOME_OFFICE_AREA = BD.fromBigInt(BigInt(300))
 
 export const DeductionsSection = ({ form, isReadOnly, isDesktop }: TaxProfileFormSectionProps) => {
+  const { t } = useTranslation()
   const desktopFieldProps = getFormFieldProps(isDesktop)
 
   return (
     <VStack className='Layer__TaxProfileForm__Section' gap='md'>
-      <Heading level={3}>Deductions</Heading>
+      <Heading level={3}>{t('deductions', 'Deductions')}</Heading>
 
       <form.AppField name='usConfiguration.deductions.homeOffice.useHomeOfficeDeduction'>
         {field => (
           <field.FormRadioGroupYesNoField
-            label='Use simplified home office deduction?'
+            label={t('useSimplifiedHomeOfficeDeduction', 'Use simplified home office deduction?')}
             isReadOnly={isReadOnly}
             {...desktopFieldProps}
           />
@@ -28,9 +30,9 @@ export const DeductionsSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
           <form.AppField name='usConfiguration.deductions.homeOffice.homeOfficeArea'>
             {field => (
               <field.FormBigDecimalField
-                label='Home office area (sq ft)'
+                label={t('homeOfficeAreaSqFt', 'Home office area (sq ft)')}
                 isReadOnly={isReadOnly}
-                placeholder='Enter area'
+                placeholder={t('enterArea', 'Enter area')}
                 mode='decimal'
                 maxDecimalPlaces={3}
                 maxValue={MAX_HOME_OFFICE_AREA}
@@ -44,7 +46,7 @@ export const DeductionsSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
       <form.AppField name='usConfiguration.deductions.vehicle.useMileageDeduction'>
         {field => (
           <field.FormRadioGroupYesNoField
-            label='Use standard mileage deduction?'
+            label={t('useStandardMileageDeduction', 'Use standard mileage deduction?')}
             isReadOnly={isReadOnly}
             {...desktopFieldProps}
           />

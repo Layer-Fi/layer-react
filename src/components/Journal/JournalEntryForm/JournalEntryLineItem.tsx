@@ -11,6 +11,7 @@ import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerA
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 
 import './journalEntryLineItem.scss'
+import { useTranslation } from 'react-i18next'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 
@@ -24,6 +25,7 @@ export interface JournalEntryLineItemProps {
 }
 
 export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, onDeleteLine, showTags = false }: JournalEntryLineItemProps) => {
+  const { t } = useTranslation()
   const showLabels = displayIndex === 0
 
   return (
@@ -41,7 +43,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
             }
             return (
               <LedgerAccountCombobox
-                label='Account'
+                label={t('account', 'Account')}
                 value={field.state.value}
                 mode={CategoriesListMode.All}
                 onValueChange={onValueChange}
@@ -56,7 +58,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
         <form.AppField name={`lineItems[${index}].amount`}>
           {field => (
             <field.FormBigDecimalField
-              label='Amount'
+              label={t('amount', 'Amount')}
               mode='currency'
               showLabel={showLabels}
               allowNegative={false}
@@ -93,7 +95,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
         <form.AppField name={`lineItems[${index}].memo`}>
           {field => (
             <field.FormTextField
-              label='Memo'
+              label={t('memo', 'Memo')}
               showLabel={showLabels}
               isReadOnly={isReadOnly}
               className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--memo`}
@@ -106,7 +108,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
             <Button
               variant='outlined'
               icon
-              aria-label='Delete line item'
+              aria-label={t('deleteLineItem', 'Delete line item')}
               onPress={onDeleteLine}
             >
               <X size={16} />

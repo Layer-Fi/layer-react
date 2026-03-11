@@ -1,4 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import type { CustomAccount } from '@internal-types/customAccounts'
 import { humanizeEnum } from '@utils/format'
@@ -26,7 +28,7 @@ export type AccountOption = {
 }
 
 const formatCreateLabel = (inputValue: string) => {
-  return inputValue ? `Create "${inputValue}"` : 'Create account'
+  return inputValue ? i18next.t('createInputvalue', 'Create "{{inputValue}}"', { inputValue }) : i18next.t('createAccount', 'Create account')
 }
 
 const AccountOption = ({ option, fallback }: { option: AccountOption, fallback: React.ReactNode }) => {
@@ -70,6 +72,7 @@ interface UploadTransactionsUploadCsvStepProps {
 export function UploadTransactionsUploadCsvStep(
   { selectedAccount, onSelectAccount, selectedFile, onSelectFile, onParseCsv }: UploadTransactionsUploadCsvStepProps,
 ) {
+  const { t } = useTranslation()
   const { next } = useWizard()
   const {
     data: customAccounts,
@@ -93,11 +96,11 @@ export function UploadTransactionsUploadCsvStep(
   const onCreateOption = useCallback((inputValue: string) => {
     onSelectAccount({
       value: 'new_account',
-      label: 'Create account',
+      label: t('createAccount', 'Create account'),
       account: { accountName: inputValue },
       __isNew__: true,
     })
-  }, [onSelectAccount])
+  }, [t, onSelectAccount])
 
   const onCreateAccountSuccess = useCallback((account: CustomAccount) => {
     onSelectAccount({
@@ -133,11 +136,11 @@ export function UploadTransactionsUploadCsvStep(
     <VStack gap='lg'>
       <VStack pis='3xs' gap='xs'>
         <Label size='md' htmlFor='account_name'>
-          Which account are these transactions from?
+          {t('whichAccountAreTheseTransactionsFrom', 'Which account are these transactions from?')}
         </Label>
         <CreatableComboBox<AccountOption>
           inputId='account_name'
-          placeholder={customAccountsError ? 'Failed to load options' : 'Select account...'}
+          placeholder={customAccountsError ? t('failedToLoadOptions', 'Failed to load options') : t('selectAccount', 'Select account...')}
           options={accountOptions}
           onSelectedValueChange={onSelectAccount}
           onCreateOption={onCreateOption}
@@ -167,7 +170,7 @@ export function UploadTransactionsUploadCsvStep(
             <CsvUpload file={selectedFile} onFileSelected={onFileSelected} replaceDropTarget />
             <Separator />
             <VStack gap='xs' className='Layer__upload-transactions__template-section'>
-              <P size='sm'>Click to copy the required column headers</P>
+              <P size='sm'>{t('clickToCopyTheRequiredColumnHeaders', 'Click to copy the required column headers')}</P>
               <HStack align='center' gap='xs' className='Layer__upload-transactions__template-section__button-row'>
                 <CopyTemplateHeadersButtonGroup
                   headers={templateHeaders}
@@ -178,7 +181,7 @@ export function UploadTransactionsUploadCsvStep(
                   csvProps={{ headers: allHeaders, rows: templateExampleTransactions }}
                   className='Layer__upload-transactions__template-section__button-row-item'
                 >
-                  Download template
+                  {t('downloadTemplate', 'Download template')}
                 </DownloadCsvTemplateButton>
               </HStack>
             </VStack>
@@ -188,7 +191,7 @@ export function UploadTransactionsUploadCsvStep(
               </HStack>
               <Spacer />
               <SubmitButton
-                tooltip={(selectedFile && !hasSelectedAccount) ? 'Select an account' : null}
+                tooltip={(selectedFile && !hasSelectedAccount) ? t('selectAnAccount', 'Select an account') : null}
                 disabled={!hasSelectedAccount || !selectedFile}
                 processing={isParsingCsv}
                 error={hasParseCsvError}
@@ -196,7 +199,7 @@ export function UploadTransactionsUploadCsvStep(
                 withRetry
                 noIcon={!isParsingCsv}
               >
-                {hasParseCsvError ? 'Retry' : 'Continue'}
+                {hasParseCsvError ? t('retry', 'Retry') : t('continue', 'Continue')}
               </SubmitButton>
             </HStack>
           </>

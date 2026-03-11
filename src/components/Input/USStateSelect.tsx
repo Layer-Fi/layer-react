@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { type BaseSelectOption } from '@internal-types/general'
 import { US_STATES, type USState } from '@internal-types/location'
 import { Select } from '@components/Input/Select'
@@ -19,6 +21,7 @@ export type USStateSelecttProps = {
 }
 
 export const USStateSelect = ({ value, onChange }: USStateSelecttProps) => {
+  const { t } = useTranslation()
   const usStateOptions: BaseSelectOption[] = US_STATES.map(state => ({
     label: state.label,
     value: state.value,
@@ -29,7 +32,7 @@ export const USStateSelect = ({ value, onChange }: USStateSelecttProps) => {
       options={usStateOptions}
       value={findSelectOption(usStateOptions, value)}
       onChange={option => onChange(option as USState)}
-      placeholder='US state'
+      placeholder={t('usState', 'US state')}
     />
   )
 }
