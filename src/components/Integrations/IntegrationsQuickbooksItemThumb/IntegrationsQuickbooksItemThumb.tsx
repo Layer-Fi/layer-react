@@ -84,7 +84,7 @@ export const IntegrationsQuickbooksItemThumb = () => {
       <Card className='Layer__linked-account-thumb Layer__integrations-quickbooks-item-thumb'>
         <div className='topbar'>
           <HStack gap='xs'>
-            <Text size={TextSize.md}>{t('quickbooks', 'QuickBooks')}</Text>
+            <Text size={TextSize.md}>QuickBooks</Text>
             {quickbooksUiState === QuickbooksConnectionSyncUiState.Syncing
               ? <BadgeLoader variant={BadgeVariant.INFO} />
               : (

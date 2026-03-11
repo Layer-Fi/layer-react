@@ -37,6 +37,7 @@ const ScheduledCallState = ({
 }) => {
   const { t } = useTranslation()
   const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? t('onboardingCall', 'Onboarding call') : t('adHocCall', 'Ad hoc call')
+  const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
 
   return (
     <VStack gap='md' align='center'>
@@ -61,7 +62,7 @@ const ScheduledCallState = ({
             {t('location', 'Location:')}
             {' '}
           </Span>
-          <Span size='md'>{callBooking.callType === CallBookingType.ZOOM ? t('zoom', 'Zoom') : t('googleMeet', 'Google Meet')}</Span>
+          <Span size='md'>{callPlatform}</Span>
         </HStack>
         <HStack align='center' gap='sm'>
           <Clock size={16} />
@@ -83,7 +84,7 @@ const ScheduledCallState = ({
         <VStack>
           <AddToCalendar
             title={callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? t('onboardingCall', 'Onboarding call') : t('adhocCall', 'Adhoc call')}
-            description={callBooking.callType === CallBookingType.ZOOM ? t('zoom', 'Zoom') : t('googleMeet', 'Google Meet')}
+            description={callPlatform}
             location={callBooking.callLink.toString()}
             startDate={callBooking.eventStartAt}
             endDate={callBooking.eventEndAt}

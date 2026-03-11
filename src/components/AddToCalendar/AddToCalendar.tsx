@@ -134,13 +134,13 @@ export const AddToCalendar = ({
           <MenuItem key='outlook' onClick={() => handleCalendarClick('outlook')}>
             <HStack gap='sm'>
               <img className='Layer__AddToCalendar__CalendarIcon' src={OutlookIcon} alt={t('outlookCalendar', 'Outlook Calendar')} />
-              <Span size='sm'>{t('outlook', 'Outlook')}</Span>
+              <Span size='sm'>Outlook</Span>
             </HStack>
           </MenuItem>
           <MenuItem key='yahoo' onClick={() => handleCalendarClick('yahoo')}>
             <HStack gap='sm'>
               <img className='Layer__AddToCalendar__CalendarIcon' src={YahooIcon} alt={t('yahooCalendar', 'Yahoo Calendar')} />
-              <Span size='sm'>{t('yahoo', 'Yahoo')}</Span>
+              <Span size='sm'>Yahoo</Span>
             </HStack>
           </MenuItem>
           <MenuItem key='ics' onClick={() => handleCalendarClick('ics')}>
