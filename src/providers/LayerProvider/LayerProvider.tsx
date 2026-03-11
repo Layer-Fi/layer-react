@@ -1,5 +1,4 @@
 import { type PropsWithChildren, useState } from 'react'
-import { I18nProvider } from 'react-aria-components'
 import { SWRConfig } from 'swr'
 
 import { type LayerThemeConfig } from '@internal-types/layerContext'
@@ -10,6 +9,7 @@ import { BusinessProvider } from '@providers/BusinessProvider/BusinessProvider'
 import type { Environment, EnvironmentConfigOverride } from '@providers/Environment/environmentConfigs'
 import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInputProvider'
 import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { LayerI18nProvider } from '@providers/I18nProvider/LayerI18nProvider'
 
 export type EventCallbacks = {
   onTransactionCategorized?: () => void
@@ -59,7 +59,7 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
 
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
-      <I18nProvider locale='en-US'>
+      <LayerI18nProvider>
         <EnvironmentInputProvider environment={environment} environmentConfigOverride={environmentConfigOverride} usePlaidSandbox={usePlaidSandbox}>
           <AuthInputProvider
             appId={appId}
@@ -71,7 +71,7 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
             </GlobalDateStoreProvider>
           </AuthInputProvider>
         </EnvironmentInputProvider>
-      </I18nProvider>
+      </LayerI18nProvider>
     </SWRConfig>
   )
 }
