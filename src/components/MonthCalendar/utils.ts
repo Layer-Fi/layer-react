@@ -1,16 +1,20 @@
-import i18next from 'i18next'
-export const MONTHS = [
-  i18next.t('january', 'January'),
-  i18next.t('february', 'February'),
-  i18next.t('march', 'March'),
-  i18next.t('april', 'April'),
-  i18next.t('may', 'May'),
-  i18next.t('june', 'June'),
-  i18next.t('july', 'July'),
-  i18next.t('august', 'August'),
-  i18next.t('september', 'September'),
-  i18next.t('october', 'October'),
-  i18next.t('november', 'November'),
-  i18next.t('december', 'December'),
-  'December',
-].map((label, i) => ({ key: i + 1, label, abbreviation: label.slice(0, 3) }))
+export type MonthOption = {
+  key: number
+  label: string
+  abbreviation: string
+}
+
+const ARBITRARY_REFERENCE_YEAR = 2020
+export const getMonths = (locale: string): MonthOption[] => {
+  const labelFormatter = new Intl.DateTimeFormat(locale, { month: 'long' })
+  const abbreviationFormatter = new Intl.DateTimeFormat(locale, { month: 'short' })
+
+  return Array.from({ length: 12 }, (_, index) => {
+    const date = new Date(ARBITRARY_REFERENCE_YEAR, index, 1)
+    return {
+      key: index + 1,
+      label: labelFormatter.format(date),
+      abbreviation: abbreviationFormatter.format(date),
+    }
+  })
+}
