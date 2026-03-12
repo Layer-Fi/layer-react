@@ -19,7 +19,7 @@ export const BankTransactionMemo = ({ bankTransactionId }: { bankTransactionId: 
               <Label htmlFor='memo' size='sm' weight='bold'>{t('description', 'Description')}</Label>
               {isUpdatingMemo && (
                 <Span size='sm' weight='bold' variant='subtle'>
-                  Saving...
+                  {t('saving', 'Saving...')}
                 </Span>
               )}
               {!isUpdatingMemo && isSaved && (
