@@ -1,5 +1,4 @@
 import { useCallback, useContext, useState } from 'react'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -14,12 +13,15 @@ import { Spacer } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 
-const MenuTriggerButton = () => (
-  <Button variant='outlined'>
-    {i18next.t('manage', 'Manage')}
-    <Cog size={16} />
-  </Button>
-)
+const MenuTriggerButton = () => {
+  const { t } = useTranslation()
+  return (
+    <Button variant='outlined'>
+      {t('manage', 'Manage')}
+      <Cog size={16} />
+    </Button>
+  )
+}
 
 export const IntegrationsConnectMenu = () => {
   const { t } = useTranslation()

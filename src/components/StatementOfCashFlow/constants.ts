@@ -1,47 +1,48 @@
-import i18next from 'i18next'
-export const STATEMENT_OF_CASH_FLOW_ROWS = [
+import { translationKey } from '@utils/i18n/translationKey'
+
+export const STATEMENT_OF_CASH_FLOW_ROWS_CONFIG = [
   {
     name: 'OperatingActivities',
-    displayName: i18next.t('operatingActivities', 'Operating Activities'),
     lineItem: 'operating_activities',
     type: 'line_item',
     summarize: true,
+    ...translationKey('operatingActivities', 'Operating Activities'),
   },
   {
     name: 'InvestingActivities',
-    displayName: i18next.t('investingActivities', 'Investing Activities'),
     lineItem: 'investing_activities',
     type: 'line_item',
     summarize: true,
+    ...translationKey('investingActivities', 'Investing Activities'),
   },
   {
     name: 'FinancingActivities',
-    displayName: i18next.t('financingActivities', 'Financing Activities'),
     lineItem: 'financing_activities',
     type: 'line_item',
     summarize: true,
+    ...translationKey('financingActivities', 'Financing Activities'),
   },
   {
     name: 'PeriodNetCashIncrease',
-    displayName: i18next.t('netCashIncreaseForPeriod', 'Net Cash Increase For Period'),
     lineItem: 'period_net_cash_increase',
     type: 'summary_value',
     summarize: false,
+    ...translationKey('netCashIncreaseForPeriod', 'Net Cash Increase For Period'),
   },
   {
     name: 'CashAtBeginningOfPeriod',
-    displayName: i18next.t('cashAtBeginningOfPeriod', 'Cash at Beginning of Period'),
     lineItem: 'cash_at_start_of_period',
     type: 'summary_value',
     summarize: false,
+    ...translationKey('cashAtBeginningOfPeriod', 'Cash at Beginning of Period'),
   },
   {
     name: 'CashAtEndOfPeriod',
-    displayName: i18next.t('cashAtEndOfPeriod', 'Cash at End of Period'),
     lineItem: 'cash_at_end_of_period',
     type: 'summary_value',
     summarize: false,
+    ...translationKey('cashAtEndOfPeriod', 'Cash at End of Period'),
   },
-]
+] as const
 
-export const ADJUSTMENTS_ROW_NAME = i18next.t('adjustmentsToNetIncome', 'Adjustments to Net Income')
+export const ADJUSTMENTS_ROW_I18N = translationKey('adjustmentsToNetIncome', 'Adjustments to Net Income')

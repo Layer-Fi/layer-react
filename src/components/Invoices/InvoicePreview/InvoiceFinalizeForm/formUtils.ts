@@ -1,4 +1,4 @@
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
 import type { InvoicePaymentMethod as InvoicePaymentMethodType } from '@schemas/invoices/invoicePaymentMethod'
@@ -33,12 +33,15 @@ export const convertInvoiceFinalizeFormToParams = (
 
 export const validateInvoiceFinalizeForm = (
   { value }: { value: InvoiceFinalizeFormValues },
+  t: TFunction,
 ) => {
   const { creditCardEnabled, customPaymentInstructions } = value
 
   const errors = []
   if (!creditCardEnabled && !customPaymentInstructions.trim()) {
-    errors.push({ creditCardEnabled: i18next.t('eitherAPaymentMethodOrCustomPaymentInstructionsMustBeSetOnAnInvoice', 'Either a payment method or custom payment instructions must be set on an invoice') })
+    errors.push({
+      creditCardEnabled: t('eitherAPaymentMethodOrCustomPaymentInstructionsMustBeSetOnAnInvoice', 'Either a payment method or custom payment instructions must be set on an invoice'),
+    })
   }
 
   return errors.length > 0 ? errors : null

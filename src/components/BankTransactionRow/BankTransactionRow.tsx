@@ -117,10 +117,10 @@ export const BankTransactionRow = ({
       error={isError ? t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.') : undefined}
     >
       {isError
-        ? 'Retry'
+        ? t('retry', 'Retry')
         : displayAsCategorized
-          ? stringOverrides?.updateButtonText || 'Update'
-          : stringOverrides?.approveButtonText || 'Confirm'}
+          ? stringOverrides?.updateButtonText ?? t('update', 'Update')
+          : stringOverrides?.approveButtonText ?? t('confirm', 'Confirm')}
     </SubmitButton>
   ), [
     displayAsCategorized,

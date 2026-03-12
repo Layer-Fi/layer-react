@@ -1,5 +1,4 @@
-import { useCallback, useId, useState } from 'react'
-import i18next from 'i18next'
+import { useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getActivationDate } from '@utils/business'
@@ -14,16 +13,6 @@ type DateSelectionOption = {
   label: string
   value: DatePreset
 }
-const dateSelectionOptionConfig = {
-  [DatePreset.ThisMonth]: { label: i18next.t('thisMonth', 'This Month'), value: DatePreset.ThisMonth },
-  [DatePreset.LastMonth]: { label: i18next.t('lastMonth', 'Last Month'), value: DatePreset.LastMonth },
-  [DatePreset.ThisQuarter]: { label: i18next.t('thisQuarter', 'This Quarter'), value: DatePreset.ThisQuarter },
-  [DatePreset.LastQuarter]: { label: i18next.t('lastQuarter', 'Last Quarter'), value: DatePreset.LastQuarter },
-  [DatePreset.ThisYear]: { label: i18next.t('thisYear', 'This Year'), value: DatePreset.ThisYear },
-  [DatePreset.LastYear]: { label: i18next.t('lastYear', 'Last Year'), value: DatePreset.LastYear },
-  [DatePreset.Custom]: { label: i18next.t('custom', 'Custom'), value: DatePreset.Custom },
-}
-const options = Object.values(dateSelectionOptionConfig).filter(opt => opt.value !== DatePreset.Custom)
 
 export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boolean }) => {
   const { t } = useTranslation()
@@ -34,7 +23,22 @@ export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boole
   const { setDateRange } = useGlobalDateRangeActions()
 
   const selectedPreset = presetForDateRange(dateRange, lastPreset, getActivationDate(business))
-  const selectedOption = dateSelectionOptionConfig[selectedPreset ?? DatePreset.Custom]
+
+  const allOptions = useMemo<DateSelectionOption[]>(
+    () => [
+      { value: DatePreset.ThisMonth, label: t('thisMonth', 'This Month') },
+      { value: DatePreset.LastMonth, label: t('lastMonth', 'Last Month') },
+      { value: DatePreset.ThisQuarter, label: t('thisQuarter', 'This Quarter') },
+      { value: DatePreset.LastQuarter, label: t('lastQuarter', 'Last Quarter') },
+      { value: DatePreset.ThisYear, label: t('thisYear', 'This Year') },
+      { value: DatePreset.LastYear, label: t('lastYear', 'Last Year') },
+      { value: DatePreset.Custom, label: t('custom', 'Custom') },
+    ],
+    [t],
+  )
+
+  const options = allOptions.filter(o => o.value !== DatePreset.Custom)
+  const selectedOption = allOptions.find(o => o.value === (selectedPreset ?? DatePreset.Custom)) ?? null
 
   const onSelectedValueChange = useCallback((option: DateSelectionOption | null) => {
     if (option === null) return

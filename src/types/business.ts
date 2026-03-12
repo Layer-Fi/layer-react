@@ -1,6 +1,5 @@
-import i18next from 'i18next'
-
 import { type USStateCode } from '@internal-types/location'
+import { translationKey } from '@utils/i18n/translationKey'
 
 export interface Business {
   id: string
@@ -20,12 +19,12 @@ export interface Business {
   us_state?: USStateCode
 }
 
-export const ENTITY_TYPES = [
-  { value: 'SOLE_PROP', label: i18next.t('soleProprietorship', 'Sole Proprietorship') },
-  { value: 'C_CORP', label: i18next.t('cCorporation', 'C Corporation') },
-  { value: 'LLC', label: i18next.t('limitedLiabilityCompany', 'Limited Liability Company') },
-  { value: 'S_CORP', label: i18next.t('sCorporation', 'S Corporation') },
-  { value: 'PARTNERSHIP', label: i18next.t('partnership', 'Partnership') },
+export const ENTITY_TYPES_CONFIG = [
+  { value: 'SOLE_PROP' as const, ...translationKey('soleProprietorship', 'Sole Proprietorship') },
+  { value: 'C_CORP' as const, ...translationKey('cCorporation', 'C Corporation') },
+  { value: 'LLC' as const, ...translationKey('limitedLiabilityCompany', 'Limited Liability Company') },
+  { value: 'S_CORP' as const, ...translationKey('sCorporation', 'S Corporation') },
+  { value: 'PARTNERSHIP' as const, ...translationKey('partnership', 'Partnership') },
 ] as const
 
-export type EntityType = (typeof ENTITY_TYPES)[number]['value']
+export type EntityType = (typeof ENTITY_TYPES_CONFIG)[number]['value']

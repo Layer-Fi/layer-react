@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
 import { endOfYesterday, startOfToday } from 'date-fns'
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 import { HandCoins, Plus, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { getCustomerName } from '@utils/customerVendor'
 import { convertCentsToCurrency, formatDate } from '@utils/format'
+import { translationKey } from '@utils/i18n/translationKey'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type ListInvoicesFilterParams, useListInvoices } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
@@ -52,17 +53,19 @@ export type InvoiceStatusOption = {
   label: string
   value: InvoiceStatusFilter
 }
-const InvoiceStatusOptionConfig = {
-  [InvoiceStatusFilter.All]: { label: i18next.t('all', 'All'), value: InvoiceStatusFilter.All },
-  [InvoiceStatusFilter.Unpaid]: { label: i18next.t('unpaid', 'Unpaid'), value: InvoiceStatusFilter.Unpaid },
-  [InvoiceStatusFilter.Overdue]: { label: i18next.t('overdue', 'Overdue'), value: InvoiceStatusFilter.Overdue },
-  [InvoiceStatusFilter.Sent]: { label: i18next.t('sent', 'Sent'), value: InvoiceStatusFilter.Sent },
-  [InvoiceStatusFilter.Paid]: { label: i18next.t('paid', 'Paid'), value: InvoiceStatusFilter.Paid },
-  [InvoiceStatusFilter.Voided]: { label: i18next.t('voided', 'Voided'), value: InvoiceStatusFilter.Voided },
-  [InvoiceStatusFilter.Refunded]: { label: i18next.t('refunded', 'Refunded'), value: InvoiceStatusFilter.Refunded },
-  [InvoiceStatusFilter.WrittenOff]: { label: i18next.t('writtenOff', 'Written Off'), value: InvoiceStatusFilter.WrittenOff },
-}
-export const ALL_OPTION = InvoiceStatusOptionConfig[InvoiceStatusFilter.All]
+
+const INVOICE_STATUS_CONFIG = [
+  { value: InvoiceStatusFilter.All, ...translationKey('all', 'All') },
+  { value: InvoiceStatusFilter.Unpaid, ...translationKey('unpaid', 'Unpaid') },
+  { value: InvoiceStatusFilter.Overdue, ...translationKey('overdue', 'Overdue') },
+  { value: InvoiceStatusFilter.Sent, ...translationKey('sent', 'Sent') },
+  { value: InvoiceStatusFilter.Paid, ...translationKey('paid', 'Paid') },
+  { value: InvoiceStatusFilter.Voided, ...translationKey('voided', 'Voided') },
+  { value: InvoiceStatusFilter.Refunded, ...translationKey('refunded', 'Refunded') },
+  { value: InvoiceStatusFilter.WrittenOff, ...translationKey('writtenOff', 'Written Off') },
+]
+
+export const ALL_OPTION: InvoiceStatusOption = { value: InvoiceStatusFilter.All, label: 'All' }
 
 const AmountCell = ({ invoice }: { invoice: Invoice }) => {
   const { t } = useTranslation()
@@ -99,37 +102,40 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
 }
 
 type InvoiceRowType = Row<Invoice>
-const getColumnConfig = (onViewInvoice: (invoice: Invoice) => void): NestedColumnConfig<Invoice> => [
+const getColumnConfig = (
+  onViewInvoice: (invoice: Invoice) => void,
+  t: TFunction,
+): NestedColumnConfig<Invoice> => [
   {
     id: InvoiceColumns.SentAt,
-    header: i18next.t('sentDate', 'Sent Date'),
+    header: t('sentDate', 'Sent Date'),
     cell: (row: InvoiceRowType) => row.original.sentAt ? formatDate(row.original.sentAt) : null,
   },
   {
     id: InvoiceColumns.InvoiceNo,
-    header: i18next.t('numberAbbreviation', 'No.'),
+    header: t('numberAbbreviation', 'No.'),
     cell: (row: InvoiceRowType) => <Span ellipsis>{row.original.invoiceNumber}</Span>,
     isRowHeader: true,
   },
   {
     id: InvoiceColumns.Customer,
-    header: i18next.t('customer', 'Customer'),
+    header: t('customer', 'Customer'),
     cell: (row: InvoiceRowType) => <Span ellipsis>{getCustomerName(row.original.customer)}</Span>,
   },
   {
     id: InvoiceColumns.Total,
-    header: i18next.t('amount', 'Amount'),
+    header: t('amount', 'Amount'),
     cell: (row: InvoiceRowType) => <AmountCell invoice={row.original} />,
   },
   {
     id: InvoiceColumns.Status,
-    header: i18next.t('status', 'Status'),
+    header: t('status', 'Status'),
     cell: (row: InvoiceRowType) => <InvoiceStatusCell invoice={row.original} />,
   },
   {
     id: InvoiceColumns.Expand,
     cell: (row: InvoiceRowType) => (
-      <Button inset icon onPress={() => onViewInvoice(row.original)} aria-label={i18next.t('viewInvoice', 'View invoice')} variant='ghost'>
+      <Button inset icon onPress={() => onViewInvoice(row.original)} aria-label={t('viewInvoice', 'View invoice')} variant='ghost'>
         <ChevronRightFill />
       </Button>
     ),
@@ -213,19 +219,30 @@ export const InvoiceTable = () => {
     }
   }, [fetchMore, hasMore])
 
-  const options: InvoiceStatusOption[] = useMemo(() => Object.values(InvoiceStatusOptionConfig), [])
+  const options: InvoiceStatusOption[] = useMemo(
+    () => INVOICE_STATUS_CONFIG.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
+  const selectedStatusOption = useMemo(
+    () => options.find(o => o.value === selectedInvoiceStatusOption?.value) ?? options[0],
+    [options, selectedInvoiceStatusOption?.value],
+  )
 
   const SingleValue = useCallback(() => {
-    const label = selectedInvoiceStatusOption.label
+    const label = selectedStatusOption?.label
     return label ? t('statusColonLabel', 'Status: {{label}}', { label }) : t('status', 'Status')
-  }, [selectedInvoiceStatusOption.label, t])
+  }, [selectedStatusOption?.label, t])
 
   const StatusFilter = useCallback(() => (
     <ComboBox
       className='Layer__InvoiceTable__StatusFilter'
       options={options}
       onSelectedValueChange={option => option && setTableFilters({ status: option })}
-      selectedValue={selectedInvoiceStatusOption}
+      selectedValue={selectedStatusOption}
       isSearchable={false}
       isClearable={false}
       placeholder={t('status', 'Status')}
@@ -233,7 +250,7 @@ export const InvoiceTable = () => {
       aria-label={t('statusFilter', 'Status Filter')}
     />
   ),
-  [SingleValue, options, selectedInvoiceStatusOption, setTableFilters, t])
+  [SingleValue, options, selectedStatusOption, setTableFilters, t])
 
   const CreateInvoiceButton = useCallback(() => (
     <Button onPress={toCreateInvoice}>
@@ -244,7 +261,7 @@ export const InvoiceTable = () => {
   [t, toCreateInvoice])
 
   const InvoiceTableEmptyState = useCallback(() => {
-    const isFiltered = selectedInvoiceStatusOption && selectedInvoiceStatusOption !== ALL_OPTION
+    const isFiltered = selectedInvoiceStatusOption?.value !== InvoiceStatusFilter.All
 
     return (
       <DataState
@@ -271,7 +288,7 @@ export const InvoiceTable = () => {
     />
   ), [refetch, t])
 
-  const columnConfig = useMemo(() => getColumnConfig(toViewInvoice), [toViewInvoice])
+  const columnConfig = useMemo(() => getColumnConfig(toViewInvoice, t), [toViewInvoice, t])
 
   return (
     <Container name='InvoiceTable'>

@@ -1,5 +1,5 @@
 import { Schema } from 'effect/index'
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 import { uniqBy } from 'lodash-es'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
@@ -17,12 +17,12 @@ export enum ValidateSplitError {
   CategoryIsRequired = 'CategoryIsRequired',
 }
 
-const getValidateSplitErrorMessage = (splitError: ValidateSplitError): string => {
+const getValidateSplitErrorMessage = (splitError: ValidateSplitError, t: TFunction): string => {
   switch (splitError) {
     case ValidateSplitError.AmountsMustBeGreaterThanZero:
-      return i18next.t('allSplitsMustHaveAnAmountGreaterThanZero', 'All splits must have an amount greater than $0.00')
+      return t('allSplitsMustHaveAnAmountGreaterThanZero', 'All splits must have an amount greater than $0.00')
     case ValidateSplitError.CategoryIsRequired:
-      return i18next.t('allSplitsMustHaveACategory', 'All splits must have a category')
+      return t('allSplitsMustHaveACategory', 'All splits must have a category')
   }
 }
 
@@ -31,10 +31,10 @@ export const isSplitsValid = (localSplits: Split[]): boolean => {
     .reduce((acc, splitError) => acc && splitError === undefined, true)
 }
 
-export const getSplitsErrorMessage = (localSplits: Split[]): string => {
+export const getSplitsErrorMessage = (localSplits: Split[], t: TFunction): string => {
   const firstError = uniqBy(validateSplit(localSplits), error => error?.toString()).find((error): error is ValidateSplitError => error !== undefined)
   if (!firstError) return ''
-  return getValidateSplitErrorMessage(firstError)
+  return getValidateSplitErrorMessage(firstError, t)
 }
 
 export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undefined)[] => {

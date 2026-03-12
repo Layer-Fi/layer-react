@@ -1,7 +1,7 @@
 import { fromDate, getLocalTimeZone, toCalendarDate } from '@internationalized/date'
 import { startOfToday } from 'date-fns'
 import { BigDecimal as BD } from 'effect'
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 
 import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@schemas/invoices/invoice'
 import {
@@ -129,46 +129,48 @@ export const getInvoiceFormDefaultValues = (invoice: Invoice | null): InvoiceFor
   return invoice ? getInvoiceFormInitialValues(invoice) : getEmptyInvoiceFormValues()
 }
 
-export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) => {
+export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }, t: TFunction) => {
   const { customer, invoiceNumber, sentAt, dueAt, lineItems } = invoice
 
   const errors = []
   if (customer === null) {
-    errors.push({ customer: i18next.t('customerIsARequiredField', 'Customer is a required field.') })
+    errors.push({ customer: t('customerIsARequiredField', 'Customer is a required field.') })
   }
 
   if (!invoiceNumber.trim()) {
-    errors.push({ invoiceNumber: i18next.t('invoiceNumberIsARequiredField', 'Invoice number is a required field.') })
+    errors.push({ invoiceNumber: t('invoiceNumberIsARequiredField', 'Invoice number is a required field.') })
   }
 
   if (sentAt === null) {
-    errors.push({ sentAt: i18next.t('invoiceDateIsARequiredField', 'Invoice date is a required field.') })
+    errors.push({ sentAt: t('invoiceDateIsARequiredField', 'Invoice date is a required field.') })
   }
 
   if (dueAt === null) {
-    errors.push({ dueAt: i18next.t('dueDateIsARequiredField', 'Due date is a required field.') })
+    errors.push({ dueAt: t('dueDateIsARequiredField', 'Due date is a required field.') })
   }
 
   if (sentAt !== null && dueAt !== null && toCalendarDate(dueAt).compare(toCalendarDate(sentAt)) < 0) {
-    errors.push({ dueAt: i18next.t('dueDateMustBeAfterInvoiceDate', 'Due date must be after invoice date.') })
+    errors.push({ dueAt: t('dueDateMustBeAfterInvoiceDate', 'Due date must be after invoice date.') })
   }
 
   const nonEmptyLineItems = lineItems.filter(item => !InvoiceFormLineItemEquivalence(EMPTY_LINE_ITEM, item))
 
   if (nonEmptyLineItems.length === 0) {
-    errors.push({ lineItems: i18next.t('invoiceRequiresAtLeastOneNonemptyLineItem', 'Invoice requires at least one non-empty line item.') })
+    errors.push({ lineItems: t('invoiceRequiresAtLeastOneNonemptyLineItem', 'Invoice requires at least one non-empty line item.') })
   }
 
   nonEmptyLineItems.some((item) => {
     if (item.description.trim() === '') {
-      errors.push({ lineItems: i18next.t('invoiceHasIncompleteLineItemsPleaseIncludeRequiredFieldDescription', 'Invoice has incomplete line items. Please include required field: Description.') })
+      errors.push({
+        lineItems: t('invoiceHasIncompleteLineItemsPleaseIncludeRequiredFieldDescription', 'Invoice has incomplete line items. Please include required field: Description.'),
+      })
       return true
     }
   })
 
   const grandTotal = getGrandTotalFromInvoice(invoice)
   if (BD.isNegative(grandTotal)) {
-    errors.push({ lineItems: i18next.t('invoiceHasANegativeTotal', 'Invoice has a negative total.') })
+    errors.push({ lineItems: t('invoiceHasANegativeTotal', 'Invoice has a negative total.') })
   }
 
   return errors.length > 0 ? errors : null

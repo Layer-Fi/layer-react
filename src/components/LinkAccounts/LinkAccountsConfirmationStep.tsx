@@ -1,8 +1,9 @@
 import { useContext } from 'react'
 import { useForm } from '@tanstack/react-form'
+import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { i18nextPlural } from '@utils/i18n/plural'
+import { tPlural } from '@utils/i18n/plural'
 import { useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
 import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
@@ -17,12 +18,12 @@ import { useWizard } from '@components/Wizard/Wizard'
 
 import './linkAccountsConfirmationStep.scss'
 
-function getSubmitButtonText({
-  totalCount,
-  confirmedCount,
-}: { totalCount: number, confirmedCount: number }) {
+function getSubmitButtonText(
+  { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number },
+  t: TFunction,
+) {
   if (confirmedCount === totalCount) {
-    return i18nextPlural('confirmAllAccounts', {
+    return tPlural(t, 'confirmAllAccounts', {
       count: totalCount,
       one: 'Confirm Account',
       other: 'Confirm All Accounts',
@@ -30,14 +31,14 @@ function getSubmitButtonText({
   }
 
   if (confirmedCount === 0) {
-    return i18nextPlural('excludeAllAccounts', {
+    return tPlural(t, 'excludeAllAccounts', {
       count: totalCount,
       one: 'Exclude Account',
       other: 'Exclude All Accounts',
     })
   }
 
-  return i18nextPlural('confirmSelectedAccounts', {
+  return tPlural(t, 'confirmSelectedAccounts', {
     count: confirmedCount,
     one: 'Confirm {{count}} Selected Account',
     other: 'Confirm {{count}} Selected Accounts',
@@ -144,7 +145,7 @@ export function LinkAccountsConfirmationStep() {
               {getSubmitButtonText({
                 totalCount,
                 confirmedCount: selectedCount,
-              })}
+              }, t)}
             </Button>
           )}
         </Subscribe>

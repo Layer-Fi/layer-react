@@ -1,12 +1,15 @@
-import i18next from 'i18next'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Legend } from 'recharts'
+
+import { translationKey } from '@utils/i18n/translationKey'
 
 import { STRIPE_PATTERN_DARK_FILL } from './ProfitAndLossChartPatternDefs'
 
-const LEGEND_ENTRIES = [
-  { value: i18next.t('revenue', 'Revenue'), type: 'circle', id: 'IncomeLegend' },
-  { value: i18next.t('expenses', 'Expenses'), type: 'circle', id: 'ExpensesLegend' },
-  { value: i18next.t('uncategorized', 'Uncategorized'), type: 'circle', id: 'UncategorizedLegend' },
+const LEGEND_ENTRY_CONFIG = [
+  { ...translationKey('revenue', 'Revenue'), type: 'circle', id: 'IncomeLegend' },
+  { ...translationKey('expenses', 'Expenses'), type: 'circle', id: 'ExpensesLegend' },
+  { ...translationKey('uncategorized', 'Uncategorized'), type: 'circle', id: 'UncategorizedLegend' },
 ]
 
 const LegendIcon = ({ fill }: { fill?: string }) => (
@@ -41,6 +44,14 @@ const renderLegendContent = (payload: { value: string, type: string, id: string 
   )
 }
 
-export const ProfitAndLossChartLegend = () => (
-  <Legend verticalAlign='top' align='right' content={renderLegendContent(LEGEND_ENTRIES)} />
-)
+export const ProfitAndLossChartLegend = () => {
+  const { t } = useTranslation()
+  const payload = useMemo(() => LEGEND_ENTRY_CONFIG.map(entry => ({
+    value: t(entry.i18nKey, entry.defaultValue),
+    type: entry.type,
+    id: entry.id,
+  })), [t])
+  return (
+    <Legend verticalAlign='top' align='right' content={renderLegendContent(payload)} />
+  )
+}

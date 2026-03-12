@@ -81,7 +81,7 @@ function TagSelectorSelection({
         {(tag) => {
           const isOptimistic = tag._local?.isOptimistic ?? false
           const dimensionLabel = getTagDisplayNameForDimension(tag)
-          const valueLabel = getTagDisplayNameForValue(tag)
+          const valueLabel = getTagDisplayNameForValue(tag, t)
           const id = tag.id
 
           return (
@@ -177,7 +177,7 @@ export function TagSelector({
           label: dimensionLabel,
           options: definedValues.map((tag) => {
             const { id: valueId, value: value } = tag
-            const valueLabel = getTagValueDisplayName(tag)
+            const valueLabel = getTagValueDisplayName(tag, t)
             return ({
               label: valueLabel,
               value: valueId,
@@ -193,6 +193,7 @@ export function TagSelector({
     [
       data,
       selectedTags,
+      t,
     ],
   )
 

@@ -1,4 +1,4 @@
-import i18next from 'i18next'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type AdjustedGrossIncome, type Deductions } from '@schemas/taxEstimates/details'
@@ -11,15 +11,6 @@ type DeductionRowConfig = {
   getAmount: (deductions: Deductions) => number
 }
 
-const deductionRows: DeductionRowConfig[] = [
-  { key: 'businessExpenses', label: i18next.t('deductibleExpenses', 'Deductible Expenses'), getAmount: d => d.businessExpenses },
-  { key: 'vehicleExpense', label: i18next.t('deductibleMileageExpenses', 'Deductible Mileage Expenses'), getAmount: d => d.vehicleExpense?.amount ?? 0 },
-  { key: 'homeOffice', label: i18next.t('homeOfficeDeduction', 'Home Office Deduction'), getAmount: d => d.homeOffice?.amount ?? 0 },
-  { key: 'selfEmploymentTaxDeduction', label: i18next.t('selfEmploymentDeduction', 'Self-Employment Deduction'), getAmount: d => d.selfEmploymentTaxDeduction },
-  { key: 'qualifiedTipDeduction', label: i18next.t('qualifiedTipDeduction', 'Qualified Tip Deduction'), getAmount: d => d.qualifiedTipDeduction },
-  { key: 'qualifiedOvertimeDeduction', label: i18next.t('qualifiedOvertimeDeduction', 'Qualified Overtime Deduction'), getAmount: d => d.qualifiedOvertimeDeduction },
-]
-
 type AdjustedGrossIncomeTableProps = {
   data: AdjustedGrossIncome
 }
@@ -27,6 +18,15 @@ type AdjustedGrossIncomeTableProps = {
 export const AdjustedGrossIncomeTable = ({ data }: AdjustedGrossIncomeTableProps) => {
   const { t } = useTranslation()
   const { income, deductions, totalAdjustedGrossIncome } = data
+
+  const deductionRows: DeductionRowConfig[] = useMemo(() => [
+    { key: 'businessExpenses', label: t('deductibleExpenses', 'Deductible Expenses'), getAmount: d => d.businessExpenses },
+    { key: 'vehicleExpense', label: t('deductibleMileageExpenses', 'Deductible Mileage Expenses'), getAmount: d => d.vehicleExpense?.amount ?? 0 },
+    { key: 'homeOffice', label: t('homeOfficeDeduction', 'Home Office Deduction'), getAmount: d => d.homeOffice?.amount ?? 0 },
+    { key: 'selfEmploymentTaxDeduction', label: t('selfEmploymentDeduction', 'Self-Employment Deduction'), getAmount: d => d.selfEmploymentTaxDeduction },
+    { key: 'qualifiedTipDeduction', label: t('qualifiedTipDeduction', 'Qualified Tip Deduction'), getAmount: d => d.qualifiedTipDeduction },
+    { key: 'qualifiedOvertimeDeduction', label: t('qualifiedOvertimeDeduction', 'Qualified Overtime Deduction'), getAmount: d => d.qualifiedOvertimeDeduction },
+  ], [t])
 
   return (
     <Table className='Layer__TaxTable' aria-label={t('adjustedGrossIncome', 'Adjusted Gross Income')}>

@@ -93,7 +93,7 @@ export const ProfitAndLossDetailedCharts = ({
       <header className='Layer__profit-and-loss-detailed-charts__header'>
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides)}
+            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides, t)}
           </Text>
           <Text size={TextSize.sm} className='date'>
             {format(dateRange.startDate, MONTH_YEAR_FORMAT_FULL)}
@@ -116,7 +116,7 @@ export const ProfitAndLossDetailedCharts = ({
         )}
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides)}
+            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides, t)}
           </Text>
           <Text size={TextSize.sm} className='date'>
             {format(dateRange.startDate, MONTH_YEAR_FORMAT_FULL)}

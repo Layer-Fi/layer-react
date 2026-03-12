@@ -9,7 +9,13 @@ import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { DefaultAccountingOfferingConfig, DefaultBookkeepingOfferingConfig, DefaultHeroContentConfig, LandingPageContentID, LandingPageDefaultTextContent } from '@components/LandingPage/content'
+import {
+  buildDefaultAccountingOfferingConfig,
+  buildDefaultBookkeepingOfferingConfig,
+  buildDefaultHeroContentConfig,
+  buildLandingPageDefaultTextContent,
+  LandingPageContentID,
+} from '@components/LandingPage/content'
 import { LandingPageHelper } from '@components/LandingPage/LandingPageHelper'
 import { LandingPageOffer } from '@components/LandingPage/LandingPageOptions'
 import { type DeepPartial, type HeroContentConfig, type LandingPageCardConfig, type LandingPageLink, type LandingPagePlatformConfig as LandingPagePlatformConfig } from '@components/LandingPage/types'
@@ -48,10 +54,22 @@ export const LandingPage = ({
   const hasAccountingEnabled = availableOffers.includes('accounting')
   const hasBookkeepingEnabled = availableOffers.includes('bookkeeping')
 
-  const heroConfig = mergeHeroContentConfig(DefaultHeroContentConfig, heroOverrides)
-  const offeringSectionTitle = offeringOverrides.stringOverrides?.sectionTitle ?? LandingPageDefaultTextContent[LandingPageContentID.offersTitle]
-  const accountingOfferingConfig = mergeLandingPageConfig(DefaultAccountingOfferingConfig, offeringOverrides.accounting)
-  const bookkeepingOfferingConfig = mergeLandingPageConfig(DefaultBookkeepingOfferingConfig, offeringOverrides.bookkeeping)
+  const heroConfig = useMemo(
+    () => mergeHeroContentConfig(buildDefaultHeroContentConfig(t), heroOverrides),
+    [t, heroOverrides],
+  )
+  const offeringSectionTitle = useMemo(
+    () => offeringOverrides.stringOverrides?.sectionTitle ?? buildLandingPageDefaultTextContent(t)[LandingPageContentID.offersTitle],
+    [t, offeringOverrides],
+  )
+  const accountingOfferingConfig = useMemo(
+    () => mergeLandingPageConfig(buildDefaultAccountingOfferingConfig(t), offeringOverrides.accounting),
+    [t, offeringOverrides.accounting],
+  )
+  const bookkeepingOfferingConfig = useMemo(
+    () => mergeLandingPageConfig(buildDefaultBookkeepingOfferingConfig(t), offeringOverrides.bookkeeping),
+    [t, offeringOverrides.bookkeeping],
+  )
 
   const baseClassName = classNames(
     'Layer__LandingPage',

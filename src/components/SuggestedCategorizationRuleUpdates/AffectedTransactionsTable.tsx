@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import type { MinimalBankTransaction } from '@schemas/bankTransactions/base'
@@ -30,23 +29,29 @@ export interface AffectedTransactionsTableProps {
   isError?: boolean
 }
 
-const ErrorState = () => (
-  <DataState
-    spacing
-    status={DataStateStatus.failed}
-    title={i18next.t('errorLoadingTransactions', 'Error loading transactions')}
-    description={i18next.t('thereWasAnErrorLoadingTheAffectedTransactions', 'There was an error loading the affected transactions')}
-  />
-)
+const ErrorState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      spacing
+      status={DataStateStatus.failed}
+      title={t('errorLoadingTransactions', 'Error loading transactions')}
+      description={t('thereWasAnErrorLoadingTheAffectedTransactions', 'There was an error loading the affected transactions')}
+    />
+  )
+}
 
-const EmptyState = () => (
-  <DataState
-    spacing
-    status={DataStateStatus.info}
-    title={i18next.t('noTransactionsFound', 'No transactions found')}
-    description={i18next.t('thereAreNoAffectedTransactionsToDisplay', 'There are no affected transactions to display')}
-  />
-)
+const EmptyState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      spacing
+      status={DataStateStatus.info}
+      title={t('noTransactionsFound', 'No transactions found')}
+      description={t('thereAreNoAffectedTransactionsToDisplay', 'There are no affected transactions to display')}
+    />
+  )
+}
 
 export const AffectedTransactionsTable = ({
   transactions,
@@ -94,7 +99,7 @@ export const AffectedTransactionsTable = ({
     <VStack className='Layer__AffectedTransactionsTable'>
       <VirtualizedDataTable<MinimalBankTransaction>
         componentName={COMPONENT_NAME}
-        ariaLabel={i18next.t('affectedTransactions', 'Affected transactions')}
+        ariaLabel={t('affectedTransactions', 'Affected transactions')}
         columnConfig={columnConfig}
         data={transactions}
         isLoading={isLoading}

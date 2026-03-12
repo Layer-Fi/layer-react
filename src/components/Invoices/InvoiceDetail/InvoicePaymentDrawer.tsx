@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
@@ -17,16 +16,19 @@ export type InvoicePaymentDrawerProps = {
   invoice: Invoice
 }
 
-const InvoicePaymentDrawerHeader = ({ close }: { close: () => void }) => (
-  <ModalTitleWithClose
-    heading={(
-      <ModalHeading size='md'>
-        {i18next.t('recordInvoicePayment', 'Record invoice payment')}
-      </ModalHeading>
-    )}
-    onClose={close}
-  />
-)
+const InvoicePaymentDrawerHeader = ({ close }: { close: () => void }) => {
+  const { t } = useTranslation()
+  return (
+    <ModalTitleWithClose
+      heading={(
+        <ModalHeading size='md'>
+          {t('recordInvoicePayment', 'Record invoice payment')}
+        </ModalHeading>
+      )}
+      onClose={close}
+    />
+  )
+}
 
 export const InvoicePaymentDrawer = ({
   isOpen,

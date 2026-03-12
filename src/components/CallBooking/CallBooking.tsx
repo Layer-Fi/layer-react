@@ -1,5 +1,4 @@
 import { format as formatTime } from 'date-fns'
-import i18next from 'i18next'
 import { Link as LinkIcon } from 'lucide-react'
 import { Clock, Milestone, Users, Video } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -18,17 +17,20 @@ import { Separator } from '@components/Separator/Separator'
 
 import './callBooking.scss'
 
-const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
-  <VStack gap='md' align='center'>
-    <Heading size='sm'>{i18next.t('haveAnyQuestions', 'Have any questions?')}</Heading>
-    <Span variant='subtle'>
-      {i18next.t('bookACallWithYourBookkeeper', 'Book a call with your bookkeeper')}
-    </Span>
-    <VStack gap='xs'>
-      <Button variant='solid' onClick={onBookCall}>{i18next.t('bookACall', 'Book a call')}</Button>
+const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
+  const { t } = useTranslation()
+  return (
+    <VStack gap='md' align='center'>
+      <Heading size='sm'>{t('haveAnyQuestions', 'Have any questions?')}</Heading>
+      <Span variant='subtle'>
+        {t('bookACallWithYourBookkeeper', 'Book a call with your bookkeeper')}
+      </Span>
+      <VStack gap='xs'>
+        <Button variant='solid' onClick={onBookCall}>{t('bookACall', 'Book a call')}</Button>
+      </VStack>
     </VStack>
-  </VStack>
-)
+  )
+}
 
 const ScheduledCallState = ({
   callBooking,

@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react'
-import i18next from 'i18next'
 import { PencilRuler } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -24,26 +23,32 @@ import { CategorizationRulesMobileList } from '@components/CategorizationRules/C
 import { CategorizationRulesTable } from '@components/CategorizationRules/CategorizationRulesTable/CategorizationRulesTable'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
-const CategorizationRulesEmptyState = () => (
-  <DataState
-    status={DataStateStatus.allDone}
-    title={i18next.t('noRulesFound', 'No rules found')}
-    description={i18next.t('noCategorizationRulesHaveBeenCreatedYetYouWillReceiveSuggestionsForRulesToCreateAsYouCategorizeTransactionsInTheBankFeed', 'No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.')}
-    icon={<PencilRuler />}
-    spacing
-    className='Layer__CategorizationRulesView__EmptyState'
-  />
-)
+const CategorizationRulesEmptyState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      status={DataStateStatus.allDone}
+      title={t('noRulesFound', 'No rules found')}
+      description={t('noCategorizationRulesHaveBeenCreatedYetYouWillReceiveSuggestionsForRulesToCreateAsYouCategorizeTransactionsInTheBankFeed', 'No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.')}
+      icon={<PencilRuler />}
+      spacing
+      className='Layer__CategorizationRulesView__EmptyState'
+    />
+  )
+}
 
-const CategorizationRulesErrorState = () => (
-  <DataState
-    status={DataStateStatus.failed}
-    title={i18next.t('weCouldntLoadYourCategorizationRules', 'We couldn’t load your categorization rules')}
-    description={i18next.t('anErrorOccurredWhileLoadingYourCategorizationRulesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your categorization rules. Please check your connection and try again.')}
-    spacing
-    className='Layer__CategorizationRulesView__ErrorState'
-  />
-)
+const CategorizationRulesErrorState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      status={DataStateStatus.failed}
+      title={t('weCouldntLoadYourCategorizationRules', 'We couldn’t load your categorization rules')}
+      description={t('anErrorOccurredWhileLoadingYourCategorizationRulesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your categorization rules. Please check your connection and try again.')}
+      spacing
+      className='Layer__CategorizationRulesView__ErrorState'
+    />
+  )
+}
 
 type CategorizationRulesHeaderProps = {
   onGoBack?: () => void

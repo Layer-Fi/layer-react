@@ -1,6 +1,5 @@
 import { type ReactNode, useMemo, useState } from 'react'
 import classNames from 'classnames'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
@@ -56,7 +55,7 @@ export interface AccountingOverviewProps {
 type PnlToggleOption = 'revenue' | 'expenses'
 
 export const AccountingOverview = ({
-  title = i18next.t('accountingOverview', 'Accounting overview'),
+  title,
   showTitle = true,
   enableOnboarding = false,
   onboardingStepOverride = undefined,
@@ -97,7 +96,7 @@ export const AccountingOverview = ({
       }
     >
       <View
-        title={stringOverrides?.title || title}
+        title={stringOverrides?.title || title || t('accountingOverview', 'Accounting overview')}
         showHeader={showTitle}
         header={(
           <Header>

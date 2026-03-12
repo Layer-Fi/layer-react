@@ -1,6 +1,5 @@
 import { type ComponentProps, forwardRef, type PropsWithChildren, type ReactElement } from 'react'
 import classNames from 'classnames'
-import i18next from 'i18next'
 import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -19,26 +18,29 @@ type ModalCloseButtonProps = {
   positionAbsolute?: boolean
 }
 
-export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalCloseButtonProps) => (
-  <div
-    className={
-      classNames(MODAL_CLOSE_BUTTON_CLASS_NAME,
-        positionAbsolute && `${MODAL_CLOSE_BUTTON_CLASS_NAME}--position-absolute`,
-      )
-    }
-  >
-    <Button
-      icon
-      inset
-      variant='ghost'
-      slot='close'
-      onPress={onClose}
-      aria-label={i18next.t('closeModal', 'Close Modal')}
-    >
-      <X size={24} />
-    </Button>
-  </div>
-)
+export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalCloseButtonProps) => {
+  const { t } = useTranslation()
+
+  const className = classNames(
+    MODAL_CLOSE_BUTTON_CLASS_NAME,
+    positionAbsolute && `${MODAL_CLOSE_BUTTON_CLASS_NAME}--position-absolute`,
+  )
+
+  return (
+    <div className={className}>
+      <Button
+        icon
+        inset
+        variant='ghost'
+        slot='close'
+        onPress={onClose}
+        aria-label={t('closeModal', 'Close Modal')}
+      >
+        <X size={24} />
+      </Button>
+    </div>
+  )
+}
 
 type ModalTitleWithCloseProps = {
   heading: ReactElement

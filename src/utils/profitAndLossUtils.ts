@@ -1,4 +1,4 @@
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 
 import type { LineItem } from '@schemas/common/lineItem'
 import type { ProfitAndLoss } from '@schemas/reports/profitAndLoss'
@@ -48,14 +48,18 @@ export const collectRevenueItems = (data: ProfitAndLoss): PnlChartLineItem[] => 
   return revenueItems
 }
 
-export const humanizeTitle = (sidebarView: SidebarScope, overrides: DetailedChartStringOverrides | undefined) => {
+export const humanizeTitle = (
+  sidebarView: SidebarScope,
+  overrides: DetailedChartStringOverrides | undefined,
+  t: TFunction,
+) => {
   switch (sidebarView) {
     case 'expenses':
-      return overrides?.expenseChartHeader || i18next.t('expenses', 'Expenses')
+      return overrides?.expenseChartHeader || t('expenses', 'Expenses')
     case 'revenue':
-      return overrides?.revenueChartHeader || i18next.t('revenue', 'Revenue')
+      return overrides?.revenueChartHeader || t('revenue', 'Revenue')
     default:
-      return i18next.t('profitLoss', 'Profit & Loss')
+      return t('profitLoss', 'Profit & Loss')
   }
 }
 

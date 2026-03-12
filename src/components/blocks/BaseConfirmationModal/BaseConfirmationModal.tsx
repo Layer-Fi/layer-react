@@ -1,4 +1,5 @@
 import { memo, type ReactNode, useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Awaitable } from '@internal-types/utility/promises'
 import { type APIError } from '@utils/api/apiError'
@@ -41,16 +42,21 @@ const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent(
   description,
   content,
   onConfirm,
-  confirmLabel = 'Confirm',
-  retryLabel = 'Retry',
-  cancelLabel = 'Cancel',
+  confirmLabel,
+  retryLabel,
+  cancelLabel,
   errorText,
   closeOnConfirm = true,
   confirmDisabled = false,
   useDrawer = false,
 }: BaseConfirmationModalContentProps) {
+  const { t } = useTranslation()
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<APIError | Error | null>(null)
+
+  const confirmButtonLabel = confirmLabel ?? t('confirm', 'Confirm')
+  const retryButtonLabel = retryLabel ?? t('retry', 'Retry')
+  const cancelButtonLabel = cancelLabel ?? t('cancel', 'Cancel')
 
   const onClickConfirm = useCallback(() => {
     setIsProcessing(true)
@@ -88,7 +94,7 @@ const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent(
         <HStack gap='md'>
           <Spacer />
           <Button variant={ButtonVariant.secondary} onClick={close}>
-            {cancelLabel}
+            {cancelButtonLabel}
           </Button>
           <SubmitButton
             onClick={onClickConfirm}
@@ -98,7 +104,7 @@ const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent(
             withRetry
             noIcon={!isProcessing}
           >
-            {error ? retryLabel : confirmLabel}
+            {error ? retryButtonLabel : confirmButtonLabel}
           </SubmitButton>
         </HStack>
       </ModalActions>

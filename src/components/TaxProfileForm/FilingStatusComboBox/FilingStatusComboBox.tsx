@@ -1,24 +1,24 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { FilingStatus } from '@schemas/taxEstimates/filingStatus'
+import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 
 import './filingStatusComboBox.scss'
 
-const FILING_STATUS_OPTIONS = [
-  { value: FilingStatus.SINGLE, label: i18next.t('single', 'Single') },
-  { value: FilingStatus.MARRIED, label: i18next.t('marriedFilingJointly', 'Married filing jointly') },
-  { value: FilingStatus.MARRIED_SEPARATELY, label: i18next.t('marriedFilingSeparately', 'Married filing separately') },
-  { value: FilingStatus.HEAD, label: i18next.t('headOfHousehold', 'Head of household') },
-  { value: FilingStatus.WIDOWER, label: i18next.t('qualifyingWidower', 'Qualifying widow(er)') },
+const FILING_STATUS_CONFIG = [
+  { value: FilingStatus.SINGLE, ...translationKey('single', 'Single') },
+  { value: FilingStatus.MARRIED, ...translationKey('marriedFilingJointly', 'Married filing jointly') },
+  { value: FilingStatus.MARRIED_SEPARATELY, ...translationKey('marriedFilingSeparately', 'Married filing separately') },
+  { value: FilingStatus.HEAD, ...translationKey('headOfHousehold', 'Head of household') },
+  { value: FilingStatus.WIDOWER, ...translationKey('qualifyingWidower', 'Qualifying widow(er)') },
 ] as const
 
-type FilingStatusOption = typeof FILING_STATUS_OPTIONS[number]
+type FilingStatusOption = { value: FilingStatus, label: string }
 
 type FilingStatusComboBoxProps = {
   value: FilingStatus | null
@@ -42,11 +42,19 @@ export const FilingStatusComboBox = ({
     className,
   )
 
+  const options = useMemo<FilingStatusOption[]>(
+    () => FILING_STATUS_CONFIG.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
   const selectedValue = useMemo(() =>
     value
-      ? FILING_STATUS_OPTIONS.find(o => o.value === value) ?? null
+      ? options.find(o => o.value === value) ?? null
       : null,
-  [value])
+  [value, options])
 
   const handleChange = useCallback((option: FilingStatusOption | null) => {
     onChange(option ? option.value : null)
@@ -60,7 +68,7 @@ export const FilingStatusComboBox = ({
         {t('filingStatus', 'Filing status')}
       </Label>
       <ComboBox<FilingStatusOption>
-        options={FILING_STATUS_OPTIONS}
+        options={options}
         selectedValue={selectedValue}
         onSelectedValueChange={handleChange}
         inputId={inputId}

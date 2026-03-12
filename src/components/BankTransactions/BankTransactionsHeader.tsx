@@ -2,12 +2,12 @@ import { useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
-import i18next from 'i18next'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { BankTransactionsDateFilterMode } from '@utils/bankTransactions'
+import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
@@ -50,9 +50,9 @@ export interface BankTransactionsHeaderStringOverrides {
   downloadButton?: string
 }
 
-const STATUS_TOGGLE_OPTIONS = [
-  { label: i18next.t('toReview', 'To Review'), value: DisplayState.review },
-  { label: i18next.t('categorized', 'Categorized'), value: DisplayState.categorized },
+const STATUS_TOGGLE_CONFIG = [
+  { ...translationKey('toReview', 'To Review'), value: DisplayState.review },
+  { ...translationKey('categorized', 'Categorized'), value: DisplayState.categorized },
 ]
 
 type TransactionsSearchProps = {
@@ -156,6 +156,14 @@ export const BankTransactionsHeader = ({
   const isMobileList = tableContentMode === BankTransactionsTableContent.MobileList
   const isListView = isMobileList || tableContentMode === BankTransactionsTableContent.List
 
+  const statusToggleOptions = useMemo(
+    () => STATUS_TOGGLE_CONFIG.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
       <HStack align='center'>
@@ -240,7 +248,7 @@ export const BankTransactionsHeader = ({
     ? (
       <Toggle
         ariaLabel={t('categorizationStatus', 'Categorization status')}
-        options={STATUS_TOGGLE_OPTIONS}
+        options={statusToggleOptions}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}
         fullWidth={isMobileList}

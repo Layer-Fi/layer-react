@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import i18next from 'i18next'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Select, { type Options } from 'react-select'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { type MoneyFormat } from '@internal-types/general'
+import { translationKey } from '@utils/i18n/translationKey'
 import { type PnlTagFilter } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Toggle } from '@ui/Toggle/Toggle'
@@ -18,10 +18,10 @@ import './projectProfitability.scss'
 
 type ProjectTab = 'overview' | 'transactions' | 'report'
 
-const PROJECT_TAB_OPTIONS = [
-  { value: 'overview', label: i18next.t('overview', 'Overview') },
-  { value: 'transactions', label: i18next.t('transactions', 'Transactions') },
-  { value: 'report', label: i18next.t('report', 'Report') },
+const PROJECT_TAB_CONFIG = [
+  { value: 'overview' as const, ...translationKey('overview', 'Overview') },
+  { value: 'transactions' as const, ...translationKey('transactions', 'Transactions') },
+  { value: 'report' as const, ...translationKey('report', 'Report') },
 ]
 
 export type TagOption = {
@@ -60,6 +60,14 @@ export const ProjectProfitabilityView = ({
     undefined,
   )
 
+  const projectTabOptions = useMemo(
+    () => PROJECT_TAB_CONFIG.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
   const isOptionSelected = (
     option: TagOption,
     selectValue: Options<TagOption>,
@@ -95,7 +103,7 @@ export const ProjectProfitabilityView = ({
         <div className='Layer__component'>
           <Toggle
             ariaLabel={t('projectView', 'Project view')}
-            options={PROJECT_TAB_OPTIONS}
+            options={projectTabOptions}
             selectedKey={activeTab}
             onSelectionChange={key => setActiveTab(key as ProjectTab)}
           />

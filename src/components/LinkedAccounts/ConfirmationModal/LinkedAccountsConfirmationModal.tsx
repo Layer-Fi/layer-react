@@ -1,7 +1,8 @@
 import { useState } from 'react'
+import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { i18nextPlural } from '@utils/i18n/plural'
+import { tPlural } from '@utils/i18n/plural'
 import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
 import { getAccountsNeedingConfirmation, useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useAccountConfirmationStore } from '@providers/AccountConfirmationStoreProvider'
@@ -16,9 +17,10 @@ import { ConditionalList } from '@components/utility/ConditionalList'
 
 function getButtonLabel(
   { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number },
+  t: TFunction,
 ) {
   if (confirmedCount === totalCount) {
-    return i18nextPlural('confirmAllAccounts', {
+    return tPlural(t, 'confirmAllAccounts', {
       count: totalCount,
       one: 'Confirm Account',
       other: 'Confirm All Accounts',
@@ -26,28 +28,31 @@ function getButtonLabel(
   }
 
   if (confirmedCount === 0) {
-    return i18nextPlural('excludeAllAccounts', {
+    return tPlural(t, 'excludeAllAccounts', {
       count: totalCount,
       one: 'Exclude Account',
       other: 'Exclude All Accounts',
     })
   }
 
-  return i18nextPlural('confirmSelectedAccounts', {
+  return tPlural(t, 'confirmSelectedAccounts', {
     count: confirmedCount,
     one: 'Confirm {{count}} Selected Account',
     other: 'Confirm {{count}} Selected Accounts',
   })
 }
 
-function getFormComponentLabels(formState: AccountConfirmExcludeFormState) {
+function getFormComponentLabels(
+  formState: AccountConfirmExcludeFormState,
+  t: TFunction,
+) {
   const values = Object.values(formState)
 
   const totalCount = values.length
   const confirmedCount = values.filter(Boolean).length
 
-  const buttonLabel = getButtonLabel({ totalCount, confirmedCount })
-  const descriptionLabel = i18nextPlural('selectTheAccountsYouUseForYourBusiness', {
+  const buttonLabel = getButtonLabel({ totalCount, confirmedCount }, t)
+  const descriptionLabel = tPlural(t, 'selectTheAccountsYouUseForYourBusiness', {
     count: totalCount,
     one: 'Is this account relevant to your business?',
     other: 'Select the accounts you use for your business.',
@@ -146,7 +151,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     }
   }
 
-  const { descriptionLabel, buttonLabel } = getFormComponentLabels(formState)
+  const { descriptionLabel, buttonLabel } = getFormComponentLabels(formState, t)
 
   return (
     <>

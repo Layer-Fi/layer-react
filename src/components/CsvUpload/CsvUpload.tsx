@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import classNames from 'classnames'
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 import { FileSpreadsheet } from 'lucide-react'
 import { type FileRejection, useDropzone } from 'react-dropzone'
 import { Trans, useTranslation } from 'react-i18next'
@@ -18,22 +18,21 @@ const VALID_EXTENSIONS = ['.csv']
 const VALID_FILE_TYPES = ['text/csv', 'text/plain', 'application/vnd.ms-excel']
 const MAX_FILE_SIZE = 2 * 1024 * 1024
 
-const validateCsvFile = (file: File) => {
+const validateCsvFile = (file: File, t: TFunction) => {
   const isValidExtension = VALID_EXTENSIONS.some(ext =>
     file.name.toLowerCase().endsWith(ext),
   )
 
   if (!isValidExtension) {
-    return i18next.t('fileExtensionMustEndInCsv', 'File extension must end in .csv')
+    return t('fileExtensionMustEndInCsv', 'File extension must end in .csv')
   }
 
-  // Check MIME type if it exists
   if (file.type && !VALID_FILE_TYPES.includes(file.type)) {
-    return i18next.t('invalidFileTypeType', 'Invalid file type: {{type}}', { type: file.type })
+    return t('invalidFileTypeType', 'Invalid file type: {{type}}', { type: file.type })
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    return i18next.t('fileExceedsTheSizeLimitOf2mb', 'File exceeds the size limit of 2MB')
+    return t('fileExceedsTheSizeLimitOf2mb', 'File exceeds the size limit of 2MB')
   }
 
   return null
@@ -114,7 +113,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
         return
       }
 
-      const maybeErrorMessage = validateCsvFile(firstFile)
+      const maybeErrorMessage = validateCsvFile(firstFile, t)
       if (!maybeErrorMessage) {
         onFileSelected(firstFile)
         setErrorMessage(undefined)

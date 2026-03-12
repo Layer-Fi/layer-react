@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import i18next from 'i18next'
+import { useMemo, useState } from 'react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasMatch } from '@utils/bankTransactions'
+import { translationKey } from '@utils/i18n/translationKey'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
@@ -13,22 +13,10 @@ import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileL
 import { Purpose } from './BankTransactionsMobileListItem'
 import { PersonalStableName } from './constants'
 
-const PURPOSE_TOGGLE_OPTIONS = [
-  {
-    value: 'business',
-    label: i18next.t('business', 'Business'),
-    style: { minWidth: 84 },
-  },
-  {
-    value: 'personal',
-    label: i18next.t('personal', 'Personal'),
-    style: { minWidth: 84 },
-  },
-  {
-    value: 'more',
-    label: i18next.t('more', 'More'),
-    style: { minWidth: 84 },
-  },
+const PURPOSE_TOGGLE_CONFIG = [
+  { value: 'business' as const, ...translationKey('business', 'Business'), style: { minWidth: 84 } },
+  { value: 'personal' as const, ...translationKey('personal', 'Personal'), style: { minWidth: 84 } },
+  { value: 'more' as const, ...translationKey('more', 'More'), style: { minWidth: 84 } },
 ]
 
 export interface BankTransactionsMobileListItemExpandedRowProps {
@@ -51,6 +39,14 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   const { t } = useTranslation()
   const [purpose, setPurpose] = useState<Purpose>(getInitialPurpose(bankTransaction))
 
+  const purposeToggleOptions = useMemo(
+    () => PURPOSE_TOGGLE_CONFIG.map(opt => ({
+      ...opt,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
   const onChangePurpose = (key: Key) =>
     setPurpose(key as Purpose)
 
@@ -60,7 +56,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
         && (
           <Toggle
             ariaLabel={t('purpose', 'Purpose')}
-            options={PURPOSE_TOGGLE_OPTIONS}
+            options={purposeToggleOptions}
             selectedKey={purpose}
             onSelectionChange={onChangePurpose}
           />

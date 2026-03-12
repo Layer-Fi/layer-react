@@ -1,7 +1,8 @@
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
-import { i18nextPlural } from '@utils/i18n/plural'
+import { tPlural } from '@utils/i18n/plural'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { getDueDifference } from '@utils/time/timeUtils'
 import AlertCircle from '@icons/AlertCircle'
@@ -10,51 +11,51 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 
-const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }) => {
+const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t: TFunction) => {
   const badgeSize = inline ? BadgeSize.EXTRA_SMALL : BadgeSize.SMALL
   const iconSize = inline ? 10 : 12
 
   switch (invoice.status) {
     case InvoiceStatus.WrittenOff: {
-      return { text: i18next.t('writtenOff', 'Written Off') }
+      return { text: t('writtenOff', 'Written Off') }
     }
     case InvoiceStatus.PartiallyWrittenOff: {
-      return { text: i18next.t('partiallyWrittenOff', 'Partially Written Off') }
+      return { text: t('partiallyWrittenOff', 'Partially Written Off') }
     }
     case InvoiceStatus.Refunded: {
-      return { text: i18next.t('refunded', 'Refunded') }
+      return { text: t('refunded', 'Refunded') }
     }
     case InvoiceStatus.Paid: {
       return {
-        text: i18next.t('paid', 'Paid'),
+        text: t('paid', 'Paid'),
         badge: <Badge variant={BadgeVariant.SUCCESS} size={badgeSize} icon={<CheckCircle size={iconSize} />} iconOnly />,
       }
     }
     case InvoiceStatus.Voided: {
-      return { text: i18next.t('voided', 'Voided') }
+      return { text: t('voided', 'Voided') }
     }
     case InvoiceStatus.Sent:
     case InvoiceStatus.PartiallyPaid: {
       if (invoice.dueAt === null) {
         return {
           text: invoice.status === InvoiceStatus.PartiallyPaid
-            ? i18next.t('partiallyPaid', 'Partially Paid')
-            : i18next.t('sent', 'Sent'),
+            ? t('partiallyPaid', 'Partially Paid')
+            : t('sent', 'Sent'),
         }
       }
 
       const dueDifference = getDueDifference(invoice.dueAt)
       if (dueDifference === 0) {
         return {
-          text: i18next.t('dueTodayStatus', 'Due Today'),
+          text: t('dueTodayStatus', 'Due Today'),
         }
       }
 
       if (dueDifference < 0) {
         const daysAgo = Math.abs(dueDifference)
         return {
-          text: i18next.t('overdue', 'Overdue'),
-          subText: i18nextPlural('dueCountDaysAgo', {
+          text: t('overdue', 'Overdue'),
+          subText: tPlural(t, 'dueCountDaysAgo', {
             count: daysAgo,
             one: 'Due {{count}} day ago',
             other: 'Due {{count}} days ago',
@@ -65,8 +66,8 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }) =
 
       const daysUntilDue = Math.abs(dueDifference)
       return {
-        text: i18next.t('sent', 'Sent'),
-        subText: i18nextPlural('dueInCountDays', {
+        text: t('sent', 'Sent'),
+        subText: tPlural(t, 'dueInCountDays', {
           count: daysUntilDue,
           one: 'Due in {{count}} day',
           other: 'Due in {{count}} days',
@@ -83,7 +84,8 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }) =
 }
 
 export const InvoiceStatusCell = ({ invoice, inline = false }: { invoice: Invoice, inline?: boolean }) => {
-  const dueStatus = getDueStatusConfig(invoice, { inline })
+  const { t } = useTranslation()
+  const dueStatus = getDueStatusConfig(invoice, { inline }, t)
 
   const Stack = inline ? HStack : VStack
   const subText = (inline && dueStatus.subText) ? `(${dueStatus.subText})` : dueStatus.subText

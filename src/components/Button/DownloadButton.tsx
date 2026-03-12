@@ -1,4 +1,3 @@
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import DownloadCloud from '@icons/DownloadCloud'
@@ -26,20 +25,21 @@ export const DownloadButton = ({
   tooltip,
   text,
   retryText,
-  errorText = i18next.t('downloadFailedCheckConnectionAndRetryInFewSeconds', 'Download failed. Check connection and retry in few seconds.'),
+  errorText,
   variant = ButtonVariant.secondary,
   disabled = false,
 }: DownloadButtonProps) => {
   const { t } = useTranslation()
   const displayText = text ?? t('download', 'Download')
   const displayRetryText = retryText ?? t('retry', 'Retry')
+  const displayErrorText = errorText ?? t('downloadFailedCheckConnectionAndRetryInFewSeconds', 'Download failed. Check connection and retry in few seconds.')
 
   if (requestFailed) {
     return (
       <RetryButton
         onClick={() => void onClick?.()}
         className='Layer__download-retry-btn'
-        error={errorText}
+        error={displayErrorText}
         disabled={isDownloading || disabled}
         iconOnly={iconOnly}
       >

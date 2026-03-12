@@ -214,10 +214,10 @@ export const BankTransactionsListItem = ({
               error={isError ? t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.') : undefined}
             >
               {isError
-                ? 'Retry'
+                ? t('retry', 'Retry')
                 : (!displayAsCategorized
-                  ? stringOverrides?.approveButtonText || 'Approve'
-                  : stringOverrides?.updateButtonText || 'Update')}
+                  ? stringOverrides?.approveButtonText ?? t('approve', 'Approve')
+                  : stringOverrides?.updateButtonText ?? t('update', 'Update'))}
             </SubmitButton>
           </HStack>
         </div>

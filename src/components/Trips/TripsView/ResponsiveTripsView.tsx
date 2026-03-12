@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { getYear } from 'date-fns'
-import i18next from 'i18next'
 import { Car } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import type { Trip } from '@schemas/trip'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
@@ -20,26 +20,32 @@ import { TripsTable } from '@components/Trips/TripsTable/TripsTable'
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
   width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
 
-const TripsViewEmptyState = () => (
-  <DataState
-    status={DataStateStatus.allDone}
-    title={i18next.t('noTripsYet', 'No trips yet')}
-    description={i18next.t('addYourFirstTripToStartTrackingMileage', 'Add your first trip to start tracking mileage.')}
-    icon={<Car />}
-    spacing
-    className='Layer__TripsView__EmptyState'
-  />
-)
+const TripsViewEmptyState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      status={DataStateStatus.allDone}
+      title={t('noTripsYet', 'No trips yet')}
+      description={t('addYourFirstTripToStartTrackingMileage', 'Add your first trip to start tracking mileage.')}
+      icon={<Car />}
+      spacing
+      className='Layer__TripsView__EmptyState'
+    />
+  )
+}
 
-const TripsViewErrorState = () => (
-  <DataState
-    status={DataStateStatus.failed}
-    title={i18next.t('weCouldntLoadYourTrips', 'We couldn\'t load your trips')}
-    description={i18next.t('anErrorOccurredWhileLoadingYourTripsPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your trips. Please check your connection and try again.')}
-    spacing
-    className='Layer__TripsView__ErrorState'
-  />
-)
+const TripsViewErrorState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      status={DataStateStatus.failed}
+      title={t('weCouldntLoadYourTrips', 'We couldn\'t load your trips')}
+      description={t('anErrorOccurredWhileLoadingYourTripsPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your trips. Please check your connection and try again.')}
+      spacing
+      className='Layer__TripsView__ErrorState'
+    />
+  )
+}
 
 export const ResponsiveTripsView = () => {
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)

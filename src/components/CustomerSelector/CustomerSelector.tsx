@@ -1,6 +1,6 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
@@ -54,7 +54,8 @@ type CustomerSelectorProps = CustomerSelectorBaseProps & (
   | { isCreatable?: false, onCreateCustomer?: (name: string) => void }
 )
 
-const formatCreateLabel = (inputValue: string) => inputValue ? i18next.t('createCustomerInputValue', 'Create customer "{{inputValue}}"', { inputValue }) : i18next.t('createNewCustomer', 'Create new customer')
+const formatCreateLabel = (inputValue: string, t: TFunction) =>
+  inputValue ? t('createCustomerInputValue', 'Create customer "{{inputValue}}"', { inputValue }) : t('createNewCustomer', 'Create new customer')
 
 export function CustomerSelector({
   selectedCustomer,
@@ -172,7 +173,12 @@ export function CustomerSelector({
   }
 
   const creatableProps = isCreatable
-    ? { isCreatable: true as const, onCreateOption: onCreateCustomer, formatCreateLabel, groups: [{ label: t('customers', 'Customers'), options }] }
+    ? {
+      isCreatable: true as const,
+      onCreateOption: onCreateCustomer,
+      formatCreateLabel: (inputValue: string) => formatCreateLabel(inputValue, t),
+      groups: [{ label: t('customers', 'Customers'), options }],
+    }
     : { isCreatable: false as const, options }
 
   return (

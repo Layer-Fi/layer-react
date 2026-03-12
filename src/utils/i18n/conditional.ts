@@ -1,5 +1,3 @@
-import i18next from 'i18next'
-
 type TranslationOptions = Record<string, unknown>
 type TranslateFn = (key: string, options: TranslationOptions) => string
 
@@ -19,11 +17,4 @@ export const tConditional = <TCondition extends string>(
     context: contexts?.[condition],
     defaultValue: cases[condition],
   })
-}
-
-export const i18nextConditional = <TCondition extends string>(
-  key: string,
-  options: ConditionalTranslationOptions<TCondition>,
-): string => {
-  return tConditional((translationKey, translationOptions) => i18next.t(translationKey, translationOptions), key, options)
 }

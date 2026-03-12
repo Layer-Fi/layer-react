@@ -1,8 +1,8 @@
-import { useCallback, useId } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
+import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
@@ -14,14 +14,14 @@ type PaymentMethodOption = {
   label: string
   value: PaymentMethod
 }
-const PaymentMethodOptionConfig = {
-  [PaymentMethod.Cash]: { label: i18next.t('cash', 'Cash'), value: PaymentMethod.Cash },
-  [PaymentMethod.Check]: { label: i18next.t('check', 'Check'), value: PaymentMethod.Check },
-  [PaymentMethod.CreditCard]: { label: i18next.t('creditCard', 'Credit Card'), value: PaymentMethod.CreditCard },
-  [PaymentMethod.Ach]: { label: i18next.t('ach', 'ACH'), value: PaymentMethod.Ach },
-  [PaymentMethod.Other]: { label: i18next.t('other', 'Other'), value: PaymentMethod.Other },
-}
-const options = Object.values(PaymentMethodOptionConfig)
+
+const PAYMENT_METHOD_OPTIONS = [
+  { value: PaymentMethod.Cash, ...translationKey('cash', 'Cash') },
+  { value: PaymentMethod.Check, ...translationKey('check', 'Check') },
+  { value: PaymentMethod.CreditCard, ...translationKey('creditCard', 'Credit Card') },
+  { value: PaymentMethod.Ach, ...translationKey('ach', 'ACH') },
+  { value: PaymentMethod.Other, ...translationKey('other', 'Other') },
+]
 
 type PaymentMethodComboBoxProps = {
   value: PaymentMethod | null
@@ -39,10 +39,19 @@ export const PaymentMethodComboBox = ({ value, onValueChange, isReadOnly, classN
     className,
   )
 
-  const selectedOption = value ? PaymentMethodOptionConfig[value] : null
-  const onSelectedValueChange = useCallback((option: PaymentMethodOption | null) => {
+  const options = useMemo<PaymentMethodOption[]>(
+    () => PAYMENT_METHOD_OPTIONS.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
+  const selectedOption = value ? (options.find(o => o.value === value) ?? null) : null
+  const handleChange = (option: null | PaymentMethodOption) => {
     onValueChange(option?.value || null)
-  }, [onValueChange])
+  }
+  const onSelectedValueChange = useCallback(handleChange, [onValueChange])
 
   const inputId = useId()
 

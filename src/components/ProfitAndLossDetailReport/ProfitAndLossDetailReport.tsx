@@ -1,7 +1,6 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
 import type { Row } from '@tanstack/react-table'
 import { format } from 'date-fns'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { Direction } from '@internal-types/general'
@@ -61,23 +60,29 @@ export interface ProfitAndLossDetailReportProps {
   stringOverrides?: ProfitAndLossDetailReportStringOverrides
 }
 
-const ErrorState = () => (
-  <DataState
-    spacing
-    status={DataStateStatus.failed}
-    title={i18next.t('errorLoadingDetailLines', 'Error loading detail lines')}
-    description={i18next.t('thereWasAnErrorLoadingTheProfitAndLossDetailLines', 'There was an error loading the profit and loss detail lines')}
-  />
-)
+const ErrorState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      spacing
+      status={DataStateStatus.failed}
+      title={t('errorLoadingDetailLines', 'Error loading detail lines')}
+      description={t('thereWasAnErrorLoadingTheProfitAndLossDetailLines', 'There was an error loading the profit and loss detail lines')}
+    />
+  )
+}
 
-const EmptyState = () => (
-  <DataState
-    spacing
-    status={DataStateStatus.info}
-    title={i18next.t('noDetailLinesFound', 'No detail lines found')}
-    description={i18next.t('thereAreNoDetailLinesForThisProfitAndLossItem', 'There are no detail lines for this profit and loss item')}
-  />
-)
+const EmptyState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      spacing
+      status={DataStateStatus.info}
+      title={t('noDetailLinesFound', 'No detail lines found')}
+      description={t('thereAreNoDetailLinesForThisProfitAndLossItem', 'There are no detail lines for this profit and loss item')}
+    />
+  )
+}
 
 export const ProfitAndLossDetailReport = ({
   lineItemName,

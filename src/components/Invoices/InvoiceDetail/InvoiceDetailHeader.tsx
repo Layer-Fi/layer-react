@@ -1,10 +1,11 @@
 import { useCallback, useMemo } from 'react'
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 import { ArrowRight, HandCoins } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { InvoiceStatus } from '@schemas/invoices/invoice'
+import { translationKey } from '@utils/i18n/translationKey'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { type InvoiceDetailRouteState, InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -31,15 +32,26 @@ const getHeaderMode = (viewState: InvoiceDetailRouteState): HeaderMode => {
   return HeaderMode.Edit
 }
 
-const getHeadingContent = (headerMode: HeaderMode, invoiceNumber: string | null) => {
-  switch (headerMode) {
-    case HeaderMode.Preview:
-      return invoiceNumber ? i18next.t('previewingInvoiceNumber', 'Previewing Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('previewingInvoice', 'Previewing Invoice')
-    case HeaderMode.View:
-      return invoiceNumber ? i18next.t('invoiceNumberWithPrefix', 'Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('viewInvoice', 'View Invoice')
-    case HeaderMode.Edit:
-      return invoiceNumber ? i18next.t('editingInvoiceNumber', 'Editing Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('editingInvoice', 'Editing Invoice')
-  }
+const HEADING_I18N: Record<HeaderMode, { withNumber: ReturnType<typeof translationKey>, noNumber: ReturnType<typeof translationKey> }> = {
+  [HeaderMode.Preview]: {
+    withNumber: translationKey('previewingInvoiceNumber', 'Previewing Invoice #{{invoiceNumber}}'),
+    noNumber: translationKey('previewingInvoice', 'Previewing Invoice'),
+  },
+  [HeaderMode.View]: {
+    withNumber: translationKey('invoiceNumberWithPrefix', 'Invoice #{{invoiceNumber}}'),
+    noNumber: translationKey('viewInvoice', 'View Invoice'),
+  },
+  [HeaderMode.Edit]: {
+    withNumber: translationKey('editingInvoiceNumber', 'Editing Invoice #{{invoiceNumber}}'),
+    noNumber: translationKey('editingInvoice', 'Editing Invoice'),
+  },
+}
+
+const getHeadingContent = (headerMode: HeaderMode, invoiceNumber: string | null, t: TFunction) => {
+  const { i18nKey, defaultValue } = invoiceNumber
+    ? HEADING_I18N[headerMode].withNumber
+    : HEADING_I18N[headerMode].noNumber
+  return t(i18nKey, defaultValue, invoiceNumber ? { invoiceNumber } : {})
 }
 
 export type InvoiceDetailHeaderProps = {
@@ -78,7 +90,7 @@ export const InvoiceDetailHeader = ({
   }
 
   const headerMode = getHeaderMode(viewState)
-  const headingContent = getHeadingContent(headerMode, viewState.invoice.invoiceNumber)
+  const headingContent = getHeadingContent(headerMode, viewState.invoice.invoiceNumber, t)
 
   const canMarkAsPaid = viewState.invoice.status === InvoiceStatus.Sent
     || viewState.invoice.status === InvoiceStatus.PartiallyPaid

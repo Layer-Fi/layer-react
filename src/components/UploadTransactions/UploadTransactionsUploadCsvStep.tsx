@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import type { CustomAccount } from '@internal-types/customAccounts'
@@ -27,9 +27,10 @@ export type AccountOption = {
   __isNew__?: true
 }
 
-const formatCreateLabel = (inputValue: string) => {
-  return inputValue ? i18next.t('createInputValue', 'Create "{{inputValue}}"', { inputValue }) : i18next.t('createAccount', 'Create account')
-}
+const formatCreateLabel = (inputValue: string, t: TFunction) =>
+  inputValue
+    ? t('createInputValue', 'Create "{{inputValue}}"', { inputValue })
+    : t('createAccount', 'Create account')
 
 const AccountOption = ({ option, fallback }: { option: AccountOption, fallback: React.ReactNode }) => {
   if (option.account && !option.__isNew__) {
@@ -144,7 +145,7 @@ export function UploadTransactionsUploadCsvStep(
           options={accountOptions}
           onSelectedValueChange={onSelectAccount}
           onCreateOption={onCreateOption}
-          formatCreateLabel={formatCreateLabel}
+          formatCreateLabel={inputValue => formatCreateLabel(inputValue, t)}
           isValidNewOption={() => true}
           selectedValue={selectedAccount}
           isClearable

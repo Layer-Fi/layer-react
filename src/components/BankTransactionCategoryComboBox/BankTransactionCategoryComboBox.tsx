@@ -12,7 +12,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Header, Span } from '@ui/Typography/Text'
 import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { BankTransactionCategoryComboBoxGroupLabel, flattenCategories, getAllCategoriesGroup, getSuggestedCategoriesGroup, getSuggestedMatchesGroup, isLoadingSuggestions } from '@components/BankTransactionCategoryComboBox/utils'
+import { flattenCategories, getAllCategoriesGroup, getGroupDisplayLabel, getSuggestedCategoriesGroup, getSuggestedMatchesGroup, isBoldGroupLabel, isLoadingSuggestions } from '@components/BankTransactionCategoryComboBox/utils'
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
 import { DateTime } from '@components/DateTime/DateTime'
 
@@ -63,24 +63,16 @@ type BankTransactionCategoryComboBoxGroupHeadingProps = {
   fallback: React.ReactNode
 }
 
-const BOLDED_LABELS: string[] = [
-  BankTransactionCategoryComboBoxGroupLabel.ALL_CATEGORIES,
-  BankTransactionCategoryComboBoxGroupLabel.TRANSFER,
-  BankTransactionCategoryComboBoxGroupLabel.MATCH,
-]
-
 const BankTransactionCategoryComboBoxGroupHeading = ({ group, fallback }: BankTransactionCategoryComboBoxGroupHeadingProps) => {
-  if (group.label !== undefined && BOLDED_LABELS.includes(group.label)) {
-    return (
-      <HStack className='Layer__BankTransactionCategoryComboBox__CustomGroupHeading'>
-        <Header size='xs'>
-          {group.label}
-        </Header>
-      </HStack>
-    )
-  }
+  const { t } = useTranslation()
+  const displayLabel = getGroupDisplayLabel(group.label, t)
+  if (displayLabel === undefined || !isBoldGroupLabel(group.label)) return fallback
 
-  return fallback
+  return (
+    <HStack className='Layer__BankTransactionCategoryComboBox__CustomGroupHeading'>
+      <Header size='xs'>{displayLabel}</Header>
+    </HStack>
+  )
 }
 
 type BankTransactionCategoryComboBoxProps = {
@@ -116,8 +108,8 @@ export const BankTransactionCategoryComboBox = ({
 
   const suggestedGroup = useMemo(() => {
     if (!bankTransaction) return null
-    return getSuggestedCategoriesGroup(bankTransaction)
-  }, [bankTransaction])
+    return getSuggestedCategoriesGroup(bankTransaction, t)
+  }, [bankTransaction, t])
 
   const categoryGroups = useMemo(() => {
     if (!categories) return []

@@ -7,12 +7,7 @@ import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOf
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { RetryButton } from '@components/Button/RetryButton'
 import { SubmitButton } from '@components/Button/SubmitButton'
-import {
-  LEDGER_ACCOUNT_SUBTYPES,
-  LEDGER_ACCOUNT_SUBTYPES_FOR_TYPE,
-  LEDGER_ACCOUNT_TYPES,
-  NORMALITY_OPTIONS,
-} from '@components/ChartOfAccountsForm/constants'
+import { useChartOfAccountsFormOptions } from '@components/ChartOfAccountsForm/useChartOfAccountsFormOptions'
 import { useParentOptions } from '@components/ChartOfAccountsForm/useParentOptions'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
@@ -54,6 +49,11 @@ export const ChartOfAccountsForm = ({
   } = useContext(ChartOfAccountsContext)
 
   const parentOptions = useParentOptions(data)
+  const {
+    ledgerAccountTypesOptions,
+    normalityOptions,
+    ledgerAccountSubtypesForType,
+  } = useChartOfAccountsFormOptions()
 
   const entry = useMemo(() => {
     if (form?.action === 'edit' && form.accountId) {
@@ -190,7 +190,7 @@ export const ChartOfAccountsForm = ({
           inline={true}
         >
           <Select
-            options={LEDGER_ACCOUNT_TYPES}
+            options={ledgerAccountTypesOptions}
             value={form?.data.type}
             onChange={sel => changeFormData('type', sel)}
             isInvalid={Boolean(form?.errors?.find(x => x.field === 'type'))}
@@ -210,8 +210,8 @@ export const ChartOfAccountsForm = ({
           <Select
             options={
               form?.data.type?.value !== undefined
-                ? LEDGER_ACCOUNT_SUBTYPES_FOR_TYPE[form?.data.type?.value]
-                : LEDGER_ACCOUNT_SUBTYPES
+                ? ledgerAccountSubtypesForType[form?.data.type?.value]
+                : Object.values(ledgerAccountSubtypesForType).flat()
             }
             value={form?.data.subType}
             isInvalid={Boolean(form?.errors?.find(x => x.field === 'subType'))}
@@ -226,7 +226,7 @@ export const ChartOfAccountsForm = ({
           inline={true}
         >
           <Select
-            options={NORMALITY_OPTIONS}
+            options={normalityOptions}
             value={form?.data.normality}
             isInvalid={Boolean(
               form?.errors?.find(x => x.field === 'normality'),

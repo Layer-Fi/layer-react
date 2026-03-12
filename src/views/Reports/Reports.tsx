@@ -1,9 +1,9 @@
 import { type ReactNode, useMemo, useState } from 'react'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type View as ViewType } from '@internal-types/general'
 import { type ProfitAndLossCompareConfig } from '@internal-types/profitAndLoss'
+import { translationKey } from '@utils/i18n/translationKey'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { Toggle } from '@ui/Toggle/Toggle'
@@ -45,7 +45,13 @@ export interface ReportsProps {
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
-type ReportOption = { value: ReportType, label: string }
+
+const REPORT_TYPE_CONFIG: { value: ReportType, i18nKey: string, defaultValue: string }[] = [
+  { value: 'profitAndLoss', ...translationKey('profitLoss', 'Profit & Loss') },
+  { value: 'balanceSheet', ...translationKey('balanceSheet', 'Balance Sheet') },
+  { value: 'statementOfCashFlow', ...translationKey('statementOfCashFlow', 'Statement of Cash Flow') },
+]
+
 export interface ReportsPanelProps {
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
@@ -53,29 +59,6 @@ export interface ReportsPanelProps {
   statementOfCashFlowConfig?: TimeRangePickerConfig
   view: ViewBreakpoint
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
-}
-
-const getOptions = (enabledReports: ReportType[]) => {
-  return [
-    enabledReports.includes('profitAndLoss')
-      ? {
-        value: 'profitAndLoss',
-        label: i18next.t('profitLoss', 'Profit & Loss'),
-      }
-      : null,
-    enabledReports.includes('balanceSheet')
-      ? {
-        value: 'balanceSheet',
-        label: i18next.t('balanceSheet', 'Balance Sheet'),
-      }
-      : null,
-    enabledReports.includes('statementOfCashFlow')
-      ? {
-        value: 'statementOfCashFlow',
-        label: i18next.t('statementOfCashFlow', 'Statement of Cash Flow'),
-      }
-      : null,
-  ].filter(o => !!o) as ReportOption[]
 }
 
 const defaultEnabledReports: ReportType[] = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow']
@@ -93,7 +76,12 @@ export const Reports = ({
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
-  const options = useMemo(() => getOptions(enabledReports), [enabledReports])
+  const options = useMemo(
+    () => REPORT_TYPE_CONFIG
+      .filter(c => enabledReports.includes(c.value))
+      .map(c => ({ value: c.value, label: t(c.i18nKey, c.defaultValue) })),
+    [enabledReports, t],
+  )
   const defaultTitle =
     enabledReports.length > 1
       ? t('reports', 'Reports')

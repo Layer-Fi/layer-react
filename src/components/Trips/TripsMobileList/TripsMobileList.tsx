@@ -27,20 +27,23 @@ interface TripsMobileListProps {
   }
 }
 
-const TripsMobileListItem = ({ trip }: { trip: Trip }) => (
-  <HStack justify='space-between' gap='sm' className='Layer__TripsMobileListItem'>
-    <VStack gap='3xs' className='Layer__TripsMobileListItem__LeftContent'>
-      <Span weight='bold'>{formatCalendarDate(trip.tripDate)}</Span>
-      {(trip.startAddress || trip.endAddress) && <TripsAddressCell trip={trip} />}
-    </VStack>
-    <VStack gap='3xs' align='end'>
-      <Span weight='bold'>{formatDistance(trip.distance)}</Span>
-      <Badge size={BadgeSize.SMALL} variant={getPurposeBadgeVariant(trip.purpose)}>
-        {getPurposeLabel(trip.purpose)}
-      </Badge>
-    </VStack>
-  </HStack>
-)
+const TripsMobileListItem = ({ trip }: { trip: Trip }) => {
+  const { t } = useTranslation()
+  return (
+    <HStack justify='space-between' gap='sm' className='Layer__TripsMobileListItem'>
+      <VStack gap='3xs' className='Layer__TripsMobileListItem__LeftContent'>
+        <Span weight='bold'>{formatCalendarDate(trip.tripDate)}</Span>
+        {(trip.startAddress || trip.endAddress) && <TripsAddressCell trip={trip} />}
+      </VStack>
+      <VStack gap='3xs' align='end'>
+        <Span weight='bold'>{formatDistance(trip.distance, t)}</Span>
+        <Badge size={BadgeSize.SMALL} variant={getPurposeBadgeVariant(trip.purpose)}>
+          {getPurposeLabel(trip.purpose, t)}
+        </Badge>
+      </VStack>
+    </HStack>
+  )
+}
 
 export const TripsMobileList = ({
   data,

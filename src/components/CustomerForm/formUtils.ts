@@ -1,4 +1,4 @@
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 
 import { type Customer, type CustomerForm } from '@schemas/customer'
 import { UpsertCustomerMode } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
@@ -26,18 +26,17 @@ export const getCustomerFormDefaultValues = (state: CustomerFormState): Customer
   }
 }
 
-export const validateCustomerForm = ({ customer }: { customer: CustomerForm }) => {
+export const validateCustomerForm = ({ customer }: { customer: CustomerForm }, t: TFunction) => {
   const { individualName, companyName, email } = customer
 
   const errors = []
 
-  // At least one of individual name or company name is required
   if (!individualName.trim() && !companyName.trim()) {
-    errors.push({ individualName: i18next.t('eitherIndividualNameOrCompanyNameIsRequired', 'Either individual name or company name is required.') })
+    errors.push({ individualName: t('eitherIndividualNameOrCompanyNameIsRequired', 'Either individual name or company name is required.') })
   }
 
   if (!email.trim()) {
-    errors.push({ email: i18next.t('emailIsARequiredField', 'Email is a required field.') })
+    errors.push({ email: t('emailIsARequiredField', 'Email is a required field.') })
   }
 
   return errors.length > 0 ? errors : null

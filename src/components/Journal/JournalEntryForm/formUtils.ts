@@ -1,6 +1,6 @@
 import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import { BigDecimal as BD } from 'effect'
-import i18next from 'i18next'
+import type { TFunction } from 'i18next'
 
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { makeTagFromTransactionTag, makeTagKeyValueFromTag } from '@schemas/tag'
@@ -126,48 +126,46 @@ export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateC
   }
 }
 
-export function validateJournalEntryForm({ value }: { value: JournalEntryForm }) {
+export function validateJournalEntryForm({ value }: { value: JournalEntryForm }, t: TFunction) {
   const errors = []
 
   if (!value.entryAt) {
-    errors.push({ entryAt: i18next.t('entryDateIsARequiredField', 'Entry date is a required field.') })
+    errors.push({ entryAt: t('entryDateIsARequiredField', 'Entry date is a required field.') })
   }
 
   if (!value.createdBy) {
-    errors.push({ createdBy: i18next.t('createdByIsARequiredField', 'Created by is a required field.') })
+    errors.push({ createdBy: t('createdByIsARequiredField', 'Created by is a required field.') })
   }
 
   if (!value.memo) {
-    errors.push({ memo: i18next.t('memoIsARequiredField', 'Memo is a required field.') })
+    errors.push({ memo: t('memoIsARequiredField', 'Memo is a required field.') })
   }
 
-  // Filter out blank line items for validation
   const nonBlankLineItems = value.lineItems.filter(lineItem => !isLineItemBlank(lineItem))
 
   if (!value.lineItems || nonBlankLineItems.length === 0) {
-    errors.push({ lineItems: i18next.t('atLeastOneLineItemIsRequired', 'At least one line item is required.') })
+    errors.push({ lineItems: t('atLeastOneLineItemIsRequired', 'At least one line item is required.') })
   }
   else {
     const nonBlankDebits = nonBlankLineItems.filter(item => item.direction === LedgerEntryDirection.Debit)
     const nonBlankCredits = nonBlankLineItems.filter(item => item.direction === LedgerEntryDirection.Credit)
 
     if (nonBlankDebits.length === 0) {
-      errors.push({ lineItems: i18next.t('atLeastOneDebitLineItemIsRequired', 'At least one debit line item is required.') })
+      errors.push({ lineItems: t('atLeastOneDebitLineItemIsRequired', 'At least one debit line item is required.') })
     }
 
     if (nonBlankCredits.length === 0) {
-      errors.push({ lineItems: i18next.t('atLeastOneCreditLineItemIsRequired', 'At least one credit line item is required.') })
+      errors.push({ lineItems: t('atLeastOneCreditLineItemIsRequired', 'At least one credit line item is required.') })
     }
 
     const debitTotal = nonBlankDebits.reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
     const creditTotal = nonBlankCredits.reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
 
     if (!BD.equals(debitTotal, creditTotal)) {
-      errors.push({ lineItems: i18next.t('debitAndCreditAmountsMustBeEqual', 'Debit and credit amounts must be equal') })
+      errors.push({ lineItems: t('debitAndCreditAmountsMustBeEqual', 'Debit and credit amounts must be equal') })
     }
 
     value.lineItems.forEach((lineItem, index) => {
-      // Skip validation for blank line items
       if (isLineItemBlank(lineItem)) {
         return
       }
@@ -175,19 +173,19 @@ export function validateJournalEntryForm({ value }: { value: JournalEntryForm })
       const accountId = lineItem.accountIdentifier
       if (accountId.type === 'AccountId' && 'id' in accountId) {
         if (!accountId.id) {
-          errors.push({ [`lineItems[${index}].accountIdentifier`]: i18next.t('accountIsARequiredField', 'Account is a required field.') })
+          errors.push({ [`lineItems[${index}].accountIdentifier`]: t('accountIsARequiredField', 'Account is a required field.') })
         }
       }
       else if (accountId.type === 'StableName' && 'stableName' in accountId) {
         if (!accountId.stableName) {
-          errors.push({ [`lineItems[${index}].accountIdentifier`]: i18next.t('accountIsARequiredField', 'Account is a required field.') })
+          errors.push({ [`lineItems[${index}].accountIdentifier`]: t('accountIsARequiredField', 'Account is a required field.') })
         }
       }
       else {
-        errors.push({ [`lineItems[${index}].accountIdentifier`]: i18next.t('accountIsARequiredField', 'Account is a required field.') })
+        errors.push({ [`lineItems[${index}].accountIdentifier`]: t('accountIsARequiredField', 'Account is a required field.') })
       }
       if (BD.lessThan(lineItem.amount, BIG_DECIMAL_ZERO)) {
-        errors.push({ [`lineItems[${index}].amount`]: i18next.t('amountMustBeGreaterThanZero', 'Amount must be greater than zero.') })
+        errors.push({ [`lineItems[${index}].amount`]: t('amountMustBeGreaterThanZero', 'Amount must be greater than zero.') })
       }
     })
   }

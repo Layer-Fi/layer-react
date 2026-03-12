@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { MobileList } from '@ui/MobileList/MobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -11,32 +11,36 @@ import { type CommonTaxPaymentsListProps, getQuarterLabel, type TaxPaymentQuarte
 
 import './taxPaymentsMobileList.scss'
 
-const TaxPaymentsMobileListItem = ({ payment }: { payment: TaxPaymentQuarterWithId }) => (
-  <VStack gap='xs' className='Layer__TaxPaymentsMobileListItem'>
-    <Heading size='sm' weight='bold' pbe='3xs'>{getQuarterLabel(payment.quarter)}</Heading>
-    <VStack gap='3xs'>
+const TaxPaymentsMobileListItem = ({ payment }: { payment: TaxPaymentQuarterWithId }) => {
+  const { t } = useTranslation()
+  return (
+    <VStack gap='xs' className='Layer__TaxPaymentsMobileListItem'>
+      <Heading size='sm' weight='bold' pbe='3xs'>{getQuarterLabel(payment.quarter)}</Heading>
+      <VStack gap='3xs'>
+        <HStack justify='space-between'>
+          <Span size='sm' variant='subtle'>{t('rolledOverFromPreviousQuarter', 'Rolled Over From Previous Quarter')}</Span>
+          <MoneySpan size='sm' amount={payment.owedRolledOverFromPrevious} />
+        </HStack>
+        <HStack justify='space-between'>
+          <Span size='sm' variant='subtle'>{t('owedThisQuarter', 'Owed This Quarter')}</Span>
+          <MoneySpan size='sm' amount={payment.owedThisQuarter} />
+        </HStack>
+        <HStack justify='space-between'>
+          <Span size='sm' variant='subtle'>{t('totalPaid', 'Total Paid')}</Span>
+          <MoneySpan size='sm' amount={payment.totalPaid} />
+        </HStack>
+      </VStack>
+      <Separator />
       <HStack justify='space-between'>
-        <Span size='sm' variant='subtle'>{i18next.t('rolledOverFromPreviousQuarter', 'Rolled Over From Previous Quarter')}</Span>
-        <MoneySpan size='sm' amount={payment.owedRolledOverFromPrevious} />
-      </HStack>
-      <HStack justify='space-between'>
-        <Span size='sm' variant='subtle'>{i18next.t('owedThisQuarter', 'Owed This Quarter')}</Span>
-        <MoneySpan size='sm' amount={payment.owedThisQuarter} />
-      </HStack>
-      <HStack justify='space-between'>
-        <Span size='sm' variant='subtle'>{i18next.t('totalPaid', 'Total Paid')}</Span>
-        <MoneySpan size='sm' amount={payment.totalPaid} />
+        <Span size='md' weight='bold'>{t('remainingBalance', 'Remaining Balance')}</Span>
+        <MoneySpan size='md' amount={payment.total} weight='bold' />
       </HStack>
     </VStack>
-    <Separator />
-    <HStack justify='space-between'>
-      <Span size='md' weight='bold'>{i18next.t('remainingBalance', 'Remaining Balance')}</Span>
-      <MoneySpan size='md' amount={payment.total} weight='bold' />
-    </HStack>
-  </VStack>
-)
+  )
+}
 
 export const TaxPaymentsMobileList = ({ data, isLoading, isError, slots }: CommonTaxPaymentsListProps) => {
+  const { t } = useTranslation()
   const renderItem = useCallback(
     (payment: TaxPaymentQuarterWithId) => <TaxPaymentsMobileListItem payment={payment} />,
     [],
@@ -45,7 +49,7 @@ export const TaxPaymentsMobileList = ({ data, isLoading, isError, slots }: Commo
   return (
     <div className='Layer__TaxPaymentsMobileList'>
       <MobileList
-        ariaLabel={i18next.t('taxPayments', 'Tax Payments')}
+        ariaLabel={t('taxPayments', 'Tax Payments')}
         data={data}
         isLoading={isLoading}
         isError={isError}

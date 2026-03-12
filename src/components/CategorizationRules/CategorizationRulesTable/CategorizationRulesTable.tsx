@@ -59,7 +59,7 @@ export const CategorizationRulesTable = ({
       id: CategorizationRuleColumns.Direction,
       header: t('direction', 'Direction'),
       cell: (row: Row<CategorizationRule>) => (
-        <Span ellipsis>{getCategorizationRuleDirectionLabel(row.original.bankDirectionFilter)}</Span>
+        <Span ellipsis>{getCategorizationRuleDirectionLabel(row.original.bankDirectionFilter, t)}</Span>
       ),
     },
     {

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption } from '@internal-types/categorizationOption'
@@ -42,6 +43,7 @@ export const useSplitsForm = ({
   selectedCategory,
   isOpen,
 }: UseSplitsFormOptions): UseSplitsFormReturn => {
+  const { t } = useTranslation()
   const [localSplits, setLocalSplits] = useState<Split[]>(
     getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory),
   )
@@ -57,13 +59,13 @@ export const useSplitsForm = ({
 
   const saveLocalSplitsToCategoryStore = useCallback((splits: Split[]) => {
     if (!isSplitsValid(splits)) {
-      setSplitFormError(getSplitsErrorMessage(splits))
+      setSplitFormError(getSplitsErrorMessage(splits, t))
       return
     }
 
     setTransactionCategory(bankTransaction.id, new SplitAsOption(splits))
     setSplitFormError(undefined)
-  }, [bankTransaction.id, setTransactionCategory])
+  }, [bankTransaction.id, setTransactionCategory, t])
 
   const addSplit = useCallback(() => {
     const newSplits = calculateAddSplit(localSplits)
@@ -134,12 +136,12 @@ export const useSplitsForm = ({
 
   const onBlurSplitAmount = useCallback(() => {
     if (!isSplitsValid(localSplits)) {
-      setSplitFormError(getSplitsErrorMessage(localSplits))
+      setSplitFormError(getSplitsErrorMessage(localSplits, t))
       return
     }
     setSplitFormError(undefined)
     setInputValues({})
-  }, [localSplits])
+  }, [localSplits, t])
 
   const getInputValueForSplitAtIndex = useCallback((index: number, split: Split): string => {
     return inputValues[index] ?? convertCentsToDecimalString(split.amount)
@@ -147,12 +149,12 @@ export const useSplitsForm = ({
 
   const validateSplitsForm = useCallback((): boolean => {
     if (!isSplitsValid(localSplits)) {
-      setSplitFormError(getSplitsErrorMessage(localSplits))
+      setSplitFormError(getSplitsErrorMessage(localSplits, t))
       return false
     }
     setSplitFormError(undefined)
     return true
-  }, [localSplits])
+  }, [localSplits, t])
 
   return {
     localSplits,

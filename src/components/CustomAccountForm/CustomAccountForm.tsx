@@ -1,9 +1,9 @@
-import { type FormEvent, useCallback, useEffect } from 'react'
-import i18next from 'i18next'
+import { type FormEvent, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type CustomAccount, CustomAccountSubtype } from '@internal-types/customAccounts'
 import { notEmpty } from '@utils/form'
+import { translationKey } from '@utils/i18n/translationKey'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { SubmitButton } from '@components/Button/SubmitButton'
@@ -15,10 +15,10 @@ import { ErrorText } from '@components/Typography/ErrorText'
 
 import './customAccountForm.scss'
 
-const accountTypeOptions = [
-  { value: CustomAccountSubtype.CHECKING, label: i18next.t('checking', 'Checking') },
-  { value: CustomAccountSubtype.SAVINGS, label: i18next.t('savings', 'Savings') },
-  { value: CustomAccountSubtype.CREDIT_CARD, label: i18next.t('creditCard', 'Credit Card') },
+const accountTypeConfig = [
+  { value: CustomAccountSubtype.CHECKING, ...translationKey('checking', 'Checking') },
+  { value: CustomAccountSubtype.SAVINGS, ...translationKey('savings', 'Savings') },
+  { value: CustomAccountSubtype.CREDIT_CARD, ...translationKey('creditCard', 'Credit Card') },
 ]
 
 export type CustomAccountsFormProps = {
@@ -30,6 +30,14 @@ export type CustomAccountsFormProps = {
 export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: CustomAccountsFormProps) => {
   const { t } = useTranslation()
   const { form, submitError, isFormValid } = useCustomAccountForm({ onSuccess })
+
+  const accountTypeOptions = useMemo(
+    () => accountTypeConfig.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
 
   const { isSubmitting } = form.state
   const onSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {

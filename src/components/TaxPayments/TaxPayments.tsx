@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { useTaxPayments } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -10,33 +10,42 @@ import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxPaymentsMobileList } from '@components/TaxPayments/TaxPaymentsMobileList/TaxPaymentsMobileList'
 import { TaxPaymentsTable } from '@components/TaxPayments/TaxPaymentsTable/TaxPaymentsTable'
 
-const TaxPaymentsHeader = ({ isMobile }: { isMobile: boolean }) => (
-  <TaxEstimatesHeader
-    title={i18next.t('taxPayments', 'Tax Payments')}
-    description={i18next.t('federalAndStateTaxPaymentsForTheSelectedTaxYear', 'Federal and state tax payments for the selected tax year')}
-    isMobile={isMobile}
-  />
-)
+const TaxPaymentsHeader = ({ isMobile }: { isMobile: boolean }) => {
+  const { t } = useTranslation()
+  return (
+    <TaxEstimatesHeader
+      title={t('taxPayments', 'Tax Payments')}
+      description={t('federalAndStateTaxPaymentsForTheSelectedTaxYear', 'Federal and state tax payments for the selected tax year')}
+      isMobile={isMobile}
+    />
+  )
+}
 
-const ErrorState = () => (
-  <DataState
-    spacing
-    status={DataStateStatus.failed}
-    title={i18next.t('weCouldntLoadYourTaxPayments', 'We couldnʼt load your tax payments')}
-    description={i18next.t('anErrorOccurredWhileLoadingYourTaxPaymentsPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax payments. Please check your connection and try again.')}
-    className='Layer__TaxPayments__ErrorState'
-  />
-)
+const ErrorState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      spacing
+      status={DataStateStatus.failed}
+      title={t('weCouldntLoadYourTaxPayments', 'We couldnʼt load your tax payments')}
+      description={t('anErrorOccurredWhileLoadingYourTaxPaymentsPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax payments. Please check your connection and try again.')}
+      className='Layer__TaxPayments__ErrorState'
+    />
+  )
+}
 
-const EmptyState = () => (
-  <DataState
-    spacing
-    status={DataStateStatus.info}
-    title={i18next.t('noTaxPaymentsFound', 'No tax payments found')}
-    description={i18next.t('thereAreNoTaxPaymentsToDisplay', 'There are no tax payments to display.')}
-    className='Layer__TaxPayments__EmptyState'
-  />
-)
+const EmptyState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      spacing
+      status={DataStateStatus.info}
+      title={t('noTaxPaymentsFound', 'No tax payments found')}
+      description={t('thereAreNoTaxPaymentsToDisplay', 'There are no tax payments to display.')}
+      className='Layer__TaxPayments__EmptyState'
+    />
+  )
+}
 
 export const TaxPayments = () => {
   const { year } = useTaxEstimatesYear()

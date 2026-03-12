@@ -76,6 +76,21 @@ export const getStringValue = (expression: unknown): string | undefined => {
   }
 }
 
+export const getStringValueFromExpression = (expression: unknown): string | undefined => {
+  const direct = getStringValue(expression)
+  if (direct !== undefined) return direct
+
+  if (!expression || typeof expression !== 'object') return
+
+  const type = (expression as { type?: string }).type
+  if (type === 'TSAsExpression' || type === 'TSSatisfiesExpression') {
+    const inner = (expression as { expression?: unknown }).expression
+    return getStringValueFromExpression(inner)
+  }
+
+  return undefined
+}
+
 export const getCallExpressionName = (expression: unknown): string | undefined => {
   if (!expression || typeof expression !== 'object' || (expression as { type?: string }).type !== 'CallExpression') {
     return

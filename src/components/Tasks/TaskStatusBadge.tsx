@@ -1,4 +1,7 @@
-import { i18nextPlural } from '@utils/i18n/plural'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
+
+import { tPlural } from '@utils/i18n/plural'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
@@ -12,7 +15,11 @@ type TaskStatusBadgeProps = {
   tasksCount?: number
 }
 
-const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: TaskStatusBadgeProps['tasksCount']) => {
+const buildBadgeConfig = (
+  status: TaskStatusBadgeProps['status'],
+  tasksCount: TaskStatusBadgeProps['tasksCount'],
+  t: TFunction,
+) => {
   switch (status) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
     case BookkeepingPeriodStatus.NOT_STARTED:
@@ -21,7 +28,7 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
         color: 'info' as const,
         icon: <Clock size={12} />,
         label: tasksCount
-          ? i18nextPlural('countTasks', {
+          ? tPlural(t, 'countTasks', {
             count: tasksCount,
             one: '{{count}} task',
             other: '{{count}} tasks',
@@ -35,7 +42,7 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
       return {
         color: 'warning' as const,
         label: tasksCount
-          ? i18nextPlural('countTasks', {
+          ? tPlural(t, 'countTasks', {
             count: tasksCount,
             one: '{{count}} task',
             other: '{{count}} tasks',
@@ -65,7 +72,8 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
 }
 
 export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) => {
-  const badgeConfig = buildBadgeConfig(status, tasksCount)
+  const { t } = useTranslation()
+  const badgeConfig = buildBadgeConfig(status, tasksCount, t)
 
   if (!badgeConfig) {
     return

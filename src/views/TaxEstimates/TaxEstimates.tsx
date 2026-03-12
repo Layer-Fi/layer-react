@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react'
 import { getYear } from 'date-fns'
-import i18next from 'i18next'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
+import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import {
@@ -131,21 +131,23 @@ const TaxEstimatesViewHeader = () => {
   )
 }
 
-const TAX_ESTIMATES_TAB_OPTIONS = [
-  {
-    value: TaxEstimatesRoute.Estimates,
-    label: i18next.t('estimates', 'Estimates'),
-  },
-  {
-    value: TaxEstimatesRoute.Payments,
-    label: i18next.t('payments', 'Payments'),
-  },
+const TAX_ESTIMATES_TAB_CONFIG = [
+  { value: TaxEstimatesRoute.Estimates, ...translationKey('estimates', 'Estimates') },
+  { value: TaxEstimatesRoute.Payments, ...translationKey('payments', 'Payments') },
 ]
 
 const TaxEstimatesOnboardedViewContent = () => {
   const { t } = useTranslation()
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
+
+  const tabOptions = useMemo(
+    () => TAX_ESTIMATES_TAB_CONFIG.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
 
   const handleTabChange = useCallback((key: Key) => {
     navigate(key as TaxEstimatesRoute)
@@ -159,7 +161,7 @@ const TaxEstimatesOnboardedViewContent = () => {
     <>
       <Toggle
         ariaLabel={t('taxEstimateView', 'Tax estimate view')}
-        options={TAX_ESTIMATES_TAB_OPTIONS}
+        options={tabOptions}
         selectedKey={route}
         onSelectionChange={handleTabChange}
       />

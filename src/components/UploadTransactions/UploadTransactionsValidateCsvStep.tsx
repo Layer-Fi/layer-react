@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import classNames from 'classnames'
-import i18next from 'i18next'
 import { RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -31,7 +30,9 @@ const formatters = {
   amount: (parsed: number) => convertCentsToCurrency(parsed) ?? '',
 }
 
-const generateDynamicHeaders = (transactionsPreview: PreviewCsv<CustomAccountTransactionRow>) => {
+const generateDynamicHeaders = (
+  transactionsPreview: PreviewCsv<CustomAccountTransactionRow>,
+) => {
   const hasExternalId = transactionsPreview.some(transaction =>
     transaction.external_id?.parsed != null,
   )
@@ -43,7 +44,7 @@ const generateDynamicHeaders = (transactionsPreview: PreviewCsv<CustomAccountTra
     hasReferenceNumber,
     headers: {
       ...(hasExternalId && { external_id: 'External ID' }),
-      ...(hasReferenceNumber && { reference_number: i18next.t('referenceNo', 'Reference No.') }),
+      ...(hasReferenceNumber && { reference_number: 'Reference No.' }),
       ...templateHeaders,
     },
   }
@@ -69,7 +70,7 @@ export function UploadTransactionsValidateCsvStep(
     total_transactions_count: totalTransactionsCount,
   } = parseCsvResponse!
 
-  const { headers: dynamicHeaders, hasExternalId, hasReferenceNumber } = generateDynamicHeaders(transactionsPreview)
+  const { headers: dynamicHeaders, hasExternalId, hasReferenceNumber } = generateDynamicHeaders(transactionsPreview, t)
 
   const onClickUploadTransactions = useCallback(() => {
     void uploadTransactions({
