@@ -87,7 +87,7 @@ export function TransactionsToReview({
         >
           {numTransactionsToReview}
           {' '}
-          pending
+          {t('pending', 'pending')}
         </Badge>
       )
     }

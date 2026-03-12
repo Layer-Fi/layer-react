@@ -1,23 +1,12 @@
+import i18next from 'i18next'
 import { Legend } from 'recharts'
 
 import { STRIPE_PATTERN_DARK_FILL } from './ProfitAndLossChartPatternDefs'
 
-const PROFIT_AND_LOSS_CHART_LEGEND_PAYLOAD = [
-  {
-    value: 'Revenue',
-    type: 'circle',
-    id: 'IncomeLegend',
-  },
-  {
-    value: 'Expenses',
-    type: 'circle',
-    id: 'ExpensesLegend',
-  },
-  {
-    value: 'Uncategorized',
-    type: 'circle',
-    id: 'UncategorizedLegend',
-  },
+const LEGEND_ENTRIES = [
+  { value: i18next.t('revenue', 'Revenue'), type: 'circle', id: 'IncomeLegend' },
+  { value: i18next.t('expenses', 'Expenses'), type: 'circle', id: 'ExpensesLegend' },
+  { value: i18next.t('uncategorized', 'Uncategorized'), type: 'circle', id: 'UncategorizedLegend' },
 ]
 
 const LegendIcon = ({ fill }: { fill?: string }) => (
@@ -36,10 +25,10 @@ const LegendIcon = ({ fill }: { fill?: string }) => (
   </svg>
 )
 
-const renderLegendContent = () => {
+const renderLegendContent = (payload: { value: string, type: string, id: string }[]) => {
   return (
     <ul className='Layer__chart-legend-list'>
-      {PROFIT_AND_LOSS_CHART_LEGEND_PAYLOAD.map((entry, idx) => (
+      {payload.map((entry, idx) => (
         <li
           key={`legend-item-${idx}`}
           className={`recharts-legend-item legend-item-${idx}`}
@@ -53,5 +42,5 @@ const renderLegendContent = () => {
 }
 
 export const ProfitAndLossChartLegend = () => (
-  <Legend verticalAlign='top' align='right' content={renderLegendContent} />
+  <Legend verticalAlign='top' align='right' content={renderLegendContent(LEGEND_ENTRIES)} />
 )

@@ -1,4 +1,5 @@
 import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import DownloadCloud from '@icons/DownloadCloud'
 import { Button, type ButtonProps, ButtonVariant } from '@components/Button/Button'
@@ -23,12 +24,16 @@ export const DownloadButton = ({
   isDownloading,
   requestFailed,
   tooltip,
-  text = 'Download',
-  retryText = 'Retry',
+  text,
+  retryText,
   errorText = i18next.t('downloadFailedCheckConnectionAndRetryInFewSeconds', 'Download failed. Check connection and retry in few seconds.'),
   variant = ButtonVariant.secondary,
   disabled = false,
 }: DownloadButtonProps) => {
+  const { t } = useTranslation()
+  const displayText = text ?? t('download', 'Download')
+  const displayRetryText = retryText ?? t('retry', 'Retry')
+
   if (requestFailed) {
     return (
       <RetryButton
@@ -38,7 +43,7 @@ export const DownloadButton = ({
         disabled={isDownloading || disabled}
         iconOnly={iconOnly}
       >
-        {retryText}
+        {displayRetryText}
       </RetryButton>
     )
   }
@@ -53,7 +58,7 @@ export const DownloadButton = ({
       isProcessing={isDownloading}
       tooltip={tooltip}
     >
-      {text}
+      {displayText}
     </Button>
   )
 }

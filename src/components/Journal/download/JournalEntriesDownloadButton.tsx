@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { useJournalEntriesDownload } from '@hooks/api/businesses/[business-id]/ledger/entries/exports/csv/useJournalEntriesDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
@@ -13,6 +15,7 @@ export function JournalEntriesDownloadButton({
   endCutoff,
   iconOnly,
 }: JournalEntriesDownloadButtonProps) {
+  const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   const { trigger, isMutating, error } = useJournalEntriesDownload({
     startCutoff,
@@ -27,8 +30,8 @@ export function JournalEntriesDownloadButton({
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text='Download CSV'
-        retryText='Retry'
+        text={t('downloadCsv', 'Download CSV')}
+        retryText={t('retry', 'Retry')}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

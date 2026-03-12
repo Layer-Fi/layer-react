@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransactionsMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
@@ -61,9 +62,10 @@ export const BankTransactionsWithLinkedAccounts = ({
   renderInAppLink,
   showCategorizationRules,
 }: BankTransactionsWithLinkedAccountsProps) => {
+  const { t } = useTranslation()
   return (
     <View
-      title={stringOverrides?.title || title || 'Bank transactions'}
+      title={stringOverrides?.title || title || t('bankTransactions', 'Bank transactions')}
       showHeader={showTitle}
     >
       <LinkedAccounts

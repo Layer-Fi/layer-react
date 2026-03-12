@@ -1,5 +1,6 @@
 import { type ReactNode, useCallback } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import ReactSelect, {
   components,
   type DropdownIndicatorProps,
@@ -43,6 +44,7 @@ export const Select = <T,>({
   isLoading,
   formatOptionLabel,
 }: SelectProps<T>) => {
+  const { t } = useTranslation()
   const baseClassName = classNames(
     'Layer__select',
     isInvalid ? 'Layer__select--error' : '',
@@ -63,7 +65,7 @@ export const Select = <T,>({
           name={name}
           className={baseClassName}
           classNamePrefix={classNamePrefix}
-          placeholder={placeholder ?? 'Select...'}
+          placeholder={placeholder ?? t('select', 'Select...')}
           options={options}
           formatOptionLabel={formatOptionLabel}
           value={value}

@@ -1,5 +1,6 @@
 import { type ReactNode, useContext, useMemo } from 'react'
 import { format, sub } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { calculatePercentageChange } from '@utils/percentageChange'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
@@ -56,6 +57,7 @@ function Internal_ProfitAndLossSummaries({
   slots,
   variants,
 }: Internal_ProfitAndLossSummariesProps) {
+  const { t } = useTranslation()
   const {
     data,
     isLoading,
@@ -127,7 +129,7 @@ function Internal_ProfitAndLossSummaries({
           onClick={actionable ? () => setSidebarScope('revenue') : undefined}
         >
           <ProfitAndLossSummariesSummary
-            label={stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
+            label={stringOverrides?.revenueLabel || revenueLabel || t('revenue', 'Revenue')}
             amount={effectiveData.income.value ?? 0}
             isLoading={isLoading}
             percentChange={revenuePercentChange}
@@ -149,7 +151,7 @@ function Internal_ProfitAndLossSummaries({
           onClick={actionable ? () => setSidebarScope('expenses') : undefined}
         >
           <ProfitAndLossSummariesSummary
-            label={stringOverrides?.expensesLabel || 'Expenses'}
+            label={stringOverrides?.expensesLabel || t('expenses', 'Expenses')}
             amount={(effectiveData?.income?.value ?? 0) - effectiveData.netProfit}
             isLoading={isLoading}
             percentChange={expensesPercentChange}
@@ -169,7 +171,7 @@ function Internal_ProfitAndLossSummaries({
         </ProfitAndLossSummariesListItem>
         <ProfitAndLossSummariesListItem>
           <ProfitAndLossSummariesSummary
-            label={stringOverrides?.netProfitLabel || 'Net Profit'}
+            label={stringOverrides?.netProfitLabel || t('netProfit', 'Net Profit')}
             amount={data?.netProfit ?? 0}
             variants={variants}
             isLoading={isLoading}

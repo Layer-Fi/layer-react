@@ -28,7 +28,8 @@ export function getBookkeepingStatusConfig({
   monthNumber,
   incompleteTasksCount,
 }: BookkeepingStatusConfigOptions): InternalStatusConfig | undefined {
-  const monthName = monthNumber !== undefined ? getMonthNameFromNumber(monthNumber) : ''
+  const locale = i18next.resolvedLanguage || i18next.language || 'en-US'
+  const monthName = monthNumber !== undefined ? getMonthNameFromNumber(monthNumber, locale) : ''
   const inProgressDescription = incompleteTasksCount !== undefined && incompleteTasksCount > 0
     ? i18nextPlural('wereWorkingOnYourMonthNameBooksPleaseCompleteTheCountOpenTasks', {
       count: incompleteTasksCount,
