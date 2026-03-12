@@ -46,7 +46,7 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }) =
       const dueDifference = getDueDifference(invoice.dueAt)
       if (dueDifference === 0) {
         return {
-          text: i18next.t('dueToday2', 'Due Today'),
+          text: i18next.t('dueTodayStatus', 'Due Today'),
         }
       }
 

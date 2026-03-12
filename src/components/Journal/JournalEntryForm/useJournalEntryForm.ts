@@ -45,7 +45,7 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
 
       const journalEntryNumber = journalEntry.entry.entryNumber
       addToast({
-        content: i18next.t('journalEntryJournalentrynumberPosted', 'Journal entry #{{journalEntryNumber}} posted', { journalEntryNumber }),
+        content: i18next.t('journalEntryNumberPosted', 'Journal entry #{{journalEntryNumber}} posted', { journalEntryNumber }),
         type: 'success',
       })
 

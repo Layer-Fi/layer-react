@@ -133,7 +133,7 @@ export const TripForm = (props: TripFormProps) => {
             onSelectedVehicleChange={field.handleChange}
             isReadOnly={isReadOnly}
             inline
-            placeholder={t('addVehicle2', 'Add vehicle')}
+            placeholder={t('addVehicleLabel', 'Add vehicle')}
             containerClassName='Layer__TripForm__Field__Vehicle'
           />
         )}

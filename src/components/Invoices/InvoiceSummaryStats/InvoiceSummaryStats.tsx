@@ -89,7 +89,7 @@ export const InvoiceSummaryStats = () => {
             {!showSkeleton && overdueCount !== undefined
               ? (
                 <Badge variant={BadgeVariant.WARNING} size={BadgeSize.SMALL}>
-                  {t('overdueInvoicesOverduecount', 'Overdue invoices: {{overdueCount}}', { overdueCount })}
+                  {t('overdueInvoicesCount', 'Overdue invoices: {{overdueCount}}', { overdueCount })}
                 </Badge>
               )
               : <BadgeLoader variant={BadgeVariant.WARNING} showLoading />}
@@ -98,7 +98,7 @@ export const InvoiceSummaryStats = () => {
             {!showSkeleton && sentCount !== undefined
               ? (
                 <Badge variant={BadgeVariant.INFO} size={BadgeSize.SMALL}>
-                  {t('upcomingInvoicesSentcount', 'Upcoming invoices: {{sentCount}}', { sentCount })}
+                  {t('upcomingInvoicesCount', 'Upcoming invoices: {{sentCount}}', { sentCount })}
                 </Badge>
               )
               : <BadgeLoader variant={BadgeVariant.INFO} showLoading />}

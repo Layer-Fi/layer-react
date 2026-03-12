@@ -90,10 +90,10 @@ export function UploadTransactionsValidateCsvStep(
           {!isValidCsv
             && (
               <Badge variant={BadgeVariant.ERROR}>
-                {t('invalidTransactionsInvalidtransactionscount', 'Invalid transactions: {{invalidTransactionsCount}}', { invalidTransactionsCount })}
+                {t('invalidTransactionsCount', 'Invalid transactions: {{invalidTransactionsCount}}', { invalidTransactionsCount })}
               </Badge>
             )}
-          <Badge>{t('totalTransactionsTotaltransactionscount', 'Total transactions: {{totalTransactionsCount}}', { totalTransactionsCount })}</Badge>
+          <Badge>{t('totalTransactionsCount', 'Total transactions: {{totalTransactionsCount}}', { totalTransactionsCount })}</Badge>
         </HStack>
         <ValidateCsvTable
           className={classNames(

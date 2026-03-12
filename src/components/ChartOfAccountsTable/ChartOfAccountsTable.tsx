@@ -357,7 +357,7 @@ export const ChartOfAccountsTableContent = ({
               </TableCell>
             )}
             <TableCell isHeaderCell>
-              {stringOverrides?.nameColumnHeader || t('accountName2', 'Account Name')}
+              {stringOverrides?.nameColumnHeader || t('accountNameColumnHeader', 'Account Name')}
             </TableCell>
             <TableCell isHeaderCell>
               {stringOverrides?.typeColumnHeader || t('type', 'Type')}

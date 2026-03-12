@@ -68,7 +68,7 @@ const ScheduledCallState = ({
           <Clock size={16} />
           <HStack gap='xs' align='center'>
             <Span>
-              {t('date2', 'Date:')}
+              {t('dateLabel', 'Date:')}
               {' '}
             </Span>
             <Span size='md'>

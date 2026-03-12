@@ -1,6 +1,8 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
 import type { Row } from '@tanstack/react-table'
 import { format } from 'date-fns'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { Direction } from '@internal-types/general'
 import { convertLedgerEntrySourceToLinkingMetadata, type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
@@ -27,8 +29,6 @@ import { Text, TextSize, TextUseTooltip, TextWeight } from '@components/Typograp
 import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
 
 import './profitAndLossDetailReport.scss'
-import { useTranslation } from 'react-i18next'
-import i18next from 'i18next'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
@@ -259,7 +259,7 @@ export const ProfitAndLossDetailReport = ({
       <VStack className='Layer__ProfitAndLossDetailReport'>
         <VirtualizedDataTable<ProcessedPnlDetailLine>
           componentName={COMPONENT_NAME}
-          ariaLabel={t('lineitemnameDetailLines', '{{lineItemName}} detail lines', { lineItemName })}
+          ariaLabel={t('lineItemDetailLines', '{{lineItemName}} detail lines', { lineItemName })}
           columnConfig={columnConfig}
           data={rowsWithRunningBalance.lines}
           isLoading={isLoading}

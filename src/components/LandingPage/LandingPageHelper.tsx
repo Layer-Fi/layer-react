@@ -52,7 +52,7 @@ export class LandingPageHelper {
     return {
       badge: i18next.t('easyToUseSoftware', 'Easy to use software'),
       cta: {
-        label: i18next.t('getStarted2', 'Get Started'),
+        label: i18next.t('getStartedButtonLabel', 'Get Started'),
         url: '/',
       },
       title: i18next.t('platformnameAccounting', '{{platformName}} Accounting', { platformName }),
@@ -97,7 +97,7 @@ export class LandingPageHelper {
     return {
       badge: i18next.t('aCompleteBookkeepingService', 'A complete bookkeeping service'),
       cta: {
-        label: i18next.t('getStarted2', 'Get Started'),
+        label: i18next.t('getStartedButtonLabel', 'Get Started'),
         url: '/',
       },
       title: i18next.t('fullserviceBookkeeping', 'Full-service Bookkeeping'),

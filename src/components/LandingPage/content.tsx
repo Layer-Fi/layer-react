@@ -109,7 +109,7 @@ export const landingPageDefaultContentConfig: Omit<ContentConfig, 'config'> = {
 export const DefaultHeroContentConfig: HeroContentConfig = {
   stringOverrides: {
     title: i18next.t('platformnameAccounting', '{{platformName}} Accounting'),
-    subtitle: i18next.t('trackYourBusinessFinancesRightWithinPlatformname2', 'Track your business finances, right within {{platformName}}'),
+    subtitle: i18next.t('trackYourBusinessFinancesRightWithinPlatformName', 'Track your business finances, right within {{platformName}}'),
     heading1: i18next.t('allYourFinancesInOnePlace', 'All your finances in one place'),
     heading1Desc: i18next.t('directlyIntegrateWithYourPlatformnameDataSoYouCanSeeYourBusinessPerformanceAndProfitInRealtime', 'Directly integrate with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
     heading2: i18next.t('builtForIndustry', 'Built for {{industry}}'),

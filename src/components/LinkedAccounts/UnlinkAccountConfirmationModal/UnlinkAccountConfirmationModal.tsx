@@ -21,7 +21,7 @@ export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, bankAccou
         return {
           title: t('deleteAccount', 'Delete account'),
           description: t('thisAccountAndAnyUnmatchedTransactionsWillBeDeleted', 'This account and any unmatched transactions will be deleted.'),
-          confirmLabel: t('deleteAccount2', 'Delete Account'),
+          confirmLabel: t('deleteAccountButtonLabel', 'Delete Account'),
           errorText: t('deletionFailedPleaseCheckYourConnectionAndTryAgainInAFewSeconds', 'Deletion failed. Please check your connection and try again in a few seconds.'),
         }
       case 'UNLINK':
@@ -29,7 +29,7 @@ export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, bankAccou
           title: t('unlinkAccount', 'Unlink account'),
           description:
             t('thisAccountWillStopSyncingNewDataAndAnyUnmatchedTransactionsWillBeDeleted', 'This account will stop syncing new data, and any unmatched transactions will be deleted.'),
-          confirmLabel: t('unlinkAccount2', 'Unlink Account'),
+          confirmLabel: t('unlinkAccountButtonLabel', 'Unlink Account'),
           errorText: t('unlinkFailedPleaseCheckYourConnectionAndTryAgainInAFewSeconds', 'Unlink failed. Please check your connection and try again in a few seconds.'),
         }
     }

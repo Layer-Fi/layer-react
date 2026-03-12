@@ -212,7 +212,7 @@ const JournalTableContent = ({
             </TableCell>
           )}
           <TableCell isHeaderCell>
-            {stringOverrides?.accountColumnHeader || t('accountName2', 'Account Name')}
+            {stringOverrides?.accountColumnHeader || t('accountNameColumnHeader', 'Account Name')}
           </TableCell>
           <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
             {stringOverrides?.debitColumnHeader || t('debit', 'Debit')}

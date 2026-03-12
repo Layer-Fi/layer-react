@@ -46,7 +46,7 @@ export const InvoiceFormMetadataSection = ({
           <InvoiceFormTotalRow label={t('taxableSubtotal', 'Taxable subtotal')} value={taxableSubtotal} />
           <InvoiceFormTotalRow label={t('taxRate', 'Tax rate')} value={taxes}>
             <form.AppField name='taxRate'>
-              {field => <field.FormBigDecimalField label={t('taxRate2', 'Tax Rate')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+              {field => <field.FormBigDecimalField label={t('taxRateFieldLabel', 'Tax Rate')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
             </form.AppField>
           </InvoiceFormTotalRow>
           <InvoiceFormTotalRow label={t('total', 'Total')} value={grandTotal} />

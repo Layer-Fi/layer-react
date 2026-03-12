@@ -131,7 +131,7 @@ export const AccountFormBox = ({
               errorText={dateErrorText}
             />
           </InputGroup>
-          <InputGroup label={t('openingBalance2', 'Opening balance')}>
+          <InputGroup label={t('openingBalanceLabel', 'Opening balance')}>
             <AmountInput
               name='openingBalance'
               defaultValue={value.openingBalance}

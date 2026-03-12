@@ -72,7 +72,7 @@ export const LinkedAccountsComponent = ({
           <DataState
             status={DataStateStatus.failed}
             title={t('somethingWentWrong', 'Something went wrong')}
-            description={t('weCouldntLoadYourData2', 'We couldn’t load your data.')}
+            description={t('weCouldntLoadYourData', 'We couldn’t load your data.')}
             onRefresh={() => void refetchAccounts()}
             isLoading={isValidating}
           />

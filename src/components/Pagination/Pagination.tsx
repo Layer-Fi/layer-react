@@ -90,7 +90,7 @@ export const Pagination = ({
                 <PaginationButton
                   isSelected={pageNumber === currentPage}
                   onPress={() => onPageChange(Number(pageNumber))}
-                  aria-label={t('goToPagePagenumber', 'Go to page {{pageNumber}}', { pageNumber })}
+                  aria-label={t('goToPageNumber', 'Go to page {{pageNumber}}', { pageNumber })}
                 >
                   {pageNumber}
                 </PaginationButton>
