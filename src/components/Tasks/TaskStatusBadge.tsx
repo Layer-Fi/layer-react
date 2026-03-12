@@ -1,5 +1,4 @@
-import pluralize from 'pluralize'
-
+import { i18nextPlural } from '@utils/i18n/plural'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
@@ -21,7 +20,13 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
       return {
         color: 'info' as const,
         icon: <Clock size={12} />,
-        label: tasksCount ? pluralize('task', tasksCount, true) : undefined,
+        label: tasksCount
+          ? i18nextPlural('countTasks', {
+            count: tasksCount,
+            one: '{{count}} task',
+            other: '{{count}} tasks',
+          })
+          : undefined,
         labelShort: tasksCount ? `${tasksCount}` : undefined,
       }
     }
@@ -29,7 +34,13 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
     case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
       return {
         color: 'warning' as const,
-        label: tasksCount ? pluralize('task', tasksCount, true) : undefined,
+        label: tasksCount
+          ? i18nextPlural('countTasks', {
+            count: tasksCount,
+            one: '{{count}} task',
+            other: '{{count}} tasks',
+          })
+          : undefined,
         labelShort: tasksCount ? `${tasksCount}` : undefined,
         icon: <AlertCircle size={12} />,
       }
