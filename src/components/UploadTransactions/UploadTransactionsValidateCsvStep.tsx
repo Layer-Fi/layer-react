@@ -70,7 +70,7 @@ export function UploadTransactionsValidateCsvStep(
     total_transactions_count: totalTransactionsCount,
   } = parseCsvResponse!
 
-  const { headers: dynamicHeaders, hasExternalId, hasReferenceNumber } = generateDynamicHeaders(transactionsPreview, t)
+  const { headers: dynamicHeaders, hasExternalId, hasReferenceNumber } = generateDynamicHeaders(transactionsPreview)
 
   const onClickUploadTransactions = useCallback(() => {
     void uploadTransactions({

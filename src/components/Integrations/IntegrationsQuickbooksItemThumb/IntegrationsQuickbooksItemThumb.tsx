@@ -81,7 +81,7 @@ export const IntegrationsQuickbooksItemThumb = () => {
   if (!quickbooksConnectionStatus) return null
 
   const quickbooksUiState = getQuickbooksConnectionSyncUiState(quickbooksConnectionStatus)
-  const badgeConfig = getBadgeConfig(quickbooksUiState, hasSynced, t)
+  const badgeConfig = getBadgeConfig(quickbooksUiState, hasSynced)
   return (
     <LinkedAccountOptions config={menuConfig}>
       <Card className='Layer__linked-account-thumb Layer__integrations-quickbooks-item-thumb'>
