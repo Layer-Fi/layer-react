@@ -30,14 +30,14 @@ export function getBookkeepingStatusConfig({
 }: BookkeepingStatusConfigOptions): InternalStatusConfig | undefined {
   const monthName = monthNumber !== undefined ? getMonthNameFromNumber(monthNumber) : ''
   const inProgressDescription = incompleteTasksCount !== undefined && incompleteTasksCount > 0
-    ? i18nextPlural('wereWorkingOnYourMonthnameBooksPleaseCompleteTheCountOpenTasks', {
+    ? i18nextPlural('wereWorkingOnYourMonthNameBooksPleaseCompleteTheCountOpenTasks', {
       count: incompleteTasksCount,
       monthName,
       one: 'We\'re working on your {{monthName}} books. Please complete the {{count}} open task.',
       other: 'We\'re working on your {{monthName}} books. Please complete the {{count}} open tasks.',
     })
     : i18next.t(
-      'wereWorkingOnYourMonthnameBooksNoActionIsNeededFromYouRightNow',
+      'wereWorkingOnYourMonthNameBooksNoActionIsNeededFromYouRightNow',
       'We\'re working on your {{monthName}} books. No action is needed from you right now.',
       { monthName },
     )
@@ -57,7 +57,7 @@ export function getBookkeepingStatusConfig({
     case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
       return {
         label: i18next.t('actionRequired', 'Action required'),
-        description: i18next.t('pleaseRespondToTheBelowTasksToHelpUsCompleteYourMonthnameBooks', 'Please respond to the below tasks to help us complete your {{monthName}} books.', { monthName }),
+        description: i18next.t('pleaseRespondToTheBelowTasksToHelpUsCompleteYourMonthNameBooks', 'Please respond to the below tasks to help us complete your {{monthName}} books.', { monthName }),
         color: 'warning',
         icon: <AlertCircle size={12} />,
       }
@@ -65,7 +65,7 @@ export function getBookkeepingStatusConfig({
     case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
       return {
         label: i18next.t('booksCompleted', 'Books completed'),
-        description: i18next.t('yourMonthnameBooksAreCompleteAndReadyToView', 'Your {{monthName}} books are complete and ready to view!', { monthName }),
+        description: i18next.t('yourMonthNameBooksAreCompleteAndReadyToView', 'Your {{monthName}} books are complete and ready to view!', { monthName }),
         color: 'success',
         icon: <CheckCircle size={12} />,
       }

@@ -71,7 +71,7 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
       type: 'soon',
       diff: daysDiff,
       title: i18next.t('dueSoon', 'Due soon'),
-      diffText: i18nextPlural('dueInDays', {
+      diffText: i18nextPlural('dueInCountDays', {
         count: Math.abs(daysDiff),
         one: 'Due in {{count}} day',
         other: 'Due in {{count}} days',
@@ -82,7 +82,7 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
   return {
     type: 'before',
     diff: daysDiff,
-    diffText: i18nextPlural('dueInDays', {
+    diffText: i18nextPlural('dueInCountDays', {
       count: Math.abs(daysDiff),
       one: 'Due in {{count}} day',
       other: 'Due in {{count}} days',

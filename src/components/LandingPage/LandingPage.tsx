@@ -130,7 +130,7 @@ export const LandingPage = ({
             className='Layer__LandingPage__media-image'
             key={`hero-image-${isStackedLayout}`}
             src={heroConfig.mediaUrls.topOfFoldImage}
-            alt={t('platformnameAccountingDashboardInterfaceShowingFinancialDataAndBusinessInsights', '{{platformName}} Accounting dashboard interface showing financial data and business insights', { platformName: platform.platformName })}
+            alt={t('platformNameAccountingDashboardInterfaceShowingFinancialDataAndBusinessInsights', '{{platformName}} Accounting dashboard interface showing financial data and business insights', { platformName: platform.platformName })}
           />
         </VStack>
       </div>

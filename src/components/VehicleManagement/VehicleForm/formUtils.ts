@@ -39,7 +39,7 @@ export const validateVehicleForm = ({ vehicle }: { vehicle: VehicleForm }) => {
 
   const currentYear = new Date().getFullYear()
   if (!Number.isNaN(year) && (year < 1900 || year > currentYear + 1)) {
-    errors.push({ year: i18next.t('yearMustBeBetween1900AndVal', 'Year must be between 1900 and {{val}}.', { val: currentYear + 1 }) })
+    errors.push({ year: i18next.t('yearMustBeBetween1900AndMaxYear', 'Year must be between 1900 and {{maxYear}}.', { maxYear: currentYear + 1 }) })
   }
 
   return errors.length > 0 ? errors : null

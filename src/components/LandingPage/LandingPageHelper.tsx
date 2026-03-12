@@ -28,7 +28,7 @@ export class LandingPageHelper {
         icon: <img src={imageBusinessAccounts} alt={i18next.t('businessBankAccountsAndCreditCardsConnectionIcon', 'Business bank accounts and credit cards connection icon')} />,
         title: i18next.t('connectYourBusinessAccounts', 'Connect your business accounts'),
         text: i18next.t(
-          'connectYourBusinessBankAccountsAndCreditCardsRightWithinPlatformname',
+          'connectYourBusinessBankAccountsAndCreditCardsRightWithinPlatformName',
           'Connect your business bank accounts and credit cards right within {{platformName}}.',
           { platformName },
         ),
@@ -55,7 +55,7 @@ export class LandingPageHelper {
         label: i18next.t('getStartedButtonLabel', 'Get Started'),
         url: '/',
       },
-      title: i18next.t('platformnameAccounting', '{{platformName}} Accounting', { platformName }),
+      title: i18next.t('platformNameAccounting', '{{platformName}} Accounting', { platformName }),
       description: i18next.t(
         'theBestAccountingSoftwareForIndustryBusinessesFastToSetUpAndEasyToUse',
         'The best accounting software for {{industry}} businesses. Fast to set up and easy to use.',
@@ -64,7 +64,7 @@ export class LandingPageHelper {
       features: [
         {
           icon: <Check size={14} />,
-          description: i18next.t('directIntegrationWithPlatformname', 'Direct integration with {{platformName}}', { platformName }),
+          description: i18next.t('directIntegrationWithPlatformName', 'Direct integration with {{platformName}}', { platformName }),
         },
         { icon: <Check size={14} />, description: i18next.t('trackExpensesAndReceipts', 'Track expenses and receipts') },
         { icon: <Check size={14} />, description: i18next.t('easyToUnderstandProfitabilityChartsAndReports', 'Easy to understand profitability charts and reports') },
@@ -100,7 +100,7 @@ export class LandingPageHelper {
         label: i18next.t('getStartedButtonLabel', 'Get Started'),
         url: '/',
       },
-      title: i18next.t('fullserviceBookkeeping', 'Full-service Bookkeeping'),
+      title: i18next.t('fullServiceBookkeeping', 'Full-service Bookkeeping'),
       description: i18next.t('getADedicatedBookkeeperWhoWillOrganizeAndManageYourBooksForYou', 'Get a dedicated bookkeeper who will organize and manage your books for you.'),
       features: [
         { icon: <Check size={14} />, description: i18next.t('personalizedSetupWithYourBookkeeper', 'Personalized setup with your bookkeeper') },

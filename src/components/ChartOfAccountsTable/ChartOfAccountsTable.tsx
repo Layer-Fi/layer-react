@@ -390,7 +390,7 @@ export const ChartOfAccountsTableContent = ({
             setAccountToDelete(null)
           }
         }}
-        title={t('deleteVal', 'Delete {{val}}', { val: accountToDelete?.name })}
+        title={t('deleteAccountName', 'Delete {{accountName}}', { accountName: accountToDelete?.name })}
         description={t('thisAccountWillBePermanentlyRemovedFromYourChartOfAccounts', 'This account will be permanently removed from your Chart of Accounts.')}
         onConfirm={onConfirmDelete}
         confirmLabel={t('deleteAccount', 'Delete Account')}

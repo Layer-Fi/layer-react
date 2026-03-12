@@ -15,7 +15,7 @@ const deductionRows: DeductionRowConfig[] = [
   { key: 'businessExpenses', label: i18next.t('deductibleExpenses', 'Deductible Expenses'), getAmount: d => d.businessExpenses },
   { key: 'vehicleExpense', label: i18next.t('deductibleMileageExpenses', 'Deductible Mileage Expenses'), getAmount: d => d.vehicleExpense?.amount ?? 0 },
   { key: 'homeOffice', label: i18next.t('homeOfficeDeduction', 'Home Office Deduction'), getAmount: d => d.homeOffice?.amount ?? 0 },
-  { key: 'selfEmploymentTaxDeduction', label: i18next.t('selfemploymentDeduction', 'Self-Employment Deduction'), getAmount: d => d.selfEmploymentTaxDeduction },
+  { key: 'selfEmploymentTaxDeduction', label: i18next.t('selfEmploymentDeduction', 'Self-Employment Deduction'), getAmount: d => d.selfEmploymentTaxDeduction },
   { key: 'qualifiedTipDeduction', label: i18next.t('qualifiedTipDeduction', 'Qualified Tip Deduction'), getAmount: d => d.qualifiedTipDeduction },
   { key: 'qualifiedOvertimeDeduction', label: i18next.t('qualifiedOvertimeDeduction', 'Qualified Overtime Deduction'), getAmount: d => d.qualifiedOvertimeDeduction },
 ]

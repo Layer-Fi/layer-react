@@ -63,13 +63,13 @@ export enum LandingPageContentID {
 
 export const LandingPageDefaultTextContent: LandingPageTypesTextContent = {
   [LandingPageContentID.title]: '', // When left blank, uses a dark and grayed out color
-  [LandingPageContentID.subtitle]: i18next.t('trackYourBusinessFinancesRightWithinPlatformname', 'Track your business finances, right within {{platformName}}.'),
+  [LandingPageContentID.subtitle]: i18next.t('trackYourBusinessFinancesRightWithinPlatformNameWithPeriod', 'Track your business finances, right within {{platformName}}.'),
   [LandingPageContentID.headline1]: i18next.t('allYourFinancesInOnePlace', 'All your finances in one place'),
-  [LandingPageContentID.headline1Desc]: i18next.t('directlyIntegratedWithYourPlatformnameDataSoYouCanSeeYourBusinessPerformanceAndProfitInRealtime', 'Directly integrated with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
+  [LandingPageContentID.headline1Desc]: i18next.t('directlyIntegratedWithYourPlatformNameDataSoYouCanSeeYourBusinessPerformanceAndProfitInRealtime', 'Directly integrated with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
   [LandingPageContentID.headline2]: i18next.t('builtForIndustry', 'Built for {{industry}}'),
   [LandingPageContentID.headline2Desc]: i18next.t('trackYourExpensesAndGetEasyToUnderstandReportsDesignedSpecificallyForIndustryBusinesses', 'Track your expenses and get easy to understand reports designed specifically for {{industry}} businesses.'),
   [LandingPageContentID.valuePropositionTitle]: i18next.t('selfserviceAccountingToUnderstandYourBusinessHealth', 'Self-service accounting to understand your business health'),
-  [LandingPageContentID.offersTitle]: i18next.t('usePlatformnameAccountingYourselfOrLetOurTeamOfExpertsHandleBookkeepingForYou', 'Use {{platformName}} Accounting yourself, or let our team of experts handle bookkeeping for you'),
+  [LandingPageContentID.offersTitle]: i18next.t('usePlatformNameAccountingYourselfOrLetOurTeamOfExpertsHandleBookkeepingForYou', 'Use {{platformName}} Accounting yourself, or let our team of experts handle bookkeeping for you'),
 }
 
 export interface ContentConfig {
@@ -96,7 +96,7 @@ export const landingPageDefaultContentConfig: Omit<ContentConfig, 'config'> = {
     {
       icon: <></>,
       title: i18next.t('allYourFinancesInOnePlace', 'All your finances in one place'),
-      text: i18next.t('directlyIntegratedWithYourPlatformnameDataSoYouCanSeeYourBusinessPerformanceAndProfitInRealtime', 'Directly integrated with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
+      text: i18next.t('directlyIntegratedWithYourPlatformNameDataSoYouCanSeeYourBusinessPerformanceAndProfitInRealtime', 'Directly integrated with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
     },
     {
       icon: <></>,
@@ -108,10 +108,10 @@ export const landingPageDefaultContentConfig: Omit<ContentConfig, 'config'> = {
 
 export const DefaultHeroContentConfig: HeroContentConfig = {
   stringOverrides: {
-    title: i18next.t('platformnameAccounting', '{{platformName}} Accounting'),
+    title: i18next.t('platformNameAccounting', '{{platformName}} Accounting'),
     subtitle: i18next.t('trackYourBusinessFinancesRightWithinPlatformName', 'Track your business finances, right within {{platformName}}'),
     heading1: i18next.t('allYourFinancesInOnePlace', 'All your finances in one place'),
-    heading1Desc: i18next.t('directlyIntegrateWithYourPlatformnameDataSoYouCanSeeYourBusinessPerformanceAndProfitInRealtime', 'Directly integrate with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
+    heading1Desc: i18next.t('directlyIntegrateWithYourPlatformNameDataSoYouCanSeeYourBusinessPerformanceAndProfitInRealtime', 'Directly integrate with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
     heading2: i18next.t('builtForIndustry', 'Built for {{industry}}'),
     heading2Desc: i18next.t('trackYourExpensesAndGetEasyToUnderstandReportsDesignedSpecificallyForIndustry', 'Track your expenses and get easy to understand reports designed specifically for {{industry}}.'),
   },
@@ -134,7 +134,7 @@ export const DefaultAccountingOfferingConfig: LandingPageCardConfig = {
   offerType: 'accounting',
   stringOverrides: {
     badge: i18next.t('easyToUseSoftware', 'Easy to use software'),
-    title: i18next.t('platformnameAccounting', '{{platformName}} Accounting'),
+    title: i18next.t('platformNameAccounting', '{{platformName}} Accounting'),
     subtitle: i18next.t('theBestAccountingSoftwareForIndustryBusinessesFastToSetUpAndEasyToUse', 'The best accounting software for {{industry}} businesses. Fast to set up and easy to use.'),
     priceAmount: '',
     priceUnit: '',
@@ -155,7 +155,7 @@ export const DefaultBookkeepingOfferingConfig: LandingPageCardConfig = {
   offerType: 'bookkeeping',
   stringOverrides: {
     badge: i18next.t('aCompleteBookkeepingService', 'A complete bookkeeping service'),
-    title: i18next.t('fullserviceBookkeeping', 'Full-service Bookkeeping'),
+    title: i18next.t('fullServiceBookkeeping', 'Full-service Bookkeeping'),
     subtitle: i18next.t('getADedicatedBookkeeperWhoWillOrganizeAndManageYourBooksForYou', 'Get a dedicated bookkeeper who will organize and manage your books for you.'),
     priceAmount: '',
     priceUnit: '',

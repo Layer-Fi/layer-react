@@ -1,4 +1,5 @@
 import { useContext, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Direction } from '@internal-types/general'
 import { TableCellAlign } from '@internal-types/table'
@@ -27,7 +28,6 @@ import { TableCell } from '@components/TableCell/TableCell'
 import { TableHead } from '@components/TableHead/TableHead'
 import { TableRow } from '@components/TableRow/TableRow'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
-import { useTranslation } from 'react-i18next'
 
 interface SourceDetailStringOverrides {
   sourceLabel?: string
@@ -185,7 +185,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem
-            label={t('quickbooksId', 'Quickbooks ID')}
+            label={t('quickBooksId', 'QuickBooks ID')}
           >
             {source.quickbooksId}
           </DetailsListItem>
@@ -208,10 +208,10 @@ export const SourceDetailView = ({
           >
             {source.recipientName}
           </DetailsListItem>
-          <DetailsListItem label={t('writeoffDate', 'Write-off Date')}>
+          <DetailsListItem label={t('writeOffDate', 'Write-off Date')}>
             <DateTime value={source.date} />
           </DetailsListItem>
-          <DetailsListItem label={t('writeoffAmount', 'Write-off Amount')}>
+          <DetailsListItem label={t('writeOffAmount', 'Write-off Amount')}>
             {convertCentsToCurrency(source.writeOffAmount)}
           </DetailsListItem>
         </>
@@ -462,7 +462,7 @@ export const LedgerAccountEntryDetails = ({
             : (
               <VStack>
                 <Span>{t('journalEntry', 'Journal Entry')}</Span>
-                {entryData && <Span variant='subtle' size='xs'>{t('journalIdVal', 'Journal ID #{{val}}', { val: entryNumber(entryData) })}</Span>}
+                {entryData && <Span variant='subtle' size='xs'>{t('journalIdNumber', 'Journal ID #{{journalId}}', { journalId: entryNumber(entryData) })}</Span>}
               </VStack>
             )
         }

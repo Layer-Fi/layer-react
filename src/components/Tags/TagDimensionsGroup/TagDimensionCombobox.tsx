@@ -123,7 +123,7 @@ export const TagDimensionCombobox = ({
           inputId={inputId}
           isReadOnly={isReadOnly}
           isLoading={isLoading}
-          placeholder={t('selectVal', 'Select {{val}}', { val: tagDimension?.displayName ?? dimensionKey })}
+          placeholder={t('selectTagDimension', 'Select {{dimensionName}}', { dimensionName: tagDimension?.displayName ?? dimensionKey })}
           isClearable={isClearable}
           {...additionalAriaProps}
         />

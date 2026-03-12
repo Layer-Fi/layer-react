@@ -26,7 +26,7 @@ export const validateInvoiceRefundForm = ({ invoiceRefund, invoice }: { invoiceR
   }
 
   if (completedAt && invoice.paidAt && toCalendarDate(completedAt).compare(toCalendarDate(fromDate(invoice.paidAt, 'UTC'))) < 0) {
-    errors.push({ completedAt: i18next.t('refundDateCannotBeBeforeTheLastInvoicePaymentVal', 'Refund date cannot be before the last invoice payment ({{val}}).', { val: formatDate(invoice.paidAt, DATE_FORMAT_SHORT) }) })
+    errors.push({ completedAt: i18next.t('refundDateCannotBeBeforeLastInvoicePaymentDate', 'Refund date cannot be before the last invoice payment ({{lastPaymentDate}}).', { lastPaymentDate: formatDate(invoice.paidAt, DATE_FORMAT_SHORT) }) })
   }
 
   if (completedAt && toCalendarDate(completedAt).compare(today(getLocalTimeZone())) > 0) {

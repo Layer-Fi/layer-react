@@ -117,7 +117,7 @@ export const MileageSummaryCard = () => {
               {t('taxDeduction', 'Tax Deduction')}
             </Span>
             <Badge size={BadgeSize.MEDIUM} variant={BadgeVariant.NEUTRAL}>
-              {t('standardRateFormatteddeductionratemile', 'Standard Rate: {{formattedDeductionRate}}/mile', { formattedDeductionRate })}
+              {t('standardRateFormattedDeductionRatePerMile', 'Standard Rate: {{formattedDeductionRate}}/mile', { formattedDeductionRate })}
             </Badge>
           </HStack>
         </HStack>

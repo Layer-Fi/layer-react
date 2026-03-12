@@ -37,7 +37,7 @@ export const validateInvoicePaymentForm = ({ invoicePayment, invoice }: { invoic
   }
 
   if (paidAt && invoice.sentAt && toCalendarDate(paidAt).compare(toCalendarDate(fromDate(invoice.sentAt, 'UTC'))) < 0) {
-    errors.push({ paidAt: i18next.t('paymentDateCannotBeBeforeTheInvoiceDateVal', 'Payment date cannot be before the invoice date ({{val}}).', { val: formatDate(invoice.sentAt, DATE_FORMAT_SHORT) }) })
+    errors.push({ paidAt: i18next.t('paymentDateCannotBeBeforeInvoiceDate', 'Payment date cannot be before the invoice date ({{invoiceDate}}).', { invoiceDate: formatDate(invoice.sentAt, DATE_FORMAT_SHORT) }) })
   }
 
   if (paidAt && toCalendarDate(paidAt).compare(today(getLocalTimeZone())) > 0) {

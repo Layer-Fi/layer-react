@@ -34,11 +34,11 @@ const getHeaderMode = (viewState: InvoiceDetailRouteState): HeaderMode => {
 const getHeadingContent = (headerMode: HeaderMode, invoiceNumber: string | null) => {
   switch (headerMode) {
     case HeaderMode.Preview:
-      return invoiceNumber ? i18next.t('previewingInvoiceInvoicenumber', 'Previewing Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('previewingInvoice', 'Previewing Invoice')
+      return invoiceNumber ? i18next.t('previewingInvoiceNumber', 'Previewing Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('previewingInvoice', 'Previewing Invoice')
     case HeaderMode.View:
-      return invoiceNumber ? i18next.t('invoiceInvoicenumber', 'Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('viewInvoice', 'View Invoice')
+      return invoiceNumber ? i18next.t('invoiceNumberWithPrefix', 'Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('viewInvoice', 'View Invoice')
     case HeaderMode.Edit:
-      return invoiceNumber ? i18next.t('editingInvoiceInvoicenumber', 'Editing Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('editingInvoice', 'Editing Invoice')
+      return invoiceNumber ? i18next.t('editingInvoiceNumber', 'Editing Invoice #{{invoiceNumber}}', { invoiceNumber }) : i18next.t('editingInvoice', 'Editing Invoice')
   }
 }
 

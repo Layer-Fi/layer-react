@@ -28,7 +28,7 @@ export type AccountOption = {
 }
 
 const formatCreateLabel = (inputValue: string) => {
-  return inputValue ? i18next.t('createInputvalue', 'Create "{{inputValue}}"', { inputValue }) : i18next.t('createAccount', 'Create account')
+  return inputValue ? i18next.t('createInputValue', 'Create "{{inputValue}}"', { inputValue }) : i18next.t('createAccount', 'Create account')
 }
 
 const AccountOption = ({ option, fallback }: { option: AccountOption, fallback: React.ReactNode }) => {

@@ -54,7 +54,7 @@ type CustomerSelectorProps = CustomerSelectorBaseProps & (
   | { isCreatable?: false, onCreateCustomer?: (name: string) => void }
 )
 
-const formatCreateLabel = (inputValue: string) => inputValue ? i18next.t('createCustomerInputvalue', 'Create customer "{{inputValue}}"', { inputValue }) : i18next.t('createNewCustomer', 'Create new customer')
+const formatCreateLabel = (inputValue: string) => inputValue ? i18next.t('createCustomerInputValue', 'Create customer "{{inputValue}}"', { inputValue }) : i18next.t('createNewCustomer', 'Create new customer')
 
 export function CustomerSelector({
   selectedCustomer,

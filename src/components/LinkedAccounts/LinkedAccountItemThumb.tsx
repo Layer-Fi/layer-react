@@ -134,7 +134,7 @@ export const LinkedAccountItemThumb = ({
       )
     additionalConfigs.push({
       name: institutionName
-        ? t('unlinkAllAccountsUnderThisInstitutionnameConnection', 'Unlink all accounts under this {{institutionName}} connection', { institutionName })
+        ? t('unlinkAllAccountsUnderThisInstitutionNameConnection', 'Unlink all accounts under this {{institutionName}} connection', { institutionName })
         : t('unlinkAllAccountsUnderThisConnection', 'Unlink all accounts under this connection'),
       action: () => {
         // TODO: replace with better confirm dialog

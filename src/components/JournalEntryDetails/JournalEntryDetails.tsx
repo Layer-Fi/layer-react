@@ -136,7 +136,7 @@ export const JournalEntryDetails = () => {
         title={(
           <VStack>
             <Span>{t('journalEntry', 'Journal Entry')}</Span>
-            {entry && <Span variant='subtle' size='xs'>{t('journalIdVal', 'Journal ID #{{val}}', { val: entryNumber(entry) })}</Span>}
+            {entry && <Span variant='subtle' size='xs'>{t('journalIdNumber', 'Journal ID #{{journalId}}', { journalId: entryNumber(entry) })}</Span>}
           </VStack>
         )}
         className='Layer__border-top'
@@ -152,7 +152,7 @@ export const JournalEntryDetails = () => {
         </DetailsListItem>
         {entry?.reversal_id && (
           <DetailsListItem label={t('reversal', 'Reversal')} isLoading={isLoadingEntry}>
-            {t('journalEntryVal', 'Journal Entry #{{val}}', { val: entry?.reversal_id.substring(0, 5) })}
+            {t('journalEntryNumber', 'Journal Entry #{{entryNumber}}', { entryNumber: entry?.reversal_id.substring(0, 5) })}
           </DetailsListItem>
         )}
       </DetailsList>
