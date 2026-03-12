@@ -1,13 +1,12 @@
-import i18next from 'i18next'
-export const BALANCE_SHEET_ROWS = [
+export const getBalanceSheetRows = (t: (key: string, defaultValue: string) => string) => [
   {
     name: 'Assets',
-    displayName: i18next.t('assets', 'Assets'),
+    displayName: t('assets', 'Assets'),
     lineItem: 'assets',
   },
   {
     name: 'LiabilitiesAndEquity',
-    displayName: i18next.t('liabilitiesEquity', 'Liabilities & Equity'),
+    displayName: t('liabilitiesEquity', 'Liabilities & Equity'),
     lineItem: 'liabilities_and_equity',
   },
 ]

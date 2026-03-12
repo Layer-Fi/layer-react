@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import i18next from 'i18next'
+import { useMemo, useState } from 'react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
@@ -13,20 +12,20 @@ import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileL
 import { Purpose } from './BankTransactionsMobileListItem'
 import { PersonalStableName } from './constants'
 
-const PURPOSE_TOGGLE_OPTIONS = [
+const getPurposeToggleOptions = (t: (key: string, defaultValue: string) => string) => [
   {
     value: 'business',
-    label: i18next.t('business', 'Business'),
+    label: t('business', 'Business'),
     style: { minWidth: 84 },
   },
   {
     value: 'personal',
-    label: i18next.t('personal', 'Personal'),
+    label: t('personal', 'Personal'),
     style: { minWidth: 84 },
   },
   {
     value: 'more',
-    label: i18next.t('more', 'More'),
+    label: t('more', 'More'),
     style: { minWidth: 84 },
   },
 ]
@@ -50,6 +49,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
 }: BankTransactionsMobileListItemExpandedRowProps) => {
   const { t } = useTranslation()
   const [purpose, setPurpose] = useState<Purpose>(getInitialPurpose(bankTransaction))
+  const purposeToggleOptions = useMemo(() => getPurposeToggleOptions(t), [t])
 
   const onChangePurpose = (key: Key) =>
     setPurpose(key as Purpose)
@@ -60,7 +60,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
         && (
           <Toggle
             ariaLabel={t('purpose', 'Purpose')}
-            options={PURPOSE_TOGGLE_OPTIONS}
+            options={purposeToggleOptions}
             selectedKey={purpose}
             onSelectionChange={onChangePurpose}
           />

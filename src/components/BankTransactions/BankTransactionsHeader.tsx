@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
-import i18next from 'i18next'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
@@ -50,9 +49,9 @@ export interface BankTransactionsHeaderStringOverrides {
   downloadButton?: string
 }
 
-const STATUS_TOGGLE_OPTIONS = [
-  { label: i18next.t('toReview', 'To Review'), value: DisplayState.review },
-  { label: i18next.t('categorized', 'Categorized'), value: DisplayState.categorized },
+const getStatusToggleOptions = (t: (key: string, defaultValue: string) => string) => [
+  { label: t('toReview', 'To Review'), value: DisplayState.review },
+  { label: t('categorized', 'Categorized'), value: DisplayState.categorized },
 ]
 
 type TransactionsSearchProps = {
@@ -98,6 +97,7 @@ const DownloadButton = ({
   disabled?: boolean
   isListView?: boolean
 }) => {
+  const { t } = useTranslation()
   const { handleDownloadTransactions, invisibleDownloadRef, isMutating, error } = useHandleDownloadTransactions({ isListView })
 
   return (
@@ -108,7 +108,7 @@ const DownloadButton = ({
         onClick={handleDownloadTransactions}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text={downloadButtonTextOverride}
+        text={downloadButtonTextOverride ?? t('download', 'Download')}
         disabled={disabled}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
@@ -235,12 +235,13 @@ export const BankTransactionsHeader = ({
     )
   }, [t, isMobileList])
 
+  const statusToggleOptions = useMemo(() => getStatusToggleOptions(t), [t])
   const isStatusToggleVisible = isCategorizationEnabled && showStatusToggle
   const statusToggle = isStatusToggleVisible
     ? (
       <Toggle
         ariaLabel={t('categorizationStatus', 'Categorization status')}
-        options={STATUS_TOGGLE_OPTIONS}
+        options={statusToggleOptions}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}
         fullWidth={isMobileList}

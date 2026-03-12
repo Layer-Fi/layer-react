@@ -1,11 +1,12 @@
-import { type PropsWithChildren } from 'react'
+import { type PropsWithChildren, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useBalanceSheet } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { type DateSelectionMode, useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TableProvider } from '@contexts/TableContext/TableContext'
 import { HStack } from '@ui/Stack/Stack'
-import { BALANCE_SHEET_ROWS } from '@components/BalanceSheet/constants'
+import { getBalanceSheetRows } from '@components/BalanceSheet/constants'
 import { BalanceSheetDownloadButton } from '@components/BalanceSheet/download/BalanceSheetDownloadButton'
 import { BalanceSheetExpandAllButton } from '@components/BalanceSheetExpandAllButton/BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '@components/BalanceSheetTable/BalanceSheetTable'
@@ -56,9 +57,11 @@ const BalanceSheetView = ({
   stringOverrides,
   dateSelectionMode = 'full',
 }: BalanceSheetViewProps) => {
+  const { t } = useTranslation()
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
   const { data, isLoading, isValidating, isError } = useBalanceSheet({ effectiveDate })
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+  const balanceSheetRows = useMemo(() => getBalanceSheetRows(t), [t])
 
   const content = (
     <ConditionalBlock
@@ -81,7 +84,7 @@ const BalanceSheetView = ({
       {({ data }) => (
         <BalanceSheetTable
           data={data}
-          config={BALANCE_SHEET_ROWS}
+          config={balanceSheetRows}
           stringOverrides={stringOverrides?.balanceSheetTable}
         />
       )}
