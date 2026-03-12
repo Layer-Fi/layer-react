@@ -1,4 +1,5 @@
 import { Fragment, useContext, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   type ProfitAndLossComparisonItem,
@@ -25,7 +26,6 @@ import { TableCell } from '@components/TableCell/TableCell'
 import { TableHead } from '@components/TableHead/TableHead'
 import { TableRow } from '@components/TableRow/TableRow'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
-import { useTranslation } from 'react-i18next'
 
 interface ProfitAndLossCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides

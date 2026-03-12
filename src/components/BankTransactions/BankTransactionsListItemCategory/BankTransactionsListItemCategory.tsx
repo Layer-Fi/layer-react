@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { isCategorized } from '@utils/bankTransactions'
 import { useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
@@ -6,7 +8,6 @@ import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransa
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
 
 import './bankTransactionsListItemCategory.scss'
-import { useTranslation } from 'react-i18next'
 
 export interface BankTransactionsListItemCategoryProps {
   bankTransaction: BankTransaction

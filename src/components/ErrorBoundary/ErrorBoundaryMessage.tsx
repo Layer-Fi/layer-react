@@ -1,5 +1,6 @@
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useTranslation } from 'react-i18next'
+
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 export const ErrorBoundaryMessage = () => {
   const { t } = useTranslation()

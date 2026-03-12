@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { CategoriesListMode, type Classification, isClassificationAccountIdentifier } from '@schemas/categorization'
 import type { AppForm } from '@hooks/features/forms/useForm'
@@ -11,7 +12,6 @@ import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerA
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 
 import './journalEntryLineItem.scss'
-import { useTranslation } from 'react-i18next'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 

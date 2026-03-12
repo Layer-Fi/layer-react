@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { hasReceipts } from '@utils/bankTransactions'
@@ -25,7 +26,6 @@ import { ErrorText } from '@components/Typography/ErrorText'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 import './bankTransactionsMobileListSplitForm.scss'
-import { useTranslation } from 'react-i18next'
 
 interface BankTransactionsMobileListSplitFormProps {
   bankTransaction: BankTransaction
