@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { tConditional } from '@utils/i18n/conditional'
 import { useTaxDetails } from '@hooks/api/businesses/[business-id]/tax-estimates/details/useTaxDetails'
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -18,7 +19,6 @@ import { StateTaxTable } from '@components/TaxDetails/StateTaxTable/StateTaxTabl
 import { TaxDetailsExpandableCardHeading } from '@components/TaxDetails/TaxDetailsExpandableCardHeading'
 import { TaxSummaryCard } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCard'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
-import { maybeAddProjectedToLabel } from '@components/TaxEstimates/utils'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxDetails.scss'
@@ -32,13 +32,18 @@ type ExpandedState = {
 const TaxDetailsHeader = ({ isMobile }: { isMobile: boolean }) => {
   const { t } = useTranslation()
   const { fullYearProjection } = useFullYearProjection()
+  const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
   return (
     <TaxEstimatesHeader
-      title={maybeAddProjectedToLabel(t, {
-        key: 'businessIncomeTaxes',
-        isProjected: fullYearProjection,
-        defaultCase: 'Business Income Taxes',
-        projectedCase: 'Projected Business Income Taxes',
+      title={tConditional(t, 'businessIncomeTaxes', {
+        condition: projectedCondition,
+        cases: {
+          default: 'Business Income Taxes',
+          projected: 'Projected Business Income Taxes',
+        },
+        contexts: {
+          projected: 'projected',
+        },
       })}
       description={t('calculatedBasedOnYourCategorizedTransactionsAndTrackedMileage', 'Calculated based on your categorized transactions and tracked mileage')}
       isMobile={isMobile}
@@ -54,6 +59,7 @@ export const TaxDetails = () => {
   const { t } = useTranslation()
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
+  const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
   const { data, isLoading, isError } = useTaxDetails({ year, fullYearProjection })
   const { data: summaryData, isLoading: isSummaryLoading } = useTaxSummary({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
@@ -124,11 +130,15 @@ export const TaxDetails = () => {
                 slots={{
                   Heading: (
                     <TaxDetailsExpandableCardHeading
-                      title={maybeAddProjectedToLabel(t, {
-                        key: 'taxableBusinessIncome',
-                        isProjected: fullYearProjection,
-                        defaultCase: 'Taxable Business Income',
-                        projectedCase: 'Projected Taxable Business Income',
+                      title={tConditional(t, 'taxableBusinessIncome', {
+                        condition: projectedCondition,
+                        cases: {
+                          default: 'Taxable Business Income',
+                          projected: 'Projected Taxable Business Income',
+                        },
+                        contexts: {
+                          projected: 'projected',
+                        },
                       })}
                       amount={details.adjustedGrossIncome.totalAdjustedGrossIncome}
                     />
@@ -144,11 +154,15 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title={maybeAddProjectedToLabel(t, {
-                          key: 'federalTaxes',
-                          isProjected: fullYearProjection,
-                          defaultCase: 'Federal Taxes',
-                          projectedCase: 'Projected Federal Taxes',
+                        title={tConditional(t, 'federalTaxes', {
+                          condition: projectedCondition,
+                          cases: {
+                            default: 'Federal Taxes',
+                            projected: 'Projected Federal Taxes',
+                          },
+                          contexts: {
+                            projected: 'projected',
+                          },
                         })}
                         amount={usFederal.totalFederalTax.totalFederalTaxOwed}
                       />
@@ -165,11 +179,15 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title={maybeAddProjectedToLabel(t, {
-                          key: 'stateTaxesStateName',
-                          isProjected: fullYearProjection,
-                          defaultCase: 'State Taxes ({{stateName}})',
-                          projectedCase: 'Projected State Taxes ({{stateName}})',
+                        title={tConditional(t, 'stateTaxesStateName', {
+                          condition: projectedCondition,
+                          cases: {
+                            default: 'State Taxes ({{stateName}})',
+                            projected: 'Projected State Taxes ({{stateName}})',
+                          },
+                          contexts: {
+                            projected: 'projected',
+                          },
                           stateName: usState.stateName,
                         })}
                         amount={usState.totalStateTax.totalStateTaxOwed}

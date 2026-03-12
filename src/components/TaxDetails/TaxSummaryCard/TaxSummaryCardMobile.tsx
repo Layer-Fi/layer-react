@@ -2,12 +2,12 @@ import { useTranslation } from 'react-i18next'
 
 import type { TaxSummary } from '@schemas/taxEstimates/summary'
 import { formatDate } from '@utils/format'
+import { tConditional } from '@utils/i18n/conditional'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
-import { maybeAddProjectedToLabel } from '@components/TaxEstimates/utils'
 
 type TaxSummaryCardMobileProps = {
   data: TaxSummary
@@ -16,6 +16,7 @@ type TaxSummaryCardMobileProps = {
 export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
   const { t } = useTranslation()
   const { fullYearProjection } = useFullYearProjection()
+  const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
 
   return (
     <VStack className='Layer__TaxSummaryCard--mobile' gap='md'>
@@ -23,11 +24,15 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
         <VStack gap='xs' justify='center' align='center'>
           <VStack justify='center' align='center'>
             <Span size='md' variant='subtle'>
-              {maybeAddProjectedToLabel(t, {
-                key: 'taxesOwed',
-                isProjected: fullYearProjection,
-                defaultCase: 'Taxes Owed',
-                projectedCase: 'Projected Taxes Owed',
+              {tConditional(t, 'taxesOwed', {
+                condition: projectedCondition,
+                cases: {
+                  default: 'Taxes Owed',
+                  projected: 'Projected Taxes Owed',
+                },
+                contexts: {
+                  projected: 'projected',
+                },
               })}
             </Span>
             <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
