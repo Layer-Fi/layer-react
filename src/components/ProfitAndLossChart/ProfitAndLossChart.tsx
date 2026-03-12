@@ -5,6 +5,7 @@ import {
   startOfMonth,
   sub,
 } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 import {
   CartesianGrid,
   ComposedChart,
@@ -43,6 +44,7 @@ export interface ProfitAndLossChartProps {
 const CHART_MARGINS = { left: 12, right: 12, bottom: 12 }
 
 export const ProfitAndLossChart = ({ tagFilter }: ProfitAndLossChartProps) => {
+  const { i18n } = useTranslation()
   const [compactView, setCompactView] = useState(false)
   const barSize = compactView ? 10 : 20
   const cursorWidth = barSize * 2.2
@@ -95,8 +97,9 @@ export const ProfitAndLossChart = ({ tagFilter }: ProfitAndLossChartProps) => {
     () => transformPnLData({
       data,
       compactView,
+      locale: i18n.resolvedLanguage ?? i18n.language,
     }),
-    [data, compactView],
+    [data, compactView, i18n.resolvedLanguage, i18n.language],
   )
 
   const selectedIndex = dataOrPlaceholderData.findIndex(

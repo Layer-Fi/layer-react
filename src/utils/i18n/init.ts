@@ -11,11 +11,24 @@ const frCAResources = frCATranslation as Record<string, unknown>
 
 let initPromise: Promise<void> | undefined
 
+const SUPPORTED_LOCALES = ['en-US', 'fr-CA']
+
 const isPseudoEnabled = () => {
   if (typeof window === 'undefined') return false
 
   const params = new URLSearchParams(window.location.search)
   return params.get('locale') === 'pseudo'
+}
+
+const getFallbackLocale = () => {
+  const params = new URLSearchParams(window.location.search)
+  const localeParam = params.get('locale')
+
+  if (localeParam && SUPPORTED_LOCALES.includes(localeParam)) {
+    return localeParam
+  }
+
+  return 'en-US'
 }
 
 const initI18n = async () => {
@@ -32,7 +45,7 @@ const initI18n = async () => {
       .init({
         returnEmptyString: false,
         initImmediate: false,
-        fallbackLng: 'en-US',
+        fallbackLng: getFallbackLocale(),
         defaultNS: 'translation',
         resources: {
           'en-US': { translation: enUSResources },
