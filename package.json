@@ -104,6 +104,7 @@
     "date-fns": "^4.1.0",
     "effect": "^3.16.3",
     "i18next": "^25.8.17",
+    "i18next-pseudo": "^2.2.1",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.507.0",
     "motion": "^12.23.11",
