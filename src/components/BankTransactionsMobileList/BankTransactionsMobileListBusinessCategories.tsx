@@ -1,12 +1,9 @@
-import { useCallback, useMemo, useState } from 'react'
-import { ChevronLeft } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { CategoryAsOption } from '@internal-types/categorizationOption'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
-import { Button } from '@ui/Button/Button'
-import { ModalHeading } from '@ui/Modal/ModalSlots'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { VStack } from '@ui/Stack/Stack'
 import { ActionableList } from '@components/ActionableList/ActionableList'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { type CategoryGroup, flattenCategories } from '@components/BankTransactionsMobileList/utils'
@@ -16,6 +13,8 @@ export interface BankTransactionsMobileListBusinessCategoriesProps {
   select: (category: BankTransactionCategoryComboBoxOption | null) => void
   selectedId?: string
   showTooltips: boolean
+  setSelectedGroup: (prevState: CategoryGroup | null) => void
+  selectedGroup: CategoryGroup | null
 }
 
 const isGroup = (item: CategoryGroup | CategoryAsOption): item is CategoryGroup => {
@@ -26,22 +25,22 @@ export const BankTransactionsMobileListBusinessCategories = ({
   select,
   selectedId,
   showTooltips,
+  setSelectedGroup,
+  selectedGroup,
 }: BankTransactionsMobileListBusinessCategoriesProps) => {
   const { t } = useTranslation()
   const { data: categories } = useCategories()
   const [query, setQuery] = useState('')
 
-  const categoryOptions = useMemo(() =>
-    flattenCategories(
+  const categoryOptions = useMemo(() => {
+    if (selectedGroup) return selectedGroup.categories
+    return flattenCategories(
       (categories ?? []).filter(category => category.type != 'ExclusionNested'),
-    ),
-  [categories])
-
-  const [optionsToShow, setOptionsToShow] = useState<Array<CategoryGroup | CategoryAsOption>>(categoryOptions)
-  const [selectedGroup, setSelectedGroup] = useState<string>()
+    )
+  }, [categories, selectedGroup])
 
   const filteredOptions = useMemo(() => {
-    let options = optionsToShow
+    let options = categoryOptions
 
     if (query) {
       const lower = query.toLowerCase()
@@ -63,41 +62,20 @@ export const BankTransactionsMobileListBusinessCategories = ({
       .map(opt => isGroup(opt)
         ? { label: opt.label, id: opt.id, value: opt, asLink: true }
         : { label: opt.label, id: opt.value, description: opt.original.description ?? undefined, value: opt })
-  }, [optionsToShow, query])
+  }, [categoryOptions, query])
 
   const onCategorySelect = (item: { value: CategoryGroup | CategoryAsOption }) => {
     if (isGroup(item.value)) {
-      setOptionsToShow(item.value.categories)
-      setSelectedGroup(item.value.label)
+      setSelectedGroup(item.value)
       setQuery('')
       return
     }
     select(item.value)
   }
 
-  const clearSelectedGroup = useCallback(() => {
-    setOptionsToShow(categoryOptions)
-    setSelectedGroup(undefined)
-    setQuery('')
-  }, [categoryOptions])
-
   return (
-    <VStack className='Layer__bank-transaction-mobile-list-item__categories_list-container' pbs='lg' gap='md'>
-      <VStack pis='sm' pie='sm' gap='md'>
-        <HStack pis='xs'>
-          {selectedGroup
-            ? (
-              <Button variant='text' onClick={clearSelectedGroup}>
-                <ChevronLeft size={18} />
-                <ModalHeading size='sm' weight='bold' align='center'>
-                  {selectedGroup}
-                </ModalHeading>
-              </Button>
-            )
-            : <ModalHeading size='sm' weight='bold'>{t('selectCategory', 'Select category')}</ModalHeading>}
-        </HStack>
-        <SearchField value={query} onChange={setQuery} label={t('searchCategories', 'Search categories...')} />
-      </VStack>
+    <VStack className='Layer__bank-transaction-mobile-list-item__categories_list-container' pb='md' gap='md'>
+      <SearchField value={query} onChange={setQuery} label={t('searchCategories', 'Search categories...')} />
       <ActionableList<CategoryAsOption | CategoryGroup>
         options={filteredOptions}
         onClick={onCategorySelect}

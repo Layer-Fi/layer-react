@@ -85,11 +85,12 @@ type DialogSlots = {
 type DialogComponentProps = Omit<DialogProps, 'className'> & {
   variant: ModalVariant
   slots?: DialogSlots
+  fixedHeight?: boolean
 } & Partial<ModalRenderProps>
 
 const Dialog = forwardRef<HTMLElement, DialogComponentProps>(
-  ({ variant = 'center', children, slots, isEntering, isExiting, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ variant, entering: isEntering, exiting: isExiting })
+  ({ variant = 'center', children, slots, isEntering, isExiting, fixedHeight, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ variant, entering: isEntering, exiting: isExiting, fixed: fixedHeight })
     const Header = slots?.Header
 
     return (
@@ -173,6 +174,7 @@ export type DrawerProps = AllowedModalOverlayProps &
   AllowedDialogProps &
   AllowedInternalModalProps & {
     slots?: DrawerSlots
+    fixedHeight?: boolean
   }
 
 export function Drawer({
@@ -186,6 +188,7 @@ export function Drawer({
   'aria-label': ariaLabel,
   variant = 'drawer',
   isDismissable = false,
+  fixedHeight = false,
   role,
 }: DrawerProps) {
   return (
@@ -199,6 +202,7 @@ export function Drawer({
             slots={slots}
             isEntering={isEntering}
             isExiting={isExiting}
+            fixedHeight={fixedHeight}
           >
             {children}
           </Dialog>
