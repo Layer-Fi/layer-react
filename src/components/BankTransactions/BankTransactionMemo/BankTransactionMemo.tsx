@@ -1,17 +1,19 @@
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { Input } from '@ui/Input/Input'
+import { TextArea } from '@ui/Input/TextArea'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { useBankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/useBankTransactionMemo'
-import { Input } from '@components/Input/Input'
-import { Textarea } from '@components/Textarea/Textarea'
 
 import './bankTransactionMemo.scss'
 
 export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTransactionId: BankTransaction['id'], isMobile?: boolean }) => {
   const { t } = useTranslation()
   const { form, isUpdatingMemo, isErrorUpdatingMemo, isSaved } = useBankTransactionMemo({ bankTransactionId })
+
+  const InputComponent = isMobile ? Input : TextArea
 
   return (
     <form onBlur={() => void form.handleSubmit()}>
@@ -36,25 +38,15 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
                 </Span>
               )}
             </HStack>
-            {isMobile
-              ? (
-                <Input
-                  name='memo'
-                  className='Layer__BankTransactionMemo__InputTextArea'
-                  placeholder={t('addDescription', 'Add description')}
-                  value={field.state.value ?? undefined}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
-                />
-              )
-              : (
-                <Textarea
-                  name='memo'
-                  className='Layer__BankTransactionMemo__InputTextArea'
-                  placeholder={t('addDescription', 'Add description')}
-                  value={field.state.value ?? undefined}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
-                />
-              )}
+            <HStack className='Layer__BankTransactionMemo__InputTextArea'>
+              <InputComponent
+                name='memo'
+                placeholder={t('addDescription', 'Add description')}
+                value={field.state.value ?? undefined}
+                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => field.handleChange(e.target.value)}
+              />
+            </HStack>
+            )
           </VStack>
         )}
       </form.Field>
