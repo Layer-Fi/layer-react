@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -22,12 +23,13 @@ export const BankTransactionsBulkActions = ({
   isMobileView = false,
   slotProps,
 }: BankTransactionsBulkActionsProps) => {
+  const { t } = useTranslation()
   const { display } = useBankTransactionsContext()
   const [categorizeModalOpen, setCategorizeModalOpen] = useState(false)
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
   const [recategorizeModalOpen, setRecategorizeModalOpen] = useState(false)
   const [uncategorizeModalOpen, setUncategorizeModalOpen] = useState(false)
-  const confirmButtonLabel = slotProps?.ConfirmAllModal?.label || 'Confirm all'
+  const confirmButtonLabel = slotProps?.ConfirmAllModal?.label || t('confirmAll', 'Confirm all')
 
   return (
     <>
@@ -39,7 +41,7 @@ export const BankTransactionsBulkActions = ({
                 variant='outlined'
                 onClick={() => setCategorizeModalOpen(true)}
               >
-                Categorize
+                {t('categorize', 'Categorize')}
               </Button>
               <BankTransactionsCategorizeAllModal
                 isOpen={categorizeModalOpen}
@@ -64,7 +66,7 @@ export const BankTransactionsBulkActions = ({
                 variant='outlined'
                 onClick={() => setRecategorizeModalOpen(true)}
               >
-                {isMobileView ? 'Categorize' : 'Recategorize'}
+                {isMobileView ? t('categorize', 'Categorize') : t('recategorize', 'Recategorize')}
               </Button>
               <BankTransactionsCategorizeAllModal
                 isOpen={recategorizeModalOpen}
@@ -77,7 +79,7 @@ export const BankTransactionsBulkActions = ({
                 variant='solid'
                 onClick={() => setUncategorizeModalOpen(true)}
               >
-                Uncategorize
+                {t('uncategorize', 'Uncategorize')}
               </Button>
               <BankTransactionsUncategorizeAllModal
                 isOpen={uncategorizeModalOpen}

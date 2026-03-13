@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import CoffeeIcon from '@icons/Coffee'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { Link } from '@components/Button/Link'
@@ -15,6 +17,7 @@ export const BookkeepingUpsellBar = ({
   onClick,
   href,
 }: BookkeepingUpsellBarProps) => {
+  const { t } = useTranslation()
   return (
     <div className='Layer__bar-banner Layer__bar-banner--bookkeeping'>
       <div className='Layer__bar-banner__left-col'>
@@ -23,26 +26,26 @@ export const BookkeepingUpsellBar = ({
         </IconBox>
         <div className='Layer__bar-banner__text-container'>
           <Text size={TextSize.md} weight={TextWeight.bold}>
-            Need help with your books?
+            {t('needHelpWithYourBooks', 'Need help with your books?')}
           </Text>
           <Text
             size={TextSize.sm}
             className='Layer__bar-banner__text-container__desc'
           >
-            Order bookkeeping service supported by real humans.
+            {t('orderOurBookkeepingServiceSupportedByRealHumans', 'Order our bookkeeping service supported by real humans.')}
           </Text>
         </div>
       </div>
       {onClick
         ? (
           <Button variant={ButtonVariant.secondary} onClick={onClick}>
-            Schedule a demo
+            {t('scheduleADemo', 'Schedule a demo')}
           </Button>
         )
         : href
           ? (
             <Link href={href} target='_blank' variant={ButtonVariant.secondary}>
-              Schedule a demo
+              {t('scheduleADemo', 'Schedule a demo')}
             </Link>
           )
           : null}

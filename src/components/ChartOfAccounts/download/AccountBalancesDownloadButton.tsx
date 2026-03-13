@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { useAccountBalancesDownload } from '@hooks/api/businesses/[business-id]/ledger/balances/exports/csv/useAccountBalancesDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
@@ -13,6 +15,7 @@ export function AccountBalancesDownloadButton({
   endCutoff,
   iconOnly,
 }: AccountBalancesDownloadButtonProps) {
+  const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useAccountBalancesDownload({
@@ -28,8 +31,8 @@ export function AccountBalancesDownloadButton({
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text='Download CSV'
-        retryText='Retry'
+        text={t('downloadCsv', 'Download CSV')}
+        retryText={t('retry', 'Retry')}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

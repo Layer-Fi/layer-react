@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { getIncompleteTasks, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { Button } from '@components/Button/Button'
@@ -26,6 +27,7 @@ export const TasksListMobile = ({
   pageSize,
   setCurrentPage,
 }: TasksListMobileProps) => {
+  const { t } = useTranslation()
   const [showMobilePanel, setShowMobilePanel] = useState(false)
 
   const unresolvedTasks = getIncompleteTasks(sortedTasks).slice(0, MOBILE_SHOW_UNRESOLVED_TASKS_COUNT)
@@ -42,7 +44,7 @@ export const TasksListMobile = ({
       {unresolvedTasks.length === 0 && tasksCount > 0
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
-            <TextButton onClick={() => setShowMobilePanel(true)}>Show completed tasks</TextButton>
+            <TextButton onClick={() => setShowMobilePanel(true)}>{t('showCompletedTasks', 'Show completed tasks')}</TextButton>
           </div>
         )
         : null}
@@ -50,9 +52,7 @@ export const TasksListMobile = ({
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
             <Button onClick={() => setShowMobilePanel(true)} fullWidth>
-              Show all tasks (
-              {tasksCount}
-              )
+              {t('showAllTasksCount', 'Show all tasks ({{tasksCount}})', { tasksCount })}
             </Button>
           </div>
         )
@@ -60,7 +60,7 @@ export const TasksListMobile = ({
       <MobilePanel
         open={showMobilePanel}
         onClose={() => setShowMobilePanel(false)}
-        header={<p>Tasks</p>}
+        header={<p>{t('tasks', 'Tasks')}</p>}
       >
         {sortedTasks && sortedTasks.length > 0
           && (

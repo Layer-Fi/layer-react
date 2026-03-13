@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/i18n/plural'
 import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
-import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
+import { getAccountsNeedingConfirmation, useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useAccountConfirmationStore } from '@providers/AccountConfirmationStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
@@ -15,32 +17,46 @@ import { ConditionalList } from '@components/utility/ConditionalList'
 
 function getButtonLabel(
   { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number },
+  t: TFunction,
 ) {
   if (confirmedCount === totalCount) {
-    return totalCount > 1
-      ? 'Confirm All Accounts'
-      : 'Confirm Account'
+    return tPlural(t, 'confirmAllAccounts', {
+      count: totalCount,
+      one: 'Confirm Account',
+      other: 'Confirm All Accounts',
+    })
   }
 
   if (confirmedCount === 0) {
-    return totalCount > 1
-      ? 'Exclude All Accounts'
-      : 'Exclude Account'
+    return tPlural(t, 'excludeAllAccounts', {
+      count: totalCount,
+      one: 'Exclude Account',
+      other: 'Exclude All Accounts',
+    })
   }
 
-  return `Confirm ${confirmedCount} Selected Account${confirmedCount > 1 ? 's' : ''}`
+  return tPlural(t, 'confirmSelectedAccounts', {
+    count: confirmedCount,
+    one: 'Confirm {{count}} Selected Account',
+    other: 'Confirm {{count}} Selected Accounts',
+  })
 }
 
-function getFormComponentLabels(formState: AccountConfirmExcludeFormState) {
+function getFormComponentLabels(
+  formState: AccountConfirmExcludeFormState,
+  t: TFunction,
+) {
   const values = Object.values(formState)
 
   const totalCount = values.length
   const confirmedCount = values.filter(Boolean).length
 
-  const buttonLabel = getButtonLabel({ totalCount, confirmedCount })
-  const descriptionLabel = totalCount > 1
-    ? 'Select the accounts you use for your business.'
-    : 'Is this account relevant to your business?'
+  const buttonLabel = getButtonLabel({ totalCount, confirmedCount }, t)
+  const descriptionLabel = tPlural(t, 'selectTheAccountsYouUseForYourBusiness', {
+    count: totalCount,
+    one: 'Is this account relevant to your business?',
+    other: 'Select the accounts you use for your business.',
+  })
 
   return {
     buttonLabel,
@@ -92,12 +108,13 @@ function useLinkedAccountsConfirmationModal() {
 }
 
 function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   return (
     <VStack gap='2xs'>
       <ModalTitleWithClose
         heading={(
           <ModalHeading size='md'>
-            Loading Your Accounts...
+            {t('loadingYourAccounts', 'Loading Your Accounts...')}
           </ModalHeading>
         )}
         onClose={onClose}
@@ -106,7 +123,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
         <VStack slot='center' align='center' gap='md'>
           <LoadingSpinner size={48} />
           <P align='center'>
-            This may take a few minutes.
+            {t('thisMayTakeAFewMinutes', 'This may take a few minutes.')}
           </P>
         </VStack>
       </ModalContent>
@@ -115,6 +132,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
 }
 
 function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   const { accounts, onFinish, refetchAccounts } = useLinkedAccountsConfirmationModal()
 
   const [formState, setFormState] = useState(() => Object.fromEntries(
@@ -133,14 +151,14 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     }
   }
 
-  const { descriptionLabel, buttonLabel } = getFormComponentLabels(formState)
+  const { descriptionLabel, buttonLabel } = getFormComponentLabels(formState, t)
 
   return (
     <>
       <ModalTitleWithClose
         heading={(
           <ModalHeading pbe='2xs' size='md'>
-            Confirm Business Accounts
+            {t('confirmBusinessAccounts', 'Confirm Business Accounts')}
           </ModalHeading>
         )}
         onClose={onClose}
@@ -154,7 +172,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
           Empty={(
             <VStack slot='center'>
               <P align='center'>
-                There are no accounts to confirm. You may close this modal.
+                {t('thereAreNoAccountsToConfirmYouMayCloseThisModal', 'There are no accounts to confirm. You may close this modal.')}
               </P>
             </VStack>
           )}
@@ -181,14 +199,13 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
             ? (
               <>
                 <P size='sm'>
-                  An error occurred while confirming accounts.
-                  You will have an opportunity to try again later.
+                  {t('errorOccurredWhileConfirmingAccountsRetryLater', 'An error occurred while confirming accounts. You will have an opportunity to try again later.')}
                 </P>
                 <P size='sm'>
-                  No data will be synced until you confirm.
+                  {t('noDataWillBeSyncedUntilYouConfirm', 'No data will be synced until you confirm.')}
                 </P>
-                <Button onPress={close}>
-                  Close
+                <Button onPress={onClose}>
+                  {t('close', 'Close')}
                 </Button>
               </>
             )

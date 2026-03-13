@@ -3,9 +3,11 @@ import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import type { Key } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { BankTransactionsDateFilterMode } from '@utils/bankTransactions'
+import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
@@ -48,9 +50,9 @@ export interface BankTransactionsHeaderStringOverrides {
   downloadButton?: string
 }
 
-const STATUS_TOGGLE_OPTIONS = [
-  { label: 'To Review', value: DisplayState.review },
-  { label: 'Categorized', value: DisplayState.categorized },
+const STATUS_TOGGLE_CONFIG = [
+  { ...translationKey('toReview', 'To Review'), value: DisplayState.review },
+  { ...translationKey('categorized', 'Categorized'), value: DisplayState.categorized },
 ]
 
 type TransactionsSearchProps = {
@@ -59,6 +61,7 @@ type TransactionsSearchProps = {
 }
 
 function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
+  const { t } = useTranslation()
   const { filters, setFilters } = useBankTransactionsFiltersContext()
 
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
@@ -76,7 +79,7 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   return (
     <SearchField
       slot={slot}
-      label='Search transactions'
+      label={t('searchTransactions', 'Search transactions')}
       value={localSearch}
       onChange={handleSearch}
       isDisabled={isDisabled}
@@ -105,7 +108,7 @@ const DownloadButton = ({
         onClick={handleDownloadTransactions}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text={downloadButtonTextOverride ?? 'Download'}
+        text={downloadButtonTextOverride}
         disabled={disabled}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
@@ -124,6 +127,7 @@ export const BankTransactionsHeader = ({
   collapseHeader,
   showCategorizationRules = false,
 }: BankTransactionsHeaderProps) => {
+  const { t } = useTranslation()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const activationDate = useBusinessActivationDate()
   const { display } = useBankTransactionsContext()
@@ -152,6 +156,14 @@ export const BankTransactionsHeader = ({
   const isMobileList = tableContentMode === BankTransactionsTableContent.MobileList
   const isListView = isMobileList || tableContentMode === BankTransactionsTableContent.List
 
+  const statusToggleOptions = useMemo(
+    () => STATUS_TOGGLE_CONFIG.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
       <HStack align='center'>
@@ -159,7 +171,7 @@ export const BankTransactionsHeader = ({
           className='Layer__bank-transactions__title'
           size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
         >
-          {stringOverrides?.header || 'Transactions'}
+          {stringOverrides?.header || t('transactions', 'Transactions')}
         </Heading>
         {isSyncing && (
           <SyncingComponent
@@ -171,7 +183,7 @@ export const BankTransactionsHeader = ({
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
-          label='Select a month'
+          label={t('selectAMonth', 'Select a month')}
           date={monthPickerDate}
           onChange={setDateRange}
           minDate={activationDate ? convertDateToZonedDateTime(activationDate) : null}
@@ -181,6 +193,7 @@ export const BankTransactionsHeader = ({
       )}
     </div>
   ), [
+    t,
     activationDate,
     asWidget,
     isSyncing,
@@ -223,19 +236,19 @@ export const BankTransactionsHeader = ({
         isMobileView={isMobileList}
         slotProps={{
           ConfirmAllModal: {
-            label: isMobileList ? 'Confirm' : 'Confirm all',
+            label: isMobileList ? t('confirm', 'Confirm') : t('confirmAll', 'Confirm all'),
           },
         }}
       />
     )
-  }, [isMobileList])
+  }, [t, isMobileList])
 
   const isStatusToggleVisible = isCategorizationEnabled && showStatusToggle
   const statusToggle = isStatusToggleVisible
     ? (
       <Toggle
-        ariaLabel='Categorization status'
-        options={STATUS_TOGGLE_OPTIONS}
+        ariaLabel={t('categorizationStatus', 'Categorization status')}
+        options={statusToggleOptions}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}
         fullWidth={isMobileList}

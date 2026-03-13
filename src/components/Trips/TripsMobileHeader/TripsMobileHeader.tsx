@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
@@ -18,6 +19,7 @@ interface TripsMobileHeaderProps {
 }
 
 export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
+  const { t } = useTranslation()
   const { tableFilters, setTableFilters } = useTripsTableFilters()
   const { query, purposeFilter } = tableFilters
 
@@ -34,7 +36,7 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
   return (
     <Header className='Layer__TripsMobileHeader'>
       <VStack gap='sm'>
-        <Heading size='lg'>Trips</Heading>
+        <Heading size='lg'>{t('trips', 'Trips')}</Heading>
 
         <HStack align='center' gap='xs'>
           <TripPurposeToggle
@@ -47,13 +49,13 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
 
         <HStack gap='xs' align='center' pbe='md'>
           <SearchField
-            label='Search trips'
+            label={t('searchTrips', 'Search trips')}
             value={inputValue}
             onChange={handleInputChange}
             className='Layer__TripsMobileHeader__SearchField'
           />
           <Button onPress={onRecordTrip}>
-            Record Trip
+            {t('recordTrip', 'Record Trip')}
             <Plus size={16} />
           </Button>
         </HStack>

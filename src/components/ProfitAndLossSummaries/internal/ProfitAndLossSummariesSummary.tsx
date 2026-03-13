@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Trans } from 'react-i18next'
 
 import { formatPercentageChange } from '@utils/percentageChange'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
@@ -79,9 +80,14 @@ export function ProfitAndLossSummariesSummary({
               </Span>
             </HStack>
             <Span size='xs' variant='subtle' noWrap>
-              vs.
-              {' '}
-              {comparisonMonth || ''}
+              <Trans
+                i18nKey='vsComparisonMonth'
+                values={{ comparisonMonth: comparisonMonth ?? '' }}
+              >
+                vs.
+                {' '}
+                {{ comparisonMonth }}
+              </Trans>
             </Span>
           </VStack>
         )}

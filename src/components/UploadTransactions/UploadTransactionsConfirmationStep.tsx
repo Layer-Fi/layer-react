@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
-import pluralize from 'pluralize'
+import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/i18n/plural'
 import ChevronRight from '@icons/ChevronRight'
 import UploadCloud from '@icons/UploadCloud'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
@@ -16,6 +17,7 @@ type UploadTransactionsConfirmationStepProps = {
 }
 
 export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTransactionsCount }: UploadTransactionsConfirmationStepProps) {
+  const { t } = useTranslation()
   const { goToStep, next } = useWizard()
   const goRestartFlow = useCallback(() => {
     onRestartFlow()
@@ -27,8 +29,12 @@ export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTran
       <DataState
         className='Layer__upload-transactions__confirmation-step__data-state'
         status={DataStateStatus.success}
-        title='Transactions uploaded successfully'
-        description={`${pluralize('transaction', uploadedTransactionsCount, true)} ${uploadedTransactionsCount === 1 ? 'has' : 'have'} been uploaded to your account.`}
+        title={t('transactionsUploadedSuccessfully', 'Transactions uploaded successfully')}
+        description={tPlural(t, 'countTransactionsHaveBeenUploadedToYourAccount', {
+          count: uploadedTransactionsCount,
+          one: '{{count}} transaction has been uploaded to your account.',
+          other: '{{count}} transactions have been uploaded to your account.',
+        })}
       />
       <Separator />
       <HStack gap='xs' className='Layer__upload-transactions__confirmation-step__button-row'>
@@ -39,14 +45,14 @@ export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTran
           rightIcon={<UploadCloud size={12} />}
           className='Layer__upload-transactions__confirmation-step__button-row-item'
         >
-          Upload another file
+          {t('uploadAnotherFile', 'Upload another file')}
         </Button>
         <Button
           onClick={() => { void next() }}
           rightIcon={<ChevronRight />}
           className='Layer__upload-transactions__confirmation-step__button-row-item'
         >
-          I’m done uploading transactions
+          {t('imDoneUploadingTransactions', 'I’m done uploading transactions')}
         </Button>
       </HStack>
     </VStack>

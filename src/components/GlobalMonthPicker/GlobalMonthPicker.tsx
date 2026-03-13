@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
+import { useTranslation } from 'react-i18next'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
@@ -12,6 +13,7 @@ type GlobalMonthPickerProps = {
 }
 
 export const GlobalMonthPicker = ({ truncateMonth, showLabel = false }: GlobalMonthPickerProps) => {
+  const { t } = useTranslation()
   const { minDate, maxDate } = useGlobalDatePickerBounds()
   const { setMonth } = useGlobalDateRangeActions()
   const { date } = useGlobalDate({ dateSelectionMode: 'month' })
@@ -26,7 +28,7 @@ export const GlobalMonthPicker = ({ truncateMonth, showLabel = false }: GlobalMo
 
   return (
     <MonthPicker
-      label='Month'
+      label={t('month', 'Month')}
       showLabel={showLabel}
       date={dateZdt}
       onChange={onChange}

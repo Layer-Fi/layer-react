@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
@@ -26,6 +27,7 @@ export function LinkAccounts(props: LinkAccountsProps) {
 function LinkAccountsContent({
   onComplete,
 }: LinkAccountsProps) {
+  const { t } = useTranslation()
   const { data: linkedAccounts, loadingStatus } = useContext(LinkedAccountsContext)
 
   const linkedAccountsNeedingConfirmation = linkedAccounts
@@ -39,7 +41,7 @@ function LinkAccountsContent({
       <Wizard
         Header={(
           <Heading>
-            Link your bank accounts and credit cards
+            {t('linkYourBankAccountsAndCreditCards', 'Link your bank accounts and credit cards')}
           </Heading>
         )}
         Footer={null}

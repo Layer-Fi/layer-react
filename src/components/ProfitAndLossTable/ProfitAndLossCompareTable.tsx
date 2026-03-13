@@ -1,4 +1,5 @@
 import { Fragment, useContext, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   type ProfitAndLossComparisonItem,
@@ -33,6 +34,7 @@ interface ProfitAndLossCompareTableProps {
 export const ProfitAndLossCompareTable = ({
   stringOverrides,
 }: ProfitAndLossCompareTableProps) => {
+  const { t } = useTranslation()
   const { dateRange, dateSelectionMode } = useContext(ProfitAndLossContext)
   const {
     data: comparisonData,
@@ -239,55 +241,55 @@ export const ProfitAndLossCompareTable = ({
               comparisonData: resolvedComparisonData,
               rowKey: 'income',
               depth: 0,
-              rowDisplayName: 'Income',
+              rowDisplayName: t('income', 'Income'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'cost_of_goods_sold',
               depth: 0,
-              rowDisplayName: 'Cost of Goods Sold',
+              rowDisplayName: t('costOfGoodsSold', 'Cost of Goods Sold'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'gross_profit',
               depth: 0,
-              rowDisplayName: stringOverrides?.grossProfitLabel || 'Gross Profit',
+              rowDisplayName: stringOverrides?.grossProfitLabel || t('grossProfit', 'Gross Profit'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'expenses',
               depth: 0,
-              rowDisplayName: 'Expenses',
+              rowDisplayName: t('expenses', 'Expenses'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'profit_before_taxes',
               depth: 0,
-              rowDisplayName: stringOverrides?.netProfitLabel || 'Profit Before Taxes',
+              rowDisplayName: stringOverrides?.netProfitLabel || t('profitBeforeTaxes', 'Profit Before Taxes'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'taxes',
               depth: 0,
-              rowDisplayName: 'Taxes',
+              rowDisplayName: t('taxes', 'Taxes'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'net_profit',
               depth: 0,
-              rowDisplayName: stringOverrides?.netProfitLabel || 'Net Profit',
+              rowDisplayName: stringOverrides?.netProfitLabel || t('netProfit', 'Net Profit'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'personal_expenses',
               depth: 0,
-              rowDisplayName: 'Personal Expenses',
+              rowDisplayName: t('personalExpenses', 'Personal Expenses'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'other_outflows',
               depth: 0,
-              rowDisplayName: 'Other Outflows',
+              rowDisplayName: t('otherOutflows', 'Other Outflows'),
             })}
           </TableBody>
         </Table>

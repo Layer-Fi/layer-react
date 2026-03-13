@@ -1,7 +1,8 @@
-import pluralize from 'pluralize'
+import { useTranslation } from 'react-i18next'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { asMutable } from '@utils/asMutable'
+import { tPlural } from '@utils/i18n/plural'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -16,13 +17,18 @@ interface RuleUpdatesPromptReviewStepProps {
 }
 
 export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesPromptReviewStepProps) {
+  const { t } = useTranslation()
   const { previous } = useWizard()
   const ActionButtonsStack = isDrawer ? VStack : HStack
 
   return (
     <VStack pbe={isDrawer ? 'xl' : undefined}>
       <Span size='md'>
-        {`The following ${pluralize('transaction', ruleSuggestion.transactionsThatWillBeAffected.length, ruleSuggestion.transactionsThatWillBeAffected.length !== 1)} will be affected:`}
+        {tPlural(t, 'followingCountTransactionsWillBeAffected', {
+          count: ruleSuggestion.transactionsThatWillBeAffected.length,
+          one: 'The following {{count}} transaction will be affected:',
+          other: 'The following {{count}} transactions will be affected:',
+        })}
       </Span>
       <AffectedTransactionsTable transactions={asMutable(ruleSuggestion.transactionsThatWillBeAffected)} />
       <Separator />
@@ -32,11 +38,11 @@ export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesP
           variant='outlined'
           fullWidth={isDrawer}
         >
-          Back
+          {t('back', 'Back')}
         </Button>
         <CreateRuleButton
           newRule={ruleSuggestion.newRule}
-          slotProps={{ fullWidth: isDrawer, children: 'Submit' }}
+          slotProps={{ fullWidth: isDrawer, children: t('submit', 'Submit') }}
         />
       </ActionButtonsStack>
     </VStack>

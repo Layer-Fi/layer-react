@@ -1,23 +1,15 @@
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Legend } from 'recharts'
+
+import { translationKey } from '@utils/i18n/translationKey'
 
 import { STRIPE_PATTERN_DARK_FILL } from './ProfitAndLossChartPatternDefs'
 
-const PROFIT_AND_LOSS_CHART_LEGEND_PAYLOAD = [
-  {
-    value: 'Revenue',
-    type: 'circle',
-    id: 'IncomeLegend',
-  },
-  {
-    value: 'Expenses',
-    type: 'circle',
-    id: 'ExpensesLegend',
-  },
-  {
-    value: 'Uncategorized',
-    type: 'circle',
-    id: 'UncategorizedLegend',
-  },
+const LEGEND_ENTRY_CONFIG = [
+  { ...translationKey('revenue', 'Revenue'), type: 'circle', id: 'IncomeLegend' },
+  { ...translationKey('expenses', 'Expenses'), type: 'circle', id: 'ExpensesLegend' },
+  { ...translationKey('uncategorized', 'Uncategorized'), type: 'circle', id: 'UncategorizedLegend' },
 ]
 
 const LegendIcon = ({ fill }: { fill?: string }) => (
@@ -36,10 +28,10 @@ const LegendIcon = ({ fill }: { fill?: string }) => (
   </svg>
 )
 
-const renderLegendContent = () => {
+const renderLegendContent = (payload: { value: string, type: string, id: string }[]) => {
   return (
     <ul className='Layer__chart-legend-list'>
-      {PROFIT_AND_LOSS_CHART_LEGEND_PAYLOAD.map((entry, idx) => (
+      {payload.map((entry, idx) => (
         <li
           key={`legend-item-${idx}`}
           className={`recharts-legend-item legend-item-${idx}`}
@@ -52,6 +44,14 @@ const renderLegendContent = () => {
   )
 }
 
-export const ProfitAndLossChartLegend = () => (
-  <Legend verticalAlign='top' align='right' content={renderLegendContent} />
-)
+export const ProfitAndLossChartLegend = () => {
+  const { t } = useTranslation()
+  const payload = useMemo(() => LEGEND_ENTRY_CONFIG.map(entry => ({
+    value: t(entry.i18nKey, entry.defaultValue),
+    type: entry.type,
+    id: entry.id,
+  })), [t])
+  return (
+    <Legend verticalAlign='top' align='right' content={renderLegendContent(payload)} />
+  )
+}

@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
 import { differenceInDays, parseISO } from 'date-fns'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/i18n/plural'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
@@ -12,13 +15,17 @@ export interface DueStatusProps {
   size?: 'sm' | 'md'
 }
 
-const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
+const dueStatusTitle = (daysDiff: number, paid: boolean | undefined, t: TFunction) => {
   if (paid && daysDiff > 0) {
     return {
       type: 'paid',
       diff: daysDiff,
-      title: 'Paid',
-      diffText: `${daysDiff} ${daysDiff === 1 ? 'day' : 'days'} ago`,
+      title: t('paid', 'Paid'),
+      diffText: tPlural(t, 'daysAgo', {
+        count: daysDiff,
+        one: '{{count}} day ago',
+        other: '{{count}} days ago',
+      }),
     }
   }
 
@@ -26,8 +33,8 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'paid',
       diff: daysDiff,
-      title: 'Paid',
-      diffText: 'Today',
+      title: t('paid', 'Paid'),
+      diffText: t('today', 'Today'),
     }
   }
 
@@ -35,7 +42,7 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'paid',
       diff: daysDiff,
-      title: 'Paid',
+      title: t('paid', 'Paid'),
     }
   }
 
@@ -43,7 +50,7 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'today',
       diff: daysDiff,
-      title: 'Due today',
+      title: t('dueToday', 'Due today'),
     }
   }
 
@@ -51,8 +58,12 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'overdue',
       diff: daysDiff,
-      title: 'Overdue',
-      diffText: `${daysDiff} ${daysDiff === 1 ? 'day' : 'days'} ago`,
+      title: t('overdue', 'Overdue'),
+      diffText: tPlural(t, 'daysAgo', {
+        count: daysDiff,
+        one: '{{count}} day ago',
+        other: '{{count}} days ago',
+      }),
     }
   }
 
@@ -60,17 +71,23 @@ const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
     return {
       type: 'soon',
       diff: daysDiff,
-      title: 'Due soon',
-      diffText: `Due in ${Math.abs(daysDiff)} ${
-        daysDiff === -1 ? 'day' : 'days'
-      }`,
+      title: t('dueSoon', 'Due soon'),
+      diffText: tPlural(t, 'dueInCountDays', {
+        count: Math.abs(daysDiff),
+        one: 'Due in {{count}} day',
+        other: 'Due in {{count}} days',
+      }),
     }
   }
 
   return {
     type: 'before',
     diff: daysDiff,
-    diffText: `Due in ${Math.abs(daysDiff)} days`,
+    diffText: tPlural(t, 'dueInCountDays', {
+      count: Math.abs(daysDiff),
+      one: 'Due in {{count}} day',
+      other: 'Due in {{count}} days',
+    }),
   }
 }
 
@@ -85,6 +102,7 @@ const getDiff = (refDate: Date | string) => {
 }
 
 export const DueStatus = ({ dueDate, paidAt, size = 'md' }: DueStatusProps) => {
+  const { t } = useTranslation()
   const date = useMemo(() => {
     try {
       const diff = getDiff(paidAt ? paidAt : dueDate)
@@ -93,12 +111,12 @@ export const DueStatus = ({ dueDate, paidAt, size = 'md' }: DueStatusProps) => {
         return null
       }
 
-      return dueStatusTitle(diff, Boolean(paidAt))
+      return dueStatusTitle(diff, Boolean(paidAt), t)
     }
     catch (_err) {
       return null
     }
-  }, [dueDate, paidAt])
+  }, [dueDate, paidAt, t])
 
   if (!date) {
     return null

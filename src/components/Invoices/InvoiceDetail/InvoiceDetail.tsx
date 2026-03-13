@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
@@ -18,6 +19,7 @@ import { InvoiceFinalizeStep } from '@components/Invoices/InvoicePreview/Invoice
 import './invoiceDetail.scss'
 
 export const InvoiceDetail = () => {
+  const { t } = useTranslation()
   const viewState = useInvoiceDetail()
   const [isPaymentDrawerOpen, setIsPaymentDrawerOpen] = useState(false)
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
@@ -40,9 +42,9 @@ export const InvoiceDetail = () => {
   }, [])
 
   const onFinalizeInvoiceSuccess = useCallback((invoice: Invoice) => {
-    addToast({ content: 'Invoice saved and sent successfully', type: 'success' })
+    addToast({ content: t('invoiceSavedAndSentSuccessfully', 'Invoice saved and sent successfully'), type: 'success' })
     toViewInvoice(invoice)
-  }, [addToast, toViewInvoice])
+  }, [addToast, t, toViewInvoice])
 
   const Header = useCallback(() => {
     return (

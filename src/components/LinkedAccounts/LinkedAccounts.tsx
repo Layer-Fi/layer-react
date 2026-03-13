@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
@@ -42,6 +43,7 @@ export const LinkedAccountsComponent = ({
   showBreakConnection = false,
   stringOverrides,
 }: LinkedAccountsProps) => {
+  const { t } = useTranslation()
   const {
     isLoading,
     error,
@@ -56,7 +58,7 @@ export const LinkedAccountsComponent = ({
           className='Layer__linked-accounts__title'
           size={HeadingSize.secondary}
         >
-          {stringOverrides?.title || 'Linked Accounts'}
+          {stringOverrides?.title || t('linkedAccounts', 'Linked Accounts')}
         </Heading>
       </Header>
 
@@ -69,8 +71,8 @@ export const LinkedAccountsComponent = ({
         ? (
           <DataState
             status={DataStateStatus.failed}
-            title='Something went wrong'
-            description='We couldn’t load your data.'
+            title={t('somethingWentWrong', 'Something went wrong')}
+            description={t('weCouldntLoadYourData', 'We couldn’t load your data.')}
             onRefresh={() => void refetchAccounts()}
             isLoading={isValidating}
           />

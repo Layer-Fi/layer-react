@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { GlobalYearPicker } from '@components/GlobalYearPicker/GlobalYearPicker'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
@@ -7,9 +9,12 @@ import { Trips } from '@components/Trips/Trips'
 import { View } from '@components/View/View'
 
 export const unstable_MileageTracking = ({ showTitle = true }: { showTitle?: boolean }) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { t } = useTranslation()
+
   return (
     <View
-      title='Mileage Tracking'
+      title={t('mileageTracking', 'Mileage Tracking')}
       showHeader={showTitle}
       header={(
         <Header>

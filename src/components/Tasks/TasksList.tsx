@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { isCompletedTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
@@ -10,19 +11,22 @@ import { TasksListItem } from '@components/Tasks/TasksListItem'
 import { TasksListMobile } from '@components/Tasks/TasksListMobile'
 import { Text, TextSize } from '@components/Typography/Text'
 
-const TasksEmptyState = () => (
-  <div className='Layer__tasks-empty-state'>
-    <div className='Layer__tasks-icon'>
-      <SmileIcon />
+const TasksEmptyState = () => {
+  const { t } = useTranslation()
+  return (
+    <div className='Layer__tasks-empty-state'>
+      <div className='Layer__tasks-icon'>
+        <SmileIcon />
+      </div>
+      <Text size={TextSize.sm}>
+        {t('thereAreNoPendingTasks', 'There are no pending tasks!')}
+        <br />
+        {' '}
+        {t('greatJob', 'Great job!')}
+      </Text>
     </div>
-    <Text size={TextSize.sm}>
-      There are no pending tasks!
-      <br />
-      {' '}
-      Great job!
-    </Text>
-  </div>
-)
+  )
+}
 
 type TasksListProps = {
   pageSize?: number

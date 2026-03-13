@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
 import { flattenValidationErrors } from '@utils/form'
@@ -21,6 +22,7 @@ type CustomerFormBaseProps = {
 
 export type CustomerFormProps = CustomerFormBaseProps & CustomerFormState
 export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFormProps) => {
+  const { t } = useTranslation()
   const { form, submitError } = useCustomerForm({ onSuccess, ...formState })
 
   // Prevents default browser form submission behavior
@@ -53,10 +55,10 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
       <form.AppField name='individualName'>
         {field => (
           <field.FormTextField
-            label='Individual name'
+            label={t('individualName', 'Individual name')}
             inline
             isReadOnly={isReadOnly}
-            placeholder='Enter individual name'
+            placeholder={t('enterIndividualName', 'Enter individual name')}
             className='Layer__CustomerForm__Field__IndividualName'
           />
         )}
@@ -65,10 +67,10 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
       <form.AppField name='companyName'>
         {field => (
           <field.FormTextField
-            label='Company name'
+            label={t('companyName', 'Company name')}
             inline
             isReadOnly={isReadOnly}
-            placeholder='Enter company name'
+            placeholder={t('enterCompanyName', 'Enter company name')}
             className='Layer__CustomerForm__Field__CompanyName'
           />
         )}
@@ -77,10 +79,10 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
       <form.AppField name='email'>
         {field => (
           <field.FormTextField
-            label='Email'
+            label={t('email', 'Email')}
             inline
             isReadOnly={isReadOnly}
-            placeholder='Enter email address'
+            placeholder={t('enterEmailAddress', 'Enter email address')}
             className='Layer__CustomerForm__Field__Email'
           />
         )}
@@ -89,10 +91,10 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
       <form.AppField name='addressString'>
         {field => (
           <field.FormTextAreaField
-            label='Address'
+            label={t('address', 'Address')}
             inline
             isReadOnly={isReadOnly}
-            placeholder='Enter address'
+            placeholder={t('enterAddress', 'Enter address')}
             className='Layer__CustomerForm__Field__Address'
           />
         )}
@@ -108,7 +110,7 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
               onPress={() => { void form.handleSubmit() }}
             >
               <Save size={14} />
-              Save Customer
+              {t('saveCustomer', 'Save Customer')}
             </Button>
           )}
         </form.Subscribe>

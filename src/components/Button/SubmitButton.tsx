@@ -1,6 +1,7 @@
 import { type ButtonHTMLAttributes } from 'react'
 import classNames from 'classnames'
 import { UploadCloud } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import AlertCircle from '@icons/AlertCircle'
 import CheckCircle from '@icons/CheckCircle'
@@ -86,6 +87,7 @@ export const SubmitButton = ({
   iconAsPrimary = true,
   ...props
 }: SubmitButtonProps) => {
+  const { t } = useTranslation()
   const baseClassName = classNames(
     active ? 'Layer__btn--active' : '',
     className,
@@ -97,7 +99,7 @@ export const SubmitButton = ({
         {...props}
         className={baseClassName}
         disabled={processing || disabled}
-        error={typeof error === 'string' ? error : 'Something went wrong'}
+        error={typeof error === 'string' ? error : t('somethingWentWrong', 'Something went wrong')}
       >
         {children}
       </RetryButton>

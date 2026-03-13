@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import type React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { flattenValidationErrors } from '@utils/form'
@@ -23,6 +24,7 @@ export type VehicleFormProps = {
 }
 
 export const VehicleForm = (props: VehicleFormProps) => {
+  const { t } = useTranslation()
   const { onSuccess, vehicle, isReadOnly } = props
   const { form, submitError } = useVehicleForm({ onSuccess, vehicle })
 
@@ -56,10 +58,10 @@ export const VehicleForm = (props: VehicleFormProps) => {
       <form.AppField name='makeAndModel'>
         {field => (
           <field.FormTextField
-            label='Make and model'
+            label={t('makeAndModel', 'Make and model')}
             inline
             isReadOnly={isReadOnly}
-            placeholder='Enter vehicle make and model'
+            placeholder={t('enterVehicleMakeAndModel', 'Enter vehicle make and model')}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__MakeAndModel`}
           />
         )}
@@ -69,10 +71,10 @@ export const VehicleForm = (props: VehicleFormProps) => {
         {field => (
           <field.FormNumberField
             maxValue={9999}
-            label='Year'
+            label={t('year', 'Year')}
             inline
             isReadOnly={isReadOnly}
-            placeholder='Enter vehicle year'
+            placeholder={t('enterVehicleYear', 'Enter vehicle year')}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Year`}
           />
         )}
@@ -81,10 +83,10 @@ export const VehicleForm = (props: VehicleFormProps) => {
       <form.AppField name='licensePlate'>
         {field => (
           <field.FormTextField
-            label='License plate'
+            label={t('licensePlate', 'License plate')}
             inline
             isReadOnly={isReadOnly}
-            placeholder='Enter license plate'
+            placeholder={t('enterLicensePlate', 'Enter license plate')}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__LicensePlate`}
           />
         )}
@@ -93,10 +95,10 @@ export const VehicleForm = (props: VehicleFormProps) => {
       <form.AppField name='vin'>
         {field => (
           <field.FormTextField
-            label='VIN'
+            label={t('vin', 'VIN')}
             inline
             isReadOnly={isReadOnly}
-            placeholder='Enter VIN'
+            placeholder={t('enterVin', 'Enter VIN')}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Vin`}
           />
         )}
@@ -105,10 +107,10 @@ export const VehicleForm = (props: VehicleFormProps) => {
       <form.AppField name='description'>
         {field => (
           <field.FormTextAreaField
-            label='Description'
+            label={t('description', 'Description')}
             inline
             isReadOnly={isReadOnly}
-            placeholder='Add description'
+            placeholder={t('addDescription', 'Add description')}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Description`}
           />
         )}
@@ -117,7 +119,7 @@ export const VehicleForm = (props: VehicleFormProps) => {
       <form.AppField name='isPrimary'>
         {field => (
           <field.FormSwitchField
-            label='Set as primary vehicle'
+            label={t('setAsPrimaryVehicle', 'Set as primary vehicle')}
             inline
             isReadOnly={isReadOnly}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__IsPrimary`}
@@ -134,7 +136,7 @@ export const VehicleForm = (props: VehicleFormProps) => {
               isPending={isSubmitting}
               onPress={() => { void form.handleSubmit() }}
             >
-              Save Vehicle
+              {t('saveVehicle', 'Save Vehicle')}
             </Button>
           )}
         </form.Subscribe>

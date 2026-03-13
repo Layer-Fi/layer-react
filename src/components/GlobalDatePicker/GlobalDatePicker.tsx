@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
 import { useGlobalDate, useGlobalDateActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -6,6 +7,7 @@ import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 
 export const GlobalDatePicker = ({ showLabel = false }: { showLabel?: boolean }) => {
+  const { t } = useTranslation()
   const { date } = useGlobalDate({ dateSelectionMode: 'full' })
   const { setDate: setGlobalDate } = useGlobalDateActions()
   const { minDate, maxDate } = useGlobalDatePickerBounds()
@@ -23,7 +25,7 @@ export const GlobalDatePicker = ({ showLabel = false }: { showLabel?: boolean })
 
   return (
     <DatePicker
-      label='Effective date'
+      label={t('effectiveDate', 'Effective date')}
       date={localDate}
       onChange={onChange}
       minDate={minDateZdt}

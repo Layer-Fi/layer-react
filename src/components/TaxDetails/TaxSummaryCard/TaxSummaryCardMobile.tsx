@@ -1,29 +1,44 @@
+import { useTranslation } from 'react-i18next'
+
 import type { TaxSummary } from '@schemas/taxEstimates/summary'
 import { formatDate } from '@utils/format'
+import { tConditional } from '@utils/i18n/conditional'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
-import { maybeAddProjectedToLabel } from '@components/TaxEstimates/utils'
 
 type TaxSummaryCardMobileProps = {
   data: TaxSummary
 }
 
 export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
+  const { t } = useTranslation()
   const { fullYearProjection } = useFullYearProjection()
+  const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
 
   return (
     <VStack className='Layer__TaxSummaryCard--mobile' gap='md'>
       <Card className='Layer__TaxSummaryCard__OverviewCard'>
         <VStack gap='xs' justify='center' align='center'>
           <VStack justify='center' align='center'>
-            <Span size='md' variant='subtle'>{maybeAddProjectedToLabel('Taxes Owed', fullYearProjection)}</Span>
+            <Span size='md' variant='subtle'>
+              {tConditional(t, 'taxesOwed', {
+                condition: projectedCondition,
+                cases: {
+                  default: 'Taxes Owed',
+                  projected: 'Projected Taxes Owed',
+                },
+                contexts: {
+                  projected: 'projected',
+                },
+              })}
+            </Span>
             <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
           </VStack>
           <VStack align='center'>
-            <Span size='sm' variant='subtle'>Taxes Due</Span>
+            <Span size='sm' variant='subtle'>{t('taxesDue', 'Taxes Due')}</Span>
             <Span size='md'>{formatDate(data.taxesDueAt)}</Span>
           </VStack>
         </VStack>
@@ -40,9 +55,9 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
               <MoneySpan size='md' amount={section.taxesPaid} />
               <span />
               <span />
-              <Span size='sm' variant='subtle'>Total</Span>
+              <Span size='sm' variant='subtle'>{t('total', 'Total')}</Span>
               <span />
-              <Span size='sm' variant='subtle'>Taxes Paid</Span>
+              <Span size='sm' variant='subtle'>{t('taxesPaid', 'Taxes Paid')}</Span>
             </div>
           ))}
         </div>

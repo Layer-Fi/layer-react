@@ -1,5 +1,6 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { getYear } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
@@ -12,21 +13,20 @@ type ProjectionOption = {
   valueBool: boolean
 }
 
-const YearToDateOption = { label: 'Year to date', value: 'ytd', valueBool: false }
-const FullYearProjectionOption = { label: 'Full year projection', value: 'full-year', valueBool: true }
-
-const PROJECTION_OPTIONS: ReadonlyArray<ProjectionOption> = [
-  YearToDateOption,
-  FullYearProjectionOption,
-]
-
 export const FullYearProjectionComboBox = () => {
+  const { t } = useTranslation()
   const { fullYearProjection, setFullYearProjection } = useFullYearProjection()
   const { year } = useTaxEstimatesYear()
 
-  const selectedValue = fullYearProjection
-    ? FullYearProjectionOption
-    : YearToDateOption
+  const options = useMemo<ProjectionOption[]>(
+    () => [
+      { label: t('yearToDate', 'Year to date'), value: 'ytd', valueBool: false },
+      { label: t('fullYearProjection', 'Full year projection'), value: 'full-year', valueBool: true },
+    ],
+    [t],
+  )
+
+  const selectedValue = fullYearProjection ? options[1] : options[0]
 
   const handleChange = useCallback((option: ProjectionOption | null) => {
     setFullYearProjection(option?.valueBool ?? false)
@@ -37,7 +37,7 @@ export const FullYearProjectionComboBox = () => {
   return (
     <ComboBox<ProjectionOption>
       className='Layer__FullYearProjectionComboBox'
-      options={PROJECTION_OPTIONS}
+      options={options}
       selectedValue={selectedValue}
       onSelectedValueChange={handleChange}
       isClearable={false}

@@ -1,9 +1,9 @@
 import { pipe, Schema } from 'effect'
 
-import { US_STATES } from '@internal-types/location'
+import { US_STATE_VALUES } from '@internal-types/location'
 import { FilingStatusSchema } from '@schemas/taxEstimates/filingStatus'
 
-const USStateCodeSchema = Schema.Literal(...US_STATES.map(s => s.value))
+const USStateCodeSchema = Schema.Literal(...US_STATE_VALUES)
 
 const WithholdingSchema = Schema.Struct({
   useCustomWithholding: pipe(

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import ChevronDown from '@icons/ChevronDown'
 import { Button } from '@ui/Button/Button'
@@ -17,17 +18,18 @@ type Props = {
 }
 
 export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips }: Props) => {
+  const { t } = useTranslation()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   return (
     <HStack fluid className='Layer__CategorySelectDrawerWithTrigger'>
       <Button
         fullWidth
-        aria-label='Select category'
+        aria-label={t('selectCategory', 'Select category')}
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
       >
-        <Span ellipsis>{value?.label ?? 'Select...'}</Span>
+        <Span ellipsis>{value?.label ?? t('select', 'Select...')}</Span>
         <ChevronDown size={16} />
       </Button>
 

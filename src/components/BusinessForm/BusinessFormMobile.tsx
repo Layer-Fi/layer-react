@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { GridList } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -22,6 +23,7 @@ export const BusinessFormMobile = ({
   onSelect,
   readOnly,
 }: BusinessFormMobileProps) => {
+  const { t } = useTranslation()
   const handleSelectionChange = useCallback((keys: Set<string | number> | 'all') => {
     if (readOnly) return
 
@@ -35,10 +37,10 @@ export const BusinessFormMobile = ({
   return (
     <VStack gap='sm'>
       <Span size='sm' weight='bold'>
-        Select category
+        {t('selectCategory', 'Select category')}
       </Span>
       <GridList
-        aria-label='Select a category'
+        aria-label={t('selectACategory', 'Select a category')}
         selectionMode='single'
         selectedKeys={selectedId ? new Set([selectedId]) : new Set()}
         onSelectionChange={handleSelectionChange}

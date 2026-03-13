@@ -1,4 +1,5 @@
 import { Schema } from 'effect/index'
+import type { TFunction } from 'i18next'
 import { uniqBy } from 'lodash-es'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
@@ -12,8 +13,17 @@ import { isApiCategorizationAsOption } from '@components/BankTransactionCategory
 import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
 
 export enum ValidateSplitError {
-  AmountsMustBeGreaterThanZero = 'All splits must have an amount greater than $0.00',
-  CategoryIsRequired = 'All splits must have a category',
+  AmountsMustBeGreaterThanZero = 'AmountsMustBeGreaterThanZero',
+  CategoryIsRequired = 'CategoryIsRequired',
+}
+
+const getValidateSplitErrorMessage = (splitError: ValidateSplitError, t: TFunction): string => {
+  switch (splitError) {
+    case ValidateSplitError.AmountsMustBeGreaterThanZero:
+      return t('allSplitsMustHaveAnAmountGreaterThanZero', 'All splits must have an amount greater than $0.00')
+    case ValidateSplitError.CategoryIsRequired:
+      return t('allSplitsMustHaveACategory', 'All splits must have a category')
+  }
 }
 
 export const isSplitsValid = (localSplits: Split[]): boolean => {
@@ -21,8 +31,10 @@ export const isSplitsValid = (localSplits: Split[]): boolean => {
     .reduce((acc, splitError) => acc && splitError === undefined, true)
 }
 
-export const getSplitsErrorMessage = (localSplits: Split[]): string => {
-  return uniqBy(validateSplit(localSplits), error => error?.toString()).filter(Boolean)[0] || ''
+export const getSplitsErrorMessage = (localSplits: Split[], t: TFunction): string => {
+  const firstError = uniqBy(validateSplit(localSplits), error => error?.toString()).find((error): error is ValidateSplitError => error !== undefined)
+  if (!firstError) return ''
+  return getValidateSplitErrorMessage(firstError, t)
 }
 
 export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undefined)[] => {

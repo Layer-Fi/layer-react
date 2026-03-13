@@ -1,6 +1,7 @@
 import { createContext, type PropsWithChildren, useContext } from 'react'
 import type React from 'react'
 import { Dialog, Menu as AriaMenu, MenuItem as AriaMenuItem, MenuTrigger, Popover } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
@@ -63,13 +64,14 @@ export const MenuList = ({ children }: PropsWithChildren) => {
 }
 
 export const DropdownMenu = ({ children, ariaLabel, variant, slots, slotProps }: DropdownMenuProps) => {
+  const { t } = useTranslation()
   const { Trigger } = slots
   const width = slotProps?.Dialog?.width
   const dataProps = toDataProperties({ variant })
 
   return (
     <MenuTrigger>
-      <Trigger aria-label='Menu' />
+      <Trigger aria-label={t('menu', 'Menu')} />
       <Popover placement='bottom right' className='Layer__UI__DropdownMenu__Popover Layer__variables'>
         <Dialog className='Layer__UI__DropdownMenu__Dialog' aria-label={ariaLabel} style={{ width }} {...dataProps}>
           <DropdownMenuProvider value={{ variant }}>

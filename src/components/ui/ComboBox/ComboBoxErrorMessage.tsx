@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { HStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
@@ -9,6 +10,7 @@ type ComboBoxErrorMessageProps = {
 }
 
 export function ComboBoxErrorMessage({ isError, errorMessage }: ComboBoxErrorMessageProps) {
+  const { t } = useTranslation()
   if (!isError) {
     return null
   }
@@ -17,7 +19,7 @@ export function ComboBoxErrorMessage({ isError, errorMessage }: ComboBoxErrorMes
     <HStack justify='end'>
       {errorMessage ?? (
         <P size='xs' status='error'>
-          An error occurred.
+          {t('anErrorOccurred', 'An error occurred.')}
         </P>
       )}
     </HStack>

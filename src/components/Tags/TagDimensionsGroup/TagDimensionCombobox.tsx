@@ -1,4 +1,6 @@
 import { useCallback, useId, useMemo } from 'react'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { type Tag, type TagValueDefinition } from '@schemas/tag'
 import { useTagDimensionByKey } from '@hooks/api/businesses/[business-id]/tags/dimensions/key/[dimension-key]/useTagDimensionByKey'
@@ -7,39 +9,26 @@ import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
-class TagValueDefinitionAsOption {
-  private tagValueDefinition: TagValueDefinition
+type TagValueDefinitionAsOption = {
+  id: string
+  value: string
+  label: string
+  valueDisplayName: string | null | undefined
+  archivedAt: Date | null | undefined
+}
 
-  constructor(tagValueDefinition: TagValueDefinition) {
-    this.tagValueDefinition = tagValueDefinition
-  }
+const toOption = (dv: TagValueDefinition, t: TFunction): TagValueDefinitionAsOption => {
+  const baseLabel = dv.displayName ?? dv.value
+  const label = dv.archivedAt
+    ? t('labelArchived', '{{label}} (Archived)', { label: baseLabel })
+    : baseLabel
 
-  get id() {
-    return this.tagValueDefinition.id
-  }
-
-  get label() {
-    const label = (this.valueDisplayName ?? this.tagValueDefinition.value)
-    if (this.isArchived) {
-      return `${label} (Archived)`
-    }
-    return label
-  }
-
-  get value() {
-    return this.tagValueDefinition.value
-  }
-
-  get valueDisplayName() {
-    return this.tagValueDefinition.displayName
-  }
-
-  get isArchived() {
-    return !!this.archivedAt
-  }
-
-  get archivedAt() {
-    return this.tagValueDefinition.archivedAt
+  return {
+    id: dv.id,
+    value: dv.value,
+    label,
+    valueDisplayName: dv.displayName,
+    archivedAt: dv.archivedAt,
   }
 }
 
@@ -62,25 +51,24 @@ export const TagDimensionCombobox = ({
   className,
   isClearable = true,
 }: TagDimensionComboboxProps) => {
+  const { t } = useTranslation()
   const { data: tagDimension, isLoading } = useTagDimensionByKey({ dimensionKey })
 
-  const options = useMemo(() => {
-    if (!tagDimension) return []
+  const options = useMemo(
+    () => (tagDimension ? tagDimension.definedValues.map(dv => toOption(dv, t)) : []),
+    [tagDimension, t],
+  )
 
-    return tagDimension.definedValues
-      .map(value => new TagValueDefinitionAsOption(value))
-  }, [tagDimension])
-
-  const selectedOption = useMemo(() => {
+  const selectedOption = useMemo((): TagValueDefinitionAsOption | null => {
     if (value === null) return null
-    return new TagValueDefinitionAsOption({
+    return toOption({
       id: value.id,
       key: value.key,
       value: value.value,
       displayName: value.valueDisplayName,
       archivedAt: value.archivedAt,
-    })
-  }, [value])
+    }, t)
+  }, [value, t])
 
   const onSelectedValueChange = useCallback((option: TagValueDefinitionAsOption | null) => {
     let nextTag: Tag | null = null
@@ -120,7 +108,7 @@ export const TagDimensionCombobox = ({
           inputId={inputId}
           isReadOnly={isReadOnly}
           isLoading={isLoading}
-          placeholder={`Select ${tagDimension?.displayName ?? dimensionKey}`}
+          placeholder={t('selectTagDimension', 'Select {{dimensionName}}', { dimensionName: tagDimension?.displayName ?? dimensionKey })}
           isClearable={isClearable}
           {...additionalAriaProps}
         />

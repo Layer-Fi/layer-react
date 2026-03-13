@@ -1,4 +1,5 @@
 import { type RefObject, useContext, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { Container } from '@components/Container/Container'
@@ -47,6 +48,7 @@ const ProfitAndLossPanel = ({
   stringOverrides,
   ...props
 }: ProfitAndLossViewPanelProps) => {
+  const { t } = useTranslation()
   const { sidebarScope } = useContext(ProfitAndLossContext)
 
   return (
@@ -60,7 +62,7 @@ const ProfitAndLossPanel = ({
       parentRef={containerRef}
     >
       <ProfitAndLoss.Header
-        text={stringOverrides?.header || 'Profit & Loss'}
+        text={stringOverrides?.header || t('profitLoss', 'Profit & Loss')}
         className={`Layer__${COMPONENT_NAME}__header`}
         headingClassName='Layer__profit-and-loss__title'
       />
@@ -75,6 +77,7 @@ const Components = ({
   hideTable = false,
   stringOverrides,
 }: ProfitAndLossViewProps) => {
+  const { t } = useTranslation()
   const { isError, isLoading, isValidating, refetch } = useContext(ProfitAndLossContext)
 
   if (!isLoading && isError) {
@@ -82,8 +85,8 @@ const Components = ({
       <div className='Layer__table-state-container'>
         <DataState
           status={DataStateStatus.failed}
-          title='Something went wrong'
-          description='We couldn’t load your data.'
+          title={t('somethingWentWrong', 'Something went wrong')}
+          description={t('weCouldntLoadYourData', 'We couldn’t load your data.')}
           onRefresh={() => refetch()}
           isLoading={isValidating}
         />

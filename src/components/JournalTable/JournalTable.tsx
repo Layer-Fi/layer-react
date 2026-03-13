@@ -1,5 +1,6 @@
 import { Fragment, useContext, useLayoutEffect } from 'react'
 import { format as formatTime, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { type View } from '@internal-types/general'
 import {
@@ -63,6 +64,7 @@ const JournalTableContent = ({
   data: JournalEntry[]
   stringOverrides?: JournalTableStringOverrides
 }) => {
+  const { t } = useTranslation()
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(JournalContext)
 
@@ -196,27 +198,27 @@ const JournalTableContent = ({
       <TableHead>
         <TableRow isHeadRow rowKey='journal-head-row'>
           <TableCell isHeaderCell>
-            {stringOverrides?.idColumnHeader || 'Id'}
+            {stringOverrides?.idColumnHeader || t('id', 'Id')}
           </TableCell>
           <TableCell isHeaderCell>
-            {stringOverrides?.dateColumnHeader || 'Date'}
+            {stringOverrides?.dateColumnHeader || t('date', 'Date')}
           </TableCell>
           <TableCell isHeaderCell>
-            {stringOverrides?.transactionColumnHeader || 'Transaction'}
+            {stringOverrides?.transactionColumnHeader || t('transaction', 'Transaction')}
           </TableCell>
           {enableAccountNumbers && (
             <TableCell isHeaderCell>
-              {stringOverrides?.accountNumberColumnHeader || 'Account Number'}
+              {stringOverrides?.accountNumberColumnHeader || t('accountNumber', 'Account Number')}
             </TableCell>
           )}
           <TableCell isHeaderCell>
-            {stringOverrides?.accountColumnHeader || 'Account Name'}
+            {stringOverrides?.accountColumnHeader || t('accountNameColumnHeader', 'Account Name')}
           </TableCell>
           <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.debitColumnHeader || 'Debit'}
+            {stringOverrides?.debitColumnHeader || t('debit', 'Debit')}
           </TableCell>
           <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.creditColumnHeader || 'Credit'}
+            {stringOverrides?.creditColumnHeader || t('credit', 'Credit')}
           </TableCell>
         </TableRow>
       </TableHead>

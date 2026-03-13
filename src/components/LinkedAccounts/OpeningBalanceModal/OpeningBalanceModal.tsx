@@ -1,5 +1,6 @@
 import { useContext, useMemo, useState } from 'react'
 import { startOfYear } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@internal-types/linkedAccounts'
 import { getActivationDate } from '@utils/business'
@@ -62,6 +63,7 @@ function LinkedAccountsOpeningBalanceModalContent({
   accounts: BankAccount[]
   stringOverrides?: OpeningBalanceModalStringOverrides
 }) {
+  const { t } = useTranslation()
   const { business } = useLayerContext()
   const { refetchAccounts } = useLinkedAccounts()
 
@@ -124,7 +126,7 @@ function LinkedAccountsOpeningBalanceModalContent({
       <ModalTitleWithClose
         heading={(
           <ModalHeading size='sm'>
-            {stringOverrides?.title ?? 'Add opening balance'}
+            {stringOverrides?.title ?? t('addOpeningBalance', 'Add opening balance')}
           </ModalHeading>
         )}
         onClose={handleDismiss}
@@ -151,7 +153,7 @@ function LinkedAccountsOpeningBalanceModalContent({
         <ModalActions>
           <VStack gap='md'>
             <Button onPress={() => void trigger()} isPending={isMutating}>
-              {stringOverrides?.buttonText ?? 'Submit'}
+              {stringOverrides?.buttonText ?? t('submit', 'Submit')}
             </Button>
           </VStack>
         </ModalActions>

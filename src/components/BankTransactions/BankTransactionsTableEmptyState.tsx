@@ -1,5 +1,6 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
 import { SearchX } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -22,6 +23,7 @@ const DataStateContainer = ({ children }: PropsWithChildren) => (
 )
 
 export const BankTransactionsTableEmptyState = () => {
+  const { t } = useTranslation()
   const { display } = useBankTransactionsContext()
   const { filters } = useBankTransactionsFiltersContext()
 
@@ -33,8 +35,8 @@ export const BankTransactionsTableEmptyState = () => {
       <DataStateContainer>
         <DataState
           status={DataStateStatus.info}
-          title='No transactions found'
-          description='Try adjusting your search filters'
+          title={t('noTransactionsFound', 'No transactions found')}
+          description={t('tryAdjustingYourSearchFilters', 'Try adjusting your search filters')}
           icon={<SearchX />}
           spacing
         />
@@ -48,13 +50,13 @@ export const BankTransactionsTableEmptyState = () => {
         status={DataStateStatus.allDone}
         title={
           isCategorizationMode
-            ? 'You are up to date with transactions!'
-            : 'You have no categorized transactions'
+            ? t('youAreUpToDateWithTransactions', 'You are up to date with transactions!')
+            : t('youHaveNoCategorizedTransactions', 'You have no categorized transactions')
         }
         description={
           isCategorizationMode
-            ? 'All uncategorized transactions will be displayed here'
-            : 'All transactions will be displayed here once reviewed'
+            ? t('allUncategorizedTransactionsWillBeDisplayedHere', 'All uncategorized transactions will be displayed here')
+            : t('allTransactionsWillBeDisplayedHereOnceReviewed', 'All transactions will be displayed here once reviewed')
         }
         icon={isCategorizationMode ? undefined : <InboxIcon />}
         spacing
@@ -67,6 +69,7 @@ export function BankTransactionsListWithEmptyStates({
   isEmpty,
   slots,
 }: BankTransactionsTableEmptyStatesProps) {
+  const { t } = useTranslation()
   const { isLoading, isError } = useBankTransactionsContext()
 
   if (isError) {
@@ -74,8 +77,8 @@ export function BankTransactionsListWithEmptyStates({
       <DataStateContainer>
         <DataState
           status={DataStateStatus.failed}
-          title='Something went wrong'
-          description='We couldn’t load your transactions'
+          title={t('somethingWentWrong', 'Something went wrong')}
+          description={t('weCouldntLoadYourTransactions', 'We couldn’t load your transactions')}
           spacing
         />
       </DataStateContainer>

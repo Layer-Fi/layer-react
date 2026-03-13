@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { Drawer, Modal } from '@ui/Modal/Modal'
@@ -51,6 +52,7 @@ export const SuggestedCategorizationRuleUpdatesDialog = ({
   ruleSuggestion,
   variant,
 }: SuggestedCategorizationRuleUpdatesDialogProps) => {
+  const { t } = useTranslation()
   const isDrawer = variant === 'drawer'
 
   const DrawerHeader = useCallback(() => {
@@ -80,7 +82,7 @@ export const SuggestedCategorizationRuleUpdatesDialog = ({
   }
 
   return (
-    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} aria-label='Update categorization rules'>
+    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} aria-label={t('updateCategorizationRules', 'Update categorization rules')}>
       {({ close }) => (
         <>
           <SuggestedCategorizationRuleUpdatesDialogDesktopHeader close={close} ruleSuggestion={ruleSuggestion} />

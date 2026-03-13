@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { getVehicleDisplayName } from '@utils/vehicles'
@@ -17,6 +18,7 @@ export function VehicleReactivateConfirmationModal({
   vehicle,
   useDrawer,
 }: VehicleReactivateConfirmationModalProps) {
+  const { t } = useTranslation()
   const { trigger: reactivateVehicle } = useReactivateVehicle({ vehicleId: vehicle.id })
 
   const onConfirm = useCallback(async () => {
@@ -29,12 +31,12 @@ export function VehicleReactivateConfirmationModal({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title='Reactivate this vehicle?'
-      description={`${vehicleName} will be restored to your active vehicles list and available for tracking trips.`}
+      title={t('reactivateThisVehicle', 'Reactivate this vehicle?')}
+      description={t('vehiclenameWillBeRestoredToYourActiveVehiclesListAndAvailableForTrackingTrips', '{{vehicleName}} will be restored to your active vehicles list and available for tracking trips.', { vehicleName })}
       onConfirm={onConfirm}
-      confirmLabel='Reactivate vehicle'
-      cancelLabel='Cancel'
-      errorText='Failed to reactivate vehicle. Please check your connection and try again.'
+      confirmLabel={t('reactivateVehicle', 'Reactivate vehicle')}
+      cancelLabel={t('cancel', 'Cancel')}
+      errorText={t('failedToReactivateVehicleTryAgain', 'Failed to reactivate vehicle. Please check your connection and try again.')}
       useDrawer={useDrawer}
     />
   )

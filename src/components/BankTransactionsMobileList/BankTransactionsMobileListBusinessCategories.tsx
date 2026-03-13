@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import type { CategoryAsOption } from '@internal-types/categorizationOption'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
@@ -26,6 +27,7 @@ export const BankTransactionsMobileListBusinessCategories = ({
   selectedId,
   showTooltips,
 }: BankTransactionsMobileListBusinessCategoriesProps) => {
+  const { t } = useTranslation()
   const { data: categories } = useCategories()
   const [query, setQuery] = useState('')
 
@@ -92,9 +94,9 @@ export const BankTransactionsMobileListBusinessCategories = ({
                 </ModalHeading>
               </Button>
             )
-            : <ModalHeading size='sm' weight='bold'>Select category</ModalHeading>}
+            : <ModalHeading size='sm' weight='bold'>{t('selectCategory', 'Select category')}</ModalHeading>}
         </HStack>
-        <SearchField value={query} onChange={setQuery} label='Search categories...' />
+        <SearchField value={query} onChange={setQuery} label={t('searchCategories', 'Search categories...')} />
       </VStack>
       <ActionableList<CategoryAsOption | CategoryGroup>
         options={filteredOptions}

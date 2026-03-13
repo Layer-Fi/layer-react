@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { type InvoicePayment } from '@schemas/invoices/invoicePayment'
@@ -15,30 +16,34 @@ export type InvoicePaymentDrawerProps = {
   invoice: Invoice
 }
 
-const InvoicePaymentDrawerHeader = ({ close }: { close: () => void }) => (
-  <ModalTitleWithClose
-    heading={(
-      <ModalHeading size='md'>
-        Record invoice payment
-      </ModalHeading>
-    )}
-    onClose={close}
-  />
-)
+const InvoicePaymentDrawerHeader = ({ close }: { close: () => void }) => {
+  const { t } = useTranslation()
+  return (
+    <ModalTitleWithClose
+      heading={(
+        <ModalHeading size='md'>
+          {t('recordInvoicePayment', 'Record invoice payment')}
+        </ModalHeading>
+      )}
+      onClose={close}
+    />
+  )
+}
 
 export const InvoicePaymentDrawer = ({
   isOpen,
   onOpenChange,
   invoice,
 }: InvoicePaymentDrawerProps) => {
+  const { t } = useTranslation()
   const { addToast } = useLayerContext()
   const { toViewInvoice } = useInvoiceNavigation()
 
   const onSuccess = useCallback((invoicePayment: InvoicePayment) => {
-    addToast({ content: 'Invoice paid successfully', type: 'success' })
+    addToast({ content: t('invoicePaidSuccessfully', 'Invoice paid successfully'), type: 'success' })
     const updatedInvoice = updateInvoiceWithPayment(invoice, invoicePayment)
     toViewInvoice(updatedInvoice)
-  }, [addToast, invoice, toViewInvoice])
+  }, [addToast, invoice, t, toViewInvoice])
 
   return (
     <Drawer isOpen={isOpen} onOpenChange={onOpenChange} slots={{ Header: InvoicePaymentDrawerHeader }}>

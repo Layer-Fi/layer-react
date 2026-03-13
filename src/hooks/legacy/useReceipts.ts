@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { format as formatTime, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import type { DocumentS3Urls } from '@internal-types/bankTransactions'
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -116,6 +117,7 @@ export const useReceipts: UseReceipts = ({
   bankTransaction,
   isActive,
 }: UseReceiptsProps) => {
+  const { t } = useTranslation()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
@@ -168,7 +170,7 @@ export const useReceipts: UseReceipts = ({
           status: 'failed' as const,
           name: file.name,
           date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
-          error: 'Invalid file type. Please upload an image or PDF.',
+          error: t('invalidFileTypePleaseUploadAnImageOrPdf', 'Invalid file type. Please upload an image or PDF.'),
         },
       ])
       return
@@ -228,7 +230,7 @@ export const useReceipts: UseReceipts = ({
           if (url.id === id) {
             return {
               ...url,
-              error: 'Failed to upload',
+              error: t('failedToUpload', 'Failed to upload'),
               status: 'failed' as const,
             }
           }
@@ -276,7 +278,7 @@ export const useReceipts: UseReceipts = ({
             return {
               ...url,
               status: 'failed',
-              error: 'Failed to delete',
+              error: t('failedToDelete', 'Failed to delete'),
             }
           }
 

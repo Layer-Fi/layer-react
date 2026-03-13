@@ -1,5 +1,6 @@
 import { type PropsWithChildren, useId } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { FieldError } from '@ui/Form/Form'
@@ -27,6 +28,7 @@ export function FormRadioGroupYesNoField({
   isReadOnly = false,
   orientation = 'horizontal',
 }: PropsWithChildren<FormRadioGroupYesNoFieldProps>) {
+  const { t } = useTranslation()
   const field = useFieldContext<boolean>()
 
   const { name, state, handleChange, handleBlur } = field
@@ -70,10 +72,10 @@ export function FormRadioGroupYesNoField({
       <VStack slot='options' gap='3xs'>
         <Stack direction={orientation === 'horizontal' ? 'row' : 'column'} gap={orientation === 'horizontal' ? 'sm' : 'xs'}>
           <Radio<YesNoValue> value='no'>
-            <Span slot='description'>No</Span>
+            <Span slot='description'>{t('no', 'No')}</Span>
           </Radio>
           <Radio<YesNoValue> value='yes'>
-            <Span slot='description'>Yes</Span>
+            <Span slot='description'>{t('yes', 'Yes')}</Span>
           </Radio>
         </Stack>
         {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}

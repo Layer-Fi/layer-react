@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { CalendarDate, fromDate, getLocalTimeZone, type ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -6,12 +6,13 @@ import {
   GridList,
   GridListItem,
 } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import type { View } from '@internal-types/general'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
-import { MONTHS } from '@components/MonthCalendar/utils'
+import { getMonths } from '@components/MonthCalendar/utils'
 
 import './monthCalendar.scss'
 
@@ -28,6 +29,9 @@ export function MonthCalendar({
   maxDate?: ZonedDateTime | null
   variant?: View
 }) {
+  const { t, i18n } = useTranslation()
+  const locale = i18n.resolvedLanguage || i18n.language || 'en-US'
+  const months = useMemo(() => getMonths(locale), [locale])
   const minYear = minDate?.year ?? null
   const maxYear = maxDate?.year ?? null
   const [year, setYear] = useState(() => date?.year ?? new Date().getFullYear())
@@ -85,7 +89,7 @@ export function MonthCalendar({
           variant='ghost'
           onPress={goToPreviousYear}
           isDisabled={isPrevYearDisabled}
-          aria-label='Previous year'
+          aria-label={t('previousYear', 'Previous year')}
         >
           <ChevronLeft size={20} />
         </Button>
@@ -96,13 +100,13 @@ export function MonthCalendar({
           variant='ghost'
           onPress={goToNextYear}
           isDisabled={isNextYearDisabled}
-          aria-label='Next year'
+          aria-label={t('nextYear', 'Next year')}
         >
           <ChevronRight size={20} />
         </Button>
       </HStack>
       <GridList
-        aria-label='Select a month'
+        aria-label={t('selectAMonth', 'Select a month')}
         selectionMode='single'
         selectedKeys={date?.year === year ? new Set([date.month]) : new Set()}
         onSelectionChange={(keys) => {
@@ -116,7 +120,7 @@ export function MonthCalendar({
           variant === 'mobile' && 'Layer__MonthCalendar__MonthGrid--mobile',
         )}
       >
-        {MONTHS.map(m => (
+        {months.map(m => (
           <GridListItem
             id={m.key}
             key={m.key}

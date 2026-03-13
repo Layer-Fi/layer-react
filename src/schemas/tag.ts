@@ -1,4 +1,5 @@
 import { pipe, Schema } from 'effect'
+import type { TFunction } from 'i18next'
 
 export const TagDimensionStrictnessSchema = Schema.Literal(
   'BALANCING',
@@ -92,21 +93,18 @@ export const TagSchema = Schema.Data(
   }),
 )
 
-export function getTagDisplayNameForValue(tag: Tag): string {
+export function getTagDisplayNameForValue(tag: Tag, t: TFunction): string {
   const valueBaseLabel = tag.valueDisplayName ?? tag.value
-  const archiveAwareLabel = tag.archivedAt ? `${valueBaseLabel} (Archived)` : valueBaseLabel
-  return archiveAwareLabel
+  return tag.archivedAt ? t('valueBaseLabelArchived', '{{valueBaseLabel}} (Archived)', { valueBaseLabel }) : valueBaseLabel
 }
 
 export function getTagDisplayNameForDimension(tag: Tag): string {
   return tag.dimensionDisplayName ?? tag.key
 }
 
-export function getTagValueDisplayNameForValue(tagValue: TagValue): string {
+export function getTagValueDisplayNameForValue(tagValue: TagValue, t: TFunction): string {
   const valueBaseLabel = tagValue.valueDisplayName ?? tagValue.value
-  const archiveAwareLabel = tagValue.isArchived ? `${valueBaseLabel} (Archived)` : valueBaseLabel
-
-  return archiveAwareLabel
+  return tagValue.isArchived ? t('valueBaseLabelArchived', '{{valueBaseLabel}} (Archived)', { valueBaseLabel }) : valueBaseLabel
 }
 
 export function getTagValueDisplayNameForDimension(tagValue: TagValue): string {
@@ -117,10 +115,12 @@ export function getDimensionDisplayName(dimension: TagDimension): string {
   return dimension.displayName ?? dimension.key
 }
 
-export function getTagValueDisplayName(tag: { value: string, displayName?: string | null, archivedAt?: Date | null }): string {
+export function getTagValueDisplayName(
+  tag: { value: string, displayName?: string | null, archivedAt?: Date | null },
+  t: TFunction,
+): string {
   const valueBaseLabel = tag.displayName ?? tag.value
-  const archiveAwareLabel = tag.archivedAt ? `${valueBaseLabel} (Archived)` : valueBaseLabel
-  return archiveAwareLabel
+  return tag.archivedAt ? t('valueBaseLabelArchived', '{{valueBaseLabel}} (Archived)', { valueBaseLabel }) : valueBaseLabel
 }
 
 export const makeTag = Schema.decodeSync(TagSchema)

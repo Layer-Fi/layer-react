@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { Car } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { asMutable } from '@utils/asMutable'
@@ -17,6 +18,7 @@ interface VehicleManagementGridProps {
 }
 
 export const VehicleManagementGrid = ({ onEditVehicle, showArchived }: VehicleManagementGridProps) => {
+  const { t } = useTranslation()
   const { data, isLoading, isError } = useListVehicles({ allowArchived: showArchived })
   const vehicles = useMemo(() => data ? asMutable(data) : undefined, [data])
 
@@ -32,8 +34,8 @@ export const VehicleManagementGrid = ({ onEditVehicle, showArchived }: VehicleMa
     return (
       <DataState
         status={DataStateStatus.failed}
-        title="We couldn't load your vehicles"
-        description='An error occurred while loading your vehicles. Please check your connection and try again.'
+        title={t('weCouldntLoadYourVehicles', 'We couldn\'t load your vehicles')}
+        description={t('anErrorOccurredWhileLoadingYourVehiclesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your vehicles. Please check your connection and try again.')}
         spacing
       />
     )
@@ -43,8 +45,8 @@ export const VehicleManagementGrid = ({ onEditVehicle, showArchived }: VehicleMa
     return (
       <DataState
         status={DataStateStatus.allDone}
-        title='No vehicles yet'
-        description='Add your first vehicle to start tracking trips.'
+        title={t('noVehiclesYet', 'No vehicles yet')}
+        description={t('addYourFirstVehicleToStartTrackingTrips', 'Add your first vehicle to start tracking trips.')}
         icon={<Car />}
         spacing
       />

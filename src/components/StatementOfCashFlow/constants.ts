@@ -1,46 +1,48 @@
-export const STATEMENT_OF_CASH_FLOW_ROWS = [
+import { translationKey } from '@utils/i18n/translationKey'
+
+export const STATEMENT_OF_CASH_FLOW_ROWS_CONFIG = [
   {
     name: 'OperatingActivities',
-    displayName: 'Operating Activities',
     lineItem: 'operating_activities',
     type: 'line_item',
     summarize: true,
+    ...translationKey('operatingActivities', 'Operating Activities'),
   },
   {
     name: 'InvestingActivities',
-    displayName: 'Investing Activities',
     lineItem: 'investing_activities',
     type: 'line_item',
     summarize: true,
+    ...translationKey('investingActivities', 'Investing Activities'),
   },
   {
     name: 'FinancingActivities',
-    displayName: 'Financing Activities',
     lineItem: 'financing_activities',
     type: 'line_item',
     summarize: true,
+    ...translationKey('financingActivities', 'Financing Activities'),
   },
   {
     name: 'PeriodNetCashIncrease',
-    displayName: 'Net Cash Increase For Period',
     lineItem: 'period_net_cash_increase',
     type: 'summary_value',
     summarize: false,
+    ...translationKey('netCashIncreaseForPeriod', 'Net Cash Increase For Period'),
   },
   {
     name: 'CashAtBeginningOfPeriod',
-    displayName: 'Cash at Beginning of Period',
     lineItem: 'cash_at_start_of_period',
     type: 'summary_value',
     summarize: false,
+    ...translationKey('cashAtBeginningOfPeriod', 'Cash at Beginning of Period'),
   },
   {
     name: 'CashAtEndOfPeriod',
-    displayName: 'Cash at End of Period',
     lineItem: 'cash_at_end_of_period',
     type: 'summary_value',
     summarize: false,
+    ...translationKey('cashAtEndOfPeriod', 'Cash at End of Period'),
   },
-]
+] as const
 
-export const ADJUSTMENTS_ROW_NAME = 'Adjustments to Net Income'
+export const ADJUSTMENTS_ROW_I18N = translationKey('adjustmentsToNetIncome', 'Adjustments to Net Income')

@@ -1,4 +1,5 @@
 import { useContext, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Direction } from '@internal-types/general'
 import { TableCellAlign } from '@internal-types/table'
@@ -49,28 +50,29 @@ export const SourceDetailView = ({
   source: LedgerEntrySourceType
   stringOverrides?: SourceDetailStringOverrides
 }) => {
+  const { t } = useTranslation()
   switch (source.type) {
     case 'Transaction_Ledger_Entry_Source': {
       return (
         <>
           <DetailsListItem
-            label={stringOverrides?.accountNameLabel || 'Account name'}
+            label={stringOverrides?.accountNameLabel || t('accountName', 'Account name')}
           >
             {source.accountName}
           </DetailsListItem>
-          <DetailsListItem label={stringOverrides?.dateLabel || 'Date'}>
+          <DetailsListItem label={stringOverrides?.dateLabel || t('date', 'Date')}>
             <DateTime value={source.date} />
           </DetailsListItem>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           <DetailsListItem
-            label={stringOverrides?.directionLabel || 'Direction'}
+            label={stringOverrides?.directionLabel || t('direction', 'Direction')}
           >
             {source.direction}
           </DetailsListItem>
           <DetailsListItem
-            label={stringOverrides?.counterpartyLabel || 'Counterparty'}
+            label={stringOverrides?.counterpartyLabel || t('counterparty', 'Counterparty')}
           >
             {source.counterparty || source.displayDescription}
           </DetailsListItem>
@@ -81,19 +83,19 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem
-            label={stringOverrides?.invoiceNumberLabel || 'Invoice number'}
+            label={stringOverrides?.invoiceNumberLabel || t('invoiceNumber', 'Invoice number')}
           >
             {source.invoiceNumber}
           </DetailsListItem>
           <DetailsListItem
-            label={stringOverrides?.recipientNameLabel || 'Recipient name'}
+            label={stringOverrides?.recipientNameLabel || t('recipientName', 'Recipient name')}
           >
             {source.recipientName}
           </DetailsListItem>
-          <DetailsListItem label={stringOverrides?.dateLabel || 'Date'}>
+          <DetailsListItem label={stringOverrides?.dateLabel || t('date', 'Date')}>
             <DateTime value={source.date} />
           </DetailsListItem>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
         </>
@@ -102,11 +104,11 @@ export const SourceDetailView = ({
     case 'Manual_Ledger_Entry_Source': {
       return (
         <>
-          <DetailsListItem label={stringOverrides?.memoLabel || 'Memo'}>
+          <DetailsListItem label={stringOverrides?.memoLabel || t('memo', 'Memo')}>
             {source.memo}
           </DetailsListItem>
           <DetailsListItem
-            label={stringOverrides?.createdByLabel || 'Created by'}
+            label={stringOverrides?.createdByLabel || t('createdBy', 'Created by')}
           >
             {source.createdBy}
           </DetailsListItem>
@@ -117,11 +119,11 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem
-            label={stringOverrides?.invoiceNumberLabel || 'Invoice number'}
+            label={stringOverrides?.invoiceNumberLabel || t('invoiceNumber', 'Invoice number')}
           >
             {source.invoiceNumber}
           </DetailsListItem>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
         </>
@@ -130,11 +132,11 @@ export const SourceDetailView = ({
     case 'Refund_Allocation_Ledger_Entry_Source': {
       return (
         <>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           <DetailsListItem
-            label={stringOverrides?.recipientNameLabel || 'Recipient name'}
+            label={stringOverrides?.recipientNameLabel || t('recipientName', 'Recipient name')}
           >
             {source.recipientName}
           </DetailsListItem>
@@ -144,11 +146,11 @@ export const SourceDetailView = ({
     case 'Refund_Payment_Ledger_Entry_Source': {
       return (
         <>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.refundedToCustomerAmount)}
           </DetailsListItem>
           <DetailsListItem
-            label={stringOverrides?.recipientNameLabel || 'Recipient name'}
+            label={stringOverrides?.recipientNameLabel || t('recipientName', 'Recipient name')}
           >
             {source.recipientName}
           </DetailsListItem>
@@ -158,7 +160,7 @@ export const SourceDetailView = ({
     case 'Opening_Balance_Ledger_Entry_Source': {
       return (
         <DetailsListItem
-          label={stringOverrides?.accountNameLabel || 'Account name'}
+          label={stringOverrides?.accountNameLabel || t('accountName', 'Account name')}
         >
           {source.accountName}
         </DetailsListItem>
@@ -167,11 +169,11 @@ export const SourceDetailView = ({
     case 'Payout_Ledger_Entry_Source': {
       return (
         <>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.paidOutAmount)}
           </DetailsListItem>
           <DetailsListItem
-            label={stringOverrides?.processorLabel || 'Processor'}
+            label={stringOverrides?.processorLabel || t('processor', 'Processor')}
           >
             {source.processor}
           </DetailsListItem>
@@ -183,11 +185,11 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem
-            label='Quickbooks ID'
+            label={t('quickBooksId', 'QuickBooks ID')}
           >
             {source.quickbooksId}
           </DetailsListItem>
-          <DetailsListItem label='Import Date'>
+          <DetailsListItem label={t('importDate', 'Import Date')}>
             <DateTime value={source.importDate} />
           </DetailsListItem>
         </>
@@ -197,19 +199,19 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem
-            label={stringOverrides?.invoiceNumberLabel || 'Invoice number'}
+            label={stringOverrides?.invoiceNumberLabel || t('invoiceNumber', 'Invoice number')}
           >
             {source.invoiceNumber}
           </DetailsListItem>
           <DetailsListItem
-            label={stringOverrides?.recipientNameLabel || 'Recipient name'}
+            label={stringOverrides?.recipientNameLabel || t('recipientName', 'Recipient name')}
           >
             {source.recipientName}
           </DetailsListItem>
-          <DetailsListItem label='Write-off Date'>
+          <DetailsListItem label={t('writeOffDate', 'Write-off Date')}>
             <DateTime value={source.date} />
           </DetailsListItem>
-          <DetailsListItem label='Write-off Amount'>
+          <DetailsListItem label={t('writeOffAmount', 'Write-off Amount')}>
             {convertCentsToCurrency(source.writeOffAmount)}
           </DetailsListItem>
         </>
@@ -218,10 +220,10 @@ export const SourceDetailView = ({
     case 'Vendor_Refund_Allocation_Ledger_Entry_Source': {
       return (
         <>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
-          <DetailsListItem label='Vendor Description'>
+          <DetailsListItem label={t('vendorDescription', 'Vendor Description')}>
             {source.vendorDescription}
           </DetailsListItem>
         </>
@@ -230,10 +232,10 @@ export const SourceDetailView = ({
     case 'Vendor_Refund_Payment_Ledger_Entry_Source': {
       return (
         <>
-          <DetailsListItem label='Refunded Amount'>
+          <DetailsListItem label={t('refundedAmount', 'Refunded Amount')}>
             {convertCentsToCurrency(source.refundedByVendorAmount)}
           </DetailsListItem>
-          <DetailsListItem label='Vendor Description'>
+          <DetailsListItem label={t('vendorDescription', 'Vendor Description')}>
             {source.vendorDescription}
           </DetailsListItem>
         </>
@@ -242,15 +244,15 @@ export const SourceDetailView = ({
     case 'Vendor_Payout_Ledger_Entry_Source': {
       return (
         <>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.paidOutAmount)}
           </DetailsListItem>
           <DetailsListItem
-            label={stringOverrides?.processorLabel || 'Processor'}
+            label={stringOverrides?.processorLabel || t('processor', 'Processor')}
           >
             {source.processor}
           </DetailsListItem>
-          <DetailsListItem label='Completed At'>
+          <DetailsListItem label={t('completedAt', 'Completed At')}>
             <DateTime value={source.completedAt} />
           </DetailsListItem>
         </>
@@ -258,14 +260,14 @@ export const SourceDetailView = ({
     }
     case 'Payroll_Ledger_Entry_Source': {
       return (
-        <DetailsListItem label='Payday'>
+        <DetailsListItem label={t('payday', 'Payday')}>
           <DateTime value={source.payday} />
         </DetailsListItem>
       )
     }
     case 'Payroll_Payment_Ledger_Entry_Source': {
       return (
-        <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+        <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
           {convertCentsToCurrency(source.amount)}
         </DetailsListItem>
       )
@@ -273,16 +275,16 @@ export const SourceDetailView = ({
     case 'Bill_Ledger_Entry_Source': {
       return (
         <>
-          <DetailsListItem label='Bill Number'>
+          <DetailsListItem label={t('billNumber', 'Bill Number')}>
             {source.billNumber}
           </DetailsListItem>
-          <DetailsListItem label='Vendor Description'>
+          <DetailsListItem label={t('vendorDescription', 'Vendor Description')}>
             {source.vendorDescription}
           </DetailsListItem>
-          <DetailsListItem label={stringOverrides?.dateLabel || 'Date'}>
+          <DetailsListItem label={stringOverrides?.dateLabel || t('date', 'Date')}>
             <DateTime value={source.date} />
           </DetailsListItem>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
         </>
@@ -291,10 +293,10 @@ export const SourceDetailView = ({
     case 'Bill_Payment_Ledger_Entry_Source': {
       return (
         <>
-          <DetailsListItem label='Bill Number'>
+          <DetailsListItem label={t('billNumber', 'Bill Number')}>
             {source.billNumber}
           </DetailsListItem>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
         </>
@@ -304,11 +306,11 @@ export const SourceDetailView = ({
       const vendorDisplayName = source.vendor.individualName ?? source.vendor.companyName
       return (
         <>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           {vendorDisplayName && (
-            <DetailsListItem label='Vendor'>
+            <DetailsListItem label={t('vendor', 'Vendor')}>
               {vendorDisplayName}
             </DetailsListItem>
           )}
@@ -319,11 +321,11 @@ export const SourceDetailView = ({
       const customerDisplayName = source.customer.individualName ?? source.customer.companyName
       return (
         <>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          <DetailsListItem label={stringOverrides?.amountLabel || t('amount', 'Amount')}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           {customerDisplayName && (
-            <DetailsListItem label='Customer'>
+            <DetailsListItem label={t('customer', 'Customer')}>
               {customerDisplayName}
             </DetailsListItem>
           )}
@@ -368,6 +370,7 @@ export const LedgerAccountEntryDetails = ({
 }: {
   stringOverrides?: LedgerAccountEntryDetailsStringOverrides
 }) => {
+  const { t } = useTranslation()
   const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
     useContext(LedgerAccountsContext)
   const { renderInAppLink } = useInAppLinkContext()
@@ -408,13 +411,13 @@ export const LedgerAccountEntryDetails = ({
           <HeaderCol className='Layer__hidden-lg Layer__hidden-xl'>
             <BackButton onClick={closeSelectedEntry} />
             <Heading size={HeadingSize.secondary}>
-              {stringOverrides?.title || 'Transaction details'}
+              {stringOverrides?.title || t('transactionDetails', 'Transaction details')}
             </Heading>
           </HeaderCol>
           <HeaderCol className='Layer__show-lg Layer__show-xl'>
             <Heading size={HeadingSize.secondary}>
               {stringOverrides?.transactionSource?.header
-                || 'Transaction source'}
+                || t('transactionSource', 'Transaction source')}
             </Heading>
           </HeaderCol>
           <HeaderCol className='Layer__show-lg Layer__show-xl'>
@@ -424,7 +427,7 @@ export const LedgerAccountEntryDetails = ({
       </Header>
       <DetailsList
         title={
-          stringOverrides?.transactionSource?.header || 'Transaction source'
+          stringOverrides?.transactionSource?.header || t('transactionSource', 'Transaction source')
         }
         titleClassName='Layer__hidden-lg Layer__hidden-xl'
         actions={(
@@ -439,7 +442,7 @@ export const LedgerAccountEntryDetails = ({
       >
         <DetailsListItem
           label={
-            stringOverrides?.transactionSource?.details?.sourceLabel || 'Source'
+            stringOverrides?.transactionSource?.details?.sourceLabel || t('source', 'Source')
           }
           isLoading={isLoadingEntry}
         >
@@ -458,8 +461,8 @@ export const LedgerAccountEntryDetails = ({
             )
             : (
               <VStack>
-                <Span>Journal Entry</Span>
-                {entryData && <Span variant='subtle' size='xs'>{`Journal ID #${entryNumber(entryData)}`}</Span>}
+                <Span>{t('journalEntry', 'Journal Entry')}</Span>
+                {entryData && <Span variant='subtle' size='xs'>{t('journalIdNumber', 'Journal ID #{{journalId}}', { journalId: entryNumber(entryData) })}</Span>}
               </VStack>
             )
         }
@@ -468,14 +471,14 @@ export const LedgerAccountEntryDetails = ({
         <DetailsListItem
           label={
             stringOverrides?.journalEntry?.details?.entryTypeLabel
-            || 'Entry type'
+            || t('entryType', 'Entry type')
           }
           isLoading={isLoadingEntry}
         >
           {humanizeEnum(entryData?.entry_type ?? '')}
         </DetailsListItem>
         <DetailsListItem
-          label={stringOverrides?.journalEntry?.details?.dateLabel || 'Date'}
+          label={stringOverrides?.journalEntry?.details?.dateLabel || t('date', 'Date')}
           isLoading={isLoadingEntry}
         >
           {entryData?.entry_at && <DateTime value={entryData?.entry_at} />}
@@ -483,7 +486,7 @@ export const LedgerAccountEntryDetails = ({
         <DetailsListItem
           label={
             stringOverrides?.journalEntry?.details?.creationDateLabel
-            || 'Creation date'
+            || t('creationDate', 'Creation date')
           }
           isLoading={isLoadingEntry}
         >
@@ -493,7 +496,7 @@ export const LedgerAccountEntryDetails = ({
           <DetailsListItem
             label={
               stringOverrides?.journalEntry?.details?.reversalLabel
-              || 'Reversal'
+              || t('reversal', 'Reversal')
             }
             isLoading={isLoadingEntry}
           >
@@ -514,15 +517,15 @@ export const LedgerAccountEntryDetails = ({
                   <TableRow rowKey='soc-flow-head-row' isHeadRow>
                     <TableCell>
                       {stringOverrides?.lineItemsTable?.lineItemsColumnHeader
-                        || 'Line items'}
+                        || t('lineItems', 'Line items')}
                     </TableCell>
                     <TableCell align={TableCellAlign.RIGHT}>
                       {stringOverrides?.lineItemsTable?.debitColumnHeader
-                        || 'Debit'}
+                        || t('debit', 'Debit')}
                     </TableCell>
                     <TableCell align={TableCellAlign.RIGHT}>
                       {stringOverrides?.lineItemsTable?.creditColumnHeader
-                        || 'Credit'}
+                        || t('credit', 'Credit')}
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -554,7 +557,7 @@ export const LedgerAccountEntryDetails = ({
                     variant='summation'
                   >
                     <TableCell primary>
-                      {stringOverrides?.lineItemsTable?.totalRowHeader || 'Total'}
+                      {stringOverrides?.lineItemsTable?.totalRowHeader || t('total', 'Total')}
                     </TableCell>
                     <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
                       {totalDebit || 0}

@@ -1,4 +1,5 @@
 import { useCallback, useId, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { CustomerVendorSchema } from '@schemas/customerVendor'
 import { useListCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
@@ -65,6 +66,7 @@ export function CustomerVendorSelector({
   isReadOnly,
   showLabel = true,
 }: CustomerVendorSelectorProps) {
+  const { t } = useTranslation()
   const {
     searchQuery,
     handleInputChange,
@@ -91,7 +93,7 @@ export function CustomerVendorSelector({
     () => {
       const customersSection = customerPages
         ? {
-          label: 'Customers',
+          label: t('customers', 'Customers'),
           id: 'CUSTOMER',
           options: customerPages
             .flatMap(({ data }) => data)
@@ -101,7 +103,7 @@ export function CustomerVendorSelector({
 
       const vendorsSection = vendorPages
         ? {
-          label: 'Vendors',
+          label: t('vendors', 'Vendors'),
           id: 'VENDOR',
           options: vendorPages
             .flatMap(({ data }) => data)
@@ -117,6 +119,7 @@ export function CustomerVendorSelector({
         )
     },
     [
+      t,
       customerPages,
       vendorPages,
     ],
@@ -191,10 +194,10 @@ export function CustomerVendorSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        No matching customer or vendor found
+        {t('noMatchingCustomersOrVendorsFound', 'No matching customers or vendors found')}
       </P>
     ),
-    [],
+    [t],
   )
 
   const ErrorMessage = useMemo(
@@ -203,10 +206,10 @@ export function CustomerVendorSelector({
         size='xs'
         status='error'
       >
-        An error occurred while loading customer and vendor options.
+        {t('anErrorOccurredWhileLoadingCustomerAndVendorOptions', 'An error occurred while loading customer and vendor options.')}
       </P>
     ),
-    [],
+    [t],
   )
 
   const inputId = useId()
@@ -228,7 +231,7 @@ export function CustomerVendorSelector({
             htmlFor={inputId}
             size='sm'
           >
-            Customer or Vendor
+            {t('customerOrVendor', 'Customer or Vendor')}
           </Label>
           {isMutating
             ? (
@@ -236,7 +239,7 @@ export function CustomerVendorSelector({
                 size='xs'
                 variant='subtle'
               >
-                Saving...
+                {t('saving', 'Saving...')}
               </P>
             )
             : null}
@@ -257,7 +260,7 @@ export function CustomerVendorSelector({
         isDisabled={isReadOnly || shouldDisableComboBox}
         isError={isError}
         isLoading={isLoadingWithoutFallback}
-        aria-label={showLabel ? undefined : 'Customer or Vendor'}
+        aria-label={showLabel ? undefined : t('customerOrVendor', 'Customer or Vendor')}
       />
     </VStack>
   )

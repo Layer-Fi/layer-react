@@ -1,4 +1,5 @@
 import { type RefObject, useContext, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type View } from '@internal-types/general'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
@@ -43,6 +44,7 @@ export const JournalTableWithPanel = ({
   pageSize?: number
   stringOverrides?: JournalTableStringOverrides
 }) => {
+  const { t } = useTranslation()
   const [currentPage, setCurrentPage] = useState(1)
   const { toCreateEntry } = useJournalNavigation()
 
@@ -98,7 +100,7 @@ export const JournalTableWithPanel = ({
               className={`Layer__${COMPONENT_NAME}__title`}
               size={HeadingSize.view}
             >
-              {stringOverrides?.componentTitle || 'Journal'}
+              {stringOverrides?.componentTitle || t('journal', 'Journal')}
             </Heading>
           </HeaderCol>
         </HeaderRow>
@@ -110,7 +112,7 @@ export const JournalTableWithPanel = ({
               size={HeadingSize.secondary}
               className={`Layer__${COMPONENT_NAME}__subtitle`}
             >
-              {stringOverrides?.componentSubtitle || 'Entries'}
+              {stringOverrides?.componentSubtitle || t('entries', 'Entries')}
             </Heading>
           </HeaderCol>
           <HeaderCol>
@@ -122,7 +124,7 @@ export const JournalTableWithPanel = ({
               iconOnly={view === 'mobile'}
               leftIcon={view === 'mobile' && <PlusIcon size={14} />}
             >
-              {stringOverrides?.addEntryButton || 'Add Entry'}
+              {stringOverrides?.addEntryButton || t('addEntry', 'Add Entry')}
             </Button>
           </HeaderCol>
         </HeaderRow>
@@ -145,8 +147,8 @@ export const JournalTableWithPanel = ({
         <div className='Layer__table-state-container'>
           <DataState
             status={DataStateStatus.allDone}
-            title='No entries found'
-            description='There are no entries in the journal.'
+            title={t('noEntriesFound', 'No entries found')}
+            description={t('thereAreNoEntriesInTheJournal', 'There are no entries in the journal.')}
           />
         </div>
       )}
@@ -156,8 +158,8 @@ export const JournalTableWithPanel = ({
           <div className='Layer__table-state-container'>
             <DataState
               status={DataStateStatus.failed}
-              title='Something went wrong'
-              description='We couldn’t load your data.'
+              title={t('somethingWentWrong', 'Something went wrong')}
+              description={t('weCouldntLoadYourData', 'We couldn’t load your data.')}
               onRefresh={() => { void refetch() }}
               isLoading={isValidating || isLoading}
             />

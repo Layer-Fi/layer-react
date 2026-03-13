@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { type Invoice } from '@schemas/invoices/invoice'
 import { convertCentsToCurrency } from '@utils/format'
 import { HStack } from '@ui/Stack/Stack'
@@ -12,18 +14,19 @@ export type InvoiceDetailSubHeaderProps = {
 }
 
 export const InvoiceDetailSubHeader = ({ invoice }: InvoiceDetailSubHeaderProps) => {
+  const { t } = useTranslation()
   const { outstandingBalance, totalAmount } = invoice
 
   return (
     <HStack className='Layer__InvoiceDetail__SubHeader'>
       <HStack gap='5xl'>
-        <DataPoint label='Balance due'>
+        <DataPoint label={t('balanceDue', 'Balance due')}>
           <Span>{convertCentsToCurrency(outstandingBalance)}</Span>
         </DataPoint>
-        <DataPoint label='Open balance'>
+        <DataPoint label={t('openBalance', 'Open balance')}>
           <Span>{convertCentsToCurrency(totalAmount)}</Span>
         </DataPoint>
-        <DataPoint label='Status'>
+        <DataPoint label={t('status', 'Status')}>
           <InvoiceStatusCell invoice={invoice} inline />
         </DataPoint>
       </HStack>

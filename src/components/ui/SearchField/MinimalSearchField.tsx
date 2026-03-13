@@ -3,6 +3,7 @@ import {
   SearchField as ReactAriaSearchField,
   type SearchFieldProps as ReactAriaSearchFieldProps,
 } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import X from '@icons/X'
 import { Button } from '@ui/Button/Button'
@@ -20,13 +21,14 @@ export function MinimalSearchField({
   isDisabled,
   ...restProps
 }: MinimalSearchFieldProps) {
+  const { t } = useTranslation()
   return (
     <ReactAriaSearchField {...restProps} isDisabled={isDisabled} className={CLASS_NAME}>
       <ReactAriaInput
         slot='input'
         placeholder={placeholder}
       />
-      <Button slot='clear-button' inset icon variant='ghost' aria-label='Clear search'>
+      <Button slot='clear-button' inset icon variant='ghost' aria-label={t('clearSearch', 'Clear search')}>
         <X />
       </Button>
     </ReactAriaSearchField>

@@ -1,6 +1,8 @@
-import { useCallback, useId } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
+import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
@@ -12,14 +14,14 @@ type PaymentMethodOption = {
   label: string
   value: PaymentMethod
 }
-const PaymentMethodOptionConfig = {
-  [PaymentMethod.Cash]: { label: 'Cash', value: PaymentMethod.Cash },
-  [PaymentMethod.Check]: { label: 'Check', value: PaymentMethod.Check },
-  [PaymentMethod.CreditCard]: { label: 'Credit Card', value: PaymentMethod.CreditCard },
-  [PaymentMethod.Ach]: { label: 'ACH', value: PaymentMethod.Ach },
-  [PaymentMethod.Other]: { label: 'Other', value: PaymentMethod.Other },
-}
-const options = Object.values(PaymentMethodOptionConfig)
+
+const PAYMENT_METHOD_OPTIONS = [
+  { value: PaymentMethod.Cash, ...translationKey('cash', 'Cash') },
+  { value: PaymentMethod.Check, ...translationKey('check', 'Check') },
+  { value: PaymentMethod.CreditCard, ...translationKey('creditCard', 'Credit Card') },
+  { value: PaymentMethod.Ach, ...translationKey('ach', 'ACH') },
+  { value: PaymentMethod.Other, ...translationKey('other', 'Other') },
+]
 
 type PaymentMethodComboBoxProps = {
   value: PaymentMethod | null
@@ -30,23 +32,33 @@ type PaymentMethodComboBoxProps = {
 }
 
 export const PaymentMethodComboBox = ({ value, onValueChange, isReadOnly, className, inline }: PaymentMethodComboBoxProps) => {
+  const { t } = useTranslation()
   const combinedClassName = classNames(
     'Layer__PaymentMethodComboBox',
     inline && 'Layer__PaymentMethodComboBox--inline',
     className,
   )
 
-  const selectedOption = value ? PaymentMethodOptionConfig[value] : null
-  const onSelectedValueChange = useCallback((option: PaymentMethodOption | null) => {
+  const options = useMemo<PaymentMethodOption[]>(
+    () => PAYMENT_METHOD_OPTIONS.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
+  const selectedOption = value ? (options.find(o => o.value === value) ?? null) : null
+  const handleChange = (option: null | PaymentMethodOption) => {
     onValueChange(option?.value || null)
-  }, [onValueChange])
+  }
+  const onSelectedValueChange = useCallback(handleChange, [onValueChange])
 
   const inputId = useId()
 
   return (
     <HStack className={combinedClassName}>
       <Label size='sm' htmlFor={inputId}>
-        Payment method
+        {t('paymentMethod', 'Payment method')}
       </Label>
       <ComboBox
         options={options}

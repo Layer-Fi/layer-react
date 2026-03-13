@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
@@ -29,6 +30,7 @@ export const MatchForm = ({
   matchFormError,
   readOnly = false,
 }: MatchFormProps) => {
+  const { t } = useTranslation()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const { renderInAppLink } = useInAppLinkContext()
 
@@ -50,12 +52,12 @@ export const MatchForm = ({
   return (
     <div className='Layer__MatchForm__Table'>
       <div className='Layer__MatchForm__Table__header'>
-        <div className='Layer__MatchForm__Table__date'>Date</div>
+        <div className='Layer__MatchForm__Table__date'>{t('date', 'Date')}</div>
         <div className='Layer__MatchForm__Table__desc'>
-          Description
+          {t('description', 'Description')}
         </div>
-        <div className='Layer__MatchForm__Table__amount'>Amount</div>
-        {renderInAppLink && <div className='Layer__MatchForm__Table__link'>Link</div>}
+        <div className='Layer__MatchForm__Table__amount'>{t('amount', 'Amount')}</div>
+        {renderInAppLink && <div className='Layer__MatchForm__Table__link'>{t('link', 'Link')}</div>}
         {match && <div className='Layer__MatchForm__Table__status' />}
       </div>
       {effectiveSuggestedMatches.map((suggestedMatch) => {
@@ -112,7 +114,7 @@ export const MatchForm = ({
                     <MatchBadge
                       bankTransaction={bankTransaction}
                       dateFormat={DATE_FORMAT}
-                      text={isTransferMatch(bankTransaction) ? 'Transfer' : 'Matched'}
+                      text={isTransferMatch(bankTransaction) ? t('transfer', 'Transfer') : t('matched', 'Matched')}
                     />
                   )}
                 </div>

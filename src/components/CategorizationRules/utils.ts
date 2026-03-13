@@ -1,15 +1,20 @@
-import { BankDirectionFilter } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import type { TFunction } from 'i18next'
 
-const DIRECTION_LABELS: Record<BankDirectionFilter, string> = {
-  [BankDirectionFilter.MONEY_IN]: 'Money In',
-  [BankDirectionFilter.MONEY_OUT]: 'Money Out',
-}
+import { BankDirectionFilter } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { translationKey } from '@utils/i18n/translationKey'
+
+export const DIRECTION_CONFIG = [
+  { value: BankDirectionFilter.MONEY_IN, ...translationKey('moneyIn', 'Money In') },
+  { value: BankDirectionFilter.MONEY_OUT, ...translationKey('moneyOut', 'Money Out') },
+] as const
 
 export const getCategorizationRuleDirectionLabel = (
   bankDirectionFilter: BankDirectionFilter | null | undefined,
-) => {
+  t: TFunction,
+): string => {
   if (!bankDirectionFilter) {
-    return 'Any direction'
+    return t('anyDirection', 'Any direction')
   }
-  return DIRECTION_LABELS[bankDirectionFilter]
+  const entry = DIRECTION_CONFIG.find(c => c.value === bankDirectionFilter)
+  return entry ? t(entry.i18nKey, entry.defaultValue) : t('anyDirection', 'Any direction')
 }

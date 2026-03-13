@@ -1,6 +1,8 @@
 import { useCallback, useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
+import type { TFunction } from 'i18next'
 import { Edit, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { type Trip, type TripPurpose } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
@@ -35,46 +37,46 @@ type TripActions = {
 }
 
 type TripsRowType = Row<Trip>
-const getColumnConfig = ({ onViewOrUpsertTrip, onDeleteTrip }: TripActions): NestedColumnConfig<Trip> => [
+const getColumnConfig = ({ onViewOrUpsertTrip, onDeleteTrip }: TripActions, t: TFunction): NestedColumnConfig<Trip> => [
   {
     id: TripColumns.TripDate,
-    header: 'Date',
+    header: t('date', 'Date'),
     cell: (row: TripsRowType) => formatCalendarDate(row.original.tripDate),
   },
   {
     id: TripColumns.Vehicle,
-    header: 'Vehicle',
+    header: t('vehicle', 'Vehicle'),
     cell: (row: TripsRowType) => <Span ellipsis withTooltip>{getVehicleDisplayName(row.original.vehicle)}</Span>,
     isRowHeader: true,
   },
   {
     id: TripColumns.Distance,
-    header: 'Distance',
-    cell: (row: TripsRowType) => <Span align='right'>{formatDistance(row.original.distance)}</Span>,
+    header: t('distance', 'Distance'),
+    cell: (row: TripsRowType) => <Span align='right'>{formatDistance(row.original.distance, t)}</Span>,
   },
   {
     id: TripColumns.Purpose,
-    header: 'Purpose',
-    cell: (row: TripsRowType) => getPurposeLabel(row.original.purpose as TripPurpose),
+    header: t('purpose', 'Purpose'),
+    cell: (row: TripsRowType) => getPurposeLabel(row.original.purpose as TripPurpose, t),
   },
   {
     id: TripColumns.Address,
-    header: 'Address',
+    header: t('address', 'Address'),
     cell: (row: TripsRowType) => <TripsAddressCell trip={row.original} />,
   },
   {
     id: TripColumns.Description,
-    header: 'Description',
+    header: t('description', 'Description'),
     cell: (row: TripsRowType) => <Span ellipsis withTooltip>{row.original.description}</Span>,
   },
   {
     id: TripColumns.Actions,
     cell: (row: TripsRowType) => (
       <HStack gap='3xs'>
-        <Button inset icon onPress={() => onViewOrUpsertTrip(row.original)} aria-label='View Trip' variant='ghost'>
+        <Button inset icon onPress={() => onViewOrUpsertTrip(row.original)} aria-label={t('viewTrip', 'View Trip')} variant='ghost'>
           <Edit size={20} />
         </Button>
-        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label='Delete Trip' variant='ghost'>
+        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label={t('deleteTrip', 'Delete Trip')} variant='ghost'>
           <Trash2 size={20} />
         </Button>
       </HStack>
@@ -104,14 +106,18 @@ export const TripsTable = ({
   onViewOrUpsertTrip,
   slots,
 }: TripsTableProps) => {
-  const columnConfig = useMemo(() => getColumnConfig({ onViewOrUpsertTrip, onDeleteTrip }), [onViewOrUpsertTrip, onDeleteTrip])
+  const { t } = useTranslation()
+  const columnConfig = useMemo(
+    () => getColumnConfig({ onViewOrUpsertTrip, onDeleteTrip }, t),
+    [onViewOrUpsertTrip, onDeleteTrip, t],
+  )
   const onRecordTrip = useCallback(() => onViewOrUpsertTrip(null), [onViewOrUpsertTrip])
 
   return (
     <Container name='TripsTable'>
       <TripsTableHeader onRecordTrip={onRecordTrip} />
       <PaginatedTable
-        ariaLabel='Trips'
+        ariaLabel={t('trips', 'Trips')}
         data={data}
         isLoading={isLoading}
         isError={isError}

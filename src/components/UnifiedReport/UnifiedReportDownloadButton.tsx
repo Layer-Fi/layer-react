@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { useUnifiedReportExcel } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/exports/excel/useUnifiedReportExcel'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import DownloadCloud from '@icons/DownloadCloud'
@@ -10,6 +12,7 @@ type UnifiedReportDownloadButtonProps = {
 }
 
 export function UnifiedReportDownloadButton({ dateSelectionMode }: UnifiedReportDownloadButtonProps) {
+  const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
   const { trigger, isMutating, isError } = useUnifiedReportExcel({
@@ -25,7 +28,7 @@ export function UnifiedReportDownloadButton({ dateSelectionMode }: UnifiedReport
         isPending={isMutating}
         isDisabled={isMutating}
       >
-        {isError ? 'Retry' : 'Download'}
+        {isError ? t('retry', 'Retry') : t('download', 'Download')}
         {isError ? <RefreshCcw size={12} /> : <DownloadCloud size={16} /> }
       </Button>
       <InvisibleDownload ref={invisibleDownloadRef} />

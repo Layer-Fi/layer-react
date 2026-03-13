@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import type { ExternalAccountConnection } from '@internal-types/linkedAccounts'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { VStack } from '@ui/Stack/Stack'
@@ -14,6 +16,7 @@ export function LinkedAccountToConfirm({
   isConfirmed,
   onChangeConfirmed,
 }: LinkedAccountConfirmationProps) {
+  const { t } = useTranslation()
   return (
     <BasicLinkedAccountContainer isSelected={isConfirmed}>
       <BasicLinkedAccountContent account={account} />
@@ -23,7 +26,7 @@ export function LinkedAccountToConfirm({
           variant='success'
           isSelected={isConfirmed}
           onChange={onChangeConfirmed}
-          aria-label='Confirm Account Inclusion'
+          aria-label={t('confirmAccountInclusion', 'Confirm Account Inclusion')}
         />
       </VStack>
     </BasicLinkedAccountContainer>

@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
@@ -15,6 +16,8 @@ export const DebitCreditPill = ({
   onChange,
   isReadOnly = false,
 }: DebitCreditPillProps) => {
+  const { t } = useTranslation()
+
   const handleClick = useCallback(() => {
     const newDirection = value === LedgerEntryDirection.Debit
       ? LedgerEntryDirection.Credit
@@ -31,7 +34,7 @@ export const DebitCreditPill = ({
       size={BadgeSize.SMALL}
       onClick={isReadOnly ? undefined : handleClick}
     >
-      {isDebit ? 'Debit' : 'Credit'}
+      {isDebit ? t('debit', 'Debit') : t('credit', 'Credit')}
     </Badge>
   )
 }

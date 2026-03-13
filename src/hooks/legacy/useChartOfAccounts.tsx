@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import type { EditAccount, NewAccount } from '@internal-types/chartOfAccounts'
 import type { Direction } from '@internal-types/general'
@@ -14,7 +16,7 @@ import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { NORMALITY_OPTIONS } from '@components/ChartOfAccountsForm/constants'
+import { buildNormalityOptions } from '@components/ChartOfAccountsForm/useChartOfAccountsFormOptions'
 
 const createAccount = post<{ data: SingleChartAccountEncodedType }, NewAccount>(
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/accounts`,
@@ -25,26 +27,26 @@ const updateAccount = put<{ data: SingleChartAccountEncodedType }, EditAccount>(
     `/v1/businesses/${businessId}/ledger/accounts/${accountId}`,
 )
 
-const validate = (formData?: ChartOfAccountsForm) => {
+const validate = (formData: ChartOfAccountsForm, t: TFunction): FormError[] => {
   const errors: FormError[] = []
 
-  const parentIdError = validateParentId(formData)
+  const parentIdError = validateParentId(formData, t)
   if (parentIdError) {
     errors.push(parentIdError)
   }
-  const nameError = validateName(formData)
+  const nameError = validateName(formData, t)
   if (nameError) {
     errors.push(nameError)
   }
-  const normalityError = validateNormality(formData)
+  const normalityError = validateNormality(formData, t)
   if (normalityError) {
     errors.push(normalityError)
   }
-  const typeError = validateType(formData)
+  const typeError = validateType(formData, t)
   if (typeError) {
     errors.push(typeError)
   }
-  const subTypeError = validateSubType(formData)
+  const subTypeError = validateSubType(formData, t)
   if (subTypeError) {
     errors.push(subTypeError)
   }
@@ -52,10 +54,10 @@ const validate = (formData?: ChartOfAccountsForm) => {
   return errors
 }
 
-const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
+const revalidateField = (fieldName: string, formData: ChartOfAccountsForm, t: TFunction) => {
   switch (fieldName) {
     case 'parent': {
-      const parentIdError = validateParentId(formData)
+      const parentIdError = validateParentId(formData, t)
       if (parentIdError) {
         return (formData?.errors || [])
           .filter(x => x.field !== fieldName)
@@ -64,7 +66,7 @@ const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
       return (formData?.errors || []).filter(x => x.field !== fieldName)
     }
     case 'name': {
-      const nameError = validateName(formData)
+      const nameError = validateName(formData, t)
       if (nameError) {
         return (formData?.errors || [])
           .filter(x => x.field !== fieldName)
@@ -74,7 +76,7 @@ const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
       return (formData?.errors || []).filter(x => x.field !== fieldName)
     }
     case 'normality': {
-      const normalityError = validateNormality(formData)
+      const normalityError = validateNormality(formData, t)
       if (normalityError) {
         return (formData?.errors || [])
           .filter(x => x.field !== fieldName)
@@ -84,7 +86,7 @@ const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
       return (formData?.errors || []).filter(x => x.field !== fieldName)
     }
     case 'type': {
-      const typeError = validateType(formData)
+      const typeError = validateType(formData, t)
       if (typeError) {
         return (formData?.errors || [])
           .filter(x => x.field !== fieldName)
@@ -94,7 +96,7 @@ const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
       return (formData?.errors || []).filter(x => x.field !== fieldName)
     }
     case 'subType': {
-      const subTypeError = validateSubType(formData)
+      const subTypeError = validateSubType(formData, t)
       if (subTypeError) {
         return (formData?.errors || [])
           .filter(x => x.field !== fieldName)
@@ -108,62 +110,62 @@ const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
   }
 }
 
-const validateSubType = (formData?: ChartOfAccountsForm) => {
+const validateSubType = (formData: ChartOfAccountsForm, t: TFunction) => {
   if (!formData?.data.subType?.value) {
     return {
       field: 'subType',
-      message: 'Must be selected',
+      message: t('mustBeSelected', 'Must be selected'),
     }
   }
 
   return
 }
 
-const validateType = (formData?: ChartOfAccountsForm) => {
+const validateType = (formData: ChartOfAccountsForm, t: TFunction) => {
   if (!formData?.data.type?.value) {
     return {
       field: 'type',
-      message: 'Must be selected',
+      message: t('mustBeSelected', 'Must be selected'),
     }
   }
 
   return
 }
 
-const validateNormality = (formData?: ChartOfAccountsForm) => {
+const validateNormality = (formData: ChartOfAccountsForm, t: TFunction) => {
   const stringValueNormality = formData?.data.normality?.value?.toString()
   if (stringValueNormality === undefined) {
     return {
       field: 'normality',
-      message: 'Must be selected',
+      message: t('mustBeSelected', 'Must be selected'),
     }
   }
   else if (!['DEBIT', 'CREDIT'].includes(stringValueNormality)) {
     return {
       field: 'normality',
-      message: 'Must be selected',
+      message: t('mustBeSelected', 'Must be selected'),
     }
   }
 
   return
 }
 
-const validateParentId = (formData?: ChartOfAccountsForm) => {
+const validateParentId = (formData: ChartOfAccountsForm, t: TFunction) => {
   if (!formData?.data.parent?.value) {
     return {
       field: 'parent',
-      message: 'Must be selected',
+      message: t('mustBeSelected', 'Must be selected'),
     }
   }
 
   return
 }
 
-const validateName = (formData?: ChartOfAccountsForm) => {
+const validateName = (formData: ChartOfAccountsForm, t: TFunction) => {
   if (!formData?.data.name?.trim()) {
     return {
       field: 'name',
-      message: 'Cannot be blank',
+      message: t('cannotBeBlank', 'Cannot be blank'),
     }
   }
 
@@ -200,6 +202,7 @@ export const flattenAccounts = (
     .filter(id => id)
 
 export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
+  const { t } = useTranslation()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
@@ -212,6 +215,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
   const { data, isLoading, isValidating, isError, mutate } = useLedgerBalances(withDates, startDate, endDate)
   const { invalidateLedgerBalances } = useLedgerBalancesCacheActions()
   const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+  const normalityOptions = useMemo(() => buildNormalityOptions(t), [t])
 
   const create = async (newAccount: NewAccount) => {
     setSendingForm(true)
@@ -226,7 +230,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
       setForm(undefined)
     }
     catch (_err) {
-      setApiError('Submit failed. Please, check your connection and try again.')
+      setApiError(t('submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
     }
     finally {
       setSendingForm(false)
@@ -250,7 +254,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
       setForm(undefined)
     }
     catch (_err) {
-      setApiError('Submit failed. Please, check your connection and try again.')
+      setApiError(t('submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
     }
     finally {
       setSendingForm(false)
@@ -262,7 +266,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
       return
     }
 
-    const errors = validate(form)
+    const errors = validate(form, t)
 
     if (errors.length > 0) {
       setForm({
@@ -367,7 +371,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
             label: found.accountSubtype?.displayName,
           }
           : undefined,
-        normality: NORMALITY_OPTIONS.find(
+        normality: normalityOptions.find(
           normalityOption => normalityOption.value == found.normality,
         ),
       },
@@ -418,7 +422,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
               : undefined,
 
             /* Inherit the parent's normality */
-            normality: NORMALITY_OPTIONS.find(
+            normality: normalityOptions.find(
               normalityOption => normalityOption.value == foundParent.normality,
             ),
           },
@@ -426,7 +430,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
       }
     }
 
-    const errors = revalidateField(fieldName, newFormData)
+    const errors = revalidateField(fieldName, newFormData, t)
 
     setForm({
       ...newFormData,

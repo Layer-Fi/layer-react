@@ -1,4 +1,5 @@
 import { forwardRef, useImperativeHandle } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
@@ -86,6 +87,7 @@ const BankTransactionReceipts = forwardRef<
     },
     ref,
   ) => {
+    const { t } = useTranslation()
     const { receiptUrls, uploadReceipt, archiveDocument } = useReceiptsContext()
 
     // Call this save action after clicking save in parent component:
@@ -104,7 +106,7 @@ const BankTransactionReceipts = forwardRef<
           : null}
         {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0)
           ? (
-            <FileInput onUpload={files => void uploadReceipt(files[0])} text='Upload receipt' accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES} />
+            <FileInput onUpload={files => void uploadReceipt(files[0])} text={t('uploadReceipt', 'Upload receipt')} accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES} />
           )
           : null}
         {receiptUrls.map((url, index) => (

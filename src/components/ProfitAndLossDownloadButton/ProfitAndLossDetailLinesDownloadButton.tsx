@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import { useProfitAndLossDetailLinesExport } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/exports/excel/useProfitAndLossDetailLinesExport'
@@ -19,6 +20,7 @@ export function ProfitAndLossDetailLinesDownloadButton({
   stringOverrides,
   iconOnly,
 }: ProfitAndLossDetailLinesDownloadButtonProps) {
+  const { t } = useTranslation()
   const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLossContext)
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
@@ -44,8 +46,8 @@ export function ProfitAndLossDetailLinesDownloadButton({
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text={stringOverrides?.downloadButtonText || 'Download'}
-        retryText={stringOverrides?.retryButtonText || 'Retry'}
+        text={stringOverrides?.downloadButtonText || t('download', 'Download')}
+        retryText={stringOverrides?.retryButtonText || t('retry', 'Retry')}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

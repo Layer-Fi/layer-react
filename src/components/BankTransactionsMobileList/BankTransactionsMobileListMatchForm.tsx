@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
 import {
@@ -31,6 +32,7 @@ export const BankTransactionsMobileListMatchForm = ({
   showDescriptions,
   showCategorization,
 }: BankTransactionsMobileListMatchFormProps) => {
+  const { t } = useTranslation()
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -61,7 +63,7 @@ export const BankTransactionsMobileListMatchForm = ({
     }
 
     if (!selectedMatch) {
-      setFormError('Select an option to match the transaction')
+      setFormError(t('selectAnOptionToMatchTheTransaction', 'Select an option to match the transaction'))
     }
 
     if (
@@ -76,7 +78,7 @@ export const BankTransactionsMobileListMatchForm = ({
   return (
     <VStack gap='sm'>
       <Span size='sm' weight='bold'>
-        Find Match
+        {t('findMatch', 'Find Match')}
       </Span>
       <MatchFormMobile
         readOnly={!showCategorization}
@@ -98,14 +100,14 @@ export const BankTransactionsMobileListMatchForm = ({
           ref={receiptsRef}
           floatingActions={false}
           hideUploadButtons={true}
-          label='Receipts'
+          label={t('receipts', 'Receipts')}
         />
       )}
       <HStack gap='md'>
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-            text='Upload receipt'
+            text={t('uploadReceipt', 'Upload receipt')}
             iconOnly={true}
             icon={<PaperclipIcon />}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -122,8 +124,8 @@ export const BankTransactionsMobileListMatchForm = ({
             onClick={save}
           >
             {isMatching
-              ? 'Saving...'
-              : 'Approve match'}
+              ? t('saving', 'Saving...')
+              : t('approveMatch', 'Approve match')}
           </Button>
         )}
       </HStack>
@@ -131,7 +133,7 @@ export const BankTransactionsMobileListMatchForm = ({
       {isErrorMatching
         && (
           <ErrorText>
-            Approval failed. Check connection and retry in few seconds.
+            {t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
           </ErrorText>
         )}
     </VStack>

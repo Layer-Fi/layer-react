@@ -1,5 +1,7 @@
 import { type ReactNode } from 'react'
+import type { TFunction } from 'i18next'
 
+import { translationKey } from '@utils/i18n/translationKey'
 import { type HeroContentConfig, type LandingPageCardConfig, type LandingPageConfig } from '@components/LandingPage/types'
 import { imagePartnerAccountingImage } from '@assets/images'
 
@@ -60,15 +62,34 @@ export enum LandingPageContentID {
   offersTitle,
 }
 
-export const LandingPageDefaultTextContent: LandingPageTypesTextContent = {
-  [LandingPageContentID.title]: '', // When left blank, uses a dark and grayed out color
-  [LandingPageContentID.subtitle]: 'Track your business finances, right within {platformName}.',
-  [LandingPageContentID.headline1]: 'All your finances in one place',
-  [LandingPageContentID.headline1Desc]: 'Directly integrated with your {platformName} data, so you can see your business performance and profit in real-time.',
-  [LandingPageContentID.headline2]: 'Built for {industry}',
-  [LandingPageContentID.headline2Desc]: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
-  [LandingPageContentID.valuePropositionTitle]: 'Self-service accounting to understand your business health',
-  [LandingPageContentID.offersTitle]: 'Use {platformName} Accounting yourself, or let our team of experts handle bookkeeping for you',
+const TEXT_CONTENT_I18N = {
+  [LandingPageContentID.subtitle]: translationKey('trackYourBusinessFinancesRightWithinPlatformNameWithPeriod', 'Track your business finances, right within {{platformName}}.'),
+  [LandingPageContentID.headline1]: translationKey('allYourFinancesInOnePlace', 'All your finances in one place'),
+  [LandingPageContentID.headline1Desc]: translationKey('directlyIntegratedWithYourPlatformNameDataSoYouCanSeeYourBusinessPerformanceAndProfitInRealtime', 'Directly integrated with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
+  [LandingPageContentID.headline2]: translationKey('builtForIndustry', 'Built for {{industry}}'),
+  [LandingPageContentID.headline2Desc]: translationKey('trackYourExpensesAndGetEasyToUnderstandReportsDesignedSpecificallyForIndustryBusinesses', 'Track your expenses and get easy to understand reports designed specifically for {{industry}} businesses.'),
+  [LandingPageContentID.valuePropositionTitle]: translationKey('selfserviceAccountingToUnderstandYourBusinessHealth', 'Self-service accounting to understand your business health'),
+  [LandingPageContentID.offersTitle]: translationKey('usePlatformNameAccountingYourselfOrLetOurTeamOfExpertsHandleBookkeepingForYou', 'Use {{platformName}} Accounting yourself, or let our team of experts handle bookkeeping for you'),
+} as const
+
+export const buildLandingPageDefaultTextContent = (t: TFunction): LandingPageTypesTextContent => {
+  const sub = TEXT_CONTENT_I18N[LandingPageContentID.subtitle]
+  const h1 = TEXT_CONTENT_I18N[LandingPageContentID.headline1]
+  const h1Desc = TEXT_CONTENT_I18N[LandingPageContentID.headline1Desc]
+  const h2 = TEXT_CONTENT_I18N[LandingPageContentID.headline2]
+  const h2Desc = TEXT_CONTENT_I18N[LandingPageContentID.headline2Desc]
+  const vp = TEXT_CONTENT_I18N[LandingPageContentID.valuePropositionTitle]
+  const offers = TEXT_CONTENT_I18N[LandingPageContentID.offersTitle]
+  return {
+    [LandingPageContentID.title]: '',
+    [LandingPageContentID.subtitle]: t(sub.i18nKey, sub.defaultValue),
+    [LandingPageContentID.headline1]: t(h1.i18nKey, h1.defaultValue),
+    [LandingPageContentID.headline1Desc]: t(h1Desc.i18nKey, h1Desc.defaultValue),
+    [LandingPageContentID.headline2]: t(h2.i18nKey, h2.defaultValue),
+    [LandingPageContentID.headline2Desc]: t(h2Desc.i18nKey, h2Desc.defaultValue),
+    [LandingPageContentID.valuePropositionTitle]: t(vp.i18nKey, vp.defaultValue),
+    [LandingPageContentID.offersTitle]: t(offers.i18nKey, offers.defaultValue),
+  }
 }
 
 export interface ContentConfig {
@@ -84,57 +105,53 @@ export type PartialContentConfig = {
   config: (LandingPageConfig | Partial<LandingPageConfig>)[]
 }
 
-/**
- * Provided default content configuration, which defines defaults for textual content
- * on the LandingPage.
- * @see LandingPage
- */
-export const landingPageDefaultContentConfig: Omit<ContentConfig, 'config'> = {
-  textContent: LandingPageDefaultTextContent,
-  features: [
-    {
-      icon: <></>,
-      title: 'All your finances in one place',
-      text: 'Directly integrated with your {platformName} data, so you can see your business performance and profit in real-time.',
-    },
-    {
-      icon: <></>,
-      title: 'Built for {industry}',
-      text: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
-    },
-  ],
-}
+const HERO_CONTENT_I18N = {
+  title: translationKey('platformNameAccounting', '{{platformName}} Accounting'),
+  subtitle: translationKey('trackYourBusinessFinancesRightWithinPlatformName', 'Track your business finances, right within {{platformName}}'),
+  heading1: translationKey('allYourFinancesInOnePlace', 'All your finances in one place'),
+  heading1Desc: translationKey('directlyIntegrateWithYourPlatformNameDataSoYouCanSeeYourBusinessPerformanceAndProfitInRealtime', 'Directly integrate with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
+  heading2: translationKey('builtForIndustry', 'Built for {{industry}}'),
+  heading2Desc: translationKey('trackYourExpensesAndGetEasyToUnderstandReportsDesignedSpecificallyForIndustry', 'Track your expenses and get easy to understand reports designed specifically for {{industry}}.'),
+  bookACall: translationKey('bookACall', 'Book a call'),
+  learnMore: translationKey('learnMore', 'Learn more'),
+} as const
 
-export const DefaultHeroContentConfig: HeroContentConfig = {
+export const buildDefaultHeroContentConfig = (t: TFunction): HeroContentConfig => ({
   stringOverrides: {
-    title: '{platformName} Accounting',
-    subtitle: 'Track your business finances, right within {platformName}',
-    heading1: 'All your finances in one place',
-    heading1Desc: 'Directly integrate with your {platformName} data, so you can see your business performance and profit in real-time.',
-    heading2: 'Built for {industry}',
-    heading2Desc: 'Track your expenses and get easy to understand reports designed specifically for {industry}.',
+    title: t(HERO_CONTENT_I18N.title.i18nKey, HERO_CONTENT_I18N.title.defaultValue),
+    subtitle: t(HERO_CONTENT_I18N.subtitle.i18nKey, HERO_CONTENT_I18N.subtitle.defaultValue),
+    heading1: t(HERO_CONTENT_I18N.heading1.i18nKey, HERO_CONTENT_I18N.heading1.defaultValue),
+    heading1Desc: t(HERO_CONTENT_I18N.heading1Desc.i18nKey, HERO_CONTENT_I18N.heading1Desc.defaultValue),
+    heading2: t(HERO_CONTENT_I18N.heading2.i18nKey, HERO_CONTENT_I18N.heading2.defaultValue),
+    heading2Desc: t(HERO_CONTENT_I18N.heading2Desc.i18nKey, HERO_CONTENT_I18N.heading2Desc.defaultValue),
   },
   mediaUrls: {
     topOfFoldImage: imagePartnerAccountingImage,
   },
   cta: {
     primary: {
-      label: 'Book a call',
+      label: t(HERO_CONTENT_I18N.bookACall.i18nKey, HERO_CONTENT_I18N.bookACall.defaultValue),
       url: 'https://www.google.com',
     },
     secondary: {
-      label: 'Learn more',
+      label: t(HERO_CONTENT_I18N.learnMore.i18nKey, HERO_CONTENT_I18N.learnMore.defaultValue),
       url: 'https://www.google.com',
     },
   },
-}
+})
 
-export const DefaultAccountingOfferingConfig: LandingPageCardConfig = {
+const ACCOUNTING_OFFERING_I18N = {
+  badge: translationKey('easyToUseSoftware', 'Easy to use software'),
+  title: translationKey('platformNameAccounting', '{{platformName}} Accounting'),
+  subtitle: translationKey('theBestAccountingSoftwareForIndustryBusinessesFastToSetUpAndEasyToUse', 'The best accounting software for {{industry}} businesses. Fast to set up and easy to use.'),
+} as const
+
+export const buildDefaultAccountingOfferingConfig = (t: TFunction): LandingPageCardConfig => ({
   offerType: 'accounting',
   stringOverrides: {
-    badge: 'Easy to use software',
-    title: '{platformName} Accounting',
-    subtitle: 'The best accounting software for {industry} businesses. Fast to set up and easy to use.',
+    badge: t(ACCOUNTING_OFFERING_I18N.badge.i18nKey, ACCOUNTING_OFFERING_I18N.badge.defaultValue),
+    title: t(ACCOUNTING_OFFERING_I18N.title.i18nKey, ACCOUNTING_OFFERING_I18N.title.defaultValue),
+    subtitle: t(ACCOUNTING_OFFERING_I18N.subtitle.i18nKey, ACCOUNTING_OFFERING_I18N.subtitle.defaultValue),
     priceAmount: '',
     priceUnit: '',
   },
@@ -148,14 +165,20 @@ export const DefaultAccountingOfferingConfig: LandingPageCardConfig = {
     },
   },
   showStartingAtLabel: false,
-}
+})
 
-export const DefaultBookkeepingOfferingConfig: LandingPageCardConfig = {
+const BOOKKEEPING_OFFERING_I18N = {
+  badge: translationKey('aCompleteBookkeepingService', 'A complete bookkeeping service'),
+  title: translationKey('fullServiceBookkeeping', 'Full-service Bookkeeping'),
+  subtitle: translationKey('getADedicatedBookkeeperWhoWillOrganizeAndManageYourBooksForYou', 'Get a dedicated bookkeeper who will organize and manage your books for you.'),
+} as const
+
+export const buildDefaultBookkeepingOfferingConfig = (t: TFunction): LandingPageCardConfig => ({
   offerType: 'bookkeeping',
   stringOverrides: {
-    badge: 'A complete bookkeeping service',
-    title: 'Full-service Bookkeeping',
-    subtitle: 'Get a dedicated bookkeeper who will organize and manage your books for you.',
+    badge: t(BOOKKEEPING_OFFERING_I18N.badge.i18nKey, BOOKKEEPING_OFFERING_I18N.badge.defaultValue),
+    title: t(BOOKKEEPING_OFFERING_I18N.title.i18nKey, BOOKKEEPING_OFFERING_I18N.title.defaultValue),
+    subtitle: t(BOOKKEEPING_OFFERING_I18N.subtitle.i18nKey, BOOKKEEPING_OFFERING_I18N.subtitle.defaultValue),
     priceAmount: '',
     priceUnit: '',
   },
@@ -169,4 +192,18 @@ export const DefaultBookkeepingOfferingConfig: LandingPageCardConfig = {
     },
   },
   showStartingAtLabel: false,
-}
+})
+
+const DEFAULT_FEATURES_I18N = [
+  { title: translationKey('allYourFinancesInOnePlace', 'All your finances in one place'), text: translationKey('directlyIntegratedWithYourPlatformNameDataSoYouCanSeeYourBusinessPerformanceAndProfitInRealtime', 'Directly integrated with your {{platformName}} data, so you can see your business performance and profit in real-time.') },
+  { title: translationKey('builtForIndustry', 'Built for {{industry}}'), text: translationKey('trackYourExpensesAndGetEasyToUnderstandReportsDesignedSpecificallyForIndustryBusinesses', 'Track your expenses and get easy to understand reports designed specifically for {{industry}} businesses.') },
+] as const
+
+export const buildLandingPageDefaultContentConfig = (t: TFunction): Omit<ContentConfig, 'config'> => ({
+  textContent: buildLandingPageDefaultTextContent(t),
+  features: DEFAULT_FEATURES_I18N.map(f => ({
+    icon: <></>,
+    title: t(f.title.i18nKey, f.title.defaultValue),
+    text: t(f.text.i18nKey, f.text.defaultValue),
+  })),
+})

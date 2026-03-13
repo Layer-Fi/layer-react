@@ -1,4 +1,6 @@
 import { useCallback, useState } from 'react'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
@@ -18,35 +20,44 @@ type UploadTransactionsHeaderProps = {
   onClose?: () => void
 }
 
-function getTitle(currentStep: UploadTransactionsStep, isValid: boolean | undefined) {
+function getTitle(
+  currentStep: UploadTransactionsStep,
+  isValid: boolean | undefined,
+  t: TFunction,
+) {
   switch (currentStep) {
     case UploadTransactionsStep.UploadCsv:
-      return 'Upload transactions'
+      return t('uploadTransactions', 'Upload transactions')
     case UploadTransactionsStep.ValidateCsv:
-      return isValid ? 'Review transactions' : 'Some transactions couldn’t be parsed'
+      return isValid ? t('reviewTransactions', 'Review transactions') : t('someTransactionsCouldntBeParsed', 'Some transactions couldn’t be parsed')
     case UploadTransactionsStep.Confirmation:
       return ''
   }
 }
 
-function getDescription(currentStep: UploadTransactionsStep, isValid: boolean | undefined) {
+function getDescription(
+  currentStep: UploadTransactionsStep,
+  isValid: boolean | undefined,
+  t: TFunction,
+) {
   switch (currentStep) {
     case UploadTransactionsStep.UploadCsv:
-      return 'Import a file of transactions from your bank account or credit card'
+      return t('importAFileOfTransactionsFromYourBankAccountOrCreditCard', 'Import a file of transactions from your bank account or credit card')
     case UploadTransactionsStep.ValidateCsv:
       if (isValid) {
-        return 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.'
+        return t('allTransactionsWereParsedSuccessfullyClickUploadTransactionsToFinalizeTheImport', 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.')
       }
-      return 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.'
+      return t('weFoundFormattingErrorsInSomeTransactionsPleaseCorrectTheHighlightedRowsInYourFileAndReuploadIt', 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.')
     case UploadTransactionsStep.Confirmation:
       return ''
   }
 }
 function UploadTransactionsHeader({ currentStep, isValid, onClose }: UploadTransactionsHeaderProps) {
+  const { t } = useTranslation()
   if (currentStep === UploadTransactionsStep.Confirmation) return null
 
-  const title = getTitle(currentStep, isValid)
-  const description = getDescription(currentStep, isValid)
+  const title = getTitle(currentStep, isValid, t)
+  const description = getDescription(currentStep, isValid, t)
 
   return (
     <ModalTitleWithClose
