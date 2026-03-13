@@ -13,11 +13,8 @@ const conditionalPlugin = {
   onVisitNode: (node: unknown, context: PluginContext) => {
     const calleeName = getCallExpressionName(node)
     const isTConditional = calleeName === 'tConditional'
-    const isI18nextConditional = calleeName === 'i18nextConditional'
 
-    if (!isTConditional && !isI18nextConditional) {
-      return
-    }
+    if (!isTConditional) return
 
     const key = getStringValue(getCallArgumentExpression(node, isTConditional ? 1 : 0))
     if (!key) {

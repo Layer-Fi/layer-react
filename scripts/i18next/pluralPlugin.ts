@@ -11,11 +11,8 @@ const pluralPlugin = {
   onVisitNode: (node: unknown, context: PluginContext) => {
     const calleeName = getCallExpressionName(node)
     const isTPlural = calleeName === 'tPlural'
-    const isI18nextPlural = calleeName === 'i18nextPlural'
 
-    if (!isTPlural && !isI18nextPlural) {
-      return
-    }
+    if (!isTPlural) return
 
     const key = getStringValue(getCallArgumentExpression(node, isTPlural ? 1 : 0))
     if (!key) {
