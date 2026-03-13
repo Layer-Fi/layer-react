@@ -1,6 +1,8 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { AlertCircle, CheckIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
+import { translationKey } from '@utils/i18n/translationKey'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import QuickbooksIcon from '@icons/QuickbooksIcon'
 import RefreshCcw from '@icons/RefreshCcw'
@@ -15,12 +17,15 @@ import { getQuickbooksConnectionSyncUiState, QuickbooksConnectionSyncUiState } f
 import { LinkedAccountOptions } from '@components/LinkedAccountOptions/LinkedAccountOptions'
 import { Text, TextSize } from '@components/Typography/Text'
 
-const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasSynced: boolean) => {
+const getBadgeConfig = (
+  quickbooksUiState: QuickbooksConnectionSyncUiState,
+  hasSynced: boolean,
+) => {
   if (!hasSynced) {
     return {
       variant: BadgeVariant.INFO,
-      text: 'Sync',
       icon: <RefreshCcw size={12} />,
+      ...translationKey('sync', 'Sync'),
     } as const
   }
 
@@ -28,30 +33,31 @@ const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasS
     case QuickbooksConnectionSyncUiState.SyncFailed: {
       return {
         variant: BadgeVariant.ERROR,
-        text: 'Retry Sync',
         icon: <AlertCircle size={12} />,
+        ...translationKey('retrySync', 'Retry Sync'),
       } as const
     }
     case QuickbooksConnectionSyncUiState.Connected:
     case QuickbooksConnectionSyncUiState.SyncSuccess: {
       return {
         variant: BadgeVariant.SUCCESS,
-        text: 'Synced',
         icon: <CheckIcon size={12} />,
+        ...translationKey('synced', 'Synced'),
       } as const
     }
     default:
     case QuickbooksConnectionSyncUiState.Syncing: {
       return {
         variant: BadgeVariant.INFO,
-        text: 'Sync',
         icon: <RefreshCcw size={12} />,
+        ...translationKey('sync', 'Sync'),
       } as const
     }
   }
 }
 
 export const IntegrationsQuickbooksItemThumb = () => {
+  const { t } = useTranslation()
   const { quickbooksConnectionStatus, syncFromQuickbooks } = useContext(QuickbooksContext)
   const [hasSynced, setHasSynced] = useState(false)
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false)
@@ -64,13 +70,13 @@ export const IntegrationsQuickbooksItemThumb = () => {
   const menuConfig = useMemo(() => {
     return [
       {
-        name: 'Unlink account',
+        name: t('unlinkAccount', 'Unlink account'),
         action: () => {
           setIsConfirmationModalOpen(true)
         },
       },
     ]
-  }, [])
+  }, [t])
 
   if (!quickbooksConnectionStatus) return null
 
@@ -93,7 +99,7 @@ export const IntegrationsQuickbooksItemThumb = () => {
                   size={BadgeSize.SMALL}
                   hoverable
                 >
-                  {badgeConfig.text}
+                  {t(badgeConfig.i18nKey, badgeConfig.defaultValue)}
                 </Badge>
               )}
           </HStack>

@@ -1,6 +1,7 @@
 import { forwardRef, useCallback, useImperativeHandle } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import type React from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 
 import type { CustomerRefund } from '@schemas/invoices/customerRefund'
 import type { Invoice } from '@schemas/invoices/invoice'
@@ -24,6 +25,7 @@ export type InvoiceRefundFormProps = {
 }
 
 export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefundFormProps, ref) => {
+  const { t } = useTranslation()
   const { form, submitError } = useInvoiceRefundForm({ onSuccess, invoice })
 
   // Prevents default browser form submission behavior since we're handling submission externally
@@ -60,14 +62,18 @@ export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefu
       </form.Subscribe>
       <VStack className={`${INVOICE_REFUND_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <HStack className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} gap='xs' align='center'>
-          <Span size='sm'>Invoice</Span>
-          <Span size='md' weight='bold' ellipsis>
-            #
-            {invoice.invoiceNumber}
-          </Span>
+          <Trans
+            i18nKey='invoiceLabelAndNumber'
+            defaults='<label>Invoice</label> <value>#{{invoiceNumber}}</value>'
+            values={{ invoiceNumber: invoice.invoiceNumber }}
+            components={{
+              label: <Span size='sm' />,
+              value: <Span size='md' weight='bold' ellipsis />,
+            }}
+          />
         </HStack>
         <form.AppField name='completedAt'>
-          {field => <field.FormDateField label='Refund date' inline className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__CompletedAt`} />}
+          {field => <field.FormDateField label={t('refundDate', 'Refund date')} inline className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__CompletedAt`} />}
         </form.AppField>
         <form.Field name='method'>
           {field => (
@@ -80,7 +86,7 @@ export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefu
           )}
         </form.Field>
         <form.AppField name='amount'>
-          {field => <field.FormBigDecimalField label='Amount' inline className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly />}
+          {field => <field.FormBigDecimalField label={t('amount', 'Amount')} inline className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly />}
         </form.AppField>
       </VStack>
     </Form>

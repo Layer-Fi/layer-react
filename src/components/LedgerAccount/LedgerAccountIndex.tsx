@@ -5,6 +5,7 @@ import {
   useState,
 } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { LedgerAccountNodeType } from '@internal-types/chartOfAccounts'
 import { type View } from '@internal-types/general'
@@ -51,6 +52,7 @@ export const LedgerAccount = ({
   view,
   stringOverrides,
 }: LedgerAccountProps) => {
+  const { t } = useTranslation()
   const [currentPage, setCurrentPage] = useState(1)
 
   const {
@@ -127,7 +129,7 @@ export const LedgerAccount = ({
                     className='Layer__ledger-account__balance-label'
                     size={TextSize.sm}
                   >
-                    Current balance
+                    {t('currentBalance', 'Current balance')}
                   </Text>
                   <Text
                     className='Layer__ledger-account__balance-value'
@@ -149,21 +151,21 @@ export const LedgerAccount = ({
                 <>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable?.dateColumnHeader
-                      || 'Date'}
+                      || t('date', 'Date')}
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable
-                      ?.journalIdColumnHeader || 'Journal ID #'}
+                      ?.journalIdColumnHeader || t('journalId', 'Journal ID #')}
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader
-                      || 'Source'}
+                      || t('source', 'Source')}
                   </th>
                   {nodeType !== LedgerAccountNodeType.Leaf
                     && (
                       <th className='Layer__table-header'>
                         {stringOverrides?.ledgerEntriesTable?.accountColumnHeader
-                          || 'Account'}
+                          || t('account', 'Account')}
                       </th>
                     )}
                 </>
@@ -172,15 +174,15 @@ export const LedgerAccount = ({
                 <>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable?.debitColumnHeader
-                      || 'Debit'}
+                      || t('debit', 'Debit')}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable?.creditColumnHeader
-                      || 'Credit'}
+                      || t('credit', 'Credit')}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable
-                      ?.runningBalanceColumnHeader || 'Running balance'}
+                      ?.runningBalanceColumnHeader || t('runningBalance', 'Running balance')}
                   </th>
                 </>
               )}
@@ -215,8 +217,8 @@ export const LedgerAccount = ({
             <div className='Layer__table-state-container Layer__border-top'>
               <DataState
                 status={DataStateStatus.failed}
-                title='Something went wrong'
-                description='We couldn’t load your data.'
+                title={t('somethingWentWrong', 'Something went wrong')}
+                description={t('weCouldntLoadYourData', 'We couldn’t load your data.')}
                 onRefresh={() => { void refetch() }}
                 isLoading={isValidating || isLoading}
               />
@@ -237,8 +239,8 @@ export const LedgerAccount = ({
             <div className='Layer__table-state-container Layer__border-top'>
               <DataState
                 status={DataStateStatus.info}
-                title='No ledger activity'
-                description='There are no ledger entries in this account.'
+                title={t('noLedgerActivity', 'No ledger activity')}
+                description={t('thereAreNoLedgerEntriesInThisAccount', 'There are no ledger entries in this account.')}
               />
             </div>
           )

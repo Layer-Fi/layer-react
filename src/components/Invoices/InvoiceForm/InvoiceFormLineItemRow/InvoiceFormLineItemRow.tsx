@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { Trash } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { nrbdEquals } from '@schemas/nonRecursiveBigDecimal'
 import { Button } from '@ui/Button/Button'
@@ -17,6 +18,7 @@ type InvoiceFormLineItemRowProps = {
 }
 
 export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }: InvoiceFormLineItemRowProps) => {
+  const { t } = useTranslation()
   return (
     <VStack>
       <HStack
@@ -25,7 +27,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
         className={classNames('Layer__InvoiceForm__LineItem', isReadOnly && 'Layer__InvoiceForm__LineItem--readonly')}
       >
         <form.AppField name={`lineItems[${index}].description`}>
-          {field => <field.FormTextField label='Description' showLabel={index === 0} isReadOnly={isReadOnly} />}
+          {field => <field.FormTextField label={t('description', 'Description')} showLabel={index === 0} isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField
           name={`lineItems[${index}].quantity`}
@@ -41,7 +43,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
             },
           }}
         >
-          {field => <field.FormNonRecursiveBigDecimalField label='Quantity' showLabel={index === 0} isReadOnly={isReadOnly} />}
+          {field => <field.FormNonRecursiveBigDecimalField label={t('quantity', 'Quantity')} showLabel={index === 0} isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField
           name={`lineItems[${index}].unitPrice`}
@@ -57,7 +59,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
             },
           }}
         >
-          {field => <field.FormNonRecursiveBigDecimalField label='Rate' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
+          {field => <field.FormNonRecursiveBigDecimalField label={t('rate', 'Rate')} mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField
           name={`lineItems[${index}].amount`}
@@ -73,13 +75,13 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
             },
           }}
         >
-          {field => <field.FormNonRecursiveBigDecimalField label='Amount' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
+          {field => <field.FormNonRecursiveBigDecimalField label={t('amount', 'Amount')} mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField name={`lineItems[${index}].isTaxable`}>
-          {field => <field.FormCheckboxField label='Taxable' showLabel={index === 0} isReadOnly={isReadOnly} />}
+          {field => <field.FormCheckboxField label={t('taxable', 'Taxable')} showLabel={index === 0} isReadOnly={isReadOnly} />}
         </form.AppField>
         {!isReadOnly
-          && <Button variant='outlined' icon inset aria-label='Delete line item' onPress={onDeleteLine}><Trash size={16} /></Button>}
+          && <Button variant='outlined' icon inset aria-label={t('deleteLineItem', 'Delete line item')} onPress={onDeleteLine}><Trash size={16} /></Button>}
       </HStack>
     </VStack>
   )

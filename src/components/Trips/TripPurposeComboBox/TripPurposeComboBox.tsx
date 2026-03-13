@@ -1,11 +1,12 @@
-import { useCallback, useId } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { TripPurpose } from '@schemas/trip'
+import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { getPurposeLabel } from '@components/Trips/utils'
 
 import './tripPurposeComboBox.scss'
 
@@ -14,13 +15,11 @@ type TripPurposeOption = {
   value: TripPurpose
 }
 
-const TripPurposeOptionConfig = {
-  [TripPurpose.Business]: { label: getPurposeLabel(TripPurpose.Business), value: TripPurpose.Business },
-  [TripPurpose.Personal]: { label: getPurposeLabel(TripPurpose.Personal), value: TripPurpose.Personal },
-  [TripPurpose.Unreviewed]: { label: getPurposeLabel(TripPurpose.Unreviewed), value: TripPurpose.Unreviewed },
-}
-
-const options = Object.values(TripPurposeOptionConfig)
+const TRIP_PURPOSE_OPTIONS = [
+  { value: TripPurpose.Business, ...translationKey('business', 'Business') },
+  { value: TripPurpose.Personal, ...translationKey('personal', 'Personal') },
+  { value: TripPurpose.Unreviewed, ...translationKey('unreviewed', 'Unreviewed') },
+]
 
 type TripPurposeComboBoxProps = {
   value: TripPurpose | null
@@ -30,23 +29,33 @@ type TripPurposeComboBoxProps = {
 }
 
 export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, className }: TripPurposeComboBoxProps) => {
+  const { t } = useTranslation()
   const combinedClassName = classNames(
     'Layer__TripPurposeComboBox',
     'Layer__TripPurposeComboBox--inline',
     className,
   )
 
-  const selectedOption = value ? TripPurposeOptionConfig[value] : null
-  const onSelectedValueChange = useCallback((option: TripPurposeOption | null) => {
+  const options = useMemo<TripPurposeOption[]>(
+    () => TRIP_PURPOSE_OPTIONS.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
+  const selectedOption = value ? (options.find(o => o.value === value) ?? null) : null
+  const handleChange = (option: null | TripPurposeOption) => {
     onValueChange(option?.value || null)
-  }, [onValueChange])
+  }
+  const onSelectedValueChange = useCallback(handleChange, [onValueChange])
 
   const inputId = useId()
 
   return (
     <HStack className={combinedClassName}>
       <Label size='sm' htmlFor={inputId}>
-        Purpose
+        {t('purposeLabel', 'Purpose')}
       </Label>
       <ComboBox
         options={options}

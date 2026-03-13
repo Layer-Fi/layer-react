@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
 import { updateInvoiceWithRefund } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/refund/useRefundInvoice'
@@ -11,6 +12,7 @@ type InvoiceRefundModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   onSuccess: (invoice: Invoice) => void
 }
 export function InvoiceRefundModal({ isOpen, onOpenChange, invoice, onSuccess }: InvoiceRefundModalProps) {
+  const { t } = useTranslation()
   const formRef = useRef<{ submit: () => Promise<void> }>(null)
 
   const onConfirm = useCallback(() => formRef.current?.submit(), [])
@@ -28,11 +30,11 @@ export function InvoiceRefundModal({ isOpen, onOpenChange, invoice, onSuccess }:
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title='Issue refund'
+      title={t('issueRefund', 'Issue refund')}
       content={content}
       onConfirm={onConfirm}
-      confirmLabel='Refund Invoice'
-      errorText='There was an error issuing a refund for this invoice. Please check your connection and try again in a few seconds.'
+      confirmLabel={t('refundInvoice', 'Refund Invoice')}
+      errorText={t('errorIssuingRefundTryAgain', 'There was an error issuing a refund for this invoice. Please check your connection and try again in a few seconds.')}
       closeOnConfirm={false}
     />
   )

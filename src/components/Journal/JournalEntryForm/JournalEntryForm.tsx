@@ -1,6 +1,7 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import type React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { CustomerVendorSchema } from '@schemas/customerVendor'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
@@ -19,7 +20,6 @@ import { Separator } from '@components/Separator/Separator'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 import { TextSize } from '@components/Typography/Text'
 
-import './journalEntryForm.scss'
 import './journalEntryForm.scss'
 
 type CustomerVendor = typeof CustomerVendorSchema.Type
@@ -40,6 +40,7 @@ export type JournalEntryFormProps = {
 }
 
 export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, JournalEntryFormProps>((props, ref) => {
+  const { t } = useTranslation()
   const { toJournalTable } = useJournalNavigation()
 
   const { isReadOnly = false, onSuccess, onChangeFormState, showTags = true, showCustomerVendor = true } = props
@@ -94,7 +95,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
           <VStack gap='xs'>
             <form.AppField name='entryAt'>
-              {field => <field.FormDateField label='Entry date' isReadOnly={isReadOnly} />}
+              {field => <field.FormDateField label={t('entryDate', 'Entry date')} isReadOnly={isReadOnly} />}
             </form.AppField>
           </VStack>
           <div></div>
@@ -107,7 +108,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
             <form.AppField name='referenceNumber'>
               {field => (
                 <field.FormTextField
-                  label='Reference number'
+                  label={t('referenceNumber', 'Reference number')}
                   isReadOnly={isReadOnly}
                 />
               )}
@@ -118,7 +119,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
             <form.AppField name='createdBy'>
               {field => (
                 <field.FormTextField
-                  label='Created by'
+                  label={t('createdBy', 'Created by')}
                   isReadOnly={isReadOnly}
                 />
               )}
@@ -158,7 +159,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
                         <CustomerVendorSelector
                           selectedCustomerVendor={currentCustomerVendor}
                           onSelectedCustomerVendorChange={handleSelectionChange}
-                          placeholder='Select customer or vendor'
+                          placeholder={t('selectCustomerOrVendor', 'Select customer or vendor')}
                           isReadOnly={isReadOnly}
                         />
                       )
@@ -191,7 +192,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}
-            title='Add Debits'
+            title={t('addDebits', 'Add Debits')}
             direction={LedgerEntryDirection.Debit}
             showTags={showTags}
           />
@@ -202,7 +203,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}
-            title='Add Credits'
+            title={t('addCredits', 'Add Credits')}
             direction={LedgerEntryDirection.Credit}
             showTags={showTags}
           />
@@ -213,7 +214,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         <HStack justify='space-between' gap='xl'>
           <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__AdditionalTextFields`}>
             <form.AppField name='memo'>
-              {field => <field.FormTextAreaField label='Memo' isReadOnly={isReadOnly} />}
+              {field => <field.FormTextAreaField label={t('memo', 'Memo')} isReadOnly={isReadOnly} />}
             </form.AppField>
           </VStack>
         </HStack>

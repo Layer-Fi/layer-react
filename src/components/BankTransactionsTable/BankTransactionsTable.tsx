@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
@@ -52,6 +53,7 @@ export const BankTransactionsTable = ({
   page,
   lastPage,
 }: BankTransactionsTableProps) => {
+  const { t } = useTranslation()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const { mutate, display } = useBankTransactionsContext()
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
@@ -89,28 +91,28 @@ export const BankTransactionsTable = ({
                   isSelected={isAllSelected}
                   isIndeterminate={isPartiallySelected}
                   onChange={onHeaderCheckboxChange}
-                  aria-label='Select all transactions on this page'
+                  aria-label={t('selectAllTransactionsOnThisPage', 'Select all transactions on this page')}
                 />
               </span>
             </th>
           )}
           <th className='Layer__table-header Layer__bank-transactions__date-col'>
-            {stringOverrides?.transactionsTable?.dateColumnHeaderText || 'Date'}
+            {stringOverrides?.transactionsTable?.dateColumnHeaderText || t('date', 'Date')}
           </th>
           <th className='Layer__table-header Layer__bank-transactions__tx-col'>
             {stringOverrides?.transactionsTable?.transactionColumnHeaderText
-              || 'Transaction'}
+              || t('transaction', 'Transaction')}
           </th>
           <th className='Layer__table-header Layer__bank-transactions__account-col'>
             {stringOverrides?.transactionsTable?.accountColumnHeaderText
-              || 'Account'}
+              || t('account', 'Account')}
           </th>
           <th
             className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'
             {...showReceiptDataProperties}
           >
             {stringOverrides?.transactionsTable?.amountColumnHeaderText
-              || 'Amount'}
+              || t('amount', 'Amount')}
           </th>
           <th
             className='Layer__table-header Layer__bank-transactions__documents-col'
@@ -120,13 +122,13 @@ export const BankTransactionsTable = ({
             ? (
               <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
                 {stringOverrides?.transactionsTable?.categorizeColumnHeaderText
-                  || 'Categorize'}
+                  || t('categorize', 'Categorize')}
               </th>
             )
             : (
               <th className='Layer__table-header Layer__table-cell__category-col'>
                 {stringOverrides?.transactionsTable?.categoryColumnHeaderText
-                  || 'Category'}
+                  || t('category', 'Category')}
               </th>
             )}
         </tr>
@@ -161,7 +163,7 @@ export const BankTransactionsTable = ({
             <tr>
               <td colSpan={3}>
                 <SyncingComponent
-                  title='Syncing historical account data'
+                  titleVariant='historical'
                   timeSync={5}
                   onRefresh={onRefresh}
                 />

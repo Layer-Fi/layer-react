@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import {
   Cell,
   Label,
@@ -39,6 +40,7 @@ export const DetailedChart = ({
   isLoading,
   showDatePicker = true,
 }: DetailedChartProps) => {
+  const { t } = useTranslation()
   const chartData = useMemo(() => filteredData.map(x => ({
     ...x,
     value: x.value > 0 ? x.value : 0,
@@ -50,7 +52,7 @@ export const DetailedChart = ({
 
   const text = hoveredItem
     ? hoveredItem.displayName
-    : 'Total'
+    : t('total', 'Total')
 
   const value = hoveredItem
     ? filteredData.find(

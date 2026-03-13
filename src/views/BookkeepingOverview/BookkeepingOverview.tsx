@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
+import { useTranslation } from 'react-i18next'
 
 import { type CallBooking as CallBookingData } from '@schemas/callBooking'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
@@ -57,6 +58,7 @@ export const BookkeepingOverview = ({
   stringOverrides,
   slotProps,
 }: BookkeepingOverviewProps) => {
+  const { t } = useTranslation()
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
   const { value: sizeClass } = useSizeClass()
@@ -68,13 +70,13 @@ export const BookkeepingOverview = ({
   const toggleOptions = useMemo(() => [
     {
       value: 'revenue',
-      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || 'Revenue',
+      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || t('revenue', 'Revenue'),
     },
     {
       value: 'expenses',
-      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || 'Expenses',
+      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || t('expenses', 'Expenses'),
     },
-  ], [stringOverrides])
+  ], [t, stringOverrides])
 
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
@@ -89,7 +91,7 @@ export const BookkeepingOverview = ({
     <ProfitAndLoss asContainer={false}>
       <View
         viewClassName='Layer__bookkeeping-overview--view'
-        title={stringOverrides?.title || title || 'Bookkeeping overview'}
+        title={stringOverrides?.title || title || t('bookkeepingOverview', 'Bookkeeping overview')}
         header={(
           <Header>
             <HeaderRow>
@@ -143,7 +145,7 @@ export const BookkeepingOverview = ({
             }}
           >
             <ProfitAndLoss.Header
-              text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
+              text={stringOverrides?.profitAndLoss?.header || t('profitLoss', 'Profit & Loss')}
               withStatus
             />
             <VStack pb='md' pi='md' fluid>
@@ -157,7 +159,7 @@ export const BookkeepingOverview = ({
         </div>
         <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>
           <Toggle
-            ariaLabel='Chart type'
+            ariaLabel={t('chartType', 'Chart type')}
             options={toggleOptions}
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}

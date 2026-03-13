@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { useRejectCategorizationRulesUpdateSuggestion } from '@hooks/api/businesses/[business-id]/categorization-rules/suggestions/useRejectCategorizationRulesUpdateSuggestion'
@@ -17,6 +18,7 @@ interface RuleUpdatesPromptStepProps {
 }
 
 export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleUpdatesPromptStepProps) {
+  const { t } = useTranslation()
   const { next } = useWizard()
   const { addToast } = useLayerContext()
   const { trigger: rejectRuleSuggestion, isMutating } = useRejectCategorizationRulesUpdateSuggestion()
@@ -32,10 +34,10 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
       .then(() => {
         close()
       }).catch(() => {
-        addToast({ content: 'Failed to reject rule suggestion', type: 'error' })
+        addToast({ content: t('failedToRejectRuleSuggestion', 'Failed to reject rule suggestion'), type: 'error' })
       })
   },
-  [addToast, close, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId])
+  [addToast, close, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId, t])
 
   return (
     <VStack gap='md' pbe={isDrawer ? 'xl' : undefined}>
@@ -47,16 +49,16 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
           ? (
             <CreateRuleButton
               newRule={ruleSuggestion.newRule}
-              slotProps={{ fullWidth: true, children: 'Yes, always categorize' }}
+              slotProps={{ fullWidth: true, children: t('yesAlwaysCategorize', 'Yes, always categorize') }}
             />
           )
           : (
             <Button onPress={() => void next()} fullWidth>
-              Yes, always categorize
+              {t('yesAlwaysCategorize', 'Yes, always categorize')}
             </Button>
           )}
         <Button onPress={close} variant='outlined' fullWidth>
-          No, I’ll decide each time
+          {t('noIllDecideEachTime', 'No, I’ll decide each time')}
         </Button>
         <HStack align='center' gap='xs'>
           <Separator />
@@ -64,12 +66,12 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
             size='sm'
             variant='subtle'
           >
-            OR
+            {t('or', 'OR')}
           </Span>
           <Separator />
         </HStack>
         <Button onPress={() => void handleDisableSuggestionPrompt()} isPending={isMutating} variant='outlined' fullWidth>
-          Don’t ask again
+          {t('dontAskAgain', 'Don’t ask again')}
         </Button>
       </VStack>
     </VStack>

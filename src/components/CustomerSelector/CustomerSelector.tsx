@@ -1,5 +1,7 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
 import { getCustomerName } from '@utils/customerVendor'
@@ -52,7 +54,8 @@ type CustomerSelectorProps = CustomerSelectorBaseProps & (
   | { isCreatable?: false, onCreateCustomer?: (name: string) => void }
 )
 
-const formatCreateLabel = (inputValue: string) => inputValue ? `Create customer "${inputValue}"` : 'Create new customer'
+const formatCreateLabel = (inputValue: string, t: TFunction) =>
+  inputValue ? t('createCustomerInputValue', 'Create customer "{{inputValue}}"', { inputValue }) : t('createNewCustomer', 'Create new customer')
 
 export function CustomerSelector({
   selectedCustomer,
@@ -64,6 +67,7 @@ export function CustomerSelector({
   inline,
   className,
 }: CustomerSelectorProps) {
+  const { t } = useTranslation()
   const combinedClassName = classNames(
     'Layer__CustomerSelector',
     inline && 'Layer__CustomerSelector--inline',
@@ -132,10 +136,10 @@ export function CustomerSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        No matching customer
+        {t('noMatchingCustomers', 'No matching customers')}
       </P>
     ),
-    [],
+    [t],
   )
 
   const ErrorMessage = useMemo(
@@ -144,10 +148,10 @@ export function CustomerSelector({
         size='xs'
         status='error'
       >
-        An error occurred while loading customers.
+        {t('anErrorOccurredWhileLoadingCustomers', 'An error occurred while loading customers.')}
       </P>
     ),
-    [],
+    [t],
   )
 
   const inputId = useId()
@@ -169,12 +173,17 @@ export function CustomerSelector({
   }
 
   const creatableProps = isCreatable
-    ? { isCreatable: true as const, onCreateOption: onCreateCustomer, formatCreateLabel, groups: [{ label: 'Customers', options }] }
+    ? {
+      isCreatable: true as const,
+      onCreateOption: onCreateCustomer,
+      formatCreateLabel: (inputValue: string) => formatCreateLabel(inputValue, t),
+      groups: [{ label: t('customers', 'Customers'), options }],
+    }
     : { isCreatable: false as const, options }
 
   return (
     <VStack className={combinedClassName}>
-      <Label htmlFor={inputId} size='sm'>Customer</Label>
+      <Label htmlFor={inputId} size='sm'>{t('customer', 'Customer')}</Label>
       <MaybeCreatableComboBox {...sharedProps} {...creatableProps} />
     </VStack>
   )

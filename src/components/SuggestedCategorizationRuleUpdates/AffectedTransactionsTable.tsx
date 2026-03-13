@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
+import { useTranslation } from 'react-i18next'
 
 import type { MinimalBankTransaction } from '@schemas/bankTransactions/base'
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
@@ -28,34 +29,42 @@ export interface AffectedTransactionsTableProps {
   isError?: boolean
 }
 
-const ErrorState = () => (
-  <DataState
-    spacing
-    status={DataStateStatus.failed}
-    title='Error loading transactions'
-    description='There was an error loading the affected transactions'
-  />
-)
+const ErrorState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      spacing
+      status={DataStateStatus.failed}
+      title={t('errorLoadingTransactions', 'Error loading transactions')}
+      description={t('thereWasAnErrorLoadingTheAffectedTransactions', 'There was an error loading the affected transactions')}
+    />
+  )
+}
 
-const EmptyState = () => (
-  <DataState
-    spacing
-    status={DataStateStatus.info}
-    title='No transactions found'
-    description='There are no affected transactions to display'
-  />
-)
+const EmptyState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      spacing
+      status={DataStateStatus.info}
+      title={t('noTransactionsFound', 'No transactions found')}
+      description={t('thereAreNoAffectedTransactionsToDisplay', 'There are no affected transactions to display')}
+    />
+  )
+}
 
 export const AffectedTransactionsTable = ({
   transactions,
   isLoading = false,
   isError = false,
 }: AffectedTransactionsTableProps) => {
+  const { t } = useTranslation()
+
   type AffectedTransactionRowType = Row<MinimalBankTransaction>
   const columnConfig: NestedColumnConfig<MinimalBankTransaction> = useMemo(() => [
     {
       id: TransactionColumns.Date,
-      header: 'Date',
+      header: t('Date', 'Date'),
       cell: (row: AffectedTransactionRowType) => (
         <DateTime
           valueAsDate={row.original.date}
@@ -68,7 +77,7 @@ export const AffectedTransactionsTable = ({
     },
     {
       id: TransactionColumns.Description,
-      header: 'Description',
+      header: t('description', 'Description'),
       cell: (row: AffectedTransactionRowType) => (
         <Span withTooltip>
           {row.original.counterpartyName || row.original.description || '-'}
@@ -78,19 +87,19 @@ export const AffectedTransactionsTable = ({
     },
     {
       id: TransactionColumns.Amount,
-      header: 'Amount',
+      header: t('amount', 'Amount'),
       cell: (row: AffectedTransactionRowType) => {
         const amount = row.original.direction === BankTransactionDirection.Credit ? row.original.amount : -row.original.amount
         return <MoneySpan amount={amount} />
       },
     },
-  ], [])
+  ], [t])
 
   return (
     <VStack className='Layer__AffectedTransactionsTable'>
       <VirtualizedDataTable<MinimalBankTransaction>
         componentName={COMPONENT_NAME}
-        ariaLabel='Affected transactions'
+        ariaLabel={t('affectedTransactions', 'Affected transactions')}
         columnConfig={columnConfig}
         data={transactions}
         isLoading={isLoading}

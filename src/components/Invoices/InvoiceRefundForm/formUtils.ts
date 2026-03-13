@@ -1,5 +1,6 @@
 import { fromDate, getLocalTimeZone, toCalendarDate, today } from '@internationalized/date'
 import { formatDate, startOfToday } from 'date-fns'
+import type { TFunction } from 'i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
@@ -16,24 +17,31 @@ export const getInvoiceRefundFormDefaultValues = (invoice: Invoice): InvoiceRefu
   }
 }
 
-export const validateInvoiceRefundForm = ({ invoiceRefund, invoice }: { invoiceRefund: InvoiceRefundForm, invoice: Invoice }) => {
+export const validateInvoiceRefundForm = (
+  { invoiceRefund, invoice }: { invoiceRefund: InvoiceRefundForm, invoice: Invoice },
+  t: TFunction,
+) => {
   const { completedAt, method } = invoiceRefund
 
   const errors = []
   if (completedAt === null) {
-    errors.push({ completedAt: 'Refund date is a required field.' })
+    errors.push({ completedAt: t('refundDateIsARequiredField', 'Refund date is a required field.') })
   }
 
   if (completedAt && invoice.paidAt && toCalendarDate(completedAt).compare(toCalendarDate(fromDate(invoice.paidAt, 'UTC'))) < 0) {
-    errors.push({ completedAt: `Refund date cannot be before the last invoice payment (${formatDate(invoice.paidAt, DATE_FORMAT_SHORT)}).` })
+    errors.push({
+      completedAt: t('refundDateCannotBeBeforeLastInvoicePaymentDate', 'Refund date cannot be before the last invoice payment ({{lastPaymentDate}}).', {
+        lastPaymentDate: formatDate(invoice.paidAt, DATE_FORMAT_SHORT),
+      }),
+    })
   }
 
   if (completedAt && toCalendarDate(completedAt).compare(today(getLocalTimeZone())) > 0) {
-    errors.push({ completedAt: 'Refund date cannot be in the future.' })
+    errors.push({ completedAt: t('refundDateCannotBeInTheFuture', 'Refund date cannot be in the future.') })
   }
 
   if (method === null) {
-    errors.push({ method: 'Payment method is a required field.' })
+    errors.push({ method: t('paymentMethodIsARequiredField', 'Payment method is a required field.') })
   }
 
   return errors.length > 0 ? errors : null

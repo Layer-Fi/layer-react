@@ -1,4 +1,5 @@
 import { Fragment, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { TableCellAlign } from '@internal-types/table'
 import type { LineItem } from '@schemas/common/lineItem'
@@ -33,6 +34,7 @@ export const ProfitAndLossTableComponent = ({
   stringOverrides,
   onLineItemClick,
 }: ProfitAndLossTableProps) => {
+  const { t } = useTranslation()
   const {
     data,
     isLoading,
@@ -162,7 +164,7 @@ export const ProfitAndLossTableComponent = ({
               lineItem: {
                 name: 'gross_profit',
                 value: data.grossProfit,
-                displayName: stringOverrides?.grossProfitLabel || 'Gross Profit',
+                displayName: stringOverrides?.grossProfitLabel || t('grossProfit', 'Gross Profit'),
                 lineItems: [],
               },
               depth: 0,
@@ -181,7 +183,7 @@ export const ProfitAndLossTableComponent = ({
                 name: 'profit_before_taxes',
                 value: data.profitBeforeTaxes,
                 displayName:
-                  stringOverrides?.profitBeforeTaxesLabel || 'Profit Before Taxes',
+                  stringOverrides?.profitBeforeTaxesLabel || t('profitBeforeTaxes', 'Profit Before Taxes'),
                 lineItems: [],
               },
               depth: 0,
@@ -199,7 +201,7 @@ export const ProfitAndLossTableComponent = ({
               lineItem: {
                 name: 'net_profit',
                 value: data.netProfit,
-                displayName: stringOverrides?.netProfitLabel || 'Net Profit',
+                displayName: stringOverrides?.netProfitLabel || t('netProfit', 'Net Profit'),
                 lineItems: [],
               },
               depth: 0,

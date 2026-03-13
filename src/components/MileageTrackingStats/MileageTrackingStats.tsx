@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { getYear } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -39,23 +40,27 @@ const MileageTrackingStatsRow = ({ label, value }: { label: string, value: numbe
   </VStack>
 )
 
-const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdown }: MileageTrackingStatsCardProps) => (
-  <VStack className='Layer__MileageTrackingStats__Card' gap='3xs'>
-    <Span size='md'>{title}</Span>
-    {formatAsMoney
-      ? <MoneySpan amount={amount} size='lg' weight='bold' />
-      : <Span size='lg' weight='bold'>{amount.toLocaleString()}</Span>}
-    {breakdown && (
-      <HStack gap='md'>
-        <MileageTrackingStatsRow label='Business' value={breakdown.business} />
-        <MileageTrackingStatsRow label='Personal' value={breakdown.personal} />
-        <MileageTrackingStatsRow label='Uncategorized' value={breakdown.uncategorized} />
-      </HStack>
-    )}
-  </VStack>
-)
+const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdown }: MileageTrackingStatsCardProps) => {
+  const { t } = useTranslation()
+  return (
+    <VStack className='Layer__MileageTrackingStats__Card' gap='3xs'>
+      <Span size='md'>{title}</Span>
+      {formatAsMoney
+        ? <MoneySpan amount={amount} size='lg' weight='bold' />
+        : <Span size='lg' weight='bold'>{amount.toLocaleString()}</Span>}
+      {breakdown && (
+        <HStack gap='md'>
+          <MileageTrackingStatsRow label={t('business', 'Business')} value={breakdown.business} />
+          <MileageTrackingStatsRow label={t('personal', 'Personal')} value={breakdown.personal} />
+          <MileageTrackingStatsRow label={t('uncategorized', 'Uncategorized')} value={breakdown.uncategorized} />
+        </HStack>
+      )}
+    </VStack>
+  )
+}
 
 export const MileageTrackingStats = () => {
+  const { t } = useTranslation()
   const { data: mileageData, isLoading, isError } = useMileageSummary()
   const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
   const selectedYear = getYear(startDate)
@@ -82,7 +87,7 @@ export const MileageTrackingStats = () => {
   if (isError) {
     return (
       <Container name='mileage-tracking-stats'>
-        <DataState status={DataStateStatus.failed} title='Failed to load mileage data' spacing />
+        <DataState status={DataStateStatus.failed} title={t('failedToLoadMileageData', 'Failed to load mileage data')} spacing />
       </Container>
     )
   }
@@ -102,12 +107,12 @@ export const MileageTrackingStats = () => {
       <div className='Layer__MileageTrackingStats__Content'>
         <VStack className='Layer__MileageTrackingStats__Cards' gap='md' justify='center'>
           <MileageTrackingStatsCard
-            title='Total Deduction'
+            title={t('totalDeduction', 'Total Deduction')}
             amount={selectedYearData?.estimatedDeduction ?? 0}
             formatAsMoney
           />
           <MileageTrackingStatsCard
-            title='Total Miles'
+            title={t('totalMiles', 'Total Miles')}
             amount={selectedYearData?.miles ?? 0}
             breakdown={{
               business: selectedYearData?.businessMiles ?? 0,
@@ -116,7 +121,7 @@ export const MileageTrackingStats = () => {
             }}
           />
           <MileageTrackingStatsCard
-            title='Trips'
+            title={t('trips', 'Trips')}
             amount={selectedYearData?.trips ?? 0}
             breakdown={{
               business: selectedYearData?.businessTrips ?? 0,

@@ -1,5 +1,6 @@
 import { useMemo, useRef } from 'react'
 import classNames from 'classnames'
+import i18next from 'i18next'
 import { Filter } from 'lucide-react'
 import {
   components,
@@ -38,15 +39,12 @@ const getSelectedLabels = <T extends ComboBoxOption>(selectedValues: T | readonl
       return ''
     }
 
-    if (labels.length === 1) {
-      return labels[0]
-    }
+    const listFormatter = new Intl.ListFormat(i18next.resolvedLanguage || i18next.language || 'en', {
+      style: 'long',
+      type: 'conjunction',
+    })
 
-    if (labels.length === 2) {
-      return `${labels[0]} and ${labels[1]}`
-    }
-
-    return `${labels.slice(0, -1).join(', ')}, and ${labels[labels.length - 1]}`
+    return listFormatter.format(labels)
   }
 
   return (selectedValues as T).label

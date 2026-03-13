@@ -19,6 +19,7 @@ type TaxTableRowProps = {
   label: string
   value: string | number
   variant: TaxTableRowVariant
+  sign?: string
 }
 
 const VARIANT_CLASS_MAP: Record<TaxTableRowVariant, string> = {
@@ -31,14 +32,15 @@ const VARIANT_CLASS_MAP: Record<TaxTableRowVariant, string> = {
 
 const BOLD_VARIANTS = new Set([TaxTableRowVariant.SectionTotal, TaxTableRowVariant.Total])
 
-export const TaxTableRow = ({ label, value, variant }: TaxTableRowProps) => {
+export const TaxTableRow = ({ label, value, variant, sign }: TaxTableRowProps) => {
   const { isMobile } = useSizeClass()
   const isEmpty = variant === TaxTableRowVariant.Empty
   const isBold = BOLD_VARIANTS.has(variant)
   const mobileClass = isMobile ? 'Layer__UI__Table-Row--mobile' : ''
   const className = classnames(VARIANT_CLASS_MAP[variant], mobileClass)
+  const formattedLabel = sign ? `${sign} ${label}` : label
 
-  const labelElement = isBold ? <Span weight='bold'>{label}</Span> : <Span>{label}</Span>
+  const labelElement = isBold ? <Span weight='bold'>{formattedLabel}</Span> : <Span>{formattedLabel}</Span>
   const valueElement = typeof value === 'number'
     ? <MoneySpan weight={isBold ? 'bold' : undefined} amount={value} />
     : <Span weight={isBold ? 'bold' : undefined}>{value}</Span>

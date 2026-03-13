@@ -1,3 +1,5 @@
+import type { TFunction } from 'i18next'
+
 import { type Vehicle, type VehicleForm } from '@schemas/vehicle'
 
 export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
@@ -22,22 +24,22 @@ export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
   }
 }
 
-export const validateVehicleForm = ({ vehicle }: { vehicle: VehicleForm }) => {
+export const validateVehicleForm = ({ vehicle }: { vehicle: VehicleForm }, t: TFunction) => {
   const { makeAndModel, year } = vehicle
 
   const errors = []
 
   if (!makeAndModel.trim()) {
-    errors.push({ makeAndModel: 'Make and model is a required field.' })
+    errors.push({ makeAndModel: t('makeAndModelIsARequiredField', 'Make and model is a required field.') })
   }
 
   if (Number.isNaN(year)) {
-    errors.push({ year: 'Year is a required field.' })
+    errors.push({ year: t('yearIsARequiredField', 'Year is a required field.') })
   }
 
   const currentYear = new Date().getFullYear()
   if (!Number.isNaN(year) && (year < 1900 || year > currentYear + 1)) {
-    errors.push({ year: `Year must be between 1900 and ${currentYear + 1}.` })
+    errors.push({ year: t('yearMustBeBetween1900AndMaxYear', 'Year must be between 1900 and {{maxYear}}.', { maxYear: currentYear + 1 }) })
   }
 
   return errors.length > 0 ? errors : null

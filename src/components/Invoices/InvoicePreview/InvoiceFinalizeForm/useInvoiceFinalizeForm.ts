@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
+import { useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
 import type { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
@@ -27,6 +28,7 @@ export const useInvoiceFinalizeForm = ({
   initialPaymentMethods,
   onSuccess,
 }: UseInvoiceFinalizeFormProps) => {
+  const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { trigger: finalizeInvoice } = useFinalizeInvoice({ invoiceId: invoice.id })
 
@@ -56,8 +58,8 @@ export const useInvoiceFinalizeForm = ({
   )
 
   const validators = useMemo(() => ({
-    onDynamic: validateInvoiceFinalizeForm,
-  }), [])
+    onDynamic: (args: { value: InvoiceFinalizeFormValues }) => validateInvoiceFinalizeForm(args, t),
+  }), [t])
 
   const form = useAppForm<InvoiceFinalizeFormValues>({
     defaultValues,

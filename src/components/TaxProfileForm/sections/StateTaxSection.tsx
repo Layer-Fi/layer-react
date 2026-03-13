@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { FilingStatusComboBox } from '@components/TaxProfileForm/FilingStatusComboBox/FilingStatusComboBox'
@@ -5,11 +7,12 @@ import { getFormFieldProps, type TaxProfileFormSectionProps } from '@components/
 import { UsStateComboBox } from '@components/UsStateComboBox/UsStateComboBox'
 
 export const StateTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFormSectionProps) => {
+  const { t } = useTranslation()
   const desktopFieldProps = getFormFieldProps(isDesktop)
 
   return (
     <VStack className='Layer__TaxProfileForm__Section' gap='md'>
-      <Heading level={3}>State Tax Information</Heading>
+      <Heading level={3}>{t('stateTaxInformation', 'State Tax Information')}</Heading>
 
       <form.Field name='usConfiguration.state.taxState'>
         {field => (
@@ -36,7 +39,7 @@ export const StateTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFormS
       <form.AppField name='usConfiguration.state.withholding.useCustomWithholding'>
         {field => (
           <field.FormRadioGroupYesNoField
-            label='Use custom withholding?'
+            label={t('useCustomWithholding', 'Use custom withholding?')}
             isReadOnly={isReadOnly}
             {...desktopFieldProps}
           />
@@ -48,10 +51,10 @@ export const StateTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFormS
           <form.AppField name='usConfiguration.state.withholding.amount'>
             {field => (
               <field.FormBigDecimalField
-                label='Withholding amount'
+                label={t('withholdingAmount', 'Withholding amount')}
                 mode='currency'
                 isReadOnly={isReadOnly}
-                placeholder='Enter amount'
+                placeholder={t('enterAmount', 'Enter amount')}
                 {...desktopFieldProps}
               />
             )}

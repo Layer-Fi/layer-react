@@ -1,6 +1,9 @@
 import { useContext } from 'react'
 import { useForm } from '@tanstack/react-form'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/i18n/plural'
 import { useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
 import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
@@ -15,39 +18,49 @@ import { useWizard } from '@components/Wizard/Wizard'
 
 import './linkAccountsConfirmationStep.scss'
 
-function getSubmitButtonText({
-  totalCount,
-  confirmedCount,
-}: { totalCount: number, confirmedCount: number }) {
+function getSubmitButtonText(
+  { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number },
+  t: TFunction,
+) {
   if (confirmedCount === totalCount) {
-    return totalCount > 1
-      ? 'Confirm All Accounts'
-      : 'Confirm Account'
+    return tPlural(t, 'confirmAllAccounts', {
+      count: totalCount,
+      one: 'Confirm Account',
+      other: 'Confirm All Accounts',
+    })
   }
 
   if (confirmedCount === 0) {
-    return totalCount > 1
-      ? 'Exclude All Accounts'
-      : 'Exclude Account'
+    return tPlural(t, 'excludeAllAccounts', {
+      count: totalCount,
+      one: 'Exclude Account',
+      other: 'Exclude All Accounts',
+    })
   }
 
-  return `Confirm ${confirmedCount} Selected Account${confirmedCount > 1 ? 's' : ''}`
+  return tPlural(t, 'confirmSelectedAccounts', {
+    count: confirmedCount,
+    one: 'Confirm {{count}} Selected Account',
+    other: 'Confirm {{count}} Selected Accounts',
+  })
 }
 
 function AccountConfirmationEmptyList() {
+  const { t } = useTranslation()
   const CLASS_NAME = 'Layer__AccountConfirmationEmptyList'
 
   return (
     <div className={CLASS_NAME}>
       <VStack slot='center' gap='xs'>
-        <Heading size='sm' align='center'>Accounts Successfully Linked</Heading>
-        <P variant='subtle' align='center'>You can link more accounts at any time from the Bank Transactions section</P>
+        <Heading size='sm' align='center'>{t('accountsSuccessfullyLinked', 'Accounts Successfully Linked')}</Heading>
+        <P variant='subtle' align='center'>{t('youCanLinkMoreAccountsAtAnyTimeFromTheBankTransactionsSection', 'You can link more accounts at any time from the Bank Transactions section')}</P>
       </VStack>
     </div>
   )
 }
 
 export function LinkAccountsConfirmationStep() {
+  const { t } = useTranslation()
   const {
     data: linkedAccounts,
     loadingStatus: linkedAccountsLoadingStatus,
@@ -85,10 +98,10 @@ export function LinkAccountsConfirmationStep() {
     <VStack gap='lg'>
       <VStack gap='2xs'>
         <Heading level={3} size='sm'>
-          Which accounts do you use for businesses?
+          {t('whichAccountsDoYouUseForBusiness', 'Which accounts do you use for businesses?')}
         </Heading>
         <P variant='subtle'>
-          {'Please unselect any accounts you don\'t use for your business.'}
+          {t('pleaseDeselectAnyAccountsYouDontUseForYourBusiness', 'Please deselect any accounts you don\'t use for your business.')}
         </P>
       </VStack>
       <Field name='accounts' mode='array'>
@@ -115,7 +128,7 @@ export function LinkAccountsConfirmationStep() {
       </Field>
       <HStack pbs='lg' gap='sm'>
         <Button variant={ButtonVariant.secondary} onClick={previous}>
-          Back
+          {t('back', 'Back')}
         </Button>
         <Subscribe
           selector={({ isSubmitting, values }) => ({
@@ -132,7 +145,7 @@ export function LinkAccountsConfirmationStep() {
               {getSubmitButtonText({
                 totalCount,
                 confirmedCount: selectedCount,
-              })}
+              }, t)}
             </Button>
           )}
         </Subscribe>

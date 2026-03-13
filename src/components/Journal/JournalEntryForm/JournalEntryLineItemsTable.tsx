@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { useStore } from '@tanstack/react-form'
+import { useTranslation } from 'react-i18next'
 
-import { type LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import type { AppForm } from '@hooks/features/forms/useForm'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -27,6 +28,7 @@ export const JournalEntryLineItemsTable = ({
   direction,
   showTags = false,
 }: JournalEntryLineItemsTableProps) => {
+  const { t } = useTranslation()
   const lineItems = useStore(form.store, state => state.values.lineItems || EMPTY_ARRAY)
 
   const filteredIndices = useMemo(() => {
@@ -73,11 +75,9 @@ export const JournalEntryLineItemsTable = ({
               {displayLineItems.length === 0 && (
                 <VStack gap='md' align='center' className='empty-state'>
                   <P variant='subtle' align='center' size='sm'>
-                    No
-                    {' '}
-                    {direction.toLowerCase()}
-                    {' '}
-                    line items added yet. Click &ldquo;Add next line&rdquo; to get started.
+                    {direction === LedgerEntryDirection.Debit
+                      ? t('noDebitLineItemsAddedYet', 'No debit line items added yet. Click "Add next line" to get started.')
+                      : t('noCreditLineItemsAddedYet', 'No credit line items added yet. Click "Add next line" to get started.')}
                   </P>
                 </VStack>
               )}
@@ -85,7 +85,7 @@ export const JournalEntryLineItemsTable = ({
                 <HStack justify='start'>
                   <Button onPress={() => field.pushValue(getJournalEntryLineItemFormDefaultValues(direction))} variant='text'>
                     <Span weight='normal' size='sm' variant='subtle'>
-                      Add next line
+                      {t('addNextLine', 'Add next line')}
                     </Span>
                   </Button>
                 </HStack>

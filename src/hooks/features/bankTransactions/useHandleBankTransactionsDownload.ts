@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useBankTransactionsDownload } from '@hooks/api/businesses/[business-id]/reports/transactions/exports/excel/useBankTransactionsDownload'
 import { bankTransactionFiltersToHookOptions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
@@ -7,6 +8,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 export function useHandleDownloadTransactions({ isListView }: { isListView: boolean }) {
+  const { t } = useTranslation()
   const { addToast } = useLayerContext()
   const { filters } = useBankTransactionsFiltersContext()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
@@ -21,15 +23,15 @@ export function useHandleDownloadTransactions({ isListView }: { isListView: bool
         }
         else if (isListView) {
           addToast({
-            content: 'Download Failed, Please Retry',
+            content: t('downloadFailedPleaseRetry', 'Download Failed, Please Retry'),
             type: 'error',
           })
         }
       })
       .catch(() => {
-        addToast({ content: 'Download Failed, Please Retry', type: 'error' })
+        addToast({ content: t('downloadFailedPleaseRetry', 'Download Failed, Please Retry'), type: 'error' })
       })
-  }, [addToast, filters, isListView, trigger, triggerInvisibleDownload])
+  }, [addToast, filters, isListView, trigger, triggerInvisibleDownload, t])
 
   return useMemo(() => ({
     handleDownloadTransactions,

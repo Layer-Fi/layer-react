@@ -1,4 +1,5 @@
-import { useCallback, useId, useState } from 'react'
+import { useCallback, useId, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { getActivationDate } from '@utils/business'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -12,18 +13,9 @@ type DateSelectionOption = {
   label: string
   value: DatePreset
 }
-const dateSelectionOptionConfig = {
-  [DatePreset.ThisMonth]: { label: 'This Month', value: DatePreset.ThisMonth },
-  [DatePreset.LastMonth]: { label: 'Last Month', value: DatePreset.LastMonth },
-  [DatePreset.ThisQuarter]: { label: 'This Quarter', value: DatePreset.ThisQuarter },
-  [DatePreset.LastQuarter]: { label: 'Last Quarter', value: DatePreset.LastQuarter },
-  [DatePreset.ThisYear]: { label: 'This Year', value: DatePreset.ThisYear },
-  [DatePreset.LastYear]: { label: 'Last Year', value: DatePreset.LastYear },
-  [DatePreset.Custom]: { label: 'Custom', value: DatePreset.Custom },
-}
-const options = Object.values(dateSelectionOptionConfig).filter(opt => opt.value !== DatePreset.Custom)
 
 export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boolean }) => {
+  const { t } = useTranslation()
   const [lastPreset, setLastPreset] = useState<DatePreset | null>(null)
   const { business } = useLayerContext()
 
@@ -31,7 +23,22 @@ export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boole
   const { setDateRange } = useGlobalDateRangeActions()
 
   const selectedPreset = presetForDateRange(dateRange, lastPreset, getActivationDate(business))
-  const selectedOption = dateSelectionOptionConfig[selectedPreset ?? DatePreset.Custom]
+
+  const allOptions = useMemo<DateSelectionOption[]>(
+    () => [
+      { value: DatePreset.ThisMonth, label: t('thisMonth', 'This Month') },
+      { value: DatePreset.LastMonth, label: t('lastMonth', 'Last Month') },
+      { value: DatePreset.ThisQuarter, label: t('thisQuarter', 'This Quarter') },
+      { value: DatePreset.LastQuarter, label: t('lastQuarter', 'Last Quarter') },
+      { value: DatePreset.ThisYear, label: t('thisYear', 'This Year') },
+      { value: DatePreset.LastYear, label: t('lastYear', 'Last Year') },
+      { value: DatePreset.Custom, label: t('custom', 'Custom') },
+    ],
+    [t],
+  )
+
+  const options = allOptions.filter(o => o.value !== DatePreset.Custom)
+  const selectedOption = allOptions.find(o => o.value === (selectedPreset ?? DatePreset.Custom)) ?? null
 
   const onSelectedValueChange = useCallback((option: DateSelectionOption | null) => {
     if (option === null) return
@@ -47,7 +54,7 @@ export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boole
 
   const inputId = useId()
 
-  const label = 'Report period'
+  const label = t('reportPeriod', 'Report period')
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
   return (

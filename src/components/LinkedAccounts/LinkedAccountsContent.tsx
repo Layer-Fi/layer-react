@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import PlusIcon from '@icons/PlusIcon'
@@ -20,6 +21,7 @@ export const LinkedAccountsContent = ({
   showUnlinkItem,
   showBreakConnection,
 }: LinkedAccountsDataProps) => {
+  const { t } = useTranslation()
   const { data, addConnection } = useContext(LinkedAccountsContext)
 
   const linkedAccountsNewAccountClassName = classNames(
@@ -46,14 +48,13 @@ export const LinkedAccountsContent = ({
         <div
           role='button'
           tabIndex={0}
-          aria-label='new-account'
           onClick={() => { void addConnection('PLAID') }}
           className={linkedAccountsNewAccountClassName}
         >
           <div className='Layer__linked-accounts__new-account-label'>
             <PlusIcon size={15} />
             <Text as='span' size={'sm' as TextSize}>
-              Add Account
+              {t('addAccount', 'Add Account')}
             </Text>
           </div>
         </div>

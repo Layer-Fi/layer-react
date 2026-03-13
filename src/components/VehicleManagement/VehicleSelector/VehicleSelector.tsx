@@ -1,5 +1,6 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { getVehicleDisplayName } from '@utils/vehicles'
@@ -63,6 +64,7 @@ export function VehicleSelector({
   containerClassName,
   showLabel = true,
 }: VehicleSelectorProps) {
+  const { t } = useTranslation()
   const combinedClassName = classNames(
     'Layer__VehicleSelector',
     inline && 'Layer__VehicleSelector--inline',
@@ -93,10 +95,10 @@ export function VehicleSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        No matching vehicle
+        {t('noMatchingVehicle', 'No matching vehicle')}
       </P>
     ),
-    [],
+    [t],
   )
 
   const ErrorMessage = useMemo(
@@ -105,21 +107,21 @@ export function VehicleSelector({
         size='xs'
         status='error'
       >
-        An error occurred while loading vehicles.
+        {t('anErrorOccurredWhileLoadingVehicles', 'An error occurred while loading vehicles.')}
       </P>
     ),
-    [],
+    [t],
   )
 
   const inputId = useId()
-  const additionalAriaProps = !showLabel && { 'aria-label': 'Vehicle' }
+  const additionalAriaProps = !showLabel && { 'aria-label': t('vehicle', 'Vehicle') }
 
   const isLoadingWithoutFallback = isLoading && !data
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   return (
     <VStack className={combinedClassName}>
-      {showLabel && <Label htmlFor={inputId} size='sm'>Vehicle</Label>}
+      {showLabel && <Label htmlFor={inputId} size='sm'>{t('vehicle', 'Vehicle')}</Label>}
       <ComboBox
         selectedValue={selectedVehicleForComboBox}
         onSelectedValueChange={onSelectedValueChange}

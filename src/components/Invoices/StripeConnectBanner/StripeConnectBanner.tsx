@@ -1,3 +1,6 @@
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { StripeAccountStatus } from '@schemas/stripeAccountStatus'
 import { useStripeAccountStatus } from '@hooks/api/businesses/[business-id]/stripe/status/useStripeAccountStatus'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -8,32 +11,33 @@ import { useStripeConnect } from '@components/Invoices/StripeConnectBanner/useSt
 
 import '@components/Invoices/StripeConnectBanner/stripeConnectBanner.scss'
 
-const BANNER_PROP_CONFIG: Partial<Record<StripeAccountStatus, {
-  variant: BannerVariant
-  title: string
-  description: string
-}>> = {
-  [StripeAccountStatus.Pending]: {
-    variant: 'default',
-    title: 'Stripe account under review',
-    description: 'Once complete, you can start accepting card and bank payments.',
-  },
-  [StripeAccountStatus.NotCreated]: {
-    variant: 'info',
-    title: 'Stripe payments not enabled',
-    description: 'Set up your Stripe account to start accepting card and bank payments for your invoices.',
-  },
-  [StripeAccountStatus.Incomplete]: {
-    variant: 'warning',
-    title: 'Stripe setup incomplete',
-    description: 'Finish setting up your Stripe account to start accepting card and bank payments for your invoices.',
-  },
-}
-
 export const StripeConnectBanner = () => {
+  const { t } = useTranslation()
   const { accountingConfiguration } = useLayerContext()
   const { data, isLoading, isError } = useStripeAccountStatus()
   const { handleConnectStripe, isMutating, isStripeConnectError } = useStripeConnect()
+
+  const bannerPropConfig = useMemo<Partial<Record<StripeAccountStatus, {
+    variant: BannerVariant
+    title: string
+    description: string
+  }>>>(() => ({
+    [StripeAccountStatus.Pending]: {
+      variant: 'default',
+      title: t('stripeAccountUnderReview', 'Stripe account under review'),
+      description: t('onceCompleteYouCanStartAcceptingCardAndBankPayments', 'Once complete, you can start accepting card and bank payments.'),
+    },
+    [StripeAccountStatus.NotCreated]: {
+      variant: 'info',
+      title: t('stripePaymentsNotEnabled', 'Stripe payments not enabled'),
+      description: t('setUpYourStripeAccountToStartAcceptingCardAndBankPaymentsForYourInvoices', 'Set up your Stripe account to start accepting card and bank payments for your invoices.'),
+    },
+    [StripeAccountStatus.Incomplete]: {
+      variant: 'warning',
+      title: t('stripeSetupIncomplete', 'Stripe setup incomplete'),
+      description: t('finishSettingUpYourStripeAccountToStartAcceptingCardAndBankPaymentsForYourInvoices', 'Finish setting up your Stripe account to start accepting card and bank payments for your invoices.'),
+    },
+  }), [t])
 
   if (!accountingConfiguration?.enableStripeOnboarding) {
     return null
@@ -49,7 +53,7 @@ export const StripeConnectBanner = () => {
     return null
   }
 
-  const bannerConfig = BANNER_PROP_CONFIG[status]
+  const bannerConfig = bannerPropConfig[status]
 
   if (!bannerConfig) {
     return null

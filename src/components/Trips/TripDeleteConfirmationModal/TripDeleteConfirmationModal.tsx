@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Trip } from '@schemas/trip'
 import { useDeleteTrip } from '@hooks/api/businesses/[business-id]/mileage/trips/[trip-id]/useDeleteTrip'
@@ -17,6 +18,7 @@ export function TripDeleteConfirmationModal({
   onSuccess,
   trip,
 }: TripDeleteConfirmationModalProps) {
+  const { t } = useTranslation()
   const { trigger: deleteTrip } = useDeleteTrip({ tripId: trip.id })
   const { isMobile } = useSizeClass()
 
@@ -29,12 +31,12 @@ export function TripDeleteConfirmationModal({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title='Delete this trip?'
-      description='This trip will be permanently deleted. This action cannot be undone.'
+      title={t('deleteThisTrip', 'Delete this trip?')}
+      description={t('thisTripWillBePermanentlyDeletedThisActionCannotBeUndone', 'This trip will be permanently deleted. This action cannot be undone.')}
       onConfirm={onConfirm}
-      confirmLabel='Delete Trip'
-      cancelLabel='Cancel'
-      errorText='Failed to delete trip. Please check your connection and try again.'
+      confirmLabel={t('deleteTrip', 'Delete Trip')}
+      cancelLabel={t('cancel', 'Cancel')}
+      errorText={t('failedToDeleteTripTryAgain', 'Failed to delete trip. Please check your connection and try again.')}
       useDrawer={isMobile}
     />
   )

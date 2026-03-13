@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
 import { UpsertCustomerMode } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
@@ -27,9 +28,10 @@ const CustomerFormDrawerHeader = ({ title, close }: { title: string, close: () =
 )
 
 export const CustomerFormDrawer = (props: CustomerFormDrawerProps) => {
+  const { t } = useTranslation()
   const { isOpen, onOpenChange, onSuccess, formState } = props
 
-  const title = formState?.mode === UpsertCustomerMode.Update ? 'Edit customer details' : 'Create new customer'
+  const title = formState?.mode === UpsertCustomerMode.Update ? t('editCustomerDetails', 'Edit customer details') : t('createNewCustomer', 'Create new customer')
   const Header = useCallback(({ close }: { close: () => void }) => (
     <CustomerFormDrawerHeader title={title} close={close} />
   ), [title])

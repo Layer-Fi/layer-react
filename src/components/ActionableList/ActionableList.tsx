@@ -46,10 +46,9 @@ export const ActionableList = <T,>({
           <div className='Layer__actionable-list__content'>
             <Text size={TextSize.sm}>{x.label}</Text>
             {
-              /* TODO: Replace 'See all categories' with something more generic */
               showDescriptions
               && x.description
-              && x.label !== 'See all categories' && (
+              && (
                 <Text
                   className='Layer__actionable-list__content-description'
                   size={TextSize.sm}

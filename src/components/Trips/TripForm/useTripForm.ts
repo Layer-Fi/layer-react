@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
+import { useTranslation } from 'react-i18next'
 
 import { type Trip, type TripForm, UpsertTripSchema } from '@schemas/trip'
 import { UpsertTripMode, useUpsertTrip } from '@hooks/api/businesses/[business-id]/mileage/trips/useUpsertTrip'
@@ -11,6 +12,7 @@ type onSuccessFn = (trip: Trip) => void
 type UseTripFormProps = { onSuccess: onSuccessFn, trip?: Trip }
 
 export const useTripForm = (props: UseTripFormProps) => {
+  const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, trip } = props
 
@@ -39,8 +41,8 @@ export const useTripForm = (props: UseTripFormProps) => {
   }, [onSuccess, upsertTrip])
 
   const onDynamic = useCallback(({ value }: { value: TripForm }) => {
-    return validateTripForm({ trip: value })
-  }, [])
+    return validateTripForm({ trip: value }, t)
+  }, [t])
 
   const validators = useMemo(() => ({ onDynamic }), [onDynamic])
 

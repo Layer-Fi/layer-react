@@ -1,6 +1,8 @@
-import pluralize from 'pluralize'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
+import { tPlural } from '@utils/i18n/plural'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { getDueDifference } from '@utils/time/timeUtils'
 import AlertCircle from '@icons/AlertCircle'
@@ -9,55 +11,67 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 
-const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }) => {
+const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t: TFunction) => {
   const badgeSize = inline ? BadgeSize.EXTRA_SMALL : BadgeSize.SMALL
   const iconSize = inline ? 10 : 12
 
   switch (invoice.status) {
     case InvoiceStatus.WrittenOff: {
-      return { text: 'Written Off' }
+      return { text: t('writtenOff', 'Written Off') }
     }
     case InvoiceStatus.PartiallyWrittenOff: {
-      return { text: 'Partially Written Off' }
+      return { text: t('partiallyWrittenOff', 'Partially Written Off') }
     }
     case InvoiceStatus.Refunded: {
-      return { text: 'Refunded' }
+      return { text: t('refunded', 'Refunded') }
     }
     case InvoiceStatus.Paid: {
       return {
-        text: 'Paid',
+        text: t('paid', 'Paid'),
         badge: <Badge variant={BadgeVariant.SUCCESS} size={badgeSize} icon={<CheckCircle size={iconSize} />} iconOnly />,
       }
     }
     case InvoiceStatus.Voided: {
-      return { text: 'Voided' }
+      return { text: t('voided', 'Voided') }
     }
     case InvoiceStatus.Sent:
     case InvoiceStatus.PartiallyPaid: {
       if (invoice.dueAt === null) {
         return {
-          text: invoice.status === InvoiceStatus.PartiallyPaid ? 'Partially Paid' : 'Sent',
+          text: invoice.status === InvoiceStatus.PartiallyPaid
+            ? t('partiallyPaid', 'Partially Paid')
+            : t('sent', 'Sent'),
         }
       }
 
       const dueDifference = getDueDifference(invoice.dueAt)
       if (dueDifference === 0) {
         return {
-          text: 'Due Today',
+          text: t('dueTodayStatus', 'Due Today'),
         }
       }
 
       if (dueDifference < 0) {
+        const daysAgo = Math.abs(dueDifference)
         return {
-          text: 'Overdue',
-          subText: `Due ${pluralize('day', Math.abs(dueDifference), true)} ago`,
+          text: t('overdue', 'Overdue'),
+          subText: tPlural(t, 'dueCountDaysAgo', {
+            count: daysAgo,
+            one: 'Due {{count}} day ago',
+            other: 'Due {{count}} days ago',
+          }),
           badge: <Badge variant={BadgeVariant.WARNING} size={badgeSize} icon={<AlertCircle size={iconSize} />} iconOnly />,
         }
       }
 
+      const daysUntilDue = Math.abs(dueDifference)
       return {
-        text: 'Sent',
-        subText: `Due in ${pluralize('day', Math.abs(dueDifference), true)}`,
+        text: t('sent', 'Sent'),
+        subText: tPlural(t, 'dueInCountDays', {
+          count: daysUntilDue,
+          one: 'Due in {{count}} day',
+          other: 'Due in {{count}} days',
+        }),
       }
     }
     default: {
@@ -70,7 +84,8 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }) =
 }
 
 export const InvoiceStatusCell = ({ invoice, inline = false }: { invoice: Invoice, inline?: boolean }) => {
-  const dueStatus = getDueStatusConfig(invoice, { inline })
+  const { t } = useTranslation()
+  const dueStatus = getDueStatusConfig(invoice, { inline }, t)
 
   const Stack = inline ? HStack : VStack
   const subText = (inline && dueStatus.subText) ? `(${dueStatus.subText})` : dueStatus.subText

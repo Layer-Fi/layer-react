@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { useBalanceSheetDownload } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/exports/excel/useBalanceSheetDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
@@ -11,6 +13,7 @@ export function BalanceSheetDownloadButton({
   effectiveDate,
   iconOnly,
 }: BalanceSheetDownloadButtonProps) {
+  const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useBalanceSheetDownload({
@@ -25,8 +28,8 @@ export function BalanceSheetDownloadButton({
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text='Download'
-        retryText='Retry'
+        text={t('download', 'Download')}
+        retryText={t('retry', 'Retry')}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

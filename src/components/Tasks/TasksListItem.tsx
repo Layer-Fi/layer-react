@@ -1,5 +1,6 @@
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { isCompletedTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { getIconForTask } from '@utils/bookkeeping/tasks/getBookkeepingTaskStatusIcon'
@@ -23,6 +24,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   { task, defaultOpen, onExpandTask },
   ref,
 ) => {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [userResponse, setUserResponse] = useState(task.user_response ?? '')
   const [selectedFiles, setSelectedFiles] = useState<File[]>()
@@ -83,7 +85,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               onUpload={(files: File[]) => {
                 setSelectedFiles(files)
               }}
-              text='Select file(s)'
+              text={t('selectFiles', 'Select files')}
               allowMultipleUploads
             />
           )
@@ -95,13 +97,13 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 variant={ButtonVariant.secondary}
                 onClick={() => setSelectedFiles(undefined)}
               >
-                Cancel
+                {t('cancel', 'Cancel')}
               </Button>
               <Button
                 variant={ButtonVariant.primary}
                 onClick={() => void submit()}
               >
-                Submit
+                {t('submit', 'Submit')}
               </Button>
             </>
           )
@@ -119,7 +121,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 })
               }}
             >
-              Update
+              {t('update', 'Update')}
             </Button>
           )
         }
@@ -133,7 +135,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 })
               }}
             >
-              Delete Uploads
+              {t('deleteUploads', 'Delete Uploads')}
             </Button>
           )
         }
@@ -141,7 +143,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
       else { return null }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [task, selectedFiles, userResponse])
+  }, [t, task, selectedFiles, userResponse])
 
   return (
     <div className='Layer__tasks-list-item-wrapper' ref={ref}>
@@ -169,7 +171,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
             <Text size={TextSize.sm}>{task.question}</Text>
             <Textarea
               value={userResponse}
-              placeholder={task.user_response_type === 'UPLOAD_DOCUMENT' ? 'Optional description' : ''}
+              placeholder={task.user_response_type === 'UPLOAD_DOCUMENT' ? t('optionalDescription', 'Optional description') : ''}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setUserResponse(e.target.value)}
             />
@@ -178,11 +180,11 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 <div className='Layer__tasks-list__link-list'>
                   {selectedFiles
                     ? (
-                      <div className='Layer__tasks-list__link-list-header'>Selected Files:</div>
+                      <div className='Layer__tasks-list__link-list-header'>{t('selectedFiles', 'Selected Files:')}</div>
                     )
                     : task.documents
                       ? (
-                        <div className='Layer__tasks-list__link-list-header'>Uploaded Files:</div>
+                        <div className='Layer__tasks-list__link-list-header'>{t('uploadedFiles', 'Uploaded Files:')}</div>
                       )
                       : null}
                   <ul className='Layer__tasks-list__links-list'>
@@ -214,8 +216,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                     }}
                   >
                     {task.user_response && task.user_response !== userResponse
-                      ? 'Update'
-                      : 'Save'}
+                      ? t('update', 'Update')
+                      : t('save', 'Save')}
                   </Button>
                 )}
             </div>

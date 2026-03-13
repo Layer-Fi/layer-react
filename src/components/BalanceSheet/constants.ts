@@ -1,12 +1,14 @@
-export const BALANCE_SHEET_ROWS = [
+import { translationKey } from '@utils/i18n/translationKey'
+
+export const BALANCE_SHEET_ROWS_CONFIG = [
   {
     name: 'Assets',
-    displayName: 'Assets',
     lineItem: 'assets',
+    ...translationKey('assets', 'Assets'),
   },
   {
     name: 'LiabilitiesAndEquity',
-    displayName: 'Liabilities & Equity',
     lineItem: 'liabilities_and_equity',
+    ...translationKey('liabilitiesEquity', 'Liabilities & Equity'),
   },
-]
+] as const

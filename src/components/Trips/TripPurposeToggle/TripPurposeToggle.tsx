@@ -1,4 +1,8 @@
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { TripPurpose } from '@schemas/trip'
+import { translationKey } from '@utils/i18n/translationKey'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 
 export enum TripPurposeFilterValue {
@@ -7,10 +11,10 @@ export enum TripPurposeFilterValue {
   Personal = TripPurpose.Personal,
 }
 
-const TRIP_PURPOSE_OPTIONS = [
-  { label: 'All', value: TripPurposeFilterValue.All },
-  { label: 'Business', value: TripPurposeFilterValue.Business },
-  { label: 'Personal', value: TripPurposeFilterValue.Personal },
+const TRIP_PURPOSE_CONFIG = [
+  { ...translationKey('all', 'All'), value: TripPurposeFilterValue.All },
+  { ...translationKey('business', 'Business'), value: TripPurposeFilterValue.Business },
+  { ...translationKey('personal', 'Personal'), value: TripPurposeFilterValue.Personal },
 ]
 
 export type TripPurposeToggleProps = {
@@ -24,10 +28,18 @@ export const TripPurposeToggle = ({
   onChange,
   fullWidth,
 }: TripPurposeToggleProps) => {
+  const { t } = useTranslation()
+  const options = useMemo(
+    () => TRIP_PURPOSE_CONFIG.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
   return (
     <Toggle
-      ariaLabel='Trip purpose'
-      options={TRIP_PURPOSE_OPTIONS}
+      ariaLabel={t('tripPurpose', 'Trip purpose')}
+      options={options}
       selectedKey={selected}
       onSelectionChange={key => onChange(key as TripPurposeFilterValue)}
       size={ToggleSize.small}

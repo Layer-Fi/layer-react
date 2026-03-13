@@ -1,4 +1,5 @@
 import { useContext, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { convertCentsToCurrency } from '@utils/format'
 import { flattenAccounts } from '@hooks/legacy/useChartOfAccounts'
@@ -6,12 +7,7 @@ import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOf
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { RetryButton } from '@components/Button/RetryButton'
 import { SubmitButton } from '@components/Button/SubmitButton'
-import {
-  LEDGER_ACCOUNT_SUBTYPES,
-  LEDGER_ACCOUNT_SUBTYPES_FOR_TYPE,
-  LEDGER_ACCOUNT_TYPES,
-  NORMALITY_OPTIONS,
-} from '@components/ChartOfAccountsForm/constants'
+import { useChartOfAccountsFormOptions } from '@components/ChartOfAccountsForm/useChartOfAccountsFormOptions'
 import { useParentOptions } from '@components/ChartOfAccountsForm/useParentOptions'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
@@ -41,6 +37,7 @@ export const ChartOfAccountsForm = ({
 }: {
   stringOverrides?: ChartOfAccountsFormStringOverrides
 }) => {
+  const { t } = useTranslation()
   const {
     form,
     data,
@@ -52,6 +49,11 @@ export const ChartOfAccountsForm = ({
   } = useContext(ChartOfAccountsContext)
 
   const parentOptions = useParentOptions(data)
+  const {
+    ledgerAccountTypesOptions,
+    normalityOptions,
+    ledgerAccountSubtypesForType,
+  } = useChartOfAccountsFormOptions()
 
   const entry = useMemo(() => {
     if (form?.action === 'edit' && form.accountId) {
@@ -80,8 +82,8 @@ export const ChartOfAccountsForm = ({
           <HeaderCol>
             <Heading size={HeadingSize.secondary} className='title'>
               {form?.action === 'edit'
-                ? stringOverrides?.editModeHeader || 'Edit Account'
-                : stringOverrides?.createModeHeader || 'Add New Account'}
+                ? stringOverrides?.editModeHeader || t('editAccount', 'Edit Account')
+                : stringOverrides?.createModeHeader || t('addNewAccount', 'Add New Account')}
             </Heading>
           </HeaderCol>
           <HeaderCol className='actions'>
@@ -91,16 +93,16 @@ export const ChartOfAccountsForm = ({
               variant={ButtonVariant.secondary}
               disabled={sendingForm}
             >
-              {stringOverrides?.cancelButton || 'Cancel'}
+              {stringOverrides?.cancelButton || t('cancel', 'Cancel')}
             </Button>
             {apiError && (
               <RetryButton
                 type='submit'
                 processing={sendingForm}
-                error='Check connection and retry in few seconds.'
+                error={t('checkConnectionAndRetry', 'Check connection and retry in few seconds.')}
                 disabled={sendingForm}
               >
-                {stringOverrides?.retryButton || 'Retry'}
+                {stringOverrides?.retryButton || t('retry', 'Retry')}
               </RetryButton>
             )}
             {!apiError && (
@@ -110,7 +112,7 @@ export const ChartOfAccountsForm = ({
                 active={true}
                 disabled={sendingForm}
               >
-                {stringOverrides?.saveButton || 'Save'}
+                {stringOverrides?.saveButton || t('save', 'Save')}
               </SubmitButton>
             )}
           </HeaderCol>
@@ -138,7 +140,7 @@ export const ChartOfAccountsForm = ({
       <div className='Layer__chart-of-accounts__form'>
         <InputGroup
           name='parent'
-          label={stringOverrides?.parentLabel || 'Parent'}
+          label={stringOverrides?.parentLabel || t('parent', 'Parent')}
           inline={true}
         >
           <Select
@@ -152,12 +154,12 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='name'
-          label={stringOverrides?.nameLabel || 'Name'}
+          label={stringOverrides?.nameLabel || t('name', 'Name')}
           inline
         >
           <Input
             name='name'
-            placeholder='Enter name...'
+            placeholder={t('enterName', 'Enter name...')}
             value={form?.data.name}
             isInvalid={Boolean(form?.errors?.find(x => x.field === 'name'))}
             errorMessage={form?.errors?.find(x => x.field === 'name')?.message}
@@ -168,12 +170,12 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='accountNumber'
-          label={stringOverrides?.accountNumberLabel || 'Account Number'}
+          label={stringOverrides?.accountNumberLabel || t('accountNumber', 'Account Number')}
           inline
         >
           <Input
             name='accountNumber'
-            placeholder='Enter account number...'
+            placeholder={t('enterAccountNumber', 'Enter account number...')}
             value={form?.data.accountNumber}
             isInvalid={Boolean(form?.errors?.find(x => x.field === 'accountNumber'))}
             errorMessage={form?.errors?.find(x => x.field === 'accountNumber')?.message}
@@ -184,11 +186,11 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='type'
-          label={stringOverrides?.typeLabel || 'Type'}
+          label={stringOverrides?.typeLabel || t('type', 'Type')}
           inline={true}
         >
           <Select
-            options={LEDGER_ACCOUNT_TYPES}
+            options={ledgerAccountTypesOptions}
             value={form?.data.type}
             onChange={sel => changeFormData('type', sel)}
             isInvalid={Boolean(form?.errors?.find(x => x.field === 'type'))}
@@ -202,14 +204,14 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='subType'
-          label={stringOverrides?.subTypeLabel || 'Sub-Type'}
+          label={stringOverrides?.subTypeLabel || t('subType', 'Sub-Type')}
           inline={true}
         >
           <Select
             options={
               form?.data.type?.value !== undefined
-                ? LEDGER_ACCOUNT_SUBTYPES_FOR_TYPE[form?.data.type?.value]
-                : LEDGER_ACCOUNT_SUBTYPES
+                ? ledgerAccountSubtypesForType[form?.data.type?.value]
+                : Object.values(ledgerAccountSubtypesForType).flat()
             }
             value={form?.data.subType}
             isInvalid={Boolean(form?.errors?.find(x => x.field === 'subType'))}
@@ -220,11 +222,11 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='normality'
-          label={stringOverrides?.normalityLabel || 'Normality'}
+          label={stringOverrides?.normalityLabel || t('normality', 'Normality')}
           inline={true}
         >
           <Select
-            options={NORMALITY_OPTIONS}
+            options={normalityOptions}
             value={form?.data.normality}
             isInvalid={Boolean(
               form?.errors?.find(x => x.field === 'normality'),
@@ -244,16 +246,16 @@ export const ChartOfAccountsForm = ({
             variant={ButtonVariant.secondary}
             disabled={sendingForm}
           >
-            {stringOverrides?.cancelButton || 'Cancel'}
+            {stringOverrides?.cancelButton || t('cancel', 'Cancel')}
           </Button>
           {apiError && (
             <RetryButton
               type='submit'
               processing={sendingForm}
-              error='Check connection and retry in few seconds.'
+              error={t('checkConnectionAndRetryInFewSeconds', 'Check connection and retry in few seconds.')}
               disabled={sendingForm}
             >
-              {stringOverrides?.retryButton || 'Retry'}
+              {stringOverrides?.retryButton || t('retry', 'Retry')}
             </RetryButton>
           )}
           {!apiError && (
@@ -263,7 +265,7 @@ export const ChartOfAccountsForm = ({
               active={true}
               disabled={sendingForm}
             >
-              {stringOverrides?.saveButton || 'Save'}
+              {stringOverrides?.saveButton || t('save', 'Save')}
             </SubmitButton>
           )}
         </div>

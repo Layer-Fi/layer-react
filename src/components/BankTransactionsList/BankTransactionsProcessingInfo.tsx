@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import Clock from '@icons/Clock'
 import { HStack } from '@ui/Stack/Stack'
@@ -11,7 +13,8 @@ interface BankTransactionsProcessingInfoProps {
 }
 
 export const BankTransactionsProcessingInfo = ({ showAsBadge = false }: BankTransactionsProcessingInfoProps) => {
-  const tooltipContent = 'Our team will review and categorize this transaction. We\'ll reach out if we have any questions about it.'
+  const { t } = useTranslation()
+  const tooltipContent = t('ourTeamWillReviewAndCategorizeThisTransactionWellReachOutIfWeHaveAnyQuestionsAboutIt', 'Our team will review and categorize this transaction. We\'ll reach out if we have any questions about it.')
 
   if (showAsBadge) {
     return (
@@ -21,7 +24,7 @@ export const BankTransactionsProcessingInfo = ({ showAsBadge = false }: BankTran
           icon={<Clock size={11} />}
           variant={BadgeVariant.INFO}
         >
-          Processing
+          {t('processing', 'Processing')}
         </Badge>
       </HStack>
     )

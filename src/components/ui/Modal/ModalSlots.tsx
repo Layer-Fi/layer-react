@@ -1,6 +1,7 @@
 import { type ComponentProps, forwardRef, type PropsWithChildren, type ReactElement } from 'react'
 import classNames from 'classnames'
 import { X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
@@ -17,26 +18,29 @@ type ModalCloseButtonProps = {
   positionAbsolute?: boolean
 }
 
-export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalCloseButtonProps) => (
-  <div
-    className={
-      classNames(MODAL_CLOSE_BUTTON_CLASS_NAME,
-        positionAbsolute && `${MODAL_CLOSE_BUTTON_CLASS_NAME}--position-absolute`,
-      )
-    }
-  >
-    <Button
-      icon
-      inset
-      variant='ghost'
-      slot='close'
-      onPress={onClose}
-      aria-label='Close Modal'
-    >
-      <X size={24} />
-    </Button>
-  </div>
-)
+export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalCloseButtonProps) => {
+  const { t } = useTranslation()
+
+  const className = classNames(
+    MODAL_CLOSE_BUTTON_CLASS_NAME,
+    positionAbsolute && `${MODAL_CLOSE_BUTTON_CLASS_NAME}--position-absolute`,
+  )
+
+  return (
+    <div className={className}>
+      <Button
+        icon
+        inset
+        variant='ghost'
+        slot='close'
+        onPress={onClose}
+        aria-label={t('closeModal', 'Close Modal')}
+      >
+        <X size={24} />
+      </Button>
+    </div>
+  )
+}
 
 type ModalTitleWithCloseProps = {
   heading: ReactElement
@@ -50,6 +54,7 @@ export const ModalTitleWithClose = forwardRef<
   HTMLElementTagNameMap['div'],
   ModalTitleWithCloseProps
 >(function ModalTitleWithClose({ heading, description, onClose, hideCloseButton = false, hideBottomPadding = false }, ref) {
+  const { t } = useTranslation()
   return (
     <VStack>
       <div
@@ -66,7 +71,7 @@ export const ModalTitleWithClose = forwardRef<
             variant='outlined'
             slot='close'
             onPress={onClose}
-            aria-label='Close Modal'
+            aria-label={t('closeModal', 'Close Modal')}
           >
             <X size={16} />
           </Button>

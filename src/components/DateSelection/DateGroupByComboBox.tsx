@@ -1,23 +1,20 @@
-import { useCallback, useId } from 'react'
+import { useId, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { DateGroupBy } from '@schemas/reports/unifiedReport'
+import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
+import { createDateGroupByOnChange, type GroupByOption } from '@components/DateSelection/dateGroupByComboBoxUtils'
 
 import './dateGroupByComboBox.scss'
 
-type DateGroupByOption = {
-  label: string
-  value: DateGroupBy
-}
-
-const DateGroupByOptionConfig = {
-  [DateGroupBy.AllTime]: { label: 'All time', value: DateGroupBy.AllTime },
-  [DateGroupBy.Month]: { label: 'Month', value: DateGroupBy.Month },
-  [DateGroupBy.Year]: { label: 'Year', value: DateGroupBy.Year },
-}
-const options = Object.values(DateGroupByOptionConfig)
+const DATE_GROUP_BY_CONFIG = [
+  { value: DateGroupBy.AllTime, ...translationKey('allTime', 'All time') },
+  { value: DateGroupBy.Month, ...translationKey('month', 'Month') },
+  { value: DateGroupBy.Year, ...translationKey('year', 'Year') },
+]
 
 type DateGroupByComboBoxProps = {
   value: DateGroupBy | null
@@ -25,16 +22,27 @@ type DateGroupByComboBoxProps = {
 }
 
 export const DateGroupByComboBox = ({ value, onValueChange }: DateGroupByComboBoxProps) => {
-  const selectedOption = value ? DateGroupByOptionConfig[value] : null
-  const onSelectedValueChange = useCallback((option: DateGroupByOption | null) => {
-    onValueChange(option?.value || null)
-  }, [onValueChange])
+  const { t } = useTranslation()
+
+  const options = useMemo<GroupByOption[]>(
+    () => DATE_GROUP_BY_CONFIG.map((opt) => {
+      const { i18nKey, defaultValue } = opt
+      return { value: opt.value, label: t(i18nKey, defaultValue) }
+    }),
+    [t],
+  )
+
+  const selectedOption = value ? (options.find(o => o.value === value) ?? null) : null
+  const onSelectedValueChange = useMemo(
+    () => createDateGroupByOnChange(onValueChange),
+    [onValueChange],
+  )
 
   const inputId = useId()
 
   return (
     <VStack className='Layer__DateGroupByComboBox__Container'>
-      <Label pbe='3xs' size='sm' htmlFor={inputId}>Group by</Label>
+      <Label pbe='3xs' size='sm' htmlFor={inputId}>{t('groupBy', 'Group by')}</Label>
       <ComboBox
         className='Layer__DateGroupByComboBox'
         options={options}

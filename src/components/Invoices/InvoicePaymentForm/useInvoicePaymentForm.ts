@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
+import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { type DedicatedInvoicePaymentForm, type InvoicePayment, UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
@@ -12,6 +13,7 @@ type onSuccessFn = (invoicePayment: InvoicePayment) => void
 type UseInvoicePaymentFormProps = { onSuccess: onSuccessFn, invoice: Invoice }
 
 export const useInvoicePaymentForm = (props: UseInvoicePaymentFormProps) => {
+  const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, invoice } = props
 
@@ -38,8 +40,8 @@ export const useInvoicePaymentForm = (props: UseInvoicePaymentFormProps) => {
   }, [onSuccess, upsertDedicatedInvoicePayment])
 
   const onDynamic = useCallback(({ value }: { value: DedicatedInvoicePaymentForm }) => {
-    return validateInvoicePaymentForm({ invoicePayment: value, invoice })
-  }, [invoice])
+    return validateInvoicePaymentForm({ invoicePayment: value, invoice }, t)
+  }, [invoice, t])
 
   const validators = useMemo(() => ({ onDynamic }), [onDynamic])
 

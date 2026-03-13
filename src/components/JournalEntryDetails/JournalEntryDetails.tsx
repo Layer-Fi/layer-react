@@ -1,4 +1,5 @@
 import { useContext, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { TableCellAlign } from '@internal-types/table'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
@@ -33,6 +34,7 @@ import { TableRow } from '@components/TableRow/TableRow'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 export const JournalEntryDetails = () => {
+  const { t } = useTranslation()
   const {
     data,
     isLoadingEntry,
@@ -44,7 +46,7 @@ export const JournalEntryDetails = () => {
   } = useContext(JournalContext)
   const { renderInAppLink } = useInAppLinkContext()
   const [reverseEntryProcessing, setReverseEntryProcessing] = useState(false)
-  const [reverseEntryError, setReverseEntryError] = useState<string>()
+  const [reverseEntryError, setReverseEntryError] = useState<boolean>(false)
 
   const entry = useMemo(() => {
     if (selectedEntryId && data) {
@@ -82,12 +84,12 @@ export const JournalEntryDetails = () => {
     }
     try {
       setReverseEntryProcessing(true)
-      setReverseEntryError(undefined)
+      setReverseEntryError(false)
       await reverseEntry(entry.id)
       void refetch()
     }
     catch (_err) {
-      setReverseEntryError('Failed')
+      setReverseEntryError(true)
     }
     finally {
       setReverseEntryProcessing(false)
@@ -100,10 +102,10 @@ export const JournalEntryDetails = () => {
         <HeaderRow>
           <HeaderCol className='Layer__hidden-lg Layer__hidden-xl'>
             <BackButton onClick={closeSelectedEntry} />
-            <Heading size={HeadingSize.secondary}>Transaction details</Heading>
+            <Heading size={HeadingSize.secondary}>{t('transactionDetails', 'Transaction details')}</Heading>
           </HeaderCol>
           <HeaderCol className='Layer__show-lg Layer__show-xl'>
-            <Heading size={HeadingSize.secondary}>Transaction source</Heading>
+            <Heading size={HeadingSize.secondary}>{t('transactionSource', 'Transaction source')}</Heading>
           </HeaderCol>
           <HeaderCol className='Layer__show-lg Layer__show-xl'>
             <CloseButton onClick={closeSelectedEntry} />
@@ -111,7 +113,7 @@ export const JournalEntryDetails = () => {
         </HeaderRow>
       </Header>
       <DetailsList
-        title='Transaction source'
+        title={t('transactionSource', 'Transaction source')}
         titleClassName='Layer__hidden-lg Layer__hidden-xl'
         actions={(
           <Button
@@ -123,7 +125,7 @@ export const JournalEntryDetails = () => {
           />
         )}
       >
-        <DetailsListItem label='Source' isLoading={isLoadingEntry}>
+        <DetailsListItem label={t('source', 'Source')} isLoading={isLoadingEntry}>
           {badgeOrInAppLink}
         </DetailsListItem>
         {ledgerEntrySource && (
@@ -133,24 +135,24 @@ export const JournalEntryDetails = () => {
       <DetailsList
         title={(
           <VStack>
-            <Span>Journal Entry</Span>
-            {entry && <Span variant='subtle' size='xs'>{`Journal ID #${entryNumber(entry)}`}</Span>}
+            <Span>{t('journalEntry', 'Journal Entry')}</Span>
+            {entry && <Span variant='subtle' size='xs'>{t('journalIdNumber', 'Journal ID #{{journalId}}', { journalId: entryNumber(entry) })}</Span>}
           </VStack>
         )}
         className='Layer__border-top'
       >
-        <DetailsListItem label='Entry type' isLoading={isLoadingEntry}>
+        <DetailsListItem label={t('entryType', 'Entry type')} isLoading={isLoadingEntry}>
           {humanizeEnum(entry?.entry_type ?? '')}
         </DetailsListItem>
-        <DetailsListItem label='Effective date' isLoading={isLoadingEntry}>
+        <DetailsListItem label={t('effectiveDate', 'Effective date')} isLoading={isLoadingEntry}>
           {entry?.entry_at && <DateTime value={entry?.entry_at} />}
         </DetailsListItem>
-        <DetailsListItem label='Creation date' isLoading={isLoadingEntry}>
+        <DetailsListItem label={t('creationDate', 'Creation date')} isLoading={isLoadingEntry}>
           {entry?.date && <DateTime value={entry?.date} />}
         </DetailsListItem>
         {entry?.reversal_id && (
-          <DetailsListItem label='Reversal' isLoading={isLoadingEntry}>
-            {`Journal Entry #${entry?.reversal_id.substring(0, 5)}`}
+          <DetailsListItem label={t('reversal', 'Reversal')} isLoading={isLoadingEntry}>
+            {t('journalEntryNumber', 'Journal Entry #{{entryNumber}}', { entryNumber: entry?.reversal_id.substring(0, 5) })}
           </DetailsListItem>
         )}
       </DetailsList>
@@ -164,18 +166,18 @@ export const JournalEntryDetails = () => {
               >
                 <TableHead>
                   <TableRow rowKey='soc-flow-head-row' isHeadRow>
-                    <TableCell>Line items</TableCell>
+                    <TableCell>{t('lineItems', 'Line items')}</TableCell>
                     <TableCell
                       className='Layer__journal__debit-credit-col'
                       align={TableCellAlign.RIGHT}
                     >
-                      Debit
+                      {t('debit', 'Debit')}
                     </TableCell>
                     <TableCell
                       className='Layer__journal__debit-credit-col'
                       align={TableCellAlign.RIGHT}
                     >
-                      Credit
+                      {t('credit', 'Credit')}
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -214,7 +216,7 @@ export const JournalEntryDetails = () => {
                     rowKey='ledger-line-item-summation'
                     variant='summation'
                   >
-                    <TableCell primary>Total</TableCell>
+                    <TableCell primary>{t('total', 'Total')}</TableCell>
                     <TableCell
                       isCurrency
                       primary
@@ -258,13 +260,15 @@ export const JournalEntryDetails = () => {
                   onClick={reverseEntryProcessing ? () => {} : onReverseEntry}
                   isProcessing={reverseEntryProcessing}
                   tooltip={
-                    (Boolean(entry?.reversal_id)
-                      && 'This entry has already been reversed')
-                    ?? (reverseEntryError && 'Operation failed. Try again.')
+                    entry?.reversal_id
+                      ? t('thisEntryHasAlreadyBeenReversed', 'This entry has already been reversed')
+                      : reverseEntryError
+                        ? t('operationFailedTryAgain', 'Operation failed. Try again.')
+                        : undefined
                   }
                   disabled={Boolean(entry?.reversal_id)}
                 >
-                  Reverse entry
+                  {t('reverseEntry', 'Reverse entry')}
                 </Button>
               </div>
             )}

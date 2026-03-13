@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect/index'
+import { useTranslation } from 'react-i18next'
 
 import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { useCreateCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/useCreateCategorizationRule'
@@ -13,6 +14,7 @@ interface CreateRuleButtonProps {
 }
 
 export const CreateRuleButton = ({ newRule: ruleSuggestion, slotProps }: CreateRuleButtonProps) => {
+  const { t } = useTranslation()
   const { next } = useWizard()
   const { trigger: createCategorizationRule, isMutating } = useCreateCategorizationRule()
   const { addToast } = useLayerContext()
@@ -22,10 +24,10 @@ export const CreateRuleButton = ({ newRule: ruleSuggestion, slotProps }: CreateR
       await createCategorizationRule(encodedRule).then(() => {
         void next()
       }).catch(() => {
-        addToast({ content: 'Failed to create categorization rule', type: 'error' })
+        addToast({ content: t('failedToCreateCategorizationRule', 'Failed to create categorization rule'), type: 'error' })
       })
     })()
-  }, [addToast, createCategorizationRule, next, ruleSuggestion])
+  }, [addToast, createCategorizationRule, next, ruleSuggestion, t])
   return (
     <Button
       onPress={handlePress}

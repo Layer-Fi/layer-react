@@ -1,5 +1,6 @@
-import pluralize from 'pluralize'
+import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/i18n/plural'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -14,6 +15,7 @@ type TasksPanelNotificationProps = {
 export const TasksPanelNotification = ({
   onClickReconnectAccounts,
 }: TasksPanelNotificationProps) => {
+  const { t } = useTranslation()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
   const { anyPreviousYearIncomplete, earliestIncompletePeriod } =
     useBookkeepingYearsStatus()
@@ -28,9 +30,11 @@ export const TasksPanelNotification = ({
             <AlertCircle size={11} />
           </Text>
           <Text size={TextSize.md} weight={TextWeight.bold}>
-            {disconnectedAccountsRequiringNotification === 1
-              ? '1 bank account is disconnected'
-              : `${disconnectedAccountsRequiringNotification} bank accounts are disconnected`}
+            {tPlural(t, 'bankAccountsAreDisconnected', {
+              count: disconnectedAccountsRequiringNotification,
+              one: '{{count}} bank account is disconnected',
+              other: '{{count}} bank accounts are disconnected',
+            })}
           </Text>
         </div>
         {onClickReconnectAccounts && (
@@ -41,9 +45,11 @@ export const TasksPanelNotification = ({
             }}
           >
             <Text size={TextSize.sm} weight={TextWeight.bold}>
-              Reconnect
-              {' '}
-              {pluralize('account', disconnectedAccountsRequiringNotification)}
+              {tPlural(t, 'reconnectCountAccounts', {
+                count: disconnectedAccountsRequiringNotification,
+                one: 'Reconnect {{count}} account',
+                other: 'Reconnect {{count}} accounts',
+              })}
             </Text>
             <ArrowRightCircle size={14} />
           </button>
@@ -53,6 +59,7 @@ export const TasksPanelNotification = ({
   }
 
   if (anyPreviousYearIncomplete && earliestIncompletePeriod) {
+    const unresolvedTasksCount = anyPreviousYearIncomplete.unresolvedTasks ?? 0
     return (
       <div className='Layer__tasks-header__notification' data-status='warning'>
         <div className='Layer__tasks-header__notification__text'>
@@ -65,13 +72,12 @@ export const TasksPanelNotification = ({
             status='warning'
             invertColor
           >
-            {pluralize(
-              'open task',
-              anyPreviousYearIncomplete.unresolvedTasks,
-              true,
-            )}
-            {' in '}
-            {anyPreviousYearIncomplete.year}
+            {tPlural(t, 'countOpenTasksInYear', {
+              count: unresolvedTasksCount,
+              year: anyPreviousYearIncomplete.year,
+              one: '{{count}} open task in {{year}}',
+              other: '{{count}} open tasks in {{year}}',
+            })}
           </Text>
         </div>
         <button
@@ -84,7 +90,7 @@ export const TasksPanelNotification = ({
           }}
         >
           <Text size={TextSize.sm} weight={TextWeight.bold}>
-            View and complete
+            {t('viewAndComplete', 'View and complete')}
           </Text>
           <ArrowRightCircle size={14} />
         </button>

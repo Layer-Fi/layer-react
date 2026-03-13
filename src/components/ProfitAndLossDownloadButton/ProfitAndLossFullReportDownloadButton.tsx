@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type MoneyFormat } from '@internal-types/general'
 import { getProfitAndLossExcel } from '@hooks/legacy/useDownloadProfitAndLoss'
@@ -21,6 +22,7 @@ export const ProfitAndLossFullReportDownloadButton = ({
   moneyFormat,
   iconOnly,
 }: ProfitAndLossReportDownloadButtonProps) => {
+  const { t } = useTranslation()
   const { dateRange, tagFilter } = useContext(ProfitAndLossContext)
   const { getProfitAndLossComparisonCsv, comparisonConfig } = useContext(
     ProfitAndLossComparisonContext,
@@ -81,8 +83,8 @@ export const ProfitAndLossFullReportDownloadButton = ({
       onClick={handleClick}
       isDownloading={isDownloading}
       requestFailed={requestFailed}
-      text={stringOverrides?.downloadButtonText || 'Download'}
-      retryText={stringOverrides?.retryButtonText || 'Retry'}
+      text={stringOverrides?.downloadButtonText || t('download', 'Download')}
+      retryText={stringOverrides?.retryButtonText || t('retry', 'Retry')}
     />
   )
 }

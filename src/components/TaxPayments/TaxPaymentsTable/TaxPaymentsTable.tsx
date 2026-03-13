@@ -1,4 +1,7 @@
+import { useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -20,10 +23,10 @@ enum TaxPaymentColumns {
 
 type TaxPaymentRowType = Row<TaxPaymentQuarterWithId>
 
-const columnConfig: NestedColumnConfig<TaxPaymentQuarterWithId> = [
+const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentQuarterWithId> => [
   {
     id: TaxPaymentColumns.Quarter,
-    header: 'Quarter',
+    header: t('quarter', 'Quarter'),
     cell: (row: TaxPaymentRowType) => (
       <Span>{getQuarterLabel(row.original.quarter)}</Span>
     ),
@@ -31,28 +34,28 @@ const columnConfig: NestedColumnConfig<TaxPaymentQuarterWithId> = [
   },
   {
     id: TaxPaymentColumns.OwedFromPrevious,
-    header: 'Rolled Over From Previous Quarter',
+    header: t('rolledOverFromPreviousQuarter', 'Rolled Over From Previous Quarter'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.owedRolledOverFromPrevious} />
     ),
   },
   {
     id: TaxPaymentColumns.OwedThisQuarter,
-    header: 'Owed This Quarter',
+    header: t('owedThisQuarter', 'Owed This Quarter'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.owedThisQuarter} />
     ),
   },
   {
     id: TaxPaymentColumns.TotalPaid,
-    header: 'Total Paid',
+    header: t('totalPaid', 'Total Paid'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.totalPaid} />
     ),
   },
   {
     id: TaxPaymentColumns.Total,
-    header: 'Remaining Balance',
+    header: t('remainingBalance', 'Remaining Balance'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.total} />
     ),
@@ -60,10 +63,13 @@ const columnConfig: NestedColumnConfig<TaxPaymentQuarterWithId> = [
 ]
 
 export const TaxPaymentsTable = ({ data, isLoading, isError, slots }: CommonTaxPaymentsListProps) => {
+  const { t } = useTranslation()
+  const columnConfig = useMemo(() => getColumnConfig(t), [t])
+
   return (
     <SimpleDataTable<TaxPaymentQuarterWithId>
       componentName={COMPONENT_NAME}
-      ariaLabel='Tax payments'
+      ariaLabel={t('taxPayments', 'Tax Payments')}
       columnConfig={columnConfig}
       data={data}
       isLoading={isLoading}

@@ -1,27 +1,28 @@
 import { BigDecimal as BD } from 'effect'
+import { type TFunction } from 'i18next'
 
 import { TripPurpose } from '@schemas/trip'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { BadgeVariant } from '@components/Badge/Badge'
 
-export const formatDistance = (distance: BD.BigDecimal) => {
-  return `${BD.format(distance)} mi`
+export const formatDistance = (distance: BD.BigDecimal, t: TFunction) => {
+  return t('distanceMiles', '{{distance}} mi', { distance: BD.format(distance) })
 }
 
-export const getPurposeLabel = (purpose: TripPurpose): string => {
+export const getPurposeLabel = (purpose: TripPurpose, t: TFunction): string => {
   switch (purpose) {
     case TripPurpose.Business:
-      return 'Business'
+      return t('business', 'Business')
     case TripPurpose.Personal:
-      return 'Personal'
+      return t('personal', 'Personal')
     case TripPurpose.Unreviewed:
-      return 'Unreviewed'
+      return t('unreviewed', 'Unreviewed')
     default:
       return safeAssertUnreachable({
         value: purpose,
         message: 'Unexpected trip purpose in `getPurposeLabel`',
-        fallbackValue: 'Business' as string,
-      }) ?? 'Business'
+        fallbackValue: t('business', 'Business'),
+      }) ?? t('business', 'Business')
   }
 }
 

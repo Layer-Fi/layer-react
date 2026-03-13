@@ -1,4 +1,5 @@
 import { type USStateCode } from '@internal-types/location'
+import { translationKey } from '@utils/i18n/translationKey'
 
 export interface Business {
   id: string
@@ -18,12 +19,12 @@ export interface Business {
   us_state?: USStateCode
 }
 
-export const ENTITY_TYPES = [
-  { value: 'SOLE_PROP', label: 'Sole Proprietorship' },
-  { value: 'C_CORP', label: 'C Corporation' },
-  { value: 'LLC', label: 'Limited Liability Company' },
-  { value: 'S_CORP', label: 'S Corporation' },
-  { value: 'PARTNERSHIP', label: 'Partnership' },
+export const ENTITY_TYPES_CONFIG = [
+  { value: 'SOLE_PROP' as const, ...translationKey('soleProprietorship', 'Sole Proprietorship') },
+  { value: 'C_CORP' as const, ...translationKey('cCorporation', 'C Corporation') },
+  { value: 'LLC' as const, ...translationKey('limitedLiabilityCompany', 'Limited Liability Company') },
+  { value: 'S_CORP' as const, ...translationKey('sCorporation', 'S Corporation') },
+  { value: 'PARTNERSHIP' as const, ...translationKey('partnership', 'Partnership') },
 ] as const
 
-export type EntityType = (typeof ENTITY_TYPES)[number]['value']
+export type EntityType = (typeof ENTITY_TYPES_CONFIG)[number]['value']

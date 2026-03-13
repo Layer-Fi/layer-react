@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@internal-types/linkedAccounts'
 import { getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
@@ -49,6 +50,7 @@ export const LinkedAccountItemThumb = ({
   showUnlinkItem,
   showBreakConnection,
 }: LinkedAccountItemThumbProps) => {
+  const { t } = useTranslation()
   const {
     addConnection,
     removeConnection,
@@ -71,16 +73,16 @@ export const LinkedAccountItemThumb = ({
     )
     if (plaidAccountForConfirm) {
       pillConfig = {
-        text: 'Confirm account',
+        text: t('confirmAccount', 'Confirm account'),
         config: [
           {
-            name: 'Mark as a duplicate account',
+            name: t('markAsADuplicateAccount', 'Mark as a duplicate account'),
             action: () => {
               void excludeAccount(plaidAccountForConfirm.external_account_source, plaidAccountForConfirm.id)
             },
           },
           {
-            name: 'Mark as not a duplicate account',
+            name: t('markAsNotADuplicateAccount', 'Mark as not a duplicate account'),
             action: () => {
               void confirmAccount(plaidAccountForConfirm.external_account_source, plaidAccountForConfirm.id)
             },
@@ -91,10 +93,10 @@ export const LinkedAccountItemThumb = ({
   }
   else if (repairInfo) {
     pillConfig = {
-      text: 'Fix account',
+      text: t('fixAccount', 'Fix account'),
       config: [
         {
-          name: 'Repair connection',
+          name: t('repairConnection', 'Repair connection'),
           action: () => {
             if (!repairInfo.connectionExternalId) return
             if (repairInfo.reconnectWithNewCredentials) {
@@ -112,7 +114,7 @@ export const LinkedAccountItemThumb = ({
   const additionalConfigs: HoverMenuProps['config'] = []
 
   additionalConfigs.push({
-    name: isAllExternalAccountsUserCreatedCustom(bankAccount) ? 'Delete account' : 'Unlink account',
+    name: isAllExternalAccountsUserCreatedCustom(bankAccount) ? t('deleteAccount', 'Delete account') : t('unlinkAccount', 'Unlink account'),
     action: () => {
       setIsUnlinkConfirmationModalOpen(true)
     },
@@ -120,19 +122,25 @@ export const LinkedAccountItemThumb = ({
 
   if (showUnlinkItem && plaidAccount?.connection_external_id) {
     const institutionName = getBankAccountInstitution(bankAccount)?.name
+    const removeAllAccountsConfirmationMessage = institutionName
+      ? t(
+        'pleaseConfirmYouWishToRemoveAllAccountsBelongingToInstitutionName',
+        'Please confirm you wish to remove all accounts belonging to {{institutionName}}',
+        { institutionName },
+      )
+      : t(
+        'pleaseConfirmYouWishToRemoveAllAccountsBelongingToThisInstitution',
+        'Please confirm you wish to remove all accounts belonging to this institution',
+      )
     additionalConfigs.push({
       name: institutionName
-        ? `Unlink all accounts under this ${institutionName} connection`
-        : 'Unlink all accounts under this connection',
+        ? t('unlinkAllAccountsUnderThisInstitutionNameConnection', 'Unlink all accounts under this {{institutionName}} connection', { institutionName })
+        : t('unlinkAllAccountsUnderThisConnection', 'Unlink all accounts under this connection'),
       action: () => {
         // TODO: replace with better confirm dialog
         if (
           plaidAccount.connection_external_id
-          && confirm(
-            `Please confirm you wish to remove all accounts belonging to ${
-              institutionName || 'this institution'
-            }`,
-          )
+          && confirm(removeAllAccountsConfirmationMessage)
         ) {
           void removeConnection(
             plaidAccount.external_account_source,
@@ -145,7 +153,7 @@ export const LinkedAccountItemThumb = ({
 
   if (accountMissingOpeningBalance(bankAccount)) {
     additionalConfigs.push({
-      name: 'Add opening balance',
+      name: t('addOpeningBalance', 'Add opening balance'),
       action: () => {
         setAccountsToAddOpeningBalanceInModal([bankAccount])
       },

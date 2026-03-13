@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Trip } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
@@ -26,20 +27,23 @@ interface TripsMobileListProps {
   }
 }
 
-const TripsMobileListItem = ({ trip }: { trip: Trip }) => (
-  <HStack justify='space-between' gap='sm' className='Layer__TripsMobileListItem'>
-    <VStack gap='3xs' className='Layer__TripsMobileListItem__LeftContent'>
-      <Span weight='bold'>{formatCalendarDate(trip.tripDate)}</Span>
-      {(trip.startAddress || trip.endAddress) && <TripsAddressCell trip={trip} />}
-    </VStack>
-    <VStack gap='3xs' align='end'>
-      <Span weight='bold'>{formatDistance(trip.distance)}</Span>
-      <Badge size={BadgeSize.SMALL} variant={getPurposeBadgeVariant(trip.purpose)}>
-        {getPurposeLabel(trip.purpose)}
-      </Badge>
-    </VStack>
-  </HStack>
-)
+const TripsMobileListItem = ({ trip }: { trip: Trip }) => {
+  const { t } = useTranslation()
+  return (
+    <HStack justify='space-between' gap='sm' className='Layer__TripsMobileListItem'>
+      <VStack gap='3xs' className='Layer__TripsMobileListItem__LeftContent'>
+        <Span weight='bold'>{formatCalendarDate(trip.tripDate)}</Span>
+        {(trip.startAddress || trip.endAddress) && <TripsAddressCell trip={trip} />}
+      </VStack>
+      <VStack gap='3xs' align='end'>
+        <Span weight='bold'>{formatDistance(trip.distance, t)}</Span>
+        <Badge size={BadgeSize.SMALL} variant={getPurposeBadgeVariant(trip.purpose)}>
+          {getPurposeLabel(trip.purpose, t)}
+        </Badge>
+      </VStack>
+    </HStack>
+  )
+}
 
 export const TripsMobileList = ({
   data,
@@ -50,13 +54,14 @@ export const TripsMobileList = ({
   paginationProps,
   slots,
 }: TripsMobileListProps) => {
+  const { t } = useTranslation()
   const renderItem = useCallback((trip: Trip) => <TripsMobileListItem trip={trip} />, [])
 
   return (
     <div className='Layer__TripsMobileList'>
       <TripsMobileHeader onRecordTrip={onRecordTrip} />
       <PaginatedMobileList
-        ariaLabel='Trips'
+        ariaLabel={t('trips', 'Trips')}
         data={data}
         isLoading={isLoading}
         isError={isError}

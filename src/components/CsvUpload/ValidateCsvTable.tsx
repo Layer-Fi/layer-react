@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { type PreviewCell, type PreviewCsv, type PreviewRow } from '@components/CsvUpload/types'
 import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
@@ -29,6 +30,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
   formatters,
   className,
 }: ValidateCsvTableProps<T>) {
+  const { t } = useTranslation()
   const sortedData = useMemo<DataRow<T>[]>(
     () => [...data]
       .sort((a, b) => {
@@ -43,7 +45,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
     () => [
       {
         id: 'row',
-        header: <span className='Layer__CsvUpload__Table__header-cell-content Layer__CsvUpload__Table__header-cell-content--row'>Row</span>,
+        header: <span className='Layer__CsvUpload__Table__header-cell-content Layer__CsvUpload__Table__header-cell-content--row'>{t('row', 'Row')}</span>,
         cell: (row: Row<DataRow<T>>) => (
           <span className={classNames(
             'Layer__CsvUpload__Table__cell-content',
@@ -81,14 +83,14 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
         },
       })),
     ],
-    [headers, formatters],
+    [t, headers, formatters],
   )
 
   return (
     <div className={classNames('Layer__CsvUpload__Table__wrapper', className)}>
       <VirtualizedDataTable<DataRow<T>>
         componentName='ValidateCsvTable'
-        ariaLabel='CSV validation preview'
+        ariaLabel={t('csvValidationPreview', 'CSV validation preview')}
         columnConfig={columnConfig}
         data={sortedData}
         isLoading={false}

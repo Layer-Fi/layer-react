@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationType } from '@internal-types/categories'
@@ -48,6 +49,7 @@ export const BankTransactionsMobileListBusinessForm = ({
   showReceiptUploads,
   showTooltips,
 }: BankTransactionsMobileListBusinessFormProps) => {
+  const { t } = useTranslation()
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -93,14 +95,14 @@ export const BankTransactionsMobileListBusinessForm = ({
 
     options.push({
       value: new PlaceholderAsOption({
-        label: 'Show all categories',
+        label: t('showAllCategories', 'Show all categories'),
         value: 'SELECT_CATEGORY',
       }),
       asLink: true,
     })
 
     return options
-  }, [sessionCategories])
+  }, [t, sessionCategories])
 
   const onCategorySelect = (category: DisplayOption) => {
     if (isSelectCategoryOption(category.value)) {
@@ -178,7 +180,7 @@ export const BankTransactionsMobileListBusinessForm = ({
         >
           {showReceiptUploads && (
             <BankTransactionReceipts
-              label='Receipts'
+              label={t('receipts', 'Receipts')}
               ref={receiptsRef}
               floatingActions={false}
               hideUploadButtons={true}
@@ -189,7 +191,7 @@ export const BankTransactionsMobileListBusinessForm = ({
           {showReceiptUploads && (
             <FileInput
               onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-              text='Upload receipt'
+              text={t('uploadReceipt', 'Upload receipt')}
               iconOnly={true}
               icon={<PaperclipIcon />}
               accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -203,15 +205,15 @@ export const BankTransactionsMobileListBusinessForm = ({
                 isDisabled={!selectedCategory || isCategorizing}
               >
                 {isCategorizing
-                  ? (isCategorized(bankTransaction) ? 'Updating...' : 'Confirming...')
-                  : (isCategorized(bankTransaction) ? 'Update' : 'Confirm')}
+                  ? (isCategorized(bankTransaction) ? t('updating', 'Updating...') : t('confirming', 'Confirming...'))
+                  : (isCategorized(bankTransaction) ? t('update', 'Update') : t('confirm', 'Confirm'))}
               </Button>
             )}
         </HStack>
         {isErrorCategorizing && showRetry
           ? (
             <ErrorText>
-              Approval failed. Check connection and retry in few seconds.
+              {t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
             </ErrorText>
           )
           : null}

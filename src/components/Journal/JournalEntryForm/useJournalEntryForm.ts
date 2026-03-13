@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { Schema } from 'effect'
+import { useTranslation } from 'react-i18next'
 
 import { UpsertJournalEntryMode, useUpsertJournalEntry } from '@hooks/api/businesses/[business-id]/ledger/journal-entries/useUpsertJournalEntry'
 import { useAppForm } from '@hooks/features/forms/useForm'
@@ -21,6 +22,7 @@ function isUpdateMode(props: UseJournalEntryFormProps): props is {
 }
 
 export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
+  const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, mode } = props
   const { addToast } = useLayerContext()
@@ -44,7 +46,7 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
 
       const journalEntryNumber = journalEntry.entry.entryNumber
       addToast({
-        content: `Journal entry #${journalEntryNumber} posted`,
+        content: t('journalEntryNumberPosted', 'Journal entry #{{journalEntryNumber}} posted', { journalEntryNumber }),
         type: 'success',
       })
 
@@ -53,13 +55,13 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
     }
     catch (e) {
       console.error(e)
-      setSubmitError('Something went wrong. Please try again.')
+      setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
     }
-  }, [onSuccess, upsertJournalEntry, addToast])
+  }, [onSuccess, upsertJournalEntry, addToast, t])
 
   const validators = useMemo(() => ({
-    onDynamic: validateJournalEntryForm,
-  }), [])
+    onDynamic: (arg: { value: JournalEntryForm }) => validateJournalEntryForm(arg, t),
+  }), [t])
 
   const form = useAppForm<JournalEntryForm>({
     defaultValues,

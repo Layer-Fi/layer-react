@@ -1,4 +1,5 @@
 import { Schema } from 'effect/index'
+import type { TFunction } from 'i18next'
 
 import type { BankTransaction, SuggestedMatch } from '@internal-types/bankTransactions'
 import { CategorizationType, hasSuggestions } from '@internal-types/categories'
@@ -8,14 +9,37 @@ import { type CategorizationEncoded, isSplitCategorizationEncoded, type NestedCa
 import { decodeCustomerVendor } from '@schemas/customerVendor'
 import { TransactionTagSchema } from '@schemas/tag'
 import { makeTagFromTransactionTag } from '@schemas/tag'
+import { translationKey } from '@utils/i18n/translationKey'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
-export enum BankTransactionCategoryComboBoxGroupLabel {
+export enum BankTransactionCategoryComboBoxGroup {
   TRANSFER = 'TRANSFER',
   MATCH = 'MATCH',
   SUGGESTIONS = 'SUGGESTIONS',
-  ALL_CATEGORIES = 'ALL CATEGORIES',
+  ALL_CATEGORIES = 'ALL_CATEGORIES',
 }
+
+const GROUP_LABEL_I18N: Record<BankTransactionCategoryComboBoxGroup, { i18nKey: string, defaultValue: string }> = {
+  [BankTransactionCategoryComboBoxGroup.TRANSFER]: translationKey('transferUppercase', 'TRANSFER'),
+  [BankTransactionCategoryComboBoxGroup.MATCH]: translationKey('matchUppercase', 'MATCH'),
+  [BankTransactionCategoryComboBoxGroup.SUGGESTIONS]: translationKey('suggestionsUppercase', 'SUGGESTIONS'),
+  [BankTransactionCategoryComboBoxGroup.ALL_CATEGORIES]: translationKey('allCategoriesUppercase', 'ALL CATEGORIES'),
+}
+
+const BOLD_GROUP_LABELS = new Set<BankTransactionCategoryComboBoxGroup>([
+  BankTransactionCategoryComboBoxGroup.ALL_CATEGORIES,
+  BankTransactionCategoryComboBoxGroup.TRANSFER,
+  BankTransactionCategoryComboBoxGroup.MATCH,
+])
+
+export const getGroupDisplayLabel = (label: string | undefined, t: TFunction): string | undefined => {
+  if (!label) return undefined
+  const config = label in GROUP_LABEL_I18N ? GROUP_LABEL_I18N[label as BankTransactionCategoryComboBoxGroup] : undefined
+  return config ? t(config.i18nKey, config.defaultValue) : label
+}
+
+export const isBoldGroupLabel = (label: string | undefined): boolean =>
+  label !== undefined && BOLD_GROUP_LABELS.has(label as BankTransactionCategoryComboBoxGroup)
 
 export const convertApiCategorizationToCategoryOrSplitAsOption = (categorization: CategorizationEncoded): BankTransactionCategoryComboBoxOption => {
   if (isSplitCategorizationEncoded(categorization)) {
@@ -61,15 +85,15 @@ export const getSuggestedMatchesGroup = (bankTransaction: BankTransaction) => {
 
   return {
     label: hasOnlyTransferMatches(bankTransaction)
-      ? BankTransactionCategoryComboBoxGroupLabel.TRANSFER
-      : BankTransactionCategoryComboBoxGroupLabel.MATCH,
+      ? BankTransactionCategoryComboBoxGroup.TRANSFER
+      : BankTransactionCategoryComboBoxGroup.MATCH,
     options: bankTransaction.suggested_matches.map((match: SuggestedMatch) => new SuggestedMatchAsOption(match)),
   }
 }
 
 export const getAllCategoriesGroup = () => {
   return {
-    label: BankTransactionCategoryComboBoxGroupLabel.ALL_CATEGORIES,
+    label: BankTransactionCategoryComboBoxGroup.ALL_CATEGORIES,
     options: [new PlaceholderAsOption({ label: '', value: 'ALL_CATEGORIES', isHidden: true })],
   }
 }
@@ -77,18 +101,18 @@ export const getAllCategoriesGroup = () => {
 export const isLoadingSuggestions = (bankTransaction: BankTransaction) => {
   return bankTransaction.categorization_status === CategorizationStatus.PENDING
 }
-export const getSuggestedCategoriesGroup = (bankTransaction: BankTransaction) => {
+export const getSuggestedCategoriesGroup = (bankTransaction: BankTransaction, t: TFunction) => {
   if (isLoadingSuggestions(bankTransaction)) {
     return {
-      label: BankTransactionCategoryComboBoxGroupLabel.SUGGESTIONS,
-      options: [new PlaceholderAsOption({ label: 'Generating suggestions for transaction...', value: 'LOADING_SUGGESTIONS' })],
+      label: BankTransactionCategoryComboBoxGroup.SUGGESTIONS,
+      options: [new PlaceholderAsOption({ label: t('generatingSuggestionsForTransaction', 'Generating suggestions for transaction...'), value: 'LOADING_SUGGESTIONS' })],
     }
   }
 
   const categorizationFlow = bankTransaction.categorization_flow
   if (categorizationFlow?.type === CategorizationType.ASK_FROM_SUGGESTIONS && hasSuggestions(categorizationFlow)) {
     return {
-      label: BankTransactionCategoryComboBoxGroupLabel.SUGGESTIONS,
+      label: BankTransactionCategoryComboBoxGroup.SUGGESTIONS,
       options: categorizationFlow.suggestions.map(suggestion => convertApiCategorizationToCategoryOrSplitAsOption(suggestion)),
     }
   }

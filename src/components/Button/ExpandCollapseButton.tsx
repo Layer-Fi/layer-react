@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import CollapseIcon from '@icons/Collapse'
 import ExpandIcon from '@icons/Expand'
@@ -19,6 +20,7 @@ export const ExpandCollapseButton = ({
   iconOnly,
   variant,
 }: ExpandCollapseButtonProps) => {
+  const { t } = useTranslation()
   return (
     <>
       <Button
@@ -40,7 +42,7 @@ export const ExpandCollapseButton = ({
         iconAsPrimary={iconOnly}
         iconOnly={iconOnly}
       >
-        {iconOnly ? null : !expanded ? 'Expand all rows' : 'Collapse all rows'}
+        {iconOnly ? null : !expanded ? t('expandAllRows', 'Expand all rows') : t('collapseAllRows', 'Collapse all rows')}
       </Button>
     </>
   )

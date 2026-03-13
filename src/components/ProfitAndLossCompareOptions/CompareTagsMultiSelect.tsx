@@ -1,4 +1,5 @@
 import { useContext, useId } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { StylesConfig } from 'react-select'
 
 import { type TagComparisonOption } from '@internal-types/profitAndLoss'
@@ -26,6 +27,7 @@ const selectStyles = {
 } satisfies StylesConfig<SelectOption, true>
 
 export const CompareTagsMultiSelect = () => {
+  const { t } = useTranslation()
   const {
     compareOptions,
     selectedCompareOptions,
@@ -36,14 +38,14 @@ export const CompareTagsMultiSelect = () => {
 
   return (
     <VStack className='Layer__CompareTagsMultiSelect__Container'>
-      <Label pbe='3xs' size='sm' htmlFor={inputId}>Compare by</Label>
+      <Label pbe='3xs' size='sm' htmlFor={inputId}>{t('compareBy', 'Compare by')}</Label>
       <MultiSelect
         inputId={inputId}
         options={compareOptions.map(toSelectOption)}
         onChange={setSelectedCompareOptions}
         defaultValue={selectedCompareOptions?.map(toSelectOption)}
         value={selectedCompareOptions.map(toSelectOption)}
-        placeholder='Select tags'
+        placeholder={t('selectTags', 'Select tags')}
         styles={selectStyles}
         className='Layer__CompareTagsMultiSelect'
       />

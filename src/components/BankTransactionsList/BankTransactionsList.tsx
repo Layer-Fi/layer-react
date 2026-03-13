@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { DATE_FORMAT } from '@utils/time/timeFormats'
 import { useBankTransactionsTableCheckboxState } from '@hooks/features/bankTransactions/useBankTransactionsTableCheckboxState'
@@ -28,6 +30,7 @@ export const BankTransactionsList = ({
   showReceiptUploads,
   showTooltips,
 }: BankTransactionsListProps) => {
+  const { t } = useTranslation()
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
@@ -47,10 +50,10 @@ export const BankTransactionsList = ({
             isSelected={isAllSelected}
             isIndeterminate={isPartiallySelected}
             onChange={onHeaderCheckboxChange}
-            aria-label='Select all transactions on this page'
+            aria-label={t('selectAllTransactionsOnThisPage', 'Select all transactions on this page')}
           />
           <Span size='sm'>
-            Select all
+            {t('selectAll', 'Select all')}
           </Span>
         </HStack>
       )}

@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
-import pluralize from 'pluralize'
+import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/i18n/plural'
 import { useBulkUncategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-uncategorize/useBulkUncategorize'
 import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -14,6 +15,7 @@ interface BankTransactionsUncategorizeAllModalProps {
 }
 
 export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isMobileView = false }: BankTransactionsUncategorizeAllModalProps) => {
+  const { t } = useTranslation()
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
@@ -32,16 +34,20 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isM
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title='Uncategorize all selected transactions?'
+      title={t('uncategorizeAllSelectedTransactions', 'Uncategorize all selected transactions?')}
       content={(
         <Span>
-          {`This will uncategorize ${count} selected ${pluralize('transaction', count)}.`}
+          {tPlural(t, 'thisWillUncategorizeCountSelectedTransactions', {
+            count,
+            one: 'This will uncategorize {{count}} selected transaction.',
+            other: 'This will uncategorize {{count}} selected transactions.',
+          })}
         </Span>
       )}
       onConfirm={handleConfirm}
-      confirmLabel='Uncategorize All'
-      cancelLabel='Cancel'
-      errorText='Failed to uncategorize transactions'
+      confirmLabel={t('uncategorizeAll', 'Uncategorize All')}
+      cancelLabel={t('cancel', 'Cancel')}
+      errorText={t('failedToUncategorizeTransactions', 'Failed to uncategorize transactions')}
       useDrawer={isMobileView}
     />
   )

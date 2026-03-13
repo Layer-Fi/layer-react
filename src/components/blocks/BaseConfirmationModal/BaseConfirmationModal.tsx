@@ -1,7 +1,8 @@
 import { memo, type ReactNode, useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type Awaitable } from '@internal-types/utility/promises'
-import { APIError } from '@utils/api/apiError'
+import { type APIError } from '@utils/api/apiError'
 import { Drawer, Modal, type ModalProps } from '@ui/Modal/Modal'
 import {
   ModalActions,
@@ -28,16 +29,6 @@ export type BaseConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChan
   useDrawer?: boolean
 }
 
-function getErrorMessage(error: APIError | Error | null, errorText?: string) {
-  if (error === null) return null
-
-  if (errorText) return errorText
-
-  return error instanceof APIError
-    ? error?.getAllMessages()?.[0] || error?.getMessage()
-    : error?.message
-}
-
 type BaseConfirmationModalContentProps = Omit<
   BaseConfirmationModalProps,
   'isOpen' | 'onOpenChange'
@@ -51,16 +42,21 @@ const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent(
   description,
   content,
   onConfirm,
-  confirmLabel = 'Confirm',
-  retryLabel = 'Retry',
-  cancelLabel = 'Cancel',
+  confirmLabel,
+  retryLabel,
+  cancelLabel,
   errorText,
   closeOnConfirm = true,
   confirmDisabled = false,
   useDrawer = false,
 }: BaseConfirmationModalContentProps) {
+  const { t } = useTranslation()
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<APIError | Error | null>(null)
+
+  const confirmButtonLabel = confirmLabel ?? t('confirm', 'Confirm')
+  const retryButtonLabel = retryLabel ?? t('retry', 'Retry')
+  const cancelButtonLabel = cancelLabel ?? t('cancel', 'Cancel')
 
   const onClickConfirm = useCallback(() => {
     setIsProcessing(true)
@@ -98,17 +94,17 @@ const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent(
         <HStack gap='md'>
           <Spacer />
           <Button variant={ButtonVariant.secondary} onClick={close}>
-            {cancelLabel}
+            {cancelButtonLabel}
           </Button>
           <SubmitButton
             onClick={onClickConfirm}
             processing={isProcessing}
             disabled={confirmDisabled}
-            error={getErrorMessage(error, errorText) ?? ''}
+            error={error ? errorText : undefined}
             withRetry
             noIcon={!isProcessing}
           >
-            {error ? retryLabel : confirmLabel}
+            {error ? retryButtonLabel : confirmButtonLabel}
           </SubmitButton>
         </HStack>
       </ModalActions>

@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { type CustomerVendorSchema, decodeCustomerVendor } from '@schemas/customerVendor'
@@ -14,6 +15,7 @@ type BankTransactionCustomerVendorSelectorProps = {
 export function BankTransactionCustomerVendorSelector({
   bankTransaction,
 }: BankTransactionCustomerVendorSelectorProps) {
+  const { t } = useTranslation()
   const {
     id: bankTransactionId,
     customer,
@@ -90,7 +92,7 @@ export function BankTransactionCustomerVendorSelector({
     <CustomerVendorSelector
       selectedCustomerVendor={selectedCustomerVendor}
       onSelectedCustomerVendorChange={triggerSetCustomerVendor}
-      placeholder='Set transaction customer or vendor'
+      placeholder={t('setTransactionCustomerOrVendor', 'Set transaction customer or vendor')}
       isReadOnly={!isCategorizationEnabled}
       isMutating={isMutating || selectedCustomerVendor?._local?.isOptimistic}
     />

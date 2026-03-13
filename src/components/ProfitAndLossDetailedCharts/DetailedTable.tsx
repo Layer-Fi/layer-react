@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { type SortDirection } from '@internal-types/general'
 import { formatPercent } from '@utils/format'
@@ -99,6 +100,7 @@ export const DetailedTable = ({
   stringOverrides,
   onValueClick,
 }: DetailedTableProps) => {
+  const { t } = useTranslation()
   const typeColorMapping = mapTypesToColors(filteredData, chartColorsList)
   const positiveTotal = filteredData
     .filter(x => x.value > 0)
@@ -127,7 +129,7 @@ export const DetailedTable = ({
                 className={classNames('Layer__sortable-col', buildColClass('category'))}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'category')}
               >
-                {stringOverrides?.categoryColumnHeader || 'Category'}
+                {stringOverrides?.categoryColumnHeader || t('category', 'Category')}
                 {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>
@@ -136,7 +138,7 @@ export const DetailedTable = ({
                   className={classNames('Layer__sortable-col', buildColClass('type'))}
                   onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
                 >
-                  {stringOverrides?.typeColumnHeader || 'Type'}
+                  {stringOverrides?.typeColumnHeader || t('type', 'Type')}
                   {' '}
                   <SortArrows className='Layer__sort-arrows' />
                 </th>
@@ -145,7 +147,7 @@ export const DetailedTable = ({
                 className={classNames('Layer__sortable-col', buildColClass('value'), 'value-col')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'value')}
               >
-                {stringOverrides?.valueColumnHeader || 'Value'}
+                {stringOverrides?.valueColumnHeader || t('value', 'Value')}
                 {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>

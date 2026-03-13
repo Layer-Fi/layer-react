@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import Select, { type Options } from 'react-select'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { type MoneyFormat } from '@internal-types/general'
+import { translationKey } from '@utils/i18n/translationKey'
 import { type PnlTagFilter } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Toggle } from '@ui/Toggle/Toggle'
@@ -16,10 +18,10 @@ import './projectProfitability.scss'
 
 type ProjectTab = 'overview' | 'transactions' | 'report'
 
-const PROJECT_TAB_OPTIONS = [
-  { value: 'overview', label: 'Overview' },
-  { value: 'transactions', label: 'Transactions' },
-  { value: 'report', label: 'Report' },
+const PROJECT_TAB_CONFIG = [
+  { value: 'overview' as const, ...translationKey('overview', 'Overview') },
+  { value: 'transactions' as const, ...translationKey('transactions', 'Transactions') },
+  { value: 'report' as const, ...translationKey('report', 'Report') },
 ]
 
 export type TagOption = {
@@ -51,10 +53,19 @@ export const ProjectProfitabilityView = ({
   dateSelectionMode = 'month',
   csvMoneyFormat = 'DOLLAR_STRING',
 }: ProjectProfitabilityProps) => {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<ProjectTab>('overview')
   const [tagFilter, setTagFilter] = useState<TagOption | null>(null)
   const [pnlTagFilter, setPnlTagFilter] = useState<PnlTagFilter | undefined>(
     undefined,
+  )
+
+  const projectTabOptions = useMemo(
+    () => PROJECT_TAB_CONFIG.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
   )
 
   const isOptionSelected = (
@@ -91,8 +102,8 @@ export const ProjectProfitabilityView = ({
       <div className='Layer__component Layer__header__actions'>
         <div className='Layer__component'>
           <Toggle
-            ariaLabel='Project view'
-            options={PROJECT_TAB_OPTIONS}
+            ariaLabel={t('projectView', 'Project view')}
+            options={projectTabOptions}
             selectedKey={activeTab}
             onSelectionChange={key => setActiveTab(key as ProjectTab)}
           />
@@ -101,7 +112,7 @@ export const ProjectProfitabilityView = ({
           className='Layer__category-menu Layer__select'
           classNamePrefix='Layer__select'
           options={valueOptions}
-          placeholder='Select a project...'
+          placeholder={t('selectAProject', 'Select a project...')}
           isOptionSelected={isOptionSelected}
           defaultValue={valueOptions.length > 0 ? valueOptions[0] : undefined}
           value={valueOptions.find(
@@ -121,7 +132,7 @@ export const ProjectProfitabilityView = ({
         <>
           {activeTab === 'overview' && (
             <AccountingOverview
-              stringOverrides={{ header: 'Project Overview' }}
+              stringOverrides={{ header: t('projectOverview', 'Project Overview') }}
               tagFilter={tagFilter ? tagFilter : undefined}
               onTransactionsToReviewClick={() => setActiveTab('transactions')}
               enableOnboarding={false}

@@ -1,6 +1,7 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { format } from 'date-fns'
 import { Hourglass } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { humanizeTitle } from '@utils/profitAndLossUtils'
@@ -46,6 +47,7 @@ export const ProfitAndLossDetailedCharts = ({
   chartColorsList?: string[]
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
 }) => {
+  const { t } = useTranslation()
   const {
     filteredDataRevenue,
     filteredTotalRevenue,
@@ -91,7 +93,7 @@ export const ProfitAndLossDetailedCharts = ({
       <header className='Layer__profit-and-loss-detailed-charts__header'>
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides)}
+            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides, t)}
           </Text>
           <Text size={TextSize.sm} className='date'>
             {format(dateRange.startDate, MONTH_YEAR_FORMAT_FULL)}
@@ -114,7 +116,7 @@ export const ProfitAndLossDetailedCharts = ({
         )}
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides)}
+            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides, t)}
           </Text>
           <Text size={TextSize.sm} className='date'>
             {format(dateRange.startDate, MONTH_YEAR_FORMAT_FULL)}
@@ -130,12 +132,12 @@ export const ProfitAndLossDetailedCharts = ({
                 <VStack align='center' justify='center' gap='md' className='Layer__profit-and-loss-detailed-charts__empty-chart-content'>
                   <Hourglass size={36} className='Layer__profit-and-loss-detailed-charts__empty-chart-icon' />
                   <Span size={TextSize.md} weight={TextWeight.bold} variant='subtle'>
-                    No transactions found
+                    {t('noTransactionsFound', 'No transactions found')}
                   </Span>
                 </VStack>
               </div>
               <HStack align='center' justify='center' gap='md' pb='md' className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
-                <Span size={TextSize.md} variant='subtle'>Upload your transactions or wait for transactions to be synced from your bank.</Span>
+                <Span size={TextSize.md} variant='subtle'>{t('uploadYourTransactionsOrWaitForTransactionsToBeSyncedFromYourBank', 'Upload your transactions or wait for transactions to be synced from your bank.')}</Span>
               </HStack>
             </>
           )

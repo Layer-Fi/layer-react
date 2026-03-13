@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
@@ -62,6 +63,7 @@ export const BankTransactionsMobileListPersonalForm = ({
   showDescriptions,
   showCategorization,
 }: BankTransactionsMobileListPersonalFormProps) => {
+  const { t } = useTranslation()
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -121,7 +123,7 @@ export const BankTransactionsMobileListPersonalForm = ({
             ref={receiptsRef}
             floatingActions={false}
             hideUploadButtons={true}
-            label='Receipts'
+            label={t('receipts', 'Receipts')}
           />
         )}
       </div>
@@ -129,7 +131,7 @@ export const BankTransactionsMobileListPersonalForm = ({
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-            text='Upload receipt'
+            text={t('uploadReceipt', 'Upload receipt')}
             iconOnly={true}
             icon={<PaperclipIcon />}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -143,17 +145,17 @@ export const BankTransactionsMobileListPersonalForm = ({
               isDisabled={alreadyAssigned || isCategorizing}
             >
               {isCategorizing
-                ? (isCategorized(bankTransaction) ? 'Updating...' : 'Confirming...')
+                ? (isCategorized(bankTransaction) ? t('updating', 'Updating...') : t('confirming', 'Confirming...'))
                 : alreadyAssigned
-                  ? 'Updated'
-                  : 'Mark as Personal'}
+                  ? t('updated', 'Updated')
+                  : t('markAsPersonal', 'Mark as Personal')}
             </Button>
           )}
       </HStack>
       {isErrorCategorizing && showRetry
         ? (
           <ErrorText>
-            Approval failed. Check connection and retry in few seconds.
+            {t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
           </ErrorText>
         )
         : null}

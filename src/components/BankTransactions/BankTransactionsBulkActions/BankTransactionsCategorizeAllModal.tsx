@@ -1,6 +1,7 @@
 import { useCallback, useId, useState } from 'react'
-import pluralize from 'pluralize'
+import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/i18n/plural'
 import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
@@ -28,6 +29,7 @@ export const BankTransactionsCategorizeAllModal = ({
   mode,
   isMobileView = false,
 }: BankTransactionsCategorizeAllModalProps) => {
+  const { t } = useTranslation()
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
@@ -72,11 +74,11 @@ export const BankTransactionsCategorizeAllModal = ({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={handleCategorizeModalClose}
-      title={mode === CategorizationMode.Categorize ? 'Categorize all selected transactions?' : 'Recategorize all selected transactions?'}
+      title={mode === CategorizationMode.Categorize ? t('categorizeAllSelectedTransactions', 'Categorize all selected transactions?') : t('recategorizeAllSelectedTransactions', 'Recategorize all selected transactions?')}
       content={(
         <VStack gap='xs'>
           <VStack gap='3xs'>
-            <Label size='sm' htmlFor={categorySelectId}>Select category</Label>
+            <Label size='sm' htmlFor={categorySelectId}>{t('selectCategory', 'Select category')}</Label>
             {isMobileView
               ? (
                 <CategorySelectDrawerWithTrigger
@@ -99,17 +101,27 @@ export const BankTransactionsCategorizeAllModal = ({
           {selectedCategory && isCategoryAsOption(selectedCategory) && (
             <Span>
               {mode === CategorizationMode.Categorize
-                ? `This will categorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`
-                : `This will recategorize ${count} selected ${pluralize('transaction', count)} as ${selectedCategory.original.displayName}.`}
+                ? tPlural(t, 'thisWillCategorizeCountSelectedTransactionsAsCategory', {
+                  count,
+                  category: selectedCategory.original.displayName,
+                  one: 'This will categorize {{count}} selected transaction as {{category}}.',
+                  other: 'This will categorize {{count}} selected transactions as {{category}}.',
+                })
+                : tPlural(t, 'thisWillRecategorizeCountSelectedTransactionsAsCategory', {
+                  count,
+                  category: selectedCategory.original.displayName,
+                  one: 'This will recategorize {{count}} selected transaction as {{category}}.',
+                  other: 'This will recategorize {{count}} selected transactions as {{category}}.',
+                })}
             </Span>
           )}
         </VStack>
       )}
       onConfirm={handleConfirm}
-      confirmLabel={mode === CategorizationMode.Categorize ? 'Categorize All' : 'Recategorize All'}
-      cancelLabel='Cancel'
+      confirmLabel={mode === CategorizationMode.Categorize ? t('categorizeAll', 'Categorize All') : t('recategorizeAll', 'Recategorize All')}
+      cancelLabel={t('cancel', 'Cancel')}
       confirmDisabled={!selectedCategory}
-      errorText={mode === CategorizationMode.Categorize ? 'Failed to categorize transactions' : 'Failed to recategorize transactions'}
+      errorText={mode === CategorizationMode.Categorize ? t('failedToCategorizeTransactions', 'Failed to categorize transactions') : t('failedToRecategorizeTransactions', 'Failed to recategorize transactions')}
       closeOnConfirm
       useDrawer={isMobileView}
     />

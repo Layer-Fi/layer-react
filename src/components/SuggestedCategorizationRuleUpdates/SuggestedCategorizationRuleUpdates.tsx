@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { ModalHeading } from '@ui/Modal/ModalSlots'
@@ -13,11 +15,12 @@ type SuggestedCategorizationRuleUpdatesProps = {
 }
 
 export function RuleSuggestionHeader({ ruleSuggestion }: { ruleSuggestion: UpdateCategorizationRulesSuggestion }) {
+  const { t } = useTranslation()
   switch (ruleSuggestion.type) {
     case 'Create_Categorization_Rule_For_Counterparty':
       return (
         <ModalHeading size='sm'>
-          Always use this category?
+          {t('alwaysUseThisCategory', 'Always use this category?')}
         </ModalHeading>
       )
     default: {

@@ -1,7 +1,8 @@
 import { useContext } from 'react'
-import pluralize from 'pluralize'
+import { useTranslation } from 'react-i18next'
 
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
+import { tPlural } from '@utils/i18n/plural'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import ChevronRight from '@icons/ChevronRight'
 import LinkIcon from '@icons/Link'
@@ -20,6 +21,7 @@ import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
 export function LinkAccountsLinkStep() {
+  const { t } = useTranslation()
   const {
     data,
     loadingStatus,
@@ -40,7 +42,7 @@ export function LinkAccountsLinkStep() {
         Empty={(
           <VStack gap='xl' pbe='md'>
             <Text status='disabled'>
-              Connect your bank accounts and credit cards to automatically import your business transactions.
+              {t('connectYourBankAccountsAndCreditCardsToAutomaticallyImportYourBusinessTransactions', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
             </Text>
             <Button
               onClick={() => { void addConnection('PLAID') }}
@@ -49,7 +51,7 @@ export function LinkAccountsLinkStep() {
               fullWidth={false}
               style={{ maxWidth: 'fit-content' }}
             >
-              Connect my bank
+              {t('connectMyBank', 'Connect my bank')}
             </Button>
           </VStack>
         )}
@@ -59,10 +61,14 @@ export function LinkAccountsLinkStep() {
             <VStack>
               <VStack gap='2xs' pbe='md'>
                 <Heading level={3} size='sm'>
-                  {`We've found ${pluralize('account', effectiveAccounts.length, true)}`}
+                  {tPlural(t, 'weveFoundCountAccounts', {
+                    count: effectiveAccounts.length,
+                    one: 'We’ve found {{count}} account',
+                    other: 'We’ve found {{count}} accounts',
+                  })}
                 </Heading>
                 <Text status='disabled'>
-                  You’ll have the chance to remove any accounts you don’t use for your business in the next step.
+                  {t('youllHaveTheChanceToRemoveAnyAccountsYouDontUseForYourBusinessInTheNextStep', 'You’ll have the chance to remove any accounts you don’t use for your business in the next step.')}
                 </Text>
               </VStack>
               <LinkAccountsListContainer>
@@ -70,7 +76,7 @@ export function LinkAccountsLinkStep() {
               </LinkAccountsListContainer>
               <VStack pbs='xl'>
                 <ActionableRow
-                  title='Do you use any other bank accounts or credit cards for your business?'
+                  title={t('doYouUseAnyOtherBankAccountsOrCreditCardsForYourBusiness', 'Do you use any other bank accounts or credit cards for your business?')}
                   button={(
                     <Button
                       onClick={() => { void addConnection('PLAID') }}
@@ -79,7 +85,7 @@ export function LinkAccountsLinkStep() {
                       fullWidth={false}
                       style={{ width: 'auto', minWidth: 'fit-content' }}
                     >
-                      Link another bank
+                      {t('linkAnotherBank', 'Link another bank')}
                     </Button>
                   )}
                 />
@@ -91,8 +97,8 @@ export function LinkAccountsLinkStep() {
         Error={(
           <DataState
             status={DataStateStatus.failed}
-            title='Failed to load accounts'
-            description='Please try again later'
+            title={t('failedToLoadAccounts', 'Failed to load accounts')}
+            description={t('pleaseTryAgainLater', 'Please try again later')}
             onRefresh={() => { void refetchAccounts() }}
           />
         )}
@@ -116,7 +122,7 @@ export function LinkAccountsLinkStep() {
             <Separator mbs='lg' mbe='lg' />
             <HStack justify='start' gap='sm'>
               <Button onClick={() => { void next() }} rightIcon={<ChevronRight />}>
-                I’m done linking my banks
+                {t('imDoneLinkingMyBanks', 'I’m done linking my banks')}
               </Button>
             </HStack>
           </>

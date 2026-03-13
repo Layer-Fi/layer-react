@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { type FormError, type FormErrorWithId } from '@internal-types/general'
 import { type BaseSelectOption } from '@internal-types/general'
 import type { JournalEntry as JournalEntryType } from '@internal-types/journal'
 import {
   type JournalEntry,
-  type JournalEntryLineItem,
   type NewApiJournalEntry,
   type NewFormJournalEntry,
 } from '@internal-types/journal'
@@ -80,33 +81,21 @@ export const flattenAccounts = (
     .flat()
     .filter(id => id)
 
-const validateLineItems = (lineItems?: JournalEntryLineItem[]) => {
-  if (!lineItems) {
-    return null
-  }
+const validateLineItems = (formData: JournalFormTypes['data']['line_items'] | undefined, t: TFunction) => {
   const errors: FormErrorWithId[] = []
-
-  lineItems.map((lineItem, idx) => {
+  if (!formData) return errors
+  formData.map((lineItem, idx) => {
     if (!lineItem.account_identifier.id) {
-      errors.push({
-        id: idx,
-        field: 'account',
-        message: 'Account is required',
-      })
+      errors.push({ id: idx, field: 'account', message: t('accountIsRequired', 'Account is required') })
     }
-
     if (!lineItem.amount) {
-      errors.push({
-        id: idx,
-        field: 'amount',
-        message: 'Amount cannot be empty or zero',
-      })
+      errors.push({ id: idx, field: 'amount', message: t('amountCannotBeEmptyOrZero', 'Amount cannot be empty or zero') })
     }
   })
   return errors
 }
 
-const validate = (formData?: JournalFormTypes) => {
+const validate = (formData: JournalFormTypes, t: TFunction) => {
   let errors: {
     entry: FormError[]
     lineItems: FormErrorWithId[]
@@ -115,7 +104,7 @@ const validate = (formData?: JournalFormTypes) => {
     lineItems: [],
   }
 
-  const lineItems = validateLineItems(formData?.data.line_items)
+  const lineItems = validateLineItems(formData?.data.line_items, t)
 
   if (lineItems) {
     errors = {
@@ -128,6 +117,7 @@ const validate = (formData?: JournalFormTypes) => {
 }
 
 export const useJournal: UseJournal = () => {
+  const { t } = useTranslation()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
@@ -199,13 +189,13 @@ export const useJournal: UseJournal = () => {
       setForm(undefined)
     }
     catch (_err) {
-      setApiError('Submit failed. Please, check your connection and try again.')
+      setApiError(t('submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
     }
     finally {
       setSendingForm(false)
       void debouncedInvalidateProfitAndLoss()
     }
-  }, [apiUrl, auth?.access_token, businessId, refetch, closeSelectedEntry, debouncedInvalidateProfitAndLoss])
+  }, [apiUrl, auth?.access_token, businessId, refetch, closeSelectedEntry, debouncedInvalidateProfitAndLoss, t])
 
   const addEntry = useCallback(() => {
     setSelectedEntryId('new')
@@ -331,7 +321,7 @@ export const useJournal: UseJournal = () => {
       return null
     }
 
-    const errors = validate(form)
+    const errors = validate(form, t)
 
     if (errors.entry.length > 0 || errors.lineItems.length > 0) {
       setForm({
@@ -352,7 +342,7 @@ export const useJournal: UseJournal = () => {
         })),
       } as NewApiJournalEntry)
     }
-  }, [form, addingEntry, create])
+  }, [form, addingEntry, create, t])
 
   const addEntryLine = useCallback(() => {
     if (!form) {

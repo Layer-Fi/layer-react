@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
+import { useTranslation } from 'react-i18next'
 
 import { UpsertVehicleSchema, type Vehicle, type VehicleForm } from '@schemas/vehicle'
 import { UpsertVehicleMode, useUpsertVehicle } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useUpsertVehicle'
@@ -11,6 +12,7 @@ type onSuccessFn = (vehicle: Vehicle) => void
 type UseVehicleFormProps = { onSuccess: onSuccessFn, vehicle?: Vehicle }
 
 export const useVehicleForm = (props: UseVehicleFormProps) => {
+  const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, vehicle } = props
 
@@ -39,8 +41,8 @@ export const useVehicleForm = (props: UseVehicleFormProps) => {
   }, [onSuccess, upsertVehicle])
 
   const onDynamic = useCallback(({ value }: { value: VehicleForm }) => {
-    return validateVehicleForm({ vehicle: value })
-  }, [])
+    return validateVehicleForm({ vehicle: value }, t)
+  }, [t])
 
   const validators = useMemo(() => ({ onDynamic }), [onDynamic])
 

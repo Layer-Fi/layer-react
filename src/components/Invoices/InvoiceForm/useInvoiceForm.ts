@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { Schema } from 'effect'
+import { useTranslation } from 'react-i18next'
 
 import { type Invoice, type InvoiceForm, UpsertInvoiceSchema } from '@schemas/invoices/invoice'
 import { UpsertInvoiceMode, useUpsertInvoice } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
@@ -27,6 +28,7 @@ function isUpdateMode(props: UseInvoiceFormProps): props is { onSuccess: onSucce
 export type InvoiceFormType = ReturnType<typeof useAppForm<InvoiceForm>>
 
 export const useInvoiceForm = (props: UseInvoiceFormProps) => {
+  const { t } = useTranslation()
   const { onSuccess, mode } = props
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
 
@@ -60,8 +62,8 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
     }, [onSuccess, upsertInvoice])
 
   const validators = useMemo(() => ({
-    onDynamic: validateInvoiceForm,
-  }), [])
+    onDynamic: (arg: { value: InvoiceForm }) => validateInvoiceForm(arg, t),
+  }), [t])
 
   const form = useAppForm<InvoiceForm>({
     defaultValues,

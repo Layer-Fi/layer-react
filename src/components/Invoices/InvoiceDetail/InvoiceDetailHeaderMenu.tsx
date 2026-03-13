@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { Menu as MenuIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
@@ -50,6 +51,7 @@ type InvoiceDetailHeaderMenuProps = {
   onEditInvoice: () => void
 }
 export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMenuProps) => {
+  const { t } = useTranslation()
   const viewState = useInvoiceDetail()
   const { toViewInvoice } = useInvoiceNavigation()
   const [openModal, setOpenModal] = useState<InvoiceActionModalType>()
@@ -86,7 +88,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
   return (
     <>
       <DropdownMenu
-        ariaLabel='Additional invoice actions'
+        ariaLabel={t('additionalInvoiceActions', 'Additional invoice actions')}
         slots={{ Trigger }}
         slotProps={{ Dialog: { width: 160 } }}
         variant='compact'
@@ -94,27 +96,27 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
         <MenuList>
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Edit) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Edit} onClick={onEditInvoice}>
-              <Span size='sm'>Edit details</Span>
+              <Span size='sm'>{t('editDetails', 'Edit details')}</Span>
             </MenuItem>
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Refund) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Refund} onClick={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Refund)}>
-              <Span size='sm'>Issue refund</Span>
+              <Span size='sm'>{t('issueRefund', 'Issue refund')}</Span>
             </MenuItem>
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Void) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Void} onClick={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Void)}>
-              <Span size='sm'>Cancel/Void</Span>
+              <Span size='sm'>{t('markAsVoid', 'Mark as void')}</Span>
             </MenuItem>
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Writeoff) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Writeoff} onClick={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Writeoff)}>
-              <Span size='sm'>Write off</Span>
+              <Span size='sm'>{t('writeOff', 'Write off')}</Span>
             </MenuItem>
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Reset) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Reset} onClick={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Reset)}>
-              <Span size='sm'>Reset to sent</Span>
+              <Span size='sm'>{t('resetToSent', 'Reset to sent')}</Span>
             </MenuItem>
           )}
         </MenuList>

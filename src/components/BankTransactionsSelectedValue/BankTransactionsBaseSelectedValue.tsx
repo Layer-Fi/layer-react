@@ -1,4 +1,5 @@
 import { Layers2Icon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import MinimizeTwo from '@icons/MinimizeTwo'
 import Scissors from '@icons/Scissors'
@@ -20,6 +21,7 @@ export type BankTransactionsBaseSelectedValueProps = {
 }
 
 export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSelectedValueProps) => {
+  const { t } = useTranslation()
   const { type, className, label, slotProps, showCategoryBadge = false, isCategorized = false } = props
 
   if (type === 'placeholder') {
@@ -34,7 +36,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
     return (
       <HStack gap='xs' align='center' className={className}>
         <Badge size={BadgeSize.SMALL} icon={<MinimizeTwo size={11} />}>
-          {type === 'transfer' ? 'Transfer' : 'Match'}
+          {type === 'transfer' ? t('transfer', 'Transfer') : t('match', 'Match')}
         </Badge>
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
@@ -45,7 +47,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
     return (
       <HStack gap='xs' align='center' className={className}>
         <Badge size={BadgeSize.SMALL} icon={<Scissors size={11} />}>
-          Split
+          {t('split', 'Split')}
         </Badge>
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
@@ -56,7 +58,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
     <HStack gap='xs' align='center' className={className}>
       {showCategoryBadge && (
         <Badge size={BadgeSize.SMALL} icon={<Layers2Icon size={11} />}>
-          {isCategorized ? 'Category' : 'Suggested category'}
+          {isCategorized ? t('category', 'Category') : t('suggestedCategory', 'Suggested category')}
         </Badge>
       )}
       <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>

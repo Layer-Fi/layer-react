@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { format as formatTime, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import {
@@ -63,6 +64,7 @@ export const BankTransactionRow = ({
   showTooltips,
   stringOverrides,
 }: Props) => {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [isExpandedRowValid, setIsExpandedRowValid] = useState(true)
   const toggleOpen = useCallback(() => {
@@ -112,13 +114,13 @@ export const BankTransactionRow = ({
       disabled={selectedCategory === null || isBulkSelectionActive}
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
       withRetry
-      error={isError ? 'Approval failed. Check connection and retry in few seconds.' : undefined}
+      error={isError ? t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.') : undefined}
     >
       {isError
-        ? 'Retry'
+        ? t('retry', 'Retry')
         : displayAsCategorized
-          ? stringOverrides?.updateButtonText || 'Update'
-          : stringOverrides?.approveButtonText || 'Confirm'}
+          ? stringOverrides?.updateButtonText ?? t('update', 'Update')
+          : stringOverrides?.approveButtonText ?? t('confirm', 'Confirm')}
     </SubmitButton>
   ), [
     displayAsCategorized,
@@ -130,6 +132,7 @@ export const BankTransactionRow = ({
     selectedCategory,
     stringOverrides?.approveButtonText,
     stringOverrides?.updateButtonText,
+    t,
   ])
 
   const preventRowExpansion = (e: React.MouseEvent) => {
@@ -251,7 +254,7 @@ export const BankTransactionRow = ({
                       size={TextSize.md}
                       className='Layer__unsaved-info'
                     >
-                      <span>Unsaved</span>
+                      <span>{t('unsaved', 'Unsaved')}</span>
                       <AlertCircle size={12} />
                     </Text>
                   )}

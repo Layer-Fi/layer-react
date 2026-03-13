@@ -1,7 +1,9 @@
-import { useCallback, useId } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import { differenceInDays, startOfDay } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
+import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
@@ -19,15 +21,15 @@ type InvoiceTermsOption = {
   label: string
   value: InvoiceTermsValues
 }
-const InvoiceTermsOptionConfig = {
-  [InvoiceTermsValues.Net10]: { label: 'Net 10', value: InvoiceTermsValues.Net10 },
-  [InvoiceTermsValues.Net15]: { label: 'Net 15', value: InvoiceTermsValues.Net15 },
-  [InvoiceTermsValues.Net30]: { label: 'Net 30', value: InvoiceTermsValues.Net30 },
-  [InvoiceTermsValues.Net60]: { label: 'Net 60', value: InvoiceTermsValues.Net60 },
-  [InvoiceTermsValues.Net90]: { label: 'Net 90', value: InvoiceTermsValues.Net90 },
-  [InvoiceTermsValues.Custom]: { label: 'Custom', value: InvoiceTermsValues.Custom },
-}
-const options = Object.values(InvoiceTermsOptionConfig)
+
+const INVOICE_TERMS_CONFIG = [
+  { value: InvoiceTermsValues.Net10, ...translationKey('net10', 'Net 10') },
+  { value: InvoiceTermsValues.Net15, ...translationKey('net15', 'Net 15') },
+  { value: InvoiceTermsValues.Net30, ...translationKey('net30', 'Net 30') },
+  { value: InvoiceTermsValues.Net60, ...translationKey('net60', 'Net 60') },
+  { value: InvoiceTermsValues.Net90, ...translationKey('net90', 'Net 90') },
+  { value: InvoiceTermsValues.Custom, ...translationKey('custom', 'Custom') },
+]
 
 export const getDurationInDaysFromTerms = (terms: InvoiceTermsValues) => {
   switch (terms) {
@@ -78,17 +80,28 @@ type InvoiceTermsComboBoxProps = {
 }
 
 export const InvoiceTermsComboBox = ({ value, onValueChange, isReadOnly }: InvoiceTermsComboBoxProps) => {
-  const selectedOption = InvoiceTermsOptionConfig[value]
-  const onSelectedValueChange = useCallback((option: InvoiceTermsOption | null) => {
+  const { t } = useTranslation()
+
+  const options = useMemo<InvoiceTermsOption[]>(
+    () => INVOICE_TERMS_CONFIG.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
+  const selectedOption = value ? (options.find(o => o.value === value) ?? null) : null
+  const handleChange = (option: null | InvoiceTermsOption) => {
     onValueChange(option?.value || null)
-  }, [onValueChange])
+  }
+  const onSelectedValueChange = useCallback(handleChange, [onValueChange])
 
   const inputId = useId()
 
   return (
     <HStack className='Layer__InvoiceForm__TermsComboBox Layer__InvoiceForm__Field__Terms'>
       <Label size='sm' htmlFor={inputId}>
-        Terms
+        {t('terms', 'Terms')}
       </Label>
       <ComboBox
         options={options}

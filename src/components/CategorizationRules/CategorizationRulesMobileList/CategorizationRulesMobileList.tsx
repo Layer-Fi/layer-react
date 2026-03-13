@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import type { NestedCategorization } from '@schemas/categorization'
@@ -23,36 +24,39 @@ const CategorizationRuleMobileListItem = ({
   rule,
   options,
   onDeletePress,
-}: CategorizationRuleMobileListItemProps) => (
-  <HStack justify='space-between' align='center' gap='sm' className='Layer__CategorizationRulesMobileListItem'>
-    <VStack gap='2xs' className='Layer__CategorizationRulesMobileListItem__Content'>
-      <Span weight='bold' ellipsis>{rule.counterpartyFilter?.name}</Span>
-      <HStack gap='3xs' align='center'>
-        <Span size='sm' variant='subtle'>Direction:</Span>
-        <Span size='sm' variant='subtle'>{getCategorizationRuleDirectionLabel(rule.bankDirectionFilter)}</Span>
-      </HStack>
-      {rule.category && (
+}: CategorizationRuleMobileListItemProps) => {
+  const { t } = useTranslation()
+  return (
+    <HStack justify='space-between' align='center' gap='sm' className='Layer__CategorizationRulesMobileListItem'>
+      <VStack gap='2xs' className='Layer__CategorizationRulesMobileListItem__Content'>
+        <Span weight='bold' ellipsis>{rule.counterpartyFilter?.name}</Span>
         <HStack gap='3xs' align='center'>
-          <Span size='sm' variant='subtle'>Category:</Span>
-          <ResolvedCategoryName
-            accountIdentifier={rule.category}
-            options={options}
-            slotProps={{ Span: { size: 'sm', variant: 'subtle' } }}
-          />
+          <Span size='sm' variant='subtle'>{t('direction', 'Direction:')}</Span>
+          <Span size='sm' variant='subtle'>{getCategorizationRuleDirectionLabel(rule.bankDirectionFilter, t)}</Span>
         </HStack>
-      )}
-    </VStack>
-    <Button
-      inset
-      icon
-      onPress={() => onDeletePress(rule)}
-      aria-label='Delete rule'
-      variant='ghost'
-    >
-      <Trash2 size={16} />
-    </Button>
-  </HStack>
-)
+        {rule.category && (
+          <HStack gap='3xs' align='center'>
+            <Span size='sm' variant='subtle'>{t('category', 'Category:')}</Span>
+            <ResolvedCategoryName
+              accountIdentifier={rule.category}
+              options={options}
+              slotProps={{ Span: { size: 'sm', variant: 'subtle' } }}
+            />
+          </HStack>
+        )}
+      </VStack>
+      <Button
+        inset
+        icon
+        onPress={() => onDeletePress(rule)}
+        aria-label={t('deleteRule', 'Delete rule')}
+        variant='ghost'
+      >
+        <Trash2 size={16} />
+      </Button>
+    </HStack>
+  )
+}
 
 export interface CategorizationRulesMobileListProps {
   data: CategorizationRule[] | undefined
@@ -76,6 +80,7 @@ export const CategorizationRulesMobileList = ({
   onDeleteRule,
   slots,
 }: CategorizationRulesMobileListProps) => {
+  const { t } = useTranslation()
   const renderItem = useCallback((rule: CategorizationRule) => (
     <CategorizationRuleMobileListItem rule={rule} options={options} onDeletePress={onDeleteRule} />
   ), [options, onDeleteRule])
@@ -83,7 +88,7 @@ export const CategorizationRulesMobileList = ({
   return (
     <div className='Layer__CategorizationRulesMobileList'>
       <PaginatedMobileList
-        ariaLabel='Categorization rules'
+        ariaLabel={t('categorizationRules', 'Categorization rules')}
         data={data}
         isLoading={isLoading}
         isError={isError}

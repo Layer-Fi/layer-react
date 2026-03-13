@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
+import { useTranslation } from 'react-i18next'
 
 import { type Customer, type CustomerForm, UpsertCustomerSchema } from '@schemas/customer'
 import { UpsertCustomerMode, useUpsertCustomer } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
@@ -11,6 +12,7 @@ type onSuccessFn = (customer: Customer) => void
 type UseCustomerFormProps = { onSuccess: onSuccessFn } & CustomerFormState
 
 export const useCustomerForm = (props: UseCustomerFormProps) => {
+  const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, mode } = props
 
@@ -50,8 +52,8 @@ export const useCustomerForm = (props: UseCustomerFormProps) => {
   }, [onSuccess, upsertCustomer])
 
   const onDynamic = useCallback(({ value }: { value: CustomerForm }) => {
-    return validateCustomerForm({ customer: value })
-  }, [])
+    return validateCustomerForm({ customer: value }, t)
+  }, [t])
 
   const validators = useMemo(() => ({ onDynamic }), [onDynamic])
 

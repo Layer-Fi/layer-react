@@ -1,4 +1,5 @@
 import { useContext, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { type OnboardingStep } from '@internal-types/layerContext'
@@ -29,6 +30,7 @@ export const ConnectAccount = ({
   onboardingStep,
   onTransactionsToReviewClick,
 }: ConnectAccountProps) => {
+  const { t } = useTranslation()
   const { addConnection } = useContext(LinkedAccountsContext)
   const { filters } = useBankTransactionsFilters({
     scope: DisplayState.review,
@@ -48,19 +50,19 @@ export const ConnectAccount = ({
         <DataState
           status={DataStateStatus.info}
           icon={<CreditCardIcon size={12} />}
-          title='No accounts connected'
-          description='Populate your accounting dashboard in 3 steps'
+          title={t('noAccountsConnected', 'No accounts connected')}
+          description={t('populateYourAccountingDashboardIn3Steps', 'Populate your accounting dashboard in 3 steps')}
         />
         <ActionableRow
           iconBox={<PlaidIcon />}
-          title='Connect accounts'
-          description='Import data with one simple integration.'
+          title={t('connectAccounts', 'Connect accounts')}
+          description={t('importDataWithOneSimpleIntegration', 'Import data with one simple integration.')}
           button={(
             <Button
               onClick={() => { void addConnection('PLAID') }}
               rightIcon={<LinkIcon size={12} />}
             >
-              Connect
+              {t('connect', 'Connect')}
             </Button>
           )}
         />
@@ -73,8 +75,8 @@ export const ConnectAccount = ({
       <DataState
         status={DataStateStatus.success}
         icon={<SunriseIcon size={12} />}
-        title='Account linked successfully'
-        description='Your transactions are now available on the platform, to see all data on the charts, categorize transactions.'
+        title={t('accountLinkedSuccessfully', 'Account linked successfully')}
+        description={t('yourTransactionsAreNowAvailableOnThePlatformToSeeAllDataOnTheChartsCategorizeTransactions', 'Your transactions are now available on the platform, to see all data on the charts, categorize transactions.')}
       />
       {onTransactionsToReviewClick && transactionsToReview > 0
         ? (
@@ -82,7 +84,7 @@ export const ConnectAccount = ({
             icon={<FolderIcon size={12} />}
             title={(
               <Text>
-                Categorize transactions
+                {t('categorizeTransactions', 'Categorize transactions')}
                 {' '}
                 <Badge
                   variant={BadgeVariant.WARNING}
@@ -91,11 +93,11 @@ export const ConnectAccount = ({
                 >
                   {transactionsToReview}
                   {' '}
-                  pending
+                  {t('pending', 'pending')}
                 </Badge>
               </Text>
             )}
-            description='Once your data is on the platform categorize them in Bank Transactions tab'
+            description={t('onceYourDataIsOnThePlatformCategorizeThemInBankTransactionsTab', 'Once your data is on the platform categorize them in Bank Transactions tab')}
             onClick={() => onTransactionsToReviewClick()}
           />
         )

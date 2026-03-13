@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -16,6 +17,7 @@ type InvoiceFormLineItemsSectionProps = {
 export const InvoiceFormLineItemsSection = ({
   form,
 }: InvoiceFormLineItemsSectionProps) => {
+  const { t } = useTranslation()
   const { isReadOnly } = useInvoiceDetail()
 
   return (
@@ -34,7 +36,7 @@ export const InvoiceFormLineItemsSection = ({
           {!isReadOnly
             && (
               <Button variant='outlined' onClick={() => field.pushValue(EMPTY_LINE_ITEM)}>
-                Add line item
+                {t('addLineItem', 'Add line item')}
                 <Plus size={16} />
               </Button>
             )}
