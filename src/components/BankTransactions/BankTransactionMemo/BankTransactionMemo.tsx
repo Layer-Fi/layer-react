@@ -1,9 +1,8 @@
-import classNames from 'classnames'
-
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { useBankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/useBankTransactionMemo'
+import { Input } from '@components/Input/Input'
 import { Textarea } from '@components/Textarea/Textarea'
 
 export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTransactionId: BankTransaction['id'], isMobile?: boolean }) => {
@@ -32,13 +31,23 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
                 </Span>
               )}
             </HStack>
-            <Textarea
-              className={classNames(isMobile && 'Layer__textarea--mobile')}
-              name='memo'
-              placeholder='Add description'
-              value={field.state.value ?? undefined}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
-            />
+            {isMobile
+              ? (
+                <Input
+                  name='memo'
+                  placeholder='Add description'
+                  value={field.state.value ?? undefined}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
+                />
+              )
+              : (
+                <Textarea
+                  name='memo'
+                  placeholder='Add description'
+                  value={field.state.value ?? undefined}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
+                />
+              )}
           </VStack>
         )}
       </form.Field>

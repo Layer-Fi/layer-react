@@ -84,13 +84,6 @@
       0 0 0 1px var(--color-base-700);
     outline: none;
   }
-
-  &.Layer__textarea--mobile {
-    overflow: hidden;
-    height: 2.25rem;
-    min-height: 2.25rem;
-    padding-block: calc((2.25rem - 1.4em) / 2);
-  }
 }
 
 .Layer__input {
