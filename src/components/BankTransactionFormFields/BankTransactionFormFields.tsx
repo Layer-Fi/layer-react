@@ -20,6 +20,7 @@ type BankTransactionFormFieldProps = {
   showDescriptions?: boolean
   hideTags?: boolean
   hideCustomerVendor?: boolean
+  isMobile?: boolean
 }
 
 export function BankTransactionFormFields({
@@ -27,6 +28,7 @@ export function BankTransactionFormFields({
   showDescriptions,
   hideTags = false,
   hideCustomerVendor = false,
+  isMobile = false,
 }: BankTransactionFormFieldProps) {
   const { showTags } = useBankTransactionTagVisibility()
   const { showCustomerVendor } = useBankTransactionCustomerVendorVisibility()
@@ -103,7 +105,7 @@ export function BankTransactionFormFields({
       {showDescriptions
         && (
           <VStack gap='sm'>
-            <BankTransactionMemo bankTransactionId={bankTransaction.id} />
+            <BankTransactionMemo bankTransactionId={bankTransaction.id} isMobile={isMobile} />
           </VStack>
         )}
     </VStack>

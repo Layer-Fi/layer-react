@@ -1,5 +1,6 @@
+import classNames from 'classnames'
+
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { Input } from '@ui/Input/Input'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { useBankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/useBankTransactionMemo'
@@ -31,23 +32,13 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
                 </Span>
               )}
             </HStack>
-            {isMobile
-              ? (
-                <Input
-                  name='memo'
-                  placeholder='Add description'
-                  value={field.state.value ?? undefined}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
-                />
-              )
-              : (
-                <Textarea
-                  name='memo'
-                  placeholder='Add description'
-                  value={field.state.value ?? undefined}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
-                />
-              )}
+            <Textarea
+              className={classNames(isMobile && 'Layer__textarea--mobile')}
+              name='memo'
+              placeholder='Add description'
+              value={field.state.value ?? undefined}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
+            />
           </VStack>
         )}
       </form.Field>
