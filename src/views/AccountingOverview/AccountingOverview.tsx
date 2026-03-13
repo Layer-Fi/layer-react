@@ -1,10 +1,9 @@
-import { type ReactNode, useMemo, useState } from 'react'
+import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { Toggle } from '@ui/Toggle/Toggle'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
@@ -13,6 +12,7 @@ import { HeaderRow } from '@components/Header/HeaderRow'
 import { Onboarding } from '@components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import {
   ProfitAndLossSummaries,
   type ProfitAndLossSummariesStringOverrides,
@@ -51,8 +51,6 @@ export interface AccountingOverviewProps {
   }
 }
 
-type PnlToggleOption = 'revenue' | 'expenses'
-
 export const AccountingOverview = ({
   title,
   showTitle = true,
@@ -66,24 +64,10 @@ export const AccountingOverview = ({
   slotProps,
 }: AccountingOverviewProps) => {
   const { t } = useTranslation()
-  const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const { value: sizeClass } = useSizeClass()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
-
-  const toggleOptions = useMemo(() => (
-    [
-      {
-        value: 'revenue',
-        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || t('revenue', 'Revenue'),
-      },
-      {
-        value: 'expenses',
-        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || t('expenses', 'Expenses'),
-      },
-    ]
-  ), [t, stringOverrides])
 
   return (
     <ProfitAndLoss
@@ -139,22 +123,11 @@ export const AccountingOverview = ({
             {middleBanner}
           </Container>
         )}
-        <div className='Layer__accounting-overview-profit-and-loss-charts'>
-          <Toggle
-            ariaLabel={t('chartType', 'Chart type')}
-            options={toggleOptions}
-            selectedKey={pnlToggle}
-            onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
-          />
-          <Container name='accounting-overview-profit-and-loss-chart'>
-            <ProfitAndLoss.DetailedCharts
-              scope={pnlToggle}
-              hideClose={true}
-              stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-              chartColorsList={chartColorsList}
-            />
-          </Container>
-        </div>
+        <ProfitAndLossOverviewDetailedCharts
+          variant='accounting'
+          detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartColorsList={chartColorsList}
+        />
       </View>
     </ProfitAndLoss>
   )

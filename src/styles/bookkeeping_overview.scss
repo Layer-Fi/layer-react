@@ -35,31 +35,11 @@
 }
 
 .Layer__bookkeeping-overview-profit-and-loss-charts {
-  display: flex;
-  gap: var(--spacing-md);
   max-width: 1406px;
-
-  > .Layer__UI__Toggle {
-    display: none;
-  }
 }
 
 .Layer__bookkeeping-overview-profit-and-loss .recharts-legend-wrapper {
   top: 16px !important;
-}
-
-@container (max-width: 796px) {
-  .Layer__bookkeeping-overview-profit-and-loss-chart {
-    width: 100%;
-  }
-
-  .Layer__bookkeeping-overview-profit-and-loss-charts {
-    flex-direction: column;
-  }
-
-  .Layer__bookkeeping-overview-profit-and-loss-charts > .Layer__UI__Toggle {
-    display: flex;
-  }
 }
 
 @container (max-width: 460px) {
