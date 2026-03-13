@@ -12,17 +12,18 @@ const frCAResources = frCATranslation as Record<string, unknown>
 let initPromise: Promise<void> | undefined
 
 const SUPPORTED_LOCALES = ['en-US', 'fr-CA']
+const LAYER_TEST_LOCALE_URL_PARAM = 'layer_test_locale'
 
 const isPseudoEnabled = () => {
   if (typeof window === 'undefined') return false
 
   const params = new URLSearchParams(window.location.search)
-  return params.get('locale') === 'pseudo'
+  return params.get(LAYER_TEST_LOCALE_URL_PARAM) === 'pseudo'
 }
 
 const getFallbackLocale = () => {
   const params = new URLSearchParams(window.location.search)
-  const localeParam = params.get('locale')
+  const localeParam = params.get(LAYER_TEST_LOCALE_URL_PARAM)
 
   if (localeParam && SUPPORTED_LOCALES.includes(localeParam)) {
     return localeParam
