@@ -21,7 +21,7 @@ import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
 export function LinkAccountsLinkStep() {
-  const { t } = useTranslation(['linkedAccounts'])
+  const { t } = useTranslation()
   const {
     data,
     loadingStatus,
