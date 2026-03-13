@@ -40,20 +40,23 @@ export function LinkAccountsLinkStep() {
       <ConditionalList
         list={effectiveAccounts}
         Empty={(
-          <VStack gap='xl' pbe='md'>
-            <Text status='disabled'>
-              {t('connectYourBankAccountsAndCreditCardsToAutomaticallyImportYourBusinessTransactions', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
-            </Text>
-            <Button
-              onClick={() => { void addConnection('PLAID') }}
-              rightIcon={<LinkIcon size={12} />}
-              disabled={loadingStatus !== 'complete'}
-              fullWidth={false}
-              style={{ maxWidth: 'fit-content' }}
-            >
-              {t('connectMyBank', 'Connect my bank')}
-            </Button>
-          </VStack>
+          <ElevatedLoadingSpinnerContainer>
+            {isLinking && <ElevatedLoadingSpinner />}
+            <VStack gap='xl' pbe='md'>
+              <Text status='disabled'>
+                {t('connectYourBankAccountsAndCreditCardsToAutomaticallyImportYourBusinessTransactions', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
+              </Text>
+              <Button
+                onClick={() => { void addConnection('PLAID') }}
+                rightIcon={<LinkIcon size={12} />}
+                disabled={loadingStatus !== 'complete' || isLinking}
+                fullWidth={false}
+                style={{ maxWidth: 'fit-content' }}
+              >
+                {t('connectMyBank', 'Connect my bank')}
+              </Button>
+            </VStack>
+          </ElevatedLoadingSpinnerContainer>
         )}
         Container={({ children }) => (
           <ElevatedLoadingSpinnerContainer>
@@ -81,7 +84,7 @@ export function LinkAccountsLinkStep() {
                     <Button
                       onClick={() => { void addConnection('PLAID') }}
                       rightIcon={<LinkIcon size={12} />}
-                      disabled={loadingStatus !== 'complete'}
+                      disabled={loadingStatus !== 'complete' || isLinking}
                       fullWidth={false}
                       style={{ width: 'auto', minWidth: 'fit-content' }}
                     >
