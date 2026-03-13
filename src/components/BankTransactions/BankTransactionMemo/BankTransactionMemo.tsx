@@ -1,10 +1,11 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { Input } from '@ui/Input/Input'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { useBankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/useBankTransactionMemo'
 import { Textarea } from '@components/Textarea/Textarea'
 
-export const BankTransactionMemo = ({ bankTransactionId }: { bankTransactionId: BankTransaction['id'] }) => {
+export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTransactionId: BankTransaction['id'], isMobile?: boolean }) => {
   const { form, isUpdatingMemo, isErrorUpdatingMemo, isSaved } = useBankTransactionMemo({ bankTransactionId })
 
   return (
@@ -30,12 +31,23 @@ export const BankTransactionMemo = ({ bankTransactionId }: { bankTransactionId: 
                 </Span>
               )}
             </HStack>
-            <Textarea
-              name='memo'
-              placeholder='Add description'
-              value={field.state.value ?? undefined}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
-            />
+            {isMobile
+              ? (
+                <Input
+                  name='memo'
+                  placeholder='Add description'
+                  value={field.state.value ?? undefined}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
+                />
+              )
+              : (
+                <Textarea
+                  name='memo'
+                  placeholder='Add description'
+                  value={field.state.value ?? undefined}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
+                />
+              )}
           </VStack>
         )}
       </form.Field>
