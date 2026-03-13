@@ -21,7 +21,7 @@ import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
 export function LinkAccountsLinkStep() {
-  const { t } = useTranslation()
+  const { t } = useTranslation(['linkedAccounts'])
   const {
     data,
     loadingStatus,
@@ -40,20 +40,23 @@ export function LinkAccountsLinkStep() {
       <ConditionalList
         list={effectiveAccounts}
         Empty={(
-          <VStack gap='xl' pbe='md'>
-            <Text status='disabled'>
-              {t('connectYourBankAccountsAndCreditCardsToAutomaticallyImportYourBusinessTransactions', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
-            </Text>
-            <Button
-              onClick={() => { void addConnection('PLAID') }}
-              rightIcon={<LinkIcon size={12} />}
-              disabled={loadingStatus !== 'complete'}
-              fullWidth={false}
-              style={{ maxWidth: 'fit-content' }}
-            >
-              {t('connectMyBank', 'Connect my bank')}
-            </Button>
-          </VStack>
+          <ElevatedLoadingSpinnerContainer>
+            {isLinking && <ElevatedLoadingSpinner />}
+            <VStack gap='xl' pbe='md'>
+              <Text status='disabled'>
+                {t('connectYourBankAccountsAndCreditCardsToAutomaticallyImportYourBusinessTransactions', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
+              </Text>
+              <Button
+                onClick={() => { void addConnection('PLAID') }}
+                rightIcon={<LinkIcon size={12} />}
+                disabled={loadingStatus !== 'complete'}
+                fullWidth={false}
+                style={{ maxWidth: 'fit-content' }}
+              >
+                {t('connectMyBank', 'Connect my bank')}
+              </Button>
+            </VStack>
+          </ElevatedLoadingSpinnerContainer>
         )}
         Container={({ children }) => (
           <ElevatedLoadingSpinnerContainer>
