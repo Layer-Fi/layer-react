@@ -109,6 +109,7 @@ export const BankTransactionsMobileListPersonalForm = ({
         showDescriptions={showDescriptions}
         hideCustomerVendor
         hideTags
+        isMobile
       />
       <div
         className={classNames(
