@@ -1,5 +1,4 @@
 import classNames from 'classnames'
-import { useTranslation } from 'react-i18next'
 
 import CheckIcon from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'
@@ -31,7 +30,6 @@ export const ActionableList = <T,>({
   showDescriptions = false,
   className,
 }: ActionableListProps<T>) => {
-  const { t } = useTranslation()
   return (
     <ul className={classNames('Layer__actionable-list', className)}>
       {options.map((x, idx) => (
