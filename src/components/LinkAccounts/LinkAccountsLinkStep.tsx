@@ -49,7 +49,7 @@ export function LinkAccountsLinkStep() {
               <Button
                 onClick={() => { void addConnection('PLAID') }}
                 rightIcon={<LinkIcon size={12} />}
-                disabled={loadingStatus !== 'complete'}
+                disabled={loadingStatus !== 'complete' || isLinking}
                 fullWidth={false}
                 style={{ maxWidth: 'fit-content' }}
               >
@@ -84,7 +84,7 @@ export function LinkAccountsLinkStep() {
                     <Button
                       onClick={() => { void addConnection('PLAID') }}
                       rightIcon={<LinkIcon size={12} />}
-                      disabled={loadingStatus !== 'complete'}
+                      disabled={loadingStatus !== 'complete' || isLinking}
                       fullWidth={false}
                       style={{ width: 'auto', minWidth: 'fit-content' }}
                     >
