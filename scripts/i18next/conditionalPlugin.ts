@@ -16,12 +16,12 @@ const conditionalPlugin = {
 
     if (!isTConditional) return
 
-    const key = getStringValue(getCallArgumentExpression(node, isTConditional ? 1 : 0))
+    const key = getStringValue(getCallArgumentExpression(node, 1))
     if (!key) {
       return
     }
 
-    const optionsExpression = getCallArgumentExpression(node, isTConditional ? 2 : 1)
+    const optionsExpression = getCallArgumentExpression(node, 2)
     const casesExpression = getObjectPropertyValue(optionsExpression, 'cases')
     const contextsExpression = getObjectPropertyValue(optionsExpression, 'contexts')
     const ns = getStringValue(getObjectPropertyValue(optionsExpression, 'ns'))

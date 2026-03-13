@@ -14,12 +14,12 @@ const pluralPlugin = {
 
     if (!isTPlural) return
 
-    const key = getStringValue(getCallArgumentExpression(node, isTPlural ? 1 : 0))
+    const key = getStringValue(getCallArgumentExpression(node, 1))
     if (!key) {
       return
     }
 
-    const optionsExpression = getCallArgumentExpression(node, isTPlural ? 2 : 1)
+    const optionsExpression = getCallArgumentExpression(node, 2)
     const ns = getStringValue(getObjectPropertyValue(optionsExpression, 'ns'))
     const one = getStringValue(getObjectPropertyValue(optionsExpression, 'one'))
     const other = getStringValue(getObjectPropertyValue(optionsExpression, 'other'))
