@@ -60,10 +60,6 @@
   .Layer__bookkeeping-overview-profit-and-loss-charts > .Layer__UI__Toggle {
     display: flex;
   }
-
-  .Layer__component.Layer__bookkeeping-overview-profit-and-loss-chart.bookkeeping-overview-profit-and-loss-chart--hidden {
-    display: none;
-  }
 }
 
 @container (max-width: 460px) {

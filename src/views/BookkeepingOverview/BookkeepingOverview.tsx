@@ -164,28 +164,9 @@ export const BookkeepingOverview = ({
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
           />
-          <Container
-            name={classNames(
-              'bookkeeping-overview-profit-and-loss-chart',
-              pnlToggle !== 'revenue'
-              && 'bookkeeping-overview-profit-and-loss-chart--hidden',
-            )}
-          >
+          <Container name='bookkeeping-overview-profit-and-loss-chart'>
             <ProfitAndLoss.DetailedCharts
-              scope='revenue'
-              hideClose={true}
-              stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-            />
-          </Container>
-          <Container
-            name={classNames(
-              'bookkeeping-overview-profit-and-loss-chart',
-              pnlToggle !== 'expenses'
-              && 'bookkeeping-overview-profit-and-loss-chart--hidden',
-            )}
-          >
-            <ProfitAndLoss.DetailedCharts
-              scope='expenses'
+              scope={pnlToggle}
               hideClose={true}
               stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
             />

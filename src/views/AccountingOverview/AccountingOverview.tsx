@@ -1,5 +1,4 @@
 import { type ReactNode, useMemo, useState } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
@@ -147,29 +146,9 @@ export const AccountingOverview = ({
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
           />
-          <Container
-            name={classNames(
-              'accounting-overview-profit-and-loss-chart',
-              pnlToggle !== 'revenue'
-              && 'accounting-overview-profit-and-loss-chart--hidden',
-            )}
-          >
+          <Container name='accounting-overview-profit-and-loss-chart'>
             <ProfitAndLoss.DetailedCharts
-              scope='revenue'
-              hideClose={true}
-              stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-              chartColorsList={chartColorsList}
-            />
-          </Container>
-          <Container
-            name={classNames(
-              'accounting-overview-profit-and-loss-chart',
-              pnlToggle !== 'expenses'
-              && 'accounting-overview-profit-and-loss-chart--hidden',
-            )}
-          >
-            <ProfitAndLoss.DetailedCharts
-              scope='expenses'
+              scope={pnlToggle}
               hideClose={true}
               stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
               chartColorsList={chartColorsList}
