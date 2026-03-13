@@ -41,7 +41,7 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
                 <Input
                   name='memo'
                   className='Layer__BankTransactionMemo__InputTextArea'
-                  placeholder='Add description'
+                  placeholder={t('addDescription', 'Add description')}
                   value={field.state.value ?? undefined}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
                 />
@@ -50,7 +50,7 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
                 <Textarea
                   name='memo'
                   className='Layer__BankTransactionMemo__InputTextArea'
-                  placeholder='Add description'
+                  placeholder={t('addDescription', 'Add description')}
                   value={field.state.value ?? undefined}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
                 />
