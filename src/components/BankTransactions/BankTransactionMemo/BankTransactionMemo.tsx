@@ -5,6 +5,8 @@ import { useBankTransactionMemo } from '@components/BankTransactions/BankTransac
 import { Input } from '@components/Input/Input'
 import { Textarea } from '@components/Textarea/Textarea'
 
+import './bankTransactionMemo.scss'
+
 export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTransactionId: BankTransaction['id'], isMobile?: boolean }) => {
   const { form, isUpdatingMemo, isErrorUpdatingMemo, isSaved } = useBankTransactionMemo({ bankTransactionId })
 
@@ -12,7 +14,7 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
     <form onBlur={() => void form.handleSubmit()}>
       <form.Field name='memo'>
         {field => (
-          <VStack gap='3xs'>
+          <VStack gap='3xs' className='Layer__BankTransactionMemo'>
             <HStack justify='space-between' align='baseline'>
               <Label htmlFor='memo' size='sm' weight='bold'>Description</Label>
               {isUpdatingMemo && (
@@ -35,6 +37,7 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
               ? (
                 <Input
                   name='memo'
+                  className='Layer__BankTransactionMemo__InputTextArea'
                   placeholder='Add description'
                   value={field.state.value ?? undefined}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
@@ -43,6 +46,7 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
               : (
                 <Textarea
                   name='memo'
+                  className='Layer__BankTransactionMemo__InputTextArea'
                   placeholder='Add description'
                   value={field.state.value ?? undefined}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
