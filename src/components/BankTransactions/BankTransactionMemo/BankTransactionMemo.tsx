@@ -46,7 +46,6 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
                 onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => field.handleChange(e.target.value)}
               />
             </HStack>
-            )
           </VStack>
         )}
       </form.Field>
