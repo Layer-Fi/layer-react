@@ -138,12 +138,12 @@ export const ChartOfAccountsTableContent = ({
       return undefined
     }
     if (account.subAccounts.length > 0) {
-      return t('chartOfAccounts.thisAccountCannotBeDeletedBecauseItHasChildAccounts', 'This account cannot be deleted because it has child accounts')
+      return t('chartOfAccounts:thisAccountCannotBeDeletedBecauseItHasChildAccounts', 'This account cannot be deleted because it has child accounts')
     }
     if (account.balance !== 0) {
-      return t('chartOfAccounts.thisAccountCannotBeDeletedBecauseItHasLedgerEntries', 'This account cannot be deleted because it has ledger entries')
+      return t('chartOfAccounts:thisAccountCannotBeDeletedBecauseItHasLedgerEntries', 'This account cannot be deleted because it has ledger entries')
     }
-    return t('chartOfAccounts.thisAccountCannotBeDeletedBecauseItIsARequiredAccount', 'This account cannot be deleted because it is a required account')
+    return t('chartOfAccounts:thisAccountCannotBeDeletedBecauseItIsARequiredAccount', 'This account cannot be deleted because it is a required account')
   }
 
   // Clear all manually toggled expanded/collapsed rows when the search query changes
@@ -287,7 +287,7 @@ export const ChartOfAccountsTableContent = ({
                 iconOnly
                 onClick={onClickView}
               >
-                {t('common.view', 'View')}
+                {t('common:view', 'View')}
               </Button>
               <Button
                 variant={ButtonVariant.secondary}
@@ -295,9 +295,9 @@ export const ChartOfAccountsTableContent = ({
                 iconOnly
                 disabled={isNonEditable}
                 onClick={onClickEdit}
-                tooltip={isNonEditable ? t('chartOfAccounts.thisAccountCannotBeModified', 'This account cannot be modified') : undefined}
+                tooltip={isNonEditable ? t('chartOfAccounts:thisAccountCannotBeModified', 'This account cannot be modified') : undefined}
               >
-                {t('common.edit', 'Edit')}
+                {t('common:edit', 'Edit')}
               </Button>
               <Button
                 variant={ButtonVariant.secondary}
@@ -307,7 +307,7 @@ export const ChartOfAccountsTableContent = ({
                 disabled={isDeleteDisabled}
                 tooltip={getDeleteButtonTooltip(account)}
               >
-                {t('common.delete', 'Delete')}
+                {t('common:delete', 'Delete')}
               </Button>
             </HStack>
           </TableCell>
@@ -331,8 +331,8 @@ export const ChartOfAccountsTableContent = ({
       <div className='Layer__table-state-container'>
         <DataState
           status={DataStateStatus.info}
-          title={t('chartOfAccounts.noAccountsFound', 'No accounts found')}
-          description={t('chartOfAccounts.noAccountsMatchTheCurrentFiltersClickAddAccountToCreateANewOne', 'No accounts match the current filters. Click "Add Account" to create a new one.')}
+          title={t('chartOfAccounts:noAccountsFound', 'No accounts found')}
+          description={t('chartOfAccounts:noAccountsMatchTheCurrentFiltersClickAddAccountToCreateANewOne', 'No accounts match the current filters. Click "Add Account" to create a new one.')}
         />
       </div>
     )
@@ -353,20 +353,20 @@ export const ChartOfAccountsTableContent = ({
           <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
             {enableAccountNumbers && (
               <TableCell isHeaderCell>
-                {stringOverrides?.numberColumnHeader || t('generalLedger.accountNumber', 'Account Number')}
+                {stringOverrides?.numberColumnHeader || t('generalLedger:accountNumber', 'Account Number')}
               </TableCell>
             )}
             <TableCell isHeaderCell>
-              {stringOverrides?.nameColumnHeader || t('generalLedger.accountNameColumnHeader', 'Account Name')}
+              {stringOverrides?.nameColumnHeader || t('generalLedger:accountNameColumnHeader', 'Account Name')}
             </TableCell>
             <TableCell isHeaderCell>
-              {stringOverrides?.typeColumnHeader || t('common.type', 'Type')}
+              {stringOverrides?.typeColumnHeader || t('common:type', 'Type')}
             </TableCell>
             <TableCell isHeaderCell>
-              {stringOverrides?.subtypeColumnHeader || t('chartOfAccounts.subType', 'Sub-Type')}
+              {stringOverrides?.subtypeColumnHeader || t('chartOfAccounts:subType', 'Sub-Type')}
             </TableCell>
             <TableCell isHeaderCell>
-              {stringOverrides?.balanceColumnHeader || t('common.balance', 'Balance')}
+              {stringOverrides?.balanceColumnHeader || t('common:balance', 'Balance')}
             </TableCell>
             <TableCell isHeaderCell />
           </TableRow>
@@ -390,11 +390,11 @@ export const ChartOfAccountsTableContent = ({
             setAccountToDelete(null)
           }
         }}
-        title={t('chartOfAccounts.deleteAccountName', 'Delete {{accountName}}', { accountName: accountToDelete?.name })}
-        description={t('chartOfAccounts.thisAccountWillBePermanentlyRemovedFromYourChartOfAccounts', 'This account will be permanently removed from your Chart of Accounts.')}
+        title={t('chartOfAccounts:deleteAccountName', 'Delete {{accountName}}', { accountName: accountToDelete?.name })}
+        description={t('chartOfAccounts:thisAccountWillBePermanentlyRemovedFromYourChartOfAccounts', 'This account will be permanently removed from your Chart of Accounts.')}
         onConfirm={onConfirmDelete}
-        confirmLabel={t('chartOfAccounts.deleteAccount', 'Delete Account')}
-        cancelLabel={t('common.cancel', 'Cancel')}
+        confirmLabel={t('chartOfAccounts:deleteAccount', 'Delete Account')}
+        cancelLabel={t('common:cancel', 'Cancel')}
       />
     </>
 

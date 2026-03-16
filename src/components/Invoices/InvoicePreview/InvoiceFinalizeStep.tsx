@@ -50,8 +50,8 @@ export const InvoiceFinalizeStep = ({
               <DataState
                 icon={<AlertTriangle size={16} />}
                 status={DataStateStatus.failed}
-                title={t('invoices.weCouldntLoadPaymentMethods', 'We couldn\'t load payment methods')}
-                description={t('common.pleaseTryAgain', 'Please try again.')}
+                title={t('invoices:weCouldntLoadPaymentMethods', 'We couldn\'t load payment methods')}
+                description={t('common:pleaseTryAgain', 'Please try again.')}
               />
             </VStack>
           )}

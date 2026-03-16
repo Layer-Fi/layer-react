@@ -123,7 +123,7 @@ export const BankTransactionsMobileListPersonalForm = ({
             ref={receiptsRef}
             floatingActions={false}
             hideUploadButtons={true}
-            label={t('bankTransactions.receipts', 'Receipts')}
+            label={t('bankTransactions:receipts', 'Receipts')}
           />
         )}
       </div>
@@ -131,7 +131,7 @@ export const BankTransactionsMobileListPersonalForm = ({
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-            text={t('bankTransactions.uploadReceipt', 'Upload receipt')}
+            text={t('bankTransactions:uploadReceipt', 'Upload receipt')}
             iconOnly={true}
             icon={<PaperclipIcon />}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -145,17 +145,17 @@ export const BankTransactionsMobileListPersonalForm = ({
               isDisabled={alreadyAssigned || isCategorizing}
             >
               {isCategorizing
-                ? (isCategorized(bankTransaction) ? t('ui.updating', 'Updating...') : t('bankTransactions.confirming', 'Confirming...'))
+                ? (isCategorized(bankTransaction) ? t('ui:updating', 'Updating...') : t('bankTransactions:confirming', 'Confirming...'))
                 : alreadyAssigned
-                  ? t('common.updated', 'Updated')
-                  : t('bankTransactions.markAsPersonal', 'Mark as Personal')}
+                  ? t('common:updated', 'Updated')
+                  : t('bankTransactions:markAsPersonal', 'Mark as Personal')}
             </Button>
           )}
       </HStack>
       {isErrorCategorizing && showRetry
         ? (
           <ErrorText>
-            {t('bankTransactions.approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
+            {t('bankTransactions:approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
           </ErrorText>
         )
         : null}

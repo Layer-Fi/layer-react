@@ -100,7 +100,7 @@ export const JournalTableWithPanel = ({
               className={`Layer__${COMPONENT_NAME}__title`}
               size={HeadingSize.view}
             >
-              {stringOverrides?.componentTitle || t('generalLedger.journal', 'Journal')}
+              {stringOverrides?.componentTitle || t('generalLedger:journal', 'Journal')}
             </Heading>
           </HeaderCol>
         </HeaderRow>
@@ -112,7 +112,7 @@ export const JournalTableWithPanel = ({
               size={HeadingSize.secondary}
               className={`Layer__${COMPONENT_NAME}__subtitle`}
             >
-              {stringOverrides?.componentSubtitle || t('generalLedger.entries', 'Entries')}
+              {stringOverrides?.componentSubtitle || t('generalLedger:entries', 'Entries')}
             </Heading>
           </HeaderCol>
           <HeaderCol>
@@ -124,7 +124,7 @@ export const JournalTableWithPanel = ({
               iconOnly={view === 'mobile'}
               leftIcon={view === 'mobile' && <PlusIcon size={14} />}
             >
-              {stringOverrides?.addEntryButton || t('generalLedger.addEntry', 'Add Entry')}
+              {stringOverrides?.addEntryButton || t('generalLedger:addEntry', 'Add Entry')}
             </Button>
           </HeaderCol>
         </HeaderRow>
@@ -147,8 +147,8 @@ export const JournalTableWithPanel = ({
         <div className='Layer__table-state-container'>
           <DataState
             status={DataStateStatus.allDone}
-            title={t('generalLedger.noEntriesFound', 'No entries found')}
-            description={t('generalLedger.thereAreNoEntriesInTheJournal', 'There are no entries in the journal.')}
+            title={t('generalLedger:noEntriesFound', 'No entries found')}
+            description={t('generalLedger:thereAreNoEntriesInTheJournal', 'There are no entries in the journal.')}
           />
         </div>
       )}
@@ -158,8 +158,8 @@ export const JournalTableWithPanel = ({
           <div className='Layer__table-state-container'>
             <DataState
               status={DataStateStatus.failed}
-              title={t('common.somethingWentWrong', 'Something went wrong')}
-              description={t('common.weCouldntLoadYourData', 'We couldn’t load your data.')}
+              title={t('common:somethingWentWrong', 'Something went wrong')}
+              description={t('common:weCouldntLoadYourData', 'We couldn’t load your data.')}
               onRefresh={() => { void refetch() }}
               isLoading={isValidating || isLoading}
             />

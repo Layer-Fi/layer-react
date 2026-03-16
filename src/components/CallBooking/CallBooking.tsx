@@ -21,12 +21,12 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   const { t } = useTranslation()
   return (
     <VStack gap='md' align='center'>
-      <Heading size='sm'>{t('callBookings.haveAnyQuestions', 'Have any questions?')}</Heading>
+      <Heading size='sm'>{t('callBookings:haveAnyQuestions', 'Have any questions?')}</Heading>
       <Span variant='subtle'>
-        {t('callBookings.bookACallWithYourBookkeeper', 'Book a call with your bookkeeper')}
+        {t('callBookings:bookACallWithYourBookkeeper', 'Book a call with your bookkeeper')}
       </Span>
       <VStack gap='xs'>
-        <Button variant='solid' onClick={onBookCall}>{t('callBookings.bookACall', 'Book a call')}</Button>
+        <Button variant='solid' onClick={onBookCall}>{t('callBookings:bookACall', 'Book a call')}</Button>
       </VStack>
     </VStack>
   )
@@ -38,22 +38,22 @@ const ScheduledCallState = ({
   callBooking: CallBookingData
 }) => {
   const { t } = useTranslation()
-  const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? t('callBookings.onboardingCall', 'Onboarding call') : t('callBookings.adHocCall', 'Ad hoc call')
+  const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? t('callBookings:onboardingCall', 'Onboarding call') : t('callBookings:adHocCall', 'Ad hoc call')
   const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
 
   return (
     <VStack gap='md' align='center'>
       <Users size={36} strokeWidth={1.5} />
-      <Heading size='sm'>{t('callBookings.upcomingCall', 'Upcoming Call')}</Heading>
+      <Heading size='sm'>{t('callBookings:upcomingCall', 'Upcoming Call')}</Heading>
       <Span variant='subtle'>
-        {t('callBookings.meetWithOurBookkeepingTeam', 'Meet with our bookkeeping team')}
+        {t('callBookings:meetWithOurBookkeepingTeam', 'Meet with our bookkeeping team')}
       </Span>
       <Separator />
       <VStack align='start' className='Layer__call-booking-details' gap='xs'>
         <HStack align='center' gap='sm'>
           <Milestone size={16} />
           <Span>
-            {t('callBookings.purpose', 'Purpose:')}
+            {t('callBookings:purpose', 'Purpose:')}
             {' '}
           </Span>
           <Span>{purpose}</Span>
@@ -61,7 +61,7 @@ const ScheduledCallState = ({
         <HStack align='center' gap='sm'>
           <Video size={16} />
           <Span>
-            {t('callBookings.location', 'Location:')}
+            {t('callBookings:location', 'Location:')}
             {' '}
           </Span>
           <Span size='md'>{callPlatform}</Span>
@@ -70,7 +70,7 @@ const ScheduledCallState = ({
           <Clock size={16} />
           <HStack gap='xs' align='center'>
             <Span>
-              {t('callBookings.dateLabel', 'Date:')}
+              {t('callBookings:dateLabel', 'Date:')}
               {' '}
             </Span>
             <Span size='md'>
@@ -85,7 +85,7 @@ const ScheduledCallState = ({
       <HStack gap='xs' align='start' justify='start' className='Layer__call-booking-actions'>
         <VStack>
           <AddToCalendar
-            title={callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? t('callBookings.onboardingCall', 'Onboarding call') : t('callBookings.adhocCall', 'Adhoc call')}
+            title={callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? t('callBookings:onboardingCall', 'Onboarding call') : t('callBookings:adhocCall', 'Adhoc call')}
             description={callPlatform}
             location={callBooking.callLink.toString()}
             startDate={callBooking.eventStartAt}
@@ -96,7 +96,7 @@ const ScheduledCallState = ({
 
         <LinkButton href={callBooking.callLink.toString()} external variant='outlined'>
           <LinkIcon size={16} />
-          {t('callBookings.joinCall', 'Join call')}
+          {t('callBookings:joinCall', 'Join call')}
         </LinkButton>
 
       </HStack>

@@ -47,9 +47,9 @@ export interface ReportsProps {
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
 
 const REPORT_TYPE_CONFIG: { value: ReportType, i18nKey: string, defaultValue: string }[] = [
-  { value: 'profitAndLoss', ...translationKey('common.profitLoss', 'Profit & Loss') },
-  { value: 'balanceSheet', ...translationKey('reports.balanceSheet', 'Balance Sheet') },
-  { value: 'statementOfCashFlow', ...translationKey('reports.statementOfCashFlow', 'Statement of Cash Flow') },
+  { value: 'profitAndLoss', ...translationKey('common:profitLoss', 'Profit & Loss') },
+  { value: 'balanceSheet', ...translationKey('reports:balanceSheet', 'Balance Sheet') },
+  { value: 'statementOfCashFlow', ...translationKey('reports:statementOfCashFlow', 'Statement of Cash Flow') },
 ]
 
 export interface ReportsPanelProps {
@@ -84,7 +84,7 @@ export const Reports = ({
   )
   const defaultTitle =
     enabledReports.length > 1
-      ? t('reports.reports', 'Reports')
+      ? t('reports:reports', 'Reports')
       : options.find(option => (option.value === enabledReports[0]))?.label
 
   return (
@@ -95,7 +95,7 @@ export const Reports = ({
       {enabledReports.length > 1 && (
         <div className='Layer__component Layer__header__actions'>
           <Toggle
-            ariaLabel={t('reports.reportType', 'Report type')}
+            ariaLabel={t('reports:reportType', 'Report type')}
             options={options}
             selectedKey={activeTab}
             onSelectionChange={key => setActiveTab(key as ReportType)}

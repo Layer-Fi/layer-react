@@ -16,9 +16,9 @@ type TripPurposeOption = {
 }
 
 const TRIP_PURPOSE_OPTIONS = [
-  { value: TripPurpose.Business, ...translationKey('common.business', 'Business') },
-  { value: TripPurpose.Personal, ...translationKey('common.personal', 'Personal') },
-  { value: TripPurpose.Unreviewed, ...translationKey('common.unreviewed', 'Unreviewed') },
+  { value: TripPurpose.Business, ...translationKey('common:business', 'Business') },
+  { value: TripPurpose.Personal, ...translationKey('common:personal', 'Personal') },
+  { value: TripPurpose.Unreviewed, ...translationKey('common:unreviewed', 'Unreviewed') },
 ]
 
 type TripPurposeComboBoxProps = {
@@ -55,7 +55,7 @@ export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, classNam
   return (
     <HStack className={combinedClassName}>
       <Label size='sm' htmlFor={inputId}>
-        {t('common.purpose', 'Purpose')}
+        {t('common:purpose', 'Purpose')}
       </Label>
       <ComboBox
         options={options}

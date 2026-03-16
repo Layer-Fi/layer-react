@@ -14,7 +14,7 @@ const formatLastSyncedAt = (datetime: string, t: TFunction) => {
   const parsed = new Date(datetime)
   if (!isValid(parsed)) return ''
 
-  return t('integrations.dateAtTime', '{{date}} at {{time}}', {
+  return t('integrations:dateAtTime', '{{date}} at {{time}}', {
     date: format(parsed, `${MONTH_FORMAT} d, yyyy`),
     time: format(parsed, 'h:mm a'),
   })
@@ -29,21 +29,21 @@ const useFooterConfig = (
   switch (quickbooksUiState) {
     case QuickbooksConnectionSyncUiState.Syncing: {
       return {
-        title: t('integrations.syncingAccountData', 'Syncing account data'),
-        description: t('integrations.thisMayTakeUpTo5Minutes', 'This may take up to 5 minutes'),
+        title: t('integrations:syncingAccountData', 'Syncing account data'),
+        description: t('integrations:thisMayTakeUpTo5Minutes', 'This may take up to 5 minutes'),
         badgeVariant: 'info',
       } as const
     }
     case QuickbooksConnectionSyncUiState.SyncFailed: {
       return {
-        title: t('integrations.lastSyncFailedAt', 'Last sync failed at'),
+        title: t('integrations:lastSyncFailedAt', 'Last sync failed at'),
         description: formatLastSyncedAt(lastSyncedAt!, t),
         badgeVariant: 'error',
       } as const
     }
     case QuickbooksConnectionSyncUiState.SyncSuccess: {
       return {
-        title: t('integrations.lastSyncedOn', 'Last synced on'),
+        title: t('integrations:lastSyncedOn', 'Last synced on'),
         description: formatLastSyncedAt(lastSyncedAt!, t),
         badgeVariant: 'success',
       } as const
@@ -51,7 +51,7 @@ const useFooterConfig = (
     case QuickbooksConnectionSyncUiState.Connected:
     default: {
       return {
-        title: t('integrations.connectedToQuickbooks', 'Connected to QuickBooks'),
+        title: t('integrations:connectedToQuickbooks', 'Connected to QuickBooks'),
         badgeVariant: 'success',
       } as const
     }

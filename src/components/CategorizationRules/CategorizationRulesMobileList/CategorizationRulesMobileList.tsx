@@ -31,12 +31,12 @@ const CategorizationRuleMobileListItem = ({
       <VStack gap='2xs' className='Layer__CategorizationRulesMobileListItem__Content'>
         <Span weight='bold' ellipsis>{rule.counterpartyFilter?.name}</Span>
         <HStack gap='3xs' align='center'>
-          <Span size='sm' variant='subtle'>{t('common.direction', 'Direction:')}</Span>
+          <Span size='sm' variant='subtle'>{t('common:direction', 'Direction:')}</Span>
           <Span size='sm' variant='subtle'>{getCategorizationRuleDirectionLabel(rule.bankDirectionFilter, t)}</Span>
         </HStack>
         {rule.category && (
           <HStack gap='3xs' align='center'>
-            <Span size='sm' variant='subtle'>{t('common.category', 'Category:')}</Span>
+            <Span size='sm' variant='subtle'>{t('common:category', 'Category:')}</Span>
             <ResolvedCategoryName
               accountIdentifier={rule.category}
               options={options}
@@ -49,7 +49,7 @@ const CategorizationRuleMobileListItem = ({
         inset
         icon
         onPress={() => onDeletePress(rule)}
-        aria-label={t('categorizationRules.deleteRule', 'Delete rule')}
+        aria-label={t('categorizationRules:deleteRule', 'Delete rule')}
         variant='ghost'
       >
         <Trash2 size={16} />
@@ -88,7 +88,7 @@ export const CategorizationRulesMobileList = ({
   return (
     <div className='Layer__CategorizationRulesMobileList'>
       <PaginatedMobileList
-        ariaLabel={t('categorizationRules.categorizationRules', 'Categorization rules')}
+        ariaLabel={t('categorizationRules:categorizationRules', 'Categorization rules')}
         data={data}
         isLoading={isLoading}
         isError={isError}

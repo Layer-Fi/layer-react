@@ -83,8 +83,8 @@ export const ProfitAndLossFullReportDownloadButton = ({
       onClick={handleClick}
       isDownloading={isDownloading}
       requestFailed={requestFailed}
-      text={stringOverrides?.downloadButtonText || t('common.download', 'Download')}
-      retryText={stringOverrides?.retryButtonText || t('common.retry', 'Retry')}
+      text={stringOverrides?.downloadButtonText || t('common:download', 'Download')}
+      retryText={stringOverrides?.retryButtonText || t('common:retry', 'Retry')}
     />
   )
 }

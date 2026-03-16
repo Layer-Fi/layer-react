@@ -23,8 +23,8 @@ const MileageDeductionChartTooltipContent = ({ active, payload, selectedYear }: 
   return (
     <ChartTooltipContent>
       <ChartTooltipRow label={`${data.monthName} ${selectedYear}`} />
-      <ChartTooltipRow label={t('mileageTracking.miles', 'Miles:')} value={<Span size='sm' variant='white'>{data.miles}</Span>} />
-      <ChartTooltipRow label={t('mileageTracking.deduction', 'Deduction:')} value={<MoneySpan status='success' amount={data.deduction} size='sm' />} />
+      <ChartTooltipRow label={t('mileageTracking:miles', 'Miles:')} value={<Span size='sm' variant='white'>{data.miles}</Span>} />
+      <ChartTooltipRow label={t('mileageTracking:deduction', 'Deduction:')} value={<MoneySpan status='success' amount={data.deduction} size='sm' />} />
     </ChartTooltipContent>
   )
 }

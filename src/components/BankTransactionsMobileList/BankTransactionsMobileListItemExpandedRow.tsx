@@ -14,9 +14,9 @@ import { Purpose } from './BankTransactionsMobileListItem'
 import { PersonalStableName } from './constants'
 
 const PURPOSE_TOGGLE_CONFIG = [
-  { value: 'business' as const, ...translationKey('common.business', 'Business'), style: { minWidth: 84 } },
-  { value: 'personal' as const, ...translationKey('common.personal', 'Personal'), style: { minWidth: 84 } },
-  { value: 'more' as const, ...translationKey('common.more', 'More'), style: { minWidth: 84 } },
+  { value: 'business' as const, ...translationKey('common:business', 'Business'), style: { minWidth: 84 } },
+  { value: 'personal' as const, ...translationKey('common:personal', 'Personal'), style: { minWidth: 84 } },
+  { value: 'more' as const, ...translationKey('common:more', 'More'), style: { minWidth: 84 } },
 ]
 
 export interface BankTransactionsMobileListItemExpandedRowProps {
@@ -55,7 +55,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
       {showCategorization
         && (
           <Toggle
-            ariaLabel={t('common.purpose', 'Purpose')}
+            ariaLabel={t('common:purpose', 'Purpose')}
             options={purposeToggleOptions}
             selectedKey={purpose}
             onSelectionChange={onChangePurpose}

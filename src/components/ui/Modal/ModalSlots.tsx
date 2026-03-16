@@ -34,7 +34,7 @@ export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalClo
         variant='ghost'
         slot='close'
         onPress={onClose}
-        aria-label={t('ui.closeModal', 'Close Modal')}
+        aria-label={t('ui:closeModal', 'Close Modal')}
       >
         <X size={24} />
       </Button>
@@ -71,7 +71,7 @@ export const ModalTitleWithClose = forwardRef<
             variant='outlined'
             slot='close'
             onPress={onClose}
-            aria-label={t('ui.closeModal', 'Close Modal')}
+            aria-label={t('ui:closeModal', 'Close Modal')}
           >
             <X size={16} />
           </Button>

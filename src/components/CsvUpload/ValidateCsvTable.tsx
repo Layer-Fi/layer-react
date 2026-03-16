@@ -45,7 +45,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
     () => [
       {
         id: 'row',
-        header: <span className='Layer__CsvUpload__Table__header-cell-content Layer__CsvUpload__Table__header-cell-content--row'>{t('common.row', 'Row')}</span>,
+        header: <span className='Layer__CsvUpload__Table__header-cell-content Layer__CsvUpload__Table__header-cell-content--row'>{t('common:row', 'Row')}</span>,
         cell: (row: Row<DataRow<T>>) => (
           <span className={classNames(
             'Layer__CsvUpload__Table__cell-content',
@@ -90,7 +90,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
     <div className={classNames('Layer__CsvUpload__Table__wrapper', className)}>
       <VirtualizedDataTable<DataRow<T>>
         componentName='ValidateCsvTable'
-        ariaLabel={t('upload.csvValidationPreview', 'CSV validation preview')}
+        ariaLabel={t('upload:csvValidationPreview', 'CSV validation preview')}
         columnConfig={columnConfig}
         data={sortedData}
         isLoading={false}

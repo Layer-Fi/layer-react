@@ -40,43 +40,43 @@ type TripsRowType = Row<Trip>
 const getColumnConfig = ({ onViewOrUpsertTrip, onDeleteTrip }: TripActions, t: TFunction): NestedColumnConfig<Trip> => [
   {
     id: TripColumns.TripDate,
-    header: t('common.date', 'Date'),
+    header: t('common:date', 'Date'),
     cell: (row: TripsRowType) => formatCalendarDate(row.original.tripDate),
   },
   {
     id: TripColumns.Vehicle,
-    header: t('vehicles.vehicle', 'Vehicle'),
+    header: t('vehicles:vehicle', 'Vehicle'),
     cell: (row: TripsRowType) => <Span ellipsis withTooltip>{getVehicleDisplayName(row.original.vehicle)}</Span>,
     isRowHeader: true,
   },
   {
     id: TripColumns.Distance,
-    header: t('trips.distance', 'Distance'),
+    header: t('trips:distance', 'Distance'),
     cell: (row: TripsRowType) => <Span align='right'>{formatDistance(row.original.distance, t)}</Span>,
   },
   {
     id: TripColumns.Purpose,
-    header: t('common.purpose', 'Purpose'),
+    header: t('common:purpose', 'Purpose'),
     cell: (row: TripsRowType) => getPurposeLabel(row.original.purpose as TripPurpose, t),
   },
   {
     id: TripColumns.Address,
-    header: t('common.address', 'Address'),
+    header: t('common:address', 'Address'),
     cell: (row: TripsRowType) => <TripsAddressCell trip={row.original} />,
   },
   {
     id: TripColumns.Description,
-    header: t('common.description', 'Description'),
+    header: t('common:description', 'Description'),
     cell: (row: TripsRowType) => <Span ellipsis withTooltip>{row.original.description}</Span>,
   },
   {
     id: TripColumns.Actions,
     cell: (row: TripsRowType) => (
       <HStack gap='3xs'>
-        <Button inset icon onPress={() => onViewOrUpsertTrip(row.original)} aria-label={t('trips.viewTrip', 'View Trip')} variant='ghost'>
+        <Button inset icon onPress={() => onViewOrUpsertTrip(row.original)} aria-label={t('trips:viewTrip', 'View Trip')} variant='ghost'>
           <Edit size={20} />
         </Button>
-        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label={t('trips.deleteTrip', 'Delete Trip')} variant='ghost'>
+        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label={t('trips:deleteTrip', 'Delete Trip')} variant='ghost'>
           <Trash2 size={20} />
         </Button>
       </HStack>
@@ -117,7 +117,7 @@ export const TripsTable = ({
     <Container name='TripsTable'>
       <TripsTableHeader onRecordTrip={onRecordTrip} />
       <PaginatedTable
-        ariaLabel={t('trips.trips', 'Trips')}
+        ariaLabel={t('trips:trips', 'Trips')}
         data={data}
         isLoading={isLoading}
         isError={isError}

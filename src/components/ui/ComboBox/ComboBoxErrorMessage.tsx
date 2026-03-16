@@ -19,7 +19,7 @@ export function ComboBoxErrorMessage({ isError, errorMessage }: ComboBoxErrorMes
     <HStack justify='end'>
       {errorMessage ?? (
         <P size='xs' status='error'>
-          {t('ui.anErrorOccurred', 'An error occurred.')}
+          {t('ui:anErrorOccurred', 'An error occurred.')}
         </P>
       )}
     </HStack>

@@ -51,7 +51,7 @@ export const GlobalDateRangePicker = ({ showLabels = false }: { showLabels?: boo
   return (
     <>
       <DatePicker
-        label={t('date.startDate', 'Start date')}
+        label={t('date:startDate', 'Start date')}
         date={localStartDate}
         onChange={onChangeStartDate}
         minDate={minStartDate}
@@ -63,7 +63,7 @@ export const GlobalDateRangePicker = ({ showLabels = false }: { showLabels?: boo
         showLabel={showLabels}
       />
       <DatePicker
-        label={t('date.endDate', 'End date')}
+        label={t('date:endDate', 'End date')}
         date={localEndDate}
         onChange={onChangeEndDate}
         minDate={minEndDate}

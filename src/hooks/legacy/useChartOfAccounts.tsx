@@ -114,7 +114,7 @@ const validateSubType = (formData: ChartOfAccountsForm, t: TFunction) => {
   if (!formData?.data.subType?.value) {
     return {
       field: 'subType',
-      message: t('common.mustBeSelected', 'Must be selected'),
+      message: t('common:mustBeSelected', 'Must be selected'),
     }
   }
 
@@ -125,7 +125,7 @@ const validateType = (formData: ChartOfAccountsForm, t: TFunction) => {
   if (!formData?.data.type?.value) {
     return {
       field: 'type',
-      message: t('common.mustBeSelected', 'Must be selected'),
+      message: t('common:mustBeSelected', 'Must be selected'),
     }
   }
 
@@ -137,13 +137,13 @@ const validateNormality = (formData: ChartOfAccountsForm, t: TFunction) => {
   if (stringValueNormality === undefined) {
     return {
       field: 'normality',
-      message: t('common.mustBeSelected', 'Must be selected'),
+      message: t('common:mustBeSelected', 'Must be selected'),
     }
   }
   else if (!['DEBIT', 'CREDIT'].includes(stringValueNormality)) {
     return {
       field: 'normality',
-      message: t('common.mustBeSelected', 'Must be selected'),
+      message: t('common:mustBeSelected', 'Must be selected'),
     }
   }
 
@@ -154,7 +154,7 @@ const validateParentId = (formData: ChartOfAccountsForm, t: TFunction) => {
   if (!formData?.data.parent?.value) {
     return {
       field: 'parent',
-      message: t('common.mustBeSelected', 'Must be selected'),
+      message: t('common:mustBeSelected', 'Must be selected'),
     }
   }
 
@@ -165,7 +165,7 @@ const validateName = (formData: ChartOfAccountsForm, t: TFunction) => {
   if (!formData?.data.name?.trim()) {
     return {
       field: 'name',
-      message: t('common.cannotBeBlank', 'Cannot be blank'),
+      message: t('common:cannotBeBlank', 'Cannot be blank'),
     }
   }
 
@@ -230,7 +230,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
       setForm(undefined)
     }
     catch (_err) {
-      setApiError(t('common.submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
+      setApiError(t('common:submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
     }
     finally {
       setSendingForm(false)
@@ -254,7 +254,7 @@ export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
       setForm(undefined)
     }
     catch (_err) {
-      setApiError(t('common.submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
+      setApiError(t('common:submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
     }
     finally {
       setSendingForm(false)

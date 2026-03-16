@@ -8,8 +8,8 @@ export const ErrorBoundaryMessage = () => {
     <div className='Layer__component Layer__component-container Layer__error-boundary'>
       <DataState
         status={DataStateStatus.failed}
-        title={t('common.somethingWentWrong', 'Something went wrong')}
-        description={t('common.tryToRefreshThePage', 'Try to refresh the page.')}
+        title={t('common:somethingWentWrong', 'Something went wrong')}
+        description={t('common:tryToRefreshThePage', 'Try to refresh the page.')}
       />
     </div>
   )

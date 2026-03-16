@@ -10,7 +10,7 @@ export const TripsAddressCell = ({ trip }: { trip: Trip }) => {
       {trip.startAddress && (
         <Span ellipsis size='sm' withTooltip>
           <Trans
-            i18nKey='trips.tripStartAddress'
+            i18nKey='trips:tripStartAddress'
             defaults='<bold>Start:</bold> {{address}}'
             values={{ address: trip.startAddress }}
             components={{ bold: <strong /> }}
@@ -20,7 +20,7 @@ export const TripsAddressCell = ({ trip }: { trip: Trip }) => {
       {trip.endAddress && (
         <Span ellipsis size='sm' withTooltip>
           <Trans
-            i18nKey='trips.tripEndAddress'
+            i18nKey='trips:tripEndAddress'
             defaults='<bold>End:</bold> {{address}}'
             values={{ address: trip.endAddress }}
             components={{ bold: <strong /> }}

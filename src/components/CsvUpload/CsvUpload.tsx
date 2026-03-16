@@ -24,15 +24,15 @@ const validateCsvFile = (file: File, t: TFunction) => {
   )
 
   if (!isValidExtension) {
-    return t('upload.fileExtensionMustEndInCsv', 'File extension must end in .csv')
+    return t('upload:fileExtensionMustEndInCsv', 'File extension must end in .csv')
   }
 
   if (file.type && !VALID_FILE_TYPES.includes(file.type)) {
-    return t('upload.invalidFileTypeType', 'Invalid file type: {{type}}', { type: file.type })
+    return t('upload:invalidFileTypeType', 'Invalid file type: {{type}}', { type: file.type })
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    return t('upload.fileExceedsTheSizeLimitOf2mb', 'File exceeds the size limit of 2MB')
+    return t('upload:fileExceedsTheSizeLimitOf2mb', 'File exceeds the size limit of 2MB')
   }
 
   return null
@@ -103,13 +103,13 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
       const hasTooManyFiles = rejections.some(r => r.errors.some(e => e.code === 'too-many-files'))
       if (restFiles.length > 0 || hasTooManyFiles) {
         onFileSelected(null)
-        setErrorMessage(t('upload.tooManyFilesSelected', 'Too many files selected'))
+        setErrorMessage(t('upload:tooManyFilesSelected', 'Too many files selected'))
         return
       }
 
       if (rejections.length > 0) {
         onFileSelected(null)
-        setErrorMessage(t('upload.unknownUploadError', 'Unknown upload error'))
+        setErrorMessage(t('upload:unknownUploadError', 'Unknown upload error'))
         return
       }
 
@@ -154,7 +154,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
           <UploadCloud size={12} />
           <P size='sm'>
             <Trans
-              i18nKey='upload.dragAndDropFileOrClickBrowse'
+              i18nKey='upload:dragAndDropFileOrClickBrowse'
               defaults='Drag and drop a file, or <browse>Browse</browse>.'
               components={{
                 browse: <button type='button' className='Layer__csv-upload__browse-link' onClick={handleBrowseClick} />,
@@ -163,12 +163,12 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
           </P>
           <input type='file' ref={fileInputRef} style={{ display: 'none' }} accept='.csv' onChange={handleFileChange} />
         </HStack>
-        <P size='sm' variant='subtle'>{t('upload.fileMustBeInCsvFormat', 'File must be in CSV format')}</P>
+        <P size='sm' variant='subtle'>{t('upload:fileMustBeInCsvFormat', 'File must be in CSV format')}</P>
         {errorMessage && (
           <DataState
             className='Layer__csv-upload__error-message'
             status={DataStateStatus.failed}
-            title={t('upload.cannotUploadFile', 'Cannot upload file')}
+            title={t('upload:cannotUploadFile', 'Cannot upload file')}
             description={errorMessage}
             inline
           />

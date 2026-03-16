@@ -34,7 +34,7 @@ export const useInvoiceRefundForm = ({ onSuccess, invoice }: UseInvoiceRefundFor
     }
     catch (e) {
       console.error(e)
-      setSubmitError(t('common.somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
+      setSubmitError(t('common:somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
     }
   }, [onSuccess, refundInvoice, t])
 

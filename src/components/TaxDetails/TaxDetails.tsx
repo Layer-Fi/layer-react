@@ -35,7 +35,7 @@ const TaxDetailsHeader = ({ isMobile }: { isMobile: boolean }) => {
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
   return (
     <TaxEstimatesHeader
-      title={tConditional(t, 'taxEstimates.businessIncomeTaxes', {
+      title={tConditional(t, 'taxEstimates:businessIncomeTaxes', {
         condition: projectedCondition,
         cases: {
           default: 'Business Income Taxes',
@@ -45,7 +45,7 @@ const TaxDetailsHeader = ({ isMobile }: { isMobile: boolean }) => {
           projected: 'projected',
         },
       })}
-      description={t('taxEstimates.calculatedBasedOnYourCategorizedTransactionsAndTrackedMileage', 'Calculated based on your categorized transactions and tracked mileage')}
+      description={t('taxEstimates:calculatedBasedOnYourCategorizedTransactionsAndTrackedMileage', 'Calculated based on your categorized transactions and tracked mileage')}
       isMobile={isMobile}
     />
   )
@@ -95,8 +95,8 @@ export const TaxDetails = () => {
         Error={(
           <DataState
             status={DataStateStatus.failed}
-            title={t('taxEstimates.weCouldntLoadYourTaxSummary', 'We couldn\'t load your tax summary')}
-            description={t('taxEstimates.anErrorOccurredWhileLoadingYourTaxSummaryPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
+            title={t('taxEstimates:weCouldntLoadYourTaxSummary', 'We couldn\'t load your tax summary')}
+            description={t('taxEstimates:anErrorOccurredWhileLoadingYourTaxSummaryPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
             spacing
           />
         )}
@@ -112,8 +112,8 @@ export const TaxDetails = () => {
         Error={(
           <DataState
             status={DataStateStatus.failed}
-            title={t('taxEstimates.weCouldntLoadYourTaxEstimates', 'We couldn\'t load your tax estimates')}
-            description={t('taxEstimates.anErrorOccurredWhileLoadingYourTaxEstimatesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
+            title={t('taxEstimates:weCouldntLoadYourTaxEstimates', 'We couldn\'t load your tax estimates')}
+            description={t('taxEstimates:anErrorOccurredWhileLoadingYourTaxEstimatesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
             spacing
           />
         )}
@@ -130,7 +130,7 @@ export const TaxDetails = () => {
                 slots={{
                   Heading: (
                     <TaxDetailsExpandableCardHeading
-                      title={tConditional(t, 'taxEstimates.taxableBusinessIncome', {
+                      title={tConditional(t, 'taxEstimates:taxableBusinessIncome', {
                         condition: projectedCondition,
                         cases: {
                           default: 'Taxable Business Income',
@@ -154,7 +154,7 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title={tConditional(t, 'taxEstimates.federalTaxes', {
+                        title={tConditional(t, 'taxEstimates:federalTaxes', {
                           condition: projectedCondition,
                           cases: {
                             default: 'Federal Taxes',
@@ -179,7 +179,7 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title={tConditional(t, 'taxEstimates.stateTaxesStateName', {
+                        title={tConditional(t, 'taxEstimates:stateTaxesStateName', {
                           condition: projectedCondition,
                           cases: {
                             default: 'State Taxes ({{stateName}})',

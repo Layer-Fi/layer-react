@@ -43,7 +43,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
             }
             return (
               <LedgerAccountCombobox
-                label={t('common.account', 'Account')}
+                label={t('common:account', 'Account')}
                 value={field.state.value}
                 mode={CategoriesListMode.All}
                 onValueChange={onValueChange}
@@ -58,7 +58,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
         <form.AppField name={`lineItems[${index}].amount`}>
           {field => (
             <field.FormBigDecimalField
-              label={t('common.amount', 'Amount')}
+              label={t('common:amount', 'Amount')}
               mode='currency'
               showLabel={showLabels}
               allowNegative={false}
@@ -95,7 +95,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
         <form.AppField name={`lineItems[${index}].memo`}>
           {field => (
             <field.FormTextField
-              label={t('common.memo', 'Memo')}
+              label={t('common:memo', 'Memo')}
               showLabel={showLabels}
               isReadOnly={isReadOnly}
               className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--memo`}
@@ -108,7 +108,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
             <Button
               variant='outlined'
               icon
-              aria-label={t('common.deleteLineItem', 'Delete line item')}
+              aria-label={t('common:deleteLineItem', 'Delete line item')}
               onPress={onDeleteLine}
             >
               <X size={16} />

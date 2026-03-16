@@ -40,14 +40,14 @@ export const LandingPageOffer = ({
 
   const features = useMemo(() => type === 'bookkeeping'
     ? [
-      t('landingPage.personalizedSetupWithYourBookkeeper', 'Personalized setup with your bookkeeper'),
-      t('landingPage.monthlyBooksDoneForYou', 'Monthly books done for you'),
-      t('landingPage.completeFinancialReportsAndEndOfYearTaxPacket', 'Complete financial reports and end of year tax packet'),
+      t('landingPage:personalizedSetupWithYourBookkeeper', 'Personalized setup with your bookkeeper'),
+      t('landingPage:monthlyBooksDoneForYou', 'Monthly books done for you'),
+      t('landingPage:completeFinancialReportsAndEndOfYearTaxPacket', 'Complete financial reports and end of year tax packet'),
     ]
     : [
-      t('landingPage.directIntegrationWithPlatformName', 'Direct integration with {{platformName}}', { platformName: platformConfig.platformName }),
-      t('landingPage.trackExpensesAndReceipts', 'Track expenses and receipts'),
-      t('landingPage.easyToUnderstandProfitabilityChartsAndReports', 'Easy to understand profitability charts and reports'),
+      t('landingPage:directIntegrationWithPlatformName', 'Direct integration with {{platformName}}', { platformName: platformConfig.platformName }),
+      t('landingPage:trackExpensesAndReceipts', 'Track expenses and receipts'),
+      t('landingPage:easyToUnderstandProfitabilityChartsAndReports', 'Easy to understand profitability charts and reports'),
     ], [platformConfig.platformName, t, type])
 
   const baseClassName = classNames(className)
@@ -85,7 +85,7 @@ export const LandingPageOffer = ({
 
         <HStack justify='space-between' align='end'>
           <VStack gap='2xs'>
-            {config.showStartingAtLabel && <Span size='sm' variant='subtle'>{t('landingPage.startingAt', 'Starting at')}</Span>}
+            {config.showStartingAtLabel && <Span size='sm' variant='subtle'>{t('landingPage:startingAt', 'Starting at')}</Span>}
             <HStack align='baseline'>
               <Span size='xl' weight='bold'>{config.stringOverrides.priceAmount}</Span>
               {config.stringOverrides.priceAmount != '' && (

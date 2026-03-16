@@ -20,7 +20,7 @@ type TagValueDefinitionAsOption = {
 const toOption = (dv: TagValueDefinition, t: TFunction): TagValueDefinitionAsOption => {
   const baseLabel = dv.displayName ?? dv.value
   const label = dv.archivedAt
-    ? t('tags.labelArchived', '{{label}} (Archived)', { label: baseLabel })
+    ? t('tags:labelArchived', '{{label}} (Archived)', { label: baseLabel })
     : baseLabel
 
   return {
@@ -108,7 +108,7 @@ export const TagDimensionCombobox = ({
           inputId={inputId}
           isReadOnly={isReadOnly}
           isLoading={isLoading}
-          placeholder={t('tags.selectTagDimension', 'Select {{dimensionName}}', { dimensionName: tagDimension?.displayName ?? dimensionKey })}
+          placeholder={t('tags:selectTagDimension', 'Select {{dimensionName}}', { dimensionName: tagDimension?.displayName ?? dimensionKey })}
           isClearable={isClearable}
           {...additionalAriaProps}
         />

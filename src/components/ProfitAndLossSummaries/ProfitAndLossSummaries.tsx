@@ -129,7 +129,7 @@ function Internal_ProfitAndLossSummaries({
           onClick={actionable ? () => setSidebarScope('revenue') : undefined}
         >
           <ProfitAndLossSummariesSummary
-            label={stringOverrides?.revenueLabel || revenueLabel || t('common.revenue', 'Revenue')}
+            label={stringOverrides?.revenueLabel || revenueLabel || t('common:revenue', 'Revenue')}
             amount={effectiveData.income.value ?? 0}
             isLoading={isLoading}
             percentChange={revenuePercentChange}
@@ -151,7 +151,7 @@ function Internal_ProfitAndLossSummaries({
           onClick={actionable ? () => setSidebarScope('expenses') : undefined}
         >
           <ProfitAndLossSummariesSummary
-            label={stringOverrides?.expensesLabel || t('common.expenses', 'Expenses')}
+            label={stringOverrides?.expensesLabel || t('common:expenses', 'Expenses')}
             amount={(effectiveData?.income?.value ?? 0) - effectiveData.netProfit}
             isLoading={isLoading}
             percentChange={expensesPercentChange}
@@ -171,7 +171,7 @@ function Internal_ProfitAndLossSummaries({
         </ProfitAndLossSummariesListItem>
         <ProfitAndLossSummariesListItem>
           <ProfitAndLossSummariesSummary
-            label={stringOverrides?.netProfitLabel || t('common.netProfit', 'Net Profit')}
+            label={stringOverrides?.netProfitLabel || t('common:netProfit', 'Net Profit')}
             amount={data?.netProfit ?? 0}
             variants={variants}
             isLoading={isLoading}

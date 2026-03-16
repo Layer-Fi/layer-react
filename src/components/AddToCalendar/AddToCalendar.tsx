@@ -108,7 +108,7 @@ export const AddToCalendar = ({
     return (
       <Button variant='outlined'>
         <Calendar size={16} />
-        {t('callBookings.addToCalendar', 'Add to Calendar')}
+        {t('callBookings:addToCalendar', 'Add to Calendar')}
         <ChevronDown size={16} />
       </Button>
     )
@@ -118,7 +118,7 @@ export const AddToCalendar = ({
     <>
       <InvisibleDownload ref={invisibleDownloadRef} />
       <DropdownMenu
-        ariaLabel={t('callBookings.addToCalendar', 'Add to Calendar')}
+        ariaLabel={t('callBookings:addToCalendar', 'Add to Calendar')}
         slots={{ Trigger }}
         slotProps={{
           Dialog: { width: '10rem' },
@@ -127,26 +127,26 @@ export const AddToCalendar = ({
         <MenuList>
           <MenuItem key='google' onClick={() => handleCalendarClick('google')}>
             <HStack gap='sm'>
-              <img className='Layer__AddToCalendar__CalendarIcon' src={GoogleIcon} alt={t('callBookings.googleCalendar', 'Google Calendar')} />
-              <Span size='sm'>{t('callBookings.googleCalendar', 'Google Calendar')}</Span>
+              <img className='Layer__AddToCalendar__CalendarIcon' src={GoogleIcon} alt={t('callBookings:googleCalendar', 'Google Calendar')} />
+              <Span size='sm'>{t('callBookings:googleCalendar', 'Google Calendar')}</Span>
             </HStack>
           </MenuItem>
           <MenuItem key='outlook' onClick={() => handleCalendarClick('outlook')}>
             <HStack gap='sm'>
-              <img className='Layer__AddToCalendar__CalendarIcon' src={OutlookIcon} alt={t('callBookings.outlookCalendar', 'Outlook Calendar')} />
+              <img className='Layer__AddToCalendar__CalendarIcon' src={OutlookIcon} alt={t('callBookings:outlookCalendar', 'Outlook Calendar')} />
               <Span size='sm'>Outlook</Span>
             </HStack>
           </MenuItem>
           <MenuItem key='yahoo' onClick={() => handleCalendarClick('yahoo')}>
             <HStack gap='sm'>
-              <img className='Layer__AddToCalendar__CalendarIcon' src={YahooIcon} alt={t('callBookings.yahooCalendar', 'Yahoo Calendar')} />
+              <img className='Layer__AddToCalendar__CalendarIcon' src={YahooIcon} alt={t('callBookings:yahooCalendar', 'Yahoo Calendar')} />
               <Span size='sm'>Yahoo</Span>
             </HStack>
           </MenuItem>
           <MenuItem key='ics' onClick={() => handleCalendarClick('ics')}>
             <HStack gap='sm'>
               <Download size={16} />
-              <Span size='sm'>{t('callBookings.downloadIcsFile', 'Download .ics file')}</Span>
+              <Span size='sm'>{t('callBookings:downloadIcsFile', 'Download .ics file')}</Span>
             </HStack>
           </MenuItem>
         </MenuList>

@@ -34,7 +34,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
       .then(() => {
         close()
       }).catch(() => {
-        addToast({ content: t('categorizationRules.failedToRejectRuleSuggestion', 'Failed to reject rule suggestion'), type: 'error' })
+        addToast({ content: t('categorizationRules:failedToRejectRuleSuggestion', 'Failed to reject rule suggestion'), type: 'error' })
       })
   },
   [addToast, close, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId, t])
@@ -49,16 +49,16 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
           ? (
             <CreateRuleButton
               newRule={ruleSuggestion.newRule}
-              slotProps={{ fullWidth: true, children: t('categorizationRules.yesAlwaysCategorize', 'Yes, always categorize') }}
+              slotProps={{ fullWidth: true, children: t('categorizationRules:yesAlwaysCategorize', 'Yes, always categorize') }}
             />
           )
           : (
             <Button onPress={() => void next()} fullWidth>
-              {t('categorizationRules.yesAlwaysCategorize', 'Yes, always categorize')}
+              {t('categorizationRules:yesAlwaysCategorize', 'Yes, always categorize')}
             </Button>
           )}
         <Button onPress={close} variant='outlined' fullWidth>
-          {t('categorizationRules.noIllDecideEachTime', 'No, I’ll decide each time')}
+          {t('categorizationRules:noIllDecideEachTime', 'No, I’ll decide each time')}
         </Button>
         <HStack align='center' gap='xs'>
           <Separator />
@@ -66,12 +66,12 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
             size='sm'
             variant='subtle'
           >
-            {t('categorizationRules.uppercaseOr', 'OR')}
+            {t('categorizationRules:uppercaseOr', 'OR')}
           </Span>
           <Separator />
         </HStack>
         <Button onPress={() => void handleDisableSuggestionPrompt()} isPending={isMutating} variant='outlined' fullWidth>
-          {t('categorizationRules.dontAskAgain', 'Don’t ask again')}
+          {t('categorizationRules:dontAskAgain', 'Don’t ask again')}
         </Button>
       </VStack>
     </VStack>

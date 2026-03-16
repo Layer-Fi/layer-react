@@ -99,7 +99,7 @@ export const SubmitButton = ({
         {...props}
         className={baseClassName}
         disabled={processing || disabled}
-        error={typeof error === 'string' ? error : t('common.somethingWentWrong', 'Something went wrong')}
+        error={typeof error === 'string' ? error : t('common:somethingWentWrong', 'Something went wrong')}
       >
         {children}
       </RetryButton>

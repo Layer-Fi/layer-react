@@ -11,9 +11,9 @@ import { createDateGroupByOnChange, type GroupByOption } from '@components/DateS
 import './dateGroupByComboBox.scss'
 
 const DATE_GROUP_BY_CONFIG = [
-  { value: DateGroupBy.AllTime, ...translationKey('date.allTime', 'All time') },
-  { value: DateGroupBy.Month, ...translationKey('date.month', 'Month') },
-  { value: DateGroupBy.Year, ...translationKey('date.year', 'Year') },
+  { value: DateGroupBy.AllTime, ...translationKey('date:allTime', 'All time') },
+  { value: DateGroupBy.Month, ...translationKey('date:month', 'Month') },
+  { value: DateGroupBy.Year, ...translationKey('date:year', 'Year') },
 ]
 
 type DateGroupByComboBoxProps = {
@@ -42,7 +42,7 @@ export const DateGroupByComboBox = ({ value, onValueChange }: DateGroupByComboBo
 
   return (
     <VStack className='Layer__DateGroupByComboBox__Container'>
-      <Label pbe='3xs' size='sm' htmlFor={inputId}>{t('reports.groupBy', 'Group by')}</Label>
+      <Label pbe='3xs' size='sm' htmlFor={inputId}>{t('reports:groupBy', 'Group by')}</Label>
       <ComboBox
         className='Layer__DateGroupByComboBox'
         options={options}

@@ -60,13 +60,13 @@ export const Pagination = ({
 
   return (
     <VStack className={classNames('Layer__pagination-container', className)} fluid>
-      <nav aria-label={t('ui.pagination', 'Pagination')} className='Layer__pagination-nav'>
+      <nav aria-label={t('ui:pagination', 'Pagination')} className='Layer__pagination-nav'>
         <ul className='Layer__pagination' role='list'>
           <li key='page-prev'>
             <PaginationButton
               onPress={() => onPageChange(currentPage - 1)}
               isDisabled={currentPage === 1}
-              aria-label={t('ui.goToPreviousPage', 'Go to previous page')}
+              aria-label={t('ui:goToPreviousPage', 'Go to previous page')}
             >
               <ChevronLeft size={12} />
             </PaginationButton>
@@ -90,7 +90,7 @@ export const Pagination = ({
                 <PaginationButton
                   isSelected={pageNumber === currentPage}
                   onPress={() => onPageChange(Number(pageNumber))}
-                  aria-label={t('ui.goToPageNumber', 'Go to page {{pageNumber}}', { pageNumber })}
+                  aria-label={t('ui:goToPageNumber', 'Go to page {{pageNumber}}', { pageNumber })}
                 >
                   {pageNumber}
                 </PaginationButton>
@@ -102,7 +102,7 @@ export const Pagination = ({
               <li key='page-has-more'>
                 <PaginationButton
                   onPress={fetchMore}
-                  aria-label={t('ui.getMoreResults', 'Get more results')}
+                  aria-label={t('ui:getMoreResults', 'Get more results')}
                 >
                   &hellip;
                 </PaginationButton>
@@ -113,7 +113,7 @@ export const Pagination = ({
             <PaginationButton
               onPress={() => onPageChange(currentPage + 1)}
               isDisabled={currentPage === lastPage}
-              aria-label={t('ui.goToNextPage', 'Go to next page')}
+              aria-label={t('ui:goToNextPage', 'Go to next page')}
             >
               <ChevronRight size={12} />
             </PaginationButton>

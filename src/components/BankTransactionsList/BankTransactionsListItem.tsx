@@ -211,13 +211,13 @@ export const BankTransactionsListItem = ({
               processing={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
               withRetry
-              error={isError ? t('bankTransactions.approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.') : undefined}
+              error={isError ? t('bankTransactions:approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.') : undefined}
             >
               {isError
-                ? t('common.retry', 'Retry')
+                ? t('common:retry', 'Retry')
                 : (!displayAsCategorized
-                  ? stringOverrides?.approveButtonText ?? t('common.approve', 'Approve')
-                  : stringOverrides?.updateButtonText ?? t('common.update', 'Update'))}
+                  ? stringOverrides?.approveButtonText ?? t('common:approve', 'Approve')
+                  : stringOverrides?.updateButtonText ?? t('common:update', 'Update'))}
             </SubmitButton>
           </HStack>
         </div>
@@ -231,7 +231,7 @@ export const BankTransactionsListItem = ({
         && (
           <HStack pis='md' pbe='md'>
             <ErrorText>
-              {t('bankTransactions.approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
+              {t('bankTransactions:approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
             </ErrorText>
           </HStack>
         )}

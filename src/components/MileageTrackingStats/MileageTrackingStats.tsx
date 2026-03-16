@@ -50,9 +50,9 @@ const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdown }: M
         : <Span size='lg' weight='bold'>{amount.toLocaleString()}</Span>}
       {breakdown && (
         <HStack gap='md'>
-          <MileageTrackingStatsRow label={t('common.business', 'Business')} value={breakdown.business} />
-          <MileageTrackingStatsRow label={t('common.personal', 'Personal')} value={breakdown.personal} />
-          <MileageTrackingStatsRow label={t('common.uncategorized', 'Uncategorized')} value={breakdown.uncategorized} />
+          <MileageTrackingStatsRow label={t('common:business', 'Business')} value={breakdown.business} />
+          <MileageTrackingStatsRow label={t('common:personal', 'Personal')} value={breakdown.personal} />
+          <MileageTrackingStatsRow label={t('common:uncategorized', 'Uncategorized')} value={breakdown.uncategorized} />
         </HStack>
       )}
     </VStack>
@@ -87,7 +87,7 @@ export const MileageTrackingStats = () => {
   if (isError) {
     return (
       <Container name='mileage-tracking-stats'>
-        <DataState status={DataStateStatus.failed} title={t('mileageTracking.failedToLoadMileageData', 'Failed to load mileage data')} spacing />
+        <DataState status={DataStateStatus.failed} title={t('mileageTracking:failedToLoadMileageData', 'Failed to load mileage data')} spacing />
       </Container>
     )
   }
@@ -107,12 +107,12 @@ export const MileageTrackingStats = () => {
       <div className='Layer__MileageTrackingStats__Content'>
         <VStack className='Layer__MileageTrackingStats__Cards' gap='md' justify='center'>
           <MileageTrackingStatsCard
-            title={t('mileageTracking.totalDeduction', 'Total Deduction')}
+            title={t('mileageTracking:totalDeduction', 'Total Deduction')}
             amount={selectedYearData?.estimatedDeduction ?? 0}
             formatAsMoney
           />
           <MileageTrackingStatsCard
-            title={t('mileageTracking.totalMiles', 'Total Miles')}
+            title={t('mileageTracking:totalMiles', 'Total Miles')}
             amount={selectedYearData?.miles ?? 0}
             breakdown={{
               business: selectedYearData?.businessMiles ?? 0,
@@ -121,7 +121,7 @@ export const MileageTrackingStats = () => {
             }}
           />
           <MileageTrackingStatsCard
-            title={t('trips.trips', 'Trips')}
+            title={t('trips:trips', 'Trips')}
             amount={selectedYearData?.trips ?? 0}
             breakdown={{
               business: selectedYearData?.businessTrips ?? 0,

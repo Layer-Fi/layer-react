@@ -36,7 +36,7 @@ export const useTripForm = (props: UseTripFormProps) => {
     }
     catch (e) {
       console.error(e)
-      setSubmitError(t('common.somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
+      setSubmitError(t('common:somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
     }
   }, [onSuccess, upsertTrip, t])
 

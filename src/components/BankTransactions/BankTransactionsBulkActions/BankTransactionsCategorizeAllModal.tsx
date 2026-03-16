@@ -74,11 +74,11 @@ export const BankTransactionsCategorizeAllModal = ({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={handleCategorizeModalClose}
-      title={mode === CategorizationMode.Categorize ? t('bankTransactions.categorizeAllSelectedTransactions', 'Categorize all selected transactions?') : t('bankTransactions.recategorizeAllSelectedTransactions', 'Recategorize all selected transactions?')}
+      title={mode === CategorizationMode.Categorize ? t('bankTransactions:categorizeAllSelectedTransactions', 'Categorize all selected transactions?') : t('bankTransactions:recategorizeAllSelectedTransactions', 'Recategorize all selected transactions?')}
       content={(
         <VStack gap='xs'>
           <VStack gap='3xs'>
-            <Label size='sm' htmlFor={categorySelectId}>{t('bankTransactions.selectCategory', 'Select category')}</Label>
+            <Label size='sm' htmlFor={categorySelectId}>{t('bankTransactions:selectCategory', 'Select category')}</Label>
             {isMobileView
               ? (
                 <CategorySelectDrawerWithTrigger
@@ -101,13 +101,13 @@ export const BankTransactionsCategorizeAllModal = ({
           {selectedCategory && isCategoryAsOption(selectedCategory) && (
             <Span>
               {mode === CategorizationMode.Categorize
-                ? tPlural(t, 'bankTransactions.thisWillCategorizeCountSelectedTransactionsAsCategory', {
+                ? tPlural(t, 'bankTransactions:thisWillCategorizeCountSelectedTransactionsAsCategory', {
                   count,
                   category: selectedCategory.original.displayName,
                   one: 'This will categorize {{count}} selected transaction as {{category}}.',
                   other: 'This will categorize {{count}} selected transactions as {{category}}.',
                 })
-                : tPlural(t, 'bankTransactions.thisWillRecategorizeCountSelectedTransactionsAsCategory', {
+                : tPlural(t, 'bankTransactions:thisWillRecategorizeCountSelectedTransactionsAsCategory', {
                   count,
                   category: selectedCategory.original.displayName,
                   one: 'This will recategorize {{count}} selected transaction as {{category}}.',
@@ -118,9 +118,9 @@ export const BankTransactionsCategorizeAllModal = ({
         </VStack>
       )}
       onConfirm={handleConfirm}
-      confirmLabel={mode === CategorizationMode.Categorize ? t('bankTransactions.categorizeAll', 'Categorize All') : t('bankTransactions.recategorizeAll', 'Recategorize All')}
+      confirmLabel={mode === CategorizationMode.Categorize ? t('bankTransactions:categorizeAll', 'Categorize All') : t('bankTransactions:recategorizeAll', 'Recategorize All')}
       confirmDisabled={!selectedCategory}
-      errorText={mode === CategorizationMode.Categorize ? t('bankTransactions.failedToCategorizeTransactions', 'Failed to categorize transactions') : t('bankTransactions.failedToRecategorizeTransactions', 'Failed to recategorize transactions')}
+      errorText={mode === CategorizationMode.Categorize ? t('bankTransactions:failedToCategorizeTransactions', 'Failed to categorize transactions') : t('bankTransactions:failedToRecategorizeTransactions', 'Failed to recategorize transactions')}
       closeOnConfirm
       useDrawer={isMobileView}
     />

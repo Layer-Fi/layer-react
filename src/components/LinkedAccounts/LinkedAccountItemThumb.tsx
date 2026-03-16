@@ -73,16 +73,16 @@ export const LinkedAccountItemThumb = ({
     )
     if (plaidAccountForConfirm) {
       pillConfig = {
-        text: t('linkedAccounts.confirmAccount', 'Confirm account'),
+        text: t('linkedAccounts:confirmAccount', 'Confirm account'),
         config: [
           {
-            name: t('linkedAccounts.markAsADuplicateAccount', 'Mark as a duplicate account'),
+            name: t('linkedAccounts:markAsADuplicateAccount', 'Mark as a duplicate account'),
             action: () => {
               void excludeAccount(plaidAccountForConfirm.external_account_source, plaidAccountForConfirm.id)
             },
           },
           {
-            name: t('linkedAccounts.markAsNotADuplicateAccount', 'Mark as not a duplicate account'),
+            name: t('linkedAccounts:markAsNotADuplicateAccount', 'Mark as not a duplicate account'),
             action: () => {
               void confirmAccount(plaidAccountForConfirm.external_account_source, plaidAccountForConfirm.id)
             },
@@ -93,10 +93,10 @@ export const LinkedAccountItemThumb = ({
   }
   else if (repairInfo) {
     pillConfig = {
-      text: t('linkedAccounts.fixAccount', 'Fix account'),
+      text: t('linkedAccounts:fixAccount', 'Fix account'),
       config: [
         {
-          name: t('linkedAccounts.repairConnection', 'Repair connection'),
+          name: t('linkedAccounts:repairConnection', 'Repair connection'),
           action: () => {
             if (!repairInfo.connectionExternalId) return
             if (repairInfo.reconnectWithNewCredentials) {
@@ -114,7 +114,7 @@ export const LinkedAccountItemThumb = ({
   const additionalConfigs: HoverMenuProps['config'] = []
 
   additionalConfigs.push({
-    name: isAllExternalAccountsUserCreatedCustom(bankAccount) ? t('linkedAccounts.deleteAccount', 'Delete account') : t('linkedAccounts.unlinkAccount', 'Unlink account'),
+    name: isAllExternalAccountsUserCreatedCustom(bankAccount) ? t('linkedAccounts:deleteAccount', 'Delete account') : t('linkedAccounts:unlinkAccount', 'Unlink account'),
     action: () => {
       setIsUnlinkConfirmationModalOpen(true)
     },
@@ -124,18 +124,18 @@ export const LinkedAccountItemThumb = ({
     const institutionName = getBankAccountInstitution(bankAccount)?.name
     const removeAllAccountsConfirmationMessage = institutionName
       ? t(
-        'linkedAccounts.pleaseConfirmYouWishToRemoveAllAccountsBelongingToInstitutionName',
+        'linkedAccounts:pleaseConfirmYouWishToRemoveAllAccountsBelongingToInstitutionName',
         'Please confirm you wish to remove all accounts belonging to {{institutionName}}',
         { institutionName },
       )
       : t(
-        'linkedAccounts.pleaseConfirmYouWishToRemoveAllAccountsBelongingToThisInstitution',
+        'linkedAccounts:pleaseConfirmYouWishToRemoveAllAccountsBelongingToThisInstitution',
         'Please confirm you wish to remove all accounts belonging to this institution',
       )
     additionalConfigs.push({
       name: institutionName
-        ? t('linkedAccounts.unlinkAllAccountsUnderThisInstitutionNameConnection', 'Unlink all accounts under this {{institutionName}} connection', { institutionName })
-        : t('linkedAccounts.unlinkAllAccountsUnderThisConnection', 'Unlink all accounts under this connection'),
+        ? t('linkedAccounts:unlinkAllAccountsUnderThisInstitutionNameConnection', 'Unlink all accounts under this {{institutionName}} connection', { institutionName })
+        : t('linkedAccounts:unlinkAllAccountsUnderThisConnection', 'Unlink all accounts under this connection'),
       action: () => {
         // TODO: replace with better confirm dialog
         if (
@@ -153,7 +153,7 @@ export const LinkedAccountItemThumb = ({
 
   if (accountMissingOpeningBalance(bankAccount)) {
     additionalConfigs.push({
-      name: t('linkedAccounts.addOpeningBalance', 'Add opening balance'),
+      name: t('linkedAccounts:addOpeningBalance', 'Add opening balance'),
       action: () => {
         setAccountsToAddOpeningBalanceInModal([bankAccount])
       },

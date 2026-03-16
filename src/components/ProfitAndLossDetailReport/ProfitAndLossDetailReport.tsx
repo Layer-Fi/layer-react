@@ -66,8 +66,8 @@ const ErrorState = () => {
     <DataState
       spacing
       status={DataStateStatus.failed}
-      title={t('reports.errorLoadingDetailLines', 'Error loading detail lines')}
-      description={t('reports.thereWasAnErrorLoadingTheProfitAndLossDetailLines', 'There was an error loading the profit and loss detail lines')}
+      title={t('reports:errorLoadingDetailLines', 'Error loading detail lines')}
+      description={t('reports:thereWasAnErrorLoadingTheProfitAndLossDetailLines', 'There was an error loading the profit and loss detail lines')}
     />
   )
 }
@@ -78,8 +78,8 @@ const EmptyState = () => {
     <DataState
       spacing
       status={DataStateStatus.info}
-      title={t('reports.noDetailLinesFound', 'No detail lines found')}
-      description={t('reports.thereAreNoDetailLinesForThisProfitAndLossItem', 'There are no detail lines for this profit and loss item')}
+      title={t('reports:noDetailLinesFound', 'No detail lines found')}
+      description={t('reports:thereAreNoDetailLinesForThisProfitAndLossItem', 'There are no detail lines for this profit and loss item')}
     />
   )
 }
@@ -157,7 +157,7 @@ export const ProfitAndLossDetailReport = ({
   const columnConfig: NestedColumnConfig<ProcessedPnlDetailLine> = useMemo(() => [
     {
       id: PnlDetailColumns.Date,
-      header: stringOverrides?.dateColumnHeader || t('common.date', 'Date'),
+      header: stringOverrides?.dateColumnHeader || t('common:date', 'Date'),
       cell: (row: PnlDetailRowType) => (
         <DateTime
           value={row.original.date}
@@ -170,7 +170,7 @@ export const ProfitAndLossDetailReport = ({
     },
     {
       id: PnlDetailColumns.Type,
-      header: stringOverrides?.typeColumnHeader || t('common.type', 'Type'),
+      header: stringOverrides?.typeColumnHeader || t('common:type', 'Type'),
       cell: (row: PnlDetailRowType) => {
         const { source } = row.original
         return source
@@ -187,7 +187,7 @@ export const ProfitAndLossDetailReport = ({
     },
     {
       id: PnlDetailColumns.Account,
-      header: stringOverrides?.accountColumnHeader || t('common.account', 'Account'),
+      header: stringOverrides?.accountColumnHeader || t('common:account', 'Account'),
       cell: (row: PnlDetailRowType) => (
         <Text
           as='span'
@@ -200,7 +200,7 @@ export const ProfitAndLossDetailReport = ({
     },
     {
       id: PnlDetailColumns.Description,
-      header: stringOverrides?.descriptionColumnHeader || t('common.description', 'Description'),
+      header: stringOverrides?.descriptionColumnHeader || t('common:description', 'Description'),
       cell: (row: PnlDetailRowType) => (
         <Text
           as='span'
@@ -214,7 +214,7 @@ export const ProfitAndLossDetailReport = ({
     },
     {
       id: PnlDetailColumns.Amount,
-      header: stringOverrides?.amountColumnHeader || t('common.amount', 'Amount'),
+      header: stringOverrides?.amountColumnHeader || t('common:amount', 'Amount'),
       cell: (row: PnlDetailRowType) => {
         return (
           <MoneySpan amount={row.original.direction === Direction.CREDIT ? row.original.amount : -row.original.amount} />
@@ -223,7 +223,7 @@ export const ProfitAndLossDetailReport = ({
     },
     {
       id: PnlDetailColumns.Balance,
-      header: stringOverrides?.balanceColumnHeader || t('common.balance', 'Balance'),
+      header: stringOverrides?.balanceColumnHeader || t('common:balance', 'Balance'),
       cell: (row: PnlDetailRowType) => {
         return (
           <MoneySpan amount={row.original.runningBalance} />
@@ -247,9 +247,9 @@ export const ProfitAndLossDetailReport = ({
       <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={handleBackToList} borderless>
         <VStack pi='md'>
           <DetailsList
-            title={stringOverrides?.sourceDetailsTitle || t('bankTransactions.transactionSource', 'Transaction source')}
+            title={stringOverrides?.sourceDetailsTitle || t('bankTransactions:transactionSource', 'Transaction source')}
           >
-            <DetailsListItem label={t('common.source', 'Source')}>
+            <DetailsListItem label={t('common:source', 'Source')}>
               {badgeOrInAppLink}
             </DetailsListItem>
             <SourceDetailView source={selectedSource} />
@@ -264,7 +264,7 @@ export const ProfitAndLossDetailReport = ({
       <VStack className='Layer__ProfitAndLossDetailReport'>
         <VirtualizedDataTable<ProcessedPnlDetailLine>
           componentName={COMPONENT_NAME}
-          ariaLabel={t('reports.lineItemDetailLines', '{{lineItemName}} detail lines', { lineItemName })}
+          ariaLabel={t('reports:lineItemDetailLines', '{{lineItemName}} detail lines', { lineItemName })}
           columnConfig={columnConfig}
           data={rowsWithRunningBalance.lines}
           isLoading={isLoading}
@@ -278,7 +278,7 @@ export const ProfitAndLossDetailReport = ({
         {rowsWithRunningBalance.lines.length > 0 && (
           <HStack pb='sm' align='center' className='Layer__profit-and-loss-detail-report__total-row'>
             <HStack className='Layer__profit-and-loss-detail-report__total-label'>
-              <Label weight='bold' size='md'>{t('common.total', 'Total')}</Label>
+              <Label weight='bold' size='md'>{t('common:total', 'Total')}</Label>
             </HStack>
             <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
               <MoneySpan weight='bold' size='md' amount={rowsWithRunningBalance.total} />

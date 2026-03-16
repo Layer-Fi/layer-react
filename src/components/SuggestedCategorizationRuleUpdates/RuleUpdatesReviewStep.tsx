@@ -24,7 +24,7 @@ export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesP
   return (
     <VStack pbe={isDrawer ? 'xl' : undefined}>
       <Span size='md'>
-        {tPlural(t, 'categorizationRules.followingCountTransactionsWillBeAffected', {
+        {tPlural(t, 'categorizationRules:followingCountTransactionsWillBeAffected', {
           count: ruleSuggestion.transactionsThatWillBeAffected.length,
           one: 'The following {{count}} transaction will be affected:',
           other: 'The following {{count}} transactions will be affected:',
@@ -38,11 +38,11 @@ export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesP
           variant='outlined'
           fullWidth={isDrawer}
         >
-          {t('common.back', 'Back')}
+          {t('common:back', 'Back')}
         </Button>
         <CreateRuleButton
           newRule={ruleSuggestion.newRule}
-          slotProps={{ fullWidth: isDrawer, children: t('common.submit', 'Submit') }}
+          slotProps={{ fullWidth: isDrawer, children: t('common:submit', 'Submit') }}
         />
       </ActionButtonsStack>
     </VStack>

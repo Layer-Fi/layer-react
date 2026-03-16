@@ -198,27 +198,27 @@ const JournalTableContent = ({
       <TableHead>
         <TableRow isHeadRow rowKey='journal-head-row'>
           <TableCell isHeaderCell>
-            {stringOverrides?.idColumnHeader || t('common.id', 'Id')}
+            {stringOverrides?.idColumnHeader || t('common:id', 'Id')}
           </TableCell>
           <TableCell isHeaderCell>
-            {stringOverrides?.dateColumnHeader || t('common.date', 'Date')}
+            {stringOverrides?.dateColumnHeader || t('common:date', 'Date')}
           </TableCell>
           <TableCell isHeaderCell>
-            {stringOverrides?.transactionColumnHeader || t('common.transaction', 'Transaction')}
+            {stringOverrides?.transactionColumnHeader || t('common:transaction', 'Transaction')}
           </TableCell>
           {enableAccountNumbers && (
             <TableCell isHeaderCell>
-              {stringOverrides?.accountNumberColumnHeader || t('generalLedger.accountNumber', 'Account Number')}
+              {stringOverrides?.accountNumberColumnHeader || t('generalLedger:accountNumber', 'Account Number')}
             </TableCell>
           )}
           <TableCell isHeaderCell>
-            {stringOverrides?.accountColumnHeader || t('generalLedger.accountNameColumnHeader', 'Account Name')}
+            {stringOverrides?.accountColumnHeader || t('generalLedger:accountNameColumnHeader', 'Account Name')}
           </TableCell>
           <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.debitColumnHeader || t('common.debit', 'Debit')}
+            {stringOverrides?.debitColumnHeader || t('common:debit', 'Debit')}
           </TableCell>
           <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.creditColumnHeader || t('common.credit', 'Credit')}
+            {stringOverrides?.creditColumnHeader || t('common:credit', 'Credit')}
           </TableCell>
         </TableRow>
       </TableHead>

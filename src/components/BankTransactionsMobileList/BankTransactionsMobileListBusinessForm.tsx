@@ -95,7 +95,7 @@ export const BankTransactionsMobileListBusinessForm = ({
 
     options.push({
       value: new PlaceholderAsOption({
-        label: t('bankTransactions.showAllCategories', 'Show all categories'),
+        label: t('bankTransactions:showAllCategories', 'Show all categories'),
         value: 'SELECT_CATEGORY',
       }),
       asLink: true,
@@ -179,7 +179,7 @@ export const BankTransactionsMobileListBusinessForm = ({
         >
           {showReceiptUploads && (
             <BankTransactionReceipts
-              label={t('bankTransactions.receipts', 'Receipts')}
+              label={t('bankTransactions:receipts', 'Receipts')}
               ref={receiptsRef}
               floatingActions={false}
               hideUploadButtons={true}
@@ -190,7 +190,7 @@ export const BankTransactionsMobileListBusinessForm = ({
           {showReceiptUploads && (
             <FileInput
               onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-              text={t('bankTransactions.uploadReceipt', 'Upload receipt')}
+              text={t('bankTransactions:uploadReceipt', 'Upload receipt')}
               iconOnly={true}
               icon={<PaperclipIcon />}
               accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -205,18 +205,18 @@ export const BankTransactionsMobileListBusinessForm = ({
               >
                 {isCategorizing
                   ? (isCategorized(bankTransaction)
-                    ? t('common.updating', 'Updating...')
-                    : t('common.confirming', 'Confirming...'))
+                    ? t('common:updating', 'Updating...')
+                    : t('common:confirming', 'Confirming...'))
                   : (isCategorized(bankTransaction)
-                    ? t('common.update', 'Update')
-                    : t('common.confirm', 'Confirm'))}
+                    ? t('common:update', 'Update')
+                    : t('common:confirm', 'Confirm'))}
               </Button>
             )}
         </HStack>
         {isErrorCategorizing && showRetry
           ? (
             <ErrorText>
-              {t('bankTransactions.approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
+              {t('bankTransactions:approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
             </ErrorText>
           )
           : null}

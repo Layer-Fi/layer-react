@@ -37,10 +37,10 @@ export const BusinessFormMobile = ({
   return (
     <VStack gap='sm'>
       <Span size='sm' weight='bold'>
-        {t('bankTransactions.selectCategory', 'Select category')}
+        {t('bankTransactions:selectCategory', 'Select category')}
       </Span>
       <GridList
-        aria-label={t('bankTransactions.selectACategory', 'Select a category')}
+        aria-label={t('bankTransactions:selectACategory', 'Select a category')}
         selectionMode='single'
         selectedKeys={selectedId ? new Set([selectedId]) : new Set()}
         onSelectionChange={handleSelectionChange}

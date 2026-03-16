@@ -22,7 +22,7 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
       <VStack className='Layer__TaxSummaryCard__Overview' gap='xs' justify='center' align='center'>
         <VStack justify='center' align='center'>
           <Span size='md' variant='subtle'>
-            {tConditional(t, 'taxEstimates.taxesOwed', {
+            {tConditional(t, 'taxEstimates:taxesOwed', {
               condition: projectedCondition,
               cases: {
                 default: 'Taxes Owed',
@@ -36,7 +36,7 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
           <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
         </VStack>
         <VStack align='center'>
-          <Span size='sm' variant='subtle'>{t('taxEstimates.taxesDue', 'Taxes Due')}</Span>
+          <Span size='sm' variant='subtle'>{t('taxEstimates:taxesDue', 'Taxes Due')}</Span>
           <Span size='md'>{formatDate(data.taxesDueAt)}</Span>
         </VStack>
       </VStack>
@@ -52,9 +52,9 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
               <MoneySpan size='lg' amount={section.taxesPaid} />
               <span />
               <span />
-              <Span size='sm' variant='subtle'>{t('common.total', 'Total')}</Span>
+              <Span size='sm' variant='subtle'>{t('common:total', 'Total')}</Span>
               <span />
-              <Span size='sm' variant='subtle'>{t('taxEstimates.taxesPaid', 'Taxes Paid')}</Span>
+              <Span size='sm' variant='subtle'>{t('taxEstimates:taxesPaid', 'Taxes Paid')}</Span>
             </div>
           ))}
         </div>

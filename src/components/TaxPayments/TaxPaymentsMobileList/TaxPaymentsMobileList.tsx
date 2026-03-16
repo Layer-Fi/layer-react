@@ -18,21 +18,21 @@ const TaxPaymentsMobileListItem = ({ payment }: { payment: TaxPaymentQuarterWith
       <Heading size='sm' weight='bold' pbe='3xs'>{getQuarterLabel(payment.quarter)}</Heading>
       <VStack gap='3xs'>
         <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('taxEstimates.rolledOverFromPreviousQuarter', 'Rolled Over From Previous Quarter')}</Span>
+          <Span size='sm' variant='subtle'>{t('taxEstimates:rolledOverFromPreviousQuarter', 'Rolled Over From Previous Quarter')}</Span>
           <MoneySpan size='sm' amount={payment.owedRolledOverFromPrevious} />
         </HStack>
         <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('taxEstimates.owedThisQuarter', 'Owed This Quarter')}</Span>
+          <Span size='sm' variant='subtle'>{t('taxEstimates:owedThisQuarter', 'Owed This Quarter')}</Span>
           <MoneySpan size='sm' amount={payment.owedThisQuarter} />
         </HStack>
         <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('taxEstimates.totalPaid', 'Total Paid')}</Span>
+          <Span size='sm' variant='subtle'>{t('taxEstimates:totalPaid', 'Total Paid')}</Span>
           <MoneySpan size='sm' amount={payment.totalPaid} />
         </HStack>
       </VStack>
       <Separator />
       <HStack justify='space-between'>
-        <Span size='md' weight='bold'>{t('taxEstimates.remainingBalance', 'Remaining Balance')}</Span>
+        <Span size='md' weight='bold'>{t('taxEstimates:remainingBalance', 'Remaining Balance')}</Span>
         <MoneySpan size='md' amount={payment.total} weight='bold' />
       </HStack>
     </VStack>
@@ -49,7 +49,7 @@ export const TaxPaymentsMobileList = ({ data, isLoading, isError, slots }: Commo
   return (
     <div className='Layer__TaxPaymentsMobileList'>
       <MobileList
-        ariaLabel={t('taxEstimates.taxPayments', 'Tax Payments')}
+        ariaLabel={t('taxEstimates:taxPayments', 'Tax Payments')}
         data={data}
         isLoading={isLoading}
         isError={isError}

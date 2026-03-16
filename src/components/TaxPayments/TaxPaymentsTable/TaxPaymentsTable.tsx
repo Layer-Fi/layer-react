@@ -26,7 +26,7 @@ type TaxPaymentRowType = Row<TaxPaymentQuarterWithId>
 const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentQuarterWithId> => [
   {
     id: TaxPaymentColumns.Quarter,
-    header: t('taxEstimates.quarter', 'Quarter'),
+    header: t('taxEstimates:quarter', 'Quarter'),
     cell: (row: TaxPaymentRowType) => (
       <Span>{getQuarterLabel(row.original.quarter)}</Span>
     ),
@@ -34,28 +34,28 @@ const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentQuarterWith
   },
   {
     id: TaxPaymentColumns.OwedFromPrevious,
-    header: t('taxEstimates.rolledOverFromPreviousQuarter', 'Rolled Over From Previous Quarter'),
+    header: t('taxEstimates:rolledOverFromPreviousQuarter', 'Rolled Over From Previous Quarter'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.owedRolledOverFromPrevious} />
     ),
   },
   {
     id: TaxPaymentColumns.OwedThisQuarter,
-    header: t('taxEstimates.owedThisQuarter', 'Owed This Quarter'),
+    header: t('taxEstimates:owedThisQuarter', 'Owed This Quarter'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.owedThisQuarter} />
     ),
   },
   {
     id: TaxPaymentColumns.TotalPaid,
-    header: t('taxEstimates.totalPaid', 'Total Paid'),
+    header: t('taxEstimates:totalPaid', 'Total Paid'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.totalPaid} />
     ),
   },
   {
     id: TaxPaymentColumns.Total,
-    header: t('taxEstimates.remainingBalance', 'Remaining Balance'),
+    header: t('taxEstimates:remainingBalance', 'Remaining Balance'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.total} />
     ),
@@ -69,7 +69,7 @@ export const TaxPaymentsTable = ({ data, isLoading, isError, slots }: CommonTaxP
   return (
     <SimpleDataTable<TaxPaymentQuarterWithId>
       componentName={COMPONENT_NAME}
-      ariaLabel={t('taxEstimates.taxPayments', 'Tax Payments')}
+      ariaLabel={t('taxEstimates:taxPayments', 'Tax Payments')}
       columnConfig={columnConfig}
       data={data}
       isLoading={isLoading}

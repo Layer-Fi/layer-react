@@ -93,7 +93,7 @@ export function CustomerVendorSelector({
     () => {
       const customersSection = customerPages
         ? {
-          label: t('customerVendor.customers', 'Customers'),
+          label: t('customerVendor:customers', 'Customers'),
           id: 'CUSTOMER',
           options: customerPages
             .flatMap(({ data }) => data)
@@ -103,7 +103,7 @@ export function CustomerVendorSelector({
 
       const vendorsSection = vendorPages
         ? {
-          label: t('customerVendor.vendors', 'Vendors'),
+          label: t('customerVendor:vendors', 'Vendors'),
           id: 'VENDOR',
           options: vendorPages
             .flatMap(({ data }) => data)
@@ -194,7 +194,7 @@ export function CustomerVendorSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {t('customerVendor.noMatchingCustomersOrVendorsFound', 'No matching customers or vendors found')}
+        {t('customerVendor:noMatchingCustomersOrVendorsFound', 'No matching customers or vendors found')}
       </P>
     ),
     [t],
@@ -206,7 +206,7 @@ export function CustomerVendorSelector({
         size='xs'
         status='error'
       >
-        {t('customerVendor.anErrorOccurredWhileLoadingCustomerAndVendorOptions', 'An error occurred while loading customer and vendor options.')}
+        {t('customerVendor:anErrorOccurredWhileLoadingCustomerAndVendorOptions', 'An error occurred while loading customer and vendor options.')}
       </P>
     ),
     [t],
@@ -231,7 +231,7 @@ export function CustomerVendorSelector({
             htmlFor={inputId}
             size='sm'
           >
-            {t('customerVendor.customerOrVendor', 'Customer or Vendor')}
+            {t('customerVendor:customerOrVendor', 'Customer or Vendor')}
           </Label>
           {isMutating
             ? (
@@ -239,7 +239,7 @@ export function CustomerVendorSelector({
                 size='xs'
                 variant='subtle'
               >
-                {t('common.saving', 'Saving...')}
+                {t('common:saving', 'Saving...')}
               </P>
             )
             : null}
@@ -260,7 +260,7 @@ export function CustomerVendorSelector({
         isDisabled={isReadOnly || shouldDisableComboBox}
         isError={isError}
         isLoading={isLoadingWithoutFallback}
-        aria-label={showLabel ? undefined : t('customerVendor.customerOrVendor', 'Customer or Vendor')}
+        aria-label={showLabel ? undefined : t('customerVendor:customerOrVendor', 'Customer or Vendor')}
       />
     </VStack>
   )

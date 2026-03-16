@@ -129,7 +129,7 @@ export const LedgerAccount = ({
                     className='Layer__ledger-account__balance-label'
                     size={TextSize.sm}
                   >
-                    {t('generalLedger.currentBalance', 'Current balance')}
+                    {t('generalLedger:currentBalance', 'Current balance')}
                   </Text>
                   <Text
                     className='Layer__ledger-account__balance-value'
@@ -151,21 +151,21 @@ export const LedgerAccount = ({
                 <>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable?.dateColumnHeader
-                      || t('common.date', 'Date')}
+                      || t('common:date', 'Date')}
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable
-                      ?.journalIdColumnHeader || t('generalLedger.journalId', 'Journal ID #')}
+                      ?.journalIdColumnHeader || t('generalLedger:journalId', 'Journal ID #')}
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader
-                      || t('common.source', 'Source')}
+                      || t('common:source', 'Source')}
                   </th>
                   {nodeType !== LedgerAccountNodeType.Leaf
                     && (
                       <th className='Layer__table-header'>
                         {stringOverrides?.ledgerEntriesTable?.accountColumnHeader
-                          || t('common.account', 'Account')}
+                          || t('common:account', 'Account')}
                       </th>
                     )}
                 </>
@@ -174,15 +174,15 @@ export const LedgerAccount = ({
                 <>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable?.debitColumnHeader
-                      || t('common.debit', 'Debit')}
+                      || t('common:debit', 'Debit')}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable?.creditColumnHeader
-                      || t('common.credit', 'Credit')}
+                      || t('common:credit', 'Credit')}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable
-                      ?.runningBalanceColumnHeader || t('generalLedger.runningBalance', 'Running balance')}
+                      ?.runningBalanceColumnHeader || t('generalLedger:runningBalance', 'Running balance')}
                   </th>
                 </>
               )}
@@ -217,8 +217,8 @@ export const LedgerAccount = ({
             <div className='Layer__table-state-container Layer__border-top'>
               <DataState
                 status={DataStateStatus.failed}
-                title={t('common.somethingWentWrong', 'Something went wrong')}
-                description={t('common.weCouldntLoadYourData', 'We couldn’t load your data.')}
+                title={t('common:somethingWentWrong', 'Something went wrong')}
+                description={t('common:weCouldntLoadYourData', 'We couldn’t load your data.')}
                 onRefresh={() => { void refetch() }}
                 isLoading={isValidating || isLoading}
               />
@@ -239,8 +239,8 @@ export const LedgerAccount = ({
             <div className='Layer__table-state-container Layer__border-top'>
               <DataState
                 status={DataStateStatus.info}
-                title={t('generalLedger.noLedgerActivity', 'No ledger activity')}
-                description={t('generalLedger.thereAreNoLedgerEntriesInThisAccount', 'There are no ledger entries in this account.')}
+                title={t('generalLedger:noLedgerActivity', 'No ledger activity')}
+                description={t('generalLedger:thereAreNoLedgerEntriesInThisAccount', 'There are no ledger entries in this account.')}
               />
             </div>
           )

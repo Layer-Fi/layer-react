@@ -18,27 +18,27 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
   } = data
 
   return (
-    <Table className='Layer__TaxTable' aria-label={t('taxEstimates.stateTax', 'State Tax')}>
+    <Table className='Layer__TaxTable' aria-label={t('taxEstimates:stateTax', 'State Tax')}>
       <TableHeader className='Layer__TaxTable__Header'>
         <Row>
-          <Column isRowHeader>{t('common.description', 'Description')}</Column>
-          <Column>{t('common.amount', 'Amount')}</Column>
+          <Column isRowHeader>{t('common:description', 'Description')}</Column>
+          <Column>{t('common:amount', 'Amount')}</Column>
         </Row>
       </TableHeader>
       <TableBody>
-        <TaxTableRow label={t('taxEstimates.stateAdjustedGrossIncome', 'State Adjusted Gross Income')} value={stateIncomeTax.stateAgi} variant={TaxTableRowVariant.Standard} />
-        <TaxTableRow label={t('taxEstimates.stateDeductions', 'State Deductions')} sign='-' value={stateIncomeTax.stateDeductions} variant={TaxTableRowVariant.Nested} />
-        <TaxTableRow label={t('taxEstimates.stateTaxableIncome', 'State Taxable Income')} value={stateIncomeTax.stateTaxableIncome} variant={TaxTableRowVariant.Standard} />
-        <TaxTableRow label={t('taxEstimates.stateTaxRate', 'State Tax Rate')} sign='×' value={stateIncomeTax.effectiveStateTaxRate} variant={TaxTableRowVariant.Nested} />
-        <TaxTableRow label={t('taxEstimates.stateIncomeTaxEstimateOwed', 'State Income Tax Estimate (Owed)')} value={stateIncomeTax.stateIncomeTaxOwed} variant={TaxTableRowVariant.SectionTotal} />
+        <TaxTableRow label={t('taxEstimates:stateAdjustedGrossIncome', 'State Adjusted Gross Income')} value={stateIncomeTax.stateAgi} variant={TaxTableRowVariant.Standard} />
+        <TaxTableRow label={t('taxEstimates:stateDeductions', 'State Deductions')} sign='-' value={stateIncomeTax.stateDeductions} variant={TaxTableRowVariant.Nested} />
+        <TaxTableRow label={t('taxEstimates:stateTaxableIncome', 'State Taxable Income')} value={stateIncomeTax.stateTaxableIncome} variant={TaxTableRowVariant.Standard} />
+        <TaxTableRow label={t('taxEstimates:stateTaxRate', 'State Tax Rate')} sign='×' value={stateIncomeTax.effectiveStateTaxRate} variant={TaxTableRowVariant.Nested} />
+        <TaxTableRow label={t('taxEstimates:stateIncomeTaxEstimateOwed', 'State Income Tax Estimate (Owed)')} value={stateIncomeTax.stateIncomeTaxOwed} variant={TaxTableRowVariant.SectionTotal} />
         {additionalTaxes.length > 0 && (
           <>
             <TaxTableRow label='' value='' variant={TaxTableRowVariant.Empty} />
             {additionalTaxes.map((additionalTax, index) => (
               <React.Fragment key={additionalTax.taxName}>
-                <TaxTableRow label={t('taxEstimates.taxableAmountForTaxName', 'Taxable Amount for {{taxName}}', { taxName: additionalTax.taxName })} value={additionalTax.taxableAmount} variant={TaxTableRowVariant.Standard} />
-                <TaxTableRow label={t('taxEstimates.taxNameRate', '{{taxName}} Rate', { taxName: additionalTax.taxName })} sign='×' value={additionalTax.taxRate} variant={TaxTableRowVariant.Nested} />
-                <TaxTableRow label={t('taxEstimates.taxNameEstimateOwed', '{{taxName}} Estimate (Owed)', { taxName: additionalTax.taxName })} value={additionalTax.taxOwed} variant={TaxTableRowVariant.SectionTotal} />
+                <TaxTableRow label={t('taxEstimates:taxableAmountForTaxName', 'Taxable Amount for {{taxName}}', { taxName: additionalTax.taxName })} value={additionalTax.taxableAmount} variant={TaxTableRowVariant.Standard} />
+                <TaxTableRow label={t('taxEstimates:taxNameRate', '{{taxName}} Rate', { taxName: additionalTax.taxName })} sign='×' value={additionalTax.taxRate} variant={TaxTableRowVariant.Nested} />
+                <TaxTableRow label={t('taxEstimates:taxNameEstimateOwed', '{{taxName}} Estimate (Owed)', { taxName: additionalTax.taxName })} value={additionalTax.taxOwed} variant={TaxTableRowVariant.SectionTotal} />
                 {index < additionalTaxes.length - 1 && (
                   <TaxTableRow label='' value='' variant={TaxTableRowVariant.Empty} />
                 )}
@@ -47,12 +47,12 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
           </>
         )}
         <TaxTableRow label='' value='' variant={TaxTableRowVariant.Empty} />
-        <TaxTableRow label={t('taxEstimates.stateIncomeTaxEstimateOwed', 'State Income Tax Estimate (Owed)')} value={totalStateTax.stateIncomeTaxOwed} variant={TaxTableRowVariant.Standard} />
+        <TaxTableRow label={t('taxEstimates:stateIncomeTaxEstimateOwed', 'State Income Tax Estimate (Owed)')} value={totalStateTax.stateIncomeTaxOwed} variant={TaxTableRowVariant.Standard} />
         {additionalTaxes.length > 0 && (
-          <TaxTableRow label={t('taxEstimates.additionalStateTaxesEstimateOwed', 'Additional State Taxes Estimate (Owed)')} sign='+' value={totalStateTax.additionalTaxesOwed} variant={TaxTableRowVariant.Nested} />
+          <TaxTableRow label={t('taxEstimates:additionalStateTaxesEstimateOwed', 'Additional State Taxes Estimate (Owed)')} sign='+' value={totalStateTax.additionalTaxesOwed} variant={TaxTableRowVariant.Nested} />
         )}
-        <TaxTableRow label={t('taxEstimates.amountAppliedFromStateWithholding', 'Amount Applied from State Withholding')} sign='-' value={totalStateTax.stateWithholdings} variant={TaxTableRowVariant.Nested} />
-        <TaxTableRow label={t('taxEstimates.totalStateTaxEstimate', 'Total State Tax Estimate')} value={totalStateTax.totalStateTaxOwed} variant={TaxTableRowVariant.Total} />
+        <TaxTableRow label={t('taxEstimates:amountAppliedFromStateWithholding', 'Amount Applied from State Withholding')} sign='-' value={totalStateTax.stateWithholdings} variant={TaxTableRowVariant.Nested} />
+        <TaxTableRow label={t('taxEstimates:totalStateTaxEstimate', 'Total State Tax Estimate')} value={totalStateTax.totalStateTaxOwed} variant={TaxTableRowVariant.Total} />
       </TableBody>
     </Table>
   )

@@ -37,22 +37,26 @@ export const getKeyName = (key: unknown): string | undefined => {
 
 export const resolveNamespacedKeyInfo = ({
   key,
-   ns,
-   fallbackNs,
- }: {
-   key: string
-   ns?: string
-   fallbackNs?: string
- }): NamespacedKeyInfo => {
-   if (ns) return { key, ns }
-   
-   if (key.includes('.')) {
-     const [nsValue, keyValue] = key.split('.')
-     return { key: keyValue, ns: nsValue }
-   }
- 
-   return { key, ns: fallbackNs }
- }
+  ns,
+  fallbackNs,
+}: {
+  key: string
+  ns?: string
+  fallbackNs?: string
+}): NamespacedKeyInfo => {
+  if (ns) return { key, ns }
+
+  const separatorIndex = key.indexOf(':')
+  const hasInlineNamespace = separatorIndex > 0 && separatorIndex < key.length - 1
+  if (hasInlineNamespace) {
+    return {
+      ns: key.slice(0, separatorIndex),
+      key: key.slice(separatorIndex + 1),
+    }
+  }
+
+  return { key, ns: fallbackNs }
+}
 
 export const getObjectProperties = (expression: unknown): unknown[] => {
   if (!expression || typeof expression !== 'object' || (expression as { type?: string }).type !== 'ObjectExpression') {

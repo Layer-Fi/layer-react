@@ -126,7 +126,7 @@ function LinkedAccountsOpeningBalanceModalContent({
       <ModalTitleWithClose
         heading={(
           <ModalHeading size='sm'>
-            {stringOverrides?.title ?? t('linkedAccounts.addOpeningBalance', 'Add opening balance')}
+            {stringOverrides?.title ?? t('linkedAccounts:addOpeningBalance', 'Add opening balance')}
           </ModalHeading>
         )}
         onClose={handleDismiss}
@@ -153,7 +153,7 @@ function LinkedAccountsOpeningBalanceModalContent({
         <ModalActions>
           <VStack gap='md'>
             <Button onPress={() => void trigger()} isPending={isMutating}>
-              {stringOverrides?.buttonText ?? t('common.submit', 'Submit')}
+              {stringOverrides?.buttonText ?? t('common:submit', 'Submit')}
             </Button>
           </VStack>
         </ModalActions>

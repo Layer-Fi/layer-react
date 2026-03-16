@@ -95,7 +95,7 @@ export function VehicleSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {t('vehicles.noMatchingVehicle', 'No matching vehicle')}
+        {t('vehicles:noMatchingVehicle', 'No matching vehicle')}
       </P>
     ),
     [t],
@@ -107,21 +107,21 @@ export function VehicleSelector({
         size='xs'
         status='error'
       >
-        {t('vehicles.anErrorOccurredWhileLoadingVehicles', 'An error occurred while loading vehicles.')}
+        {t('vehicles:anErrorOccurredWhileLoadingVehicles', 'An error occurred while loading vehicles.')}
       </P>
     ),
     [t],
   )
 
   const inputId = useId()
-  const additionalAriaProps = !showLabel && { 'aria-label': t('vehicles.vehicle', 'Vehicle') }
+  const additionalAriaProps = !showLabel && { 'aria-label': t('vehicles:vehicle', 'Vehicle') }
 
   const isLoadingWithoutFallback = isLoading && !data
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   return (
     <VStack className={combinedClassName}>
-      {showLabel && <Label htmlFor={inputId} size='sm'>{t('vehicles.vehicle', 'Vehicle')}</Label>}
+      {showLabel && <Label htmlFor={inputId} size='sm'>{t('vehicles:vehicle', 'Vehicle')}</Label>}
       <ComboBox
         selectedValue={selectedVehicleForComboBox}
         onSelectedValueChange={onSelectedValueChange}

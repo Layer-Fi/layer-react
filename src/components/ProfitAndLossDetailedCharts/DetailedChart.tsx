@@ -52,7 +52,7 @@ export const DetailedChart = ({
 
   const text = hoveredItem
     ? hoveredItem.displayName
-    : t('common.total', 'Total')
+    : t('common:total', 'Total')
 
   const value = hoveredItem
     ? filteredData.find(

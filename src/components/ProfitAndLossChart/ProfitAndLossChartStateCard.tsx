@@ -12,12 +12,12 @@ export const ProfitAndLossChartStateCard = () => {
         <BarChart2Icon />
       </IconBox>
       <div className='Layer__profit-and-loss-chart__state-card__text'>
-        <Text weight={TextWeight.bold}>{t('linkedAccounts.dataIsSyncing', 'Data is syncing')}</Text>
+        <Text weight={TextWeight.bold}>{t('linkedAccounts:dataIsSyncing', 'Data is syncing')}</Text>
         <Text
           size={TextSize.sm}
           className='Layer__profit-and-loss-chart__state-card__description'
         >
-          {t('linkedAccounts.thisMayTakeUpToFewMinutes', 'This may take up to few minutes')}
+          {t('linkedAccounts:thisMayTakeUpToFewMinutes', 'This may take up to few minutes')}
         </Text>
       </div>
     </div>

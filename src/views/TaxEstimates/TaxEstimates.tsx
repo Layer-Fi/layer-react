@@ -62,8 +62,8 @@ const TaxEstimatesViewContent = () => {
           <Container name='tax-estimates'>
             <DataState
               status={DataStateStatus.failed}
-              title={t('taxEstimates.unableToLoadTaxInformation', 'Unable to load tax information')}
-              description={t('taxEstimates.weCouldntRetrieveYourTaxProfilePleaseCheckYourConnectionAndTryAgain', 'We couldn’t retrieve your tax profile. Please check your connection and try again.')}
+              title={t('taxEstimates:unableToLoadTaxInformation', 'Unable to load tax information')}
+              description={t('taxEstimates:weCouldntRetrieveYourTaxProfilePleaseCheckYourConnectionAndTryAgain', 'We couldn’t retrieve your tax profile. Please check your connection and try again.')}
               spacing
             />
           </Container>
@@ -116,14 +116,14 @@ const TaxEstimatesViewHeader = () => {
         maxDate={maxDateZdt}
       />
       <DropdownMenu
-        ariaLabel={t('taxEstimates.additionalActions', 'Additional actions')}
+        ariaLabel={t('taxEstimates:additionalActions', 'Additional actions')}
         slots={{ Trigger }}
         slotProps={{ Dialog: { width: 160 } }}
       >
         <MenuList>
           <MenuItem key={TaxEstimatesRoute.Profile} onClick={() => navigate(TaxEstimatesRoute.Profile)}>
             <UserRoundPen size={20} strokeWidth={1.25} />
-            <Span size='sm'>{t('taxEstimates.updateTaxProfile', 'Update tax profile')}</Span>
+            <Span size='sm'>{t('taxEstimates:updateTaxProfile', 'Update tax profile')}</Span>
           </MenuItem>
         </MenuList>
       </DropdownMenu>
@@ -132,8 +132,8 @@ const TaxEstimatesViewHeader = () => {
 }
 
 const TAX_ESTIMATES_TAB_CONFIG = [
-  { value: TaxEstimatesRoute.Estimates, ...translationKey('taxEstimates.estimates', 'Estimates') },
-  { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates.payments', 'Payments') },
+  { value: TaxEstimatesRoute.Estimates, ...translationKey('taxEstimates:estimates', 'Estimates') },
+  { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates:payments', 'Payments') },
 ]
 
 const TaxEstimatesOnboardedViewContent = () => {
@@ -160,7 +160,7 @@ const TaxEstimatesOnboardedViewContent = () => {
   return (
     <>
       <Toggle
-        ariaLabel={t('taxEstimates.taxEstimateView', 'Tax estimate view')}
+        ariaLabel={t('taxEstimates:taxEstimateView', 'Tax estimate view')}
         options={tabOptions}
         selectedKey={route}
         onSelectionChange={handleTabChange}

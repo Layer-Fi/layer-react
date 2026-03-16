@@ -31,7 +31,7 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
   const { isMobile, isTablet } = useSizeClass()
   const [isEditMode, setIsEditMode] = useState(false)
   const isReadOnly = !isEditMode && !!trip && (isMobile || isTablet)
-  const title = trip ? t('trips.tripDetails', 'Trip details') : t('trips.recordTrip', 'Record trip')
+  const title = trip ? t('trips:tripDetails', 'Trip details') : t('trips:recordTrip', 'Record trip')
 
   const handleOpenChange = useCallback((nextIsOpen: boolean) => {
     if (!nextIsOpen) {
@@ -70,11 +70,11 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
                 <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
                   <Button variant='outlined' onPress={() => onDeleteTrip(trip)}>
                     <Trash2 size={16} />
-                    {t('trips.deleteTrip', 'Delete Trip')}
+                    {t('trips:deleteTrip', 'Delete Trip')}
                   </Button>
                   <Button onPress={() => setIsEditMode(true)}>
                     <Edit size={16} />
-                    {t('trips.editTrip', 'Edit Trip')}
+                    {t('trips:editTrip', 'Edit Trip')}
                   </Button>
                 </HStack>
               )}

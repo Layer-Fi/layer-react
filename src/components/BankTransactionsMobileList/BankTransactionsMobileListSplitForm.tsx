@@ -74,8 +74,8 @@ export const BankTransactionsMobileListSplitForm = ({
     : []
 
   const addSplitButtonText = effectiveSplits.length > 1
-    ? t('bankTransactions.addNewSplit', 'Add new split')
-    : t('bankTransactions.split', 'Split')
+    ? t('bankTransactions:addNewSplit', 'Add new split')
+    : t('bankTransactions:split', 'Split')
 
   useEffect(() => {
     if (isErrorCategorizing) {
@@ -104,7 +104,7 @@ export const BankTransactionsMobileListSplitForm = ({
         && (
           <VStack gap='sm'>
             <Text weight={TextWeight.bold} size={TextSize.sm}>
-              {t('bankTransactions.splitTransaction', 'Split transaction')}
+              {t('bankTransactions:splitTransaction', 'Split transaction')}
             </Text>
             <VStack gap='sm'>
               {localSplits.map((split, index) => (
@@ -172,7 +172,7 @@ export const BankTransactionsMobileListSplitForm = ({
             ref={receiptsRef}
             floatingActions={false}
             hideUploadButtons={true}
-            label={t('bankTransactions.receipts', 'Receipts')}
+            label={t('bankTransactions:receipts', 'Receipts')}
           />
         )}
       </div>
@@ -180,7 +180,7 @@ export const BankTransactionsMobileListSplitForm = ({
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-            text={t('bankTransactions.uploadReceipt', 'Upload receipt')}
+            text={t('bankTransactions:uploadReceipt', 'Upload receipt')}
             iconOnly={true}
             icon={<PaperclipIcon />}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -194,18 +194,18 @@ export const BankTransactionsMobileListSplitForm = ({
           >
             {isCategorizing
               ? (isCategorized(bankTransaction)
-                ? t('common.updating', 'Updating...')
-                : t('common.confirming', 'Confirming...'))
+                ? t('common:updating', 'Updating...')
+                : t('common:confirming', 'Confirming...'))
               : (isCategorized(bankTransaction)
-                ? t('common.update', 'Update')
-                : t('common.confirm', 'Confirm'))}
+                ? t('common:update', 'Update')
+                : t('common:confirm', 'Confirm'))}
           </Button>
         )}
       </HStack>
       {(isErrorCategorizing && showRetry)
         && (
           <ErrorText>
-            {t('bankTransactions.approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
+            {t('bankTransactions:approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
           </ErrorText>
         )}
     </VStack>

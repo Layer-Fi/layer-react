@@ -20,7 +20,7 @@ function getButtonLabel(
   t: TFunction,
 ) {
   if (confirmedCount === totalCount) {
-    return tPlural(t, 'linkedAccounts.confirmAllAccounts', {
+    return tPlural(t, 'linkedAccounts:confirmAllAccounts', {
       count: totalCount,
       one: 'Confirm Account',
       other: 'Confirm All Accounts',
@@ -28,14 +28,14 @@ function getButtonLabel(
   }
 
   if (confirmedCount === 0) {
-    return tPlural(t, 'linkedAccounts.excludeAllAccounts', {
+    return tPlural(t, 'linkedAccounts:excludeAllAccounts', {
       count: totalCount,
       one: 'Exclude Account',
       other: 'Exclude All Accounts',
     })
   }
 
-  return tPlural(t, 'linkedAccounts.confirmSelectedAccounts', {
+  return tPlural(t, 'linkedAccounts:confirmSelectedAccounts', {
     count: confirmedCount,
     one: 'Confirm {{count}} Selected Account',
     other: 'Confirm {{count}} Selected Accounts',
@@ -52,7 +52,7 @@ function getFormComponentLabels(
   const confirmedCount = values.filter(Boolean).length
 
   const buttonLabel = getButtonLabel({ totalCount, confirmedCount }, t)
-  const descriptionLabel = tPlural(t, 'linkedAccounts.selectTheAccountsYouUseForYourBusiness', {
+  const descriptionLabel = tPlural(t, 'linkedAccounts:selectTheAccountsYouUseForYourBusiness', {
     count: totalCount,
     one: 'Is this account relevant to your business?',
     other: 'Select the accounts you use for your business.',
@@ -114,7 +114,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
       <ModalTitleWithClose
         heading={(
           <ModalHeading size='md'>
-            {t('linkedAccounts.loadingYourAccounts', 'Loading Your Accounts...')}
+            {t('linkedAccounts:loadingYourAccounts', 'Loading Your Accounts...')}
           </ModalHeading>
         )}
         onClose={onClose}
@@ -123,7 +123,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
         <VStack slot='center' align='center' gap='md'>
           <LoadingSpinner size={48} />
           <P align='center'>
-            {t('linkedAccounts.thisMayTakeAFewMinutes', 'This may take a few minutes.')}
+            {t('linkedAccounts:thisMayTakeAFewMinutes', 'This may take a few minutes.')}
           </P>
         </VStack>
       </ModalContent>
@@ -158,7 +158,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
       <ModalTitleWithClose
         heading={(
           <ModalHeading pbe='2xs' size='md'>
-            {t('linkedAccounts.confirmBusinessAccounts', 'Confirm Business Accounts')}
+            {t('linkedAccounts:confirmBusinessAccounts', 'Confirm Business Accounts')}
           </ModalHeading>
         )}
         onClose={onClose}
@@ -172,7 +172,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
           Empty={(
             <VStack slot='center'>
               <P align='center'>
-                {t('linkedAccounts.thereAreNoAccountsToConfirmYouMayCloseThisModal', 'There are no accounts to confirm. You may close this modal.')}
+                {t('linkedAccounts:thereAreNoAccountsToConfirmYouMayCloseThisModal', 'There are no accounts to confirm. You may close this modal.')}
               </P>
             </VStack>
           )}
@@ -199,13 +199,13 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
             ? (
               <>
                 <P size='sm'>
-                  {t('linkedAccounts.errorOccurredWhileConfirmingAccountsRetryLater', 'An error occurred while confirming accounts. You will have an opportunity to try again later.')}
+                  {t('linkedAccounts:errorOccurredWhileConfirmingAccountsRetryLater', 'An error occurred while confirming accounts. You will have an opportunity to try again later.')}
                 </P>
                 <P size='sm'>
-                  {t('linkedAccounts.noDataWillBeSyncedUntilYouConfirm', 'No data will be synced until you confirm.')}
+                  {t('linkedAccounts:noDataWillBeSyncedUntilYouConfirm', 'No data will be synced until you confirm.')}
                 </P>
                 <Button onPress={onClose}>
-                  {t('common.close', 'Close')}
+                  {t('common:close', 'Close')}
                 </Button>
               </>
             )

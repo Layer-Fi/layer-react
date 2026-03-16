@@ -164,7 +164,7 @@ export const ProfitAndLossTableComponent = ({
               lineItem: {
                 name: 'gross_profit',
                 value: data.grossProfit,
-                displayName: stringOverrides?.grossProfitLabel || t('common.grossProfit', 'Gross Profit'),
+                displayName: stringOverrides?.grossProfitLabel || t('common:grossProfit', 'Gross Profit'),
                 lineItems: [],
               },
               depth: 0,
@@ -183,7 +183,7 @@ export const ProfitAndLossTableComponent = ({
                 name: 'profit_before_taxes',
                 value: data.profitBeforeTaxes,
                 displayName:
-                  stringOverrides?.profitBeforeTaxesLabel || t('reports.profitBeforeTaxes', 'Profit Before Taxes'),
+                  stringOverrides?.profitBeforeTaxesLabel || t('reports:profitBeforeTaxes', 'Profit Before Taxes'),
                 lineItems: [],
               },
               depth: 0,
@@ -201,7 +201,7 @@ export const ProfitAndLossTableComponent = ({
               lineItem: {
                 name: 'net_profit',
                 value: data.netProfit,
-                displayName: stringOverrides?.netProfitLabel || t('common.netProfit', 'Net Profit'),
+                displayName: stringOverrides?.netProfitLabel || t('common:netProfit', 'Net Profit'),
                 lineItems: [],
               },
               depth: 0,

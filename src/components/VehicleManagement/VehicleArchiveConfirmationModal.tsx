@@ -31,11 +31,11 @@ export function VehicleArchiveConfirmationModal({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('vehicles.archiveThisVehicle', 'Archive this vehicle?')}
-      description={t('vehicles.vehiclenameWillBeHiddenFromYourActiveVehiclesListYouCanReactivateItAtAnyTime', '{{vehicleName}} will be hidden from your active vehicles list. You can reactivate it at any time.', { vehicleName })}
+      title={t('vehicles:archiveThisVehicle', 'Archive this vehicle?')}
+      description={t('vehicles:vehiclenameWillBeHiddenFromYourActiveVehiclesListYouCanReactivateItAtAnyTime', '{{vehicleName}} will be hidden from your active vehicles list. You can reactivate it at any time.', { vehicleName })}
       onConfirm={onConfirm}
-      confirmLabel={t('vehicles.archiveVehicle', 'Archive vehicle')}
-      errorText={t('vehicles.failedToArchiveVehicleTryAgain', 'Failed to archive vehicle. Please check your connection and try again.')}
+      confirmLabel={t('vehicles:archiveVehicle', 'Archive vehicle')}
+      errorText={t('vehicles:failedToArchiveVehicleTryAgain', 'Failed to archive vehicle. Please check your connection and try again.')}
       useDrawer={useDrawer}
     />
   )
