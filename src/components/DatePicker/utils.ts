@@ -8,8 +8,8 @@ export const getIsDateInvalid = (
   { minDate, maxDate }: { minDate?: ZonedDateTime | null, maxDate?: ZonedDateTime | null },
   t: TFunction,
 ) => {
-  if (date === null) return t('cannotSelectEmptyDate', 'Cannot select empty date')
-  if (minDate && date.compare(minDate) < 0) return t('cannotSelectDateBeforeMinDate', 'Cannot select date before {{minDate}}', { minDate: formatDate(minDate.toDate()) })
-  if (maxDate && date.compare(maxDate) > 0) return t('cannotSelectDateInTheFuture', 'Cannot select date in the future')
+  if (date === null) return t('date.cannotSelectEmptyDate', 'Cannot select empty date')
+  if (minDate && date.compare(minDate) < 0) return t('date.cannotSelectDateBeforeMinDate', 'Cannot select date before {{minDate}}', { minDate: formatDate(minDate.toDate()) })
+  if (maxDate && date.compare(maxDate) > 0) return t('date.cannotSelectDateInTheFuture', 'Cannot select date in the future')
   return null
 }

@@ -71,7 +71,7 @@ export const VehicleForm = (props: VehicleFormProps) => {
         {field => (
           <field.FormNumberField
             maxValue={9999}
-            label={t('common.year', 'Year')}
+            label={t('date.year', 'Year')}
             inline
             isReadOnly={isReadOnly}
             placeholder={t('vehicles.enterVehicleYear', 'Enter vehicle year')}

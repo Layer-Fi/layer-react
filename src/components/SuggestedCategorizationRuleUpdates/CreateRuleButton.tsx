@@ -24,7 +24,7 @@ export const CreateRuleButton = ({ newRule: ruleSuggestion, slotProps }: CreateR
       await createCategorizationRule(encodedRule).then(() => {
         void next()
       }).catch(() => {
-        addToast({ content: t('failedToCreateCategorizationRule', 'Failed to create categorization rule'), type: 'error' })
+        addToast({ content: t('categorizationRules.failedToCreateCategorizationRule', 'Failed to create categorization rule'), type: 'error' })
       })
     })()
   }, [addToast, createCategorizationRule, next, ruleSuggestion, t])

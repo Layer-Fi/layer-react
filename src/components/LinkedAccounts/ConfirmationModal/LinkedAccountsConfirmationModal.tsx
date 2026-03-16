@@ -20,7 +20,7 @@ function getButtonLabel(
   t: TFunction,
 ) {
   if (confirmedCount === totalCount) {
-    return tPlural(t, 'confirmAllAccounts', {
+    return tPlural(t, 'linkedAccounts.confirmAllAccounts', {
       count: totalCount,
       one: 'Confirm Account',
       other: 'Confirm All Accounts',
@@ -28,14 +28,14 @@ function getButtonLabel(
   }
 
   if (confirmedCount === 0) {
-    return tPlural(t, 'excludeAllAccounts', {
+    return tPlural(t, 'linkedAccounts.excludeAllAccounts', {
       count: totalCount,
       one: 'Exclude Account',
       other: 'Exclude All Accounts',
     })
   }
 
-  return tPlural(t, 'confirmSelectedAccounts', {
+  return tPlural(t, 'linkedAccounts.confirmSelectedAccounts', {
     count: confirmedCount,
     one: 'Confirm {{count}} Selected Account',
     other: 'Confirm {{count}} Selected Accounts',
@@ -52,7 +52,7 @@ function getFormComponentLabels(
   const confirmedCount = values.filter(Boolean).length
 
   const buttonLabel = getButtonLabel({ totalCount, confirmedCount }, t)
-  const descriptionLabel = tPlural(t, 'selectTheAccountsYouUseForYourBusiness', {
+  const descriptionLabel = tPlural(t, 'linkedAccounts.selectTheAccountsYouUseForYourBusiness', {
     count: totalCount,
     one: 'Is this account relevant to your business?',
     other: 'Select the accounts you use for your business.',

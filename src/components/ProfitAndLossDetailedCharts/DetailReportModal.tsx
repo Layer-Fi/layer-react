@@ -33,7 +33,7 @@ export function DetailReportModal({
       isOpen={isOpen}
       size='2xl'
       onOpenChange={onOpenChange}
-      aria-label={t('profitAndLossDetailReport', 'Profit and Loss Detail Report')}
+      aria-label={t('reports.profitAndLossDetailReport', 'Profit and Loss Detail Report')}
       variant={shouldUseMobileDrawer ? 'mobile-drawer' : 'drawer'}
     >
       <div className={shouldUseMobileDrawer ? 'Layer__ProfitAndLossReport__Modal--mobile' : 'Layer__ProfitAndLossReport__Modal--drawer'}>

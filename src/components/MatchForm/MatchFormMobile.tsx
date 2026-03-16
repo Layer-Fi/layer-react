@@ -32,7 +32,7 @@ export const MatchFormMobile = ({
 
   return (
     <GridList
-      aria-label={t('selectAMatch', 'Select a match')}
+      aria-label={t('bankTransactions.selectAMatch', 'Select a match')}
       selectionMode='single'
       selectedKeys={selectedMatchId ? new Set([selectedMatchId]) : new Set()}
       onSelectionChange={(keys) => {

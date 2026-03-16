@@ -30,7 +30,7 @@ export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTran
         className='Layer__upload-transactions__confirmation-step__data-state'
         status={DataStateStatus.success}
         title={t('upload.transactionsUploadedSuccessfully', 'Transactions uploaded successfully')}
-        description={tPlural(t, 'countTransactionsHaveBeenUploadedToYourAccount', {
+        description={tPlural(t, 'upload.countTransactionsHaveBeenUploadedToYourAccount', {
           count: uploadedTransactionsCount,
           one: '{{count}} transaction has been uploaded to your account.',
           other: '{{count}} transactions have been uploaded to your account.',

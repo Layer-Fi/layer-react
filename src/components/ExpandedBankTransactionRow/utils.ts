@@ -20,9 +20,9 @@ export enum ValidateSplitError {
 const getValidateSplitErrorMessage = (splitError: ValidateSplitError, t: TFunction): string => {
   switch (splitError) {
     case ValidateSplitError.AmountsMustBeGreaterThanZero:
-      return t('allSplitsMustHaveAnAmountGreaterThanZero', 'All splits must have an amount greater than $0.00')
+      return t('bankTransactions.allSplitsMustHaveAnAmountGreaterThanZero', 'All splits must have an amount greater than $0.00')
     case ValidateSplitError.CategoryIsRequired:
-      return t('allSplitsMustHaveACategory', 'All splits must have a category')
+      return t('bankTransactions.allSplitsMustHaveACategory', 'All splits must have a category')
   }
 }
 

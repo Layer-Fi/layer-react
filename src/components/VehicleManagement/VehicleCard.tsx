@@ -26,7 +26,7 @@ interface VehicleCardProps {
 
 const VEHICLE_CARD_FIELDS_CONFIG = [
   { fieldKey: 'makeAndModel' as const, ...translationKey('vehicles.makeAndModel', 'Make and model') },
-  { fieldKey: 'year' as const, ...translationKey('common.year', 'Year') },
+  { fieldKey: 'year' as const, ...translationKey('date.year', 'Year') },
   { fieldKey: 'licensePlate' as const, ...translationKey('vehicles.licensePlate', 'License plate') },
   { fieldKey: 'vin' as const, ...translationKey('vehicles.vin', 'VIN') },
   { fieldKey: 'description' as const, ...translationKey('common.description', 'Description') },

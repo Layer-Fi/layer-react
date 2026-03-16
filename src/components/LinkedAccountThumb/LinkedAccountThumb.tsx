@@ -96,9 +96,9 @@ export const LinkedAccountThumb = ({
         ? (
           <div className='loadingbar'>
             <div className='loading-text Layer__text--sm'>
-              <div>{t('syncingAccountData', 'Syncing account data')}</div>
+              <div>{t('linkedAccounts.syncingAccountData', 'Syncing account data')}</div>
               <div className='syncing-data-description'>
-                {t('thisMayTakeUpTo5Minutes', 'This may take up to 5 minutes')}
+                {t('linkedAccounts.thisMayTakeUpTo5Minutes', 'This may take up to 5 minutes')}
               </div>
             </div>
             <div className='loading-wrapper'>
@@ -118,7 +118,7 @@ export const LinkedAccountThumb = ({
                   )}
                   size={'sm' as TextSize}
                 >
-                  {t('bankBalance', 'Bank balance')}
+                  {t('linkedAccounts.bankBalance', 'Bank balance')}
                 </Text>
                 {bankBalance}
               </div>
@@ -135,7 +135,7 @@ export const LinkedAccountThumb = ({
                       className='account-balance-text'
                       size={'sm' as TextSize}
                     >
-                      {t('ledgerBalance', 'Ledger balance')}
+                      {t('generalLedger.ledgerBalance', 'Ledger balance')}
                     </Text>
                   )}
                 <Text as='span' className='account-balance'>

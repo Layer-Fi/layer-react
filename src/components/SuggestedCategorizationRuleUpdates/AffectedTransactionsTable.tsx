@@ -35,8 +35,8 @@ const ErrorState = () => {
     <DataState
       spacing
       status={DataStateStatus.failed}
-      title={t('errorLoadingTransactions', 'Error loading transactions')}
-      description={t('thereWasAnErrorLoadingTheAffectedTransactions', 'There was an error loading the affected transactions')}
+      title={t('categorizationRules.errorLoadingTransactions', 'Error loading transactions')}
+      description={t('categorizationRules.thereWasAnErrorLoadingTheAffectedTransactions', 'There was an error loading the affected transactions')}
     />
   )
 }
@@ -47,8 +47,8 @@ const EmptyState = () => {
     <DataState
       spacing
       status={DataStateStatus.info}
-      title={t('noTransactionsFound', 'No transactions found')}
-      description={t('thereAreNoAffectedTransactionsToDisplay', 'There are no affected transactions to display')}
+      title={t('bankTransactions.noTransactionsFound', 'No transactions found')}
+      description={t('bankTransactions.thereAreNoAffectedTransactionsToDisplay', 'There are no affected transactions to display')}
     />
   )
 }
@@ -64,7 +64,7 @@ export const AffectedTransactionsTable = ({
   const columnConfig: NestedColumnConfig<MinimalBankTransaction> = useMemo(() => [
     {
       id: TransactionColumns.Date,
-      header: t('Date', 'Date'),
+      header: t('common.date', 'Date'),
       cell: (row: AffectedTransactionRowType) => (
         <DateTime
           valueAsDate={row.original.date}
@@ -77,7 +77,7 @@ export const AffectedTransactionsTable = ({
     },
     {
       id: TransactionColumns.Description,
-      header: t('description', 'Description'),
+      header: t('ui.description', 'Description'),
       cell: (row: AffectedTransactionRowType) => (
         <Span withTooltip>
           {row.original.counterpartyName || row.original.description || '-'}
@@ -87,7 +87,7 @@ export const AffectedTransactionsTable = ({
     },
     {
       id: TransactionColumns.Amount,
-      header: t('amount', 'Amount'),
+      header: t('ui.amount', 'Amount'),
       cell: (row: AffectedTransactionRowType) => {
         const amount = row.original.direction === BankTransactionDirection.Credit ? row.original.amount : -row.original.amount
         return <MoneySpan amount={amount} />
@@ -99,7 +99,7 @@ export const AffectedTransactionsTable = ({
     <VStack className='Layer__AffectedTransactionsTable'>
       <VirtualizedDataTable<MinimalBankTransaction>
         componentName={COMPONENT_NAME}
-        ariaLabel={t('affectedTransactions', 'Affected transactions')}
+        ariaLabel={t('bankTransactions.affectedTransactions', 'Affected transactions')}
         columnConfig={columnConfig}
         data={transactions}
         isLoading={isLoading}

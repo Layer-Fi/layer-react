@@ -46,7 +46,7 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
 
       const journalEntryNumber = journalEntry.entry.entryNumber
       addToast({
-        content: t('journalEntryNumberPosted', 'Journal entry #{{journalEntryNumber}} posted', { journalEntryNumber }),
+        content: t('generalLedger.journalEntryNumberPosted', 'Journal entry #{{journalEntryNumber}} posted', { journalEntryNumber }),
         type: 'success',
       })
 
@@ -55,7 +55,7 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
     }
     catch (e) {
       console.error(e)
-      setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
+      setSubmitError(t('common.somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
     }
   }, [onSuccess, upsertJournalEntry, addToast, t])
 
