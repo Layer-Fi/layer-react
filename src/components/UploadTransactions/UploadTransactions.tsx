@@ -27,9 +27,9 @@ function getTitle(
 ) {
   switch (currentStep) {
     case UploadTransactionsStep.UploadCsv:
-      return t('uploadTransactions', 'Upload transactions')
+      return t('upload.uploadTransactions', 'Upload transactions')
     case UploadTransactionsStep.ValidateCsv:
-      return isValid ? t('reviewTransactions', 'Review transactions') : t('someTransactionsCouldntBeParsed', 'Some transactions couldn’t be parsed')
+      return isValid ? t('upload.reviewTransactions', 'Review transactions') : t('upload.someTransactionsCouldntBeParsed', 'Some transactions couldn’t be parsed')
     case UploadTransactionsStep.Confirmation:
       return ''
   }
@@ -42,12 +42,12 @@ function getDescription(
 ) {
   switch (currentStep) {
     case UploadTransactionsStep.UploadCsv:
-      return t('importAFileOfTransactionsFromYourBankAccountOrCreditCard', 'Import a file of transactions from your bank account or credit card')
+      return t('upload.importAFileOfTransactionsFromYourBankAccountOrCreditCard', 'Import a file of transactions from your bank account or credit card')
     case UploadTransactionsStep.ValidateCsv:
       if (isValid) {
-        return t('allTransactionsWereParsedSuccessfullyClickUploadTransactionsToFinalizeTheImport', 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.')
+        return t('upload.allTransactionsWereParsedSuccessfullyClickUploadTransactionsToFinalizeTheImport', 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.')
       }
-      return t('weFoundFormattingErrorsInSomeTransactionsPleaseCorrectTheHighlightedRowsInYourFileAndReuploadIt', 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.')
+      return t('upload.weFoundFormattingErrorsInSomeTransactionsPleaseCorrectTheHighlightedRowsInYourFileAndReuploadIt', 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.')
     case UploadTransactionsStep.Confirmation:
       return ''
   }

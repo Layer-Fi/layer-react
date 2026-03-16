@@ -50,7 +50,7 @@ export const UsStateComboBox = ({
   return (
     <HStack className={combinedClassName}>
       <Label size='sm' htmlFor={inputId}>
-        {t('usState', 'US state')}
+        {t('usStates.usState', 'US state')}
       </Label>
       <ComboBox<USState>
         options={options}

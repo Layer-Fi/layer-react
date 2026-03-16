@@ -14,7 +14,7 @@ export const unstable_MileageTracking = ({ showTitle = true }: { showTitle?: boo
 
   return (
     <View
-      title={t('mileageTracking', 'Mileage Tracking')}
+      title={t('mileageTracking.mileageTracking', 'Mileage Tracking')}
       showHeader={showTitle}
       header={(
         <Header>

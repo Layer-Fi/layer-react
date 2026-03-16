@@ -71,7 +71,7 @@ export const DropdownMenu = ({ children, ariaLabel, variant, slots, slotProps }:
 
   return (
     <MenuTrigger>
-      <Trigger aria-label={t('menu', 'Menu')} />
+      <Trigger aria-label={t('ui.menu', 'Menu')} />
       <Popover placement='bottom right' className='Layer__UI__DropdownMenu__Popover Layer__variables'>
         <Dialog className='Layer__UI__DropdownMenu__Dialog' aria-label={ariaLabel} style={{ width }} {...dataProps}>
           <DropdownMenuProvider value={{ variant }}>

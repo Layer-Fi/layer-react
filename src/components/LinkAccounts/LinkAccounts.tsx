@@ -41,7 +41,7 @@ function LinkAccountsContent({
       <Wizard
         Header={(
           <Heading>
-            {t('linkYourBankAccountsAndCreditCards', 'Link your bank accounts and credit cards')}
+            {t('linkedAccounts.linkYourBankAccountsAndCreditCards', 'Link your bank accounts and credit cards')}
           </Heading>
         )}
         Footer={null}

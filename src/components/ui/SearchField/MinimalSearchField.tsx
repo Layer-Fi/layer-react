@@ -28,7 +28,7 @@ export function MinimalSearchField({
         slot='input'
         placeholder={placeholder}
       />
-      <Button slot='clear-button' inset icon variant='ghost' aria-label={t('clearSearch', 'Clear search')}>
+      <Button slot='clear-button' inset icon variant='ghost' aria-label={t('ui.clearSearch', 'Clear search')}>
         <X />
       </Button>
     </ReactAriaSearchField>

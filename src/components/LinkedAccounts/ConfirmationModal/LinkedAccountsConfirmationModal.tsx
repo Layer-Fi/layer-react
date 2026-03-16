@@ -114,7 +114,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
       <ModalTitleWithClose
         heading={(
           <ModalHeading size='md'>
-            {t('loadingYourAccounts', 'Loading Your Accounts...')}
+            {t('linkedAccounts.loadingYourAccounts', 'Loading Your Accounts...')}
           </ModalHeading>
         )}
         onClose={onClose}
@@ -123,7 +123,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
         <VStack slot='center' align='center' gap='md'>
           <LoadingSpinner size={48} />
           <P align='center'>
-            {t('thisMayTakeAFewMinutes', 'This may take a few minutes.')}
+            {t('linkedAccounts.thisMayTakeAFewMinutes', 'This may take a few minutes.')}
           </P>
         </VStack>
       </ModalContent>
@@ -158,7 +158,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
       <ModalTitleWithClose
         heading={(
           <ModalHeading pbe='2xs' size='md'>
-            {t('confirmBusinessAccounts', 'Confirm Business Accounts')}
+            {t('linkedAccounts.confirmBusinessAccounts', 'Confirm Business Accounts')}
           </ModalHeading>
         )}
         onClose={onClose}
@@ -172,7 +172,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
           Empty={(
             <VStack slot='center'>
               <P align='center'>
-                {t('thereAreNoAccountsToConfirmYouMayCloseThisModal', 'There are no accounts to confirm. You may close this modal.')}
+                {t('linkedAccounts.thereAreNoAccountsToConfirmYouMayCloseThisModal', 'There are no accounts to confirm. You may close this modal.')}
               </P>
             </VStack>
           )}
@@ -199,13 +199,13 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
             ? (
               <>
                 <P size='sm'>
-                  {t('errorOccurredWhileConfirmingAccountsRetryLater', 'An error occurred while confirming accounts. You will have an opportunity to try again later.')}
+                  {t('linkedAccounts.errorOccurredWhileConfirmingAccountsRetryLater', 'An error occurred while confirming accounts. You will have an opportunity to try again later.')}
                 </P>
                 <P size='sm'>
-                  {t('noDataWillBeSyncedUntilYouConfirm', 'No data will be synced until you confirm.')}
+                  {t('linkedAccounts.noDataWillBeSyncedUntilYouConfirm', 'No data will be synced until you confirm.')}
                 </P>
                 <Button onPress={onClose}>
-                  {t('close', 'Close')}
+                  {t('common.close', 'Close')}
                 </Button>
               </>
             )

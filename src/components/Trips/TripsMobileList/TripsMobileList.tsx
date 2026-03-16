@@ -61,7 +61,7 @@ export const TripsMobileList = ({
     <div className='Layer__TripsMobileList'>
       <TripsMobileHeader onRecordTrip={onRecordTrip} />
       <PaginatedMobileList
-        ariaLabel={t('trips', 'Trips')}
+        ariaLabel={t('trips.trips', 'Trips')}
         data={data}
         isLoading={isLoading}
         isError={isError}

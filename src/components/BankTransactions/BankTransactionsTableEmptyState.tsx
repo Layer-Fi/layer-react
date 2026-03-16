@@ -35,8 +35,8 @@ export const BankTransactionsTableEmptyState = () => {
       <DataStateContainer>
         <DataState
           status={DataStateStatus.info}
-          title={t('noTransactionsFound', 'No transactions found')}
-          description={t('tryAdjustingYourSearchFilters', 'Try adjusting your search filters')}
+          title={t('bankTransactions.noTransactionsFound', 'No transactions found')}
+          description={t('common.tryAdjustingYourSearchFilters', 'Try adjusting your search filters')}
           icon={<SearchX />}
           spacing
         />
@@ -50,13 +50,13 @@ export const BankTransactionsTableEmptyState = () => {
         status={DataStateStatus.allDone}
         title={
           isCategorizationMode
-            ? t('youAreUpToDateWithTransactions', 'You are up to date with transactions!')
-            : t('youHaveNoCategorizedTransactions', 'You have no categorized transactions')
+            ? t('bankTransactions.youAreUpToDateWithTransactions', 'You are up to date with transactions!')
+            : t('bankTransactions.youHaveNoCategorizedTransactions', 'You have no categorized transactions')
         }
         description={
           isCategorizationMode
-            ? t('allUncategorizedTransactionsWillBeDisplayedHere', 'All uncategorized transactions will be displayed here')
-            : t('allTransactionsWillBeDisplayedHereOnceReviewed', 'All transactions will be displayed here once reviewed')
+            ? t('bankTransactions.allUncategorizedTransactionsWillBeDisplayedHere', 'All uncategorized transactions will be displayed here')
+            : t('bankTransactions.allTransactionsWillBeDisplayedHereOnceReviewed', 'All transactions will be displayed here once reviewed')
         }
         icon={isCategorizationMode ? undefined : <InboxIcon />}
         spacing
@@ -77,8 +77,8 @@ export function BankTransactionsListWithEmptyStates({
       <DataStateContainer>
         <DataState
           status={DataStateStatus.failed}
-          title={t('somethingWentWrong', 'Something went wrong')}
-          description={t('weCouldntLoadYourTransactions', 'We couldn’t load your transactions')}
+          title={t('common.somethingWentWrong', 'Something went wrong')}
+          description={t('bankTransactions.weCouldntLoadYourTransactions', 'We couldn’t load your transactions')}
           spacing
         />
       </DataStateContainer>

@@ -58,7 +58,7 @@ export const LinkedAccountsComponent = ({
           className='Layer__linked-accounts__title'
           size={HeadingSize.secondary}
         >
-          {stringOverrides?.title || t('linkedAccounts', 'Linked Accounts')}
+          {stringOverrides?.title || t('linkedAccounts.linkedAccounts', 'Linked Accounts')}
         </Heading>
       </Header>
 
@@ -71,8 +71,8 @@ export const LinkedAccountsComponent = ({
         ? (
           <DataState
             status={DataStateStatus.failed}
-            title={t('somethingWentWrong', 'Something went wrong')}
-            description={t('weCouldntLoadYourData', 'We couldn’t load your data.')}
+            title={t('common.somethingWentWrong', 'Something went wrong')}
+            description={t('common.weCouldntLoadYourData', 'We couldn’t load your data.')}
             onRefresh={() => void refetchAccounts()}
             isLoading={isValidating}
           />

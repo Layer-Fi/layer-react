@@ -31,11 +31,11 @@ export function VehicleReactivateConfirmationModal({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('reactivateThisVehicle', 'Reactivate this vehicle?')}
-      description={t('vehiclenameWillBeRestoredToYourActiveVehiclesListAndAvailableForTrackingTrips', '{{vehicleName}} will be restored to your active vehicles list and available for tracking trips.', { vehicleName })}
+      title={t('vehicles.reactivateThisVehicle', 'Reactivate this vehicle?')}
+      description={t('vehicles.vehiclenameWillBeRestoredToYourActiveVehiclesListAndAvailableForTrackingTrips', '{{vehicleName}} will be restored to your active vehicles list and available for tracking trips.', { vehicleName })}
       onConfirm={onConfirm}
-      confirmLabel={t('reactivateVehicle', 'Reactivate vehicle')}
-      errorText={t('failedToReactivateVehicleTryAgain', 'Failed to reactivate vehicle. Please check your connection and try again.')}
+      confirmLabel={t('vehicles.reactivateVehicle', 'Reactivate vehicle')}
+      errorText={t('vehicles.failedToReactivateVehicleTryAgain', 'Failed to reactivate vehicle. Please check your connection and try again.')}
       useDrawer={useDrawer}
     />
   )

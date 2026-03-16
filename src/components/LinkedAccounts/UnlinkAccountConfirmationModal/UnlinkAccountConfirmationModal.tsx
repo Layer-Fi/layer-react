@@ -19,18 +19,18 @@ export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, bankAccou
     switch (variant) {
       case 'DELETE':
         return {
-          title: t('deleteAccount', 'Delete account'),
-          description: t('thisAccountAndAnyUnmatchedTransactionsWillBeDeleted', 'This account and any unmatched transactions will be deleted.'),
-          confirmLabel: t('deleteAccountButtonLabel', 'Delete Account'),
-          errorText: t('deletionFailedPleaseCheckYourConnectionAndTryAgainInAFewSeconds', 'Deletion failed. Please check your connection and try again in a few seconds.'),
+          title: t('linkedAccounts.deleteAccount', 'Delete account'),
+          description: t('linkedAccounts.thisAccountAndAnyUnmatchedTransactionsWillBeDeleted', 'This account and any unmatched transactions will be deleted.'),
+          confirmLabel: t('linkedAccounts.deleteAccountButtonLabel', 'Delete Account'),
+          errorText: t('linkedAccounts.deletionFailedPleaseCheckYourConnectionAndTryAgainInAFewSeconds', 'Deletion failed. Please check your connection and try again in a few seconds.'),
         }
       case 'UNLINK':
         return {
-          title: t('unlinkAccount', 'Unlink account'),
+          title: t('linkedAccounts.unlinkAccount', 'Unlink account'),
           description:
-            t('thisAccountWillStopSyncingNewDataAndAnyUnmatchedTransactionsWillBeDeleted', 'This account will stop syncing new data, and any unmatched transactions will be deleted.'),
-          confirmLabel: t('unlinkAccountButtonLabel', 'Unlink Account'),
-          errorText: t('unlinkFailedPleaseCheckYourConnectionAndTryAgainInAFewSeconds', 'Unlink failed. Please check your connection and try again in a few seconds.'),
+            t('linkedAccounts.thisAccountWillStopSyncingNewDataAndAnyUnmatchedTransactionsWillBeDeleted', 'This account will stop syncing new data, and any unmatched transactions will be deleted.'),
+          confirmLabel: t('linkedAccounts.unlinkAccountButtonLabel', 'Unlink Account'),
+          errorText: t('linkedAccounts.unlinkFailedPleaseCheckYourConnectionAndTryAgainInAFewSeconds', 'Unlink failed. Please check your connection and try again in a few seconds.'),
         }
     }
   }, [variant, t])

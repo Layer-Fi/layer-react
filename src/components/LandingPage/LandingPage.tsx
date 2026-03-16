@@ -102,7 +102,7 @@ export const LandingPage = ({
                   {platform.platformName}
                   <br />
                 </Heading>
-                <Heading size={isMobile ? 'xl' : '3xl'} variant='subtle' weight='normal'>{t('accounting', 'Accounting')}</Heading>
+                <Heading size={isMobile ? 'xl' : '3xl'} variant='subtle' weight='normal'>{t('common.accounting', 'Accounting')}</Heading>
               </>
             )}
             {heroConfig.stringOverrides?.title != '' && (
@@ -148,7 +148,7 @@ export const LandingPage = ({
             className='Layer__LandingPage__media-image'
             key={`hero-image-${isStackedLayout}`}
             src={heroConfig.mediaUrls.topOfFoldImage}
-            alt={t('platformNameAccountingDashboardInterfaceShowingFinancialDataAndBusinessInsights', '{{platformName}} Accounting dashboard interface showing financial data and business insights', { platformName: platform.platformName })}
+            alt={t('landingPage.platformNameAccountingDashboardInterfaceShowingFinancialDataAndBusinessInsights', '{{platformName}} Accounting dashboard interface showing financial data and business insights', { platformName: platform.platformName })}
           />
         </VStack>
       </div>

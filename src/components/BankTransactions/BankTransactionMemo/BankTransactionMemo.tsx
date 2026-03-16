@@ -16,26 +16,26 @@ export const BankTransactionMemo = ({ bankTransactionId }: { bankTransactionId: 
         {field => (
           <VStack gap='3xs'>
             <HStack justify='space-between' align='baseline'>
-              <Label htmlFor='memo' size='sm' weight='bold'>{t('description', 'Description')}</Label>
+              <Label htmlFor='memo' size='sm' weight='bold'>{t('common.description', 'Description')}</Label>
               {isUpdatingMemo && (
                 <Span size='sm' weight='bold' variant='subtle'>
-                  {t('saving', 'Saving...')}
+                  {t('common.saving', 'Saving...')}
                 </Span>
               )}
               {!isUpdatingMemo && isSaved && (
                 <Span size='sm' status='success'>
-                  {t('saved', 'Saved')}
+                  {t('common.saved', 'Saved')}
                 </Span>
               )}
               {!isUpdatingMemo && !isSaved && isErrorUpdatingMemo && (
                 <Span size='sm' weight='bold' status='error'>
-                  {t('errorSaving', 'Error saving')}
+                  {t('common.errorSaving', 'Error saving')}
                 </Span>
               )}
             </HStack>
             <Textarea
               name='memo'
-              placeholder={t('addDescription', 'Add description')}
+              placeholder={t('common.addDescription', 'Add description')}
               value={field.state.value ?? undefined}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
             />
