@@ -23,6 +23,10 @@ export const flattenCategories = (categories: NestedCategorization[]): Array<Cat
     }
 
     if (subCategories.every(subCategory => !subCategory.subCategories || subCategory.subCategories.length === 0)) {
+      if (subCategories.length === 1) {
+        return [new CategoryAsOption(subCategories[0])]
+      }
+
       return [{
         label: category.displayName,
         id: 'id' in category ? category.id : category.stableName,
