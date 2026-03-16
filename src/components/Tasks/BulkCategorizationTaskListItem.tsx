@@ -2,7 +2,7 @@ import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import type { RawAiTask } from '@internal-types/tasks'
+import type { RawAutomatedTask } from '@internal-types/tasks'
 import { isCompletedTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { getIconForTask } from '@utils/bookkeeping/tasks/getBookkeepingTaskStatusIcon'
 import ChevronDownFill from '@icons/ChevronDownFill'
@@ -33,7 +33,7 @@ export type BulkCategorizationSelection = {
 }
 
 type BulkCategorizationTaskListItemProps = {
-  task: RawAiTask
+  task: RawAutomatedTask
   defaultOpen: boolean
   description: string
   transactions?: ReadonlyArray<BulkCategorizationTransaction>

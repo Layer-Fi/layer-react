@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { isAiTask, isCompletedTask, isHumanTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { isAutomatedTask, isCompletedTask, isHumanTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import SmileIcon from '@icons/SmileIcon'
 import { VStack } from '@ui/Stack/Stack'
 import { Pagination } from '@components/Pagination/Pagination'
 import { BulkCategorizationTaskListItem } from '@components/Tasks/BulkCategorizationTaskListItem'
-import { getBulkCategorizationTaskDescription, mapAiTaskToBulkCategorizationTransactions } from '@components/Tasks/bulkCategorizationTaskMappers'
+import { getBulkCategorizationTaskDescription, mapAutomatedTaskToBulkCategorizationTransactions } from '@components/Tasks/bulkCategorizationTaskMappers'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
 import { TasksListMobile } from '@components/Tasks/TasksListMobile'
 import { Text, TextSize } from '@components/Typography/Text'
@@ -117,13 +117,13 @@ export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
           <>
             {pageItems.map((task, index) => (
               <VStack key={task.id}>
-                {isAiTask(task) && (
+                {isAutomatedTask(task) && (
                   <BulkCategorizationTaskListItem
                     ref={setItemRef(task.id)}
                     task={task}
                     defaultOpen={index === indexFirstIncomplete}
                     description={getBulkCategorizationTaskDescription(task)}
-                    transactions={mapAiTaskToBulkCategorizationTransactions(task)}
+                    transactions={mapAutomatedTaskToBulkCategorizationTransactions(task)}
                     onExpandTask={onExpandTask(task.id)}
                   />
                 )}

@@ -1,4 +1,4 @@
-import type { RawAiTask, RawHumanTask, RawTask, TasksStatus } from '@internal-types/tasks'
+import type { RawAutomatedTask, RawHumanTask, RawTask, TasksStatus } from '@internal-types/tasks'
 
 export function isIncompleteTask<T extends Pick<RawTask, 'status'>>(
   task: T,
@@ -17,7 +17,7 @@ export function getIncompleteTasks<T extends Pick<RawTask, 'status'>>(
 type UserVisibleTaskStatus = Exclude<TasksStatus, 'COMPLETED' | 'ARCHIVED'>
 export type UserVisibleTask = RawTask & { status: UserVisibleTaskStatus }
 export type UserVisibleHumanTask = RawHumanTask & { status: UserVisibleTaskStatus }
-export type UserVisibleAiTask = RawAiTask & { status: UserVisibleTaskStatus }
+export type UserVisibleAutomatedTask = RawAutomatedTask & { status: UserVisibleTaskStatus }
 
 function isUserVisibleTask<T extends Pick<RawTask, 'status'>>(
   task: T,
@@ -33,8 +33,8 @@ export function getUserVisibleTasks<T extends Pick<RawTask, 'status'>>(
   return tasks.filter(task => isUserVisibleTask(task))
 }
 
-export function isAiTask(task: Pick<RawTask, 'type'>): task is RawAiTask {
-  return task.type === 'AI_Task'
+export function isAutomatedTask(task: Pick<RawTask, 'type'>): task is RawAutomatedTask {
+  return task.type === 'Automated_Task'
 }
 
 export function isHumanTask(task: Pick<RawTask, 'type'>): task is RawHumanTask {

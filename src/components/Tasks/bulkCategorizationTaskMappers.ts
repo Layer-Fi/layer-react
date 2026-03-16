@@ -1,7 +1,7 @@
-import type { RawAiTask } from '@internal-types/tasks'
+import type { RawAutomatedTask } from '@internal-types/tasks'
 import type { BulkCategorizationTransaction } from '@components/Tasks/BulkCategorizationTaskListItem'
 
-function formatAiTaskTransactionDate(value: string): string {
+function formatAutomatedTaskTransactionDate(value: string): string {
   const date = new Date(value)
 
   if (Number.isNaN(date.getTime())) {
@@ -14,23 +14,23 @@ function formatAiTaskTransactionDate(value: string): string {
   })
 }
 
-function formatAiTaskTransactionAmount(amount: number): string {
+function formatAutomatedTaskTransactionAmount(amount: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   }).format(Math.abs(amount))
 }
 
-export function mapAiTaskToBulkCategorizationTransactions(task: RawAiTask): ReadonlyArray<BulkCategorizationTransaction> {
+export function mapAutomatedTaskToBulkCategorizationTransactions(task: RawAutomatedTask): ReadonlyArray<BulkCategorizationTransaction> {
   return task.payload.uncategorized_transactions.map(transaction => ({
     id: transaction.id,
     merchantName: transaction.counterparty_name ?? task.payload.counterparty.name,
-    date: formatAiTaskTransactionDate(transaction.date),
-    amount: formatAiTaskTransactionAmount(transaction.amount),
+    date: formatAutomatedTaskTransactionDate(transaction.date),
+    amount: formatAutomatedTaskTransactionAmount(transaction.amount),
   }))
 }
 
-export function getBulkCategorizationTaskDescription(task: RawAiTask): string {
+export function getBulkCategorizationTaskDescription(task: RawAutomatedTask): string {
   const totalTransactions = task.payload.uncategorized_transactions.length
   const counterpartyName = task.payload.counterparty.name
 

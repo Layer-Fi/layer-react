@@ -30,7 +30,7 @@ export type RawHumanTask = RawTaskBase & {
   documents: Document[]
 }
 
-type AiTaskCounterparty = {
+type AutomatedTaskCounterparty = {
   id: string
   external_id: string | null
   name: string
@@ -41,7 +41,7 @@ type AiTaskCounterparty = {
   counterparty_type: string | null
 }
 
-type AiTaskSuggestedRule = {
+type AutomatedTaskSuggestedRule = {
   apply_retroactively: boolean
   created_by_suggestion_id: string | null
   external_id: string | null
@@ -60,29 +60,29 @@ type AiTaskSuggestedRule = {
   amount_max_filter: number | null
 }
 
-export type AiTaskUncategorizedTransaction = {
+export type AutomatedTaskUncategorizedTransaction = {
   id: string
   date: string
   amount: number
   counterparty_name: string | null
 }
 
-type AiRuleSuggestionReviewPayload = {
-  type: 'Ai_Rule_Suggestion_Review'
-  counterparty: AiTaskCounterparty
+type AutomatedRuleSuggestionReviewPayload = {
+  type: 'Automated_Rule_Suggestion_Review'
+  counterparty: AutomatedTaskCounterparty
   suggestion_id: string
-  suggested_rules: ReadonlyArray<AiTaskSuggestedRule>
-  uncategorized_transactions: ReadonlyArray<AiTaskUncategorizedTransaction>
+  suggested_rules: ReadonlyArray<AutomatedTaskSuggestedRule>
+  uncategorized_transactions: ReadonlyArray<AutomatedTaskUncategorizedTransaction>
 }
 
-export type RawAiTask = RawTaskBase & {
-  type: 'AI_Task'
-  task_type: 'AI'
+export type RawAutomatedTask = RawTaskBase & {
+  type: 'Automated_Task'
+  task_type: 'Automated'
   source_suggestion_id: string | null
-  payload: AiRuleSuggestionReviewPayload
+  payload: AutomatedRuleSuggestionReviewPayload
 }
 
-export type RawTask = RawHumanTask | RawAiTask
+export type RawTask = RawHumanTask | RawAutomatedTask
 
 const _TASKS_STATUSES = [
   'TODO',

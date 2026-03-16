@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getIncompleteTasks, isAiTask, isHumanTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { getIncompleteTasks, isAutomatedTask, isHumanTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { Button } from '@components/Button/Button'
 import { TextButton } from '@components/Button/TextButton'
 import { MobilePanel } from '@components/MobilePanel/MobilePanel'
 import { Pagination } from '@components/Pagination/Pagination'
 import { BulkCategorizationTaskListItem } from '@components/Tasks/BulkCategorizationTaskListItem'
-import { getBulkCategorizationTaskDescription, mapAiTaskToBulkCategorizationTransactions } from '@components/Tasks/bulkCategorizationTaskMappers'
+import { getBulkCategorizationTaskDescription, mapAutomatedTaskToBulkCategorizationTransactions } from '@components/Tasks/bulkCategorizationTaskMappers'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
 
 const MOBILE_SHOW_UNRESOLVED_TASKS_COUNT = 2
@@ -37,14 +37,14 @@ export const TasksListMobile = ({
   return (
     <div className='Layer__tasks-list'>
       {unresolvedTasks.map((task, index) => (
-        isAiTask(task)
+        isAutomatedTask(task)
           ? (
             <BulkCategorizationTaskListItem
               key={task.id}
               task={task}
               defaultOpen={index === indexFirstIncomplete}
               description={getBulkCategorizationTaskDescription(task)}
-              transactions={mapAiTaskToBulkCategorizationTransactions(task)}
+              transactions={mapAutomatedTaskToBulkCategorizationTransactions(task)}
             />
           )
           : isHumanTask(task)
@@ -82,14 +82,14 @@ export const TasksListMobile = ({
           && (
             <div className='Layer__tasks-list'>
               {sortedTasks.map((task, index) => (
-                isAiTask(task)
+                isAutomatedTask(task)
                   ? (
                     <BulkCategorizationTaskListItem
                       key={task.id}
                       task={task}
                       defaultOpen={index === indexFirstIncomplete}
                       description={getBulkCategorizationTaskDescription(task)}
-                      transactions={mapAiTaskToBulkCategorizationTransactions(task)}
+                      transactions={mapAutomatedTaskToBulkCategorizationTransactions(task)}
                     />
                   )
                   : isHumanTask(task)
