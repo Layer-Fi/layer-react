@@ -31,7 +31,8 @@
 }
 
 .Layer__bookkeeping-overview-profit-and-loss-chart {
-  width: calc(50% - var(--spacing-md) / 2);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .Layer__bookkeeping-overview-profit-and-loss-charts {

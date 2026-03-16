@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Container } from '@components/Container/Container'
@@ -25,7 +25,10 @@ export const ProfitAndLossOverviewDetailedCharts = ({
 }: ProfitAndLossOverviewDetailedChartsProps) => {
   const { t } = useTranslation()
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
-  const { isDesktop } = useSizeClass()
+  const [isCompact, setIsCompact] = useState(false)
+  const elementRef = useElementSize<HTMLDivElement>((size) => {
+    setIsCompact(size.width < 720)
+  })
 
   const toggleOptions = useMemo(() => (
     [
@@ -49,8 +52,8 @@ export const ProfitAndLossOverviewDetailedCharts = ({
     : 'bookkeeping-overview-profit-and-loss-chart'
 
   return (
-    <VStack className={chartsWrapperClassName} gap='md'>
-      {!isDesktop
+    <VStack className={chartsWrapperClassName} gap='md' ref={elementRef}>
+      {isCompact
         && (
           <Toggle
             ariaLabel={t('chartType', 'Chart type')}
@@ -59,8 +62,18 @@ export const ProfitAndLossOverviewDetailedCharts = ({
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
           />
         )}
-      {isDesktop
+      {isCompact
         ? (
+          <Container name={chartContainerName}>
+            <ProfitAndLoss.DetailedCharts
+              scope={pnlToggle}
+              hideClose={true}
+              stringOverrides={detailedChartsStringOverrides}
+              chartColorsList={chartColorsList}
+            />
+          </Container>
+        )
+        : (
           <HStack gap='md'>
             <Container name={chartContainerName}>
               <ProfitAndLoss.DetailedCharts
@@ -79,16 +92,6 @@ export const ProfitAndLossOverviewDetailedCharts = ({
               />
             </Container>
           </HStack>
-        )
-        : (
-          <Container name={chartContainerName}>
-            <ProfitAndLoss.DetailedCharts
-              scope={pnlToggle}
-              hideClose={true}
-              stringOverrides={detailedChartsStringOverrides}
-              chartColorsList={chartColorsList}
-            />
-          </Container>
         )}
     </VStack>
   )
