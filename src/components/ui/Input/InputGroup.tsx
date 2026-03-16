@@ -9,7 +9,7 @@ import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
 import './inputGroup.scss'
 
-const INPUT_GROUP_CLASS_NAME = 'Layer__InputGroup'
+const INPUT_GROUP_CLASS_NAME = 'Layer__UI__InputGroup'
 
 type InputGroupProps = ReactAriaGroupProps & {
   actionCount?: 1 | 2
