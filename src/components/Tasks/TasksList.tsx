@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { isCompletedTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { isAiTask, isCompletedTask, isHumanTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import SmileIcon from '@icons/SmileIcon'
 import { VStack } from '@ui/Stack/Stack'
 import { Pagination } from '@components/Pagination/Pagination'
-import { BulkCategorizationTaskListItem, type BulkCategorizationTransaction } from '@components/Tasks/BulkCategorizationTaskListItem'
+import { BulkCategorizationTaskListItem } from '@components/Tasks/BulkCategorizationTaskListItem'
+import { getBulkCategorizationTaskDescription, mapAiTaskToBulkCategorizationTransactions } from '@components/Tasks/bulkCategorizationTaskMappers'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
 import { TasksListMobile } from '@components/Tasks/TasksListMobile'
 import { Text, TextSize } from '@components/Typography/Text'
@@ -28,44 +29,6 @@ const TasksEmptyState = () => {
     </div>
   )
 }
-
-const MOCK_BULK_CATEGORIZATION_TRANSACTIONS: ReadonlyArray<BulkCategorizationTransaction> = [
-  {
-    id: 'bulk-categorization-transaction-1',
-    merchantName: 'Costco Wholesale #482',
-    date: 'Nov 3',
-    amount: '$124.97',
-    initialCategory: 'office-expenses',
-  },
-  {
-    id: 'bulk-categorization-transaction-2',
-    merchantName: 'Costco Wholesale #482',
-    date: 'Nov 8',
-    amount: '$89.50',
-    initialCategory: 'electronics',
-  },
-  {
-    id: 'bulk-categorization-transaction-3',
-    merchantName: 'Costco Wholesale #310',
-    date: 'Nov 14',
-    amount: '$62.33',
-    initialCategory: 'equipment',
-  },
-  {
-    id: 'bulk-categorization-transaction-4',
-    merchantName: 'Costco Wholesale #482',
-    date: 'Nov 19',
-    amount: '$149.99',
-    initialCategory: 'office-expenses',
-  },
-  {
-    id: 'bulk-categorization-transaction-5',
-    merchantName: 'Costco Wholesale #310',
-    date: 'Nov 24',
-    amount: '$51.21',
-    initialCategory: 'office-expenses',
-  },
-]
 
 type TasksListProps = {
   pageSize?: number
@@ -154,18 +117,22 @@ export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
           <>
             {pageItems.map((task, index) => (
               <VStack key={task.id}>
-                <TasksListItem
-                  ref={setItemRef(task.id)}
-                  task={task}
-                  defaultOpen={index === indexFirstIncomplete}
-                  onExpandTask={onExpandTask(task.id)}
-                />
-                {index === 0 && (
+                {isAiTask(task) && (
                   <BulkCategorizationTaskListItem
+                    ref={setItemRef(task.id)}
                     task={task}
-                    defaultOpen={false}
-                    description='We see 5 transactions at Costco this week totaling $478. Can you tell us more about what these were for?'
-                    transactions={MOCK_BULK_CATEGORIZATION_TRANSACTIONS}
+                    defaultOpen={index === indexFirstIncomplete}
+                    description={getBulkCategorizationTaskDescription(task)}
+                    transactions={mapAiTaskToBulkCategorizationTransactions(task)}
+                    onExpandTask={onExpandTask(task.id)}
+                  />
+                )}
+                {isHumanTask(task) && (
+                  <TasksListItem
+                    ref={setItemRef(task.id)}
+                    task={task}
+                    defaultOpen={index === indexFirstIncomplete}
+                    onExpandTask={onExpandTask(task.id)}
                   />
                 )}
               </VStack>

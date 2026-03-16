@@ -2,7 +2,8 @@ import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { isCompletedTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import type { RawAiTask } from '@internal-types/tasks'
+import { isCompletedTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { getIconForTask } from '@utils/bookkeeping/tasks/getBookkeepingTaskStatusIcon'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -32,9 +33,9 @@ export type BulkCategorizationSelection = {
 }
 
 type BulkCategorizationTaskListItemProps = {
-  task: UserVisibleTask
+  task: RawAiTask
   defaultOpen: boolean
-  description?: string
+  description: string
   transactions?: ReadonlyArray<BulkCategorizationTransaction>
   onExpandTask?: (isOpen: boolean) => void
   onSave?: (selection: BulkCategorizationSelection) => void
@@ -204,7 +205,7 @@ export const BulkCategorizationTaskListItem = forwardRef<HTMLDivElement, BulkCat
         <VStack className={taskBodyClassName}>
           <VStack className='Layer__tasks-list-item__body-info Layer__bulk-categorization-task-list-item__body-info'>
             <Span size='sm' weight='bold' className='Layer__bulk-categorization-task-list-item__description'>
-              {description ?? task.question}
+              {description}
             </Span>
 
             <HStack className='Layer__bulk-categorization-task-list-item__scope-toggle'>

@@ -2,7 +2,7 @@ import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { isCompletedTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { isCompletedTask, type UserVisibleHumanTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { getIconForTask } from '@utils/bookkeeping/tasks/getBookkeepingTaskStatusIcon'
 import { useDeleteUploadsOnTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/delete/useDeleteUploadsOnTask'
 import { useUpdateTaskUploadDescription } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/update-description/useUpdateTaskUploadDescription'
@@ -15,7 +15,7 @@ import { Textarea } from '@components/Textarea/Textarea'
 import { Text, TextSize } from '@components/Typography/Text'
 
 type TasksListItemProps = {
-  task: UserVisibleTask
+  task: UserVisibleHumanTask
   defaultOpen: boolean
   onExpandTask?: (isOpen: boolean) => void
 }
