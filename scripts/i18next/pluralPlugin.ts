@@ -3,6 +3,7 @@ import {
   getCallArgumentExpression,
   getCallExpressionName,
   getObjectPropertyValue,
+  resolveNamespacedKeyInfo,
   getStringValue,
 } from './extractPluginUtils'
 
@@ -21,23 +22,24 @@ const pluralPlugin = {
 
     const optionsExpression = getCallArgumentExpression(node, 2)
     const ns = getStringValue(getObjectPropertyValue(optionsExpression, 'ns'))
+    const namespacedKeyInfo = resolveNamespacedKeyInfo({ key, ns })
     const one = getStringValue(getObjectPropertyValue(optionsExpression, 'one'))
     const other = getStringValue(getObjectPropertyValue(optionsExpression, 'other'))
 
     if (one) {
       context.addKey({
-        key: `${key}_one`,
+        key: `${namespacedKeyInfo.key}_one`,
         defaultValue: one,
-        ns,
+        ns: namespacedKeyInfo.ns,
         explicitDefault: true,
       })
     }
 
     if (other) {
       context.addKey({
-        key: `${key}_other`,
+        key: `${namespacedKeyInfo.key}_other`,
         defaultValue: other,
-        ns,
+        ns: namespacedKeyInfo.ns,
         explicitDefault: true,
       })
     }

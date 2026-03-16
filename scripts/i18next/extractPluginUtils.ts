@@ -5,6 +5,11 @@ export type KeyInfo = {
   explicitDefault?: boolean
 }
 
+type NamespacedKeyInfo = {
+  key: string
+  ns?: string
+}
+
 export type PluginContext = {
   addKey: (keyInfo: KeyInfo) => void
 }
@@ -29,6 +34,25 @@ export const getKeyName = (key: unknown): string | undefined => {
     return typeof value === 'string' ? value : undefined
   }
 }
+
+export const resolveNamespacedKeyInfo = ({
+  key,
+   ns,
+   fallbackNs,
+ }: {
+   key: string
+   ns?: string
+   fallbackNs?: string
+ }): NamespacedKeyInfo => {
+   if (ns) return { key, ns }
+   
+   if (key.includes('.')) {
+     const [nsValue, keyValue] = key.split('.')
+     return { key: keyValue, ns: nsValue }
+   }
+ 
+   return { key, ns: fallbackNs }
+ }
 
 export const getObjectProperties = (expression: unknown): unknown[] => {
   if (!expression || typeof expression !== 'object' || (expression as { type?: string }).type !== 'ObjectExpression') {

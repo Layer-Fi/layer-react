@@ -5,6 +5,7 @@ import {
   getKeyName,
   getObjectProperties,
   getObjectPropertyValue,
+  resolveNamespacedKeyInfo,
   getStringValue,
 } from './extractPluginUtils'
 
@@ -25,6 +26,7 @@ const conditionalPlugin = {
     const casesExpression = getObjectPropertyValue(optionsExpression, 'cases')
     const contextsExpression = getObjectPropertyValue(optionsExpression, 'contexts')
     const ns = getStringValue(getObjectPropertyValue(optionsExpression, 'ns'))
+    const namespacedKeyInfo = resolveNamespacedKeyInfo({ key, ns })
     const extractedKeys = new Set<string>()
 
     for (const caseProperty of getObjectProperties(casesExpression)) {
@@ -39,7 +41,7 @@ const conditionalPlugin = {
       }
 
       const contextValue = getStringValue(getObjectPropertyValue(contextsExpression, caseName))
-      const extractedKey = contextValue ? `${key}_${contextValue}` : key
+      const extractedKey = contextValue ? `${namespacedKeyInfo.key}_${contextValue}` : namespacedKeyInfo.key
 
       if (extractedKeys.has(extractedKey)) {
         continue
@@ -49,7 +51,7 @@ const conditionalPlugin = {
       context.addKey({
         key: extractedKey,
         defaultValue,
-        ns,
+        ns: namespacedKeyInfo.ns,
         explicitDefault: true,
       })
     }
