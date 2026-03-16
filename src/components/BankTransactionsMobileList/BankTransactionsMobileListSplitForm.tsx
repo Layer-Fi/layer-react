@@ -158,6 +158,7 @@ export const BankTransactionsMobileListSplitForm = ({
         showDescriptions={showDescriptions}
         hideCustomerVendor
         hideTags
+        isMobile
       />
       <div
         className={classNames(

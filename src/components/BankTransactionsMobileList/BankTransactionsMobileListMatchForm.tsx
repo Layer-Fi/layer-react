@@ -94,6 +94,7 @@ export const BankTransactionsMobileListMatchForm = ({
         showDescriptions={showDescriptions}
         hideCustomerVendor
         hideTags
+        isMobile
       />
       {showReceiptUploads && (
         <BankTransactionReceipts
