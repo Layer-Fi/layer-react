@@ -52,8 +52,8 @@ export const CategorySelectDrawer = ({
   }, [categories, selectedGroup])
 
   const filteredOptions = useMemo(
-    () => buildFilteredCategoryOptions(categoryOptions, query),
-    [categoryOptions, query],
+    () => buildFilteredCategoryOptions(categoryOptions, query, selectedId),
+    [categoryOptions, query, selectedId],
   )
 
   const Header = useCallback(({ close }: { close: () => void }) => (

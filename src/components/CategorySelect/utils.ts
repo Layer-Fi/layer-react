@@ -37,6 +37,7 @@ export const flattenCategories = (categories: NestedCategorization[]): Array<Cat
 export const buildFilteredCategoryOptions = (
   categoryOptions: CategoryOption[],
   query: string,
+  selectedId?: string,
 ): ActionableListOption<CategoryOption>[] => {
   let options = categoryOptions
 
@@ -55,8 +56,22 @@ export const buildFilteredCategoryOptions = (
   }
 
   return [...options]
-    .sort((a, b) => a.label.localeCompare(b.label))
+    .sort((a, b) => {
+      if (selectedId) {
+        const aSelected = isSelectedOption(a, selectedId)
+        const bSelected = isSelectedOption(b, selectedId)
+        if (aSelected !== bSelected) return aSelected ? -1 : 1
+      }
+      return a.label.localeCompare(b.label)
+    })
     .map(opt => 'categories' in opt
       ? { label: opt.label, id: opt.id, value: opt, asLink: true }
       : { label: opt.label, id: opt.value, description: opt.original.description ?? undefined, value: opt })
+}
+
+const isSelectedOption = (opt: CategoryOption, selectedId: string): boolean => {
+  if ('categories' in opt) {
+    return opt.categories.some(category => category.value === selectedId)
+  }
+  return opt.value === selectedId
 }
