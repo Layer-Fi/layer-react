@@ -1,0 +1,157 @@
+.Layer__tasks__expand-icon--collapsed {
+  transform: rotate(-180deg);
+}
+
+.Layer__bulk-categorization-task-list-item-wrapper {
+  .Layer__bulk-categorization-task-list-item__head-button {
+    all: unset;
+    box-sizing: border-box;
+    width: 100%;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .Layer__bulk-categorization-task-list-item {
+    border-radius: 8px;
+    background: var(--color-base-50);
+  }
+
+  .Layer__bulk-categorization-task-list-item__body {
+    padding-right: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    padding-left: var(--spacing-3xl);
+  }
+
+  .Layer__bulk-categorization-task-list-item__body-info {
+    display: flex;
+    gap: var(--spacing-md);
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .Layer__bulk-categorization-task-list-item__description {
+    max-inline-size: 72rem;
+    line-height: 1.4;
+  }
+
+  .Layer__bulk-categorization-task-list-item__scope-toggle {
+    display: inline-flex;
+    width: fit-content;
+    padding: 2px;
+    border-radius: 10px;
+    border: 1px solid var(--color-base-300);
+    background: var(--color-white);
+  }
+
+  .Layer__bulk-categorization-task-list-item__scope-toggle-button {
+    border-radius: 8px;
+    border: 0;
+    box-shadow: none;
+
+    &.Layer__btn--secondary {
+      background: var(--color-white);
+      color: var(--color-base-700);
+    }
+
+    &:active,
+    &:visited,
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
+  .Layer__bulk-categorization-task-list-item__pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+
+  .Layer__bulk-categorization-task-list-item__pill-button {
+    &.Layer__btn--secondary {
+      background: var(--color-white);
+      color: var(--color-base-700);
+    }
+  }
+
+  .Layer__bulk-categorization-task-list-item__transactions {
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid var(--color-base-300);
+    background: var(--color-white);
+  }
+
+  .Layer__bulk-categorization-task-list-item__transaction-row {
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+
+  .Layer__bulk-categorization-task-list-item__transaction-row--with-border {
+    border-bottom: 1px solid var(--color-base-300);
+  }
+
+  .Layer__bulk-categorization-task-list-item__transaction-details {
+    min-width: 0;
+  }
+
+  .Layer__bulk-categorization-task-list-item__transaction-categories {
+    display: inline-flex;
+    gap: 0;
+    overflow: hidden;
+    min-height: 36px;
+    max-width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--color-base-300);
+    background: var(--color-white);
+  }
+
+  .Layer__bulk-categorization-task-list-item__transaction-category-button {
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+
+    &:not(:first-child) {
+      border-left: 1px solid var(--color-base-300);
+    }
+
+    &.Layer__btn--secondary {
+      background: var(--color-white);
+      color: var(--color-base-700);
+    }
+
+    .Layer__btn-content,
+    .Layer__btn-text {
+      font-size: var(--text-sm);
+    }
+
+    &:active,
+    &:visited,
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
+  .Layer__bulk-categorization-task-list-item__actions {
+    padding-bottom: 0;
+    margin-top: var(--spacing-xs);
+  }
+}
+
+@container (width <= 900px) {
+  .Layer__bulk-categorization-task-list-item-wrapper {
+    .Layer__bulk-categorization-task-list-item__transaction-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .Layer__bulk-categorization-task-list-item__transaction-categories {
+      overflow-x: auto;
+      width: 100%;
+      padding-bottom: 0;
+    }
+
+    .Layer__bulk-categorization-task-list-item__transaction-category-button {
+      flex: 1;
+    }
+  }
+}
