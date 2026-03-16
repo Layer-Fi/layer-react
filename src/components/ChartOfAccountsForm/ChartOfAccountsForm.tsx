@@ -170,7 +170,7 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='accountNumber'
-          label={stringOverrides?.accountNumberLabel || t('chartOfAccounts.accountNumber', 'Account Number')}
+          label={stringOverrides?.accountNumberLabel || t('generalLedger.accountNumber', 'Account Number')}
           inline
         >
           <Input

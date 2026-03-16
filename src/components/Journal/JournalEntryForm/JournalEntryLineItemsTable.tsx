@@ -76,8 +76,8 @@ export const JournalEntryLineItemsTable = ({
                 <VStack gap='md' align='center' className='empty-state'>
                   <P variant='subtle' align='center' size='sm'>
                     {direction === LedgerEntryDirection.Debit
-                      ? t('noDebitLineItemsAddedYet', 'No debit line items added yet. Click "Add next line" to get started.')
-                      : t('noCreditLineItemsAddedYet', 'No credit line items added yet. Click "Add next line" to get started.')}
+                      ? t('generalLedger.noDebitLineItemsAddedYet', 'No debit line items added yet. Click "Add next line" to get started.')
+                      : t('generalLedger.noCreditLineItemsAddedYet', 'No credit line items added yet. Click "Add next line" to get started.')}
                   </P>
                 </VStack>
               )}
@@ -85,7 +85,7 @@ export const JournalEntryLineItemsTable = ({
                 <HStack justify='start'>
                   <Button onPress={() => field.pushValue(getJournalEntryLineItemFormDefaultValues(direction))} variant='text'>
                     <Span weight='normal' size='sm' variant='subtle'>
-                      {t('addNextLine', 'Add next line')}
+                      {t('generalLedger.addNextLine', 'Add next line')}
                     </Span>
                   </Button>
                 </HStack>

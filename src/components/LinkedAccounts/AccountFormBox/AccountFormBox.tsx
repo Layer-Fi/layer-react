@@ -119,9 +119,9 @@ export const AccountFormBox = ({
           </Text>
         </div>
         <div className={`${CLASS_NAME}__details-col__inputs`}>
-          <InputGroup label={t('openingDate', 'Opening date')}>
+          <InputGroup label={t('linkedAccounts.openingDate', 'Opening date')}>
             <DatePicker
-              label={t('openingDate', 'Opening date')}
+              label={t('linkedAccounts.openingDate', 'Opening date')}
               date={date}
               onChange={onChangeDate}
               onBlur={onBlurDate}
@@ -131,7 +131,7 @@ export const AccountFormBox = ({
               errorText={dateErrorText}
             />
           </InputGroup>
-          <InputGroup label={t('openingBalanceLabel', 'Opening balance')}>
+          <InputGroup label={t('linkedAccounts.openingBalanceLabel', 'Opening balance')}>
             <AmountInput
               name='openingBalance'
               defaultValue={value.openingBalance}
@@ -139,13 +139,13 @@ export const AccountFormBox = ({
                 onChange({ ...value, openingBalance: newValue })}
               disabled={!disableConfirmExclude && !value.isConfirmed}
               isInvalid={errors.includes('MISSING_BALANCE')}
-              errorMessage={t('fieldIsRequired', 'Field is required')}
+              errorMessage={t('common.fieldIsRequired', 'Field is required')}
             />
           </InputGroup>
         </div>
         {errors.includes('API_ERROR') && (
           <ErrorText>
-            {t('anErrorOccurredWhileSavingDataYouWillHaveAnOpportunityToTryAgainLater', 'An error occurred while saving data. You will have an opportunity to try again later.')}
+            {t('linkedAccounts.anErrorOccurredWhileSavingDataYouWillHaveAnOpportunityToTryAgainLater', 'An error occurred while saving data. You will have an opportunity to try again later.')}
           </ErrorText>
         )}
       </div>
@@ -155,7 +155,7 @@ export const AccountFormBox = ({
             size='lg'
             isSelected={value.isConfirmed}
             onChange={v => onChange({ ...value, isConfirmed: v })}
-            aria-label={t('confirmAccountInclusion', 'Confirm Account Inclusion')}
+            aria-label={t('linkedAccounts.confirmAccountInclusion', 'Confirm Account Inclusion')}
           />
         </div>
       )}

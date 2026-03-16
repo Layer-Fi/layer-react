@@ -23,13 +23,13 @@ export function useHandleDownloadTransactions({ isListView }: { isListView: bool
         }
         else if (isListView) {
           addToast({
-            content: t('downloadFailedPleaseRetry', 'Download Failed, Please Retry'),
+            content: t('bankTransactions.downloadFailedPleaseRetry', 'Download failed, please retry'),
             type: 'error',
           })
         }
       })
       .catch(() => {
-        addToast({ content: t('downloadFailedPleaseRetry', 'Download Failed, Please Retry'), type: 'error' })
+        addToast({ content: t('bankTransactions.downloadFailedPleaseRetry', 'Download failed, please retry'), type: 'error' })
       })
   }, [addToast, filters, isListView, trigger, triggerInvisibleDownload, t])
 

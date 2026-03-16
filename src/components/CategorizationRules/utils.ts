@@ -4,8 +4,8 @@ import { BankDirectionFilter } from '@schemas/bankTransactions/categorizationRul
 import { translationKey } from '@utils/i18n/translationKey'
 
 export const DIRECTION_CONFIG = [
-  { value: BankDirectionFilter.MONEY_IN, ...translationKey('moneyIn', 'Money In') },
-  { value: BankDirectionFilter.MONEY_OUT, ...translationKey('moneyOut', 'Money Out') },
+  { value: BankDirectionFilter.MONEY_IN, ...translationKey('categorizationRules.moneyIn', 'Money In') },
+  { value: BankDirectionFilter.MONEY_OUT, ...translationKey('categorizationRules.moneyOut', 'Money Out') },
 ] as const
 
 export const getCategorizationRuleDirectionLabel = (
@@ -13,8 +13,8 @@ export const getCategorizationRuleDirectionLabel = (
   t: TFunction,
 ): string => {
   if (!bankDirectionFilter) {
-    return t('anyDirection', 'Any direction')
+    return t('categorizationRules.anyDirection', 'Any direction')
   }
   const entry = DIRECTION_CONFIG.find(c => c.value === bankDirectionFilter)
-  return entry ? t(entry.i18nKey, entry.defaultValue) : t('anyDirection', 'Any direction')
+  return entry ? t(entry.i18nKey, entry.defaultValue) : t('categorizationRules.anyDirection', 'Any direction')
 }

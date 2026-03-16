@@ -55,7 +55,7 @@ export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, classNam
   return (
     <HStack className={combinedClassName}>
       <Label size='sm' htmlFor={inputId}>
-        {t('trips.purpose', 'Purpose')}
+        {t('common.purpose', 'Purpose')}
       </Label>
       <ComboBox
         options={options}

@@ -106,7 +106,7 @@ const BankTransactionReceipts = forwardRef<
           : null}
         {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0)
           ? (
-            <FileInput onUpload={files => void uploadReceipt(files[0])} text={t('uploadReceipt', 'Upload receipt')} accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES} />
+            <FileInput onUpload={files => void uploadReceipt(files[0])} text={t('bankTransactions.uploadReceipt', 'Upload receipt')} accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES} />
           )
           : null}
         {receiptUrls.map((url, index) => (

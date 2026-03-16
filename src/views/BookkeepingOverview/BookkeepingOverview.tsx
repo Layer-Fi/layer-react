@@ -70,11 +70,11 @@ export const BookkeepingOverview = ({
   const toggleOptions = useMemo(() => [
     {
       value: 'revenue',
-      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || t('revenue', 'Revenue'),
+      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || t('common.revenue', 'Revenue'),
     },
     {
       value: 'expenses',
-      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || t('expenses', 'Expenses'),
+      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || t('common.expenses', 'Expenses'),
     },
   ], [t, stringOverrides])
 
@@ -91,7 +91,7 @@ export const BookkeepingOverview = ({
     <ProfitAndLoss asContainer={false}>
       <View
         viewClassName='Layer__bookkeeping-overview--view'
-        title={stringOverrides?.title || title || t('bookkeepingOverview', 'Bookkeeping overview')}
+        title={stringOverrides?.title || title || t('overview.bookkeepingOverview', 'Bookkeeping overview')}
         header={(
           <Header>
             <HeaderRow>
@@ -145,7 +145,7 @@ export const BookkeepingOverview = ({
             }}
           >
             <ProfitAndLoss.Header
-              text={stringOverrides?.profitAndLoss?.header || t('profitLoss', 'Profit & Loss')}
+              text={stringOverrides?.profitAndLoss?.header || t('common.profitLoss', 'Profit & Loss')}
               withStatus
             />
             <VStack pb='md' pi='md' fluid>
@@ -159,7 +159,7 @@ export const BookkeepingOverview = ({
         </div>
         <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>
           <Toggle
-            ariaLabel={t('chartType', 'Chart type')}
+            ariaLabel={t('overview.chartType', 'Chart type')}
             options={toggleOptions}
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}

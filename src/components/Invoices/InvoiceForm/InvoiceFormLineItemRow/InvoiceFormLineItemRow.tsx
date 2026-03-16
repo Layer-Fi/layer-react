@@ -81,7 +81,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
           {field => <field.FormCheckboxField label={t('invoices.taxable', 'Taxable')} showLabel={index === 0} isReadOnly={isReadOnly} />}
         </form.AppField>
         {!isReadOnly
-          && <Button variant='outlined' icon inset aria-label={t('invoices.deleteLineItem', 'Delete line item')} onPress={onDeleteLine}><Trash size={16} /></Button>}
+          && <Button variant='outlined' icon inset aria-label={t('common.deleteLineItem', 'Delete line item')} onPress={onDeleteLine}><Trash size={16} /></Button>}
       </HStack>
     </VStack>
   )

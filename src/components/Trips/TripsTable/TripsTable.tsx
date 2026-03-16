@@ -56,7 +56,7 @@ const getColumnConfig = ({ onViewOrUpsertTrip, onDeleteTrip }: TripActions, t: T
   },
   {
     id: TripColumns.Purpose,
-    header: t('trips.purpose', 'Purpose'),
+    header: t('common.purpose', 'Purpose'),
     cell: (row: TripsRowType) => getPurposeLabel(row.original.purpose as TripPurpose, t),
   },
   {

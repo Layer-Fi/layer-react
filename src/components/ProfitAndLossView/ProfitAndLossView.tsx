@@ -62,7 +62,7 @@ const ProfitAndLossPanel = ({
       parentRef={containerRef}
     >
       <ProfitAndLoss.Header
-        text={stringOverrides?.header || t('profitLoss', 'Profit & Loss')}
+        text={stringOverrides?.header || t('common.profitLoss', 'Profit & Loss')}
         className={`Layer__${COMPONENT_NAME}__header`}
         headingClassName='Layer__profit-and-loss__title'
       />
@@ -85,8 +85,8 @@ const Components = ({
       <div className='Layer__table-state-container'>
         <DataState
           status={DataStateStatus.failed}
-          title={t('somethingWentWrong', 'Something went wrong')}
-          description={t('weCouldntLoadYourData', 'We couldn’t load your data.')}
+          title={t('common.somethingWentWrong', 'Something went wrong')}
+          description={t('common.weCouldntLoadYourData', 'We couldn’t load your data.')}
           onRefresh={() => refetch()}
           isLoading={isValidating}
         />

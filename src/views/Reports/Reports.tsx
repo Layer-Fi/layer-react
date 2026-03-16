@@ -47,7 +47,7 @@ export interface ReportsProps {
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
 
 const REPORT_TYPE_CONFIG: { value: ReportType, i18nKey: string, defaultValue: string }[] = [
-  { value: 'profitAndLoss', ...translationKey('reports.profitLoss', 'Profit & Loss') },
+  { value: 'profitAndLoss', ...translationKey('common.profitLoss', 'Profit & Loss') },
   { value: 'balanceSheet', ...translationKey('reports.balanceSheet', 'Balance Sheet') },
   { value: 'statementOfCashFlow', ...translationKey('reports.statementOfCashFlow', 'Statement of Cash Flow') },
 ]

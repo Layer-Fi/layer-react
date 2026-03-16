@@ -253,7 +253,7 @@ export const ProfitAndLossCompareTable = ({
               comparisonData: resolvedComparisonData,
               rowKey: 'gross_profit',
               depth: 0,
-              rowDisplayName: stringOverrides?.grossProfitLabel || t('reports.grossProfit', 'Gross Profit'),
+              rowDisplayName: stringOverrides?.grossProfitLabel || t('common.grossProfit', 'Gross Profit'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,

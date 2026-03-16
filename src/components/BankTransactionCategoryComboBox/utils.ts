@@ -20,10 +20,10 @@ export enum BankTransactionCategoryComboBoxGroup {
 }
 
 const GROUP_LABEL_I18N: Record<BankTransactionCategoryComboBoxGroup, { i18nKey: string, defaultValue: string }> = {
-  [BankTransactionCategoryComboBoxGroup.TRANSFER]: translationKey('transferUppercase', 'TRANSFER'),
-  [BankTransactionCategoryComboBoxGroup.MATCH]: translationKey('matchUppercase', 'MATCH'),
-  [BankTransactionCategoryComboBoxGroup.SUGGESTIONS]: translationKey('suggestionsUppercase', 'SUGGESTIONS'),
-  [BankTransactionCategoryComboBoxGroup.ALL_CATEGORIES]: translationKey('allCategoriesUppercase', 'ALL CATEGORIES'),
+  [BankTransactionCategoryComboBoxGroup.TRANSFER]: translationKey('bankTransactions.transferUppercase', 'TRANSFER'),
+  [BankTransactionCategoryComboBoxGroup.MATCH]: translationKey('bankTransactions.matchUppercase', 'MATCH'),
+  [BankTransactionCategoryComboBoxGroup.SUGGESTIONS]: translationKey('bankTransactions.suggestionsUppercase', 'SUGGESTIONS'),
+  [BankTransactionCategoryComboBoxGroup.ALL_CATEGORIES]: translationKey('bankTransactions.allCategoriesUppercase', 'ALL CATEGORIES'),
 }
 
 const BOLD_GROUP_LABELS = new Set<BankTransactionCategoryComboBoxGroup>([
@@ -105,7 +105,7 @@ export const getSuggestedCategoriesGroup = (bankTransaction: BankTransaction, t:
   if (isLoadingSuggestions(bankTransaction)) {
     return {
       label: BankTransactionCategoryComboBoxGroup.SUGGESTIONS,
-      options: [new PlaceholderAsOption({ label: t('generatingSuggestionsForTransaction', 'Generating suggestions for transaction...'), value: 'LOADING_SUGGESTIONS' })],
+      options: [new PlaceholderAsOption({ label: t('bankTransactions.generatingSuggestionsForTransaction', 'Generating suggestions for transaction...'), value: 'LOADING_SUGGESTIONS' })],
     }
   }
 

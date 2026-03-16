@@ -59,7 +59,7 @@ export const humanizeTitle = (
     case 'revenue':
       return overrides?.revenueChartHeader || t('common.revenue', 'Revenue')
     default:
-      return t('reports.profitLoss', 'Profit & Loss')
+      return t('common.profitLoss', 'Profit & Loss')
   }
 }
 

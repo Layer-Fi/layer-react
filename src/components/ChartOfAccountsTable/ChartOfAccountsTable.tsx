@@ -353,11 +353,11 @@ export const ChartOfAccountsTableContent = ({
           <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
             {enableAccountNumbers && (
               <TableCell isHeaderCell>
-                {stringOverrides?.numberColumnHeader || t('chartOfAccounts.accountNumber', 'Account Number')}
+                {stringOverrides?.numberColumnHeader || t('generalLedger.accountNumber', 'Account Number')}
               </TableCell>
             )}
             <TableCell isHeaderCell>
-              {stringOverrides?.nameColumnHeader || t('chartOfAccounts.accountNameColumnHeader', 'Account Name')}
+              {stringOverrides?.nameColumnHeader || t('generalLedger.accountNameColumnHeader', 'Account Name')}
             </TableCell>
             <TableCell isHeaderCell>
               {stringOverrides?.typeColumnHeader || t('common.type', 'Type')}

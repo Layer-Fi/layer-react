@@ -95,7 +95,7 @@ export const BankTransactionsMobileListBusinessForm = ({
 
     options.push({
       value: new PlaceholderAsOption({
-        label: t('showAllCategories', 'Show all categories'),
+        label: t('bankTransactions.showAllCategories', 'Show all categories'),
         value: 'SELECT_CATEGORY',
       }),
       asLink: true,
@@ -179,7 +179,7 @@ export const BankTransactionsMobileListBusinessForm = ({
         >
           {showReceiptUploads && (
             <BankTransactionReceipts
-              label={t('receipts', 'Receipts')}
+              label={t('bankTransactions.receipts', 'Receipts')}
               ref={receiptsRef}
               floatingActions={false}
               hideUploadButtons={true}
@@ -190,7 +190,7 @@ export const BankTransactionsMobileListBusinessForm = ({
           {showReceiptUploads && (
             <FileInput
               onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-              text={t('uploadReceipt', 'Upload receipt')}
+              text={t('bankTransactions.uploadReceipt', 'Upload receipt')}
               iconOnly={true}
               icon={<PaperclipIcon />}
               accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -204,15 +204,19 @@ export const BankTransactionsMobileListBusinessForm = ({
                 isDisabled={!selectedCategory || isCategorizing}
               >
                 {isCategorizing
-                  ? (isCategorized(bankTransaction) ? t('updating', 'Updating...') : t('confirming', 'Confirming...'))
-                  : (isCategorized(bankTransaction) ? t('update', 'Update') : t('confirm', 'Confirm'))}
+                  ? (isCategorized(bankTransaction)
+                    ? t('common.updating', 'Updating...')
+                    : t('common.confirming', 'Confirming...'))
+                  : (isCategorized(bankTransaction)
+                    ? t('common.update', 'Update')
+                    : t('common.confirm', 'Confirm'))}
               </Button>
             )}
         </HStack>
         {isErrorCategorizing && showRetry
           ? (
             <ErrorText>
-              {t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
+              {t('bankTransactions.approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
             </ErrorText>
           )
           : null}
