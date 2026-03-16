@@ -89,7 +89,7 @@ export const InvoiceSummaryStats = () => {
             {!showSkeleton && overdueCount !== undefined
               ? (
                 <Badge variant={BadgeVariant.WARNING} size={BadgeSize.SMALL}>
-                  {t('overdueInvoicesCount', 'Overdue invoices: {{overdueCount}}', { overdueCount })}
+                  {t('invoices.overdueInvoicesCount', 'Overdue invoices: {{overdueCount}}', { overdueCount })}
                 </Badge>
               )
               : <BadgeLoader variant={BadgeVariant.WARNING} showLoading />}
@@ -98,7 +98,7 @@ export const InvoiceSummaryStats = () => {
             {!showSkeleton && sentCount !== undefined
               ? (
                 <Badge variant={BadgeVariant.INFO} size={BadgeSize.SMALL}>
-                  {t('upcomingInvoicesCount', 'Upcoming invoices: {{sentCount}}', { sentCount })}
+                  {t('invoices.upcomingInvoicesCount', 'Upcoming invoices: {{sentCount}}', { sentCount })}
                 </Badge>
               )
               : <BadgeLoader variant={BadgeVariant.INFO} showLoading />}
@@ -109,7 +109,7 @@ export const InvoiceSummaryStats = () => {
             </FallbackWithSkeletonLoader>
           </HStack>
         </HStack>
-        <Meter label={t('percentageOfInvoicesOverdue', 'Percentage of invoices overdue')} minValue={0} maxValue={100} value={percentageOverdue} meterOnly className='Layer__InvoiceSummaryStats__Meter' />
+        <Meter label={t('invoices.percentageOfInvoicesOverdue', 'Percentage of invoices overdue')} minValue={0} maxValue={100} value={percentageOverdue} meterOnly className='Layer__InvoiceSummaryStats__Meter' />
       </VStack>
     </HStack>
   )

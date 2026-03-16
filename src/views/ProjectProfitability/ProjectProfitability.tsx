@@ -19,9 +19,9 @@ import './projectProfitability.scss'
 type ProjectTab = 'overview' | 'transactions' | 'report'
 
 const PROJECT_TAB_CONFIG = [
-  { value: 'overview' as const, ...translationKey('overview', 'Overview') },
-  { value: 'transactions' as const, ...translationKey('transactions', 'Transactions') },
-  { value: 'report' as const, ...translationKey('report', 'Report') },
+  { value: 'overview' as const, ...translationKey('common.overview', 'Overview') },
+  { value: 'transactions' as const, ...translationKey('common.transactions', 'Transactions') },
+  { value: 'report' as const, ...translationKey('common.report', 'Report') },
 ]
 
 export type TagOption = {
@@ -102,7 +102,7 @@ export const ProjectProfitabilityView = ({
       <div className='Layer__component Layer__header__actions'>
         <div className='Layer__component'>
           <Toggle
-            ariaLabel={t('projectView', 'Project view')}
+            ariaLabel={t('common.projectView', 'Project view')}
             options={projectTabOptions}
             selectedKey={activeTab}
             onSelectionChange={key => setActiveTab(key as ProjectTab)}
@@ -112,7 +112,7 @@ export const ProjectProfitabilityView = ({
           className='Layer__category-menu Layer__select'
           classNamePrefix='Layer__select'
           options={valueOptions}
-          placeholder={t('selectAProject', 'Select a project...')}
+          placeholder={t('common.selectAProject', 'Select a project...')}
           isOptionSelected={isOptionSelected}
           defaultValue={valueOptions.length > 0 ? valueOptions[0] : undefined}
           value={valueOptions.find(
@@ -132,7 +132,7 @@ export const ProjectProfitabilityView = ({
         <>
           {activeTab === 'overview' && (
             <AccountingOverview
-              stringOverrides={{ header: t('projectOverview', 'Project Overview') }}
+              stringOverrides={{ header: t('common.projectOverview', 'Project Overview') }}
               tagFilter={tagFilter ? tagFilter : undefined}
               onTransactionsToReviewClick={() => setActiveTab('transactions')}
               enableOnboarding={false}

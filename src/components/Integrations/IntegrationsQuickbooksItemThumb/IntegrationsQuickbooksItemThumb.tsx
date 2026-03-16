@@ -25,7 +25,7 @@ const getBadgeConfig = (
     return {
       variant: BadgeVariant.INFO,
       icon: <RefreshCcw size={12} />,
-      ...translationKey('sync', 'Sync'),
+      ...translationKey('integrations.sync', 'Sync'),
     } as const
   }
 
@@ -34,7 +34,7 @@ const getBadgeConfig = (
       return {
         variant: BadgeVariant.ERROR,
         icon: <AlertCircle size={12} />,
-        ...translationKey('retrySync', 'Retry Sync'),
+        ...translationKey('integrations.retrySync', 'Retry Sync'),
       } as const
     }
     case QuickbooksConnectionSyncUiState.Connected:
@@ -42,7 +42,7 @@ const getBadgeConfig = (
       return {
         variant: BadgeVariant.SUCCESS,
         icon: <CheckIcon size={12} />,
-        ...translationKey('synced', 'Synced'),
+        ...translationKey('integrations.synced', 'Synced'),
       } as const
     }
     default:
@@ -50,7 +50,7 @@ const getBadgeConfig = (
       return {
         variant: BadgeVariant.INFO,
         icon: <RefreshCcw size={12} />,
-        ...translationKey('sync', 'Sync'),
+        ...translationKey('integrations.sync', 'Sync'),
       } as const
     }
   }
@@ -70,7 +70,7 @@ export const IntegrationsQuickbooksItemThumb = () => {
   const menuConfig = useMemo(() => {
     return [
       {
-        name: t('unlinkAccount', 'Unlink account'),
+        name: t('linkedAccounts.unlinkAccount', 'Unlink account'),
         action: () => {
           setIsConfirmationModalOpen(true)
         },

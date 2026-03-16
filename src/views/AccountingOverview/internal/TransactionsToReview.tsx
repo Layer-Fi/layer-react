@@ -73,7 +73,7 @@ export function TransactionsToReview({
           icon={<RefreshCcw size={12} />}
           onClick={() => void mutate()}
         >
-          {t('refresh', 'Refresh')}
+          {t('common.refresh', 'Refresh')}
         </Badge>
       )
     }
@@ -87,7 +87,7 @@ export function TransactionsToReview({
         >
           {numTransactionsToReview}
           {' '}
-          {t('pending', 'pending')}
+          {t('bankTransactions.pending', 'pending')}
         </Badge>
       )
     }
@@ -98,7 +98,7 @@ export function TransactionsToReview({
         size={BadgeSize.SMALL}
         icon={<CheckIcon size={12} />}
       >
-        {t('allDone', 'All done')}
+        {t('bankTransactions.allDone', 'All done')}
       </Badge>
     )
   }, [t, hasLoadedData, isError, mutate, numTransactionsToReview])
@@ -116,7 +116,7 @@ export function TransactionsToReview({
     <div onClick={onClick} className={CLASS_NAME}>
       <VStack gap={verticalGap} align='start'>
         <ProfitAndLossSummariesHeading variants={variants}>
-          {t('transactionsToReview', 'Transactions to review')}
+          {t('bankTransactions.transactionsToReview', 'Transactions to review')}
         </ProfitAndLossSummariesHeading>
         {transactionsToReviewBadge}
       </VStack>
