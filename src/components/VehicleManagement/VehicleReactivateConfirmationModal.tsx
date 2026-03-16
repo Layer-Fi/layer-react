@@ -35,7 +35,6 @@ export function VehicleReactivateConfirmationModal({
       description={t('vehiclenameWillBeRestoredToYourActiveVehiclesListAndAvailableForTrackingTrips', '{{vehicleName}} will be restored to your active vehicles list and available for tracking trips.', { vehicleName })}
       onConfirm={onConfirm}
       confirmLabel={t('reactivateVehicle', 'Reactivate vehicle')}
-      cancelLabel={t('cancel', 'Cancel')}
       errorText={t('failedToReactivateVehicleTryAgain', 'Failed to reactivate vehicle. Please check your connection and try again.')}
       useDrawer={useDrawer}
     />

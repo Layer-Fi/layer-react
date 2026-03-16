@@ -118,7 +118,7 @@ export const AddToCalendar = ({
     <>
       <InvisibleDownload ref={invisibleDownloadRef} />
       <DropdownMenu
-        ariaLabel='Add to calendar'
+        ariaLabel={t('addToCalendar', 'Add to Calendar')}
         slots={{ Trigger }}
         slotProps={{
           Dialog: { width: '10rem' },

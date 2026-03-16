@@ -31,7 +31,6 @@ export function JournalEntriesDownloadButton({
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
         text={t('downloadCsv', 'Download CSV')}
-        retryText={t('retry', 'Retry')}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useStore } from '@tanstack/react-form'
+import { useTranslation } from 'react-i18next'
 
 import { type CustomAccount, CustomAccountSubtype, CustomAccountType } from '@internal-types/customAccounts'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
@@ -31,6 +32,7 @@ type UseCustomAccountFormProps = {
 }
 
 export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) => {
+  const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
 
   const { trigger: createCustomAccount } = useCreateCustomAccount()
@@ -58,7 +60,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
         }
       }
       catch {
-        setSubmitError('Something went wrong. Please try again.')
+        setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
       }
     },
   })

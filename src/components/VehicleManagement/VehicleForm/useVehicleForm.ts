@@ -36,9 +36,9 @@ export const useVehicleForm = (props: UseVehicleFormProps) => {
     }
     catch (e) {
       console.error(e)
-      setSubmitError('Something went wrong. Please try again.')
+      setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
     }
-  }, [onSuccess, upsertVehicle])
+  }, [onSuccess, upsertVehicle, t])
 
   const onDynamic = useCallback(({ value }: { value: VehicleForm }) => {
     return validateVehicleForm({ vehicle: value }, t)

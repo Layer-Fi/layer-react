@@ -32,8 +32,8 @@ export const ExpandCollapseButton = ({
         }
         className={classNames(
           iconOnly
-            ? 'Layer__expand-collpase-all-rows-btn--sm'
-            : 'Layer__expand-collpase-all-rows-btn',
+            ? 'Layer__expand-collapse-all-rows-btn--sm'
+            : 'Layer__expand-collapse-all-rows-btn',
           className,
         )}
         rightIcon={

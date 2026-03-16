@@ -1,4 +1,3 @@
-import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
@@ -15,11 +14,12 @@ type TaskStatusBadgeProps = {
   tasksCount?: number
 }
 
-const buildBadgeConfig = (
+const useBadgeConfig = (
   status: TaskStatusBadgeProps['status'],
   tasksCount: TaskStatusBadgeProps['tasksCount'],
-  t: TFunction,
 ) => {
+  const { t } = useTranslation()
+
   switch (status) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
     case BookkeepingPeriodStatus.NOT_STARTED:
@@ -72,8 +72,7 @@ const buildBadgeConfig = (
 }
 
 export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) => {
-  const { t } = useTranslation()
-  const badgeConfig = buildBadgeConfig(status, tasksCount, t)
+  const badgeConfig = useBadgeConfig(status, tasksCount)
 
   if (!badgeConfig) {
     return

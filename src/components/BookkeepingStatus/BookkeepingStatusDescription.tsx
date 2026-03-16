@@ -1,7 +1,5 @@
-import { useTranslation } from 'react-i18next'
-
 import { type BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
-import { getBookkeepingStatusConfig } from '@components/BookkeepingStatus/utils'
+import { useBookkeepingStatusConfig } from '@components/BookkeepingStatus/useBookkeepingStatusConfig'
 import { Text, TextSize } from '@components/Typography/Text'
 
 type BookkeepingStatusDescriptionProps = {
@@ -11,11 +9,7 @@ type BookkeepingStatusDescriptionProps = {
 }
 
 export const BookkeepingStatusDescription = ({ monthNumber, status, incompleteTasksCount }: BookkeepingStatusDescriptionProps) => {
-  const { t, i18n } = useTranslation()
-  const statusConfig = getBookkeepingStatusConfig(
-    { status, monthNumber, incompleteTasksCount, locale: i18n.language },
-    t,
-  )
+  const statusConfig = useBookkeepingStatusConfig({ status, monthNumber, incompleteTasksCount })
   if (!statusConfig) {
     return null
   }

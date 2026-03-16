@@ -35,7 +35,6 @@ export function VehicleArchiveConfirmationModal({
       description={t('vehiclenameWillBeHiddenFromYourActiveVehiclesListYouCanReactivateItAtAnyTime', '{{vehicleName}} will be hidden from your active vehicles list. You can reactivate it at any time.', { vehicleName })}
       onConfirm={onConfirm}
       confirmLabel={t('archiveVehicle', 'Archive vehicle')}
-      cancelLabel={t('cancel', 'Cancel')}
       errorText={t('failedToArchiveVehicleTryAgain', 'Failed to archive vehicle. Please check your connection and try again.')}
       useDrawer={useDrawer}
     />

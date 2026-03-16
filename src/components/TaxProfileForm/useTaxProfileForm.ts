@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
+import { useTranslation } from 'react-i18next'
 
 import { type TaxProfile, TaxProfileRequestSchema } from '@schemas/taxEstimates/profile'
 import { UpsertTaxProfileMode, useUpsertTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useUpsertTaxProfile'
@@ -14,6 +15,7 @@ type UseTaxProfileFormProps = {
 }
 
 export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormProps) => {
+  const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const [submitSuccess, setSubmitSuccess] = useState<string | undefined>(undefined)
 
@@ -39,9 +41,9 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
     catch (e) {
       console.error(e)
       setSubmitSuccess(undefined)
-      setSubmitError('Something went wrong. Please try again.')
+      setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
     }
-  }, [onSuccess, upsertProfile])
+  }, [onSuccess, upsertProfile, t])
 
   const form = useAppForm<TaxProfileForm>({
     defaultValues: defaultValuesRef.current,

@@ -35,7 +35,6 @@ export function TripDeleteConfirmationModal({
       description={t('thisTripWillBePermanentlyDeletedThisActionCannotBeUndone', 'This trip will be permanently deleted. This action cannot be undone.')}
       onConfirm={onConfirm}
       confirmLabel={t('deleteTrip', 'Delete Trip')}
-      cancelLabel={t('cancel', 'Cancel')}
       errorText={t('failedToDeleteTripTryAgain', 'Failed to delete trip. Please check your connection and try again.')}
       useDrawer={isMobile}
     />

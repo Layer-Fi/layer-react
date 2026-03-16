@@ -51,10 +51,10 @@ export const useInvoiceFinalizeForm = ({
       }
       catch (e) {
         console.error(e)
-        setSubmitError('Something went wrong. Please try again.')
+        setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
       }
     },
-    [finalizeInvoice, onSuccess],
+    [finalizeInvoice, onSuccess, t],
   )
 
   const validators = useMemo(() => ({

@@ -109,7 +109,7 @@ export const InvoiceSummaryStats = () => {
             </FallbackWithSkeletonLoader>
           </HStack>
         </HStack>
-        <Meter label={t('invoicesMeter', 'Invoices meter')} minValue={0} maxValue={100} value={percentageOverdue} meterOnly className='Layer__InvoiceSummaryStats__Meter' />
+        <Meter label={t('percentageOfInvoicesOverdue', 'Percentage of invoices overdue')} minValue={0} maxValue={100} value={percentageOverdue} meterOnly className='Layer__InvoiceSummaryStats__Meter' />
       </VStack>
     </HStack>
   )

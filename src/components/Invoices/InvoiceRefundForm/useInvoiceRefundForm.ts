@@ -34,9 +34,9 @@ export const useInvoiceRefundForm = ({ onSuccess, invoice }: UseInvoiceRefundFor
     }
     catch (e) {
       console.error(e)
-      setSubmitError('Something went wrong. Please try again.')
+      setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
     }
-  }, [onSuccess, refundInvoice])
+  }, [onSuccess, refundInvoice, t])
 
   const onDynamic = useCallback(({ value }: { value: InvoiceRefundForm }) => {
     return validateInvoiceRefundForm({ invoiceRefund: value, invoice }, t)

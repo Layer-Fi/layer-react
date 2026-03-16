@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { getMonthNameFromNumber } from '@utils/date'
 import { tPlural } from '@utils/i18n/plural'
@@ -21,14 +21,14 @@ type BookkeepingStatusConfigOptions = {
   status: BookkeepingPeriodStatus
   monthNumber?: number
   incompleteTasksCount?: number
-  locale?: string
 }
 
-export function getBookkeepingStatusConfig(
+export function useBookkeepingStatusConfig(
   options: BookkeepingStatusConfigOptions,
-  t: TFunction,
 ): InternalStatusConfig | undefined {
-  const { status, monthNumber, incompleteTasksCount, locale = 'en-US' } = options
+  const { t, i18n } = useTranslation()
+  const { status, monthNumber, incompleteTasksCount } = options
+  const locale = i18n.language
   const monthName = monthNumber !== undefined ? getMonthNameFromNumber(monthNumber, locale) : ''
   const inProgressDescription = incompleteTasksCount !== undefined && incompleteTasksCount > 0
     ? tPlural(t, 'wereWorkingOnYourMonthNameBooksPleaseCompleteTheCountOpenTasks', {

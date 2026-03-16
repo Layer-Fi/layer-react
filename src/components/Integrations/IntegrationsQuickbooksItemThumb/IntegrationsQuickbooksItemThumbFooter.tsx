@@ -20,11 +20,12 @@ const formatLastSyncedAt = (datetime: string, t: TFunction) => {
   })
 }
 
-const getFooterConfig = (
+const useFooterConfig = (
   quickbooksUiState: QuickbooksConnectionSyncUiState,
   lastSyncedAt: string | undefined,
-  t: TFunction,
 ) => {
+  const { t } = useTranslation()
+
   switch (quickbooksUiState) {
     case QuickbooksConnectionSyncUiState.Syncing: {
       return {
@@ -62,15 +63,14 @@ type IntegrationsQuickbooksItemThumbFooterProps = {
 }
 
 export const IntegrationsQuickbooksItemThumbFooter = ({ quickbooksUiState }: IntegrationsQuickbooksItemThumbFooterProps) => {
-  const { t } = useTranslation()
   const { quickbooksConnectionStatus } = useContext(QuickbooksContext)
+  const { title, description, badgeVariant } = useFooterConfig(
+    quickbooksUiState,
+    quickbooksConnectionStatus?.last_synced_at,
+  )
+
   if (!quickbooksConnectionStatus) return null
 
-  const { title, description, badgeVariant } = getFooterConfig(
-    quickbooksUiState,
-    quickbooksConnectionStatus.last_synced_at,
-    t,
-  )
   return (
     <HStack className='loadingbar'>
       <VStack>
