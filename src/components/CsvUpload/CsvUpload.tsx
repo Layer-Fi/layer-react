@@ -154,7 +154,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
           <UploadCloud size={12} />
           <P size='sm'>
             <Trans
-              i18nKey='dragAndDropFileOrClickBrowse'
+              i18nKey='upload.dragAndDropFileOrClickBrowse'
               defaults='Drag and drop a file, or <browse>Browse</browse>.'
               components={{
                 browse: <button type='button' className='Layer__csv-upload__browse-link' onClick={handleBrowseClick} />,

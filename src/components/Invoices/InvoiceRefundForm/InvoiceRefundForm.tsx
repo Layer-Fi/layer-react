@@ -63,7 +63,7 @@ export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefu
       <VStack className={`${INVOICE_REFUND_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <HStack className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} gap='xs' align='center'>
           <Trans
-            i18nKey='invoiceLabelAndNumber'
+            i18nKey='invoices.invoiceLabelAndNumber'
             defaults='<label>Invoice</label> <value>#{{invoiceNumber}}</value>'
             values={{ invoiceNumber: invoice.invoiceNumber }}
             components={{

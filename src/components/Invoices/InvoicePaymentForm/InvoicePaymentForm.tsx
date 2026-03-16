@@ -71,7 +71,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
       <VStack className={`${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <HStack className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} gap='xs' align='center'>
           <Trans
-            i18nKey='invoiceLabelAndNumber'
+            i18nKey='invoices.invoiceLabelAndNumber'
             defaults='<label>Invoice</label> <value>#{{invoiceNumber}}</value>'
             values={{ invoiceNumber: invoice.invoiceNumber }}
             components={{
