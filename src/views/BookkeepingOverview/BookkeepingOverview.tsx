@@ -1,4 +1,3 @@
-import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
@@ -9,7 +8,6 @@ import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookin
 import { useCalendly } from '@hooks/features/calendly/useCalendly'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
-import { Toggle } from '@ui/Toggle/Toggle'
 import { CallBooking } from '@components/CallBooking/CallBooking'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
@@ -18,6 +16,7 @@ import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
@@ -49,8 +48,6 @@ export interface BookkeepingOverviewProps {
   title?: string
 }
 
-type PnlToggleOption = 'revenue' | 'expenses'
-
 export const BookkeepingOverview = ({
   title,
   showTitle = true,
@@ -59,24 +56,12 @@ export const BookkeepingOverview = ({
   slotProps,
 }: BookkeepingOverviewProps) => {
   const { t } = useTranslation()
-  const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
   const { value: sizeClass } = useSizeClass()
   const { isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly } = useCalendly()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
-
-  const toggleOptions = useMemo(() => [
-    {
-      value: 'revenue',
-      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || t('revenue', 'Revenue'),
-    },
-    {
-      value: 'expenses',
-      label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || t('expenses', 'Expenses'),
-    },
-  ], [t, stringOverrides])
 
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
@@ -157,40 +142,10 @@ export const BookkeepingOverview = ({
             <ProfitAndLoss.Chart />
           </Container>
         </div>
-        <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>
-          <Toggle
-            ariaLabel={t('chartType', 'Chart type')}
-            options={toggleOptions}
-            selectedKey={pnlToggle}
-            onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}
-          />
-          <Container
-            name={classNames(
-              'bookkeeping-overview-profit-and-loss-chart',
-              pnlToggle !== 'revenue'
-              && 'bookkeeping-overview-profit-and-loss-chart--hidden',
-            )}
-          >
-            <ProfitAndLoss.DetailedCharts
-              scope='revenue'
-              hideClose={true}
-              stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-            />
-          </Container>
-          <Container
-            name={classNames(
-              'bookkeeping-overview-profit-and-loss-chart',
-              pnlToggle !== 'expenses'
-              && 'bookkeeping-overview-profit-and-loss-chart--hidden',
-            )}
-          >
-            <ProfitAndLoss.DetailedCharts
-              scope='expenses'
-              hideClose={true}
-              stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-            />
-          </Container>
-        </div>
+        <ProfitAndLossOverviewDetailedCharts
+          variant='bookkeeping'
+          detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+        />
       </View>
       {isCalendlyVisible && (
         <div
