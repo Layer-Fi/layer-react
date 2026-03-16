@@ -14,8 +14,8 @@ const TaxPaymentsHeader = ({ isMobile }: { isMobile: boolean }) => {
   const { t } = useTranslation()
   return (
     <TaxEstimatesHeader
-      title={t('taxPayments', 'Tax Payments')}
-      description={t('federalAndStateTaxPaymentsForTheSelectedTaxYear', 'Federal and state tax payments for the selected tax year')}
+      title={t('taxEstimates.taxPayments', 'Tax Payments')}
+      description={t('taxEstimates.federalAndStateTaxPaymentsForTheSelectedTaxYear', 'Federal and state tax payments for the selected tax year')}
       isMobile={isMobile}
     />
   )
@@ -27,8 +27,8 @@ const ErrorState = () => {
     <DataState
       spacing
       status={DataStateStatus.failed}
-      title={t('weCouldntLoadYourTaxPayments', 'We couldnʼt load your tax payments')}
-      description={t('anErrorOccurredWhileLoadingYourTaxPaymentsPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax payments. Please check your connection and try again.')}
+      title={t('taxEstimates.weCouldntLoadYourTaxPayments', 'We couldnʼt load your tax payments')}
+      description={t('taxEstimates.anErrorOccurredWhileLoadingYourTaxPaymentsPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax payments. Please check your connection and try again.')}
       className='Layer__TaxPayments__ErrorState'
     />
   )
@@ -40,8 +40,8 @@ const EmptyState = () => {
     <DataState
       spacing
       status={DataStateStatus.info}
-      title={t('noTaxPaymentsFound', 'No tax payments found')}
-      description={t('thereAreNoTaxPaymentsToDisplay', 'There are no tax payments to display.')}
+      title={t('taxEstimates.noTaxPaymentsFound', 'No tax payments found')}
+      description={t('taxEstimates.thereAreNoTaxPaymentsToDisplay', 'There are no tax payments to display.')}
       className='Layer__TaxPayments__EmptyState'
     />
   )

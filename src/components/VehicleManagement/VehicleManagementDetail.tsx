@@ -29,9 +29,9 @@ const MobileVehicleManagementDetailHeader = ({
   const { t } = useTranslation()
   return (
     <HStack justify='space-between' align='center' fluid pie='md' pb='md'>
-      <Heading size='sm'>{t('manageVehicles', 'Manage vehicles')}</Heading>
+      <Heading size='sm'>{t('vehicles.manageVehicles', 'Manage vehicles')}</Heading>
       <Button variant='solid' onPress={onAddVehicle}>
-        {t('add', 'Add')}
+        {t('common.add', 'Add')}
         <Plus size={14} />
       </Button>
     </HStack>
@@ -47,15 +47,15 @@ const DesktopVehicleManagementDetailHeader = ({
   const { t } = useTranslation()
   return (
     <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
-      <Heading size='sm'>{t('manageVehicles', 'Manage vehicles')}</Heading>
+      <Heading size='sm'>{t('vehicles.manageVehicles', 'Manage vehicles')}</Heading>
       <HStack gap='md' align='center'>
         {showArchivedToggle && (
           <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
-            <Span size='sm' noWrap>{t('showArchived', 'Show archived')}</Span>
+            <Span size='sm' noWrap>{t('common.showArchived', 'Show archived')}</Span>
           </Switch>
         )}
         <Button variant='solid' onPress={onAddVehicle}>
-          {t('addVehicle', 'Add Vehicle')}
+          {t('vehicles.addVehicle', 'Add Vehicle')}
           <Plus size={14} />
         </Button>
       </HStack>
@@ -143,7 +143,7 @@ export const VehicleManagementDetail = () => {
             pbs='md'
           >
             <Switch isSelected={showArchived} onChange={setShowArchived}>
-              <Span size='sm' noWrap>{t('showArchived', 'Show archived')}</Span>
+              <Span size='sm' noWrap>{t('common.showArchived', 'Show archived')}</Span>
             </Switch>
           </HStack>
         )}

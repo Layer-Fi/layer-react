@@ -31,11 +31,11 @@ export function TripDeleteConfirmationModal({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('deleteThisTrip', 'Delete this trip?')}
-      description={t('thisTripWillBePermanentlyDeletedThisActionCannotBeUndone', 'This trip will be permanently deleted. This action cannot be undone.')}
+      title={t('trips.deleteThisTrip', 'Delete this trip?')}
+      description={t('trips.thisTripWillBePermanentlyDeletedThisActionCannotBeUndone', 'This trip will be permanently deleted. This action cannot be undone.')}
       onConfirm={onConfirm}
-      confirmLabel={t('deleteTrip', 'Delete Trip')}
-      errorText={t('failedToDeleteTripTryAgain', 'Failed to delete trip. Please check your connection and try again.')}
+      confirmLabel={t('trips.deleteTrip', 'Delete Trip')}
+      errorText={t('trips.failedToDeleteTripTryAgain', 'Failed to delete trip. Please check your connection and try again.')}
       useDrawer={isMobile}
     />
   )

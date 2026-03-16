@@ -36,7 +36,7 @@ export const useVehicleForm = (props: UseVehicleFormProps) => {
     }
     catch (e) {
       console.error(e)
-      setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
+      setSubmitError(t('common.somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
     }
   }, [onSuccess, upsertVehicle, t])
 

@@ -24,7 +24,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
         <VStack gap='xs' justify='center' align='center'>
           <VStack justify='center' align='center'>
             <Span size='md' variant='subtle'>
-              {tConditional(t, 'taxesOwed', {
+              {tConditional(t, 'taxEstimates.taxesOwed', {
                 condition: projectedCondition,
                 cases: {
                   default: 'Taxes Owed',
@@ -38,7 +38,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
             <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
           </VStack>
           <VStack align='center'>
-            <Span size='sm' variant='subtle'>{t('taxesDue', 'Taxes Due')}</Span>
+            <Span size='sm' variant='subtle'>{t('taxEstimates.taxesDue', 'Taxes Due')}</Span>
             <Span size='md'>{formatDate(data.taxesDueAt)}</Span>
           </VStack>
         </VStack>
@@ -55,9 +55,9 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
               <MoneySpan size='md' amount={section.taxesPaid} />
               <span />
               <span />
-              <Span size='sm' variant='subtle'>{t('total', 'Total')}</Span>
+              <Span size='sm' variant='subtle'>{t('common.total', 'Total')}</Span>
               <span />
-              <Span size='sm' variant='subtle'>{t('taxesPaid', 'Taxes Paid')}</Span>
+              <Span size='sm' variant='subtle'>{t('taxEstimates.taxesPaid', 'Taxes Paid')}</Span>
             </div>
           ))}
         </div>

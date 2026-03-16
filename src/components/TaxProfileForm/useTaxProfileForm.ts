@@ -41,7 +41,7 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
     catch (e) {
       console.error(e)
       setSubmitSuccess(undefined)
-      setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
+      setSubmitError(t('common.somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
     }
   }, [onSuccess, upsertProfile, t])
 

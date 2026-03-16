@@ -55,7 +55,9 @@ type CustomerSelectorProps = CustomerSelectorBaseProps & (
 )
 
 const formatCreateLabel = (inputValue: string, t: TFunction) =>
-  inputValue ? t('createCustomerInputValue', 'Create customer "{{inputValue}}"', { inputValue }) : t('createNewCustomer', 'Create new customer')
+  inputValue
+    ? t('customerVendor.createCustomerInputValue', 'Create customer "{{inputValue}}"', { inputValue })
+    : t('customerVendor.createNewCustomer', 'Create new customer')
 
 export function CustomerSelector({
   selectedCustomer,
@@ -136,7 +138,7 @@ export function CustomerSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {t('noMatchingCustomers', 'No matching customers')}
+        {t('customerVendor.noMatchingCustomers', 'No matching customers')}
       </P>
     ),
     [t],
@@ -148,7 +150,7 @@ export function CustomerSelector({
         size='xs'
         status='error'
       >
-        {t('anErrorOccurredWhileLoadingCustomers', 'An error occurred while loading customers.')}
+        {t('customerVendor.anErrorOccurredWhileLoadingCustomers', 'An error occurred while loading customers.')}
       </P>
     ),
     [t],
@@ -177,13 +179,13 @@ export function CustomerSelector({
       isCreatable: true as const,
       onCreateOption: onCreateCustomer,
       formatCreateLabel: (inputValue: string) => formatCreateLabel(inputValue, t),
-      groups: [{ label: t('customers', 'Customers'), options }],
+      groups: [{ label: t('customerVendor.customers', 'Customers'), options }],
     }
     : { isCreatable: false as const, options }
 
   return (
     <VStack className={combinedClassName}>
-      <Label htmlFor={inputId} size='sm'>{t('customer', 'Customer')}</Label>
+      <Label htmlFor={inputId} size='sm'>{t('customerVendor.customer', 'Customer')}</Label>
       <MaybeCreatableComboBox {...sharedProps} {...creatableProps} />
     </VStack>
   )

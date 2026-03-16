@@ -34,7 +34,7 @@ export const DebitCreditPill = ({
       size={BadgeSize.SMALL}
       onClick={isReadOnly ? undefined : handleClick}
     >
-      {isDebit ? t('debit', 'Debit') : t('credit', 'Credit')}
+      {isDebit ? t('common.debit', 'Debit') : t('common.credit', 'Credit')}
     </Badge>
   )
 }

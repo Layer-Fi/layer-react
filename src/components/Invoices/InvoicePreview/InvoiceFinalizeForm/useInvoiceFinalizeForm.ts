@@ -51,7 +51,7 @@ export const useInvoiceFinalizeForm = ({
       }
       catch (e) {
         console.error(e)
-        setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
+        setSubmitError(t('common.somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
       }
     },
     [finalizeInvoice, onSuccess, t],

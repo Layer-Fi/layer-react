@@ -20,8 +20,8 @@ export const FullYearProjectionComboBox = () => {
 
   const options = useMemo<ProjectionOption[]>(
     () => [
-      { label: t('yearToDate', 'Year to date'), value: 'ytd', valueBool: false },
-      { label: t('fullYearProjection', 'Full year projection'), value: 'full-year', valueBool: true },
+      { label: t('taxEstimates.yearToDate', 'Year to date'), value: 'ytd', valueBool: false },
+      { label: t('taxEstimates.fullYearProjection', 'Full year projection'), value: 'full-year', valueBool: true },
     ],
     [t],
   )

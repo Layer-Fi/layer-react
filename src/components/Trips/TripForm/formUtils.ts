@@ -35,19 +35,19 @@ export const validateTripForm = ({ trip }: { trip: TripForm }, t: TFunction) => 
   const errors = []
 
   if (tripDate === null) {
-    errors.push({ tripDate: t('tripDateIsARequiredField', 'Trip date is a required field.') })
+    errors.push({ tripDate: t('trips.tripDateIsARequiredField', 'Trip date is a required field.') })
   }
 
   if (tripDate && tripDate.compare(today(getLocalTimeZone())) > 0) {
-    errors.push({ tripDate: t('tripDateCannotBeInTheFuture', 'Trip date cannot be in the future.') })
+    errors.push({ tripDate: t('trips.tripDateCannotBeInTheFuture', 'Trip date cannot be in the future.') })
   }
 
   if (!BD.isPositive(distance)) {
-    errors.push({ distance: t('distanceMustBeGreaterThanZero', 'Distance must be greater than zero.') })
+    errors.push({ distance: t('trips.distanceMustBeGreaterThanZero', 'Distance must be greater than zero.') })
   }
 
   if (!purpose) {
-    errors.push({ purpose: t('purposeIsARequiredField', 'Purpose is a required field.') })
+    errors.push({ purpose: t('trips.purposeIsARequiredField', 'Purpose is a required field.') })
   }
 
   return errors.length > 0 ? errors : null

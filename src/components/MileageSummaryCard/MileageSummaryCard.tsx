@@ -63,7 +63,7 @@ export const MileageSummaryCard = () => {
       <VStack gap='md' pb='md' pi='lg'>
         <DataState
           status={DataStateStatus.failed}
-          title={t('anErrorOccurredWhileLoadingYourMileageDataPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your mileage data. Please check your connection and try again.')}
+          title={t('mileageTracking.anErrorOccurredWhileLoadingYourMileageDataPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your mileage data. Please check your connection and try again.')}
           spacing
         />
       </VStack>
@@ -105,7 +105,7 @@ export const MileageSummaryCard = () => {
       <HStack className='Layer__MileageSummaryCard__Panel'>
         {/* Header */}
         <HStack align='center' className='Layer__MileageSummaryCard__Panel-header Layer__MileageSummaryCard__Panel-left'>
-          <Span size='lg'>{t('milesThisMonth', 'Miles this month')}</Span>
+          <Span size='lg'>{t('mileageTracking.milesThisMonth', 'Miles this month')}</Span>
           <ArrowRightCircleAlt size={24} className='Layer__MileageSummaryCard__Panel-header-arrow-icon' />
         </HStack>
         <HStack align='center' className='Layer__MileageSummaryCard__Panel-header'>
@@ -114,10 +114,10 @@ export const MileageSummaryCard = () => {
               size='lg'
               className='Layer__MileageSummaryCard__Panel-header-tax-deduction-label'
             >
-              {t('taxDeduction', 'Tax Deduction')}
+              {t('mileageTracking.taxDeduction', 'Tax Deduction')}
             </Span>
             <Badge size={BadgeSize.MEDIUM} variant={BadgeVariant.NEUTRAL}>
-              {t('standardRateFormattedDeductionRatePerMile', 'Standard Rate: {{formattedDeductionRate}}/mile', { formattedDeductionRate })}
+              {t('mileageTracking.standardRateFormattedDeductionRatePerMile', 'Standard Rate: {{formattedDeductionRate}}/mile', { formattedDeductionRate })}
             </Badge>
           </HStack>
         </HStack>
@@ -146,10 +146,10 @@ export const MileageSummaryCard = () => {
     <VStack gap='md' pb='md' pi='lg'>
       <HStack gap='md' justify='space-between'>
         <Span size='lg' weight='bold' pb='2xs'>
-          {t('mileageTracking', 'Mileage Tracking')}
+          {t('mileageTracking.mileageTracking', 'Mileage Tracking')}
         </Span>
         <Button onPress={onRecordTrip}>
-          {t('addTrip', 'Add Trip')}
+          {t('trips.addTrip', 'Add Trip')}
           <Plus size={16} />
         </Button>
       </HStack>
@@ -167,7 +167,7 @@ export const MileageSummaryCard = () => {
         </HStack>
         <HStack gap='xs'>
           <Span size='sm' variant='subtle'>
-            {t('totalTaxDeduction', 'Total tax deduction:')}
+            {t('mileageTracking.totalTaxDeduction', 'Total tax deduction:')}
             {' '}
           </Span>
           <MoneySpan

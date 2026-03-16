@@ -36,7 +36,7 @@ export const InvoiceFormLineItemsSection = ({
           {!isReadOnly
             && (
               <Button variant='outlined' onClick={() => field.pushValue(EMPTY_LINE_ITEM)}>
-                {t('addLineItem', 'Add line item')}
+                {t('invoices.addLineItem', 'Add line item')}
                 <Plus size={16} />
               </Button>
             )}

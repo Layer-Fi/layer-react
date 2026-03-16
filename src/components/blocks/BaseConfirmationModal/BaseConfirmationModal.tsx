@@ -54,9 +54,9 @@ const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent(
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<APIError | Error | null>(null)
 
-  const confirmButtonLabel = confirmLabel ?? t('confirm', 'Confirm')
-  const retryButtonLabel = retryLabel ?? t('retry', 'Retry')
-  const cancelButtonLabel = cancelLabel ?? t('cancel', 'Cancel')
+  const confirmButtonLabel = confirmLabel ?? t('common.confirm', 'Confirm')
+  const retryButtonLabel = retryLabel ?? t('common.retry', 'Retry')
+  const cancelButtonLabel = cancelLabel ?? t('common.cancel', 'Cancel')
 
   const onClickConfirm = useCallback(() => {
     setIsProcessing(true)

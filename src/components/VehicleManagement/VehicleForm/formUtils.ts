@@ -30,16 +30,16 @@ export const validateVehicleForm = ({ vehicle }: { vehicle: VehicleForm }, t: TF
   const errors = []
 
   if (!makeAndModel.trim()) {
-    errors.push({ makeAndModel: t('makeAndModelIsARequiredField', 'Make and model is a required field.') })
+    errors.push({ makeAndModel: t('vehicles.makeAndModelIsARequiredField', 'Make and model is a required field.') })
   }
 
   if (Number.isNaN(year)) {
-    errors.push({ year: t('yearIsARequiredField', 'Year is a required field.') })
+    errors.push({ year: t('vehicles.yearIsARequiredField', 'Year is a required field.') })
   }
 
   const currentYear = new Date().getFullYear()
   if (!Number.isNaN(year) && (year < 1900 || year > currentYear + 1)) {
-    errors.push({ year: t('yearMustBeBetween1900AndMaxYear', 'Year must be between 1900 and {{maxYear}}.', { maxYear: currentYear + 1 }) })
+    errors.push({ year: t('vehicles.yearMustBeBetween1900AndMaxYear', 'Year must be between 1900 and {{maxYear}}.', { maxYear: currentYear + 1 }) })
   }
 
   return errors.length > 0 ? errors : null
