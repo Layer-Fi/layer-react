@@ -14,7 +14,7 @@ interface BankTransactionsProcessingInfoProps {
 
 export const BankTransactionsProcessingInfo = ({ showAsBadge = false }: BankTransactionsProcessingInfoProps) => {
   const { t } = useTranslation()
-  const tooltipContent = t('ourTeamWillReviewAndCategorizeThisTransactionWellReachOutIfWeHaveAnyQuestionsAboutIt', 'Our team will review and categorize this transaction. We\'ll reach out if we have any questions about it.')
+  const tooltipContent = t('bookkeeping.ourTeamWillReviewAndCategorizeThisTransactionWellReachOutIfWeHaveAnyQuestionsAboutIt', 'Our team will review and categorize this transaction. We\'ll reach out if we have any questions about it.')
 
   if (showAsBadge) {
     return (
@@ -24,7 +24,7 @@ export const BankTransactionsProcessingInfo = ({ showAsBadge = false }: BankTran
           icon={<Clock size={11} />}
           variant={BadgeVariant.INFO}
         >
-          {t('processing', 'Processing')}
+          {t('common.processing', 'Processing')}
         </Badge>
       </HStack>
     )

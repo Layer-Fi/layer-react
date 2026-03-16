@@ -42,7 +42,7 @@ export const InvoiceDetail = () => {
   }, [])
 
   const onFinalizeInvoiceSuccess = useCallback((invoice: Invoice) => {
-    addToast({ content: t('invoiceSavedAndSentSuccessfully', 'Invoice saved and sent successfully'), type: 'success' })
+    addToast({ content: t('invoices.invoiceSavedAndSentSuccessfully', 'Invoice saved and sent successfully'), type: 'success' })
     toViewInvoice(invoice)
   }, [addToast, t, toViewInvoice])
 

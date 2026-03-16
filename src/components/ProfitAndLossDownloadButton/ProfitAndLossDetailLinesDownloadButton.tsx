@@ -46,8 +46,8 @@ export function ProfitAndLossDetailLinesDownloadButton({
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text={stringOverrides?.downloadButtonText || t('download', 'Download')}
-        retryText={stringOverrides?.retryButtonText || t('retry', 'Retry')}
+        text={stringOverrides?.downloadButtonText || t('common.download', 'Download')}
+        retryText={stringOverrides?.retryButtonText || t('common.retry', 'Retry')}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

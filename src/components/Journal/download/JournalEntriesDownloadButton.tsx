@@ -30,7 +30,7 @@ export function JournalEntriesDownloadButton({
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text={t('downloadCsv', 'Download CSV')}
+        text={t('common.downloadCsv', 'Download CSV')}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

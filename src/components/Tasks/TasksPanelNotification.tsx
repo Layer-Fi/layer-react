@@ -30,7 +30,7 @@ export const TasksPanelNotification = ({
             <AlertCircle size={11} />
           </Text>
           <Text size={TextSize.md} weight={TextWeight.bold}>
-            {tPlural(t, 'bankAccountsAreDisconnected', {
+            {tPlural(t, 'bookkeeping.bankAccountsAreDisconnected', {
               count: disconnectedAccountsRequiringNotification,
               one: '{{count}} bank account is disconnected',
               other: '{{count}} bank accounts are disconnected',
@@ -45,7 +45,7 @@ export const TasksPanelNotification = ({
             }}
           >
             <Text size={TextSize.sm} weight={TextWeight.bold}>
-              {tPlural(t, 'reconnectCountAccounts', {
+              {tPlural(t, 'bookkeeping.reconnectCountAccounts', {
                 count: disconnectedAccountsRequiringNotification,
                 one: 'Reconnect {{count}} account',
                 other: 'Reconnect {{count}} accounts',
@@ -72,7 +72,7 @@ export const TasksPanelNotification = ({
             status='warning'
             invertColor
           >
-            {tPlural(t, 'countOpenTasksInYear', {
+            {tPlural(t, 'bookkeeping.countOpenTasksInYear', {
               count: unresolvedTasksCount,
               year: anyPreviousYearIncomplete.year,
               one: '{{count}} open task in {{year}}',
@@ -90,7 +90,7 @@ export const TasksPanelNotification = ({
           }}
         >
           <Text size={TextSize.sm} weight={TextWeight.bold}>
-            {t('viewAndComplete', 'View and complete')}
+            {t('bookkeeping.viewAndComplete', 'View and complete')}
           </Text>
           <ArrowRightCircle size={14} />
         </button>

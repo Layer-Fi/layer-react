@@ -81,7 +81,7 @@ export const StatementOfCashFlowTable = ({
             depth={depth + 1}
             variant='summation'
           >
-            <TableCell primary>{t('totalOfDisplayName', 'Total of {{displayName}}', { displayName: lineItem.display_name })}</TableCell>
+            <TableCell primary>{t('reports.totalOfDisplayName', 'Total of {{displayName}}', { displayName: lineItem.display_name })}</TableCell>
             <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
               {lineItem.value}
             </TableCell>
@@ -96,10 +96,10 @@ export const StatementOfCashFlowTable = ({
       <TableHead>
         <TableRow rowKey='soc-flow-head-row' isHeadRow>
           <TableCell isHeaderCell>
-            {stringOverrides?.typeColumnHeader || t('type', 'Type')}
+            {stringOverrides?.typeColumnHeader || t('common.type', 'Type')}
           </TableCell>
           <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.totalColumnHeader || t('total', 'Total')}
+            {stringOverrides?.totalColumnHeader || t('common.total', 'Total')}
           </TableCell>
         </TableRow>
       </TableHead>

@@ -91,28 +91,28 @@ export const BankTransactionsTable = ({
                   isSelected={isAllSelected}
                   isIndeterminate={isPartiallySelected}
                   onChange={onHeaderCheckboxChange}
-                  aria-label={t('selectAllTransactionsOnThisPage', 'Select all transactions on this page')}
+                  aria-label={t('bankTransactions.selectAllTransactionsOnThisPage', 'Select all transactions on this page')}
                 />
               </span>
             </th>
           )}
           <th className='Layer__table-header Layer__bank-transactions__date-col'>
-            {stringOverrides?.transactionsTable?.dateColumnHeaderText || t('date', 'Date')}
+            {stringOverrides?.transactionsTable?.dateColumnHeaderText || t('ui.date', 'Date')}
           </th>
           <th className='Layer__table-header Layer__bank-transactions__tx-col'>
             {stringOverrides?.transactionsTable?.transactionColumnHeaderText
-              || t('transaction', 'Transaction')}
+              || t('common.transaction', 'Transaction')}
           </th>
           <th className='Layer__table-header Layer__bank-transactions__account-col'>
             {stringOverrides?.transactionsTable?.accountColumnHeaderText
-              || t('account', 'Account')}
+              || t('common.account', 'Account')}
           </th>
           <th
             className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'
             {...showReceiptDataProperties}
           >
             {stringOverrides?.transactionsTable?.amountColumnHeaderText
-              || t('amount', 'Amount')}
+              || t('common.amount', 'Amount')}
           </th>
           <th
             className='Layer__table-header Layer__bank-transactions__documents-col'
@@ -122,13 +122,13 @@ export const BankTransactionsTable = ({
             ? (
               <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
                 {stringOverrides?.transactionsTable?.categorizeColumnHeaderText
-                  || t('categorize', 'Categorize')}
+                  || t('common.categorize', 'Categorize')}
               </th>
             )
             : (
               <th className='Layer__table-header Layer__table-cell__category-col'>
                 {stringOverrides?.transactionsTable?.categoryColumnHeaderText
-                  || t('category', 'Category')}
+                  || t('common.category', 'Category')}
               </th>
             )}
         </tr>

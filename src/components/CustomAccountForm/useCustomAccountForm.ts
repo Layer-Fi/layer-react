@@ -60,7 +60,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
         }
       }
       catch {
-        setSubmitError(t('somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
+        setSubmitError(t('common.somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
       }
     },
   })

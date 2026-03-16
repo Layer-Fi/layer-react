@@ -55,10 +55,10 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
       <form.AppField name='individualName'>
         {field => (
           <field.FormTextField
-            label={t('individualName', 'Individual name')}
+            label={t('customerVendor.individualName', 'Individual name')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('enterIndividualName', 'Enter individual name')}
+            placeholder={t('customerVendor.enterIndividualName', 'Enter individual name')}
             className='Layer__CustomerForm__Field__IndividualName'
           />
         )}
@@ -67,10 +67,10 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
       <form.AppField name='companyName'>
         {field => (
           <field.FormTextField
-            label={t('companyName', 'Company name')}
+            label={t('customerVendor.companyName', 'Company name')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('enterCompanyName', 'Enter company name')}
+            placeholder={t('customerVendor.enterCompanyName', 'Enter company name')}
             className='Layer__CustomerForm__Field__CompanyName'
           />
         )}
@@ -79,10 +79,10 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
       <form.AppField name='email'>
         {field => (
           <field.FormTextField
-            label={t('email', 'Email')}
+            label={t('common.email', 'Email')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('enterEmailAddress', 'Enter email address')}
+            placeholder={t('customerVendor.enterEmailAddress', 'Enter email address')}
             className='Layer__CustomerForm__Field__Email'
           />
         )}
@@ -91,10 +91,10 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
       <form.AppField name='addressString'>
         {field => (
           <field.FormTextAreaField
-            label={t('address', 'Address')}
+            label={t('common.address', 'Address')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('enterAddress', 'Enter address')}
+            placeholder={t('customerVendor.enterAddress', 'Enter address')}
             className='Layer__CustomerForm__Field__Address'
           />
         )}
@@ -110,7 +110,7 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
               onPress={() => { void form.handleSubmit() }}
             >
               <Save size={14} />
-              {t('saveCustomer', 'Save Customer')}
+              {t('customerVendor.saveCustomer', 'Save Customer')}
             </Button>
           )}
         </form.Subscribe>

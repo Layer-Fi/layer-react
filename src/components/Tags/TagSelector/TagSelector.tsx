@@ -54,7 +54,7 @@ function TagSelectorSelection({
 
   return (
     <TagGroup
-      aria-label={t('activeTags', 'Active Tags')}
+      aria-label={t('tags.activeTags', 'Active Tags')}
       selectionMode='none'
       onRemove={
         onRemoveTag
@@ -144,7 +144,7 @@ function LabeledTagSelectorContainer({
         htmlFor={forInputId}
         size='sm'
       >
-        {t('tags', 'Tags')}
+        {t('tags.tags', 'Tags')}
       </Label>
       {children}
     </VStack>
@@ -228,7 +228,7 @@ export function TagSelector({
         variant='subtle'
         nonAria
       >
-        {t('noMatchingTagsFound', 'No matching tags found')}
+        {t('tags.noMatchingTagsFound', 'No matching tags found')}
       </Span>
     ),
     [t],
@@ -240,7 +240,7 @@ export function TagSelector({
         status='error'
         nonAria
       >
-        {t('anErrorOccurredWhileLoadingTagOptions', 'An error occurred while loading tag options.')}
+        {t('tags.anErrorOccurredWhileLoadingTagOptions', 'An error occurred while loading tag options.')}
       </Span>
     ),
     [t],
@@ -283,7 +283,7 @@ export function TagSelector({
           groups={groups}
           inputId={inputId}
 
-          placeholder={t('addATagToThisTransaction', 'Add a tag to this transaction...')}
+          placeholder={t('tags.addATagToThisTransaction', 'Add a tag to this transaction...')}
           slots={{
             EmptyMessage,
             ErrorMessage,

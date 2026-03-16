@@ -21,7 +21,7 @@ const TasksOnboardingEmptyState = () => {
   const { t } = useTranslation()
   return (
     <VStack gap='lg' pi='md' pbe='md'>
-      <Span>{t('onceYouCompleteYourBookkeepingOnboardingCallYouWillSeeYourBookkeepingTasksHere', 'Once you complete your bookkeeping onboarding call, you will see your bookkeeping tasks here.')}</Span>
+      <Span>{t('bookkeeping.onceYouCompleteYourBookkeepingOnboardingCallYouWillSeeYourBookkeepingTasksHere', 'Once you complete your bookkeeping onboarding call, you will see your bookkeeping tasks here.')}</Span>
     </VStack>
   )
 }
@@ -97,9 +97,9 @@ export function Tasks({
               <TasksEmptyContainer>
                 <VStack gap='sm' align='center'>
                   <Heading size='xs' level={4}>
-                    {t('notEnrolledInBookkeeping', 'Not Enrolled in Bookkeeping')}
+                    {t('bookkeeping.notEnrolledInBookkeeping', 'Not Enrolled in Bookkeeping')}
                   </Heading>
-                  <P>{t('ifYouBelieveThisIsAnErrorPleaseContactSupport', 'If you believe this is an error, please contact support.')}</P>
+                  <P>{t('bookkeeping.ifYouBelieveThisIsAnErrorPleaseContactSupport', 'If you believe this is an error, please contact support.')}</P>
                 </VStack>
               </TasksEmptyContainer>
             )}
