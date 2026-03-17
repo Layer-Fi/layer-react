@@ -9,14 +9,15 @@ type Document = {
 
 type RawTaskBase = {
   id: string
+  task_run_id: string | null
   status: TasksStatus
   title: string
   type: string
+  period_id: string | null
   archived_at: string | null
-  completed_at: string | null
   created_at: string
   updated_at: string
-  effective_date: string
+  effective_date: string | null
 }
 
 export type RawHumanTask = RawTaskBase & {
@@ -24,9 +25,11 @@ export type RawHumanTask = RawTaskBase & {
   question: string
   transaction_id: string | null
   user_marked_completed_at: string | null
+  completed_at: string | null
   user_response: string | null
   user_response_type: TasksResponseType
   document_type: DocumentType
+  document: Document | null
   documents: Document[]
 }
 
@@ -44,42 +47,38 @@ type AutomatedTaskCounterparty = {
 type AutomatedTaskSuggestedRule = {
   apply_retroactively: boolean
   created_by_suggestion_id: string | null
-  external_id: string | null
-  name: string | null
+  counterparty_filter: string | null
   category: unknown
-  suggestion_1: unknown
-  suggestion_2: unknown
-  suggestion_3: unknown
-  business_name_filter: string | null
-  client_name_filter: string | null
-  merchant_type_filter: string | null
-  transaction_description_filter: string | null
-  transaction_type_filter: string | null
   bank_direction_filter: string | null
-  amount_min_filter: number | null
-  amount_max_filter: number | null
 }
 
-export type AutomatedTaskUncategorizedTransaction = {
+type AutomatedTaskSuggestionStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED'
+
+export type AutomatedTaskAffectedTransaction = {
   id: string
   date: string
   amount: number
-  counterparty_name: string | null
+  counterparty_name: string
+  direction: string
+  description: string | null
 }
 
-type AutomatedRuleSuggestionReviewPayload = {
-  type: 'Automated_Rule_Suggestion_Review'
-  counterparty: AutomatedTaskCounterparty
-  suggestion_id: string
+type AutomatedTaskSuggestion = {
+  type: 'Create_One_Of_Suggested_Categorization_Rules_For_Counterparty'
+  id: string
   suggested_rules: ReadonlyArray<AutomatedTaskSuggestedRule>
-  uncategorized_transactions: ReadonlyArray<AutomatedTaskUncategorizedTransaction>
+  counterparty: AutomatedTaskCounterparty
+  transactions_that_will_be_affected: ReadonlyArray<AutomatedTaskAffectedTransaction>
+  accepted_at: string | null
+  dismissed_at: string | null
+  status: AutomatedTaskSuggestionStatus
 }
 
 export type RawAutomatedTask = RawTaskBase & {
   type: 'Automated_Task'
-  task_type: 'Automated'
+  task_type: 'AUTOMATED'
   source_suggestion_id: string | null
-  payload: AutomatedRuleSuggestionReviewPayload
+  suggestion: AutomatedTaskSuggestion
 }
 
 export type RawTask = RawHumanTask | RawAutomatedTask

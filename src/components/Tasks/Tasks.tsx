@@ -1,8 +1,9 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { CallBookingPurpose, useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
+import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P, Span } from '@ui/Typography/Text'
@@ -32,12 +33,13 @@ export interface TasksStringOverrides {
 
 type TasksState = 'loading' | 'onboarding' | 'active'
 
-type TasksProps = {
+export interface TasksProps {
   /**
    * @deprecated Use `stringOverrides.header` instead
    */
   tasksHeader?: string
   mobile?: boolean
+  fixedToPreviousMonth?: boolean
   stringOverrides?: TasksStringOverrides
   onClickReconnectAccounts?: () => void
 }
@@ -45,12 +47,31 @@ type TasksProps = {
 export function Tasks({
   mobile = false,
   tasksHeader,
+  fixedToPreviousMonth = false,
   onClickReconnectAccounts,
   stringOverrides,
 }: TasksProps) {
   const { t } = useTranslation()
   const { data, isLoading } = useBookkeepingPeriods()
   const { data: callBookings, isLoading: isLoadingCallBookings } = useCallBookings()
+  const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
+
+  useEffect(() => {
+    if (!fixedToPreviousMonth) {
+      return
+    }
+
+    const previousMonthDate = new Date()
+    previousMonthDate.setDate(1)
+    previousMonthDate.setMonth(previousMonthDate.getMonth() - 1)
+
+    setMonthByPeriod({
+      monthNumber: previousMonthDate.getMonth() + 1,
+      yearNumber: previousMonthDate.getFullYear(),
+    })
+  }, [fixedToPreviousMonth, setMonthByPeriod])
+
+  const shouldShowPeriodNavigation = !fixedToPreviousMonth
 
   const tasksState: TasksState = useMemo(() => {
     if (isLoading || isLoadingCallBookings) {
@@ -106,8 +127,8 @@ export function Tasks({
           >
             {() => (
               <>
-                <TasksYearsTabs />
-                <TasksMonthSelector />
+                {shouldShowPeriodNavigation && <TasksYearsTabs />}
+                {shouldShowPeriodNavigation && <TasksMonthSelector />}
                 <TasksPending />
                 <TasksList mobile={mobile} />
               </>
