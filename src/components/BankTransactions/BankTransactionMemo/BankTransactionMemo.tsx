@@ -1,4 +1,3 @@
-import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -8,8 +7,6 @@ import { TextArea } from '@ui/Input/TextArea'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { useBankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/useBankTransactionMemo'
-
-import './bankTransactionMemo.scss'
 
 export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTransactionId: BankTransaction['id'], isMobile?: boolean }) => {
   const { t } = useTranslation()
@@ -43,9 +40,10 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
                 ? (
                   <InputGroup>
                     <Input
+                      inset
                       name='memo'
-                      placeholder='Add description'
                       value={field.state.value ?? undefined}
+                      placeholder={t('common:action.add_description', 'Add description')}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
                     />
                   </InputGroup>
@@ -53,8 +51,8 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
                 : (
                   <TextArea
                     name='memo'
-                    placeholder='Add description'
                     value={field.state.value ?? undefined}
+                    placeholder={t('common:action.add_description', 'Add description')}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
                   />
                 )}
