@@ -1,3 +1,4 @@
+import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -7,6 +8,8 @@ import { TextArea } from '@ui/Input/TextArea'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { useBankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/useBankTransactionMemo'
+
+import './bankTransactionMemo.scss'
 
 export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTransactionId: BankTransaction['id'], isMobile?: boolean }) => {
   const { t } = useTranslation()
