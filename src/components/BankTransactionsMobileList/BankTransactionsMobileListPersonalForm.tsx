@@ -148,7 +148,7 @@ export const BankTransactionsMobileListPersonalForm = ({
               {isCategorizing
                 ? (isCategorized(bankTransaction)
                   ? t('common:state.updating', 'Updating...')
-                  : t('bankTransactions:label.confirming', 'Confirming...'))
+                  : t('common:state.confirming', 'Confirming...'))
                 : alreadyAssigned
                   ? t('common:state.updated', 'Updated')
                   : t('bankTransactions:action.mark_as_personal', 'Mark as Personal')}
