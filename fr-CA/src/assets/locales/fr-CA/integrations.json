@@ -1,0 +1,34 @@
+{
+  "action": {
+    "connect_integration": "Connect Integration",
+    "connect_quickbooks": "Connect QuickBooks",
+    "retry_connect_quickbooks": "Retry Connect QuickBooks",
+    "retry_sync": "Retry Sync",
+    "sync_label": "Sync",
+    "unlink_quickbooks": "Unlink QuickBooks"
+  },
+  "empty": {
+    "active_integrations": "No active integrations"
+  },
+  "error": {
+    "connect_quickbooks": "Failed to connect QuickBooks",
+    "unlink_failed": "Unlink failed. Please check your connection and try again in a few seconds."
+  },
+  "label": {
+    "date_time": "{{date}} at {{time}}",
+    "integrations": "Integrations",
+    "quickbooks_connected": "QuickBooks connected",
+    "take_five_minutes": "This may take up to 5 minutes",
+    "unlink_quickbooks": "Unlink QuickBooks"
+  },
+  "prompt": {
+    "confirm_unlink_quickbooks": "Please confirm that you want to unlink QuickBooks."
+  },
+  "state": {
+    "connected_quickbooks": "Connected to QuickBooks",
+    "last_sync": "Last synced on",
+    "last_sync_failed_at": "Last sync failed at",
+    "synced": "Synced",
+    "syncing_account_data": "Syncing account data"
+  }
+}
