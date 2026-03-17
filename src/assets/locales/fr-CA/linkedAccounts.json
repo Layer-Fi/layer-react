@@ -1,0 +1,81 @@
+{
+  "action": {
+    "add_account": "",
+    "add_opening_balance": "",
+    "confirm_account": "",
+    "confirm_accounts_one": "",
+    "confirm_accounts_other": "",
+    "confirm_accounts_selected_one": "",
+    "confirm_accounts_selected_other": "",
+    "connect_my_bank": "",
+    "delete_account": "",
+    "delete_account_label": "",
+    "exclude_all_accounts_one": "",
+    "exclude_all_accounts_other": "",
+    "fix_account": "",
+    "im_done_linking": "",
+    "link_another_bank": "",
+    "mark_duplicate_account": "",
+    "mark_not_duplicate_account": "",
+    "repair_connection": "",
+    "unlink_account": "",
+    "unlink_account_label": "",
+    "unlink_accounts_under_connection": "",
+    "unlink_accounts_under_institution_name": ""
+  },
+  "empty": {
+    "no_accounts_connected": ""
+  },
+  "error": {
+    "confirm_accounts_try_again_later": "",
+    "delete_account_check_connection": "",
+    "load_accounts": "",
+    "no_data_sync_until_confirm": "",
+    "save_data_try_again_later": "",
+    "unlink_failed": ""
+  },
+  "label": {
+    "account_and_unmatched_transactions_deleted": "",
+    "account_linked_successfully": "",
+    "account_stops_syncing_new_data": "",
+    "accounts_successfully_linked": "",
+    "bank_balance": "",
+    "confirm_account_inclusion": "",
+    "confirm_business_accounts": "",
+    "confirm_remove_accounts_for_institution": "",
+    "confirm_remove_accounts_for_institution_name": "",
+    "connect_accounts": "",
+    "connect_bank_accounts_and_credit_cards": "",
+    "data_is_syncing": "",
+    "deselect_unused_accounts": "",
+    "found_accounts_count_one": "",
+    "found_accounts_count_other": "",
+    "import_data_simple_integration": "",
+    "ledger_balance": "",
+    "link_bank_accounts_and_credit_cards": "",
+    "link_more_accounts_any_time": "",
+    "linked_accounts": "",
+    "loading_accounts": "",
+    "may_take_few_minutes": "",
+    "may_take_up_to_5_minutes": "",
+    "may_take_up_to_hours_one": "",
+    "may_take_up_to_hours_other": "",
+    "may_take_up_to_minutes_one": "",
+    "may_take_up_to_minutes_other": "",
+    "no_accounts_to_confirm": "",
+    "opening_balance": "",
+    "opening_date": "",
+    "populate_accounting_dashboard_three_steps": "",
+    "remove_unused_accounts_next_step": "",
+    "select_accounts_use_one": "",
+    "select_accounts_use_other": ""
+  },
+  "prompt": {
+    "use_other_bank_accounts_or_cards": "",
+    "which_accounts_for_business": ""
+  },
+  "state": {
+    "syncing_account_data": "",
+    "syncing_historical_account_data": ""
+  }
+}

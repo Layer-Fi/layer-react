@@ -1,0 +1,76 @@
+{
+  "action": {
+    "add_credits": "Add Credits",
+    "add_debits": "Add Debits",
+    "add_entry": "Add Entry",
+    "add_new_entry": "Add new entry",
+    "add_next_line": "Add next line",
+    "reverse_entry": "Reverse entry",
+    "save_account": "Save Account",
+    "select_account_type": "Select account type..."
+  },
+  "empty": {
+    "credit_line_items": "No credit line items added yet. Click \"Add next line\" to get started.",
+    "debit_line_items": "No debit line items added yet. Click \"Add next line\" to get started.",
+    "entries": "No entries found",
+    "entry_journal_message": "There are no ledger entries in this account.",
+    "ledger_activity": "No ledger activity"
+  },
+  "error": {
+    "operation_retry": "Operation failed. Try again.",
+    "submit_failed_check_connection": "Submit failed. Please check your connection and try again."
+  },
+  "label": {
+    "account_name": "Account name",
+    "account_name_title_case": "Account Name",
+    "account_number": "Account Number",
+    "account_type": "Account type",
+    "balance": "Current balance",
+    "bill_number": "Bill Number",
+    "check_fields": "Please check all fields.",
+    "creation_date": "Creation date",
+    "enter_account_name": "Enter account name...",
+    "enter_institution_name": "Enter institution name...",
+    "entries": "Entries",
+    "entry_date": "Entry date",
+    "entry_journal": "There are no entries in the journal.",
+    "entry_reversed": "This entry has already been reversed",
+    "entry_type": "Entry type",
+    "general_ledger": "General Ledger",
+    "import_date": "Import Date",
+    "institution_name": "Institution name",
+    "invoice_number": "Invoice number",
+    "journal": "Journal",
+    "journal_entry": "Journal Entry",
+    "journal_entry_number": "Journal Entry #{{entryNumber}}",
+    "journal_entry_posted": "Journal entry #{{journalEntryNumber}} posted",
+    "journal_id": "Journal ID #",
+    "journal_id_display": "Journal ID #{{journalId}}",
+    "ledger_view": "Ledger view",
+    "line_items": "Line items",
+    "payday": "Payday",
+    "quickbooks_id": "QuickBooks ID",
+    "recipient_name": "Recipient name",
+    "reversal": "Reversal",
+    "running_balance": "Running balance"
+  },
+  "prompt": {
+    "discard_changes_journal_entry": "Discard changes to this journal entry?"
+  },
+  "validation": {
+    "account_name_required": "Account name is required",
+    "account_required": "Account is a required field.",
+    "account_required_short": "Account is required",
+    "account_type_required": "Account type is required",
+    "amount_greater_must": "Amount must be greater than zero.",
+    "amount_not_empty_or_zero": "Amount cannot be empty or zero",
+    "create_required": "Created by is a required field.",
+    "debit_credit_must": "Debit and credit amounts must be equal",
+    "entry_date_required": "Entry date is a required field.",
+    "institution_name_required": "Institution name is required",
+    "least_one_required": "At least one credit line item is required.",
+    "least_one_required_line": "At least one line item is required.",
+    "least_one_required_one": "At least one debit line item is required.",
+    "memo_required": "Memo is a required field."
+  }
+}

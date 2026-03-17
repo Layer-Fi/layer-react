@@ -1,0 +1,50 @@
+{
+  "action": {
+    "add_vehicle": "Add Vehicle",
+    "add_vehicle_label": "Add vehicle",
+    "archive_vehicle_label": "Archive vehicle",
+    "delete_vehicle_label": "Delete vehicle",
+    "edit_vehicle": "Edit vehicle",
+    "manage_vehicles": "Manage vehicles",
+    "reactivate_vehicle_label": "Reactivate vehicle",
+    "save_vehicle": "Save Vehicle",
+    "set_primary_vehicle": "Set as primary vehicle"
+  },
+  "empty": {
+    "add_first_vehicle": "Add your first vehicle to start tracking trips.",
+    "matching_vehicle": "No matching vehicle",
+    "vehicles": "No vehicles yet"
+  },
+  "error": {
+    "archive_vehicle": "Failed to archive vehicle. Please check your connection and try again.",
+    "delete_vehicle": "Failed to delete vehicle. Please check your connection and try again.",
+    "delete_vehicle_name": "{{vehicleName}} will be permanently deleted. This action cannot be undone.",
+    "load_vehicle": "We couldn't load your vehicles",
+    "load_vehicle_retry": "An error occurred while loading your vehicles. Please check your connection and try again.",
+    "load_vehicles": "An error occurred while loading vehicles.",
+    "reactivate_vehicle": "Failed to reactivate vehicle. Please check your connection and try again."
+  },
+  "label": {
+    "all_vehicles": "All vehicles",
+    "enter_license_plate": "Enter license plate",
+    "enter_vehicle_make_model": "Enter vehicle make and model",
+    "enter_vehicle_year": "Enter vehicle year",
+    "enter_vin": "Enter VIN",
+    "license_plate": "License plate",
+    "make_model": "Make and model",
+    "vehicle": "Vehicle",
+    "vehicle_name_hidden_from_active_list": "{{vehicleName}} will be hidden from your active vehicles list. You can reactivate it at any time.",
+    "vehicle_name_restored_to_active_list": "{{vehicleName}} will be restored to your active vehicles list and available for tracking trips.",
+    "vin": "VIN"
+  },
+  "prompt": {
+    "archive_vehicle": "Archive this vehicle?",
+    "delete_vehicle": "Delete this vehicle?",
+    "reactivate_vehicle": "Reactivate this vehicle?"
+  },
+  "validation": {
+    "make_model_required": "Make and model is a required field.",
+    "year_range": "Year must be between 1900 and {{maxYear}}.",
+    "year_required": "Year is a required field."
+  }
+}

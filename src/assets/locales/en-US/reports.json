@@ -1,0 +1,49 @@
+{
+  "action": {
+    "collapse_rows": "Collapse all rows",
+    "expand_rows": "Expand all rows"
+  },
+  "emptu": {
+    "no_detail_lines_pnl_item": "There are no detail lines for this profit and loss item"
+  },
+  "empty": {
+    "no_detail_lines_found": "No detail lines found",
+    "no_rows_found": "No rows found",
+    "report_has_no_rows": "This report has no rows."
+  },
+  "error": {
+    "couldnt_load_report": "We couldn’t load your report",
+    "load_detail_lines": "Error loading detail lines",
+    "load_pnl_detail_lines": "There was an error loading the profit and loss detail lines",
+    "load_report": "An error occurred while loading your report. Please check your connection and try again."
+  },
+  "label": {
+    "adjustments_net_income": "Adjustments to Net Income",
+    "assets": "Assets",
+    "balance_sheet": "Balance Sheet",
+    "balance_sheet_report": "Balance Sheet Report",
+    "cash_beginning_of_period": "Cash at Beginning of Period",
+    "cash_end_of_period": "Cash at End of Period",
+    "compare": "Compare by",
+    "cost_goods_sold": "Cost of Goods Sold",
+    "financing_activities": "Financing Activities",
+    "group": "Group by",
+    "income": "Income",
+    "investing_activities": "Investing Activities",
+    "liabilities_equity": "Liabilities & Equity",
+    "line_item_name_detail_lines": "{{lineItemName}} detail lines",
+    "net_cash_increase_period": "Net Cash Increase For Period",
+    "net_profit": "Net Profit",
+    "operating_activities": "Operating Activities",
+    "other_outflows": "Other Outflows",
+    "profit_before_taxes": "Profit Before Taxes",
+    "profit_loss_detail_report": "Profit and Loss Detail Report",
+    "profit_loss_report": "Profit & Loss Report",
+    "report_period": "Report period",
+    "report_type": "Report type",
+    "reports": "Reports",
+    "statement_cash_flow": "Statement of Cash Flow",
+    "statement_cash_flow_message": "Statement of Cash Flow Report",
+    "total_display_name": "Total of {{displayName}}"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "action": {
+    "add_calendar": "",
+    "book_call": "",
+    "download_ics_file": "",
+    "join_call": ""
+  },
+  "label": {
+    "ad_hoc_call": "",
+    "book_call_with_bookkeeper": "",
+    "date_colon": "",
+    "google_calendar": "",
+    "location_colon": "",
+    "meet_bookkeeping_team": "",
+    "onboarding_call": "",
+    "outlook_calendar": "",
+    "purpose_colon": "",
+    "upcoming_call": "",
+    "yahoo_calendar": ""
+  },
+  "prompt": {
+    "have_questions": ""
+  }
+}

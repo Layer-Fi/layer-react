@@ -1,0 +1,45 @@
+{
+  "action": {
+    "delete_uploads": "",
+    "schedule_a_demo": "",
+    "select_files": "",
+    "show_all_tasks_count": "",
+    "show_completed_tasks": "",
+    "view_and_complete": ""
+  },
+  "label": {
+    "bank_accounts_disconnected_one": "",
+    "bank_accounts_disconnected_other": "",
+    "bookkeeping_tasks": "",
+    "complete_bookkeeping_onboarding_call": "",
+    "count_open_tasks_one": "",
+    "count_open_tasks_other": "",
+    "count_tasks_one": "",
+    "count_tasks_other": "",
+    "great_job": "",
+    "month_name_books_complete": "",
+    "not_enrolled_in_bookkeeping": "",
+    "optional_description": "",
+    "order_our_bookkeeping_service": "",
+    "pending_tasks": "",
+    "please_contact_support": "",
+    "reconnect_count_accounts_one": "",
+    "reconnect_count_accounts_other": "",
+    "respond_to_below_tasks": "",
+    "selected_files": "",
+    "tasks": "",
+    "team_review_categorize_transaction": "",
+    "uploaded_files": "",
+    "working_on_books_no_action_needed": "",
+    "working_on_books_please_complete_tasks_one": "",
+    "working_on_books_please_complete_tasks_other": ""
+  },
+  "prompt": {
+    "need_help_books": ""
+  },
+  "state": {
+    "action_required": "",
+    "books_completed": "",
+    "books_in_progress": ""
+  }
+}

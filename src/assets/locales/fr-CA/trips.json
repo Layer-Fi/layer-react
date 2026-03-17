@@ -1,0 +1,45 @@
+{
+  "action": {
+    "add_trip": "",
+    "delete_trip": "",
+    "edit_trip": "",
+    "record_trip": "",
+    "save_trip": "",
+    "view_trip": ""
+  },
+  "empty": {
+    "add_first_trip": "",
+    "no_trips_yet": ""
+  },
+  "error": {
+    "delete_trip": "",
+    "load_trips": "",
+    "load_trips_error": ""
+  },
+  "label": {
+    "additional_trip_actions": "",
+    "delete_trip_warning": "",
+    "distance": "",
+    "distance_mi": "",
+    "end_address": "",
+    "enter_address": "",
+    "enter_distance": "",
+    "search_trips": "",
+    "start_address": "",
+    "trip_date": "",
+    "trip_details": "",
+    "trip_end_address": "",
+    "trip_purpose": "",
+    "trip_start_address": "",
+    "trips": ""
+  },
+  "prompt": {
+    "delete_trip": ""
+  },
+  "validation": {
+    "distance_greater_than_zero": "",
+    "purpose_required": "",
+    "trip_date_not_future": "",
+    "trip_date_required": ""
+  }
+}

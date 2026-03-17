@@ -1,0 +1,18 @@
+{
+  "action": {
+    "add_tag_transaction": "",
+    "select_dimension_name": "",
+    "select_tags": ""
+  },
+  "empty": {
+    "matching_tags": ""
+  },
+  "error": {
+    "load_tag_options": ""
+  },
+  "label": {
+    "active_tags": "",
+    "tag_label_archived": "",
+    "tags": ""
+  }
+}

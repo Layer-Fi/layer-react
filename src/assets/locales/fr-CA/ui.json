@@ -1,0 +1,24 @@
+{
+  "action": {
+    "clear_filters": "",
+    "clear_search": "",
+    "close_modal": "",
+    "get_more_results": ""
+  },
+  "empty": {
+    "matching_options": ""
+  },
+  "error": {
+    "generic": ""
+  },
+  "label": {
+    "go_next_page": "",
+    "go_page_number": "",
+    "go_previous_page": "",
+    "menu": "",
+    "pagination": ""
+  },
+  "state": {
+    "pending": ""
+  }
+}

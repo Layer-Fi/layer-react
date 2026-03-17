@@ -1,0 +1,36 @@
+{
+  "action": {
+    "create_customer_input_value": "",
+    "create_new_customer": "",
+    "edit_customer_details": "",
+    "save_customer": "",
+    "select_customer_vendor": "",
+    "set_customer_vendor": ""
+  },
+  "empty": {
+    "matching_customers": "",
+    "matching_customers_vendors": ""
+  },
+  "error": {
+    "load_customer_vendor": "",
+    "load_customers": ""
+  },
+  "label": {
+    "company_name": "",
+    "customer": "",
+    "customer_vendor": "",
+    "customers": "",
+    "enter_address": "",
+    "enter_company_name": "",
+    "enter_email_address": "",
+    "enter_individual_name": "",
+    "individual_name": "",
+    "vendor": "",
+    "vendor_description": "",
+    "vendors": ""
+  },
+  "validation": {
+    "either_individual_required": "",
+    "email_required": ""
+  }
+}

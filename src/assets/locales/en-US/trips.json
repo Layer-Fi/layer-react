@@ -1,0 +1,45 @@
+{
+  "action": {
+    "add_trip": "Add Trip",
+    "delete_trip": "Delete Trip",
+    "edit_trip": "Edit Trip",
+    "record_trip": "Record Trip",
+    "save_trip": "Save Trip",
+    "view_trip": "View Trip"
+  },
+  "empty": {
+    "add_first_trip": "Add your first trip to start tracking mileage.",
+    "no_trips_yet": "No trips yet"
+  },
+  "error": {
+    "delete_trip": "Failed to delete trip. Please check your connection and try again.",
+    "load_trips": "We couldn't load your trips",
+    "load_trips_error": "An error occurred while loading your trips. Please check your connection and try again."
+  },
+  "label": {
+    "additional_trip_actions": "Additional trips actions",
+    "delete_trip_warning": "This trip will be permanently deleted. This action cannot be undone.",
+    "distance": "Distance",
+    "distance_mi": "{{distance}} mi",
+    "end_address": "End address",
+    "enter_address": "Enter address",
+    "enter_distance": "Enter distance",
+    "search_trips": "Search trips",
+    "start_address": "Start address",
+    "trip_date": "Trip date",
+    "trip_details": "Trip details",
+    "trip_end_address": "<bold>End:</bold> {{address}}",
+    "trip_purpose": "Trip purpose",
+    "trip_start_address": "<bold>Start:</bold> {{address}}",
+    "trips": "Trips"
+  },
+  "prompt": {
+    "delete_trip": "Delete this trip?"
+  },
+  "validation": {
+    "distance_greater_than_zero": "Distance must be greater than zero.",
+    "purpose_required": "Purpose is a required field.",
+    "trip_date_not_future": "Trip date cannot be in the future.",
+    "trip_date_required": "Trip date is a required field."
+  }
+}

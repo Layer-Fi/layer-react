@@ -1,0 +1,8 @@
+{
+  "chart_type": "Chart type",
+  "label": {
+    "accounting_overview": "Accounting overview",
+    "bookkeeping_overview": "Bookkeeping overview",
+    "vs_comparison_month": "vs. {{comparisonMonth}}"
+  }
+}

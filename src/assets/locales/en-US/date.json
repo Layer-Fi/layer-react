@@ -1,0 +1,29 @@
+{
+  "action": {
+    "select_a_month": "Select a month"
+  },
+  "label": {
+    "all_time": "All time",
+    "completed_at": "Completed At",
+    "creation_date": "Creation date",
+    "custom": "Custom",
+    "effective_date": "Effective date",
+    "end_date": "End date",
+    "last_month": "Last Month",
+    "last_quarter": "Last Quarter",
+    "last_year": "Last Year",
+    "month": "Month",
+    "next_year": "Next year",
+    "previous_year": "Previous year",
+    "start_date": "Start date",
+    "this_month": "This Month",
+    "this_quarter": "This Quarter",
+    "this_year": "This Year",
+    "year": "Year"
+  },
+  "validation": {
+    "date_before_min": "Cannot select date before {{minDate}}",
+    "date_in_future": "Cannot select date in the future",
+    "date_not_empty": "Cannot select empty date"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "action": {
+    "clear_filters": "Clear All Filters",
+    "clear_search": "Clear search",
+    "close_modal": "Close Modal",
+    "get_more_results": "Get more results"
+  },
+  "empty": {
+    "matching_options": "No matching options"
+  },
+  "error": {
+    "generic": "An error occurred."
+  },
+  "label": {
+    "go_next_page": "Go to next page",
+    "go_page_number": "Go to page {{pageNumber}}",
+    "go_previous_page": "Go to previous page",
+    "menu": "Menu",
+    "pagination": "Pagination"
+  },
+  "state": {
+    "pending": "pending"
+  }
+}
