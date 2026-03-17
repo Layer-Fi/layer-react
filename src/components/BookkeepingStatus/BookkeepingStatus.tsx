@@ -13,7 +13,7 @@ type BookkeepingStatusProps = {
 }
 
 export const BookkeepingStatus = ({ status, text, monthNumber, iconOnly }: BookkeepingStatusProps) => {
-  const statusConfig = useBookkeepingStatusConfig({ status: status!, monthNumber })
+  const statusConfig = useBookkeepingStatusConfig({ status, monthNumber })
   if (!status || !statusConfig) {
     return
   }

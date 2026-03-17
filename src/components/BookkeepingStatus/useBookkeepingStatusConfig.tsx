@@ -18,7 +18,7 @@ type InternalStatusConfig = {
 }
 
 type BookkeepingStatusConfigOptions = {
-  status: BookkeepingPeriodStatus
+  status?: BookkeepingPeriodStatus
   monthNumber?: number
   incompleteTasksCount?: number
 }
@@ -28,6 +28,9 @@ export function useBookkeepingStatusConfig(
 ): InternalStatusConfig | undefined {
   const { t, i18n } = useTranslation()
   const { status, monthNumber, incompleteTasksCount } = options
+
+  if (!status) return
+
   const locale = i18n.language
   const monthName = monthNumber !== undefined ? getMonthNameFromNumber(monthNumber, locale) : ''
   const inProgressDescription = incompleteTasksCount !== undefined && incompleteTasksCount > 0

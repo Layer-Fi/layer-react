@@ -24,12 +24,12 @@ import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectD
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
 
-const select_a_category_VALUE = 'select_a_category'
+const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
 
 export const isSelectCategoryOption = (
   value: BusinessFormOptionValue,
 ): boolean => {
-  return isPlaceholderAsOption(value) && value.value === select_a_category_VALUE
+  return isPlaceholderAsOption(value) && value.value === SELECT_CATEGORY_VALUE
 }
 
 type DisplayOption = BusinessFormMobileItemOption
@@ -96,7 +96,7 @@ export const BankTransactionsMobileListBusinessForm = ({
     options.push({
       value: new PlaceholderAsOption({
         label: t('bankTransactions:action.show_all_categories', 'Show all categories'),
-        value: 'select_a_category',
+        value: 'SELECT_CATEGORY',
       }),
       asLink: true,
     })
