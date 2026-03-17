@@ -4,11 +4,10 @@ import { initReactI18next } from 'react-i18next'
 
 import { pseudoOptions } from '@utils/i18n/pseudoConfig'
 import * as enUS from '@assets/locales/en-US'
-import * as frCA from '@assets/locales/fr-CA'
 
 let initPromise: Promise<void> | undefined
 
-const SUPPORTED_LOCALES = ['en-US', 'fr-CA']
+const SUPPORTED_LOCALES = ['en-US']
 const LAYER_TEST_LOCALE_URL_PARAM = 'layer_test_locale'
 
 const isPseudoEnabled = () => {
@@ -48,7 +47,6 @@ const initI18n = async () => {
         defaultNS: 'common',
         resources: {
           'en-US': enUS,
-          'fr-CA': frCA,
         },
         ...(usePseudo && { lng: 'en-US', postProcess: ['pseudo'] }),
       })
