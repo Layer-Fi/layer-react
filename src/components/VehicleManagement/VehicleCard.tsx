@@ -25,11 +25,11 @@ interface VehicleCardProps {
 }
 
 const VEHICLE_CARD_FIELDS_CONFIG = [
-  { fieldKey: 'makeAndModel' as const, ...translationKey('vehicles:makeAndModel', 'Make and model') },
-  { fieldKey: 'year' as const, ...translationKey('date:year', 'Year') },
-  { fieldKey: 'licensePlate' as const, ...translationKey('vehicles:licensePlate', 'License plate') },
-  { fieldKey: 'vin' as const, ...translationKey('vehicles:vin', 'VIN') },
-  { fieldKey: 'description' as const, ...translationKey('common:description', 'Description') },
+  { fieldKey: 'makeAndModel' as const, ...translationKey('vehicles:label.make_model', 'Make and model') },
+  { fieldKey: 'year' as const, ...translationKey('date:label.year', 'Year') },
+  { fieldKey: 'licensePlate' as const, ...translationKey('vehicles:label.license_plate', 'License plate') },
+  { fieldKey: 'vin' as const, ...translationKey('vehicles:label.vin', 'VIN') },
+  { fieldKey: 'description' as const, ...translationKey('common:label.description', 'Description') },
 ]
 
 export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
@@ -60,12 +60,12 @@ export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
                 <Heading size='sm' ellipsis>{vehicleName}</Heading>
                 {vehicle.isPrimary && (
                   <Badge size={BadgeSize.SMALL} variant={BadgeVariant.INFO}>
-                    {t('common:primary', 'Primary')}
+                    {t('common:label.primary', 'Primary')}
                   </Badge>
                 )}
                 {isArchived && (
                   <Badge size={BadgeSize.SMALL} variant={BadgeVariant.WARNING}>
-                    {t('common:archived', 'Archived')}
+                    {t('common:state.archived', 'Archived')}
                   </Badge>
                 )}
               </HStack>
@@ -87,27 +87,27 @@ export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
             {!isArchived && (
               <Button variant='ghost' onPress={() => onEdit(vehicle)}>
                 <Edit size={16} />
-                {t('common:edit', 'Edit')}
+                {t('common:action.edit_label', 'Edit')}
               </Button>
             )}
             {isArchived
               ? (
                 <Button variant='ghost' onPress={() => setIsReactivateModalOpen(true)}>
                   <RotateCcw size={16} />
-                  {t('common:reactivate', 'Reactivate')}
+                  {t('common:action.reactivate_label', 'Reactivate')}
                 </Button>
               )
               : vehicle.isEligibleForDeletion
                 ? (
                   <Button variant='ghost' onPress={() => setIsDeleteModalOpen(true)}>
                     <Trash2 size={16} />
-                    {t('common:delete', 'Delete')}
+                    {t('common:action.delete_label', 'Delete')}
                   </Button>
                 )
                 : (
                   <Button variant='ghost' onPress={() => setIsArchiveModalOpen(true)}>
                     <Archive size={16} />
-                    {t('common:archive', 'Archive')}
+                    {t('common:action.archive_label', 'Archive')}
                   </Button>
                 )}
           </HStack>

@@ -30,9 +30,9 @@ export const DownloadButton = ({
   disabled = false,
 }: DownloadButtonProps) => {
   const { t } = useTranslation()
-  const displayText = text ?? t('common:download', 'Download')
-  const displayRetryText = retryText ?? t('common:retry', 'Retry')
-  const displayErrorText = errorText ?? t('common:downloadFailedCheckConnectionAndRetryInFewSeconds', 'Download failed. Check connection and retry in few seconds.')
+  const displayText = text ?? t('common:action.download_label', 'Download')
+  const displayRetryText = retryText ?? t('common:action.retry_label', 'Retry')
+  const displayErrorText = errorText ?? t('common:error.download_failed_check_connection', 'Download failed. Check connection and retry in a few seconds.')
 
   if (requestFailed) {
     return (

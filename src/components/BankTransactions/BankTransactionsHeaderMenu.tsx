@@ -36,7 +36,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
         key: BankTransactionsHeaderMenuActions.DownloadTransactions,
         onClick: handleDownloadTransactions,
         icon: <DownloadCloud size={16} />,
-        label: t('bankTransactions:downloadTransactions', 'Download transactions'),
+        label: t('bankTransactions:action.download_transactions', 'Download transactions'),
       })
     }
 
@@ -45,7 +45,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
         key: BankTransactionsHeaderMenuActions.UploadTransactions,
         onClick: () => setIsModalOpen(true),
         icon: <UploadCloud size={16} />,
-        label: t('bankTransactions:uploadTransactionsManually', 'Upload transactions manually'),
+        label: t('bankTransactions:action.upload_transactions_manually', 'Upload transactions manually'),
       })
     }
 
@@ -54,7 +54,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
         key: BankTransactionsHeaderMenuActions.ManageCategorizationRules,
         onClick: toCategorizationRulesTable,
         icon: <PencilRuler size={16} strokeWidth={1.25} />,
-        label: t('bankTransactions:manageCategorizationRules', 'Manage categorization rules'),
+        label: t('bankTransactions:action.manage_categorization_rules', 'Manage categorization rules'),
       })
     }
 
@@ -75,7 +75,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
   return (
     <>
       <DataTableHeaderMenu
-        ariaLabel={t('bankTransactions:additionalBankTransactionsActions', 'Additional bank transactions actions')}
+        ariaLabel={t('bankTransactions:label.additional_bank_transaction_actions', 'Additional bank transactions actions')}
         items={menuItems}
         isDisabled={isDisabled}
         slots={{ Icon }}

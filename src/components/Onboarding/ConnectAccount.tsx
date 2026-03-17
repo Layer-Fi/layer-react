@@ -50,19 +50,19 @@ export const ConnectAccount = ({
         <DataState
           status={DataStateStatus.info}
           icon={<CreditCardIcon size={12} />}
-          title={t('linkedAccounts:noAccountsConnected', 'No accounts connected')}
-          description={t('linkedAccounts:populateYourAccountingDashboardIn3Steps', 'Populate your accounting dashboard in 3 steps')}
+          title={t('linkedAccounts:empty.no_accounts_connected', 'No accounts connected')}
+          description={t('linkedAccounts:label.populate_accounting_dashboard_three_steps', 'Populate your accounting dashboard in 3 steps')}
         />
         <ActionableRow
           iconBox={<PlaidIcon />}
-          title={t('linkedAccounts:connectAccounts', 'Connect accounts')}
-          description={t('linkedAccounts:importDataWithOneSimpleIntegration', 'Import data with one simple integration.')}
+          title={t('linkedAccounts:label.connect_accounts', 'Connect accounts')}
+          description={t('linkedAccounts:label.import_data_simple_integration', 'Import data with one simple integration.')}
           button={(
             <Button
               onClick={() => { void addConnection('PLAID') }}
               rightIcon={<LinkIcon size={12} />}
             >
-              {t('common:connect', 'Connect')}
+              {t('common:action.connect_label', 'Connect')}
             </Button>
           )}
         />
@@ -75,8 +75,8 @@ export const ConnectAccount = ({
       <DataState
         status={DataStateStatus.success}
         icon={<SunriseIcon size={12} />}
-        title={t('linkedAccounts:accountLinkedSuccessfully', 'Account linked successfully')}
-        description={t('bankTransactions:yourTransactionsAreNowAvailableOnThePlatformToSeeAllDataOnTheChartsCategorizeTransactions', 'Your transactions are now available on the platform, to see all data on the charts, categorize transactions.')}
+        title={t('linkedAccounts:label.account_linked_successfully', 'Account linked successfully')}
+        description={t('bankTransactions:label.transactions_available_platform', 'Your transactions are now available on the platform, to see all data on the charts, categorize transactions.')}
       />
       {onTransactionsToReviewClick && transactionsToReview > 0
         ? (
@@ -84,7 +84,7 @@ export const ConnectAccount = ({
             icon={<FolderIcon size={12} />}
             title={(
               <Text>
-                {t('bankTransactions:categorizeTransactions', 'Categorize transactions')}
+                {t('bankTransactions:action.categorize_transactions', 'Categorize transactions')}
                 {' '}
                 <Badge
                   variant={BadgeVariant.WARNING}
@@ -93,11 +93,11 @@ export const ConnectAccount = ({
                 >
                   {transactionsToReview}
                   {' '}
-                  {t('ui:pending', 'pending')}
+                  {t('ui:state.pending', 'pending')}
                 </Badge>
               </Text>
             )}
-            description={t('bankTransactions:onceYourDataIsOnThePlatformCategorizeThemInBankTransactionsTab', 'Once your data is on the platform categorize them in Bank Transactions tab')}
+            description={t('bankTransactions:label.data_on_platform_categorize', 'Once your data is on the platform categorize them in Bank Transactions tab')}
             onClick={() => onTransactionsToReviewClick()}
           />
         )

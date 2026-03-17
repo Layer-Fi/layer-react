@@ -16,9 +16,9 @@ import { ErrorText } from '@components/Typography/ErrorText'
 import './customAccountForm.scss'
 
 const accountTypeConfig = [
-  { value: CustomAccountSubtype.CHECKING, ...translationKey('common:checking', 'Checking') },
-  { value: CustomAccountSubtype.SAVINGS, ...translationKey('common:savings', 'Savings') },
-  { value: CustomAccountSubtype.CREDIT_CARD, ...translationKey('common:creditCard', 'Credit Card') },
+  { value: CustomAccountSubtype.CHECKING, ...translationKey('common:label.checking', 'Checking') },
+  { value: CustomAccountSubtype.SAVINGS, ...translationKey('common:label.savings', 'Savings') },
+  { value: CustomAccountSubtype.CREDIT_CARD, ...translationKey('common:label.credit_card', 'Credit Card') },
 ]
 
 export type CustomAccountsFormProps = {
@@ -59,15 +59,15 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         <form.Field
           name='account_name'
           validators={{
-            onSubmit: ({ value }) => notEmpty(value) ? undefined : t('generalLedger:accountNameIsRequired', 'Account name is required'),
+            onSubmit: ({ value }) => notEmpty(value) ? undefined : t('generalLedger:validation.account_name_required', 'Account name is required'),
           }}
         >
           {field => (
-            <InputGroup name='account_name' label={t('generalLedger:accountName', 'Account name')} className='Layer__custom-account-form__field'>
+            <InputGroup name='account_name' label={t('generalLedger:label.account_name', 'Account name')} className='Layer__custom-account-form__field'>
               <Input
                 className='Layer__custom-account-form__input'
                 name='account_name'
-                placeholder={t('generalLedger:enterAccountName', 'Enter account name...')}
+                placeholder={t('generalLedger:label.enter_account_name', 'Enter account name...')}
                 value={field.state.value}
                 onChange={e =>
                   field.handleChange((e.target as HTMLInputElement).value)}
@@ -81,15 +81,15 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         <form.Field
           name='institution_name'
           validators={{
-            onSubmit: ({ value }) => notEmpty(value) ? undefined : t('generalLedger:institutionNameIsRequired', 'Institution name is required'),
+            onSubmit: ({ value }) => notEmpty(value) ? undefined : t('generalLedger:validation.institution_name_required', 'Institution name is required'),
           }}
         >
           {field => (
-            <InputGroup name='institution_name' label={t('generalLedger:institutionName', 'Institution name')} className='Layer__custom-account-form__field'>
+            <InputGroup name='institution_name' label={t('generalLedger:label.institution_name', 'Institution name')} className='Layer__custom-account-form__field'>
               <Input
                 className='Layer__custom-account-form__input'
                 name='institution_name'
-                placeholder={t('generalLedger:enterInstitutionName', 'Enter institution name...')}
+                placeholder={t('generalLedger:label.enter_institution_name', 'Enter institution name...')}
                 value={field.state.value}
                 onChange={e =>
                   field.handleChange((e.target as HTMLInputElement).value)}
@@ -103,15 +103,15 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         <form.Field
           name='account_type'
           validators={{
-            onSubmit: ({ value }) => notEmpty(value) ? undefined : t('generalLedger:accountTypeIsRequired', 'Account type is required'),
+            onSubmit: ({ value }) => notEmpty(value) ? undefined : t('generalLedger:validation.account_type_required', 'Account type is required'),
           }}
         >
           {field => (
-            <InputGroup name='account_type' label={t('generalLedger:accountType', 'Account type')} className='Layer__custom-account-form__field'>
+            <InputGroup name='account_type' label={t('generalLedger:label.account_type', 'Account type')} className='Layer__custom-account-form__field'>
               <Select
                 className='Layer__custom-account-form__input'
                 name='account_type'
-                placeholder={t('generalLedger:selectAccountType', 'Select account type...')}
+                placeholder={t('generalLedger:action.select_account_type', 'Select account type...')}
                 options={accountTypeOptions}
                 value={accountTypeOptions.find(opt => opt.value === field.state.value) || null}
                 onChange={option => field.handleChange(option?.value)}
@@ -125,7 +125,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         <HStack gap='xs' pbs='xs'>
           {!isFormValid && (
             <ErrorText pb='xs'>
-              {t('generalLedger:pleaseCheckAllFields', 'Please check all fields.')}
+              {t('generalLedger:label.check_fields', 'Please check all fields.')}
             </ErrorText>
           )}
           {submitError && (
@@ -136,7 +136,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           <Spacer />
           {onCancel && (
             <Button type='button' variant={ButtonVariant.secondary} onClick={onCancel}>
-              {t('common:cancel', 'Cancel')}
+              {t('common:action.cancel_label', 'Cancel')}
             </Button>
           )}
           <SubmitButton
@@ -147,8 +147,8 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
             error={submitError}
           >
             {submitError
-              ? t('common:retry', 'Retry')
-              : t('generalLedger:saveAccount', 'Save Account')}
+              ? t('common:action.retry_label', 'Retry')
+              : t('generalLedger:action.save_account', 'Save Account')}
           </SubmitButton>
         </HStack>
       </VStack>

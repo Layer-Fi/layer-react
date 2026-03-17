@@ -16,11 +16,11 @@ export function useStripeConnect() {
         window.open(result.connectAccountUrl, '_blank')
       }
       else {
-        addToast({ content: t('stripe:stripeMisconfiguredConnectLink', 'Stripe has sent a misconfigured connect account onboarding link. Please try again.'), type: 'error' })
+        addToast({ content: t('stripe:error.stripe_sent_misconfigured_link', 'Stripe has sent a misconfigured connect account onboarding link. Please try again.'), type: 'error' })
       }
     }
     catch {
-      addToast({ content: t('stripe:unableToConnectToStripe', 'Unable to connect to Stripe. Please try again.'), type: 'error' })
+      addToast({ content: t('stripe:error.unable_to_connect_to_stripe', 'Unable to connect to Stripe. Please try again.'), type: 'error' })
     }
   }, [trigger, addToast, t])
 

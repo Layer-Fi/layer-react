@@ -44,7 +44,7 @@ export const InvoiceSummaryStats = () => {
       <VStack className='Layer__InvoiceSummaryStats__Payments' gap='3xs'>
         <HStack align='center'>
           <Trans
-            i18nKey='invoices:paidLast30Days'
+            i18nKey='invoices:label.paid_last_30_days'
             defaults='<paid>Paid</paid> <period>last 30 days</period>'
             components={{
               paid: <Span size='sm' />,
@@ -65,7 +65,7 @@ export const InvoiceSummaryStats = () => {
         <HStack gap='md' align='end'>
           <HStack align='center'>
             <Trans
-              i18nKey='invoices:owedToYouLast12Months'
+              i18nKey='invoices:label.owed_last_12_months'
               defaults='<owed>Owed to you</owed> <period>last 12 months</period>'
               components={{
                 owed: <Span size='sm' pbe='3xs' />,
@@ -89,7 +89,7 @@ export const InvoiceSummaryStats = () => {
             {!showSkeleton && overdueCount !== undefined
               ? (
                 <Badge variant={BadgeVariant.WARNING} size={BadgeSize.SMALL}>
-                  {t('invoices:overdueInvoicesCount', 'Overdue invoices: {{overdueCount}}', { overdueCount })}
+                  {t('invoices:label.overdue_invoices_count', 'Overdue invoices: {{overdueCount}}', { overdueCount })}
                 </Badge>
               )
               : <BadgeLoader variant={BadgeVariant.WARNING} showLoading />}
@@ -98,7 +98,7 @@ export const InvoiceSummaryStats = () => {
             {!showSkeleton && sentCount !== undefined
               ? (
                 <Badge variant={BadgeVariant.INFO} size={BadgeSize.SMALL}>
-                  {t('invoices:upcomingInvoicesCount', 'Upcoming invoices: {{sentCount}}', { sentCount })}
+                  {t('invoices:label.upcoming_invoices_sent_count', 'Upcoming invoices: {{sentCount}}', { sentCount })}
                 </Badge>
               )
               : <BadgeLoader variant={BadgeVariant.INFO} showLoading />}
@@ -109,7 +109,7 @@ export const InvoiceSummaryStats = () => {
             </FallbackWithSkeletonLoader>
           </HStack>
         </HStack>
-        <Meter label={t('invoices:percentageOfInvoicesOverdue', 'Percentage of invoices overdue')} minValue={0} maxValue={100} value={percentageOverdue} meterOnly className='Layer__InvoiceSummaryStats__Meter' />
+        <Meter label={t('invoices:label.percentage_invoices_overdue', 'Percentage of invoices overdue')} minValue={0} maxValue={100} value={percentageOverdue} meterOnly className='Layer__InvoiceSummaryStats__Meter' />
       </VStack>
     </HStack>
   )

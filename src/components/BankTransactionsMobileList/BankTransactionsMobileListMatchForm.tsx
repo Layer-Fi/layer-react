@@ -63,7 +63,7 @@ export const BankTransactionsMobileListMatchForm = ({
     }
 
     if (!selectedMatch) {
-      setFormError(t('bankTransactions:selectAnOptionToMatchTheTransaction', 'Select an option to match the transaction'))
+      setFormError(t('bankTransactions:action.select_option_match_transaction', 'Select an option to match the transaction'))
     }
 
     if (
@@ -78,7 +78,7 @@ export const BankTransactionsMobileListMatchForm = ({
   return (
     <VStack gap='sm'>
       <Span size='sm' weight='bold'>
-        {t('bankTransactions:findMatch', 'Find Match')}
+        {t('bankTransactions:label.find_match', 'Find Match')}
       </Span>
       <MatchFormMobile
         readOnly={!showCategorization}
@@ -100,14 +100,14 @@ export const BankTransactionsMobileListMatchForm = ({
           ref={receiptsRef}
           floatingActions={false}
           hideUploadButtons={true}
-          label={t('bankTransactions:receipts', 'Receipts')}
+          label={t('bankTransactions:label.receipts', 'Receipts')}
         />
       )}
       <HStack gap='md'>
         {showReceiptUploads && (
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-            text={t('bankTransactions:uploadReceipt', 'Upload receipt')}
+            text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
             iconOnly={true}
             icon={<PaperclipIcon />}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -124,8 +124,8 @@ export const BankTransactionsMobileListMatchForm = ({
             onClick={save}
           >
             {isMatching
-              ? t('common:saving', 'Saving...')
-              : t('bankTransactions:approveMatch', 'Approve match')}
+              ? t('common:state.saving', 'Saving...')
+              : t('bankTransactions:action.approve_match', 'Approve match')}
           </Button>
         )}
       </HStack>
@@ -133,7 +133,7 @@ export const BankTransactionsMobileListMatchForm = ({
       {isErrorMatching
         && (
           <ErrorText>
-            {t('bankTransactions:approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.')}
+            {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
           </ErrorText>
         )}
     </VStack>

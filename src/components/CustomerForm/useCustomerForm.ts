@@ -47,7 +47,7 @@ export const useCustomerForm = (props: UseCustomerFormProps) => {
     }
     catch (e) {
       console.error(e)
-      setSubmitError(t('common:somethingWentWrongPleaseTryAgain', 'Something went wrong. Please try again.'))
+      setSubmitError(t('common:error.something_went_wrong_try_again', 'Something went wrong. Please try again.'))
     }
   }, [onSuccess, upsertCustomer, t])
 

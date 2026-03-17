@@ -89,7 +89,7 @@ export function MonthCalendar({
           variant='ghost'
           onPress={goToPreviousYear}
           isDisabled={isPrevYearDisabled}
-          aria-label={t('date:previousYear', 'Previous year')}
+          aria-label={t('date:label.previous_year', 'Previous year')}
         >
           <ChevronLeft size={20} />
         </Button>
@@ -100,13 +100,13 @@ export function MonthCalendar({
           variant='ghost'
           onPress={goToNextYear}
           isDisabled={isNextYearDisabled}
-          aria-label={t('date:nextYear', 'Next year')}
+          aria-label={t('date:label.next_year', 'Next year')}
         >
           <ChevronRight size={20} />
         </Button>
       </HStack>
       <GridList
-        aria-label={t('date:selectAMonth', 'Select a month')}
+        aria-label={t('date:action.select_a_month', 'Select a month')}
         selectionMode='single'
         selectedKeys={date?.year === year ? new Set([date.month]) : new Set()}
         onSelectionChange={(keys) => {

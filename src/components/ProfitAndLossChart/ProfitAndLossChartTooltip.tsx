@@ -34,7 +34,7 @@ const ProfitAndLossTooltipContent = ({
   if (isLoading) {
     return (
       <div className='Layer__ChartTooltip'>
-        <Span variant='white' size='sm'>{t('common:loading', 'Loading...')}</Span>
+        <Span variant='white' size='sm'>{t('common:state.loading', 'Loading...')}</Span>
       </div>
     )
   }
@@ -42,15 +42,15 @@ const ProfitAndLossTooltipContent = ({
   return (
     <ChartTooltipContent>
       <ChartTooltipRow
-        label={t('common:revenue', 'Revenue')}
+        label={t('common:label.revenue', 'Revenue')}
         value={<MoneySpan amount={revenue} variant='white' size='sm' />}
       />
       <ChartTooltipRow
-        label={t('common:expenses', 'Expenses')}
+        label={t('common:label.expenses', 'Expenses')}
         value={<MoneySpan amount={expenses} variant='white' size='sm' />}
       />
       <ChartTooltipRow
-        label={t('common:netProfit', 'Net Profit')}
+        label={t('common:label.net_profit', 'Net Profit')}
         value={<MoneySpan amount={netProfit} variant='white' status={status} size='sm' />}
       />
     </ChartTooltipContent>

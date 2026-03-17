@@ -11,11 +11,11 @@ import { Label } from '@ui/Typography/Text'
 import './filingStatusComboBox.scss'
 
 const FILING_STATUS_CONFIG = [
-  { value: FilingStatus.SINGLE, ...translationKey('taxEstimates:single', 'Single') },
-  { value: FilingStatus.MARRIED, ...translationKey('taxEstimates:marriedFilingJointly', 'Married filing jointly') },
-  { value: FilingStatus.MARRIED_SEPARATELY, ...translationKey('taxEstimates:marriedFilingSeparately', 'Married filing separately') },
-  { value: FilingStatus.HEAD, ...translationKey('taxEstimates:headOfHousehold', 'Head of household') },
-  { value: FilingStatus.WIDOWER, ...translationKey('taxEstimates:qualifyingWidower', 'Qualifying widow(er)') },
+  { value: FilingStatus.SINGLE, ...translationKey('taxEstimates:label.single', 'Single') },
+  { value: FilingStatus.MARRIED, ...translationKey('taxEstimates:label.married_filing_jointly', 'Married filing jointly') },
+  { value: FilingStatus.MARRIED_SEPARATELY, ...translationKey('taxEstimates:label.married_filing_separately', 'Married filing separately') },
+  { value: FilingStatus.HEAD, ...translationKey('taxEstimates:label.head_household', 'Head of household') },
+  { value: FilingStatus.WIDOWER, ...translationKey('taxEstimates:label.qualifying_widow_er', 'Qualifying widow(er)') },
 ] as const
 
 type FilingStatusOption = { value: FilingStatus, label: string }
@@ -65,7 +65,7 @@ export const FilingStatusComboBox = ({
   return (
     <HStack className={combinedClassName}>
       <Label size='sm' htmlFor={inputId}>
-        {t('taxEstimates:filingStatus', 'Filing status')}
+        {t('taxEstimates:label.filing_status', 'Filing status')}
       </Label>
       <ComboBox<FilingStatusOption>
         options={options}

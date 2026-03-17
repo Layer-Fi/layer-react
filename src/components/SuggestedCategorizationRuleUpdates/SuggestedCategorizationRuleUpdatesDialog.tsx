@@ -82,7 +82,7 @@ export const SuggestedCategorizationRuleUpdatesDialog = ({
   }
 
   return (
-    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} aria-label={t('categorizationRules:updateCategorizationRules', 'Update categorization rules')}>
+    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} aria-label={t('categorizationRules:label.update_categorization_rules', 'Update categorization rules')}>
       {({ close }) => (
         <>
           <SuggestedCategorizationRuleUpdatesDialogDesktopHeader close={close} ruleSuggestion={ruleSuggestion} />

@@ -72,10 +72,10 @@ export function FormRadioGroupYesNoField({
       <VStack slot='options' gap='3xs'>
         <Stack direction={orientation === 'horizontal' ? 'row' : 'column'} gap={orientation === 'horizontal' ? 'sm' : 'xs'}>
           <Radio<YesNoValue> value='no'>
-            <Span slot='description'>{t('common:no', 'No')}</Span>
+            <Span slot='description'>{t('common:label.no', 'No')}</Span>
           </Radio>
           <Radio<YesNoValue> value='yes'>
-            <Span slot='description'>{t('common:yes', 'Yes')}</Span>
+            <Span slot='description'>{t('common:label.yes', 'Yes')}</Span>
           </Radio>
         </Stack>
         {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}

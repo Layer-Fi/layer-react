@@ -44,7 +44,7 @@ export function LinkAccountsLinkStep() {
             {isLinking && <ElevatedLoadingSpinner />}
             <VStack gap='xl' pbe='md'>
               <Text status='disabled'>
-                {t('linkedAccounts:connectYourBankAccountsAndCreditCardsToAutomaticallyImportYourBusinessTransactions', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
+                {t('linkedAccounts:label.connect_bank_accounts_and_credit_cards', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
               </Text>
               <Button
                 onClick={() => { void addConnection('PLAID') }}
@@ -53,7 +53,7 @@ export function LinkAccountsLinkStep() {
                 fullWidth={false}
                 style={{ maxWidth: 'fit-content' }}
               >
-                {t('linkedAccounts:connectMyBank', 'Connect my bank')}
+                {t('linkedAccounts:action.connect_my_bank', 'Connect my bank')}
               </Button>
             </VStack>
           </ElevatedLoadingSpinnerContainer>
@@ -64,14 +64,14 @@ export function LinkAccountsLinkStep() {
             <VStack>
               <VStack gap='2xs' pbe='md'>
                 <Heading level={3} size='sm'>
-                  {tPlural(t, 'linkedAccounts:weveFoundCountAccounts', {
+                  {tPlural(t, 'linkedAccounts:label.found_accounts_count', {
                     count: effectiveAccounts.length,
                     one: 'We’ve found {{count}} account',
                     other: 'We’ve found {{count}} accounts',
                   })}
                 </Heading>
                 <Text status='disabled'>
-                  {t('linkedAccounts:youllHaveTheChanceToRemoveAnyAccountsYouDontUseForYourBusinessInTheNextStep', 'You’ll have the chance to remove any accounts you don’t use for your business in the next step.')}
+                  {t('linkedAccounts:label.remove_unused_accounts_next_step', 'You’ll have the chance to remove any accounts you don’t use for your business in the next step.')}
                 </Text>
               </VStack>
               <LinkAccountsListContainer>
@@ -79,7 +79,7 @@ export function LinkAccountsLinkStep() {
               </LinkAccountsListContainer>
               <VStack pbs='xl'>
                 <ActionableRow
-                  title={t('linkedAccounts:doYouUseAnyOtherBankAccountsOrCreditCardsForYourBusiness', 'Do you use any other bank accounts or credit cards for your business?')}
+                  title={t('linkedAccounts:prompt.use_other_bank_accounts_or_cards', 'Do you use any other bank accounts or credit cards for your business?')}
                   button={(
                     <Button
                       onClick={() => { void addConnection('PLAID') }}
@@ -88,7 +88,7 @@ export function LinkAccountsLinkStep() {
                       fullWidth={false}
                       style={{ width: 'auto', minWidth: 'fit-content' }}
                     >
-                      {t('linkedAccounts:linkAnotherBank', 'Link another bank')}
+                      {t('linkedAccounts:action.link_another_bank', 'Link another bank')}
                     </Button>
                   )}
                 />
@@ -100,8 +100,8 @@ export function LinkAccountsLinkStep() {
         Error={(
           <DataState
             status={DataStateStatus.failed}
-            title={t('linkedAccounts:failedToLoadAccounts', 'Failed to load accounts')}
-            description={t('common:pleaseTryAgainLater', 'Please try again later')}
+            title={t('linkedAccounts:error.load_accounts', 'Failed to load accounts')}
+            description={t('common:error.please_try_again_later', 'Please try again later')}
             onRefresh={() => { void refetchAccounts() }}
           />
         )}
@@ -125,7 +125,7 @@ export function LinkAccountsLinkStep() {
             <Separator mbs='lg' mbe='lg' />
             <HStack justify='start' gap='sm'>
               <Button onClick={() => { void next() }} rightIcon={<ChevronRight />}>
-                {t('linkedAccounts:imDoneLinkingMyBanks', 'I’m done linking my banks')}
+                {t('linkedAccounts:action.im_done_linking', 'I’m done linking my banks')}
               </Button>
             </HStack>
           </>

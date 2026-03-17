@@ -82,8 +82,8 @@ export const ChartOfAccountsForm = ({
           <HeaderCol>
             <Heading size={HeadingSize.secondary} className='title'>
               {form?.action === 'edit'
-                ? stringOverrides?.editModeHeader || t('chartOfAccounts:editAccount', 'Edit Account')
-                : stringOverrides?.createModeHeader || t('chartOfAccounts:addNewAccount', 'Add New Account')}
+                ? stringOverrides?.editModeHeader || t('chartOfAccounts:action.edit_account', 'Edit Account')
+                : stringOverrides?.createModeHeader || t('chartOfAccounts:action.add_new_account', 'Add New Account')}
             </Heading>
           </HeaderCol>
           <HeaderCol className='actions'>
@@ -93,16 +93,16 @@ export const ChartOfAccountsForm = ({
               variant={ButtonVariant.secondary}
               disabled={sendingForm}
             >
-              {stringOverrides?.cancelButton || t('common:cancel', 'Cancel')}
+              {stringOverrides?.cancelButton || t('common:action.cancel_label', 'Cancel')}
             </Button>
             {apiError && (
               <RetryButton
                 type='submit'
                 processing={sendingForm}
-                error={t('chartOfAccounts:checkConnectionAndRetry', 'Check connection and retry in few seconds.')}
+                error={t('chartOfAccounts:error.check_connection_retry_message', 'Check connection and retry in a few seconds.')}
                 disabled={sendingForm}
               >
-                {stringOverrides?.retryButton || t('common:retry', 'Retry')}
+                {stringOverrides?.retryButton || t('common:action.retry_label', 'Retry')}
               </RetryButton>
             )}
             {!apiError && (
@@ -112,7 +112,7 @@ export const ChartOfAccountsForm = ({
                 active={true}
                 disabled={sendingForm}
               >
-                {stringOverrides?.saveButton || t('common:save', 'Save')}
+                {stringOverrides?.saveButton || t('common:action.save_label', 'Save')}
               </SubmitButton>
             )}
           </HeaderCol>
@@ -140,7 +140,7 @@ export const ChartOfAccountsForm = ({
       <div className='Layer__chart-of-accounts__form'>
         <InputGroup
           name='parent'
-          label={stringOverrides?.parentLabel || t('chartOfAccounts:parent', 'Parent')}
+          label={stringOverrides?.parentLabel || t('chartOfAccounts:label.parent', 'Parent')}
           inline={true}
         >
           <Select
@@ -154,12 +154,12 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='name'
-          label={stringOverrides?.nameLabel || t('common:name', 'Name')}
+          label={stringOverrides?.nameLabel || t('common:label.name', 'Name')}
           inline
         >
           <Input
             name='name'
-            placeholder={t('chartOfAccounts:enterName', 'Enter name...')}
+            placeholder={t('chartOfAccounts:label.enter_name', 'Enter name...')}
             value={form?.data.name}
             isInvalid={Boolean(form?.errors?.find(x => x.field === 'name'))}
             errorMessage={form?.errors?.find(x => x.field === 'name')?.message}
@@ -170,12 +170,12 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='accountNumber'
-          label={stringOverrides?.accountNumberLabel || t('generalLedger:accountNumber', 'Account Number')}
+          label={stringOverrides?.accountNumberLabel || t('generalLedger:label.account_number', 'Account Number')}
           inline
         >
           <Input
             name='accountNumber'
-            placeholder={t('chartOfAccounts:enterAccountNumber', 'Enter account number...')}
+            placeholder={t('chartOfAccounts:label.enter_account_number', 'Enter account number...')}
             value={form?.data.accountNumber}
             isInvalid={Boolean(form?.errors?.find(x => x.field === 'accountNumber'))}
             errorMessage={form?.errors?.find(x => x.field === 'accountNumber')?.message}
@@ -186,7 +186,7 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='type'
-          label={stringOverrides?.typeLabel || t('common:type', 'Type')}
+          label={stringOverrides?.typeLabel || t('common:label.type', 'Type')}
           inline={true}
         >
           <Select
@@ -204,7 +204,7 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='subType'
-          label={stringOverrides?.subTypeLabel || t('chartOfAccounts:subType', 'Sub-Type')}
+          label={stringOverrides?.subTypeLabel || t('chartOfAccounts:label.sub_type', 'Sub-Type')}
           inline={true}
         >
           <Select
@@ -222,7 +222,7 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
         <InputGroup
           name='normality'
-          label={stringOverrides?.normalityLabel || t('common:normality', 'Normality')}
+          label={stringOverrides?.normalityLabel || t('common:label.normality', 'Normality')}
           inline={true}
         >
           <Select
@@ -246,16 +246,16 @@ export const ChartOfAccountsForm = ({
             variant={ButtonVariant.secondary}
             disabled={sendingForm}
           >
-            {stringOverrides?.cancelButton || t('common:cancel', 'Cancel')}
+            {stringOverrides?.cancelButton || t('common:action.cancel_label', 'Cancel')}
           </Button>
           {apiError && (
             <RetryButton
               type='submit'
               processing={sendingForm}
-              error={t('chartOfAccounts:checkConnectionAndRetryInFewSeconds', 'Check connection and retry in few seconds.')}
+              error={t('chartOfAccounts:error.check_connection_retry_message', 'Check connection and retry in a few seconds.')}
               disabled={sendingForm}
             >
-              {stringOverrides?.retryButton || t('common:retry', 'Retry')}
+              {stringOverrides?.retryButton || t('common:action.retry_label', 'Retry')}
             </RetryButton>
           )}
           {!apiError && (
@@ -265,7 +265,7 @@ export const ChartOfAccountsForm = ({
               active={true}
               disabled={sendingForm}
             >
-              {stringOverrides?.saveButton || t('common:save', 'Save')}
+              {stringOverrides?.saveButton || t('common:action.save_label', 'Save')}
             </SubmitButton>
           )}
         </div>

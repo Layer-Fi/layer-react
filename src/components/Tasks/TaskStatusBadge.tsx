@@ -28,7 +28,7 @@ const useBadgeConfig = (
         color: 'info' as const,
         icon: <Clock size={12} />,
         label: tasksCount
-          ? tPlural(t, 'bookkeeping:countTasks', {
+          ? tPlural(t, 'bookkeeping:label.count_tasks', {
             count: tasksCount,
             one: '{{count}} task',
             other: '{{count}} tasks',
@@ -42,7 +42,7 @@ const useBadgeConfig = (
       return {
         color: 'warning' as const,
         label: tasksCount
-          ? tPlural(t, 'bookkeeping:countTasks', {
+          ? tPlural(t, 'bookkeeping:label.count_tasks', {
             count: tasksCount,
             one: '{{count}} task',
             other: '{{count}} tasks',

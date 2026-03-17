@@ -85,7 +85,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               onUpload={(files: File[]) => {
                 setSelectedFiles(files)
               }}
-              text={t('bookkeeping:selectFiles', 'Select files')}
+              text={t('bookkeeping:action.select_files', 'Select files')}
               allowMultipleUploads
             />
           )
@@ -97,13 +97,13 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 variant={ButtonVariant.secondary}
                 onClick={() => setSelectedFiles(undefined)}
               >
-                {t('common:cancel', 'Cancel')}
+                {t('common:action.cancel_label', 'Cancel')}
               </Button>
               <Button
                 variant={ButtonVariant.primary}
                 onClick={() => void submit()}
               >
-                {t('common:submit', 'Submit')}
+                {t('common:action.submit_label', 'Submit')}
               </Button>
             </>
           )
@@ -121,7 +121,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 })
               }}
             >
-              {t('common:update', 'Update')}
+              {t('common:action.update_label', 'Update')}
             </Button>
           )
         }
@@ -135,7 +135,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 })
               }}
             >
-              {t('bookkeeping:deleteUploads', 'Delete Uploads')}
+              {t('bookkeeping:action.delete_uploads', 'Delete Uploads')}
             </Button>
           )
         }
@@ -171,7 +171,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
             <Text size={TextSize.sm}>{task.question}</Text>
             <Textarea
               value={userResponse}
-              placeholder={task.user_response_type === 'UPLOAD_DOCUMENT' ? t('bookkeeping:optionalDescription', 'Optional description') : ''}
+              placeholder={task.user_response_type === 'UPLOAD_DOCUMENT' ? t('bookkeeping:label.optional_description', 'Optional description') : ''}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setUserResponse(e.target.value)}
             />
@@ -180,11 +180,11 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 <div className='Layer__tasks-list__link-list'>
                   {selectedFiles
                     ? (
-                      <div className='Layer__tasks-list__link-list-header'>{t('bookkeeping:selectedFiles', 'Selected Files:')}</div>
+                      <div className='Layer__tasks-list__link-list-header'>{t('bookkeeping:label.selected_files', 'Selected Files:')}</div>
                     )
                     : task.documents
                       ? (
-                        <div className='Layer__tasks-list__link-list-header'>{t('bookkeeping:uploadedFiles', 'Uploaded Files:')}</div>
+                        <div className='Layer__tasks-list__link-list-header'>{t('bookkeeping:label.uploaded_files', 'Uploaded Files:')}</div>
                       )
                       : null}
                   <ul className='Layer__tasks-list__links-list'>
@@ -216,8 +216,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                     }}
                   >
                     {task.user_response && task.user_response !== userResponse
-                      ? t('common:update', 'Update')
-                      : t('common:save', 'Save')}
+                      ? t('common:action.update_label', 'Update')
+                      : t('common:action.save_label', 'Save')}
                   </Button>
                 )}
             </div>

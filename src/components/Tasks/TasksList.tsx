@@ -19,10 +19,10 @@ const TasksEmptyState = () => {
         <SmileIcon />
       </div>
       <Text size={TextSize.sm}>
-        {t('bookkeeping:thereAreNoPendingTasks', 'There are no pending tasks!')}
+        {t('bookkeeping:label.pending_tasks', 'There are no pending tasks!')}
         <br />
         {' '}
-        {t('bookkeeping:greatJob', 'Great job!')}
+        {t('bookkeeping:label.great_job', 'Great job!')}
       </Text>
     </div>
   )

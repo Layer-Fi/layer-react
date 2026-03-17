@@ -81,7 +81,7 @@ export const ChartOfAccountsTableWithPanel = ({
               className={`Layer__${COMPONENT_NAME}__title`}
               size={asWidget ? HeadingSize.view : HeadingSize.primary}
             >
-              {stringOverrides?.headerText || t('chartOfAccounts:chartOfAccounts', 'Chart of Accounts')}
+              {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
             </Heading>
           </HeaderCol>
         </HeaderRow>
@@ -116,7 +116,7 @@ export const ChartOfAccountsTableWithPanel = ({
             </Heading>
           </HeaderCol>
           <HeaderCol className='Layer__chart-of-accounts__actions'>
-            <SearchField label={t('chartOfAccounts:searchAccounts', 'Search accounts')} value={inputValue} onChange={handleInputChange} />
+            <SearchField label={t('chartOfAccounts:label.search_accounts', 'Search accounts')} value={inputValue} onChange={handleInputChange} />
             <AccountBalancesDownloadButton
               iconOnly={['mobile', 'tablet'].includes(view)}
             />
@@ -128,7 +128,7 @@ export const ChartOfAccountsTableWithPanel = ({
                   ['mobile', 'tablet'].includes(view) && <PlusIcon size={14} />
                 }
               >
-                {stringOverrides?.addAccountButtonText || t('chartOfAccounts:addAccount', 'Add Account')}
+                {stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')}
               </Button>
             )}
           </HeaderCol>
@@ -151,8 +151,8 @@ export const ChartOfAccountsTableWithPanel = ({
           <div className='Layer__table-state-container'>
             <DataState
               status={DataStateStatus.failed}
-              title={t('common:somethingWentWrong', 'Something went wrong')}
-              description={t('common:weCouldntLoadYourData', 'We couldn’t load your data.')}
+              title={t('common:error.something_went_wrong', 'Something went wrong')}
+              description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
               onRefresh={() => void refetch()}
               isLoading={isValidating || isLoading}
             />

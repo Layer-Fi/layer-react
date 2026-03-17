@@ -65,7 +65,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   const { t } = useTranslation()
   return (
     <View
-      title={stringOverrides?.title || title || t('bankTransactions:bankTransactions', 'Bank transactions')}
+      title={stringOverrides?.title || title || t('bankTransactions:label.bank_transactions', 'Bank transactions')}
       showHeader={showTitle}
     >
       <LinkedAccounts

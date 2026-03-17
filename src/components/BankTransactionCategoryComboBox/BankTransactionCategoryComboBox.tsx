@@ -30,7 +30,7 @@ const BankTransactionCategoryComboBoxOption = ({ option, fallback }: BankTransac
   if (option.value === 'LOADING_SUGGESTIONS') {
     return (
       <HStack justify='space-between' align='center' className='Layer__BankTransactionCategoryComboBox__LoadingSuggestionsOption'>
-        <Span>{t('bankTransactions:generatingSuggestions', 'Generating suggestions...')}</Span>
+        <Span>{t('bankTransactions:label.generating_suggestions', 'Generating suggestions...')}</Span>
         <LoadingSpinner size={16} />
       </HStack>
     )
@@ -130,10 +130,10 @@ export const BankTransactionCategoryComboBox = ({
   const placeholder = numMatchOptions > 1
     ? `${numMatchOptions} possible matches...`
     : loadingSuggestions
-      ? t('bankTransactions:generatingSuggestions', 'Generating suggestions...')
+      ? t('bankTransactions:label.generating_suggestions', 'Generating suggestions...')
       : includeSuggestedMatches
-        ? t('bankTransactions:categorizeOrMatch', 'Categorize or match...')
-        : t('bankTransactions:selectCategory', 'Select category')
+        ? t('bankTransactions:action.categorize_or_match', 'Categorize or match...')
+        : t('bankTransactions:action.select_category', 'Select category')
 
   const SingleValue = useCallback(() => {
     return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} />

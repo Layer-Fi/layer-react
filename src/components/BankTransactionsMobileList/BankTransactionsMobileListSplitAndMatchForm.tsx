@@ -60,12 +60,12 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
         formType === Purpose.match
           ? (
             <TextButton onClick={() => setFormType(Purpose.categorize)}>
-              {t('bankTransactions:orSplitTransaction', 'or split transaction')}
+              {t('bankTransactions:action.split_transaction', 'or split transaction')}
             </TextButton>
           )
           : (
             <TextButton onClick={() => setFormType(Purpose.match)}>
-              {t('bankTransactions:orFindMatch', 'or find match')}
+              {t('bankTransactions:label.or_find_match', 'or find match')}
             </TextButton>
           )
       )}

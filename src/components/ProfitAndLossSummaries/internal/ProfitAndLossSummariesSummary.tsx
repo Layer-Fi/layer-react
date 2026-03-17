@@ -81,7 +81,7 @@ export function ProfitAndLossSummariesSummary({
             </HStack>
             <Span size='xs' variant='subtle' noWrap>
               <Trans
-                i18nKey='overview:vsComparisonMonth'
+                i18nKey='overview:label.vs_comparison_month'
                 values={{ comparisonMonth: comparisonMonth ?? '' }}
               >
                 vs.

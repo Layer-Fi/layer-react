@@ -95,7 +95,7 @@ export const TagSchema = Schema.Data(
 
 export function getTagDisplayNameForValue(tag: Tag, t: TFunction): string {
   const valueBaseLabel = tag.valueDisplayName ?? tag.value
-  return tag.archivedAt ? t('tags:valueBaseLabelArchived', '{{valueBaseLabel}} (Archived)', { valueBaseLabel }) : valueBaseLabel
+  return tag.archivedAt ? t('tags:label.tag_label_archived', '{{label}} (Archived)', { label: valueBaseLabel }) : valueBaseLabel
 }
 
 export function getTagDisplayNameForDimension(tag: Tag): string {
@@ -104,7 +104,7 @@ export function getTagDisplayNameForDimension(tag: Tag): string {
 
 export function getTagValueDisplayNameForValue(tagValue: TagValue, t: TFunction): string {
   const valueBaseLabel = tagValue.valueDisplayName ?? tagValue.value
-  return tagValue.isArchived ? t('tags:valueBaseLabelArchived', '{{valueBaseLabel}} (Archived)', { valueBaseLabel }) : valueBaseLabel
+  return tagValue.isArchived ? t('tags:label.tag_label_archived', '{{label}} (Archived)', { label: valueBaseLabel }) : valueBaseLabel
 }
 
 export function getTagValueDisplayNameForDimension(tagValue: TagValue): string {
@@ -120,7 +120,7 @@ export function getTagValueDisplayName(
   t: TFunction,
 ): string {
   const valueBaseLabel = tag.displayName ?? tag.value
-  return tag.archivedAt ? t('tags:valueBaseLabelArchived', '{{valueBaseLabel}} (Archived)', { valueBaseLabel }) : valueBaseLabel
+  return tag.archivedAt ? t('tags:label.tag_label_archived', '{{label}} (Archived)', { label: valueBaseLabel }) : valueBaseLabel
 }
 
 export const makeTag = Schema.decodeSync(TagSchema)

@@ -52,12 +52,12 @@ export const MatchForm = ({
   return (
     <div className='Layer__MatchForm__Table'>
       <div className='Layer__MatchForm__Table__header'>
-        <div className='Layer__MatchForm__Table__date'>{t('common:date', 'Date')}</div>
+        <div className='Layer__MatchForm__Table__date'>{t('common:label.date', 'Date')}</div>
         <div className='Layer__MatchForm__Table__desc'>
-          {t('common:description', 'Description')}
+          {t('common:label.description', 'Description')}
         </div>
-        <div className='Layer__MatchForm__Table__amount'>{t('common:amount', 'Amount')}</div>
-        {renderInAppLink && <div className='Layer__MatchForm__Table__link'>{t('common:link', 'Link')}</div>}
+        <div className='Layer__MatchForm__Table__amount'>{t('common:label.amount', 'Amount')}</div>
+        {renderInAppLink && <div className='Layer__MatchForm__Table__link'>{t('common:action.link_label', 'Link')}</div>}
         {match && <div className='Layer__MatchForm__Table__status' />}
       </div>
       {effectiveSuggestedMatches.map((suggestedMatch) => {
@@ -114,7 +114,7 @@ export const MatchForm = ({
                     <MatchBadge
                       bankTransaction={bankTransaction}
                       dateFormat={DATE_FORMAT}
-                      text={isTransferMatch(bankTransaction) ? t('bankTransactions:transfer', 'Transfer') : t('bankTransactions:matched', 'Matched')}
+                      text={isTransferMatch(bankTransaction) ? t('bankTransactions:label.transfer', 'Transfer') : t('bankTransactions:label.matched', 'Matched')}
                     />
                   )}
                 </div>

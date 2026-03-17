@@ -14,8 +14,8 @@ export const ReportsTableErrorState = ({
     <div className='Layer__table-state-container'>
       <DataState
         status={DataStateStatus.failed}
-        title={t('common:somethingWentWrong', 'Something went wrong')}
-        description={t('common:weCouldntLoadYourData', 'We couldn\'t load your data.')}
+        title={t('common:error.something_went_wrong', 'Something went wrong')}
+        description={t('common:error.couldnt_load_data', 'We couldn\'t load your data.')}
         isLoading={isLoading}
       />
     </div>

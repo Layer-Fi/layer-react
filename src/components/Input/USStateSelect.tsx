@@ -33,7 +33,7 @@ export const USStateSelect = ({ value, onChange }: USStateSelecttProps) => {
       options={usStateOptions}
       value={findSelectOption(usStateOptions, value)}
       onChange={option => onChange(option as USState)}
-      placeholder={t('usStates:usState', 'US state')}
+      placeholder={t('usStates:label.us_state', 'US state')}
     />
   )
 }

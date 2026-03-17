@@ -23,12 +23,12 @@ type InvoiceTermsOption = {
 }
 
 const INVOICE_TERMS_CONFIG = [
-  { value: InvoiceTermsValues.Net10, ...translationKey('invoices:net10', 'Net 10') },
-  { value: InvoiceTermsValues.Net15, ...translationKey('invoices:net15', 'Net 15') },
-  { value: InvoiceTermsValues.Net30, ...translationKey('invoices:net30', 'Net 30') },
-  { value: InvoiceTermsValues.Net60, ...translationKey('invoices:net60', 'Net 60') },
-  { value: InvoiceTermsValues.Net90, ...translationKey('invoices:net90', 'Net 90') },
-  { value: InvoiceTermsValues.Custom, ...translationKey('invoices:custom', 'Custom') },
+  { value: InvoiceTermsValues.Net10, ...translationKey('invoices:label.net_10', 'Net 10') },
+  { value: InvoiceTermsValues.Net15, ...translationKey('invoices:label.net_15', 'Net 15') },
+  { value: InvoiceTermsValues.Net30, ...translationKey('invoices:label.net_30', 'Net 30') },
+  { value: InvoiceTermsValues.Net60, ...translationKey('invoices:label.net_60', 'Net 60') },
+  { value: InvoiceTermsValues.Net90, ...translationKey('invoices:label.net_90', 'Net 90') },
+  { value: InvoiceTermsValues.Custom, ...translationKey('invoices:label.custom', 'Custom') },
 ]
 
 export const getDurationInDaysFromTerms = (terms: InvoiceTermsValues) => {
@@ -101,7 +101,7 @@ export const InvoiceTermsComboBox = ({ value, onValueChange, isReadOnly }: Invoi
   return (
     <HStack className='Layer__InvoiceForm__TermsComboBox Layer__InvoiceForm__Field__Terms'>
       <Label size='sm' htmlFor={inputId}>
-        {t('invoices:terms', 'Terms')}
+        {t('invoices:label.terms', 'Terms')}
       </Label>
       <ComboBox
         options={options}

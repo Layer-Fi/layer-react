@@ -101,8 +101,8 @@ export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProp
     return (
       <DataState
         status={DataStateStatus.allDone}
-        title={t('reports:noRowsFound', 'No rows found')}
-        description={t('reports:thisReportHasNoRows', 'This report has no rows.')}
+        title={t('reports:empty.no_rows_found', 'No rows found')}
+        description={t('reports:empty.report_has_no_rows', 'This report has no rows.')}
         spacing
       />
     )
@@ -111,8 +111,8 @@ export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProp
   const UnifiedReportErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
-      title={t('reports:weCouldntLoadYourReport', 'We couldn’t load your report')}
-      description={t('reports:anErrorOccurredWhileLoadingYourReportPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your report. Please check your connection and try again.')}
+      title={t('reports:error.couldnt_load_report', 'We couldn’t load your report')}
+      description={t('reports:error.load_report', 'An error occurred while loading your report. Please check your connection and try again.')}
       onRefresh={() => { void refetch() }}
       spacing
     />

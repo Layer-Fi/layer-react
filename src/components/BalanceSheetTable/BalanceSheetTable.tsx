@@ -100,7 +100,7 @@ export const BalanceSheetTable = ({
             depth={depth + 1}
             variant='summation'
           >
-            <TableCell primary>{t('reports:totalOfDisplayName', 'Total of {{displayName}}', { displayName: lineItem.display_name })}</TableCell>
+            <TableCell primary>{t('reports:label.total_display_name', 'Total of {{displayName}}', { displayName: lineItem.display_name })}</TableCell>
             <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
               {lineItem.value}
             </TableCell>

@@ -50,10 +50,10 @@ export const BankTransactionsList = ({
             isSelected={isAllSelected}
             isIndeterminate={isPartiallySelected}
             onChange={onHeaderCheckboxChange}
-            aria-label={t('bankTransactions:selectAllTransactionsOnThisPage', 'Select all transactions on this page')}
+            aria-label={t('bankTransactions:action.select_all_transactions', 'Select all transactions on this page')}
           />
           <Span size='sm'>
-            {t('common:selectAll', 'Select all')}
+            {t('common:action.select_all', 'Select all')}
           </Span>
         </HStack>
       )}

@@ -21,18 +21,18 @@ export function InvoiceResetModal({ isOpen, onOpenChange, invoice, onSuccess }: 
   }, [onSuccess, resetInvoice])
 
   const description = invoice.status === InvoiceStatus.Voided
-    ? t('invoices:resettingThisInvoiceWillRemoveItsCurrentStatusAsVoidAndReturnItToASentState', 'Resetting this invoice will remove its current status as void and return it to a sent state.')
-    : t('invoices:resettingThisInvoiceWillDeleteAllPaymentsRefundsAndWriteOffsAssociatedWithItAndReturnItToASentState', 'Resetting this invoice will delete all payments, refunds, and write offs associated with it and return it to a sent state.')
+    ? t('invoices:prompt.reset_invoice_remove_void_status_warning', 'Resetting this invoice will remove its current status as void and return it to a sent state.')
+    : t('invoices:prompt.reset_invoice_warning', 'Resetting this invoice will delete all payments, refunds, and write offs associated with it and return it to a sent state.')
 
   return (
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('invoices:resetInvoiceToSent', 'Reset invoice to sent')}
+      title={t('invoices:label.reset_invoice_to_sent', 'Reset invoice to sent')}
       description={description}
       onConfirm={onConfirm}
-      confirmLabel={t('invoices:resetInvoice', 'Reset Invoice')}
-      errorText={t('invoices:errorResettingInvoiceTryAgain', 'There was an error resetting this invoice. Please check your connection and try again in a few seconds.')}
+      confirmLabel={t('invoices:action.reset_invoice', 'Reset Invoice')}
+      errorText={t('invoices:error.reset_invoice', 'There was an error resetting this invoice. Please check your connection and try again in a few seconds.')}
     />
   )
 }

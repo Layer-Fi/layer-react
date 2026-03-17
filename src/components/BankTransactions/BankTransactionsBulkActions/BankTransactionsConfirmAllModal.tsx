@@ -38,12 +38,12 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('bankTransactions:confirmAllSuggestions', 'Confirm all suggestions?')}
+      title={t('bankTransactions:prompt.confirm_suggestions', 'Confirm all suggestions?')}
       content={(
         skippedCount === 0
           ? (
             <Span>
-              {tPlural(t, 'bankTransactions:thisWillConfirmCountTransactions', {
+              {tPlural(t, 'bankTransactions:label.this_will_confirm', {
                 count,
                 one: 'This will confirm {{count}} transaction.',
                 other: 'This will confirm {{count}} transactions.',
@@ -53,7 +53,7 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
           : (
             <VStack gap='xs'>
               <Span>
-                {tPlural(t, 'bankTransactions:actionableCountOfCountTransactionsWillBeConfirmed', {
+                {tPlural(t, 'bankTransactions:label.actionable_count_of', {
                   count,
                   actionableCount,
                   one: '{{actionableCount}} of {{count}} transaction will be confirmed.',
@@ -61,7 +61,7 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
                 })}
               </Span>
               <Span>
-                {tPlural(t, 'bankTransactions:countTransactionsWillBeSkippedDueToMissingCategory', {
+                {tPlural(t, 'bankTransactions:label.count_transactions_will', {
                   count: skippedCount,
                   one: '{{count}} transaction will be skipped due to missing category.',
                   other: '{{count}} transactions will be skipped due to missing category.',
@@ -71,8 +71,8 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
           )
       )}
       onConfirm={handleConfirm}
-      confirmLabel={t('bankTransactions:confirmAll', 'Confirm all')}
-      errorText={t('bankTransactions:failedToConfirmTransactions', 'Failed to confirm transactions')}
+      confirmLabel={t('bankTransactions:action.confirm_all', 'Confirm all')}
+      errorText={t('bankTransactions:error.confirm_transactions', 'Failed to confirm transactions')}
       closeOnConfirm
       confirmDisabled={actionableCount === 0}
       useDrawer={isMobileView}

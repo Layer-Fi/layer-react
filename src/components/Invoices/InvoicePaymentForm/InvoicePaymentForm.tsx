@@ -71,7 +71,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
       <VStack className={`${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <HStack className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} gap='xs' align='center'>
           <Trans
-            i18nKey='invoices:invoiceLabelAndNumber'
+            i18nKey='invoices:label.invoice_number_component'
             defaults='<label>Invoice</label> <value>#{{invoiceNumber}}</value>'
             values={{ invoiceNumber: invoice.invoiceNumber }}
             components={{
@@ -81,11 +81,11 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
           />
         </HStack>
         <form.AppField name='paidAt'>
-          {field => <field.FormDateField label={t('invoices:paymentDate', 'Payment date')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__PaidAt`} isReadOnly={isReadOnly} />}
+          {field => <field.FormDateField label={t('invoices:label.payment_date', 'Payment date')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__PaidAt`} isReadOnly={isReadOnly} />}
         </form.AppField>
       </VStack>
       <VStack className={`${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Section`} gap='xs'>
-        <Heading level={3} size='sm' pbe='xs'>{t('invoices:paymentDetails', 'Payment details')}</Heading>
+        <Heading level={3} size='sm' pbe='xs'>{t('invoices:label.payment_details', 'Payment details')}</Heading>
         <form.Field name='method'>
           {field => (
             <PaymentMethodComboBox
@@ -99,22 +99,22 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
         </form.Field>
         <form.AppField name='referenceNumber'>
           {field =>
-            <field.FormTextField label={t('common:referenceNumber', 'Reference number')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__ReferenceNo`} isReadOnly={isReadOnly} />}
+            <field.FormTextField label={t('common:label.reference_number', 'Reference number')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__ReferenceNo`} isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField name='memo'>
           {field => (
-            <field.FormTextAreaField label={t('common:memo', 'Memo')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__Memo`} isReadOnly={isReadOnly} />
+            <field.FormTextAreaField label={t('common:label.memo', 'Memo')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__Memo`} isReadOnly={isReadOnly} />
           )}
         </form.AppField>
       </VStack>
       <VStack className={`${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <form.AppField name='amount'>
-          {field => <field.FormBigDecimalField label={t('invoices:amountPaid', 'Amount paid')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly={isReadOnly} maxValue={convertCentsToBigDecimal(invoice.outstandingBalance)} />}
+          {field => <field.FormBigDecimalField label={t('invoices:label.amount_paid', 'Amount paid')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly={isReadOnly} maxValue={convertCentsToBigDecimal(invoice.outstandingBalance)} />}
         </form.AppField>
         <form.Subscribe selector={state => [state.values.amount]}>
           {([amount]) => (
             <HStack justify='end' className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__OutstandingBalance`} gap='xs' align='center'>
-              <Span size='sm'>{t('invoices:balanceDue', 'Balance due')}</Span>
+              <Span size='sm'>{t('invoices:label.balance_due', 'Balance due')}</Span>
               <Span size='md' weight='bold'>
                 {formatBigDecimalToString(BD.subtract(convertCentsToBigDecimal(invoice.outstandingBalance), amount), { mode: 'currency' })}
               </Span>
@@ -126,7 +126,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
         <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
           {([canSubmit, isSubmitting]) => (
             <Button type='submit' isDisabled={!canSubmit} isPending={isSubmitting} onPress={() => { void form.handleSubmit() }}>
-              {t('invoices:recordPayment', 'Record Payment')}
+              {t('invoices:action.record_payment', 'Record Payment')}
             </Button>
           )}
         </form.Subscribe>

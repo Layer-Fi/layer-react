@@ -42,7 +42,7 @@ export const ExpandCollapseButton = ({
         iconAsPrimary={iconOnly}
         iconOnly={iconOnly}
       >
-        {iconOnly ? null : !expanded ? t('reports:expandAllRows', 'Expand all rows') : t('reports:collapseAllRows', 'Collapse all rows')}
+        {iconOnly ? null : !expanded ? t('reports:action.expand_rows', 'Expand all rows') : t('reports:action.collapse_rows', 'Collapse all rows')}
       </Button>
     </>
   )

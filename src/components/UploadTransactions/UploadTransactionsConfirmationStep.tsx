@@ -29,8 +29,8 @@ export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTran
       <DataState
         className='Layer__upload-transactions__confirmation-step__data-state'
         status={DataStateStatus.success}
-        title={t('upload:transactionsUploadedSuccessfully', 'Transactions uploaded successfully')}
-        description={tPlural(t, 'upload:countTransactionsHaveBeenUploadedToYourAccount', {
+        title={t('upload:label.transactions_uploaded_successfully', 'Transactions uploaded successfully')}
+        description={tPlural(t, 'upload:label.count_transactions_have', {
           count: uploadedTransactionsCount,
           one: '{{count}} transaction has been uploaded to your account.',
           other: '{{count}} transactions have been uploaded to your account.',
@@ -45,14 +45,14 @@ export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTran
           rightIcon={<UploadCloud size={12} />}
           className='Layer__upload-transactions__confirmation-step__button-row-item'
         >
-          {t('upload:uploadAnotherFile', 'Upload another file')}
+          {t('upload:action.upload_another_file', 'Upload another file')}
         </Button>
         <Button
           onClick={() => { void next() }}
           rightIcon={<ChevronRight />}
           className='Layer__upload-transactions__confirmation-step__button-row-item'
         >
-          {t('upload:imDoneUploadingTransactions', 'I’m done uploading transactions')}
+          {t('upload:label.im_done_uploading', 'I’m done uploading transactions')}
         </Button>
       </HStack>
     </VStack>

@@ -33,23 +33,23 @@ export const InvoiceFormMetadataSection = ({
       <HStack justify='space-between' gap='xl'>
         <VStack className='Layer__InvoiceForm__AdditionalTextFields'>
           <form.AppField name='memo'>
-            {field => <field.FormTextAreaField label={t('common:memo', 'Memo')} isReadOnly={isReadOnly} />}
+            {field => <field.FormTextAreaField label={t('common:label.memo', 'Memo')} isReadOnly={isReadOnly} />}
           </form.AppField>
         </VStack>
         <VStack className='Layer__InvoiceForm__TotalFields' fluid>
-          <InvoiceFormTotalRow label={t('invoices:subtotal', 'Subtotal')} value={subtotal} />
-          <InvoiceFormTotalRow label={t('invoices:discount', 'Discount')} value={negate(additionalDiscount)}>
+          <InvoiceFormTotalRow label={t('invoices:label.subtotal', 'Subtotal')} value={subtotal} />
+          <InvoiceFormTotalRow label={t('invoices:label.discount', 'Discount')} value={negate(additionalDiscount)}>
             <form.AppField name='discountRate'>
-              {field => <field.FormBigDecimalField label={t('invoices:discount', 'Discount')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+              {field => <field.FormBigDecimalField label={t('invoices:label.discount', 'Discount')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
             </form.AppField>
           </InvoiceFormTotalRow>
-          <InvoiceFormTotalRow label={t('invoices:taxableSubtotal', 'Taxable subtotal')} value={taxableSubtotal} />
-          <InvoiceFormTotalRow label={t('invoices:taxRate', 'Tax rate')} value={taxes}>
+          <InvoiceFormTotalRow label={t('invoices:label.taxable_subtotal', 'Taxable subtotal')} value={taxableSubtotal} />
+          <InvoiceFormTotalRow label={t('invoices:label.tax_rate', 'Tax rate')} value={taxes}>
             <form.AppField name='taxRate'>
-              {field => <field.FormBigDecimalField label={t('invoices:taxRateFieldLabel', 'Tax Rate')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+              {field => <field.FormBigDecimalField label={t('invoices:label.tax_rate_title_case', 'Tax Rate')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
             </form.AppField>
           </InvoiceFormTotalRow>
-          <InvoiceFormTotalRow label={t('common:total', 'Total')} value={grandTotal} />
+          <InvoiceFormTotalRow label={t('common:label.total', 'Total')} value={grandTotal} />
         </VStack>
       </HStack>
     </VStack>

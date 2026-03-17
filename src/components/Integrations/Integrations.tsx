@@ -41,7 +41,7 @@ export const IntegrationsComponent = ({
           className='Layer__linked-accounts__title'
           size={HeadingSize.secondary}
         >
-          {stringOverrides?.title || t('integrations:integrations', 'Integrations')}
+          {stringOverrides?.title || t('integrations:label.integrations', 'Integrations')}
         </Heading>
         <IntegrationsConnectMenu />
       </Header>
@@ -53,7 +53,7 @@ export const IntegrationsComponent = ({
       {!isLoading && !quickbooksConnectionStatus.is_connected && (
         <DataState
           status={DataStateStatus.info}
-          title={t('integrations:noActiveIntegrations', 'No active integrations')}
+          title={t('integrations:empty.active_integrations', 'No active integrations')}
         />
       )}
       {quickbooksConnectionStatus?.is_connected && <IntegrationsContent />}

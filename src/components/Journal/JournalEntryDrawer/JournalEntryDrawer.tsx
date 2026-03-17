@@ -71,11 +71,11 @@ export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true 
       <BaseConfirmationModal
         isOpen={isDiscardChangesModalOpen}
         onOpenChange={setIsDiscardChangesModalOpen}
-        title={t('generalLedger:discardChangesToThisJournalEntry', 'Discard changes to this journal entry?')}
-        description={t('common:anyUnsavedChangesWillBeLost', 'Any unsaved changes will be lost.')}
+        title={t('generalLedger:prompt.discard_changes_journal_entry', 'Discard changes to this journal entry?')}
+        description={t('common:label.unsaved_changes_lost', 'Any unsaved changes will be lost.')}
         onConfirm={toJournalTable}
-        confirmLabel={t('common:discardChanges', 'Discard changes')}
-        cancelLabel={t('common:keepEditing', 'Keep editing')}
+        confirmLabel={t('common:action.discard_changes', 'Discard changes')}
+        cancelLabel={t('common:label.keep_editing', 'Keep editing')}
       />
     </>
   )
@@ -93,20 +93,20 @@ const JournalEntryDrawerHeader = ({ onSubmit, formState }: JournalEntryDrawerHea
 
   const saveButton = useMemo(() => (
     <Button isPending={isSubmitting} onPress={onSubmit}>
-      {t('common:post', 'Post')}
+      {t('common:action.post_label', 'Post')}
       <Save size={14} />
     </Button>
   ), [t, isSubmitting, onSubmit])
 
   const cancelButton = useMemo(() => (
     <Button variant='outlined' onPress={toJournalTable}>
-      {t('common:cancel', 'Cancel')}
+      {t('common:action.cancel_label', 'Cancel')}
     </Button>
   ), [t, toJournalTable])
 
   return (
     <HStack justify='space-between' align='center' fluid pie='md'>
-      <Heading size='sm'>{t('generalLedger:addNewEntry', 'Add new entry')}</Heading>
+      <Heading size='sm'>{t('generalLedger:action.add_new_entry', 'Add new entry')}</Heading>
       <HStack gap='xs'>
         {cancelButton}
         {saveButton}

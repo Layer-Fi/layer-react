@@ -59,7 +59,7 @@ export const ProfitAndLossHeader = ({
     <Header className={className}>
       <span className='Layer__component-header__title-wrapper Layer__profit-and-loss__header'>
         <Heading size={HeadingSize.secondary} className={headingClassName} align='left'>
-          {stringOverrides?.title || text || t('common:profitLoss', 'Profit & Loss')}
+          {stringOverrides?.title || text || t('common:label.profit_loss', 'Profit & Loss')}
         </Heading>
         {isSyncing && <SyncingBadge />}
         {withStatus && activePeriodStatus && (

@@ -134,7 +134,7 @@ export const LedgerAccountRow = ({
             <div className='Layer__ledger_account-table__balances-mobile'>
               <div className='Layer__ledger_account-table__balance-item'>
                 <span className='Layer__ledger_account-table__balances-mobile__label'>
-                  {t('common:debit', 'Debit')}
+                  {t('common:label.debit', 'Debit')}
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
                   {' '}
@@ -144,7 +144,7 @@ export const LedgerAccountRow = ({
               </div>
               <div className='Layer__ledger_account-table__balance-item'>
                 <span className='Layer__ledger_account-table__balances-mobile__label'>
-                  {t('common:credit', 'Credit')}
+                  {t('common:label.credit', 'Credit')}
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
                   {row.direction === Direction.CREDIT
@@ -153,7 +153,7 @@ export const LedgerAccountRow = ({
               </div>
               <div className='Layer__ledger_account-table__balance-item'>
                 <span className='Layer__ledger_account-table__balances-mobile__label'>
-                  {t('generalLedger:runningBalance', 'Running balance')}
+                  {t('generalLedger:label.running_balance', 'Running balance')}
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
                   {`$${centsToDollars(row.running_balance)}`}

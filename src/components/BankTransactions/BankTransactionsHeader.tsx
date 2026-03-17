@@ -51,8 +51,8 @@ export interface BankTransactionsHeaderStringOverrides {
 }
 
 const STATUS_TOGGLE_CONFIG = [
-  { ...translationKey('bankTransactions:toReview', 'To Review'), value: DisplayState.review },
-  { ...translationKey('bankTransactions:categorized', 'Categorized'), value: DisplayState.categorized },
+  { ...translationKey('bankTransactions:label.to_review', 'To Review'), value: DisplayState.review },
+  { ...translationKey('bankTransactions:label.categorized', 'Categorized'), value: DisplayState.categorized },
 ]
 
 type TransactionsSearchProps = {
@@ -79,7 +79,7 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   return (
     <SearchField
       slot={slot}
-      label={t('bankTransactions:searchTransactions', 'Search transactions')}
+      label={t('bankTransactions:action.search_transactions', 'Search transactions')}
       value={localSearch}
       onChange={handleSearch}
       isDisabled={isDisabled}
@@ -171,7 +171,7 @@ export const BankTransactionsHeader = ({
           className='Layer__bank-transactions__title'
           size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
         >
-          {stringOverrides?.header || t('common:transactions', 'Transactions')}
+          {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
         {isSyncing && (
           <SyncingComponent
@@ -183,7 +183,7 @@ export const BankTransactionsHeader = ({
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
-          label={t('date:selectAMonth', 'Select a month')}
+          label={t('date:action.select_a_month', 'Select a month')}
           date={monthPickerDate}
           onChange={setDateRange}
           minDate={activationDate ? convertDateToZonedDateTime(activationDate) : null}
@@ -236,7 +236,7 @@ export const BankTransactionsHeader = ({
         isMobileView={isMobileList}
         slotProps={{
           ConfirmAllModal: {
-            label: isMobileList ? t('common:confirm', 'Confirm') : t('bankTransactions:confirmAll', 'Confirm all'),
+            label: isMobileList ? t('common:action.confirm_label', 'Confirm') : t('bankTransactions:action.confirm_all', 'Confirm all'),
           },
         }}
       />
@@ -247,7 +247,7 @@ export const BankTransactionsHeader = ({
   const statusToggle = isStatusToggleVisible
     ? (
       <Toggle
-        ariaLabel={t('bankTransactions:categorizationStatus', 'Categorization status')}
+        ariaLabel={t('bankTransactions:label.bank_transactions_categorization_status', 'Categorization status')}
         options={statusToggleOptions}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}

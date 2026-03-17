@@ -13,12 +13,12 @@ export const DeductionsSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
 
   return (
     <VStack className='Layer__TaxProfileForm__Section' gap='md'>
-      <Heading level={3}>{t('taxEstimates:deductions', 'Deductions')}</Heading>
+      <Heading level={3}>{t('taxEstimates:label.deductions', 'Deductions')}</Heading>
 
       <form.AppField name='usConfiguration.deductions.homeOffice.useHomeOfficeDeduction'>
         {field => (
           <field.FormRadioGroupYesNoField
-            label={t('taxEstimates:useSimplifiedHomeOfficeDeduction', 'Use simplified home office deduction?')}
+            label={t('taxEstimates:label.use_simplified_home_office', 'Use simplified home office deduction?')}
             isReadOnly={isReadOnly}
             {...desktopFieldProps}
           />
@@ -30,9 +30,9 @@ export const DeductionsSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
           <form.AppField name='usConfiguration.deductions.homeOffice.homeOfficeArea'>
             {field => (
               <field.FormBigDecimalField
-                label={t('taxEstimates:homeOfficeAreaSqFt', 'Home office area (sq ft)')}
+                label={t('taxEstimates:label.home_office_area_sq', 'Home office area (sq ft)')}
                 isReadOnly={isReadOnly}
-                placeholder={t('taxEstimates:enterArea', 'Enter area')}
+                placeholder={t('taxEstimates:label.enter_area', 'Enter area')}
                 mode='decimal'
                 maxDecimalPlaces={3}
                 maxValue={MAX_HOME_OFFICE_AREA}
@@ -46,7 +46,7 @@ export const DeductionsSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
       <form.AppField name='usConfiguration.deductions.vehicle.useMileageDeduction'>
         {field => (
           <field.FormRadioGroupYesNoField
-            label={t('taxEstimates:useStandardMileageDeduction', 'Use standard mileage deduction?')}
+            label={t('taxEstimates:label.use_standard_mileage_deduction', 'Use standard mileage deduction?')}
             isReadOnly={isReadOnly}
             {...desktopFieldProps}
           />

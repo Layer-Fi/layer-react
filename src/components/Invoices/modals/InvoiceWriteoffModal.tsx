@@ -27,11 +27,11 @@ export function InvoiceWriteoffModal({ isOpen, onOpenChange, invoice, onSuccess 
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('invoices:writeOffInvoice', 'Write off invoice')}
-      description={t('invoices:writingOffThisInvoiceWillRecordItAsBadDebtAndYouWillNoLongerBeAbleToApplyPaymentsToItThisActionCannotBeUndone', 'Writing off this invoice will record it as bad debt, and you will no longer be able to apply payments to it. This action cannot be undone.')}
+      title={t('invoices:action.write_off_invoice', 'Write off invoice')}
+      description={t('invoices:prompt.write_off_invoice_warning', 'Writing off this invoice will record it as bad debt, and you will no longer be able to apply payments to it. This action cannot be undone.')}
       onConfirm={onConfirm}
-      confirmLabel={t('invoices:writeOffInvoice', 'Write Off Invoice')}
-      errorText={t('invoices:errorWritingOffInvoiceTryAgain', 'There was an error writing off this invoice. Please check your connection and try again in a few seconds.')}
+      confirmLabel={t('invoices:action.write_off_invoice', 'Write Off Invoice')}
+      errorText={t('invoices:error.write_off_invoice', 'There was an error writing off this invoice. Please check your connection and try again in a few seconds.')}
     />
   )
 }

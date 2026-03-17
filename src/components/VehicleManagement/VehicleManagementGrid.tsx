@@ -34,8 +34,8 @@ export const VehicleManagementGrid = ({ onEditVehicle, showArchived }: VehicleMa
     return (
       <DataState
         status={DataStateStatus.failed}
-        title={t('vehicles:weCouldntLoadYourVehicles', 'We couldn\'t load your vehicles')}
-        description={t('vehicles:anErrorOccurredWhileLoadingYourVehiclesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your vehicles. Please check your connection and try again.')}
+        title={t('vehicles:error.load_vehicle', 'We couldn\'t load your vehicles')}
+        description={t('vehicles:error.load_vehicle_retry', 'An error occurred while loading your vehicles. Please check your connection and try again.')}
         spacing
       />
     )
@@ -45,8 +45,8 @@ export const VehicleManagementGrid = ({ onEditVehicle, showArchived }: VehicleMa
     return (
       <DataState
         status={DataStateStatus.allDone}
-        title={t('vehicles:noVehiclesYet', 'No vehicles yet')}
-        description={t('vehicles:addYourFirstVehicleToStartTrackingTrips', 'Add your first vehicle to start tracking trips.')}
+        title={t('vehicles:empty.vehicles', 'No vehicles yet')}
+        description={t('vehicles:empty.add_first_vehicle', 'Add your first vehicle to start tracking trips.')}
         icon={<Car />}
         spacing
       />

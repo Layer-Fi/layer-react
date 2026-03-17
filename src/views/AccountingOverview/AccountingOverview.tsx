@@ -77,11 +77,11 @@ export const AccountingOverview = ({
     [
       {
         value: 'revenue',
-        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || t('common:revenue', 'Revenue'),
+        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.revenueToggleLabel || t('common:label.revenue', 'Revenue'),
       },
       {
         value: 'expenses',
-        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || t('common:expenses', 'Expenses'),
+        label: stringOverrides?.profitAndLoss?.detailedCharts?.detailedChartStringOverrides?.expenseToggleLabel || t('common:label.expenses', 'Expenses'),
       },
     ]
   ), [t, stringOverrides])
@@ -96,7 +96,7 @@ export const AccountingOverview = ({
       }
     >
       <View
-        title={stringOverrides?.title || title || t('overview:accountingOverview', 'Accounting overview')}
+        title={stringOverrides?.title || title || t('overview:label.accounting_overview', 'Accounting overview')}
         showHeader={showTitle}
         header={(
           <Header>
@@ -125,7 +125,7 @@ export const AccountingOverview = ({
           asWidget
         >
           <ProfitAndLoss.Header
-            text={stringOverrides?.header || t('common:profitLoss', 'Profit & Loss')}
+            text={stringOverrides?.header || t('common:label.profit_loss', 'Profit & Loss')}
           />
           <ProfitAndLoss.Chart
             tagFilter={
@@ -142,7 +142,7 @@ export const AccountingOverview = ({
         )}
         <div className='Layer__accounting-overview-profit-and-loss-charts'>
           <Toggle
-            ariaLabel={t('overview:chartType', 'Chart type')}
+            ariaLabel={t('overview:label.chart_type', 'Chart type')}
             options={toggleOptions}
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}

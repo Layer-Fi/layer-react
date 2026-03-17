@@ -24,14 +24,14 @@ export const BulkActionsModule = ({ showSelectedLabel = true, fullWidth = false,
     <HStack slot='toggle' justify='space-between' align='center' gap='xs' fluid={fullWidth}>
       <HStack justify='space-between' align='center' pis='sm' pie='3xs' gap='3xs' className='Layer__BulkActionsModule__SelectedItemsContainer'>
         <Span noWrap>
-          {showSelectedLabel ? t('common:countSelected', '{{count}} selected', { count }) : count}
+          {showSelectedLabel ? t('common:label.count_selected', '{{count}} selected', { count }) : count}
         </Span>
         <Button
           variant='ghost'
           icon
           inset
           onClick={clearSelection}
-          aria-label={t('common:clearSelectedItems', 'Clear selected items')}
+          aria-label={t('common:action.clear_selected_items', 'Clear selected items')}
         >
           <X />
         </Button>

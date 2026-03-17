@@ -46,24 +46,24 @@ export const BankTransactionsMobileBulkActionsHeader = ({
               isSelected={isAllSelected}
               isIndeterminate={isPartiallySelected}
               onChange={onHeaderCheckboxChange}
-              aria-label={t('bankTransactions:selectAllTransactionsOnThisPage', 'Select all transactions on this page')}
+              aria-label={t('bankTransactions:action.select_all_transactions', 'Select all transactions on this page')}
             />
             <Span
               size='md'
             >
-              {t('common:selectAll', 'Select all')}
+              {t('common:action.select_all', 'Select all')}
             </Span>
           </>
         )}
       </HStack>
       <HStack align='center' gap='xs'>
         <Span size='md' noWrap>
-          {t('common:bulkActions', 'Bulk Actions')}
+          {t('common:label.bulk_actions', 'Bulk Actions')}
         </Span>
         <Switch
           isSelected={bulkActionsEnabled}
           onChange={onBulkActionsToggle}
-          aria-label={t('common:toggleBulkActions', 'Toggle bulk actions')}
+          aria-label={t('common:action.toggle_bulk_actions', 'Toggle bulk actions')}
         />
       </HStack>
 

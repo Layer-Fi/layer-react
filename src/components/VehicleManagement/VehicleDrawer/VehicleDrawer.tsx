@@ -26,7 +26,7 @@ const VehicleDrawerHeader = ({ title, close, isMobile }: { title: string, close:
 export const VehicleDrawer = ({ isOpen, onOpenChange, vehicle, onSuccess }: VehicleDrawerProps) => {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
-  const title = vehicle ? t('vehicles:editVehicle', 'Edit vehicle') : t('vehicles:addVehicleLabel', 'Add vehicle')
+  const title = vehicle ? t('vehicles:action.edit_vehicle', 'Edit vehicle') : t('vehicles:action.add_vehicle_label', 'Add vehicle')
 
   const Header = useCallback(({ close }: { close: () => void }) => (
     <VehicleDrawerHeader title={title} close={close} isMobile={isMobile} />
