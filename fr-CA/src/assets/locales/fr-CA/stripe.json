@@ -1,0 +1,19 @@
+{
+  "action": {
+    "connect_stripe_label": "Connect Stripe"
+  },
+  "error": {
+    "stripe_sent_misconfigured_link": "Stripe has sent a misconfigured connect account onboarding link. Please try again.",
+    "unable_to_connect_to_stripe": "Unable to connect to Stripe. Please try again."
+  },
+  "label": {
+    "finish_setting_up_stripe_account": "Finish setting up your Stripe account to start accepting card and bank payments for your invoices.",
+    "once_complete_can_accept_payments": "Once complete, you can start accepting card and bank payments.",
+    "set_up_stripe_account": "Set up your Stripe account to start accepting card and bank payments for your invoices."
+  },
+  "state": {
+    "stripe_account_review": "Stripe account under review",
+    "stripe_payment_not_enabled": "Stripe payments not enabled",
+    "stripe_setup_incomplete": "Stripe setup incomplete"
+  }
+}
