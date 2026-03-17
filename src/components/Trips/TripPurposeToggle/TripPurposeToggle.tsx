@@ -12,9 +12,9 @@ export enum TripPurposeFilterValue {
 }
 
 const TRIP_PURPOSE_CONFIG = [
-  { ...translationKey('all', 'All'), value: TripPurposeFilterValue.All },
-  { ...translationKey('business', 'Business'), value: TripPurposeFilterValue.Business },
-  { ...translationKey('personal', 'Personal'), value: TripPurposeFilterValue.Personal },
+  { ...translationKey('common:label.value', 'All'), value: TripPurposeFilterValue.All },
+  { ...translationKey('common:label.business', 'Business'), value: TripPurposeFilterValue.Business },
+  { ...translationKey('common:label.personal', 'Personal'), value: TripPurposeFilterValue.Personal },
 ]
 
 export type TripPurposeToggleProps = {
@@ -38,7 +38,7 @@ export const TripPurposeToggle = ({
   )
   return (
     <Toggle
-      ariaLabel={t('tripPurpose', 'Trip purpose')}
+      ariaLabel={t('trips:label.trip_purpose', 'Trip purpose')}
       options={options}
       selectedKey={selected}
       onSelectionChange={key => onChange(key as TripPurposeFilterValue)}

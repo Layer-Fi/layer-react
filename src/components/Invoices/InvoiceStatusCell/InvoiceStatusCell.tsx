@@ -17,45 +17,45 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t
 
   switch (invoice.status) {
     case InvoiceStatus.WrittenOff: {
-      return { text: t('writtenOff', 'Written Off') }
+      return { text: t('invoices:state.written', 'Written Off') }
     }
     case InvoiceStatus.PartiallyWrittenOff: {
-      return { text: t('partiallyWrittenOff', 'Partially Written Off') }
+      return { text: t('invoices:label.partially_written', 'Partially Written Off') }
     }
     case InvoiceStatus.Refunded: {
-      return { text: t('refunded', 'Refunded') }
+      return { text: t('invoices:state.refunded', 'Refunded') }
     }
     case InvoiceStatus.Paid: {
       return {
-        text: t('paid', 'Paid'),
+        text: t('invoices:state.paid', 'Paid'),
         badge: <Badge variant={BadgeVariant.SUCCESS} size={badgeSize} icon={<CheckCircle size={iconSize} />} iconOnly />,
       }
     }
     case InvoiceStatus.Voided: {
-      return { text: t('voided', 'Voided') }
+      return { text: t('invoices:state.voided', 'Voided') }
     }
     case InvoiceStatus.Sent:
     case InvoiceStatus.PartiallyPaid: {
       if (invoice.dueAt === null) {
         return {
           text: invoice.status === InvoiceStatus.PartiallyPaid
-            ? t('partiallyPaid', 'Partially Paid')
-            : t('sent', 'Sent'),
+            ? t('invoices:state.partially_paid', 'Partially Paid')
+            : t('invoices:state.sent', 'Sent'),
         }
       }
 
       const dueDifference = getDueDifference(invoice.dueAt)
       if (dueDifference === 0) {
         return {
-          text: t('dueTodayStatus', 'Due Today'),
+          text: t('invoices:state.due_today', 'Due Today'),
         }
       }
 
       if (dueDifference < 0) {
         const daysAgo = Math.abs(dueDifference)
         return {
-          text: t('overdue', 'Overdue'),
-          subText: tPlural(t, 'dueCountDaysAgo', {
+          text: t('invoices:state.overdue', 'Overdue'),
+          subText: tPlural(t, 'invoices:state.due_count_days', {
             count: daysAgo,
             one: 'Due {{count}} day ago',
             other: 'Due {{count}} days ago',
@@ -66,8 +66,8 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t
 
       const daysUntilDue = Math.abs(dueDifference)
       return {
-        text: t('sent', 'Sent'),
-        subText: tPlural(t, 'dueInCountDays', {
+        text: t('invoices:state.sent', 'Sent'),
+        subText: tPlural(t, 'invoices:state.due_in_count', {
           count: daysUntilDue,
           one: 'Due in {{count}} day',
           other: 'Due in {{count}} days',

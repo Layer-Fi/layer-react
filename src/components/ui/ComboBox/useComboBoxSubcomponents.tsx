@@ -144,7 +144,7 @@ function buildCustomNoOptionsMessage<T extends ComboBoxOption, IsMulti extends b
         {...restProps}
         className={COMBO_BOX_CLASS_NAMES.NO_OPTIONS_MESSAGE}
       >
-        {EmptyMessage ?? <Span>{t('noMatchingOptions', 'No matching options')}</Span>}
+        {EmptyMessage ?? <Span>{t('ui:empty.matching_options', 'No matching options')}</Span>}
       </components.NoOptionsMessage>
     )
   }

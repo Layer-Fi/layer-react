@@ -3,15 +3,11 @@ import Pseudo from 'i18next-pseudo'
 import { initReactI18next } from 'react-i18next'
 
 import { pseudoOptions } from '@utils/i18n/pseudoConfig'
-import enUSTranslation from '@assets/locales/en-US/translation.json'
-import frCATranslation from '@assets/locales/fr-CA/translation.json'
-
-const enUSResources = enUSTranslation as Record<string, unknown>
-const frCAResources = frCATranslation as Record<string, unknown>
+import * as enUS from '@assets/locales/en-US'
 
 let initPromise: Promise<void> | undefined
 
-const SUPPORTED_LOCALES = ['en-US', 'fr-CA']
+const SUPPORTED_LOCALES = ['en-US']
 const LAYER_TEST_LOCALE_URL_PARAM = 'layer_test_locale'
 
 const isPseudoEnabled = () => {
@@ -21,7 +17,7 @@ const isPseudoEnabled = () => {
   return params.get(LAYER_TEST_LOCALE_URL_PARAM) === 'pseudo'
 }
 
-const getFallbackLocale = () => {
+const getLocale = () => {
   const params = new URLSearchParams(window.location.search)
   const localeParam = params.get(LAYER_TEST_LOCALE_URL_PARAM)
 
@@ -46,11 +42,11 @@ const initI18n = async () => {
       .init({
         returnEmptyString: false,
         initImmediate: false,
-        fallbackLng: getFallbackLocale(),
-        defaultNS: 'translation',
+        lng: getLocale(),
+        fallbackLng: 'en-US',
+        defaultNS: 'common',
         resources: {
-          'en-US': { translation: enUSResources },
-          'fr-CA': { translation: frCAResources },
+          'en-US': enUS,
         },
         ...(usePseudo && { lng: 'en-US', postProcess: ['pseudo'] }),
       })

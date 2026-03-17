@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { getMonthNameFromNumber } from '@utils/date'
 import { tPlural } from '@utils/i18n/plural'
@@ -18,27 +18,30 @@ type InternalStatusConfig = {
 }
 
 type BookkeepingStatusConfigOptions = {
-  status: BookkeepingPeriodStatus
+  status?: BookkeepingPeriodStatus
   monthNumber?: number
   incompleteTasksCount?: number
-  locale?: string
 }
 
-export function getBookkeepingStatusConfig(
+export function useBookkeepingStatusConfig(
   options: BookkeepingStatusConfigOptions,
-  t: TFunction,
 ): InternalStatusConfig | undefined {
-  const { status, monthNumber, incompleteTasksCount, locale = 'en-US' } = options
+  const { t, i18n } = useTranslation()
+  const { status, monthNumber, incompleteTasksCount } = options
+
+  if (!status) return
+
+  const locale = i18n.language
   const monthName = monthNumber !== undefined ? getMonthNameFromNumber(monthNumber, locale) : ''
   const inProgressDescription = incompleteTasksCount !== undefined && incompleteTasksCount > 0
-    ? tPlural(t, 'wereWorkingOnYourMonthNameBooksPleaseCompleteTheCountOpenTasks', {
+    ? tPlural(t, 'bookkeeping:label.working_on_books_please_complete_tasks', {
       count: incompleteTasksCount,
       monthName,
       one: 'We\'re working on your {{monthName}} books. Please complete the {{count}} open task.',
       other: 'We\'re working on your {{monthName}} books. Please complete the {{count}} open tasks.',
     })
     : t(
-      'wereWorkingOnYourMonthNameBooksNoActionIsNeededFromYouRightNow',
+      'bookkeeping:label.working_on_books_no_action_needed',
       'We\'re working on your {{monthName}} books. No action is needed from you right now.',
       { monthName },
     )
@@ -48,7 +51,7 @@ export function getBookkeepingStatusConfig(
     case BookkeepingPeriodStatus.NOT_STARTED:
     case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
       return {
-        label: t('booksInProgress', 'Books in progress'),
+        label: t('bookkeeping:state.books_in_progress', 'Books in progress'),
         description: inProgressDescription,
         color: 'info',
         icon: <Clock size={12} />,
@@ -57,16 +60,16 @@ export function getBookkeepingStatusConfig(
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
     case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
       return {
-        label: t('actionRequired', 'Action required'),
-        description: t('pleaseRespondToTheBelowTasksToHelpUsCompleteYourMonthNameBooks', 'Please respond to the below tasks to help us complete your {{monthName}} books.', { monthName }),
+        label: t('bookkeeping:state.action_required', 'Action required'),
+        description: t('bookkeeping:label.respond_to_below_tasks', 'Please respond to the below tasks to help us complete your {{monthName}} books.', { monthName }),
         color: 'warning',
         icon: <AlertCircle size={12} />,
       }
     }
     case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
       return {
-        label: t('booksCompleted', 'Books completed'),
-        description: t('yourMonthNameBooksAreCompleteAndReadyToView', 'Your {{monthName}} books are complete and ready to view!', { monthName }),
+        label: t('bookkeeping:state.books_completed', 'Books completed'),
+        description: t('bookkeeping:label.month_name_books_complete', 'Your {{monthName}} books are complete and ready to view!', { monthName }),
         color: 'success',
         icon: <CheckCircle size={12} />,
       }

@@ -14,11 +14,11 @@ export function IntegrationsQuickbooksUnlinkConfirmationModal({ isOpen, onOpenCh
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('unlinkQuickbooks', 'Unlink QuickBooks')}
-      description={t('pleaseConfirmThatYouWantToUnlinkQuickbooks', 'Please confirm that you want to unlink QuickBooks.')}
+      title={t('integrations:label.unlink_quickbooks', 'Unlink QuickBooks')}
+      description={t('integrations:prompt.confirm_unlink_quickbooks', 'Please confirm that you want to unlink QuickBooks.')}
       onConfirm={unlinkQuickbooks}
-      confirmLabel={t('unlinkQuickbooks', 'Unlink QuickBooks')}
-      errorText={t('unlinkFailedTryAgain', 'Unlink failed. Please check your connection and try again in a few seconds.')}
+      confirmLabel={t('integrations:action.unlink_quickbooks', 'Unlink QuickBooks')}
+      errorText={t('integrations:error.unlink_failed', 'Unlink failed. Please check your connection and try again in a few seconds.')}
     />
   )
 }

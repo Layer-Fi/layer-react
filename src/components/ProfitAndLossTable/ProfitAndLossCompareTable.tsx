@@ -241,55 +241,55 @@ export const ProfitAndLossCompareTable = ({
               comparisonData: resolvedComparisonData,
               rowKey: 'income',
               depth: 0,
-              rowDisplayName: t('income', 'Income'),
+              rowDisplayName: t('reports:label.income', 'Income'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'cost_of_goods_sold',
               depth: 0,
-              rowDisplayName: t('costOfGoodsSold', 'Cost of Goods Sold'),
+              rowDisplayName: t('reports:label.cost_goods_sold', 'Cost of Goods Sold'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'gross_profit',
               depth: 0,
-              rowDisplayName: stringOverrides?.grossProfitLabel || t('grossProfit', 'Gross Profit'),
+              rowDisplayName: stringOverrides?.grossProfitLabel || t('common:label.gross_profit', 'Gross Profit'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'expenses',
               depth: 0,
-              rowDisplayName: t('expenses', 'Expenses'),
+              rowDisplayName: t('common:label.expenses', 'Expenses'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'profit_before_taxes',
               depth: 0,
-              rowDisplayName: stringOverrides?.netProfitLabel || t('profitBeforeTaxes', 'Profit Before Taxes'),
+              rowDisplayName: stringOverrides?.netProfitLabel || t('reports:label.profit_before_taxes', 'Profit Before Taxes'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'taxes',
               depth: 0,
-              rowDisplayName: t('taxes', 'Taxes'),
+              rowDisplayName: t('common:label.taxes', 'Taxes'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'net_profit',
               depth: 0,
-              rowDisplayName: stringOverrides?.netProfitLabel || t('netProfit', 'Net Profit'),
+              rowDisplayName: stringOverrides?.netProfitLabel || t('reports:label.net_profit', 'Net Profit'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'personal_expenses',
               depth: 0,
-              rowDisplayName: t('personalExpenses', 'Personal Expenses'),
+              rowDisplayName: t('bankTransactions:label.personal_expenses', 'Personal Expenses'),
             })}
             {renderRow({
               comparisonData: resolvedComparisonData,
               rowKey: 'other_outflows',
               depth: 0,
-              rowDisplayName: t('otherOutflows', 'Other Outflows'),
+              rowDisplayName: t('reports:label.other_outflows', 'Other Outflows'),
             })}
           </TableBody>
         </Table>

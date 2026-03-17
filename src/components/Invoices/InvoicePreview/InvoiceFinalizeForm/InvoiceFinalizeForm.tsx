@@ -49,11 +49,11 @@ export const InvoiceFinalizeForm = ({
     <Form className='Layer__InvoiceFinalizeForm' onSubmit={blockNativeOnSubmit}>
       {topError ? <FormErrorBanner message={topError} className='Layer__InvoiceFinalizeForm__ErrorBanner' /> : null}
       <VStack className='Layer__InvoiceFinalizeForm__Section' gap='sm'>
-        <Heading level={3} size='sm'>{t('paymentMethods', 'Payment methods')}</Heading>
+        <Heading level={3} size='sm'>{t('invoices:label.payment_methods', 'Payment methods')}</Heading>
         <form.AppField name='creditCardEnabled'>
           {field => (
             <field.FormSwitchField
-              label={t('creditCard', 'Credit Card')}
+              label={t('common:label.credit_card', 'Credit Card')}
               slots={{ LabelIcon: <CreditCardIcon size={14} /> }}
               inline
             />
@@ -61,14 +61,14 @@ export const InvoiceFinalizeForm = ({
         </form.AppField>
       </VStack>
       <VStack className='Layer__InvoiceFinalizeForm__Section' gap='sm'>
-        <Heading level={3} size='sm'>{t('customPaymentInstructions', 'Custom Payment Instructions')}</Heading>
+        <Heading level={3} size='sm'>{t('invoices:label.custom_payment_instructions', 'Custom Payment Instructions')}</Heading>
         <form.AppField name='customPaymentInstructions'>
           {field => (
             <field.FormTextAreaField
-              label={t('customPaymentInstructions', 'Custom Payment Instructions')}
+              label={t('invoices:label.custom_payment_instructions', 'Custom Payment Instructions')}
               showLabel={false}
               className='Layer__InvoiceFinalizeForm__Field__CustomPaymentInstructions'
-              placeholder={t('addCustomPaymentInstructions', 'Add custom payment instructions')}
+              placeholder={t('invoices:label.add_custom_payment_instructions', 'Add custom payment instructions')}
             />
           )}
         </form.AppField>
@@ -76,7 +76,7 @@ export const InvoiceFinalizeForm = ({
           {([canSubmit, isSubmitting]) => (
             <HStack className='Layer__InvoiceFinalizeForm__Submit' justify='end'>
               <Button type='submit' isDisabled={!canSubmit} isPending={isSubmitting} onPress={() => { void form.handleSubmit() }}>
-                {t('save', 'Save')}
+                {t('common:action.save_label', 'Save')}
                 <Save size={14} />
               </Button>
             </HStack>

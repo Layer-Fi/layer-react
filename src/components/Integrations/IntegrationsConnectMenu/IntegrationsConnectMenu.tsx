@@ -17,7 +17,7 @@ const MenuTriggerButton = () => {
   const { t } = useTranslation()
   return (
     <Button variant='outlined'>
-      {t('manage', 'Manage')}
+      {t('common:action.manage_label', 'Manage')}
       <Cog size={16} />
     </Button>
   )
@@ -37,23 +37,23 @@ export const IntegrationsConnectMenu = () => {
       .then((res) => { window.location.href = res })
       .catch(() => {
         setIsLinkQuickbooksError(true)
-        addToast({ content: t('failedToConnectQuickbooks', 'Failed to connect QuickBooks'), type: 'error' })
+        addToast({ content: t('integrations:error.connect_quickbooks', 'Failed to connect QuickBooks'), type: 'error' })
       })
   }, [linkQuickbooks, addToast, t])
 
   return (
     <DropdownMenu
-      ariaLabel={t('connectIntegration', 'Connect Integration')}
+      ariaLabel={t('integrations:action.connect_integration', 'Connect Integration')}
       slots={{ Trigger: MenuTriggerButton }}
       slotProps={{ Dialog: { width: 280 } }}
     >
-      <Heading size='2xs' weight='bold'>{t('integrations', 'Integrations')}</Heading>
+      <Heading size='2xs' weight='bold'>{t('integrations:label.integrations', 'Integrations')}</Heading>
       <MenuList>
         {quickbooksIsConnected
           ? (
             <MenuItem key='quickbooks-connected' isDisabled>
               <QuickbooksIcon size={20} />
-              <Span size='sm'>{t('quickbooksConnected', 'QuickBooks connected')}</Span>
+              <Span size='sm'>{t('integrations:label.quickbooks_connected', 'QuickBooks connected')}</Span>
               <Spacer />
               <CheckIcon size={16} />
             </MenuItem>
@@ -62,7 +62,7 @@ export const IntegrationsConnectMenu = () => {
             <MenuItem key='connect-quickbooks' onClick={initiateQuickbooksOAuth}>
               <QuickbooksIcon size={20} />
               <Span {...isLinkQuickbooksError && { status: 'error' }} size='sm'>
-                { isLinkQuickbooksError ? t('retryConnectQuickbooks', 'Retry Connect QuickBooks') : t('connectQuickbooks', 'Connect QuickBooks') }
+                { isLinkQuickbooksError ? t('integrations:action.retry_connect_quickbooks', 'Retry Connect QuickBooks') : t('integrations:action.connect_quickbooks', 'Connect QuickBooks') }
               </Span>
               <Spacer />
               <LinkIcon size={12} />

@@ -27,9 +27,9 @@ function getTitle(
 ) {
   switch (currentStep) {
     case UploadTransactionsStep.UploadCsv:
-      return t('uploadTransactions', 'Upload transactions')
+      return t('upload:action.upload_transactions', 'Upload transactions')
     case UploadTransactionsStep.ValidateCsv:
-      return isValid ? t('reviewTransactions', 'Review transactions') : t('someTransactionsCouldntBeParsed', 'Some transactions couldn’t be parsed')
+      return isValid ? t('upload:label.review_transactions', 'Review transactions') : t('upload:error.could_not_parse_transactions', 'Some transactions couldn’t be parsed')
     case UploadTransactionsStep.Confirmation:
       return ''
   }
@@ -42,12 +42,12 @@ function getDescription(
 ) {
   switch (currentStep) {
     case UploadTransactionsStep.UploadCsv:
-      return t('importAFileOfTransactionsFromYourBankAccountOrCreditCard', 'Import a file of transactions from your bank account or credit card')
+      return t('upload:action.import_file_transaction_bank', 'Import a file of transactions from your bank account or credit card')
     case UploadTransactionsStep.ValidateCsv:
       if (isValid) {
-        return t('allTransactionsWereParsedSuccessfullyClickUploadTransactionsToFinalizeTheImport', 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.')
+        return t('upload:label.transactions_parsed_successfully_click_upload', 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.')
       }
-      return t('weFoundFormattingErrorsInSomeTransactionsPleaseCorrectTheHighlightedRowsInYourFileAndReuploadIt', 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.')
+      return t('upload:validation.transactions_formatting_errors', 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.')
     case UploadTransactionsStep.Confirmation:
       return ''
   }

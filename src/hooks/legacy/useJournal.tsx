@@ -86,10 +86,10 @@ const validateLineItems = (formData: JournalFormTypes['data']['line_items'] | un
   if (!formData) return errors
   formData.map((lineItem, idx) => {
     if (!lineItem.account_identifier.id) {
-      errors.push({ id: idx, field: 'account', message: t('accountIsRequired', 'Account is required') })
+      errors.push({ id: idx, field: 'account', message: t('generalLedger:validation.account_required_short', 'Account is required') })
     }
     if (!lineItem.amount) {
-      errors.push({ id: idx, field: 'amount', message: t('amountCannotBeEmptyOrZero', 'Amount cannot be empty or zero') })
+      errors.push({ id: idx, field: 'amount', message: t('generalLedger:validation.amount_not_empty_or_zero', 'Amount cannot be empty or zero') })
     }
   })
   return errors
@@ -189,7 +189,7 @@ export const useJournal: UseJournal = () => {
       setForm(undefined)
     }
     catch (_err) {
-      setApiError(t('submitFailedPleaseCheckYourConnectionAndTryAgain', 'Submit failed. Please check your connection and try again.'))
+      setApiError(t('generalLedger:error.submit_failed_check_connection', 'Submit failed. Please check your connection and try again.'))
     }
     finally {
       setSendingForm(false)

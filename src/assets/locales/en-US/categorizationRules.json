@@ -1,0 +1,36 @@
+{
+  "action": {
+    "delete_rule": "Delete rule",
+    "dont_ask_again": "Don’t ask again",
+    "no_decide_each_time": "No, I’ll decide each time",
+    "yes_always_categorize": "Yes, always categorize"
+  },
+  "empty": {
+    "no_categorization_rules_yet": "No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.",
+    "no_rules_found": "No rules found"
+  },
+  "error": {
+    "archive_categorization_rule": "Failed to archive categorization rule",
+    "couldnt_load_data": "We couldn’t load your categorization rules",
+    "create_categorization_rule": "Failed to create categorization rule",
+    "load_affected_transactions": "There was an error loading the affected transactions",
+    "load_categorization_rules": "An error occurred while loading your categorization rules. Please check your connection and try again.",
+    "load_transactions": "Error loading transactions",
+    "reject_rule_suggestion": "Failed to reject rule suggestion"
+  },
+  "label": {
+    "any_direction": "Any direction",
+    "categorization_rules": "Categorization Rules",
+    "following_count_transactions_one": "The following {{count}} transaction will be affected:",
+    "following_count_transactions_other": "The following {{count}} transactions will be affected:",
+    "money_in": "Money In",
+    "money_out": "Money Out",
+    "or": "OR",
+    "transaction_no_longer_automatically_categorized": "Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.",
+    "update_categorization_rules": "Update categorization rules"
+  },
+  "prompt": {
+    "always_use_category": "Always use this category?",
+    "delete_categorization_rule": "Delete categorization rule?"
+  }
+}

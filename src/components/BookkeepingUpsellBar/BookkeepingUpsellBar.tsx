@@ -26,26 +26,26 @@ export const BookkeepingUpsellBar = ({
         </IconBox>
         <div className='Layer__bar-banner__text-container'>
           <Text size={TextSize.md} weight={TextWeight.bold}>
-            {t('needHelpWithYourBooks', 'Need help with your books?')}
+            {t('bookkeeping:prompt.need_help_books', 'Need help with your books?')}
           </Text>
           <Text
             size={TextSize.sm}
             className='Layer__bar-banner__text-container__desc'
           >
-            {t('orderOurBookkeepingServiceSupportedByRealHumans', 'Order our bookkeeping service supported by real humans.')}
+            {t('bookkeeping:label.order_our_bookkeeping_service', 'Order our bookkeeping service supported by real humans.')}
           </Text>
         </div>
       </div>
       {onClick
         ? (
           <Button variant={ButtonVariant.secondary} onClick={onClick}>
-            {t('scheduleADemo', 'Schedule a demo')}
+            {t('bookkeeping:action.schedule_a_demo', 'Schedule a demo')}
           </Button>
         )
         : href
           ? (
             <Link href={href} target='_blank' variant={ButtonVariant.secondary}>
-              {t('scheduleADemo', 'Schedule a demo')}
+              {t('bookkeeping:action.schedule_a_demo', 'Schedule a demo')}
             </Link>
           )
           : null}

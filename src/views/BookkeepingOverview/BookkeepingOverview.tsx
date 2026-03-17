@@ -76,7 +76,7 @@ export const BookkeepingOverview = ({
     <ProfitAndLoss asContainer={false}>
       <View
         viewClassName='Layer__bookkeeping-overview--view'
-        title={stringOverrides?.title || title || t('bookkeepingOverview', 'Bookkeeping overview')}
+        title={stringOverrides?.title || title || t('overview:label.bookkeeping_overview', 'Bookkeeping overview')}
         header={(
           <Header>
             <HeaderRow>
@@ -130,7 +130,7 @@ export const BookkeepingOverview = ({
             }}
           >
             <ProfitAndLoss.Header
-              text={stringOverrides?.profitAndLoss?.header || t('profitLoss', 'Profit & Loss')}
+              text={stringOverrides?.profitAndLoss?.header || t('common:label.profit_loss', 'Profit & Loss')}
               withStatus
             />
             <VStack pb='md' pi='md' fluid>

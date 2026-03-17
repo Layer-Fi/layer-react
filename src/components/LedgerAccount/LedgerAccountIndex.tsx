@@ -129,7 +129,7 @@ export const LedgerAccount = ({
                     className='Layer__ledger-account__balance-label'
                     size={TextSize.sm}
                   >
-                    {t('currentBalance', 'Current balance')}
+                    {t('generalLedger:label.balance', 'Current balance')}
                   </Text>
                   <Text
                     className='Layer__ledger-account__balance-value'
@@ -151,21 +151,21 @@ export const LedgerAccount = ({
                 <>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable?.dateColumnHeader
-                      || t('date', 'Date')}
+                      || t('common:label.date', 'Date')}
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable
-                      ?.journalIdColumnHeader || t('journalId', 'Journal ID #')}
+                      ?.journalIdColumnHeader || t('generalLedger:label.journal_id', 'Journal ID #')}
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader
-                      || t('source', 'Source')}
+                      || t('common:label.source', 'Source')}
                   </th>
                   {nodeType !== LedgerAccountNodeType.Leaf
                     && (
                       <th className='Layer__table-header'>
                         {stringOverrides?.ledgerEntriesTable?.accountColumnHeader
-                          || t('account', 'Account')}
+                          || t('common:label.account', 'Account')}
                       </th>
                     )}
                 </>
@@ -174,15 +174,15 @@ export const LedgerAccount = ({
                 <>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable?.debitColumnHeader
-                      || t('debit', 'Debit')}
+                      || t('common:label.debit', 'Debit')}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable?.creditColumnHeader
-                      || t('credit', 'Credit')}
+                      || t('common:label.credit', 'Credit')}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable
-                      ?.runningBalanceColumnHeader || t('runningBalance', 'Running balance')}
+                      ?.runningBalanceColumnHeader || t('generalLedger:label.running_balance', 'Running balance')}
                   </th>
                 </>
               )}
@@ -217,8 +217,8 @@ export const LedgerAccount = ({
             <div className='Layer__table-state-container Layer__border-top'>
               <DataState
                 status={DataStateStatus.failed}
-                title={t('somethingWentWrong', 'Something went wrong')}
-                description={t('weCouldntLoadYourData', 'We couldn’t load your data.')}
+                title={t('common:error.something_went_wrong', 'Something went wrong')}
+                description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
                 onRefresh={() => { void refetch() }}
                 isLoading={isValidating || isLoading}
               />
@@ -239,8 +239,8 @@ export const LedgerAccount = ({
             <div className='Layer__table-state-container Layer__border-top'>
               <DataState
                 status={DataStateStatus.info}
-                title={t('noLedgerActivity', 'No ledger activity')}
-                description={t('thereAreNoLedgerEntriesInThisAccount', 'There are no ledger entries in this account.')}
+                title={t('generalLedger:empty.ledger_activity', 'No ledger activity')}
+                description={t('generalLedger:empty.entry_journal_message', 'There are no ledger entries in this account.')}
               />
             </div>
           )

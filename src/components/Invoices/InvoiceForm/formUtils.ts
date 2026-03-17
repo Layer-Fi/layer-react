@@ -134,35 +134,35 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }, 
 
   const errors = []
   if (customer === null) {
-    errors.push({ customer: t('customerIsARequiredField', 'Customer is a required field.') })
+    errors.push({ customer: t('invoices:validation.customer_required', 'Customer is a required field.') })
   }
 
   if (!invoiceNumber.trim()) {
-    errors.push({ invoiceNumber: t('invoiceNumberIsARequiredField', 'Invoice number is a required field.') })
+    errors.push({ invoiceNumber: t('invoices:validation.invoice_number_required', 'Invoice number is a required field.') })
   }
 
   if (sentAt === null) {
-    errors.push({ sentAt: t('invoiceDateIsARequiredField', 'Invoice date is a required field.') })
+    errors.push({ sentAt: t('invoices:validation.invoice_date_required', 'Invoice date is a required field.') })
   }
 
   if (dueAt === null) {
-    errors.push({ dueAt: t('dueDateIsARequiredField', 'Due date is a required field.') })
+    errors.push({ dueAt: t('invoices:validation.due_date_required', 'Due date is a required field.') })
   }
 
   if (sentAt !== null && dueAt !== null && toCalendarDate(dueAt).compare(toCalendarDate(sentAt)) < 0) {
-    errors.push({ dueAt: t('dueDateMustBeAfterInvoiceDate', 'Due date must be after invoice date.') })
+    errors.push({ dueAt: t('invoices:validation.due_date_must', 'Due date must be after invoice date.') })
   }
 
   const nonEmptyLineItems = lineItems.filter(item => !InvoiceFormLineItemEquivalence(EMPTY_LINE_ITEM, item))
 
   if (nonEmptyLineItems.length === 0) {
-    errors.push({ lineItems: t('invoiceRequiresAtLeastOneNonemptyLineItem', 'Invoice requires at least one non-empty line item.') })
+    errors.push({ lineItems: t('invoices:validation.invoice_requires_empty', 'Invoice requires at least one non-empty line item.') })
   }
 
   nonEmptyLineItems.some((item) => {
     if (item.description.trim() === '') {
       errors.push({
-        lineItems: t('invoiceHasIncompleteLineItemsPleaseIncludeRequiredFieldDescription', 'Invoice has incomplete line items. Please include required field: Description.'),
+        lineItems: t('invoices:validation.invoice_incomplete_required', 'Invoice has incomplete line items. Please include required field: Description.'),
       })
       return true
     }
@@ -170,7 +170,7 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }, 
 
   const grandTotal = getGrandTotalFromInvoice(invoice)
   if (BD.isNegative(grandTotal)) {
-    errors.push({ lineItems: t('invoiceHasANegativeTotal', 'Invoice has a negative total.') })
+    errors.push({ lineItems: t('invoices:label.invoice_negative_total', 'Invoice has a negative total.') })
   }
 
   return errors.length > 0 ? errors : null

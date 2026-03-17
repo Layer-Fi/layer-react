@@ -7,7 +7,7 @@ type BankTransactionsUploadModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChang
 export function BankTransactionsUploadModal({ isOpen, onOpenChange }: BankTransactionsUploadModalProps) {
   const { t } = useTranslation()
   return (
-    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='xl' aria-label={t('uploadTransactions', 'Upload transactions')}>
+    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='xl' aria-label={t('upload:action.upload_transactions', 'Upload transactions')}>
       {({ close }) => {
         return <UploadTransactions onComplete={close} />
       }}

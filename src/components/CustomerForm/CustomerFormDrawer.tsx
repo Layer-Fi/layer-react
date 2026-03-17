@@ -31,7 +31,9 @@ export const CustomerFormDrawer = (props: CustomerFormDrawerProps) => {
   const { t } = useTranslation()
   const { isOpen, onOpenChange, onSuccess, formState } = props
 
-  const title = formState?.mode === UpsertCustomerMode.Update ? t('editCustomerDetails', 'Edit customer details') : t('createNewCustomer', 'Create new customer')
+  const title = formState?.mode === UpsertCustomerMode.Update
+    ? t('customerVendor:action.edit_customer_details', 'Edit customer details')
+    : t('customerVendor:action.create_new_customer', 'Create new customer')
   const Header = useCallback(({ close }: { close: () => void }) => (
     <CustomerFormDrawerHeader title={title} close={close} />
   ), [title])

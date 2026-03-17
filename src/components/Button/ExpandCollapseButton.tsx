@@ -32,8 +32,8 @@ export const ExpandCollapseButton = ({
         }
         className={classNames(
           iconOnly
-            ? 'Layer__expand-collpase-all-rows-btn--sm'
-            : 'Layer__expand-collpase-all-rows-btn',
+            ? 'Layer__expand-collapse-all-rows-btn--sm'
+            : 'Layer__expand-collapse-all-rows-btn',
           className,
         )}
         rightIcon={
@@ -42,7 +42,7 @@ export const ExpandCollapseButton = ({
         iconAsPrimary={iconOnly}
         iconOnly={iconOnly}
       >
-        {iconOnly ? null : !expanded ? t('expandAllRows', 'Expand all rows') : t('collapseAllRows', 'Collapse all rows')}
+        {iconOnly ? null : !expanded ? t('reports:action.expand_rows', 'Expand all rows') : t('reports:action.collapse_rows', 'Collapse all rows')}
       </Button>
     </>
   )

@@ -35,9 +35,9 @@ export const useInvoicePaymentForm = (props: UseInvoicePaymentFormProps) => {
     }
     catch (e) {
       console.error(e)
-      setSubmitError('Something went wrong. Please try again.')
+      setSubmitError(t('common:error.something_went_wrong_please_try_again', 'Something went wrong. Please try again.'))
     }
-  }, [onSuccess, upsertDedicatedInvoicePayment])
+  }, [onSuccess, upsertDedicatedInvoicePayment, t])
 
   const onDynamic = useCallback(({ value }: { value: DedicatedInvoicePaymentForm }) => {
     return validateInvoicePaymentForm({ invoicePayment: value, invoice }, t)

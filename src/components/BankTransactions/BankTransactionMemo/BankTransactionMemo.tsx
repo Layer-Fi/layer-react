@@ -18,53 +18,50 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
   return (
     <form onBlur={() => void form.handleSubmit()}>
       <form.Field name='memo'>
-        {(field) => {
-          const inputProps = {
-            name: 'memo',
-            placeholder: t('addDescription', 'Add description'),
-            value: field.state.value ?? undefined,
-          }
-          return (
-            <VStack gap='3xs' className='Layer__BankTransactionMemo'>
-              <HStack justify='space-between' align='baseline'>
-                <Label htmlFor='memo' size='sm' weight='bold'>{t('description', 'Description')}</Label>
-                {isUpdatingMemo && (
-                  <Span size='sm' weight='bold' variant='subtle'>
-                    {t('saving', 'Saving...')}
-                  </Span>
-                )}
-                {!isUpdatingMemo && isSaved && (
-                  <Span size='sm' status='success'>
-                    {t('saved', 'Saved')}
-                  </Span>
-                )}
-                {!isUpdatingMemo && !isSaved && isErrorUpdatingMemo && (
-                  <Span size='sm' weight='bold' status='error'>
-                    {t('errorSaving', 'Error saving')}
-                  </Span>
-                )}
-              </HStack>
-              <HStack className='Layer__BankTransactionMemo__InputTextArea'>
-                {isMobile
-                  ? (
-                    <InputGroup>
-                      <Input
-                        {...inputProps}
-                        inset
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
-                      />
-                    </InputGroup>
-                  )
-                  : (
-                    <TextArea
-                      {...inputProps}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
+        {field => (
+          <VStack gap='3xs' className='Layer__BankTransactionMemo'>
+            <HStack justify='space-between' align='baseline'>
+              <Label htmlFor='memo' size='sm' weight='bold'>{t('common:label.description', 'Description')}</Label>
+              {isUpdatingMemo && (
+                <Span size='sm' weight='bold' variant='subtle'>
+                  {t('common:state.saving', 'Saving...')}
+                </Span>
+              )}
+              {!isUpdatingMemo && isSaved && (
+                <Span size='sm' status='success'>
+                  {t('common:state.saved', 'Saved')}
+                </Span>
+              )}
+              {!isUpdatingMemo && !isSaved && isErrorUpdatingMemo && (
+                <Span size='sm' weight='bold' status='error'>
+                  {t('common:error.saving', 'Error saving')}
+                </Span>
+              )}
+            </HStack>
+            <HStack className='Layer__BankTransactionMemo__InputTextArea'>
+              {isMobile
+                ? (
+                  <InputGroup>
+                    <Input
+                      inset
+                      name='memo'
+                      value={field.state.value ?? undefined}
+                      placeholder={t('common:action.add_description', 'Add description')}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
                     />
-                  )}
-              </HStack>
-            </VStack>
-          )
-        }}
+                  </InputGroup>
+                )
+                : (
+                  <TextArea
+                    name='memo'
+                    value={field.state.value ?? undefined}
+                    placeholder={t('common:action.add_description', 'Add description')}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
+                  />
+                )}
+            </HStack>
+          </VStack>
+        )}
       </form.Field>
     </form>
   )

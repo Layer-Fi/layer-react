@@ -60,7 +60,7 @@ export const DataTableHeader = ({ name, count, slotProps = {}, slots = {} }: Dat
           <Filters />
           {slotProps.ClearFiltersButton && (
             <Button variant='outlined' {...slotProps.ClearFiltersButton}>
-              {t('clearAllFilters', 'Clear All Filters')}
+              {t('ui:action.clear_filters', 'Clear All Filters')}
             </Button>
           )}
         </HStack>

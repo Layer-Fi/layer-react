@@ -57,9 +57,9 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
       }
       catch (e) {
         console.error(e)
-        setSubmitError('Something went wrong. Please try again.')
+        setSubmitError(t('common:error.something_went_wrong_please_try_again', 'Something went wrong. Please try again.'))
       }
-    }, [onSuccess, upsertInvoice])
+    }, [onSuccess, upsertInvoice, t])
 
   const validators = useMemo(() => ({
     onDynamic: (arg: { value: InvoiceForm }) => validateInvoiceForm(arg, t),

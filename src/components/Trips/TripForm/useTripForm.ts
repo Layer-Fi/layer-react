@@ -36,9 +36,9 @@ export const useTripForm = (props: UseTripFormProps) => {
     }
     catch (e) {
       console.error(e)
-      setSubmitError('Something went wrong. Please try again.')
+      setSubmitError(t('common:error.something_went_wrong_please_try_again', 'Something went wrong. Please try again.'))
     }
-  }, [onSuccess, upsertTrip])
+  }, [onSuccess, upsertTrip, t])
 
   const onDynamic = useCallback(({ value }: { value: TripForm }) => {
     return validateTripForm({ trip: value }, t)

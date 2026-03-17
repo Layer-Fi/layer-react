@@ -1,4 +1,3 @@
-import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
@@ -15,11 +14,12 @@ type TaskStatusBadgeProps = {
   tasksCount?: number
 }
 
-const buildBadgeConfig = (
+const useBadgeConfig = (
   status: TaskStatusBadgeProps['status'],
   tasksCount: TaskStatusBadgeProps['tasksCount'],
-  t: TFunction,
 ) => {
+  const { t } = useTranslation()
+
   switch (status) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
     case BookkeepingPeriodStatus.NOT_STARTED:
@@ -28,7 +28,7 @@ const buildBadgeConfig = (
         color: 'info' as const,
         icon: <Clock size={12} />,
         label: tasksCount
-          ? tPlural(t, 'countTasks', {
+          ? tPlural(t, 'bookkeeping:label.count_tasks', {
             count: tasksCount,
             one: '{{count}} task',
             other: '{{count}} tasks',
@@ -42,7 +42,7 @@ const buildBadgeConfig = (
       return {
         color: 'warning' as const,
         label: tasksCount
-          ? tPlural(t, 'countTasks', {
+          ? tPlural(t, 'bookkeeping:label.count_tasks', {
             count: tasksCount,
             one: '{{count}} task',
             other: '{{count}} tasks',
@@ -72,8 +72,7 @@ const buildBadgeConfig = (
 }
 
 export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) => {
-  const { t } = useTranslation()
-  const badgeConfig = buildBadgeConfig(status, tasksCount, t)
+  const badgeConfig = useBadgeConfig(status, tasksCount)
 
   if (!badgeConfig) {
     return

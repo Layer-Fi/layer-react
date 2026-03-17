@@ -1,8 +1,6 @@
-import { useTranslation } from 'react-i18next'
-
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { type BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
-import { getBookkeepingStatusConfig } from '@components/BookkeepingStatus/utils'
+import { useBookkeepingStatusConfig } from '@components/BookkeepingStatus/useBookkeepingStatusConfig'
 import { Text, TextSize } from '@components/Typography/Text'
 
 import './bookkeepingStatus.scss'
@@ -15,13 +13,8 @@ type BookkeepingStatusProps = {
 }
 
 export const BookkeepingStatus = ({ status, text, monthNumber, iconOnly }: BookkeepingStatusProps) => {
-  const { t, i18n } = useTranslation()
-  if (!status) {
-    return
-  }
-
-  const statusConfig = getBookkeepingStatusConfig({ status, monthNumber, locale: i18n.language }, t)
-  if (!statusConfig) {
+  const statusConfig = useBookkeepingStatusConfig({ status, monthNumber })
+  if (!status || !statusConfig) {
     return
   }
 

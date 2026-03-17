@@ -70,7 +70,7 @@ export const CategorySelectDrawer = ({
               </Button>
             </HStack>
           )
-          : <ModalHeading size='sm' weight='bold'>{t('selectCategory', 'Select category')}</ModalHeading>
+          : <ModalHeading size='sm' weight='bold'>{t('bankTransactions:action.select_category', 'Select category')}</ModalHeading>
       )}
       onClose={close}
       hideBottomPadding
@@ -88,7 +88,7 @@ export const CategorySelectDrawer = ({
     >
       {({ close }) => (
         <VStack className='Layer__bank-transaction-mobile-list-item__categories_list-container' pb='md' gap='md'>
-          <SearchField value={query} onChange={setQuery} label={t('searchCategories', 'Search categories...')} />
+          <SearchField value={query} onChange={setQuery} label={t('bankTransactions:action.search_categories', 'Search categories...')} />
           <ActionableList<CategoryOption>
             options={filteredOptions}
             onClick={(item: { value: CategoryOption }) => {

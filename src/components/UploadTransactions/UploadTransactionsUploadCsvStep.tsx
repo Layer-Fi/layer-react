@@ -29,8 +29,8 @@ export type AccountOption = {
 
 const formatCreateLabel = (inputValue: string, t: TFunction) =>
   inputValue
-    ? t('createInputValue', 'Create "{{inputValue}}"', { inputValue })
-    : t('createAccount', 'Create account')
+    ? t('upload:action.create_input_value', 'Create "{{inputValue}}"', { inputValue })
+    : t('upload:action.create_account', 'Create account')
 
 const AccountOption = ({ option, fallback }: { option: AccountOption, fallback: React.ReactNode }) => {
   if (option.account && !option.__isNew__) {
@@ -97,7 +97,7 @@ export function UploadTransactionsUploadCsvStep(
   const onCreateOption = useCallback((inputValue: string) => {
     onSelectAccount({
       value: 'new_account',
-      label: t('createAccount', 'Create account'),
+      label: t('upload:action.create_account', 'Create account'),
       account: { accountName: inputValue },
       __isNew__: true,
     })
@@ -137,11 +137,11 @@ export function UploadTransactionsUploadCsvStep(
     <VStack gap='lg'>
       <VStack pis='3xs' gap='xs'>
         <Label size='md' htmlFor='account_name'>
-          {t('whichAccountAreTheseTransactionsFrom', 'Which account are these transactions from?')}
+          {t('upload:prompt.which_account_are_transactions_from', 'Which account are these transactions from?')}
         </Label>
         <CreatableComboBox<AccountOption>
           inputId='account_name'
-          placeholder={customAccountsError ? t('failedToLoadOptions', 'Failed to load options') : t('selectAccount', 'Select account...')}
+          placeholder={customAccountsError ? t('common:error.load_options', 'Failed to load options') : t('upload:action.select_account', 'Select account...')}
           options={accountOptions}
           onSelectedValueChange={onSelectAccount}
           onCreateOption={onCreateOption}
@@ -171,7 +171,7 @@ export function UploadTransactionsUploadCsvStep(
             <CsvUpload file={selectedFile} onFileSelected={onFileSelected} replaceDropTarget />
             <Separator />
             <VStack gap='xs' className='Layer__upload-transactions__template-section'>
-              <P size='sm'>{t('clickToCopyTheRequiredColumnHeaders', 'Click to copy the required column headers')}</P>
+              <P size='sm'>{t('upload:action.click_copy_required', 'Click to copy the required column headers')}</P>
               <HStack align='center' gap='xs' className='Layer__upload-transactions__template-section__button-row'>
                 <CopyTemplateHeadersButtonGroup
                   headers={templateHeaders}
@@ -182,17 +182,17 @@ export function UploadTransactionsUploadCsvStep(
                   csvProps={{ headers: allHeaders, rows: templateExampleTransactions }}
                   className='Layer__upload-transactions__template-section__button-row-item'
                 >
-                  {t('downloadTemplate', 'Download template')}
+                  {t('upload:action.download_template', 'Download template')}
                 </DownloadCsvTemplateButton>
               </HStack>
             </VStack>
             <HStack align='center' gap='xs'>
               <HStack className='Layer__upload-transactions__parse-csv-error-message'>
-                {hasParseCsvError && <P status='error'>{t('weCouldNotParseThisCsvPleaseReviewTheFileAndTryAgain', 'We could not parse this CSV. Please review the file and try again.')}</P>}
+                {hasParseCsvError && <P status='error'>{t('upload:error.could_not_parse_csv', 'We could not parse this CSV. Please review the file and try again.')}</P>}
               </HStack>
               <Spacer />
               <SubmitButton
-                tooltip={(selectedFile && !hasSelectedAccount) ? t('selectAnAccount', 'Select an account') : null}
+                tooltip={(selectedFile && !hasSelectedAccount) ? t('upload:action.select_account_label', 'Select an account') : null}
                 disabled={!hasSelectedAccount || !selectedFile}
                 processing={isParsingCsv}
                 error={hasParseCsvError}
@@ -200,7 +200,7 @@ export function UploadTransactionsUploadCsvStep(
                 withRetry
                 noIcon={!isParsingCsv}
               >
-                {hasParseCsvError ? t('retry', 'Retry') : t('continue', 'Continue')}
+                {hasParseCsvError ? t('common:action.retry_label', 'Retry') : t('common:action.continue_label', 'Continue')}
               </SubmitButton>
             </HStack>
           </>

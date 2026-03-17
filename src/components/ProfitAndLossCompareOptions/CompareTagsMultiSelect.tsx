@@ -38,14 +38,14 @@ export const CompareTagsMultiSelect = () => {
 
   return (
     <VStack className='Layer__CompareTagsMultiSelect__Container'>
-      <Label pbe='3xs' size='sm' htmlFor={inputId}>{t('compareBy', 'Compare by')}</Label>
+      <Label pbe='3xs' size='sm' htmlFor={inputId}>{t('reports:label.compare', 'Compare by')}</Label>
       <MultiSelect
         inputId={inputId}
         options={compareOptions.map(toSelectOption)}
         onChange={setSelectedCompareOptions}
         defaultValue={selectedCompareOptions?.map(toSelectOption)}
         value={selectedCompareOptions.map(toSelectOption)}
-        placeholder={t('selectTags', 'Select tags')}
+        placeholder={t('tags:action.select_tags', 'Select tags')}
         styles={selectStyles}
         className='Layer__CompareTagsMultiSelect'
       />

@@ -203,13 +203,13 @@ export const ExpandedBankTransactionRow = ({
   const toggleOptions = useMemo(() => [
     {
       value: 'categorize',
-      label: t('categorize', 'Categorize'),
+      label: t('common:action.categorize', 'Categorize'),
     },
     {
       value: 'match',
-      label: t('match', 'Match'),
+      label: t('bankTransactions:label.match', 'Match'),
       disabled: !hasMatch(bankTransaction),
-      disabledMessage: t('weCouldNotFindMatchingTransactions', 'We could not find matching transactions'),
+      disabledMessage: t('bankTransactions:error.matching_transactions_not_found', 'We could not find matching transactions'),
     },
   ], [t, bankTransaction])
 
@@ -234,7 +234,7 @@ export const ExpandedBankTransactionRow = ({
                 && (
                   <HStack pi='md' pbe='md' pbs='3xs'>
                     <Toggle
-                      ariaLabel={t('transactionAction', 'Transaction action')}
+                      ariaLabel={t('bankTransactions:label.transaction_action', 'Transaction action')}
                       size={ToggleSize.small}
                       options={toggleOptions}
                       selectedKey={purpose}
@@ -263,7 +263,7 @@ export const ExpandedBankTransactionRow = ({
                         readOnly={!isCategorizationEnabled}
                         setSelectedMatch={(suggestedMatch) => {
                           setSelectedMatch(suggestedMatch)
-                          setMatchFormError(!suggestedMatch ? t('selectAnOptionToMatchTheTransaction', 'Select an option to match the transaction') : undefined)
+                          setMatchFormError(!suggestedMatch ? t('bankTransactions:error.select_option_match_transaction', 'Select an option to match the transaction') : undefined)
                           setTransactionCategory(
                             bankTransaction.id,
                             suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null,
@@ -324,7 +324,7 @@ export const ExpandedBankTransactionRow = ({
                                 <CustomerVendorSelector
                                   selectedCustomerVendor={split.customerVendor}
                                   onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
-                                  placeholder={t('setCustomerOrVendor', 'Set customer or vendor')}
+                                  placeholder={t('customerVendor:action.set_customer_vendor', 'Set customer or vendor')}
                                   isReadOnly={!isCategorizationEnabled}
                                   showLabel={false}
                                 />
@@ -348,7 +348,7 @@ export const ExpandedBankTransactionRow = ({
                         {effectiveSplits.length > 1 && (
                           <Input
                             disabled={true}
-                            leftText={t('total', 'Total')}
+                            leftText={t('common:label.total', 'Total')}
                             inputMode='numeric'
                             value={`$${formatMoney(
                               effectiveSplits.reduce(
@@ -366,7 +366,7 @@ export const ExpandedBankTransactionRow = ({
                                   <TextButton
                                     onClick={addSplit}
                                   >
-                                    {t('addNewSplit', 'Add new split')}
+                                    {t('bankTransactions:action.add_new_split', 'Add new split')}
                                   </TextButton>
                                 )
                                 : (
@@ -375,7 +375,7 @@ export const ExpandedBankTransactionRow = ({
                                     variant='outlined'
                                   >
                                     <Scissors size={14} />
-                                    {t('split', 'Split')}
+                                    {t('bankTransactions:action.split_label', 'Split')}
                                   </Button>
                                 )}
                             </div>

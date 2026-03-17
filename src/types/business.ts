@@ -20,11 +20,11 @@ export interface Business {
 }
 
 export const ENTITY_TYPES_CONFIG = [
-  { value: 'SOLE_PROP' as const, ...translationKey('soleProprietorship', 'Sole Proprietorship') },
-  { value: 'C_CORP' as const, ...translationKey('cCorporation', 'C Corporation') },
-  { value: 'LLC' as const, ...translationKey('limitedLiabilityCompany', 'Limited Liability Company') },
-  { value: 'S_CORP' as const, ...translationKey('sCorporation', 'S Corporation') },
-  { value: 'PARTNERSHIP' as const, ...translationKey('partnership', 'Partnership') },
+  { value: 'SOLE_PROP' as const, ...translationKey('common:label.sole_proprietorship', 'Sole Proprietorship') },
+  { value: 'C_CORP' as const, ...translationKey('common:label.c_corporation', 'C Corporation') },
+  { value: 'LLC' as const, ...translationKey('common:label.limited_liability_company', 'Limited Liability Company') },
+  { value: 'S_CORP' as const, ...translationKey('common:label.s_corporation', 'S Corporation') },
+  { value: 'PARTNERSHIP' as const, ...translationKey('common:label.partnership', 'Partnership') },
 ] as const
 
 export type EntityType = (typeof ENTITY_TYPES_CONFIG)[number]['value']

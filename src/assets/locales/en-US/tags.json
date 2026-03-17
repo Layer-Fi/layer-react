@@ -1,0 +1,18 @@
+{
+  "action": {
+    "select_dimension_name": "Select {{dimensionName}}",
+    "select_tags": "Select tags"
+  },
+  "empty": {
+    "matching_tags": "No matching tags found"
+  },
+  "error": {
+    "load_tag_options": "An error occurred while loading tag options."
+  },
+  "label": {
+    "active_tags": "Active Tags",
+    "add_tag_to_transaction": "Add a tag to this transaction...",
+    "tag_label_archived": "{{label}} (Archived)",
+    "tags": "Tags"
+  }
+}

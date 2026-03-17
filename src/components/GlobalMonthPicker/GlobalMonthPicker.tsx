@@ -28,7 +28,7 @@ export const GlobalMonthPicker = ({ truncateMonth, showLabel = false }: GlobalMo
 
   return (
     <MonthPicker
-      label={t('month', 'Month')}
+      label={t('date:label.month', 'Month')}
       showLabel={showLabel}
       date={dateZdt}
       onChange={onChange}

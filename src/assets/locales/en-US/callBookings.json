@@ -1,0 +1,24 @@
+{
+  "action": {
+    "add_calendar": "Add to Calendar",
+    "book_call": "Book a call",
+    "download_ics_file": "Download .ics file",
+    "join_call": "Join call"
+  },
+  "label": {
+    "ad_hoc_call": "Ad hoc call",
+    "book_call_with_bookkeeper": "Book a call with your bookkeeper",
+    "date_colon": "Date:",
+    "google_calendar": "Google Calendar",
+    "location_colon": "Location:",
+    "meet_bookkeeping_team": "Meet with our bookkeeping team",
+    "onboarding_call": "Onboarding call",
+    "outlook_calendar": "Outlook Calendar",
+    "purpose_colon": "Purpose:",
+    "upcoming_call": "Upcoming Call",
+    "yahoo_calendar": "Yahoo Calendar"
+  },
+  "prompt": {
+    "have_questions": "Have any questions?"
+  }
+}

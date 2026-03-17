@@ -6,7 +6,7 @@ import { isAmountCellValue, isEmptyCellValue, type UnifiedReportColumn, type Uni
 import { asMutable } from '@utils/asMutable'
 import { useUnifiedReport } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/useUnifiedReport'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useUnifiedReportState } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useUnifiedReportName, useUnifiedReportState } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
@@ -82,6 +82,7 @@ type UnifiedReportTableProps = {
 
 export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProps) => {
   const { t } = useTranslation()
+  const reportName = useUnifiedReportName()
   const { report, groupBy, ...dateParams } = useUnifiedReportState({ dateSelectionMode })
   const { data, isLoading, isError, refetch } = useUnifiedReport({ report, groupBy, ...dateParams })
   const { setExpanded } = useContext(ExpandableDataTableContext)
@@ -100,8 +101,8 @@ export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProp
     return (
       <DataState
         status={DataStateStatus.allDone}
-        title={t('noRowsFound', 'No rows found')}
-        description={t('thisReportHasNoRows', 'This report has no rows.')}
+        title={t('reports:empty.no_rows_found', 'No rows found')}
+        description={t('reports:empty.report_has_no_rows', 'This report has no rows.')}
         spacing
       />
     )
@@ -110,8 +111,8 @@ export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProp
   const UnifiedReportErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
-      title={t('weCouldntLoadYourReport', 'We couldn’t load your report')}
-      description={t('anErrorOccurredWhileLoadingYourReportPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your report. Please check your connection and try again.')}
+      title={t('reports:error.couldnt_load_report', 'We couldn’t load your report')}
+      description={t('reports:error.load_report', 'An error occurred while loading your report. Please check your connection and try again.')}
       onRefresh={() => { void refetch() }}
       spacing
     />
@@ -119,7 +120,7 @@ export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProp
 
   return (
     <ExpandableDataTable
-      ariaLabel={t('report', 'Report')}
+      ariaLabel={reportName}
       data={mutableRows}
       isLoading={data === undefined || isLoading}
       isError={isError}

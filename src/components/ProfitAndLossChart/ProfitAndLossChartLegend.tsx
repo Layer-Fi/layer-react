@@ -7,9 +7,9 @@ import { translationKey } from '@utils/i18n/translationKey'
 import { STRIPE_PATTERN_DARK_FILL } from './ProfitAndLossChartPatternDefs'
 
 const LEGEND_ENTRY_CONFIG = [
-  { ...translationKey('revenue', 'Revenue'), type: 'circle', id: 'IncomeLegend' },
-  { ...translationKey('expenses', 'Expenses'), type: 'circle', id: 'ExpensesLegend' },
-  { ...translationKey('uncategorized', 'Uncategorized'), type: 'circle', id: 'UncategorizedLegend' },
+  { ...translationKey('common:label.revenue', 'Revenue'), type: 'circle', id: 'IncomeLegend' },
+  { ...translationKey('common:label.expenses', 'Expenses'), type: 'circle', id: 'ExpensesLegend' },
+  { ...translationKey('common:label.uncategorized', 'Uncategorized'), type: 'circle', id: 'UncategorizedLegend' },
 ]
 
 const LegendIcon = ({ fill }: { fill?: string }) => (

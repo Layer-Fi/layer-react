@@ -20,7 +20,7 @@ export function RuleSuggestionHeader({ ruleSuggestion }: { ruleSuggestion: Updat
     case 'Create_Categorization_Rule_For_Counterparty':
       return (
         <ModalHeading size='sm'>
-          {t('alwaysUseThisCategory', 'Always use this category?')}
+          {t('categorizationRules:prompt.always_use_category', 'Always use this category?')}
         </ModalHeading>
       )
     default: {

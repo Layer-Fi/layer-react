@@ -55,11 +55,11 @@ export const humanizeTitle = (
 ) => {
   switch (sidebarView) {
     case 'expenses':
-      return overrides?.expenseChartHeader || t('expenses', 'Expenses')
+      return overrides?.expenseChartHeader || t('common:label.expenses', 'Expenses')
     case 'revenue':
-      return overrides?.revenueChartHeader || t('revenue', 'Revenue')
+      return overrides?.revenueChartHeader || t('common:label.revenue', 'Revenue')
     default:
-      return t('profitLoss', 'Profit & Loss')
+      return t('common:label.profit_loss', 'Profit & Loss')
   }
 }
 

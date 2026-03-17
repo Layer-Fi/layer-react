@@ -12,7 +12,7 @@ export const StateTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFormS
 
   return (
     <VStack className='Layer__TaxProfileForm__Section' gap='md'>
-      <Heading level={3}>{t('stateTaxInformation', 'State Tax Information')}</Heading>
+      <Heading level={3}>{t('taxEstimates:label.tax_information', 'State Tax Information')}</Heading>
 
       <form.Field name='usConfiguration.state.taxState'>
         {field => (
@@ -39,7 +39,7 @@ export const StateTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFormS
       <form.AppField name='usConfiguration.state.withholding.useCustomWithholding'>
         {field => (
           <field.FormRadioGroupYesNoField
-            label={t('useCustomWithholding', 'Use custom withholding?')}
+            label={t('taxEstimates:label.use_custom_withholding', 'Use custom withholding?')}
             isReadOnly={isReadOnly}
             {...desktopFieldProps}
           />
@@ -51,10 +51,10 @@ export const StateTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFormS
           <form.AppField name='usConfiguration.state.withholding.amount'>
             {field => (
               <field.FormBigDecimalField
-                label={t('withholdingAmount', 'Withholding amount')}
+                label={t('taxEstimates:label.withholding_amount', 'Withholding amount')}
                 mode='currency'
                 isReadOnly={isReadOnly}
-                placeholder={t('enterAmount', 'Enter amount')}
+                placeholder={t('taxEstimates:label.enter_amount', 'Enter amount')}
                 {...desktopFieldProps}
               />
             )}

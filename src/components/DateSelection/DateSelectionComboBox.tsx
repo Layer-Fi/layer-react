@@ -26,13 +26,13 @@ export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boole
 
   const allOptions = useMemo<DateSelectionOption[]>(
     () => [
-      { value: DatePreset.ThisMonth, label: t('thisMonth', 'This Month') },
-      { value: DatePreset.LastMonth, label: t('lastMonth', 'Last Month') },
-      { value: DatePreset.ThisQuarter, label: t('thisQuarter', 'This Quarter') },
-      { value: DatePreset.LastQuarter, label: t('lastQuarter', 'Last Quarter') },
-      { value: DatePreset.ThisYear, label: t('thisYear', 'This Year') },
-      { value: DatePreset.LastYear, label: t('lastYear', 'Last Year') },
-      { value: DatePreset.Custom, label: t('custom', 'Custom') },
+      { value: DatePreset.ThisMonth, label: t('date:label.this_month', 'This Month') },
+      { value: DatePreset.LastMonth, label: t('date:label.last_month', 'Last Month') },
+      { value: DatePreset.ThisQuarter, label: t('date:label.this_quarter', 'This Quarter') },
+      { value: DatePreset.LastQuarter, label: t('date:label.last_quarter', 'Last Quarter') },
+      { value: DatePreset.ThisYear, label: t('date:label.this_year', 'This Year') },
+      { value: DatePreset.LastYear, label: t('date:label.last_year', 'Last Year') },
+      { value: DatePreset.Custom, label: t('date:label.custom', 'Custom') },
     ],
     [t],
   )
@@ -54,7 +54,7 @@ export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boole
 
   const inputId = useId()
 
-  const label = t('reportPeriod', 'Report period')
+  const label = t('reports:label.report_period', 'Report period')
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
   return (

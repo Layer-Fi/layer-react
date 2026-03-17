@@ -1,0 +1,43 @@
+{
+  "action": {
+    "click_copy_required": "Click to copy the required column headers",
+    "create_account": "Create account",
+    "create_input_value": "Create \"{{inputValue}}\"",
+    "download_template": "Download template",
+    "import_file_transaction_bank": "Import a file of transactions from your bank account or credit card",
+    "reupload": "Reupload",
+    "select_account": "Select account...",
+    "select_account_label": "Select an account",
+    "upload_another_file": "Upload another file",
+    "upload_transactions": "Upload transactions"
+  },
+  "error": {
+    "cannot_upload_file": "Cannot upload file",
+    "could_not_parse_csv": "We could not parse this CSV. Please review the file and try again.",
+    "could_not_parse_transactions": "Some transactions couldn’t be parsed",
+    "unknown_upload_error": "Unknown upload error"
+  },
+  "label": {
+    "count_transactions_have_one": "{{count}} transaction has been uploaded to your account.",
+    "count_transactions_have_other": "{{count}} transactions have been uploaded to your account.",
+    "csv_validation_preview": "CSV validation preview",
+    "drag_drop_file_browse": "Drag and drop a file, or <browse>Browse</browse>.",
+    "im_done_uploading": "I’m done uploading transactions",
+    "review_transactions": "Review transactions",
+    "total_transactions_count": "Total transactions: {{totalTransactionsCount}}",
+    "transactions_parsed_successfully_click_upload": "All transactions were parsed successfully. Click “Upload transactions” to finalize the import.",
+    "transactions_uploaded_successfully": "Transactions uploaded successfully"
+  },
+  "prompt": {
+    "which_account_are_transactions_from": "Which account are these transactions from?"
+  },
+  "validation": {
+    "file_exceeds_size_limit": "File exceeds the size limit of 2MB",
+    "file_extension_must_end_in_csv": "File extension must end in .csv",
+    "file_must_be_csv": "File must be in CSV format",
+    "file_type_invalid": "Invalid file type: {{type}}",
+    "too_many_files_selected": "Too many files selected",
+    "transactions_formatting_errors": "We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.",
+    "transactions_invalid_count": "Invalid transactions: {{invalidTransactionsCount}}"
+  }
+}

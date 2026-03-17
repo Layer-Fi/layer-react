@@ -1,0 +1,17 @@
+{
+  "error": {
+    "load_mileage_data": "An error occurred while loading your mileage data. Please check your connection and try again.",
+    "load_mileage_summary_data": "Failed to load mileage summary data"
+  },
+  "label": {
+    "deduction_colon": "Deduction:",
+    "mileage_tracking": "Mileage Tracking",
+    "miles_colon": "Miles:",
+    "miles_month": "Miles this month",
+    "standard_rate_formatted_deduction": "Standard Rate: {{formattedDeductionRate}}/mile",
+    "tax_deduction": "Tax Deduction",
+    "total_deduction": "Total Deduction",
+    "total_miles": "Total Miles",
+    "total_tax_deduction": "Total tax deduction:"
+  }
+}

@@ -50,21 +50,21 @@ export const CategorizationRulesTable = ({
   const columnConfig: NestedColumnConfig<CategorizationRule> = useMemo(() => [
     {
       id: CategorizationRuleColumns.Counterparty,
-      header: t('counterparty', 'Counterparty'),
+      header: t('common:label.counterparty', 'Counterparty'),
       cell: (row: Row<CategorizationRule>) => (
         <Span ellipsis>{row.original.counterpartyFilter?.name}</Span>
       ),
     },
     {
       id: CategorizationRuleColumns.Direction,
-      header: t('direction', 'Direction'),
+      header: t('common:label.direction', 'Direction'),
       cell: (row: Row<CategorizationRule>) => (
         <Span ellipsis>{getCategorizationRuleDirectionLabel(row.original.bankDirectionFilter, t)}</Span>
       ),
     },
     {
       id: CategorizationRuleColumns.Category,
-      header: t('category', 'Category'),
+      header: t('common:label.category', 'Category'),
       cell: (row: Row<CategorizationRule>) => {
         const accountIdentifier = row.original.category
         if (!accountIdentifier) return null
@@ -80,7 +80,7 @@ export const CategorizationRulesTable = ({
           inset
           icon
           onPress={() => onDeleteRule(row.original)}
-          aria-label={t('deleteRule', 'Delete rule')}
+          aria-label={t('categorizationRules:action.delete_rule', 'Delete rule')}
           variant='ghost'
         >
           <Trash2 size={16} />
@@ -92,7 +92,7 @@ export const CategorizationRulesTable = ({
   return (
     <Container name='CategorizationRulesTable'>
       <PaginatedTable
-        ariaLabel={t('categorizationRules', 'Categorization rules')}
+        ariaLabel={t('categorizationRules:label.categorization_rules', 'Categorization rules')}
         data={data}
         isLoading={isLoading}
         isError={isError}

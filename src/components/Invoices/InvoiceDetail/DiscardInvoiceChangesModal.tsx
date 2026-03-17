@@ -18,11 +18,11 @@ export const DiscardInvoiceChangesModal = ({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('discardChangesToThisInvoice', 'Discard changes to this invoice?')}
-      description={t('anyUnsavedChangesWillBeLost', 'Any unsaved changes will be lost.')}
+      title={t('invoices:prompt.discard_changes_invoice', 'Discard changes to this invoice?')}
+      description={t('common:label.unsaved_changes_lost', 'Any unsaved changes will be lost.')}
       onConfirm={onConfirm}
-      confirmLabel={t('discardChanges', 'Discard changes')}
-      cancelLabel={t('keepEditing', 'Keep editing')}
+      confirmLabel={t('common:action.discard_changes', 'Discard changes')}
+      cancelLabel={t('common:label.keep_editing', 'Keep editing')}
     />
   )
 }

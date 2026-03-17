@@ -58,7 +58,7 @@ export const TripForm = (props: TripFormProps) => {
       <form.AppField name='tripDate'>
         {field => (
           <field.FormDateField<CalendarDate>
-            label={t('tripDate', 'Trip date')}
+            label={t('trips:label.trip_date', 'Trip date')}
             inline
             isReadOnly={isReadOnly}
             className='Layer__TripForm__Field__TripDate'
@@ -69,11 +69,11 @@ export const TripForm = (props: TripFormProps) => {
       <form.AppField name='distance'>
         {field => (
           <field.FormBigDecimalField
-            label={t('distanceMiles', 'Distance (miles)')}
+            label={t('trips:label.distance_mi', 'Distance (miles)')}
             inline
             isReadOnly={isReadOnly}
             maxDecimalPlaces={2}
-            placeholder={t('enterDistance', 'Enter distance')}
+            placeholder={t('trips:label.enter_distance', 'Enter distance')}
             className='Layer__TripForm__Field__Distance'
           />
         )}
@@ -82,10 +82,10 @@ export const TripForm = (props: TripFormProps) => {
       <form.AppField name='startAddress'>
         {field => (
           <field.FormTextField
-            label={t('startAddress', 'Start address')}
+            label={t('trips:label.start_address', 'Start address')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('enterAddress', 'Enter address')}
+            placeholder={t('trips:label.enter_address', 'Enter address')}
             className='Layer__TripForm__Field__StartAddress'
           />
         )}
@@ -94,10 +94,10 @@ export const TripForm = (props: TripFormProps) => {
       <form.AppField name='endAddress'>
         {field => (
           <field.FormTextField
-            label={t('endAddress', 'End address')}
+            label={t('trips:label.end_address', 'End address')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('enterAddress', 'Enter address')}
+            placeholder={t('common:label.enter_address', 'Enter address')}
             className='Layer__TripForm__Field__EndAddress'
           />
         )}
@@ -117,10 +117,10 @@ export const TripForm = (props: TripFormProps) => {
       <form.AppField name='description'>
         {field => (
           <field.FormTextAreaField
-            label={t('description', 'Description')}
+            label={t('common:label.description', 'Description')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('addDescription', 'Add description')}
+            placeholder={t('common:action.add_description', 'Add description')}
             className='Layer__TripForm__Field__Description'
           />
         )}
@@ -133,7 +133,7 @@ export const TripForm = (props: TripFormProps) => {
             onSelectedVehicleChange={field.handleChange}
             isReadOnly={isReadOnly}
             inline
-            placeholder={t('addVehicleLabel', 'Add vehicle')}
+            placeholder={t('vehicles:action.add_vehicle_label', 'Add vehicle')}
             containerClassName='Layer__TripForm__Field__Vehicle'
           />
         )}
@@ -150,7 +150,7 @@ export const TripForm = (props: TripFormProps) => {
                 onPress={() => { void form.handleSubmit() }}
               >
                 <Save size={14} />
-                {t('saveTrip', 'Save Trip')}
+                {t('trips:action.save_trip', 'Save Trip')}
               </Button>
             )}
           </form.Subscribe>

@@ -91,10 +91,10 @@ export function UploadTransactionsValidateCsvStep(
           {!isValidCsv
             && (
               <Badge variant={BadgeVariant.ERROR}>
-                {t('invalidTransactionsCount', 'Invalid transactions: {{invalidTransactionsCount}}', { invalidTransactionsCount })}
+                {t('upload:validation.transactions_invalid_count', 'Invalid transactions: {{invalidTransactionsCount}}', { invalidTransactionsCount })}
               </Badge>
             )}
-          <Badge>{t('totalTransactionsCount', 'Total transactions: {{totalTransactionsCount}}', { totalTransactionsCount })}</Badge>
+          <Badge>{t('upload:label.total_transactions_count', 'Total transactions: {{totalTransactionsCount}}', { totalTransactionsCount })}</Badge>
         </HStack>
         <ValidateCsvTable
           className={classNames(
@@ -109,7 +109,7 @@ export function UploadTransactionsValidateCsvStep(
       </VStack>
       <Separator />
       <HStack gap='xs'>
-        <Button onClick={() => { void previous() }} variant={ButtonVariant.secondary}>{t('back', 'Back')}</Button>
+        <Button onClick={() => { void previous() }} variant={ButtonVariant.secondary}>{t('common:action.back', 'Back')}</Button>
         <Spacer />
         {isValidCsv
           ? (
@@ -121,7 +121,7 @@ export function UploadTransactionsValidateCsvStep(
               withRetry
               iconAsPrimary={false}
             >
-              {uploadTransactionsError ? t('retry', 'Retry') : t('uploadTransactions', 'Upload transactions')}
+              {uploadTransactionsError ? t('common:action.retry_label', 'Retry') : t('upload:action.upload_transactions', 'Upload transactions')}
             </SubmitButton>
           )
           : (
@@ -130,7 +130,7 @@ export function UploadTransactionsValidateCsvStep(
               rightIcon={<RefreshCcw size={12} />}
               variant={ButtonVariant.primary}
             >
-              {t('reupload', 'Reupload')}
+              {t('upload:action.reupload', 'Reupload')}
             </Button>
           )}
       </HStack>

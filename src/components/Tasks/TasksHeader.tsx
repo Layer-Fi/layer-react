@@ -10,7 +10,7 @@ export const TasksHeader = ({
   const { t } = useTranslation()
   return (
     <div className='Layer__tasks-header'>
-      <Text size={TextSize.lg}>{tasksHeader ?? t('bookkeepingTasks', 'Bookkeeping Tasks')}</Text>
+      <Text size={TextSize.lg}>{tasksHeader ?? t('bookkeeping:label.bookkeeping_tasks', 'Bookkeeping Tasks')}</Text>
     </div>
   )
 }

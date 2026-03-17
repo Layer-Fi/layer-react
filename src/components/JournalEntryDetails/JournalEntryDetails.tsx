@@ -102,10 +102,10 @@ export const JournalEntryDetails = () => {
         <HeaderRow>
           <HeaderCol className='Layer__hidden-lg Layer__hidden-xl'>
             <BackButton onClick={closeSelectedEntry} />
-            <Heading size={HeadingSize.secondary}>{t('transactionDetails', 'Transaction details')}</Heading>
+            <Heading size={HeadingSize.secondary}>{t('bankTransactions:label.transaction_details', 'Transaction details')}</Heading>
           </HeaderCol>
           <HeaderCol className='Layer__show-lg Layer__show-xl'>
-            <Heading size={HeadingSize.secondary}>{t('transactionSource', 'Transaction source')}</Heading>
+            <Heading size={HeadingSize.secondary}>{t('bankTransactions:label.transaction_source', 'Transaction source')}</Heading>
           </HeaderCol>
           <HeaderCol className='Layer__show-lg Layer__show-xl'>
             <CloseButton onClick={closeSelectedEntry} />
@@ -113,7 +113,7 @@ export const JournalEntryDetails = () => {
         </HeaderRow>
       </Header>
       <DetailsList
-        title={t('transactionSource', 'Transaction source')}
+        title={t('bankTransactions:label.transaction_source', 'Transaction source')}
         titleClassName='Layer__hidden-lg Layer__hidden-xl'
         actions={(
           <Button
@@ -125,7 +125,7 @@ export const JournalEntryDetails = () => {
           />
         )}
       >
-        <DetailsListItem label={t('source', 'Source')} isLoading={isLoadingEntry}>
+        <DetailsListItem label={t('common:label.source', 'Source')} isLoading={isLoadingEntry}>
           {badgeOrInAppLink}
         </DetailsListItem>
         {ledgerEntrySource && (
@@ -135,24 +135,24 @@ export const JournalEntryDetails = () => {
       <DetailsList
         title={(
           <VStack>
-            <Span>{t('journalEntry', 'Journal Entry')}</Span>
-            {entry && <Span variant='subtle' size='xs'>{t('journalIdNumber', 'Journal ID #{{journalId}}', { journalId: entryNumber(entry) })}</Span>}
+            <Span>{t('generalLedger:label.journal_entry', 'Journal Entry')}</Span>
+            {entry && <Span variant='subtle' size='xs'>{t('generalLedger:label.journal_id_display', 'Journal ID #{{journalId}}', { journalId: entryNumber(entry) })}</Span>}
           </VStack>
         )}
         className='Layer__border-top'
       >
-        <DetailsListItem label={t('entryType', 'Entry type')} isLoading={isLoadingEntry}>
+        <DetailsListItem label={t('generalLedger:label.entry_type', 'Entry type')} isLoading={isLoadingEntry}>
           {humanizeEnum(entry?.entry_type ?? '')}
         </DetailsListItem>
-        <DetailsListItem label={t('effectiveDate', 'Effective date')} isLoading={isLoadingEntry}>
+        <DetailsListItem label={t('date:label.effective_date', 'Effective date')} isLoading={isLoadingEntry}>
           {entry?.entry_at && <DateTime value={entry?.entry_at} />}
         </DetailsListItem>
-        <DetailsListItem label={t('creationDate', 'Creation date')} isLoading={isLoadingEntry}>
+        <DetailsListItem label={t('date:label.creation_date', 'Creation date')} isLoading={isLoadingEntry}>
           {entry?.date && <DateTime value={entry?.date} />}
         </DetailsListItem>
         {entry?.reversal_id && (
-          <DetailsListItem label={t('reversal', 'Reversal')} isLoading={isLoadingEntry}>
-            {t('journalEntryNumber', 'Journal Entry #{{entryNumber}}', { entryNumber: entry?.reversal_id.substring(0, 5) })}
+          <DetailsListItem label={t('generalLedger:label.reversal', 'Reversal')} isLoading={isLoadingEntry}>
+            {t('generalLedger:label.journal_entry_number', 'Journal Entry #{{entryNumber}}', { entryNumber: entry?.reversal_id.substring(0, 5) })}
           </DetailsListItem>
         )}
       </DetailsList>
@@ -166,18 +166,18 @@ export const JournalEntryDetails = () => {
               >
                 <TableHead>
                   <TableRow rowKey='soc-flow-head-row' isHeadRow>
-                    <TableCell>{t('lineItems', 'Line items')}</TableCell>
+                    <TableCell>{t('generalLedger:label.line_items', 'Line items')}</TableCell>
                     <TableCell
                       className='Layer__journal__debit-credit-col'
                       align={TableCellAlign.RIGHT}
                     >
-                      {t('debit', 'Debit')}
+                      {t('common:label.debit', 'Debit')}
                     </TableCell>
                     <TableCell
                       className='Layer__journal__debit-credit-col'
                       align={TableCellAlign.RIGHT}
                     >
-                      {t('credit', 'Credit')}
+                      {t('common:label.credit', 'Credit')}
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -216,7 +216,7 @@ export const JournalEntryDetails = () => {
                     rowKey='ledger-line-item-summation'
                     variant='summation'
                   >
-                    <TableCell primary>{t('total', 'Total')}</TableCell>
+                    <TableCell primary>{t('common:label.total', 'Total')}</TableCell>
                     <TableCell
                       isCurrency
                       primary
@@ -261,14 +261,14 @@ export const JournalEntryDetails = () => {
                   isProcessing={reverseEntryProcessing}
                   tooltip={
                     entry?.reversal_id
-                      ? t('thisEntryHasAlreadyBeenReversed', 'This entry has already been reversed')
+                      ? t('generalLedger:label.entry_reversed', 'This entry has already been reversed')
                       : reverseEntryError
-                        ? t('operationFailedTryAgain', 'Operation failed. Try again.')
+                        ? t('generalLedger:error.operation_retry', 'Operation failed. Try again.')
                         : undefined
                   }
                   disabled={Boolean(entry?.reversal_id)}
                 >
-                  {t('reverseEntry', 'Reverse entry')}
+                  {t('generalLedger:action.reverse_entry', 'Reverse entry')}
                 </Button>
               </div>
             )}

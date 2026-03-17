@@ -100,7 +100,7 @@ export const JournalTableWithPanel = ({
               className={`Layer__${COMPONENT_NAME}__title`}
               size={HeadingSize.view}
             >
-              {stringOverrides?.componentTitle || t('journal', 'Journal')}
+              {stringOverrides?.componentTitle || t('generalLedger:label.journal', 'Journal')}
             </Heading>
           </HeaderCol>
         </HeaderRow>
@@ -112,7 +112,7 @@ export const JournalTableWithPanel = ({
               size={HeadingSize.secondary}
               className={`Layer__${COMPONENT_NAME}__subtitle`}
             >
-              {stringOverrides?.componentSubtitle || t('entries', 'Entries')}
+              {stringOverrides?.componentSubtitle || t('generalLedger:label.entries', 'Entries')}
             </Heading>
           </HeaderCol>
           <HeaderCol>
@@ -124,7 +124,7 @@ export const JournalTableWithPanel = ({
               iconOnly={view === 'mobile'}
               leftIcon={view === 'mobile' && <PlusIcon size={14} />}
             >
-              {stringOverrides?.addEntryButton || t('addEntry', 'Add Entry')}
+              {stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')}
             </Button>
           </HeaderCol>
         </HeaderRow>
@@ -147,8 +147,8 @@ export const JournalTableWithPanel = ({
         <div className='Layer__table-state-container'>
           <DataState
             status={DataStateStatus.allDone}
-            title={t('noEntriesFound', 'No entries found')}
-            description={t('thereAreNoEntriesInTheJournal', 'There are no entries in the journal.')}
+            title={t('generalLedger:empty.entries', 'No entries found')}
+            description={t('generalLedger:label.entry_journal', 'There are no entries in the journal.')}
           />
         </div>
       )}
@@ -158,8 +158,8 @@ export const JournalTableWithPanel = ({
           <div className='Layer__table-state-container'>
             <DataState
               status={DataStateStatus.failed}
-              title={t('somethingWentWrong', 'Something went wrong')}
-              description={t('weCouldntLoadYourData', 'We couldn’t load your data.')}
+              title={t('common:error.something_went_wrong', 'Something went wrong')}
+              description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
               onRefresh={() => { void refetch() }}
               isLoading={isValidating || isLoading}
             />

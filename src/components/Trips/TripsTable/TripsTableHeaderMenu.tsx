@@ -18,13 +18,13 @@ export const TripsTableHeaderMenu = () => {
       key: TripsTableHeaderMenuActions.ManageVehicles,
       onClick: toVehicleManagement,
       icon: <Car size={20} strokeWidth={1.25} />,
-      label: t('manageVehicles', 'Manage vehicles'),
+      label: t('vehicles:action.manage_vehicles', 'Manage vehicles'),
     },
   ], [t, toVehicleManagement])
 
   return (
     <DataTableHeaderMenu
-      ariaLabel={t('additionalTripsActions', 'Additional trips actions')}
+      ariaLabel={t('trips:label.additional_trip_actions', 'Additional trips actions')}
       items={menuItems}
     />
   )

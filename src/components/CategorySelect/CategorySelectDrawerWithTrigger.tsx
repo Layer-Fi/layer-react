@@ -25,11 +25,11 @@ export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips 
     <HStack fluid className='Layer__CategorySelectDrawerWithTrigger'>
       <Button
         fullWidth
-        aria-label={t('selectCategory', 'Select category')}
+        aria-label={t('bankTransactions:action.select_category', 'Select category')}
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
       >
-        <Span ellipsis>{value?.label ?? t('select', 'Select...')}</Span>
+        <Span ellipsis>{value?.label ?? t('common:action.select_label', 'Select...')}</Span>
         <ChevronDown size={16} />
       </Button>
 

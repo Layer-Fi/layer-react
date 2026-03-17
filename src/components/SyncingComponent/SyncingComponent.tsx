@@ -46,13 +46,13 @@ export const SyncingComponent = ({
   const getSyncDurationMessage = () => {
     if (timeSync > 60) {
       const hours = Math.floor(timeSync / 60)
-      return tPlural(t, 'thisMayTakeUpToCountHours', {
+      return tPlural(t, 'linkedAccounts:label.may_take_up_to_hours', {
         count: hours,
         one: 'This may take up to {{count}} hour.',
         other: 'This may take up to {{count}} hours.',
       })
     }
-    return tPlural(t, 'thisMayTakeUpToCountMinutes', {
+    return tPlural(t, 'linkedAccounts:label.may_take_up_to_minutes', {
       count: timeSync,
       one: 'This may take up to {{count}} minute.',
       other: 'This may take up to {{count}} minutes.',
@@ -60,8 +60,8 @@ export const SyncingComponent = ({
   }
 
   const title = titleVariant === 'historical'
-    ? t('syncingHistoricalAccountData', 'Syncing historical account data')
-    : t('syncingAccountData', 'Syncing account data')
+    ? t('linkedAccounts:state.syncing_historical_account_data', 'Syncing historical account data')
+    : t('linkedAccounts:state.syncing_account_data', 'Syncing account data')
 
   return (
     <div

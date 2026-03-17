@@ -11,7 +11,7 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
 
   return (
     <VStack className='Layer__TaxProfileForm__Section' gap='md'>
-      <Heading level={3}>{t('federalTaxInformation', 'Federal Tax Information')}</Heading>
+      <Heading level={3}>{t('taxEstimates:label.federal_tax_information', 'Federal Tax Information')}</Heading>
 
       <form.Field name='usConfiguration.federal.filingStatus'>
         {field => (
@@ -27,10 +27,10 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
       <form.AppField name='usConfiguration.federal.annualW2Income'>
         {field => (
           <field.FormBigDecimalField
-            label={t('annualW2Income', 'Annual W-2 income')}
+            label={t('taxEstimates:label.annual_w2_income', 'Annual W-2 income')}
             mode='currency'
             isReadOnly={isReadOnly}
-            placeholder={t('enterAmount', 'Enter amount')}
+            placeholder={t('taxEstimates:label.enter_amount', 'Enter amount')}
             {...desktopFieldProps}
           />
         )}
@@ -39,10 +39,10 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
       <form.AppField name='usConfiguration.federal.tipIncome'>
         {field => (
           <field.FormBigDecimalField
-            label={t('tipIncome', 'Tip income')}
+            label={t('taxEstimates:label.tip_income', 'Tip income')}
             mode='currency'
             isReadOnly={isReadOnly}
-            placeholder={t('enterAmount', 'Enter amount')}
+            placeholder={t('taxEstimates:label.enter_amount', 'Enter amount')}
             {...desktopFieldProps}
           />
         )}
@@ -51,10 +51,10 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
       <form.AppField name='usConfiguration.federal.overtimeIncome'>
         {field => (
           <field.FormBigDecimalField
-            label={t('overtimeIncome', 'Overtime income')}
+            label={t('taxEstimates:label.overtime_income', 'Overtime income')}
             mode='currency'
             isReadOnly={isReadOnly}
-            placeholder={t('enterAmount', 'Enter amount')}
+            placeholder={t('taxEstimates:label.enter_amount', 'Enter amount')}
             {...desktopFieldProps}
           />
         )}
@@ -63,7 +63,7 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
       <form.AppField name='usConfiguration.federal.withholding.useCustomWithholding'>
         {field => (
           <field.FormRadioGroupYesNoField
-            label={t('useCustomWithholding', 'Use custom withholding?')}
+            label={t('taxEstimates:label.use_custom_withholding', 'Use custom withholding?')}
             isReadOnly={isReadOnly}
             {...desktopFieldProps}
           />
@@ -75,10 +75,10 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
           <form.AppField name='usConfiguration.federal.withholding.amount'>
             {field => (
               <field.FormBigDecimalField
-                label={t('withholdingAmount', 'Withholding amount')}
+                label={t('taxEstimates:label.withholding_amount', 'Withholding amount')}
                 mode='currency'
                 isReadOnly={isReadOnly}
-                placeholder={t('enterAmount', 'Enter amount')}
+                placeholder={t('taxEstimates:label.enter_amount', 'Enter amount')}
                 {...desktopFieldProps}
               />
             )}

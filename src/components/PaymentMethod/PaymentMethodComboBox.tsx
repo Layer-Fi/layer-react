@@ -16,11 +16,11 @@ type PaymentMethodOption = {
 }
 
 const PAYMENT_METHOD_OPTIONS = [
-  { value: PaymentMethod.Cash, ...translationKey('cash', 'Cash') },
-  { value: PaymentMethod.Check, ...translationKey('check', 'Check') },
-  { value: PaymentMethod.CreditCard, ...translationKey('creditCard', 'Credit Card') },
-  { value: PaymentMethod.Ach, ...translationKey('ach', 'ACH') },
-  { value: PaymentMethod.Other, ...translationKey('other', 'Other') },
+  { value: PaymentMethod.Cash, ...translationKey('common:label.cash', 'Cash') },
+  { value: PaymentMethod.Check, ...translationKey('common:label.check', 'Check') },
+  { value: PaymentMethod.CreditCard, ...translationKey('common:label.credit_card', 'Credit Card') },
+  { value: PaymentMethod.Ach, ...translationKey('common:label.ach', 'ACH') },
+  { value: PaymentMethod.Other, ...translationKey('common:label.other', 'Other') },
 ]
 
 type PaymentMethodComboBoxProps = {
@@ -58,7 +58,7 @@ export const PaymentMethodComboBox = ({ value, onValueChange, isReadOnly, classN
   return (
     <HStack className={combinedClassName}>
       <Label size='sm' htmlFor={inputId}>
-        {t('paymentMethod', 'Payment method')}
+        {t('invoices:label.payment_method', 'Payment method')}
       </Label>
       <ComboBox
         options={options}

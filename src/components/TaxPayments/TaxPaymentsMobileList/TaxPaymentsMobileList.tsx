@@ -18,21 +18,21 @@ const TaxPaymentsMobileListItem = ({ payment }: { payment: TaxPaymentQuarterWith
       <Heading size='sm' weight='bold' pbe='3xs'>{getQuarterLabel(payment.quarter)}</Heading>
       <VStack gap='3xs'>
         <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('rolledOverFromPreviousQuarter', 'Rolled Over From Previous Quarter')}</Span>
+          <Span size='sm' variant='subtle'>{t('taxEstimates:label.rolled_over_from_previous_quarter', 'Rolled Over From Previous Quarter')}</Span>
           <MoneySpan size='sm' amount={payment.owedRolledOverFromPrevious} />
         </HStack>
         <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('owedThisQuarter', 'Owed This Quarter')}</Span>
+          <Span size='sm' variant='subtle'>{t('taxEstimates:label.owed_quarter', 'Owed This Quarter')}</Span>
           <MoneySpan size='sm' amount={payment.owedThisQuarter} />
         </HStack>
         <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('totalPaid', 'Total Paid')}</Span>
+          <Span size='sm' variant='subtle'>{t('taxEstimates:label.total_paid', 'Total Paid')}</Span>
           <MoneySpan size='sm' amount={payment.totalPaid} />
         </HStack>
       </VStack>
       <Separator />
       <HStack justify='space-between'>
-        <Span size='md' weight='bold'>{t('remainingBalance', 'Remaining Balance')}</Span>
+        <Span size='md' weight='bold'>{t('taxEstimates:label.remaining_balance', 'Remaining Balance')}</Span>
         <MoneySpan size='md' amount={payment.total} weight='bold' />
       </HStack>
     </VStack>
@@ -49,7 +49,7 @@ export const TaxPaymentsMobileList = ({ data, isLoading, isError, slots }: Commo
   return (
     <div className='Layer__TaxPaymentsMobileList'>
       <MobileList
-        ariaLabel={t('taxPayments', 'Tax Payments')}
+        ariaLabel={t('taxEstimates:label.tax_payments', 'Tax Payments')}
         data={data}
         isLoading={isLoading}
         isError={isError}

@@ -35,7 +35,7 @@ const TaxDetailsHeader = ({ isMobile }: { isMobile: boolean }) => {
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
   return (
     <TaxEstimatesHeader
-      title={tConditional(t, 'businessIncomeTaxes', {
+      title={tConditional(t, 'taxEstimates:label.business_income_taxes', {
         condition: projectedCondition,
         cases: {
           default: 'Business Income Taxes',
@@ -45,7 +45,7 @@ const TaxDetailsHeader = ({ isMobile }: { isMobile: boolean }) => {
           projected: 'projected',
         },
       })}
-      description={t('calculatedBasedOnYourCategorizedTransactionsAndTrackedMileage', 'Calculated based on your categorized transactions and tracked mileage')}
+      description={t('taxEstimates:label.calculated_from_categorized_transactions', 'Calculated based on your categorized transactions and tracked mileage')}
       isMobile={isMobile}
     />
   )
@@ -95,8 +95,8 @@ export const TaxDetails = () => {
         Error={(
           <DataState
             status={DataStateStatus.failed}
-            title={t('weCouldntLoadYourTaxSummary', 'We couldn\'t load your tax summary')}
-            description={t('anErrorOccurredWhileLoadingYourTaxSummaryPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
+            title={t('taxEstimates:error.load_tax_estimates_tax', 'We couldn\'t load your tax summary')}
+            description={t('taxEstimates:error.while_loading_tax_summary', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
             spacing
           />
         )}
@@ -112,8 +112,8 @@ export const TaxDetails = () => {
         Error={(
           <DataState
             status={DataStateStatus.failed}
-            title={t('weCouldntLoadYourTaxEstimates', 'We couldn\'t load your tax estimates')}
-            description={t('anErrorOccurredWhileLoadingYourTaxEstimatesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
+            title={t('taxEstimates:error.load_tax_estimates', 'We couldn\'t load your tax estimates')}
+            description={t('taxEstimates:error.load_tax_estimates', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
             spacing
           />
         )}
@@ -130,7 +130,7 @@ export const TaxDetails = () => {
                 slots={{
                   Heading: (
                     <TaxDetailsExpandableCardHeading
-                      title={tConditional(t, 'taxableBusinessIncome', {
+                      title={tConditional(t, 'taxEstimates:label.taxable_business_income', {
                         condition: projectedCondition,
                         cases: {
                           default: 'Taxable Business Income',
@@ -154,7 +154,7 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title={tConditional(t, 'federalTaxes', {
+                        title={tConditional(t, 'taxEstimates:label.federal_taxes', {
                           condition: projectedCondition,
                           cases: {
                             default: 'Federal Taxes',
@@ -179,7 +179,7 @@ export const TaxDetails = () => {
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title={tConditional(t, 'stateTaxesStateName', {
+                        title={tConditional(t, 'taxEstimates:label.taxes_by_state_name', {
                           condition: projectedCondition,
                           cases: {
                             default: 'State Taxes ({{stateName}})',

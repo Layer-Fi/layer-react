@@ -45,7 +45,7 @@ export const TripsTableHeader = ({ onRecordTrip }: TripsTableHeaderProps) => {
     <VehicleSelector
       selectedVehicle={selectedVehicle}
       onSelectedVehicleChange={handleVehicleChange}
-      placeholder={t('allVehicles', 'All vehicles')}
+      placeholder={t('vehicles:label.all_vehicles', 'All vehicles')}
       showLabel={false}
       className='Layer__TripsTable__VehicleSelector'
       inline
@@ -55,7 +55,7 @@ export const TripsTableHeader = ({ onRecordTrip }: TripsTableHeaderProps) => {
   const HeaderActions = useCallback(() => (
     <HStack gap='xs'>
       <Button onPress={onRecordTrip}>
-        {t('recordTrip', 'Record Trip')}
+        {t('trips:action.record_trip', 'Record Trip')}
         <Plus size={16} />
       </Button>
       <TripsTableHeaderMenu />
@@ -71,11 +71,11 @@ export const TripsTableHeader = ({ onRecordTrip }: TripsTableHeaderProps) => {
 
   return (
     <DataTableHeader
-      name={t('trips', 'Trips')}
+      name={t('trips:label.trips', 'Trips')}
       slots={{ HeaderActions, HeaderFilters }}
       slotProps={{
         SearchField: {
-          label: t('searchTrips', 'Search trips'),
+          label: t('trips:label.search_trips', 'Search trips'),
           value: inputValue,
           onChange: handleInputChange,
           className: 'Layer__TripsTable__SearchField',

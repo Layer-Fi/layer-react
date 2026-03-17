@@ -129,7 +129,7 @@ export const DetailedTable = ({
                 className={classNames('Layer__sortable-col', buildColClass('category'))}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'category')}
               >
-                {stringOverrides?.categoryColumnHeader || t('category', 'Category')}
+                {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
                 {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>
@@ -138,7 +138,7 @@ export const DetailedTable = ({
                   className={classNames('Layer__sortable-col', buildColClass('type'))}
                   onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
                 >
-                  {stringOverrides?.typeColumnHeader || t('type', 'Type')}
+                  {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
                   {' '}
                   <SortArrows className='Layer__sort-arrows' />
                 </th>
@@ -147,7 +147,7 @@ export const DetailedTable = ({
                 className={classNames('Layer__sortable-col', buildColClass('value'), 'value-col')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'value')}
               >
-                {stringOverrides?.valueColumnHeader || t('value', 'Value')}
+                {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
                 {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>

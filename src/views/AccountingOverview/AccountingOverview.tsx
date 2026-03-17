@@ -79,7 +79,7 @@ export const AccountingOverview = ({
       }
     >
       <View
-        title={stringOverrides?.title || title || t('accountingOverview', 'Accounting overview')}
+        title={stringOverrides?.title || title || t('overview:label.accounting_overview', 'Accounting overview')}
         showHeader={showTitle}
         header={(
           <Header>
@@ -108,7 +108,7 @@ export const AccountingOverview = ({
           asWidget
         >
           <ProfitAndLoss.Header
-            text={stringOverrides?.header || t('profitLoss', 'Profit & Loss')}
+            text={stringOverrides?.header || t('common:label.profit_loss', 'Profit & Loss')}
           />
           <ProfitAndLoss.Chart
             tagFilter={

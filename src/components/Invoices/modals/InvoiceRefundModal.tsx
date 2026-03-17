@@ -30,11 +30,11 @@ export function InvoiceRefundModal({ isOpen, onOpenChange, invoice, onSuccess }:
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('issueRefund', 'Issue refund')}
+      title={t('invoices:label.refund_invoice', 'Issue refund')}
       content={content}
       onConfirm={onConfirm}
-      confirmLabel={t('refundInvoice', 'Refund Invoice')}
-      errorText={t('errorIssuingRefundTryAgain', 'There was an error issuing a refund for this invoice. Please check your connection and try again in a few seconds.')}
+      confirmLabel={t('invoices:action.refund_invoice', 'Refund Invoice')}
+      errorText={t('invoices:error.refund_invoice', 'There was an error issuing a refund for this invoice. Please check your connection and try again in a few seconds.')}
       closeOnConfirm={false}
     />
   )

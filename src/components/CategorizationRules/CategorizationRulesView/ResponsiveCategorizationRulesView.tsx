@@ -28,8 +28,8 @@ const CategorizationRulesEmptyState = () => {
   return (
     <DataState
       status={DataStateStatus.allDone}
-      title={t('noRulesFound', 'No rules found')}
-      description={t('noCategorizationRulesHaveBeenCreatedYetYouWillReceiveSuggestionsForRulesToCreateAsYouCategorizeTransactionsInTheBankFeed', 'No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.')}
+      title={t('categorizationRules:empty.no_rules_found', 'No rules found')}
+      description={t('categorizationRules:empty.no_categorization_rules_yet', 'No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.')}
       icon={<PencilRuler />}
       spacing
       className='Layer__CategorizationRulesView__EmptyState'
@@ -42,8 +42,8 @@ const CategorizationRulesErrorState = () => {
   return (
     <DataState
       status={DataStateStatus.failed}
-      title={t('weCouldntLoadYourCategorizationRules', 'We couldn’t load your categorization rules')}
-      description={t('anErrorOccurredWhileLoadingYourCategorizationRulesPleaseCheckYourConnectionAndTryAgain', 'An error occurred while loading your categorization rules. Please check your connection and try again.')}
+      title={t('categorizationRules:error.couldnt_load_data', 'We couldn’t load your categorization rules')}
+      description={t('categorizationRules:error.load_categorization_rules', 'An error occurred while loading your categorization rules. Please check your connection and try again.')}
       spacing
       className='Layer__CategorizationRulesView__ErrorState'
     />
@@ -63,7 +63,7 @@ const CategorizationRulesHeader = ({ onGoBack }: CategorizationRulesHeaderProps)
           <BackArrow />
         </Button>
       )}
-      <Heading size='sm'>{t('categorizationRules', 'Categorization Rules')}</Heading>
+      <Heading size='sm'>{t('categorizationRules:label.categorization_rules', 'Categorization Rules')}</Heading>
     </HStack>
   )
 }
@@ -114,7 +114,7 @@ export const ResponsiveCategorizationRulesView = () => {
         setShowDeletionConfirmationModal(false)
         setSelectedRule(null)
       }).catch(() => {
-        addToast({ content: t('failedToArchiveCategorizationRule', 'Failed to archive categorization rule'), type: 'error' })
+        addToast({ content: t('categorizationRules:error.archive_categorization_rule', 'Failed to archive categorization rule'), type: 'error' })
       })
     }
   }, [t, addToast, archiveCategorizationRuleTrigger, selectedRule?.id])
@@ -170,11 +170,11 @@ export const ResponsiveCategorizationRulesView = () => {
       <BaseConfirmationModal
         isOpen={showDeletionConfirmationModal}
         onOpenChange={setShowDeletionConfirmationModal}
-        title={t('deleteCategorizationRule', 'Delete categorization rule?')}
-        description={t('transactionsWillNoLongerBeCategorizedByThisRuleCounterpartyUnaffected', 'Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.', { counterparty: selectedRule?.counterpartyFilter?.name ?? t('thisCounterparty', 'this counterparty') })}
+        title={t('categorizationRules:prompt.delete_categorization_rule', 'Delete categorization rule?')}
+        description={t('categorizationRules:label.transaction_no_longer_automatically_categorized', 'Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.', { counterparty: selectedRule?.counterpartyFilter?.name ?? t('bankTransactions:label.selected_counterparty', 'this counterparty') })}
         onConfirm={archiveCategorizationRule}
-        confirmLabel={t('delete', 'Delete')}
-        cancelLabel={t('cancel', 'Cancel')}
+        confirmLabel={t('common:action.delete_label', 'Delete')}
+        cancelLabel={t('common:action.cancel_label', 'Cancel')}
         useDrawer={isMobile}
       />
     </>

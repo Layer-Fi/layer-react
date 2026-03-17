@@ -1,7 +1,9 @@
 import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { createStore, useStore } from 'zustand'
 
 import { DateGroupBy, type DateQueryParams, type DateRangeQueryParams, ReportEnum } from '@schemas/reports/unifiedReport'
+import { translationKey } from '@utils/i18n/translationKey'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
@@ -52,6 +54,22 @@ const UnifiedReportStoreContext = createContext(
     },
   })),
 )
+
+const UNIFIED_REPORT_NAME_TRANSLATIONS = {
+  [ReportEnum.BalanceSheet]: translationKey('reports:label.balance_sheet_report', 'Balance Sheet Report'),
+  [ReportEnum.CashflowStatement]: translationKey('reports:label.statement_cash_flow_report', 'Statement of Cash Flow Report'),
+  [ReportEnum.ProfitAndLoss]: translationKey('reports:label.profit_loss_report', 'Profit & Loss Report'),
+}
+
+export function useUnifiedReportName() {
+  const store = useContext(UnifiedReportStoreContext)
+  const { t } = useTranslation()
+
+  const report = useStore(store, state => state.report)
+
+  const { i18nKey, defaultValue } = UNIFIED_REPORT_NAME_TRANSLATIONS[report]
+  return t(i18nKey, defaultValue)
+}
 
 export function useUnifiedReportDateVariant(): UnifiedReportDateVariant {
   const store = useContext(UnifiedReportStoreContext)

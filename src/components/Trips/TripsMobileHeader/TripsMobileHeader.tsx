@@ -36,7 +36,7 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
   return (
     <Header className='Layer__TripsMobileHeader'>
       <VStack gap='sm'>
-        <Heading size='lg'>{t('trips', 'Trips')}</Heading>
+        <Heading size='lg'>{t('trips:label.trips', 'Trips')}</Heading>
 
         <HStack align='center' gap='xs'>
           <TripPurposeToggle
@@ -49,13 +49,13 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
 
         <HStack gap='xs' align='center' pbe='md'>
           <SearchField
-            label={t('searchTrips', 'Search trips')}
+            label={t('trips:label.search_trips', 'Search trips')}
             value={inputValue}
             onChange={handleInputChange}
             className='Layer__TripsMobileHeader__SearchField'
           />
           <Button onPress={onRecordTrip}>
-            {t('recordTrip', 'Record Trip')}
+            {t('trips:action.record_trip', 'Record Trip')}
             <Plus size={16} />
           </Button>
         </HStack>

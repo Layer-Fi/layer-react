@@ -95,7 +95,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
           <VStack gap='xs'>
             <form.AppField name='entryAt'>
-              {field => <field.FormDateField label={t('entryDate', 'Entry date')} isReadOnly={isReadOnly} />}
+              {field => <field.FormDateField label={t('generalLedger:label.entry_date', 'Entry date')} isReadOnly={isReadOnly} />}
             </form.AppField>
           </VStack>
           <div></div>
@@ -108,7 +108,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
             <form.AppField name='referenceNumber'>
               {field => (
                 <field.FormTextField
-                  label={t('referenceNumber', 'Reference number')}
+                  label={t('common:label.reference_number', 'Reference number')}
                   isReadOnly={isReadOnly}
                 />
               )}
@@ -119,7 +119,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
             <form.AppField name='createdBy'>
               {field => (
                 <field.FormTextField
-                  label={t('createdBy', 'Created by')}
+                  label={t('common:label.created_by', 'Created by')}
                   isReadOnly={isReadOnly}
                 />
               )}
@@ -159,7 +159,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
                         <CustomerVendorSelector
                           selectedCustomerVendor={currentCustomerVendor}
                           onSelectedCustomerVendorChange={handleSelectionChange}
-                          placeholder={t('selectCustomerOrVendor', 'Select customer or vendor')}
+                          placeholder={t('customerVendor:action.select_customer_vendor', 'Select customer or vendor')}
                           isReadOnly={isReadOnly}
                         />
                       )
@@ -192,7 +192,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}
-            title={t('addDebits', 'Add Debits')}
+            title={t('generalLedger:action.add_debits', 'Add Debits')}
             direction={LedgerEntryDirection.Debit}
             showTags={showTags}
           />
@@ -203,7 +203,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}
-            title={t('addCredits', 'Add Credits')}
+            title={t('generalLedger:action.add_credits', 'Add Credits')}
             direction={LedgerEntryDirection.Credit}
             showTags={showTags}
           />
@@ -214,7 +214,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         <HStack justify='space-between' gap='xl'>
           <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__AdditionalTextFields`}>
             <form.AppField name='memo'>
-              {field => <field.FormTextAreaField label={t('memo', 'Memo')} isReadOnly={isReadOnly} />}
+              {field => <field.FormTextAreaField label={t('common:label.memo', 'Memo')} isReadOnly={isReadOnly} />}
             </form.AppField>
           </VStack>
         </HStack>

@@ -22,7 +22,7 @@ const InvoicePaymentDrawerHeader = ({ close }: { close: () => void }) => {
     <ModalTitleWithClose
       heading={(
         <ModalHeading size='md'>
-          {t('recordInvoicePayment', 'Record invoice payment')}
+          {t('invoices:action.record_invoice_payment', 'Record invoice payment')}
         </ModalHeading>
       )}
       onClose={close}
@@ -40,7 +40,7 @@ export const InvoicePaymentDrawer = ({
   const { toViewInvoice } = useInvoiceNavigation()
 
   const onSuccess = useCallback((invoicePayment: InvoicePayment) => {
-    addToast({ content: t('invoicePaidSuccessfully', 'Invoice paid successfully'), type: 'success' })
+    addToast({ content: t('invoices:label.invoice_paid_successfully', 'Invoice paid successfully'), type: 'success' })
     const updatedInvoice = updateInvoiceWithPayment(invoice, invoicePayment)
     toViewInvoice(updatedInvoice)
   }, [addToast, invoice, t, toViewInvoice])

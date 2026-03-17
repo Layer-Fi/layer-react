@@ -34,11 +34,11 @@ export const ProfitAndLossOverviewDetailedCharts = ({
     [
       {
         value: 'revenue',
-        label: detailedChartsStringOverrides?.detailedChartStringOverrides?.revenueToggleLabel || t('revenue', 'Revenue'),
+        label: detailedChartsStringOverrides?.detailedChartStringOverrides?.revenueToggleLabel || t('common:label.revenue', 'Revenue'),
       },
       {
         value: 'expenses',
-        label: detailedChartsStringOverrides?.detailedChartStringOverrides?.expenseToggleLabel || t('expenses', 'Expenses'),
+        label: detailedChartsStringOverrides?.detailedChartStringOverrides?.expenseToggleLabel || t('common:label.expenses', 'Expenses'),
       },
     ]
   ), [detailedChartsStringOverrides, t])
@@ -56,7 +56,7 @@ export const ProfitAndLossOverviewDetailedCharts = ({
       {isCompact
         && (
           <Toggle
-            ariaLabel={t('chartType', 'Chart type')}
+            ariaLabel={t('overview:chart_type', 'Chart type')}
             options={toggleOptions}
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}

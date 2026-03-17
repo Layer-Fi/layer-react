@@ -114,13 +114,13 @@ export const BankTransactionRow = ({
       disabled={selectedCategory === null || isBulkSelectionActive}
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
       withRetry
-      error={isError ? t('approvalFailedCheckConnectionAndRetryInFewSeconds', 'Approval failed. Check connection and retry in few seconds.') : undefined}
+      error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
     >
       {isError
-        ? t('retry', 'Retry')
+        ? t('common:action.retry_label', 'Retry')
         : displayAsCategorized
-          ? stringOverrides?.updateButtonText ?? t('update', 'Update')
-          : stringOverrides?.approveButtonText ?? t('confirm', 'Confirm')}
+          ? stringOverrides?.updateButtonText ?? t('common:action.update_label', 'Update')
+          : stringOverrides?.approveButtonText ?? t('common:action.confirm_label', 'Confirm')}
     </SubmitButton>
   ), [
     displayAsCategorized,
@@ -254,7 +254,7 @@ export const BankTransactionRow = ({
                       size={TextSize.md}
                       className='Layer__unsaved-info'
                     >
-                      <span>{t('unsaved', 'Unsaved')}</span>
+                      <span>{t('common:state.unsaved', 'Unsaved')}</span>
                       <AlertCircle size={12} />
                     </Text>
                   )}

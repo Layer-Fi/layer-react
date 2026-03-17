@@ -28,7 +28,7 @@ export function UnifiedReportDownloadButton({ dateSelectionMode }: UnifiedReport
         isPending={isMutating}
         isDisabled={isMutating}
       >
-        {isError ? t('retry', 'Retry') : t('download', 'Download')}
+        {isError ? t('common:action.retry_label', 'Retry') : t('common:action.download_label', 'Download')}
         {isError ? <RefreshCcw size={12} /> : <DownloadCloud size={16} /> }
       </Button>
       <InvisibleDownload ref={invisibleDownloadRef} />

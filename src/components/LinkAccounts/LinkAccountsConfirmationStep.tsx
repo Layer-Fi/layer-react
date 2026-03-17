@@ -23,7 +23,7 @@ function getSubmitButtonText(
   t: TFunction,
 ) {
   if (confirmedCount === totalCount) {
-    return tPlural(t, 'confirmAllAccounts', {
+    return tPlural(t, 'linkedAccounts:action.confirm_accounts', {
       count: totalCount,
       one: 'Confirm Account',
       other: 'Confirm All Accounts',
@@ -31,14 +31,14 @@ function getSubmitButtonText(
   }
 
   if (confirmedCount === 0) {
-    return tPlural(t, 'excludeAllAccounts', {
+    return tPlural(t, 'linkedAccounts:action.exclude_all_accounts', {
       count: totalCount,
       one: 'Exclude Account',
       other: 'Exclude All Accounts',
     })
   }
 
-  return tPlural(t, 'confirmSelectedAccounts', {
+  return tPlural(t, 'linkedAccounts:action.confirm_accounts_selected', {
     count: confirmedCount,
     one: 'Confirm {{count}} Selected Account',
     other: 'Confirm {{count}} Selected Accounts',
@@ -52,8 +52,8 @@ function AccountConfirmationEmptyList() {
   return (
     <div className={CLASS_NAME}>
       <VStack slot='center' gap='xs'>
-        <Heading size='sm' align='center'>{t('accountsSuccessfullyLinked', 'Accounts Successfully Linked')}</Heading>
-        <P variant='subtle' align='center'>{t('youCanLinkMoreAccountsAtAnyTimeFromTheBankTransactionsSection', 'You can link more accounts at any time from the Bank Transactions section')}</P>
+        <Heading size='sm' align='center'>{t('linkedAccounts:label.accounts_successfully_linked', 'Accounts Successfully Linked')}</Heading>
+        <P variant='subtle' align='center'>{t('linkedAccounts:label.link_more_accounts_any_time', 'You can link more accounts at any time from the Bank Transactions section')}</P>
       </VStack>
     </div>
   )
@@ -98,10 +98,10 @@ export function LinkAccountsConfirmationStep() {
     <VStack gap='lg'>
       <VStack gap='2xs'>
         <Heading level={3} size='sm'>
-          {t('whichAccountsDoYouUseForBusiness', 'Which accounts do you use for businesses?')}
+          {t('linkedAccounts:prompt.which_accounts_for_business', 'Which accounts do you use for businesses?')}
         </Heading>
         <P variant='subtle'>
-          {t('pleaseDeselectAnyAccountsYouDontUseForYourBusiness', 'Please deselect any accounts you don\'t use for your business.')}
+          {t('linkedAccounts:label.deselect_unused_accounts', 'Please deselect any accounts you don\'t use for your business.')}
         </P>
       </VStack>
       <Field name='accounts' mode='array'>
@@ -128,7 +128,7 @@ export function LinkAccountsConfirmationStep() {
       </Field>
       <HStack pbs='lg' gap='sm'>
         <Button variant={ButtonVariant.secondary} onClick={previous}>
-          {t('back', 'Back')}
+          {t('common:action.back', 'Back')}
         </Button>
         <Subscribe
           selector={({ isSubmitting, values }) => ({

@@ -26,7 +26,7 @@ type TaxPaymentRowType = Row<TaxPaymentQuarterWithId>
 const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentQuarterWithId> => [
   {
     id: TaxPaymentColumns.Quarter,
-    header: t('quarter', 'Quarter'),
+    header: t('taxEstimates:label.quarter', 'Quarter'),
     cell: (row: TaxPaymentRowType) => (
       <Span>{getQuarterLabel(row.original.quarter)}</Span>
     ),
@@ -34,28 +34,28 @@ const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentQuarterWith
   },
   {
     id: TaxPaymentColumns.OwedFromPrevious,
-    header: t('rolledOverFromPreviousQuarter', 'Rolled Over From Previous Quarter'),
+    header: t('taxEstimates:label.rolled_over_from_previous_quarter', 'Rolled Over From Previous Quarter'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.owedRolledOverFromPrevious} />
     ),
   },
   {
     id: TaxPaymentColumns.OwedThisQuarter,
-    header: t('owedThisQuarter', 'Owed This Quarter'),
+    header: t('taxEstimates:label.owed_quarter', 'Owed This Quarter'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.owedThisQuarter} />
     ),
   },
   {
     id: TaxPaymentColumns.TotalPaid,
-    header: t('totalPaid', 'Total Paid'),
+    header: t('taxEstimates:label.total_paid', 'Total Paid'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.totalPaid} />
     ),
   },
   {
     id: TaxPaymentColumns.Total,
-    header: t('remainingBalance', 'Remaining Balance'),
+    header: t('taxEstimates:label.remaining_balance', 'Remaining Balance'),
     cell: (row: TaxPaymentRowType) => (
       <MoneySpan amount={row.original.total} />
     ),
@@ -69,7 +69,7 @@ export const TaxPaymentsTable = ({ data, isLoading, isError, slots }: CommonTaxP
   return (
     <SimpleDataTable<TaxPaymentQuarterWithId>
       componentName={COMPONENT_NAME}
-      ariaLabel={t('taxPayments', 'Tax Payments')}
+      ariaLabel={t('taxEstimates:label.tax_payments', 'Tax Payments')}
       columnConfig={columnConfig}
       data={data}
       isLoading={isLoading}

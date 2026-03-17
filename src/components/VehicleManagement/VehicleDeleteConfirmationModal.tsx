@@ -31,12 +31,11 @@ export function VehicleDeleteConfirmationModal({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('deleteThisVehicle', 'Delete this vehicle?')}
-      description={t('vehiclenameWillBePermanentlyDeletedThisActionCannotBeUndone', '{{vehicleName}} will be permanently deleted. This action cannot be undone.', { vehicleName })}
+      title={t('vehicles:prompt.delete_vehicle', 'Delete this vehicle?')}
+      description={t('vehicles:label.delete_vehicle_name_warning', '{{vehicleName}} will be permanently deleted. This action cannot be undone.', { vehicleName })}
       onConfirm={onConfirm}
-      confirmLabel={t('deleteVehicle', 'Delete vehicle')}
-      cancelLabel={t('cancel', 'Cancel')}
-      errorText={t('failedToDeleteVehicleTryAgain', 'Failed to delete vehicle. Please check your connection and try again.')}
+      confirmLabel={t('vehicles:action.delete_vehicle_label', 'Delete vehicle')}
+      errorText={t('vehicles:error.delete_vehicle', 'Failed to delete vehicle. Please check your connection and try again.')}
       useDrawer={useDrawer}
     />
   )

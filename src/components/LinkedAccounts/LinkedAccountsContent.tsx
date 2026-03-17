@@ -54,7 +54,7 @@ export const LinkedAccountsContent = ({
           <div className='Layer__linked-accounts__new-account-label'>
             <PlusIcon size={15} />
             <Text as='span' size={'sm' as TextSize}>
-              {t('addAccount', 'Add Account')}
+              {t('linkedAccounts:action.add_account', 'Add Account')}
             </Text>
           </div>
         </div>

@@ -24,18 +24,18 @@ export const StripeConnectBanner = () => {
   }>>>(() => ({
     [StripeAccountStatus.Pending]: {
       variant: 'default',
-      title: t('stripeAccountUnderReview', 'Stripe account under review'),
-      description: t('onceCompleteYouCanStartAcceptingCardAndBankPayments', 'Once complete, you can start accepting card and bank payments.'),
+      title: t('stripe:state.stripe_account_review', 'Stripe account under review'),
+      description: t('stripe:label.once_complete_can_accept_payments', 'Once complete, you can start accepting card and bank payments.'),
     },
     [StripeAccountStatus.NotCreated]: {
       variant: 'info',
-      title: t('stripePaymentsNotEnabled', 'Stripe payments not enabled'),
-      description: t('setUpYourStripeAccountToStartAcceptingCardAndBankPaymentsForYourInvoices', 'Set up your Stripe account to start accepting card and bank payments for your invoices.'),
+      title: t('stripe:state.stripe_payment_not_enabled', 'Stripe payments not enabled'),
+      description: t('stripe:label.set_up_stripe_account', 'Set up your Stripe account to start accepting card and bank payments for your invoices.'),
     },
     [StripeAccountStatus.Incomplete]: {
       variant: 'warning',
-      title: t('stripeSetupIncomplete', 'Stripe setup incomplete'),
-      description: t('finishSettingUpYourStripeAccountToStartAcceptingCardAndBankPaymentsForYourInvoices', 'Finish setting up your Stripe account to start accepting card and bank payments for your invoices.'),
+      title: t('stripe:state.stripe_setup_incomplete', 'Stripe setup incomplete'),
+      description: t('stripe:label.finish_setting_up_stripe_account', 'Finish setting up your Stripe account to start accepting card and bank payments for your invoices.'),
     },
   }), [t])
 
