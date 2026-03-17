@@ -18,7 +18,6 @@
   "error": {
     "archive_vehicle": "Failed to archive vehicle. Please check your connection and try again.",
     "delete_vehicle": "Failed to delete vehicle. Please check your connection and try again.",
-    "delete_vehicle_name": "{{vehicleName}} will be permanently deleted. This action cannot be undone.",
     "load_vehicle": "We couldn't load your vehicles",
     "load_vehicle_retry": "An error occurred while loading your vehicles. Please check your connection and try again.",
     "load_vehicles": "An error occurred while loading vehicles.",
@@ -26,6 +25,7 @@
   },
   "label": {
     "all_vehicles": "All vehicles",
+    "delete_vehicle_name_warning": "{{vehicleName}} will be permanently deleted. This action cannot be undone.",
     "enter_license_plate": "Enter license plate",
     "enter_vehicle_make_model": "Enter vehicle make and model",
     "enter_vehicle_year": "Enter vehicle year",

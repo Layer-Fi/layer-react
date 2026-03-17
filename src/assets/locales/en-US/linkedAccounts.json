@@ -30,7 +30,6 @@
     "confirm_accounts_try_again_later": "An error occurred while confirming accounts. You will have an opportunity to try again later.",
     "delete_account_check_connection": "Deletion failed. Please check your connection and try again in a few seconds.",
     "load_accounts": "Failed to load accounts",
-    "no_data_sync_until_confirm": "No data will be synced until you confirm.",
     "save_data_try_again_later": "An error occurred while saving data. You will have an opportunity to try again later.",
     "unlink_failed": "Unlink failed. Please check your connection and try again in a few seconds."
   },
@@ -63,6 +62,7 @@
     "may_take_up_to_minutes_one": "This may take up to {{count}} minute.",
     "may_take_up_to_minutes_other": "This may take up to {{count}} minutes.",
     "no_accounts_to_confirm": "There are no accounts to confirm. You may close this modal.",
+    "no_data_sync_until_confirm": "No data will be synced until you confirm.",
     "opening_balance": "Opening balance",
     "opening_date": "Opening date",
     "populate_accounting_dashboard_three_steps": "Populate your accounting dashboard in 3 steps",

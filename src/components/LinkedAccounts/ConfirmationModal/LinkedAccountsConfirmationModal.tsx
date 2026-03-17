@@ -202,7 +202,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
                   {t('linkedAccounts:error.confirm_accounts_try_again_later', 'An error occurred while confirming accounts. You will have an opportunity to try again later.')}
                 </P>
                 <P size='sm'>
-                  {t('linkedAccounts:error.no_data_sync_until_confirm', 'No data will be synced until you confirm.')}
+                  {t('linkedAccounts:label.no_data_sync_until_confirm', 'No data will be synced until you confirm.')}
                 </P>
                 <Button onPress={onClose}>
                   {t('common:action.close_label', 'Close')}

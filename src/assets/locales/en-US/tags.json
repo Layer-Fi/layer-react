@@ -1,6 +1,5 @@
 {
   "action": {
-    "add_tag_transaction": "Add a tag to this transaction...",
     "select_dimension_name": "Select {{dimensionName}}",
     "select_tags": "Select tags"
   },
@@ -12,6 +11,7 @@
   },
   "label": {
     "active_tags": "Active Tags",
+    "add_tag_to_transaction": "Add a tag to this transaction...",
     "tag_label_archived": "{{label}} (Archived)",
     "tags": "Tags"
   }

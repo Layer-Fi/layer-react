@@ -283,7 +283,7 @@ export function TagSelector({
           groups={groups}
           inputId={inputId}
 
-          placeholder={t('tags:action.add_tag_transaction', 'Add a tag to this transaction...')}
+          placeholder={t('tags:label.add_tag_to_transaction', 'Add a tag to this transaction...')}
           slots={{
             EmptyMessage,
             ErrorMessage,

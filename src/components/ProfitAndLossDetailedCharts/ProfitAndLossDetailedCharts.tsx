@@ -137,7 +137,7 @@ export const ProfitAndLossDetailedCharts = ({
                 </VStack>
               </div>
               <HStack align='center' justify='center' gap='md' pb='md' className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
-                <Span size={TextSize.md} variant='subtle'>{t('bankTransactions:action.upload_transactions_wait_sync', 'Upload your transactions or wait for transactions to be synced from your bank.')}</Span>
+                <Span size={TextSize.md} variant='subtle'>{t('bankTransactions:label.upload_transactions_or_wait_for_bank_sync', 'Upload your transactions or wait for transactions to be synced from your bank.')}</Span>
               </HStack>
             </>
           )

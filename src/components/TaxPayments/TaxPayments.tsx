@@ -27,7 +27,7 @@ const ErrorState = () => {
     <DataState
       spacing
       status={DataStateStatus.failed}
-      title={t('taxEstimates:error.load_tax_payment_load', 'We couldnʼt load your tax payments')}
+      title={t('taxEstimates:error.load_tax_payments', 'We couldnʼt load your tax payments')}
       description={t('taxEstimates:error.while_loading_tax_payments', 'An error occurred while loading your tax payments. Please check your connection and try again.')}
       className='Layer__TaxPayments__ErrorState'
     />

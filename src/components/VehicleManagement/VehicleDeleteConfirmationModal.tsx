@@ -32,7 +32,7 @@ export function VehicleDeleteConfirmationModal({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       title={t('vehicles:prompt.delete_vehicle', 'Delete this vehicle?')}
-      description={t('vehicles:error.delete_vehicle_name', '{{vehicleName}} will be permanently deleted. This action cannot be undone.', { vehicleName })}
+      description={t('vehicles:label.delete_vehicle_name_warning', '{{vehicleName}} will be permanently deleted. This action cannot be undone.', { vehicleName })}
       onConfirm={onConfirm}
       confirmLabel={t('vehicles:action.delete_vehicle_label', 'Delete vehicle')}
       errorText={t('vehicles:error.delete_vehicle', 'Failed to delete vehicle. Please check your connection and try again.')}

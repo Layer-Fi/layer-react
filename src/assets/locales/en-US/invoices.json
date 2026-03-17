@@ -71,7 +71,9 @@
     "refund_date": "Refund date",
     "refund_invoice": "Issue refund",
     "refunded_amount": "Refunded Amount",
+    "reset_invoice_remove_void_status_warning": "Resetting this invoice will remove its current status as void and return it to a sent state.",
     "reset_invoice_to_sent": "Reset invoice to sent",
+    "reset_invoice_warning": "Resetting this invoice will delete all payments, refunds, and write offs associated with it and return it to a sent state.",
     "search_invoices": "Search invoices",
     "sent_date": "Sent Date",
     "status_filter": "Status Filter",
@@ -84,15 +86,13 @@
     "terms": "Terms",
     "upcoming_invoices_sent_count": "Upcoming invoices: {{sentCount}}",
     "void_invoice": "Void invoice",
+    "void_invoice_warning": "Voiding this invoice will mark it as cancelled, and you will no longer be able to apply payments to it. This action cannot be undone.",
     "write_off_amount": "Write-off Amount",
-    "write_off_date": "Write-off Date"
+    "write_off_date": "Write-off Date",
+    "write_off_invoice_warning": "Writing off this invoice will record it as bad debt, and you will no longer be able to apply payments to it. This action cannot be undone."
   },
   "prompt": {
-    "discard_changes_invoice": "Discard changes to this invoice?",
-    "reset_invoice_remove_void_status_warning": "Resetting this invoice will remove its current status as void and return it to a sent state.",
-    "reset_invoice_warning": "Resetting this invoice will delete all payments, refunds, and write offs associated with it and return it to a sent state.",
-    "void_invoice_warning": "Voiding this invoice will mark it as cancelled, and you will no longer be able to apply payments to it. This action cannot be undone.",
-    "write_off_invoice_warning": "Writing off this invoice will record it as bad debt, and you will no longer be able to apply payments to it. This action cannot be undone."
+    "discard_changes_invoice": "Discard changes to this invoice?"
   },
   "state": {
     "due_count_days_one": "Due {{count}} day ago",
@@ -121,7 +121,7 @@
     "payment_amount_max_outstanding": "Payment amount cannot be greater than the outstanding invoice balance.",
     "payment_amount_must": "Payment amount must be greater than zero.",
     "payment_date_not_before_invoice": "Payment date cannot be before the invoice date ({{invoiceDate}}).",
-    "payment_date_not_before_invoice_message": "Payment date cannot be in the future.",
+    "payment_date_not_future": "Payment date cannot be in the future.",
     "payment_date_required": "Payment date is a required field.",
     "payment_method_required": "Payment method is a required field.",
     "refund_date_before_last_payment": "Refund date cannot be before the last invoice payment ({{lastPaymentDate}}).",

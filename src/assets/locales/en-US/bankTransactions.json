@@ -22,8 +22,7 @@
     "split_transaction": "Split transaction",
     "uncategorize_all": "Uncategorize All",
     "upload_receipt": "Upload receipt",
-    "upload_transactions_manually": "Upload transactions manually",
-    "upload_transactions_wait_sync": "Upload your transactions or wait for transactions to be synced from your bank."
+    "upload_transactions_manually": "Upload transactions manually"
   },
   "empty": {
     "no_categorized_transactions": "You have no categorized transactions",
@@ -91,7 +90,8 @@
     "transfer": "Transfer",
     "transfer_uppercase": "TRANSFER",
     "uncategorize_count_selected_one": "This will uncategorize {{count}} selected transaction.",
-    "uncategorize_count_selected_other": "This will uncategorize {{count}} selected transactions."
+    "uncategorize_count_selected_other": "This will uncategorize {{count}} selected transactions.",
+    "upload_transactions_or_wait_for_bank_sync": "Upload your transactions or wait for transactions to be synced from your bank."
   },
   "prompt": {
     "categorize_selected_transactions": "Categorize all selected transactions?",

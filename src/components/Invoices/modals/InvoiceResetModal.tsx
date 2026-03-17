@@ -21,8 +21,8 @@ export function InvoiceResetModal({ isOpen, onOpenChange, invoice, onSuccess }: 
   }, [onSuccess, resetInvoice])
 
   const description = invoice.status === InvoiceStatus.Voided
-    ? t('invoices:prompt.reset_invoice_remove_void_status_warning', 'Resetting this invoice will remove its current status as void and return it to a sent state.')
-    : t('invoices:prompt.reset_invoice_warning', 'Resetting this invoice will delete all payments, refunds, and write offs associated with it and return it to a sent state.')
+    ? t('invoices:label.reset_invoice_remove_void_status_warning', 'Resetting this invoice will remove its current status as void and return it to a sent state.')
+    : t('invoices:label.reset_invoice_warning', 'Resetting this invoice will delete all payments, refunds, and write offs associated with it and return it to a sent state.')
 
   return (
     <BaseConfirmationModal

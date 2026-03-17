@@ -45,7 +45,7 @@ export const LandingPageOffer = ({
       t('landingPage:label.complete_financial_reports', 'Complete financial reports and end of year tax packet'),
     ]
     : [
-      t('landingPage:label.direct_integration_platform_name', 'Direct integration with {{platformName}}', { platformName: platformConfig.platformName }),
+      t('landingPage:label.direct_integration_with_platform_name', 'Direct integration with {{platformName}}', { platformName: platformConfig.platformName }),
       t('landingPage:label.track_expenses_and_receipts', 'Track expenses and receipts'),
       t('landingPage:label.easy_to_understand_profitability_charts', 'Easy to understand profitability charts and reports'),
     ], [platformConfig.platformName, t, type])

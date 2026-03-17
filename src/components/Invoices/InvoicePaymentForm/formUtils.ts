@@ -50,7 +50,7 @@ export const validateInvoicePaymentForm = (
   }
 
   if (paidAt && toCalendarDate(paidAt).compare(today(getLocalTimeZone())) > 0) {
-    errors.push({ paidAt: t('invoices:validation.payment_date_not_before_invoice_message', 'Payment date cannot be in the future.') })
+    errors.push({ paidAt: t('invoices:validation.payment_date_not_future', 'Payment date cannot be in the future.') })
   }
 
   if (method === null) {

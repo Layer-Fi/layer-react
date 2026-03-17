@@ -109,7 +109,7 @@ const HERO_CONTENT_I18N = {
   title: translationKey('landingPage:label.platform_name_accounting', '{{platformName}} Accounting'),
   subtitle: translationKey('landingPage:label.track_business_finances_within_platform', 'Track your business finances, right within {{platformName}}'),
   heading1: translationKey('landingPage:label.all_finances_in_one_place', 'All your finances in one place'),
-  heading1Desc: translationKey('landingPage:label.directly_integrate_platform_name', 'Directly integrated with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
+  heading1Desc: translationKey('landingPage:label.directly_integrated_with_platform_name', 'Directly integrated with your {{platformName}} data, so you can see your business performance and profit in real-time.'),
   heading2: translationKey('landingPage:label.built_for_industry', 'Built for {{industry}}'),
   heading2Desc: translationKey('landingPage:label.track_expenses_and_get_reports', 'Track your expenses and get easy to understand reports designed specifically for {{industry}} businesses.'),
   bookACall: translationKey('landingPage:action.book_call', 'Book a call'),

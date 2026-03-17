@@ -11,7 +11,7 @@
     "load_tax_estimates": "We couldn't load your tax estimates",
     "load_tax_estimates_tax": "We couldn't load your tax summary",
     "load_tax_information": "Unable to load tax information",
-    "load_tax_payment_load": "We couldnʼt load your tax payments",
+    "load_tax_payments": "We couldnʼt load your tax payments",
     "retrieve_tax_profile": "We couldn’t retrieve your tax profile. Please check your connection and try again.",
     "while_loading_tax_payments": "An error occurred while loading your tax payments. Please check your connection and try again.",
     "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
@@ -68,7 +68,6 @@
     "social_security_tax_rate": "Social Security Tax Rate",
     "state_adjusted_gross_income": "State Adjusted Gross Income",
     "state_deductions": "State Deductions",
-    "state_income_tax_estimate": "State Income Tax Estimate (Owed)",
     "state_income_tax_estimate_owed": "State Income Tax Estimate (Owed)",
     "state_tax": "State Tax",
     "state_tax_rate": "State Tax Rate",

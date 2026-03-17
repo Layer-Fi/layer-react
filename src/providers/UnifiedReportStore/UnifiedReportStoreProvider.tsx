@@ -57,7 +57,7 @@ const UnifiedReportStoreContext = createContext(
 
 const UNIFIED_REPORT_NAME_TRANSLATIONS = {
   [ReportEnum.BalanceSheet]: translationKey('reports:label.balance_sheet_report', 'Balance Sheet Report'),
-  [ReportEnum.CashflowStatement]: translationKey('reports:label.statement_cash_flow_message', 'Statement of Cash Flow Report'),
+  [ReportEnum.CashflowStatement]: translationKey('reports:label.statement_cash_flow_report', 'Statement of Cash Flow Report'),
   [ReportEnum.ProfitAndLoss]: translationKey('reports:label.profit_loss_report', 'Profit & Loss Report'),
 }
 

@@ -41,7 +41,7 @@
     "report_type": "Report type",
     "reports": "Reports",
     "statement_cash_flow": "Statement of Cash Flow",
-    "statement_cash_flow_message": "Statement of Cash Flow Report",
+    "statement_cash_flow_report": "Statement of Cash Flow Report",
     "total_display_name": "Total of {{displayName}}"
   }
 }

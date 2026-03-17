@@ -30,7 +30,7 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
         <TaxTableRow label={t('taxEstimates:label.state_deductions', 'State Deductions')} sign='-' value={stateIncomeTax.stateDeductions} variant={TaxTableRowVariant.Nested} />
         <TaxTableRow label={t('taxEstimates:label.state_taxable_income', 'State Taxable Income')} value={stateIncomeTax.stateTaxableIncome} variant={TaxTableRowVariant.Standard} />
         <TaxTableRow label={t('taxEstimates:label.state_tax_rate', 'State Tax Rate')} sign='×' value={stateIncomeTax.effectiveStateTaxRate} variant={TaxTableRowVariant.Nested} />
-        <TaxTableRow label={t('taxEstimates:label.state_income_tax_estimate', 'State Income Tax Estimate (Owed)')} value={stateIncomeTax.stateIncomeTaxOwed} variant={TaxTableRowVariant.SectionTotal} />
+        <TaxTableRow label={t('taxEstimates:label.state_income_tax_estimate_owed', 'State Income Tax Estimate (Owed)')} value={stateIncomeTax.stateIncomeTaxOwed} variant={TaxTableRowVariant.SectionTotal} />
         {additionalTaxes.length > 0 && (
           <>
             <TaxTableRow label='' value='' variant={TaxTableRowVariant.Empty} />
