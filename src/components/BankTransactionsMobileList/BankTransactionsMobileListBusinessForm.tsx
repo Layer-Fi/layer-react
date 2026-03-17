@@ -24,12 +24,12 @@ import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectD
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
 
-const select_a_category_VALUE = 'select_a_category'
+const SELECT_A_CATEGORY_VALUE = 'select_a_category'
 
 export const isSelectCategoryOption = (
   value: BusinessFormOptionValue,
 ): boolean => {
-  return isPlaceholderAsOption(value) && value.value === select_a_category_VALUE
+  return isPlaceholderAsOption(value) && value.value === SELECT_A_CATEGORY_VALUE
 }
 
 type DisplayOption = BusinessFormMobileItemOption

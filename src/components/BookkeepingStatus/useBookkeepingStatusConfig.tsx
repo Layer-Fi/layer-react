@@ -18,7 +18,7 @@ type InternalStatusConfig = {
 }
 
 type BookkeepingStatusConfigOptions = {
-  status: BookkeepingPeriodStatus
+  status?: BookkeepingPeriodStatus
   monthNumber?: number
   incompleteTasksCount?: number
 }
@@ -30,6 +30,11 @@ export function useBookkeepingStatusConfig(
   const { status, monthNumber, incompleteTasksCount } = options
   const locale = i18n.language
   const monthName = monthNumber !== undefined ? getMonthNameFromNumber(monthNumber, locale) : ''
+
+  if (status === undefined) {
+    return undefined
+  }
+
   const inProgressDescription = incompleteTasksCount !== undefined && incompleteTasksCount > 0
     ? tPlural(t, 'bookkeeping:label.working_on_books_please_complete_tasks', {
       count: incompleteTasksCount,

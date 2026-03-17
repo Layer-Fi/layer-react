@@ -29,7 +29,7 @@ export const BankTransactionsBulkActions = ({
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
   const [recategorizeModalOpen, setRecategorizeModalOpen] = useState(false)
   const [uncategorizeModalOpen, setUncategorizeModalOpen] = useState(false)
-  const confirmButtonLabel = slotProps?.ConfirmAllModal?.label || t('common:action.confirm_label', 'Confirm all')
+  const confirmButtonLabel = slotProps?.ConfirmAllModal?.label || t('bankTransactions:action.confirm_all', 'Confirm all')
 
   return (
     <>

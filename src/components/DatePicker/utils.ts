@@ -10,6 +10,6 @@ export const getIsDateInvalid = (
 ) => {
   if (date === null) return t('date:validation.date_not_empty', 'Cannot select empty date')
   if (minDate && date.compare(minDate) < 0) return t('date:validation.date_before_min', 'Cannot select date before {{minDate}}', { minDate: formatDate(minDate.toDate()) })
-  if (maxDate && date.compare(maxDate) > 0) return t('date:validation.date_before_min_message', 'Cannot select date in the future')
+  if (maxDate && date.compare(maxDate) > 0) return t('date:validation.date_in_future', 'Cannot select date in the future')
   return null
 }
