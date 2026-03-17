@@ -79,7 +79,7 @@ const EmptyState = () => {
       spacing
       status={DataStateStatus.info}
       title={t('reports:empty.no_detail_lines_found', 'No detail lines found')}
-      description={t('reports:emptu.no_detail_lines_pnl_item', 'There are no detail lines for this profit and loss item')}
+      description={t('reports:empty.no_detail_lines_pnl_item', 'There are no detail lines for this profit and loss item')}
     />
   )
 }

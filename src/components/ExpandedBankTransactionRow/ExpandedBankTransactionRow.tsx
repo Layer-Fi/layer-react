@@ -203,7 +203,7 @@ export const ExpandedBankTransactionRow = ({
   const toggleOptions = useMemo(() => [
     {
       value: 'categorize',
-      label: t('common:action.categorize_all', 'Categorize'),
+      label: t('common:action.categorize', 'Categorize'),
     },
     {
       value: 'match',
@@ -263,7 +263,7 @@ export const ExpandedBankTransactionRow = ({
                         readOnly={!isCategorizationEnabled}
                         setSelectedMatch={(suggestedMatch) => {
                           setSelectedMatch(suggestedMatch)
-                          setMatchFormError(!suggestedMatch ? t('bankTransactions:action.select_option_match_transaction', 'Select an option to match the transaction') : undefined)
+                          setMatchFormError(!suggestedMatch ? t('bankTransactions:error.select_option_match_transaction', 'Select an option to match the transaction') : undefined)
                           setTransactionCategory(
                             bankTransaction.id,
                             suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null,

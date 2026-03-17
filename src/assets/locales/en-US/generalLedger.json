@@ -17,6 +17,7 @@
     "ledger_activity": "No ledger activity"
   },
   "error": {
+    "check_fields": "Please check all fields.",
     "operation_retry": "Operation failed. Try again.",
     "submit_failed_check_connection": "Submit failed. Please check your connection and try again."
   },
@@ -27,7 +28,6 @@
     "account_type": "Account type",
     "balance": "Current balance",
     "bill_number": "Bill Number",
-    "check_fields": "Please check all fields.",
     "creation_date": "Creation date",
     "enter_account_name": "Enter account name...",
     "enter_institution_name": "Enter institution name...",

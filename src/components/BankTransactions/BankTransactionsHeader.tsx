@@ -79,7 +79,7 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   return (
     <SearchField
       slot={slot}
-      label={t('bankTransactions:action.search_transactions', 'Search transactions')}
+      label={t('bankTransactions:label.search_transactions', 'Search transactions')}
       value={localSearch}
       onChange={handleSearch}
       isDisabled={isDisabled}
@@ -247,7 +247,7 @@ export const BankTransactionsHeader = ({
   const statusToggle = isStatusToggleVisible
     ? (
       <Toggle
-        ariaLabel={t('bankTransactions:label.bank_transactions_categorization_status', 'Categorization status')}
+        ariaLabel={t('bankTransactions:label.categorization_status', 'Categorization status')}
         options={statusToggleOptions}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}

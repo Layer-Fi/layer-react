@@ -38,12 +38,12 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('bankTransactions:prompt.confirm_suggestions', 'Confirm all suggestions?')}
+      title={t('bankTransactions:prompt.confirm_all_suggestions', 'Confirm all suggestions?')}
       content={(
         skippedCount === 0
           ? (
             <Span>
-              {tPlural(t, 'bankTransactions:label.this_will_confirm', {
+              {tPlural(t, 'bankTransactions:label.this_will_confirm_count_transactions', {
                 count,
                 one: 'This will confirm {{count}} transaction.',
                 other: 'This will confirm {{count}} transactions.',
@@ -53,7 +53,7 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
           : (
             <VStack gap='xs'>
               <Span>
-                {tPlural(t, 'bankTransactions:label.actionable_count_of', {
+                {tPlural(t, 'bankTransactions:label.actionable_count_transactions_will_be_confirmed', {
                   count,
                   actionableCount,
                   one: '{{actionableCount}} of {{count}} transaction will be confirmed.',
@@ -61,7 +61,7 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
                 })}
               </Span>
               <Span>
-                {tPlural(t, 'bankTransactions:label.count_transactions_will', {
+                {tPlural(t, 'bankTransactions:label.count_transactions_will_be_skipped', {
                   count: skippedCount,
                   one: '{{count}} transaction will be skipped due to missing category.',
                   other: '{{count}} transactions will be skipped due to missing category.',

@@ -3,11 +3,9 @@
     "collapse_rows": "Collapse all rows",
     "expand_rows": "Expand all rows"
   },
-  "emptu": {
-    "no_detail_lines_pnl_item": "There are no detail lines for this profit and loss item"
-  },
   "empty": {
     "no_detail_lines_found": "No detail lines found",
+    "no_detail_lines_pnl_item": "There are no detail lines for this profit and loss item",
     "no_rows_found": "No rows found",
     "report_has_no_rows": "This report has no rows."
   },

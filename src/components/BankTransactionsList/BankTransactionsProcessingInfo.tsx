@@ -14,7 +14,7 @@ interface BankTransactionsProcessingInfoProps {
 
 export const BankTransactionsProcessingInfo = ({ showAsBadge = false }: BankTransactionsProcessingInfoProps) => {
   const { t } = useTranslation()
-  const tooltipContent = t('bookkeeping:label.team_review_categorize_transaction', 'Our team will review and categorize this transaction. We\'ll reach out if we have any questions about it.')
+  const tooltipContent = t('bookkeeping:label.team_review_and_categorize_transaction', 'Our team will review and categorize this transaction. We\'ll reach out if we have any questions about it.')
 
   if (showAsBadge) {
     return (

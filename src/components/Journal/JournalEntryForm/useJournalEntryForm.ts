@@ -55,7 +55,7 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
     }
     catch (e) {
       console.error(e)
-      setSubmitError(t('common:error.something_went_wrong_try_again', 'Something went wrong. Please try again.'))
+      setSubmitError(t('common:error.something_went_wrong_please_try_again', 'Something went wrong. Please try again.'))
     }
   }, [onSuccess, upsertJournalEntry, addToast, t])
 

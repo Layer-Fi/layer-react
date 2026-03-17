@@ -101,13 +101,13 @@ export const BankTransactionsCategorizeAllModal = ({
           {selectedCategory && isCategoryAsOption(selectedCategory) && (
             <Span>
               {mode === CategorizationMode.Categorize
-                ? tPlural(t, 'bankTransactions:validation.categorize_count_selected', {
+                ? tPlural(t, 'bankTransactions:label.categorize_count_selected', {
                   count,
                   category: selectedCategory.original.displayName,
                   one: 'This will categorize {{count}} selected transaction as {{category}}.',
                   other: 'This will categorize {{count}} selected transactions as {{category}}.',
                 })
-                : tPlural(t, 'bankTransactions:validation.recategorize_count_selected', {
+                : tPlural(t, 'bankTransactions:label.recategorize_count_selected', {
                   count,
                   category: selectedCategory.original.displayName,
                   one: 'This will recategorize {{count}} selected transaction as {{category}}.',

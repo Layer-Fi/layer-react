@@ -33,7 +33,7 @@
   },
   "validation": {
     "file_exceeds_size_limit": "File exceeds the size limit of 2MB",
-    "file_extension_must": "File extension must end in .csv",
+    "file_extension_must_end_in_csv": "File extension must end in .csv",
     "file_must_be_csv": "File must be in CSV format",
     "file_type_invalid": "Invalid file type: {{type}}",
     "too_many_files_selected": "Too many files selected",

@@ -37,7 +37,7 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isM
       title={t('bankTransactions:prompt.uncategorize_selected_transactions', 'Uncategorize all selected transactions?')}
       content={(
         <Span>
-          {tPlural(t, 'bankTransactions:validation.uncategorize_count_selected', {
+          {tPlural(t, 'bankTransactions:label.uncategorize_count_selected', {
             count,
             one: 'This will uncategorize {{count}} selected transaction.',
             other: 'This will uncategorize {{count}} selected transactions.',

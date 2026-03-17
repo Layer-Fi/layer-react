@@ -63,7 +63,7 @@ export const BankTransactionsMobileListMatchForm = ({
     }
 
     if (!selectedMatch) {
-      setFormError(t('bankTransactions:action.select_option_match_transaction', 'Select an option to match the transaction'))
+      setFormError(t('bankTransactions:error.select_option_match_transaction', 'Select an option to match the transaction'))
     }
 
     if (

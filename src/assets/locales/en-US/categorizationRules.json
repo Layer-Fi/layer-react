@@ -26,7 +26,7 @@
     "money_in": "Money In",
     "money_out": "Money Out",
     "or": "OR",
-    "transaction_longer_automatically_categorized": "Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.",
+    "transaction_no_longer_automatically_categorized": "Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.",
     "update_categorization_rules": "Update categorization rules"
   },
   "prompt": {

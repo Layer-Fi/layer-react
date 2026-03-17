@@ -29,7 +29,7 @@ export const BankTransactionsBulkActions = ({
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
   const [recategorizeModalOpen, setRecategorizeModalOpen] = useState(false)
   const [uncategorizeModalOpen, setUncategorizeModalOpen] = useState(false)
-  const confirmButtonLabel = slotProps?.ConfirmAllModal?.label || t('common:action.confirm_label', 'Confirm all')
+  const confirmButtonLabel = slotProps?.ConfirmAllModal?.label || t('bankTransactions:action.confirm_all', 'Confirm all')
 
   return (
     <>
@@ -41,7 +41,7 @@ export const BankTransactionsBulkActions = ({
                 variant='outlined'
                 onClick={() => setCategorizeModalOpen(true)}
               >
-                {t('common:action.categorize_all', 'Categorize')}
+                {t('common:action.categorize', 'Categorize')}
               </Button>
               <BankTransactionsCategorizeAllModal
                 isOpen={categorizeModalOpen}
@@ -66,7 +66,7 @@ export const BankTransactionsBulkActions = ({
                 variant='outlined'
                 onClick={() => setRecategorizeModalOpen(true)}
               >
-                {isMobileView ? t('common:action.categorize_all', 'Categorize') : t('common:action.recategorize', 'Recategorize')}
+                {isMobileView ? t('common:action.categorize', 'Categorize') : t('common:action.recategorize', 'Recategorize')}
               </Button>
               <BankTransactionsCategorizeAllModal
                 isOpen={recategorizeModalOpen}

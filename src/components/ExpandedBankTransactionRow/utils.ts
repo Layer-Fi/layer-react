@@ -22,7 +22,7 @@ const getValidateSplitErrorMessage = (splitError: ValidateSplitError, t: TFuncti
     case ValidateSplitError.AmountsMustBeGreaterThanZero:
       return t('bankTransactions:validation.splits_amount_greater_than_zero', 'All splits must have an amount greater than $0.00')
     case ValidateSplitError.CategoryIsRequired:
-      return t('bankTransactions:validation.splits_category_must', 'All splits must have a category')
+      return t('bankTransactions:validation.splits_must_have_category', 'All splits must have a category')
   }
 }
 

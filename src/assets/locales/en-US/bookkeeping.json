@@ -28,7 +28,7 @@
     "respond_to_below_tasks": "Please respond to the below tasks to help us complete your {{monthName}} books.",
     "selected_files": "Selected Files:",
     "tasks": "Tasks",
-    "team_review_categorize_transaction": "Our team will review and categorize this transaction. We'll reach out if we have any questions about it.",
+    "team_review_and_categorize_transaction": "Our team will review and categorize this transaction. We'll reach out if we have any questions about it.",
     "uploaded_files": "Uploaded Files:",
     "working_on_books_no_action_needed": "We're working on your {{monthName}} books. No action is needed from you right now.",
     "working_on_books_please_complete_tasks_one": "We're working on your {{monthName}} books. Please complete the {{count}} open task.",

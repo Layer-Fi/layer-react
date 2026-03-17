@@ -125,7 +125,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         <HStack gap='xs' pbs='xs'>
           {!isFormValid && (
             <ErrorText pb='xs'>
-              {t('generalLedger:label.check_fields', 'Please check all fields.')}
+              {t('generalLedger:error.check_fields', 'Please check all fields.')}
             </ErrorText>
           )}
           {submitError && (

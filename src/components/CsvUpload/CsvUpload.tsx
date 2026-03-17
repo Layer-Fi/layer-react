@@ -24,7 +24,7 @@ const validateCsvFile = (file: File, t: TFunction) => {
   )
 
   if (!isValidExtension) {
-    return t('upload:validation.file_extension_must', 'File extension must end in .csv')
+    return t('upload:validation.file_extension_must_end_in_csv', 'File extension must end in .csv')
   }
 
   if (file.type && !VALID_FILE_TYPES.includes(file.type)) {

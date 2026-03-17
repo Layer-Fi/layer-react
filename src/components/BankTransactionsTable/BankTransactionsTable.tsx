@@ -91,7 +91,7 @@ export const BankTransactionsTable = ({
                   isSelected={isAllSelected}
                   isIndeterminate={isPartiallySelected}
                   onChange={onHeaderCheckboxChange}
-                  aria-label={t('bankTransactions:action.select_all_transactions', 'Select all transactions on this page')}
+                  aria-label={t('bankTransactions:label.select_all_transactions', 'Select all transactions on this page')}
                 />
               </span>
             </th>
@@ -122,7 +122,7 @@ export const BankTransactionsTable = ({
             ? (
               <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
                 {stringOverrides?.transactionsTable?.categorizeColumnHeaderText
-                  || t('common:action.categorize_all', 'Categorize')}
+                  || t('common:action.categorize', 'Categorize')}
               </th>
             )
             : (
