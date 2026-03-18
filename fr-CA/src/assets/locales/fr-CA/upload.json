@@ -32,7 +32,7 @@
     "which_account_are_transactions_from": "De quel compte proviennent ces transactions?"
   },
   "validation": {
-    "file_exceeds_size_limit": "Le fichier dépasse la limite de taille de 2 Mo",
+    "file_exceeds_size_limit": "Le fichier dépasse la limite de taille de 2 Mo",
     "file_extension_must_end_in_csv": "L’extension du fichier doit se terminer par .csv",
     "file_must_be_csv": "Le fichier doit être au format CSV",
     "file_type_invalid": "Type de fichier invalide : {{type}}",
