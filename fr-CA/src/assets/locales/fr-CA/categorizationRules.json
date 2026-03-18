@@ -1,0 +1,36 @@
+{
+  "action": {
+    "delete_rule": "Supprimer la règle",
+    "dont_ask_again": "Ne plus demander",
+    "no_decide_each_time": "Non, je vais décider chaque fois",
+    "yes_always_categorize": "Oui, toujours catégoriser"
+  },
+  "empty": {
+    "no_categorization_rules_yet": "Aucune règle de catégorisation n’a encore été créée. Vous recevrez des suggestions de règles à créer au fur et à mesure que vous catégoriserez les transactions dans le flux bancaire.",
+    "no_rules_found": "Aucune règle trouvée"
+  },
+  "error": {
+    "archive_categorization_rule": "Échec de l’archivage de la règle de catégorisation",
+    "couldnt_load_data": "Nous n’avons pas pu charger vos règles de catégorisation",
+    "create_categorization_rule": "Échec de la création de la règle de catégorisation",
+    "load_affected_transactions": "Une erreur s’est produite lors du chargement des transactions concernées",
+    "load_categorization_rules": "Une erreur s’est produite lors du chargement de vos règles de catégorisation. Veuillez vérifier votre connexion et réessayer.",
+    "load_transactions": "Erreur lors du chargement des transactions",
+    "reject_rule_suggestion": "Échec du rejet de la suggestion de règle"
+  },
+  "label": {
+    "any_direction": "Toutes les directions",
+    "categorization_rules": "Règles de catégorisation",
+    "following_count_transactions_one": "La transaction suivante, au nombre de {{count}}, sera touchée :",
+    "following_count_transactions_other": "Les {{count}} transactions suivantes seront touchées :",
+    "money_in": "Entrées d’argent",
+    "money_out": "Sorties d’argent",
+    "or": "OU",
+    "transaction_no_longer_automatically_categorized": "Les transactions ne seront plus automatiquement catégorisées par cette règle. Les transactions précédemment catégorisées pour {{counterparty}} ne seront pas touchées.",
+    "update_categorization_rules": "Mettre à jour les règles de catégorisation"
+  },
+  "prompt": {
+    "always_use_category": "Toujours utiliser cette catégorie?",
+    "delete_categorization_rule": "Supprimer la règle de catégorisation?"
+  }
+}
