@@ -1,0 +1,17 @@
+{
+  "error": {
+    "load_mileage_data": "Une erreur s’est produite lors du chargement de vos données de kilométrage. Veuillez vérifier votre connexion et réessayer.",
+    "load_mileage_summary_data": "Impossible de charger les données du sommaire du kilométrage"
+  },
+  "label": {
+    "deduction_colon": "Déduction :",
+    "mileage_tracking": "Suivi du kilométrage",
+    "miles_colon": "Miles :",
+    "miles_month": "Miles ce mois-ci",
+    "standard_rate_formatted_deduction": "Taux standard : {{formattedDeductionRate}}/mile",
+    "tax_deduction": "Déduction fiscale",
+    "total_deduction": "Déduction totale",
+    "total_miles": "Total des miles",
+    "total_tax_deduction": "Déduction fiscale totale :"
+  }
+}
