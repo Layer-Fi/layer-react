@@ -72,7 +72,7 @@ const dueStatusTitle = (daysDiff: number, paid: boolean | undefined, t: TFunctio
       type: 'soon',
       diff: daysDiff,
       title: t('common:state.due_soon', 'Due soon'),
-      diffText: tPlural(t, 'common:state.due_in_count', {
+      diffText: tPlural(t, 'common:state.due_in_count_days', {
         count: Math.abs(daysDiff),
         one: 'Due in {{count}} day',
         other: 'Due in {{count}} days',
@@ -83,7 +83,7 @@ const dueStatusTitle = (daysDiff: number, paid: boolean | undefined, t: TFunctio
   return {
     type: 'before',
     diff: daysDiff,
-    diffText: tPlural(t, 'common:state.due_in_count', {
+    diffText: tPlural(t, 'common:state.due_in_count_days', {
       count: Math.abs(daysDiff),
       one: 'Due in {{count}} day',
       other: 'Due in {{count}} days',

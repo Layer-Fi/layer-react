@@ -62,7 +62,7 @@ const INVOICE_STATUS_CONFIG = [
   { value: InvoiceStatusFilter.Paid, ...translationKey('invoices:state.paid', 'Paid') },
   { value: InvoiceStatusFilter.Voided, ...translationKey('invoices:state.voided', 'Voided') },
   { value: InvoiceStatusFilter.Refunded, ...translationKey('invoices:state.refunded', 'Refunded') },
-  { value: InvoiceStatusFilter.WrittenOff, ...translationKey('invoices:state.written', 'Written Off') },
+  { value: InvoiceStatusFilter.WrittenOff, ...translationKey('invoices:state.written_off', 'Written Off') },
 ]
 
 export const ALL_OPTION: InvoiceStatusOption = { value: InvoiceStatusFilter.All, label: 'All' }
@@ -281,8 +281,8 @@ export const InvoiceTable = () => {
   const InvoiceTableErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
-      title={t('invoices:error.couldnt_load_invoice', 'We couldn’t load your invoices')}
-      description={t('invoices:error.load_invoice', 'An error occurred while loading your invoices. Please check your connection and try again.')}
+      title={t('invoices:error.couldnt_load_invoices', 'We couldn’t load your invoices')}
+      description={t('invoices:error.load_invoices', 'An error occurred while loading your invoices. Please check your connection and try again.')}
       onRefresh={() => { void refetch() }}
       spacing
     />

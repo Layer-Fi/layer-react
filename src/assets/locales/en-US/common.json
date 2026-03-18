@@ -128,8 +128,8 @@
   "state": {
     "archived": "Archived",
     "confirming": "Confirming...",
-    "due_in_count_one": "Due in {{count}} day",
-    "due_in_count_other": "Due in {{count}} days",
+    "due_in_count_days_one": "Due in {{count}} day",
+    "due_in_count_days_other": "Due in {{count}} days",
     "due_soon": "Due soon",
     "due_today": "Due today",
     "loading": "Loading...",
