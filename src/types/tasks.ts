@@ -7,12 +7,16 @@ type Document = {
   presigned_url: S3PresignedUrl
 }
 
+type TaskTransportType = 'Human_Task' | 'Automated_Task'
+type TaskDomainType = 'HUMAN' | 'AUTOMATED'
+
 type RawTaskBase = {
   id: string
   task_run_id: string | null
   status: TasksStatus
   title: string
-  type: string
+  type: TaskTransportType
+  task_type: TaskDomainType
   period_id: string | null
   archived_at: string | null
   created_at: string
@@ -22,6 +26,7 @@ type RawTaskBase = {
 
 export type RawHumanTask = RawTaskBase & {
   type: 'Human_Task'
+  task_type: 'HUMAN'
   question: string
   transaction_id: string | null
   user_marked_completed_at: string | null
@@ -44,12 +49,27 @@ type AutomatedTaskCounterparty = {
   counterparty_type: string | null
 }
 
-type AutomatedTaskSuggestedRule = {
+type AutomatedTaskSuggestionRule = {
   apply_retroactively: boolean
   created_by_suggestion_id: string | null
   counterparty_filter: string | null
   category: unknown
-  bank_direction_filter: string | null
+  bank_direction_filter: 'MONEY_OUT' | 'MONEY_IN' | null
+}
+
+type AutomatedTaskSuggestionAccountGroup = {
+  value: string
+  display_name: string
+}
+
+type AutomatedTaskSuggestionCategory = {
+  id: string
+  name: string
+  account_number: string | null
+  stable_name: string | null
+  normality: 'DEBIT' | 'CREDIT'
+  account_type: AutomatedTaskSuggestionAccountGroup
+  account_subtype: AutomatedTaskSuggestionAccountGroup
 }
 
 type AutomatedTaskSuggestionStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED'
@@ -66,7 +86,13 @@ export type AutomatedTaskAffectedTransaction = {
 type AutomatedTaskSuggestion = {
   type: 'Create_One_Of_Suggested_Categorization_Rules_For_Counterparty'
   id: string
-  suggested_rules: ReadonlyArray<AutomatedTaskSuggestedRule>
+  suggestion_1: AutomatedTaskSuggestionRule
+  suggestion_1_category: AutomatedTaskSuggestionCategory
+  suggestion_2: AutomatedTaskSuggestionRule | null
+  suggestion_2_category: AutomatedTaskSuggestionCategory | null
+  suggestion_3: AutomatedTaskSuggestionRule | null
+  suggestion_3_category: AutomatedTaskSuggestionCategory | null
+  suggestion_personal: AutomatedTaskSuggestionRule
   counterparty: AutomatedTaskCounterparty
   transactions_that_will_be_affected: ReadonlyArray<AutomatedTaskAffectedTransaction>
   accepted_at: string | null
@@ -77,7 +103,7 @@ type AutomatedTaskSuggestion = {
 export type RawAutomatedTask = RawTaskBase & {
   type: 'Automated_Task'
   task_type: 'AUTOMATED'
-  source_suggestion_id: string | null
+  source_suggestion_id: string
   suggestion: AutomatedTaskSuggestion
 }
 

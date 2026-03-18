@@ -12,10 +12,18 @@ import { Button, ButtonVariant } from '@components/Button/Button'
 
 import './bulkCategorizationTaskListItem.scss'
 
+type CategoryValue = string
+type PersonalCategoryValue = 'personal'
+type PrimarySelectionValue = CategoryValue | PersonalCategoryValue
 type CategorizationScope = 'business' | 'personal'
-type CategoryValue = 'electronics' | 'equipment' | 'office-expenses'
-type ActionValue = 'mix' | 'other' | 'ask-later'
-type MixedCategoryValue = CategoryValue | 'other'
+type ActionValue = 'mix' | 'other'
+type MixedCategoryValue = string
+const PERSONAL_CATEGORY_VALUE: PersonalCategoryValue = 'personal'
+
+export type BulkCategorizationCategoryOption = {
+  label: string
+  value: string
+}
 
 export type BulkCategorizationTransaction = {
   id: string
@@ -37,6 +45,7 @@ type BulkCategorizationTaskListItemProps = {
   defaultOpen: boolean
   description: string
   transactions?: ReadonlyArray<BulkCategorizationTransaction>
+  categoryOptions?: ReadonlyArray<BulkCategorizationCategoryOption>
   onExpandTask?: (isOpen: boolean) => void
   onSave?: (selection: BulkCategorizationSelection) => void
 }
@@ -56,6 +65,7 @@ export const BulkCategorizationTaskListItem = forwardRef<HTMLDivElement, BulkCat
     defaultOpen,
     description,
     transactions = [],
+    categoryOptions = [],
     onExpandTask,
     onSave,
   },
@@ -63,8 +73,9 @@ export const BulkCategorizationTaskListItem = forwardRef<HTMLDivElement, BulkCat
 ) => {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(defaultOpen)
-  const [scope, setScope] = useState<CategorizationScope>('business')
-  const [selectedCategory, setSelectedCategory] = useState<CategoryValue | null>('electronics')
+  const [selectedPrimaryOption, setSelectedPrimaryOption] = useState<PrimarySelectionValue | null>(
+    categoryOptions[0]?.value ?? PERSONAL_CATEGORY_VALUE,
+  )
   const [selectedAction, setSelectedAction] = useState<ActionValue | null>(null)
   const [mixedCategories, setMixedCategories] = useState<Record<string, MixedCategoryValue>>(
     getInitialTransactionCategories(transactions),
@@ -119,50 +130,84 @@ export const BulkCategorizationTaskListItem = forwardRef<HTMLDivElement, BulkCat
     ? t('saveAll', 'Save all')
     : t('save', 'Save')
 
-  const scopeOptions = useMemo(
-    () => [
-      { label: t('business', 'Business'), value: 'business' as const },
-      { label: t('personal', 'Personal'), value: 'personal' as const },
-    ],
-    [t],
-  )
-
-  const categoryOptions = useMemo(
+  const fallbackCategoryOptions = useMemo(
     () => [
       { label: t('electronics', 'Electronics'), value: 'electronics' as const },
       { label: t('equipment', 'Equipment'), value: 'equipment' as const },
       { label: t('officeExpenses', 'Office Expenses'), value: 'office-expenses' as const },
     ],
     [t],
+  )
+
+  const resolvedCategoryOptions = useMemo(
+    () => categoryOptions.length > 0
+      ? categoryOptions
+      : fallbackCategoryOptions,
+    [categoryOptions, fallbackCategoryOptions],
+  )
+
+  const personalCategoryOption = useMemo(
+    () => ({
+      label: t('personal', 'Personal'),
+      value: PERSONAL_CATEGORY_VALUE,
+    }),
+    [t],
+  )
+
+  const primaryOptions = useMemo(
+    () => [
+      ...resolvedCategoryOptions,
+      personalCategoryOption,
+    ],
+    [personalCategoryOption, resolvedCategoryOptions],
   )
 
   const actionOptions = useMemo(
     () => [
       { label: t('aMixOfTheAbove', 'A mix of the above'), value: 'mix' as const },
       { label: t('other', 'Other'), value: 'other' as const },
-      { label: t('askMeLater', 'Ask me later'), value: 'ask-later' as const },
     ],
     [t],
   )
 
   const mixedCategoryOptions = useMemo(
     () => [
-      { label: t('electronics', 'Electronics'), value: 'electronics' as const },
-      { label: t('equipment', 'Equipment'), value: 'equipment' as const },
-      { label: t('officeExpenses', 'Office Expenses'), value: 'office-expenses' as const },
+      ...resolvedCategoryOptions,
+      personalCategoryOption,
       { label: t('other', 'Other'), value: 'other' as const },
     ],
-    [t],
+    [personalCategoryOption, resolvedCategoryOptions, t],
   )
 
-  const handleSelectCategory = (value: CategoryValue) => {
-    setSelectedCategory(value)
+  useEffect(() => {
+    if (selectedAction !== null) {
+      return
+    }
+
+    setSelectedPrimaryOption((previousCategory) => {
+      if (previousCategory === PERSONAL_CATEGORY_VALUE) {
+        return previousCategory
+      }
+
+      if (
+        previousCategory !== null
+        && resolvedCategoryOptions.some(option => option.value === previousCategory)
+      ) {
+        return previousCategory
+      }
+
+      return resolvedCategoryOptions[0]?.value ?? PERSONAL_CATEGORY_VALUE
+    })
+  }, [resolvedCategoryOptions, selectedAction])
+
+  const handleSelectPrimaryOption = (value: PrimarySelectionValue) => {
+    setSelectedPrimaryOption(value)
     setSelectedAction(null)
   }
 
   const handleSelectAction = (value: ActionValue) => {
     setSelectedAction(value)
-    setSelectedCategory(null)
+    setSelectedPrimaryOption(null)
   }
 
   const handleSelectMixedCategory = (transactionId: string, value: MixedCategoryValue) => {
@@ -173,9 +218,12 @@ export const BulkCategorizationTaskListItem = forwardRef<HTMLDivElement, BulkCat
   }
 
   const handleSave = () => {
+    const isPersonalSelection = selectedPrimaryOption === PERSONAL_CATEGORY_VALUE
+    const scope: CategorizationScope = isPersonalSelection ? 'personal' : 'business'
+
     onSave?.({
       scope,
-      category: selectedCategory,
+      category: selectedPrimaryOption !== null && !isPersonalSelection ? selectedPrimaryOption : null,
       action: selectedAction,
       mixedCategories,
     })
@@ -208,32 +256,16 @@ export const BulkCategorizationTaskListItem = forwardRef<HTMLDivElement, BulkCat
               {description}
             </Span>
 
-            <HStack className='Layer__bulk-categorization-task-list-item__scope-toggle'>
-              {scopeOptions.map(option => (
-                <Button
-                  key={option.value}
-                  variant={scope === option.value ? ButtonVariant.primary : ButtonVariant.secondary}
-                  className={classNames(
-                    'Layer__bulk-categorization-task-list-item__scope-toggle-button',
-                    scope === option.value && 'Layer__bulk-categorization-task-list-item__button--selected',
-                  )}
-                  onClick={() => setScope(option.value)}
-                >
-                  {option.label}
-                </Button>
-              ))}
-            </HStack>
-
             <HStack className='Layer__bulk-categorization-task-list-item__pill-row'>
-              {categoryOptions.map(option => (
+              {primaryOptions.map(option => (
                 <Button
                   key={option.value}
-                  variant={selectedCategory === option.value ? ButtonVariant.primary : ButtonVariant.secondary}
+                  variant={selectedPrimaryOption === option.value ? ButtonVariant.primary : ButtonVariant.secondary}
                   className={classNames(
                     'Layer__bulk-categorization-task-list-item__pill-button',
-                    selectedCategory === option.value && 'Layer__bulk-categorization-task-list-item__button--selected',
+                    selectedPrimaryOption === option.value && 'Layer__bulk-categorization-task-list-item__button--selected',
                   )}
-                  onClick={() => handleSelectCategory(option.value)}
+                  onClick={() => handleSelectPrimaryOption(option.value)}
                 >
                   {option.label}
                 </Button>

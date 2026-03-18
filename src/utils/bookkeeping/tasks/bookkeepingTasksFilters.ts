@@ -33,12 +33,12 @@ export function getUserVisibleTasks<T extends Pick<RawTask, 'status'>>(
   return tasks.filter(task => isUserVisibleTask(task))
 }
 
-export function isAutomatedTask(task: Pick<RawTask, 'type'>): task is RawAutomatedTask {
-  return task.type === 'Automated_Task'
+export function isAutomatedTask(task: Pick<RawTask, 'task_type'>): task is RawAutomatedTask {
+  return task.task_type === 'AUTOMATED'
 }
 
-export function isHumanTask(task: Pick<RawTask, 'type'>): task is RawHumanTask {
-  return task.type === 'Human_Task'
+export function isHumanTask(task: Pick<RawTask, 'task_type'>): task is RawHumanTask {
+  return task.task_type === 'HUMAN'
 }
 
 type CompletedTaskStatus = Exclude<TasksStatus, 'TODO'>

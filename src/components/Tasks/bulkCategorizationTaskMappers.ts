@@ -1,5 +1,8 @@
 import type { RawAutomatedTask } from '@internal-types/tasks'
-import type { BulkCategorizationTransaction } from '@components/Tasks/BulkCategorizationTaskListItem'
+import type {
+  BulkCategorizationCategoryOption,
+  BulkCategorizationTransaction,
+} from '@components/Tasks/BulkCategorizationTaskListItem'
 
 function formatAutomatedTaskTransactionDate(value: string): string {
   const date = new Date(value)
@@ -28,6 +31,29 @@ export function mapAutomatedTaskToBulkCategorizationTransactions(task: RawAutoma
     date: formatAutomatedTaskTransactionDate(transaction.date),
     amount: formatAutomatedTaskTransactionAmount(transaction.amount),
   }))
+}
+
+export function mapAutomatedTaskToBulkCategorizationCategoryOptions(task: RawAutomatedTask): ReadonlyArray<BulkCategorizationCategoryOption> {
+  const suggestedCategories = [
+    task.suggestion.suggestion_1_category,
+    task.suggestion.suggestion_2_category,
+    task.suggestion.suggestion_3_category,
+  ]
+
+  const optionsById = new Map<string, BulkCategorizationCategoryOption>()
+
+  suggestedCategories.forEach((category) => {
+    if (!category) {
+      return
+    }
+
+    optionsById.set(category.id, {
+      value: category.id,
+      label: category.name,
+    })
+  })
+
+  return Array.from(optionsById.values())
 }
 
 export function getBulkCategorizationTaskDescription(task: RawAutomatedTask): string {

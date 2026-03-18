@@ -7,7 +7,11 @@ import { TextButton } from '@components/Button/TextButton'
 import { MobilePanel } from '@components/MobilePanel/MobilePanel'
 import { Pagination } from '@components/Pagination/Pagination'
 import { BulkCategorizationTaskListItem } from '@components/Tasks/BulkCategorizationTaskListItem'
-import { getBulkCategorizationTaskDescription, mapAutomatedTaskToBulkCategorizationTransactions } from '@components/Tasks/bulkCategorizationTaskMappers'
+import {
+  getBulkCategorizationTaskDescription,
+  mapAutomatedTaskToBulkCategorizationCategoryOptions,
+  mapAutomatedTaskToBulkCategorizationTransactions,
+} from '@components/Tasks/bulkCategorizationTaskMappers'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
 
 const MOBILE_SHOW_UNRESOLVED_TASKS_COUNT = 2
@@ -45,6 +49,7 @@ export const TasksListMobile = ({
               defaultOpen={index === indexFirstIncomplete}
               description={getBulkCategorizationTaskDescription(task)}
               transactions={mapAutomatedTaskToBulkCategorizationTransactions(task)}
+              categoryOptions={mapAutomatedTaskToBulkCategorizationCategoryOptions(task)}
             />
           )
           : isHumanTask(task)
@@ -90,6 +95,7 @@ export const TasksListMobile = ({
                       defaultOpen={index === indexFirstIncomplete}
                       description={getBulkCategorizationTaskDescription(task)}
                       transactions={mapAutomatedTaskToBulkCategorizationTransactions(task)}
+                      categoryOptions={mapAutomatedTaskToBulkCategorizationCategoryOptions(task)}
                     />
                   )
                   : isHumanTask(task)

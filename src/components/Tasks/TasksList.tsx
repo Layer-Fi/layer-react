@@ -8,7 +8,11 @@ import SmileIcon from '@icons/SmileIcon'
 import { VStack } from '@ui/Stack/Stack'
 import { Pagination } from '@components/Pagination/Pagination'
 import { BulkCategorizationTaskListItem } from '@components/Tasks/BulkCategorizationTaskListItem'
-import { getBulkCategorizationTaskDescription, mapAutomatedTaskToBulkCategorizationTransactions } from '@components/Tasks/bulkCategorizationTaskMappers'
+import {
+  getBulkCategorizationTaskDescription,
+  mapAutomatedTaskToBulkCategorizationCategoryOptions,
+  mapAutomatedTaskToBulkCategorizationTransactions,
+} from '@components/Tasks/bulkCategorizationTaskMappers'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
 import { TasksListMobile } from '@components/Tasks/TasksListMobile'
 import { Text, TextSize } from '@components/Typography/Text'
@@ -124,6 +128,7 @@ export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
                     defaultOpen={index === indexFirstIncomplete}
                     description={getBulkCategorizationTaskDescription(task)}
                     transactions={mapAutomatedTaskToBulkCategorizationTransactions(task)}
+                    categoryOptions={mapAutomatedTaskToBulkCategorizationCategoryOptions(task)}
                     onExpandTask={onExpandTask(task.id)}
                   />
                 )}
