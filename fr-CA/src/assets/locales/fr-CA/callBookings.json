@@ -1,0 +1,24 @@
+{
+  "action": {
+    "add_calendar": "Ajouter au calendrier",
+    "book_call": "Prendre un appel",
+    "download_ics_file": "Télécharger le fichier .ics",
+    "join_call": "Joindre l'appel"
+  },
+  "label": {
+    "ad_hoc_call": "Appel ponctuel",
+    "book_call_with_bookkeeper": "Prendre un appel avec votre teneur de livres",
+    "date_colon": "Date :",
+    "google_calendar": "Google Calendar",
+    "location_colon": "Lieu :",
+    "meet_bookkeeping_team": "Rencontrez notre équipe de tenue de livres",
+    "onboarding_call": "Appel d’intégration",
+    "outlook_calendar": "Outlook Calendar",
+    "purpose_colon": "Objet :",
+    "upcoming_call": "Appel à venir",
+    "yahoo_calendar": "Yahoo Calendar"
+  },
+  "prompt": {
+    "have_questions": "Avez-vous des questions?"
+  }
+}
