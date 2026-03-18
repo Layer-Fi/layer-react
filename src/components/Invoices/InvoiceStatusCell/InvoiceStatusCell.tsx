@@ -17,10 +17,10 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t
 
   switch (invoice.status) {
     case InvoiceStatus.WrittenOff: {
-      return { text: t('invoices:state.written', 'Written Off') }
+      return { text: t('invoices:state.written_off', 'Written Off') }
     }
     case InvoiceStatus.PartiallyWrittenOff: {
-      return { text: t('invoices:label.partially_written', 'Partially Written Off') }
+      return { text: t('invoices:state.partially_written_off', 'Partially Written Off') }
     }
     case InvoiceStatus.Refunded: {
       return { text: t('invoices:state.refunded', 'Refunded') }
@@ -55,7 +55,7 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t
         const daysAgo = Math.abs(dueDifference)
         return {
           text: t('invoices:state.overdue', 'Overdue'),
-          subText: tPlural(t, 'invoices:state.due_count_days', {
+          subText: tPlural(t, 'invoices:state.due_count_days_ago', {
             count: daysAgo,
             one: 'Due {{count}} day ago',
             other: 'Due {{count}} days ago',
@@ -67,7 +67,7 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t
       const daysUntilDue = Math.abs(dueDifference)
       return {
         text: t('invoices:state.sent', 'Sent'),
-        subText: tPlural(t, 'invoices:state.due_in_count', {
+        subText: tPlural(t, 'invoices:state.due_in_count_days', {
           count: daysUntilDue,
           one: 'Due in {{count}} day',
           other: 'Due in {{count}} days',
