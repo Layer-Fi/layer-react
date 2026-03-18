@@ -8,7 +8,7 @@
     "record_payment": "Enregistrer le paiement",
     "refund_invoice": "Rembourser la facture",
     "reset_invoice": "Réinitialiser la facture",
-    "reset_to_sent": "Réinitialiser à envoyée",
+    "reset_to_sent": "Rétablir à envoyé",
     "view_invoice": "Voir la facture",
     "void_invoice_label": "Annuler la facture",
     "write_off": "Passer en perte",
@@ -31,7 +31,7 @@
   "label": {
     "add_custom_payment_instructions": "Ajouter des instructions de paiement personnalisées",
     "additional_invoice_actions": "Actions supplémentaires sur la facture",
-    "amount_outstanding": "{{amount}} impayé",
+    "amount_outstanding": "{{amount}} en souffrance",
     "amount_paid": "Montant payé",
     "balance_due": "Solde dû",
     "billing_address": "Adresse de facturation",
@@ -53,11 +53,11 @@
     "net_30": "Net à 30 jours",
     "net_60": "Net à 60 jours",
     "net_90": "Net à 90 jours",
-    "number_abbreviation": "Nº",
-    "open_balance": "Solde ouvert",
+    "number_abbreviation": "No",
+    "open_balance": "Solde impayé",
     "overdue_invoices_count": "Factures en retard : {{overdueCount}}",
-    "owed_last_12_months": "<owed>Qui vous est dû</owed> <period>12 derniers mois</period>",
-    "paid_last_30_days": "<paid>Payé</paid> <period>30 derniers jours</period>",
+    "owed_last_12_months": "<owed>Vous est dû</owed> <period>des 12 derniers mois</period>",
+    "paid_last_30_days": "<paid>Payé</paid> <period>des 30 derniers jours</period>",
     "payment_date": "Date du paiement",
     "payment_details": "Détails du paiement",
     "payment_method": "Mode de paiement",
@@ -70,9 +70,9 @@
     "refund_date": "Date du remboursement",
     "refund_invoice": "Émettre un remboursement",
     "refunded_amount": "Montant remboursé",
-    "reset_invoice_remove_void_status_warning": "La réinitialisation de cette facture supprimera son statut actuel d’annulée et la remettra à l’état envoyée.",
-    "reset_invoice_to_sent": "Réinitialiser la facture à envoyée",
-    "reset_invoice_warning": "La réinitialisation de cette facture supprimera tous les paiements, remboursements et passages en perte qui y sont associés et la remettra à l’état envoyée.",
+    "reset_invoice_remove_void_status_warning": "Le rétablissement de cette facture supprimera son statut actuel d’annulée et la remettra à l’état envoyé.",
+    "reset_invoice_to_sent": "Rétablir la facture à envoyé",
+    "reset_invoice_warning": "Le rétablissement de cette facture supprimera tous les paiements, remboursements et radiations qui y sont associés et la remettra à l’état envoyé.",
     "search_invoices": "Rechercher des factures",
     "sent_date": "Date d’envoi",
     "status_filter": "Filtre de statut",
@@ -91,7 +91,7 @@
     "write_off_invoice_warning": "Le passage en perte de cette facture l’enregistrera comme une créance irrécouvrable, et vous ne pourrez plus y appliquer de paiements. Cette action est irréversible."
   },
   "prompt": {
-    "discard_changes_invoice": "Abandonner les modifications apportées à cette facture?"
+    "discard_changes_invoice": "Ignorer les modifications apportées à cette facture?"
   },
   "state": {
     "due_count_days_ago_one": "Échue depuis {{count}} jour",
@@ -121,11 +121,11 @@
     "payment_amount_max_outstanding": "Le montant du paiement ne peut pas être supérieur au solde impayé de la facture.",
     "payment_amount_must": "Le montant du paiement doit être supérieur à zéro.",
     "payment_date_not_before_invoice": "La date du paiement ne peut pas être antérieure à la date de la facture ({{invoiceDate}}).",
-    "payment_date_not_future": "La date du paiement ne peut pas être dans le futur.",
+    "payment_date_not_future": "La date de paiement ne peut pas être dans le futur.",
     "payment_date_required": "Le champ Date du paiement est obligatoire.",
     "payment_method_required": "Le champ Mode de paiement est obligatoire.",
     "refund_date_before_last_payment": "La date du remboursement ne peut pas être antérieure au dernier paiement de la facture ({{lastPaymentDate}}).",
-    "refund_date_future": "La date du remboursement ne peut pas être dans le futur.",
+    "refund_date_future": "La date de remboursement ne peut pas être dans le futur.",
     "refund_date_required": "Le champ Date du remboursement est obligatoire."
   }
 }
