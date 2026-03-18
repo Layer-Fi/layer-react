@@ -3,7 +3,7 @@
     "select_a_month": "Sélectionner un mois"
   },
   "label": {
-    "all_time": "Toutes les périodes",
+    "all_time": "Depuis le début",
     "completed_at": "Terminé le",
     "creation_date": "Date de création",
     "custom": "Personnalisé",
@@ -17,7 +17,7 @@
     "previous_year": "Année précédente",
     "start_date": "Date de début",
     "this_month": "Ce mois-ci",
-    "this_quarter": "Ce trimestre-ci",
+    "this_quarter": "Ce trimestre",
     "this_year": "Cette année",
     "year": "Année"
   },
