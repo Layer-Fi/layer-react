@@ -23,6 +23,10 @@ export const flattenCategories = (categories: NestedCategorization[]): Array<Cat
     }
 
     if (subCategories.every(subCategory => !subCategory.subCategories || subCategory.subCategories.length === 0)) {
+      if (subCategories.length === 1) {
+        return [new CategoryAsOption(subCategories[0])]
+      }
+
       return [{
         label: category.displayName,
         id: 'id' in category ? category.id : category.stableName,
@@ -37,14 +41,18 @@ export const flattenCategories = (categories: NestedCategorization[]): Array<Cat
 export const buildFilteredCategoryOptions = (
   categoryOptions: CategoryOption[],
   query: string,
+  selectedId?: string,
 ): ActionableListOption<CategoryOption>[] => {
   let options = categoryOptions
+  const selectedCategoryInGroup = !query && selectedId
+    ? findSelectedCategoryInGroup(categoryOptions, selectedId)
+    : null
 
   if (query) {
     const lower = query.toLowerCase()
 
     options = options.flatMap((opt) => {
-      if ('categories' in opt) {
+      if (isGroup(opt)) {
         return opt.categories.filter(cat =>
           cat.label.toLowerCase().includes(lower),
         )
@@ -54,9 +62,46 @@ export const buildFilteredCategoryOptions = (
     })
   }
 
-  return [...options]
-    .sort((a, b) => a.label.localeCompare(b.label))
-    .map(opt => 'categories' in opt
-      ? { label: opt.label, id: opt.id, value: opt, asLink: true }
-      : { label: opt.label, id: opt.value, description: opt.original.description ?? undefined, value: opt })
+  return [
+    ...(selectedCategoryInGroup ? [toActionableListOption(selectedCategoryInGroup)] : []),
+    ...[...options]
+      .sort((a, b) => {
+        if (selectedId) {
+          const aSelected = isSelectedCategory(a, selectedId)
+          const bSelected = isSelectedCategory(b, selectedId)
+          if (aSelected !== bSelected) return aSelected ? -1 : 1
+        }
+        return a.label.localeCompare(b.label)
+      })
+      .map(toActionableListOption),
+  ]
+}
+
+const findSelectedCategoryInGroup = (options: CategoryOption[], selectedId: string): CategoryAsOption | null => {
+  for (const option of options) {
+    if (!isGroup(option)) {
+      continue
+    }
+
+    const selectedCategory = option.categories.find(category => category.value === selectedId)
+    if (selectedCategory) {
+      return selectedCategory
+    }
+  }
+
+  return null
+}
+
+const isSelectedCategory = (opt: CategoryOption, selectedId: string): boolean => {
+  if (isGroup(opt)) {
+    return false
+  }
+
+  return opt.value === selectedId
+}
+
+const toActionableListOption = (opt: CategoryOption): ActionableListOption<CategoryOption> => {
+  return isGroup(opt)
+    ? { label: opt.label, id: opt.id, value: opt, asLink: true }
+    : { label: opt.label, id: opt.value, description: opt.original.description ?? undefined, value: opt }
 }
