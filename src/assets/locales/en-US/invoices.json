@@ -20,8 +20,8 @@
     "invoices_filtered": "We couldn’t find any invoices with the current filters. Try changing or clearing them to see more results."
   },
   "error": {
-    "couldnt_load_invoice": "We couldn’t load your invoices",
-    "load_invoice": "An error occurred while loading your invoices. Please check your connection and try again.",
+    "couldnt_load_invoices": "We couldn’t load your invoices",
+    "load_invoices": "An error occurred while loading your invoices. Please check your connection and try again.",
     "load_payment_methods": "We couldn't load payment methods",
     "refund_invoice": "There was an error issuing a refund for this invoice. Please check your connection and try again in a few seconds.",
     "reset_invoice": "There was an error resetting this invoice. Please check your connection and try again in a few seconds.",
@@ -58,7 +58,6 @@
     "overdue_invoices_count": "Overdue invoices: {{overdueCount}}",
     "owed_last_12_months": "<owed>Owed to you</owed> <period>last 12 months</period>",
     "paid_last_30_days": "<paid>Paid</paid> <period>last 30 days</period>",
-    "partially_written": "Partially Written Off",
     "payment_date": "Payment date",
     "payment_details": "Payment details",
     "payment_method": "Payment method",
@@ -95,19 +94,20 @@
     "discard_changes_invoice": "Discard changes to this invoice?"
   },
   "state": {
-    "due_count_days_one": "Due {{count}} day ago",
-    "due_count_days_other": "Due {{count}} days ago",
-    "due_in_count_one": "Due in {{count}} day",
-    "due_in_count_other": "Due in {{count}} days",
+    "due_count_days_ago_one": "Due {{count}} day ago",
+    "due_count_days_ago_other": "Due {{count}} days ago",
+    "due_in_count_days_one": "Due in {{count}} day",
+    "due_in_count_days_other": "Due in {{count}} days",
     "due_today": "Due Today",
     "overdue": "Overdue",
     "paid": "Paid",
     "partially_paid": "Partially Paid",
+    "partially_written_off": "Partially Written Off",
     "refunded": "Refunded",
     "sent": "Sent",
     "unpaid": "Unpaid",
     "voided": "Voided",
-    "written": "Written Off"
+    "written_off": "Written Off"
   },
   "validation": {
     "customer_required": "Customer is a required field.",
