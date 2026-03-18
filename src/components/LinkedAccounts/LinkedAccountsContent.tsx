@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next'
 
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import PlusIcon from '@icons/PlusIcon'
+import { HStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { LinkedAccountsConfirmationModal } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
 import { LinkedAccountItemThumb } from '@components/LinkedAccounts/LinkedAccountItemThumb'
-import { Text, type TextSize } from '@components/Typography/Text'
 
 interface LinkedAccountsDataProps {
   asWidget?: boolean
@@ -51,12 +52,12 @@ export const LinkedAccountsContent = ({
           onClick={() => { void addConnection('PLAID') }}
           className={linkedAccountsNewAccountClassName}
         >
-          <div className='Layer__linked-accounts__new-account-label'>
-            <PlusIcon size={15} />
-            <Text as='span' size={'sm' as TextSize}>
+          <HStack align='center' gap='2xs'>
+            <PlusIcon size={14} />
+            <Span variant='placeholder'>
               {t('linkedAccounts:action.add_account', 'Add Account')}
-            </Text>
-          </div>
+            </Span>
+          </HStack>
         </div>
       </div>
       <LinkedAccountsConfirmationModal />
