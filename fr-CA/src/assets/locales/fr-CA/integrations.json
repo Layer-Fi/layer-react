@@ -27,7 +27,7 @@
   "state": {
     "connected_quickbooks": "Connecté à QuickBooks",
     "last_sync": "Dernière synchronisation le",
-    "last_sync_failed_at": "Échec de la dernière synchronisation à",
+    "last_sync_failed_at": "La dernière synchronisation a échoué à",
     "synced": "Synchronisé",
     "syncing_account_data": "Synchronisation des données du compte"
   }
