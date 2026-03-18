@@ -1,0 +1,81 @@
+{
+  "action": {
+    "add_account": "Ajouter un compte",
+    "add_opening_balance": "Ajouter le solde d'ouverture",
+    "confirm_account": "Confirmer le compte",
+    "confirm_accounts_one": "Confirmer le compte",
+    "confirm_accounts_other": "Confirmer tous les comptes",
+    "confirm_accounts_selected_one": "Confirmer {{count}} compte sélectionné",
+    "confirm_accounts_selected_other": "Confirmer {{count}} comptes sélectionnés",
+    "connect_my_bank": "Connecter ma banque",
+    "delete_account": "Supprimer le compte",
+    "delete_account_label": "Supprimer le compte",
+    "exclude_all_accounts_one": "Exclure le compte",
+    "exclude_all_accounts_other": "Exclure tous les comptes",
+    "fix_account": "Corriger le compte",
+    "im_done_linking": "J’ai terminé de lier mes banques",
+    "link_another_bank": "Lier une autre banque",
+    "mark_duplicate_account": "Marquer comme compte en double",
+    "mark_not_duplicate_account": "Marquer comme n’étant pas un compte en double",
+    "repair_connection": "Réparer la connexion",
+    "unlink_account": "Dissocier le compte",
+    "unlink_account_label": "Dissocier le compte",
+    "unlink_accounts_under_connection": "Dissocier tous les comptes sous cette connexion",
+    "unlink_accounts_under_institution_name": "Dissocier tous les comptes sous cette connexion {{institutionName}}"
+  },
+  "empty": {
+    "no_accounts_connected": "Aucun compte connecté"
+  },
+  "error": {
+    "confirm_accounts_try_again_later": "Une erreur s’est produite lors de la confirmation des comptes. Vous aurez l’occasion de réessayer plus tard.",
+    "delete_account_check_connection": "La suppression a échoué. Veuillez vérifier votre connexion et réessayer dans quelques secondes.",
+    "load_accounts": "Échec du chargement des comptes",
+    "save_data_try_again_later": "Une erreur s’est produite lors de l’enregistrement des données. Vous aurez l’occasion de réessayer plus tard.",
+    "unlink_failed": "La dissociation a échoué. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
+  },
+  "label": {
+    "account_and_unmatched_transactions_deleted": "Ce compte et toutes les transactions non appariées seront supprimés.",
+    "account_linked_successfully": "Compte lié avec succès",
+    "account_stops_syncing_new_data": "Ce compte cessera de synchroniser les nouvelles données, et toutes les transactions non appariées seront supprimées.",
+    "accounts_successfully_linked": "Comptes liés avec succès",
+    "bank_balance": "Solde bancaire",
+    "confirm_account_inclusion": "Confirmer l’inclusion du compte",
+    "confirm_business_accounts": "Confirmer les comptes d’entreprise",
+    "confirm_remove_accounts_for_institution": "Veuillez confirmer que vous souhaitez supprimer tous les comptes appartenant à cette institution",
+    "confirm_remove_accounts_for_institution_name": "Veuillez confirmer que vous souhaitez supprimer tous les comptes appartenant à {{institutionName}}",
+    "connect_accounts": "Connecter des comptes",
+    "connect_bank_accounts_and_credit_cards": "Connectez vos comptes bancaires et vos cartes de crédit pour importer automatiquement vos transactions d’entreprise.",
+    "data_is_syncing": "Les données sont en cours de synchronisation",
+    "deselect_unused_accounts": "Veuillez désélectionner tous les comptes que vous n’utilisez pas pour votre entreprise.",
+    "found_accounts_count_one": "Nous avons trouvé {{count}} compte",
+    "found_accounts_count_other": "Nous avons trouvé {{count}} comptes",
+    "import_data_simple_integration": "Importez des données avec une intégration simple.",
+    "ledger_balance": "Solde du grand livre",
+    "link_bank_accounts_and_credit_cards": "Liez vos comptes bancaires et vos cartes de crédit",
+    "link_more_accounts_any_time": "Vous pouvez lier d’autres comptes en tout temps à partir de la section Transactions bancaires",
+    "linked_accounts": "Comptes liés",
+    "loading_accounts": "Chargement de vos comptes...",
+    "may_take_few_minutes": "Cela peut prendre quelques minutes",
+    "may_take_up_to_5_minutes": "Cela peut prendre jusqu’à 5 minutes",
+    "may_take_up_to_hours_one": "Cela peut prendre jusqu’à {{count}} heure.",
+    "may_take_up_to_hours_other": "Cela peut prendre jusqu’à {{count}} heures.",
+    "may_take_up_to_minutes_one": "Cela peut prendre jusqu’à {{count}} minute.",
+    "may_take_up_to_minutes_other": "Cela peut prendre jusqu’à {{count}} minutes.",
+    "no_accounts_to_confirm": "Il n’y a aucun compte à confirmer. Vous pouvez fermer cette fenêtre modale.",
+    "no_data_sync_until_confirm": "Aucune donnée ne sera synchronisée tant que vous n’aurez pas confirmé.",
+    "opening_balance": "Solde d'ouverture",
+    "opening_date": "Date d'ouverture",
+    "populate_accounting_dashboard_three_steps": "Remplissez votre tableau de bord comptable en 3 étapes",
+    "remove_unused_accounts_next_step": "Vous aurez la possibilité de supprimer tous les comptes que vous n’utilisez pas pour votre entreprise à l’étape suivante.",
+    "select_accounts_use_one": "Ce compte est-il pertinent pour votre entreprise?",
+    "select_accounts_use_other": "Sélectionnez les comptes que vous utilisez pour votre entreprise."
+  },
+  "prompt": {
+    "use_other_bank_accounts_or_cards": "Utilisez-vous d’autres comptes bancaires ou cartes de crédit pour votre entreprise?",
+    "which_accounts_for_business": "Quels comptes utilisez-vous pour vos entreprises?"
+  },
+  "state": {
+    "syncing_account_data": "Synchronisation des données du compte",
+    "syncing_historical_account_data": "Synchronisation des données historiques du compte"
+  }
+}
