@@ -6,11 +6,11 @@ import { tPlural } from '@utils/i18n/plural'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import ChevronRight from '@icons/ChevronRight'
 import LinkIcon from '@icons/Link'
+import { Button } from '@ui/Button/Button'
 import { ElevatedLoadingSpinner, ElevatedLoadingSpinnerContainer } from '@ui/Loading/ElevatedLoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { ActionableRow } from '@components/ActionableRow/ActionableRow'
-import { Button } from '@components/Button/Button'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { LinkAccountsListContainer } from '@components/LinkAccounts/LinkAccountsListContainer'
 import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '@components/LinkedAccounts/BasicLinkedAccount/BasicLinkedAccount'
@@ -48,12 +48,10 @@ export function LinkAccountsLinkStep() {
               </Text>
               <Button
                 onClick={() => { void addConnection('PLAID') }}
-                rightIcon={<LinkIcon size={12} />}
-                disabled={loadingStatus !== 'complete' || isLinking}
-                fullWidth={false}
-                style={{ maxWidth: 'fit-content' }}
+                isDisabled={loadingStatus !== 'complete' || isLinking}
               >
                 {t('linkedAccounts:action.connect_my_bank', 'Connect my bank')}
+                <LinkIcon size={12} />
               </Button>
             </VStack>
           </ElevatedLoadingSpinnerContainer>
@@ -83,12 +81,11 @@ export function LinkAccountsLinkStep() {
                   button={(
                     <Button
                       onClick={() => { void addConnection('PLAID') }}
-                      rightIcon={<LinkIcon size={12} />}
-                      disabled={loadingStatus !== 'complete' || isLinking}
-                      fullWidth={false}
-                      style={{ width: 'auto', minWidth: 'fit-content' }}
+                      isDisabled={loadingStatus !== 'complete' || isLinking}
+                      variant='outlined'
                     >
                       {t('linkedAccounts:action.link_another_bank', 'Link another bank')}
+                      <LinkIcon size={12} />
                     </Button>
                   )}
                 />
@@ -124,8 +121,9 @@ export function LinkAccountsLinkStep() {
           <>
             <Separator mbs='lg' mbe='lg' />
             <HStack justify='start' gap='sm'>
-              <Button onClick={() => { void next() }} rightIcon={<ChevronRight />}>
+              <Button onClick={() => { void next() }}>
                 {t('linkedAccounts:action.im_done_linking', 'I’m done linking my banks')}
+                <ChevronRight />
               </Button>
             </HStack>
           </>
