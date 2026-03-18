@@ -12,7 +12,7 @@
   "label": {
     "active_tags": "Étiquettes actives",
     "add_tag_to_transaction": "Ajouter une étiquette à cette transaction...",
-    "tag_label_archived": "{{label}} (Archivée)",
+    "tag_label_archived": "{{label}} (Archivé)",
     "tags": "Étiquettes"
   }
 }
