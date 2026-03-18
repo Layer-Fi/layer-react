@@ -3,7 +3,7 @@
     "add_calendar": "Ajouter au calendrier",
     "book_call": "Prendre un appel",
     "download_ics_file": "Télécharger le fichier .ics",
-    "join_call": "Joindre l'appel"
+    "join_call": "Joindre l’appel"
   },
   "label": {
     "ad_hoc_call": "Appel ponctuel",
@@ -11,7 +11,7 @@
     "date_colon": "Date :",
     "google_calendar": "Google Calendar",
     "location_colon": "Lieu :",
-    "meet_bookkeeping_team": "Rencontrez notre équipe de tenue de livres",
+    "meet_bookkeeping_team": "Rencontrer notre équipe de tenue de livres",
     "onboarding_call": "Appel d’intégration",
     "outlook_calendar": "Outlook Calendar",
     "purpose_colon": "Objet :",
