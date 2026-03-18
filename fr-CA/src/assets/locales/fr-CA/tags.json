@@ -1,0 +1,18 @@
+{
+  "action": {
+    "select_dimension_name": "Sélectionner {{dimensionName}}",
+    "select_tags": "Sélectionner des étiquettes"
+  },
+  "empty": {
+    "matching_tags": "Aucune étiquette correspondante trouvée"
+  },
+  "error": {
+    "load_tag_options": "Une erreur s’est produite lors du chargement des options d’étiquette."
+  },
+  "label": {
+    "active_tags": "Étiquettes actives",
+    "add_tag_to_transaction": "Ajouter une étiquette à cette transaction...",
+    "tag_label_archived": "{{label}} (Archivée)",
+    "tags": "Étiquettes"
+  }
+}
