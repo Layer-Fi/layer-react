@@ -34,9 +34,38 @@ export const flattenCategories = (categories: NestedCategorization[]): Array<Cat
   })
 }
 
+const promoteSelectedCategoryOption = (
+  categoryOptions: CategoryOption[],
+  selectedId?: string,
+): CategoryOption[] => {
+  if (!selectedId) {
+    return categoryOptions
+  }
+
+  const selectedRootCategory = categoryOptions.find(
+    (option): option is CategoryAsOption => !isGroup(option) && option.value === selectedId,
+  )
+
+  if (selectedRootCategory) {
+    return [selectedRootCategory, ...categoryOptions.filter(option => option !== selectedRootCategory)]
+  }
+
+  const selectedNestedCategory = categoryOptions
+    .filter(isGroup)
+    .flatMap(group => group.categories)
+    .find(category => category.value === selectedId)
+
+  if (!selectedNestedCategory) {
+    return categoryOptions
+  }
+
+  return [selectedNestedCategory, ...categoryOptions]
+}
+
 export const buildFilteredCategoryOptions = (
   categoryOptions: CategoryOption[],
   query: string,
+  selectedId?: string,
 ): ActionableListOption<CategoryOption>[] => {
   let options = categoryOptions
 
@@ -54,8 +83,10 @@ export const buildFilteredCategoryOptions = (
     })
   }
 
-  return [...options]
-    .sort((a, b) => a.label.localeCompare(b.label))
+  return promoteSelectedCategoryOption(
+    [...options].sort((a, b) => a.label.localeCompare(b.label)),
+    selectedId,
+  )
     .map(opt => 'categories' in opt
       ? { label: opt.label, id: opt.id, value: opt, asLink: true }
       : { label: opt.label, id: opt.value, description: opt.original.description ?? undefined, value: opt })
