@@ -1,0 +1,50 @@
+{
+  "action": {
+    "add_vehicle": "Ajouter un véhicule",
+    "add_vehicle_label": "Ajouter un véhicule",
+    "archive_vehicle_label": "Archiver le véhicule",
+    "delete_vehicle_label": "Supprimer le véhicule",
+    "edit_vehicle": "Modifier le véhicule",
+    "manage_vehicles": "Gérer les véhicules",
+    "reactivate_vehicle_label": "Réactiver le véhicule",
+    "save_vehicle": "Enregistrer le véhicule",
+    "set_primary_vehicle": "Définir comme véhicule principal"
+  },
+  "empty": {
+    "add_first_vehicle": "Ajoutez votre premier véhicule pour commencer à faire le suivi de vos déplacements.",
+    "matching_vehicle": "Aucun véhicule correspondant",
+    "vehicles": "Aucun véhicule pour le moment"
+  },
+  "error": {
+    "archive_vehicle": "Impossible d’archiver le véhicule. Veuillez vérifier votre connexion et réessayer.",
+    "delete_vehicle": "Impossible de supprimer le véhicule. Veuillez vérifier votre connexion et réessayer.",
+    "load_vehicle": "Nous n’avons pas pu charger vos véhicules",
+    "load_vehicle_retry": "Une erreur s’est produite lors du chargement de vos véhicules. Veuillez vérifier votre connexion et réessayer.",
+    "load_vehicles": "Une erreur s’est produite lors du chargement des véhicules.",
+    "reactivate_vehicle": "Impossible de réactiver le véhicule. Veuillez vérifier votre connexion et réessayer."
+  },
+  "label": {
+    "all_vehicles": "Tous les véhicules",
+    "delete_vehicle_name_warning": "{{vehicleName}} sera supprimé définitivement. Cette action ne peut pas être annulée.",
+    "enter_license_plate": "Saisir la plaque d’immatriculation",
+    "enter_vehicle_make_model": "Saisir la marque et le modèle du véhicule",
+    "enter_vehicle_year": "Saisir l’année du véhicule",
+    "enter_vin": "Saisir le NIV",
+    "license_plate": "Plaque d’immatriculation",
+    "make_model": "Marque et modèle",
+    "vehicle": "Véhicule",
+    "vehicle_name_hidden_from_active_list": "{{vehicleName}} sera masqué de votre liste de véhicules actifs. Vous pourrez le réactiver en tout temps.",
+    "vehicle_name_restored_to_active_list": "{{vehicleName}} sera restauré dans votre liste de véhicules actifs et pourra être utilisé pour faire le suivi de vos déplacements.",
+    "vin": "NIV"
+  },
+  "prompt": {
+    "archive_vehicle": "Archiver ce véhicule?",
+    "delete_vehicle": "Supprimer ce véhicule?",
+    "reactivate_vehicle": "Réactiver ce véhicule?"
+  },
+  "validation": {
+    "make_model_required": "La marque et le modèle sont obligatoires.",
+    "year_range": "L’année doit être comprise entre 1900 et {{maxYear}}.",
+    "year_required": "L’année est obligatoire."
+  }
+}
