@@ -23,10 +23,6 @@ export const flattenCategories = (categories: NestedCategorization[]): Array<Cat
     }
 
     if (subCategories.every(subCategory => !subCategory.subCategories || subCategory.subCategories.length === 0)) {
-      if (subCategories.length === 1) {
-        return [new CategoryAsOption(subCategories[0])]
-      }
-
       return [{
         label: category.displayName,
         id: 'id' in category ? category.id : category.stableName,
@@ -36,6 +32,34 @@ export const flattenCategories = (categories: NestedCategorization[]): Array<Cat
 
     return flattenCategories(subCategories)
   })
+}
+
+const promoteSelectedCategoryOption = (
+  categoryOptions: CategoryOption[],
+  selectedId?: string,
+): CategoryOption[] => {
+  if (!selectedId) {
+    return categoryOptions
+  }
+
+  const selectedRootCategory = categoryOptions.find(
+    (option): option is CategoryAsOption => !isGroup(option) && option.value === selectedId,
+  )
+
+  if (selectedRootCategory) {
+    return [selectedRootCategory, ...categoryOptions.filter(option => option !== selectedRootCategory)]
+  }
+
+  const selectedNestedCategory = categoryOptions
+    .filter(isGroup)
+    .flatMap(group => group.categories)
+    .find(category => category.value === selectedId)
+
+  if (!selectedNestedCategory) {
+    return categoryOptions
+  }
+
+  return [selectedNestedCategory, ...categoryOptions]
 }
 
 export const buildFilteredCategoryOptions = (
@@ -59,23 +83,11 @@ export const buildFilteredCategoryOptions = (
     })
   }
 
-  return [...options]
-    .sort((a, b) => {
-      if (selectedId) {
-        const aSelected = isSelectedOption(a, selectedId)
-        const bSelected = isSelectedOption(b, selectedId)
-        if (aSelected !== bSelected) return aSelected ? -1 : 1
-      }
-      return a.label.localeCompare(b.label)
-    })
+  return promoteSelectedCategoryOption(
+    [...options].sort((a, b) => a.label.localeCompare(b.label)),
+    selectedId,
+  )
     .map(opt => 'categories' in opt
       ? { label: opt.label, id: opt.id, value: opt, asLink: true }
       : { label: opt.label, id: opt.value, description: opt.original.description ?? undefined, value: opt })
-}
-
-const isSelectedOption = (opt: CategoryOption, selectedId: string): boolean => {
-  if ('categories' in opt) {
-    return opt.categories.some(category => category.value === selectedId)
-  }
-  return opt.value === selectedId
 }
