@@ -2,7 +2,7 @@
   "action": {
     "delete_rule": "Supprimer la règle",
     "dont_ask_again": "Ne plus demander",
-    "no_decide_each_time": "Non, je vais décider chaque fois",
+    "no_decide_each_time": "Non, je déciderai chaque fois",
     "yes_always_categorize": "Oui, toujours catégoriser"
   },
   "empty": {
@@ -19,14 +19,14 @@
     "reject_rule_suggestion": "Échec du rejet de la suggestion de règle"
   },
   "label": {
-    "any_direction": "Toutes les directions",
+    "any_direction": "Toute direction",
     "categorization_rules": "Règles de catégorisation",
-    "following_count_transactions_one": "La transaction suivante, au nombre de {{count}}, sera touchée :",
+    "following_count_transactions_one": "La transaction suivante sera touchée\u0000a0:",
     "following_count_transactions_other": "Les {{count}} transactions suivantes seront touchées :",
     "money_in": "Entrées d’argent",
     "money_out": "Sorties d’argent",
     "or": "OU",
-    "transaction_no_longer_automatically_categorized": "Les transactions ne seront plus automatiquement catégorisées par cette règle. Les transactions précédemment catégorisées pour {{counterparty}} ne seront pas touchées.",
+    "transaction_no_longer_automatically_categorized": "Les transactions ne seront plus catégorisées automatiquement par cette règle. Les transactions précédemment catégorisées dans {{counterparty}} ne seront pas touchées.",
     "update_categorization_rules": "Mettre à jour les règles de catégorisation"
   },
   "prompt": {
