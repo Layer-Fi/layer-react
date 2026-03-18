@@ -6,12 +6,12 @@
   "label": {
     "deduction_colon": "Déduction :",
     "mileage_tracking": "Suivi du kilométrage",
-    "miles_colon": "Miles :",
-    "miles_month": "Miles ce mois-ci",
-    "standard_rate_formatted_deduction": "Taux standard : {{formattedDeductionRate}}/mile",
+    "miles_colon": "Kilométrage :",
+    "miles_month": "Kilométrage ce mois-ci",
+    "standard_rate_formatted_deduction": "Taux standard : {{formattedDeductionRate}}/mille",
     "tax_deduction": "Déduction fiscale",
     "total_deduction": "Déduction totale",
-    "total_miles": "Total des miles",
+    "total_miles": "Kilométrage total",
     "total_tax_deduction": "Déduction fiscale totale :"
   }
 }
