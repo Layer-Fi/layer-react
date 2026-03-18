@@ -20,8 +20,8 @@
     "repair_connection": "Réparer la connexion",
     "unlink_account": "Dissocier le compte",
     "unlink_account_label": "Dissocier le compte",
-    "unlink_accounts_under_connection": "Dissocier tous les comptes sous cette connexion",
-    "unlink_accounts_under_institution_name": "Dissocier tous les comptes sous cette connexion {{institutionName}}"
+    "unlink_accounts_under_connection": "Dissocier tous les comptes de cette connexion",
+    "unlink_accounts_under_institution_name": "Dissocier tous les comptes de cette connexion à {{institutionName}}"
   },
   "empty": {
     "no_accounts_connected": "Aucun compte connecté"
@@ -71,8 +71,8 @@
     "select_accounts_use_other": "Sélectionnez les comptes que vous utilisez pour votre entreprise."
   },
   "prompt": {
-    "use_other_bank_accounts_or_cards": "Utilisez-vous d’autres comptes bancaires ou cartes de crédit pour votre entreprise?",
-    "which_accounts_for_business": "Quels comptes utilisez-vous pour vos entreprises?"
+    "use_other_bank_accounts_or_cards": "Utilisez-vous d'autres comptes bancaires ou cartes de crédit pour votre entreprise?",
+    "which_accounts_for_business": "Quels comptes utilisez-vous pour votre entreprise?"
   },
   "state": {
     "syncing_account_data": "Synchronisation des données du compte",
