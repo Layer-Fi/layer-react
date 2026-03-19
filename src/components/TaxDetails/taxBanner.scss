@@ -1,0 +1,63 @@
+.Layer__TaxBanner {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-base-800);
+  background-color: var(--color-base-900);
+  color: var(--color-base-0);
+  container-type: inline-size;
+
+  .Layer__UI__Button {
+    flex-shrink: 0;
+
+    --button-bg-default: var(--color-base-0);
+    --button-bg-active: var(--color-base-100);
+    --button-bg-disabled: var(--color-base-300);
+    --button-fg-default: var(--color-base-900);
+    --button-fg-disabled: var(--color-base-500);
+    --outline-default: var(--color-base-600);
+  }
+
+  &__Body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__Icon {
+    flex-shrink: 0;
+    height: 2rem;
+    width: 2rem;
+    border-radius: var(--border-radius-xs);
+    background-color: var(--color-base-0);
+    color: var(--color-base-900);
+  }
+
+  &__Content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__Title {
+    color: inherit;
+  }
+}
+
+@container (max-width: 560px) {
+  .Layer__TaxBanner.Layer__Stack {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .Layer__TaxBanner__Body.Layer__Stack {
+    align-items: flex-start;
+    inline-size: 100%;
+  }
+
+  .Layer__TaxBanner__Icon {
+    display: none;
+  }
+
+  .Layer__TaxBanner .Layer__UI__Button {
+    inline-size: 100%;
+  }
+}

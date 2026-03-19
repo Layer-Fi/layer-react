@@ -1,5 +1,4 @@
-import { useCallback, useState } from 'react'
-import type { ReactNode } from 'react'
+import { type ReactNode, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { tConditional } from '@utils/i18n/conditional'
@@ -81,127 +80,129 @@ export const TaxDetails = () => {
   ), [isDesktop])
 
   return (
-    <ResponsiveDetailView
-      name='TaxDetails'
-      slots={{ Header }}
-      mobileProps={{ className: 'Layer__TaxDetails--mobile' }}
-    >
-      <ConditionalBlock
-        isLoading={isSummaryLoading}
-        isError={isError}
-        data={summaryData}
-        Loading={<Loader />}
-        Inactive={null}
-        Error={(
-          <DataState
-            status={DataStateStatus.failed}
-            title={t('taxEstimates:error.load_tax_estimates_tax', 'We couldn\'t load your tax summary')}
-            description={t('taxEstimates:error.while_loading_tax_summary', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
-            spacing
-          />
-        )}
+    <VStack gap='md'>
+      <ResponsiveDetailView
+        name='TaxDetails'
+        slots={{ Header }}
+        mobileProps={{ className: 'Layer__TaxDetails--mobile' }}
       >
-        {({ data: summary }) => <TaxSummaryCard data={summary} />}
-      </ConditionalBlock>
-      <ConditionalBlock
-        isLoading={isLoading}
-        isError={isError}
-        data={data}
-        Loading={<Loader />}
-        Inactive={null}
-        Error={(
-          <DataState
-            status={DataStateStatus.failed}
-            title={t('taxEstimates:error.load_tax_estimates', 'We couldn\'t load your tax estimates')}
-            description={t('taxEstimates:error.load_tax_estimates', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
-            spacing
-          />
-        )}
-      >
-        {({ data: details }) => {
-          const usFederal = details.taxes.usFederal
-          const usState = details.taxes.usState
+        <ConditionalBlock
+          isLoading={isSummaryLoading}
+          isError={isError}
+          data={summaryData}
+          Loading={<Loader />}
+          Inactive={null}
+          Error={(
+            <DataState
+              status={DataStateStatus.failed}
+              title={t('taxEstimates:error.load_tax_estimates_tax', 'We couldn\'t load your tax summary')}
+              description={t('taxEstimates:error.while_loading_tax_summary', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
+              spacing
+            />
+          )}
+        >
+          {({ data: summary }) => <TaxSummaryCard data={summary} />}
+        </ConditionalBlock>
+        <ConditionalBlock
+          isLoading={isLoading}
+          isError={isError}
+          data={data}
+          Loading={<Loader />}
+          Inactive={null}
+          Error={(
+            <DataState
+              status={DataStateStatus.failed}
+              title={t('taxEstimates:error.load_tax_estimates', 'We couldn\'t load your tax estimates')}
+              description={t('taxEstimates:error.load_tax_estimates', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
+              spacing
+            />
+          )}
+        >
+          {({ data: details }) => {
+            const usFederal = details.taxes.usFederal
+            const usState = details.taxes.usState
 
-          return (
-            <ExpandableCardsWrapper>
-              <ExpandableCard
-                isExpanded={expanded.taxableIncome}
-                onToggleExpanded={() => toggleExpanded('taxableIncome')}
-                slots={{
-                  Heading: (
-                    <TaxDetailsExpandableCardHeading
-                      title={tConditional(t, 'taxEstimates:label.taxable_business_income', {
-                        condition: projectedCondition,
-                        cases: {
-                          default: 'Taxable Business Income',
-                          projected: 'Projected Taxable Business Income',
-                        },
-                        contexts: {
-                          projected: 'projected',
-                        },
-                      })}
-                      amount={details.adjustedGrossIncome.totalAdjustedGrossIncome}
-                    />
-                  ),
-                }}
-              >
-                <AdjustedGrossIncomeTable data={details.adjustedGrossIncome} />
-              </ExpandableCard>
-              {usFederal && (
+            return (
+              <ExpandableCardsWrapper>
                 <ExpandableCard
-                  isExpanded={expanded.federalTaxes}
-                  onToggleExpanded={() => toggleExpanded('federalTaxes')}
+                  isExpanded={expanded.taxableIncome}
+                  onToggleExpanded={() => toggleExpanded('taxableIncome')}
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
-                        title={tConditional(t, 'taxEstimates:label.federal_taxes', {
+                        title={tConditional(t, 'taxEstimates:label.taxable_business_income', {
                           condition: projectedCondition,
                           cases: {
-                            default: 'Federal Taxes',
-                            projected: 'Projected Federal Taxes',
+                            default: 'Taxable Business Income',
+                            projected: 'Projected Taxable Business Income',
                           },
                           contexts: {
                             projected: 'projected',
                           },
                         })}
-                        amount={usFederal.totalFederalTax.totalFederalTaxOwed}
+                        amount={details.adjustedGrossIncome.totalAdjustedGrossIncome}
                       />
                     ),
                   }}
                 >
-                  <FederalTaxTable data={usFederal} adjustedGrossIncome={details.adjustedGrossIncome.totalAdjustedGrossIncome} />
+                  <AdjustedGrossIncomeTable data={details.adjustedGrossIncome} />
                 </ExpandableCard>
-              )}
-              {usState && (
-                <ExpandableCard
-                  isExpanded={expanded.stateTaxes}
-                  onToggleExpanded={() => toggleExpanded('stateTaxes')}
-                  slots={{
-                    Heading: (
-                      <TaxDetailsExpandableCardHeading
-                        title={tConditional(t, 'taxEstimates:label.taxes_by_state_name', {
-                          condition: projectedCondition,
-                          cases: {
-                            default: 'State Taxes ({{stateName}})',
-                            projected: 'Projected State Taxes ({{stateName}})',
-                          },
-                          contexts: {
-                            projected: 'projected',
-                          },
-                          stateName: usState.stateName,
-                        })}
-                        amount={usState.totalStateTax.totalStateTaxOwed}
-                      />
-                    ),
-                  }}
-                >
-                  <StateTaxTable data={usState} />
-                </ExpandableCard>
-              )}
-            </ExpandableCardsWrapper>
-          )
-        }}
-      </ConditionalBlock>
-    </ResponsiveDetailView>
+                {usFederal && (
+                  <ExpandableCard
+                    isExpanded={expanded.federalTaxes}
+                    onToggleExpanded={() => toggleExpanded('federalTaxes')}
+                    slots={{
+                      Heading: (
+                        <TaxDetailsExpandableCardHeading
+                          title={tConditional(t, 'taxEstimates:label.federal_taxes', {
+                            condition: projectedCondition,
+                            cases: {
+                              default: 'Federal Taxes',
+                              projected: 'Projected Federal Taxes',
+                            },
+                            contexts: {
+                              projected: 'projected',
+                            },
+                          })}
+                          amount={usFederal.totalFederalTax.totalFederalTaxOwed}
+                        />
+                      ),
+                    }}
+                  >
+                    <FederalTaxTable data={usFederal} adjustedGrossIncome={details.adjustedGrossIncome.totalAdjustedGrossIncome} />
+                  </ExpandableCard>
+                )}
+                {usState && (
+                  <ExpandableCard
+                    isExpanded={expanded.stateTaxes}
+                    onToggleExpanded={() => toggleExpanded('stateTaxes')}
+                    slots={{
+                      Heading: (
+                        <TaxDetailsExpandableCardHeading
+                          title={tConditional(t, 'taxEstimates:label.taxes_by_state_name', {
+                            condition: projectedCondition,
+                            cases: {
+                              default: 'State Taxes ({{stateName}})',
+                              projected: 'Projected State Taxes ({{stateName}})',
+                            },
+                            contexts: {
+                              projected: 'projected',
+                            },
+                            stateName: usState.stateName,
+                          })}
+                          amount={usState.totalStateTax.totalStateTaxOwed}
+                        />
+                      ),
+                    }}
+                  >
+                    <StateTaxTable data={usState} />
+                  </ExpandableCard>
+                )}
+              </ExpandableCardsWrapper>
+            )
+          }}
+        </ConditionalBlock>
+      </ResponsiveDetailView>
+    </VStack>
   )
 }
