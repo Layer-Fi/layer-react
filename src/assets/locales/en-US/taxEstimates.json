@@ -1,6 +1,8 @@
 {
   "action": {
+    "hide_details": "Hide details",
     "save_profile": "Save Profile",
+    "show_details": "Show details",
     "update_tax_profile": "Update tax profile"
   },
   "empty": {
