@@ -21,7 +21,7 @@
   "label": {
     "any_direction": "Toute direction",
     "categorization_rules": "Règles de catégorisation",
-    "following_count_transactions_one": "La transaction suivante sera touchée\u0000a0:",
+    "following_count_transactions_one": "La {{count}} transaection suivante sera touchée :",
     "following_count_transactions_other": "Les {{count}} transactions suivantes seront touchées :",
     "money_in": "Entrées d’argent",
     "money_out": "Sorties d’argent",
