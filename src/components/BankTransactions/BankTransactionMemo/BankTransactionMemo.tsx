@@ -16,7 +16,13 @@ export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTrans
   const { form, isUpdatingMemo, isErrorUpdatingMemo, isSaved } = useBankTransactionMemo({ bankTransactionId })
 
   return (
-    <form onBlur={() => void form.handleSubmit()}>
+    <form
+      onBlur={() => void form.handleSubmit()}
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        void form.handleSubmit()
+      }}
+    >
       <form.Field name='memo'>
         {field => (
           <VStack gap='3xs' className='Layer__BankTransactionMemo'>
