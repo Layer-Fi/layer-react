@@ -91,7 +91,7 @@
     "write_off_invoice_warning": "Le passage en perte de cette facture l’enregistrera comme une créance irrécouvrable, et vous ne pourrez plus y appliquer de paiements. Cette action est irréversible."
   },
   "prompt": {
-    "discard_changes_invoice": "Ignorer les modifications apportées à cette facture?"
+    "discard_changes_invoice": "Annuler les modifications apportées à cette facture?"
   },
   "state": {
     "due_count_days_ago_one": "Échue depuis {{count}} jour",
