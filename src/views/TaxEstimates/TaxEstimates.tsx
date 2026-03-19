@@ -18,29 +18,36 @@ import {
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
-import { HStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
+import { TaxBanner, type TaxBannerReviewPayload, TaxBannerReviewTypes } from '@components/TaxDetails/TaxBanner'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { View } from '@components/View/View'
 import { YearPicker } from '@components/YearPicker/YearPicker'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
+import './taxEstimates.scss'
+
 const TAX_ESTIMATES_MIN_YEAR = 2024
 
-export const TaxEstimatesView = () => {
+export type TaxEstimatesViewProps = {
+  onTaxBannerReviewClick?: (payload: TaxBannerReviewPayload) => void
+}
+
+export const TaxEstimatesView = ({ onTaxBannerReviewClick }: TaxEstimatesViewProps) => {
   return (
     <TaxEstimatesRouteStoreProvider>
-      <TaxEstimatesViewContent />
+      <TaxEstimatesViewContent onTaxBannerReviewClick={onTaxBannerReviewClick} />
     </TaxEstimatesRouteStoreProvider>
   )
 }
 
-const TaxEstimatesViewContent = () => {
+const TaxEstimatesViewContent = ({ onTaxBannerReviewClick }: TaxEstimatesViewProps) => {
   const { t } = useTranslation()
   const onboardingStatus = useTaxEstimatesOnboardingStatus()
   const header = useMemo(
@@ -70,13 +77,13 @@ const TaxEstimatesViewContent = () => {
         )
 
       case OnboardingStatus.Onboarded:
-        return <TaxEstimatesOnboardedViewContent />
+        return <TaxEstimatesOnboardedViewContent onTaxBannerReviewClick={onTaxBannerReviewClick} />
 
       case OnboardingStatus.NotOnboarded:
       default:
         return <TaxProfile />
     }
-  }, [onboardingStatus, t])
+  }, [onTaxBannerReviewClick, onboardingStatus, t])
 
   return (
     <View title='Taxes' header={header}>
@@ -136,10 +143,13 @@ const TAX_ESTIMATES_TAB_CONFIG = [
   { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates:label.payments', 'Payments') },
 ]
 
-const TaxEstimatesOnboardedViewContent = () => {
+const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimatesViewProps) => {
   const { t } = useTranslation()
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
+  const handleTaxBannerReview = useCallback((payload: TaxBannerReviewPayload) => {
+    onTaxBannerReviewClick?.(payload)
+  }, [onTaxBannerReviewClick])
 
   const tabOptions = useMemo(
     () => TAX_ESTIMATES_TAB_CONFIG.map(opt => ({
@@ -153,20 +163,39 @@ const TaxEstimatesOnboardedViewContent = () => {
     navigate(key as TaxEstimatesRoute)
   }, [navigate])
 
+  const taxBanner = (
+    <VStack className='Layer__TaxEstimates__TaxBannerWrapper'>
+      <TaxBanner
+        title={t('taxEstimates:banner.categorization_incomplete.title', 'Your tax estimates are incomplete')}
+        description={t('taxEstimates:banner.categorization_incomplete.description', 'You have 16 uncategorized transactions with $2,100.00 in potential deductions to review.')}
+        action={{
+          label: t('taxEstimates:action.review_banner', 'Review'),
+          onPress: handleTaxBannerReview,
+          payload: {
+            type: TaxBannerReviewTypes.UncategorizedTransactions,
+            count: 16,
+            amount: 2100,
+          },
+        }}
+      />
+    </VStack>
+  )
+
   if (route === TaxEstimatesRoute.Profile) {
     return <TaxProfile />
   }
 
   return (
-    <>
+    <VStack gap='md'>
       <Toggle
         ariaLabel={t('taxEstimates:label.tax_estimate_view', 'Tax estimate view')}
         options={tabOptions}
         selectedKey={route}
         onSelectionChange={handleTabChange}
       />
+      {taxBanner}
       {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
       {route === TaxEstimatesRoute.Payments && <TaxPayments />}
-    </>
+    </VStack>
   )
 }
