@@ -20,7 +20,7 @@
     "month_name_books_complete": "Vos livres de {{monthName}} sont terminés et prêts à être consultés!",
     "not_enrolled_in_bookkeeping": "Non inscrit au service de tenue de livres",
     "optional_description": "Description facultative",
-    "order_our_bookkeeping_service": "Commandez notre service de tenue de livres soutenu par de vraies personnes.",
+    "order_our_bookkeeping_service": "Commandez notre service de tenue de livres offert avec l’appui d’une vraie équipe.",
     "pending_tasks": "Il n’y a aucune tâche en attente!",
     "please_contact_support": "Si vous pensez qu’il s’agit d’une erreur, veuillez communiquer avec l’assistance.",
     "reconnect_count_accounts_one": "Reconnecter {{count}} compte",
@@ -28,11 +28,11 @@
     "respond_to_below_tasks": "Veuillez répondre aux tâches ci-dessous pour nous aider à terminer vos livres de {{monthName}}.",
     "selected_files": "Fichiers sélectionnés :",
     "tasks": "Tâches",
-    "team_review_and_categorize_transaction": "Notre équipe examinera et classera cette transaction. Nous communiquerons avec vous si nous avons des questions à son sujet.",
+    "team_review_and_categorize_transaction": "Notre équipe examinera et catégorisera cette transaction. Nous vous contacterons si nous avons des questions à son sujet.",
     "uploaded_files": "Fichiers téléversés :",
     "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action n’est requise de votre part pour le moment.",
-    "working_on_books_please_complete_tasks_one": "Nous travaillons sur vos livres de {{monthName}}. Veuillez effectuer la tâche ouverte {{count}}.",
-    "working_on_books_please_complete_tasks_other": "Nous travaillons sur vos livres de {{monthName}}. Veuillez terminer les {{count}} tâches ouvertes."
+    "working_on_books_please_complete_tasks_one": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer la tâche en attente.",
+    "working_on_books_please_complete_tasks_other": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer les {{count}} tâches en attente."
   },
   "prompt": {
     "need_help_books": "Besoin d’aide avec vos livres?"
