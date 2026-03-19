@@ -1,0 +1,43 @@
+{
+  "action": {
+    "click_copy_required": "Cliquez pour copier les en-têtes de colonnes requis",
+    "create_account": "Créer un compte",
+    "create_input_value": "Créer \"{{inputValue}}\"",
+    "download_template": "Télécharger le modèle",
+    "import_file_transaction_bank": "Importer un fichier de transactions à partir de votre compte bancaire ou de votre carte de crédit",
+    "reupload": "Téléverser de nouveau",
+    "select_account": "Sélectionner un compte...",
+    "select_account_label": "Sélectionner un compte",
+    "upload_another_file": "Téléverser un autre fichier",
+    "upload_transactions": "Téléverser les transactions"
+  },
+  "error": {
+    "cannot_upload_file": "Impossible de téléverser le fichier",
+    "could_not_parse_csv": "Nous n’avons pas pu analyser ce fichier CSV. Veuillez vérifier le fichier et réessayer.",
+    "could_not_parse_transactions": "Certaines transactions n’ont pas pu être analysées",
+    "unknown_upload_error": "Erreur de téléversement inconnue"
+  },
+  "label": {
+    "count_transactions_have_one": "{{count}} transaction a été téléversée dans votre compte.",
+    "count_transactions_have_other": "{{count}} transactions ont été téléversées dans votre compte.",
+    "csv_validation_preview": "Aperçu de la validation du fichier CSV",
+    "drag_drop_file_browse": "Glissez-déposez un fichier ou <browse>parcourez</browse>.",
+    "im_done_uploading": "J’ai terminé de téléverser les transactions",
+    "review_transactions": "Vérifier les transactions",
+    "total_transactions_count": "Total des transactions : {{totalTransactionsCount}}",
+    "transactions_parsed_successfully_click_upload": "Toutes les transactions ont été analysées avec succès. Cliquez sur « Téléverser les transactions » pour finaliser l’importation.",
+    "transactions_uploaded_successfully": "Transactions téléversées avec succès"
+  },
+  "prompt": {
+    "which_account_are_transactions_from": "De quel compte proviennent ces transactions?"
+  },
+  "validation": {
+    "file_exceeds_size_limit": "Le fichier dépasse la taille maximale de 2 Mo",
+    "file_extension_must_end_in_csv": "L’extension du fichier doit se terminer par .csv",
+    "file_must_be_csv": "Le fichier doit être au format CSV",
+    "file_type_invalid": "Type de fichier invalide : {{type}}",
+    "too_many_files_selected": "Trop de fichiers sélectionnés",
+    "transactions_formatting_errors": "Nous avons trouvé des erreurs de formatage dans certaines transactions. Veuillez corriger les lignes en surbrillance dans votre fichier et le téléverser de nouveau.",
+    "transactions_invalid_count": "Transactions invalides : {{invalidTransactionsCount}}"
+  }
+}

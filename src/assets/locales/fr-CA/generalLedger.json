@@ -1,0 +1,76 @@
+{
+  "action": {
+    "add_credits": "Ajouter des crédits",
+    "add_debits": "Ajouter des débits",
+    "add_entry": "Ajouter une écriture",
+    "add_new_entry": "Ajouter une nouvelle écriture",
+    "add_next_line": "Ajouter la ligne suivante",
+    "reverse_entry": "Contrepasser l’écriture",
+    "save_account": "Enregistrer le compte",
+    "select_account_type": "Sélectionner le type de compte..."
+  },
+  "empty": {
+    "credit_line_items": "Aucune ligne de crédit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
+    "debit_line_items": "Aucune ligne de débit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
+    "entries": "Aucune écriture trouvée",
+    "entry_journal_message": "Il n’y a aucune écriture comptable dans ce compte.",
+    "ledger_activity": "Aucune activité au grand livre"
+  },
+  "error": {
+    "check_fields": "Veuillez vérifier tous les champs.",
+    "operation_retry": "L’opération a échoué. Réessayez.",
+    "submit_failed_check_connection": "L’envoi a échoué. Veuillez vérifier votre connexion et réessayer."
+  },
+  "label": {
+    "account_name": "Nom du compte",
+    "account_name_title_case": "Nom du compte",
+    "account_number": "Numéro de compte",
+    "account_type": "Type de compte",
+    "balance": "Solde actuel",
+    "bill_number": "Numéro de facture fournisseur",
+    "creation_date": "Date de création",
+    "enter_account_name": "Saisissez le nom du compte...",
+    "enter_institution_name": "Saisissez le nom de l’institution...",
+    "entries": "Écritures",
+    "entry_date": "Date d’écriture",
+    "entry_journal": "Il n’y a aucune écriture dans le journal.",
+    "entry_reversed": "Cette écriture a déjà été contrepassée",
+    "entry_type": "Type d’écriture",
+    "general_ledger": "Grand livre",
+    "import_date": "Date d’importation",
+    "institution_name": "Nom de l’institution",
+    "invoice_number": "Numéro de facture",
+    "journal": "Journal",
+    "journal_entry": "Écriture de journal",
+    "journal_entry_number": "Écriture de journal #{{entryNumber}}",
+    "journal_entry_posted": "Écriture de journal #{{journalEntryNumber}} comptabilisée",
+    "journal_id": "ID du journal #",
+    "journal_id_display": "ID du journal #{{journalId}}",
+    "ledger_view": "Vue du grand livre",
+    "line_items": "Lignes",
+    "payday": "Jour de paie",
+    "quickbooks_id": "ID QuickBooks",
+    "recipient_name": "Nom du destinataire",
+    "reversal": "Contrepassation",
+    "running_balance": "Solde cumulatif"
+  },
+  "prompt": {
+    "discard_changes_journal_entry": "Annuler les modifications apportées à cette écriture de journal?"
+  },
+  "validation": {
+    "account_name_required": "Le nom du compte est obligatoire",
+    "account_required": "Le compte est un champ obligatoire.",
+    "account_required_short": "Le compte est obligatoire",
+    "account_type_required": "Le type de compte est obligatoire",
+    "amount_greater_must": "Le montant doit être supérieur à zéro.",
+    "amount_not_empty_or_zero": "Le montant ne peut pas être vide ou égal à zéro",
+    "create_required": "Le champ Créé par est obligatoire.",
+    "debit_credit_must": "Les montants au débit et au crédit doivent être égaux",
+    "entry_date_required": "La date d’écriture est un champ obligatoire.",
+    "institution_name_required": "Le nom de l’institution est obligatoire",
+    "least_one_required": "Au moins une ligne de crédit est obligatoire.",
+    "least_one_required_line": "Au moins une ligne est obligatoire.",
+    "least_one_required_one": "Au moins une ligne de débit est obligatoire.",
+    "memo_required": "Le mémo est un champ obligatoire."
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "action": {
+    "connect_integration": "Connecter l’intégration",
+    "connect_quickbooks": "Connecter QuickBooks",
+    "retry_connect_quickbooks": "Réessayer de connecter QuickBooks",
+    "retry_sync": "Réessayer la synchronisation",
+    "sync_label": "Synchroniser",
+    "unlink_quickbooks": "Dissocier QuickBooks"
+  },
+  "empty": {
+    "active_integrations": "Aucune intégration active"
+  },
+  "error": {
+    "connect_quickbooks": "Échec de la connexion à QuickBooks",
+    "unlink_failed": "Échec de la dissociation. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
+  },
+  "label": {
+    "date_time": "{{date}} à {{time}}",
+    "integrations": "Intégrations",
+    "quickbooks_connected": "QuickBooks connecté",
+    "take_five_minutes": "Cela peut prendre jusqu’à 5 minutes",
+    "unlink_quickbooks": "Dissocier QuickBooks"
+  },
+  "prompt": {
+    "confirm_unlink_quickbooks": "Veuillez confirmer que vous souhaitez dissocier QuickBooks."
+  },
+  "state": {
+    "connected_quickbooks": "Connecté à QuickBooks",
+    "last_sync": "Dernière synchronisation le",
+    "last_sync_failed_at": "La dernière synchronisation a échoué à",
+    "synced": "Synchronisé",
+    "syncing_account_data": "Synchronisation des données du compte"
+  }
+}

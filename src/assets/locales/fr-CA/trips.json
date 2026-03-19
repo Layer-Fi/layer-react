@@ -1,0 +1,45 @@
+{
+  "action": {
+    "add_trip": "Ajouter un trajet",
+    "delete_trip": "Supprimer le trajet",
+    "edit_trip": "Modifier le trajet",
+    "record_trip": "Enregistrer un trajet",
+    "save_trip": "Enregistrer le trajet",
+    "view_trip": "Afficher le trajet"
+  },
+  "empty": {
+    "add_first_trip": "Ajoutez votre premier trajet pour commencer à faire le suivi du kilométrage.",
+    "no_trips_yet": "Aucun trajet pour le moment"
+  },
+  "error": {
+    "delete_trip": "Échec de la suppression du trajet. Veuillez vérifier votre connexion et réessayer.",
+    "load_trips": "Nous n'avons pas pu charger vos trajets",
+    "load_trips_error": "Une erreur s'est produite lors du chargement de vos trajets. Veuillez vérifier votre connexion et réessayer."
+  },
+  "label": {
+    "additional_trip_actions": "Actions supplémentaires pour les trajets",
+    "delete_trip_warning": "Ce trajet sera supprimé définitivement. Cette action ne peut pas être annulée.",
+    "distance": "Distance",
+    "distance_mi": "{{distance}} mi",
+    "end_address": "Adresse de destination",
+    "enter_address": "Saisissez l’adresse",
+    "enter_distance": "Saisissez la distance",
+    "search_trips": "Rechercher des trajets",
+    "start_address": "Adresse de départ",
+    "trip_date": "Date du trajet",
+    "trip_details": "Détails du trajet",
+    "trip_end_address": "<bold>Destination :</bold> {{address}}",
+    "trip_purpose": "Motif du trajet",
+    "trip_start_address": "<bold>Départ :</bold> {{address}}",
+    "trips": "Trajets"
+  },
+  "prompt": {
+    "delete_trip": "Supprimer ce trajet?"
+  },
+  "validation": {
+    "distance_greater_than_zero": "La distance doit être supérieure à zéro.",
+    "purpose_required": "Le motif est un champ obligatoire.",
+    "trip_date_not_future": "La date du trajet ne peut pas être dans le futur.",
+    "trip_date_required": "La date du trajet est un champ obligatoire."
+  }
+}

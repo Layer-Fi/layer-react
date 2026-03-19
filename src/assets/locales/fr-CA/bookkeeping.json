@@ -1,0 +1,45 @@
+{
+  "action": {
+    "delete_uploads": "Supprimer les téléversements",
+    "schedule_a_demo": "Planifier une démo",
+    "select_files": "Sélectionner des fichiers",
+    "show_all_tasks_count": "Afficher toutes les tâches ({{tasksCount}})",
+    "show_completed_tasks": "Afficher les tâches terminées",
+    "view_and_complete": "Voir et terminer"
+  },
+  "label": {
+    "bank_accounts_disconnected_one": "{{count}} compte bancaire est déconnecté",
+    "bank_accounts_disconnected_other": "{{count}} comptes bancaires sont déconnectés",
+    "bookkeeping_tasks": "Tâches de tenue de livres",
+    "complete_bookkeeping_onboarding_call": "Une fois votre appel d’intégration à la tenue de livres terminé, vos tâches de tenue de livres s’afficheront ici.",
+    "count_open_tasks_one": "{{count}} tâche ouverte en {{year}}",
+    "count_open_tasks_other": "{{count}} tâches ouvertes en {{year}}",
+    "count_tasks_one": "{{count}} tâche",
+    "count_tasks_other": "{{count}} tâches",
+    "great_job": "Excellent travail!",
+    "month_name_books_complete": "Vos livres de {{monthName}} sont terminés et prêts à être consultés!",
+    "not_enrolled_in_bookkeeping": "Non inscrit au service de tenue de livres",
+    "optional_description": "Description facultative",
+    "order_our_bookkeeping_service": "Commandez notre service de tenue de livres offert avec l’appui d’une vraie équipe.",
+    "pending_tasks": "Il n’y a aucune tâche en attente!",
+    "please_contact_support": "Si vous pensez qu’il s’agit d’une erreur, veuillez communiquer avec l’assistance.",
+    "reconnect_count_accounts_one": "Reconnecter {{count}} compte",
+    "reconnect_count_accounts_other": "Reconnecter {{count}} comptes",
+    "respond_to_below_tasks": "Veuillez répondre aux tâches ci-dessous pour nous aider à terminer vos livres de {{monthName}}.",
+    "selected_files": "Fichiers sélectionnés :",
+    "tasks": "Tâches",
+    "team_review_and_categorize_transaction": "Notre équipe examinera et catégorisera cette transaction. Nous vous contacterons si nous avons des questions à son sujet.",
+    "uploaded_files": "Fichiers téléversés :",
+    "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action n’est requise de votre part pour le moment.",
+    "working_on_books_please_complete_tasks_one": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer la tâche en attente.",
+    "working_on_books_please_complete_tasks_other": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer les {{count}} tâches en attente."
+  },
+  "prompt": {
+    "need_help_books": "Besoin d’aide avec vos livres?"
+  },
+  "state": {
+    "action_required": "Action requise",
+    "books_completed": "Livres terminés",
+    "books_in_progress": "Livres en cours"
+  }
+}

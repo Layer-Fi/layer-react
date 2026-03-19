@@ -1,0 +1,24 @@
+{
+  "action": {
+    "clear_filters": "Effacer tous les filtres",
+    "clear_search": "Effacer la recherche",
+    "close_modal": "Fermer la fenêtre modale",
+    "get_more_results": "Afficher plus de résultats"
+  },
+  "empty": {
+    "matching_options": "Aucune option correspondante"
+  },
+  "error": {
+    "generic": "Une erreur s’est produite."
+  },
+  "label": {
+    "go_next_page": "Aller à la page suivante",
+    "go_page_number": "Aller à la page {{pageNumber}}",
+    "go_previous_page": "Aller à la page précédente",
+    "menu": "Menu",
+    "pagination": "Pagination"
+  },
+  "state": {
+    "pending": "en attente"
+  }
+}

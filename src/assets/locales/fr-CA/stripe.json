@@ -1,0 +1,19 @@
+{
+  "action": {
+    "connect_stripe_label": "Connecter Stripe"
+  },
+  "error": {
+    "stripe_sent_misconfigured_link": "Stripe a envoyé un lien d’intégration de compte Connect mal configuré. Veuillez réessayer.",
+    "unable_to_connect_to_stripe": "Impossible de se connecter à Stripe. Veuillez réessayer."
+  },
+  "label": {
+    "finish_setting_up_stripe_account": "Terminez la configuration de votre compte Stripe pour commencer à accepter les paiements par carte et par virement bancaire pour vos factures.",
+    "once_complete_can_accept_payments": "Une fois la configuration terminée, vous pourrez commencer à accepter les paiements par carte et par virement bancaire.",
+    "set_up_stripe_account": "Configurez votre compte Stripe pour commencer à accepter les paiements par carte et par virement bancaire pour vos factures."
+  },
+  "state": {
+    "stripe_account_review": "Compte Stripe en cours de vérification",
+    "stripe_payment_not_enabled": "Paiements Stripe non activés",
+    "stripe_setup_incomplete": "Configuration de Stripe incomplète"
+  }
+}
