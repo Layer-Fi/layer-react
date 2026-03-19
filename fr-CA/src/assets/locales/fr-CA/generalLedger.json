@@ -13,7 +13,7 @@
     "credit_line_items": "Aucune ligne de crédit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
     "debit_line_items": "Aucune ligne de débit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
     "entries": "Aucune écriture trouvée",
-    "entry_journal_message": "Il n’y a aucune écriture au grand livre dans ce compte.",
+    "entry_journal_message": "Il n’y a aucune écriture comptable dans ce compte.",
     "ledger_activity": "Aucune activité au grand livre"
   },
   "error": {
@@ -36,7 +36,7 @@
     "entry_journal": "Il n’y a aucune écriture dans le journal.",
     "entry_reversed": "Cette écriture a déjà été contrepassée",
     "entry_type": "Type d’écriture",
-    "general_ledger": "Grand livre général",
+    "general_ledger": "Grand livre",
     "import_date": "Date d’importation",
     "institution_name": "Nom de l’institution",
     "invoice_number": "Numéro de facture",
