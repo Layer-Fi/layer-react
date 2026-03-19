@@ -1,0 +1,36 @@
+{
+  "action": {
+    "create_customer_input_value": "Créer le client \"{{inputValue}}\"",
+    "create_new_customer": "Créer un nouveau client",
+    "edit_customer_details": "Modifier les renseignements du client",
+    "save_customer": "Enregistrer le client",
+    "select_customer_vendor": "Sélectionner un client ou un fournisseur",
+    "set_customer_vendor": "Sélectionner un client ou un fournisseur"
+  },
+  "empty": {
+    "matching_customers": "Aucun client correspondant",
+    "matching_customers_vendors": "Aucun client ni fournisseur correspondant trouvé"
+  },
+  "error": {
+    "load_customer_vendor": "Une erreur s’est produite lors du chargement des options de clients et de fournisseurs.",
+    "load_customers": "Une erreur s’est produite lors du chargement des clients."
+  },
+  "label": {
+    "company_name": "Nom de l’entreprise",
+    "customer": "Client",
+    "customer_vendor": "Client ou fournisseur",
+    "customers": "Clients",
+    "enter_address": "Saisissez l’adresse",
+    "enter_company_name": "Saisissez le nom de l’entreprise",
+    "enter_email_address": "Saisissez l’adresse courriel",
+    "enter_individual_name": "Saisissez le nom de la personne",
+    "individual_name": "Nom de la personne",
+    "vendor": "Fournisseur",
+    "vendor_description": "Description du fournisseur",
+    "vendors": "Fournisseurs"
+  },
+  "validation": {
+    "either_individual_required": "Le nom de la personne ou le nom de l’entreprise est requis.",
+    "email_required": "L’adresse courriel est obligatoire."
+  }
+}
