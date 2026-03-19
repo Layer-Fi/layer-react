@@ -24,6 +24,23 @@
     min-block-size: 2.5rem;
   }
 
+  &__MetricCard {
+    min-width: 0;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-xs);
+    background-color: var(--color-base-50);
+  }
+
+  &__MetricCardLabel {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  &__MetricCardMeter {
+    flex: 1;
+    min-width: 0;
+  }
+
   &__MetricValue {
     flex: 0 0 56%;
     justify-content: flex-end;
@@ -34,6 +51,16 @@
   &__DeductionsMeter {
     flex: 1;
     min-width: 9rem;
+  }
+
+  &__MetricCard .Layer__TaxOverview__IncomeMeter,
+  &__MetricCard .Layer__TaxOverview__DeductionsMeter {
+    width: 100%;
+    min-width: 0;
+  }
+
+  &__MetricCard .Layer__MoneySpan {
+    flex-shrink: 0;
   }
 
   &__IncomeMeter__track,
@@ -54,9 +81,21 @@
     min-width: 0;
   }
 
+  &__EstimatedTaxesContentMobile {
+    align-items: center;
+  }
+
   &__EstimatedTaxesLegend {
     flex: 1;
     min-width: 0;
+  }
+
+  &__LegendCard {
+    width: 100%;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-xs);
+    border: 1px solid var(--color-base-200);
+    background-color: var(--color-base-0);
   }
 
   &__LegendHeader {
@@ -202,28 +241,34 @@
   .Layer__TaxOverview__EstimatedTaxesContent,
   .Layer__TaxOverview__MetricRow,
   .Layer__TaxOverview__MetricValue,
-  .Layer__TaxOverview__DeadlineRow,
   .Layer__TaxOverview__DeadlineReviewRow {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .Layer__TaxOverview__Card.Layer__card {
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
   }
 
   .Layer__TaxOverview__EstimatedTaxesContent {
     align-items: center;
   }
 
+  .Layer__TaxOverview__EstimatedTaxesContentMobile .Layer__TaxOverview__DonutChart {
+    width: 11rem;
+  }
+
   .Layer__TaxOverview__MetricValue {
     flex-basis: auto;
   }
 
-  .Layer__TaxOverview__LegendValueGroup,
-  .Layer__TaxOverview__DeadlineValueRow {
-    justify-content: flex-start;
+  .Layer__TaxOverview__LegendCard {
+    min-inline-size: 0;
   }
 
-  .Layer__TaxOverview__DeadlineAmountColumn,
-  .Layer__TaxOverview__DeadlineAmountCopy {
-    align-items: flex-start;
+  .Layer__TaxOverview__LegendValueGroup {
+    min-inline-size: 0;
   }
 
   .Layer__TaxOverview__DeadlineReviewRow .Layer__button {

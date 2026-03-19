@@ -8,6 +8,7 @@ import {
   type TaxOverviewDeadlineStatus,
 } from '@schemas/taxEstimates/overview'
 import { formatDate, formatPercent } from '@utils/format'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Meter } from '@ui/Meter/Meter'
@@ -22,6 +23,20 @@ import './taxOverview.scss'
 
 type TaxOverviewProps = {
   onTaxBannerReviewClick?: (payload: TaxBannerReviewPayload) => void
+}
+
+type TaxOverviewEstimatedTaxesLegendProps = {
+  categories: readonly TaxOverviewCategory[]
+  isMobile: boolean
+  total: number
+}
+
+type TaxOverviewMetricRowProps = {
+  amount: number
+  isMobile: boolean
+  label: string
+  maxMeterValue: number
+  meterClassName: 'Layer__TaxOverview__IncomeMeter' | 'Layer__TaxOverview__DeductionsMeter'
 }
 
 const DONUT_RADIUS = 52
@@ -145,6 +160,71 @@ const TaxOverviewDonutChart = ({
   )
 }
 
+const TaxOverviewEstimatedTaxesLegend = ({
+  categories,
+  isMobile,
+  total,
+}: TaxOverviewEstimatedTaxesLegendProps) => {
+  const className = isMobile
+    ? 'Layer__TaxOverview__LegendCard'
+    : 'Layer__TaxOverview__EstimatedTaxesLegend'
+
+  return (
+    <VStack className={className} gap='sm' fluid>
+      <HStack justify='space-between' className='Layer__TaxOverview__LegendHeader'>
+        <Span size='sm' variant='subtle'>Category</Span>
+        <HStack className='Layer__TaxOverview__LegendHeaderValue' align='center' gap='2xs'>
+          <Span size='sm' variant='subtle'>Value</Span>
+          <ArrowUpDown size={12} />
+        </HStack>
+      </HStack>
+      {categories.map(category => (
+        <HStack key={category.key} className='Layer__TaxOverview__LegendRow' justify='space-between' align='center' gap='md'>
+          <Span size='sm'>{category.label}</Span>
+          <HStack className='Layer__TaxOverview__LegendValueGroup' align='center' gap='sm'>
+            <MoneySpan size='sm' weight='bold' amount={category.amount} />
+            <Span size='sm' variant='subtle'>
+              {formatPercent(total === 0 ? 0 : category.amount / total)}
+              %
+            </Span>
+            <Span nonAria className={`Layer__TaxOverview__LegendSwatch ${getCategoryClassName(category.key)}`} />
+          </HStack>
+        </HStack>
+      ))}
+    </VStack>
+  )
+}
+
+const TaxOverviewMetricRow = ({
+  amount,
+  isMobile,
+  label,
+  maxMeterValue,
+  meterClassName,
+}: TaxOverviewMetricRowProps) => {
+  if (isMobile) {
+    return (
+      <HStack className='Layer__TaxOverview__MetricCard' align='center' gap='md'>
+        <Span size='md' className='Layer__TaxOverview__MetricCardLabel'>{label}</Span>
+        <HStack className='Layer__TaxOverview__MetricCardMeter' align='center'>
+          <Meter className={meterClassName} label={label} minValue={0} maxValue={maxMeterValue} value={amount} meterOnly />
+        </HStack>
+        <MoneySpan size='md' weight='bold' amount={amount} />
+      </HStack>
+    )
+  }
+
+  return (
+    <HStack className='Layer__TaxOverview__MetricRow' justify='space-between' align='center' gap='md'>
+      <Span size='md'>{label}</Span>
+      <HStack className='Layer__TaxOverview__MetricValue' align='center' gap='md'>
+        <MoneySpan size='md' weight='bold' amount={amount} />
+        <Meter className={meterClassName} label={label} minValue={0} maxValue={maxMeterValue} value={amount} meterOnly />
+      </HStack>
+    </HStack>
+  )
+}
+
 const TaxOverviewDeadlineCard = ({
   deadline,
   onTaxBannerReviewClick,
@@ -208,6 +288,7 @@ const TaxOverviewContent = ({
   onTaxBannerReviewClick,
 }: TaxOverviewProps & { data: TaxOverviewData }) => {
   const { year } = useTaxEstimatesYear()
+  const { isMobile } = useSizeClass()
   const maxMeterValue = Math.max(data.incomeTotal, data.deductionsTotal, 1)
 
   return (
@@ -227,21 +308,21 @@ const TaxOverviewContent = ({
                 {year}
               </Span>
             </VStack>
-            <VStack gap='md'>
-              <HStack className='Layer__TaxOverview__MetricRow' justify='space-between' align='center' gap='md'>
-                <Span size='md'>Total income</Span>
-                <HStack className='Layer__TaxOverview__MetricValue' align='center' gap='md'>
-                  <MoneySpan size='md' weight='bold' amount={data.incomeTotal} />
-                  <Meter className='Layer__TaxOverview__IncomeMeter' label='Total income' minValue={0} maxValue={maxMeterValue} value={data.incomeTotal} meterOnly />
-                </HStack>
-              </HStack>
-              <HStack className='Layer__TaxOverview__MetricRow' justify='space-between' align='center' gap='md'>
-                <Span size='md'>Deductions</Span>
-                <HStack className='Layer__TaxOverview__MetricValue' align='center' gap='md'>
-                  <MoneySpan size='md' weight='bold' amount={data.deductionsTotal} />
-                  <Meter className='Layer__TaxOverview__DeductionsMeter' label='Deductions' minValue={0} maxValue={maxMeterValue} value={data.deductionsTotal} meterOnly />
-                </HStack>
-              </HStack>
+            <VStack gap={isMobile ? 'sm' : 'md'}>
+              <TaxOverviewMetricRow
+                label='Total income'
+                amount={data.incomeTotal}
+                maxMeterValue={maxMeterValue}
+                meterClassName='Layer__TaxOverview__IncomeMeter'
+                isMobile={isMobile}
+              />
+              <TaxOverviewMetricRow
+                label='Deductions'
+                amount={data.deductionsTotal}
+                maxMeterValue={maxMeterValue}
+                meterClassName='Layer__TaxOverview__DeductionsMeter'
+                isMobile={isMobile}
+              />
             </VStack>
           </Card>
           <Card className='Layer__TaxOverview__Card'>
@@ -251,31 +332,27 @@ const TaxOverviewContent = ({
                 {' '}
                 {year}
               </Heading>
-              <HStack className='Layer__TaxOverview__EstimatedTaxesContent' align='center' gap='lg'>
-                <TaxOverviewDonutChart categories={data.estimatedTaxCategories} total={data.estimatedTaxesTotal} />
-                <VStack className='Layer__TaxOverview__EstimatedTaxesLegend' gap='sm' fluid>
-                  <HStack justify='space-between' className='Layer__TaxOverview__LegendHeader'>
-                    <Span size='sm' variant='subtle'>Category</Span>
-                    <HStack className='Layer__TaxOverview__LegendHeaderValue' align='center' gap='2xs'>
-                      <Span size='sm' variant='subtle'>Value</Span>
-                      <ArrowUpDown size={12} />
-                    </HStack>
+              {isMobile
+                ? (
+                  <VStack className='Layer__TaxOverview__EstimatedTaxesContentMobile' gap='lg'>
+                    <TaxOverviewDonutChart categories={data.estimatedTaxCategories} total={data.estimatedTaxesTotal} />
+                    <TaxOverviewEstimatedTaxesLegend
+                      categories={data.estimatedTaxCategories}
+                      total={data.estimatedTaxesTotal}
+                      isMobile
+                    />
+                  </VStack>
+                )
+                : (
+                  <HStack className='Layer__TaxOverview__EstimatedTaxesContent' align='center' gap='lg'>
+                    <TaxOverviewDonutChart categories={data.estimatedTaxCategories} total={data.estimatedTaxesTotal} />
+                    <TaxOverviewEstimatedTaxesLegend
+                      categories={data.estimatedTaxCategories}
+                      total={data.estimatedTaxesTotal}
+                      isMobile={false}
+                    />
                   </HStack>
-                  {data.estimatedTaxCategories.map(category => (
-                    <HStack key={category.key} className='Layer__TaxOverview__LegendRow' justify='space-between' align='center' gap='md'>
-                      <Span size='sm'>{category.label}</Span>
-                      <HStack className='Layer__TaxOverview__LegendValueGroup' align='center' gap='sm'>
-                        <MoneySpan size='sm' weight='bold' amount={category.amount} />
-                        <Span size='sm' variant='subtle'>
-                          {formatPercent(data.estimatedTaxesTotal === 0 ? 0 : category.amount / data.estimatedTaxesTotal)}
-                          %
-                        </Span>
-                        <Span nonAria className={`Layer__TaxOverview__LegendSwatch ${getCategoryClassName(category.key)}`} />
-                      </HStack>
-                    </HStack>
-                  ))}
-                </VStack>
-              </HStack>
+                )}
             </VStack>
           </Card>
         </VStack>
