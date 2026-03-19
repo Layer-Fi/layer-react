@@ -27,7 +27,7 @@
     "account_number": "Numéro de compte",
     "account_type": "Type de compte",
     "balance": "Solde actuel",
-    "bill_number": "Numéro de facture",
+    "bill_number": "Numéro de facture fournisseur",
     "creation_date": "Date de création",
     "enter_account_name": "Saisir le nom du compte...",
     "enter_institution_name": "Saisir le nom de l’institution...",
