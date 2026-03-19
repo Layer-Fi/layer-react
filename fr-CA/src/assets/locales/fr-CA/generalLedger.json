@@ -55,7 +55,7 @@
     "running_balance": "Solde cumulatif"
   },
   "prompt": {
-    "discard_changes_journal_entry": "Ignorer les modifications apportées à cette écriture de journal?"
+    "discard_changes_journal_entry": "Annuler les modifications apportées à cette écriture de journal?"
   },
   "validation": {
     "account_name_required": "Le nom du compte est obligatoire",
