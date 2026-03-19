@@ -4,8 +4,10 @@ import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
+import { convertNumberToCurrency } from '@utils/format'
 import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
+import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import {
   OnboardingStatus,
@@ -24,8 +26,9 @@ import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
-import { TaxBanner, type TaxBannerReviewPayload, TaxBannerReviewTypes } from '@components/TaxDetails/TaxBanner'
+import { TaxBanner, type TaxBannerReviewPayload } from '@components/TaxDetails/TaxBanner'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
+import { TaxOverview } from '@components/TaxOverview/TaxOverview'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { View } from '@components/View/View'
 import { YearPicker } from '@components/YearPicker/YearPicker'
@@ -139,6 +142,7 @@ const TaxEstimatesViewHeader = () => {
 }
 
 const TAX_ESTIMATES_TAB_CONFIG = [
+  { value: TaxEstimatesRoute.Overview, ...translationKey('common:label.overview', 'Overview') },
   { value: TaxEstimatesRoute.Estimates, ...translationKey('taxEstimates:label.estimates', 'Estimates') },
   { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates:label.payments', 'Payments') },
 ]
@@ -147,6 +151,8 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
   const { t } = useTranslation()
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
+  const { year } = useTaxEstimatesYear()
+  const { data: taxOverview } = useTaxOverview({ year })
   const handleTaxBannerReview = useCallback((payload: TaxBannerReviewPayload) => {
     onTaxBannerReviewClick?.(payload)
   }, [onTaxBannerReviewClick])
@@ -163,19 +169,20 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
     navigate(key as TaxEstimatesRoute)
   }, [navigate])
 
-  const taxBanner = (
+  const uncategorizedReviewPayload = taxOverview?.bannerReview
+
+  const taxBanner = uncategorizedReviewPayload && (
     <VStack className='Layer__TaxEstimates__TaxBannerWrapper'>
       <TaxBanner
         title={t('taxEstimates:banner.categorization_incomplete.title', 'Your tax estimates are incomplete')}
-        description={t('taxEstimates:banner.categorization_incomplete.description', 'You have 16 uncategorized transactions with $2,100.00 in potential deductions to review.')}
+        description={t(
+          'taxEstimates:banner.categorization_incomplete.description',
+          `You have ${uncategorizedReviewPayload.count} uncategorized transactions with ${convertNumberToCurrency(uncategorizedReviewPayload.amount)} in potential deductions to review.`,
+        )}
         action={{
           label: t('taxEstimates:action.review_banner', 'Review'),
           onPress: handleTaxBannerReview,
-          payload: {
-            type: TaxBannerReviewTypes.UncategorizedTransactions,
-            count: 16,
-            amount: 2100,
-          },
+          payload: uncategorizedReviewPayload,
         }}
       />
     </VStack>
@@ -194,6 +201,12 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
         onSelectionChange={handleTabChange}
       />
       {taxBanner}
+      {route === TaxEstimatesRoute.Overview && taxOverview && (
+        <TaxOverview
+          data={taxOverview}
+          onTaxBannerReviewClick={onTaxBannerReviewClick}
+        />
+      )}
       {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
       {route === TaxEstimatesRoute.Payments && <TaxPayments />}
     </VStack>

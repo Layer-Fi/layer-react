@@ -1,0 +1,232 @@
+.Layer__TaxOverview {
+  inline-size: min(100%, 1406px);
+  container-type: inline-size;
+
+  &__Grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(23rem, 0.92fr);
+    gap: var(--spacing-md);
+    align-items: start;
+  }
+
+  &__PrimaryColumn {
+    min-width: 0;
+  }
+
+  &__Card.Layer__card {
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--color-base-200);
+    box-shadow: none;
+  }
+
+  &__MetricRow {
+    min-block-size: 2.5rem;
+  }
+
+  &__MetricValue {
+    flex: 0 0 56%;
+    justify-content: flex-end;
+    min-width: 0;
+  }
+
+  &__IncomeMeter,
+  &__DeductionsMeter {
+    flex: 1;
+    min-width: 9rem;
+  }
+
+  &__IncomeMeter__track,
+  &__DeductionsMeter__track {
+    fill: var(--color-base-100);
+  }
+
+  &__IncomeMeter__fill {
+    fill: #6d3cc8;
+  }
+
+  &__DeductionsMeter__fill {
+    fill: #1c7e9a;
+  }
+
+  &__EstimatedTaxesContent {
+    justify-content: space-between;
+    min-width: 0;
+  }
+
+  &__EstimatedTaxesLegend {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__LegendHeader {
+    padding-block-end: var(--spacing-xs);
+    border-block-end: 1px solid var(--color-base-100);
+  }
+
+  &__LegendHeaderValue {
+    color: var(--color-base-500);
+  }
+
+  &__LegendRow {
+    min-block-size: 2rem;
+  }
+
+  &__LegendValueGroup {
+    justify-content: flex-end;
+    min-inline-size: 12rem;
+  }
+
+  &__LegendSwatch {
+    display: inline-flex;
+    height: 0.75rem;
+    width: 0.75rem;
+    border-radius: var(--border-radius-2xs);
+
+    &--federal {
+      background-color: #6d3cc8;
+    }
+
+    &--state {
+      background-color: #d8b8f4;
+    }
+
+    &--selfEmployment {
+      background-color: #1e4d57;
+    }
+
+    &--nextTax {
+      background-color: #63a8ac;
+    }
+  }
+
+  &__DonutChart {
+    position: relative;
+    flex-shrink: 0;
+    aspect-ratio: 1;
+    width: 9.5rem;
+  }
+
+  &__DonutChartSvg {
+    height: 100%;
+    width: 100%;
+    transform: rotate(-90deg);
+  }
+
+  &__DonutChartTrack {
+    stroke: var(--color-base-100);
+  }
+
+  &__DonutChartCenter {
+    position: absolute;
+    inset: 0;
+  }
+
+  &__DeadlineCard {
+    box-sizing: border-box;
+    min-width: 0;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-xs);
+    border: 1px solid var(--color-base-200);
+    background-color: var(--color-base-0);
+  }
+
+  &__DeadlineContent {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__DeadlineAmountColumn {
+    flex-shrink: 0;
+    min-width: 10rem;
+  }
+
+  &__DeadlineValueRow {
+    justify-content: flex-end;
+  }
+
+  &__AmountIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.25rem;
+    width: 1.25rem;
+    border-radius: 999px;
+    background-color: var(--color-info-warning-bg);
+    color: var(--color-info-warning-fg);
+
+    &--pastDue {
+      background-color: var(--color-info-error-bg);
+      color: var(--color-info-error);
+    }
+
+    &--paid {
+      background-color: var(--color-info-success-bg);
+      color: var(--color-info-success);
+    }
+
+    &--due {
+      background-color: var(--color-info-bg);
+      color: var(--color-info);
+    }
+  }
+
+  &__DeadlineReviewRow {
+    padding-block-start: var(--spacing-xs);
+    border-block-start: 1px solid var(--color-base-100);
+  }
+
+  &__DeadlineReviewContent {
+    min-width: 0;
+  }
+
+  &__DeadlineReviewIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-info-warning);
+  }
+
+  &__DeadlineReviewLabel {
+    color: var(--color-info-warning-fg);
+  }
+}
+
+@container (max-width: 920px) {
+  .Layer__TaxOverview__Grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@container (max-width: 720px) {
+  .Layer__TaxOverview__EstimatedTaxesContent,
+  .Layer__TaxOverview__MetricRow,
+  .Layer__TaxOverview__MetricValue,
+  .Layer__TaxOverview__DeadlineRow,
+  .Layer__TaxOverview__DeadlineReviewRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .Layer__TaxOverview__EstimatedTaxesContent {
+    align-items: center;
+  }
+
+  .Layer__TaxOverview__MetricValue {
+    flex-basis: auto;
+  }
+
+  .Layer__TaxOverview__LegendValueGroup,
+  .Layer__TaxOverview__DeadlineValueRow {
+    justify-content: flex-start;
+  }
+
+  .Layer__TaxOverview__DeadlineAmountColumn,
+  .Layer__TaxOverview__DeadlineAmountCopy {
+    align-items: flex-start;
+  }
+
+  .Layer__TaxOverview__DeadlineReviewRow .Layer__button {
+    width: 100%;
+  }
+}

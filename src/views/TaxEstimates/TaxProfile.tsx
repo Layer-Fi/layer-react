@@ -20,7 +20,7 @@ export const TaxProfile = () => {
   const { data: taxProfile } = useTaxProfile()
 
   const handleGoBack = useCallback(() => {
-    navigate(TaxEstimatesRoute.Estimates)
+    navigate(TaxEstimatesRoute.Overview)
   }, [navigate])
 
   const TaxProfileHeader = useCallback(() => {
