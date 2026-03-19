@@ -9,6 +9,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import type { View } from '@internal-types/general'
+import { useCurrentLocale } from '@providers/I18nProvider/I18nLocaleContext'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -29,8 +30,8 @@ export function MonthCalendar({
   maxDate?: ZonedDateTime | null
   variant?: View
 }) {
-  const { t, i18n } = useTranslation()
-  const locale = i18n.resolvedLanguage || i18n.language || 'en-US'
+  const { t } = useTranslation()
+  const locale = useCurrentLocale()
   const months = useMemo(() => getMonths(locale), [locale])
   const minYear = minDate?.year ?? null
   const maxYear = maxDate?.year ?? null
