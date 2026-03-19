@@ -1,13 +1,9 @@
 .Layer__TaxSummaryCard {
-  box-sizing: border-box;
-  width: 100%;
   padding: var(--spacing-md);
   border-block-end: 1px solid var(--color-base-200);
 
   &__Inner {
-    box-sizing: border-box;
     overflow: hidden;
-    width: 100%;
     border-radius: var(--spacing-sm);
     border: 1px solid var(--color-base-200);
     background: var(--color-base-0);
@@ -112,8 +108,6 @@
   }
 
   &--mobile {
-    width: 100%;
-
     .Layer__TaxSummaryCard__Inner {
       padding-bottom: var(--spacing-lg);
     }
@@ -135,10 +129,6 @@
       border-radius: var(--border-radius-xs);
       margin-inline: var(--spacing-lg);
       background: var(--color-base-50);
-    }
-
-    .Layer__TaxSummaryCard__Section {
-      width: 100%;
     }
 
     .Layer__TaxSummaryCard__Formula,
