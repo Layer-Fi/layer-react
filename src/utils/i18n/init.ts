@@ -3,13 +3,13 @@ import Pseudo from 'i18next-pseudo'
 import { initReactI18next } from 'react-i18next'
 
 import { pseudoOptions } from '@utils/i18n/pseudoConfig'
+import { DEFAULT_LOCALE, isSupportedLocale } from '@utils/i18n/supportedLocale'
 import * as enUS from '@assets/locales/en-US'
+import * as frCA from '@assets/locales/fr-CA'
 
 let initPromise: Promise<void> | undefined
 
-const SUPPORTED_LOCALES = ['en-US']
-const LAYER_TEST_LOCALE_URL_PARAM = 'layer_test_locale'
-
+export const LAYER_TEST_LOCALE_URL_PARAM = 'layer_test_locale'
 const isPseudoEnabled = () => {
   if (typeof window === 'undefined') return false
 
@@ -21,11 +21,11 @@ const getLocale = () => {
   const params = new URLSearchParams(window.location.search)
   const localeParam = params.get(LAYER_TEST_LOCALE_URL_PARAM)
 
-  if (localeParam && SUPPORTED_LOCALES.includes(localeParam)) {
+  if (localeParam && isSupportedLocale(localeParam)) {
     return localeParam
   }
 
-  return 'en-US'
+  return DEFAULT_LOCALE
 }
 
 const initI18n = async () => {
@@ -43,12 +43,13 @@ const initI18n = async () => {
         returnEmptyString: false,
         initImmediate: false,
         lng: getLocale(),
-        fallbackLng: 'en-US',
+        fallbackLng: DEFAULT_LOCALE,
         defaultNS: 'common',
         resources: {
           'en-US': enUS,
+          'fr-CA': frCA,
         },
-        ...(usePseudo && { lng: 'en-US', postProcess: ['pseudo'] }),
+        ...(usePseudo && { lng: DEFAULT_LOCALE, postProcess: ['pseudo'] }),
       })
       .then(() => undefined)
   }

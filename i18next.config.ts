@@ -7,6 +7,7 @@ import translationKeyPlugin from './scripts/i18next/translationKeyPlugin'
 export default defineConfig({
   locales: [
     'en-US',
+    'fr-CA',
   ],
   plugins: [conditionalPlugin, pluralPlugin, translationKeyPlugin],
   extract: {
