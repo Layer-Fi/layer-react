@@ -1,0 +1,29 @@
+{
+  "action": {
+    "select_a_month": "Sélectionner un mois"
+  },
+  "label": {
+    "all_time": "Depuis le début",
+    "completed_at": "Terminé le",
+    "creation_date": "Date de création",
+    "custom": "Personnalisé",
+    "effective_date": "Date d’effet",
+    "end_date": "Date de fin",
+    "last_month": "Le mois dernier",
+    "last_quarter": "Le trimestre dernier",
+    "last_year": "L’année dernière",
+    "month": "Mois",
+    "next_year": "Année suivante",
+    "previous_year": "Année précédente",
+    "start_date": "Date de début",
+    "this_month": "Ce mois-ci",
+    "this_quarter": "Ce trimestre",
+    "this_year": "Cette année",
+    "year": "Année"
+  },
+  "validation": {
+    "date_before_min": "Impossible de sélectionner une date antérieure au {{minDate}}",
+    "date_in_future": "Impossible de sélectionner une date future",
+    "date_not_empty": "Impossible de laisser la date vide"
+  }
+}
