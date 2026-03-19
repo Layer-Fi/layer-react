@@ -1,0 +1,8 @@
+{
+  "chart_type": "Type de graphique",
+  "label": {
+    "accounting_overview": "Aperçu comptable",
+    "bookkeeping_overview": "Aperçu de la tenue de livres",
+    "vs_comparison_month": "c. {{comparisonMonth}}"
+  }
+}
