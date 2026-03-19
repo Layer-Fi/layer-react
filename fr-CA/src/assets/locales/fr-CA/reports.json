@@ -1,7 +1,7 @@
 {
   "action": {
     "collapse_rows": "Réduire toutes les lignes",
-    "expand_rows": "Développer toutes les lignes"
+    "expand_rows": "Afficher toutes les lignes"
   },
   "empty": {
     "no_detail_lines_found": "Aucune ligne de détail trouvée",
