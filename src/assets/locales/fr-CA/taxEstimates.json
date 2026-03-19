@@ -84,7 +84,7 @@
     "taxable_income": "Revenu imposable",
     "taxable_medicare_income": "Revenu Medicare imposable",
     "taxable_medicare_surtax_income": "Revenu imposable pour la surtaxe Medicare",
-    "taxable_social_security_income": "Revenu de sécurité sociale imposable",
+    "taxable_social_security_income": "Revenu imposable de la Sécurité Sociale",
     "taxes_by_state_name": "Impôts d’État ({{stateName}})",
     "taxes_by_state_name_projected": "Impôts d’État projetés ({{stateName}})",
     "taxes_due": "Impôts à payer",
