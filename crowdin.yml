@@ -2,4 +2,4 @@ files:
   - source: /src/assets/locales/en-US/*
     ignore:
       - /src/assets/locales/en-US/index.ts
-    translation: src/assets/locales/%locale%/%file_name%.%file_extension%
+    translation: /src/assets/locales/%locale%/%file_name%.%file_extension%
