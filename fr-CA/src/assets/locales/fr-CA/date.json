@@ -23,7 +23,7 @@
   },
   "validation": {
     "date_before_min": "Impossible de sélectionner une date antérieure au {{minDate}}",
-    "date_in_future": "Impossible de sélectionner une date dans le futur",
+    "date_in_future": "Impossible de sélectionner une date future",
     "date_not_empty": "Impossible de laisser la date vide"
   }
 }
