@@ -1,13 +1,13 @@
 {
   "action": {
     "add_calendar": "Ajouter au calendrier",
-    "book_call": "Prendre un appel",
+    "book_call": "Réserver un appel",
     "download_ics_file": "Télécharger le fichier .ics",
-    "join_call": "Joindre l’appel"
+    "join_call": "Rejoindre l’appel"
   },
   "label": {
     "ad_hoc_call": "Appel ponctuel",
-    "book_call_with_bookkeeper": "Prendre un appel avec votre teneur de livres",
+    "book_call_with_bookkeeper": "Réserver un appel avec votre comptable",
     "date_colon": "Date :",
     "google_calendar": "Google Calendar",
     "location_colon": "Lieu :",
