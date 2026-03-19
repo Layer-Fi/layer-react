@@ -49,7 +49,7 @@
     "deselect_unused_accounts": "Veuillez désélectionner tous les comptes que vous n’utilisez pas pour votre entreprise.",
     "found_accounts_count_one": "Nous avons trouvé {{count}} compte",
     "found_accounts_count_other": "Nous avons trouvé {{count}} comptes",
-    "import_data_simple_integration": "Importez des données avec une intégration simple.",
+    "import_data_simple_integration": "Importez des données grâce à une intégration simple.",
     "ledger_balance": "Solde du grand livre",
     "link_bank_accounts_and_credit_cards": "Liez vos comptes bancaires et vos cartes de crédit",
     "link_more_accounts_any_time": "Vous pouvez lier d’autres comptes en tout temps à partir de la section Transactions bancaires",
