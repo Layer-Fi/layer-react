@@ -10,7 +10,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const TAX_OVERVIEW_TAG_KEY = '#tax-overview'
 const TAX_BANNER_REVIEW_COUNT = 16
-const TAX_BANNER_REVIEW_AMOUNT = 2100
+const TAX_BANNER_REVIEW_AMOUNT = 210000
 
 type UseTaxOverviewOptions = {
   year: number
@@ -40,7 +40,7 @@ const buildTaxOverviewMockResponse = ({ year }: UseTaxOverviewOptions): TaxOverv
 
   const nextTax: TaxOverviewData['nextTax'] = {
     quarter: 2,
-    amount: 1200,
+    amount: 120000,
     status: { kind: 'due' } satisfies TaxOverviewDeadlineStatus,
   }
 
@@ -54,22 +54,22 @@ const buildTaxOverviewMockResponse = ({ year }: UseTaxOverviewOptions): TaxOverv
         description: 'Estimated tax',
       },
       bannerReview,
-      deductionsTotal: 17416.77,
+      deductionsTotal: 1741677,
       estimatedTaxCategories: [
-        { key: 'federal', label: 'Federal', amount: 855.1 },
-        { key: 'state', label: 'State', amount: 402.34 },
-        { key: 'selfEmployment', label: 'Self-employment', amount: 2473.8 },
+        { key: 'federal', label: 'Federal', amount: 85510 },
+        { key: 'state', label: 'State', amount: 40234 },
+        { key: 'selfEmployment', label: 'Self-employment', amount: 247380 },
         { key: 'nextTax', label: 'Next tax', amount: nextTax.amount },
       ],
-      estimatedTaxesTotal: 5456.24,
-      incomeTotal: 28849.49,
+      estimatedTaxesTotal: 545624,
+      incomeTotal: 2884949,
       nextTax,
       paymentDeadlines: [
         {
           id: 'quarter-1',
           title: 'Q1 taxes',
           dueAt: getQuarterDueDate(year, 1),
-          amount: 6849.49,
+          amount: 684949,
           description: 'Estimated tax',
           status: { kind: 'pastDue' },
         },
@@ -77,7 +77,7 @@ const buildTaxOverviewMockResponse = ({ year }: UseTaxOverviewOptions): TaxOverv
           id: 'quarter-2',
           title: 'Q2 taxes',
           dueAt: getQuarterDueDate(year, 2),
-          amount: 4849.49,
+          amount: 484949,
           description: 'Estimated tax',
           status: nextTax.status,
         },
@@ -85,7 +85,7 @@ const buildTaxOverviewMockResponse = ({ year }: UseTaxOverviewOptions): TaxOverv
           id: 'quarter-3',
           title: 'Q3 taxes',
           dueAt: getQuarterDueDate(year, 3),
-          amount: 4849.49,
+          amount: 484949,
           description: 'Estimated tax',
           status: { kind: 'categorizationIncomplete' },
           reviewAction: { payload: bannerReview },
