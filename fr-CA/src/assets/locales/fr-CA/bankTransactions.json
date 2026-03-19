@@ -54,7 +54,7 @@
     "affected_transaction_display": "Aucune transaction concernée à afficher",
     "affected_transactions": "Transactions concernées",
     "all_categories_uppercase": "TOUTES LES CATÉGORIES",
-    "all_done": "Terminé",
+    "all_done": "Tout est terminé",
     "bank_transactions": "Transactions bancaires",
     "categorization_status": "État de la catégorisation",
     "categorize_count_selected_one": "Cette action catégorisera {{count}} transaction sélectionnée dans la catégorie {{category}}.",
