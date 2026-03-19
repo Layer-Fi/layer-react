@@ -59,7 +59,7 @@
     "categorization_status": "État de la catégorisation",
     "categorize_count_selected_one": "Cette action catégorisera {{count}} transaction sélectionnée dans la catégorie {{category}}.",
     "categorize_count_selected_other": "Cette action catégorisera {{count}} transactions sélectionnées dans la catégorie {{category}}.",
-    "categorized": "Catégorisée",
+    "categorized": "Catégorisé",
     "count_transactions_will_be_skipped_one": "{{count}} transaction sera ignorée en raison de l’absence de catégorie.",
     "count_transactions_will_be_skipped_other": "{{count}} transactions seront ignorées en raison de l’absence de catégorie.",
     "data_on_platform_categorize": "Une fois vos données sur la plateforme, catégorisez-les dans l’onglet Transactions bancaires",
