@@ -9,7 +9,6 @@ import { type LedgerAccountLineItem } from '@internal-types/ledgerAccounts'
 import { decodeLedgerEntrySource } from '@schemas/generalLedger/ledgerEntrySource'
 import { lineEntryNumber } from '@utils/journal'
 import { centsToDollars } from '@utils/money'
-import { DateFormat } from '@utils/time/timeFormats'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { Text, TextWeight } from '@components/Typography/Text'
@@ -185,7 +184,7 @@ export const LedgerAccountRow = ({
     >
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content'>
-          {row.date && formatDate(row.date, DateFormat.DateShort)}
+          {row.date && formatDate(row.date)}
         </span>
       </td>
       <td className='Layer__table-cell'>

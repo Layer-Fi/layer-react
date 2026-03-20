@@ -7,7 +7,6 @@ import type { FileMetadata } from '@internal-types/fileUpload'
 import { type Awaitable } from '@internal-types/utility/promises'
 import { get, post, postWithFormData } from '@utils/api/authenticatedHttp'
 import { hasReceipts } from '@utils/bankTransactions'
-import { DateFormat } from '@utils/time/timeFormats'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -190,7 +189,7 @@ export const useReceipts: UseReceipts = ({
       url: undefined,
       status: 'pending' as const,
       name: renamedFile.name,
-      date: formatDate(new Date(), DateFormat.DateShort),
+      date: formatDate(new Date()),
     }
 
     try {
