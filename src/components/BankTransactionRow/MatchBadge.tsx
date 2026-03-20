@@ -1,8 +1,10 @@
-import { format as formatTime, parseISO } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { isTransferMatch } from '@utils/bankTransactions'
 import { centsToDollars as formatMoney } from '@utils/money'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import MinimizeTwo from '@icons/MinimizeTwo'
 import { Badge } from '@components/Badge/Badge'
 
@@ -11,15 +13,16 @@ import './matchBadge.scss'
 interface MatchTooltipProps {
   amount: number
   date: string
-  dateFormat: string
   description: string
 }
 
-const MatchTooltip = ({ amount, date, dateFormat, description }: MatchTooltipProps) => {
+const MatchTooltip = ({ amount, date, description }: MatchTooltipProps) => {
+  const { formatDate } = useIntlFormatter()
+
   return (
     <span className='Layer__MatchTooltip'>
       <div className='Layer__MatchTooltip__date'>
-        {formatTime(parseISO(date), dateFormat)}
+        {formatDate(date)}
       </div>
       <div className='Layer__MatchTooltip__description'>
         {description}
@@ -34,15 +37,15 @@ const MatchTooltip = ({ amount, date, dateFormat, description }: MatchTooltipPro
 
 export interface MatchBadgeProps {
   bankTransaction: BankTransaction
-  dateFormat: string
-  text?: string
 }
 
-export const MatchBadge = ({
-  bankTransaction,
-  dateFormat,
-  text = 'Match',
-}: MatchBadgeProps) => {
+export const MatchBadge = ({ bankTransaction }: MatchBadgeProps) => {
+  const { t } = useTranslation()
+
+  const text = isTransferMatch(bankTransaction)
+    ? t('bankTransactions:label.transfer', 'Transfer')
+    : t('bankTransactions:label.matched', 'Matched')
+
   if (
     bankTransaction.categorization_status === CategorizationStatus.MATCHED
     && bankTransaction.match
@@ -53,7 +56,7 @@ export const MatchBadge = ({
     return (
       <Badge
         icon={<MinimizeTwo size={11} />}
-        tooltip={<MatchTooltip amount={amount} date={date} dateFormat={dateFormat} description={description} />}
+        tooltip={<MatchTooltip amount={amount} date={date} description={description} />}
       >
         {text}
       </Badge>

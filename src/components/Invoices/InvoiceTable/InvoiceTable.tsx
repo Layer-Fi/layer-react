@@ -7,11 +7,12 @@ import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { getCustomerName } from '@utils/customerVendor'
-import { convertCentsToCurrency, formatDate } from '@utils/format'
+import { convertCentsToCurrency } from '@utils/format'
 import { translationKey } from '@utils/i18n/translationKey'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type ListInvoicesFilterParams, useListInvoices } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { type InvoiceTableFilters, useInvoiceNavigation, useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import ChevronRightFill from '@icons/ChevronRightFill'
 import { Button } from '@ui/Button/Button'
@@ -101,6 +102,13 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
   }
 }
 
+const DateCell = ({ date }: { date: Date | null }) => {
+  const { formatDate } = useIntlFormatter()
+
+  if (!date) return null
+  return <Span>{formatDate(date)}</Span>
+}
+
 type InvoiceRowType = Row<Invoice>
 const getColumnConfig = (
   onViewInvoice: (invoice: Invoice) => void,
@@ -109,7 +117,7 @@ const getColumnConfig = (
   {
     id: InvoiceColumns.SentAt,
     header: t('invoices:label.sent_date', 'Sent Date'),
-    cell: (row: InvoiceRowType) => row.original.sentAt ? formatDate(row.original.sentAt) : null,
+    cell: (row: InvoiceRowType) => <DateCell date={row.original.sentAt} />,
   },
   {
     id: InvoiceColumns.InvoiceNo,

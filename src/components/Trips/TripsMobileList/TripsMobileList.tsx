@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Trip } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -29,10 +30,12 @@ interface TripsMobileListProps {
 
 const TripsMobileListItem = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
+
   return (
     <HStack justify='space-between' gap='sm' className='Layer__TripsMobileListItem'>
       <VStack gap='3xs' className='Layer__TripsMobileListItem__LeftContent'>
-        <Span weight='bold'>{formatCalendarDate(trip.tripDate)}</Span>
+        <Span weight='bold'>{formatCalendarDate(trip.tripDate, formatDate)}</Span>
         {(trip.startAddress || trip.endAddress) && <TripsAddressCell trip={trip} />}
       </VStack>
       <VStack gap='3xs' align='end'>

@@ -1,13 +1,13 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
 import type { Row } from '@tanstack/react-table'
-import { format } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import { Direction } from '@internal-types/general'
 import { convertLedgerEntrySourceToLinkingMetadata, type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
-import { MONTH_DAY_FORMAT_SHORT } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/time/timeFormats'
 import type { PnlDetailLine } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
 import { useProfitAndLossDetailLines } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
@@ -92,6 +92,7 @@ export const ProfitAndLossDetailReport = ({
   stringOverrides,
 }: ProfitAndLossDetailReportProps) => {
   const { t } = useTranslation()
+  const { formatDateRange } = useIntlFormatter()
   const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLossContext)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySourceType | null>(null)
@@ -110,12 +111,6 @@ export const ProfitAndLossDetailReport = ({
   const dynamicBreadcrumbs = useMemo(() => {
     return breadcrumbPath || [{ name: lineItemName, display_name: lineItemName }]
   }, [breadcrumbPath, lineItemName])
-
-  const formatDateRange = (startDate: Date, endDate: Date) => {
-    const start = format(startDate, MONTH_DAY_FORMAT_SHORT)
-    const end = format(endDate, MONTH_DAY_FORMAT_SHORT)
-    return `${start} - ${end}`
-  }
 
   const { data, isLoading, isError } = useProfitAndLossDetailLines({
     businessId,
@@ -236,11 +231,11 @@ export const ProfitAndLossDetailReport = ({
     return (
       <DetailReportBreadcrumb
         breadcrumbs={dynamicBreadcrumbs}
-        subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
+        subtitle={formatDateRange(dateRange.startDate, dateRange.endDate, DateFormat.MonthDayShort)}
         onBreadcrumbClick={onBreadcrumbClick}
       />
     )
-  }, [dynamicBreadcrumbs, dateRange, onBreadcrumbClick])
+  }, [dynamicBreadcrumbs, dateRange, formatDateRange, onBreadcrumbClick])
 
   if (selectedSource) {
     return (

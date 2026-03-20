@@ -1,10 +1,12 @@
 import { type PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { I18nProvider as AriaI18nProvider } from 'react-aria-components'
 import { I18nextProvider } from 'react-i18next'
+import { IntlProvider } from 'react-intl'
 
 import i18next from '@utils/i18n/init'
 import { DEFAULT_LOCALE, isSupportedLocale } from '@utils/i18n/supportedLocale'
-import { I18nLocaleContext } from '@providers/I18nProvider/I18nLocaleContext'
+
+const EMPTY_MESSAGES = {}
 
 const getLocale = () => {
   const locale = i18next.resolvedLanguage || i18next.language
@@ -25,11 +27,11 @@ export function LayerI18nProvider({ children }: PropsWithChildren) {
 
   return (
     <I18nextProvider i18n={i18next}>
-      <I18nLocaleContext.Provider value={locale}>
+      <IntlProvider locale={locale} defaultLocale={DEFAULT_LOCALE} messages={EMPTY_MESSAGES}>
         <AriaI18nProvider locale={locale}>
           {children}
         </AriaI18nProvider>
-      </I18nLocaleContext.Provider>
+      </IntlProvider>
     </I18nextProvider>
   )
 }

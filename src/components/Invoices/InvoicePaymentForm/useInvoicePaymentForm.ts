@@ -5,15 +5,23 @@ import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { type DedicatedInvoicePaymentForm, type InvoicePayment, UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
+import { DateFormat } from '@utils/time/timeFormats'
 import { UpsertDedicatedInvoicePaymentMode, useUpsertDedicatedInvoicePayment } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment/useUpsertDedicatedInvoicePayment'
 import { useAppForm } from '@hooks/features/forms/useForm'
-import { convertInvoicePaymentFormToParams, getInvoicePaymentFormDefaultValues, validateInvoicePaymentForm } from '@components/Invoices/InvoicePaymentForm/formUtils'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import {
+  convertInvoicePaymentFormToParams,
+  getInvoicePaymentFormDefaultValues,
+  InvoicePaymentInvalidReason,
+  validateInvoicePaymentForm,
+} from '@components/Invoices/InvoicePaymentForm/formUtils'
 
 type onSuccessFn = (invoicePayment: InvoicePayment) => void
 type UseInvoicePaymentFormProps = { onSuccess: onSuccessFn, invoice: Invoice }
 
 export const useInvoicePaymentForm = (props: UseInvoicePaymentFormProps) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, invoice } = props
 
@@ -39,9 +47,33 @@ export const useInvoicePaymentForm = (props: UseInvoicePaymentFormProps) => {
     }
   }, [onSuccess, upsertDedicatedInvoicePayment, t])
 
+  const getErrorText = useCallback((reason: InvoicePaymentInvalidReason): string => {
+    switch (reason) {
+      case InvoicePaymentInvalidReason.AmountMustBePositive:
+        return t('invoices:validation.payment_amount_must', 'Payment amount must be greater than zero.')
+      case InvoicePaymentInvalidReason.AmountExceedsOutstandingBalance:
+        return t('invoices:validation.payment_amount_max_outstanding', 'Payment amount cannot be greater than the outstanding invoice balance.')
+      case InvoicePaymentInvalidReason.PaidAtRequired:
+        return t('invoices:validation.payment_date_required', 'Payment date is a required field.')
+      case InvoicePaymentInvalidReason.PaidAtBeforeInvoiceDate:
+        return t('invoices:validation.payment_date_not_before_invoice', 'Payment date cannot be before the invoice date ({{invoiceDate}}).', {
+          invoiceDate: invoice.sentAt ? formatDate(invoice.sentAt, DateFormat.DateNumeric) : '',
+        })
+      case InvoicePaymentInvalidReason.PaidAtInFuture:
+        return t('invoices:validation.payment_date_not_future', 'Payment date cannot be in the future.')
+      case InvoicePaymentInvalidReason.MethodRequired:
+        return t('invoices:validation.payment_method_required', 'Payment method is a required field.')
+      default:
+        return ''
+    }
+  }, [formatDate, invoice.sentAt, t])
+
   const onDynamic = useCallback(({ value }: { value: DedicatedInvoicePaymentForm }) => {
-    return validateInvoicePaymentForm({ invoicePayment: value, invoice }, t)
-  }, [invoice, t])
+    const errors = validateInvoicePaymentForm({ invoicePayment: value, invoice })
+    if (!errors) return null
+
+    return errors.map(({ field, reason }) => ({ [field]: getErrorText(reason) }))
+  }, [getErrorText, invoice])
 
   const validators = useMemo(() => ({ onDynamic }), [onDynamic])
 

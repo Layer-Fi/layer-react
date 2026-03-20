@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react'
 import classNames from 'classnames'
-import { format as formatTime, parseISO } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -11,6 +10,7 @@ import {
 import { isCategorized } from '@utils/bankTransactions'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
@@ -36,7 +36,6 @@ import { ErrorText } from '@components/Typography/ErrorText'
 
 type BankTransactionsListItemProps = {
   index: number
-  dateFormat: string
   bankTransaction: BankTransaction
   stringOverrides?: BankTransactionCTAStringOverrides
 
@@ -47,7 +46,6 @@ type BankTransactionsListItemProps = {
 
 export const BankTransactionsListItem = ({
   index,
-  dateFormat,
   bankTransaction,
   stringOverrides,
 
@@ -56,6 +54,7 @@ export const BankTransactionsListItem = ({
   showTooltips,
 }: BankTransactionsListItemProps) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
   const [openExpandedRow, setOpenExpandedRow] = useState(false)
   const [isExpandedRowValid, setIsExpandedRowValid] = useState(true)
@@ -109,7 +108,7 @@ export const BankTransactionsListItem = ({
       <span className='Layer__bank-transaction-list-item__heading'>
         <div className='Layer__bank-transaction-list-item__heading__main'>
           <Span ellipsis size='sm'>
-            {formatTime(parseISO(bankTransaction.date), dateFormat)}
+            {formatDate(bankTransaction.date)}
           </Span>
 
           <span className='Layer__bank-transaction-list-item__heading-separator' />

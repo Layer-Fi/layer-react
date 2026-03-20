@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { DATE_FORMAT } from '@utils/time/timeFormats'
 import { useBankTransactionsTableCheckboxState } from '@hooks/features/bankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -148,7 +147,6 @@ export const BankTransactionsTable = ({
               <BankTransactionRow
                 key={bankTransaction.id}
                 index={index}
-                dateFormat={DATE_FORMAT}
                 bankTransaction={bankTransaction}
                 showDescriptions={showDescriptions}
                 showReceiptUploads={showReceiptUploads}

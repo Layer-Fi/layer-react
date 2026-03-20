@@ -1,15 +1,17 @@
 import type { ZonedDateTime } from '@internationalized/date'
-import type { TFunction } from 'i18next'
 
-import { formatDate } from '@utils/format'
+export enum DateInvalidReason {
+  Empty = 'empty',
+  BeforeMin = 'beforeMin',
+  AfterMax = 'afterMax',
+}
 
-export const getIsDateInvalid = (
+export const getDateInvalidReason = (
   date: ZonedDateTime | null,
   { minDate, maxDate }: { minDate?: ZonedDateTime | null, maxDate?: ZonedDateTime | null },
-  t: TFunction,
 ) => {
-  if (date === null) return t('date:validation.date_not_empty', 'Cannot select empty date')
-  if (minDate && date.compare(minDate) < 0) return t('date:validation.date_before_min', 'Cannot select date before {{minDate}}', { minDate: formatDate(minDate.toDate()) })
-  if (maxDate && date.compare(maxDate) > 0) return t('date:validation.date_in_future', 'Cannot select date in the future')
+  if (date === null) return DateInvalidReason.Empty
+  if (minDate && date.compare(minDate) < 0) return DateInvalidReason.BeforeMin
+  if (maxDate && date.compare(maxDate) > 0) return DateInvalidReason.AfterMax
   return null
 }

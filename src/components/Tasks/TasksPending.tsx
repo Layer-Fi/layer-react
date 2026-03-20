@@ -1,10 +1,10 @@
 import classNames from 'classnames'
-import { format } from 'date-fns'
 import { Cell, Pie, PieChart } from 'recharts'
 
 import { getCompletedTasks, getIncompleteTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { MONTH_YEAR_FORMAT } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/time/timeFormats'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { BookkeepingStatusDescription } from '@components/BookkeepingStatus/BookkeepingStatusDescription'
@@ -18,6 +18,7 @@ const TASKS_CHARTS_COLORS = {
 
 export const TasksPending = () => {
   const { date } = useGlobalDate()
+  const { formatDate } = useIntlFormatter()
   const { activePeriod } = useActiveBookkeepingPeriod()
 
   const totalTaskCount = activePeriod?.tasks?.length ?? 0
@@ -44,7 +45,7 @@ export const TasksPending = () => {
   return (
     <div className='Layer__tasks-pending'>
       <div className='Layer__tasks-pending-header'>
-        <Heading size={HeadingSize.secondary}>{format(date, MONTH_YEAR_FORMAT)}</Heading>
+        <Heading size={HeadingSize.secondary}>{formatDate(date, DateFormat.MonthYear)}</Heading>
         {activePeriod?.tasks && activePeriod.tasks.length > 0
           ? (
             <div className='Layer__tasks-pending-bar'>

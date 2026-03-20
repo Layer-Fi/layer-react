@@ -5,9 +5,16 @@ import { useTranslation } from 'react-i18next'
 
 import { CreateCustomerRefundSchema, type CustomerRefund } from '@schemas/invoices/customerRefund'
 import { type Invoice } from '@schemas/invoices/invoice'
+import { DateFormat } from '@utils/time/timeFormats'
 import { useRefundInvoice } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/refund/useRefundInvoice'
 import { useAppForm } from '@hooks/features/forms/useForm'
-import { convertInvoiceRefundFormToParams, getInvoiceRefundFormDefaultValues, validateInvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/formUtils'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import {
+  convertInvoiceRefundFormToParams,
+  getInvoiceRefundFormDefaultValues,
+  InvoiceRefundInvalidReason,
+  validateInvoiceRefundForm,
+} from '@components/Invoices/InvoiceRefundForm/formUtils'
 import type { InvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/invoiceRefundFormSchemas'
 
 type onSuccessFn = (refund: CustomerRefund) => void
@@ -15,6 +22,7 @@ type UseInvoiceRefundFormProps = { onSuccess: onSuccessFn, invoice: Invoice }
 
 export const useInvoiceRefundForm = ({ onSuccess, invoice }: UseInvoiceRefundFormProps) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
 
   const { trigger: refundInvoice } = useRefundInvoice({ invoiceId: invoice.id })
@@ -38,9 +46,29 @@ export const useInvoiceRefundForm = ({ onSuccess, invoice }: UseInvoiceRefundFor
     }
   }, [onSuccess, refundInvoice, t])
 
+  const getErrorText = useCallback((reason: InvoiceRefundInvalidReason): string => {
+    switch (reason) {
+      case InvoiceRefundInvalidReason.CompletedAtRequired:
+        return t('invoices:validation.refund_date_required', 'Refund date is a required field.')
+      case InvoiceRefundInvalidReason.CompletedAtBeforeLastPayment:
+        return t('invoices:validation.refund_date_before_last_payment', 'Refund date cannot be before the last invoice payment ({{lastPaymentDate}}).', {
+          lastPaymentDate: invoice.paidAt ? formatDate(invoice.paidAt, DateFormat.DateNumeric) : '',
+        })
+      case InvoiceRefundInvalidReason.CompletedAtInFuture:
+        return t('invoices:validation.refund_date_future', 'Refund date cannot be in the future.')
+      case InvoiceRefundInvalidReason.MethodRequired:
+        return t('invoices:validation.payment_method_required', 'Payment method is a required field.')
+      default:
+        return ''
+    }
+  }, [formatDate, t, invoice.paidAt])
+
   const onDynamic = useCallback(({ value }: { value: InvoiceRefundForm }) => {
-    return validateInvoiceRefundForm({ invoiceRefund: value, invoice }, t)
-  }, [invoice, t])
+    const errors = validateInvoiceRefundForm({ invoiceRefund: value, invoice })
+    if (!errors) return null
+
+    return errors.map(({ field, reason }) => ({ [field]: getErrorText(reason) }))
+  }, [getErrorText, invoice])
 
   const validators = useMemo(() => ({ onDynamic }), [onDynamic])
 

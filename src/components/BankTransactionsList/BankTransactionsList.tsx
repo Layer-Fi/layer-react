@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { DATE_FORMAT } from '@utils/time/timeFormats'
 import { useBankTransactionsTableCheckboxState } from '@hooks/features/bankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -63,7 +62,6 @@ export const BankTransactionsList = ({
             <BankTransactionsListItem
               key={bankTransaction.id}
               index={index}
-              dateFormat={DATE_FORMAT}
               bankTransaction={bankTransaction}
               stringOverrides={stringOverrides}
 

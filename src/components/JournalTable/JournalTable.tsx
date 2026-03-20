@@ -1,5 +1,4 @@
 import { Fragment, useContext, useLayoutEffect } from 'react'
-import { format as formatTime, parseISO } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import { type View } from '@internal-types/general'
@@ -12,7 +11,7 @@ import { TableCellAlign } from '@internal-types/table'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { humanizeEnum } from '@utils/format'
 import { entryNumber } from '@utils/journal'
-import { DATE_FORMAT } from '@utils/time/timeFormats'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -65,6 +64,7 @@ const JournalTableContent = ({
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(JournalContext)
 
@@ -118,7 +118,7 @@ const JournalTableContent = ({
             {entryNumber(row)}
           </TableCell>
           <TableCell>
-            {row.entry_at && formatTime(parseISO(row.entry_at), DATE_FORMAT)}
+            {row.entry_at && formatDate(row.entry_at)}
           </TableCell>
           <TableCell>{humanizeEnum(row.entry_type)}</TableCell>
           {/* Empty cell for account number on Transaction level */}

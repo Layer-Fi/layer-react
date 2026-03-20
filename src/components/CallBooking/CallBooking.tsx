@@ -1,11 +1,10 @@
-import { format as formatTime } from 'date-fns'
 import { Link as LinkIcon } from 'lucide-react'
 import { Clock, Milestone, Users, Video } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
-import { DATE_FORMAT_WITH_TIME_READABLE } from '@utils/time/timeFormats'
-import { getTimezoneDisplay } from '@utils/time/timezoneUtils'
+import { DateFormat } from '@utils/time/timeFormats'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -38,6 +37,7 @@ const ScheduledCallState = ({
   callBooking: CallBookingData
 }) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING ? t('callBookings:label.onboarding_call', 'Onboarding call') : t('callBookings:label.ad_hoc_call', 'Ad hoc call')
   const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
 
@@ -74,11 +74,8 @@ const ScheduledCallState = ({
               {' '}
             </Span>
             <Span size='md'>
-              {formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME_READABLE)}
-              {' '}
-              <>{getTimezoneDisplay(callBooking.eventStartAt)}</>
+              {formatDate(callBooking.eventStartAt, DateFormat.DateWithTimeReadableWithTimezone)}
             </Span>
-
           </HStack>
         </HStack>
       </VStack>

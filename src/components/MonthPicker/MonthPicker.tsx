@@ -2,9 +2,9 @@ import { useCallback, useId, useRef, useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { Dialog, DialogTrigger } from 'react-aria-components'
-import { useTranslation } from 'react-i18next'
 
-import { getMonthNameFromNumber } from '@utils/date'
+import { DateFormat } from '@utils/time/timeFormats'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
@@ -35,18 +35,21 @@ export const MonthPicker = ({
   maxDate = null,
   truncateMonth = false,
 }: MonthPickerProps) => {
-  const { i18n } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const triggerRef = useRef(null)
   const [isPopoverOpen, setPopoverOpen] = useState(false)
   const { value } = useSizeClass()
-  const locale = i18n.resolvedLanguage ?? i18n.language
 
   const onChangeMonth = useCallback((val: ZonedDateTime) => {
     onChange(val)
     setPopoverOpen(false)
   }, [onChange])
 
-  const inputValue = `${getMonthNameFromNumber(date.month, locale, truncateMonth ? 'short' : 'long')} ${date.year}`
+  const monthDate = new Date(date.year, date.month - 1, 1)
+  const inputValue = formatDate(
+    monthDate,
+    truncateMonth ? DateFormat.MonthYearShort : DateFormat.MonthYear,
+  )
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
   const inputId = useId()

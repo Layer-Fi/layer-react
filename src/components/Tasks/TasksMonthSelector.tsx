@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
-import { format, getMonth, getYear, set } from 'date-fns'
+import { getMonth, getYear, set } from 'date-fns'
 
 import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { MONTH_FORMAT_SHORT } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/time/timeFormats'
 import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TaskMonthTile } from '@components/Tasks/TaskMonthTile'
 import { type MonthData } from '@components/Tasks/types'
@@ -23,6 +24,7 @@ function useActiveYearBookkeepingPeriods() {
 
 function TasksMonthSelector() {
   const { date } = useGlobalDate()
+  const { formatDate } = useIntlFormatter()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
 
   const { periodsInActiveYear } = useActiveYearBookkeepingPeriods()
@@ -54,14 +56,14 @@ function TasksMonthSelector() {
       const total = taskData.tasks?.length ?? 0
 
       return {
-        monthStr: format(date, MONTH_FORMAT_SHORT),
+        monthStr: formatDate(date, DateFormat.MonthShort),
         date,
         completed: getCompletedTasks(taskData.tasks).length,
         total,
         ...taskData,
       } satisfies MonthData
     })
-  }, [periodsInActiveYear, activeYear])
+  }, [activeYear, formatDate, periodsInActiveYear])
 
   return (
     <div className='Layer__tasks-month-selector'>

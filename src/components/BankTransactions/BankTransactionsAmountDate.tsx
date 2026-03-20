@@ -1,4 +1,4 @@
-import { MONTH_DAY_FORMAT } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/time/timeFormats'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { DateTime } from '@components/DateTime/DateTime'
@@ -28,7 +28,7 @@ export const BankTransactionsAmountDate = ({ amount, date, slotProps }: BankTran
 
       <DateTime
         value={date}
-        dateFormat={MONTH_DAY_FORMAT}
+        dateFormat={DateFormat.MonthDayShort}
         onlyDate
         slotProps={{
           Date: {

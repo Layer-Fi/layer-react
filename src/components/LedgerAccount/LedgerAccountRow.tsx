@@ -1,6 +1,5 @@
 import { useContext, useMemo } from 'react'
 import classNames from 'classnames'
-import { format as formatTime, parseISO } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import { LedgerAccountNodeType } from '@internal-types/chartOfAccounts'
@@ -10,7 +9,7 @@ import { type LedgerAccountLineItem } from '@internal-types/ledgerAccounts'
 import { decodeLedgerEntrySource } from '@schemas/generalLedger/ledgerEntrySource'
 import { lineEntryNumber } from '@utils/journal'
 import { centsToDollars } from '@utils/money'
-import { DATE_FORMAT } from '@utils/time/timeFormats'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { Text, TextWeight } from '@components/Typography/Text'
 
@@ -28,6 +27,7 @@ export const LedgerAccountRow = ({
   nodeType,
 }: LedgerAccountRowProps) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(LedgerAccountsContext)
   const ledgerEntrySource = useMemo(() => {
@@ -55,7 +55,7 @@ export const LedgerAccountRow = ({
           <span className='Layer__table-cell-content'>
             <div className='Layer__ledger-account-table__tablet-main-col__date'>
               <Text>
-                {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
+                {row.date && formatDate(row.date)}
               </Text>
               <Text
                 weight={TextWeight.normal}
@@ -115,7 +115,7 @@ export const LedgerAccountRow = ({
           <span className='Layer__table-cell-content'>
             <div className='Layer__ledger-account-table__tablet-main-col__date'>
               <Text>
-                {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
+                {row.date && formatDate(row.date)}
               </Text>
               <Text
                 weight={TextWeight.normal}
@@ -184,7 +184,7 @@ export const LedgerAccountRow = ({
     >
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content'>
-          {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
+          {row.date && formatDate(row.date)}
         </span>
       </td>
       <td className='Layer__table-cell'>

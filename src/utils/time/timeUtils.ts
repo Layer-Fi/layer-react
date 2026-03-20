@@ -1,5 +1,7 @@
-import { type CalendarDate, DateFormatter, fromDate, getLocalTimeZone, ZonedDateTime } from '@internationalized/date'
+import { type CalendarDate, fromDate, getLocalTimeZone, ZonedDateTime } from '@internationalized/date'
 import { differenceInDays, formatISO } from 'date-fns'
+
+import type { DateTimeFormatFn } from '@hooks/utils/i18n/useIntlFormatter'
 
 export const toLocalDateString = (date: Date): string => formatISO(date.valueOf(), { representation: 'date' })
 
@@ -19,14 +21,7 @@ export function isZonedDateTime(val: unknown): val is ZonedDateTime {
 
 export const convertDateToZonedDateTime = (date: Date) => fromDate(date, getLocalTimeZone())
 
-export const formatCalendarDate = (date: CalendarDate): string => {
-  const formatter = new DateFormatter('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    timeZone: 'UTC',
-  })
-  // Create a Date object in UTC to avoid timezone shifts
-  const utcDate = new Date(Date.UTC(date.year, date.month - 1, date.day))
-  return formatter.format(utcDate)
+export const formatCalendarDate = (date: CalendarDate, formatDate: DateTimeFormatFn): string => {
+  const localDate = new Date(date.year, date.month - 1, date.day)
+  return formatDate(localDate)
 }

@@ -1,12 +1,10 @@
 import { fromDate, getLocalTimeZone, toCalendarDate, today } from '@internationalized/date'
-import { formatDate, startOfToday } from 'date-fns'
+import { startOfToday } from 'date-fns'
 import { BigDecimal as BD } from 'effect'
-import type { TFunction } from 'i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { type DedicatedInvoicePaymentForm } from '@schemas/invoices/invoicePayment'
 import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
-import { DATE_FORMAT_SHORT } from '@utils/time/timeFormats'
 
 export const getInvoicePaymentFormDefaultValues = (invoice: Invoice): DedicatedInvoicePaymentForm => {
   const paidAt = fromDate(startOfToday(), getLocalTimeZone())
@@ -20,41 +18,47 @@ export const getInvoicePaymentFormDefaultValues = (invoice: Invoice): DedicatedI
   }
 }
 
+export enum InvoicePaymentInvalidReason {
+  AmountMustBePositive = 'amountMustBePositive',
+  AmountExceedsOutstandingBalance = 'amountExceedsOutstandingBalance',
+  PaidAtRequired = 'paidAtRequired',
+  PaidAtBeforeInvoiceDate = 'paidAtBeforeInvoiceDate',
+  PaidAtInFuture = 'paidAtInFuture',
+  MethodRequired = 'methodRequired',
+}
+
+export type InvoicePaymentValidationError = {
+  field: 'amount' | 'paidAt' | 'method'
+  reason: InvoicePaymentInvalidReason
+}
+
 export const validateInvoicePaymentForm = (
   { invoicePayment, invoice }: { invoicePayment: DedicatedInvoicePaymentForm, invoice: Invoice },
-  t: TFunction,
 ) => {
   const { amount, paidAt, method } = invoicePayment
-
-  const errors = []
+  const errors: InvoicePaymentValidationError[] = []
   if (!BD.isPositive(amount)) {
-    errors.push({ amount: t('invoices:validation.payment_amount_must', 'Payment amount must be greater than zero.') })
+    errors.push({ field: 'amount', reason: InvoicePaymentInvalidReason.AmountMustBePositive })
   }
 
   if (BD.greaterThan(amount, convertCentsToBigDecimal(invoice.outstandingBalance))) {
-    errors.push({
-      amount: t('invoices:validation.payment_amount_max_outstanding', 'Payment amount cannot be greater than the outstanding invoice balance.'),
-    })
+    errors.push({ field: 'amount', reason: InvoicePaymentInvalidReason.AmountExceedsOutstandingBalance })
   }
 
   if (paidAt === null) {
-    errors.push({ paidAt: t('invoices:validation.payment_date_required', 'Payment date is a required field.') })
+    errors.push({ field: 'paidAt', reason: InvoicePaymentInvalidReason.PaidAtRequired })
   }
 
   if (paidAt && invoice.sentAt && toCalendarDate(paidAt).compare(toCalendarDate(fromDate(invoice.sentAt, 'UTC'))) < 0) {
-    errors.push({
-      paidAt: t('invoices:validation.payment_date_not_before_invoice', 'Payment date cannot be before the invoice date ({{invoiceDate}}).', {
-        invoiceDate: formatDate(invoice.sentAt, DATE_FORMAT_SHORT),
-      }),
-    })
+    errors.push({ field: 'paidAt', reason: InvoicePaymentInvalidReason.PaidAtBeforeInvoiceDate })
   }
 
   if (paidAt && toCalendarDate(paidAt).compare(today(getLocalTimeZone())) > 0) {
-    errors.push({ paidAt: t('invoices:validation.payment_date_not_future', 'Payment date cannot be in the future.') })
+    errors.push({ field: 'paidAt', reason: InvoicePaymentInvalidReason.PaidAtInFuture })
   }
 
   if (method === null) {
-    errors.push({ method: t('invoices:validation.payment_method_required', 'Payment method is a required field.') })
+    errors.push({ field: 'method', reason: InvoicePaymentInvalidReason.MethodRequired })
   }
 
   return errors.length > 0 ? errors : null
