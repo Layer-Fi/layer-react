@@ -1,10 +1,10 @@
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getMonthNameFromNumber } from '@utils/date'
 import { tPlural } from '@utils/i18n/plural'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import AlertCircle from '@icons/AlertCircle'
 import CheckCircle from '@icons/CheckCircle'
 import Clock from '@icons/Clock'
@@ -26,13 +26,13 @@ type BookkeepingStatusConfigOptions = {
 export function useBookkeepingStatusConfig(
   options: BookkeepingStatusConfigOptions,
 ): InternalStatusConfig | undefined {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const { formatMonthName } = useIntlFormatter()
   const { status, monthNumber, incompleteTasksCount } = options
 
   if (!status) return
 
-  const locale = i18n.language
-  const monthName = monthNumber !== undefined ? getMonthNameFromNumber(monthNumber, locale) : ''
+  const monthName = monthNumber !== undefined ? formatMonthName(monthNumber) : ''
   const inProgressDescription = incompleteTasksCount !== undefined && incompleteTasksCount > 0
     ? tPlural(t, 'bookkeeping:label.working_on_books_please_complete_tasks', {
       count: incompleteTasksCount,

@@ -1,11 +1,12 @@
 import { type ReactNode, useContext, useMemo } from 'react'
-import { format, sub } from 'date-fns'
+import { sub } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import { calculatePercentageChange } from '@utils/percentageChange'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { MONTH_FORMAT_SHORT } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/time/timeFormats'
 import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import {
@@ -58,6 +59,7 @@ function Internal_ProfitAndLossSummaries({
   variants,
 }: Internal_ProfitAndLossSummariesProps) {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const {
     data,
     isLoading,
@@ -107,9 +109,9 @@ function Internal_ProfitAndLossSummaries({
       revenuePercentChange: calculatePercentageChange(currentRevenue, previousRevenue),
       expensesPercentChange: calculatePercentageChange(currentExpenses, previousExpenses),
       netProfitPercentChange: calculatePercentageChange(currentNetProfit, previousNetProfit),
-      comparisonMonth: format(previousMonthStart, MONTH_FORMAT_SHORT),
+      comparisonMonth: formatDate(previousMonthStart, DateFormat.MonthShort),
     }
-  }, [previousData, effectiveData, previousMonthStart])
+  }, [effectiveData, formatDate, previousData, previousMonthStart])
 
   const {
     revenuePercentChange = null,

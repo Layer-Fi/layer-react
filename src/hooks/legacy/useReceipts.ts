@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { format as formatTime, parseISO } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import type { DocumentS3Urls } from '@internal-types/bankTransactions'
@@ -8,8 +7,9 @@ import type { FileMetadata } from '@internal-types/fileUpload'
 import { type Awaitable } from '@internal-types/utility/promises'
 import { get, post, postWithFormData } from '@utils/api/authenticatedHttp'
 import { hasReceipts } from '@utils/bankTransactions'
-import { DATE_FORMAT } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/time/timeFormats'
 import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -68,11 +68,6 @@ type UseReceipts = (props: UseReceiptsProps) => {
   archiveDocument: (document: DocumentWithStatus) => Awaitable<void>
 }
 
-const readDate = (date?: string) => {
-  if (!date) return undefined
-  return date && formatTime(parseISO(date), DATE_FORMAT)
-}
-
 const RECEIPT_ALLOWED_UPLOAD_FILE_TYPES = [
   'image/jpeg',
   'image/png',
@@ -118,6 +113,7 @@ export const useReceipts: UseReceipts = ({
   isActive,
 }: UseReceiptsProps) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
@@ -152,7 +148,7 @@ export const useReceipts: UseReceipts = ({
       type: docUrl.fileType,
       status: 'uploaded' as const,
       name: docUrl.fileName,
-      date: readDate(docUrl.createdAt),
+      date: formatDate(docUrl.createdAt),
     }))
 
     setReceiptUrls(retrievedDocs)
@@ -169,7 +165,7 @@ export const useReceipts: UseReceipts = ({
           url: undefined,
           status: 'failed' as const,
           name: file.name,
-          date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
+          date: formatDate(new Date()),
           error: t('bankTransactions:error.upload_file_type', 'Invalid file type. Please upload an image or PDF.'),
         },
       ])
@@ -194,7 +190,7 @@ export const useReceipts: UseReceipts = ({
       url: undefined,
       status: 'pending' as const,
       name: renamedFile.name,
-      date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
+      date: formatDate(new Date(), DateFormat.DateShort),
     }
 
     try {

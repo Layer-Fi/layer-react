@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect } from 'react'
+import { Fragment, useContext, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -12,6 +12,7 @@ import {
   mergeComparisonLineItemsAtDepth,
 } from '@utils/profitAndLossComparisonUtils'
 import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
@@ -35,6 +36,7 @@ export const ProfitAndLossCompareTable = ({
   stringOverrides,
 }: ProfitAndLossCompareTableProps) => {
   const { t } = useTranslation()
+  const formatter = useIntlFormatter()
   const { dateRange, dateSelectionMode } = useContext(ProfitAndLossContext)
   const {
     data: comparisonData,
@@ -71,6 +73,18 @@ export const ProfitAndLossCompareTable = ({
 
     return <BookkeepingStatus status={period.status} monthNumber={currentMonth} iconOnly />
   }
+
+  const comparisonPeriods = useMemo(() => {
+    if (!comparePeriods) {
+      return []
+    }
+
+    return generateComparisonPeriods({
+      numberOfPeriods: comparePeriods,
+      mode: comparisonPeriodMode,
+      ...dateRange,
+    }, formatter)
+  }, [comparePeriods, comparisonPeriodMode, dateRange, formatter])
 
   const renderRow = ({
     comparisonData,
@@ -206,16 +220,12 @@ export const ProfitAndLossCompareTable = ({
                   ? (
                     selectedCompareOptions.map((option, i) => (
                       <Fragment key={option.displayName + '-' + i}>
-                        {generateComparisonPeriods({
-                          numberOfPeriods: comparePeriods,
-                          mode: comparisonPeriodMode,
-                          ...dateRange,
-                        }).map((month, index) => (
+                        {comparisonPeriods.map((period, index) => (
                           <TableCell key={option.displayName + '-' + index} isHeaderCell>
                             <HStack gap='2xs'>
-                              {month.label}
+                              {period.label}
                               {' '}
-                              {getBookkeepingPeriodStatus(month.date)}
+                              {getBookkeepingPeriodStatus(period.date)}
                             </HStack>
                           </TableCell>
                         ))}
@@ -224,13 +234,9 @@ export const ProfitAndLossCompareTable = ({
                   )
                   : (
                     <Fragment key='total-1'>
-                      {generateComparisonPeriods({
-                        numberOfPeriods: comparePeriods,
-                        mode: comparisonPeriodMode,
-                        ...dateRange,
-                      }).map((month, index) => (
+                      {comparisonPeriods.map((period, index) => (
                         <TableCell key={'total-' + index + '-cell'} isHeaderCell>
-                          {month.label}
+                          {period.label}
                         </TableCell>
                       ))}
                     </Fragment>

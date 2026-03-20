@@ -1,12 +1,10 @@
 import classNames from 'classnames'
-import { format as formatTime, parseISO } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
-import { isTransferMatch } from '@utils/bankTransactions'
 import { centsToDollars as formatMoney } from '@utils/money'
-import { DATE_FORMAT } from '@utils/time/timeFormats'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { MatchBadge } from '@components/BankTransactionRow/MatchBadge'
@@ -31,6 +29,7 @@ export const MatchForm = ({
   readOnly = false,
 }: MatchFormProps) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const { renderInAppLink } = useInAppLinkContext()
 
@@ -81,7 +80,7 @@ export const MatchForm = ({
           >
             <div className='Layer__nowrap Layer__MatchForm__Table__date'>
               <span>
-                {formatTime(parseISO(suggestedMatch.details.date), DATE_FORMAT)}
+                {formatDate(suggestedMatch.details.date)}
               </span>
             </div>
             <div className='Layer__MatchForm__Table__desc'>
@@ -111,11 +110,7 @@ export const MatchForm = ({
                   )}
                 >
                   {suggestedMatch.details.id === match?.details.id && (
-                    <MatchBadge
-                      bankTransaction={bankTransaction}
-                      dateFormat={DATE_FORMAT}
-                      text={isTransferMatch(bankTransaction) ? t('bankTransactions:label.transfer', 'Transfer') : t('bankTransactions:label.matched', 'Matched')}
-                    />
+                    <MatchBadge bankTransaction={bankTransaction} />
                   )}
                 </div>
               )

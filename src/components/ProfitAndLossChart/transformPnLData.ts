@@ -1,10 +1,7 @@
-import { getMonthNameFromNumber } from '@utils/date'
+import { MonthPattern } from '@utils/time/timeFormats'
 import { type ProfitAndLossSummaryData } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
+import { type MonthNameFormatFn } from '@hooks/utils/i18n/useIntlFormatter'
 import type { ChartDataPoint } from '@components/ProfitAndLossChart/chartDataPoint'
-
-const formatMonthName = (date: Date, compactView: boolean, locale: string): string => {
-  return getMonthNameFromNumber(date.getMonth() + 1, locale, compactView ? 'narrow' : 'short')
-}
 
 const BASE_LOADING_DEFAULT = 90000
 
@@ -41,16 +38,18 @@ const summarizePnL = ({
   index,
   compactView,
   data,
-  locale,
+  formatMonthName,
 }: {
   pnl: ProfitAndLossSummaryData
   index: number
   compactView: boolean
   data?: ProfitAndLossSummaryData[]
-  locale: string
+  formatMonthName: MonthNameFormatFn
 }): ChartDataPoint => {
-  const date = new Date(pnl.year, pnl.month - 1, 1)
-  const name = formatMonthName(date, compactView, locale)
+  const name = formatMonthName(
+    pnl.month,
+    compactView ? MonthPattern.MonthNarrow : MonthPattern.MonthShort,
+  )
 
   const { loadingBar, loadingBarInverse } = pnl.isLoading
     ? getLoadingValues(index, data)
@@ -86,11 +85,17 @@ const summarizePnL = ({
 export const transformPnLData = ({
   data,
   compactView,
-  locale,
+  formatMonthName,
 }: {
   data: ProfitAndLossSummaryData[]
   compactView: boolean
-  locale: string
+  formatMonthName: MonthNameFormatFn
 }): ChartDataPoint[] => {
-  return data.map((pnl, index) => summarizePnL({ pnl, index, compactView, data, locale }))
+  return data.map((pnl, index) => summarizePnL({
+    pnl,
+    index,
+    compactView,
+    data,
+    formatMonthName,
+  }))
 }

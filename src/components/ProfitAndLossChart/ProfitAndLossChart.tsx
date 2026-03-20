@@ -5,7 +5,6 @@ import {
   startOfMonth,
   sub,
 } from 'date-fns'
-import { useTranslation } from 'react-i18next'
 import {
   CartesianGrid,
   ComposedChart,
@@ -22,6 +21,7 @@ import { isDateAllowedToBrowse } from '@utils/business'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { useProfitAndLossLTM } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ChartYAxis } from '@components/Chart/ChartYAxis'
@@ -44,7 +44,7 @@ export interface ProfitAndLossChartProps {
 const CHART_MARGINS = { left: 12, right: 12, bottom: 12 }
 
 export const ProfitAndLossChart = ({ tagFilter }: ProfitAndLossChartProps) => {
-  const { i18n } = useTranslation()
+  const { formatMonthName } = useIntlFormatter()
   const [compactView, setCompactView] = useState(false)
   const barSize = compactView ? 10 : 20
   const cursorWidth = barSize * 2.2
@@ -97,9 +97,9 @@ export const ProfitAndLossChart = ({ tagFilter }: ProfitAndLossChartProps) => {
     () => transformPnLData({
       data,
       compactView,
-      locale: i18n.resolvedLanguage ?? i18n.language,
+      formatMonthName,
     }),
-    [data, compactView, i18n.resolvedLanguage, i18n.language],
+    [compactView, data, formatMonthName],
   )
 
   const selectedIndex = dataOrPlaceholderData.findIndex(

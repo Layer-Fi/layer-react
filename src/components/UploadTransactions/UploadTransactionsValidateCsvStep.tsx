@@ -1,13 +1,15 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import classNames from 'classnames'
 import { RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type CustomAccountTransactionRow } from '@internal-types/customAccounts'
-import { convertCentsToCurrency, formatDate } from '@utils/format'
+import { convertCentsToCurrency } from '@utils/format'
+import { DateFormat } from '@utils/time/timeFormats'
 import type { CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { useCreateCustomAccountTransactions } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/useCreateCustomAccountTransactions'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { Button, ButtonVariant } from '@components/Button/Button'
@@ -23,11 +25,6 @@ interface UploadTransactionsValidateCsvStepProps {
   selectedAccountId?: string
   onSelectFile: (file: File | null) => void
   onUploadTransactionsSuccess: (transactions: BankTransaction[]) => void
-}
-
-const formatters = {
-  date: (parsed: string) => formatDate(parsed, 'MM/dd/yyyy'),
-  amount: (parsed: number) => convertCentsToCurrency(parsed) ?? '',
 }
 
 const generateDynamicHeaders = (
@@ -54,8 +51,14 @@ export function UploadTransactionsValidateCsvStep(
   { parseCsvResponse, selectedAccountId, onSelectFile, onUploadTransactionsSuccess }: UploadTransactionsValidateCsvStepProps,
 ) {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const { previous, next } = useWizard()
   const { trigger: uploadTransactions, isMutating, error: uploadTransactionsError } = useCreateCustomAccountTransactions()
+
+  const formatters = useMemo(() => ({
+    date: (parsed: string) => formatDate(parsed, DateFormat.DateNumericPadded),
+    amount: (parsed: number) => convertCentsToCurrency(parsed) ?? '',
+  }), [formatDate])
 
   const onClickReupload = useCallback(() => {
     onSelectFile(null)

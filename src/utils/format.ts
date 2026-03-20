@@ -1,7 +1,3 @@
-import { format as formatDateFns, parseISO } from 'date-fns'
-
-import { DATE_FORMAT } from '@utils/time/timeFormats'
-
 /**
  * Capitalize first letter of the given text.
  */
@@ -142,22 +138,6 @@ export const convertCentsToCurrency = (amount?: number | string): string | undef
   }
   catch {
     return undefined
-  }
-}
-
-/**
- * Format date to a given format. By default, it uses the DATE_FORMAT.
- */
-export const formatDate = (date?: string | Date, dateFormat: string = DATE_FORMAT): string => {
-  try {
-    if (!date) {
-      return ''
-    }
-
-    return formatDateFns(date instanceof Date ? date : parseISO(date), dateFormat)
-  }
-  catch {
-    return ''
   }
 }
 

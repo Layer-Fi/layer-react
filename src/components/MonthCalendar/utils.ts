@@ -1,4 +1,5 @@
-import { getMonthNameFromNumber } from '@utils/date'
+import { MonthPattern } from '@utils/time/timeFormats'
+import { type MonthNameFormatFn } from '@hooks/utils/i18n/useIntlFormatter'
 
 export type MonthOption = {
   key: number
@@ -6,12 +7,12 @@ export type MonthOption = {
   abbreviation: string
 }
 
-export const getMonths = (locale: string): MonthOption[] => {
+export const getMonths = (formatMonthName: MonthNameFormatFn): MonthOption[] => {
   return Array.from({ length: 12 }, (_, index) => {
     return {
       key: index + 1,
-      label: getMonthNameFromNumber(index + 1, locale, 'long'),
-      abbreviation: getMonthNameFromNumber(index + 1, locale, 'short'),
+      label: formatMonthName(index + 1, MonthPattern.Month),
+      abbreviation: formatMonthName(index + 1, MonthPattern.MonthShort),
     }
   })
 }

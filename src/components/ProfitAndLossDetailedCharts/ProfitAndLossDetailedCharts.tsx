@@ -1,12 +1,12 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
-import { format } from 'date-fns'
 import { Hourglass } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { humanizeTitle } from '@utils/profitAndLossUtils'
-import { MONTH_YEAR_FORMAT_FULL } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/time/timeFormats'
 import { type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import XIcon from '@icons/X'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -48,6 +48,7 @@ export const ProfitAndLossDetailedCharts = ({
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
 }) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const {
     filteredDataRevenue,
     filteredTotalRevenue,
@@ -96,7 +97,7 @@ export const ProfitAndLossDetailedCharts = ({
             {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides, t)}
           </Text>
           <Text size={TextSize.sm} className='date'>
-            {format(dateRange.startDate, MONTH_YEAR_FORMAT_FULL)}
+            {formatDate(dateRange.startDate, DateFormat.MonthYear)}
           </Text>
           {showDatePicker && <GlobalMonthPicker />}
         </div>
@@ -119,7 +120,7 @@ export const ProfitAndLossDetailedCharts = ({
             {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides, t)}
           </Text>
           <Text size={TextSize.sm} className='date'>
-            {format(dateRange.startDate, MONTH_YEAR_FORMAT_FULL)}
+            {formatDate(dateRange.startDate, DateFormat.MonthYear)}
           </Text>
         </div>
       </header>

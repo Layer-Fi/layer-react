@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { type Trip, type TripPurpose } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
 import { getVehicleDisplayName } from '@utils/vehicles'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -37,11 +38,19 @@ type TripActions = {
 }
 
 type TripsRowType = Row<Trip>
-const getColumnConfig = ({ onViewOrUpsertTrip, onDeleteTrip }: TripActions, t: TFunction): NestedColumnConfig<Trip> => [
+const TripsDateCell = ({ tripDate }: { tripDate: Trip['tripDate'] }) => {
+  const { formatDate } = useIntlFormatter()
+  return formatCalendarDate(tripDate, formatDate)
+}
+
+const getColumnConfig = (
+  { onViewOrUpsertTrip, onDeleteTrip }: TripActions,
+  t: TFunction,
+): NestedColumnConfig<Trip> => [
   {
     id: TripColumns.TripDate,
     header: t('common:label.date', 'Date'),
-    cell: (row: TripsRowType) => formatCalendarDate(row.original.tripDate),
+    cell: (row: TripsRowType) => <TripsDateCell tripDate={row.original.tripDate} />,
   },
   {
     id: TripColumns.Vehicle,

@@ -1,10 +1,8 @@
 import { fromDate, getLocalTimeZone, toCalendarDate, today } from '@internationalized/date'
-import { formatDate, startOfToday } from 'date-fns'
-import type { TFunction } from 'i18next'
+import { startOfToday } from 'date-fns'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
-import { DATE_FORMAT_SHORT } from '@utils/time/timeFormats'
 import type { InvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/invoiceRefundFormSchemas'
 
 export const getInvoiceRefundFormDefaultValues = (invoice: Invoice): InvoiceRefundForm => {
@@ -17,31 +15,37 @@ export const getInvoiceRefundFormDefaultValues = (invoice: Invoice): InvoiceRefu
   }
 }
 
+export enum InvoiceRefundInvalidReason {
+  CompletedAtRequired = 'completedAtRequired',
+  CompletedAtBeforeLastPayment = 'completedAtBeforeLastPayment',
+  CompletedAtInFuture = 'completedAtInFuture',
+  MethodRequired = 'methodRequired',
+}
+
+export type InvoiceRefundValidationError = {
+  field: 'completedAt' | 'method'
+  reason: InvoiceRefundInvalidReason
+}
+
 export const validateInvoiceRefundForm = (
   { invoiceRefund, invoice }: { invoiceRefund: InvoiceRefundForm, invoice: Invoice },
-  t: TFunction,
 ) => {
   const { completedAt, method } = invoiceRefund
-
-  const errors = []
+  const errors: InvoiceRefundValidationError[] = []
   if (completedAt === null) {
-    errors.push({ completedAt: t('invoices:validation.refund_date_required', 'Refund date is a required field.') })
+    errors.push({ field: 'completedAt', reason: InvoiceRefundInvalidReason.CompletedAtRequired })
   }
 
   if (completedAt && invoice.paidAt && toCalendarDate(completedAt).compare(toCalendarDate(fromDate(invoice.paidAt, 'UTC'))) < 0) {
-    errors.push({
-      completedAt: t('invoices:validation.refund_date_before_last_payment', 'Refund date cannot be before the last invoice payment ({{lastPaymentDate}}).', {
-        lastPaymentDate: formatDate(invoice.paidAt, DATE_FORMAT_SHORT),
-      }),
-    })
+    errors.push({ field: 'completedAt', reason: InvoiceRefundInvalidReason.CompletedAtBeforeLastPayment })
   }
 
   if (completedAt && toCalendarDate(completedAt).compare(today(getLocalTimeZone())) > 0) {
-    errors.push({ completedAt: t('invoices:validation.refund_date_future', 'Refund date cannot be in the future.') })
+    errors.push({ field: 'completedAt', reason: InvoiceRefundInvalidReason.CompletedAtInFuture })
   }
 
   if (method === null) {
-    errors.push({ method: t('invoices:validation.payment_method_required', 'Payment method is a required field.') })
+    errors.push({ field: 'method', reason: InvoiceRefundInvalidReason.MethodRequired })
   }
 
   return errors.length > 0 ? errors : null

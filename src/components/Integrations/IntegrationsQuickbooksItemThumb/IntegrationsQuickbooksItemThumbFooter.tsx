@@ -1,30 +1,20 @@
 import { useContext } from 'react'
-import { format, isValid } from 'date-fns'
-import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { MONTH_FORMAT } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/time/timeFormats'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
 import { QuickbooksConnectionSyncUiState } from '@components/Integrations/IntegrationsQuickbooksItemThumb/utils'
 import { Text, TextSize } from '@components/Typography/Text'
 
-const formatLastSyncedAt = (datetime: string, t: TFunction) => {
-  const parsed = new Date(datetime)
-  if (!isValid(parsed)) return ''
-
-  return t('integrations:label.date_time', '{{date}} at {{time}}', {
-    date: format(parsed, `${MONTH_FORMAT} d, yyyy`),
-    time: format(parsed, 'h:mm a'),
-  })
-}
-
 const useFooterConfig = (
   quickbooksUiState: QuickbooksConnectionSyncUiState,
   lastSyncedAt: string | undefined,
 ) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
 
   switch (quickbooksUiState) {
     case QuickbooksConnectionSyncUiState.Syncing: {
@@ -37,14 +27,14 @@ const useFooterConfig = (
     case QuickbooksConnectionSyncUiState.SyncFailed: {
       return {
         title: t('integrations:state.last_sync_failed_at', 'Last sync failed at'),
-        description: formatLastSyncedAt(lastSyncedAt!, t),
+        description: formatDate(lastSyncedAt!, DateFormat.DateWithTimeReadable),
         badgeVariant: 'error',
       } as const
     }
     case QuickbooksConnectionSyncUiState.SyncSuccess: {
       return {
         title: t('integrations:state.last_sync', 'Last synced on'),
-        description: formatLastSyncedAt(lastSyncedAt!, t),
+        description: formatDate(lastSyncedAt!, DateFormat.DateWithTimeReadable),
         badgeVariant: 'success',
       } as const
     }

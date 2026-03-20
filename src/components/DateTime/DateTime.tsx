@@ -1,15 +1,15 @@
-import { format as formatTime, parseISO } from 'date-fns'
-
-import { DATE_FORMAT, TIME_FORMAT } from '@utils/time/timeFormats'
+import { type DatePattern, toDate } from '@utils/time/dateIntl'
+import { DateFormat } from '@utils/time/timeFormats'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
 import { Text } from '@components/Typography/Text'
 
 import './dateTime.scss'
 
 interface BaseDateTimeProps {
-  format?: string
-  dateFormat?: string
-  timeFormat?: string
+  format?: DatePattern
+  dateFormat?: DatePattern
+  timeFormat?: DatePattern
   onlyDate?: boolean
   onlyTime?: boolean
   slotProps?: {
@@ -34,8 +34,8 @@ export const DateTime = ({
   value,
   valueAsDate,
   format,
-  dateFormat,
-  timeFormat,
+  dateFormat = DateFormat.DateShort,
+  timeFormat = DateFormat.Time,
   onlyDate,
   onlyTime,
   slotProps = {
@@ -43,18 +43,21 @@ export const DateTime = ({
     Time: { size: 'sm', variant: 'subtle' },
   },
 }: DateTimeProps) => {
-  const dateValue = valueAsDate ?? parseISO(value)
+  const { formatDate } = useIntlFormatter()
+
+  const dateValue = valueAsDate ?? toDate(value)
+  if (!dateValue) return null
 
   if (format) {
     return (
       <Text className='Layer__datetime'>
-        {formatTime(dateValue, format)}
+        {formatDate(dateValue, format)}
       </Text>
     )
   }
 
-  const date = formatTime(dateValue, dateFormat ?? DATE_FORMAT)
-  const time = formatTime(dateValue, timeFormat ?? TIME_FORMAT)
+  const date = formatDate(dateValue, dateFormat)
+  const time = formatDate(dateValue, timeFormat)
 
   return (
     <Text className='Layer__datetime'>

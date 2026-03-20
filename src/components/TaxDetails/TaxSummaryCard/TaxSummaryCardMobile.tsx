@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
 import type { TaxSummary } from '@schemas/taxEstimates/summary'
-import { formatDate } from '@utils/format'
 import { tConditional } from '@utils/i18n/conditional'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -15,6 +15,7 @@ type TaxSummaryCardMobileProps = {
 
 export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const { fullYearProjection } = useFullYearProjection()
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
 

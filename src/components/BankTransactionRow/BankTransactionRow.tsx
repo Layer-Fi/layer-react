@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
 import classNames from 'classnames'
-import { format as formatTime, parseISO } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -11,6 +10,7 @@ import { isCategorized } from '@utils/bankTransactions'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -41,7 +41,6 @@ import './bankTransactionRow.scss'
 
 type Props = {
   index: number
-  dateFormat: string
   bankTransaction: BankTransaction
   initialLoad?: boolean
   showDescriptions: boolean
@@ -55,7 +54,6 @@ export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
 
 export const BankTransactionRow = ({
   index,
-  dateFormat,
   bankTransaction,
   initialLoad,
   showDescriptions,
@@ -65,6 +63,8 @@ export const BankTransactionRow = ({
   stringOverrides,
 }: Props) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
+
   const [open, setOpen] = useState(false)
   const [isExpandedRowValid, setIsExpandedRowValid] = useState(true)
   const toggleOpen = useCallback(() => {
@@ -180,7 +180,7 @@ export const BankTransactionRow = ({
         >
           <span className='Layer__table-cell-content'>
             <Span>
-              {formatTime(parseISO(bankTransaction.date), dateFormat)}
+              {formatDate(bankTransaction.date)}
             </Span>
           </span>
         </td>

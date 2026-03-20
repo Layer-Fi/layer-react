@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react'
-import { format } from 'date-fns'
 import {
   Bar,
   CartesianGrid,
@@ -9,6 +8,8 @@ import {
 } from 'recharts'
 
 import { centsToDollars } from '@utils/money'
+import { DateFormat } from '@utils/time/timeFormats'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { VStack } from '@ui/Stack/Stack'
 import { ChartYAxis } from '@components/Chart/ChartYAxis'
@@ -69,6 +70,7 @@ export const MileageDeductionChart = ({
   selectedYear,
 }: MileageDeductionChartProps) => {
   const { getColor } = useLayerContext()
+  const { formatDate } = useIntlFormatter()
   const [barSize, setBarSize] = useState(MEDIUM_BAR_SIZE)
 
   const onResize = useCallback((width: number | undefined) => {
@@ -83,12 +85,12 @@ export const MileageDeductionChart = ({
       const monthData = yearData.months.find(m => m.month === i + 1)
       return {
         month: i + 1,
-        monthName: format(new Date(selectedYear, i, 1), 'MMM'),
+        monthName: formatDate(new Date(selectedYear, i, 1), DateFormat.MonthShort),
         deduction: monthData?.estimatedDeduction || 0,
         miles: monthData?.miles || 0,
       }
     })
-  }, [data, selectedYear])
+  }, [data, formatDate, selectedYear])
 
   return (
     <VStack className='Layer__MileageDeductionChart' align='center' justify='center'>

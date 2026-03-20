@@ -3,7 +3,8 @@ import { type ZonedDateTime } from '@internationalized/date'
 import { useTranslation } from 'react-i18next'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
-import { getIsDateInvalid } from '@components/DatePicker/utils'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { DateInvalidReason, getDateInvalidReason } from '@components/DatePicker/utils'
 
 type UseDatePickerStateArgs = {
   date: Date
@@ -14,23 +15,37 @@ type UseDatePickerStateArgs = {
 
 export const useDatePickerState = ({ date, setDate, minDate = null, maxDate = null }: UseDatePickerStateArgs) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const dateZdt = useMemo(() => convertDateToZonedDateTime(date), [date])
   const minDateZdt = useMemo(() => minDate ? convertDateToZonedDateTime(minDate) : null, [minDate])
   const maxDateZdt = useMemo(() => maxDate ? convertDateToZonedDateTime(maxDate) : null, [maxDate])
 
-  const [localDate, setLocalDate] = useState<ZonedDateTime | null>(dateZdt)
-  const isInitialDateInvalid = getIsDateInvalid(dateZdt, { minDate: minDateZdt, maxDate: maxDateZdt }, t)
+  const getErrorText = useCallback((reason: DateInvalidReason | null): string | null => {
+    switch (reason) {
+      case DateInvalidReason.Empty:
+        return t('date:validation.date_not_empty', 'Cannot select empty date')
+      case DateInvalidReason.BeforeMin:
+        return t('date:validation.date_before_min', 'Cannot select date before {{minDate}}', { minDate: minDateZdt ? formatDate(minDateZdt.toDate()) : '' })
+      case DateInvalidReason.AfterMax:
+        return t('date:validation.date_in_future', 'Cannot select date in the future')
+      default:
+        return null
+    }
+  }, [formatDate, minDateZdt, t])
 
-  const [isInvalid, setIsInvalid] = useState(!!isInitialDateInvalid)
-  const [errorText, setErrorText] = useState<string | null>(isInitialDateInvalid)
+  const [localDate, setLocalDate] = useState<ZonedDateTime | null>(dateZdt)
+  const initialInvalidReason = getDateInvalidReason(dateZdt, { minDate: minDateZdt, maxDate: maxDateZdt })
+
+  const [isInvalid, setIsInvalid] = useState(initialInvalidReason !== null)
+  const [errorText, setErrorText] = useState<string | null>(getErrorText(initialInvalidReason))
 
   useEffect(() => {
     setLocalDate(dateZdt)
 
-    const invalid = getIsDateInvalid(dateZdt, { minDate: minDateZdt, maxDate: maxDateZdt }, t)
-    setIsInvalid(!!invalid)
-    setErrorText(invalid)
-  }, [minDate, maxDate, dateZdt, minDateZdt, maxDateZdt, t])
+    const reason = getDateInvalidReason(dateZdt, { minDate: minDateZdt, maxDate: maxDateZdt })
+    setIsInvalid(reason !== null)
+    setErrorText(getErrorText(reason))
+  }, [dateZdt, getErrorText, maxDate, maxDateZdt, minDate, minDateZdt])
 
   const onChange = useCallback(
     (date: ZonedDateTime | null) => {
@@ -43,10 +58,10 @@ export const useDatePickerState = ({ date, setDate, minDate = null, maxDate = nu
         return
       }
 
-      const invalid = getIsDateInvalid(date, { minDate: minDateZdt, maxDate: maxDateZdt }, t)
-      if (invalid) {
+      const reason = getDateInvalidReason(date, { minDate: minDateZdt, maxDate: maxDateZdt })
+      if (reason) {
         setIsInvalid(true)
-        setErrorText(invalid)
+        setErrorText(getErrorText(reason))
         return
       }
 
@@ -54,15 +69,15 @@ export const useDatePickerState = ({ date, setDate, minDate = null, maxDate = nu
       setErrorText(null)
       setDate?.(date.toDate())
     },
-    [minDateZdt, maxDateZdt, setDate, t],
+    [getErrorText, maxDateZdt, minDateZdt, setDate],
   )
 
   const onBlur = useCallback(() => {
-    const invalid = getIsDateInvalid(localDate, { minDate: minDateZdt, maxDate: maxDateZdt }, t)
+    const reason = getDateInvalidReason(localDate, { minDate: minDateZdt, maxDate: maxDateZdt })
 
-    setIsInvalid(!!invalid)
-    setErrorText(invalid)
-  }, [localDate, minDateZdt, maxDateZdt, t])
+    setIsInvalid(reason !== null)
+    setErrorText(getErrorText(reason))
+  }, [getErrorText, localDate, maxDateZdt, minDateZdt])
 
   return useMemo(() => ({
     localDate,
