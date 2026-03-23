@@ -18,6 +18,7 @@ import {
   useTaxEstimatesRouteState,
   useTaxEstimatesYear,
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -43,6 +44,28 @@ export type TaxEstimatesViewProps = {
 }
 
 export const TaxEstimatesView = ({ onTaxBannerReviewClick }: TaxEstimatesViewProps) => {
+  const { t } = useTranslation()
+  const { accountingConfiguration } = useLayerContext()
+
+  if (accountingConfiguration?.taxEstimatesEnabled === false) {
+    return (
+      <View title={t('common:label.taxes', 'Taxes')}>
+        <Container name='tax-estimates'>
+          <DataState
+            status={DataStateStatus.failed}
+            title={t('common:state.feature_not_enabled', 'Feature not enabled')}
+            description={t(
+              'common:label.feature_not_enabled_for_business',
+              '{{featureName}} is not enabled.',
+              { featureName: t('taxEstimates:label.tax_estimates', 'Tax estimates') },
+            )}
+            spacing
+          />
+        </Container>
+      </View>
+    )
+  }
+
   return (
     <TaxEstimatesRouteStoreProvider>
       <TaxEstimatesViewContent onTaxBannerReviewClick={onTaxBannerReviewClick} />
