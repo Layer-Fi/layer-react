@@ -30,12 +30,12 @@ export const AccountingConfigurationSchema = Schema.Struct({
   ),
 
   taxEstimatesEnabled: pipe(
-    Schema.optionalWith(Schema.Boolean, { default: () => false }),
+    Schema.optionalWith(Schema.Boolean, { default: () => true }),
     Schema.fromKey('tax_estimates_enabled'),
   ),
 
   mileageTrackingEnabled: pipe(
-    Schema.optionalWith(Schema.Boolean, { default: () => false }),
+    Schema.optionalWith(Schema.Boolean, { default: () => true }),
     Schema.fromKey('mileage_tracking_enabled'),
   ),
 
