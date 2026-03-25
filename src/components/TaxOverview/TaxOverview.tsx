@@ -1,3 +1,4 @@
+import { format as formatDateFns } from 'date-fns'
 import { Check, CircleAlert, Clock3, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,7 +8,7 @@ import {
   type TaxOverviewDeadlineStatus,
   type TaxOverviewNextTax,
 } from '@schemas/taxEstimates/overview'
-import { formatDate } from '@utils/format'
+import { DATE_FORMAT } from '@utils/time/timeFormats'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -123,7 +124,7 @@ const TaxOverviewDeadlineCard = ({
           <Span size='sm' variant='subtle'>
             Due:
             {' '}
-            {formatDate(deadline.dueAt)}
+            {formatDateFns(deadline.dueAt, DATE_FORMAT)}
           </Span>
         </VStack>
         <VStack className='Layer__TaxOverview__DeadlineAmountColumn' align='end' gap='xs'>

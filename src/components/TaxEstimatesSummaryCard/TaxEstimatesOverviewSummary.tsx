@@ -1,10 +1,12 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
+import { format as formatDateFns } from 'date-fns'
 import { ArrowUpDown, BellRing } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxOverviewCategory, type TaxOverviewNextTax } from '@schemas/taxEstimates/overview'
-import { formatDate, formatPercent } from '@utils/format'
+import { formatPercent } from '@utils/format'
+import { DATE_FORMAT } from '@utils/time/timeFormats'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -152,7 +154,7 @@ export const TaxEstimatesOverviewSummary = ({
       'Q{{quarter}} due {{date}}',
       {
         quarter: nextTax.quarter,
-        date: formatDate(nextTax.dueAt),
+        date: formatDateFns(nextTax.dueAt, DATE_FORMAT),
       },
     )
     : t(
@@ -160,7 +162,7 @@ export const TaxEstimatesOverviewSummary = ({
       'Q{{quarter}} payment due: {{date}}',
       {
         quarter: nextTax.quarter,
-        date: formatDate(nextTax.dueAt),
+        date: formatDateFns(nextTax.dueAt, DATE_FORMAT),
       },
     )
 
