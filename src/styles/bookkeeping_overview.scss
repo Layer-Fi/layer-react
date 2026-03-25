@@ -43,6 +43,21 @@
   top: 16px !important;
 }
 
+.Layer__bookkeeping-overview__summary-cards {
+  align-items: flex-start;
+}
+
+.Layer__bookkeeping-overview__summary-cards-item {
+  width: 100%;
+}
+
+@media screen and (width <= 900px) {
+  .Layer__bookkeeping-overview__summary-cards.Layer__Stack[data-direction='row'] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 @container (max-width: 460px) {
   .Layer__component.Layer__bookkeeping-overview-profit-and-loss .recharts-responsive-container {
     margin-top: -12px;

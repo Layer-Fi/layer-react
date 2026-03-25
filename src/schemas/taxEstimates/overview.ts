@@ -8,7 +8,7 @@ const TaxOverviewBannerReviewSchema = Schema.Struct({
 
 export type TaxOverviewBannerReview = typeof TaxOverviewBannerReviewSchema.Type
 
-const TaxOverviewCategoryKeySchema = Schema.Literal('federal', 'selfEmployment', 'state', 'nextTax')
+const TaxOverviewCategoryKeySchema = Schema.Literal('federal', 'selfEmployment', 'state')
 
 export type TaxOverviewCategoryKey = typeof TaxOverviewCategoryKeySchema.Type
 
@@ -50,6 +50,7 @@ export type TaxOverviewDeadline = typeof TaxOverviewDeadlineSchema.Type
 
 const TaxOverviewNextTaxSchema = Schema.Struct({
   amount: Schema.Number,
+  dueAt: Schema.Date,
   quarter: Schema.Number,
   status: TaxOverviewDeadlineStatusSchema,
 })

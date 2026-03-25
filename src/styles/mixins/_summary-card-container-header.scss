@@ -1,0 +1,9 @@
+@mixin summary-card-container-header {
+  box-sizing: border-box;
+  min-height: 85px;
+  border-bottom: 1px solid var(--color-base-300);
+}
+
+.Layer__SummaryCard__ContainerHeader {
+  @include summary-card-container-header;
+}

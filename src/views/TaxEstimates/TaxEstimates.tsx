@@ -4,9 +4,11 @@ import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
+import { getNextTaxFromTaxEstimatesBanner, type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
 import { translationKey } from '@utils/i18n/translationKey'
 import { centsToDollars } from '@utils/money'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
+import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import {
@@ -27,7 +29,7 @@ import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
-import { TaxBanner, type TaxBannerReviewPayload } from '@components/TaxDetails/TaxBanner'
+import { TaxBanner, type TaxBannerReviewPayload, TaxBannerReviewTypes } from '@components/TaxDetails/TaxBanner'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxOverview } from '@components/TaxOverview/TaxOverview'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
@@ -38,6 +40,18 @@ import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 import './taxEstimates.scss'
 
 const TAX_ESTIMATES_MIN_YEAR = 2024
+
+const getTaxBannerReviewPayload = (taxBanner?: TaxEstimatesBanner): TaxBannerReviewPayload | undefined => {
+  if (!taxBanner || taxBanner.totalUncategorizedCount <= 0) {
+    return
+  }
+
+  return {
+    type: TaxBannerReviewTypes.UncategorizedTransactions,
+    count: taxBanner.totalUncategorizedCount,
+    amount: taxBanner.totalUncategorizedSum,
+  }
+}
 
 export type TaxEstimatesViewProps = {
   onTaxBannerReviewClick?: (payload: TaxBannerReviewPayload) => void
@@ -175,6 +189,7 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
   const { year } = useTaxEstimatesYear()
+  const { data: taxBannerData } = useTaxEstimatesBanner({ year })
   const { data: taxOverview } = useTaxOverview({ year })
   const handleTaxBannerReview = useCallback((payload: TaxBannerReviewPayload) => {
     onTaxBannerReviewClick?.(payload)
@@ -192,7 +207,14 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
     navigate(key as TaxEstimatesRoute)
   }, [navigate])
 
-  const uncategorizedReviewPayload = taxOverview?.bannerReview
+  const uncategorizedReviewPayload = useMemo(
+    () => getTaxBannerReviewPayload(taxBannerData),
+    [taxBannerData],
+  )
+  const nextTax = useMemo(
+    () => getNextTaxFromTaxEstimatesBanner(taxBannerData),
+    [taxBannerData],
+  )
 
   const taxBanner = uncategorizedReviewPayload && (
     <VStack className='Layer__TaxEstimates__TaxBannerWrapper'>
@@ -224,9 +246,10 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
         onSelectionChange={handleTabChange}
       />
       {taxBanner}
-      {route === TaxEstimatesRoute.Overview && taxOverview && (
+      {route === TaxEstimatesRoute.Overview && taxOverview && nextTax && (
         <TaxOverview
           data={taxOverview}
+          nextTax={nextTax}
           onTaxBannerReviewClick={onTaxBannerReviewClick}
         />
       )}

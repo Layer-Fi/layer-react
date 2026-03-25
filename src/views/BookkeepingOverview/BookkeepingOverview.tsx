@@ -7,18 +7,21 @@ import { type Variants } from '@utils/styleUtils/sizeVariants'
 import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
 import { useCalendly } from '@hooks/features/calendly/useCalendly'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
-import { VStack } from '@ui/Stack/Stack'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { CallBooking } from '@components/CallBooking/CallBooking'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
+import { MileageSummaryCard } from '@components/MileageSummaryCard/MileageSummaryCard'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
+import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { View } from '@components/View/View'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
 
@@ -58,6 +61,7 @@ export const BookkeepingOverview = ({
   const { t } = useTranslation()
   const [width] = useWindowSize()
   const { value: sizeClass } = useSizeClass()
+  const { accountingConfiguration } = useLayerContext()
   const { isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly } = useCalendly()
 
   const profitAndLossSummariesVariants =
@@ -71,6 +75,7 @@ export const BookkeepingOverview = ({
   const { data: callBookings, isError, isLoading, isValidating } = useCallBookings({ limit: 1 })
   const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
   const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
+  const stackSummaryCards = width <= 1580
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -146,6 +151,35 @@ export const BookkeepingOverview = ({
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
         />
+        {stackSummaryCards
+          ? (
+            <VStack className='Layer__bookkeeping-overview__summary-cards' gap='md'>
+              {accountingConfiguration?.taxEstimatesEnabled !== false && (
+                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
+                  <TaxEstimatesSummaryCard />
+                </VStack>
+              )}
+              {accountingConfiguration?.mileageTrackingEnabled !== false && (
+                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
+                  <MileageSummaryCard />
+                </VStack>
+              )}
+            </VStack>
+          )
+          : (
+            <HStack className='Layer__bookkeeping-overview__summary-cards' gap='md'>
+              {accountingConfiguration?.taxEstimatesEnabled !== false && (
+                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
+                  <TaxEstimatesSummaryCard />
+                </VStack>
+              )}
+              {accountingConfiguration?.mileageTrackingEnabled !== false && (
+                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
+                  <MileageSummaryCard />
+                </VStack>
+              )}
+            </HStack>
+          )}
       </View>
       {isCalendlyVisible && (
         <div

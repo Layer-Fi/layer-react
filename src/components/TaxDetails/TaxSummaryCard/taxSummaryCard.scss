@@ -95,8 +95,14 @@
     width: 100%;
   }
 
+  &__OverviewLabel {
+    flex: 1;
+    min-width: 0;
+  }
+
   &__TaxesDueLabel {
-    max-width: 50%;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   &__DetailsToggleContainer {
@@ -127,15 +133,19 @@
     .Layer__TaxSummaryCard__Breakdown {
       padding: var(--spacing-md);
       border-radius: var(--border-radius-xs);
-      margin-inline: var(--spacing-lg);
       background: var(--color-base-50);
     }
 
     .Layer__TaxSummaryCard__Formula,
     .Layer__TaxSummaryCard__FormulaLabels {
-      grid-template-columns: 1fr auto 1fr auto 1fr;
-      column-gap: var(--spacing-sm);
+      grid-template-columns: max-content auto max-content auto max-content;
+      column-gap: var(--spacing-xs);
+      justify-content: space-between;
       width: 100%;
+    }
+
+    .Layer__TaxSummaryCard__FormulaLabel {
+      white-space: nowrap;
     }
 
     .Layer__TaxSummaryCard__MobileConnector {

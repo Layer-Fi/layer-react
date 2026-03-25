@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type OnboardingStep } from '@internal-types/layerContext'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
@@ -17,6 +18,7 @@ import {
   ProfitAndLossSummaries,
   type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { View } from '@components/View/View'
 import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
@@ -65,6 +67,7 @@ export const AccountingOverview = ({
 }: AccountingOverviewProps) => {
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
+  const { accountingConfiguration } = useLayerContext()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -103,6 +106,9 @@ export const AccountingOverview = ({
           onTransactionsToReviewClick={onTransactionsToReviewClick}
           variants={profitAndLossSummariesVariants}
         />
+        {accountingConfiguration?.taxEstimatesEnabled !== false && (
+          <TaxEstimatesSummaryCard />
+        )}
         <Container
           name='accounting-overview-profit-and-loss'
           asWidget

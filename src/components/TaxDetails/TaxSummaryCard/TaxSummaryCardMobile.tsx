@@ -15,6 +15,18 @@ type TaxSummaryCardMobileProps = {
   data: TaxSummary
 }
 
+const getMobileSectionLabel = (label: string) => {
+  if (/federal/i.test(label) && /self/i.test(label)) {
+    return 'Federal & self-employed taxes'
+  }
+
+  if (/state/i.test(label)) {
+    return 'State taxes'
+  }
+
+  return label
+}
+
 export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
@@ -28,7 +40,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
       <VStack className='Layer__TaxSummaryCard__Inner'>
         <VStack className='Layer__TaxSummaryCard__Overview Layer__TaxSummaryCard__Overview--mobile' gap='md'>
           <HStack className='Layer__TaxSummaryCard__OverviewHeader' justify='space-between' align='start' gap='sm'>
-            <Span size='lg' variant='subtle'>
+            <Span className='Layer__TaxSummaryCard__OverviewLabel' size='md' variant='subtle'>
               {tConditional(t, 'taxEstimates:label.taxes_owed', {
                 condition: projectedCondition,
                 cases: {
@@ -40,7 +52,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
                 },
               })}
             </Span>
-            <Span className='Layer__TaxSummaryCard__TaxesDueLabel' size='md' variant='subtle' align='right'>{taxesDueLabel}</Span>
+            <Span className='Layer__TaxSummaryCard__TaxesDueLabel' size='sm' variant='subtle' align='right'>{taxesDueLabel}</Span>
           </HStack>
           <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
         </VStack>
@@ -58,7 +70,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
                   </HStack>
                 )}
                 <VStack className='Layer__TaxSummaryCard__Section Layer__TaxSummaryCard__Section--mobile' gap='xs'>
-                  <Span size='md' variant='subtle'>{section.label}</Span>
+                  <Span size='md' variant='subtle'>{getMobileSectionLabel(section.label)}</Span>
                   <HStack className='Layer__TaxSummaryCard__Formula Layer__TaxSummaryCard__Formula--mobile' align='baseline'>
                     <MoneySpan size='lg' weight='bold' amount={section.total} />
                     <Span size='sm' variant='subtle'>=</Span>

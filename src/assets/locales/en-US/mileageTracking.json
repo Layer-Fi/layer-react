@@ -5,12 +5,15 @@
   },
   "label": {
     "deduction_colon": "Deduction:",
+    "kilometers_colon": "Kilometers:",
+    "kilometers_month": "Kilometers this month",
     "mileage_tracking": "Mileage Tracking",
     "miles_colon": "Miles:",
     "miles_month": "Miles this month",
-    "standard_rate_formatted_deduction": "Standard Rate: {{formattedDeductionRate}}/mile",
+    "standard_rate_formatted_deduction": "Standard Rate: {{formattedDeductionRate}}/{{distanceUnit}}",
     "tax_deduction": "Tax Deduction",
     "total_deduction": "Total Deduction",
+    "total_kilometers": "Total Kilometers",
     "total_miles": "Total Miles",
     "total_tax_deduction": "Total tax deduction:"
   }

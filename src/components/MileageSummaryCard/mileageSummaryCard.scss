@@ -1,3 +1,20 @@
+@import '../../styles/mixins/summary-card-container-header';
+
+.Layer__MileageSummaryCard__Container {
+  width: 100%;
+
+  &.Layer__card {
+    border: 1px solid var(--color-base-200);
+    box-shadow: none;
+  }
+}
+
+@media (width <= 720px) {
+  .Layer__SummaryCard__ContainerFooter.Layer__Stack[data-direction='row'] {
+    flex-direction: column;
+  }
+}
+
 .Layer__MileageSummaryCard {
   width: 100%;
 
@@ -10,8 +27,12 @@
     border: 1px solid var(--border-color);
     background: var(--color-base-50);
 
-    .Layer__MileageSummaryCard__Panel-header {
+    .Layer__MileageSummaryCard__Panel-header,
+    .Layer__MileageSummaryCard__Panel-value {
       padding: var(--spacing-lg);
+    }
+
+    .Layer__MileageSummaryCard__Panel-header {
       border-bottom: 1px solid var(--border-color);
     }
 
@@ -19,13 +40,13 @@
       flex-wrap: wrap;
       justify-content: space-between;
 
+      .Layer__badge {
+        white-space: nowrap;
+      }
+
       .Layer__MileageSummaryCard__Panel-header-tax-deduction-label {
         padding-block: var(--spacing-4xs);
       }
-    }
-
-    .Layer__MileageSummaryCard__Panel-value {
-      padding: var(--spacing-lg);
     }
 
     .Layer__MileageSummaryCard__Panel-left {
