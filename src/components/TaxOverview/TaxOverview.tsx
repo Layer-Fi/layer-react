@@ -8,7 +8,6 @@ import {
   type TaxOverviewDeadlineStatus,
   type TaxOverviewNextTax,
 } from '@schemas/taxEstimates/overview'
-import { DATE_FORMAT } from '@utils/time/timeFormats'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -22,6 +21,8 @@ import type { TaxBannerReviewPayload } from '@components/TaxDetails/TaxBanner'
 import { TaxEstimatesOverviewSummary } from '@components/TaxEstimatesSummaryCard/TaxEstimatesOverviewSummary'
 
 import './taxOverview.scss'
+
+const TAX_DUE_DATE_FORMAT = 'LLL d, yyyy'
 
 type TaxOverviewProps = {
   nextTax: TaxOverviewNextTax
@@ -124,7 +125,7 @@ const TaxOverviewDeadlineCard = ({
           <Span size='sm' variant='subtle'>
             Due:
             {' '}
-            {formatDateFns(deadline.dueAt, DATE_FORMAT)}
+            {formatDateFns(deadline.dueAt, TAX_DUE_DATE_FORMAT)}
           </Span>
         </VStack>
         <VStack className='Layer__TaxOverview__DeadlineAmountColumn' align='end' gap='xs'>

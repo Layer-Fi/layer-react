@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type TaxOverviewCategory, type TaxOverviewNextTax } from '@schemas/taxEstimates/overview'
 import { formatPercent } from '@utils/format'
-import { DATE_FORMAT } from '@utils/time/timeFormats'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -29,6 +28,7 @@ const DONUT_RADIUS = 52
 const DONUT_STROKE_WIDTH = 12
 const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS
 const DONUT_SEGMENT_GAP = 4
+const TAX_DUE_DATE_FORMAT = 'LLL d, yyyy'
 
 const getCategoryClassName = (key: TaxOverviewCategory['key']) => {
   switch (key) {
@@ -154,7 +154,7 @@ export const TaxEstimatesOverviewSummary = ({
       'Q{{quarter}} due {{date}}',
       {
         quarter: nextTax.quarter,
-        date: formatDateFns(nextTax.dueAt, DATE_FORMAT),
+        date: formatDateFns(nextTax.dueAt, TAX_DUE_DATE_FORMAT),
       },
     )
     : t(
@@ -162,7 +162,7 @@ export const TaxEstimatesOverviewSummary = ({
       'Q{{quarter}} payment due: {{date}}',
       {
         quarter: nextTax.quarter,
-        date: formatDateFns(nextTax.dueAt, DATE_FORMAT),
+        date: formatDateFns(nextTax.dueAt, TAX_DUE_DATE_FORMAT),
       },
     )
 
