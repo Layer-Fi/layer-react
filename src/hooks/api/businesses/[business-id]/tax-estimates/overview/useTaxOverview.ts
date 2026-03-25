@@ -2,7 +2,8 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { type TaxOverviewResponse, TaxOverviewResponseSchema } from '@schemas/taxEstimates/overview'
+import type { ReportingBasis } from '@internal-types/general'
+import { type TaxOverviewApiResponse, TaxOverviewApiResponseSchema } from '@schemas/taxEstimates/overview'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
@@ -11,18 +12,25 @@ import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const TAX_OVERVIEW_TAG_KEY = '#tax-overview'
+type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
 
 type UseTaxOverviewOptions = {
   year: number
+  reportingBasis?: TaxReportingBasis
+  fullYearProjection?: boolean
 }
 
 type GetTaxOverviewParams = UseTaxOverviewOptions & {
   businessId: string
 }
 
-const getTaxOverview = get<TaxOverviewResponse, GetTaxOverviewParams>(
-  ({ businessId, year }) => {
-    const parameters = toDefinedSearchParameters({ year })
+const getTaxOverview = get<TaxOverviewApiResponse, GetTaxOverviewParams>(
+  ({ businessId, year, reportingBasis, fullYearProjection }) => {
+    const parameters = toDefinedSearchParameters({
+      year,
+      reporting_basis: reportingBasis,
+      full_year_projection: fullYearProjection,
+    })
     return `/v1/businesses/${businessId}/tax-estimates/overview?${parameters}`
   },
 )
@@ -32,11 +40,15 @@ function buildKey({
   apiUrl,
   businessId,
   year,
+  reportingBasis,
+  fullYearProjection,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
   year: number
+  reportingBasis?: TaxReportingBasis
+  fullYearProjection?: boolean
 }) {
   if (accessToken && apiUrl) {
     return {
@@ -44,12 +56,14 @@ function buildKey({
       apiUrl,
       businessId,
       year,
+      reportingBasis,
+      fullYearProjection,
       tags: [TAX_OVERVIEW_TAG_KEY],
     } as const
   }
 }
 
-export function useTaxOverview({ year }: UseTaxOverviewOptions) {
+export function useTaxOverview({ year, reportingBasis, fullYearProjection }: UseTaxOverviewOptions) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -58,14 +72,23 @@ export function useTaxOverview({ year }: UseTaxOverviewOptions) {
       ...auth,
       businessId,
       year,
+      reportingBasis,
+      fullYearProjection,
     }),
-    async ({ accessToken, apiUrl, businessId, year }) => {
+    async ({ accessToken, apiUrl, businessId, year, reportingBasis, fullYearProjection }) => {
       return getTaxOverview(
         apiUrl,
         accessToken,
-        { params: { businessId, year } },
+        {
+          params: {
+            businessId,
+            year,
+            reportingBasis,
+            fullYearProjection,
+          },
+        },
       )()
-        .then(Schema.decodeUnknownPromise(TaxOverviewResponseSchema))
+        .then(Schema.decodeUnknownPromise(TaxOverviewApiResponseSchema))
         .then(({ data }) => data)
     },
   )
