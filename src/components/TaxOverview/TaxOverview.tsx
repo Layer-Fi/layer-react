@@ -1,4 +1,3 @@
-import { format as formatDateFns } from 'date-fns'
 import { Check, CircleAlert, Clock3, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -8,6 +7,7 @@ import {
   type TaxOverviewDeadlineStatus,
   type TaxOverviewNextTax,
 } from '@schemas/taxEstimates/overview'
+import { formatDateTimeUtc } from '@utils/time/timeUtils'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -21,8 +21,6 @@ import type { TaxBannerReviewPayload } from '@components/TaxDetails/TaxBanner'
 import { TaxEstimatesOverviewSummary } from '@components/TaxEstimatesSummaryCard/TaxEstimatesOverviewSummary'
 
 import './taxOverview.scss'
-
-const TAX_DUE_DATE_FORMAT = 'LLL d, yyyy'
 
 type TaxOverviewProps = {
   nextTax: TaxOverviewNextTax
@@ -125,7 +123,7 @@ const TaxOverviewDeadlineCard = ({
           <Span size='sm' variant='subtle'>
             Due:
             {' '}
-            {formatDateFns(deadline.dueAt, TAX_DUE_DATE_FORMAT)}
+            {formatDateTimeUtc(deadline.dueAt)}
           </Span>
         </VStack>
         <VStack className='Layer__TaxOverview__DeadlineAmountColumn' align='end' gap='xs'>
@@ -152,13 +150,14 @@ const TaxOverviewDeadlineCard = ({
               uncategorized transactions
             </Span>
           </HStack>
-          <Button
-            variant='outlined'
-            onPress={() => onTaxBannerReviewClick?.(reviewAction.payload)}
-            isDisabled={!onTaxBannerReviewClick}
-          >
-            {t('taxEstimates:action.review_banner', 'Review')}
-          </Button>
+          {onTaxBannerReviewClick && (
+            <Button
+              variant='outlined'
+              onPress={() => onTaxBannerReviewClick(reviewAction.payload)}
+            >
+              {t('taxEstimates:action.review_banner', 'Review')}
+            </Button>
+          )}
         </HStack>
       )}
     </VStack>

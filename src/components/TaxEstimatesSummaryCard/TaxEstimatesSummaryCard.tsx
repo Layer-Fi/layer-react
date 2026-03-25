@@ -2,30 +2,49 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getNextTaxFromTaxEstimatesBanner } from '@schemas/taxEstimates/banner'
-import { type TaxOverviewData } from '@schemas/taxEstimates/overview'
+import type { TaxOverviewCategory, TaxOverviewCategoryKey } from '@schemas/taxEstimates/overview'
 import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
-import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
+import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Loader } from '@components/Loader/Loader'
 import { TaxEstimatesOverviewSummary } from '@components/TaxEstimatesSummaryCard/TaxEstimatesOverviewSummary'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 type TaxEstimatesSummaryCardData = {
-  estimatedTaxCategories: TaxOverviewData['estimatedTaxCategories']
+  estimatedTaxCategories: TaxOverviewCategory[]
   estimatedTaxesTotal: number
   nextTax: NonNullable<ReturnType<typeof getNextTaxFromTaxEstimatesBanner>>
   year: number
+}
+
+const SECTION_TO_CATEGORY_KEY: Record<string, TaxOverviewCategoryKey> = {
+  'Federal Income & Self-Employment Tax': 'federal',
+  'State Income Tax': 'state',
+}
+
+const transformSummaryToCategories = (sections: ReadonlyArray<{ label: string, taxesOwed: number }>): TaxOverviewCategory[] => {
+  return sections
+    .map((section): TaxOverviewCategory | undefined => {
+      const key = SECTION_TO_CATEGORY_KEY[section.label]
+      if (!key) return undefined
+      return {
+        key,
+        label: key === 'federal' ? 'Federal + SE' : 'State',
+        amount: section.taxesOwed,
+      }
+    })
+    .filter((category): category is TaxOverviewCategory => category !== undefined)
 }
 
 export const TaxEstimatesSummaryCard = () => {
   const { t } = useTranslation()
   const { date } = useGlobalDate({ dateSelectionMode: 'month' })
   const year = date.getFullYear()
-  const { data: taxOverview, isLoading: isTaxOverviewLoading, isError: isTaxOverviewError } = useTaxOverview({ year })
+  const { data: taxSummary, isLoading: isTaxSummaryLoading, isError: isTaxSummaryError } = useTaxSummary({ year })
   const { data: taxBanner, isLoading: isTaxBannerLoading, isError: isTaxBannerError } = useTaxEstimatesBanner({ year })
 
   const data = useMemo((): TaxEstimatesSummaryCardData | undefined => {
-    if (!taxOverview || !taxBanner) {
+    if (!taxSummary || !taxBanner) {
       return
     }
 
@@ -35,18 +54,18 @@ export const TaxEstimatesSummaryCard = () => {
     }
 
     return {
-      estimatedTaxCategories: taxOverview.estimatedTaxCategories,
-      estimatedTaxesTotal: taxOverview.estimatedTaxesTotal,
+      estimatedTaxCategories: transformSummaryToCategories(taxSummary.sections),
+      estimatedTaxesTotal: taxSummary.projectedTaxesOwed,
       nextTax,
       year,
     }
-  }, [taxBanner, taxOverview, year])
+  }, [taxBanner, taxSummary, year])
 
   return (
     <ConditionalBlock
       data={data}
-      isLoading={isTaxOverviewLoading || isTaxBannerLoading}
-      isError={isTaxOverviewError || isTaxBannerError}
+      isLoading={isTaxSummaryLoading || isTaxBannerLoading}
+      isError={isTaxSummaryError || isTaxBannerError}
       Loading={<Loader />}
       Inactive={null}
       Error={null}

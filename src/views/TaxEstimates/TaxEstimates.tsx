@@ -1,15 +1,18 @@
 import { useCallback, useMemo } from 'react'
 import { getYear } from 'date-fns'
+import { DateTime } from 'effect'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
-import { getNextTaxFromTaxEstimatesBanner, type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
+import { getNextTaxFromTaxEstimatesBanner, getTaxEstimatesBannerQuarterStatus, type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
+import type { TaxOverviewCategory, TaxOverviewCategoryKey, TaxOverviewData, TaxOverviewDeadline } from '@schemas/taxEstimates/overview'
 import { translationKey } from '@utils/i18n/translationKey'
 import { centsToDollars } from '@utils/money'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
+import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import {
   OnboardingStatus,
@@ -184,13 +187,65 @@ const TAX_ESTIMATES_TAB_CONFIG = [
   { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates:label.payments', 'Payments') },
 ]
 
+const SECTION_TO_CATEGORY_KEY: Record<string, TaxOverviewCategoryKey> = {
+  'Federal Income & Self-Employment Tax': 'federal',
+  'State Income Tax': 'state',
+}
+
+const transformSummaryToCategories = (sections: ReadonlyArray<{ label: string, taxesOwed: number }>): TaxOverviewCategory[] => {
+  return sections
+    .map((section): TaxOverviewCategory | undefined => {
+      const key = SECTION_TO_CATEGORY_KEY[section.label]
+      if (!key) return undefined
+      return {
+        key,
+        label: key === 'federal' ? 'Federal + SE' : 'State',
+        amount: section.taxesOwed,
+      }
+    })
+    .filter((category): category is TaxOverviewCategory => category !== undefined)
+}
+
+const toNoonUtcDateTime = (date: Date): DateTime.Utc => {
+  // Convert date to noon UTC to avoid timezone day shifts when displaying
+  return DateTime.unsafeMake({
+    year: date.getUTCFullYear(),
+    month: date.getUTCMonth() + 1, // JS months are 0-indexed, Effect months are 1-indexed
+    day: date.getUTCDate(),
+    hour: 12,
+  })
+}
+
+const transformBannerToDeadlines = (
+  banner: TaxEstimatesBanner,
+): TaxOverviewDeadline[] => {
+  return banner.quarters.map(quarter => ({
+    id: `quarter-${quarter.quarter}`,
+    title: `Q${quarter.quarter} taxes`,
+    dueAt: toNoonUtcDateTime(quarter.dueDate),
+    amount: quarter.balance,
+    description: 'Estimated tax',
+    status: getTaxEstimatesBannerQuarterStatus(quarter),
+    reviewAction: quarter.uncategorizedCount > 0
+      ? {
+        payload: {
+          type: 'UNCATEGORIZED_TRANSACTIONS' as const,
+          count: quarter.uncategorizedCount,
+          amount: quarter.uncategorizedSum,
+        },
+      }
+      : undefined,
+  }))
+}
+
 const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimatesViewProps) => {
   const { t } = useTranslation()
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
   const { year } = useTaxEstimatesYear()
   const { data: taxBannerData } = useTaxEstimatesBanner({ year })
-  const { data: taxOverview } = useTaxOverview({ year })
+  const { data: taxOverviewApi } = useTaxOverview({ year })
+  const { data: taxSummary } = useTaxSummary({ year })
   const handleTaxBannerReview = useCallback((payload: TaxBannerReviewPayload) => {
     onTaxBannerReviewClick?.(payload)
   }, [onTaxBannerReviewClick])
@@ -215,6 +270,32 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
     () => getNextTaxFromTaxEstimatesBanner(taxBannerData),
     [taxBannerData],
   )
+
+  // Transform API data into the shape expected by TaxOverview component
+  const taxOverviewData = useMemo((): TaxOverviewData | undefined => {
+    if (!taxOverviewApi || !taxSummary || !taxBannerData || !nextTax) {
+      return undefined
+    }
+
+    const estimatedTaxCategories = transformSummaryToCategories(taxSummary.sections)
+    const paymentDeadlines = transformBannerToDeadlines(taxBannerData)
+
+    return {
+      incomeTotal: taxOverviewApi.totalIncome,
+      deductionsTotal: taxOverviewApi.totalDeductions,
+      estimatedTaxCategories,
+      estimatedTaxesTotal: taxSummary.projectedTaxesOwed,
+      nextTax,
+      paymentDeadlines,
+      annualDeadline: {
+        id: 'annual-income-taxes',
+        title: 'Annual income taxes',
+        dueAt: DateTime.unsafeMake({ year: year + 1, month: 4, day: 15, hour: 12 }), // April 15 of next year (noon UTC to avoid timezone day shift)
+        amount: taxSummary.projectedTaxesOwed,
+        description: 'Estimated tax',
+      },
+    }
+  }, [taxOverviewApi, taxSummary, taxBannerData, nextTax, year])
 
   const taxBanner = uncategorizedReviewPayload && (
     <VStack className='Layer__TaxEstimates__TaxBannerWrapper'>
@@ -246,9 +327,9 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
         onSelectionChange={handleTabChange}
       />
       {taxBanner}
-      {route === TaxEstimatesRoute.Overview && taxOverview && nextTax && (
+      {route === TaxEstimatesRoute.Overview && taxOverviewData && nextTax && (
         <TaxOverview
-          data={taxOverview}
+          data={taxOverviewData}
           nextTax={nextTax}
           onTaxBannerReviewClick={onTaxBannerReviewClick}
         />
