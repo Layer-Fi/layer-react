@@ -3,6 +3,14 @@
   flex-direction: column;
   width: 100%;
 
+  .Layer__TaxProfileForm__Disclaimer {
+    color: var(--color-base-600);
+
+    .Layer__Checkbox {
+      font-size: var(--text-sm);
+    }
+  }
+
   .Layer__TaxProfileForm__Section {
     padding: var(--spacing-md);
     border-radius: var(--border-radius-sm);
@@ -12,5 +20,9 @@
 
   .Layer__TaxProfileForm__Field--desktop {
     grid-template-columns: 16rem minmax(auto, 24rem);
+  }
+
+  .Layer__UI__Button {
+    min-inline-size: 8rem;
   }
 }
