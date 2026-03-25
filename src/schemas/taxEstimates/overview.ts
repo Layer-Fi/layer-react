@@ -1,4 +1,48 @@
-import { Schema } from 'effect'
+import { pipe, Schema } from 'effect'
+
+// ============================================================
+// API Response Schema - matches actual /tax-estimates/overview endpoint
+// ============================================================
+
+const TaxOverviewApiDataSchema = Schema.Struct({
+  year: Schema.Number,
+  excludesPendingTransactions: pipe(
+    Schema.optionalWith(Schema.Boolean, { default: () => true }),
+    Schema.fromKey('excludes_pending_transactions'),
+  ),
+  taxableIncomeEstimate: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('taxable_income_estimate'),
+  ),
+  totalIncome: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('total_income'),
+  ),
+  totalDeductions: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('total_deductions'),
+  ),
+  estimatedTaxesOwed: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('estimated_taxes_owed'),
+  ),
+  taxesDueDate: pipe(
+    Schema.optionalWith(Schema.Date, { nullable: true }),
+    Schema.fromKey('taxes_due_date'),
+  ),
+})
+
+export type TaxOverviewApiData = typeof TaxOverviewApiDataSchema.Type
+
+export const TaxOverviewApiResponseSchema = Schema.Struct({
+  data: TaxOverviewApiDataSchema,
+})
+
+export type TaxOverviewApiResponse = typeof TaxOverviewApiResponseSchema.Type
+
+// ============================================================
+// Legacy Types - used by UI components (will be derived from multiple endpoints)
+// ============================================================
 
 const TaxOverviewBannerReviewSchema = Schema.Struct({
   type: Schema.Literal('UNCATEGORIZED_TRANSACTIONS'),
@@ -39,7 +83,7 @@ export type TaxOverviewDeadlineReviewAction = typeof TaxOverviewDeadlineReviewAc
 const TaxOverviewDeadlineSchema = Schema.Struct({
   amount: Schema.Number,
   description: Schema.String,
-  dueAt: Schema.Date,
+  dueAt: Schema.DateTimeUtc,
   id: Schema.String,
   reviewAction: Schema.optional(TaxOverviewDeadlineReviewActionSchema),
   status: Schema.optional(TaxOverviewDeadlineStatusSchema),
@@ -59,7 +103,7 @@ export type TaxOverviewNextTax = typeof TaxOverviewNextTaxSchema.Type
 
 const TaxOverviewDataSchema = Schema.Struct({
   annualDeadline: TaxOverviewDeadlineSchema,
-  bannerReview: TaxOverviewBannerReviewSchema,
+  bannerReview: Schema.optional(TaxOverviewBannerReviewSchema),
   deductionsTotal: Schema.Number,
   estimatedTaxCategories: Schema.Array(TaxOverviewCategorySchema),
   estimatedTaxesTotal: Schema.Number,
