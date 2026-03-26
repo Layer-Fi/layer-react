@@ -4,7 +4,7 @@
   box-shadow: none;
 
   &:not(:first-child) {
-    border-top: 1px solid var(--color-base-300);
+    border-top: 2px solid var(--color-base-300);
   }
 
   &__Header {
@@ -16,8 +16,8 @@
     cursor: pointer;
   }
 
-  &__Content {
+  /* &__Content {
     padding-block-end: var(--spacing-md);
     padding-inline: var(--spacing-md);
-  }
+  } */
 }

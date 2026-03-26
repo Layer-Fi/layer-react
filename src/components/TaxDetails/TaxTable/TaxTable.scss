@@ -18,11 +18,47 @@
   }
 
   .Layer__UI__Table-Cell {
-    &:nth-child(2) {
+    &:last-child {
       justify-content: flex-end;
       text-align: right;
     }
   }
+}
+
+.Layer__TaxTable__LabelWithIcon {
+  display: flex;
+  align-items: stretch;
+  padding-left: var(--spacing-md);
+
+  .Layer__Span {
+    color: var(--color-base-500);
+  }
+}
+
+.Layer__TaxTable__IconCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  min-width: 2.5rem;
+}
+
+.Layer__TaxTable__Icon {
+  font-size: var(--text-lg);
+  font-weight: 400;
+  color: var(--color-base-500);
+}
+
+.Layer__TaxTable__Separator {
+  align-self: stretch;
+  width: 1px;
+  background-color: var(--color-base-300);
+}
+
+.Layer__TaxTable__Label {
+  display: flex;
+  align-items: center;
+  padding-left: var(--spacing-sm);
 }
 
 .Layer__UI__Table-Row {
@@ -30,7 +66,9 @@
     background-color: var(--color-base-50);
 
     .Layer__UI__Table-Cell:first-child {
-      padding-left: var(--spacing-lg);
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-left: 0;
     }
   }
 

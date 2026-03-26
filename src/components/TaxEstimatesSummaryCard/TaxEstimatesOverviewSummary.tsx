@@ -1,6 +1,5 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
-import { format as formatDateFns } from 'date-fns'
 import { ArrowUpDown, BellRing } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -28,7 +27,14 @@ const DONUT_RADIUS = 52
 const DONUT_STROKE_WIDTH = 12
 const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS
 const DONUT_SEGMENT_GAP = 4
-const TAX_DUE_DATE_FORMAT = 'LLL d, yyyy'
+const formatDateUtc = (date: Date): string => {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  }).format(date)
+}
 
 const getCategoryClassName = (key: TaxOverviewCategory['key']) => {
   switch (key) {
@@ -154,7 +160,7 @@ export const TaxEstimatesOverviewSummary = ({
       'Q{{quarter}} due {{date}}',
       {
         quarter: nextTax.quarter,
-        date: formatDateFns(nextTax.dueAt, TAX_DUE_DATE_FORMAT),
+        date: formatDateUtc(nextTax.dueAt),
       },
     )
     : t(
@@ -162,7 +168,7 @@ export const TaxEstimatesOverviewSummary = ({
       'Q{{quarter}} payment due: {{date}}',
       {
         quarter: nextTax.quarter,
-        date: formatDateFns(nextTax.dueAt, TAX_DUE_DATE_FORMAT),
+        date: formatDateUtc(nextTax.dueAt),
       },
     )
 

@@ -33,23 +33,19 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
         <TaxTableRow label={t('taxEstimates:label.taxable_income', 'Taxable Income')} value={federalIncomeTax.taxableIncome} variant={TaxTableRowVariant.Standard} />
         <TaxTableRow label={t('taxEstimates:label.federal_tax_rate', 'Federal Tax Rate')} sign='×' value={federalIncomeTax.effectiveFederalTaxRate} variant={TaxTableRowVariant.Nested} />
         <TaxTableRow label={t('taxEstimates:label.federal_tax_estimate_owed', 'Federal Tax Estimate (Owed)')} value={federalIncomeTax.federalIncomeTaxOwed} variant={TaxTableRowVariant.SectionTotal} />
-        <TaxTableRow label='' value='' variant={TaxTableRowVariant.Empty} />
         <TaxTableRow label={t('taxEstimates:label.taxable_social_security_income', 'Taxable Social Security Income')} value={socialSecurityTax.socialSecurityIncome} variant={TaxTableRowVariant.Standard} />
         <TaxTableRow label={t('taxEstimates:label.social_security_tax_rate', 'Social Security Tax Rate')} sign='×' value={socialSecurityTax.socialSecurityTaxRate} variant={TaxTableRowVariant.Nested} />
         <TaxTableRow label={t('taxEstimates:label.social_security_tax_estimate_owed', 'Social Security Tax Estimate (Owed)')} value={socialSecurityTax.socialSecurityTaxOwed} variant={TaxTableRowVariant.SectionTotal} />
-        <TaxTableRow label='' value='' variant={TaxTableRowVariant.Empty} />
         <TaxTableRow label={t('taxEstimates:label.taxable_medicare_income', 'Taxable Medicare Income')} value={medicareTax.medicareIncome} variant={TaxTableRowVariant.Standard} />
         <TaxTableRow label={t('taxEstimates:label.medicare_tax_rate', 'Medicare Tax Rate')} sign='×' value={medicareTax.medicareTaxRate} variant={TaxTableRowVariant.Nested} />
         <TaxTableRow label={t('taxEstimates:label.medicare_tax_estimate_owed', 'Medicare Tax Estimate (Owed)')} value={medicareTax.medicareTaxOwed} variant={TaxTableRowVariant.SectionTotal} />
         {medicareSurtax && (
           <>
-            <TaxTableRow label='' value='' variant={TaxTableRowVariant.Empty} />
             <TaxTableRow label={t('taxEstimates:label.taxable_medicare_surtax_income', 'Taxable Medicare Surtax Income')} value={medicareSurtax.medicareSurtaxIncome} variant={TaxTableRowVariant.Standard} />
             <TaxTableRow label={t('taxEstimates:label.medicare_surtax_rate', 'Medicare Surtax Rate')} sign='×' value={medicareSurtax.medicareSurtaxRate} variant={TaxTableRowVariant.Nested} />
             <TaxTableRow label={t('taxEstimates:label.medicare_surtax_estimate_owed', 'Medicare Surtax Estimate (Owed)')} value={medicareSurtax.medicareSurtaxOwed} variant={TaxTableRowVariant.SectionTotal} />
           </>
         )}
-        <TaxTableRow label='' value='' variant={TaxTableRowVariant.Empty} />
         <TaxTableRow label={t('taxEstimates:label.federal_tax_estimate_owed', 'Federal Tax Estimate (Owed)')} value={totalFederalTax.federalIncomeTaxOwed} variant={TaxTableRowVariant.Standard} />
         <TaxTableRow label={t('taxEstimates:label.social_security_tax_estimate_owed', 'Social Security Tax Estimate (Owed)')} sign='+' value={totalFederalTax.socialSecurityTaxOwed} variant={TaxTableRowVariant.Nested} />
         <TaxTableRow label={t('taxEstimates:label.medicare_tax_estimate_owed', 'Medicare Tax Estimate (Owed)')} sign='+' value={totalFederalTax.medicareTaxOwed} variant={TaxTableRowVariant.Nested} />

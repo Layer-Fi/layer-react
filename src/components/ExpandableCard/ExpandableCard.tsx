@@ -29,9 +29,9 @@ export const ExpandableCard = ({
         className='Layer__ExpandableCard__Header'
         onClick={onToggleExpanded}
       >
-        <HStack justify='space-between' align='center'>
-          {slots.Heading}
+        <HStack gap='sm' align='center'>
           <ExpandButton isExpanded={isExpanded} />
+          {slots.Heading}
         </HStack>
       </button>
       <AnimatedPresenceElement

@@ -35,19 +35,31 @@ const BOLD_VARIANTS = new Set([TaxTableRowVariant.SectionTotal, TaxTableRowVaria
 export const TaxTableRow = ({ label, value, variant, sign }: TaxTableRowProps) => {
   const { isMobile } = useSizeClass()
   const isEmpty = variant === TaxTableRowVariant.Empty
+  const isNested = variant === TaxTableRowVariant.Nested
   const isBold = BOLD_VARIANTS.has(variant)
   const mobileClass = isMobile ? 'Layer__UI__Table-Row--mobile' : ''
   const className = classnames(VARIANT_CLASS_MAP[variant], mobileClass)
-  const formattedLabel = sign ? `${sign} ${label}` : label
 
-  const labelElement = isBold ? <Span weight='bold'>{formattedLabel}</Span> : <Span>{formattedLabel}</Span>
+  const labelElement = isBold ? <Span weight='bold'>{label}</Span> : <Span>{label}</Span>
   const valueElement = typeof value === 'number'
     ? <MoneySpan weight={isBold ? 'bold' : undefined} amount={value} />
     : <Span weight={isBold ? 'bold' : undefined}>{value}</Span>
 
+  const labelContent = isNested && sign
+    ? (
+      <div className='Layer__TaxTable__LabelWithIcon'>
+        <span className='Layer__TaxTable__IconCell'>
+          <span className='Layer__TaxTable__Icon'>{sign}</span>
+        </span>
+        <span className='Layer__TaxTable__Separator' />
+        <span className='Layer__TaxTable__Label'>{labelElement}</span>
+      </div>
+    )
+    : labelElement
+
   return (
     <Row className={className}>
-      <Cell>{!isEmpty && labelElement}</Cell>
+      <Cell>{!isEmpty && labelContent}</Cell>
       <Cell>{!isEmpty && valueElement}</Cell>
     </Row>
   )
