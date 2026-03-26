@@ -4,7 +4,7 @@ import { ArrowUpDown, BellRing } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxOverviewCategory, type TaxOverviewNextTax } from '@schemas/taxEstimates/overview'
-import { formatPercent } from '@utils/format'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -112,6 +112,7 @@ const TaxEstimatesSummaryLegend = ({
   total,
 }: Pick<TaxEstimatesOverviewSummaryProps, 'categories' | 'total'> & { isMobile: boolean }) => {
   const { t } = useTranslation()
+  const { formatPercent } = useIntlFormatter()
   const className = isMobile
     ? 'Layer__TaxEstimatesSummaryCard__LegendCard'
     : 'Layer__TaxEstimatesSummaryCard__Legend'
