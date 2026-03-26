@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next'
 
 import { convertBigIntCentsToBigDecimal, convertDecimalToPercent, formatBigDecimalToString, safeDivide } from '@utils/bigDecimalUtils'
 import { useInvoiceSummaryStats } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import Check from '@icons/Check'
 import { Meter } from '@ui/Meter/Meter'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -30,6 +31,7 @@ const getPercentageOverdue = (sentTotal: bigint | undefined, overdueTotal: bigin
 
 export const InvoiceSummaryStats = () => {
   const { t } = useTranslation()
+  const formatter = useIntlFormatter()
   const { data, isLoading, isError } = useInvoiceSummaryStats()
 
   const showSkeleton = !data || isLoading || isError
@@ -56,7 +58,7 @@ export const InvoiceSummaryStats = () => {
           <Badge variant={BadgeVariant.SUCCESS} size={BadgeSize.EXTRA_SMALL} icon={<Check size={11} />} iconOnly />
           <FallbackWithSkeletonLoader isLoading={showSkeleton} height='24px' width='120px'>
             <Span size='xl'>
-              {invoicePaymentsTotal !== undefined && formatBigDecimalToString(convertBigIntCentsToBigDecimal(invoicePaymentsTotal), { mode: 'currency' })}
+              {invoicePaymentsTotal !== undefined && formatBigDecimalToString(formatter, convertBigIntCentsToBigDecimal(invoicePaymentsTotal), { mode: 'currency' })}
             </Span>
           </FallbackWithSkeletonLoader>
         </HStack>
@@ -75,7 +77,7 @@ export const InvoiceSummaryStats = () => {
           </HStack>
           <FallbackWithSkeletonLoader isLoading={showSkeleton} height='24px' width='120px'>
             <Span size='xl'>
-              {invoicesTotal !== undefined && formatBigDecimalToString(convertBigIntCentsToBigDecimal(invoicesTotal), { mode: 'currency' })}
+              {invoicesTotal !== undefined && formatBigDecimalToString(formatter, convertBigIntCentsToBigDecimal(invoicesTotal), { mode: 'currency' })}
             </Span>
           </FallbackWithSkeletonLoader>
         </HStack>
@@ -83,7 +85,7 @@ export const InvoiceSummaryStats = () => {
           <HStack gap='xs' align='center'>
             <FallbackWithSkeletonLoader isLoading={showSkeleton} height='17px' width='80px'>
               <Span size='md'>
-                {overdueTotal !== undefined && formatBigDecimalToString(convertBigIntCentsToBigDecimal(overdueTotal), { mode: 'currency' })}
+                {overdueTotal !== undefined && formatBigDecimalToString(formatter, convertBigIntCentsToBigDecimal(overdueTotal), { mode: 'currency' })}
               </Span>
             </FallbackWithSkeletonLoader>
             {!showSkeleton && overdueCount !== undefined
@@ -104,7 +106,7 @@ export const InvoiceSummaryStats = () => {
               : <BadgeLoader variant={BadgeVariant.INFO} showLoading />}
             <FallbackWithSkeletonLoader isLoading={showSkeleton} height='17px' width='80px'>
               <Span size='md'>
-                {sentTotal !== undefined && formatBigDecimalToString(convertBigIntCentsToBigDecimal(sentTotal), { mode: 'currency' })}
+                {sentTotal !== undefined && formatBigDecimalToString(formatter, convertBigIntCentsToBigDecimal(sentTotal), { mode: 'currency' })}
               </Span>
             </FallbackWithSkeletonLoader>
           </HStack>

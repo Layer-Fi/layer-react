@@ -1,5 +1,5 @@
+import { type MonthNameFormatFn } from '@utils/i18n/date/formatters'
 import { MonthPattern } from '@utils/i18n/date/patterns'
-import { type MonthNameFormatFn } from '@hooks/utils/i18n/useIntlFormatter'
 
 export type MonthOption = {
   key: number

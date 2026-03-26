@@ -1,6 +1,6 @@
 import type { AugmentedLedgerAccountBalance } from '@internal-types/chartOfAccounts'
 import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
-import type { CurrencyFormatFn } from '@hooks/utils/i18n/useIntlFormatter'
+import type { CurrencyFormatFn } from '@utils/i18n/number/formatters'
 
 const accountMatchesQuery = (
   account: NestedLedgerAccountType,

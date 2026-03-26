@@ -2,8 +2,8 @@ import { BigDecimal as BD } from 'effect'
 import { type TFunction } from 'i18next'
 
 import { TripPurpose } from '@schemas/trip'
+import { type NumberFormatFn } from '@utils/i18n/number/formatters'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { type NumberFormatFn } from '@hooks/utils/i18n/useIntlFormatter'
 import { BadgeVariant } from '@components/Badge/Badge'
 
 export const formatDistance = (

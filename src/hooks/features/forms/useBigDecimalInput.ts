@@ -7,6 +7,7 @@ import {
   convertPercentToDecimal,
   formatBigDecimalToString,
 } from '@utils/bigDecimalUtils'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 
 const DECORATOR_CHARS_REGEX = /[,%$]/g
 
@@ -31,13 +32,15 @@ export function useBigDecimalInput({
   minDecimalPlaces,
   allowNegative,
 }: UseBigDecimalInputOptions) {
+  const formatter = useIntlFormatter()
+
   const formattingProps = useMemo(() => ({
     minDecimalPlaces,
     maxDecimalPlaces,
     mode,
   }), [maxDecimalPlaces, minDecimalPlaces, mode])
 
-  const [inputValue, setInputValue] = useState<string>(formatBigDecimalToString(value, formattingProps))
+  const [inputValue, setInputValue] = useState<string>(formatBigDecimalToString(formatter, value, formattingProps))
 
   const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
@@ -66,8 +69,18 @@ export function useBigDecimalInput({
     }
     onBlur()
 
-    setInputValue(formatBigDecimalToString(clamped, formattingProps))
-  }, [inputValue, maxDecimalPlaces, mode, maxValue, value, onBlur, formattingProps, onChange])
+    setInputValue(formatBigDecimalToString(formatter, clamped, formattingProps))
+  }, [
+    inputValue,
+    maxDecimalPlaces,
+    mode,
+    maxValue,
+    value,
+    onBlur,
+    formattingProps,
+    onChange,
+    formatter,
+  ])
 
   const allowedChars = useMemo(() =>
     buildDecimalCharRegex({ allowNegative, allowPercent: mode === 'percent', allowDollar: mode === 'currency' }),
@@ -88,8 +101,8 @@ export function useBigDecimalInput({
   }, [allowedChars])
 
   useEffect(() => {
-    setInputValue(formatBigDecimalToString(value, formattingProps))
-  }, [value, formattingProps])
+    setInputValue(formatBigDecimalToString(formatter, value, formattingProps))
+  }, [value, formattingProps, formatter])
 
   return {
     inputValue,
