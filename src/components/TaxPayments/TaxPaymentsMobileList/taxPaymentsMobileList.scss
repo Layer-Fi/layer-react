@@ -1,4 +1,16 @@
 .Layer__TaxPaymentsMobileList {
+  .Layer__TaxPaymentsMobileListItem__Breakdown {
+    padding-left: var(--spacing-sm);
+  }
+
+  .Layer__TaxPaymentsMobileListItem__BreakdownRow {
+    color: var(--fg-subtle);
+
+    .Layer__Span {
+      color: inherit;
+    }
+  }
+
   .Layer__TaxPayments__ErrorState,
   .Layer__TaxPayments__EmptyState {
     padding: var(--spacing-sm);
