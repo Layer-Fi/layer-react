@@ -90,11 +90,7 @@ export function formatBigDecimalToString(
     mode?: 'percent' | 'currency' | 'decimal'
     minDecimalPlaces?: number
     maxDecimalPlaces?: number
-  } = {
-    mode: 'decimal',
-    minDecimalPlaces: 0,
-    maxDecimalPlaces: 3,
-  },
+  } = {},
 ): string {
   const normalizedBigDecimal = BD.normalize(value)
   const { mode = 'decimal', minDecimalPlaces = 0, maxDecimalPlaces = 3 } = options
@@ -113,10 +109,7 @@ export function formatBigDecimalToString(
   }
 
   if (mode === 'currency') {
-    return formatter.formatCurrencyFromCents(convertBigDecimalToCents(normalizedBigDecimal), {
-      minimumFractionDigits: minDecimalPlaces,
-      maximumFractionDigits: maxDecimalPlaces,
-    })
+    return formatter.formatCurrencyFromCents(convertBigDecimalToCents(normalizedBigDecimal))
   }
 
   return formatter.formatNumber(decimalAsNumber, {

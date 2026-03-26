@@ -7,7 +7,7 @@ import {
   toNumber,
 } from '@utils/i18n/number/input'
 
-type CurrencyFormatOptions = Pick<Intl.NumberFormatOptions, 'signDisplay' | 'minimumFractionDigits' | 'maximumFractionDigits'>
+type CurrencyFormatOptions = Pick<Intl.NumberFormatOptions, 'signDisplay'>
 type NumberFormatOptions = Pick<Intl.NumberFormatOptions, 'minimumFractionDigits' | 'maximumFractionDigits' | 'compactDisplay' | 'notation' | 'useGrouping'>
 type PercentFormatOptions = Pick<Intl.NumberFormatOptions, 'minimumFractionDigits' | 'maximumFractionDigits'>
 
