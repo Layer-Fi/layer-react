@@ -82,7 +82,7 @@ export function ProfitAndLossSummariesSummary({
               </Span>
               <Span size='md' weight='normal' status={isGoodChange ? 'success' : undefined}>
                 {formatPercent(
-                  percentChange ?? null,
+                  Math.abs(percentChange ?? 0),
                   { maximumFractionDigits: maxPercentageChangedDigits },
                 )}
               </Span>
