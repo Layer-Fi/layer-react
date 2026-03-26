@@ -2,23 +2,59 @@ import { BigDecimal as BD, Option } from 'effect'
 
 import type { IntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 
+import { getLocaleCurrencySymbol } from './i18n/number/currency'
+import { getLocaleNumberSeparators } from './i18n/number/input'
+
 export const BIG_DECIMAL_ZERO = BD.fromBigInt(BigInt(0))
 export const BIG_DECIMAL_ONE = BD.fromBigInt(BigInt(1))
 export const BIG_DECIMAL_NEG_ONE = BD.fromBigInt(BigInt(-1))
 export const BIG_DECIMAL_ONE_HUNDRED = BD.fromBigInt(BigInt(100))
 
 export const buildDecimalCharRegex = ({
+  locale,
   allowNegative = true,
   allowPercent = false,
-  allowDollar = false,
-} = {}): RegExp => {
-  let allowed = '\\d.,'
+  allowCurrencySymbol = false,
+}: {
+  locale: string
+  allowNegative?: boolean
+  allowPercent?: boolean
+  allowCurrencySymbol?: boolean
+}): RegExp => {
+  const separators = getLocaleNumberSeparators(locale)
+  const allowedChars = new Set<string>([
+    // Numerical values
+    ...'0123456789',
 
-  if (allowNegative) allowed += '\\-'
-  if (allowPercent) allowed += '%'
-  if (allowDollar) allowed += '\\$'
+    // Group and decimal separators
+    separators.decimalSeparator,
+    separators.groupSeparator,
 
-  return new RegExp(`^[${allowed}]+$`)
+    // All spaces
+    ' ',
+    '\u00A0',
+    '\u202F',
+  ])
+
+  if (allowNegative) {
+    allowedChars.add('-')
+  }
+
+  if (allowPercent) {
+    allowedChars.add('%')
+  }
+
+  if (allowCurrencySymbol) {
+    for (const char of getLocaleCurrencySymbol(locale)) {
+      allowedChars.add(char)
+    }
+  }
+
+  const escaped = Array.from(allowedChars)
+    .map(char => char.replace(/[-\\\]^]/g, '\\$&'))
+    .join('')
+
+  return new RegExp(`^[${escaped}]+$`)
 }
 
 /**

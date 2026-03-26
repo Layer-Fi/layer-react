@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useIntl } from 'react-intl'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption } from '@internal-types/categorizationOption'
 import { convertCentsToDecimalString } from '@utils/format'
+import { toLocalizedNumber } from '@utils/i18n/number/input'
 import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import {
@@ -44,6 +46,8 @@ export const useSplitsForm = ({
   isOpen,
 }: UseSplitsFormOptions): UseSplitsFormReturn => {
   const { t } = useTranslation()
+  const intl = useIntl()
+
   const [localSplits, setLocalSplits] = useState<Split[]>(
     getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory),
   )
@@ -90,29 +94,21 @@ export const useSplitsForm = ({
   const updateSplitAmount = useCallback((index: number) => (value?: string) => {
     setInputValues(prev => ({ ...prev, [index]: value ?? '' }))
 
-    if (!value) {
-      return
-    }
+    if (!value) return
 
-    const trimmedValue = value.endsWith('.') ? value.slice(0, -1) : value
-    const numericValue = Number(trimmedValue)
+    const numericValue = toLocalizedNumber(value, intl.locale)
 
-    if (isNaN(numericValue)) {
-      return
-    }
+    if (numericValue === undefined) return
 
     const newLocalSplits = calculateUpdatedAmounts(
       localSplits,
-      {
-        index,
-        newAmountInput: trimmedValue,
-        totalAmount: bankTransaction.amount,
-      })
+      { index, newAmountInput: value, totalAmount: bankTransaction.amount, locale: intl.locale },
+    )
 
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
     saveLocalSplitsToCategoryStore(newLocalSplits)
-  }, [localSplits, bankTransaction.amount, saveLocalSplitsToCategoryStore])
+  }, [localSplits, bankTransaction.amount, intl.locale, saveLocalSplitsToCategoryStore])
 
   const changeCategoryForSplitAtIndex = useCallback((index: number, newCategory: BankTransactionCategoryComboBoxOption | null) => {
     if (newCategory === null) return
