@@ -31,7 +31,7 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
         <TaxTableRow label={t('taxEstimates:label.state_taxable_income', 'State Taxable Income')} value={stateIncomeTax.stateTaxableIncome} variant={TaxTableRowVariant.Standard} />
         <TaxTableRow label={t('taxEstimates:label.state_tax_rate', 'State Tax Rate')} sign='×' value={stateIncomeTax.effectiveStateTaxRate} variant={TaxTableRowVariant.Nested} />
         <TaxTableRow label={t('taxEstimates:label.state_income_tax_estimate_owed', 'State Income Tax Estimate (Owed)')} value={stateIncomeTax.stateIncomeTaxOwed} variant={TaxTableRowVariant.SectionTotal} />
-        {additionalTaxes.map((additionalTax) => (
+        {additionalTaxes.map(additionalTax => (
           <React.Fragment key={additionalTax.taxName}>
             <TaxTableRow label={t('taxEstimates:label.taxable_amount_tax_name', 'Taxable Amount for {{taxName}}', { taxName: additionalTax.taxName })} value={additionalTax.taxableAmount} variant={TaxTableRowVariant.Standard} />
             <TaxTableRow label={t('taxEstimates:label.tax_name_rate', '{{taxName}} Rate', { taxName: additionalTax.taxName })} sign='×' value={additionalTax.taxRate} variant={TaxTableRowVariant.Nested} />

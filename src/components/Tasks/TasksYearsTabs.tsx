@@ -33,7 +33,8 @@ export const TasksYearsTabs = () => {
       if (targetYear < activeYear) {
         // Moving to an earlier year - select the latest available month
         targetMonth = periodsInTargetYear[periodsInTargetYear.length - 1]
-      } else {
+      }
+      else {
         // Moving to a later year - select the earliest available month
         targetMonth = periodsInTargetYear[0]
       }
