@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { getMonth } from 'date-fns'
 
-import { BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Tabs } from '@components/Tabs/Tabs'
@@ -14,13 +14,34 @@ export const TasksYearsTabs = () => {
   const activeYear = date.getFullYear()
 
   const { yearStatuses } = useBookkeepingYearsStatus()
+  const { data: bookkeepingPeriods } = useBookkeepingPeriods()
 
   const setCurrentYear = (year: string) => {
-    const currentMonth = getMonth(date)
+    const targetYear = Number(year)
+    const currentMonth = getMonth(date) + 1
+
+    const periodsInTargetYear = bookkeepingPeriods
+      ?.filter(period => period.year === targetYear)
+      .map(period => period.month)
+      .sort((a, b) => a - b) ?? []
+
+    const isCurrentMonthAvailable = periodsInTargetYear.includes(currentMonth)
+
+    let targetMonth = currentMonth
+
+    if (!isCurrentMonthAvailable && periodsInTargetYear.length > 0) {
+      if (targetYear < activeYear) {
+        // Moving to an earlier year - select the latest available month
+        targetMonth = periodsInTargetYear[periodsInTargetYear.length - 1]
+      } else {
+        // Moving to a later year - select the earliest available month
+        targetMonth = periodsInTargetYear[0]
+      }
+    }
 
     setMonthByPeriod({
-      monthNumber: currentMonth + 1,
-      yearNumber: Number(year),
+      monthNumber: targetMonth,
+      yearNumber: targetYear,
     })
   }
 
