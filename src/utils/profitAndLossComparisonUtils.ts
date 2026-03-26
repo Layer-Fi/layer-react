@@ -2,8 +2,9 @@ import { subMonths, subYears } from 'date-fns'
 
 import { type LineItemEncoded } from '@schemas/common/lineItem'
 import { DateGroupBy } from '@schemas/reports/unifiedReport'
-import { DateFormat } from '@utils/time/timeFormats'
-import { type DateTimeFormatFn, type DateTimeRangeFormatFn, type IntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import type { DateFormatFn, DateRangeFormatFn } from '@utils/i18n/date/formatters'
+import { DateFormat } from '@utils/i18n/date/patterns'
+import { type IntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 
 export type ComparisonPeriodParams = { endDate: Date, numberOfPeriods: number } & (
   | { mode: Exclude<DateGroupBy, DateGroupBy.AllTime> }
@@ -23,7 +24,7 @@ export const generateComparisonPeriods = (params: ComparisonPeriodParams, format
 const generateComparisonMonths = (
   endDate: number | Date,
   numberOfMonths: number,
-  dateFormatFn: DateTimeFormatFn,
+  dateFormatFn: DateFormatFn,
 ) => {
   return Array.from({ length: numberOfMonths }, (_, index) => {
     const currentMonth = subMonths(endDate, numberOfMonths - index - 1)
@@ -34,7 +35,7 @@ const generateComparisonMonths = (
 const generateComparisonYears = (
   endDate: number | Date,
   numberOfYears: number,
-  dateFormatFn: DateTimeFormatFn,
+  dateFormatFn: DateFormatFn,
 ) => {
   return Array.from({ length: numberOfYears }, (_, index) => {
     const currentMonth = subYears(endDate, numberOfYears - index - 1)
@@ -45,7 +46,7 @@ const generateComparisonYears = (
 const generateComparisonDateRange = (
   startDate: Date,
   endDate: Date,
-  dateRangeFormatFn: DateTimeRangeFormatFn,
+  dateRangeFormatFn: DateRangeFormatFn,
 ) => {
   const label = dateRangeFormatFn(startDate, endDate)
 

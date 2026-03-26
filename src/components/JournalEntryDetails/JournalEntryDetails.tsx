@@ -6,7 +6,7 @@ import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { convertLedgerEntrySourceToLinkingMetadata, decodeLedgerEntrySource } from '@schemas/generalLedger/ledgerEntrySource'
 import { humanizeEnum } from '@utils/format'
 import { entryNumber } from '@utils/journal'
-import { centsToDollars } from '@utils/money'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import AlertCircle from '@icons/AlertCircle'
@@ -35,6 +35,7 @@ import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 export const JournalEntryDetails = () => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const {
     data,
     isLoadingEntry,
@@ -194,8 +195,7 @@ export const JournalEntryDetails = () => {
                       >
                         {item.direction === LedgerEntryDirection.Debit && (
                           <Badge variant={BadgeVariant.WARNING}>
-                            $
-                            {centsToDollars(item.amount || 0)}
+                            {formatCurrencyFromCents(item.amount || 0)}
                           </Badge>
                         )}
                       </TableCell>
@@ -205,8 +205,7 @@ export const JournalEntryDetails = () => {
                       >
                         {item.direction === LedgerEntryDirection.Credit && (
                           <Badge variant={BadgeVariant.SUCCESS}>
-                            $
-                            {centsToDollars(item.amount || 0)}
+                            {formatCurrencyFromCents(item.amount || 0)}
                           </Badge>
                         )}
                       </TableCell>

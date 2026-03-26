@@ -1,13 +1,7 @@
 import { type ComponentPropsWithoutRef, forwardRef } from 'react'
-import classNames from 'classnames'
 
-import { centsToDollars as formatMoney } from '@utils/money'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
-
-import './moneySpan.scss'
-
-const CLASS_NAME = 'Layer__MoneySpan'
 
 type MoneySpanProps = {
   amount: number
@@ -16,15 +10,15 @@ type MoneySpanProps = {
 
 const MoneySpan = forwardRef<HTMLSpanElement, MoneySpanProps>(
   ({ amount, displayPlusSign, className, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({
-      'positive': amount >= 0,
-      'negative': amount < 0,
-      'display-plus-sign': displayPlusSign,
-    })
+    const { formatCurrencyFromCents } = useIntlFormatter()
+    const formattedAmount = formatCurrencyFromCents(
+      amount,
+      { signDisplay: displayPlusSign ? 'always' : 'auto' },
+    )
 
     return (
-      <Span {...restProps} {...dataProperties} className={classNames(CLASS_NAME, className)} ref={ref}>
-        {formatMoney(Math.abs(amount))}
+      <Span {...restProps} className={className} ref={ref}>
+        {formattedAmount}
       </Span>
     )
   },

@@ -1,6 +1,6 @@
-import { MonthPattern } from '@utils/time/timeFormats'
+import type { MonthNameFormatFn } from '@utils/i18n/date/formatters'
+import { MonthPattern } from '@utils/i18n/date/patterns'
 import { type ProfitAndLossSummaryData } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
-import { type MonthNameFormatFn } from '@hooks/utils/i18n/useIntlFormatter'
 import type { ChartDataPoint } from '@components/ProfitAndLossChart/chartDataPoint'
 
 const BASE_LOADING_DEFAULT = 90000

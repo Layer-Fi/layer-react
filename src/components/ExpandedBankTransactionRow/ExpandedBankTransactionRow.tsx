@@ -19,11 +19,11 @@ import {
   hasMatch,
 } from '@utils/bankTransactions'
 import { getBankTransactionFirstSuggestedMatch } from '@utils/bankTransactions'
-import { centsToDollars as formatMoney } from '@utils/money'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import Scissors from '@icons/ScissorsFullOpen'
@@ -92,6 +92,7 @@ export const ExpandedBankTransactionRow = ({
   onValidityChange,
 }: ExpandedBankTransactionRowProps) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
   // Hooks for auto-saving tags and customer/vendor in unsplit state
@@ -350,12 +351,7 @@ export const ExpandedBankTransactionRow = ({
                             disabled={true}
                             leftText={t('common:label.total', 'Total')}
                             inputMode='numeric'
-                            value={`$${formatMoney(
-                              effectiveSplits.reduce(
-                                (x, { amount }) => x + amount,
-                                0,
-                              ),
-                            )}`}
+                            value={formatCurrencyFromCents(effectiveSplits.reduce((x, { amount }) => x + amount, 0))}
                           />
                         )}
                         {isCategorizationEnabled

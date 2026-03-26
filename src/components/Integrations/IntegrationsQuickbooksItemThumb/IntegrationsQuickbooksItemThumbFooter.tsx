@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DateFormat } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'

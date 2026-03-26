@@ -1,5 +1,7 @@
 import { BigDecimal as BD, Option } from 'effect'
 
+import type { IntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+
 export const BIG_DECIMAL_ZERO = BD.fromBigInt(BigInt(0))
 export const BIG_DECIMAL_ONE = BD.fromBigInt(BigInt(1))
 export const BIG_DECIMAL_NEG_ONE = BD.fromBigInt(BigInt(-1))
@@ -82,30 +84,16 @@ export const negate = (value: BD.BigDecimal): BD.BigDecimal => {
 }
 
 export function formatBigDecimalToString(
+  formatter: IntlFormatter,
   value: BD.BigDecimal,
   options: {
     mode?: 'percent' | 'currency' | 'decimal'
     minDecimalPlaces?: number
     maxDecimalPlaces?: number
-  } = {
-    mode: 'decimal',
-    minDecimalPlaces: 0,
-    maxDecimalPlaces: 3,
-  },
+  } = {},
 ): string {
   const normalizedBigDecimal = BD.normalize(value)
-  const { mode, minDecimalPlaces, maxDecimalPlaces } = options
-
-  const formatter = new Intl.NumberFormat(
-    'en-US',
-    {
-      style: 'decimal',
-      ...(mode === 'percent' && { style: 'percent' }),
-      ...(mode === 'currency' && { style: 'currency', currency: 'USD' }),
-      minimumFractionDigits: minDecimalPlaces,
-      maximumFractionDigits: maxDecimalPlaces,
-    },
-  )
+  const { mode = 'decimal', minDecimalPlaces = 0, maxDecimalPlaces = 3 } = options
 
   let decimalAsNumber = 0
   try {
@@ -113,5 +101,19 @@ export function formatBigDecimalToString(
   }
   catch { /* empty */ }
 
-  return formatter.format(decimalAsNumber)
+  if (mode === 'percent') {
+    return formatter.formatPercent(decimalAsNumber, {
+      minimumFractionDigits: minDecimalPlaces,
+      maximumFractionDigits: maxDecimalPlaces,
+    })
+  }
+
+  if (mode === 'currency') {
+    return formatter.formatCurrencyFromCents(convertBigDecimalToCents(normalizedBigDecimal))
+  }
+
+  return formatter.formatNumber(decimalAsNumber, {
+    minimumFractionDigits: minDecimalPlaces,
+    maximumFractionDigits: maxDecimalPlaces,
+  })
 }

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import {
@@ -17,13 +18,14 @@ interface MileageDeductionChartTooltipContentProps {
 
 const MileageDeductionChartTooltipContent = ({ active, payload, selectedYear }: MileageDeductionChartTooltipContentProps) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   if (!active || !payload?.[0]) return null
 
   const data = payload[0].payload
   return (
     <ChartTooltipContent>
       <ChartTooltipRow label={`${data.monthName} ${selectedYear}`} />
-      <ChartTooltipRow label={t('mileageTracking:label.miles_colon', 'Miles:')} value={<Span size='sm' variant='white'>{data.miles}</Span>} />
+      <ChartTooltipRow label={t('mileageTracking:label.miles_colon', 'Miles:')} value={<Span size='sm' variant='white'>{formatNumber(data.miles)}</Span>} />
       <ChartTooltipRow label={t('mileageTracking:label.deduction_colon', 'Deduction:')} value={<MoneySpan status='success' amount={data.deduction} size='sm' />} />
     </ChartTooltipContent>
   )

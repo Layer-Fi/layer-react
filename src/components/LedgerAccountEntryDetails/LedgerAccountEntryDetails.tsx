@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { Direction } from '@internal-types/general'
 import { TableCellAlign } from '@internal-types/table'
 import { convertLedgerEntrySourceToLinkingMetadata, decodeLedgerEntrySource, type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
-import { convertCentsToCurrency, humanizeEnum } from '@utils/format'
+import { humanizeEnum } from '@utils/format'
 import { entryNumber } from '@utils/journal'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import XIcon from '@icons/X'
@@ -51,6 +52,7 @@ export const SourceDetailView = ({
   stringOverrides?: SourceDetailStringOverrides
 }) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   switch (source.type) {
     case 'Transaction_Ledger_Entry_Source': {
       return (
@@ -64,7 +66,7 @@ export const SourceDetailView = ({
             <DateTime value={source.date} />
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.amount)}
+            {formatCurrencyFromCents(source.amount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.directionLabel || t('common:label.direction', 'Direction')}
@@ -96,7 +98,7 @@ export const SourceDetailView = ({
             <DateTime value={source.date} />
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.amount)}
+            {formatCurrencyFromCents(source.amount)}
           </DetailsListItem>
         </>
       )
@@ -124,7 +126,7 @@ export const SourceDetailView = ({
             {source.invoiceNumber}
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.amount)}
+            {formatCurrencyFromCents(source.amount)}
           </DetailsListItem>
         </>
       )
@@ -133,7 +135,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.amount)}
+            {formatCurrencyFromCents(source.amount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.recipientNameLabel || t('generalLedger:label.recipient_name', 'Recipient name')}
@@ -147,7 +149,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.refundedToCustomerAmount)}
+            {formatCurrencyFromCents(source.refundedToCustomerAmount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.recipientNameLabel || t('generalLedger:label.recipient_name', 'Recipient name')}
@@ -170,7 +172,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.paidOutAmount)}
+            {formatCurrencyFromCents(source.paidOutAmount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.processorLabel || t('common:label.processor', 'Processor')}
@@ -212,7 +214,7 @@ export const SourceDetailView = ({
             <DateTime value={source.date} />
           </DetailsListItem>
           <DetailsListItem label={t('invoices:label.write_off_amount', 'Write-off Amount')}>
-            {convertCentsToCurrency(source.writeOffAmount)}
+            {formatCurrencyFromCents(source.writeOffAmount)}
           </DetailsListItem>
         </>
       )
@@ -221,7 +223,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.amount)}
+            {formatCurrencyFromCents(source.amount)}
           </DetailsListItem>
           <DetailsListItem label={t('customerVendor:label.vendor_description', 'Vendor Description')}>
             {source.vendorDescription}
@@ -233,7 +235,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={t('invoices:label.refunded_amount', 'Refunded Amount')}>
-            {convertCentsToCurrency(source.refundedByVendorAmount)}
+            {formatCurrencyFromCents(source.refundedByVendorAmount)}
           </DetailsListItem>
           <DetailsListItem label={t('customerVendor:label.vendor_description', 'Vendor Description')}>
             {source.vendorDescription}
@@ -245,7 +247,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.paidOutAmount)}
+            {formatCurrencyFromCents(source.paidOutAmount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.processorLabel || t('common:label.processor', 'Processor')}
@@ -268,7 +270,7 @@ export const SourceDetailView = ({
     case 'Payroll_Payment_Ledger_Entry_Source': {
       return (
         <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-          {convertCentsToCurrency(source.amount)}
+          {formatCurrencyFromCents(source.amount)}
         </DetailsListItem>
       )
     }
@@ -285,7 +287,7 @@ export const SourceDetailView = ({
             <DateTime value={source.date} />
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.amount)}
+            {formatCurrencyFromCents(source.amount)}
           </DetailsListItem>
         </>
       )
@@ -297,7 +299,7 @@ export const SourceDetailView = ({
             {source.billNumber}
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.amount)}
+            {formatCurrencyFromCents(source.amount)}
           </DetailsListItem>
         </>
       )
@@ -307,7 +309,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.amount)}
+            {formatCurrencyFromCents(source.amount)}
           </DetailsListItem>
           {vendorDisplayName && (
             <DetailsListItem label={t('customerVendor:label.vendor', 'Vendor')}>
@@ -322,7 +324,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
-            {convertCentsToCurrency(source.amount)}
+            {formatCurrencyFromCents(source.amount)}
           </DetailsListItem>
           {customerDisplayName && (
             <DetailsListItem label={t('customerVendor:label.customer', 'Customer')}>
@@ -371,6 +373,7 @@ export const LedgerAccountEntryDetails = ({
   stringOverrides?: LedgerAccountEntryDetailsStringOverrides
 }) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
     useContext(LedgerAccountsContext)
   const { renderInAppLink } = useInAppLinkContext()
@@ -539,14 +542,14 @@ export const LedgerAccountEntryDetails = ({
                       <TableCell align={TableCellAlign.RIGHT}>
                         {item.direction === Direction.DEBIT && (
                           <Badge variant={BadgeVariant.WARNING}>
-                            {convertCentsToCurrency(item.amount || 0)}
+                            {formatCurrencyFromCents(item.amount || 0)}
                           </Badge>
                         )}
                       </TableCell>
                       <TableCell align={TableCellAlign.RIGHT}>
                         {item.direction === Direction.CREDIT && (
                           <Badge variant={BadgeVariant.SUCCESS}>
-                            {convertCentsToCurrency(item.amount || 0)}
+                            {formatCurrencyFromCents(item.amount || 0)}
                           </Badge>
                         )}
                       </TableCell>

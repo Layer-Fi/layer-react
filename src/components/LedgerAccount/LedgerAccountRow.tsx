@@ -8,7 +8,6 @@ import { type View } from '@internal-types/general'
 import { type LedgerAccountLineItem } from '@internal-types/ledgerAccounts'
 import { decodeLedgerEntrySource } from '@schemas/generalLedger/ledgerEntrySource'
 import { lineEntryNumber } from '@utils/journal'
-import { centsToDollars } from '@utils/money'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { Text, TextWeight } from '@components/Typography/Text'
@@ -27,7 +26,7 @@ export const LedgerAccountRow = ({
   nodeType,
 }: LedgerAccountRowProps) => {
   const { t } = useTranslation()
-  const { formatDate } = useIntlFormatter()
+  const { formatDate, formatCurrencyFromCents } = useIntlFormatter()
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(LedgerAccountsContext)
   const ledgerEntrySource = useMemo(() => {
@@ -75,19 +74,17 @@ export const LedgerAccountRow = ({
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
           <span className='Layer__table-cell-content Layer__table-cell--amount'>
-            {row.direction === Direction.DEBIT
-              && `$${centsToDollars(row?.amount || 0)}`}
+            {row.direction === Direction.DEBIT && formatCurrencyFromCents(row?.amount || 0)}
           </span>
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
           <span className='Layer__table-cell-content Layer__table-cell--amount'>
-            {row.direction === Direction.CREDIT
-              && `$${centsToDollars(row?.amount || 0)}`}
+            {row.direction === Direction.CREDIT && formatCurrencyFromCents(row?.amount || 0)}
           </span>
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
           <span className='Layer__table-cell-content Layer__table-cell--amount'>
-            {`$${centsToDollars(row.running_balance)}`}
+            {formatCurrencyFromCents(row.running_balance)}
           </span>
         </td>
       </tr>
@@ -138,8 +135,7 @@ export const LedgerAccountRow = ({
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
                   {' '}
-                  {row.direction === Direction.DEBIT
-                    && `$${centsToDollars(row?.amount || 0)}`}
+                  {row.direction === Direction.DEBIT && formatCurrencyFromCents(row?.amount || 0)}
                 </span>
               </div>
               <div className='Layer__ledger_account-table__balance-item'>
@@ -147,8 +143,7 @@ export const LedgerAccountRow = ({
                   {t('common:label.credit', 'Credit')}
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
-                  {row.direction === Direction.CREDIT
-                    && `$${centsToDollars(row?.amount || 0)}`}
+                  {row.direction === Direction.CREDIT && formatCurrencyFromCents(row?.amount || 0)}
                 </span>
               </div>
               <div className='Layer__ledger_account-table__balance-item'>
@@ -156,7 +151,7 @@ export const LedgerAccountRow = ({
                   {t('generalLedger:label.running_balance', 'Running balance')}
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
-                  {`$${centsToDollars(row.running_balance)}`}
+                  {formatCurrencyFromCents(row.running_balance)}
                 </span>
               </div>
             </div>
@@ -205,19 +200,17 @@ export const LedgerAccountRow = ({
         )}
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
-          {row.direction === Direction.DEBIT
-            && `$${centsToDollars(row?.amount || 0)}`}
+          {row.direction === Direction.DEBIT && formatCurrencyFromCents(row?.amount || 0)}
         </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
-          {row.direction === Direction.CREDIT
-            && `$${centsToDollars(row?.amount || 0)}`}
+          {row.direction === Direction.CREDIT && formatCurrencyFromCents(row?.amount || 0)}
         </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
-          {`$${centsToDollars(row.running_balance)}`}
+          {formatCurrencyFromCents(row.running_balance)}
         </span>
       </td>
     </tr>

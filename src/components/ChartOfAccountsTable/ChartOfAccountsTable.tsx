@@ -10,7 +10,7 @@ import { type View } from '@internal-types/general'
 import { TableCellAlign } from '@internal-types/table'
 import { type LedgerBalancesSchemaType, type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { asMutable } from '@utils/asMutable'
-import { convertCentsToCurrency } from '@utils/format'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
@@ -93,6 +93,7 @@ export const ChartOfAccountsTableContent = ({
   templateAccountsEditable: boolean
 }) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const { setSelectedAccount } = useContext(LedgerAccountsContext)
   const { editAccount, deleteAccount, isError } = useContext(ChartOfAccountsContext)
   const [toggledKeys, setToggledKeys] = useState<Record<string, boolean>>({})
@@ -154,8 +155,12 @@ export const ChartOfAccountsTableContent = ({
   const filteredAccounts = useMemo(() => {
     if (!searchQuery) return data.accounts
 
-    return filterAccounts(asMutable(data.accounts), searchQuery.toLowerCase())
-  }, [data.accounts, searchQuery])
+    return filterAccounts(
+      asMutable(data.accounts),
+      searchQuery.toLowerCase(),
+      formatCurrencyFromCents,
+    )
+  }, [data.accounts, formatCurrencyFromCents, searchQuery])
 
   const renderChartOfAccountsDesktopRow = ({ account, index, depth, searchQuery }: {
     account: AugmentedLedgerAccountBalance
@@ -273,7 +278,7 @@ export const ChartOfAccountsTableContent = ({
           </TableCell>
           <TableCell>
             {highlightMatch({
-              text: convertCentsToCurrency(account.balance) || '',
+              text: formatCurrencyFromCents(account.balance),
               query: searchQuery,
               isMatching: account.isMatching,
             })}

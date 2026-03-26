@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
-import { centsToDollars as formatMoney } from '@utils/money'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
@@ -29,7 +28,7 @@ export const MatchForm = ({
   readOnly = false,
 }: MatchFormProps) => {
   const { t } = useTranslation()
-  const { formatDate } = useIntlFormatter()
+  const { formatDate, formatCurrencyFromCents } = useIntlFormatter()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const { renderInAppLink } = useInAppLinkContext()
 
@@ -93,8 +92,7 @@ export const MatchForm = ({
               </Text>
             </div>
             <div className='Layer__MatchForm__Table__amount'>
-              $
-              {formatMoney(suggestedMatch.details.amount)}
+              {formatCurrencyFromCents(suggestedMatch.details.amount)}
             </div>
             {inAppLink && (
               <div className='Layer__MatchForm__Table__link'>

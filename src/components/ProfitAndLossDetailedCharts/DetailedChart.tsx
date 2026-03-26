@@ -12,10 +12,9 @@ import {
 } from 'recharts'
 import type { CartesianViewBox } from 'recharts/types/util/types'
 
-import { formatPercent } from '@utils/format'
-import { centsToDollars as formatMoney } from '@utils/money'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { isLineItemUncategorized, mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 
@@ -41,6 +40,7 @@ export const DetailedChart = ({
   showDatePicker = true,
 }: DetailedChartProps) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents, formatPercent } = useIntlFormatter()
   const chartData = useMemo(() => filteredData.map(x => ({
     ...x,
     value: x.value > 0 ? x.value : 0,
@@ -71,6 +71,16 @@ export const DetailedChart = ({
     share = value > 0 ? value / positiveTotal : 0
   }
 
+  const formattedShare = useMemo(() => {
+    if (share === null) {
+      return ''
+    }
+    const normalizedShare = Math.abs(share * 100) < 10 && share !== 0 ? 1 : 0
+    return formatPercent(share, {
+      maximumFractionDigits: normalizedShare,
+    })
+  }, [formatPercent, share])
+
   const renderLabel = useCallback((props: LabelProps) => {
     const { x = 0, y = 0, width = 0, height = 0 } = props.viewBox as CartesianViewBox ?? {
       x: 0,
@@ -96,7 +106,7 @@ export const DetailedChart = ({
           verticalAnchor='middle'
           className='pie-center-label__value'
         >
-          {`$${formatMoney(value)}`}
+          {formatCurrencyFromCents(value)}
         </ChartText>
         {share != null && (
           <ChartText
@@ -106,12 +116,12 @@ export const DetailedChart = ({
             verticalAnchor='middle'
             className='pie-center-label__share'
           >
-            {`${formatPercent(share)}%`}
+            {formattedShare}
           </ChartText>
         )}
       </>
     )
-  }, [text, share, value])
+  }, [text, formatCurrencyFromCents, value, share, formattedShare])
 
   return (
     <div className='chart-field'>

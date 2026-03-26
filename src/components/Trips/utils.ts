@@ -2,11 +2,18 @@ import { BigDecimal as BD } from 'effect'
 import { type TFunction } from 'i18next'
 
 import { TripPurpose } from '@schemas/trip'
+import { type NumberFormatFn } from '@utils/i18n/number/formatters'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { BadgeVariant } from '@components/Badge/Badge'
 
-export const formatDistance = (distance: BD.BigDecimal, t: TFunction) => {
-  return t('trips:label.distance_mi', '{{distance}} mi', { distance: BD.format(distance) })
+export const formatDistance = (
+  distance: BD.BigDecimal,
+  t: TFunction,
+  formatNumber: NumberFormatFn,
+) => {
+  return t('trips:label.distance_mi', '{{distance}} mi', {
+    distance: formatNumber(BD.format(distance), { maximumFractionDigits: 2 }),
+  })
 }
 
 export const getPurposeLabel = (purpose: TripPurpose, t: TFunction): string => {

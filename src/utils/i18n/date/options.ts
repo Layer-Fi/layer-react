@@ -1,29 +1,4 @@
-import { parseISO } from 'date-fns'
-
-import { DateFormat } from '@utils/time/timeFormats'
-
-type DateInput = Date | string | number
-export type DatePattern = DateFormat
-
-const isValidDate = (date: Date): boolean => !Number.isNaN(date.getTime())
-
-export const toDate = (value: DateInput): Date | null => {
-  if (value === undefined || value === null) {
-    return null
-  }
-
-  if (value instanceof Date) {
-    return isValidDate(value) ? value : null
-  }
-
-  if (typeof value === 'string') {
-    const parsed = parseISO(value)
-    return isValidDate(parsed) ? parsed : null
-  }
-
-  const parsed = new Date(value)
-  return isValidDate(parsed) ? parsed : null
-}
+import { DateFormat } from '@utils/i18n/date/patterns'
 
 const DATE_FORMAT_OPTIONS: Intl.DateTimeFormatOptions = {
   month: 'short',

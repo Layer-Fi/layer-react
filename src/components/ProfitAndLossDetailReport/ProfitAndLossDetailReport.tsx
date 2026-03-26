@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Direction } from '@internal-types/general'
 import { convertLedgerEntrySourceToLinkingMetadata, type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
-import { DateFormat } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import type { PnlDetailLine } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
 import { useProfitAndLossDetailLines } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

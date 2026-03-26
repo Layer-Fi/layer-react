@@ -3,6 +3,7 @@ import { getYear } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -33,21 +34,27 @@ type MileageTrackingStatsCardProps = {
   breakdown?: StatBreakdown
 }
 
-const MileageTrackingStatsRow = ({ label, value }: { label: string, value: number }) => (
-  <VStack gap='3xs'>
-    <Span size='xs' variant='subtle'>{label}</Span>
-    <Span size='sm'>{value.toLocaleString()}</Span>
-  </VStack>
-)
+const MileageTrackingStatsRow = ({ label, value }: { label: string, value: number }) => {
+  const { formatNumber } = useIntlFormatter()
+
+  return (
+    <VStack gap='3xs'>
+      <Span size='xs' variant='subtle'>{label}</Span>
+      <Span size='sm'>{formatNumber(value)}</Span>
+    </VStack>
+  )
+}
 
 const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdown }: MileageTrackingStatsCardProps) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
+
   return (
     <VStack className='Layer__MileageTrackingStats__Card' gap='3xs'>
       <Span size='md'>{title}</Span>
       {formatAsMoney
         ? <MoneySpan amount={amount} size='lg' weight='bold' />
-        : <Span size='lg' weight='bold'>{amount.toLocaleString()}</Span>}
+        : <Span size='lg' weight='bold'>{formatNumber(amount)}</Span>}
       {breakdown && (
         <HStack gap='md'>
           <MileageTrackingStatsRow label={t('common:label.business', 'Business')} value={breakdown.business} />

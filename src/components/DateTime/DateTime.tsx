@@ -1,5 +1,5 @@
-import { type DatePattern, toDate } from '@utils/time/dateIntl'
-import { DateFormat } from '@utils/time/timeFormats'
+import { toDate } from '@utils/i18n/date/input'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
 import { Text } from '@components/Typography/Text'
@@ -7,9 +7,9 @@ import { Text } from '@components/Typography/Text'
 import './dateTime.scss'
 
 interface BaseDateTimeProps {
-  format?: DatePattern
-  dateFormat?: DatePattern
-  timeFormat?: DatePattern
+  format?: DateFormat
+  dateFormat?: DateFormat
+  timeFormat?: DateFormat
   onlyDate?: boolean
   onlyTime?: boolean
   slotProps?: {
