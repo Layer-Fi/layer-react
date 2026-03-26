@@ -1,12 +1,15 @@
 import type { IntlShape } from 'react-intl'
 
+import { getCurrencyForLocale } from '@utils/i18n/number/currency'
 import { getLocaleNumberSeparators } from '@utils/i18n/number/input'
 
 const isNumericPart = (partType: Intl.NumberFormatPartTypes) => {
   return partType === 'integer' || partType === 'fraction'
 }
 
-export const getCurrencyFormatConfig = (intl: IntlShape, currency: string) => {
+export const getCurrencyFormatConfig = (intl: IntlShape) => {
+  const currency = getCurrencyForLocale(intl.locale)
+
   const parts = intl.formatNumberToParts(1000.1, {
     style: 'currency',
     currency,

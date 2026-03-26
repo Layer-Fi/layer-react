@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import CurrencyInput, { type CurrencyInputProps } from 'react-currency-input-field'
 import { type IntlShape, useIntl } from 'react-intl'
 
-import { getCurrencyForLocale } from '@utils/i18n/number/currency'
 import { transformCurrencyValue } from '@utils/i18n/number/currency'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { getCurrencyFormatConfig } from '@components/Input/amountInputUtils'
@@ -24,9 +23,8 @@ export const AmountInput = ({
 }: AmountInputProps) => {
   const intl: IntlShape = useIntl()
   const formatter = useIntlFormatter()
-  const currency = getCurrencyForLocale(intl.locale)
 
-  const currencyFormatConfig = useMemo(() => getCurrencyFormatConfig(intl, currency), [currency, intl])
+  const currencyFormatConfig = useMemo(() => getCurrencyFormatConfig(intl), [intl])
   const decimalSeparator = currencyFormatConfig.decimalSeparator
 
   const transformRawValue = useCallback(
