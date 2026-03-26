@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@internal-types/linkedAccounts'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/bankAccount'
-import { centsToDollars as formatMoney } from '@utils/money'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import LoaderIcon from '@icons/Loader'
 import { Text, type TextSize } from '@components/Typography/Text'
@@ -33,6 +33,7 @@ export const LinkedAccountThumb = ({
   slots,
 }: LinkedAccountThumbProps) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const isSyncing = isBankAccountSyncing(bankAccount)
   const displayName = getBankAccountDisplayName(bankAccount)
   const institution = getBankAccountInstitution(bankAccount)
@@ -55,7 +56,7 @@ export const LinkedAccountThumb = ({
 
   const bankBalance = slots.Pill ?? (
     <Text as='span' className='account-balance'>
-      {`${formatMoney(bankAccount.latest_balance_timestamp?.balance)}`}
+      {formatCurrencyFromCents(bankAccount.latest_balance_timestamp?.balance)}
     </Text>
   )
 
@@ -139,7 +140,7 @@ export const LinkedAccountThumb = ({
                     </Text>
                   )}
                 <Text as='span' className='account-balance'>
-                  {`${formatMoney(bankAccount.current_ledger_balance)}`}
+                  {formatCurrencyFromCents(bankAccount.current_ledger_balance)}
                 </Text>
               </div>
             )}

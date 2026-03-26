@@ -3,13 +3,13 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type SortDirection } from '@internal-types/general'
-import { formatPercent } from '@utils/format'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import {
   type ProfitAndLossFilters,
   type Scope,
   type SidebarScope,
 } from '@hooks/features/profitAndLoss/useProfitAndLoss'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
@@ -101,6 +101,7 @@ export const DetailedTable = ({
   onValueClick,
 }: DetailedTableProps) => {
   const { t } = useTranslation()
+  const { formatPercent } = useIntlFormatter()
   const typeColorMapping = mapTypesToColors(filteredData, chartColorsList)
   const positiveTotal = filteredData
     .filter(x => x.value > 0)
@@ -158,6 +159,10 @@ export const DetailedTable = ({
             {filteredData
               .map((item, idx) => {
                 const share = item.value > 0 ? item.value / positiveTotal : 0
+                const shareFractionDigits = Math.abs(share * 100) < 10 && share !== 0 ? 1 : 0
+                const formattedShare = formatPercent(share, {
+                  maximumFractionDigits: shareFractionDigits,
+                })
                 return (
                   <tr
                     key={`pl-side-table-item-${idx}`}
@@ -192,7 +197,7 @@ export const DetailedTable = ({
                     </td>
                     <td className='percent-col'>
                       <span className='share-text'>
-                        {item.value < 0 ? '-' : `${formatPercent(share)}%`}
+                        {item.value < 0 ? '-' : formattedShare}
                       </span>
                     </td>
                   </tr>

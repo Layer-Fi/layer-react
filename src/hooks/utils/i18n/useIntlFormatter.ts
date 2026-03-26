@@ -1,54 +1,77 @@
 import { useCallback, useMemo } from 'react'
 import { useIntl } from 'react-intl'
 
-import { type DatePattern, getDateFormatOptions, toDate } from '@utils/time/dateIntl'
-import { DateFormat, MonthPattern } from '@utils/time/timeFormats'
-
-type DateInput = Parameters<typeof toDate>[0]
-export type DateTimeFormatFn = (value: DateInput, format?: DatePattern) => string
-export type MonthNameFormatFn = (monthNumber: number, format?: MonthPattern) => string
-export type DateTimeRangeFormatFn = (
-  startDate: DateInput,
-  endDate: DateInput,
-  format?: DatePattern,
-) => string
+import {
+  type DateFormatFn,
+  type DateRangeFormatFn,
+  formatDate as formatDateFn,
+  formatDateRange as formatDateRangeFn,
+  formatMonthName as formatMonthNameFn,
+  type MonthNameFormatFn,
+} from '@utils/i18n/date/formatters'
+import type { DateInput } from '@utils/i18n/date/input'
+import { type DateFormat } from '@utils/i18n/date/patterns'
+import {
+  type CurrencyFormatFn,
+  formatCurrencyFromCents as formatCurrencyFromCentsFn,
+  formatNumber as formatNumberFn,
+  formatPercent as formatPercentFn,
+  type NumberFormatFn,
+  type PercentFormatFn,
+} from '@utils/i18n/number/formatters'
 
 export type IntlFormatter = {
-  formatDate: DateTimeFormatFn
+  formatCurrencyFromCents: CurrencyFormatFn
+  formatNumber: NumberFormatFn
+  formatPercent: PercentFormatFn
+  formatDate: DateFormatFn
+  formatDateRange: DateRangeFormatFn
   formatMonthName: MonthNameFormatFn
-  formatDateRange: DateTimeRangeFormatFn
 }
 
-const ARBITRARY_REFERENCE_YEAR = 2020
 export function useIntlFormatter(): IntlFormatter {
   const intl = useIntl()
 
-  const formatDate = useCallback((value: DateInput, format: DatePattern = DateFormat.DateShort) => {
-    const date = toDate(value)
-    if (!date) return ''
-
-    return intl.formatDate(date, getDateFormatOptions(format))
+  const formatDate: DateFormatFn = useCallback((value, format) => {
+    return formatDateFn(intl, value, format)
   }, [intl])
 
-  const formatMonthName = useCallback((monthNumber: number, format: MonthPattern = MonthPattern.Month) => {
-    if (monthNumber < 1 || monthNumber > 12) {
-      return ''
-    }
-
-    const date = new Date(ARBITRARY_REFERENCE_YEAR, monthNumber - 1, 1)
-    return intl.formatDate(date, getDateFormatOptions(format))
+  const formatMonthName: MonthNameFormatFn = useCallback((monthNumber, format?) => {
+    return formatMonthNameFn(intl, monthNumber, format)
   }, [intl])
 
-  const formatDateRange = useCallback((startDate: DateInput, endDate: DateInput, format: DatePattern = DateFormat.DateShort) => {
-    const start = toDate(startDate)
-    const end = toDate(endDate)
-    if (!start || !end) return ''
+  const formatDateRange: DateRangeFormatFn = useCallback((startDate: DateInput, endDate: DateInput, format?: DateFormat) => {
+    return formatDateRangeFn(intl, startDate, endDate, format)
+  }, [intl])
 
-    return intl.formatDateTimeRange(start, end, getDateFormatOptions(format))
+  const formatCurrencyFromCents: CurrencyFormatFn = useCallback((value, options) => {
+    return formatCurrencyFromCentsFn(intl, value, options)
+  }, [intl])
+
+  const formatNumber: NumberFormatFn = useCallback((value, options) => {
+    return formatNumberFn(intl, value, options)
+  }, [intl])
+
+  const formatPercent: PercentFormatFn = useCallback((value, options) => {
+    return formatPercentFn(intl, value, options)
   }, [intl])
 
   return useMemo(
-    () => ({ formatDate, formatMonthName, formatDateRange }),
-    [formatDate, formatMonthName, formatDateRange],
+    () => ({
+      formatCurrencyFromCents,
+      formatNumber,
+      formatPercent,
+      formatDate,
+      formatDateRange,
+      formatMonthName,
+    }),
+    [
+      formatCurrencyFromCents,
+      formatNumber,
+      formatPercent,
+      formatDate,
+      formatDateRange,
+      formatMonthName,
+    ],
   )
 }

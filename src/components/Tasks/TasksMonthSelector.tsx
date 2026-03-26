@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { getMonth, getYear, set } from 'date-fns'
 
 import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { DateFormat } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'

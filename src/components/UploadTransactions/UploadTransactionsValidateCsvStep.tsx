@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type CustomAccountTransactionRow } from '@internal-types/customAccounts'
-import { convertCentsToCurrency } from '@utils/format'
-import { DateFormat } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import type { CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { useCreateCustomAccountTransactions } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/useCreateCustomAccountTransactions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -51,14 +50,14 @@ export function UploadTransactionsValidateCsvStep(
   { parseCsvResponse, selectedAccountId, onSelectFile, onUploadTransactionsSuccess }: UploadTransactionsValidateCsvStepProps,
 ) {
   const { t } = useTranslation()
-  const { formatDate } = useIntlFormatter()
+  const { formatCurrencyFromCents, formatDate } = useIntlFormatter()
   const { previous, next } = useWizard()
   const { trigger: uploadTransactions, isMutating, error: uploadTransactionsError } = useCreateCustomAccountTransactions()
 
   const formatters = useMemo(() => ({
     date: (parsed: string) => formatDate(parsed, DateFormat.DateNumericPadded),
-    amount: (parsed: number) => convertCentsToCurrency(parsed) ?? '',
-  }), [formatDate])
+    amount: (parsed: number) => formatCurrencyFromCents(parsed),
+  }), [formatCurrencyFromCents, formatDate])
 
   const onClickReupload = useCallback(() => {
     onSelectFile(null)

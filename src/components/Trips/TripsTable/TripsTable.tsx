@@ -38,9 +38,16 @@ type TripActions = {
 }
 
 type TripsRowType = Row<Trip>
+
 const TripsDateCell = ({ tripDate }: { tripDate: Trip['tripDate'] }) => {
   const { formatDate } = useIntlFormatter()
   return formatCalendarDate(tripDate, formatDate)
+}
+
+const TripsDistanceCell = ({ distance }: { distance: Trip['distance'] }) => {
+  const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
+  return <Span align='right'>{formatDistance(distance, t, formatNumber)}</Span>
 }
 
 const getColumnConfig = (
@@ -61,7 +68,7 @@ const getColumnConfig = (
   {
     id: TripColumns.Distance,
     header: t('trips:label.distance', 'Distance'),
-    cell: (row: TripsRowType) => <Span align='right'>{formatDistance(row.original.distance, t)}</Span>,
+    cell: (row: TripsRowType) => <TripsDistanceCell distance={row.original.distance} />,
   },
   {
     id: TripColumns.Purpose,

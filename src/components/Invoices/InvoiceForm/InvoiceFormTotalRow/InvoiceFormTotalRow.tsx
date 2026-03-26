@@ -3,7 +3,7 @@ import { type BigDecimal as BD } from 'effect'
 import type { PropsWithChildren } from 'react'
 
 import { convertBigDecimalToCents } from '@utils/bigDecimalUtils'
-import { convertCentsToCurrency } from '@utils/format'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
@@ -15,6 +15,7 @@ type InvoiceFormTotalRowProps = PropsWithChildren<{
 }>
 
 export const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProps) => {
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const className = classNames(
     'Layer__InvoiceForm__TotalRow',
     children && 'Layer__InvoiceForm__TotalRow--withField',
@@ -25,7 +26,7 @@ export const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotal
       <Span>{label}</Span>
       {children}
       <Span align='right'>
-        {convertCentsToCurrency(convertBigDecimalToCents(value))}
+        {formatCurrencyFromCents(convertBigDecimalToCents(value))}
       </Span>
     </HStack>
   )

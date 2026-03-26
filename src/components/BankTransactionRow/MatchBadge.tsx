@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { isTransferMatch } from '@utils/bankTransactions'
-import { centsToDollars as formatMoney } from '@utils/money'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import MinimizeTwo from '@icons/MinimizeTwo'
 import { Badge } from '@components/Badge/Badge'
@@ -17,7 +16,7 @@ interface MatchTooltipProps {
 }
 
 const MatchTooltip = ({ amount, date, description }: MatchTooltipProps) => {
-  const { formatDate } = useIntlFormatter()
+  const { formatDate, formatCurrencyFromCents } = useIntlFormatter()
 
   return (
     <span className='Layer__MatchTooltip'>
@@ -28,8 +27,7 @@ const MatchTooltip = ({ amount, date, description }: MatchTooltipProps) => {
         {description}
       </div>
       <div className='Layer__MatchTooltip__amount'>
-        $
-        {formatMoney(amount)}
+        {formatCurrencyFromCents(amount)}
       </div>
     </span>
   )

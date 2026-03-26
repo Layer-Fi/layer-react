@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { type DedicatedInvoicePaymentForm, type InvoicePayment, UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
-import { DateFormat } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { UpsertDedicatedInvoicePaymentMode, useUpsertDedicatedInvoicePayment } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment/useUpsertDedicatedInvoicePayment'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

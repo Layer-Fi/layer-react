@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 
 import { type TableCellProps } from '@internal-types/table'
-import { centsToDollars } from '@utils/money'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import ChevronDownFill from '@icons/ChevronDownFill'
 
 export const TableCell = ({
@@ -19,17 +19,14 @@ export const TableCell = ({
   width,
   nowrap,
 }: TableCellProps) => {
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const amount = typeof children === 'number' ? children : 0
-  const isPositive = amount >= 0
-  const amountString = centsToDollars(Math.abs(amount))
+  const amountString = formatCurrencyFromCents(amount)
 
   const cellClassNames = classNames(
     'Layer__table-cell',
     (primary || isHeaderCell) && 'Layer__table-cell--primary',
     isHeaderCell && 'Layer__table-header',
-    isCurrency && 'Layer__table-cell-amount',
-    isCurrency && isPositive && 'Layer__table-cell-amount--positive',
-    isCurrency && !isPositive && 'Layer__table-cell-amount--negative',
     align && `Layer__table-cell--${align}`,
     nowrap && 'Layer__table-cell--nowrap',
     className,

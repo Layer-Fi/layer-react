@@ -6,9 +6,10 @@ import { Trans, useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
 import type { InvoicePayment } from '@schemas/invoices/invoicePayment'
-import { convertCentsToBigDecimal, formatBigDecimalToString } from '@utils/bigDecimalUtils'
+import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 import { flattenValidationErrors } from '@utils/form'
 import type { UpsertDedicatedInvoicePaymentMode } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment/useUpsertDedicatedInvoicePayment'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -35,10 +36,17 @@ export type InvoicePaymentFormProps = InvoicePaymentFormMode & {
 
 export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const { onSuccess, invoice, isReadOnly } = props
   const { form, submitError } = useInvoicePaymentForm(
     { onSuccess, invoice },
   )
+
+  const formatBalanceDue = useCallback((amount: BD.BigDecimal) => {
+    const balanceDue = BD.subtract(convertCentsToBigDecimal(invoice.outstandingBalance), amount)
+
+    return formatCurrencyFromCents(convertBigDecimalToCents(balanceDue))
+  }, [invoice.outstandingBalance, formatCurrencyFromCents])
 
   // Prevents default browser form submission behavior since we're handling submission externally
   // via a custom handler (e.g., onClick). This ensures accidental native submits (like pressing
@@ -116,7 +124,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
             <HStack justify='end' className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__OutstandingBalance`} gap='xs' align='center'>
               <Span size='sm'>{t('invoices:label.balance_due', 'Balance due')}</Span>
               <Span size='md' weight='bold'>
-                {formatBigDecimalToString(BD.subtract(convertCentsToBigDecimal(invoice.outstandingBalance), amount), { mode: 'currency' })}
+                {formatBalanceDue(amount)}
               </Span>
             </HStack>
           )}

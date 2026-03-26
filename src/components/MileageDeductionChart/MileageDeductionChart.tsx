@@ -7,8 +7,7 @@ import {
   XAxis,
 } from 'recharts'
 
-import { centsToDollars } from '@utils/money'
-import { DateFormat } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { VStack } from '@ui/Stack/Stack'
@@ -62,15 +61,12 @@ const getBarSize = (width: number | undefined): number => {
   return LARGE_BAR_SIZE
 }
 
-const formatYAxis = (value?: string | number) =>
-  `$${centsToDollars(Number(value))}`
-
 export const MileageDeductionChart = ({
   data,
   selectedYear,
 }: MileageDeductionChartProps) => {
   const { getColor } = useLayerContext()
-  const { formatDate } = useIntlFormatter()
+  const { formatDate, formatCurrencyFromCents } = useIntlFormatter()
   const [barSize, setBarSize] = useState(MEDIUM_BAR_SIZE)
 
   const onResize = useCallback((width: number | undefined) => {
@@ -108,7 +104,7 @@ export const MileageDeductionChart = ({
             strokeDasharray={GRID_STROKE_DASHARRAY}
           />
 
-          <ChartYAxis format={formatYAxis} domain={[0, 'auto']} />
+          <ChartYAxis format={formatCurrencyFromCents} domain={[0, 'auto']} />
 
           <MileageDeductionChartTooltip
             selectedYear={selectedYear}

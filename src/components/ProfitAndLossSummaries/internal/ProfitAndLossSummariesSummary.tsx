@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 
-import { formatPercentageChange } from '@utils/percentageChange'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -36,12 +36,17 @@ export function ProfitAndLossSummariesSummary({
   slots,
   variants,
 }: ProfitAndLossSummariesSummaryProps) {
+  const { formatPercent } = useIntlFormatter()
   const { Chart } = slots ?? {}
 
   const showPercentChange = percentChange !== undefined && percentChange !== null && comparisonMonth
 
   const isGoodChange = showPercentChange && (isExpense ? percentChange < 0 : percentChange >= 0)
   const arrow = showPercentChange && percentChange >= 0 ? '↑' : '↓'
+
+  const maxPercentageChangedDigits = percentChange
+    ? Math.abs(percentChange) < 0.1 && percentChange !== 0 ? 1 : 0
+    : 0
 
   return (
     <HStack gap='xs' align='center' overflow='hidden'>
@@ -76,7 +81,10 @@ export function ProfitAndLossSummariesSummary({
                 {arrow}
               </Span>
               <Span size='md' weight='normal' status={isGoodChange ? 'success' : undefined}>
-                {formatPercentageChange(percentChange ?? null)}
+                {formatPercent(
+                  percentChange ?? null,
+                  { maximumFractionDigits: maxPercentageChangedDigits },
+                )}
               </Span>
             </HStack>
             <Span size='xs' variant='subtle' noWrap>

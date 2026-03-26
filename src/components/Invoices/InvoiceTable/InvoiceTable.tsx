@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { getCustomerName } from '@utils/customerVendor'
-import { convertCentsToCurrency } from '@utils/format'
 import { translationKey } from '@utils/i18n/translationKey'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type ListInvoicesFilterParams, useListInvoices } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
@@ -70,8 +69,9 @@ export const ALL_OPTION: InvoiceStatusOption = { value: InvoiceStatusFilter.All,
 
 const AmountCell = ({ invoice }: { invoice: Invoice }) => {
   const { t } = useTranslation()
-  const totalAmount = convertCentsToCurrency(invoice.totalAmount)
-  const outstandingBalance = convertCentsToCurrency(invoice.outstandingBalance)
+  const { formatCurrencyFromCents } = useIntlFormatter()
+  const totalAmount = formatCurrencyFromCents(invoice.totalAmount)
+  const outstandingBalance = formatCurrencyFromCents(invoice.outstandingBalance)
   const outstandingBalanceLabel = t('invoices:label.amount_outstanding', '{{amount}} outstanding', { amount: outstandingBalance })
 
   switch (invoice.status) {

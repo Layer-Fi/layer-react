@@ -1,8 +1,8 @@
 import { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { convertCentsToCurrency } from '@utils/format'
 import { flattenAccounts } from '@hooks/legacy/useChartOfAccounts'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { RetryButton } from '@components/Button/RetryButton'
@@ -38,6 +38,7 @@ export const ChartOfAccountsForm = ({
   stringOverrides?: ChartOfAccountsFormStringOverrides
 }) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const {
     form,
     data,
@@ -132,7 +133,7 @@ export const ChartOfAccountsForm = ({
         <div className='Layer__chart-of-accounts__form-edit-entry'>
           <Text weight={TextWeight.bold}>{entry.name}</Text>
           <Text weight={TextWeight.bold}>
-            {convertCentsToCurrency(entry.balance)}
+            {formatCurrencyFromCents(entry.balance)}
           </Text>
         </div>
       )}

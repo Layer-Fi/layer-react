@@ -12,18 +12,8 @@ export function calculatePercentageChange(current: number, previous: number): nu
 
   // If previous is zero, we can't calculate a meaningful percentage
   if (previous === 0) {
-    return current === 0 ? null : 100
+    return current === 0 ? null : 1
   }
 
-  return ((current - previous) / Math.abs(previous)) * 100
-}
-
-/**
- * Format percentage change value for display
- * @param value - Percentage change value
- * @returns Formatted percentage string
- */
-export function formatPercentageChange(value: number | null): string {
-  if (value === null) return ''
-  return `${Math.abs(value).toFixed(0)}%`
+  return ((current - previous) / Math.abs(previous))
 }

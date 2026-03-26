@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { Cell, Pie, PieChart } from 'recharts'
 
 import { getCompletedTasks, getIncompleteTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { DateFormat } from '@utils/time/timeFormats'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'

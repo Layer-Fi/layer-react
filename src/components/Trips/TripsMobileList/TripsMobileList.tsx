@@ -30,7 +30,7 @@ interface TripsMobileListProps {
 
 const TripsMobileListItem = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation()
-  const { formatDate } = useIntlFormatter()
+  const { formatDate, formatNumber } = useIntlFormatter()
 
   return (
     <HStack justify='space-between' gap='sm' className='Layer__TripsMobileListItem'>
@@ -39,7 +39,7 @@ const TripsMobileListItem = ({ trip }: { trip: Trip }) => {
         {(trip.startAddress || trip.endAddress) && <TripsAddressCell trip={trip} />}
       </VStack>
       <VStack gap='3xs' align='end'>
-        <Span weight='bold'>{formatDistance(trip.distance, t)}</Span>
+        <Span weight='bold'>{formatDistance(trip.distance, t, formatNumber)}</Span>
         <Badge size={BadgeSize.SMALL} variant={getPurposeBadgeVariant(trip.purpose)}>
           {getPurposeLabel(trip.purpose, t)}
         </Badge>

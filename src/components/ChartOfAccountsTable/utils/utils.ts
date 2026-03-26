@@ -1,24 +1,34 @@
 import type { AugmentedLedgerAccountBalance } from '@internal-types/chartOfAccounts'
 import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { convertCentsToCurrency } from '@utils/format'
-import { centsToDollars, centsToDollarsWithoutCommas } from '@utils/money'
+import type { CurrencyFormatFn } from '@hooks/utils/i18n/useIntlFormatter'
 
-const accountMatchesQuery = (account: NestedLedgerAccountType, query: string) => {
+const accountMatchesQuery = (
+  account: NestedLedgerAccountType,
+  query: string,
+  formatCurrencyFromCents: CurrencyFormatFn,
+) => {
   return [
     account.name,
     account.accountType.displayName,
     account.accountNumber || '',
     account.accountSubtype?.displayName || '',
-    centsToDollars(account.balance),
-    centsToDollarsWithoutCommas(account.balance),
-    convertCentsToCurrency(account.balance) || '']
-    .some(field => field.toLowerCase().includes(query))
+    formatCurrencyFromCents(account.balance),
+  ].some(field => field.toLowerCase().includes(query))
 }
 
-export const filterAccounts = (accounts: NestedLedgerAccountType[], query: string): AugmentedLedgerAccountBalance[] => {
+export const filterAccounts = (
+  accounts: NestedLedgerAccountType[],
+  query: string,
+  formatCurrencyFromCents: CurrencyFormatFn,
+): AugmentedLedgerAccountBalance[] => {
   return accounts.flatMap((account) => {
-    const isMatching = accountMatchesQuery(account, query)
-    const matchingChildren = filterAccounts(Array.from(account.subAccounts), query)
+    const isMatching = accountMatchesQuery(account, query, formatCurrencyFromCents)
+
+    const matchingChildren = filterAccounts(
+      Array.from(account.subAccounts),
+      query,
+      formatCurrencyFromCents,
+    )
 
     if (matchingChildren.length > 0) {
       return [{ ...account, subAccounts: matchingChildren, isMatching: true }]
@@ -32,6 +42,7 @@ export const filterAccounts = (accounts: NestedLedgerAccountType[], query: strin
   })
 }
 
+// TODO (@sraines) - i18nize this function
 const skippedChars = ['$', ',']
 export const getMatchedTextIndices = (
   {

@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 
 import { LedgerAccountNodeType } from '@internal-types/chartOfAccounts'
 import { type View } from '@internal-types/general'
-import { centsToDollars } from '@utils/money'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { BackButton } from '@components/Button/BackButton'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
@@ -53,6 +53,7 @@ export const LedgerAccount = ({
   stringOverrides,
 }: LedgerAccountProps) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const [currentPage, setCurrentPage] = useState(1)
 
   const {
@@ -135,8 +136,7 @@ export const LedgerAccount = ({
                     className='Layer__ledger-account__balance-value'
                     size={TextSize.sm}
                   >
-                    $
-                    {centsToDollars(selectedAccount?.balance || 0)}
+                    {formatCurrencyFromCents(selectedAccount?.balance || 0)}
                   </Text>
                 </div>
               </div>

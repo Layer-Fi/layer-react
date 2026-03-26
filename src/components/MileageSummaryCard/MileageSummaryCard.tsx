@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { convertCentsToCurrency } from '@utils/format'
 import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import ArrowRightCircleAlt from '@icons/ArrowRightCircleAlt'
 import Plus from '@icons/Plus'
@@ -20,6 +20,7 @@ import './mileageSummaryCard.scss'
 
 export const MileageSummaryCard = () => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const { data: mileageData, isLoading, isError } = useMileageSummary()
   const { date } = useGlobalDate({ dateSelectionMode: 'full' })
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
@@ -38,7 +39,7 @@ export const MileageSummaryCard = () => {
     const currentMonthMileageData = currentMileageData?.months.find(
       month => month.month === currentMonth,
     )
-    const formattedDeductionRate = convertCentsToCurrency(
+    const formattedDeductionRate = formatCurrencyFromCents(
       currentMonthMileageData?.deductionRate ?? 0,
     )
 
@@ -48,7 +49,7 @@ export const MileageSummaryCard = () => {
       currentMonthMileageData,
       formattedDeductionRate,
     }
-  }, [date, mileageData])
+  }, [date, formatCurrencyFromCents, mileageData])
 
   const onRecordTrip = () => {
     setIsTripDrawerOpen(true)
