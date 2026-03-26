@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption } from '@internal-types/categorizationOption'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { convertCentsToDecimalString } from '@utils/format'
 import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import {
@@ -44,7 +44,6 @@ export const useSplitsForm = ({
   isOpen,
 }: UseSplitsFormOptions): UseSplitsFormReturn => {
   const { t } = useTranslation()
-  const { formatNumber } = useIntlFormatter()
   const [localSplits, setLocalSplits] = useState<Split[]>(
     getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory),
   )
@@ -145,8 +144,8 @@ export const useSplitsForm = ({
   }, [localSplits, t])
 
   const getInputValueForSplitAtIndex = useCallback((index: number, split: Split): string => {
-    return inputValues[index] ?? formatNumber(split.amount / 100, { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: false })
-  }, [formatNumber, inputValues])
+    return inputValues[index] ?? convertCentsToDecimalString(split.amount)
+  }, [inputValues])
 
   const validateSplitsForm = useCallback((): boolean => {
     if (!isSplitsValid(localSplits)) {

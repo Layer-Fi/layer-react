@@ -40,3 +40,9 @@ export const convertToCents = (amount?: number | string | null): number | undefi
     return undefined
   }
 }
+
+export const convertCentsToDecimalString = (
+  amount: number,
+): string => {
+  return (Number(amount) / 100).toFixed(2)
+}

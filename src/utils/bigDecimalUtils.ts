@@ -113,7 +113,7 @@ export function formatBigDecimalToString(
   }
 
   if (mode === 'currency') {
-    return formatter.formatCurrencyFromCents(decimalAsNumber, {
+    return formatter.formatCurrencyFromCents(convertBigDecimalToCents(normalizedBigDecimal), {
       minimumFractionDigits: minDecimalPlaces,
       maximumFractionDigits: maxDecimalPlaces,
     })
