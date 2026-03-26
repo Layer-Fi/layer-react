@@ -83,7 +83,7 @@ export type TaxOverviewDeadlineReviewAction = typeof TaxOverviewDeadlineReviewAc
 const TaxOverviewDeadlineSchema = Schema.Struct({
   amount: Schema.Number,
   description: Schema.String,
-  dueAt: Schema.DateTimeUtc,
+  dueAt: Schema.Date,
   id: Schema.String,
   reviewAction: Schema.optional(TaxOverviewDeadlineReviewActionSchema),
   status: Schema.optional(TaxOverviewDeadlineStatusSchema),

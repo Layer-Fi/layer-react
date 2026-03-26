@@ -7,7 +7,8 @@ import {
   type TaxOverviewDeadlineStatus,
   type TaxOverviewNextTax,
 } from '@schemas/taxEstimates/overview'
-import { formatDateTimeUtc } from '@utils/time/timeUtils'
+import { DateFormat } from '@utils/time/timeFormats'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -114,6 +115,7 @@ const TaxOverviewDeadlineCard = ({
 }) => {
   const { t } = useTranslation()
   const reviewAction = deadline.reviewAction
+  const { formatDate } = useIntlFormatter()
 
   return (
     <VStack className='Layer__TaxOverview__DeadlineCard' gap='md'>
@@ -123,7 +125,7 @@ const TaxOverviewDeadlineCard = ({
           <Span size='sm' variant='subtle'>
             Due:
             {' '}
-            {formatDateTimeUtc(deadline.dueAt)}
+            {formatDate(deadline.dueAt, DateFormat.DateShort)}
           </Span>
         </VStack>
         <VStack className='Layer__TaxOverview__DeadlineAmountColumn' align='end' gap='xs'>
@@ -228,6 +230,7 @@ const TaxOverviewContent = ({
                 />
               ))}
               <TaxOverviewDeadlineCard
+                key={data.annualDeadline.id}
                 deadline={data.annualDeadline}
                 onTaxBannerReviewClick={onTaxBannerReviewClick}
               />

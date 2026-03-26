@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
+import { fromDate } from '@internationalized/date'
 import { getYear } from 'date-fns'
-import { DateTime } from 'effect'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
@@ -206,23 +206,13 @@ const transformSummaryToCategories = (sections: ReadonlyArray<{ label: string, t
     .filter((category): category is TaxOverviewCategory => category !== undefined)
 }
 
-const toNoonUtcDateTime = (date: Date): DateTime.Utc => {
-  // Convert date to noon UTC to avoid timezone day shifts when displaying
-  return DateTime.unsafeMake({
-    year: date.getUTCFullYear(),
-    month: date.getUTCMonth() + 1, // JS months are 0-indexed, Effect months are 1-indexed
-    day: date.getUTCDate(),
-    hour: 12,
-  })
-}
-
 const transformBannerToDeadlines = (
   banner: TaxEstimatesBanner,
 ): TaxOverviewDeadline[] => {
   return banner.quarters.map(quarter => ({
     id: `quarter-${quarter.quarter}`,
     title: `Q${quarter.quarter} taxes`,
-    dueAt: toNoonUtcDateTime(quarter.dueDate),
+    dueAt: fromDate(quarter.dueDate, 'UTC').toDate(),
     amount: quarter.balance,
     description: 'Estimated tax',
     status: getTaxEstimatesBannerQuarterStatus(quarter),
@@ -290,7 +280,7 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
       annualDeadline: {
         id: 'annual-income-taxes',
         title: 'Annual income taxes',
-        dueAt: DateTime.unsafeMake({ year: year + 1, month: 4, day: 15, hour: 12 }), // April 15 of next year (noon UTC to avoid timezone day shift)
+        dueAt: new Date(year + 1, 3, 15), // April 15 of next year (noon UTC to avoid timezone day shift)
         amount: taxSummary.projectedTaxesOwed,
         description: 'Estimated tax',
       },

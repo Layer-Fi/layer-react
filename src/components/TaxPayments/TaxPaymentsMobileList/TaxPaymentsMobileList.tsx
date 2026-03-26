@@ -1,7 +1,5 @@
-import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { MobileList } from '@ui/MobileList/MobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -41,21 +39,25 @@ const TaxPaymentsMobileListItem = ({ payment }: { payment: TaxPaymentQuarterWith
 
 export const TaxPaymentsMobileList = ({ data, isLoading, isError, slots }: CommonTaxPaymentsListProps) => {
   const { t } = useTranslation()
-  const renderItem = useCallback(
-    (payment: TaxPaymentQuarterWithId) => <TaxPaymentsMobileListItem payment={payment} />,
-    [],
-  )
+  const { EmptyState, ErrorState } = slots
+
+  if (isLoading) {
+    return <div className='Layer__TaxPaymentsMobileList'>{t('common:label.loading', 'Loading...')}</div>
+  }
+
+  if (isError) {
+    return <div className='Layer__TaxPaymentsMobileList'><ErrorState /></div>
+  }
+
+  if (!data || data.length === 0) {
+    return <div className='Layer__TaxPaymentsMobileList'><EmptyState /></div>
+  }
 
   return (
     <div className='Layer__TaxPaymentsMobileList'>
-      <MobileList
-        ariaLabel={t('taxEstimates:label.tax_payments', 'Tax Payments')}
-        data={data}
-        isLoading={isLoading}
-        isError={isError}
-        renderItem={renderItem}
-        slots={slots}
-      />
+      {data.map(payment => (
+        <TaxPaymentsMobileListItem key={payment.id} payment={payment} />
+      ))}
     </div>
   )
 }
