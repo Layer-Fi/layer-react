@@ -41,6 +41,13 @@ const normalizeLocaleNumberString = (value: string, locale: string): string => {
   return withoutGrouping.split(decimalSeparator).join('.')
 }
 
+export const toLocalizedCents = (value: NumberInput, locale: string): number | undefined => {
+  const parsed = toLocalizedNumber(value, locale)
+  if (parsed === undefined) return undefined
+
+  return Math.round(parsed * 100)
+}
+
 export const toLocalizedNumber = (value: NumberInput, locale: string) => {
   let localizedValue: NumberInput = value
   if (typeof value === 'string') {

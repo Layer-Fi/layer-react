@@ -50,8 +50,8 @@ export function useBigDecimalInput({
   }, [])
 
   const sanitizeInput = useCallback((rawValue: string) =>
-    transformCurrencyValue(rawValue, decimalSeparator, '.'),
-  [decimalSeparator])
+    transformCurrencyValue(rawValue, decimalSeparator, '.', allowNegative),
+  [allowNegative, decimalSeparator])
 
   const onInputBlur = useCallback(() => {
     const sanitizedInput = sanitizeInput(inputValue)

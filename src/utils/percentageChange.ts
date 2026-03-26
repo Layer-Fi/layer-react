@@ -12,8 +12,8 @@ export function calculatePercentageChange(current: number, previous: number): nu
 
   // If previous is zero, we can't calculate a meaningful percentage
   if (previous === 0) {
-    return current === 0 ? null : 1
+    return current === 0 ? null : 100
   }
 
-  return ((current - previous) / Math.abs(previous))
+  return ((current - previous) / Math.abs(previous)) * 100
 }

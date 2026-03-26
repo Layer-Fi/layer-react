@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl'
 
 import { type BankAccount } from '@internal-types/linkedAccounts'
 import { getActivationDate } from '@utils/business'
-import { toLocalizedNumber } from '@utils/i18n/number/input'
+import { toLocalizedCents } from '@utils/i18n/number/input'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import {
   type OpeningBalanceAPIResponseResult,
@@ -91,7 +91,7 @@ function LinkedAccountsOpeningBalanceModalContent({
     formsDataToSave.map(x => ({
       bankAccountId: x.bankAccount.id,
       openingDate: x.openingDate,
-      openingBalance: (toLocalizedNumber(x.openingBalance, intl.locale) ?? 0) * 100,
+      openingBalance: toLocalizedCents(x.openingBalance, intl.locale) ?? 0,
       isDateInvalid: x.isDateInvalid,
     })) as OpeningBalanceData[],
     {

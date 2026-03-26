@@ -7,7 +7,7 @@ import { type SplitCategorizationEntryEncoded } from '@schemas/categorization'
 import { isSplitCategorizationEncoded } from '@schemas/categorization'
 import { decodeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag, TransactionTagSchema } from '@schemas/tag'
-import { toLocalizedNumber } from '@utils/i18n/number/input'
+import { toLocalizedCents } from '@utils/i18n/number/input'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -83,7 +83,7 @@ export const calculateUpdatedAmounts = (
   initialRowSplits: Split[],
   { index, newAmountInput, totalAmount, locale }: { index: number, newAmountInput: string, totalAmount: number, locale: string },
 ): Split[] => {
-  const newAmount = (toLocalizedNumber(newAmountInput, locale) ?? 0) * 100
+  const newAmount = toLocalizedCents(newAmountInput, locale) ?? 0
   const splitTotal = initialRowSplits.reduce((sum, split, idx) => {
     const amount = idx === 0 ? 0 : idx === index ? newAmount : split.amount
     return sum + amount

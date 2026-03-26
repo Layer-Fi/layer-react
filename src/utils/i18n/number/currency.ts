@@ -29,18 +29,33 @@ export const getLocaleCurrencySymbol = (locale: string): string => {
   return currencySymbol
 }
 
-export const transformCurrencyValue = (rawValue: string, sourceDecimalSeparator: string, targetDecimalSeparator?: string): string => {
+export const transformCurrencyValue = (
+  rawValue: string,
+  sourceDecimalSeparator: string,
+  targetDecimalSeparator?: string,
+  allowNegative = false,
+): string => {
+  const firstDigitIndex = rawValue.split('').findIndex(char => char >= '0' && char <= '9')
+  const negativeSignIndex = rawValue.indexOf('-')
+  // Only treat '-' as a sign when it appears before the first digit.
+  const isNegative = allowNegative
+    && negativeSignIndex !== -1
+    && (firstDigitIndex === -1 || negativeSignIndex < firstDigitIndex)
+
   const normalized = rawValue
     .split('')
     .filter(char => (char >= '0' && char <= '9') || char === sourceDecimalSeparator)
     .join('')
 
   const [integerPart = '', ...fractionParts] = normalized.split(sourceDecimalSeparator)
+
+  const valueWithSign = (value: string) => (isNegative ? `-${value}` : value)
+
   if (fractionParts.length === 0) {
-    return integerPart
+    return valueWithSign(integerPart)
   }
 
   const resultDecimalSeparator = targetDecimalSeparator ?? sourceDecimalSeparator
   const fractionalPart = fractionParts.join('').slice(0, 2)
-  return `${integerPart}${resultDecimalSeparator}${fractionalPart}`
+  return valueWithSign(`${integerPart}${resultDecimalSeparator}${fractionalPart}`)
 }

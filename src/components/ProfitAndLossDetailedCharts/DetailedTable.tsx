@@ -158,8 +158,8 @@ export const DetailedTable = ({
           <tbody>
             {filteredData
               .map((item, idx) => {
-                const share = item.value > 0 ? item.value / positiveTotal : 0
-                const shareFractionDigits = Math.abs(share * 100) < 10 && share !== 0 ? 1 : 0
+                const share = item.value > 0 ? (item.value / positiveTotal) * 100 : 0
+                const shareFractionDigits = Math.abs(share) < 10 && share !== 0 ? 1 : 0
                 const formattedShare = formatPercent(share, {
                   maximumFractionDigits: shareFractionDigits,
                 })
