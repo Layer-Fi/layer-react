@@ -13,6 +13,7 @@ import type { DateInput } from '@utils/i18n/date/input'
 import { type DateFormat } from '@utils/i18n/date/patterns'
 import {
   type CurrencyFormatFn,
+  formatCurrency as formatCurrencyFn,
   formatCurrencyFromCents as formatCurrencyFromCentsFn,
   formatNumber as formatNumberFn,
   formatPercent as formatPercentFn,
@@ -21,6 +22,7 @@ import {
 } from '@utils/i18n/number/formatters'
 
 export type IntlFormatter = {
+  formatCurrency: CurrencyFormatFn
   formatCurrencyFromCents: CurrencyFormatFn
   formatNumber: NumberFormatFn
   formatPercent: PercentFormatFn
@@ -44,6 +46,10 @@ export function useIntlFormatter(): IntlFormatter {
     return formatDateRangeFn(intl, startDate, endDate, format)
   }, [intl])
 
+  const formatCurrency: CurrencyFormatFn = useCallback((value, options) => {
+    return formatCurrencyFn(intl, value, options)
+  }, [intl])
+
   const formatCurrencyFromCents: CurrencyFormatFn = useCallback((value, options) => {
     return formatCurrencyFromCentsFn(intl, value, options)
   }, [intl])
@@ -58,6 +64,7 @@ export function useIntlFormatter(): IntlFormatter {
 
   return useMemo(
     () => ({
+      formatCurrency,
       formatCurrencyFromCents,
       formatNumber,
       formatPercent,
@@ -66,6 +73,7 @@ export function useIntlFormatter(): IntlFormatter {
       formatMonthName,
     }),
     [
+      formatCurrency,
       formatCurrencyFromCents,
       formatNumber,
       formatPercent,

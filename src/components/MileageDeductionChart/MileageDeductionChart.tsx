@@ -61,12 +61,15 @@ const getBarSize = (width: number | undefined): number => {
   return LARGE_BAR_SIZE
 }
 
+const formatYAxis = (value?: string | number) =>
+  `$${Number(value) / 100}`
+
 export const MileageDeductionChart = ({
   data,
   selectedYear,
 }: MileageDeductionChartProps) => {
   const { getColor } = useLayerContext()
-  const { formatDate, formatCurrencyFromCents } = useIntlFormatter()
+  const { formatDate } = useIntlFormatter()
   const [barSize, setBarSize] = useState(MEDIUM_BAR_SIZE)
 
   const onResize = useCallback((width: number | undefined) => {
@@ -104,7 +107,7 @@ export const MileageDeductionChart = ({
             strokeDasharray={GRID_STROKE_DASHARRAY}
           />
 
-          <ChartYAxis format={formatCurrencyFromCents} domain={[0, 'auto']} />
+          <ChartYAxis format={formatYAxis} domain={[0, 'auto']} />
 
           <MileageDeductionChartTooltip
             selectedYear={selectedYear}

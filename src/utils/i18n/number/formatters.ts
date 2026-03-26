@@ -31,6 +31,21 @@ export const formatCurrencyFromCents = (
   })
 }
 
+export const formatCurrency = (
+  intl: IntlShape,
+  value: NumberInput,
+  options: CurrencyFormatOptions = {},
+) => {
+  const parsed = toNumber(value)
+  if (parsed === undefined) return ''
+
+  return intl.formatNumber(parsed, {
+    style: 'currency',
+    currency: getCurrencyForLocale(intl.locale),
+    ...options,
+  })
+}
+
 export const formatNumber = (
   intl: IntlShape,
   value: NumberInput,
