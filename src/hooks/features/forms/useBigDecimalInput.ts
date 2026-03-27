@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { BigDecimal as BD, Option } from 'effect'
+import { useIntl } from 'react-intl'
 
 import {
   BIG_DECIMAL_ZERO,
@@ -7,9 +8,9 @@ import {
   convertPercentToDecimal,
   formatBigDecimalToString,
 } from '@utils/bigDecimalUtils'
+import { transformCurrencyValue } from '@utils/i18n/number/currency'
+import { getLocaleNumberSeparators } from '@utils/i18n/number/input'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-
-const DECORATOR_CHARS_REGEX = /[,%$]/g
 
 type UseBigDecimalInputOptions = {
   value: BD.BigDecimal
@@ -32,7 +33,9 @@ export function useBigDecimalInput({
   minDecimalPlaces,
   allowNegative,
 }: UseBigDecimalInputOptions) {
+  const intl = useIntl()
   const formatter = useIntlFormatter()
+  const { decimalSeparator: sourceDecimalSeparator } = getLocaleNumberSeparators(intl.locale)
 
   const formattingProps = useMemo(() => ({
     minDecimalPlaces,
@@ -46,8 +49,16 @@ export function useBigDecimalInput({
     setInputValue(e.target.value)
   }, [])
 
+  const sanitizeInput = useCallback((rawValue: string) =>
+    transformCurrencyValue(rawValue, {
+      sourceDecimalSeparator,
+      targetDecimalSeparator: '.',
+      allowNegative,
+    }),
+  [allowNegative, sourceDecimalSeparator])
+
   const onInputBlur = useCallback(() => {
-    const sanitizedInput = inputValue.replace(DECORATOR_CHARS_REGEX, '')
+    const sanitizedInput = sanitizeInput(inputValue)
     const maybeDecimal = BD.fromString(sanitizedInput)
 
     const decimal = Option.match(maybeDecimal, {
@@ -72,6 +83,7 @@ export function useBigDecimalInput({
     setInputValue(formatBigDecimalToString(formatter, clamped, formattingProps))
   }, [
     inputValue,
+    sanitizeInput,
     maxDecimalPlaces,
     mode,
     maxValue,
@@ -83,8 +95,13 @@ export function useBigDecimalInput({
   ])
 
   const allowedChars = useMemo(() =>
-    buildDecimalCharRegex({ allowNegative, allowPercent: mode === 'percent', allowDollar: mode === 'currency' }),
-  [allowNegative, mode])
+    buildDecimalCharRegex({
+      allowNegative,
+      allowPercent: mode === 'percent',
+      allowCurrencySymbol: mode === 'currency',
+      locale: intl.locale,
+    }),
+  [allowNegative, intl.locale, mode])
 
   const onBeforeInput = useCallback((e: React.FormEvent<HTMLInputElement> & { data: string | null }) => {
     if (e.data && !allowedChars.test(e.data)) {

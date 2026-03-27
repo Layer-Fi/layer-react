@@ -75,7 +75,7 @@ export const DetailedChart = ({
     if (share === null) {
       return ''
     }
-    const normalizedShare = Math.abs(share * 100) < 10 && share !== 0 ? 1 : 0
+    const normalizedShare = Math.abs(share) < 0.1 && share !== 0 ? 1 : 0
     return formatPercent(share, {
       maximumFractionDigits: normalizedShare,
     })

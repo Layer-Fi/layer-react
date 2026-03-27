@@ -1,10 +1,11 @@
 import { useContext, useMemo, useState } from 'react'
 import { startOfYear } from 'date-fns'
 import { useTranslation } from 'react-i18next'
+import { useIntl } from 'react-intl'
 
 import { type BankAccount } from '@internal-types/linkedAccounts'
 import { getActivationDate } from '@utils/business'
-import { convertToCents } from '@utils/format'
+import { toLocalizedCents } from '@utils/i18n/number/input'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import {
   type OpeningBalanceAPIResponseResult,
@@ -64,6 +65,7 @@ function LinkedAccountsOpeningBalanceModalContent({
   stringOverrides?: OpeningBalanceModalStringOverrides
 }) {
   const { t } = useTranslation()
+  const intl = useIntl()
   const { business } = useLayerContext()
   const { refetchAccounts } = useLinkedAccounts()
 
@@ -89,7 +91,7 @@ function LinkedAccountsOpeningBalanceModalContent({
     formsDataToSave.map(x => ({
       bankAccountId: x.bankAccount.id,
       openingDate: x.openingDate,
-      openingBalance: convertToCents(x.openingBalance)?.toString(),
+      openingBalance: toLocalizedCents(x.openingBalance, intl.locale) ?? 0,
       isDateInvalid: x.isDateInvalid,
     })) as OpeningBalanceData[],
     {

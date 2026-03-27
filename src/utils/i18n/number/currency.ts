@@ -4,9 +4,71 @@ const LOCALE_CURRENCY_MAP: Record<SupportedLocale, string> = {
   [SupportedLocale.enUS]: 'USD',
   [SupportedLocale.frCA]: 'CAD',
 }
+const localeCurrencySymbolCache = new Map<string, string>()
 
-export const getCurrencyForLocale = (locale?: string): string => {
+export const getCurrencyForLocale = (locale: string): string => {
   const effectiveLocale = getIntlLocale(locale)
 
   return LOCALE_CURRENCY_MAP[effectiveLocale]
+}
+
+export const getLocaleCurrencySymbol = (locale: string): string => {
+  const currency = getCurrencyForLocale(locale)
+  const cached = localeCurrencySymbolCache.get(currency)
+
+  if (cached) return cached
+
+  const currencyPart = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+  }).formatToParts(1).find(part => part.type === 'currency')
+
+  const currencySymbol = currencyPart?.value ?? currency
+  localeCurrencySymbolCache.set(currency, currencySymbol)
+
+  return currencySymbol
+}
+
+type TransformCurrencyValueOptions = {
+  sourceDecimalSeparator: string
+  targetDecimalSeparator?: string
+  allowNegative?: boolean
+  maxFractionDigits?: number
+}
+
+export const transformCurrencyValue = (
+  rawValue: string,
+  {
+    sourceDecimalSeparator,
+    targetDecimalSeparator,
+    allowNegative = false,
+    maxFractionDigits,
+  }: TransformCurrencyValueOptions,
+): string => {
+  const firstDigitIndex = rawValue.split('').findIndex(char => char >= '0' && char <= '9')
+  const negativeSignIndex = rawValue.indexOf('-')
+  // Only treat '-' as a sign when it appears before the first digit.
+  const isNegative = allowNegative
+    && negativeSignIndex !== -1
+    && (firstDigitIndex === -1 || negativeSignIndex < firstDigitIndex)
+
+  const normalized = rawValue
+    .split('')
+    .filter(char => (char >= '0' && char <= '9') || char === sourceDecimalSeparator)
+    .join('')
+
+  const [integerPart = '', ...fractionParts] = normalized.split(sourceDecimalSeparator)
+
+  const valueWithSign = (value: string) => (isNegative ? `-${value}` : value)
+
+  if (fractionParts.length === 0) {
+    return valueWithSign(integerPart)
+  }
+
+  const resultDecimalSeparator = targetDecimalSeparator ?? sourceDecimalSeparator
+  const fullFractionalPart = fractionParts.join('')
+  const fractionalPart = maxFractionDigits === undefined
+    ? fullFractionalPart
+    : fullFractionalPart.slice(0, maxFractionDigits)
+  return valueWithSign(`${integerPart}${resultDecimalSeparator}${fractionalPart}`)
 }

@@ -7,13 +7,16 @@ const accountMatchesQuery = (
   query: string,
   formatCurrencyFromCents: CurrencyFormatFn,
 ) => {
-  return [
+  const matchOptions = [
     account.name,
     account.accountType.displayName,
     account.accountNumber || '',
     account.accountSubtype?.displayName || '',
+    formatCurrencyFromCents(account.balance, { useGrouping: false }),
     formatCurrencyFromCents(account.balance),
-  ].some(field => field.toLowerCase().includes(query))
+  ]
+
+  return matchOptions.some(field => field.toLowerCase().includes(query))
 }
 
 export const filterAccounts = (
