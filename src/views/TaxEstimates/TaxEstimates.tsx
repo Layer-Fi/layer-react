@@ -5,8 +5,8 @@ import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import { getNextTaxFromTaxEstimatesBanner, type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
+import { convertCentsToDecimalString } from '@utils/format'
 import { translationKey } from '@utils/i18n/translationKey'
-import { centsToDollars } from '@utils/money'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
@@ -222,7 +222,7 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
         title={t('taxEstimates:banner.categorization_incomplete.title', 'Your tax estimates are incomplete')}
         description={t(
           'taxEstimates:banner.categorization_incomplete.description',
-          `You have ${uncategorizedReviewPayload.count} uncategorized transactions with $${centsToDollars(uncategorizedReviewPayload.amount)} in potential deductions to review.`,
+          `You have ${uncategorizedReviewPayload.count} uncategorized transactions with $${convertCentsToDecimalString(uncategorizedReviewPayload.amount)} in potential deductions to review.`,
         )}
         action={{
           label: t('taxEstimates:action.review_banner', 'Review'),

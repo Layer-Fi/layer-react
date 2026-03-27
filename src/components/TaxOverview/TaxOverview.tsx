@@ -7,7 +7,7 @@ import {
   type TaxOverviewDeadlineStatus,
   type TaxOverviewNextTax,
 } from '@schemas/taxEstimates/overview'
-import { formatDate } from '@utils/format'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -113,6 +113,7 @@ const TaxOverviewDeadlineCard = ({
   onTaxBannerReviewClick?: (payload: TaxBannerReviewPayload) => void
 }) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const reviewAction = deadline.reviewAction
 
   return (
