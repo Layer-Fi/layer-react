@@ -60,16 +60,16 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
                 <VStack className='Layer__TaxSummaryCard__Section Layer__TaxSummaryCard__Section--mobile' gap='xs'>
                   <Span size='md' variant='subtle'>{section.label}</Span>
                   <HStack className='Layer__TaxSummaryCard__Formula Layer__TaxSummaryCard__Formula--mobile' align='baseline'>
-                    <MoneySpan size='lg' weight='bold' amount={section.total} />
+                    <MoneySpan size='lg' weight='bold' amount={section.taxesOwed} />
                     <Span size='sm' variant='subtle'>=</Span>
-                    <MoneySpan size='md' amount={section.taxesOwed} />
+                    <MoneySpan size='md' amount={section.total} />
                     <Span size='sm' variant='subtle'>-</Span>
                     <MoneySpan size='md' amount={section.taxesPaid} />
                   </HStack>
                   <HStack className='Layer__TaxSummaryCard__FormulaLabels Layer__TaxSummaryCard__FormulaLabels--mobile'>
-                    <Span className='Layer__TaxSummaryCard__FormulaLabel' size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
-                    <Span className='Layer__TaxSummaryCard__FormulaLabelPlaceholder' size='sm' variant='subtle' />
                     <Span className='Layer__TaxSummaryCard__FormulaLabel' size='sm' variant='subtle'>{t('taxEstimates:label.taxes_owed', 'Taxes Owed')}</Span>
+                    <Span className='Layer__TaxSummaryCard__FormulaLabelPlaceholder' size='sm' variant='subtle' />
+                    <Span className='Layer__TaxSummaryCard__FormulaLabel' size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
                     <Span className='Layer__TaxSummaryCard__FormulaLabelPlaceholder' size='sm' variant='subtle' />
                     <Span className='Layer__TaxSummaryCard__FormulaLabel' size='sm' variant='subtle'>{t('taxEstimates:label.taxes_paid', 'Taxes Paid')}</Span>
                   </HStack>
