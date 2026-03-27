@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
 import { tPlural } from '@utils/i18n/plural'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import ChevronRight from '@icons/ChevronRight'
 import LinkIcon from '@icons/Link'
@@ -22,6 +23,7 @@ import { useWizard } from '@components/Wizard/Wizard'
 
 export function LinkAccountsLinkStep() {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const {
     data,
     loadingStatus,
@@ -64,8 +66,9 @@ export function LinkAccountsLinkStep() {
                 <Heading level={3} size='sm'>
                   {tPlural(t, 'linkedAccounts:label.found_accounts_count', {
                     count: effectiveAccounts.length,
-                    one: 'We’ve found {{count}} account',
-                    other: 'We’ve found {{count}} accounts',
+                    displayCount: formatNumber(effectiveAccounts.length),
+                    one: 'We’ve found {{displayCount}} account',
+                    other: 'We’ve found {{displayCount}} accounts',
                   })}
                 </Heading>
                 <Text status='disabled'>

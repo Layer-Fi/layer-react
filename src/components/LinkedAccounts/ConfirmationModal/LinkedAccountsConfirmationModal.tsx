@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import type { TFunction } from 'i18next'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
 import { getAccountsNeedingConfirmation, useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useAccountConfirmationStore } from '@providers/AccountConfirmationStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
@@ -14,55 +14,6 @@ import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { LinkedAccountToConfirm } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
 import { ConditionalList } from '@components/utility/ConditionalList'
-
-function getButtonLabel(
-  { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number },
-  t: TFunction,
-) {
-  if (confirmedCount === totalCount) {
-    return tPlural(t, 'linkedAccounts:action.confirm_accounts', {
-      count: totalCount,
-      one: 'Confirm Account',
-      other: 'Confirm All Accounts',
-    })
-  }
-
-  if (confirmedCount === 0) {
-    return tPlural(t, 'linkedAccounts:action.exclude_all_accounts', {
-      count: totalCount,
-      one: 'Exclude Account',
-      other: 'Exclude All Accounts',
-    })
-  }
-
-  return tPlural(t, 'linkedAccounts:action.confirm_accounts_selected', {
-    count: confirmedCount,
-    one: 'Confirm {{count}} Selected Account',
-    other: 'Confirm {{count}} Selected Accounts',
-  })
-}
-
-function getFormComponentLabels(
-  formState: AccountConfirmExcludeFormState,
-  t: TFunction,
-) {
-  const values = Object.values(formState)
-
-  const totalCount = values.length
-  const confirmedCount = values.filter(Boolean).length
-
-  const buttonLabel = getButtonLabel({ totalCount, confirmedCount }, t)
-  const descriptionLabel = tPlural(t, 'linkedAccounts:label.select_accounts_use', {
-    count: totalCount,
-    one: 'Is this account relevant to your business?',
-    other: 'Select the accounts you use for your business.',
-  })
-
-  return {
-    buttonLabel,
-    descriptionLabel,
-  }
-}
 
 function useLinkedAccountsConfirmationModal() {
   const { data, refetchAccounts } = useLinkedAccounts()
@@ -133,6 +84,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
 
 function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const { accounts, onFinish, refetchAccounts } = useLinkedAccountsConfirmationModal()
 
   const [formState, setFormState] = useState(() => Object.fromEntries(
@@ -151,7 +103,51 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     }
   }
 
-  const { descriptionLabel, buttonLabel } = getFormComponentLabels(formState, t)
+  const getButtonLabel = useCallback(
+    ({ totalCount, confirmedCount }: { totalCount: number, confirmedCount: number }) => {
+      if (confirmedCount === totalCount) {
+        return tPlural(t, 'linkedAccounts:action.confirm_accounts', {
+          count: totalCount,
+          one: 'Confirm Account',
+          other: 'Confirm All Accounts',
+        })
+      }
+
+      if (confirmedCount === 0) {
+        return tPlural(t, 'linkedAccounts:action.exclude_all_accounts', {
+          count: totalCount,
+          one: 'Exclude Account',
+          other: 'Exclude All Accounts',
+        })
+      }
+
+      return tPlural(t, 'linkedAccounts:action.confirm_accounts_selected', {
+        count: confirmedCount,
+        displayCount: formatNumber(confirmedCount),
+        one: 'Confirm {{displayCount}} Selected Account',
+        other: 'Confirm {{displayCount}} Selected Accounts',
+      })
+    },
+    [formatNumber, t],
+  )
+
+  const getFormComponentLabels = useCallback((currentFormState: AccountConfirmExcludeFormState) => {
+    const values = Object.values(currentFormState)
+
+    const totalCount = values.length
+    const confirmedCount = values.filter(Boolean).length
+
+    const buttonLabel = getButtonLabel({ totalCount, confirmedCount })
+    const descriptionLabel = tPlural(t, 'linkedAccounts:label.select_accounts_use', {
+      count: totalCount,
+      one: 'Is this account relevant to your business?',
+      other: 'Select the accounts you use for your business.',
+    })
+
+    return { buttonLabel, descriptionLabel }
+  }, [getButtonLabel, t])
+
+  const { descriptionLabel, buttonLabel } = getFormComponentLabels(formState)
 
   return (
     <>

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 import './dueStatus.scss'
@@ -15,7 +16,12 @@ export interface DueStatusProps {
   size?: 'sm' | 'md'
 }
 
-const dueStatusTitle = (daysDiff: number, paid: boolean | undefined, t: TFunction) => {
+const dueStatusTitle = (
+  daysDiff: number,
+  paid: boolean | undefined,
+  t: TFunction,
+  formatNumber: (value: number) => string,
+) => {
   if (paid && daysDiff > 0) {
     return {
       type: 'paid',
@@ -23,8 +29,9 @@ const dueStatusTitle = (daysDiff: number, paid: boolean | undefined, t: TFunctio
       title: t('common:state.paid', 'Paid'),
       diffText: tPlural(t, 'common:label.days_ago', {
         count: daysDiff,
-        one: '{{count}} day ago',
-        other: '{{count}} days ago',
+        displayCount: formatNumber(daysDiff),
+        one: '{{displayCount}} day ago',
+        other: '{{displayCount}} days ago',
       }),
     }
   }
@@ -61,8 +68,9 @@ const dueStatusTitle = (daysDiff: number, paid: boolean | undefined, t: TFunctio
       title: t('common:state.overdue', 'Overdue'),
       diffText: tPlural(t, 'common:label.days_ago', {
         count: daysDiff,
-        one: '{{count}} day ago',
-        other: '{{count}} days ago',
+        displayCount: formatNumber(daysDiff),
+        one: '{{displayCount}} day ago',
+        other: '{{displayCount}} days ago',
       }),
     }
   }
@@ -74,8 +82,9 @@ const dueStatusTitle = (daysDiff: number, paid: boolean | undefined, t: TFunctio
       title: t('common:state.due_soon', 'Due soon'),
       diffText: tPlural(t, 'common:state.due_in_count_days', {
         count: Math.abs(daysDiff),
-        one: 'Due in {{count}} day',
-        other: 'Due in {{count}} days',
+        displayCount: formatNumber(Math.abs(daysDiff)),
+        one: 'Due in {{displayCount}} day',
+        other: 'Due in {{displayCount}} days',
       }),
     }
   }
@@ -85,8 +94,9 @@ const dueStatusTitle = (daysDiff: number, paid: boolean | undefined, t: TFunctio
     diff: daysDiff,
     diffText: tPlural(t, 'common:state.due_in_count_days', {
       count: Math.abs(daysDiff),
-      one: 'Due in {{count}} day',
-      other: 'Due in {{count}} days',
+      displayCount: formatNumber(Math.abs(daysDiff)),
+      one: 'Due in {{displayCount}} day',
+      other: 'Due in {{displayCount}} days',
     }),
   }
 }
@@ -103,6 +113,7 @@ const getDiff = (refDate: Date | string) => {
 
 export const DueStatus = ({ dueDate, paidAt, size = 'md' }: DueStatusProps) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const date = useMemo(() => {
     try {
       const diff = getDiff(paidAt ? paidAt : dueDate)
@@ -111,12 +122,12 @@ export const DueStatus = ({ dueDate, paidAt, size = 'md' }: DueStatusProps) => {
         return null
       }
 
-      return dueStatusTitle(diff, Boolean(paidAt), t)
+      return dueStatusTitle(diff, Boolean(paidAt), t, formatNumber)
     }
     catch (_err) {
       return null
     }
-  }, [dueDate, paidAt, t])
+  }, [dueDate, paidAt, t, formatNumber])
 
   if (!date) {
     return null

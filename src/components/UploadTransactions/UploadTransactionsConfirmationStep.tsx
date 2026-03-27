@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import ChevronRight from '@icons/ChevronRight'
 import UploadCloud from '@icons/UploadCloud'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
@@ -18,6 +19,7 @@ type UploadTransactionsConfirmationStepProps = {
 
 export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTransactionsCount }: UploadTransactionsConfirmationStepProps) {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const { goToStep, next } = useWizard()
   const goRestartFlow = useCallback(() => {
     onRestartFlow()
@@ -32,8 +34,9 @@ export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTran
         title={t('upload:label.transactions_uploaded_successfully', 'Transactions uploaded successfully')}
         description={tPlural(t, 'upload:label.count_transactions_have', {
           count: uploadedTransactionsCount,
-          one: '{{count}} transaction has been uploaded to your account.',
-          other: '{{count}} transactions have been uploaded to your account.',
+          displayCount: formatNumber(uploadedTransactionsCount),
+          one: '{{displayCount}} transaction has been uploaded to your account.',
+          other: '{{displayCount}} transactions have been uploaded to your account.',
         })}
       />
       <Separator />

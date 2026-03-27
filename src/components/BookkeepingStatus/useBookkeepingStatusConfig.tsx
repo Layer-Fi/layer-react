@@ -27,7 +27,7 @@ export function useBookkeepingStatusConfig(
   options: BookkeepingStatusConfigOptions,
 ): InternalStatusConfig | undefined {
   const { t } = useTranslation()
-  const { formatMonthName } = useIntlFormatter()
+  const { formatMonthName, formatNumber } = useIntlFormatter()
   const { status, monthNumber, incompleteTasksCount } = options
 
   if (!status) return
@@ -36,9 +36,10 @@ export function useBookkeepingStatusConfig(
   const inProgressDescription = incompleteTasksCount !== undefined && incompleteTasksCount > 0
     ? tPlural(t, 'bookkeeping:label.working_on_books_please_complete_tasks', {
       count: incompleteTasksCount,
+      displayCount: formatNumber(incompleteTasksCount),
       monthName,
-      one: 'We\'re working on your {{monthName}} books. Please complete the {{count}} open task.',
-      other: 'We\'re working on your {{monthName}} books. Please complete the {{count}} open tasks.',
+      one: 'We\'re working on your {{monthName}} books. Please complete the {{displayCount}} open task.',
+      other: 'We\'re working on your {{monthName}} books. Please complete the {{displayCount}} open tasks.',
     })
     : t(
       'bookkeeping:label.working_on_books_no_action_needed',

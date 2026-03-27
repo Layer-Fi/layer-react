@@ -7,6 +7,10 @@ export enum Dots {
   DotsRight = 'DotsRight',
 }
 
+export const isDots = (value: number | string): value is Dots => {
+  return value in Dots
+}
+
 export interface UsePaginationProps {
   totalCount: number
   pageSize: number

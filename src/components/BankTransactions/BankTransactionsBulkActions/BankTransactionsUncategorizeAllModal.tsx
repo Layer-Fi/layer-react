@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkUncategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-uncategorize/useBulkUncategorize'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { Span } from '@ui/Typography/Text'
@@ -16,6 +17,7 @@ interface BankTransactionsUncategorizeAllModalProps {
 
 export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isMobileView = false }: BankTransactionsUncategorizeAllModalProps) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
@@ -39,8 +41,9 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isM
         <Span>
           {tPlural(t, 'bankTransactions:label.uncategorize_count_selected', {
             count,
-            one: 'This will uncategorize {{count}} selected transaction.',
-            other: 'This will uncategorize {{count}} selected transactions.',
+            displayCount: formatNumber(count),
+            one: 'This will uncategorize {{displayCount}} selected transaction.',
+            other: 'This will uncategorize {{displayCount}} selected transactions.',
           })}
         </Span>
       )}

@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import RefreshCcw from '@icons/RefreshCcw'
 import { IconButton } from '@components/Button/IconButton'
 import { SmallLoader } from '@components/Loader/SmallLoader'
@@ -39,6 +40,7 @@ export const SyncingComponent = ({
   hideContent = false,
 }: SyncingComponentProps) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const handleRefresh = () => {
     if (onRefresh) onRefresh()
   }
@@ -48,14 +50,16 @@ export const SyncingComponent = ({
       const hours = Math.floor(timeSync / 60)
       return tPlural(t, 'linkedAccounts:label.may_take_up_to_hours', {
         count: hours,
-        one: 'This may take up to {{count}} hour.',
-        other: 'This may take up to {{count}} hours.',
+        displayCount: formatNumber(hours),
+        one: 'This may take up to {{displayCount}} hour.',
+        other: 'This may take up to {{displayCount}} hours.',
       })
     }
     return tPlural(t, 'linkedAccounts:label.may_take_up_to_minutes', {
       count: timeSync,
-      one: 'This may take up to {{count}} minute.',
-      other: 'This may take up to {{count}} minutes.',
+      displayCount: formatNumber(timeSync),
+      one: 'This may take up to {{displayCount}} minute.',
+      other: 'This may take up to {{displayCount}} minutes.',
     })
   }
 

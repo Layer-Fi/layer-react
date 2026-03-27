@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { useCashflowStatementDownload } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/exports/csv/useCashflowStatementDownload'
 import { DownloadButton } from '@components/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
@@ -13,6 +15,7 @@ export function CashflowStatementDownloadButton({
   endDate,
   iconOnly,
 }: CashflowStatementDownloadButtonProps) {
+  const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useCashflowStatementDownload({
@@ -28,8 +31,6 @@ export function CashflowStatementDownloadButton({
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text='Download'
-        retryText='Retry'
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

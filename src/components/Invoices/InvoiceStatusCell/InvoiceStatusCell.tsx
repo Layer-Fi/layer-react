@@ -5,13 +5,19 @@ import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { tPlural } from '@utils/i18n/plural'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { getDueDifference } from '@utils/time/timeUtils'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import AlertCircle from '@icons/AlertCircle'
 import CheckCircle from '@icons/CheckCircle'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 
-const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t: TFunction) => {
+const getDueStatusConfig = (
+  invoice: Invoice,
+  { inline }: { inline: boolean },
+  t: TFunction,
+  formatNumber: (value: number) => string,
+) => {
   const badgeSize = inline ? BadgeSize.EXTRA_SMALL : BadgeSize.SMALL
   const iconSize = inline ? 10 : 12
 
@@ -57,8 +63,9 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t
           text: t('invoices:state.overdue', 'Overdue'),
           subText: tPlural(t, 'invoices:state.due_count_days_ago', {
             count: daysAgo,
-            one: 'Due {{count}} day ago',
-            other: 'Due {{count}} days ago',
+            displayCount: formatNumber(daysAgo),
+            one: 'Due {{displayCount}} day ago',
+            other: 'Due {{displayCount}} days ago',
           }),
           badge: <Badge variant={BadgeVariant.WARNING} size={badgeSize} icon={<AlertCircle size={iconSize} />} iconOnly />,
         }
@@ -69,8 +76,9 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t
         text: t('invoices:state.sent', 'Sent'),
         subText: tPlural(t, 'invoices:state.due_in_count_days', {
           count: daysUntilDue,
-          one: 'Due in {{count}} day',
-          other: 'Due in {{count}} days',
+          displayCount: formatNumber(daysUntilDue),
+          one: 'Due in {{displayCount}} day',
+          other: 'Due in {{displayCount}} days',
         }),
       }
     }
@@ -85,7 +93,8 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }, t
 
 export const InvoiceStatusCell = ({ invoice, inline = false }: { invoice: Invoice, inline?: boolean }) => {
   const { t } = useTranslation()
-  const dueStatus = getDueStatusConfig(invoice, { inline }, t)
+  const { formatNumber } = useIntlFormatter()
+  const dueStatus = getDueStatusConfig(invoice, { inline }, t, formatNumber)
 
   const Stack = inline ? HStack : VStack
   const subText = (inline && dueStatus.subText) ? `(${dueStatus.subText})` : dueStatus.subText

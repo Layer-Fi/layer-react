@@ -4,6 +4,7 @@ import { tPlural } from '@utils/i18n/plural'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import AlertCircle from '@icons/AlertCircle'
 import CheckCircle from '@icons/CheckCircle'
 import Clock from '@icons/Clock'
@@ -19,6 +20,7 @@ const useBadgeConfig = (
   tasksCount: TaskStatusBadgeProps['tasksCount'],
 ) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
 
   switch (status) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
@@ -30,11 +32,12 @@ const useBadgeConfig = (
         label: tasksCount
           ? tPlural(t, 'bookkeeping:label.count_tasks', {
             count: tasksCount,
-            one: '{{count}} task',
-            other: '{{count}} tasks',
+            displayCount: formatNumber(tasksCount),
+            one: '{{displayCount}} task',
+            other: '{{displayCount}} tasks',
           })
           : undefined,
-        labelShort: tasksCount ? `${tasksCount}` : undefined,
+        labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
       }
     }
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
@@ -44,11 +47,12 @@ const useBadgeConfig = (
         label: tasksCount
           ? tPlural(t, 'bookkeeping:label.count_tasks', {
             count: tasksCount,
-            one: '{{count}} task',
-            other: '{{count}} tasks',
+            displayCount: formatNumber(tasksCount),
+            one: '{{displayCount}} task',
+            other: '{{displayCount}} tasks',
           })
           : undefined,
-        labelShort: tasksCount ? `${tasksCount}` : undefined,
+        labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
         icon: <AlertCircle size={12} />,
       }
     }

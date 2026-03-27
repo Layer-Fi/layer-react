@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { Trans } from 'react-i18next'
 import { Cell, Pie, PieChart } from 'recharts'
 
 import { getCompletedTasks, getIncompleteTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
@@ -18,12 +19,14 @@ const TASKS_CHARTS_COLORS = {
 
 export const TasksPending = () => {
   const { date } = useGlobalDate()
-  const { formatDate } = useIntlFormatter()
+  const { formatDate, formatNumber } = useIntlFormatter()
   const { activePeriod } = useActiveBookkeepingPeriod()
 
   const totalTaskCount = activePeriod?.tasks?.length ?? 0
   const completedTaskCount = getCompletedTasks(activePeriod?.tasks ?? []).length
   const incompleteTaskCount = getIncompleteTasks(activePeriod?.tasks ?? []).length
+  const displayCompletedTaskCount = formatNumber(completedTaskCount)
+  const displayTotalTaskCount = formatNumber(totalTaskCount)
 
   const chartData = [
     {
@@ -50,11 +53,15 @@ export const TasksPending = () => {
           ? (
             <div className='Layer__tasks-pending-bar'>
               <Text size={TextSize.sm}>
-                <span className={taskStatusClassName}>{completedTaskCount}</span>
-                /
-                {totalTaskCount}
-                {' '}
-                done
+                <Trans
+                  i18nKey='bookkeeping:label.completed_over_total_done'
+                  count={totalTaskCount}
+                  values={{ displayCompletedTaskCount, displayTotalTaskCount }}
+                  defaults='<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} done'
+                  components={{
+                    completed: <span className={taskStatusClassName} />,
+                  }}
+                />
               </Text>
               <PieChart width={24} height={24} className='mini-chart'>
                 <Pie

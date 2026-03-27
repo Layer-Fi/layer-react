@@ -9,6 +9,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import type { View } from '@internal-types/general'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -31,7 +32,7 @@ export function MonthCalendar({
   variant?: View
 }) {
   const { t } = useTranslation()
-  const { formatMonthName } = useIntlFormatter()
+  const { formatMonthName, formatDate } = useIntlFormatter()
   const months = useMemo(() => getMonths(formatMonthName), [formatMonthName])
   const minYear = minDate?.year ?? null
   const maxYear = maxDate?.year ?? null
@@ -94,7 +95,7 @@ export function MonthCalendar({
         >
           <ChevronLeft size={20} />
         </Button>
-        <Heading weight='normal' size='sm'>{year}</Heading>
+        <Heading weight='normal' size='sm'>{formatDate(new Date(year, 0, 1), DateFormat.Year)}</Heading>
         <Button
           icon
           inset

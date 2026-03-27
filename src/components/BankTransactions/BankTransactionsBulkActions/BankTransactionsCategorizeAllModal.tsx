@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
@@ -30,6 +31,7 @@ export const BankTransactionsCategorizeAllModal = ({
   isMobileView = false,
 }: BankTransactionsCategorizeAllModalProps) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
@@ -103,15 +105,17 @@ export const BankTransactionsCategorizeAllModal = ({
               {mode === CategorizationMode.Categorize
                 ? tPlural(t, 'bankTransactions:label.categorize_count_selected', {
                   count,
+                  displayCount: formatNumber(count),
                   category: selectedCategory.original.displayName,
-                  one: 'This will categorize {{count}} selected transaction as {{category}}.',
-                  other: 'This will categorize {{count}} selected transactions as {{category}}.',
+                  one: 'This will categorize {{displayCount}} selected transaction as {{category}}.',
+                  other: 'This will categorize {{displayCount}} selected transactions as {{category}}.',
                 })
                 : tPlural(t, 'bankTransactions:label.recategorize_count_selected', {
                   count,
+                  displayCount: formatNumber(count),
                   category: selectedCategory.original.displayName,
-                  one: 'This will recategorize {{count}} selected transaction as {{category}}.',
-                  other: 'This will recategorize {{count}} selected transactions as {{category}}.',
+                  one: 'This will recategorize {{displayCount}} selected transaction as {{category}}.',
+                  other: 'This will recategorize {{displayCount}} selected transactions as {{category}}.',
                 })}
             </Span>
           )}

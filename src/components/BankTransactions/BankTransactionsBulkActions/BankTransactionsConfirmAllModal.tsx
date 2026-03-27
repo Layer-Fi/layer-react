@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkMatchOrCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-match-or-categorize/useBulkMatchOrCategorize'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -16,6 +17,7 @@ interface BankTransactionsConfirmAllModalProps {
 
 export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobileView = false }: BankTransactionsConfirmAllModalProps) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   const { trigger, buildTransactionsPayload } = useBulkMatchOrCategorize()
@@ -45,8 +47,9 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
             <Span>
               {tPlural(t, 'bankTransactions:label.this_will_confirm_count_transactions', {
                 count,
-                one: 'This will confirm {{count}} transaction.',
-                other: 'This will confirm {{count}} transactions.',
+                displayCount: formatNumber(count),
+                one: 'This will confirm {{displayCount}} transaction.',
+                other: 'This will confirm {{displayCount}} transactions.',
               })}
             </Span>
           )
@@ -55,16 +58,18 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
               <Span>
                 {tPlural(t, 'bankTransactions:label.actionable_count_transactions_will_be_confirmed', {
                   count,
-                  actionableCount,
-                  one: '{{actionableCount}} of {{count}} transaction will be confirmed.',
-                  other: '{{actionableCount}} of {{count}} transactions will be confirmed.',
+                  displayCount: formatNumber(count),
+                  displayActionableCount: formatNumber(actionableCount),
+                  one: '{{displayActionableCount}} of {{displayCount}} transaction will be confirmed.',
+                  other: '{{displayActionableCount}} of {{displayCount}} transactions will be confirmed.',
                 })}
               </Span>
               <Span>
                 {tPlural(t, 'bankTransactions:label.count_transactions_will_be_skipped', {
                   count: skippedCount,
-                  one: '{{count}} transaction will be skipped due to missing category.',
-                  other: '{{count}} transactions will be skipped due to missing category.',
+                  displayCount: formatNumber(skippedCount),
+                  one: '{{displayCount}} transaction will be skipped due to missing category.',
+                  other: '{{displayCount}} transactions will be skipped due to missing category.',
                 })}
               </Span>
             </VStack>

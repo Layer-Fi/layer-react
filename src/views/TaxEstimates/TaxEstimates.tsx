@@ -79,7 +79,7 @@ const TaxEstimatesViewContent = () => {
   }, [onboardingStatus, t])
 
   return (
-    <View title='Taxes' header={header}>
+    <View title={t('common:label.taxes', 'Taxes')} header={header}>
       {viewContent}
     </View>
   )
