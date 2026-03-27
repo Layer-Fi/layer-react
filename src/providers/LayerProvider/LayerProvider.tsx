@@ -76,7 +76,13 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
       <LayerI18nProvider>
-        <EnvironmentInputProvider environment={environment} environmentConfigOverride={environmentConfigOverride} usePlaidSandbox={usePlaidSandbox} plaidRedirectUri={plaidRedirectUri} plaidReceivedRedirectUri={plaidReceivedRedirectUri}>
+        <EnvironmentInputProvider
+          environment={environment}
+          environmentConfigOverride={environmentConfigOverride}
+          usePlaidSandbox={usePlaidSandbox}
+          plaidRedirectUri={plaidRedirectUri}
+          plaidReceivedRedirectUri={plaidReceivedRedirectUri}
+        >
           <AuthInputProvider
             appId={appId}
             appSecret={appSecret}
