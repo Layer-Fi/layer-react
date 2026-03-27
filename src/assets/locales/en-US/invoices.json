@@ -45,6 +45,7 @@
     "invoice_negative_total": "Invoice has a negative total.",
     "invoice_number": "Invoice #{{invoiceNumber}}",
     "invoice_number_component": "<label>Invoice</label> <value>#{{invoiceNumber}}</value>",
+    "invoice_number_label": "Invoice number",
     "invoice_paid_successfully": "Invoice paid successfully",
     "invoice_saved_and_sent_successfully": "Invoice saved and sent successfully",
     "invoices": "Invoices",

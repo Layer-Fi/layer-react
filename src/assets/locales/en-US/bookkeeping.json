@@ -12,6 +12,8 @@
     "bank_accounts_disconnected_other": "{{count}} bank accounts are disconnected",
     "bookkeeping_tasks": "Bookkeeping Tasks",
     "complete_bookkeeping_onboarding_call": "Once you complete your bookkeeping onboarding call, you will see your bookkeeping tasks here.",
+    "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} done",
+    "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} done",
     "count_open_tasks_one": "{{count}} open task in {{year}}",
     "count_open_tasks_other": "{{count}} open tasks in {{year}}",
     "count_tasks_one": "{{count}} task",

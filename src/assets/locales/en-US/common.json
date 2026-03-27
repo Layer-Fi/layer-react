@@ -34,6 +34,7 @@
     "toggle_bulk_actions": "Toggle bulk actions",
     "uncategorize": "Uncategorize",
     "update_label": "Update",
+    "upload_label": "Upload",
     "view_label": "View"
   },
   "empty": {
@@ -128,6 +129,7 @@
   "state": {
     "archived": "Archived",
     "confirming": "Confirming...",
+    "disabled": "Disabled",
     "due_in_count_days_one": "Due in {{count}} day",
     "due_in_count_days_other": "Due in {{count}} days",
     "due_soon": "Due soon",
@@ -138,6 +140,7 @@
     "processing": "Processing",
     "saved": "Saved",
     "saving": "Saving...",
+    "syncing": "Syncing...",
     "unreviewed": "Unreviewed",
     "unsaved": "Unsaved",
     "updated": "Updated",

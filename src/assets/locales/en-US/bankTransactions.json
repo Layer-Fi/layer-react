@@ -1,6 +1,7 @@
 {
   "action": {
     "add_new_split": "Add new split",
+    "add_next_receipt": "Add next receipt",
     "approve_match": "Approve match",
     "categorize_all": "Categorize All",
     "categorize_or_match": "Categorize or match...",
@@ -73,6 +74,7 @@
     "personal_expenses": "Personal Expenses",
     "recategorize_count_selected_one": "This will recategorize {{count}} selected transaction as {{category}}.",
     "recategorize_count_selected_other": "This will recategorize {{count}} selected transactions as {{category}}.",
+    "receipt_number": "Receipt {{number}}",
     "receipts": "Receipts",
     "search_transactions": "Search transactions",
     "select_all_transactions": "Select all transactions on this page",
@@ -83,7 +85,9 @@
     "this_will_confirm_count_transactions_other": "This will confirm {{count}} transactions.",
     "to_review": "To Review",
     "transaction_action": "Transaction action",
+    "transaction_confirmed": "Transaction confirmed",
     "transaction_details": "Transaction details",
+    "transaction_saved": "Transaction saved",
     "transaction_source": "Transaction source",
     "transactions_available_platform": "Your transactions are now available on the platform, to see all data on the charts, categorize transactions.",
     "transactions_to_review": "Transactions to review",

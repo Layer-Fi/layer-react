@@ -101,5 +101,8 @@
     "w2_income": "W-2 Income",
     "withholding_amount": "Withholding amount",
     "year_to_date": "Year to date"
+  },
+  "state": {
+    "tax_profile_saved": "Tax profile saved"
   }
 }

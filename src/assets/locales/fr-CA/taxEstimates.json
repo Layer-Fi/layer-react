@@ -101,5 +101,8 @@
     "w2_income": "Revenu W-2",
     "withholding_amount": "Montant de la retenue",
     "year_to_date": "Cumul annuel"
+  },
+  "state": {
+    "tax_profile_saved": ""
   }
 }

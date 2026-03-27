@@ -34,6 +34,7 @@
     "toggle_bulk_actions": "Afficher/masquer les actions groupées",
     "uncategorize": "Retirer la catégorie",
     "update_label": "Mettre à jour",
+    "upload_label": "",
     "view_label": "Voir"
   },
   "empty": {
@@ -128,6 +129,7 @@
   "state": {
     "archived": "Archivé",
     "confirming": "Confirmation...",
+    "disabled": "",
     "due_in_count_days_one": "Échéance dans {{count}} jour",
     "due_in_count_days_other": "Échéance dans {{count}} jours",
     "due_soon": "Bientôt à échéance",
@@ -138,6 +140,7 @@
     "processing": "Traitement en cours",
     "saved": "Enregistré",
     "saving": "Enregistrement...",
+    "syncing": "",
     "unreviewed": "Non révisé",
     "unsaved": "Non enregistré",
     "updated": "Mis à jour",

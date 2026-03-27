@@ -1,6 +1,7 @@
 {
   "action": {
     "add_new_split": "Ajouter une nouvelle répartition",
+    "add_next_receipt": "",
     "approve_match": "Approuver le rapprochement",
     "categorize_all": "Tout catégoriser",
     "categorize_or_match": "Catégoriser ou rapprocher...",
@@ -73,6 +74,7 @@
     "personal_expenses": "Dépenses personnelles",
     "recategorize_count_selected_one": "Cette action recatégorisera {{count}} transaction sélectionnée dans la catégorie {{category}}.",
     "recategorize_count_selected_other": "Cette action recatégorisera {{count}} transactions sélectionnées dans la catégorie {{category}}.",
+    "receipt_number": "",
     "receipts": "Reçus",
     "search_transactions": "Rechercher des transactions",
     "select_all_transactions": "Sélectionner toutes les transactions de cette page",
@@ -83,7 +85,9 @@
     "this_will_confirm_count_transactions_other": "Cette action confirmera {{count}} transactions.",
     "to_review": "À examiner",
     "transaction_action": "Action sur la transaction",
+    "transaction_confirmed": "",
     "transaction_details": "Détails de la transaction",
+    "transaction_saved": "",
     "transaction_source": "Source de la transaction",
     "transactions_available_platform": "Vos transactions sont maintenant disponibles sur la plateforme. Pour voir toutes les données dans les graphiques, catégorisez les transactions.",
     "transactions_to_review": "Transactions à examiner",

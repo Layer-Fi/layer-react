@@ -23,6 +23,7 @@
     "csv_validation_preview": "Aperçu de la validation du fichier CSV",
     "drag_drop_file_browse": "Glissez-déposez un fichier ou <browse>parcourez</browse>.",
     "im_done_uploading": "J’ai terminé de téléverser les transactions",
+    "need_help_download_example_csv": "",
     "review_transactions": "Vérifier les transactions",
     "total_transactions_count": "Total des transactions : {{totalTransactionsCount}}",
     "transactions_parsed_successfully_click_upload": "Toutes les transactions ont été analysées avec succès. Cliquez sur « Téléverser les transactions » pour finaliser l’importation.",
