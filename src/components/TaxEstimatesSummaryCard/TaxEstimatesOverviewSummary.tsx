@@ -125,7 +125,6 @@ const TaxEstimatesSummaryLegend = ({
             <MoneySpan size='sm' weight='bold' amount={category.amount} />
             <Span size='sm' variant='subtle'>
               {formatPercent(total === 0 ? 0 : category.amount / total)}
-              %
             </Span>
             <Span nonAria className={`Layer__TaxEstimatesSummaryCard__LegendSwatch ${getCategoryClassName(category.key)}`} />
           </HStack>

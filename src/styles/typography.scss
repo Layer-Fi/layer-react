@@ -4,7 +4,7 @@
   font-size: var(--text-heading);
   line-height: 140%;
   font-weight: var(--font-weight-bold);
-  color: var(--color-base-800);
+  color: var(--text-color-primary);
   font-variation-settings: 'wght' var(--font-weight-bold);
   letter-spacing: -0.12px;
 }
@@ -13,7 +13,7 @@
 .Layer__heading.Layer__heading--secondary {
   font-size: var(--text-heading-sm);
   font-weight: var(--font-weight-bold);
-  color: var(--color-base-800);
+  color: var(--text-color-primary);
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
@@ -21,7 +21,7 @@
 .Layer__heading.Layer__heading--view {
   font-size: var(--text-heading-view);
   font-weight: var(--font-weight-bold);
-  color: var(--color-base-800);
+  color: var(--text-color-primary);
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
@@ -29,7 +29,7 @@
 .Layer__heading.Layer__heading--page {
   font-size: var(--text-heading-page);
   font-weight: var(--font-weight-bold);
-  color: var(--color-base-800);
+  color: var(--text-color-primary);
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 

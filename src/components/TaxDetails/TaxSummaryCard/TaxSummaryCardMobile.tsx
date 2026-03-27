@@ -15,18 +15,6 @@ type TaxSummaryCardMobileProps = {
   data: TaxSummary
 }
 
-const getMobileSectionLabel = (label: string) => {
-  if (/federal/i.test(label) && /self/i.test(label)) {
-    return 'Federal & self-employed taxes'
-  }
-
-  if (/state/i.test(label)) {
-    return 'State taxes'
-  }
-
-  return label
-}
-
 export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
@@ -70,7 +58,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
                   </HStack>
                 )}
                 <VStack className='Layer__TaxSummaryCard__Section Layer__TaxSummaryCard__Section--mobile' gap='xs'>
-                  <Span size='md' variant='subtle'>{getMobileSectionLabel(section.label)}</Span>
+                  <Span size='md' variant='subtle'>{section.label}</Span>
                   <HStack className='Layer__TaxSummaryCard__Formula Layer__TaxSummaryCard__Formula--mobile' align='baseline'>
                     <MoneySpan size='lg' weight='bold' amount={section.total} />
                     <Span size='sm' variant='subtle'>=</Span>

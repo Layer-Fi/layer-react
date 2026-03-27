@@ -75,7 +75,6 @@ export const getNextTaxFromTaxEstimatesBanner = (
 
   const nextQuarter = taxBanner.quarters.find(quarter => !quarter.isPastDue && quarter.amountOwed > 0)
     ?? taxBanner.quarters.find(quarter => quarter.amountOwed > 0)
-    ?? taxBanner.quarters[0]
 
   if (!nextQuarter) {
     return

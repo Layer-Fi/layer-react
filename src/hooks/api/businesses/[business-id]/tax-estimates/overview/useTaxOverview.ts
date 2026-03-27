@@ -5,36 +5,14 @@ import useSWR from 'swr'
 import { type TaxOverviewData, type TaxOverviewDeadlineStatus, TaxOverviewResponseSchema } from '@schemas/taxEstimates/overview'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { formatDateString, getQuarterDueDate, TAX_BANNER_REVIEW_AMOUNT, TAX_BANNER_REVIEW_COUNT } from '@hooks/api/businesses/[business-id]/tax-estimates/mockUtils'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const TAX_OVERVIEW_TAG_KEY = '#tax-overview'
-const TAX_BANNER_REVIEW_COUNT = 16
-const TAX_BANNER_REVIEW_AMOUNT = 210000
 
 type UseTaxOverviewOptions = {
   year: number
-}
-
-const getQuarterDueDate = (year: number, quarter: number) => {
-  switch (quarter) {
-    case 1:
-      return new Date(year, 3, 15)
-    case 2:
-      return new Date(year, 6, 15)
-    case 3:
-      return new Date(year, 9, 15)
-    case 4:
-      return new Date(year + 1, 0, 15)
-    default:
-      return new Date(year, 0, 15)
-  }
-}
-
-const formatDateString = (date: Date) => {
-  const month = `${date.getMonth() + 1}`.padStart(2, '0')
-  const day = `${date.getDate()}`.padStart(2, '0')
-  return `${date.getFullYear()}-${month}-${day}`
 }
 
 const buildTaxOverviewMockResponse = ({ year }: UseTaxOverviewOptions) => {

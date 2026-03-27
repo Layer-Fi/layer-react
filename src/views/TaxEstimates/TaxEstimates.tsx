@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import { getNextTaxFromTaxEstimatesBanner, type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
 import { convertCentsToDecimalString } from '@utils/format'
+import { tPlural } from '@utils/i18n/plural'
 import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
@@ -220,9 +221,15 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
     <VStack className='Layer__TaxEstimates__TaxBannerWrapper'>
       <TaxBanner
         title={t('taxEstimates:banner.categorization_incomplete.title', 'Your tax estimates are incomplete')}
-        description={t(
+        description={tPlural(
+          t,
           'taxEstimates:banner.categorization_incomplete.description',
-          `You have ${uncategorizedReviewPayload.count} uncategorized transactions with $${convertCentsToDecimalString(uncategorizedReviewPayload.amount)} in potential deductions to review.`,
+          {
+            count: uncategorizedReviewPayload.count,
+            amount: convertCentsToDecimalString(uncategorizedReviewPayload.amount),
+            one: 'You have {{count}} uncategorized transaction with ${{amount}} in potential deductions to review.',
+            other: 'You have {{count}} uncategorized transactions with ${{amount}} in potential deductions to review.',
+          },
         )}
         action={{
           label: t('taxEstimates:action.review_banner', 'Review'),

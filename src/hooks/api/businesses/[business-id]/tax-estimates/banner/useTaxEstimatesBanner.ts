@@ -5,38 +5,14 @@ import useSWR from 'swr'
 import { TaxEstimatesBannerResponseSchema } from '@schemas/taxEstimates/banner'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { getQuarterDueDateString, TAX_BANNER_REVIEW_AMOUNT, TAX_BANNER_REVIEW_COUNT } from '@hooks/api/businesses/[business-id]/tax-estimates/mockUtils'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const TAX_ESTIMATES_BANNER_TAG_KEY = '#tax-estimates-banner'
-const TAX_BANNER_REVIEW_COUNT = 16
-const TAX_BANNER_REVIEW_AMOUNT = 210000
 
 type UseTaxEstimatesBannerOptions = {
   year: number
-}
-
-const getQuarterDueDate = (year: number, quarter: number) => {
-  switch (quarter) {
-    case 1:
-      return new Date(year, 3, 15)
-    case 2:
-      return new Date(year, 6, 15)
-    case 3:
-      return new Date(year, 9, 15)
-    case 4:
-      return new Date(year + 1, 0, 15)
-    default:
-      return new Date(year, 0, 15)
-  }
-}
-
-const getQuarterDueDateString = (year: number, quarter: number) => {
-  const dueDate = getQuarterDueDate(year, quarter)
-  const month = `${dueDate.getMonth() + 1}`.padStart(2, '0')
-  const day = `${dueDate.getDate()}`.padStart(2, '0')
-
-  return `${dueDate.getFullYear()}-${month}-${day}`
 }
 
 const buildTaxEstimatesBannerMockResponse = ({ year }: UseTaxEstimatesBannerOptions) => ({
