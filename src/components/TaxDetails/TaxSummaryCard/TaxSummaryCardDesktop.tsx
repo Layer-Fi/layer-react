@@ -62,16 +62,16 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
           {data.sections.map(section => (
             <VStack key={section.label} className='Layer__TaxSummaryCard__BodyCell Layer__TaxSummaryCard__BodyCell--section' gap='sm' justify='center'>
               <HStack className='Layer__TaxSummaryCard__Formula' align='baseline'>
-                <MoneySpan size='lg' weight='bold' amount={section.total} />
+                <MoneySpan size='lg' weight='bold' amount={section.taxesOwed} />
                 <Span size='md' variant='subtle'>=</Span>
-                <MoneySpan size='lg' amount={section.taxesOwed} />
+                <MoneySpan size='lg' amount={section.total} />
                 <Span size='md' variant='subtle'>-</Span>
                 <MoneySpan size='lg' amount={section.taxesPaid} />
               </HStack>
               <HStack className='Layer__TaxSummaryCard__FormulaLabels'>
-                <Span className='Layer__TaxSummaryCard__FormulaLabel' size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
-                <Span className='Layer__TaxSummaryCard__FormulaLabelPlaceholder' size='sm' variant='subtle' />
                 <Span className='Layer__TaxSummaryCard__FormulaLabel' size='sm' variant='subtle'>{t('taxEstimates:label.taxes_owed', 'Taxes Owed')}</Span>
+                <Span className='Layer__TaxSummaryCard__FormulaLabelPlaceholder' size='sm' variant='subtle' />
+                <Span className='Layer__TaxSummaryCard__FormulaLabel' size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
                 <Span className='Layer__TaxSummaryCard__FormulaLabelPlaceholder' size='sm' variant='subtle' />
                 <Span className='Layer__TaxSummaryCard__FormulaLabel' size='sm' variant='subtle'>{t('taxEstimates:label.taxes_paid', 'Taxes Paid')}</Span>
               </HStack>

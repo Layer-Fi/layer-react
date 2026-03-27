@@ -7,7 +7,8 @@ import {
   type TaxOverviewDeadlineStatus,
   type TaxOverviewNextTax,
 } from '@schemas/taxEstimates/overview'
-import { formatDateTimeUtc } from '@utils/time/timeUtils'
+import { tPlural } from '@utils/i18n/plural'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -113,6 +114,7 @@ const TaxOverviewDeadlineCard = ({
   onTaxBannerReviewClick?: (payload: TaxBannerReviewPayload) => void
 }) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const reviewAction = deadline.reviewAction
 
   return (
@@ -121,9 +123,7 @@ const TaxOverviewDeadlineCard = ({
         <VStack className='Layer__TaxOverview__DeadlineContent' gap='3xs'>
           <Heading level={3} size='sm'>{deadline.title}</Heading>
           <Span size='sm' variant='subtle'>
-            Due:
-            {' '}
-            {formatDateTimeUtc(deadline.dueAt)}
+            {t('taxEstimates:label.due_with_date', 'Due: {{date}}', { date: formatDate(deadline.dueAt) })}
           </Span>
         </VStack>
         <VStack className='Layer__TaxOverview__DeadlineAmountColumn' align='end' gap='xs'>
@@ -145,9 +145,11 @@ const TaxOverviewDeadlineCard = ({
               <FileText size={12} />
             </Span>
             <Span className='Layer__TaxOverview__DeadlineReviewLabel' size='sm' weight='bold'>
-              {reviewAction.payload.count}
-              {' '}
-              uncategorized transactions
+              {tPlural(t, 'taxEstimates:label.uncategorized_transactions', {
+                count: reviewAction.payload.count,
+                one: '{{count}} uncategorized transaction',
+                other: '{{count}} uncategorized transactions',
+              })}
             </Span>
           </HStack>
           {onTaxBannerReviewClick && (
@@ -164,7 +166,7 @@ const TaxOverviewDeadlineCard = ({
   )
 }
 
-const TaxOverviewContent = ({
+export const TaxOverview = ({
   data,
   nextTax,
   onTaxBannerReviewClick,
@@ -181,26 +183,26 @@ const TaxOverviewContent = ({
           <Card className='Layer__TaxOverview__Card'>
             <VStack gap='xs'>
               <Heading level={2} size='md'>
-                Taxable income for
-                {' '}
-                {year}
+                {t('taxEstimates:label.taxable_income_for_year', 'Taxable income for {{year}}', { year })}
               </Heading>
               <Span size='sm' variant='subtle'>
-                Taxable income estimate to date for year
-                {' '}
-                {year}
+                {t(
+                  'taxEstimates:label.taxable_income_estimate_to_date_for_year',
+                  'Taxable income estimate to date for year {{year}}',
+                  { year },
+                )}
               </Span>
             </VStack>
             <VStack gap={isMobile ? 'sm' : 'md'}>
               <TaxOverviewMetricRow
-                label='Total income'
+                label={t('taxEstimates:label.total_income', 'Total income')}
                 amount={data.incomeTotal}
                 maxMeterValue={maxMeterValue}
                 meterClassName='Layer__TaxOverview__IncomeMeter'
                 isMobile={isMobile}
               />
               <TaxOverviewMetricRow
-                label='Deductions'
+                label={t('taxEstimates:label.deductions', 'Deductions')}
                 amount={data.deductionsTotal}
                 maxMeterValue={maxMeterValue}
                 meterClassName='Layer__TaxOverview__DeductionsMeter'
@@ -218,7 +220,7 @@ const TaxOverviewContent = ({
         </VStack>
         <Card className='Layer__TaxOverview__Card'>
           <VStack gap='lg'>
-            <Heading level={2} size='md'>Your tax deadlines</Heading>
+            <Heading level={2} size='md'>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
             <VStack gap='sm'>
               {data.paymentDeadlines.map(deadline => (
                 <TaxOverviewDeadlineCard
@@ -238,15 +240,3 @@ const TaxOverviewContent = ({
     </VStack>
   )
 }
-
-type TaxOverviewViewProps = TaxOverviewProps & {
-  data: TaxOverviewData
-}
-
-export const TaxOverview = ({ data, nextTax, onTaxBannerReviewClick }: TaxOverviewViewProps) => (
-  <TaxOverviewContent
-    data={data}
-    nextTax={nextTax}
-    onTaxBannerReviewClick={onTaxBannerReviewClick}
-  />
-)

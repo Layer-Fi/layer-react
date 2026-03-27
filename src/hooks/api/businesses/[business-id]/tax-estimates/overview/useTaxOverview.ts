@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
@@ -7,16 +6,14 @@ import { type TaxOverviewApiResponse, TaxOverviewApiResponseSchema } from '@sche
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const TAX_OVERVIEW_TAG_KEY = '#tax-overview'
-type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
 
 type UseTaxOverviewOptions = {
   year: number
-  reportingBasis?: TaxReportingBasis
+  reportingBasis?: ReportingBasis
   fullYearProjection?: boolean
 }
 
@@ -47,7 +44,7 @@ function buildKey({
   apiUrl?: string
   businessId: string
   year: number
-  reportingBasis?: TaxReportingBasis
+  reportingBasis?: ReportingBasis
   fullYearProjection?: boolean
 }) {
   if (accessToken && apiUrl) {
@@ -94,15 +91,4 @@ export function useTaxOverview({ year, reportingBasis, fullYearProjection }: Use
   )
 
   return new SWRQueryResult(swrResponse)
-}
-
-export function useTaxOverviewGlobalCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadTaxOverview = useCallback(
-    () => forceReload(({ tags }) => tags.includes(TAX_OVERVIEW_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadTaxOverview }
 }

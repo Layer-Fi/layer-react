@@ -1,14 +1,14 @@
 import { useCallback, useMemo } from 'react'
 import { getYear } from 'date-fns'
-import { DateTime } from 'effect'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import { getNextTaxFromTaxEstimatesBanner, getTaxEstimatesBannerQuarterStatus, type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
 import type { TaxOverviewCategory, TaxOverviewCategoryKey, TaxOverviewData, TaxOverviewDeadline } from '@schemas/taxEstimates/overview'
+import { convertCentsToDecimalString } from '@utils/format'
+import { tPlural } from '@utils/i18n/plural'
 import { translationKey } from '@utils/i18n/translationKey'
-import { centsToDollars } from '@utils/money'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
@@ -206,23 +206,13 @@ const transformSummaryToCategories = (sections: ReadonlyArray<{ label: string, t
     .filter((category): category is TaxOverviewCategory => category !== undefined)
 }
 
-const toNoonUtcDateTime = (date: Date): DateTime.Utc => {
-  // Convert date to noon UTC to avoid timezone day shifts when displaying
-  return DateTime.unsafeMake({
-    year: date.getUTCFullYear(),
-    month: date.getUTCMonth() + 1, // JS months are 0-indexed, Effect months are 1-indexed
-    day: date.getUTCDate(),
-    hour: 12,
-  })
-}
-
 const transformBannerToDeadlines = (
   banner: TaxEstimatesBanner,
 ): TaxOverviewDeadline[] => {
   return banner.quarters.map(quarter => ({
     id: `quarter-${quarter.quarter}`,
     title: `Q${quarter.quarter} taxes`,
-    dueAt: toNoonUtcDateTime(quarter.dueDate),
+    dueAt: quarter.dueDate,
     amount: quarter.balance,
     description: 'Estimated tax',
     status: getTaxEstimatesBannerQuarterStatus(quarter),
@@ -271,7 +261,6 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
     [taxBannerData],
   )
 
-  // Transform API data into the shape expected by TaxOverview component
   const taxOverviewData = useMemo((): TaxOverviewData | undefined => {
     if (!taxOverviewApi || !taxSummary || !taxBannerData || !nextTax) {
       return undefined
@@ -290,7 +279,7 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
       annualDeadline: {
         id: 'annual-income-taxes',
         title: 'Annual income taxes',
-        dueAt: DateTime.unsafeMake({ year: year + 1, month: 4, day: 15, hour: 12 }), // April 15 of next year (noon UTC to avoid timezone day shift)
+        dueAt: new Date(year + 1, 3, 15),
         amount: taxSummary.projectedTaxesOwed,
         description: 'Estimated tax',
       },
@@ -301,9 +290,15 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
     <VStack className='Layer__TaxEstimates__TaxBannerWrapper'>
       <TaxBanner
         title={t('taxEstimates:banner.categorization_incomplete.title', 'Your tax estimates are incomplete')}
-        description={t(
+        description={tPlural(
+          t,
           'taxEstimates:banner.categorization_incomplete.description',
-          `You have ${uncategorizedReviewPayload.count} uncategorized transactions with $${centsToDollars(uncategorizedReviewPayload.amount)} in potential deductions to review.`,
+          {
+            count: uncategorizedReviewPayload.count,
+            amount: convertCentsToDecimalString(uncategorizedReviewPayload.amount),
+            one: 'You have {{count}} uncategorized transaction with ${{amount}} in potential deductions to review.',
+            other: 'You have {{count}} uncategorized transactions with ${{amount}} in potential deductions to review.',
+          },
         )}
         action={{
           label: t('taxEstimates:action.review_banner', 'Review'),
