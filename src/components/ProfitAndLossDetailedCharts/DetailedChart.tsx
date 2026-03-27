@@ -68,14 +68,14 @@ export const DetailedChart = ({
     const positiveTotal = chartData.reduce((sum, x) => sum + x.value, 0)
 
     const value = item?.value ?? 0
-    share = value > 0 ? (value / positiveTotal) * 100 : 0
+    share = value > 0 ? value / positiveTotal : 0
   }
 
   const formattedShare = useMemo(() => {
     if (share === null) {
       return ''
     }
-    const normalizedShare = Math.abs(share) < 10 && share !== 0 ? 1 : 0
+    const normalizedShare = Math.abs(share) < 0.1 && share !== 0 ? 1 : 0
     return formatPercent(share, {
       maximumFractionDigits: normalizedShare,
     })

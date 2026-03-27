@@ -51,7 +51,7 @@ export const formatPercent = (
   const parsed = toLocalizedNumber(value, intl.locale)
   if (parsed === undefined) return ''
 
-  return intl.formatNumber(parsed / 100, {
+  return intl.formatNumber(parsed, {
     style: 'percent',
     ...options,
   })

@@ -45,7 +45,7 @@ export function ProfitAndLossSummariesSummary({
   const arrow = showPercentChange && percentChange >= 0 ? '↑' : '↓'
 
   const maxPercentageChangedDigits = percentChange
-    ? Math.abs(percentChange) < 10 && percentChange !== 0 ? 1 : 0
+    ? Math.abs(percentChange) < 0.1 && percentChange !== 0 ? 1 : 0
     : 0
 
   return (
