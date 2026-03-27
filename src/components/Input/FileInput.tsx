@@ -1,4 +1,5 @@
 import { type ChangeEvent, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import UploadCloud from '@icons/UploadCloud'
 import { ButtonVariant } from '@components/Button/Button'
@@ -17,7 +18,7 @@ export interface FileInputProps {
 }
 
 export const FileInput = ({
-  text = 'Upload',
+  text,
   onUpload,
   disabled = false,
   secondary,
@@ -26,6 +27,8 @@ export const FileInput = ({
   allowMultipleUploads = false,
   accept,
 }: FileInputProps) => {
+  const { t } = useTranslation()
+  const buttonText = text ?? t('common:action.upload_label', 'Upload')
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
   const onClick = () => {
@@ -46,7 +49,7 @@ export const FileInput = ({
     return (
       <>
         <TextButton onClick={onClick} disabled={disabled}>
-          {text}
+          {buttonText}
         </TextButton>
         <input
           type='file'
@@ -69,7 +72,7 @@ export const FileInput = ({
         disabled={disabled}
         iconOnly={iconOnly}
       >
-        {!iconOnly && text}
+        {!iconOnly && buttonText}
       </Button>
       <input
         type='file'

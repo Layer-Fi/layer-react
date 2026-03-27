@@ -1,4 +1,5 @@
 import { type ChangeEvent, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
@@ -23,10 +24,13 @@ export const Tab = ({
   value,
   leftIcon,
   disabled,
-  disabledMessage = 'Disabled',
+  disabledMessage,
   index,
   badge,
 }: TabProps) => {
+  const { t } = useTranslation()
+  const disabledMessageText = disabledMessage ?? t('common:state.disabled', 'Disabled')
+
   if (disabled) {
     return (
       <DeprecatedTooltip>
@@ -51,7 +55,7 @@ export const Tab = ({
           </label>
         </DeprecatedTooltipTrigger>
         <DeprecatedTooltipContent className='Layer__tooltip'>
-          {disabledMessage}
+          {disabledMessageText}
         </DeprecatedTooltipContent>
       </DeprecatedTooltip>
     )
