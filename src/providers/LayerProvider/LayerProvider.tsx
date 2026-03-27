@@ -26,6 +26,20 @@ type BaseLayerProviderProps = {
   usePlaidSandbox?: boolean
   onError?: (error: LayerError) => void
   eventCallbacks?: EventCallbacks
+
+  /**
+   * Plaid OAuth redirect URI. Required when running inside a mobile WebView
+   * to support OAuth-based institutions (Chase, Capital One, Wells Fargo, etc.).
+   * Must be allowlisted in the Plaid Dashboard.
+   */
+  plaidRedirectUri?: string
+
+  /**
+   * The full callback URL received after the OAuth redirect completes.
+   * The React Native host app should intercept the deep link and pass the
+   * full URL here so Plaid Link can resume the OAuth flow.
+   */
+  plaidReceivedRedirectUri?: string
 }
 
 type LayerProviderPropsWithLayerEnv = BaseLayerProviderProps & { environment?: Environment }
@@ -41,6 +55,8 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
     appSecret,
     businessAccessToken,
     usePlaidSandbox,
+    plaidRedirectUri,
+    plaidReceivedRedirectUri,
     ...restProps
   } = props
 
@@ -60,7 +76,7 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
       <LayerI18nProvider>
-        <EnvironmentInputProvider environment={environment} environmentConfigOverride={environmentConfigOverride} usePlaidSandbox={usePlaidSandbox}>
+        <EnvironmentInputProvider environment={environment} environmentConfigOverride={environmentConfigOverride} usePlaidSandbox={usePlaidSandbox} plaidRedirectUri={plaidRedirectUri} plaidReceivedRedirectUri={plaidReceivedRedirectUri}>
           <AuthInputProvider
             appId={appId}
             appSecret={appSecret}

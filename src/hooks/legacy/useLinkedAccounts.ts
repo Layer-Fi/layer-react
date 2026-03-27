@@ -134,7 +134,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     hasBeenTouched,
   } = useLayerContext()
 
-  const { apiUrl, usePlaidSandbox } = useEnvironment()
+  const { apiUrl, usePlaidSandbox, plaidRedirectUri, plaidReceivedRedirectUri } = useEnvironment()
   const { data: auth } = useAuth()
   const {
     preload: preloadAccountConfirmation,
@@ -185,6 +185,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       const linkToken = (
         await getPlaidLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
+          ...(plaidRedirectUri ? { body: { redirect_uri: plaidRedirectUri } } : {}),
         })
       ).data.link_token
       setLinkMode('add')
@@ -200,7 +201,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       const linkToken = (
         await getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
-          body: { plaid_item_id: plaidItemPlaidId },
+          body: {
+            plaid_item_id: plaidItemPlaidId,
+            ...(plaidRedirectUri ? { redirect_uri: plaidRedirectUri } : {}),
+          },
         })
       ).data.link_token
       setLinkMode('update')
@@ -235,6 +239,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
     token: linkToken,
+    receivedRedirectUri: plaidReceivedRedirectUri ?? undefined,
 
     // If in update mode, we don't need to exchange the public token for an access token.
     // The existing access token will automatically become valid again

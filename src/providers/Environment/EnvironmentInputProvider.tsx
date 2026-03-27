@@ -5,6 +5,8 @@ import { type Environment, type EnvironmentConfigOverride, EnvironmentConfigs } 
 type EnvironmentInputShape = {
   environment?: Environment
   usePlaidSandbox?: boolean
+  plaidRedirectUri?: string
+  plaidReceivedRedirectUri?: string
   environmentOverride?: Environment
   apiUrlOverride?: string
   authUrlOverride?: string
@@ -14,12 +16,16 @@ type EnvironmentInputShape = {
 type EnvironmentInputProviderProps = {
   environment?: Environment
   usePlaidSandbox?: boolean
+  plaidRedirectUri?: string
+  plaidReceivedRedirectUri?: string
   environmentConfigOverride?: EnvironmentConfigOverride
 }
 
 const AuthInputContext = createContext<EnvironmentInputShape>({
   environment: undefined,
   usePlaidSandbox: undefined,
+  plaidRedirectUri: undefined,
+  plaidReceivedRedirectUri: undefined,
   environmentOverride: undefined,
   apiUrlOverride: undefined,
   authUrlOverride: undefined,
@@ -30,6 +36,8 @@ export function useEnvironment() {
   const {
     environment = 'production',
     usePlaidSandbox,
+    plaidRedirectUri,
+    plaidReceivedRedirectUri,
     environmentOverride,
     apiUrlOverride,
     authUrlOverride,
@@ -50,6 +58,8 @@ export function useEnvironment() {
     authUrl: authUrlOverride ?? defaultAuthUrl,
     scope: scopeOverride ?? defaultScope,
     usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
+    plaidRedirectUri,
+    plaidReceivedRedirectUri,
   }
 }
 
@@ -58,6 +68,8 @@ export function EnvironmentInputProvider({
   environment,
   environmentConfigOverride,
   usePlaidSandbox,
+  plaidRedirectUri,
+  plaidReceivedRedirectUri,
 }: PropsWithChildren<EnvironmentInputProviderProps>) {
   const environmentOverride = environmentConfigOverride?.environment
   const apiUrlOverride = environmentConfigOverride?.apiUrl
@@ -68,12 +80,14 @@ export function EnvironmentInputProvider({
     () => ({
       environment,
       usePlaidSandbox,
+      plaidRedirectUri,
+      plaidReceivedRedirectUri,
       environmentOverride,
       apiUrlOverride,
       authUrlOverride,
       scopeOverride,
     }),
-    [environment, usePlaidSandbox, environmentOverride, apiUrlOverride, authUrlOverride, scopeOverride],
+    [environment, usePlaidSandbox, plaidRedirectUri, plaidReceivedRedirectUri, environmentOverride, apiUrlOverride, authUrlOverride, scopeOverride],
   )
 
   return (
