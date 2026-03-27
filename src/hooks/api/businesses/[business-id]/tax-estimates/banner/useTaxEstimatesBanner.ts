@@ -1,10 +1,8 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { TaxEstimatesBannerResponseSchema } from '@schemas/taxEstimates/banner'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { getQuarterDueDateString, TAX_BANNER_REVIEW_AMOUNT, TAX_BANNER_REVIEW_COUNT } from '@hooks/api/businesses/[business-id]/tax-estimates/mockUtils'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -107,15 +105,4 @@ export function useTaxEstimatesBanner({ year }: UseTaxEstimatesBannerOptions) {
   )
 
   return new SWRQueryResult(swrResponse)
-}
-
-export function useTaxEstimatesBannerGlobalCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadTaxEstimatesBanner = useCallback(
-    () => forceReload(({ tags }) => tags.includes(TAX_ESTIMATES_BANNER_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadTaxEstimatesBanner }
 }

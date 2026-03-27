@@ -1,10 +1,8 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { type TaxOverviewData, type TaxOverviewDeadlineStatus, TaxOverviewResponseSchema } from '@schemas/taxEstimates/overview'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { formatDateString, getQuarterDueDate, TAX_BANNER_REVIEW_AMOUNT, TAX_BANNER_REVIEW_COUNT } from '@hooks/api/businesses/[business-id]/tax-estimates/mockUtils'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -132,15 +130,4 @@ export function useTaxOverview({ year }: UseTaxOverviewOptions) {
   )
 
   return new SWRQueryResult(swrResponse)
-}
-
-export function useTaxOverviewGlobalCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadTaxOverview = useCallback(
-    () => forceReload(({ tags }) => tags.includes(TAX_OVERVIEW_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadTaxOverview }
 }

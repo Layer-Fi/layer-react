@@ -76,7 +76,6 @@ export const BookkeepingOverview = ({
   const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
   const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
   const stackSummaryCards = width <= 1580
-  const SummaryCardsStack = stackSummaryCards ? VStack : HStack
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -152,7 +151,12 @@ export const BookkeepingOverview = ({
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
         />
-        <SummaryCardsStack className='Layer__bookkeeping-overview__summary-cards' gap='md'>
+        <HStack
+          className={classNames('Layer__bookkeeping-overview__summary-cards', {
+            'Layer__bookkeeping-overview__summary-cards--stacked': stackSummaryCards,
+          })}
+          gap='md'
+        >
           {accountingConfiguration?.taxEstimatesEnabled !== false && (
             <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
               <TaxEstimatesSummaryCard />
@@ -163,7 +167,7 @@ export const BookkeepingOverview = ({
               <MileageSummaryCard />
             </VStack>
           )}
-        </SummaryCardsStack>
+        </HStack>
       </View>
       {isCalendlyVisible && (
         <div

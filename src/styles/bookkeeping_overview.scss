@@ -47,6 +47,11 @@
   align-items: flex-start;
 }
 
+.Layer__bookkeeping-overview__summary-cards--stacked.Layer__Stack[data-direction='row'] {
+  flex-direction: column;
+  align-items: stretch;
+}
+
 .Layer__bookkeeping-overview__summary-cards-item {
   width: 100%;
 }
