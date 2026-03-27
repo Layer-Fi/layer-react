@@ -165,7 +165,7 @@ const TaxOverviewDeadlineCard = ({
   )
 }
 
-const TaxOverviewContent = ({
+export const TaxOverview = ({
   data,
   nextTax,
   onTaxBannerReviewClick,
@@ -239,15 +239,3 @@ const TaxOverviewContent = ({
     </VStack>
   )
 }
-
-type TaxOverviewViewProps = TaxOverviewProps & {
-  data: TaxOverviewData
-}
-
-export const TaxOverview = ({ data, nextTax, onTaxBannerReviewClick }: TaxOverviewViewProps) => (
-  <TaxOverviewContent
-    data={data}
-    nextTax={nextTax}
-    onTaxBannerReviewClick={onTaxBannerReviewClick}
-  />
-)
