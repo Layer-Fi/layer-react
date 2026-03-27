@@ -35,7 +35,7 @@ export function useBigDecimalInput({
 }: UseBigDecimalInputOptions) {
   const intl = useIntl()
   const formatter = useIntlFormatter()
-  const { decimalSeparator } = getLocaleNumberSeparators(intl.locale)
+  const { decimalSeparator: sourceDecimalSeparator } = getLocaleNumberSeparators(intl.locale)
 
   const formattingProps = useMemo(() => ({
     minDecimalPlaces,
@@ -50,8 +50,12 @@ export function useBigDecimalInput({
   }, [])
 
   const sanitizeInput = useCallback((rawValue: string) =>
-    transformCurrencyValue(rawValue, decimalSeparator, '.', allowNegative),
-  [allowNegative, decimalSeparator])
+    transformCurrencyValue(rawValue, {
+      sourceDecimalSeparator,
+      targetDecimalSeparator: '.',
+      allowNegative,
+    }),
+  [allowNegative, sourceDecimalSeparator])
 
   const onInputBlur = useCallback(() => {
     const sanitizedInput = sanitizeInput(inputValue)

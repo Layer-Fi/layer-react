@@ -13,7 +13,6 @@ type PercentFormatOptions = Pick<Intl.NumberFormatOptions, 'minimumFractionDigit
 export type CurrencyFormatFn = (value: NumberInput, options?: CurrencyFormatOptions) => string
 export type NumberFormatFn = (value: NumberInput, options?: NumberFormatOptions) => string
 export type PercentFormatFn = (value: NumberInput, options?: PercentFormatOptions) => string
-export type PercentFromHundredFormatFn = (value: NumberInput, options?: PercentFormatOptions) => string
 
 export const formatCurrencyFromCents = (
   intl: IntlShape,

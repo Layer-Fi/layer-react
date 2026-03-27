@@ -25,11 +25,14 @@ export const AmountInput = ({
   const formatter = useIntlFormatter()
 
   const currencyFormatConfig = useMemo(() => getCurrencyFormatConfig(intl), [intl])
-  const decimalSeparator = currencyFormatConfig.decimalSeparator
+  const sourceDecimalSeparator = currencyFormatConfig.decimalSeparator
 
   const transformRawValue = useCallback(
-    (rawValue: string) => transformCurrencyValue(rawValue, decimalSeparator),
-    [decimalSeparator],
+    (rawValue: string) => transformCurrencyValue(rawValue, {
+      sourceDecimalSeparator,
+      maxFractionDigits: 2,
+    }),
+    [sourceDecimalSeparator],
   )
 
   const currencyInputClassName = classNames(

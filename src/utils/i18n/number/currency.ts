@@ -29,11 +29,21 @@ export const getLocaleCurrencySymbol = (locale: string): string => {
   return currencySymbol
 }
 
+type TransformCurrencyValueOptions = {
+  sourceDecimalSeparator: string
+  targetDecimalSeparator?: string
+  allowNegative?: boolean
+  maxFractionDigits?: number
+}
+
 export const transformCurrencyValue = (
   rawValue: string,
-  sourceDecimalSeparator: string,
-  targetDecimalSeparator?: string,
-  allowNegative = false,
+  {
+    sourceDecimalSeparator,
+    targetDecimalSeparator,
+    allowNegative = false,
+    maxFractionDigits,
+  }: TransformCurrencyValueOptions,
 ): string => {
   const firstDigitIndex = rawValue.split('').findIndex(char => char >= '0' && char <= '9')
   const negativeSignIndex = rawValue.indexOf('-')
@@ -56,6 +66,9 @@ export const transformCurrencyValue = (
   }
 
   const resultDecimalSeparator = targetDecimalSeparator ?? sourceDecimalSeparator
-  const fractionalPart = fractionParts.join('').slice(0, 2)
+  const fullFractionalPart = fractionParts.join('')
+  const fractionalPart = maxFractionDigits === undefined
+    ? fullFractionalPart
+    : fullFractionalPart.slice(0, maxFractionDigits)
   return valueWithSign(`${integerPart}${resultDecimalSeparator}${fractionalPart}`)
 }
