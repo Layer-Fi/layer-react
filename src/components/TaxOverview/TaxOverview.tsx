@@ -182,26 +182,26 @@ const TaxOverviewContent = ({
           <Card className='Layer__TaxOverview__Card'>
             <VStack gap='xs'>
               <Heading level={2} size='md'>
-                Taxable income for
-                {' '}
-                {year}
+                {t('taxEstimates:label.taxable_income_for_year', 'Taxable income for {{year}}', { year })}
               </Heading>
               <Span size='sm' variant='subtle'>
-                Taxable income estimate to date for year
-                {' '}
-                {year}
+                {t(
+                  'taxEstimates:label.taxable_income_estimate_to_date_for_year',
+                  'Taxable income estimate to date for year {{year}}',
+                  { year },
+                )}
               </Span>
             </VStack>
             <VStack gap={isMobile ? 'sm' : 'md'}>
               <TaxOverviewMetricRow
-                label='Total income'
+                label={t('taxEstimates:label.total_income', 'Total income')}
                 amount={data.incomeTotal}
                 maxMeterValue={maxMeterValue}
                 meterClassName='Layer__TaxOverview__IncomeMeter'
                 isMobile={isMobile}
               />
               <TaxOverviewMetricRow
-                label='Deductions'
+                label={t('taxEstimates:label.deductions', 'Deductions')}
                 amount={data.deductionsTotal}
                 maxMeterValue={maxMeterValue}
                 meterClassName='Layer__TaxOverview__DeductionsMeter'
@@ -219,7 +219,7 @@ const TaxOverviewContent = ({
         </VStack>
         <Card className='Layer__TaxOverview__Card'>
           <VStack gap='lg'>
-            <Heading level={2} size='md'>Your tax deadlines</Heading>
+            <Heading level={2} size='md'>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
             <VStack gap='sm'>
               {data.paymentDeadlines.map(deadline => (
                 <TaxOverviewDeadlineCard

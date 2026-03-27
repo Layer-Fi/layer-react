@@ -76,6 +76,7 @@ export const BookkeepingOverview = ({
   const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
   const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
   const stackSummaryCards = width <= 1580
+  const SummaryCardsStack = stackSummaryCards ? VStack : HStack
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -151,35 +152,18 @@ export const BookkeepingOverview = ({
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
         />
-        {stackSummaryCards
-          ? (
-            <VStack className='Layer__bookkeeping-overview__summary-cards' gap='md'>
-              {accountingConfiguration?.taxEstimatesEnabled !== false && (
-                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
-                  <TaxEstimatesSummaryCard />
-                </VStack>
-              )}
-              {accountingConfiguration?.mileageTrackingEnabled !== false && (
-                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
-                  <MileageSummaryCard />
-                </VStack>
-              )}
+        <SummaryCardsStack className='Layer__bookkeeping-overview__summary-cards' gap='md'>
+          {accountingConfiguration?.taxEstimatesEnabled !== false && (
+            <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
+              <TaxEstimatesSummaryCard />
             </VStack>
-          )
-          : (
-            <HStack className='Layer__bookkeeping-overview__summary-cards' gap='md'>
-              {accountingConfiguration?.taxEstimatesEnabled !== false && (
-                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
-                  <TaxEstimatesSummaryCard />
-                </VStack>
-              )}
-              {accountingConfiguration?.mileageTrackingEnabled !== false && (
-                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
-                  <MileageSummaryCard />
-                </VStack>
-              )}
-            </HStack>
           )}
+          {accountingConfiguration?.mileageTrackingEnabled !== false && (
+            <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
+              <MileageSummaryCard />
+            </VStack>
+          )}
+        </SummaryCardsStack>
       </View>
       {isCalendlyVisible && (
         <div

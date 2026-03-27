@@ -83,6 +83,8 @@
     "taxable_amount_tax_name": "Taxable Amount for {{taxName}}",
     "taxable_business_income": "Taxable Business Income",
     "taxable_business_income_projected": "Projected Taxable Business Income",
+    "taxable_income_estimate_to_date_for_year": "Taxable income estimate to date for year {{year}}",
+    "taxable_income_for_year": "Taxable income for {{year}}",
     "taxable_income": "Taxable Income",
     "taxable_medicare_income": "Taxable Medicare Income",
     "taxable_medicare_surtax_income": "Taxable Medicare Surtax Income",
@@ -94,6 +96,7 @@
     "taxes_owed_projected": "Projected Taxes Owed",
     "taxes_paid": "Taxes Paid",
     "tip_income": "Tip income",
+    "total_income": "Total income",
     "total_federal_tax_estimate": "Total Federal Tax Estimate",
     "total_paid": "Total Paid",
     "total_state_tax_estimate": "Total State Tax Estimate",
@@ -102,6 +105,7 @@
     "use_standard_mileage_deduction": "Use standard mileage deduction?",
     "w2_income": "W-2 Income",
     "withholding_amount": "Withholding amount",
-    "year_to_date": "Year to date"
+    "year_to_date": "Year to date",
+    "your_tax_deadlines": "Your tax deadlines"
   }
 }

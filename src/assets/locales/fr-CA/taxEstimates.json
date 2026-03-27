@@ -81,6 +81,8 @@
     "taxable_amount_tax_name": "Montant imposable pour {{taxName}}",
     "taxable_business_income": "Revenu d’entreprise imposable",
     "taxable_business_income_projected": "Revenu d’entreprise imposable projeté",
+    "taxable_income_estimate_to_date_for_year": "Estimation du revenu imposable à ce jour pour l’année {{year}}",
+    "taxable_income_for_year": "Revenu imposable pour {{year}}",
     "taxable_income": "Revenu imposable",
     "taxable_medicare_income": "Revenu Medicare imposable",
     "taxable_medicare_surtax_income": "Revenu imposable pour la surtaxe Medicare",
@@ -92,6 +94,7 @@
     "taxes_owed_projected": "Impôts dus projetés",
     "taxes_paid": "Impôts payés",
     "tip_income": "Revenu de pourboires",
+    "total_income": "Revenu total",
     "total_federal_tax_estimate": "Estimation totale de l’impôt fédéral",
     "total_paid": "Total payé",
     "total_state_tax_estimate": "Estimation totale de l’impôt d’État",
@@ -100,6 +103,7 @@
     "use_standard_mileage_deduction": "Utiliser la déduction forfaitaire kilométrique?",
     "w2_income": "Revenu W-2",
     "withholding_amount": "Montant de la retenue",
-    "year_to_date": "Cumul annuel"
+    "year_to_date": "Cumul annuel",
+    "your_tax_deadlines": "Vos échéances fiscales"
   }
 }
