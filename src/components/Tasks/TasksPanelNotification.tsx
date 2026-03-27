@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { tPlural } from '@utils/i18n/plural'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
@@ -17,7 +18,7 @@ export const TasksPanelNotification = ({
   onClickReconnectAccounts,
 }: TasksPanelNotificationProps) => {
   const { t } = useTranslation()
-  const { formatNumber } = useIntlFormatter()
+  const { formatNumber, formatDate } = useIntlFormatter()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
   const { anyPreviousYearIncomplete, earliestIncompletePeriod } =
     useBookkeepingYearsStatus()
@@ -64,7 +65,7 @@ export const TasksPanelNotification = ({
 
   if (anyPreviousYearIncomplete && earliestIncompletePeriod) {
     const unresolvedTasksCount = anyPreviousYearIncomplete.unresolvedTasks ?? 0
-    const displayYear = formatNumber(anyPreviousYearIncomplete.year, { useGrouping: false, maximumFractionDigits: 0 })
+    const displayYear = formatDate(new Date(anyPreviousYearIncomplete.year, 0, 1), DateFormat.Year)
     return (
       <div className='Layer__tasks-header__notification' data-status='warning'>
         <div className='Layer__tasks-header__notification__text'>

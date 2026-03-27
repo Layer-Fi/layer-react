@@ -1,6 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
+import { useTranslation } from 'react-i18next'
 
+import { DateFormat } from '@utils/i18n/date/patterns'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 
 import './yearPicker.scss'
@@ -8,11 +11,6 @@ import './yearPicker.scss'
 type YearOption = {
   label: string
   value: string
-}
-
-const toYearOption = (year: number): YearOption => {
-  const yearString = String(year)
-  return { label: yearString, value: yearString }
 }
 
 type YearPickerProps = {
@@ -25,13 +23,16 @@ type YearPickerProps = {
 }
 
 export const YearPicker = ({
-  label = 'Select year',
+  label,
   year,
   onChange,
   minDate = null,
   maxDate = null,
   isDisabled = false,
 }: YearPickerProps) => {
+  const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
+  const coercedLabel = label ?? t('date:label.year', 'Year')
   const minYear = minDate?.year ?? null
   const maxYear = maxDate?.year ?? null
 
@@ -43,8 +44,14 @@ export const YearPicker = ({
     const count = effectiveMaxYear - effectiveMinYear + 1
     if (count <= 0) return []
 
-    return Array.from({ length: count }, (_, i) => toYearOption(effectiveMaxYear - i))
-  }, [minYear, maxYear])
+    return Array.from({ length: count }, (_, i): YearOption => {
+      const optionYear = effectiveMaxYear - i
+      return {
+        label: formatDate(new Date(optionYear, 0, 1), DateFormat.Year),
+        value: String(optionYear),
+      }
+    })
+  }, [formatDate, minYear, maxYear])
 
   const selectedYearOption = useMemo(() => {
     return yearOptions.find(opt => opt.value === String(year)) ?? yearOptions[0]
@@ -64,7 +71,7 @@ export const YearPicker = ({
       isSearchable={false}
       isClearable={false}
       isDisabled={isDisabled}
-      aria-label={label}
+      aria-label={coercedLabel}
       className='Layer__YearPicker'
     />
   )
