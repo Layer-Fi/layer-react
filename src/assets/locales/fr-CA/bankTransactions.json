@@ -1,7 +1,7 @@
 {
   "action": {
     "add_new_split": "Ajouter une nouvelle répartition",
-    "add_next_receipt": "",
+    "add_next_receipt": "Ajouter le reçu suivant",
     "approve_match": "Approuver le rapprochement",
     "categorize_all": "Tout catégoriser",
     "categorize_or_match": "Catégoriser ou rapprocher...",
@@ -49,8 +49,8 @@
     "upload_file_type": "Type de fichier invalide. Veuillez téléverser une image ou un PDF."
   },
   "label": {
-    "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} transaction sur {{displayCount}} sera confirmée.",
-    "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} transactions sur {{displayCount}} seront confirmées.",
+    "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} du {{displayCount}} transaction sera confirmée.",
+    "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} des {{displayCount}} transactions seront confirmées.",
     "additional_bank_transaction_actions": "Actions supplémentaires sur les transactions bancaires",
     "affected_transaction_display": "Aucune transaction concernée à afficher",
     "affected_transactions": "Transactions concernées",
@@ -74,7 +74,7 @@
     "personal_expenses": "Dépenses personnelles",
     "recategorize_count_selected_one": "Cette action recatégorisera {{displayCount}} transaction sélectionnée dans la catégorie {{category}}.",
     "recategorize_count_selected_other": "Cette action recatégorisera {{displayCount}} transactions sélectionnées dans la catégorie {{category}}.",
-    "receipt_number": "",
+    "receipt_number": "Reçu {{number}}",
     "receipts": "Reçus",
     "search_transactions": "Rechercher des transactions",
     "select_all_transactions": "Sélectionner toutes les transactions de cette page",
@@ -85,9 +85,9 @@
     "this_will_confirm_count_transactions_other": "Cette action confirmera {{displayCount}} transactions.",
     "to_review": "À examiner",
     "transaction_action": "Action sur la transaction",
-    "transaction_confirmed": "",
+    "transaction_confirmed": "Transaction confirmée",
     "transaction_details": "Détails de la transaction",
-    "transaction_saved": "",
+    "transaction_saved": "Transaction enregistrée",
     "transaction_source": "Source de la transaction",
     "transactions_available_platform": "Vos transactions sont maintenant disponibles sur la plateforme. Pour voir toutes les données dans les graphiques, catégorisez les transactions.",
     "transactions_to_review": "Transactions à examiner",

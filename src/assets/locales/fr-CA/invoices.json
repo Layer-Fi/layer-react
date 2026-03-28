@@ -45,7 +45,7 @@
     "invoice_negative_total": "Le total de la facture est négatif.",
     "invoice_number": "Facture #{{invoiceNumber}}",
     "invoice_number_component": "<label>Facture</label> <value>#{{invoiceNumber}}</value>",
-    "invoice_number_label": "",
+    "invoice_number_label": "Numéro de facture",
     "invoice_paid_successfully": "Facture payée avec succès",
     "invoice_saved_and_sent_successfully": "Facture enregistrée et envoyée avec succès",
     "invoices": "Factures",

@@ -12,7 +12,7 @@
     "tax_deduction": "Déduction fiscale",
     "total_deduction": "Déduction totale",
     "total_miles": "Kilométrage total",
-    "total_miles_in_year": "",
+    "total_miles_in_year": "Total des milles en {{displayYear}} :",
     "total_tax_deduction": "Déduction fiscale totale :"
   }
 }
