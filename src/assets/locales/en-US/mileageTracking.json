@@ -12,7 +12,6 @@
     "tax_deduction": "Tax Deduction",
     "total_deduction": "Total Deduction",
     "total_miles": "Total Miles",
-    "total_miles_in_year": "Total miles in {{displayYear}}:",
     "total_tax_deduction": "Total tax deduction:"
   }
 }
