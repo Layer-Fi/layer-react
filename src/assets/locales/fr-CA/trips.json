@@ -21,7 +21,7 @@
     "delete_trip_warning": "Ce trajet sera supprimé définitivement. Cette action ne peut pas être annulée.",
     "distance": "Distance",
     "distance_mi": "{{distance}} mi",
-    "distance_miles": "Distance (miles)",
+    "distance_miles": "Distance (milles)",
     "end_address": "Adresse de destination",
     "enter_address": "Saisissez l’adresse",
     "enter_distance": "Saisissez la distance",
