@@ -69,7 +69,7 @@ export const TripForm = (props: TripFormProps) => {
       <form.AppField name='distance'>
         {field => (
           <field.FormBigDecimalField
-            label={t('trips:label.distance_mi', 'Distance (miles)')}
+            label={t('trips:label.distance_miles', 'Distance (miles)')}
             inline
             isReadOnly={isReadOnly}
             maxDecimalPlaces={2}

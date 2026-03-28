@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { asMutable } from '@utils/asMutable'
 import { tPlural } from '@utils/i18n/plural'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -18,6 +19,7 @@ interface RuleUpdatesPromptReviewStepProps {
 
 export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesPromptReviewStepProps) {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const { previous } = useWizard()
   const ActionButtonsStack = isDrawer ? VStack : HStack
 
@@ -26,8 +28,9 @@ export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesP
       <Span size='md'>
         {tPlural(t, 'categorizationRules:label.following_count_transactions', {
           count: ruleSuggestion.transactionsThatWillBeAffected.length,
-          one: 'The following {{count}} transaction will be affected:',
-          other: 'The following {{count}} transactions will be affected:',
+          displayCount: formatNumber(ruleSuggestion.transactionsThatWillBeAffected.length),
+          one: 'The following {{displayCount}} transaction will be affected:',
+          other: 'The following {{displayCount}} transactions will be affected:',
         })}
       </Span>
       <AffectedTransactionsTable transactions={asMutable(ruleSuggestion.transactionsThatWillBeAffected)} />

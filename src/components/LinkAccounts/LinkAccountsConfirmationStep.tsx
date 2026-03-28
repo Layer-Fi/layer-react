@@ -1,11 +1,11 @@
-import { useContext } from 'react'
+import { useCallback, useContext } from 'react'
 import { useForm } from '@tanstack/react-form'
-import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
 import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -17,33 +17,6 @@ import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
 import './linkAccountsConfirmationStep.scss'
-
-function getSubmitButtonText(
-  { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number },
-  t: TFunction,
-) {
-  if (confirmedCount === totalCount) {
-    return tPlural(t, 'linkedAccounts:action.confirm_accounts', {
-      count: totalCount,
-      one: 'Confirm Account',
-      other: 'Confirm All Accounts',
-    })
-  }
-
-  if (confirmedCount === 0) {
-    return tPlural(t, 'linkedAccounts:action.exclude_all_accounts', {
-      count: totalCount,
-      one: 'Exclude Account',
-      other: 'Exclude All Accounts',
-    })
-  }
-
-  return tPlural(t, 'linkedAccounts:action.confirm_accounts_selected', {
-    count: confirmedCount,
-    one: 'Confirm {{count}} Selected Account',
-    other: 'Confirm {{count}} Selected Accounts',
-  })
-}
 
 function AccountConfirmationEmptyList() {
   const { t } = useTranslation()
@@ -61,6 +34,7 @@ function AccountConfirmationEmptyList() {
 
 export function LinkAccountsConfirmationStep() {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const {
     data: linkedAccounts,
     loadingStatus: linkedAccountsLoadingStatus,
@@ -93,6 +67,33 @@ export function LinkAccountsConfirmationStep() {
       await next()
     },
   })
+
+  const getSubmitButtonText = useCallback((
+    { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number },
+  ) => {
+    if (confirmedCount === totalCount) {
+      return tPlural(t, 'linkedAccounts:action.confirm_accounts', {
+        count: totalCount,
+        one: 'Confirm Account',
+        other: 'Confirm All Accounts',
+      })
+    }
+
+    if (confirmedCount === 0) {
+      return tPlural(t, 'linkedAccounts:action.exclude_all_accounts', {
+        count: totalCount,
+        one: 'Exclude Account',
+        other: 'Exclude All Accounts',
+      })
+    }
+
+    return tPlural(t, 'linkedAccounts:action.confirm_accounts_selected', {
+      count: confirmedCount,
+      displayCount: formatNumber(confirmedCount),
+      one: 'Confirm {{displayCount}} Selected Account',
+      other: 'Confirm {{displayCount}} Selected Accounts',
+    })
+  }, [formatNumber, t])
 
   return (
     <VStack gap='lg'>
@@ -142,10 +143,7 @@ export function LinkAccountsConfirmationStep() {
               onClick={() => { void handleSubmit() }}
               disabled={isSubmitting || linkedAccountsLoadingStatus !== 'complete'}
             >
-              {getSubmitButtonText({
-                totalCount,
-                confirmedCount: selectedCount,
-              }, t)}
+              {getSubmitButtonText({ totalCount, confirmedCount: selectedCount })}
             </Button>
           )}
         </Subscribe>

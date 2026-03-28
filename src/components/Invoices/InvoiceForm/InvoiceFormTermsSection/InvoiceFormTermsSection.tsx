@@ -104,7 +104,7 @@ export const InvoiceFormTermsSection = ({
       <VStack gap='xs'>
         <form.AppField name='invoiceNumber'>
           {field =>
-            <field.FormTextField label={t('invoices:label.invoice_number_component', 'Invoice number')} inline className='Layer__InvoiceForm__Field__InvoiceNo' isReadOnly={isReadOnly} />}
+            <field.FormTextField label={t('invoices:label.invoice_number_label', 'Invoice number')} inline className='Layer__InvoiceForm__Field__InvoiceNo' isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.Field
           name='terms'

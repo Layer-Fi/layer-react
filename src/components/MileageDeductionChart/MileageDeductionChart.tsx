@@ -82,6 +82,7 @@ export const MileageDeductionChart = ({
       return {
         month: i + 1,
         monthName: formatDate(new Date(selectedYear, i, 1), DateFormat.MonthShort),
+        monthYear: formatDate(new Date(selectedYear, i, 1), DateFormat.MonthYearShort),
         deduction: monthData?.estimatedDeduction || 0,
         miles: monthData?.miles || 0,
       }
@@ -107,7 +108,6 @@ export const MileageDeductionChart = ({
           <ChartYAxis format={formatCurrencyFromCents} domain={[0, 'auto']} />
 
           <MileageDeductionChartTooltip
-            selectedYear={selectedYear}
             cursorWidth={barSize * CURSOR_WIDTH_MULTIPLE}
           />
 

@@ -1,8 +1,10 @@
 import { useMemo } from 'react'
 import { getMonth } from 'date-fns'
 
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Tabs } from '@components/Tabs/Tabs'
 import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
@@ -10,6 +12,7 @@ import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
 export const TasksYearsTabs = () => {
   const { date } = useGlobalDate()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
+  const { formatDate } = useIntlFormatter()
 
   const activeYear = date.getFullYear()
 
@@ -29,7 +32,7 @@ export const TasksYearsTabs = () => {
       .map((y) => {
         return {
           value: `${y.year}`,
-          label: `${y.year}`,
+          label: formatDate(new Date(y.year, 0, 1), DateFormat.Year),
           badge: !y.completed && y.unresolvedTasks
             ? (
               <TaskStatusBadge
@@ -41,7 +44,7 @@ export const TasksYearsTabs = () => {
 
         }
       })
-  }, [yearStatuses])
+  }, [formatDate, yearStatuses])
 
   return (
     <Tabs

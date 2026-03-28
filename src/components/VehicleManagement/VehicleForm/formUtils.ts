@@ -1,5 +1,3 @@
-import type { TFunction } from 'i18next'
-
 import { type Vehicle, type VehicleForm } from '@schemas/vehicle'
 
 export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
@@ -24,22 +22,33 @@ export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
   }
 }
 
-export const validateVehicleForm = ({ vehicle }: { vehicle: VehicleForm }, t: TFunction) => {
+export enum VehicleFormInvalidReason {
+  MakeAndModelRequired = 'makeAndModelRequired',
+  YearRequired = 'yearRequired',
+  YearRange = 'yearRange',
+}
+
+export type VehicleFormValidationError = {
+  field: 'makeAndModel' | 'year'
+  reason: VehicleFormInvalidReason
+}
+
+export const validateVehicleForm = ({ vehicle }: { vehicle: VehicleForm }) => {
   const { makeAndModel, year } = vehicle
 
-  const errors = []
+  const errors: VehicleFormValidationError[] = []
 
   if (!makeAndModel.trim()) {
-    errors.push({ makeAndModel: t('vehicles:validation.make_model_required', 'Make and model is a required field.') })
+    errors.push({ field: 'makeAndModel', reason: VehicleFormInvalidReason.MakeAndModelRequired })
   }
 
   if (Number.isNaN(year)) {
-    errors.push({ year: t('vehicles:validation.year_required', 'Year is a required field.') })
+    errors.push({ field: 'year', reason: VehicleFormInvalidReason.YearRequired })
   }
 
   const currentYear = new Date().getFullYear()
   if (!Number.isNaN(year) && (year < 1900 || year > currentYear + 1)) {
-    errors.push({ year: t('vehicles:validation.year_range', 'Year must be between 1900 and {{maxYear}}.', { maxYear: currentYear + 1 }) })
+    errors.push({ field: 'year', reason: VehicleFormInvalidReason.YearRange })
   }
 
   return errors.length > 0 ? errors : null

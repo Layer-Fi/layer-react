@@ -45,6 +45,7 @@
     "invoice_negative_total": "Le total de la facture est négatif.",
     "invoice_number": "Facture #{{invoiceNumber}}",
     "invoice_number_component": "<label>Facture</label> <value>#{{invoiceNumber}}</value>",
+    "invoice_number_label": "",
     "invoice_paid_successfully": "Facture payée avec succès",
     "invoice_saved_and_sent_successfully": "Facture enregistrée et envoyée avec succès",
     "invoices": "Factures",
@@ -94,10 +95,10 @@
     "discard_changes_invoice": "Annuler les modifications apportées à cette facture?"
   },
   "state": {
-    "due_count_days_ago_one": "Échue depuis {{count}} jour",
-    "due_count_days_ago_other": "Échue depuis {{count}} jours",
-    "due_in_count_days_one": "Échéance dans {{count}} jour",
-    "due_in_count_days_other": "Échéance dans {{count}} jours",
+    "due_count_days_ago_one": "Échue depuis {{displayCount}} jour",
+    "due_count_days_ago_other": "Échue depuis {{displayCount}} jours",
+    "due_in_count_days_one": "Échéance dans {{displayCount}} jour",
+    "due_in_count_days_other": "Échéance dans {{displayCount}} jours",
     "due_today": "Échéance aujourd’hui",
     "overdue": "En retard",
     "paid": "Payée",

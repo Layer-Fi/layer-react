@@ -1,4 +1,5 @@
 import { SelectionIndicator, ToggleButton } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { Span } from '@ui/Typography/Text'
@@ -16,8 +17,11 @@ export const ToggleOption = ({
   label,
   value,
   disabled = false,
-  disabledMessage = 'Disabled',
+  disabledMessage,
 }: ToggleOptionProps) => {
+  const { t } = useTranslation()
+  const disabledMessageText = disabledMessage ?? t('common:state.disabled', 'Disabled')
+
   const button = (
     <ToggleButton id={value} className='Layer__UI__ToggleOption' isDisabled={disabled}>
       <SelectionIndicator className='Layer__UI__ToggleOption-SelectionIndicator' />
@@ -34,7 +38,7 @@ export const ToggleOption = ({
           {button}
         </TooltipTrigger>
         <TooltipContent>
-          <span className='Layer__UI__tooltip-content--text'>{disabledMessage}</span>
+          <span className='Layer__UI__tooltip-content--text'>{disabledMessageText}</span>
         </TooltipContent>
       </Tooltip>
     )

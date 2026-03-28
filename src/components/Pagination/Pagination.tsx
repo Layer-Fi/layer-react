@@ -2,7 +2,8 @@ import classNames from 'classnames'
 import type { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Dots, usePaginationRange } from '@hooks/utils/pagination/usePaginationRange'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { isDots, usePaginationRange } from '@hooks/utils/pagination/usePaginationRange'
 import ChevronLeft from '@icons/ChevronLeft'
 import ChevronRight from '@icons/ChevronRight'
 import { Button } from '@ui/Button/Button'
@@ -46,6 +47,7 @@ export const Pagination = ({
   className,
 }: PaginationProps) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const paginationRange = usePaginationRange({
     currentPage,
     totalCount,
@@ -72,7 +74,7 @@ export const Pagination = ({
             </PaginationButton>
           </li>
           {paginationRange.map((pageNumber) => {
-            if (pageNumber in Dots) {
+            if (isDots(pageNumber)) {
               return (
                 <li key={`page-${pageNumber}`}>
                   <PaginationButton
@@ -85,14 +87,15 @@ export const Pagination = ({
               )
             }
 
+            const displayPageNumber = formatNumber(pageNumber, { useGrouping: false, maximumFractionDigits: 0 })
             return (
               <li key={`page-${pageNumber}`}>
                 <PaginationButton
                   isSelected={pageNumber === currentPage}
-                  onPress={() => onPageChange(Number(pageNumber))}
-                  aria-label={t('ui:label.go_page_number', 'Go to page {{pageNumber}}', { pageNumber })}
+                  onPress={() => onPageChange(pageNumber)}
+                  aria-label={t('ui:label.go_page_number', 'Go to page {{pageNumber}}', { pageNumber: displayPageNumber })}
                 >
-                  {pageNumber}
+                  {displayPageNumber}
                 </PaginationButton>
               </li>
             )

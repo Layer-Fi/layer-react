@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -20,13 +21,12 @@ import './mileageSummaryCard.scss'
 
 export const MileageSummaryCard = () => {
   const { t } = useTranslation()
-  const { formatCurrencyFromCents } = useIntlFormatter()
+  const { formatCurrencyFromCents, formatNumber, formatDate } = useIntlFormatter()
   const { data: mileageData, isLoading, isError } = useMileageSummary()
   const { date } = useGlobalDate({ dateSelectionMode: 'full' })
   const [isTripDrawerOpen, setIsTripDrawerOpen] = useState(false)
 
   const {
-    currentYear,
     currentMileageData,
     currentMonthMileageData,
     formattedDeductionRate,
@@ -44,7 +44,6 @@ export const MileageSummaryCard = () => {
     )
 
     return {
-      currentYear,
       currentMileageData,
       currentMonthMileageData,
       formattedDeductionRate,
@@ -126,9 +125,9 @@ export const MileageSummaryCard = () => {
         {/* Value */}
         <HStack align='center' className='Layer__MileageSummaryCard__Panel-value Layer__MileageSummaryCard__Panel-left'>
           <Span size='xl' weight='bold'>
-            {currentMonthMileageData?.miles ?? 0}
-            {' '}
-            mi
+            {t('trips:label.distance_mi', '{{distance}} mi', {
+              distance: formatNumber(currentMonthMileageData?.miles ?? 0, { maximumFractionDigits: 2 }),
+            })}
           </Span>
         </HStack>
         <HStack align='center' className='Layer__MileageSummaryCard__Panel-value'>
@@ -158,13 +157,10 @@ export const MileageSummaryCard = () => {
       <HStack gap='md' justify='space-between'>
         <HStack gap='xs'>
           <Span size='sm' variant='subtle'>
-            Total miles in
-            {' '}
-            {currentYear.toString()}
-            :
+            {t('mileageTracking:label.total_miles_in_year', 'Total miles in {{displayYear}}:', { displayYear: formatDate(date, DateFormat.Year) })}
             {' '}
           </Span>
-          <Span size='sm'>{currentMileageData?.miles ?? 0}</Span>
+          <Span size='sm'>{formatNumber(currentMileageData?.miles ?? 0, { maximumFractionDigits: 0 })}</Span>
         </HStack>
         <HStack gap='xs'>
           <Span size='sm' variant='subtle'>

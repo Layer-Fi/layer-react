@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next'
 
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { tPlural } from '@utils/i18n/plural'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import AlertCircle from '@icons/AlertCircle'
 import ArrowRightCircle from '@icons/ArrowRightCircle'
@@ -16,6 +18,7 @@ export const TasksPanelNotification = ({
   onClickReconnectAccounts,
 }: TasksPanelNotificationProps) => {
   const { t } = useTranslation()
+  const { formatNumber, formatDate } = useIntlFormatter()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
   const { anyPreviousYearIncomplete, earliestIncompletePeriod } =
     useBookkeepingYearsStatus()
@@ -32,8 +35,9 @@ export const TasksPanelNotification = ({
           <Text size={TextSize.md} weight={TextWeight.bold}>
             {tPlural(t, 'bookkeeping:label.bank_accounts_disconnected', {
               count: disconnectedAccountsRequiringNotification,
-              one: '{{count}} bank account is disconnected',
-              other: '{{count}} bank accounts are disconnected',
+              displayCount: formatNumber(disconnectedAccountsRequiringNotification),
+              one: '{{displayCount}} bank account is disconnected',
+              other: '{{displayCount}} bank accounts are disconnected',
             })}
           </Text>
         </div>
@@ -47,8 +51,9 @@ export const TasksPanelNotification = ({
             <Text size={TextSize.sm} weight={TextWeight.bold}>
               {tPlural(t, 'bookkeeping:label.reconnect_count_accounts', {
                 count: disconnectedAccountsRequiringNotification,
-                one: 'Reconnect {{count}} account',
-                other: 'Reconnect {{count}} accounts',
+                displayCount: formatNumber(disconnectedAccountsRequiringNotification),
+                one: 'Reconnect {{displayCount}} account',
+                other: 'Reconnect {{displayCount}} accounts',
               })}
             </Text>
             <ArrowRightCircle size={14} />
@@ -60,6 +65,7 @@ export const TasksPanelNotification = ({
 
   if (anyPreviousYearIncomplete && earliestIncompletePeriod) {
     const unresolvedTasksCount = anyPreviousYearIncomplete.unresolvedTasks ?? 0
+    const displayYear = formatDate(new Date(anyPreviousYearIncomplete.year, 0, 1), DateFormat.Year)
     return (
       <div className='Layer__tasks-header__notification' data-status='warning'>
         <div className='Layer__tasks-header__notification__text'>
@@ -74,9 +80,10 @@ export const TasksPanelNotification = ({
           >
             {tPlural(t, 'bookkeeping:label.count_open_tasks', {
               count: unresolvedTasksCount,
-              year: anyPreviousYearIncomplete.year,
-              one: '{{count}} open task in {{year}}',
-              other: '{{count}} open tasks in {{year}}',
+              displayCount: formatNumber(unresolvedTasksCount),
+              displayYear,
+              one: '{{displayCount}} open task in {{displayYear}}',
+              other: '{{displayCount}} open tasks in {{displayYear}}',
             })}
           </Text>
         </div>

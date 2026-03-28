@@ -15,7 +15,6 @@
     "unlink_failed": "Échec de la dissociation. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
   },
   "label": {
-    "date_time": "{{date}} à {{time}}",
     "integrations": "Intégrations",
     "quickbooks_connected": "QuickBooks connecté",
     "take_five_minutes": "Cela peut prendre jusqu’à 5 minutes",

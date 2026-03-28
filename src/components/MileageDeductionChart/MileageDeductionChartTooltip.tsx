@@ -13,10 +13,9 @@ import type { MileageDeductionChartDataPoint } from '@components/MileageDeductio
 interface MileageDeductionChartTooltipContentProps {
   active?: boolean
   payload?: Array<{ payload: MileageDeductionChartDataPoint }>
-  selectedYear: number
 }
 
-const MileageDeductionChartTooltipContent = ({ active, payload, selectedYear }: MileageDeductionChartTooltipContentProps) => {
+const MileageDeductionChartTooltipContent = ({ active, payload }: MileageDeductionChartTooltipContentProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   if (!active || !payload?.[0]) return null
@@ -24,7 +23,7 @@ const MileageDeductionChartTooltipContent = ({ active, payload, selectedYear }: 
   const data = payload[0].payload
   return (
     <ChartTooltipContent>
-      <ChartTooltipRow label={`${data.monthName} ${selectedYear}`} />
+      <ChartTooltipRow label={data.monthYear} />
       <ChartTooltipRow label={t('mileageTracking:label.miles_colon', 'Miles:')} value={<Span size='sm' variant='white'>{formatNumber(data.miles)}</Span>} />
       <ChartTooltipRow label={t('mileageTracking:label.deduction_colon', 'Deduction:')} value={<MoneySpan status='success' amount={data.deduction} size='sm' />} />
     </ChartTooltipContent>
@@ -32,13 +31,12 @@ const MileageDeductionChartTooltipContent = ({ active, payload, selectedYear }: 
 }
 
 interface MileageDeductionChartTooltipProps {
-  selectedYear: number
   cursorWidth: number
 }
 
-export const MileageDeductionChartTooltip = ({ selectedYear, cursorWidth }: MileageDeductionChartTooltipProps) => (
+export const MileageDeductionChartTooltip = ({ cursorWidth }: MileageDeductionChartTooltipProps) => (
   <ChartTooltip
-    content={<MileageDeductionChartTooltipContent selectedYear={selectedYear} />}
+    content={<MileageDeductionChartTooltipContent />}
     cursorWidth={cursorWidth}
   />
 )

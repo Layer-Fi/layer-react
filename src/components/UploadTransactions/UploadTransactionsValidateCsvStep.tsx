@@ -50,7 +50,7 @@ export function UploadTransactionsValidateCsvStep(
   { parseCsvResponse, selectedAccountId, onSelectFile, onUploadTransactionsSuccess }: UploadTransactionsValidateCsvStepProps,
 ) {
   const { t } = useTranslation()
-  const { formatCurrencyFromCents, formatDate } = useIntlFormatter()
+  const { formatCurrencyFromCents, formatDate, formatNumber } = useIntlFormatter()
   const { previous, next } = useWizard()
   const { trigger: uploadTransactions, isMutating, error: uploadTransactionsError } = useCreateCustomAccountTransactions()
 
@@ -93,10 +93,10 @@ export function UploadTransactionsValidateCsvStep(
           {!isValidCsv
             && (
               <Badge variant={BadgeVariant.ERROR}>
-                {t('upload:validation.transactions_invalid_count', 'Invalid transactions: {{invalidTransactionsCount}}', { invalidTransactionsCount })}
+                {t('upload:validation.transactions_invalid_count', 'Invalid transactions: {{invalidTransactionsCount}}', { invalidTransactionsCount: formatNumber(invalidTransactionsCount) })}
               </Badge>
             )}
-          <Badge>{t('upload:label.total_transactions_count', 'Total transactions: {{totalTransactionsCount}}', { totalTransactionsCount })}</Badge>
+          <Badge>{t('upload:label.total_transactions_count', 'Total transactions: {{totalTransactionsCount}}', { totalTransactionsCount: formatNumber(totalTransactionsCount) })}</Badge>
         </HStack>
         <ValidateCsvTable
           className={classNames(

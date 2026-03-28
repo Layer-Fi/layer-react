@@ -44,7 +44,7 @@ export const InvoiceSummaryStats = () => {
   return (
     <HStack className='Layer__InvoiceSummaryStats__Container' gap='lg'>
       <VStack className='Layer__InvoiceSummaryStats__Payments' gap='3xs'>
-        <HStack align='center'>
+        <HStack align='center' gap='3xs'>
           <Trans
             i18nKey='invoices:label.paid_last_30_days'
             defaults='<paid>Paid</paid> <period>last 30 days</period>'
@@ -65,7 +65,7 @@ export const InvoiceSummaryStats = () => {
       </VStack>
       <VStack gap='sm' fluid>
         <HStack gap='md' align='end'>
-          <HStack align='center'>
+          <HStack align='center' gap='3xs'>
             <Trans
               i18nKey='invoices:label.owed_last_12_months'
               defaults='<owed>Owed to you</owed> <period>last 12 months</period>'
@@ -91,7 +91,7 @@ export const InvoiceSummaryStats = () => {
             {!showSkeleton && overdueCount !== undefined
               ? (
                 <Badge variant={BadgeVariant.WARNING} size={BadgeSize.SMALL}>
-                  {t('invoices:label.overdue_invoices_count', 'Overdue invoices: {{overdueCount}}', { overdueCount })}
+                  {t('invoices:label.overdue_invoices_count', 'Overdue invoices: {{overdueCount}}', { overdueCount: formatter.formatNumber(overdueCount) })}
                 </Badge>
               )
               : <BadgeLoader variant={BadgeVariant.WARNING} showLoading />}
@@ -100,7 +100,7 @@ export const InvoiceSummaryStats = () => {
             {!showSkeleton && sentCount !== undefined
               ? (
                 <Badge variant={BadgeVariant.INFO} size={BadgeSize.SMALL}>
-                  {t('invoices:label.upcoming_invoices_sent_count', 'Upcoming invoices: {{sentCount}}', { sentCount })}
+                  {t('invoices:label.upcoming_invoices_sent_count', 'Upcoming invoices: {{sentCount}}', { sentCount: formatter.formatNumber(sentCount) })}
                 </Badge>
               )
               : <BadgeLoader variant={BadgeVariant.INFO} showLoading />}

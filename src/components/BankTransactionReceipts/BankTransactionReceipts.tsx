@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ReceiptsProvider } from '@providers/ReceiptsProvider/ReceiptsProvider'
 import { useReceiptsContext } from '@contexts/ReceiptsContext/ReceiptsContext'
 import { FileThumb } from '@components/FileThumb/FileThumb'
@@ -39,7 +40,7 @@ export interface BankTransactionReceiptsHandle {
 }
 
 const openReceiptInNewTab =
-  (url: string, index: number) =>
+  (url: string, receiptTitle: string) =>
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       e.preventDefault()
       const newWindow = window.open('', '_blank')
@@ -48,7 +49,7 @@ const openReceiptInNewTab =
         newWindow.document.write(`
         <html>
           <head>
-            <title>Receipt ${index + 1}</title>
+            <title>${receiptTitle}</title>
           </head>
           <body style="margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh;">
             <img src="${url}" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
@@ -88,6 +89,7 @@ const BankTransactionReceipts = forwardRef<
     ref,
   ) => {
     const { t } = useTranslation()
+    const { formatNumber } = useIntlFormatter()
     const { receiptUrls, uploadReceipt, archiveDocument } = useReceiptsContext()
 
     // Call this save action after clicking save in parent component:
@@ -117,12 +119,15 @@ const BankTransactionReceipts = forwardRef<
             floatingActions={floatingActions}
             uploadPending={url.status === 'pending'}
             deletePending={url.status === 'deleting'}
-            name={url.name ?? `Receipt ${index + 1}`}
+            name={url.name ?? t('bankTransactions:label.receipt_number', 'Receipt {{number}}', { number: formatNumber(index + 1) })}
             date={url.date}
             enableOpen={url.type === 'application/pdf'}
             onOpen={
               url.url && url.type && url.type.startsWith('image/')
-                ? openReceiptInNewTab(url.url, index)
+                ? openReceiptInNewTab(
+                  url.url,
+                  t('bankTransactions:label.receipt_number', 'Receipt {{number}}', { number: formatNumber(index + 1) }),
+                )
                 : undefined
             }
             enableDownload
@@ -137,7 +142,7 @@ const BankTransactionReceipts = forwardRef<
             <FileInput
               secondary
               onUpload={files => void uploadReceipt(files[0])}
-              text='Add next receipt'
+              text={t('bankTransactions:action.add_next_receipt', 'Add next receipt')}
               accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
             />
           )

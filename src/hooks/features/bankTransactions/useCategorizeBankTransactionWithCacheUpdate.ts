@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
@@ -7,6 +8,7 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function useCategorizeBankTransactionWithCacheUpdate() {
+  const { t } = useTranslation()
   const { addToast, eventCallbacks } = useLayerContext()
   const { updateLocalBankTransactions } = useBankTransactionsContext()
 
@@ -22,14 +24,14 @@ export function useCategorizeBankTransactionWithCacheUpdate() {
           }])
 
           if (notify) {
-            addToast({ content: 'Transaction confirmed' })
+            addToast({ content: t('bankTransactions:label.transaction_confirmed', 'Transaction confirmed') })
           }
         })
         .finally(() => {
           eventCallbacks?.onTransactionCategorized?.()
         })
     },
-    [updateLocalBankTransactions, categorizeBankTransaction, addToast, eventCallbacks],
+    [updateLocalBankTransactions, categorizeBankTransaction, addToast, eventCallbacks, t],
   )
 
   return useMemo(
