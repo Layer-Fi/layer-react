@@ -18,8 +18,8 @@
     "unknown_upload_error": "Unknown upload error"
   },
   "label": {
-    "count_transactions_have_one": "{{count}} transaction has been uploaded to your account.",
-    "count_transactions_have_other": "{{count}} transactions have been uploaded to your account.",
+    "count_transactions_have_one": "{{displayCount}} transaction has been uploaded to your account.",
+    "count_transactions_have_other": "{{displayCount}} transactions have been uploaded to your account.",
     "csv_validation_preview": "CSV validation preview",
     "drag_drop_file_browse": "Drag and drop a file, or <browse>Browse</browse>.",
     "im_done_uploading": "I’m done uploading transactions",

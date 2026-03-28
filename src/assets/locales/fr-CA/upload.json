@@ -18,8 +18,8 @@
     "unknown_upload_error": "Erreur de téléversement inconnue"
   },
   "label": {
-    "count_transactions_have_one": "{{count}} transaction a été téléversée dans votre compte.",
-    "count_transactions_have_other": "{{count}} transactions ont été téléversées dans votre compte.",
+    "count_transactions_have_one": "{{displayCount}} transaction a été téléversée dans votre compte.",
+    "count_transactions_have_other": "{{displayCount}} transactions ont été téléversées dans votre compte.",
     "csv_validation_preview": "Aperçu de la validation du fichier CSV",
     "drag_drop_file_browse": "Glissez-déposez un fichier ou <browse>parcourez</browse>.",
     "im_done_uploading": "J’ai terminé de téléverser les transactions",

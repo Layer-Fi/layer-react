@@ -157,7 +157,7 @@ export const MileageSummaryCard = () => {
       <HStack gap='md' justify='space-between'>
         <HStack gap='xs'>
           <Span size='sm' variant='subtle'>
-            {t('mileageTracking:label.total_miles_in_year', 'Total miles in {{year}}:', { year: formatDate(date, DateFormat.Year) })}
+            {t('mileageTracking:label.total_miles_in_year', 'Total miles in {{displayYear}}:', { year: formatDate(date, DateFormat.Year) })}
             {' '}
           </Span>
           <Span size='sm'>{formatNumber(currentMileageData?.miles ?? 0, { maximumFractionDigits: 0 })}</Span>

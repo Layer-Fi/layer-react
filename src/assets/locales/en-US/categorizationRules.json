@@ -21,8 +21,8 @@
   "label": {
     "any_direction": "Any direction",
     "categorization_rules": "Categorization Rules",
-    "following_count_transactions_one": "The following {{count}} transaction will be affected:",
-    "following_count_transactions_other": "The following {{count}} transactions will be affected:",
+    "following_count_transactions_one": "The following {{displayCount}} transaction will be affected:",
+    "following_count_transactions_other": "The following {{displayCount}} transactions will be affected:",
     "money_in": "Money In",
     "money_out": "Money Out",
     "or": "OR",
