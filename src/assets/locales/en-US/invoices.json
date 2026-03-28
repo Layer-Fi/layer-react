@@ -45,7 +45,6 @@
     "invoice_negative_total": "Invoice has a negative total.",
     "invoice_number": "Invoice #{{invoiceNumber}}",
     "invoice_number_component": "<label>Invoice</label> <value>#{{invoiceNumber}}</value>",
-    "invoice_number_label": "Invoice number",
     "invoice_paid_successfully": "Invoice paid successfully",
     "invoice_saved_and_sent_successfully": "Invoice saved and sent successfully",
     "invoices": "Invoices",
@@ -95,10 +94,10 @@
     "discard_changes_invoice": "Discard changes to this invoice?"
   },
   "state": {
-    "due_count_days_ago_one": "Due {{displayCount}} day ago",
-    "due_count_days_ago_other": "Due {{displayCount}} days ago",
-    "due_in_count_days_one": "Due in {{displayCount}} day",
-    "due_in_count_days_other": "Due in {{displayCount}} days",
+    "due_count_days_ago_one": "Due {{count}} day ago",
+    "due_count_days_ago_other": "Due {{count}} days ago",
+    "due_in_count_days_one": "Due in {{count}} day",
+    "due_in_count_days_other": "Due in {{count}} days",
     "due_today": "Due Today",
     "overdue": "Overdue",
     "paid": "Paid",
