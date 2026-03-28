@@ -126,7 +126,7 @@ export const MileageSummaryCard = () => {
         <HStack align='center' className='Layer__MileageSummaryCard__Panel-value Layer__MileageSummaryCard__Panel-left'>
           <Span size='xl' weight='bold'>
             {t('trips:label.distance_mi', '{{distance}} mi', {
-              distance: formatNumber(currentMonthMileageData?.miles ?? 0, { maximumFractionDigits: 0 }),
+              distance: formatNumber(currentMonthMileageData?.miles ?? 0, { maximumFractionDigits: 2 }),
             })}
           </Span>
         </HStack>

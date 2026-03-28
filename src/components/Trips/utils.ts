@@ -12,7 +12,7 @@ export const formatDistance = (
   formatNumber: NumberFormatFn,
 ) => {
   return t('trips:label.distance_mi', '{{distance}} mi', {
-    distance: formatNumber(BD.format(distance), { maximumFractionDigits: 0 }),
+    distance: formatNumber(BD.format(distance), { maximumFractionDigits: 2 }),
   })
 }
 
