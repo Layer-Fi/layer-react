@@ -27,14 +27,6 @@ const DONUT_RADIUS = 52
 const DONUT_STROKE_WIDTH = 12
 const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS
 const DONUT_SEGMENT_GAP = 4
-const formatDateUtc = (date: Date): string => {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    timeZone: 'UTC',
-  }).format(date)
-}
 
 const getCategoryClassName = (key: TaxOverviewCategory['key']) => {
   switch (key) {
@@ -133,7 +125,6 @@ const TaxEstimatesSummaryLegend = ({
             <MoneySpan size='sm' weight='bold' amount={category.amount} />
             <Span size='sm' variant='subtle'>
               {formatPercent(total === 0 ? 0 : category.amount / total)}
-              %
             </Span>
             <Span nonAria className={`Layer__TaxEstimatesSummaryCard__LegendSwatch ${getCategoryClassName(category.key)}`} />
           </HStack>
@@ -153,6 +144,7 @@ export const TaxEstimatesOverviewSummary = ({
   total,
 }: TaxEstimatesOverviewSummaryProps) => {
   const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
   const { isMobile } = useSizeClass()
   const isSummaryCardLayout = layout === 'summaryCard'
   const nextPaymentLabel = isMobile
@@ -161,7 +153,7 @@ export const TaxEstimatesOverviewSummary = ({
       'Q{{quarter}} due {{date}}',
       {
         quarter: nextTax.quarter,
-        date: formatDateUtc(nextTax.dueAt),
+        date: formatDate(nextTax.dueAt),
       },
     )
     : t(
@@ -169,7 +161,7 @@ export const TaxEstimatesOverviewSummary = ({
       'Q{{quarter}} payment due: {{date}}',
       {
         quarter: nextTax.quarter,
-        date: formatDateUtc(nextTax.dueAt),
+        date: formatDate(nextTax.dueAt),
       },
     )
 

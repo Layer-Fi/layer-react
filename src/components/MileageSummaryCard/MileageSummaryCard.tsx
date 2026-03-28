@@ -32,13 +32,13 @@ export const MileageSummaryCard = () => {
 
   const isMilesUnit = DISTANCE_UNIT === 'miles' as DistanceUnit
   const distanceUnitSuffix = isMilesUnit ? 'mi' : 'km'
-  const distanceUnitLabel = isMilesUnit ? 'mi' : 'km'
+  const distanceUnitLabel = isMilesUnit ? 'Miles' : 'Kilometers'
   const distanceThisMonthLabel = isMilesUnit
-    ? t('mileageTracking:label.miles_month', 'Miles this month')
-    : t('mileageTracking:label.kilometers_month', 'Kilometers this month')
+    ? t('mileageTracking:label.miles_month', `${distanceUnitLabel} this month`)
+    : t('mileageTracking:label.kilometers_month', `${distanceUnitLabel} this month`)
   const totalDistanceLabel = isMilesUnit
-    ? t('mileageTracking:label.total_miles', 'Total Miles')
-    : t('mileageTracking:label.total_kilometers', 'Total Kilometers')
+    ? t('mileageTracking:label.total_miles', `Total ${distanceUnitLabel}`)
+    : t('mileageTracking:label.total_kilometers', `Total ${distanceUnitLabel}`)
 
   const {
     currentYear,
@@ -141,7 +141,7 @@ export const MileageSummaryCard = () => {
               {t('mileageTracking:label.tax_deduction', 'Tax Deduction')}
             </Span>
             <Badge size={isMobile ? BadgeSize.SMALL : BadgeSize.MEDIUM} variant={BadgeVariant.NEUTRAL}>
-              {t('mileageTracking:label.standard_rate_formatted_deduction', 'Standard Rate: {{formattedDeductionRate}}/{{distanceUnit}}', { formattedDeductionRate, distanceUnit: distanceUnitLabel })}
+              {t('mileageTracking:label.standard_rate_formatted_deduction', 'Standard Rate: {{formattedDeductionRate}}/{{distanceUnit}}', { formattedDeductionRate, distanceUnit: distanceUnitSuffix })}
             </Badge>
           </HStack>
         </HStack>

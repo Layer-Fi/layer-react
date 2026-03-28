@@ -106,8 +106,18 @@
     height: 1.25rem;
     width: 1.25rem;
     border-radius: 999px;
-    background-color: var(--color-info-warning-bg);
-    color: var(--color-info-warning-fg);
+    background-color: var(--color-info-neutral-bg);
+    color: var(--color-info-neutral-fg);
+
+    &--neutral {
+      background-color: var(--color-info-neutral-bg);
+      color: var(--color-info-neutral-fg);
+    }
+
+    &--warning {
+      background-color: var(--color-info-warning-bg);
+      color: var(--color-info-warning-fg);
+    }
 
     &--pastDue {
       background-color: var(--color-info-error-bg);

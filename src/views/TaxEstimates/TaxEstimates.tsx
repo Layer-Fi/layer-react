@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { fromDate } from '@internationalized/date'
 import { getYear } from 'date-fns'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import type { Key } from 'react-aria-components'
@@ -8,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { getNextTaxFromTaxEstimatesBanner, getTaxEstimatesBannerQuarterStatus, type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
 import type { TaxOverviewCategory, TaxOverviewCategoryKey, TaxOverviewData, TaxOverviewDeadline } from '@schemas/taxEstimates/overview'
 import { convertCentsToDecimalString } from '@utils/format'
+import { tPlural } from '@utils/i18n/plural'
 import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
@@ -212,7 +212,7 @@ const transformBannerToDeadlines = (
   return banner.quarters.map(quarter => ({
     id: `quarter-${quarter.quarter}`,
     title: `Q${quarter.quarter} taxes`,
-    dueAt: fromDate(quarter.dueDate, 'UTC').toDate(),
+    dueAt: quarter.dueDate,
     amount: quarter.balance,
     description: 'Estimated tax',
     status: getTaxEstimatesBannerQuarterStatus(quarter),
@@ -261,7 +261,6 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
     [taxBannerData],
   )
 
-  // Transform API data into the shape expected by TaxOverview component
   const taxOverviewData = useMemo((): TaxOverviewData | undefined => {
     if (!taxOverviewApi || !taxSummary || !taxBannerData || !nextTax) {
       return undefined
@@ -280,7 +279,7 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
       annualDeadline: {
         id: 'annual-income-taxes',
         title: 'Annual income taxes',
-        dueAt: new Date(year + 1, 3, 15), // April 15 of next year (noon UTC to avoid timezone day shift)
+        dueAt: new Date(year + 1, 3, 15),
         amount: taxSummary.projectedTaxesOwed,
         description: 'Estimated tax',
       },
@@ -291,9 +290,15 @@ const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimat
     <VStack className='Layer__TaxEstimates__TaxBannerWrapper'>
       <TaxBanner
         title={t('taxEstimates:banner.categorization_incomplete.title', 'Your tax estimates are incomplete')}
-        description={t(
+        description={tPlural(
+          t,
           'taxEstimates:banner.categorization_incomplete.description',
-          `You have ${uncategorizedReviewPayload.count} uncategorized transactions with $${convertCentsToDecimalString(uncategorizedReviewPayload.amount)} in potential deductions to review.`,
+          {
+            count: uncategorizedReviewPayload.count,
+            amount: convertCentsToDecimalString(uncategorizedReviewPayload.amount),
+            one: 'You have {{count}} uncategorized transaction with ${{amount}} in potential deductions to review.',
+            other: 'You have {{count}} uncategorized transactions with ${{amount}} in potential deductions to review.',
+          },
         )}
         action={{
           label: t('taxEstimates:action.review_banner', 'Review'),

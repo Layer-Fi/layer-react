@@ -151,35 +151,23 @@ export const BookkeepingOverview = ({
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
         />
-        {stackSummaryCards
-          ? (
-            <VStack className='Layer__bookkeeping-overview__summary-cards' gap='md'>
-              {accountingConfiguration?.taxEstimatesEnabled !== false && (
-                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
-                  <TaxEstimatesSummaryCard />
-                </VStack>
-              )}
-              {accountingConfiguration?.mileageTrackingEnabled !== false && (
-                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
-                  <MileageSummaryCard />
-                </VStack>
-              )}
+        <HStack
+          className={classNames('Layer__bookkeeping-overview__summary-cards', {
+            'Layer__bookkeeping-overview__summary-cards--stacked': stackSummaryCards,
+          })}
+          gap='md'
+        >
+          {accountingConfiguration?.taxEstimatesEnabled !== false && (
+            <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
+              <TaxEstimatesSummaryCard />
             </VStack>
-          )
-          : (
-            <HStack className='Layer__bookkeeping-overview__summary-cards' gap='md'>
-              {accountingConfiguration?.taxEstimatesEnabled !== false && (
-                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
-                  <TaxEstimatesSummaryCard />
-                </VStack>
-              )}
-              {accountingConfiguration?.mileageTrackingEnabled !== false && (
-                <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
-                  <MileageSummaryCard />
-                </VStack>
-              )}
-            </HStack>
           )}
+          {accountingConfiguration?.mileageTrackingEnabled !== false && (
+            <VStack className='Layer__bookkeeping-overview__summary-cards-item' fluid>
+              <MileageSummaryCard />
+            </VStack>
+          )}
+        </HStack>
       </View>
       {isCalendlyVisible && (
         <div
