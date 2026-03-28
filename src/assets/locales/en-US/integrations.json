@@ -15,7 +15,6 @@
     "unlink_failed": "Unlink failed. Please check your connection and try again in a few seconds."
   },
   "label": {
-    "date_time": "{{date}} at {{time}}",
     "integrations": "Integrations",
     "quickbooks_connected": "QuickBooks connected",
     "take_five_minutes": "This may take up to 5 minutes",
