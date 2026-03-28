@@ -14,8 +14,8 @@
     "complete_bookkeeping_onboarding_call": "Une fois votre appel d’intégration à la tenue de livres terminé, vos tâches de tenue de livres s’afficheront ici.",
     "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminée",
     "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées",
-    "count_open_tasks_one": "{{displayCount}} tâche en attente en {{displayYear}}",
-    "count_open_tasks_other": "{{displayCount}} tâches en attente en {{displayYear}}",
+    "count_open_tasks_one": "{{displayCount}} tâche ouverte en {{displayYear}}",
+    "count_open_tasks_other": "{{displayCount}} tâches ouvertes en {{displayYear}}",
     "count_tasks_one": "{{displayCount}} tâche",
     "count_tasks_other": "{{displayCount}} tâches",
     "great_job": "Excellent travail!",
@@ -33,7 +33,7 @@
     "team_review_and_categorize_transaction": "Notre équipe examinera et catégorisera cette transaction. Nous vous contacterons si nous avons des questions à son sujet.",
     "uploaded_files": "Fichiers téléversés :",
     "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action n’est requise de votre part pour le moment.",
-    "working_on_books_please_complete_tasks_one": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer la tâche en attente {{displayCount}}.",
+    "working_on_books_please_complete_tasks_one": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer la {{displayCount}} tâche en attente.",
     "working_on_books_please_complete_tasks_other": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer les {{displayCount}} tâches en attente."
   },
   "prompt": {
