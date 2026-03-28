@@ -8,16 +8,14 @@
     "view_and_complete": "View and complete"
   },
   "label": {
-    "bank_accounts_disconnected_one": "{{displayCount}} bank account is disconnected",
-    "bank_accounts_disconnected_other": "{{displayCount}} bank accounts are disconnected",
+    "bank_accounts_disconnected_one": "{{count}} bank account is disconnected",
+    "bank_accounts_disconnected_other": "{{count}} bank accounts are disconnected",
     "bookkeeping_tasks": "Bookkeeping Tasks",
     "complete_bookkeeping_onboarding_call": "Once you complete your bookkeeping onboarding call, you will see your bookkeeping tasks here.",
-    "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} done",
-    "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} done",
-    "count_open_tasks_one": "{{displayCount}} open task in {{displayYear}}",
-    "count_open_tasks_other": "{{displayCount}} open tasks in {{displayYear}}",
-    "count_tasks_one": "{{displayCount}} task",
-    "count_tasks_other": "{{displayCount}} tasks",
+    "count_open_tasks_one": "{{count}} open task in {{year}}",
+    "count_open_tasks_other": "{{count}} open tasks in {{year}}",
+    "count_tasks_one": "{{count}} task",
+    "count_tasks_other": "{{count}} tasks",
     "great_job": "Great job!",
     "month_name_books_complete": "Your {{monthName}} books are complete and ready to view!",
     "not_enrolled_in_bookkeeping": "Not Enrolled in Bookkeeping",
@@ -25,16 +23,16 @@
     "order_our_bookkeeping_service": "Order our bookkeeping service supported by real humans.",
     "pending_tasks": "There are no pending tasks!",
     "please_contact_support": "If you believe this is an error, please contact support.",
-    "reconnect_count_accounts_one": "Reconnect {{displayCount}} account",
-    "reconnect_count_accounts_other": "Reconnect {{displayCount}} accounts",
+    "reconnect_count_accounts_one": "Reconnect {{count}} account",
+    "reconnect_count_accounts_other": "Reconnect {{count}} accounts",
     "respond_to_below_tasks": "Please respond to the below tasks to help us complete your {{monthName}} books.",
     "selected_files": "Selected Files:",
     "tasks": "Tasks",
     "team_review_and_categorize_transaction": "Our team will review and categorize this transaction. We'll reach out if we have any questions about it.",
     "uploaded_files": "Uploaded Files:",
     "working_on_books_no_action_needed": "We're working on your {{monthName}} books. No action is needed from you right now.",
-    "working_on_books_please_complete_tasks_one": "We're working on your {{monthName}} books. Please complete the {{displayCount}} open task.",
-    "working_on_books_please_complete_tasks_other": "We're working on your {{monthName}} books. Please complete the {{displayCount}} open tasks."
+    "working_on_books_please_complete_tasks_one": "We're working on your {{monthName}} books. Please complete the {{count}} open task.",
+    "working_on_books_please_complete_tasks_other": "We're working on your {{monthName}} books. Please complete the {{count}} open tasks."
   },
   "prompt": {
     "need_help_books": "Need help with your books?"
