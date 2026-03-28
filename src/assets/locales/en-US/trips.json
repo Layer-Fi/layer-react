@@ -21,7 +21,6 @@
     "delete_trip_warning": "This trip will be permanently deleted. This action cannot be undone.",
     "distance": "Distance",
     "distance_mi": "{{distance}} mi",
-    "distance_miles": "Distance (miles)",
     "end_address": "End address",
     "enter_address": "Enter address",
     "enter_distance": "Enter distance",
