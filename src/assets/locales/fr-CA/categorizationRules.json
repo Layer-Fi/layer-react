@@ -21,8 +21,8 @@
   "label": {
     "any_direction": "Entrées et sorties d’argent",
     "categorization_rules": "Règles de catégorisation",
-    "following_count_transactions_one": "La transaction suivante sera touchée :",
-    "following_count_transactions_other": "Les {{displayCount}} transactions suivantes seront touchées :",
+    "following_count_transactions_one": "The following {{displayCount}} transaction will be affected:",
+    "following_count_transactions_other": "The following {{displayCount}} transactions will be affected:",
     "money_in": "Entrées d’argent",
     "money_out": "Sorties d’argent",
     "or": "OU",
