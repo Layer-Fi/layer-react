@@ -5,8 +5,6 @@ import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { GlobalYearPicker } from '@components/GlobalYearPicker/GlobalYearPicker'
 import { Header } from '@components/Header/Header'
-import { HeaderCol } from '@components/Header/HeaderCol'
-import { HeaderRow } from '@components/Header/HeaderRow'
 import { MileageTrackingStats } from '@components/MileageTrackingStats/MileageTrackingStats'
 import { Trips } from '@components/Trips/Trips'
 import { View } from '@components/View/View'
@@ -47,11 +45,7 @@ const MileageTrackingViewContent = ({ showTitle }: { showTitle: boolean }) => {
       showHeader={showTitle}
       header={(
         <Header>
-          <HeaderRow>
-            <HeaderCol>
-              <GlobalYearPicker />
-            </HeaderCol>
-          </HeaderRow>
+          <GlobalYearPicker />
         </Header>
       )}
     >

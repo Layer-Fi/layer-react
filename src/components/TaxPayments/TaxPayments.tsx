@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useTaxPayments } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
@@ -68,13 +68,11 @@ export const TaxPayments = () => {
     },
   }), [dataWithIds, isError, isLoading])
 
-  const Header = useCallback(() => (
-    <TaxPaymentsHeader isMobile={!isDesktop} />
-  ), [isDesktop])
-
   return (
-    <ResponsiveDetailView name='TaxPayments' slots={{ Header }}>
-      {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
+    <ResponsiveDetailView name='TaxPayments' slots={{ Header: () => <TaxPaymentsHeader isMobile={!isDesktop} /> }}>
+      {isDesktop
+        ? <TaxPaymentsTable {...props} />
+        : <TaxPaymentsMobileList {...props} />}
     </ResponsiveDetailView>
   )
 }

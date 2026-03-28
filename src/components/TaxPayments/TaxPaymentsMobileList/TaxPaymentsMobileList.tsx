@@ -1,7 +1,5 @@
-import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { MobileList } from '@ui/MobileList/MobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -11,8 +9,28 @@ import { type CommonTaxPaymentsListProps, getQuarterLabel, type TaxPaymentQuarte
 
 import './taxPaymentsMobileList.scss'
 
+type TaxBreakdownItem = {
+  label: string
+  amount: number
+}
+
+const TaxPaymentsBreakdown = ({ items }: { items: TaxBreakdownItem[] }) => (
+  <VStack gap='3xs' className='Layer__TaxPaymentsMobileListItem__Breakdown'>
+    {items.map(item => (
+      <HStack key={item.label} justify='space-between' className='Layer__TaxPaymentsMobileListItem__BreakdownRow'>
+        <Span size='sm' variant='subtle'>{item.label}</Span>
+        <MoneySpan size='sm' variant='subtle' amount={item.amount} />
+      </HStack>
+    ))}
+  </VStack>
+)
+
 const TaxPaymentsMobileListItem = ({ payment }: { payment: TaxPaymentQuarterWithId }) => {
   const { t } = useTranslation()
+  const federalTaxLabel = t('taxEstimates:label.federal_tax', 'Federal Tax')
+  const stateTaxLabel = t('taxEstimates:label.state_tax', 'State Tax')
+  const uncategorizedLabel = t('common:label.uncategorized', 'Uncategorized')
+
   return (
     <VStack gap='xs' className='Layer__TaxPaymentsMobileListItem'>
       <Heading size='sm' weight='bold' pbe='3xs'>{getQuarterLabel(payment.quarter)}</Heading>
@@ -21,14 +39,33 @@ const TaxPaymentsMobileListItem = ({ payment }: { payment: TaxPaymentQuarterWith
           <Span size='sm' variant='subtle'>{t('taxEstimates:label.rolled_over_from_previous_quarter', 'Rolled Over From Previous Quarter')}</Span>
           <MoneySpan size='sm' amount={payment.owedRolledOverFromPrevious} />
         </HStack>
-        <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('taxEstimates:label.owed_quarter', 'Owed This Quarter')}</Span>
-          <MoneySpan size='sm' amount={payment.owedThisQuarter} />
-        </HStack>
-        <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('taxEstimates:label.total_paid', 'Total Paid')}</Span>
-          <MoneySpan size='sm' amount={payment.totalPaid} />
-        </HStack>
+        <VStack gap='3xs'>
+          <TaxPaymentsBreakdown
+            items={[
+              { label: federalTaxLabel, amount: payment.owedThisQuarterBreakdown.usFederal },
+              { label: stateTaxLabel, amount: payment.owedThisQuarterBreakdown.usState },
+            ]}
+          />
+          <Separator />
+          <HStack justify='space-between'>
+            <Span size='sm' variant='subtle'>{t('taxEstimates:label.owed_quarter', 'Owed This Quarter')}</Span>
+            <MoneySpan size='md' amount={payment.owedThisQuarter} />
+          </HStack>
+        </VStack>
+        <VStack gap='3xs'>
+          <TaxPaymentsBreakdown
+            items={[
+              { label: federalTaxLabel, amount: payment.totalPaidBreakdown.usFederal },
+              { label: stateTaxLabel, amount: payment.totalPaidBreakdown.usState },
+              { label: uncategorizedLabel, amount: payment.totalPaidBreakdown.uncategorized },
+            ]}
+          />
+          <Separator />
+          <HStack justify='space-between'>
+            <Span size='sm' variant='subtle'>{t('taxEstimates:label.total_paid', 'Total Paid')}</Span>
+            <MoneySpan size='md' amount={payment.totalPaid} />
+          </HStack>
+        </VStack>
       </VStack>
       <Separator />
       <HStack justify='space-between'>
@@ -41,21 +78,25 @@ const TaxPaymentsMobileListItem = ({ payment }: { payment: TaxPaymentQuarterWith
 
 export const TaxPaymentsMobileList = ({ data, isLoading, isError, slots }: CommonTaxPaymentsListProps) => {
   const { t } = useTranslation()
-  const renderItem = useCallback(
-    (payment: TaxPaymentQuarterWithId) => <TaxPaymentsMobileListItem payment={payment} />,
-    [],
-  )
+  const { EmptyState, ErrorState } = slots
+
+  if (isLoading) {
+    return <VStack className='Layer__TaxPaymentsMobileList'>{t('common:label.loading', 'Loading...')}</VStack>
+  }
+
+  if (isError) {
+    return <VStack className='Layer__TaxPaymentsMobileList'><ErrorState /></VStack>
+  }
+
+  if (!data || data.length === 0) {
+    return <VStack className='Layer__TaxPaymentsMobileList'><EmptyState /></VStack>
+  }
 
   return (
-    <div className='Layer__TaxPaymentsMobileList'>
-      <MobileList
-        ariaLabel={t('taxEstimates:label.tax_payments', 'Tax Payments')}
-        data={data}
-        isLoading={isLoading}
-        isError={isError}
-        renderItem={renderItem}
-        slots={slots}
-      />
-    </div>
+    <VStack className='Layer__TaxPaymentsMobileList' gap='sm'>
+      {data.map(payment => (
+        <TaxPaymentsMobileListItem key={payment.id} payment={payment} />
+      ))}
+    </VStack>
   )
 }

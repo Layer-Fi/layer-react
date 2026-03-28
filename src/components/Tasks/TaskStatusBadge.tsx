@@ -4,6 +4,7 @@ import { tPlural } from '@utils/i18n/plural'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import AlertCircle from '@icons/AlertCircle'
 import CheckCircle from '@icons/CheckCircle'
 import Clock from '@icons/Clock'
@@ -73,6 +74,7 @@ const useBadgeConfig = (
 
 export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) => {
   const badgeConfig = useBadgeConfig(status, tasksCount)
+  const { isMobile } = useSizeClass()
 
   if (!badgeConfig) {
     return
@@ -80,11 +82,15 @@ export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) =>
 
   const dataProperties = toDataProperties({ status: badgeConfig.color, icononly: !badgeConfig.label })
 
+  const isBadgeIconVisible = !isMobile
+
   return (
     <span className='Layer__tasks__badge' {...dataProperties}>
-      <span className='Layer__tasks__badge__icon-wrapper' data-status={badgeConfig.color}>
-        {badgeConfig.icon}
-      </span>
+      {isBadgeIconVisible && (
+        <span className='Layer__tasks__badge__icon-wrapper' data-status={badgeConfig.color}>
+          {badgeConfig.icon}
+        </span>
+      )}
       {
         /*
          * The labels are both rendered, BUT only one is visible at a time (controlled by container query)

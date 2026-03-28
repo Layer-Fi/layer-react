@@ -58,6 +58,8 @@
   }
 
   .Layer__TaxBanner .Layer__UI__Button {
-    inline-size: 100%;
+    align-self: flex-start;
+    width: fit-content;
+    inline-size: fit-content;
   }
 }

@@ -22,10 +22,23 @@
   }
 
   .Layer__UI__Table-Row {
+    height: 8rem;
     background-color: var(--color-base-50);
 
     &.Layer__DataTable__EmptyState__Row {
       background-color: var(--color-base-0);
     }
+  }
+
+  .Layer__TaxPaymentsTable__AmountWithBreakdown {
+    align-items: flex-end;
+    justify-content: center;
+    height: 100%;
+    width: max-content;
+    max-width: 100%;
+  }
+
+  .Layer__TaxPaymentsTable__BreakdownRow {
+    justify-content: flex-end;
   }
 }
