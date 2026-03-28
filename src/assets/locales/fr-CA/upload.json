@@ -18,12 +18,12 @@
     "unknown_upload_error": "Erreur de téléversement inconnue"
   },
   "label": {
-    "count_transactions_have_one": "{{displayCount}} transaction has been uploaded to your account.",
-    "count_transactions_have_other": "{{displayCount}} transactions have been uploaded to your account.",
+    "count_transactions_have_one": "{{displayCount}} transaction a été téléversée vers votre compte.",
+    "count_transactions_have_other": "{{displayCount}} transactions ont été téléversées vers votre compte.",
     "csv_validation_preview": "Aperçu de la validation du fichier CSV",
     "drag_drop_file_browse": "Glissez-déposez un fichier ou <browse>parcourez</browse>.",
     "im_done_uploading": "J’ai terminé de téléverser les transactions",
-    "need_help_download_example_csv": "Need help? Download an example CSV",
+    "need_help_download_example_csv": "Besoin d’aide? Téléchargez un fichier CSV d’exemple",
     "review_transactions": "Vérifier les transactions",
     "total_transactions_count": "Total des transactions : {{totalTransactionsCount}}",
     "transactions_parsed_successfully_click_upload": "Toutes les transactions ont été analysées avec succès. Cliquez sur « Téléverser les transactions » pour finaliser l’importation.",
