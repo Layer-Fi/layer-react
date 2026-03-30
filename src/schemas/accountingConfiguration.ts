@@ -30,7 +30,7 @@ export const AccountingConfigurationSchema = Schema.Struct({
   ),
 
   taxEstimatesUserAgreementAt: pipe(
-    Schema.optionalWith(Schema.DateTimeUtc, { nullable: true }),
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('tax_estimates_user_agreement_at'),
   ),
 
