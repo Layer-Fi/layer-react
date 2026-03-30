@@ -16,7 +16,7 @@ type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
 
 type UseTaxEstimatesBannerOptions = {
   year: number
-  reportingBasis?: ReportingBasis
+  reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
 }
 
