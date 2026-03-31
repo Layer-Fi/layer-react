@@ -3,7 +3,7 @@ import { pipe, Schema } from 'effect'
 const TaxOverviewApiDataSchema = Schema.Struct({
   year: Schema.Number,
   excludesPendingTransactions: pipe(
-    Schema.optionalWith(Schema.Boolean, { default: () => true }),
+    Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
     Schema.fromKey('excludes_pending_transactions'),
   ),
   taxableIncomeEstimate: pipe(
@@ -23,7 +23,7 @@ const TaxOverviewApiDataSchema = Schema.Struct({
     Schema.fromKey('estimated_taxes_owed'),
   ),
   taxesDueDate: pipe(
-    Schema.optionalWith(Schema.Date, { nullable: true }),
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('taxes_due_date'),
   ),
 })
