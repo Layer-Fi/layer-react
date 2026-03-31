@@ -16,7 +16,6 @@ const TaxSummarySectionSchema = Schema.Struct({
 export type TaxSummarySection = typeof TaxSummarySectionSchema.Type
 
 const TaxSummarySchema = Schema.Struct({
-  type: Schema.Literal('Tax_Summary'),
   year: Schema.Number,
   projectedTaxesOwed: pipe(
     Schema.propertySignature(Schema.Number),
@@ -25,6 +24,10 @@ const TaxSummarySchema = Schema.Struct({
   taxesDueAt: pipe(
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('taxes_due_at'),
+  ),
+  uncategorizedTaxPayments: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('uncategorized_tax_payments'),
   ),
   sections: Schema.Array(TaxSummarySectionSchema),
 })
