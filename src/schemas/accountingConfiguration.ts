@@ -34,14 +34,14 @@ export const AccountingConfigurationSchema = Schema.Struct({
     Schema.fromKey('tax_estimates_user_agreement_at'),
   ),
 
-  taxEstimatesEnabled: pipe(
+  enableTaxEstimates: pipe(
     Schema.propertySignature(Schema.Boolean),
-    Schema.fromKey('tax_estimates_enabled'),
+    Schema.fromKey('enable_tax_estimates'),
   ),
 
-  mileageTrackingEnabled: pipe(
+  enableMileageTracking: pipe(
     Schema.propertySignature(Schema.Boolean),
-    Schema.fromKey('mileage_tracking_enabled'),
+    Schema.fromKey('enable_mileage_tracking'),
   ),
 
   enableStripeOnboarding: pipe(
