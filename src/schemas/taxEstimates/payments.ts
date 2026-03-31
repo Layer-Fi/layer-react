@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-const TaxOwedBreakdownSchema = Schema.Struct({
+const jurisdictionFields = {
   usFederal: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('us_federal'),
@@ -9,19 +9,16 @@ const TaxOwedBreakdownSchema = Schema.Struct({
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('us_state'),
   ),
+}
+
+const TaxOwedBreakdownSchema = Schema.Struct({
+  ...jurisdictionFields,
 })
 
 export type TaxOwedBreakdown = typeof TaxOwedBreakdownSchema.Type
 
 const TaxPaidBreakdownSchema = Schema.Struct({
-  usFederal: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('us_federal'),
-  ),
-  usState: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('us_state'),
-  ),
+  ...jurisdictionFields,
   uncategorized: Schema.Number,
 })
 
