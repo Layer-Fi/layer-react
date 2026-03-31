@@ -25,6 +25,7 @@ import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
+import { TaxOverview } from '@components/TaxOverview/TaxOverview'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { View } from '@components/View/View'
 import { YearPicker } from '@components/YearPicker/YearPicker'
@@ -132,6 +133,7 @@ const TaxEstimatesViewHeader = () => {
 }
 
 const TAX_ESTIMATES_TAB_CONFIG = [
+  { value: TaxEstimatesRoute.Overview, ...translationKey('common:label.overview', 'Overview') },
   { value: TaxEstimatesRoute.Estimates, ...translationKey('taxEstimates:label.estimates', 'Estimates') },
   { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates:label.payments', 'Payments') },
 ]
@@ -165,6 +167,7 @@ const TaxEstimatesOnboardedViewContent = () => {
         selectedKey={route}
         onSelectionChange={handleTabChange}
       />
+      {route === TaxEstimatesRoute.Overview && <TaxOverview />}
       {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
       {route === TaxEstimatesRoute.Payments && <TaxPayments />}
     </>
