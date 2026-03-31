@@ -13,7 +13,7 @@ import { usePreloadCategories } from '@hooks/api/businesses/[business-id]/catego
 import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { BankTransactionsCategoryStoreProvider } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
@@ -186,7 +186,7 @@ const BankTransactionsTableView = ({
 
   const { setRuleSuggestion, ruleSuggestion } = useContext(CategorizationRulesContext)
 
-  const { data: linkedAccounts } = useLinkedAccounts()
+  const { data: linkedAccounts } = useListBankAccounts()
 
   const isSyncing = useMemo(
     () => isAnyBankAccountSyncing(linkedAccounts ?? []),

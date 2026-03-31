@@ -6,7 +6,6 @@ import { useIntl } from 'react-intl'
 import { type BankAccount } from '@internal-types/linkedAccounts'
 import { getActivationDate } from '@utils/business'
 import { toLocalizedCents } from '@utils/i18n/number/input'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import {
   type OpeningBalanceAPIResponseResult,
   type OpeningBalanceData,
@@ -67,7 +66,7 @@ function LinkedAccountsOpeningBalanceModalContent({
   const { t } = useTranslation()
   const intl = useIntl()
   const { business } = useLayerContext()
-  const { refetchAccounts } = useLinkedAccounts()
+  const { refetchAccounts } = useContext(LinkedAccountsContext)
 
   // Mark if any data has been successfully saved with API
   // so the refetchAccounts should be called on onClose

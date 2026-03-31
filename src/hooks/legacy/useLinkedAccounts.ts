@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
 import { DataModel, type LoadedStatus } from '@internal-types/general'
@@ -125,6 +125,41 @@ type UseLinkedAccounts = () => {
 
 type LinkMode = 'update' | 'add'
 
+const PLAID_OAUTH_SESSION_KEY = 'layer_plaid_oauth_session'
+
+function persistPlaidSession(linkToken: string, linkMode: LinkMode) {
+  try {
+    sessionStorage.setItem(
+      PLAID_OAUTH_SESSION_KEY,
+      JSON.stringify({ linkToken, linkMode }),
+    )
+  }
+  catch { /* best-effort */ }
+}
+
+function restorePlaidSession(): { linkToken: string, linkMode: LinkMode } | null {
+  try {
+    const raw = sessionStorage.getItem(PLAID_OAUTH_SESSION_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as { linkToken?: string, linkMode?: string }
+    if (typeof parsed.linkToken === 'string' && parsed.linkToken) {
+      return {
+        linkToken: parsed.linkToken,
+        linkMode: parsed.linkMode === 'update' ? 'update' : 'add',
+      }
+    }
+  }
+  catch { /* best-effort */ }
+  return null
+}
+
+function clearPlaidSession() {
+  try {
+    sessionStorage.removeItem(PLAID_OAUTH_SESSION_KEY)
+  }
+  catch { /* best-effort */ }
+}
+
 export const useLinkedAccounts: UseLinkedAccounts = () => {
   const {
     businessId,
@@ -134,19 +169,27 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     hasBeenTouched,
   } = useLayerContext()
 
-  const { apiUrl, usePlaidSandbox } = useEnvironment()
+  const { apiUrl, usePlaidSandbox, plaidRedirectUri, plaidReceivedRedirectUri } = useEnvironment()
   const { data: auth } = useAuth()
   const {
     preload: preloadAccountConfirmation,
     reset: resetAccountConfirmation,
   } = useAccountConfirmationStoreActions()
 
-  const [linkToken, setLinkToken] = useState<string | null>(null)
+  const restoredSession = plaidReceivedRedirectUri ? restorePlaidSession() : null
+
+  const [linkToken, setLinkToken] = useState<string | null>(restoredSession?.linkToken ?? null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
-  const [linkMode, setLinkMode] = useState<LinkMode>('add')
+  const [linkMode, setLinkMode] = useState<LinkMode>(restoredSession?.linkMode ?? 'add')
   const [isLinking, setIsLinking] = useState(false)
+  const [oAuthConsumed, setOAuthConsumed] = useState(false)
   const [accountsToAddOpeningBalanceInModal, setAccountsToAddOpeningBalanceInModal] =
     useState<BankAccount[]>([])
+
+  const authRef = useRef(auth)
+  useEffect(() => {
+    authRef.current = auth
+  }, [auth])
 
   const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
 
@@ -185,10 +228,15 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       const linkToken = (
         await getPlaidLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
+          ...(plaidRedirectUri ? { body: { redirect_uri: plaidRedirectUri } } : {}),
         })
       ).data.link_token
+      setOAuthConsumed(false)
       setLinkMode('add')
       setLinkToken(linkToken)
+      if (plaidRedirectUri) {
+        persistPlaidSession(linkToken, 'add')
+      }
     }
   }
 
@@ -200,11 +248,15 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       const linkToken = (
         await getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
-          body: { plaid_item_id: plaidItemPlaidId },
+          body: { plaid_item_id: plaidItemPlaidId, ...(plaidRedirectUri ? { redirect_uri: plaidRedirectUri } : {}) },
         })
       ).data.link_token
+      setOAuthConsumed(false)
       setLinkMode('update')
       setLinkToken(linkToken)
+      if (plaidRedirectUri) {
+        persistPlaidSession(linkToken, 'update')
+      }
     }
   }
 
@@ -217,11 +269,17 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     publicToken: string,
     metadata: PlaidLinkOnSuccessMetadata,
   ) => {
+    const accessToken = authRef.current?.access_token
+    if (!accessToken) {
+      console.error('[useLinkedAccounts] No access token available for public token exchange')
+      return
+    }
+
     setIsLinking(true)
     preloadAccountConfirmation()
 
     try {
-      await exchangePlaidPublicTokenApi(apiUrl, auth?.access_token, {
+      await exchangePlaidPublicTokenApi(apiUrl, accessToken, {
         params: { businessId },
         body: { public_token: publicToken, institution: metadata.institution },
       })
@@ -233,39 +291,50 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
+  const activeReceivedRedirectUri = (!oAuthConsumed && plaidReceivedRedirectUri) || undefined
+
+  const resetPlaidLinkState = () => {
+    clearPlaidSession()
+    setOAuthConsumed(true)
+    setLinkToken(null)
+    setLinkMode('add')
+  }
+
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
     token: linkToken,
+    receivedRedirectUri: activeReceivedRedirectUri,
 
-    // If in update mode, we don't need to exchange the public token for an access token.
-    // The existing access token will automatically become valid again
     onSuccess: (
       publicToken: string,
       metadata: PlaidLinkOnSuccessMetadata,
     ) => {
+      resetPlaidLinkState()
       if (linkMode == 'add') {
-        // Note: a sync is kicked off in the backend in this endpoint
-        void exchangePlaidPublicToken(publicToken, metadata)
+        exchangePlaidPublicToken(publicToken, metadata).catch((err) => {
+          console.error('[useLinkedAccounts] Public token exchange failed:', err)
+        })
       }
       else {
-        // Refresh the account connections, which should remove the error
-        // pills from any broken accounts
-        void updateConnectionStatus().then(() => {
+        updateConnectionStatus().then(() => {
           void refetchAccounts()
-          setLinkMode('add')
           touch(DataModel.LINKED_ACCOUNTS)
+        }).catch((err) => {
+          console.error('[useLinkedAccounts] Update connection status failed:', err)
         })
       }
     },
-    onExit: () => setLinkMode('add'),
+    onExit: () => {
+      resetPlaidLinkState()
+    },
     env: usePlaidSandbox ? 'sandbox' : undefined,
   })
 
   useEffect(() => {
-    if (plaidLinkReady) {
+    if (plaidLinkReady && auth?.access_token) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       plaidLinkStart()
     }
-  }, [plaidLinkStart, plaidLinkReady])
+  }, [plaidLinkStart, plaidLinkReady, auth?.access_token])
 
   const addConnection = async (source: AccountSource) => {
     if (source === 'PLAID') {
@@ -388,7 +457,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const updateConnectionStatus = async () => {
-    await updateConnectionStatusApi(apiUrl, auth?.access_token, {
+    await updateConnectionStatusApi(apiUrl, authRef.current?.access_token, {
       params: { businessId },
     })
   }

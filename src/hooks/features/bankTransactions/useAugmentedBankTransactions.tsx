@@ -10,7 +10,7 @@ import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationR
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { type BankTransactionFilters, filterVisibility, type NumericRangeFilter } from '@utils/bankTransactions'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -214,7 +214,7 @@ export const useAugmentedBankTransactions = (
     }
   }, [hasMore, setSize, size])
 
-  const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
+  const { data: linkedAccounts, mutate: refetchAccounts } = useListBankAccounts()
   const anyAccountSyncing = useMemo(
     () => isAnyBankAccountSyncing(linkedAccounts ?? []),
     [linkedAccounts],

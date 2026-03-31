@@ -24,6 +24,8 @@ type BaseLayerProviderProps = {
 
   theme?: LayerThemeConfig
   usePlaidSandbox?: boolean
+  plaidRedirectUri?: string
+  plaidReceivedRedirectUri?: string
   onError?: (error: LayerError) => void
   eventCallbacks?: EventCallbacks
 }
@@ -41,6 +43,8 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
     appSecret,
     businessAccessToken,
     usePlaidSandbox,
+    plaidRedirectUri,
+    plaidReceivedRedirectUri,
     ...restProps
   } = props
 
@@ -60,7 +64,13 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
       <LayerI18nProvider>
-        <EnvironmentInputProvider environment={environment} environmentConfigOverride={environmentConfigOverride} usePlaidSandbox={usePlaidSandbox}>
+        <EnvironmentInputProvider
+          environment={environment}
+          environmentConfigOverride={environmentConfigOverride}
+          usePlaidSandbox={usePlaidSandbox}
+          plaidRedirectUri={plaidRedirectUri}
+          plaidReceivedRedirectUri={plaidReceivedRedirectUri}
+        >
           <AuthInputProvider
             appId={appId}
             appSecret={appSecret}
