@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
-import { getAccountsNeedingConfirmation, useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
 import { useAccountConfirmationStore } from '@providers/AccountConfirmationStoreProvider'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Button } from '@ui/Button/Button'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { Modal } from '@ui/Modal/Modal'
@@ -65,7 +66,7 @@ function getFormComponentLabels(
 }
 
 function useLinkedAccountsConfirmationModal() {
-  const { data, refetchAccounts } = useLinkedAccounts()
+  const { data, refetchAccounts } = useContext(LinkedAccountsContext)
   const accountsNeedingConfirmation = getAccountsNeedingConfirmation(data ?? [])
 
   const {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
 import { DataModel, type LoadedStatus } from '@internal-types/general'
@@ -124,6 +124,64 @@ type UseLinkedAccounts = () => {
 }
 
 type LinkMode = 'update' | 'add'
+type PendingPlaidSuccess = {
+  publicToken: string
+  metadata: PlaidLinkOnSuccessMetadata
+}
+
+const PLAID_LINK_TOKEN_STORAGE_KEY = 'plaid_link_token'
+const PLAID_LINK_MODE_STORAGE_KEY = 'plaid_link_mode'
+
+function getPlaidStorageKey(key: string, businessId: string) {
+  return `${key}:${businessId}`
+}
+
+function readStoredPlaidLinkToken(businessId: string) {
+  if (typeof window === 'undefined') return null
+
+  try {
+    return window.sessionStorage.getItem(getPlaidStorageKey(PLAID_LINK_TOKEN_STORAGE_KEY, businessId))
+  }
+  catch {
+    return null
+  }
+}
+
+function readStoredPlaidLinkMode(businessId: string): LinkMode {
+  if (typeof window === 'undefined') return 'add'
+
+  try {
+    const storedMode = window.sessionStorage.getItem(getPlaidStorageKey(PLAID_LINK_MODE_STORAGE_KEY, businessId))
+    return storedMode === 'update' ? 'update' : 'add'
+  }
+  catch {
+    return 'add'
+  }
+}
+
+function writeStoredPlaidLinkState(businessId: string, linkToken: string, linkMode: LinkMode) {
+  if (typeof window === 'undefined') return
+
+  try {
+    window.sessionStorage.setItem(getPlaidStorageKey(PLAID_LINK_TOKEN_STORAGE_KEY, businessId), linkToken)
+    window.sessionStorage.setItem(getPlaidStorageKey(PLAID_LINK_MODE_STORAGE_KEY, businessId), linkMode)
+  }
+  catch {
+    return
+  }
+}
+
+function clearStoredPlaidLinkState(businessId: string) {
+  if (typeof window === 'undefined') return
+
+  try {
+    window.sessionStorage.removeItem(getPlaidStorageKey(PLAID_LINK_TOKEN_STORAGE_KEY, businessId))
+    window.sessionStorage.removeItem(getPlaidStorageKey(PLAID_LINK_MODE_STORAGE_KEY, businessId))
+  }
+  catch {
+    return
+  }
+}
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
   const {
@@ -135,16 +193,23 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   } = useLayerContext()
 
   const { apiUrl, usePlaidSandbox, plaidRedirectUri, plaidReceivedRedirectUri } = useEnvironment()
+  console.debug('[PlaidDiag] useLinkedAccounts env:', { plaidRedirectUri, plaidReceivedRedirectUri, usePlaidSandbox })
   const { data: auth } = useAuth()
   const {
     preload: preloadAccountConfirmation,
     reset: resetAccountConfirmation,
   } = useAccountConfirmationStoreActions()
 
-  const [linkToken, setLinkToken] = useState<string | null>(null)
+  const [linkToken, setLinkToken] = useState<string | null>(() =>
+    plaidReceivedRedirectUri ? readStoredPlaidLinkToken(businessId) : null,
+  )
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
-  const [linkMode, setLinkMode] = useState<LinkMode>('add')
+  const [linkMode, setLinkMode] = useState<LinkMode>(() =>
+    plaidReceivedRedirectUri ? readStoredPlaidLinkMode(businessId) : 'add',
+  )
   const [isLinking, setIsLinking] = useState(false)
+  const [pendingPlaidSuccess, setPendingPlaidSuccess] = useState<PendingPlaidSuccess | null>(null)
+  const [activeReceivedRedirectUri, setActiveReceivedRedirectUri] = useState(plaidReceivedRedirectUri)
   const [accountsToAddOpeningBalanceInModal, setAccountsToAddOpeningBalanceInModal] =
     useState<BankAccount[]>([])
 
@@ -159,6 +224,29 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   } = useListBankAccounts()
 
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
+
+  const refetchAccounts = useCallback(async () => {
+    await mutate()
+  }, [mutate])
+
+  useEffect(() => {
+    if (!plaidReceivedRedirectUri) {
+      return
+    }
+
+    const storedLinkToken = readStoredPlaidLinkToken(businessId)
+    setLinkToken(storedLinkToken)
+    setLinkMode(storedLinkToken ? readStoredPlaidLinkMode(businessId) : 'add')
+  }, [businessId, plaidReceivedRedirectUri])
+
+  useEffect(() => {
+    if (linkToken) {
+      writeStoredPlaidLinkState(businessId, linkToken, linkMode)
+      return
+    }
+
+    clearStoredPlaidLinkState(businessId)
+  }, [businessId, linkMode, linkToken])
 
   useEffect(() => {
     if (!isLoading && bankAccounts) {
@@ -182,12 +270,15 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    */
   const fetchPlaidLinkToken = async () => {
     if (auth?.access_token) {
+      const requestBody = plaidRedirectUri ? { redirect_uri: plaidRedirectUri } : undefined
+      console.debug('[PlaidDiag] fetchPlaidLinkToken request:', { businessId, body: requestBody })
       const linkToken = (
         await getPlaidLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
-          ...(plaidRedirectUri ? { body: { redirect_uri: plaidRedirectUri } } : {}),
+          ...(requestBody ? { body: requestBody } : {}),
         })
       ).data.link_token
+      console.debug('[PlaidDiag] fetchPlaidLinkToken received token:', linkToken ? 'yes' : 'no')
       setLinkMode('add')
       setLinkToken(linkToken)
     }
@@ -217,29 +308,70 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    * token to the backend where it will fetch and save the Plaid access token
    * and item id
    * */
-  const exchangePlaidPublicToken = async (
+  const exchangePlaidPublicToken = useCallback(async (
     publicToken: string,
     metadata: PlaidLinkOnSuccessMetadata,
   ) => {
     setIsLinking(true)
     preloadAccountConfirmation()
+    let currentStep: 'exchange' | 'refetchAccounts' = 'exchange'
 
     try {
+      console.debug('[PlaidDiag] exchangePlaidPublicToken start:', {
+        businessId,
+        hasAccessToken: !!auth?.access_token,
+        hasPublicToken: !!publicToken,
+        institution: metadata.institution?.name ?? 'unknown',
+      })
       await exchangePlaidPublicTokenApi(apiUrl, auth?.access_token, {
         params: { businessId },
         body: { public_token: publicToken, institution: metadata.institution },
       })
+      console.debug('[PlaidDiag] exchangePlaidPublicToken exchange succeeded')
+      currentStep = 'refetchAccounts'
+      console.debug('[PlaidDiag] exchangePlaidPublicToken refetch starting')
       await refetchAccounts()
+      console.debug('[PlaidDiag] exchangePlaidPublicToken refetch succeeded')
+      setLinkToken(null)
+      setLinkMode('add')
+    }
+    catch (error) {
+      console.error('[PlaidDiag] exchangePlaidPublicToken failed:', {
+        step: currentStep,
+        businessId,
+        hasAccessToken: !!auth?.access_token,
+        error,
+      })
+      throw error
     }
     finally {
       setIsLinking(false)
       resetAccountConfirmation()
     }
-  }
+  }, [
+    apiUrl,
+    auth?.access_token,
+    businessId,
+    preloadAccountConfirmation,
+    refetchAccounts,
+    resetAccountConfirmation,
+  ])
 
+  useEffect(() => {
+    if (!pendingPlaidSuccess || !auth?.access_token) {
+      return
+    }
+
+    console.debug('[PlaidDiag] exchangePlaidPublicToken resuming with auth token')
+    const queuedPlaidSuccess = pendingPlaidSuccess
+    setPendingPlaidSuccess(null)
+    void exchangePlaidPublicToken(queuedPlaidSuccess.publicToken, queuedPlaidSuccess.metadata).catch(() => undefined)
+  }, [auth?.access_token, exchangePlaidPublicToken, pendingPlaidSuccess])
+
+  console.debug('[PlaidDiag] usePlaidLink config:', { hasToken: !!linkToken, receivedRedirectUri: activeReceivedRedirectUri ?? 'none' })
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
     token: linkToken,
-    receivedRedirectUri: plaidReceivedRedirectUri ?? undefined,
+    receivedRedirectUri: activeReceivedRedirectUri ?? undefined,
 
     // If in update mode, we don't need to exchange the public token for an access token.
     // The existing access token will automatically become valid again
@@ -247,15 +379,24 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       publicToken: string,
       metadata: PlaidLinkOnSuccessMetadata,
     ) => {
+      setActiveReceivedRedirectUri(undefined)
+
       if (linkMode == 'add') {
+        if (!auth?.access_token) {
+          console.debug('[PlaidDiag] exchangePlaidPublicToken waiting for auth token')
+          setPendingPlaidSuccess({ publicToken, metadata })
+          return
+        }
+
         // Note: a sync is kicked off in the backend in this endpoint
-        void exchangePlaidPublicToken(publicToken, metadata)
+        void exchangePlaidPublicToken(publicToken, metadata).catch(() => undefined)
       }
       else {
         // Refresh the account connections, which should remove the error
         // pills from any broken accounts
         void updateConnectionStatus().then(() => {
           void refetchAccounts()
+          setLinkToken(null)
           setLinkMode('add')
           touch(DataModel.LINKED_ACCOUNTS)
         })
@@ -380,10 +521,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         `Breaking a sandbox connection with source ${source} not yet supported`,
       )
     }
-  }
-
-  const refetchAccounts = async () => {
-    await mutate()
   }
 
   const syncAccounts = async () => {
