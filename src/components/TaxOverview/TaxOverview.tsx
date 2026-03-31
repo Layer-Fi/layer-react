@@ -1,215 +1,244 @@
-import { useCallback, useMemo } from 'react'
+import { Check, CircleAlert, Clock3, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { TaxEstimatesBanner, TaxEstimatesBannerQuarter } from '@schemas/taxEstimates/banner'
-import type { TaxSummary } from '@schemas/taxEstimates/summary'
-import { tConditional } from '@utils/i18n/conditional'
+import {
+  type TaxOverviewData,
+  type TaxOverviewDeadline,
+  type TaxOverviewDeadlineStatus,
+  type TaxOverviewNextTax,
+} from '@schemas/taxEstimates/overview'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
-import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
+import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { Button } from '@ui/Button/Button'
+import { Meter } from '@ui/Meter/Meter'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { Loader } from '@components/Loader/Loader'
-import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
-import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
-import { ConditionalBlock } from '@components/utility/ConditionalBlock'
+import type { TaxBannerReviewPayload } from '@components/TaxDetails/TaxBanner'
+import { TaxEstimatesOverviewSummary } from '@components/TaxEstimatesSummaryCard/TaxEstimatesOverviewSummary'
 
 import './taxOverview.scss'
 
-type TaxOverviewData = {
-  summary: TaxSummary
-  banner: TaxEstimatesBanner
-  nextQuarter: TaxEstimatesBannerQuarter | null
+type TaxOverviewProps = {
+  nextTax: TaxOverviewNextTax
+  onTaxBannerReviewClick?: (payload: TaxBannerReviewPayload) => void
 }
 
-const getNextQuarter = (banner: TaxEstimatesBanner): TaxEstimatesBannerQuarter | null => {
-  const nextQuarter = banner.quarters.find(quarter => !quarter.isPastDue && quarter.amountOwed > 0)
-    ?? banner.quarters.find(quarter => quarter.amountOwed > 0)
-    ?? banner.quarters[0]
-
-  return nextQuarter ?? null
+type TaxOverviewMetricRowProps = {
+  amount: number
+  isMobile: boolean
+  label: string
+  maxMeterValue: number
+  meterClassName: 'Layer__TaxOverview__IncomeMeter' | 'Layer__TaxOverview__DeductionsMeter'
 }
 
-const TaxOverviewHeader = ({ isMobile }: { isMobile: boolean }) => {
-  const { t } = useTranslation()
-  const { fullYearProjection } = useFullYearProjection()
-  const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
+const getDeadlineAmountTone = (status?: TaxOverviewDeadlineStatus) => {
+  switch (status?.kind) {
+    case 'pastDue':
+      return 'pastDue'
+    case 'paid':
+      return 'paid'
+    case 'due':
+      return 'due'
+    case 'categorizationIncomplete':
+      return 'warning'
+    default:
+      return 'neutral'
+  }
+}
+
+const TaxOverviewDeadlineStatusIcon = ({ status }: { status?: TaxOverviewDeadlineStatus }) => {
+  const tone = getDeadlineAmountTone(status)
+  const Icon = (() => {
+    switch (status?.kind) {
+      case 'paid':
+        return Check
+      case 'due':
+        return Clock3
+      case 'pastDue':
+      case 'categorizationIncomplete':
+      default:
+        return CircleAlert
+    }
+  })()
 
   return (
-    <TaxEstimatesHeader
-      title={tConditional(t, 'taxEstimates:label.tax_overview', {
-        condition: projectedCondition,
-        cases: {
-          default: 'Tax Overview',
-          projected: 'Projected Tax Overview',
-        },
-        contexts: {
-          projected: 'projected',
-        },
-      })}
-      description={t('taxEstimates:label.overview_foundation_description', 'High-level tax totals and payment timeline for the selected year')}
-      isMobile={isMobile}
-    />
+    <Span
+      nonAria
+      className={`Layer__TaxOverview__AmountIcon Layer__TaxOverview__AmountIcon--${tone}`}
+    >
+      <Icon size={12} strokeWidth={2.25} />
+    </Span>
   )
 }
 
-export const TaxOverview = () => {
-  const { t } = useTranslation()
-  const { formatDate } = useIntlFormatter()
-  const { year } = useTaxEstimatesYear()
-  const { fullYearProjection } = useFullYearProjection()
-  const { data: summary, isLoading: isSummaryLoading, isError: isSummaryError } = useTaxSummary({ year, fullYearProjection })
-  const { data: banner, isLoading: isBannerLoading, isError: isBannerError } = useTaxEstimatesBanner({ year, fullYearProjection })
-  const { isDesktop } = useSizeClass()
-
-  const data = useMemo((): TaxOverviewData | undefined => {
-    if (!summary || !banner) {
-      return
-    }
-
-    return {
-      summary,
-      banner,
-      nextQuarter: getNextQuarter(banner),
-    }
-  }, [summary, banner])
-
-  const Header = useCallback(() => (
-    <TaxOverviewHeader isMobile={!isDesktop} />
-  ), [isDesktop])
+const TaxOverviewMetricRow = ({
+  amount,
+  isMobile,
+  label,
+  maxMeterValue,
+  meterClassName,
+}: TaxOverviewMetricRowProps) => {
+  if (isMobile) {
+    return (
+      <HStack className='Layer__TaxOverview__MetricCard' align='center' gap='md'>
+        <Span size='md' className='Layer__TaxOverview__MetricCardLabel'>{label}</Span>
+        <HStack className='Layer__TaxOverview__MetricCardMeter' align='center'>
+          <Meter className={meterClassName} label={label} minValue={0} maxValue={maxMeterValue} value={amount} meterOnly />
+        </HStack>
+        <MoneySpan size='md' weight='bold' amount={amount} />
+      </HStack>
+    )
+  }
 
   return (
-    <ResponsiveDetailView name='TaxOverview' slots={{ Header }}>
-      <ConditionalBlock
-        isLoading={isSummaryLoading || isBannerLoading}
-        isError={isSummaryError || isBannerError}
-        data={data}
-        Loading={<Loader />}
-        Inactive={(
-          <DataState
-            spacing
-            status={DataStateStatus.info}
-            title={t('taxEstimates:empty.tax_overview', 'No tax overview data found')}
-            description={t('taxEstimates:empty.no_tax_overview_to_display', 'There is no tax overview data to display for this year.')}
-          />
-        )}
-        Error={(
-          <DataState
-            spacing
-            status={DataStateStatus.failed}
-            title={t('taxEstimates:error.load_tax_overview', 'We couldn\'t load your tax overview')}
-            description={t('taxEstimates:error.while_loading_tax_overview', 'An error occurred while loading your tax overview. Please check your connection and try again.')}
-          />
-        )}
-      >
-        {({ data: overview }) => (
-          <VStack gap='md' className='Layer__TaxOverview'>
-            {isDesktop
-              ? (
-                <HStack gap='md' className='Layer__TaxOverview__SummaryGrid'>
-                  <Card className='Layer__TaxOverview__Card'>
-                    <VStack gap='xs'>
-                      <Span size='sm' variant='subtle'>{t('taxEstimates:label.projected_taxes_owed', 'Projected Taxes Owed')}</Span>
-                      <MoneySpan size='xl' weight='bold' amount={overview.summary.projectedTaxesOwed} />
-                      <Span size='sm' variant='subtle'>
-                        {t('taxEstimates:label.taxes_due_on', 'Taxes due on {{date}}', {
-                          date: formatDate(overview.summary.taxesDueAt, DateFormat.DateShort),
-                        })}
-                      </Span>
-                    </VStack>
-                  </Card>
-                  <Card className='Layer__TaxOverview__Card'>
-                    <VStack gap='xs'>
-                      <Span size='sm' variant='subtle'>{t('taxEstimates:label.next_payment', 'Next Payment')}</Span>
-                      {overview.nextQuarter
-                        ? (
-                          <>
-                            <Span size='md' weight='bold'>
-                              {t('taxEstimates:label.quarter_due', 'Q{{quarter}} due {{date}}', {
-                                quarter: overview.nextQuarter.quarter,
-                                date: formatDate(overview.nextQuarter.dueDate, DateFormat.DateShort),
-                              })}
-                            </Span>
-                            <MoneySpan size='xl' weight='bold' amount={overview.nextQuarter.balance} />
-                            <Span size='sm' variant='subtle'>{t('taxEstimates:label.balance_due', 'Balance Due')}</Span>
-                          </>
-                        )
-                        : (
-                          <Span size='sm' variant='subtle'>{t('taxEstimates:label.no_upcoming_payments', 'No upcoming payments')}</Span>
-                        )}
-                    </VStack>
-                  </Card>
-                </HStack>
-              )
-              : (
-                <VStack gap='md' className='Layer__TaxOverview__SummaryGrid Layer__TaxOverview__SummaryGrid--mobile'>
-                  <Card className='Layer__TaxOverview__Card'>
-                    <VStack gap='xs'>
-                      <Span size='sm' variant='subtle'>{t('taxEstimates:label.projected_taxes_owed', 'Projected Taxes Owed')}</Span>
-                      <MoneySpan size='xl' weight='bold' amount={overview.summary.projectedTaxesOwed} />
-                      <Span size='sm' variant='subtle'>
-                        {t('taxEstimates:label.taxes_due_on', 'Taxes due on {{date}}', {
-                          date: formatDate(overview.summary.taxesDueAt, DateFormat.DateShort),
-                        })}
-                      </Span>
-                    </VStack>
-                  </Card>
-                  <Card className='Layer__TaxOverview__Card'>
-                    <VStack gap='xs'>
-                      <Span size='sm' variant='subtle'>{t('taxEstimates:label.next_payment', 'Next Payment')}</Span>
-                      {overview.nextQuarter
-                        ? (
-                          <>
-                            <Span size='md' weight='bold'>
-                              {t('taxEstimates:label.quarter_due', 'Q{{quarter}} due {{date}}', {
-                                quarter: overview.nextQuarter.quarter,
-                                date: formatDate(overview.nextQuarter.dueDate, DateFormat.DateShort),
-                              })}
-                            </Span>
-                            <MoneySpan size='xl' weight='bold' amount={overview.nextQuarter.balance} />
-                            <Span size='sm' variant='subtle'>{t('taxEstimates:label.balance_due', 'Balance Due')}</Span>
-                          </>
-                        )
-                        : (
-                          <Span size='sm' variant='subtle'>{t('taxEstimates:label.no_upcoming_payments', 'No upcoming payments')}</Span>
-                        )}
-                    </VStack>
-                  </Card>
-                </VStack>
-              )}
-            <Card className='Layer__TaxOverview__Card'>
-              <VStack gap='sm'>
-                <Span size='md' weight='bold'>{t('taxEstimates:label.quarterly_deadlines', 'Quarterly Deadlines')}</Span>
-                {overview.banner.quarters.map(quarter => (
-                  <HStack
-                    key={quarter.quarter}
-                    justify='space-between'
-                    align='center'
-                    className='Layer__TaxOverview__DeadlineRow'
-                  >
-                    <VStack gap='4xs'>
-                      <Span size='sm' weight='bold'>
-                        {t('taxEstimates:label.quarter_short', 'Q{{quarter}}', { quarter: quarter.quarter })}
-                      </Span>
-                      <Span size='sm' variant='subtle'>{formatDate(quarter.dueDate, DateFormat.DateShort)}</Span>
-                    </VStack>
-                    <VStack align='end' gap='4xs' className='Layer__TaxOverview__DeadlineAmounts'>
-                      <MoneySpan size='md' weight='bold' amount={quarter.balance} />
-                      <Span size='xs' variant='subtle'>{t('taxEstimates:label.balance', 'Balance')}</Span>
-                    </VStack>
-                  </HStack>
-                ))}
-              </VStack>
-            </Card>
+    <HStack className='Layer__TaxOverview__MetricRow' justify='space-between' align='center' gap='md'>
+      <Span size='md'>{label}</Span>
+      <HStack className='Layer__TaxOverview__MetricValue' align='center' gap='md'>
+        <MoneySpan size='md' weight='bold' amount={amount} />
+        <Meter className={meterClassName} label={label} minValue={0} maxValue={maxMeterValue} value={amount} meterOnly />
+      </HStack>
+    </HStack>
+  )
+}
+
+const TaxOverviewDeadlineCard = ({
+  deadline,
+  onTaxBannerReviewClick,
+}: {
+  deadline: TaxOverviewDeadline
+  onTaxBannerReviewClick?: (payload: TaxBannerReviewPayload) => void
+}) => {
+  const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
+  const reviewAction = deadline.reviewAction
+
+  return (
+    <VStack className='Layer__TaxOverview__DeadlineCard' gap='md'>
+      <HStack className='Layer__TaxOverview__DeadlineRow' justify='space-between' align='start' gap='md'>
+        <VStack className='Layer__TaxOverview__DeadlineContent' gap='3xs'>
+          <Heading level={3} size='sm'>{deadline.title}</Heading>
+          <Span size='sm' variant='subtle'>
+            {t('taxEstimates:label.due_with_date', 'Due: {{date}}', { date: formatDate(deadline.dueAt, DateFormat.DateShort) })}
+          </Span>
+        </VStack>
+        <VStack className='Layer__TaxOverview__DeadlineAmountColumn' align='end' gap='xs'>
+          <VStack align='end' gap='3xs'>
+            <HStack className='Layer__TaxOverview__DeadlineValueRow' align='center' gap='xs'>
+              <TaxOverviewDeadlineStatusIcon status={deadline.status} />
+              <MoneySpan size='lg' weight='bold' amount={deadline.amount} />
+            </HStack>
+            <VStack className='Layer__TaxOverview__DeadlineAmountCopy' align='end' gap='3xs'>
+              <Span size='xs' variant='subtle'>{deadline.description}</Span>
+            </VStack>
           </VStack>
-        )}
-      </ConditionalBlock>
-    </ResponsiveDetailView>
+        </VStack>
+      </HStack>
+      {reviewAction && (
+        <HStack className='Layer__TaxOverview__DeadlineReviewRow' justify='space-between' align='center' gap='md'>
+          <HStack className='Layer__TaxOverview__DeadlineReviewContent' align='center' gap='xs'>
+            <Span nonAria className='Layer__TaxOverview__DeadlineReviewIcon'>
+              <FileText size={12} />
+            </Span>
+            <Span className='Layer__TaxOverview__DeadlineReviewLabel' size='sm' weight='bold'>
+              {tPlural(t, 'taxEstimates:label.uncategorized_transactions', {
+                count: reviewAction.payload.count,
+                one: '{{count}} uncategorized transaction',
+                other: '{{count}} uncategorized transactions',
+              })}
+            </Span>
+          </HStack>
+          {onTaxBannerReviewClick && (
+            <Button
+              variant='outlined'
+              onPress={() => onTaxBannerReviewClick(reviewAction.payload)}
+            >
+              {t('taxEstimates:action.review_banner', 'Review')}
+            </Button>
+          )}
+        </HStack>
+      )}
+    </VStack>
+  )
+}
+
+export const TaxOverview = ({
+  data,
+  nextTax,
+  onTaxBannerReviewClick,
+}: TaxOverviewProps & { data: TaxOverviewData }) => {
+  const { t } = useTranslation()
+  const { year } = useTaxEstimatesYear()
+  const { isMobile } = useSizeClass()
+  const maxMeterValue = Math.max(data.incomeTotal, data.deductionsTotal, 1)
+
+  return (
+    <VStack className='Layer__TaxOverview' gap='md'>
+      <VStack className='Layer__TaxOverview__Grid' gap='md'>
+        <VStack className='Layer__TaxOverview__PrimaryColumn' gap='md'>
+          <Card className='Layer__TaxOverview__Card'>
+            <VStack gap='xs'>
+              <Heading level={2} size='md'>
+                {t('taxEstimates:label.taxable_income_for_year', 'Taxable income for {{year}}', { year })}
+              </Heading>
+              <Span size='sm' variant='subtle'>
+                {t(
+                  'taxEstimates:label.taxable_income_estimate_to_date_for_year',
+                  'Taxable income estimate to date for year {{year}}',
+                  { year },
+                )}
+              </Span>
+            </VStack>
+            <VStack gap={isMobile ? 'sm' : 'md'}>
+              <TaxOverviewMetricRow
+                label={t('taxEstimates:label.total_income', 'Total income')}
+                amount={data.incomeTotal}
+                maxMeterValue={maxMeterValue}
+                meterClassName='Layer__TaxOverview__IncomeMeter'
+                isMobile={isMobile}
+              />
+              <TaxOverviewMetricRow
+                label={t('taxEstimates:label.deductions', 'Deductions')}
+                amount={data.deductionsTotal}
+                maxMeterValue={maxMeterValue}
+                meterClassName='Layer__TaxOverview__DeductionsMeter'
+                isMobile={isMobile}
+              />
+            </VStack>
+          </Card>
+          <TaxEstimatesOverviewSummary
+            className='Layer__TaxOverview__Card'
+            title={t('taxEstimates:label.estimated_taxes_for_year', 'Estimated taxes for {{year}}', { year })}
+            categories={data.estimatedTaxCategories}
+            total={data.estimatedTaxesTotal}
+            nextTax={nextTax}
+          />
+        </VStack>
+        <Card className='Layer__TaxOverview__Card'>
+          <VStack gap='lg'>
+            <Heading level={2} size='md'>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
+            <VStack gap='sm'>
+              {data.paymentDeadlines.map(deadline => (
+                <TaxOverviewDeadlineCard
+                  key={deadline.id}
+                  deadline={deadline}
+                  onTaxBannerReviewClick={onTaxBannerReviewClick}
+                />
+              ))}
+              <TaxOverviewDeadlineCard
+                key={data.annualDeadline.id}
+                deadline={data.annualDeadline}
+                onTaxBannerReviewClick={onTaxBannerReviewClick}
+              />
+            </VStack>
+          </VStack>
+        </Card>
+      </VStack>
+    </VStack>
   )
 }
