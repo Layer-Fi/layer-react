@@ -33,7 +33,11 @@ import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 const TAX_ESTIMATES_MIN_YEAR = 2024
 
-export const TaxEstimatesView = () => {
+type TaxEstimatesViewProps = {
+  onTaxBannerReviewClick?: () => void
+}
+
+export const TaxEstimatesView = ({ onTaxBannerReviewClick: _onTaxBannerReviewClick }: TaxEstimatesViewProps) => {
   return (
     <TaxEstimatesRouteStoreProvider>
       <TaxEstimatesViewContent />
