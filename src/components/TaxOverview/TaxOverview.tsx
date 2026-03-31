@@ -20,6 +20,8 @@ import { ResponsiveDetailView } from '@components/ResponsiveDetailView/Responsiv
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
+import './taxOverview.scss'
+
 type TaxOverviewData = {
   summary: TaxSummary
   banner: TaxEstimatesBanner
@@ -107,25 +109,25 @@ export const TaxOverview = () => {
         )}
       >
         {({ data: overview }) => (
-          <VStack gap='md'>
+          <VStack gap='md' className='Layer__TaxOverview'>
             {isDesktop
               ? (
-                <HStack gap='md'>
-                  <Card>
-                    <VStack gap='xs'>
-                      <Span size='sm' variant='subtle'>{t('taxEstimates:label.projected_taxes_owed', 'Projected Taxes Owed')}</Span>
-                      <MoneySpan size='xl' weight='bold' amount={overview.summary.projectedTaxesOwed} />
+                  <HStack gap='md' className='Layer__TaxOverview__SummaryGrid'>
+                    <Card className='Layer__TaxOverview__Card'>
+                      <VStack gap='xs'>
+                        <Span size='sm' variant='subtle'>{t('taxEstimates:label.projected_taxes_owed', 'Projected Taxes Owed')}</Span>
+                        <MoneySpan size='xl' weight='bold' amount={overview.summary.projectedTaxesOwed} />
                       <Span size='sm' variant='subtle'>
                         {t('taxEstimates:label.taxes_due_on', 'Taxes due on {{date}}', {
                           date: formatDate(overview.summary.taxesDueAt, DateFormat.DateShort),
                         })}
-                      </Span>
-                    </VStack>
-                  </Card>
-                  <Card>
-                    <VStack gap='xs'>
-                      <Span size='sm' variant='subtle'>{t('taxEstimates:label.next_payment', 'Next Payment')}</Span>
-                      {overview.nextQuarter
+                        </Span>
+                      </VStack>
+                    </Card>
+                    <Card className='Layer__TaxOverview__Card'>
+                      <VStack gap='xs'>
+                        <Span size='sm' variant='subtle'>{t('taxEstimates:label.next_payment', 'Next Payment')}</Span>
+                        {overview.nextQuarter
                         ? (
                           <>
                             <Span size='md' weight='bold'>
@@ -140,28 +142,28 @@ export const TaxOverview = () => {
                         )
                         : (
                           <Span size='sm' variant='subtle'>{t('taxEstimates:label.no_upcoming_payments', 'No upcoming payments')}</Span>
-                        )}
-                    </VStack>
-                  </Card>
-                </HStack>
-              )
+                            )}
+                      </VStack>
+                    </Card>
+                  </HStack>
+                )
               : (
-                <VStack gap='md'>
-                  <Card>
-                    <VStack gap='xs'>
-                      <Span size='sm' variant='subtle'>{t('taxEstimates:label.projected_taxes_owed', 'Projected Taxes Owed')}</Span>
-                      <MoneySpan size='xl' weight='bold' amount={overview.summary.projectedTaxesOwed} />
+                  <VStack gap='md' className='Layer__TaxOverview__SummaryGrid Layer__TaxOverview__SummaryGrid--mobile'>
+                    <Card className='Layer__TaxOverview__Card'>
+                      <VStack gap='xs'>
+                        <Span size='sm' variant='subtle'>{t('taxEstimates:label.projected_taxes_owed', 'Projected Taxes Owed')}</Span>
+                        <MoneySpan size='xl' weight='bold' amount={overview.summary.projectedTaxesOwed} />
                       <Span size='sm' variant='subtle'>
                         {t('taxEstimates:label.taxes_due_on', 'Taxes due on {{date}}', {
                           date: formatDate(overview.summary.taxesDueAt, DateFormat.DateShort),
                         })}
-                      </Span>
-                    </VStack>
-                  </Card>
-                  <Card>
-                    <VStack gap='xs'>
-                      <Span size='sm' variant='subtle'>{t('taxEstimates:label.next_payment', 'Next Payment')}</Span>
-                      {overview.nextQuarter
+                        </Span>
+                      </VStack>
+                    </Card>
+                    <Card className='Layer__TaxOverview__Card'>
+                      <VStack gap='xs'>
+                        <Span size='sm' variant='subtle'>{t('taxEstimates:label.next_payment', 'Next Payment')}</Span>
+                        {overview.nextQuarter
                         ? (
                           <>
                             <Span size='md' weight='bold'>
@@ -176,23 +178,28 @@ export const TaxOverview = () => {
                         )
                         : (
                           <Span size='sm' variant='subtle'>{t('taxEstimates:label.no_upcoming_payments', 'No upcoming payments')}</Span>
-                        )}
-                    </VStack>
-                  </Card>
-                </VStack>
-              )}
-            <Card>
+                            )}
+                      </VStack>
+                    </Card>
+                  </VStack>
+                )}
+            <Card className='Layer__TaxOverview__Card'>
               <VStack gap='sm'>
                 <Span size='md' weight='bold'>{t('taxEstimates:label.quarterly_deadlines', 'Quarterly Deadlines')}</Span>
                 {overview.banner.quarters.map(quarter => (
-                  <HStack key={quarter.quarter} justify='space-between' align='center'>
+                  <HStack
+                    key={quarter.quarter}
+                    justify='space-between'
+                    align='center'
+                    className='Layer__TaxOverview__DeadlineRow'
+                  >
                     <VStack gap='4xs'>
                       <Span size='sm' weight='bold'>
                         {t('taxEstimates:label.quarter_short', 'Q{{quarter}}', { quarter: quarter.quarter })}
                       </Span>
                       <Span size='sm' variant='subtle'>{formatDate(quarter.dueDate, DateFormat.DateShort)}</Span>
                     </VStack>
-                    <VStack align='end' gap='4xs'>
+                    <VStack align='end' gap='4xs' className='Layer__TaxOverview__DeadlineAmounts'>
                       <MoneySpan size='md' weight='bold' amount={quarter.balance} />
                       <Span size='xs' variant='subtle'>{t('taxEstimates:label.balance', 'Balance')}</Span>
                     </VStack>

@@ -1,0 +1,42 @@
+.Layer__TaxOverview {
+  inline-size: min(100%, 1406px);
+  container-type: inline-size;
+
+  &__SummaryGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-md);
+  }
+
+  &__SummaryGrid--mobile {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__Card.Layer__card {
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--color-base-200);
+    box-shadow: none;
+  }
+
+  &__DeadlineRow {
+    padding-block: var(--spacing-xs);
+    border-block-end: 1px solid var(--color-base-100);
+  }
+
+  &__DeadlineRow:last-child {
+    padding-block-end: 0;
+    border-block-end: none;
+  }
+
+  &__DeadlineAmounts {
+    min-width: 7.5rem;
+  }
+}
+
+@container (max-width: 920px) {
+  .Layer__TaxOverview__SummaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
