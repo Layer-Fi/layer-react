@@ -16,6 +16,15 @@ export type EventCallbacks = {
   onTransactionsFetched?: () => void
 }
 
+export type ExternalAuthRequest = {
+  provider: 'PLAID'
+  url: string
+}
+
+export type OpenExternalAuthCallback = (
+  request: ExternalAuthRequest,
+) => boolean | Promise<boolean>
+
 type BaseLayerProviderProps = {
   businessId: string
   appId?: string
@@ -27,6 +36,7 @@ type BaseLayerProviderProps = {
   usePlaidHostedLink?: boolean
   onError?: (error: LayerError) => void
   eventCallbacks?: EventCallbacks
+  openExternalAuth?: OpenExternalAuthCallback
 }
 
 type LayerProviderPropsWithLayerEnv = BaseLayerProviderProps & { environment?: Environment }

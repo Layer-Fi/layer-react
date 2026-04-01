@@ -3,7 +3,7 @@ import { type DateRange } from '@internal-types/general'
 import { type DataModel } from '@internal-types/general'
 import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { type LayerError } from '@utils/api/errorHandler'
-import type { EventCallbacks } from '@providers/LayerProvider/LayerProvider'
+import type { EventCallbacks, OpenExternalAuthCallback } from '@providers/LayerProvider/LayerProvider'
 import { type ToastProps } from '@components/Toast/Toast'
 
 export type LayerContextValues = {
@@ -14,6 +14,7 @@ export type LayerContextValues = {
   onboardingStep?: OnboardingStep
   toasts: (ToastProps & { isExiting: boolean })[]
   eventCallbacks?: EventCallbacks
+  openExternalAuth?: OpenExternalAuthCallback
   accountingConfiguration?: AccountingConfigurationSchemaType
 }
 

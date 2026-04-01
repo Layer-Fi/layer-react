@@ -34,6 +34,12 @@ type HostedLinkSession = {
   startedAtMs: number
 }
 
+type HostedLinkRuntimeConfig = {
+  completionRedirectUri?: string
+  isMobileApp?: boolean
+  redirectUri?: string
+}
+
 const HOSTED_LINK_SESSION_STORAGE_KEY = 'layer-plaid-hosted-link-session'
 const HOSTED_LINK_POLL_LOCK_STORAGE_KEY = 'layer-plaid-hosted-link-poll-lock'
 const HOSTED_LINK_POLL_INTERVAL_MS = 1500
@@ -72,6 +78,63 @@ function getHostedLinkCompletionRedirectUri() {
   return currentUrl.toString()
 }
 
+function readHostedLinkRuntimeConfig() {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  const config = (window as typeof window & { __LAYER_PLAID_HOSTED_LINK_CONFIG__?: unknown }).__LAYER_PLAID_HOSTED_LINK_CONFIG__
+  if (!config || typeof config !== 'object') {
+    return null
+  }
+
+  const candidate = config as Record<string, unknown>
+  const completionRedirectUri = typeof candidate.completionRedirectUri === 'string' && candidate.completionRedirectUri.trim()
+    ? candidate.completionRedirectUri.trim()
+    : undefined
+  const redirectUri = typeof candidate.redirectUri === 'string' && candidate.redirectUri.trim()
+    ? candidate.redirectUri.trim()
+    : undefined
+  const isMobileApp = typeof candidate.isMobileApp === 'boolean'
+    ? candidate.isMobileApp
+    : undefined
+
+  const hasValues = completionRedirectUri !== undefined || redirectUri !== undefined || isMobileApp !== undefined
+  if (!hasValues) {
+    return null
+  }
+
+  const parsed: HostedLinkRuntimeConfig = {}
+  if (completionRedirectUri !== undefined) {
+    parsed.completionRedirectUri = completionRedirectUri
+  }
+  if (redirectUri !== undefined) {
+    parsed.redirectUri = redirectUri
+  }
+  if (isMobileApp !== undefined) {
+    parsed.isMobileApp = isMobileApp
+  }
+
+  return parsed
+}
+
+function buildHostedLinkRequestBody(usePlaidHostedLink: boolean) {
+  if (!usePlaidHostedLink) {
+    return null
+  }
+
+  const runtimeConfig = readHostedLinkRuntimeConfig()
+  const completionRedirectUri = runtimeConfig?.completionRedirectUri ?? getHostedLinkCompletionRedirectUri()
+  const isMobileApp = runtimeConfig?.isMobileApp ?? false
+  const redirectUri = runtimeConfig?.redirectUri
+
+  return {
+    ...(completionRedirectUri ? { completion_redirect_uri: completionRedirectUri } : {}),
+    is_mobile_app: isMobileApp,
+    ...(redirectUri ? { redirect_uri: redirectUri } : {}),
+  }
+}
+
 function saveHostedLinkSession(session: HostedLinkSession) {
   if (!isBrowserSessionStorageAvailable()) {
     return
@@ -84,6 +147,7 @@ function saveHostedLinkSession(session: HostedLinkSession) {
     )
   }
   catch {
+    return
   }
 }
 
@@ -123,6 +187,7 @@ function clearHostedLinkSession() {
     window.sessionStorage.removeItem(HOSTED_LINK_SESSION_STORAGE_KEY)
   }
   catch {
+    return
   }
 }
 
@@ -332,6 +397,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     read,
     syncTimestamps,
     hasBeenTouched,
+    openExternalAuth,
   } = useLayerContext()
 
   const { apiUrl, usePlaidSandbox, usePlaidHostedLink } = useEnvironment()
@@ -345,6 +411,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
   const [isLinking, setIsLinking] = useState(false)
+  const [hostedLinkPollTrigger, setHostedLinkPollTrigger] = useState(0)
   const [accountsToAddOpeningBalanceInModal, setAccountsToAddOpeningBalanceInModal] =
     useState<BankAccount[]>([])
 
@@ -377,7 +444,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading])
 
-  const startHostedLinkSession = (
+  const startHostedLinkSession = async (
     mode: LinkMode,
     tokenData: PlaidLinkTokenData,
   ) => {
@@ -392,31 +459,71 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       linkToken: tokenData.link_token,
       startedAtMs: Date.now(),
     })
+
+    if (openExternalAuth) {
+      try {
+        const handledByHostApp = await openExternalAuth({
+          provider: 'PLAID',
+          url: tokenData.hosted_link_url,
+        })
+
+        if (handledByHostApp) {
+          return true
+        }
+      }
+      catch (error) {
+        const externalAuthError = error as {
+          name?: string
+          message?: string
+        }
+        console.warn('Failed to open Plaid hosted link via host callback', {
+          name: externalAuthError.name,
+          message: externalAuthError.message,
+        })
+      }
+    }
     window.location.assign(tokenData.hosted_link_url)
     return true
   }
+
+  useEffect(() => {
+    if (!usePlaidHostedLink || typeof window === 'undefined' || typeof document === 'undefined') {
+      return
+    }
+
+    const triggerHostedLinkPoll = () => {
+      setHostedLinkPollTrigger(current => current + 1)
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        triggerHostedLinkPoll()
+      }
+    }
+
+    window.addEventListener('focus', triggerHostedLinkPoll)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener('focus', triggerHostedLinkPoll)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [usePlaidHostedLink])
 
   /**
    * Initiates an add connection flow with Plaid
    */
   const fetchPlaidLinkToken = async () => {
     if (auth?.access_token) {
-      const completionRedirectUri = usePlaidHostedLink ? getHostedLinkCompletionRedirectUri() : null
+      const hostedLinkBody = buildHostedLinkRequestBody(usePlaidHostedLink)
       const tokenData = (
         await getPlaidLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
-          ...(usePlaidHostedLink
-            ? {
-              body: {
-                ...(completionRedirectUri ? { completion_redirect_uri: completionRedirectUri } : {}),
-                is_mobile_app: false,
-              },
-            }
-            : {}),
+          ...(hostedLinkBody ? { body: hostedLinkBody } : {}),
         })
       ).data
       setLinkMode('add')
-      if (startHostedLinkSession('add', tokenData)) {
+      if (await startHostedLinkSession('add', tokenData)) {
         return
       }
       setLinkToken(tokenData.link_token)
@@ -428,23 +535,18 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    */
   const fetchPlaidUpdateModeLinkToken = async (plaidItemPlaidId: string) => {
     if (auth?.access_token) {
-      const completionRedirectUri = usePlaidHostedLink ? getHostedLinkCompletionRedirectUri() : null
+      const hostedLinkBody = buildHostedLinkRequestBody(usePlaidHostedLink)
       const tokenData = (
         await getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
           body: {
             plaid_item_id: plaidItemPlaidId,
-            ...(usePlaidHostedLink
-              ? {
-                ...(completionRedirectUri ? { completion_redirect_uri: completionRedirectUri } : {}),
-                is_mobile_app: false,
-              }
-              : {}),
+            ...(hostedLinkBody ?? {}),
           },
         })
       ).data
       setLinkMode('update')
-      if (startHostedLinkSession('update', tokenData)) {
+      if (await startHostedLinkSession('update', tokenData)) {
         return
       }
       setLinkToken(tokenData.link_token)
@@ -469,6 +571,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         body: { public_token: publicToken, institution: metadata?.institution ?? null },
       })
       await refetchAccounts()
+      touch(DataModel.LINKED_ACCOUNTS)
     }
     finally {
       setIsLinking(false)
@@ -722,7 +825,18 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         }
       }
       catch (error) {
-        console.error('Failed to resume Plaid hosted link session', error)
+        const hostedLinkResumeError = error as {
+          name?: string
+          message?: string
+          code?: number
+          messages?: unknown
+        }
+        console.warn('Failed to resume Plaid hosted link session', {
+          name: hostedLinkResumeError?.name,
+          message: hostedLinkResumeError?.message,
+          code: hostedLinkResumeError?.code,
+          messages: hostedLinkResumeError?.messages,
+        })
       }
       finally {
         if (!isCancelled) {
@@ -742,7 +856,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       releaseHostedLinkPollLock(pollLockId)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth?.access_token, businessId, apiUrl, usePlaidHostedLink])
+  }, [auth?.access_token, businessId, apiUrl, usePlaidHostedLink, hostedLinkPollTrigger])
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {

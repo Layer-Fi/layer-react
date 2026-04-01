@@ -20,7 +20,7 @@ import { useDataSync } from '@hooks/legacy/useDataSync'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
+import { type ExternalAuthRequest, type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
 
@@ -66,7 +66,7 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
 }
 
 type BusinessProviderProps = PropsWithChildren<
-  Pick<LayerProviderProps, 'businessId' | 'theme' | 'onError' | 'eventCallbacks'>
+  Pick<LayerProviderProps, 'businessId' | 'theme' | 'onError' | 'eventCallbacks' | 'openExternalAuth'>
 >
 
 export const BusinessProvider = ({
@@ -75,6 +75,7 @@ export const BusinessProvider = ({
   theme,
   onError,
   eventCallbacks,
+  openExternalAuth,
 }: PropsWithChildren<BusinessProviderProps>) => {
   errorHandler.setOnError(onError)
 
@@ -82,10 +83,15 @@ export const BusinessProvider = ({
 
   // Store latest callbacks in ref to prevent unnecessary re-renders
   const eventCallbacksRef = useRef(eventCallbacks)
+  const openExternalAuthRef = useRef(openExternalAuth)
 
   useEffect(() => {
     eventCallbacksRef.current = eventCallbacks
   }, [eventCallbacks])
+
+  useEffect(() => {
+    openExternalAuthRef.current = openExternalAuth
+  }, [openExternalAuth])
 
   // Create stable callback wrappers that always call the latest version
   const stableEventCallbacks = useMemo(() => ({
@@ -96,6 +102,18 @@ export const BusinessProvider = ({
       eventCallbacksRef.current?.onTransactionsFetched?.()
     },
   }), [])
+
+  const stableOpenExternalAuth = useCallback(
+    async (request: ExternalAuthRequest) => {
+      const callback = openExternalAuthRef.current
+      if (!callback) {
+        return false
+      }
+      const isHandled = await callback(request)
+      return isHandled === true
+    },
+    [],
+  )
 
   const [state, dispatch] = useReducer(reducer, {
     businessId,
@@ -266,6 +284,7 @@ export const BusinessProvider = ({
         expireDataCaches: resetCaches,
         hasBeenTouched,
         eventCallbacks: stableEventCallbacks,
+        openExternalAuth: openExternalAuth ? stableOpenExternalAuth : undefined,
         accountingConfiguration,
         dateRange,
       }}
