@@ -26,6 +26,7 @@ type BaseLayerProviderProps = {
   usePlaidSandbox?: boolean
   plaidRedirectUri?: string
   plaidReceivedRedirectUri?: string
+  onPlaidOAuthResumeComplete?: () => void
   onError?: (error: LayerError) => void
   eventCallbacks?: EventCallbacks
 }
@@ -45,6 +46,7 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
     usePlaidSandbox,
     plaidRedirectUri,
     plaidReceivedRedirectUri,
+    onPlaidOAuthResumeComplete,
     ...restProps
   } = props
 
@@ -70,6 +72,7 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
           usePlaidSandbox={usePlaidSandbox}
           plaidRedirectUri={plaidRedirectUri}
           plaidReceivedRedirectUri={plaidReceivedRedirectUri}
+          onPlaidOAuthResumeComplete={onPlaidOAuthResumeComplete}
         >
           <AuthInputProvider
             appId={appId}

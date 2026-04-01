@@ -169,7 +169,13 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     hasBeenTouched,
   } = useLayerContext()
 
-  const { apiUrl, usePlaidSandbox, plaidRedirectUri, plaidReceivedRedirectUri } = useEnvironment()
+  const {
+    apiUrl,
+    usePlaidSandbox,
+    plaidRedirectUri,
+    plaidReceivedRedirectUri,
+    onPlaidOAuthResumeComplete,
+  } = useEnvironment()
   const { data: auth } = useAuth()
   const {
     preload: preloadAccountConfirmation,
@@ -294,10 +300,20 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const activeReceivedRedirectUri = (!oAuthConsumed && plaidReceivedRedirectUri) || undefined
 
   const resetPlaidLinkState = () => {
+    const isOAuthResumeFlow = Boolean(activeReceivedRedirectUri)
     clearPlaidSession()
     setOAuthConsumed(true)
     setLinkToken(null)
     setLinkMode('add')
+
+    if (isOAuthResumeFlow) {
+      try {
+        onPlaidOAuthResumeComplete?.()
+      }
+      catch (error) {
+        console.error('[useLinkedAccounts] onPlaidOAuthResumeComplete callback failed:', error)
+      }
+    }
   }
 
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({

@@ -7,6 +7,7 @@ type EnvironmentInputShape = {
   usePlaidSandbox?: boolean
   plaidRedirectUri?: string
   plaidReceivedRedirectUri?: string
+  onPlaidOAuthResumeComplete?: () => void
   environmentOverride?: Environment
   apiUrlOverride?: string
   authUrlOverride?: string
@@ -18,6 +19,7 @@ type EnvironmentInputProviderProps = {
   usePlaidSandbox?: boolean
   plaidRedirectUri?: string
   plaidReceivedRedirectUri?: string
+  onPlaidOAuthResumeComplete?: () => void
   environmentConfigOverride?: EnvironmentConfigOverride
 }
 
@@ -26,6 +28,7 @@ const AuthInputContext = createContext<EnvironmentInputShape>({
   usePlaidSandbox: undefined,
   plaidRedirectUri: undefined,
   plaidReceivedRedirectUri: undefined,
+  onPlaidOAuthResumeComplete: undefined,
   environmentOverride: undefined,
   apiUrlOverride: undefined,
   authUrlOverride: undefined,
@@ -38,6 +41,7 @@ export function useEnvironment() {
     usePlaidSandbox,
     plaidRedirectUri,
     plaidReceivedRedirectUri,
+    onPlaidOAuthResumeComplete,
     environmentOverride,
     apiUrlOverride,
     authUrlOverride,
@@ -60,6 +64,7 @@ export function useEnvironment() {
     usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
     plaidRedirectUri,
     plaidReceivedRedirectUri,
+    onPlaidOAuthResumeComplete,
   }
 }
 
@@ -70,6 +75,7 @@ export function EnvironmentInputProvider({
   usePlaidSandbox,
   plaidRedirectUri,
   plaidReceivedRedirectUri,
+  onPlaidOAuthResumeComplete,
 }: PropsWithChildren<EnvironmentInputProviderProps>) {
   const environmentOverride = environmentConfigOverride?.environment
   const apiUrlOverride = environmentConfigOverride?.apiUrl
@@ -82,12 +88,23 @@ export function EnvironmentInputProvider({
       usePlaidSandbox,
       plaidRedirectUri,
       plaidReceivedRedirectUri,
+      onPlaidOAuthResumeComplete,
       environmentOverride,
       apiUrlOverride,
       authUrlOverride,
       scopeOverride,
     }),
-    [environment, usePlaidSandbox, plaidRedirectUri, plaidReceivedRedirectUri, environmentOverride, apiUrlOverride, authUrlOverride, scopeOverride],
+    [
+      environment,
+      usePlaidSandbox,
+      plaidRedirectUri,
+      plaidReceivedRedirectUri,
+      onPlaidOAuthResumeComplete,
+      environmentOverride,
+      apiUrlOverride,
+      authUrlOverride,
+      scopeOverride,
+    ],
   )
 
   return (
