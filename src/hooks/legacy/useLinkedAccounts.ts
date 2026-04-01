@@ -13,17 +13,219 @@ import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmati
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
+type PlaidLinkTokenData = {
+  type: 'Link_Token'
+  link_token: string
+  hosted_link_url?: string | null
+}
+
+type PlaidLinkTokenGetData = {
+  type: 'Plaid_Link_Token_Get'
+  status: 'pending' | 'success' | 'exit'
+  public_token?: string | null
+}
+
+type LinkMode = 'update' | 'add'
+
+type HostedLinkSession = {
+  mode: LinkMode
+  businessId: string
+  linkToken: string
+  startedAtMs: number
+}
+
+const HOSTED_LINK_SESSION_STORAGE_KEY = 'layer-plaid-hosted-link-session'
+const HOSTED_LINK_POLL_LOCK_STORAGE_KEY = 'layer-plaid-hosted-link-poll-lock'
+const HOSTED_LINK_POLL_INTERVAL_MS = 1500
+const HOSTED_LINK_POLL_TIMEOUT_MS = 120000
+const HOSTED_LINK_POLL_LOCK_TIMEOUT_MS = 180000
+
+let hostedLinkPollLockFallbackId: string | null = null
+
+function isBrowserSessionStorageAvailable() {
+  return typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined'
+}
+
+function getHostedLinkCompletionRedirectUri() {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  const currentUrl = new URL(window.location.href)
+  currentUrl.hash = ''
+
+  const pathSegments = currentUrl.pathname.split('/').filter(Boolean)
+  if (pathSegments.length > 1) {
+    pathSegments[pathSegments.length - 1] = 'plaid-hosted-link-callback'
+    currentUrl.pathname = `/${pathSegments.join('/')}`
+  }
+  else if (pathSegments.length === 1) {
+    currentUrl.pathname = `/${pathSegments[0]}/plaid-hosted-link-callback`
+  }
+  else {
+    currentUrl.pathname = '/plaid-hosted-link-callback'
+  }
+
+  const returnTo = `${window.location.pathname}${window.location.search}`
+  currentUrl.search = new URLSearchParams({ return_to: returnTo }).toString()
+
+  return currentUrl.toString()
+}
+
+function saveHostedLinkSession(session: HostedLinkSession) {
+  if (!isBrowserSessionStorageAvailable()) {
+    return
+  }
+
+  try {
+    window.sessionStorage.setItem(
+      HOSTED_LINK_SESSION_STORAGE_KEY,
+      JSON.stringify(session),
+    )
+  }
+  catch {
+  }
+}
+
+function readHostedLinkSession() {
+  if (!isBrowserSessionStorageAvailable()) {
+    return null
+  }
+
+  try {
+    const raw = window.sessionStorage.getItem(HOSTED_LINK_SESSION_STORAGE_KEY)
+    if (!raw) {
+      return null
+    }
+    const parsed = JSON.parse(raw) as Partial<HostedLinkSession>
+    if (
+      (parsed.mode !== 'add' && parsed.mode !== 'update')
+      || typeof parsed.businessId !== 'string'
+      || typeof parsed.linkToken !== 'string'
+      || typeof parsed.startedAtMs !== 'number'
+    ) {
+      window.sessionStorage.removeItem(HOSTED_LINK_SESSION_STORAGE_KEY)
+      return null
+    }
+    return parsed as HostedLinkSession
+  }
+  catch {
+    return null
+  }
+}
+
+function clearHostedLinkSession() {
+  if (!isBrowserSessionStorageAvailable()) {
+    return
+  }
+
+  try {
+    window.sessionStorage.removeItem(HOSTED_LINK_SESSION_STORAGE_KEY)
+  }
+  catch {
+  }
+}
+
+function acquireHostedLinkPollLock() {
+  const lockId = `${Date.now()}-${Math.random().toString(16).slice(2)}`
+
+  if (!isBrowserSessionStorageAvailable()) {
+    if (hostedLinkPollLockFallbackId) {
+      return null
+    }
+    hostedLinkPollLockFallbackId = lockId
+    return lockId
+  }
+
+  try {
+    const rawExistingLock = window.sessionStorage.getItem(HOSTED_LINK_POLL_LOCK_STORAGE_KEY)
+    if (rawExistingLock) {
+      const existingLock = JSON.parse(rawExistingLock) as {
+        id?: string
+        acquiredAtMs?: number
+      }
+
+      if (
+        typeof existingLock.id === 'string'
+        && typeof existingLock.acquiredAtMs === 'number'
+        && Date.now() - existingLock.acquiredAtMs < HOSTED_LINK_POLL_LOCK_TIMEOUT_MS
+      ) {
+        return null
+      }
+
+      window.sessionStorage.removeItem(HOSTED_LINK_POLL_LOCK_STORAGE_KEY)
+    }
+
+    const nextLock = {
+      id: lockId,
+      acquiredAtMs: Date.now(),
+    }
+    const serializedNextLock = JSON.stringify(nextLock)
+    window.sessionStorage.setItem(HOSTED_LINK_POLL_LOCK_STORAGE_KEY, serializedNextLock)
+
+    if (window.sessionStorage.getItem(HOSTED_LINK_POLL_LOCK_STORAGE_KEY) !== serializedNextLock) {
+      return null
+    }
+
+    return lockId
+  }
+  catch {
+    if (hostedLinkPollLockFallbackId) {
+      return null
+    }
+    hostedLinkPollLockFallbackId = lockId
+    return lockId
+  }
+}
+
+function releaseHostedLinkPollLock(lockId: string) {
+  if (!isBrowserSessionStorageAvailable()) {
+    if (hostedLinkPollLockFallbackId === lockId) {
+      hostedLinkPollLockFallbackId = null
+    }
+    return
+  }
+
+  try {
+    const rawLock = window.sessionStorage.getItem(HOSTED_LINK_POLL_LOCK_STORAGE_KEY)
+    if (!rawLock) {
+      return
+    }
+    const lock = JSON.parse(rawLock) as { id?: string }
+    if (lock.id === lockId) {
+      window.sessionStorage.removeItem(HOSTED_LINK_POLL_LOCK_STORAGE_KEY)
+    }
+  }
+  catch {
+    if (hostedLinkPollLockFallbackId === lockId) {
+      hostedLinkPollLockFallbackId = null
+    }
+  }
+}
+
+function wait(ms: number) {
+  return new Promise<void>((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
 const getPlaidLinkToken = post<
-  { data: { type: 'Link_Token', link_token: string } },
+  { data: PlaidLinkTokenData },
   Record<string, unknown>,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/plaid/link`)
 
 const getPlaidUpdateModeLinkToken = post<
-  { data: { type: 'Link_Token', link_token: string } },
+  { data: PlaidLinkTokenData },
   Record<string, unknown>,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/plaid/update-mode-link`)
+
+const getPlaidLinkTokenState = post<
+  { data: PlaidLinkTokenGetData },
+  { link_token: string },
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/plaid/link/token/get`)
 
 const exchangePlaidPublicTokenApi = post<
   Record<string, unknown>,
@@ -123,8 +325,6 @@ type UseLinkedAccounts = () => {
   breakConnection: (source: AccountSource, connectionExternalId: string) => Promise<void>
 }
 
-type LinkMode = 'update' | 'add'
-
 export const useLinkedAccounts: UseLinkedAccounts = () => {
   const {
     businessId,
@@ -134,7 +334,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     hasBeenTouched,
   } = useLayerContext()
 
-  const { apiUrl, usePlaidSandbox } = useEnvironment()
+  const { apiUrl, usePlaidSandbox, usePlaidHostedLink } = useEnvironment()
   const { data: auth } = useAuth()
   const {
     preload: preloadAccountConfirmation,
@@ -177,18 +377,49 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading])
 
+  const startHostedLinkSession = (
+    mode: LinkMode,
+    tokenData: PlaidLinkTokenData,
+  ) => {
+    if (!usePlaidHostedLink || !tokenData.hosted_link_url) {
+      return false
+    }
+
+    setLinkToken(null)
+    saveHostedLinkSession({
+      mode,
+      businessId,
+      linkToken: tokenData.link_token,
+      startedAtMs: Date.now(),
+    })
+    window.location.assign(tokenData.hosted_link_url)
+    return true
+  }
+
   /**
    * Initiates an add connection flow with Plaid
    */
   const fetchPlaidLinkToken = async () => {
     if (auth?.access_token) {
-      const linkToken = (
+      const completionRedirectUri = usePlaidHostedLink ? getHostedLinkCompletionRedirectUri() : null
+      const tokenData = (
         await getPlaidLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
+          ...(usePlaidHostedLink
+            ? {
+              body: {
+                ...(completionRedirectUri ? { completion_redirect_uri: completionRedirectUri } : {}),
+                is_mobile_app: false,
+              },
+            }
+            : {}),
         })
-      ).data.link_token
+      ).data
       setLinkMode('add')
-      setLinkToken(linkToken)
+      if (startHostedLinkSession('add', tokenData)) {
+        return
+      }
+      setLinkToken(tokenData.link_token)
     }
   }
 
@@ -197,14 +428,26 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    */
   const fetchPlaidUpdateModeLinkToken = async (plaidItemPlaidId: string) => {
     if (auth?.access_token) {
-      const linkToken = (
+      const completionRedirectUri = usePlaidHostedLink ? getHostedLinkCompletionRedirectUri() : null
+      const tokenData = (
         await getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
-          body: { plaid_item_id: plaidItemPlaidId },
+          body: {
+            plaid_item_id: plaidItemPlaidId,
+            ...(usePlaidHostedLink
+              ? {
+                ...(completionRedirectUri ? { completion_redirect_uri: completionRedirectUri } : {}),
+                is_mobile_app: false,
+              }
+              : {}),
+          },
         })
-      ).data.link_token
+      ).data
       setLinkMode('update')
-      setLinkToken(linkToken)
+      if (startHostedLinkSession('update', tokenData)) {
+        return
+      }
+      setLinkToken(tokenData.link_token)
     }
   }
 
@@ -215,7 +458,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    * */
   const exchangePlaidPublicToken = async (
     publicToken: string,
-    metadata: PlaidLinkOnSuccessMetadata,
+    metadata?: PlaidLinkOnSuccessMetadata,
   ) => {
     setIsLinking(true)
     preloadAccountConfirmation()
@@ -223,7 +466,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     try {
       await exchangePlaidPublicTokenApi(apiUrl, auth?.access_token, {
         params: { businessId },
-        body: { public_token: publicToken, institution: metadata.institution },
+        body: { public_token: publicToken, institution: metadata?.institution ?? null },
       })
       await refetchAccounts()
     }
@@ -400,6 +643,106 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     await refetchAccounts()
     touch(DataModel.LINKED_ACCOUNTS)
   }
+
+  useEffect(() => {
+    if (!usePlaidHostedLink) {
+      return
+    }
+
+    if (!auth?.access_token) {
+      return
+    }
+
+    const hostedLinkSession = readHostedLinkSession()
+    if (!hostedLinkSession || hostedLinkSession.businessId !== businessId) {
+      return
+    }
+
+    const pollLockId = acquireHostedLinkPollLock()
+    if (!pollLockId) {
+      return
+    }
+
+    let isCancelled = false
+
+    const pollHostedLinkSession = async () => {
+      let shouldClearHostedLinkSession = false
+
+      try {
+        const expirationAtMs = hostedLinkSession.startedAtMs + HOSTED_LINK_POLL_TIMEOUT_MS
+
+        while (!isCancelled && Date.now() <= expirationAtMs) {
+          const tokenGetData = (
+            await getPlaidLinkTokenState(apiUrl, auth.access_token, {
+              params: { businessId },
+              body: { link_token: hostedLinkSession.linkToken },
+            })
+          ).data
+          if (isCancelled) {
+            return
+          }
+
+          if (tokenGetData.status === 'pending') {
+            await wait(HOSTED_LINK_POLL_INTERVAL_MS)
+            continue
+          }
+
+          if (tokenGetData.status === 'exit') {
+            shouldClearHostedLinkSession = true
+            break
+          }
+
+          if (hostedLinkSession.mode === 'add') {
+            if (!tokenGetData.public_token) {
+              await wait(HOSTED_LINK_POLL_INTERVAL_MS)
+              continue
+            }
+
+            await exchangePlaidPublicToken(tokenGetData.public_token)
+            if (isCancelled) {
+              return
+            }
+            shouldClearHostedLinkSession = true
+          }
+          else {
+            await updateConnectionStatus()
+            await refetchAccounts()
+            touch(DataModel.LINKED_ACCOUNTS)
+            if (isCancelled) {
+              return
+            }
+            shouldClearHostedLinkSession = true
+          }
+
+          break
+        }
+
+        if (Date.now() > hostedLinkSession.startedAtMs + HOSTED_LINK_POLL_TIMEOUT_MS) {
+          shouldClearHostedLinkSession = true
+        }
+      }
+      catch (error) {
+        console.error('Failed to resume Plaid hosted link session', error)
+      }
+      finally {
+        if (!isCancelled) {
+          if (shouldClearHostedLinkSession) {
+            clearHostedLinkSession()
+            setLinkMode('add')
+          }
+        }
+        releaseHostedLinkPollLock(pollLockId)
+      }
+    }
+
+    void pollHostedLinkSession()
+
+    return () => {
+      isCancelled = true
+      releaseHostedLinkPollLock(pollLockId)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth?.access_token, businessId, apiUrl, usePlaidHostedLink])
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {

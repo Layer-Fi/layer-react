@@ -5,6 +5,7 @@ import { type Environment, type EnvironmentConfigOverride, EnvironmentConfigs } 
 type EnvironmentInputShape = {
   environment?: Environment
   usePlaidSandbox?: boolean
+  usePlaidHostedLink?: boolean
   environmentOverride?: Environment
   apiUrlOverride?: string
   authUrlOverride?: string
@@ -14,12 +15,14 @@ type EnvironmentInputShape = {
 type EnvironmentInputProviderProps = {
   environment?: Environment
   usePlaidSandbox?: boolean
+  usePlaidHostedLink?: boolean
   environmentConfigOverride?: EnvironmentConfigOverride
 }
 
 const AuthInputContext = createContext<EnvironmentInputShape>({
   environment: undefined,
   usePlaidSandbox: undefined,
+  usePlaidHostedLink: undefined,
   environmentOverride: undefined,
   apiUrlOverride: undefined,
   authUrlOverride: undefined,
@@ -30,6 +33,7 @@ export function useEnvironment() {
   const {
     environment = 'production',
     usePlaidSandbox,
+    usePlaidHostedLink,
     environmentOverride,
     apiUrlOverride,
     authUrlOverride,
@@ -50,6 +54,7 @@ export function useEnvironment() {
     authUrl: authUrlOverride ?? defaultAuthUrl,
     scope: scopeOverride ?? defaultScope,
     usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
+    usePlaidHostedLink: usePlaidHostedLink ?? false,
   }
 }
 
@@ -58,6 +63,7 @@ export function EnvironmentInputProvider({
   environment,
   environmentConfigOverride,
   usePlaidSandbox,
+  usePlaidHostedLink,
 }: PropsWithChildren<EnvironmentInputProviderProps>) {
   const environmentOverride = environmentConfigOverride?.environment
   const apiUrlOverride = environmentConfigOverride?.apiUrl
@@ -68,12 +74,13 @@ export function EnvironmentInputProvider({
     () => ({
       environment,
       usePlaidSandbox,
+      usePlaidHostedLink,
       environmentOverride,
       apiUrlOverride,
       authUrlOverride,
       scopeOverride,
     }),
-    [environment, usePlaidSandbox, environmentOverride, apiUrlOverride, authUrlOverride, scopeOverride],
+    [environment, usePlaidSandbox, usePlaidHostedLink, environmentOverride, apiUrlOverride, authUrlOverride, scopeOverride],
   )
 
   return (

@@ -24,6 +24,7 @@ type BaseLayerProviderProps = {
 
   theme?: LayerThemeConfig
   usePlaidSandbox?: boolean
+  usePlaidHostedLink?: boolean
   onError?: (error: LayerError) => void
   eventCallbacks?: EventCallbacks
 }
@@ -41,6 +42,7 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
     appSecret,
     businessAccessToken,
     usePlaidSandbox,
+    usePlaidHostedLink,
     ...restProps
   } = props
 
@@ -60,7 +62,12 @@ export const LayerProvider = (props: PropsWithChildren<LayerProviderProps>) => {
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
       <LayerI18nProvider>
-        <EnvironmentInputProvider environment={environment} environmentConfigOverride={environmentConfigOverride} usePlaidSandbox={usePlaidSandbox}>
+        <EnvironmentInputProvider
+          environment={environment}
+          environmentConfigOverride={environmentConfigOverride}
+          usePlaidSandbox={usePlaidSandbox}
+          usePlaidHostedLink={usePlaidHostedLink}
+        >
           <AuthInputProvider
             appId={appId}
             appSecret={appSecret}
