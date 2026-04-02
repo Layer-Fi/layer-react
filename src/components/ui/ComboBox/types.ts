@@ -49,6 +49,7 @@ export type BaseComboBoxProps<T extends ComboBoxOption> = {
 
   displayDisabledAsSelected?: boolean
   menuPlacement?: MenuPlacement
+  menuShouldScrollIntoView?: boolean
 } & OptionsOrGroups<T> & AriaLabelProps
 
 export type SingleSelectComboBoxProps<T extends ComboBoxOption> = BaseComboBoxProps<T> & {

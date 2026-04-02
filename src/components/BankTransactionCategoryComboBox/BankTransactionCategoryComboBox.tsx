@@ -158,6 +158,7 @@ export const BankTransactionCategoryComboBox = ({
       isDisabled={isDisabled}
       isLoading={isLoading || loadingSuggestions}
       menuPlacement={menuPlacement}
+      menuShouldScrollIntoView={false}
     />
   )
 }
