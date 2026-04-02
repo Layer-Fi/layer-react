@@ -101,7 +101,7 @@ const TaxOverviewNextTaxSchema = Schema.Struct({
 
 export type TaxOverviewNextTax = typeof TaxOverviewNextTaxSchema.Type
 
-const TaxOverviewDataSchema = Schema.Struct({
+const _TaxOverviewDataSchema = Schema.Struct({
   annualDeadline: TaxOverviewDeadlineSchema,
   bannerReview: Schema.optional(TaxOverviewBannerReviewSchema),
   deductionsTotal: Schema.Number,
@@ -112,10 +112,4 @@ const TaxOverviewDataSchema = Schema.Struct({
   paymentDeadlines: Schema.Array(TaxOverviewDeadlineSchema),
 })
 
-export type TaxOverviewData = typeof TaxOverviewDataSchema.Type
-
-export const TaxOverviewResponseSchema = Schema.Struct({
-  data: TaxOverviewDataSchema,
-})
-
-export type TaxOverviewResponse = typeof TaxOverviewResponseSchema.Type
+export type TaxOverviewData = typeof _TaxOverviewDataSchema.Type
