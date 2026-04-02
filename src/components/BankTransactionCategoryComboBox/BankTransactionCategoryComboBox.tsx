@@ -3,18 +3,60 @@ import { useTranslation } from 'react-i18next'
 import type { GroupBase, MenuPlacement } from 'react-select'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
+import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { HStack } from '@ui/Stack/Stack'
-import { Header } from '@ui/Typography/Text'
-import {
-  type BankTransactionCategoryComboBoxOption,
-  BankTransactionCategoryComboBoxOptionItem,
-} from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBoxOptionItem'
+import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Header, Span } from '@ui/Typography/Text'
+import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { flattenCategories, getAllCategoriesGroup, getGroupDisplayLabel, getSuggestedCategoriesGroup, getSuggestedMatchesGroup, isBoldGroupLabel, isLoadingSuggestions } from '@components/BankTransactionCategoryComboBox/utils'
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
+import { DateTime } from '@components/DateTime/DateTime'
 
 import './bankTransactionCategoryComboBox.scss'
+
+type BankTransactionCategoryComboBoxOptionProps = {
+  option: BankTransactionCategoryComboBoxOption
+  fallback: React.ReactNode
+}
+
+const BankTransactionCategoryComboBoxOption = ({ option, fallback }: BankTransactionCategoryComboBoxOptionProps) => {
+  const { t } = useTranslation()
+  const { renderInAppLink } = useInAppLinkContext()
+
+  if (option.value === 'LOADING_SUGGESTIONS') {
+    return (
+      <HStack justify='space-between' align='center' className='Layer__BankTransactionCategoryComboBox__LoadingSuggestionsOption'>
+        <Span>{t('bankTransactions:label.generating_suggestions', 'Generating suggestions...')}</Span>
+        <LoadingSpinner size={16} />
+      </HStack>
+    )
+  }
+
+  if (isSuggestedMatchAsOption(option)) {
+    const matchDetails = decodeMatchDetails(option.original.details)
+
+    const inAppLink = renderInAppLink && matchDetails
+      ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails))
+      : null
+
+    return (
+      <VStack gap='xs' justify='start'>
+        <VStack gap='3xs' justify='start'>
+          <DateTime onlyDate value={option.original.details.date} slotProps={{ Date: { size: 'sm', variant: 'subtle' } }} />
+          <Span size='sm' variant='placeholder'>{option.label}</Span>
+          {inAppLink}
+        </VStack>
+        <MoneySpan size='sm' weight='bold' amount={option.original.details.amount} />
+      </VStack>
+    )
+  }
+
+  return fallback
+}
 
 type BankTransactionCategoryComboBoxGroupHeadingProps = {
   group: GroupBase<BankTransactionCategoryComboBoxOption>
@@ -109,7 +151,7 @@ export const BankTransactionCategoryComboBox = ({
       placeholder={placeholder}
       slots={{
         SingleValue,
-        Option: BankTransactionCategoryComboBoxOptionItem,
+        Option: BankTransactionCategoryComboBoxOption,
         GroupHeading: BankTransactionCategoryComboBoxGroupHeading,
       }}
       isClearable={false}
