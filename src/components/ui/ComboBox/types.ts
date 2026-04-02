@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { GroupBase } from 'react-select'
+import type { GroupBase, MenuPlacement } from 'react-select'
 
 import type { OneOf } from '@internal-types/utility/oneOf'
 
@@ -48,6 +48,7 @@ export type BaseComboBoxProps<T extends ComboBoxOption> = {
   isReadOnly?: boolean
 
   displayDisabledAsSelected?: boolean
+  menuPlacement?: MenuPlacement
 } & OptionsOrGroups<T> & AriaLabelProps
 
 export type SingleSelectComboBoxProps<T extends ComboBoxOption> = BaseComboBoxProps<T> & {
