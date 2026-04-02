@@ -4,15 +4,15 @@ import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import { getNextTaxFromTaxEstimatesBanner, getTaxEstimatesBannerQuarterStatus, type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
-import type { TaxSummarySection } from '@schemas/taxEstimates/summary'
 import type { TaxOverviewCategory, TaxOverviewData, TaxOverviewDeadline } from '@schemas/taxEstimates/overview'
+import type { TaxSummarySection } from '@schemas/taxEstimates/summary'
 import { convertCentsToDecimalString } from '@utils/format'
 import { tPlural } from '@utils/i18n/plural'
 import { translationKey } from '@utils/i18n/translationKey'
 import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
-import { TaxEstimatesRoute, useTaxEstimatesNavigation, useTaxEstimatesRouteState, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { TaxEstimatesRoute, useFullYearProjection, useTaxEstimatesNavigation, useTaxEstimatesRouteState, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { TaxBanner, type TaxBannerReviewPayload } from '@components/TaxDetails/TaxBanner'
@@ -79,9 +79,10 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
   const { year } = useTaxEstimatesYear()
+  const { fullYearProjection } = useFullYearProjection()
   const { data: taxBannerData } = useTaxEstimatesBanner({ year })
-  const { data: taxOverviewApi } = useTaxOverview({ year })
-  const { data: taxSummary } = useTaxSummary({ year })
+  const { data: taxOverviewApi } = useTaxOverview({ year, fullYearProjection })
+  const { data: taxSummary } = useTaxSummary({ year, fullYearProjection })
 
   const handleTaxBannerReview = useCallback((payload: TaxBannerReviewPayload) => {
     onTaxBannerReviewClick?.(payload)
