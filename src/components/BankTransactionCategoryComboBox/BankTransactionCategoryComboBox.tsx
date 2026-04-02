@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { GroupBase, MenuPlacement } from 'react-select'
+import type { GroupBase } from 'react-select'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
@@ -83,7 +83,6 @@ type BankTransactionCategoryComboBoxProps = {
   isDisabled?: boolean
   isLoading?: boolean
   inputId?: string
-  menuPlacement?: MenuPlacement
 }
 
 export const BankTransactionCategoryComboBox = ({
@@ -94,7 +93,6 @@ export const BankTransactionCategoryComboBox = ({
   isDisabled = false,
   isLoading = false,
   inputId,
-  menuPlacement = 'auto',
 }: BankTransactionCategoryComboBoxProps) => {
   const { t } = useTranslation()
   const { data: categories } = useCategories()
@@ -157,8 +155,6 @@ export const BankTransactionCategoryComboBox = ({
       isClearable={false}
       isDisabled={isDisabled}
       isLoading={isLoading || loadingSuggestions}
-      menuPlacement={menuPlacement}
-      menuShouldScrollIntoView={false}
     />
   )
 }
