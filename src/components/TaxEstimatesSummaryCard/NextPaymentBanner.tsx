@@ -21,6 +21,11 @@ export const NextPaymentBanner = ({
 }: NextPaymentBannerProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
+
+  if (!nextTax) {
+    return null
+  }
+
   const nextPaymentLabel = isMobile
     ? t(
       'taxEstimates:label.next_quarter_due_on_short',

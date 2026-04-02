@@ -7,7 +7,7 @@ export type SummaryCardProps = {
   className?: string
   headerAction?: ReactNode
   layout?: 'taxOverview' | 'summaryCard'
-  nextTax: TaxOverviewNextTax
+  nextTax?: TaxOverviewNextTax
   title: string
   total: number
 }

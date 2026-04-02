@@ -27,10 +27,7 @@ const TAX_ESTIMATES_TAB_CONFIG = [
   { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates:label.payments', 'Payments') },
 ]
 
-const SECTION_TO_CATEGORY_KEY: Record<string, TaxOverviewCategoryKey> = {
-  'Federal Income & Self-Employment Tax': 'federal',
-  'State Income Tax': 'state',
-}
+const TAX_OVERVIEW_CATEGORY_KEYS: readonly TaxOverviewCategoryKey[] = ['federal', 'state', 'selfEmployment']
 
 const getTaxBannerReviewPayload = (taxBanner?: TaxEstimatesBanner): TaxBannerReviewPayload | undefined => {
   if (!taxBanner || taxBanner.totalUncategorizedCount <= 0) {
@@ -48,8 +45,8 @@ const transformSummaryToCategories = (
   sections: ReadonlyArray<{ label: string, taxesOwed: number }>,
 ): TaxOverviewCategory[] => {
   return sections
-    .map((section): TaxOverviewCategory | undefined => {
-      const key = SECTION_TO_CATEGORY_KEY[section.label]
+    .map((section, index): TaxOverviewCategory | undefined => {
+      const key = TAX_OVERVIEW_CATEGORY_KEYS[index]
 
       if (!key) {
         return
@@ -57,7 +54,7 @@ const transformSummaryToCategories = (
 
       return {
         key,
-        label: key === 'federal' ? 'Federal + SE' : 'State',
+        label: section.label,
         amount: section.taxesOwed,
       }
     })
@@ -121,7 +118,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
   )
 
   const taxOverviewData = useMemo((): TaxOverviewData | undefined => {
-    if (!taxOverviewApi || !taxSummary || !taxBannerData || !nextTax) {
+    if (!taxOverviewApi || !taxSummary || !taxBannerData) {
       return undefined
     }
 
@@ -133,7 +130,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
       deductionsTotal: taxOverviewApi.totalDeductions,
       estimatedTaxCategories,
       estimatedTaxesTotal: taxSummary.projectedTaxesOwed,
-      nextTax,
+      ...(nextTax ? { nextTax } : {}),
       paymentDeadlines,
       annualDeadline: {
         id: 'annual-income-taxes',
@@ -146,7 +143,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
   }, [taxOverviewApi, taxSummary, taxBannerData, nextTax, year])
 
   const taxBanner = uncategorizedReviewPayload && (
-    <VStack className='Layer__TaxEstimates__TaxBannerWrapper'>
+    <VStack>
       <TaxBanner
         title={t('taxEstimates:banner.categorization_incomplete.title', 'Your tax estimates are incomplete')}
         description={tPlural(
@@ -181,10 +178,9 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
         onSelectionChange={handleTabChange}
       />
       {taxBanner}
-      {route === TaxEstimatesRoute.Overview && taxOverviewData && nextTax && (
+      {route === TaxEstimatesRoute.Overview && taxOverviewData && (
         <TaxOverview
           data={taxOverviewData}
-          nextTax={nextTax}
           onTaxBannerReviewClick={onTaxBannerReviewClick}
         />
       )}

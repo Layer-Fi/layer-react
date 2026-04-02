@@ -108,7 +108,7 @@ const TaxOverviewDataSchema = Schema.Struct({
   estimatedTaxCategories: Schema.Array(TaxOverviewCategorySchema),
   estimatedTaxesTotal: Schema.Number,
   incomeTotal: Schema.Number,
-  nextTax: TaxOverviewNextTaxSchema,
+  nextTax: Schema.optional(TaxOverviewNextTaxSchema),
   paymentDeadlines: Schema.Array(TaxOverviewDeadlineSchema),
 })
 

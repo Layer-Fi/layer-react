@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next'
 
 import {
   type TaxOverviewData,
-  type TaxOverviewNextTax,
 } from '@schemas/taxEstimates/overview'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
@@ -14,15 +13,14 @@ import { TaxDeadlinesCard } from '@components/TaxOverview/TaxDeadlinesCard'
 import './taxOverview.scss'
 
 type TaxOverviewProps = {
-  nextTax: TaxOverviewNextTax
+  data: TaxOverviewData
   onTaxBannerReviewClick?: (payload: TaxBannerReviewPayload) => void
 }
 
 export const TaxOverview = ({
   data,
-  nextTax,
   onTaxBannerReviewClick,
-}: TaxOverviewProps & { data: TaxOverviewData }) => {
+}: TaxOverviewProps) => {
   const { t } = useTranslation()
   const { year } = useTaxEstimatesYear()
 
@@ -39,7 +37,7 @@ export const TaxOverview = ({
             title={t('taxEstimates:label.estimated_taxes_for_year', 'Estimated taxes for {{year}}', { year })}
             categories={data.estimatedTaxCategories}
             total={data.estimatedTaxesTotal}
-            nextTax={nextTax}
+            nextTax={data.nextTax}
           />
         </VStack>
         <TaxDeadlinesCard

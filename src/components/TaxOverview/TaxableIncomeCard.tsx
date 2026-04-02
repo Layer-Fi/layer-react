@@ -38,6 +38,7 @@ export const TaxableIncomeCard = ({
         <MetricRow
           label={t('taxEstimates:label.total_income', 'Total income')}
           amount={incomeTotal}
+          classNamePrefix='Layer__TaxOverview'
           maxMeterValue={maxMeterValue}
           meterClassName='Layer__TaxOverview__IncomeMeter'
           isMobile={isMobile}
@@ -45,6 +46,7 @@ export const TaxableIncomeCard = ({
         <MetricRow
           label={t('taxEstimates:label.deductions', 'Deductions')}
           amount={deductionsTotal}
+          classNamePrefix='Layer__TaxOverview'
           maxMeterValue={maxMeterValue}
           meterClassName='Layer__TaxOverview__DeductionsMeter'
           isMobile={isMobile}
