@@ -1,9 +1,11 @@
 import { useCallback, useMemo } from 'react'
+import type { TFunction } from 'i18next'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import { getNextTaxFromTaxEstimatesBanner, getTaxEstimatesBannerQuarterStatus, type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
-import type { TaxOverviewCategory, TaxOverviewCategoryKey, TaxOverviewData, TaxOverviewDeadline } from '@schemas/taxEstimates/overview'
+import type { TaxSummarySection } from '@schemas/taxEstimates/summary'
+import type { TaxOverviewCategory, TaxOverviewData, TaxOverviewDeadline } from '@schemas/taxEstimates/overview'
 import { convertCentsToDecimalString } from '@utils/format'
 import { tPlural } from '@utils/i18n/plural'
 import { translationKey } from '@utils/i18n/translationKey'
@@ -27,8 +29,6 @@ const TAX_ESTIMATES_TAB_CONFIG = [
   { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates:label.payments', 'Payments') },
 ]
 
-const TAX_OVERVIEW_CATEGORY_KEYS: readonly TaxOverviewCategoryKey[] = ['federal', 'state', 'selfEmployment']
-
 const getTaxBannerReviewPayload = (taxBanner?: TaxEstimatesBanner): TaxBannerReviewPayload | undefined => {
   if (!taxBanner || taxBanner.totalUncategorizedCount <= 0) {
     return
@@ -42,34 +42,25 @@ const getTaxBannerReviewPayload = (taxBanner?: TaxEstimatesBanner): TaxBannerRev
 }
 
 const transformSummaryToCategories = (
-  sections: ReadonlyArray<{ label: string, taxesOwed: number }>,
+  sections: ReadonlyArray<Pick<TaxSummarySection, 'label' | 'taxesOwed' | 'type'>>,
 ): TaxOverviewCategory[] => {
-  return sections
-    .map((section, index): TaxOverviewCategory | undefined => {
-      const key = TAX_OVERVIEW_CATEGORY_KEYS[index]
-
-      if (!key) {
-        return
-      }
-
-      return {
-        key,
-        label: section.label,
-        amount: section.taxesOwed,
-      }
-    })
-    .filter((category): category is TaxOverviewCategory => category !== undefined)
+  return sections.map(section => ({
+    key: section.type,
+    label: section.label,
+    amount: section.taxesOwed,
+  }))
 }
 
 const transformBannerToDeadlines = (
   banner: TaxEstimatesBanner,
+  t: TFunction,
 ): TaxOverviewDeadline[] => {
   return banner.quarters.map(quarter => ({
     id: `quarter-${quarter.quarter}`,
-    title: `Q${quarter.quarter} taxes`,
+    title: t('taxEstimates:label.quarter_taxes', 'Q{{quarter}} taxes', { quarter: quarter.quarter }),
     dueAt: quarter.dueDate,
     amount: quarter.balance,
-    description: 'Estimated tax',
+    description: t('taxEstimates:label.estimated_tax', 'Estimated tax'),
     status: getTaxEstimatesBannerQuarterStatus(quarter),
     reviewAction: quarter.uncategorizedCount > 0
       ? {
@@ -123,7 +114,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
     }
 
     const estimatedTaxCategories = transformSummaryToCategories(taxSummary.sections)
-    const paymentDeadlines = transformBannerToDeadlines(taxBannerData)
+    const paymentDeadlines = transformBannerToDeadlines(taxBannerData, t)
 
     return {
       incomeTotal: taxOverviewApi.totalIncome,
@@ -134,13 +125,13 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
       paymentDeadlines,
       annualDeadline: {
         id: 'annual-income-taxes',
-        title: 'Annual income taxes',
+        title: t('taxEstimates:label.annual_income_taxes', 'Annual income taxes'),
         dueAt: new Date(year + 1, 3, 15),
         amount: taxSummary.projectedTaxesOwed,
-        description: 'Estimated tax',
+        description: t('taxEstimates:label.estimated_tax', 'Estimated tax'),
       },
     }
-  }, [taxOverviewApi, taxSummary, taxBannerData, nextTax, year])
+  }, [taxOverviewApi, taxSummary, taxBannerData, nextTax, t, year])
 
   const taxBanner = uncategorizedReviewPayload && (
     <VStack>

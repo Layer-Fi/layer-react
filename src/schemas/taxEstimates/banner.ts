@@ -51,16 +51,16 @@ export type TaxEstimatesBanner = typeof TaxEstimatesBannerSchema.Type
 export const getTaxEstimatesBannerQuarterStatus = (
   quarter: TaxEstimatesBannerQuarter,
 ): TaxOverviewDeadlineStatus => {
-  if (quarter.uncategorizedCount > 0) {
-    return { kind: 'categorizationIncomplete' }
-  }
-
   if (quarter.amountOwed > 0 && quarter.balance <= 0) {
     return { kind: 'paid' }
   }
 
   if (quarter.isPastDue) {
     return { kind: 'pastDue' }
+  }
+
+  if (quarter.uncategorizedCount > 0) {
+    return { kind: 'categorizationIncomplete' }
   }
 
   return { kind: 'due' }
