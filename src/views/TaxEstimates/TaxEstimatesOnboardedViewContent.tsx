@@ -187,7 +187,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
             <DataState
               status={DataStateStatus.failed}
               title={t('taxEstimates:error.load_tax_estimates', 'We couldn\'t load your tax estimates')}
-              description={t('taxEstimates:error.load_tax_estimates', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
+              description={t('taxEstimates:error.while_loading_tax_estimates', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
               spacing
             />
           )}
