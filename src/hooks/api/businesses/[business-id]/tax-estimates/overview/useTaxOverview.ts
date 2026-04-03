@@ -1,34 +1,35 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import type { ReportingBasis } from '@internal-types/general'
-import { type TaxSummaryResponse, TaxSummaryResponseSchema } from '@schemas/taxEstimates/summary'
+import { type TaxOverviewApiResponse, TaxOverviewApiResponseSchema } from '@schemas/taxEstimates/overview'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const TAX_SUMMARY_TAG_KEY = '#tax-summary'
-type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
+const TAX_OVERVIEW_TAG_KEY = '#tax-overview'
 
-type UseTaxSummaryOptions = {
+type UseTaxOverviewOptions = {
   year: number
-  reportingBasis?: TaxReportingBasis
+  reportingBasis?: ReportingBasis
   fullYearProjection?: boolean
   enabled?: boolean
 }
 
-type GetTaxSummaryParams = Omit<UseTaxSummaryOptions, 'enabled'> & {
+type GetTaxOverviewParams = Omit<UseTaxOverviewOptions, 'enabled'> & {
   businessId: string
 }
 
-const getTaxSummary = get<TaxSummaryResponse, GetTaxSummaryParams>(
+const getTaxOverview = get<TaxOverviewApiResponse, GetTaxOverviewParams>(
   ({ businessId, year, reportingBasis, fullYearProjection }) => {
-    const parameters = toDefinedSearchParameters({ year, reporting_basis: reportingBasis, full_year_projection: fullYearProjection })
-    return `/v1/businesses/${businessId}/tax-estimates/summary?${parameters}`
+    const parameters = toDefinedSearchParameters({
+      year,
+      reporting_basis: reportingBasis,
+      full_year_projection: fullYearProjection,
+    })
+    return `/v1/businesses/${businessId}/tax-estimates/overview?${parameters}`
   },
 )
 
@@ -45,7 +46,7 @@ function buildKey({
   apiUrl?: string
   businessId: string
   year: number
-  reportingBasis?: TaxReportingBasis
+  reportingBasis?: ReportingBasis
   fullYearProjection?: boolean
   enabled?: boolean
 }) {
@@ -61,12 +62,12 @@ function buildKey({
       year,
       reportingBasis,
       fullYearProjection,
-      tags: [TAX_SUMMARY_TAG_KEY],
+      tags: [TAX_OVERVIEW_TAG_KEY],
     } as const
   }
 }
 
-export function useTaxSummary({ year, reportingBasis, fullYearProjection, enabled = true }: UseTaxSummaryOptions) {
+export function useTaxOverview({ year, reportingBasis, fullYearProjection, enabled = true }: UseTaxOverviewOptions) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -80,7 +81,7 @@ export function useTaxSummary({ year, reportingBasis, fullYearProjection, enable
       enabled,
     }),
     async ({ accessToken, apiUrl, businessId, year, reportingBasis, fullYearProjection }) => {
-      return getTaxSummary(
+      return getTaxOverview(
         apiUrl,
         accessToken,
         {
@@ -92,21 +93,10 @@ export function useTaxSummary({ year, reportingBasis, fullYearProjection, enable
           },
         },
       )()
-        .then(Schema.decodeUnknownPromise(TaxSummaryResponseSchema))
+        .then(Schema.decodeUnknownPromise(TaxOverviewApiResponseSchema))
         .then(({ data }) => data)
     },
   )
 
   return new SWRQueryResult(swrResponse)
-}
-
-export function useTaxSummaryGlobalCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadTaxSummary = useCallback(
-    () => forceReload(({ tags }) => tags.includes(TAX_SUMMARY_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadTaxSummary }
 }
