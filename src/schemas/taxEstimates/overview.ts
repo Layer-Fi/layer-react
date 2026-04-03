@@ -10,10 +10,6 @@ const TaxOverviewApiDataSchema = Schema.Struct({
     Schema.optionalWith(Schema.Boolean, { default: () => true }),
     Schema.fromKey('excludes_pending_transactions'),
   ),
-  taxableIncomeEstimate: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('taxable_income_estimate'),
-  ),
   totalIncome: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('total_income'),
@@ -21,10 +17,6 @@ const TaxOverviewApiDataSchema = Schema.Struct({
   totalDeductions: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('total_deductions'),
-  ),
-  estimatedTaxesOwed: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('estimated_taxes_owed'),
   ),
   taxesDueDate: pipe(
     Schema.optionalWith(Schema.Date, { nullable: true }),
