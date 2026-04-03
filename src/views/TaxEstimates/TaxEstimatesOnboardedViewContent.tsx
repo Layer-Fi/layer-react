@@ -24,6 +24,8 @@ import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
+import './taxEstimatesOnboardedViewContent.scss'
+
 import type { TaxEstimatesViewProps } from './taxEstimatesTypes'
 
 const TAX_ESTIMATES_TAB_CONFIG = [
@@ -143,7 +145,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
   }, [taxOverviewApi, taxSummary, taxBannerData, nextTax, t, year])
 
   const taxBanner = uncategorizedReviewPayload && (
-    <VStack>
+    <VStack className='Layer__TaxEstimates__TaxBannerWrapper'>
       <TaxBanner
         title={t('taxEstimates:banner.categorization_incomplete.title', 'Your tax estimates are incomplete')}
         description={tPlural(
