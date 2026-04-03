@@ -8,6 +8,7 @@ import type { OneOf } from '@internal-types/utility/oneOf'
 import { post } from '@utils/api/authenticatedHttp'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useUnlinkBankAccount } from '@hooks/api/businesses/[business-id]/bank-accounts/useUnlinkBankAccount'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -159,6 +160,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   } = useListBankAccounts()
 
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   useEffect(() => {
     if (!isLoading && bankAccounts) {
@@ -310,6 +312,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const unlinkBankAccount = async (bankAccountId: string) => {
     await triggerUnlinkBankAccount(bankAccountId)
     await refetchAccounts()
+    void forceReloadBankTransactions()
     touch(DataModel.LINKED_ACCOUNTS)
   }
 
@@ -398,6 +401,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       params: { businessId, plaidItemPlaidId },
     })
     await refetchAccounts()
+    void forceReloadBankTransactions()
     touch(DataModel.LINKED_ACCOUNTS)
   }
 
