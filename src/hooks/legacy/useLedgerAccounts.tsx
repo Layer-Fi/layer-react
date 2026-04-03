@@ -15,7 +15,7 @@ const getLedgerAccountsEntry = get<{ data: LedgerAccountsEntry }>(
     `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
 )
 
-type UseLedgerAccounts = (showReversalEntries: boolean) => {
+type UseLedgerAccounts = () => {
   data?: LedgerAccountLineItem[] | undefined
   entryData?: LedgerAccountsEntry
   isLoading?: boolean
