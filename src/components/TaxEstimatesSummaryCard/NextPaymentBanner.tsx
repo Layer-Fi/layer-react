@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { BellRing } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -32,7 +33,7 @@ export const NextPaymentBanner = ({
       'Q{{quarter}} due {{date}}',
       {
         quarter: nextTax.quarter,
-        date: formatDate(nextTax.dueAt),
+        date: formatDate(nextTax.dueAt, DateFormat.DateShort),
       },
     )
     : t(
@@ -40,7 +41,7 @@ export const NextPaymentBanner = ({
       'Q{{quarter}} payment due: {{date}}',
       {
         quarter: nextTax.quarter,
-        date: formatDate(nextTax.dueAt),
+        date: formatDate(nextTax.dueAt, DateFormat.DateShort),
       },
     )
 
