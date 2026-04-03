@@ -26,26 +26,24 @@ export const TaxOverview = ({
 
   return (
     <VStack className='Layer__TaxOverview' gap='md'>
-      <VStack className='Layer__TaxOverview__Grid' gap='md'>
-        <VStack className='Layer__TaxOverview__PrimaryColumn' gap='md'>
-          <TaxableIncomeCard
-            incomeTotal={data.incomeTotal}
-            deductionsTotal={data.deductionsTotal}
-          />
-          <TaxEstimatesSummaryCard
-            className='Layer__TaxOverview__Card'
-            title={t('taxEstimates:label.estimated_taxes_for_year', 'Estimated taxes for {{year}}', { year })}
-            categories={data.estimatedTaxCategories}
-            total={data.estimatedTaxesTotal}
-            nextTax={data.nextTax}
-          />
-        </VStack>
-        <TaxDeadlinesCard
-          paymentDeadlines={data.paymentDeadlines}
-          annualDeadline={data.annualDeadline}
-          onTaxBannerReviewClick={onTaxBannerReviewClick}
+      <VStack className='Layer__TaxOverview__PrimaryColumn' gap='md'>
+        <TaxableIncomeCard
+          incomeTotal={data.incomeTotal}
+          deductionsTotal={data.deductionsTotal}
+        />
+        <TaxEstimatesSummaryCard
+          className='Layer__TaxOverview__Card'
+          title={t('taxEstimates:label.estimated_taxes_for_year', 'Estimated taxes for {{year}}', { year })}
+          categories={data.estimatedTaxCategories}
+          total={data.estimatedTaxesTotal}
+          nextTax={data.nextTax}
         />
       </VStack>
+      <TaxDeadlinesCard
+        paymentDeadlines={data.paymentDeadlines}
+        annualDeadline={data.annualDeadline}
+        onTaxBannerReviewClick={onTaxBannerReviewClick}
+      />
     </VStack>
   )
 }

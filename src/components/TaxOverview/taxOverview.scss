@@ -1,13 +1,13 @@
 .Layer__TaxOverview {
+  /* &__Grid { */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(23rem, 0.92fr);
+  gap: var(--spacing-md);
+  align-items: start;
   inline-size: min(100%, 1406px);
   container-type: inline-size;
 
-  &__Grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(23rem, 0.92fr);
-    gap: var(--spacing-md);
-    align-items: start;
-  }
+  /* } */
 
   &__PrimaryColumn {
     min-width: 0;
@@ -157,7 +157,7 @@
 }
 
 @container (max-width: 920px) {
-  .Layer__TaxOverview__Grid {
+  .Layer__TaxOverview {
     grid-template-columns: 1fr;
   }
 }
