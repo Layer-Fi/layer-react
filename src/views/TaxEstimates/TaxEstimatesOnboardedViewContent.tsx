@@ -135,7 +135,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
       annualDeadline: {
         id: 'annual-income-taxes',
         title: t('taxEstimates:label.annual_income_taxes', 'Annual income taxes'),
-        dueAt: new Date(year + 1, 3, 15),
+        dueAt: taxOverviewApi.taxesDueDate ?? new Date(year + 1, 3, 15),
         amount: taxSummary.projectedTaxesOwed,
         description: t('taxEstimates:label.estimated_tax', 'Estimated tax'),
       },
