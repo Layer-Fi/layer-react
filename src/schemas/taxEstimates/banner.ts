@@ -73,8 +73,8 @@ export const getNextTaxFromTaxEstimatesBanner = (
     return
   }
 
-  const nextQuarter = taxBanner.quarters.find(quarter => !quarter.isPastDue && quarter.amountOwed > 0)
-    ?? taxBanner.quarters.find(quarter => quarter.amountOwed > 0)
+  const nextQuarter = taxBanner.quarters.find(quarter => !quarter.isPastDue && quarter.balance > 0)
+    ?? taxBanner.quarters.find(quarter => quarter.balance > 0)
 
   if (!nextQuarter) {
     return
@@ -82,7 +82,7 @@ export const getNextTaxFromTaxEstimatesBanner = (
 
   return {
     quarter: nextQuarter.quarter,
-    amount: nextQuarter.amountOwed,
+    amount: nextQuarter.balance,
     dueAt: nextQuarter.dueDate,
     status: getTaxEstimatesBannerQuarterStatus(nextQuarter),
   }
