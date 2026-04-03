@@ -71,7 +71,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
         onClose={onClose}
       />
       <ModalContent>
-        <VStack slot='center' align='center' gap='md'>
+        <VStack slot='center' align='center' gap='md' pbs='xl' pbe='xl'>
           <LoadingSpinner size={48} />
           <P align='center'>
             {t('linkedAccounts:label.may_take_few_minutes', 'This may take a few minutes.')}
