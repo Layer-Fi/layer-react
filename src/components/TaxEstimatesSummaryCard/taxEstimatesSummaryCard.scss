@@ -4,6 +4,11 @@
   border-bottom: 1px solid var(--color-base-300);
 }
 
+.Layer__TaxEstimatesSummaryCard__Container {
+  container-type: inline-size;
+  min-width: 0;
+}
+
 .Layer__TaxEstimatesSummaryCard {
   min-width: 0;
 
@@ -166,7 +171,7 @@
   }
 }
 
-@media (width <= 720px) {
+@container (max-width: 760px) {
   .Layer__TaxEstimatesSummaryCard.Layer__card:not(.Layer__TaxEstimatesSummaryCard--summaryCard) {
     gap: var(--spacing-md);
     padding: var(--spacing-md);
@@ -198,9 +203,7 @@
     white-space: normal;
   }
 
-  .Layer__TaxEstimatesSummaryCard--summaryCard {
-    .Layer__TaxEstimatesSummaryCard__Header {
-      padding: var(--spacing-md);
-    }
+  .Layer__TaxEstimatesSummaryCard--summaryCard .Layer__TaxEstimatesSummaryCard__Header {
+    padding: var(--spacing-md);
   }
 }
