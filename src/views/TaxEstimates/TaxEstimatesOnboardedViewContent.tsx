@@ -80,12 +80,17 @@ const transformBannerToDeadlines = (
 export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: TaxEstimatesViewProps) => {
   const { t } = useTranslation()
   const { route } = useTaxEstimatesRouteState()
+  const isOverviewRoute = route === TaxEstimatesRoute.Overview
   const navigate = useTaxEstimatesNavigation()
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
   const { data: taxBannerData, isLoading: isTaxBannerLoading, isError: isTaxBannerError } = useTaxEstimatesBanner({ year })
-  const { data: taxOverviewApi, isLoading: isTaxOverviewLoading, isError: isTaxOverviewError } = useTaxOverview({ year, fullYearProjection })
-  const { data: taxSummary, isLoading: isTaxSummaryLoading, isError: isTaxSummaryError } = useTaxSummary({ year, fullYearProjection })
+  const { data: taxOverviewApi, isLoading: isTaxOverviewLoading, isError: isTaxOverviewError } = useTaxOverview({
+    year,
+    fullYearProjection,
+    enabled: isOverviewRoute,
+  })
+  const { data: taxSummary, isLoading: isTaxSummaryLoading, isError: isTaxSummaryError } = useTaxSummary({ year, fullYearProjection, enabled: isOverviewRoute })
 
   const handleTaxBannerReview = useCallback((payload: TaxBannerReviewPayload) => {
     onTaxBannerReviewClick?.(payload)
@@ -176,7 +181,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
         onSelectionChange={handleTabChange}
       />
       {taxBanner}
-      {route === TaxEstimatesRoute.Overview && (
+      {isOverviewRoute && (
         <ConditionalBlock
           isLoading={isOverviewLoading}
           isError={isOverviewError}
