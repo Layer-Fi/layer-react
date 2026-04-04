@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import type { MouseEventHandler } from 'react'
 
 import ChevronDownFill from '@icons/ChevronDownFill'
 
@@ -6,7 +7,7 @@ import './expandButton.scss'
 
 type ExpandButtonProps = {
   isExpanded: boolean
-  onClick?: () => void
+  onClick?: MouseEventHandler<SVGSVGElement>
 }
 
 const baseClassName = 'Layer__ExpandButton'

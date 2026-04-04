@@ -122,7 +122,7 @@ type RowStyleProps = {
 }
 
 const RowInner = <T extends object>(
-  { children, className, depth = 0, nonAria, id, ...restProps }: RowProps<T> & RowStyleProps & TableRenderingProps,
+  { children, className, depth = 0, nonAria, id, onAction, ...restProps }: RowProps<T> & RowStyleProps & TableRenderingProps,
   ref: React.Ref<HTMLTableRowElement>,
 ) => {
   const dataProperties = toDataProperties({ depth })
@@ -135,6 +135,8 @@ const RowInner = <T extends object>(
     <RowComponent
       className={getClassName(TableSubComponent.Row, className)}
       {...restProps}
+      onAction={nonAria ? undefined : onAction}
+      onClick={nonAria ? onAction : undefined}
       {...dataProperties}
       ref={ref}
       id={id?.toString()}
