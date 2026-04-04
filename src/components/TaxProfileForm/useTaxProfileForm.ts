@@ -53,14 +53,6 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
       modeAfterSubmission: 'submit',
     }),
     canSubmitWhenInvalid: true,
-    validators: {
-      onSubmit: ({ value }) => {
-        if (!value.acknowledgedDisclaimer) {
-          return t('taxEstimates:error.disclaimer_required', 'You must acknowledge the disclaimer to continue.')
-        }
-        return undefined
-      },
-    },
   })
 
   // Update the default values for the form when the tax profile changes

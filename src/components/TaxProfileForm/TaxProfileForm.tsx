@@ -15,6 +15,7 @@ import { DeductionsSection } from '@components/TaxProfileForm/sections/Deduction
 import { FederalTaxSection } from '@components/TaxProfileForm/sections/FederalTaxSection'
 import { StateTaxSection } from '@components/TaxProfileForm/sections/StateTaxSection'
 import { useTaxProfileForm } from '@components/TaxProfileForm/useTaxProfileForm'
+import { ErrorText } from '@components/Typography/ErrorText'
 import { Text, TextSize } from '@components/Typography/Text'
 
 import './taxProfileForm.scss'
@@ -39,8 +40,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
     <form.Subscribe selector={state => ({ errorMap: state.errorMap, isDirty: state.isDirty })}>
       {({ errorMap, isDirty }) => {
         const validationErrors = flattenValidationErrors(errorMap)
-        const formError = typeof errorMap.onSubmit === 'string' ? errorMap.onSubmit : null
-        const displayError = validationErrors[0] || formError || submitError
+        const displayError = validationErrors[0] || submitError
 
         if (displayError) {
           return (
@@ -98,19 +98,47 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
               'The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us.',
             )}
           </Text>
-          <form.Field name='acknowledgedDisclaimer'>
-            {field => (
-              <Checkbox
-                isSelected={field.state.value ?? false}
-                onChange={field.handleChange}
-                isReadOnly={isReadOnly}
-              >
-                {t(
-                  'taxEstimates:disclaimer.acknowledgment',
-                  'By continuing, I certify that I understand the above.',
-                )}
-              </Checkbox>
-            )}
+          <form.Field
+            name='acknowledgedDisclaimer'
+            validators={{
+              onSubmit: ({ value }) => {
+                if (!value) {
+                  return t('taxEstimates:error.disclaimer_required', 'You must acknowledge the disclaimer to continue.')
+                }
+                return undefined
+              },
+            }}
+          >
+            {(field) => {
+              const firstError = field.state.meta.errors[0]
+              const errorMessage = typeof firstError === 'string' ? firstError : undefined
+              const isInvalid = Boolean(errorMessage)
+
+              return (
+                <VStack gap='xs'>
+                  <Checkbox
+                    isSelected={field.state.value ?? false}
+                    onChange={field.handleChange}
+                    onBlur={field.handleBlur}
+                    isInvalid={isInvalid}
+                    variant={isInvalid ? 'error' : 'default'}
+                    isReadOnly={isReadOnly}
+                  >
+                    {t(
+                      'taxEstimates:disclaimer.acknowledgment',
+                      'By continuing, I certify that I understand the above.',
+                    )}
+                  </Checkbox>
+                  {errorMessage
+                    ? (
+                      <ErrorText size={TextSize.sm}>
+                        {errorMessage}
+                      </ErrorText>
+                    )
+                    : null}
+                </VStack>
+              )
+            }}
           </form.Field>
         </VStack>
 
