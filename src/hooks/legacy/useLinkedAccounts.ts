@@ -7,6 +7,7 @@ import { type AccountSource, type BankAccount, type ExternalAccountConnection } 
 import type { OneOf } from '@internal-types/utility/oneOf'
 import { post } from '@utils/api/authenticatedHttp'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useUnlinkBankAccount } from '@hooks/api/businesses/[business-id]/bank-accounts/useUnlinkBankAccount'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
@@ -157,6 +158,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     error: responseError,
     mutate,
   } = useListBankAccounts()
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
 
@@ -226,6 +228,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         body: { public_token: publicToken, institution: metadata.institution },
       })
       await refetchAccounts()
+      await forceReloadBankTransactions()
     }
     finally {
       setIsLinking(false)
