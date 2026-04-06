@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import type { PressEvent } from '@react-types/shared'
 import { flexRender, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
 
 import {
@@ -31,6 +32,8 @@ export interface DataTableProps<TData> extends BaseDataTableProps {
   data: RowType<TData>[] | undefined
   headerGroups: HeaderGroup<TData>[]
   numColumns: number
+  isRowClickable?: (row: RowType<TData>) => boolean
+  onRowClick?: (row: RowType<TData>, event?: PressEvent | React.MouseEvent) => void
 }
 
 export const DataTable = <TData extends object>({
@@ -44,6 +47,8 @@ export const DataTable = <TData extends object>({
   data,
   headerGroups,
   numColumns,
+  isRowClickable,
+  onRowClick,
 }: DataTableProps<TData>) => {
   const nonAria = headerGroups.length > 1
 
@@ -88,12 +93,17 @@ export const DataTable = <TData extends object>({
             key={row.id}
             depth={row.depth}
             nonAria={nonAria}
+            className={isRowClickable?.(row) ? 'Layer__DataTable__ClickableRow' : undefined}
+            onClick={nonAria && onRowClick ? event => onRowClick(row, event) : undefined}
           >
             {row.getVisibleCells().map(cell => (
               <Cell
                 key={`${row.id}-${cell.id}`}
                 className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
                 nonAria={nonAria}
+                onClick={!nonAria && onRowClick && isRowClickable?.(row)
+                  ? event => onRowClick(row, event)
+                  : undefined}
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </Cell>
@@ -102,7 +112,7 @@ export const DataTable = <TData extends object>({
         ))}
       </>
     )
-  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, componentName])
+  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, componentName, isRowClickable, onRowClick])
 
   return (
     <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>

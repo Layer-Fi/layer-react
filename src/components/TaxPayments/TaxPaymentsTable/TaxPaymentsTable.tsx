@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo } from 'react'
+import { useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
@@ -19,14 +19,14 @@ enum TaxPaymentColumns {
   RolledOverFromPrevious = 'RolledOverFromPrevious',
   Estimated = 'Estimated',
   Paid = 'Paid',
-  CumulativeTaxesOwed = 'CumulativeTaxesOwed',
+  RemainingBalance = 'RemainingBalance',
 }
 
 type TaxPaymentTableRow = {
   id: string
   label: string
   rolledOverFromPreviousQuarter: number
-  cumulativeTaxesOwed: number
+  remainingBalance: number
   estimated: number
   paid: number
   subRows?: TaxPaymentTableRow[]
@@ -34,91 +34,32 @@ type TaxPaymentTableRow = {
 
 type TaxPaymentRowType = Row<TaxPaymentTableRow>
 
-const getCellButtonClassName = (alignEnd?: boolean): string => {
-  return alignEnd
-    ? 'Layer__TaxPaymentsTable__RowToggleButton Layer__TaxPaymentsTable__RowToggleButton--alignEnd'
-    : 'Layer__TaxPaymentsTable__RowToggleButton'
-}
-
-const renderExpandableCell = ({
-  row,
-  children,
-  alignEnd = false,
-}: {
-  row: TaxPaymentRowType
-  children: ReactNode
-  alignEnd?: boolean
-}) => {
-  if (!row.getCanExpand()) {
-    return children
-  }
-
-  return (
-    <button
-      type='button'
-      className={getCellButtonClassName(alignEnd)}
-      onClick={() => row.toggleExpanded()}
-    >
-      {children}
-    </button>
-  )
-}
-
 const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentTableRow> => [
   {
     id: TaxPaymentColumns.Quarter,
     header: t('taxEstimates:label.quarter', 'Quarter'),
-    cell: (row: TaxPaymentRowType) => (
-      renderExpandableCell({
-        row,
-        children: <Span>{row.original.label}</Span>,
-      })
-    ),
+    cell: (row: TaxPaymentRowType) => <Span>{row.original.label}</Span>,
     isRowHeader: true,
   },
   {
     id: TaxPaymentColumns.RolledOverFromPrevious,
     header: t('taxEstimates:label.rolled_over_from_previous_quarter', 'Rolled Over From Previous Quarter'),
-    cell: (row: TaxPaymentRowType) => (
-      renderExpandableCell({
-        row,
-        alignEnd: true,
-        children: <MoneySpan amount={row.original.rolledOverFromPreviousQuarter} />,
-      })
-    ),
+    cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.rolledOverFromPreviousQuarter} />,
   },
   {
     id: TaxPaymentColumns.Estimated,
-    header: t('taxEstimates:label.total_estimated', 'Total Estimated'),
-    cell: (row: TaxPaymentRowType) => (
-      renderExpandableCell({
-        row,
-        alignEnd: true,
-        children: <MoneySpan amount={row.original.estimated} />,
-      })
-    ),
+    header: t('taxEstimates:label.owed_quarter', 'Owed This Quarter'),
+    cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.estimated} />,
   },
   {
     id: TaxPaymentColumns.Paid,
     header: t('taxEstimates:label.total_paid', 'Total Paid'),
-    cell: (row: TaxPaymentRowType) => (
-      renderExpandableCell({
-        row,
-        alignEnd: true,
-        children: <MoneySpan amount={row.original.paid} />,
-      })
-    ),
+    cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.paid} />,
   },
   {
-    id: TaxPaymentColumns.CumulativeTaxesOwed,
-    header: t('taxEstimates:label.cumulative_taxes_owed', 'Cumulative Taxes Owed'),
-    cell: (row: TaxPaymentRowType) => (
-      renderExpandableCell({
-        row,
-        alignEnd: true,
-        children: <MoneySpan amount={row.original.cumulativeTaxesOwed} />,
-      })
-    ),
+    id: TaxPaymentColumns.RemainingBalance,
+    header: t('taxEstimates:label.remaining_balance', 'Remaining Balance'),
+    cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.remainingBalance} />,
   },
 ]
 
@@ -147,7 +88,7 @@ const getTableRows = (
       id: payment.id,
       label: getQuarterLabel(payment.quarter),
       rolledOverFromPreviousQuarter: payment.owedRolledOverFromPrevious,
-      cumulativeTaxesOwed: payment.owedRolledOverFromPrevious + payment.owedThisQuarter,
+      remainingBalance: payment.owedRolledOverFromPrevious + payment.owedThisQuarter,
       estimated: payment.owedThisQuarter,
       paid: payment.totalPaid,
       subRows: [
@@ -158,7 +99,7 @@ const getTableRows = (
             'Federal Income + Self-Employment Taxes',
           ),
           rolledOverFromPreviousQuarter: previousFederalRolledOver,
-          cumulativeTaxesOwed: federalCumulativeTaxesOwed,
+          remainingBalance: federalCumulativeTaxesOwed,
           estimated: federalEstimated,
           paid: federalPaid,
         },
@@ -166,7 +107,7 @@ const getTableRows = (
           id: `${payment.id}-state`,
           label: t('taxEstimates:label.state_taxes', 'State Taxes'),
           rolledOverFromPreviousQuarter: previousStateRolledOver,
-          cumulativeTaxesOwed: stateCumulativeTaxesOwed,
+          remainingBalance: stateCumulativeTaxesOwed,
           estimated: stateEstimated,
           paid: statePaid,
         },
@@ -175,7 +116,7 @@ const getTableRows = (
             id: `${payment.id}-uncategorized`,
             label: t('taxEstimates:label.uncategorized_tax_payment', 'Uncategorized Tax Payment'),
             rolledOverFromPreviousQuarter: 0,
-            cumulativeTaxesOwed: 0,
+            remainingBalance: 0,
             estimated: 0,
             paid: payment.totalPaidBreakdown.uncategorized,
           }]
@@ -207,6 +148,7 @@ export const TaxPaymentsTable = ({ data, isLoading, isError, slots }: CommonTaxP
         slots={slots}
         getSubRows={getSubRows}
         getRowId={getRowId}
+        expandOnRowClick
       />
     </ExpandableDataTableProvider>
   )

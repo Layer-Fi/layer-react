@@ -6,6 +6,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
+import { isInteractiveEventTarget } from '@utils/dom/isInteractiveEventTarget'
 import { HStack } from '@ui/Stack/Stack'
 import {
   getColumnDefs,
@@ -24,6 +25,7 @@ type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   columnConfig: NestedColumnConfig<TData>
   getSubRows: (row: TData) => TData[] | undefined
   getRowId: (row: TData) => string
+  expandOnRowClick?: boolean
 }
 
 const getRowIndentStyle = (
@@ -33,6 +35,7 @@ const getRowIndentStyle = (
 })
 
 const EMPTY_ARRAY: never[] = []
+
 export function ExpandableDataTable<TData extends object>({
   data,
   isLoading,
@@ -44,6 +47,7 @@ export function ExpandableDataTable<TData extends object>({
   hideHeader,
   getSubRows,
   getRowId,
+  expandOnRowClick = false,
 }: ExpandableDataTableProps<TData>) {
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
 
@@ -114,6 +118,12 @@ export function ExpandableDataTable<TData extends object>({
       hideHeader={hideHeader}
       dependencies={dependencies}
       headerGroups={headerGroups}
+      isRowClickable={row => expandOnRowClick && row.getCanExpand()}
+      onRowClick={(row, event) => {
+        if (!expandOnRowClick || !row.getCanExpand()) return
+        if (event && isInteractiveEventTarget(event.target)) return
+        row.toggleExpanded()
+      }}
     />
   )
 }
