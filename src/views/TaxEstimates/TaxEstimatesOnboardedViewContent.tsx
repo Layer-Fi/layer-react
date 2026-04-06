@@ -86,7 +86,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onTaxBannerReviewClick }: Tax
   const navigate = useTaxEstimatesNavigation()
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
-  const { data: taxBannerData, isLoading: isTaxBannerLoading, isError: isTaxBannerError } = useTaxEstimatesBanner({ year })
+  const { data: taxBannerData, isLoading: isTaxBannerLoading, isError: isTaxBannerError } = useTaxEstimatesBanner({ year, fullYearProjection })
   const { data: taxOverviewApi, isLoading: isTaxOverviewLoading, isError: isTaxOverviewError } = useTaxOverview({
     year,
     fullYearProjection,
