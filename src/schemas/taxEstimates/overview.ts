@@ -42,7 +42,7 @@ export type TaxOverviewBannerReview = {
   type: 'UNCATEGORIZED_TRANSACTIONS'
 }
 
-export type TaxOverviewCategoryKey = 'federal' | 'selfEmployment' | 'state'
+export type TaxOverviewCategoryKey = 'federal' | 'state'
 
 export type TaxOverviewCategory = {
   amount: number
