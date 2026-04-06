@@ -88,28 +88,33 @@ export const DataTable = <TData extends object>({
 
     return (
       <>
-        {data?.map(row => (
-          <Row
-            key={row.id}
-            depth={row.depth}
-            nonAria={nonAria}
-            className={isRowClickable?.(row) ? 'Layer__DataTable__ClickableRow' : undefined}
-            onClick={nonAria && onRowClick ? event => onRowClick(row, event) : undefined}
-          >
-            {row.getVisibleCells().map(cell => (
-              <Cell
-                key={`${row.id}-${cell.id}`}
-                className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
-                nonAria={nonAria}
-                onClick={!nonAria && onRowClick && isRowClickable?.(row)
-                  ? event => onRowClick(row, event)
-                  : undefined}
-              >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </Cell>
-            ))}
-          </Row>
-        ))}
+        {data?.map((row) => {
+          const isClickable = Boolean(onRowClick) && (isRowClickable?.(row) ?? true)
+          const handleRowClick = onRowClick ? (event: PressEvent | React.MouseEvent) => onRowClick(row, event) : undefined
+
+          return (
+            <Row
+              key={row.id}
+              depth={row.depth}
+              nonAria={nonAria}
+              className={isClickable ? 'Layer__DataTable__ClickableRow' : undefined}
+              onClick={nonAria && isClickable ? event => handleRowClick?.(event) : undefined}
+            >
+              {row.getVisibleCells().map(cell => (
+                <Cell
+                  key={`${row.id}-${cell.id}`}
+                  className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
+                  nonAria={nonAria}
+                  onClick={!nonAria && isClickable
+                    ? event => handleRowClick?.(event)
+                    : undefined}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </Cell>
+              ))}
+            </Row>
+          )
+        })}
       </>
     )
   }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, componentName, isRowClickable, onRowClick])

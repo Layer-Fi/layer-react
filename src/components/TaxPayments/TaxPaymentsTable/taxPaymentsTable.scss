@@ -13,7 +13,7 @@
   .Layer__UI__Table-Column__TaxPaymentsTable,
   .Layer__UI__Table-Cell__TaxPaymentsTable {
     &--RolledOverFromPrevious,
-    &--CumulativeTaxesOwed,
+    &--RemainingBalance,
     &--Estimated,
     &--Paid {
       justify-content: flex-end;
