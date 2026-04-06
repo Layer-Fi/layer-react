@@ -10,10 +10,11 @@ import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const TAX_OVERVIEW_TAG_KEY = '#tax-overview'
+type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
 
 type UseTaxOverviewOptions = {
   year: number
-  reportingBasis?: ReportingBasis
+  reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
   enabled?: boolean
 }
