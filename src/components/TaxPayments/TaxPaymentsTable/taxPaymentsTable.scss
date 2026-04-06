@@ -24,28 +24,4 @@
   .Layer__DataTable__EmptyState__Row {
     background-color: var(--color-base-0);
   }
-
-  .Layer__TaxPaymentsTable__RowToggleButton {
-    display: flex;
-    width: 100%;
-    padding: 0;
-    border-radius: 4px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    text-align: left;
-
-    &:hover {
-      background-color: var(--color-base-50);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--color-primary);
-      outline-offset: -2px;
-    }
-
-    &--alignEnd {
-      justify-content: flex-end;
-    }
-  }
 }
