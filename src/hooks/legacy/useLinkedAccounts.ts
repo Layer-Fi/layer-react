@@ -228,7 +228,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         body: { public_token: publicToken, institution: metadata.institution },
       })
       await refetchAccounts()
-      await forceReloadBankTransactions()
+      void forceReloadBankTransactions()
     }
     finally {
       setIsLinking(false)
