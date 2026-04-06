@@ -2,6 +2,7 @@ import { FileText } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 import type { TaxOverviewBannerReview } from '@schemas/taxEstimates/overview'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Banner } from '@ui/Banner/Banner'
 import { Button } from '@ui/Button/Button'
 
@@ -28,13 +29,14 @@ export const TaxBanner = ({
   action,
   icon = <FileText size={16} />,
 }: TaxBannerProps) => {
+  const { isMobile } = useSizeClass()
   return (
     <Banner
       variant='dark'
       title={title}
       description={description}
       slots={{
-        Icon: icon,
+        Icon: isMobile ? null : icon,
         Button: action
           ? (
             <Button
