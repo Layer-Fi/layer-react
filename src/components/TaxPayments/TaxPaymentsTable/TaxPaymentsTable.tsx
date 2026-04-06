@@ -79,16 +79,18 @@ const getTableRows = (
     const federalEstimated = payment.owedThisQuarterBreakdown.usFederal
     const federalPaid = payment.totalPaidBreakdown.usFederal
     const federalCumulativeTaxesOwed = previousFederalRolledOver + federalEstimated
+    const federalRemainingBalance = federalCumulativeTaxesOwed - federalPaid
 
     const stateEstimated = payment.owedThisQuarterBreakdown.usState
     const statePaid = payment.totalPaidBreakdown.usState
     const stateCumulativeTaxesOwed = previousStateRolledOver + stateEstimated
+    const stateRemainingBalance = stateCumulativeTaxesOwed - statePaid
 
     const row: TaxPaymentTableRow = {
       id: payment.id,
       label: getQuarterLabel(payment.quarter),
       rolledOverFromPreviousQuarter: payment.owedRolledOverFromPrevious,
-      remainingBalance: payment.owedRolledOverFromPrevious + payment.owedThisQuarter,
+      remainingBalance: payment.total,
       estimated: payment.owedThisQuarter,
       paid: payment.totalPaid,
       subRows: [
@@ -99,7 +101,7 @@ const getTableRows = (
             'Federal Income + Self-Employment Taxes',
           ),
           rolledOverFromPreviousQuarter: previousFederalRolledOver,
-          remainingBalance: federalCumulativeTaxesOwed,
+          remainingBalance: federalRemainingBalance,
           estimated: federalEstimated,
           paid: federalPaid,
         },
@@ -107,7 +109,7 @@ const getTableRows = (
           id: `${payment.id}-state`,
           label: t('taxEstimates:label.state_taxes', 'State Taxes'),
           rolledOverFromPreviousQuarter: previousStateRolledOver,
-          remainingBalance: stateCumulativeTaxesOwed,
+          remainingBalance: stateRemainingBalance,
           estimated: stateEstimated,
           paid: statePaid,
         },
@@ -124,8 +126,8 @@ const getTableRows = (
       ],
     }
 
-    previousFederalRolledOver = federalCumulativeTaxesOwed - federalPaid
-    previousStateRolledOver = stateCumulativeTaxesOwed - statePaid
+    previousFederalRolledOver = federalRemainingBalance
+    previousStateRolledOver = stateRemainingBalance
 
     return row
   })
