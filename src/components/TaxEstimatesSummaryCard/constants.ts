@@ -11,6 +11,5 @@ export const getCategoryStroke = (key: TaxOverviewCategory['key']) => {
   switch (key) {
     case 'federal': return '#6D3CC8'
     case 'state': return '#D8B8F4'
-    case 'selfEmployment': return '#1E4D57'
   }
 }
