@@ -31,7 +31,6 @@ export interface DataTableProps<TData> extends BaseDataTableProps {
   data: RowType<TData>[] | undefined
   headerGroups: HeaderGroup<TData>[]
   numColumns: number
-  onRowClick?: (row: RowType<TData>) => void
 }
 
 export const DataTable = <TData extends object>({
@@ -45,7 +44,6 @@ export const DataTable = <TData extends object>({
   data,
   headerGroups,
   numColumns,
-  onRowClick,
 }: DataTableProps<TData>) => {
   const nonAria = headerGroups.length > 1
 
@@ -90,10 +88,6 @@ export const DataTable = <TData extends object>({
             key={row.id}
             depth={row.depth}
             nonAria={nonAria}
-            className={onRowClick && row.getCanExpand() ? 'Layer__DataTable__Row--clickable' : undefined}
-            onAction={onRowClick && row.getCanExpand()
-              ? () => onRowClick(row)
-              : undefined}
           >
             {row.getVisibleCells().map(cell => (
               <Cell
@@ -108,7 +102,7 @@ export const DataTable = <TData extends object>({
         ))}
       </>
     )
-  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, componentName, onRowClick])
+  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, componentName])
 
   return (
     <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>

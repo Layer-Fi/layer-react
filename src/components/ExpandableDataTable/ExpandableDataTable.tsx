@@ -24,7 +24,6 @@ type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   columnConfig: NestedColumnConfig<TData>
   getSubRows: (row: TData) => TData[] | undefined
   getRowId: (row: TData) => string
-  toggleExpandableRowsOnClick?: boolean
 }
 
 const getRowIndentStyle = (
@@ -45,7 +44,6 @@ export function ExpandableDataTable<TData extends object>({
   hideHeader,
   getSubRows,
   getRowId,
-  toggleExpandableRowsOnClick = false,
 }: ExpandableDataTableProps<TData>) {
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
 
@@ -116,12 +114,6 @@ export function ExpandableDataTable<TData extends object>({
       hideHeader={hideHeader}
       dependencies={dependencies}
       headerGroups={headerGroups}
-      onRowClick={toggleExpandableRowsOnClick
-        ? (row) => {
-            if (!row.getCanExpand()) return
-            row.toggleExpanded()
-          }
-        : undefined}
     />
   )
 }
