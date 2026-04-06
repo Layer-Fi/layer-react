@@ -47,7 +47,7 @@ function buildKey({
   apiUrl?: string
   businessId: string
   year: number
-  reportingBasis?: ReportingBasis
+  reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
   enabled?: boolean
 }) {
