@@ -47,7 +47,7 @@ const TaxOverviewDeadlineStatusIcon = ({ status }: { status?: TaxOverviewDeadlin
       nonAria
       className={`Layer__TaxOverview__AmountIcon Layer__TaxOverview__AmountIcon--${tone}`}
     >
-      <Icon size={12} strokeWidth={2.25} />
+      <Icon size={14} strokeWidth={2.25} />
     </Span>
   )
 }
