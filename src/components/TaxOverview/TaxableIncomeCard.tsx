@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import type { TaxOverviewData } from '@schemas/taxEstimates/overview'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -10,6 +10,7 @@ import { Card } from '@components/Card/Card'
 import { MetricRow } from '@components/MetricRow/MetricRow'
 
 type TaxableIncomeCardProps = Pick<TaxOverviewData, 'deductionsTotal' | 'incomeTotal'>
+const METRIC_ROW_MOBILE_BREAKPOINT = 600
 
 export const TaxableIncomeCard = ({
   deductionsTotal,
@@ -17,7 +18,8 @@ export const TaxableIncomeCard = ({
 }: TaxableIncomeCardProps) => {
   const { t } = useTranslation()
   const { year } = useTaxEstimatesYear()
-  const { isMobile } = useSizeClass()
+  const [viewportWidth] = useWindowSize()
+  const isMetricRowMobile = viewportWidth < METRIC_ROW_MOBILE_BREAKPOINT
   const maxMeterValue = Math.max(incomeTotal, deductionsTotal, 1)
 
   return (
@@ -34,14 +36,14 @@ export const TaxableIncomeCard = ({
           )}
         </Span>
       </VStack>
-      <VStack gap={isMobile ? 'sm' : 'md'}>
+      <VStack gap={isMetricRowMobile ? 'sm' : 'md'}>
         <MetricRow
           label={t('taxEstimates:label.total_income', 'Total income')}
           amount={incomeTotal}
           classNamePrefix='Layer__TaxOverview'
           maxMeterValue={maxMeterValue}
           meterClassName='Layer__TaxOverview__IncomeMeter'
-          isMobile={isMobile}
+          isMobile={isMetricRowMobile}
         />
         <MetricRow
           label={t('taxEstimates:label.deductions', 'Deductions')}
@@ -49,7 +51,7 @@ export const TaxableIncomeCard = ({
           classNamePrefix='Layer__TaxOverview'
           maxMeterValue={maxMeterValue}
           meterClassName='Layer__TaxOverview__DeductionsMeter'
-          isMobile={isMobile}
+          isMobile={isMetricRowMobile}
         />
       </VStack>
     </Card>
