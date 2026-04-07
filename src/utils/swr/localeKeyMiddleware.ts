@@ -1,6 +1,9 @@
-import type { Middleware, SWRHook } from 'swr'
+import type { BareFetcher, Middleware, SWRHook } from 'swr'
 
+import { setLocaleHeader } from '@utils/api/authenticatedHttp'
 import { isStringArray } from '@utils/array/isStringArray'
+import type { SupportedLocale } from '@utils/i18n/supportedLocale'
+import { AUTH_TAG_KEY } from '@hooks/utils/auth/useAuth'
 import { useLocale } from '@providers/I18nProvider/LayerI18nProvider'
 
 const hasTag = (key: unknown, tag: string): boolean =>
@@ -9,6 +12,15 @@ const hasTag = (key: unknown, tag: string): boolean =>
   && 'tags' in key
   && isStringArray((key as Record<string, unknown>).tags)
   && (key as Record<string, unknown> & { tags: string[] }).tags.includes(tag)
+
+const createLocalizedFetcher = <Data>(fetcher: BareFetcher<Data> | null) => {
+  if (!fetcher) return null
+
+  return ({ _locale, ...key }: Record<string, unknown> & { _locale: SupportedLocale }) => {
+    setLocaleHeader(_locale)
+    return fetcher(key)
+  }
+}
 
 export const localeKeyMiddleware: Middleware = (useSWRNext: SWRHook) => (key, fetcher, config) => {
   const locale = useLocale()
@@ -20,14 +32,10 @@ export const localeKeyMiddleware: Middleware = (useSWRNext: SWRHook) => (key, fe
     if (!resolvedKey) return null
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    if (hasTag(resolvedKey, '#auth')) return resolvedKey
+    if (hasTag(resolvedKey, AUTH_TAG_KEY)) return resolvedKey
 
-    if (typeof resolvedKey === 'object') {
-      return { ...(resolvedKey as Record<string, unknown>), _locale: locale as string }
-    }
-
-    return `${String(resolvedKey)}:${locale}`
+    return { ...(resolvedKey as Record<string, unknown>), _locale: locale as string }
   }
 
-  return useSWRNext(augmentedKey, fetcher, config)
+  return useSWRNext(augmentedKey, createLocalizedFetcher(fetcher), config)
 }

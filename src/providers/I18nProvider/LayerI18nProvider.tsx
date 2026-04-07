@@ -3,7 +3,6 @@ import { I18nProvider as AriaI18nProvider } from 'react-aria-components'
 import { I18nextProvider } from 'react-i18next'
 import { IntlProvider } from 'react-intl'
 
-import { setLocaleHeader } from '@utils/api/authenticatedHttp'
 import i18next, { initI18n } from '@utils/i18n/init'
 import { DEFAULT_LOCALE, type SupportedLocale } from '@utils/i18n/supportedLocale'
 
@@ -20,17 +19,11 @@ type LayerI18nProviderProps = PropsWithChildren<{
 export function LayerI18nProvider({ children, locale = DEFAULT_LOCALE }: LayerI18nProviderProps) {
   const initialized = useRef(false)
   if (!initialized.current) {
-    setLocaleHeader(locale)
     initI18n(locale)
     initialized.current = true
   }
 
-  const previousLocale = useRef(locale)
   useEffect(() => {
-    if (previousLocale.current === locale) return
-    previousLocale.current = locale
-
-    setLocaleHeader(locale)
     void i18next.changeLanguage(locale)
   }, [locale])
 

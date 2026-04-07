@@ -16,18 +16,16 @@ const isPseudoEnabled = () => {
 }
 
 export const initI18n = (locale: SupportedLocale = DEFAULT_LOCALE) => {
-  if (i18next.isInitialized) {
-    return
-  }
+  if (i18next.isInitialized) return
 
   const usePseudo = isPseudoEnabled()
 
-  void i18next
+  return void i18next
     .use(initReactI18next)
     .use(new Pseudo(pseudoOptions({ enabled: usePseudo })))
     .init({
       returnEmptyString: false,
-      initImmediate: false,
+      initAsync: false,
       lng: locale,
       fallbackLng: DEFAULT_LOCALE,
       defaultNS: 'common',

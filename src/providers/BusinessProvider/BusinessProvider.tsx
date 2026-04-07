@@ -1,7 +1,5 @@
 import { type PropsWithChildren, type Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
-import useSWR from 'swr'
 
-import type { Business } from '@internal-types/business'
 import {
   type ColorConfig,
   type ColorsPaletteOption,
@@ -11,22 +9,15 @@ import {
   type LayerThemeConfig,
   type OnboardingStep,
 } from '@internal-types/layerContext'
-import { get } from '@utils/api/authenticatedHttp'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
-import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
+import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
 import { useDataSync } from '@hooks/legacy/useDataSync'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
-
-const getBusiness = get<{ data: Business }>(
-  ({ businessId }) => `/v1/businesses/${businessId}`,
-)
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -124,34 +115,15 @@ export const BusinessProvider = ({
     setRange: setDateRange,
   }), [globalDateRange, setDateRange])
 
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+  const { data: businessData } = useBusiness({ businessId })
 
-  const { data: businessData } = useSWR(
-    businessId && auth?.access_token && `business-${businessId}`,
-    getBusiness(apiUrl, auth?.access_token, {
-      params: { businessId },
-    }),
-    {
-      ...DEFAULT_SWR_CONFIG,
-      provider: () => new Map(),
-      onSuccess: (response) => {
-        if (response?.data) {
-          dispatch({
-            type: Action.setBusiness,
-            payload: { business: response.data || [] },
-          })
-        }
-      },
-    },
-  )
   useEffect(() => {
-    if (businessData?.data) {
-      dispatch({
-        type: Action.setBusiness,
-        payload: { business: businessData.data || [] },
-      })
-    }
+    if (!businessData) return
+
+    dispatch({
+      type: Action.setBusiness,
+      payload: { business: businessData.data },
+    })
   }, [businessData])
 
   const setTheme = (theme: LayerThemeConfig) => {

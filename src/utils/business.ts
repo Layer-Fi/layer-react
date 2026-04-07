@@ -1,18 +1,9 @@
-import { differenceInCalendarMonths, parseISO, startOfMonth } from 'date-fns'
+import { differenceInCalendarMonths, startOfMonth } from 'date-fns'
 
-import { type Business } from '@internal-types/business'
+import { type Business } from '@schemas/business'
 
 export const getActivationDate = (business?: Business) => {
-  try {
-    if (business && business.activation_at) {
-      return parseISO(business.activation_at)
-    }
-
-    return
-  }
-  catch (_err) {
-    return
-  }
+  return business?.activationAt
 }
 
 export const getEarliestDateToBrowse = (business?: Business) => {
