@@ -8,7 +8,7 @@ import pkg from '../../../package.json'
 
 let _locale: SupportedLocale = DEFAULT_LOCALE
 
-export function setLocaleHeader(locale: SupportedLocale) {
+export function setLocaleHeader(locale: SupportedLocale | undefined = DEFAULT_LOCALE) {
   _locale = locale
 }
 

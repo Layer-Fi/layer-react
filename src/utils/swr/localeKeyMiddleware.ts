@@ -16,7 +16,7 @@ const hasTag = (key: unknown, tag: string): boolean =>
 const createLocalizedFetcher = <Data>(fetcher: BareFetcher<Data> | null) => {
   if (!fetcher) return null
 
-  return ({ _locale, ...key }: Record<string, unknown> & { _locale: SupportedLocale }) => {
+  return ({ _locale, ...key }: Record<string, unknown> & { _locale: SupportedLocale | undefined }) => {
     setLocaleHeader(_locale)
     return fetcher(key)
   }
