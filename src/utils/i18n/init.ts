@@ -15,7 +15,7 @@ const isPseudoEnabled = () => {
   return params.get(LAYER_TEST_LOCALE_URL_PARAM) === 'pseudo'
 }
 
-export const initI18n = (locale: SupportedLocale = DEFAULT_LOCALE) => {
+export const initI18n = (locale: SupportedLocale) => {
   if (i18next.isInitialized) return
 
   const usePseudo = isPseudoEnabled()
