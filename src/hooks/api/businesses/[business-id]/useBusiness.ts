@@ -3,13 +3,14 @@ import useSWR from 'swr'
 
 import { BusinessResponseSchema } from '@schemas/business'
 import { get } from '@utils/api/authenticatedHttp'
+import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 
 export const BUSINESS_TAG_KEY = '#business'
 
 const getBusiness = get(
-  ({ businessId }: { businessId: string }) => `/v1/businesses/${businessId}`,
+  ({ businessId }) => `/v1/businesses/${businessId}`,
 )
 
 function buildKey({
@@ -35,10 +36,12 @@ export function useBusiness({ businessId }: { businessId: string }) {
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  return useSWR(
+  const swrResponse = useSWR(
     () => buildKey({ accessToken: auth?.access_token, apiUrl, businessId }),
     ({ accessToken, apiUrl, businessId }) =>
       getBusiness(apiUrl, accessToken, { params: { businessId } })()
         .then(Schema.decodeUnknownPromise(BusinessResponseSchema)),
   )
+
+  return new SWRQueryResult(swrResponse)
 }
