@@ -74,6 +74,7 @@ const getTableRows = (
 
   let previousFederalRolledOver = 0
   let previousStateRolledOver = 0
+  let previousUncategorizedRolledOver = 0
 
   return data.map((payment) => {
     const federalEstimated = payment.owedThisQuarterBreakdown.usFederal
@@ -85,6 +86,17 @@ const getTableRows = (
     const statePaid = payment.totalPaidBreakdown.usState
     const stateCumulativeTaxesOwed = previousStateRolledOver + stateEstimated
     const stateRemainingBalance = stateCumulativeTaxesOwed - statePaid
+
+    const uncategorizedEstimated =
+      payment.owedThisQuarter - federalEstimated - stateEstimated
+    const uncategorizedPaid = payment.totalPaidBreakdown.uncategorized
+    const uncategorizedRemainingBalance =
+      previousUncategorizedRolledOver + uncategorizedEstimated - uncategorizedPaid
+    const shouldShowUncategorizedRow =
+      previousUncategorizedRolledOver !== 0 ||
+      uncategorizedEstimated !== 0 ||
+      uncategorizedPaid !== 0 ||
+      uncategorizedRemainingBalance !== 0
 
     const row: TaxPaymentTableRow = {
       id: payment.id,
@@ -113,14 +125,14 @@ const getTableRows = (
           estimated: stateEstimated,
           paid: statePaid,
         },
-        ...(payment.totalPaidBreakdown.uncategorized !== 0
+        ...(shouldShowUncategorizedRow
           ? [{
             id: `${payment.id}-uncategorized`,
             label: t('taxEstimates:label.uncategorized_tax_payment', 'Uncategorized Tax Payment'),
-            rolledOverFromPreviousQuarter: 0,
-            remainingBalance: 0,
-            estimated: 0,
-            paid: payment.totalPaidBreakdown.uncategorized,
+            rolledOverFromPreviousQuarter: previousUncategorizedRolledOver,
+            remainingBalance: uncategorizedRemainingBalance,
+            estimated: uncategorizedEstimated,
+            paid: uncategorizedPaid,
           }]
           : []),
       ],
@@ -128,6 +140,7 @@ const getTableRows = (
 
     previousFederalRolledOver = federalRemainingBalance
     previousStateRolledOver = stateRemainingBalance
+    previousUncategorizedRolledOver = uncategorizedRemainingBalance
 
     return row
   })
