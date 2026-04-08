@@ -39,7 +39,7 @@ export const JournalEntryDetails = () => {
   const {
     data,
     isLoadingEntry,
-    errorEntry,
+    isErrorEntry,
     closeSelectedEntry,
     selectedEntryId,
     reverseEntry,
@@ -157,7 +157,7 @@ export const JournalEntryDetails = () => {
           </DetailsListItem>
         )}
       </DetailsList>
-      {!isLoadingEntry && !errorEntry
+      {!isLoadingEntry && !isErrorEntry
         ? (
           <div className='Layer__journal__entry-details__line-items'>
             <Card>

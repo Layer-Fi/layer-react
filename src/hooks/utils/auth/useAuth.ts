@@ -45,6 +45,8 @@ type KeyBuilderOptions = Partial<ClientSpecificOptions>
   & OverrideableAuthURLs & OverrideableAPIURLs & OverrideableScope
   & { businessAccessToken?: string }
 
+export const AUTH_TAG_KEY = '#auth'
+
 function buildKey({
   appId,
   appSecret,
@@ -58,7 +60,7 @@ function buildKey({
       apiUrl,
       businessAccessToken,
       mode: 'explicit' as const,
-      tags: ['#auth'],
+      tags: [AUTH_TAG_KEY],
     }
   }
 
@@ -70,7 +72,7 @@ function buildKey({
       authUrl,
       scope,
       mode: 'client' as const,
-      tags: ['#auth'],
+      tags: [AUTH_TAG_KEY],
     }
   }
 

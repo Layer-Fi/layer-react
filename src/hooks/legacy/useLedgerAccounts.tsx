@@ -1,19 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import useSWR from 'swr'
+import { useCallback, useMemo, useState } from 'react'
 
 import type { LedgerAccountBalanceWithNodeType } from '@internal-types/chartOfAccounts'
-import { DataModel } from '@internal-types/general'
 import { type LedgerAccountLineItem, type LedgerAccountsEntry } from '@internal-types/ledgerAccounts'
-import { get } from '@utils/api/authenticatedHttp'
 import { type ListLedgerAccountLinesReturn, useListLedgerAccountLines } from '@hooks/api/businesses/[business-id]/ledger/accounts/[account-id]/lines/useListLedgerAccountLines'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-
-const getLedgerAccountsEntry = get<{ data: LedgerAccountsEntry }>(
-  ({ businessId, entryId }) =>
-    `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
-)
+import { useLedgerAccountsEntry } from '@hooks/api/businesses/[business-id]/ledger/entries/[entry-id]/useLedgerAccountsEntry'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
   data?: LedgerAccountLineItem[] | undefined
@@ -23,7 +13,7 @@ type UseLedgerAccounts = (showReversalEntries: boolean) => {
   isValidating?: boolean
   isValidatingEntry?: boolean
   error?: unknown
-  errorEntry?: unknown
+  isErrorEntry?: boolean
   refetch: () => Promise<ListLedgerAccountLinesReturn[] | undefined>
   selectedAccount: LedgerAccountBalanceWithNodeType | undefined
   setSelectedAccount: (account: LedgerAccountBalanceWithNodeType | undefined) => void
@@ -35,11 +25,6 @@ type UseLedgerAccounts = (showReversalEntries: boolean) => {
 }
 
 export const useLedgerAccounts: UseLedgerAccounts = () => {
-  const { businessId, read, syncTimestamps, hasBeenTouched } =
-    useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
-
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
   const [selectedAccount, setSelectedAccount] = useState<LedgerAccountBalanceWithNodeType | undefined>()
   const selectedAccountId = selectedAccount?.accountId
@@ -91,17 +76,8 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     mutate: mutateEntryData,
     isLoading: isLoadingEntry,
     isValidating: isValdiatingEntry,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    error: errorEntry,
-  } = useSWR(
-    businessId
-    && selectedEntryId
-    && auth?.access_token
-    && `ledger-accounts-entry-${businessId}-${selectedEntryId}}`,
-    getLedgerAccountsEntry(apiUrl, auth?.access_token, {
-      params: { businessId, entryId: selectedEntryId },
-    }),
-  )
+    isError: isErrorEntry,
+  } = useLedgerAccountsEntry({ entryId: selectedEntryId })
 
   const refetch = () => mutate()
 
@@ -109,29 +85,6 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     setSelectedEntryId(undefined)
     void mutateEntryData()
   }
-
-  // Create a query key for the data model tracking (similar to original)
-  const queryKey = useMemo(() => {
-    return businessId
-      && selectedAccountId
-      && auth?.access_token
-      && `ledger-accounts-lines-${businessId}-${selectedAccountId}`
-  }, [businessId, selectedAccountId, auth?.access_token])
-
-  // Refetch data if related models has been changed since last fetch
-  useEffect(() => {
-    if (queryKey && shouldFetch && (paginationIsLoading || paginationIsValidating)) {
-      read(DataModel.LEDGER_ACCOUNTS, queryKey)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paginationIsLoading, paginationIsValidating, shouldFetch])
-
-  useEffect(() => {
-    if (queryKey && shouldFetch && hasBeenTouched(queryKey)) {
-      void refetch()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncTimestamps, selectedAccountId, shouldFetch])
 
   return {
     data,
@@ -141,7 +94,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     isValidating: shouldFetch ? paginationIsValidating : false,
     isValidatingEntry: isValdiatingEntry,
     error: shouldFetch ? paginationError : undefined,
-    errorEntry,
+    isErrorEntry,
     refetch,
     selectedAccount,
     setSelectedAccount,
