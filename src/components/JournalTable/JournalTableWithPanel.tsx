@@ -51,7 +51,7 @@ export const JournalTableWithPanel = ({
   const {
     data: rawData,
     isLoading,
-    error,
+    isError,
     isValidating,
     refetch,
     selectedEntryId,
@@ -143,7 +143,7 @@ export const JournalTableWithPanel = ({
         />
       )}
 
-      {data?.length === 0 && !isLoading && !error && (
+      {data?.length === 0 && !isLoading && !isError && (
         <div className='Layer__table-state-container'>
           <DataState
             status={DataStateStatus.allDone}
@@ -153,7 +153,7 @@ export const JournalTableWithPanel = ({
         </div>
       )}
 
-      {error
+      {isError
         ? (
           <div className='Layer__table-state-container'>
             <DataState
@@ -167,7 +167,7 @@ export const JournalTableWithPanel = ({
         )
         : null}
 
-      {(!data || isLoading) && !error
+      {(!data || isLoading) && !isError
         ? (
           <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
             <Loader />

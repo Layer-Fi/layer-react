@@ -35,7 +35,7 @@ type UseJournal = () => {
   isLoadingEntry?: boolean
   isValidating?: boolean
   isValidatingEntry?: boolean
-  error?: unknown
+  isError?: boolean
   isErrorEntry?: boolean
   refetch: () => Promise<ListLedgerEntriesReturn[] | undefined>
   selectedEntryId?: string
@@ -133,8 +133,7 @@ export const useJournal: UseJournal = () => {
     data: paginatedData,
     isLoading,
     isValidating,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    error,
+    isError,
     mutate,
     size,
     setSize,
@@ -409,7 +408,7 @@ export const useJournal: UseJournal = () => {
     data,
     isLoading,
     isValidating,
-    error,
+    isError,
     refetch,
     selectedEntryId,
     setSelectedEntryId,
