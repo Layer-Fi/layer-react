@@ -13,10 +13,11 @@ export function usePreserveInfiniteSize({ size, setSize }: Pick<SWRInfiniteRespo
   const sizeBeforeLocaleChange = useRef(size)
   const previousLocale = useRef(locale)
 
-  // Track size while locale is stable
-  if (previousLocale.current === locale) {
-    sizeBeforeLocaleChange.current = size
-  }
+  useEffect(() => {
+    if (previousLocale.current === locale) {
+      sizeBeforeLocaleChange.current = size
+    }
+  }, [size, locale])
 
   // Restore size after locale changes
   useEffect(() => {
