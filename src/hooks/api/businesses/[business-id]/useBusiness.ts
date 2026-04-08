@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { BusinessResponseSchema } from '@schemas/business'
+import { type Business, BusinessResponseSchema } from '@schemas/business'
 import { get } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -9,7 +9,7 @@ import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 
 export const BUSINESS_TAG_KEY = '#business'
 
-const getBusiness = get(
+const getBusiness = get<{ data: Business }>(
   ({ businessId }) => `/v1/businesses/${businessId}`,
 )
 
