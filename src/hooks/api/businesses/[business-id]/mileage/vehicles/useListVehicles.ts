@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -62,15 +63,16 @@ class ListVehiclesSWRResponse extends SWRQueryResult<ListVehiclesResponse> {
 }
 
 export function useListVehicles({ allowArchived }: { allowArchived?: boolean } = {}) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       allowArchived,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, allowArchived }) => listVehicles(
       apiUrl,
       accessToken,

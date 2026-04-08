@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import { type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossComparison, type ProfitAndLossComparisonRequestBody } from '@internal-types/profitAndLoss'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -58,19 +59,20 @@ export function useProfitAndLossComparisonReport({
   tagFilters,
   reportingBasis,
 }: UseProfitAndLossComparisonReportProps) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       apiUrl,
       businessId,
       periods,
       tagFilters,
       reportingBasis,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => compareProfitAndLoss(
       apiUrl,
       accessToken,

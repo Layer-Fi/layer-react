@@ -2,6 +2,7 @@ import { pipe, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -56,16 +57,17 @@ function buildKey({
 }
 
 export function useStripeConnectAccountLink() {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       apiUrl,
       businessId,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => {
       return createStripeConnectAccountLink(
         apiUrl,

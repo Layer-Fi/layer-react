@@ -2,6 +2,7 @@ import useSWR from 'swr'
 
 import { mapRawCustomAccountToCustomAccount, type RawCustomAccount } from '@internal-types/customAccounts'
 import { get } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -53,15 +54,16 @@ type useCustomAccountsParams = {
   userCreated?: boolean
 }
 export function useCustomAccounts({ userCreated }: useCustomAccountsParams = {}) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   return useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       userCreated,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, userCreated }) => getCustomAccounts(
       apiUrl,
       accessToken,

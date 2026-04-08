@@ -4,6 +4,7 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import type { GetBalanceSheetParams } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -52,15 +53,16 @@ export function useBalanceSheetDownload({
   effectiveDate,
   onSuccess,
 }: UseBalanceSheetOptions) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
   return useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       businessId,
       effectiveDate,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, effectiveDate }) => getBalanceSheetExcel(
       apiUrl,
       accessToken,

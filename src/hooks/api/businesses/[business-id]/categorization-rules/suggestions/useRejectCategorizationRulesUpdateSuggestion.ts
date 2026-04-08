@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -32,15 +33,16 @@ export const rejectCategorizationRulesUpdateSuggestion = del<never>(
 )
 
 export function useRejectCategorizationRulesUpdateSuggestion() {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       access_token: auth?.access_token,
       apiUrl: auth?.apiUrl,
       businessId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: suggestionId }: { arg: string },

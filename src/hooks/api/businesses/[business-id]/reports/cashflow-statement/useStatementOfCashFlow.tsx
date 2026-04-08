@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import type { StatementOfCashFlow } from '@internal-types/statementOfCashFlow'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -58,18 +59,19 @@ export function useStatementOfCashFlow({
   startDate?: Date
   endDate?: Date
 }) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { apiUrl } = useEnvironment()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    buildKey({
+    withLocale(buildKey({
       ...auth,
       apiUrl,
       businessId,
       startDate,
       endDate,
-    }),
+    })),
     ({ apiUrl, accessToken, startDate, endDate }) => getStatementOfCashFlow(
       apiUrl,
       accessToken,

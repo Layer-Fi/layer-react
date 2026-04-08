@@ -4,6 +4,7 @@ import useSWR from 'swr'
 
 import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@schemas/invoices/invoice'
 import { get } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -36,14 +37,15 @@ const getInvoiceSummaryStats = get<
 >(({ businessId }) => `/v1/businesses/${businessId}/invoices/summary-stats`)
 
 export function useInvoiceSummaryStats() {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => getInvoiceSummaryStats(
       apiUrl,
       accessToken,

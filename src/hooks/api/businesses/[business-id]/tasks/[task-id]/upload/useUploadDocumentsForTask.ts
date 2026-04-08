@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import type { FileMetadata } from '@internal-types/fileUpload'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -65,15 +66,16 @@ type UseUploadDocumentsForTaskArg = {
 }
 
 export function useUploadDocumentsForTask() {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       businessId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: { taskId, files, description } }: { arg: UseUploadDocumentsForTaskArg },

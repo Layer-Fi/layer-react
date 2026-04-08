@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -40,16 +41,17 @@ function buildKey({
 }
 
 export function useUnlinkBankAccount() {
+  const withLocale = useLocalizedKey()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const { trigger: rawTrigger, ...rest } = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       access_token: auth?.access_token,
       apiUrl,
       businessId,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }, { arg: bankAccountId }: { arg: string }) =>
       unlinkBankAccount(apiUrl, accessToken, {
         params: { businessId, bankAccountId },

@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import type { BalanceSheet } from '@internal-types/balanceSheet'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -52,17 +53,18 @@ export function useBalanceSheet({
 }: {
   effectiveDate?: Date
 }) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { apiUrl } = useEnvironment()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       apiUrl,
       businessId,
       effectiveDate,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, effectiveDate }) => getBalanceSheet(
       apiUrl,
       accessToken,

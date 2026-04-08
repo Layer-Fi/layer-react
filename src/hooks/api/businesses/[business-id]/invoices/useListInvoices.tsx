@@ -6,6 +6,7 @@ import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type Sor
 import { type Invoice, InvoiceSchema, type InvoiceStatus } from '@schemas/invoices/invoice'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -110,12 +111,13 @@ export function useListInvoices({
   limit,
   showTotalCount = true,
 }: ListInvoicesOptions = {}) {
+  const withLocale = useLocalizedKey()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListInvoicesReturn | null) => keyLoader(
+    (_index, previousPageData: ListInvoicesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...auth,
@@ -130,7 +132,7 @@ export function useListInvoices({
         limit,
         showTotalCount,
       },
-    ),
+    )),
     ({
       accessToken,
       apiUrl,

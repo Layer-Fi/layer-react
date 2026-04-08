@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useLedgerEntriesCacheActions, useLedgerEntriesOptimisticUpdater } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -51,15 +52,16 @@ type RemoveTagFromLedgerEntryOptions = {
 }
 
 export function useRemoveTagFromLedgerEntry({ ledgerEntryId }: RemoveTagFromLedgerEntryOptions) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       ledgerEntryId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: { tagId } }: { arg: RemoveTagFromLedgerEntryArg },

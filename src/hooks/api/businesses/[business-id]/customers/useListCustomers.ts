@@ -6,6 +6,7 @@ import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { type Customer, CustomerSchema } from '@schemas/customer'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -88,11 +89,12 @@ type UseListCustomersParams = {
 }
 
 export function useListCustomers({ query, isEnabled = true }: UseListCustomersParams = {}) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListCustomersRawResult | null) => keyLoader(
+    (_index, previousPageData: ListCustomersRawResult | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...data,
@@ -100,7 +102,7 @@ export function useListCustomers({ query, isEnabled = true }: UseListCustomersPa
         query,
         isEnabled,
       },
-    ),
+    )),
     ({
       accessToken,
       apiUrl,

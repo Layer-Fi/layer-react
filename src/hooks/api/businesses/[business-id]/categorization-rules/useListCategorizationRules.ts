@@ -6,6 +6,7 @@ import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type Sor
 import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -110,12 +111,13 @@ export function useListCategorizationRules({
   limit,
   showTotalCount = true,
 }: ListCategorizationRulesOptions = {}) {
+  const withLocale = useLocalizedKey()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListCategorizationRulesReturn | null) => keyLoader(
+    (_index, previousPageData: ListCategorizationRulesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...auth,
@@ -128,7 +130,7 @@ export function useListCategorizationRules({
         limit,
         showTotalCount,
       },
-    ),
+    )),
     ({
       accessToken,
       apiUrl,

@@ -6,6 +6,7 @@ import { get } from '@utils/api/authenticatedHttp'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
 import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import {
   BOOKKEEPING_TAG_KEY,
   useBookkeepingStatus,
@@ -85,6 +86,7 @@ function buildKey({
 }
 
 export function useBookkeepingPeriods() {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -92,11 +94,11 @@ export function useBookkeepingPeriods() {
   const isActiveOrPaused = data ? isActiveOrPausedBookkeepingStatus(data.status) : false
 
   const swrResponse = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       businessId,
       isActiveOrPaused,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => getBookkeepingPeriods(
       apiUrl,
       accessToken,
