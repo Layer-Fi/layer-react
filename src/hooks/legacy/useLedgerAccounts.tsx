@@ -5,7 +5,7 @@ import { type LedgerAccountLineItem, type LedgerAccountsEntry } from '@internal-
 import { type ListLedgerAccountLinesReturn, useListLedgerAccountLines } from '@hooks/api/businesses/[business-id]/ledger/accounts/[account-id]/lines/useListLedgerAccountLines'
 import { useLedgerAccountsEntry } from '@hooks/api/businesses/[business-id]/ledger/entries/[entry-id]/useLedgerAccountsEntry'
 
-type UseLedgerAccounts = (showReversalEntries: boolean) => {
+type UseLedgerAccounts = () => {
   data?: LedgerAccountLineItem[] | undefined
   entryData?: LedgerAccountsEntry
   isLoading?: boolean
