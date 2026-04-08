@@ -6,7 +6,7 @@ import type { BankTransaction } from '@internal-types/bankTransactions'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
-import { useLocalizedKey } from '@utils/swr/localizedKey'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -174,7 +174,7 @@ export function useBankTransactions({
       startDate,
       endDate,
       tagFilterQueryString,
-    }) => {
+    }: NonNullable<ReturnType<typeof keyLoader>>) => {
       return getBankTransactions(
         apiUrl,
         accessToken,
