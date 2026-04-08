@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import type { PressEvent } from '@react-types/shared'
 import { flexRender, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
 
 import {
@@ -13,6 +12,11 @@ import {
 import { Loader } from '@components/Loader/Loader'
 
 import './dataTable.scss'
+
+type ClickableRowProps<TData> = {
+  onRowClick: (row: RowType<TData>) => void
+  isRowClickable: (row: RowType<TData>) => boolean
+}
 
 export interface BaseDataTableProps {
   componentName: string
@@ -32,8 +36,7 @@ export interface DataTableProps<TData> extends BaseDataTableProps {
   data: RowType<TData>[] | undefined
   headerGroups: HeaderGroup<TData>[]
   numColumns: number
-  isRowClickable?: (row: RowType<TData>) => boolean
-  onRowClick?: (row: RowType<TData>, event?: PressEvent | React.MouseEvent) => void
+  withClickableRow?: ClickableRowProps<TData>
 }
 
 export const DataTable = <TData extends object>({
@@ -47,8 +50,7 @@ export const DataTable = <TData extends object>({
   data,
   headerGroups,
   numColumns,
-  isRowClickable,
-  onRowClick,
+  withClickableRow,
 }: DataTableProps<TData>) => {
   const nonAria = headerGroups.length > 1
 
@@ -89,25 +91,25 @@ export const DataTable = <TData extends object>({
     return (
       <>
         {data?.map((row) => {
-          const isClickable = Boolean(onRowClick) && (isRowClickable?.(row) ?? true)
-          const handleRowClick = onRowClick ? (event: PressEvent | React.MouseEvent) => onRowClick(row, event) : undefined
+          const isClickable = withClickableRow?.isRowClickable(row)
+
+          const onAction = isClickable && withClickableRow?.onRowClick
+            ? () => withClickableRow.onRowClick(row)
+            : undefined
 
           return (
             <Row
               key={row.id}
               depth={row.depth}
               nonAria={nonAria}
+              onAction={onAction}
               className={isClickable ? 'Layer__DataTable__ClickableRow' : undefined}
-              onClick={nonAria && isClickable ? event => handleRowClick?.(event) : undefined}
             >
               {row.getVisibleCells().map(cell => (
                 <Cell
                   key={`${row.id}-${cell.id}`}
                   className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
                   nonAria={nonAria}
-                  onClick={!nonAria && isClickable
-                    ? event => handleRowClick?.(event)
-                    : undefined}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </Cell>
@@ -117,7 +119,7 @@ export const DataTable = <TData extends object>({
         })}
       </>
     )
-  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, componentName, isRowClickable, onRowClick])
+  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, withClickableRow, componentName])
 
   return (
     <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>

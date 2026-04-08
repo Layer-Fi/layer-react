@@ -93,10 +93,10 @@ const getTableRows = (
     const uncategorizedRemainingBalance =
       previousUncategorizedRolledOver + uncategorizedEstimated - uncategorizedPaid
     const shouldShowUncategorizedRow =
-      previousUncategorizedRolledOver !== 0 ||
-      uncategorizedEstimated !== 0 ||
-      uncategorizedPaid !== 0 ||
-      uncategorizedRemainingBalance !== 0
+      previousUncategorizedRolledOver !== 0
+      || uncategorizedEstimated !== 0
+      || uncategorizedPaid !== 0
+      || uncategorizedRemainingBalance !== 0
 
     const row: TaxPaymentTableRow = {
       id: payment.id,
@@ -163,7 +163,6 @@ export const TaxPaymentsTable = ({ data, isLoading, isError, slots }: CommonTaxP
         slots={slots}
         getSubRows={getSubRows}
         getRowId={getRowId}
-        expandOnRowClick
       />
     </ExpandableDataTableProvider>
   )

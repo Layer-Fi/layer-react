@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -6,7 +6,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
-import { isInteractiveEventTarget } from '@utils/dom/isInteractiveEventTarget'
 import { HStack } from '@ui/Stack/Stack'
 import {
   getColumnDefs,
@@ -25,7 +24,6 @@ type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   columnConfig: NestedColumnConfig<TData>
   getSubRows: (row: TData) => TData[] | undefined
   getRowId: (row: TData) => string
-  expandOnRowClick?: boolean
 }
 
 const getRowIndentStyle = (
@@ -47,7 +45,6 @@ export function ExpandableDataTable<TData extends object>({
   hideHeader,
   getSubRows,
   getRowId,
-  expandOnRowClick = false,
 }: ExpandableDataTableProps<TData>) {
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
 
@@ -68,13 +65,7 @@ export function ExpandableDataTable<TData extends object>({
         return (
           <div style={rowIndentStyle}>
             <HStack align='center' gap='xs'>
-              <ExpandButton
-                isExpanded={row.getIsExpanded()}
-                onClick={(event) => {
-                  event.stopPropagation()
-                  row.toggleExpanded()
-                }}
-              />
+              <ExpandButton isExpanded={row.getIsExpanded()} />
               {originalFirstCell(row)}
             </HStack>
           </div>
@@ -106,6 +97,14 @@ export function ExpandableDataTable<TData extends object>({
   const headerGroups = table.getHeaderGroups()
   const numColumns = table.getVisibleLeafColumns().length
 
+  const isRowClickable = useCallback((row: Row<TData>) => {
+    return row.getCanExpand()
+  }, [])
+
+  const onRowClick = useCallback((row: Row<TData>) => {
+    row.toggleExpanded()
+  }, [])
+
   return (
     <DataTable
       ariaLabel={ariaLabel}
@@ -118,11 +117,9 @@ export function ExpandableDataTable<TData extends object>({
       hideHeader={hideHeader}
       dependencies={dependencies}
       headerGroups={headerGroups}
-      isRowClickable={row => expandOnRowClick && row.getCanExpand()}
-      onRowClick={(row, event) => {
-        if (!expandOnRowClick || !row.getCanExpand()) return
-        if (event && isInteractiveEventTarget(event.target)) return
-        row.toggleExpanded()
+      withClickableRow={{
+        onRowClick,
+        isRowClickable,
       }}
     />
   )
