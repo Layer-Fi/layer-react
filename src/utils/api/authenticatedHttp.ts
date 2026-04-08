@@ -1,14 +1,21 @@
 import { APIError, type APIErrorMessage } from '@utils/api/apiError'
 import { reportError } from '@utils/api/errorHandler'
+import { DEFAULT_LOCALE, type SupportedLocale } from '@utils/i18n/supportedLocale'
 import type { ParameterValues } from '@utils/request/toDefinedSearchParameters'
 
 // eslint-disable-next-line import/no-relative-parent-imports
 import pkg from '../../../package.json'
 
-const CUSTOM_PREFIX = 'Layer-'
-const CUSTOM_HEADERS = {
-  [`${CUSTOM_PREFIX}React-Version`]: pkg.version,
-} as const
+let _locale: SupportedLocale = DEFAULT_LOCALE
+
+export function setLocaleHeader(locale: SupportedLocale | undefined = DEFAULT_LOCALE) {
+  _locale = locale
+}
+
+const getCustomHeaders = (): Record<string, string> => ({
+  'Layer-Locale': _locale,
+  'Layer-React-Version': pkg.version,
+})
 
 type APIResponseError = {
   description?: string
@@ -41,7 +48,7 @@ export const get =
           headers: {
             'Authorization': 'Bearer ' + (accessToken || ''),
             'Content-Type': 'application/json',
-            ...CUSTOM_HEADERS,
+            ...getCustomHeaders(),
           },
           method: 'GET',
         })
@@ -66,7 +73,7 @@ export const getText =
         fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
           headers: {
             Authorization: 'Bearer ' + (accessToken || ''),
-            ...CUSTOM_HEADERS,
+            ...getCustomHeaders(),
           },
           method: 'GET',
         })
@@ -98,7 +105,7 @@ export const request =
             'Authorization': 'Bearer ' + (accessToken || ''),
             'Content-Type': 'application/json',
             'Cache-Control': 'no-cache',
-            ...CUSTOM_HEADERS,
+            ...getCustomHeaders(),
           },
           method: verb.toUpperCase(),
           body: JSON.stringify(options?.body),
@@ -123,7 +130,7 @@ export const postWithFormData = <
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + (accessToken || ''),
-      ...CUSTOM_HEADERS,
+      ...getCustomHeaders(),
     },
     body: formData,
   })

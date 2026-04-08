@@ -161,6 +161,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   useEffect(() => {
     if (!isLoading && bankAccounts) {
@@ -314,6 +315,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const unlinkBankAccount = async (bankAccountId: string) => {
     await triggerUnlinkBankAccount(bankAccountId)
     await refetchAccounts()
+    void forceReloadBankTransactions()
     touch(DataModel.LINKED_ACCOUNTS)
   }
 
@@ -402,6 +404,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       params: { businessId, plaidItemPlaidId },
     })
     await refetchAccounts()
+    void forceReloadBankTransactions()
     touch(DataModel.LINKED_ACCOUNTS)
   }
 

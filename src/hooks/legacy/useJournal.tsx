@@ -36,7 +36,7 @@ type UseJournal = () => {
   isValidating?: boolean
   isValidatingEntry?: boolean
   error?: unknown
-  errorEntry?: unknown
+  isErrorEntry?: boolean
   refetch: () => Promise<ListLedgerEntriesReturn[] | undefined>
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
@@ -430,6 +430,6 @@ export const useJournal: UseJournal = () => {
     fetchMore,
     isLoadingEntry: false,
     isValidatingEntry: false,
-    errorEntry: undefined,
+    isErrorEntry: false,
   }
 }

@@ -1,5 +1,29 @@
 import { pipe, Schema } from 'effect'
 
+const jurisdictionFields = {
+  usFederal: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('us_federal'),
+  ),
+  usState: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('us_state'),
+  ),
+}
+
+const TaxOwedBreakdownSchema = Schema.Struct({
+  ...jurisdictionFields,
+})
+
+export type TaxOwedBreakdown = typeof TaxOwedBreakdownSchema.Type
+
+const TaxPaidBreakdownSchema = Schema.Struct({
+  ...jurisdictionFields,
+  uncategorized: Schema.Number,
+})
+
+export type TaxPaidBreakdown = typeof TaxPaidBreakdownSchema.Type
+
 const TaxPaymentQuarterSchema = Schema.Struct({
   quarter: Schema.Number,
   owedRolledOverFromPrevious: pipe(
@@ -10,9 +34,17 @@ const TaxPaymentQuarterSchema = Schema.Struct({
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('owed_this_quarter'),
   ),
+  owedThisQuarterBreakdown: pipe(
+    Schema.propertySignature(TaxOwedBreakdownSchema),
+    Schema.fromKey('owed_this_quarter_breakdown'),
+  ),
   totalPaid: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('total_paid'),
+  ),
+  totalPaidBreakdown: pipe(
+    Schema.propertySignature(TaxPaidBreakdownSchema),
+    Schema.fromKey('total_paid_breakdown'),
   ),
   total: Schema.Number,
 })

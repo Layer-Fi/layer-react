@@ -96,6 +96,8 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     isSearchable: isSearchable && !isReadOnly,
     isLoading: isLoading || isMutating,
     openMenuOnClick: !isReadOnly,
+    menuPlacement: 'auto' as const,
+    menuShouldScrollIntoView: false,
     ['aria-label']: ariaLabel,
     ['aria-labelledby']: ariaLabelledby,
     ['aria-describedby']: ariaDescribedby,
