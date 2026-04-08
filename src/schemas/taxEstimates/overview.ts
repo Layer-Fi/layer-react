@@ -35,3 +35,55 @@ export const TaxOverviewApiResponseSchema = Schema.Struct({
 })
 
 export type TaxOverviewApiResponse = typeof TaxOverviewApiResponseSchema.Type
+
+export type TaxOverviewBannerReview = {
+  amount: number
+  count: number
+  type: 'UNCATEGORIZED_TRANSACTIONS'
+}
+
+export type TaxOverviewCategoryKey = 'federal' | 'state'
+
+export type TaxOverviewCategory = {
+  amount: number
+  key: TaxOverviewCategoryKey
+  label: string
+}
+
+export type TaxOverviewDeadlineStatusKind = 'pastDue' | 'paid' | 'due' | 'categorizationIncomplete'
+
+export type TaxOverviewDeadlineStatus = {
+  kind: TaxOverviewDeadlineStatusKind
+}
+
+export type TaxOverviewDeadlineReviewAction = {
+  payload: TaxOverviewBannerReview
+}
+
+export type TaxOverviewDeadline = {
+  amount: number
+  description: string
+  dueAt: Date
+  id: string
+  reviewAction?: TaxOverviewDeadlineReviewAction
+  status?: TaxOverviewDeadlineStatus
+  title: string
+}
+
+export type TaxOverviewNextTax = {
+  amount: number
+  dueAt: Date
+  quarter: number
+  status: TaxOverviewDeadlineStatus
+}
+
+export type TaxOverviewData = {
+  annualDeadline: TaxOverviewDeadline
+  bannerReview?: TaxOverviewBannerReview
+  deductionsTotal: number
+  estimatedTaxCategories: TaxOverviewCategory[]
+  estimatedTaxesTotal: number
+  incomeTotal: number
+  nextTax?: TaxOverviewNextTax
+  paymentDeadlines: TaxOverviewDeadline[]
+}
