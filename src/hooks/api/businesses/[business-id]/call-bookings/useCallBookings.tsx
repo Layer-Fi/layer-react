@@ -16,6 +16,7 @@ import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
+import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -98,6 +99,8 @@ export function useCallBookings({ limit }: { limit?: number } = {}) {
       initialSize: 1,
     },
   )
+
+  usePreserveInfiniteSize(swrResponse)
 
   return new SWRInfiniteResult(swrResponse)
 }

@@ -7,6 +7,7 @@ import { type Customer, CustomerSchema } from '@schemas/customer'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -127,6 +128,8 @@ export function useListCustomers({ query, isEnabled = true }: UseListCustomersPa
       initialSize: 1,
     },
   )
+
+  usePreserveInfiniteSize(swrResponse)
 
   return new SWRInfiniteResult(swrResponse)
 }

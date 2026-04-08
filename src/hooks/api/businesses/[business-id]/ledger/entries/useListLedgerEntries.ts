@@ -6,6 +6,7 @@ import type { JournalEntry } from '@internal-types/journal'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -101,7 +102,7 @@ export function useListLedgerEntries({
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  return useSWRInfinite(
+  const swrResponse = useSWRInfinite(
     (_index, previousPageData: ListLedgerEntriesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
@@ -143,6 +144,10 @@ export function useListLedgerEntries({
       initialSize: 1,
     },
   )
+
+  usePreserveInfiniteSize(swrResponse)
+
+  return swrResponse
 }
 
 const INVALIDATION_DEBOUNCE_OPTIONS = {
