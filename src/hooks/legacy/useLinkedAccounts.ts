@@ -158,8 +158,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     error: responseError,
     mutate,
   } = useListBankAccounts()
-  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
-
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
