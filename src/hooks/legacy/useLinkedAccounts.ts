@@ -158,7 +158,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     error: responseError,
     mutate,
   } = useListBankAccounts()
-
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
@@ -228,6 +227,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         body: { public_token: publicToken, institution: metadata.institution },
       })
       await refetchAccounts()
+
+      void forceReloadBankTransactions()
     }
     finally {
       setIsLinking(false)
