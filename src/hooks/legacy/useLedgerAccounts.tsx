@@ -12,7 +12,7 @@ type UseLedgerAccounts = () => {
   isLoadingEntry?: boolean
   isValidating?: boolean
   isValidatingEntry?: boolean
-  error?: unknown
+  isError?: boolean
   isErrorEntry?: boolean
   refetch: () => Promise<ListLedgerAccountLinesReturn[] | undefined>
   selectedAccount: LedgerAccountBalanceWithNodeType | undefined
@@ -34,8 +34,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     data: paginatedData,
     isLoading: paginationIsLoading,
     isValidating: paginationIsValidating,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    error: paginationError,
+    isError,
     mutate,
     size,
     setSize,
@@ -93,7 +92,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     isLoadingEntry,
     isValidating: shouldFetch ? paginationIsValidating : false,
     isValidatingEntry: isValdiatingEntry,
-    error: shouldFetch ? paginationError : undefined,
+    isError: shouldFetch && isError,
     isErrorEntry,
     refetch,
     selectedAccount,

@@ -6,8 +6,9 @@ import type { JournalEntry } from '@internal-types/journal'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
+import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -147,7 +148,7 @@ export function useListLedgerEntries({
 
   usePreserveInfiniteSize(swrResponse)
 
-  return swrResponse
+  return new SWRInfiniteResult(swrResponse)
 }
 
 const INVALIDATION_DEBOUNCE_OPTIONS = {
