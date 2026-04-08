@@ -4,6 +4,7 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { type GetProfitAndLossDetailLinesParams, type PnlDetailLinesBaseParams, type PnlDetailLinesFilterParams } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -73,12 +74,13 @@ export function useProfitAndLossDetailLinesExport({
   pnlStructure,
   onSuccess,
 }: UseProfitAndLossDetailLinesExportOptions) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
 
   return useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       apiUrl,
       businessId,
@@ -88,7 +90,7 @@ export function useProfitAndLossDetailLinesExport({
       tagFilter,
       reportingBasis,
       pnlStructure,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, startDate, endDate, pnlStructureLineItemName, tagFilter, reportingBasis, pnlStructure }) =>
       getProfitAndLossDetailLinesExcel(
         apiUrl,

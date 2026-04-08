@@ -144,6 +144,7 @@ export function useBankTransactions({
   endDate,
   tagFilterQueryString,
 }: UseBankTransactionsOptions) {
+  // const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 

@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { type CreateInvoiceWriteoff, CreateInvoiceWriteoffSchema, InvoiceWriteoffSchema } from '@schemas/invoices/invoiceWriteoff'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
@@ -58,6 +59,7 @@ export const updateInvoiceWithWriteoff = (invoice: Invoice): Invoice => {
 
 type UseWriteoffInvoiceProps = { invoiceId: string }
 export const useWriteoffInvoice = ({ invoiceId }: UseWriteoffInvoiceProps) => {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -68,11 +70,11 @@ export const useWriteoffInvoice = ({ invoiceId }: UseWriteoffInvoiceProps) => {
     }, [invoiceId])
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       invoiceId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, invoiceId },
       { arg: decodedBody }: { arg: CreateInvoiceWriteoff },

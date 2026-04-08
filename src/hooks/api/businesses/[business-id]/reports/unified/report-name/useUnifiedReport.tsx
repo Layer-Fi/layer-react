@@ -5,6 +5,7 @@ import type { DateGroupBy, ReportEnum, UnifiedReportDateQueryParams } from '@sch
 import { UnifiedReportSchema } from '@schemas/reports/unifiedReport'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -55,19 +56,20 @@ type UseUnifiedReportParameters = {
 } & UnifiedReportDateQueryParams
 
 export function useUnifiedReport({ report, groupBy, ...dateParams }: UseUnifiedReportParameters) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { apiUrl } = useEnvironment()
   const { businessId } = useLayerContext()
 
   const swrResponse = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       apiUrl,
       businessId,
       report,
       groupBy,
       ...dateParams,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => getUnifiedReport(apiUrl, accessToken, {
       params: { businessId, report, groupBy, ...dateParams },
     })().then(({ data }) => Schema.decodeUnknownPromise(UnifiedReportSchema)(data)),

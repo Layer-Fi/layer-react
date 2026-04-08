@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import useSWR from 'swr'
 
 import { getText } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -39,15 +40,16 @@ type UseInvoicePreviewProps = {
   invoiceId: string
 }
 export function useInvoicePreview({ invoiceId }: UseInvoicePreviewProps) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       invoiceId,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, invoiceId }) => getInvoicePreview(
       apiUrl,
       accessToken,

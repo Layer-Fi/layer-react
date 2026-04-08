@@ -6,6 +6,7 @@ import { type ReportingBasis } from '@internal-types/general'
 import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/reports/profitAndLoss'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -78,12 +79,13 @@ export function useProfitAndLossDetailLines({
   reportingBasis,
   pnlStructure,
 }: PnlDetailLinesBaseParams & PnlDetailLinesFilterParams) {
+  const withLocale = useLocalizedKey()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const swrResponse = useSWR(
-    () => keyLoader({
+    () => withLocale(keyLoader({
       ...auth,
       apiUrl,
       businessId,
@@ -93,7 +95,7 @@ export function useProfitAndLossDetailLines({
       tagFilter,
       reportingBasis,
       pnlStructure,
-    }),
+    })),
     ({
       accessToken,
       apiUrl,

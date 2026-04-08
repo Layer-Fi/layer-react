@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CategorizationRuleSchema, type CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
@@ -44,6 +45,7 @@ const createCategorizationRule = post<CreateCategorizationRuleReturn, CreateCate
 )
 
 export function useCreateCategorizationRule() {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
@@ -52,11 +54,11 @@ export function useCreateCategorizationRule() {
   const { forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       access_token: auth?.access_token,
       apiUrl: auth?.apiUrl,
       businessId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: { ...body } }: { arg: CreateCategorizationRuleBody },

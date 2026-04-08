@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import type { TransactionTagEncoded } from '@schemas/tag'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import {
   useBankTransactionsGlobalCacheActions,
 } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -69,15 +70,16 @@ type TagBankTransactionOptions = {
 }
 
 export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionOptions) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       bankTransactionId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, bankTransactionId },
       { arg: { key, value, dimensionDisplayName, valueDisplayName } }: { arg: TagBankTransactionArg },

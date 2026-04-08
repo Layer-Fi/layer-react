@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { type TaxProfileRequest, type TaxProfileResponse, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTaxDetailsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/details/useTaxDetails'
 import { useTaxPaymentsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
@@ -57,6 +58,7 @@ type UseUpsertTaxProfileProps = {
   mode: UpsertTaxProfileMode
 }
 export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { patchTaxProfile } = useTaxProfileGlobalCacheActions()
@@ -64,10 +66,10 @@ export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
   const { forceReloadTaxDetails } = useTaxDetailsGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       businessId,
-    }),
+    })),
     async ({ accessToken, apiUrl, businessId }, { arg }: { arg: TaxProfileRequest }) => {
       const request = getRequestFn(mode)
 

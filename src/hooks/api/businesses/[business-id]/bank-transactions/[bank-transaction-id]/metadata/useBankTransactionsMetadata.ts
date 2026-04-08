@@ -2,6 +2,7 @@ import useSWR from 'swr'
 
 import { type BankTransaction, type BankTransactionMetadata } from '@internal-types/bankTransactions'
 import { get } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -38,15 +39,16 @@ function buildKey({
 }
 
 export function useBankTransactionMetadata({ bankTransactionId }: { bankTransactionId: BankTransaction['id'] }) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
   return useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       businessId,
       bankTransactionId,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => getBankTransactionMetadata(
       apiUrl,
       accessToken,

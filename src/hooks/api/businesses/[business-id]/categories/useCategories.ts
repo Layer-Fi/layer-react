@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import { type CategoriesListMode, CategoryListSchema, type NestedCategorization } from '@schemas/categorization'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -53,15 +54,16 @@ type UseCategoriesOptions = {
 }
 
 export function useCategories({ mode }: UseCategoriesOptions = {}) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
   return useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       businessId,
       mode,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, mode }) => getCategories(
       apiUrl,
       accessToken,

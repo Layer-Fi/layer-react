@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import type { BankTransactionMetadata } from '@internal-types/bankTransactions'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { put } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { GET_BANK_TRANSACTION_METADATA_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionsMetadata'
@@ -46,17 +47,18 @@ function buildKey({
 }
 
 export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess }: { bankTransactionId: string, onSuccess?: () => Awaitable<unknown> }) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       access_token: auth?.access_token,
       apiUrl: auth?.apiUrl,
       businessId,
       bankTransactionId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: body }: { arg: UpdateBankTransactionMetadataBody },

@@ -4,6 +4,7 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type APIError } from '@utils/api/apiError'
 import { get } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -55,6 +56,7 @@ export function useJournalEntriesDownload({
   endCutoff,
   onSuccess,
 }: UseJournalEntriesDownloadOptions) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -63,12 +65,12 @@ export function useJournalEntriesDownload({
     Error | APIError,
     MutationParams
   >(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       businessId,
       startCutoff,
       endCutoff,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, startCutoff, endCutoff }) => getJournalEntriesCSV(
       apiUrl,
       accessToken,

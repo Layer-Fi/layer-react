@@ -3,6 +3,7 @@ import useSWRMutation from 'swr/mutation'
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { get } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -46,16 +47,17 @@ export function useAccountBalancesDownload({
   endCutoff,
   onSuccess,
 }: UseAccountBalancesDownloadOptions) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
   return useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       businessId,
       startCutoff,
       endCutoff,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, startCutoff, endCutoff }) => getLedgerAccountBalancesCSV(
       apiUrl,
       accessToken,

@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { type UpsertVehicleEncoded, VehicleSchema } from '@schemas/vehicle'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTripsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
@@ -123,6 +124,7 @@ type UseUpsertVehicleProps =
   | { mode: UpsertVehicleMode.Update, vehicleId: string }
 
 export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -130,11 +132,11 @@ export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
   const vehicleId = mode === UpsertVehicleMode.Update ? props.vehicleId : undefined
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       vehicleId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, vehicleId },
       { arg: body }: { arg: UpsertVehicleBody },
