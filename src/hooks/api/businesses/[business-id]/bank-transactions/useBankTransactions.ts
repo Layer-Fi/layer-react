@@ -6,6 +6,7 @@ import type { BankTransaction } from '@internal-types/bankTransactions'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
+import { useLocalizedKey } from '@utils/swr/localizedKey'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -144,12 +145,12 @@ export function useBankTransactions({
   endDate,
   tagFilterQueryString,
 }: UseBankTransactionsOptions) {
-  // const withLocale = useLocalizedKey()
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const swrResponse = useSWRInfinite(
-    (_index, previousPageData: GetBankTransactionsReturn | null) => keyLoader(
+    (_index, previousPageData: GetBankTransactionsReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...data,
@@ -161,7 +162,7 @@ export function useBankTransactions({
         endDate,
         tagFilterQueryString,
       },
-    ),
+    )),
     ({
       accessToken,
       apiUrl,

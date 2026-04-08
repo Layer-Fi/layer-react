@@ -8,7 +8,7 @@ const createLocalizedFetcher = <Data>(fetcher: BareFetcher<Data> | null) => {
   if (!fetcher) return null
 
   return ({ _locale, ...key }: Record<string, unknown> & { _locale: SupportedLocale | undefined }, ...rest: unknown[]) => {
-    if (_locale) setLocaleHeader(_locale)
+    setLocaleHeader(_locale)
 
     return fetcher(key, ...rest)
   }
