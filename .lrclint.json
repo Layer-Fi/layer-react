@@ -61,7 +61,9 @@
       "severity": "warning",
       "options": {
         "maxAddedLines": 3000,
-        "filePatterns": ["**/TaxPaymentsTable.tsx"]
+        "filePatterns": [
+          "**/TaxPaymentsTable.tsx"
+        ]
       }
     },
     "no-css-classname-concatenation": {
@@ -82,7 +84,9 @@
       "options": {
         "localesPath": "src/assets/locales",
         "primaryLocale": "en-US",
-        "additionalLocales": ["fr-CA"],
+        "additionalLocales": [
+          "fr-CA"
+        ],
         "translationFunction": "translationKey"
       }
     },
@@ -96,9 +100,5 @@
       "severity": "warning",
       "options": {}
     }
-  },
-  "nudge": {
-    "enabled": true,
-    "suggestionsPerRule": 2
   }
 }
