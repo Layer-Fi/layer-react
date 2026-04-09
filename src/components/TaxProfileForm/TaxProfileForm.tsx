@@ -98,7 +98,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
           <form.Field
             name='acknowledgedDisclaimer'
             validators={{
-              onSubmit: ({ value }) => {
+              onChange: ({ value }) => {
                 if (!value) {
                   return t('taxEstimates:error.disclaimer_required', 'You must acknowledge the disclaimer to continue.')
                 }
