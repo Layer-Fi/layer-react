@@ -5,12 +5,11 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { View } from '@components/View/View'
-import type { TaxEstimatesViewProps } from '@views/TaxEstimates/taxEstimatesTypes'
 import { TaxEstimatesViewContent } from '@views/TaxEstimates/TaxEstimatesViewContent'
 
 export type { TaxEstimatesViewProps } from '@views/TaxEstimates/taxEstimatesTypes'
 
-export const TaxEstimatesView = ({ onTaxBannerReviewClick }: TaxEstimatesViewProps) => {
+export const TaxEstimatesView = () => {
   const { t } = useTranslation()
   const { accountingConfiguration } = useLayerContext()
 
@@ -35,7 +34,7 @@ export const TaxEstimatesView = ({ onTaxBannerReviewClick }: TaxEstimatesViewPro
 
   return (
     <TaxEstimatesRouteStoreProvider>
-      <TaxEstimatesViewContent onTaxBannerReviewClick={onTaxBannerReviewClick} />
+      <TaxEstimatesViewContent />
     </TaxEstimatesRouteStoreProvider>
   )
 }

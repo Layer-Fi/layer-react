@@ -5,7 +5,6 @@ import { createStore, useStore } from 'zustand'
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 
 export enum TaxEstimatesRoute {
-  Overview = 'Overview',
   Estimates = 'Estimates',
   Payments = 'Payments',
   Profile = 'Profile',
@@ -36,7 +35,7 @@ type TaxEstimatesRouteStoreShape = {
 
 const TaxEstimatesRouteStoreContext = createContext(
   createStore<TaxEstimatesRouteStoreShape>(() => ({
-    routeState: { route: TaxEstimatesRoute.Overview },
+    routeState: { route: TaxEstimatesRoute.Estimates },
     onboardingStatus: OnboardingStatus.Loading,
     navigate: () => {},
     year: getYear(new Date()),
@@ -87,7 +86,7 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   const { data: taxProfile, isLoading, isError } = useTaxProfile()
   const [store] = useState(() =>
     createStore<TaxEstimatesRouteStoreShape>(set => ({
-      routeState: { route: TaxEstimatesRoute.Overview },
+      routeState: { route: TaxEstimatesRoute.Estimates },
       onboardingStatus: OnboardingStatus.Loading,
       navigate: (route: TaxEstimatesRoute) => {
         set({ routeState: { route } })

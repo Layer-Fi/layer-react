@@ -9,10 +9,9 @@ import { View } from '@components/View/View'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 import { TaxEstimatesOnboardedViewContent } from './TaxEstimatesOnboardedViewContent'
-import type { TaxEstimatesViewProps } from './taxEstimatesTypes'
 import { TaxEstimatesViewHeader } from './TaxEstimatesViewHeader'
 
-export const TaxEstimatesViewContent = ({ onTaxBannerReviewClick }: TaxEstimatesViewProps) => {
+export const TaxEstimatesViewContent = () => {
   const { t } = useTranslation()
   const onboardingStatus = useTaxEstimatesOnboardingStatus()
 
@@ -43,13 +42,13 @@ export const TaxEstimatesViewContent = ({ onTaxBannerReviewClick }: TaxEstimates
         )
 
       case OnboardingStatus.Onboarded:
-        return <TaxEstimatesOnboardedViewContent onTaxBannerReviewClick={onTaxBannerReviewClick} />
+        return <TaxEstimatesOnboardedViewContent />
 
       case OnboardingStatus.NotOnboarded:
       default:
         return <TaxProfile />
     }
-  }, [onTaxBannerReviewClick, onboardingStatus, t])
+  }, [onboardingStatus, t])
 
   return (
     <View title={t('common:label.taxes', 'Taxes')} header={header}>
