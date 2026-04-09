@@ -72,7 +72,7 @@ function keyLoader(
       accessToken,
       apiUrl,
       businessId,
-      cursor: previousPageData?.meta?.pagination.cursor,
+      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
       customerId,
       serviceId,
       startDate: startDate ? formatISO(startDate, { representation: 'date' }) : undefined,

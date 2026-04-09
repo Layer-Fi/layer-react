@@ -92,7 +92,7 @@ function keyLoader(
       businessId,
       externalIds,
       includeArchived,
-      cursor: previousPageData?.meta?.pagination.cursor,
+      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
       sortBy,
       sortOrder,
       limit,

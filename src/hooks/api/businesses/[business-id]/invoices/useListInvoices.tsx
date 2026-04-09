@@ -90,7 +90,7 @@ function keyLoader(
       query,
       dueAtStart,
       dueAtEnd,
-      cursor: previousPageData?.meta?.pagination.cursor,
+      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
       sortBy,
       sortOrder,
       limit,

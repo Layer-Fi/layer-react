@@ -104,7 +104,7 @@ function keyLoader(
       apiUrl,
       businessId,
       accountId,
-      cursor: previousPageData?.meta?.pagination.cursor,
+      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
       include_entries_before_activation,
       include_child_account_lines,
       start_date,
