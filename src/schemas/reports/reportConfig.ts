@@ -1,57 +1,44 @@
 import { pipe, Schema } from 'effect'
 
-export const ReportControlSchema = Schema.Literal('date_range', 'group_by', 'unknown')
-export type ReportControl = typeof ReportControlSchema.Type
+import { createTransformedEnumSchema } from '@schemas/utils'
 
-const TransformedReportControlSchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(ReportControlSchema),
-  {
-    decode: (input) => {
-      if (ReportControlSchema.literals.includes(input as ReportControl)) {
-        return input as ReportControl
-      }
+export enum ReportControl {
+  DATE_RANGE = 'date_range',
+  GROUP_BY = 'group_by',
+  UNKNOWN = 'unknown',
+}
 
-      return 'unknown'
-    },
-    encode: input => input,
-  },
+export enum ReportType {
+  PROFIT_AND_LOSS = 'profit-and-loss',
+  CASHFLOW_STATEMENT = 'cashflow-statement',
+  UNKNOWN = 'unknown',
+}
+
+export enum ReportGroupType {
+  ACCOUNTING = 'accounting',
+  UNKNOWN = 'unknown',
+}
+
+const ReportControlSchema = Schema.Enums(ReportControl)
+const ReportTypeSchema = Schema.Enums(ReportType)
+const ReportGroupTypeSchema = Schema.Enums(ReportGroupType)
+
+const TransformedReportControlSchema = createTransformedEnumSchema(
+  ReportControlSchema,
+  ReportControl,
+  ReportControl.UNKNOWN,
 )
 
-export const ReportTypeSchema = Schema.Literal('profit-and-loss', 'cashflow-statement', 'unknown')
-export type ReportType = typeof ReportTypeSchema.Type
-
-const TransformedReportTypeSchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(ReportTypeSchema),
-  {
-    decode: (input) => {
-      if (ReportTypeSchema.literals.includes(input as ReportType)) {
-        return input as ReportType
-      }
-
-      return 'unknown'
-    },
-    encode: input => input,
-  },
+const TransformedReportTypeSchema = createTransformedEnumSchema(
+  ReportTypeSchema,
+  ReportType,
+  ReportType.UNKNOWN,
 )
 
-export const ReportGroupTypeSchema = Schema.Literal('accounting', 'unknown')
-export type ReportGroupType = typeof ReportGroupTypeSchema.Type
-
-const TransformedReportGroupTypeSchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(ReportGroupTypeSchema),
-  {
-    decode: (input) => {
-      if (ReportGroupTypeSchema.literals.includes(input as ReportGroupType)) {
-        return input as ReportGroupType
-      }
-
-      return 'unknown'
-    },
-    encode: input => input,
-  },
+const TransformedReportGroupTypeSchema = createTransformedEnumSchema(
+  ReportGroupTypeSchema,
+  ReportGroupType,
+  ReportGroupType.UNKNOWN,
 )
 
 export const ReportConfigSchema = Schema.Struct({
