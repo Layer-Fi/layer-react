@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Effect, Schema } from 'effect'
+import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { TimeEntrySchema, type UpsertTimeEntryEncoded } from '@schemas/timeTracking'
@@ -59,21 +59,6 @@ const UpsertTimeEntryReturnSchema = Schema.Struct({
 
 type UpsertTimeEntryReturn = typeof UpsertTimeEntryReturnSchema.Type
 
-const CreateParamsSchema = Schema.Struct({
-  businessId: Schema.UUID,
-  timeEntryId: Schema.Undefined,
-})
-
-const UpdateParamsSchema = Schema.Struct({
-  businessId: Schema.UUID,
-  timeEntryId: Schema.UUID,
-})
-
-export type CreateParams = typeof CreateParamsSchema.Type
-export type UpdateParams = typeof UpdateParamsSchema.Type
-
-export type UpsertParams = CreateParams | UpdateParams
-
 type RequestArgs = {
   apiUrl: string
   accessToken: string
@@ -82,41 +67,23 @@ type RequestArgs = {
 
 type UpsertRequestFn = (args: RequestArgs) => Promise<UpsertTimeEntryReturn>
 
-const isParamsValidForMode = <M extends UpsertTimeEntryMode>(
-  mode: M,
-  params: unknown,
-): params is M extends UpsertTimeEntryMode.Update ? UpdateParams : CreateParams => {
-  if (mode === UpsertTimeEntryMode.Update) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(UpdateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  if (mode === UpsertTimeEntryMode.Create) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(CreateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  return false
-}
-
 function getRequestFn(
   mode: UpsertTimeEntryMode,
-  params: UpsertParams,
+  params: { businessId: string, timeEntryId: string | undefined },
 ): UpsertRequestFn {
   if (mode === UpsertTimeEntryMode.Update) {
-    if (!isParamsValidForMode(UpsertTimeEntryMode.Update, params)) {
-      throw new Error('Invalid params for update mode')
+    if (params.timeEntryId === undefined) {
+      throw new Error('timeEntryId is required for update mode')
     }
 
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertTimeEntryBody }) =>
-      updateTimeEntry(apiUrl, accessToken, { params, body })
-  }
-  else {
-    if (!isParamsValidForMode(UpsertTimeEntryMode.Create, params)) {
-      throw new Error('Invalid params for create mode')
-    }
+    const updateParams = { businessId: params.businessId, timeEntryId: params.timeEntryId }
 
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertTimeEntryBody }) =>
-      createTimeEntry(apiUrl, accessToken, { params, body })
+    return ({ apiUrl, accessToken, body }) =>
+      updateTimeEntry(apiUrl, accessToken, { params: updateParams, body })
   }
+
+  return ({ apiUrl, accessToken, body }) =>
+    createTimeEntry(apiUrl, accessToken, { params: { businessId: params.businessId }, body })
 }
 
 type UseUpsertTimeEntryProps =
