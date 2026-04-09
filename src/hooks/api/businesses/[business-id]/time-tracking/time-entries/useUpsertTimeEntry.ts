@@ -61,6 +61,7 @@ type UpsertTimeEntryReturn = typeof UpsertTimeEntryReturnSchema.Type
 
 const CreateParamsSchema = Schema.Struct({
   businessId: Schema.String,
+  timeEntryId: Schema.Undefined,
 })
 
 const UpdateParamsSchema = Schema.Struct({
@@ -161,7 +162,7 @@ export const useUpsertTimeEntry = (props: UseUpsertTimeEntryProps) => {
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>): ReturnType<typeof originalTrigger> => {
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
       if (mode === UpsertTimeEntryMode.Update) {
@@ -184,7 +185,8 @@ export const useUpsertTimeEntry = (props: UseUpsertTimeEntryProps) => {
         return stableProxiedTrigger
       }
 
-      return Reflect.get(target, prop) as unknown
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
     },
   })
 }

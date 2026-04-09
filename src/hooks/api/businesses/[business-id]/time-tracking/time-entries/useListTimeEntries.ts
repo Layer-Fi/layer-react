@@ -72,7 +72,7 @@ function keyLoader(
       accessToken,
       apiUrl,
       businessId,
-      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
+      cursor: previousPageData?.meta?.pagination.cursor,
       customerId,
       serviceId,
       startDate: startDate ? formatISO(startDate, { representation: 'date' }) : undefined,
@@ -92,7 +92,7 @@ const listTimeEntries = get<
   typeof ListTimeEntriesResponseSchema.Encoded,
   {
     businessId: string
-    cursor?: string
+    cursor?: string | null
     limit?: number
     customerId?: string
     serviceId?: string

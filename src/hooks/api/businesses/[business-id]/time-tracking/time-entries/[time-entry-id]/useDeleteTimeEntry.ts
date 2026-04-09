@@ -82,7 +82,7 @@ export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => 
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>): ReturnType<typeof originalTrigger> => {
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
       void forceReloadTimeEntries()
@@ -100,7 +100,8 @@ export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => 
         return stableProxiedTrigger
       }
 
-      return Reflect.get(target, prop) as unknown
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
     },
   })
 }
