@@ -39,7 +39,6 @@ const UsConfigurationFormSchema = Schema.Struct({
 export const TaxProfileFormSchema = Schema.Struct({
   taxCountryCode: Schema.NullishOr(Schema.String),
   usConfiguration: Schema.NullishOr(UsConfigurationFormSchema),
-  acknowledgedDisclaimer: Schema.NullishOr(Schema.Boolean),
 })
 
 export type TaxProfileForm = typeof TaxProfileFormSchema.Type

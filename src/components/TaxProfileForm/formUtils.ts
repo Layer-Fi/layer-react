@@ -69,7 +69,6 @@ const DEFAULT_TAX_PROFILE_FORM: TaxProfileForm = {
       },
     },
   },
-  acknowledgedDisclaimer: false,
 }
 
 export const taxProfileToFormValues = (taxProfile?: TaxProfile | null): TaxProfileForm => {
@@ -110,7 +109,6 @@ export const taxProfileToFormValues = (taxProfile?: TaxProfile | null): TaxProfi
         }
         : null,
     },
-    acknowledgedDisclaimer: taxProfile.userHasSavedTaxProfile ?? false,
   }
 }
 
