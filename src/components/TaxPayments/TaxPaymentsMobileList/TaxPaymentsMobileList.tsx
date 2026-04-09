@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
 import { asMutable } from '@utils/asMutable'
 import { MobileList } from '@ui/MobileList/MobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -8,7 +9,7 @@ import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Separator } from '@components/Separator/Separator'
-import { type CommonTaxPaymentsListProps, type TaxPaymentRow } from '@components/TaxPayments/utils'
+import { type CommonTaxPaymentsListProps } from '@components/TaxPayments/utils'
 
 import './taxPaymentsMobileList.scss'
 
