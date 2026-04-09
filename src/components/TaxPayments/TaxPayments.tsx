@@ -21,19 +21,9 @@ const TaxPaymentsHeader = ({ isMobile }: { isMobile: boolean }) => {
   )
 }
 
-export const TaxPayments = () => {
-  const { year } = useTaxEstimatesYear()
-  const { fullYearProjection } = useFullYearProjection()
-  const { data, isLoading, isError } = useTaxPayments({ year, fullYearProjection })
-  const { isDesktop } = useSizeClass()
+const ErrorState = () => {
   const { t } = useTranslation()
-
-  const dataWithIds = useMemo(
-    () => data?.quarters.map(q => ({ ...q, id: `Q${q.quarter}` })),
-    [data?.quarters],
-  )
-
-  const errorState = useCallback(() => (
+  return (
     <DataState
       spacing
       status={DataStateStatus.failed}
@@ -41,9 +31,12 @@ export const TaxPayments = () => {
       description={t('taxEstimates:error.while_loading_tax_payments', 'An error occurred while loading your tax payments. Please check your connection and try again.')}
       className='Layer__TaxPayments__ErrorState'
     />
-  ), [t])
+  )
+}
 
-  const emptyState = useCallback(() => (
+const EmptyState = () => {
+  const { t } = useTranslation()
+  return (
     <DataState
       spacing
       status={DataStateStatus.info}
@@ -51,17 +44,29 @@ export const TaxPayments = () => {
       description={t('taxEstimates:empty.no_tax_payments_to_display', 'There are no tax payments to display.')}
       className='Layer__TaxPayments__EmptyState'
     />
-  ), [t])
+  )
+}
+
+export const TaxPayments = () => {
+  const { year } = useTaxEstimatesYear()
+  const { fullYearProjection } = useFullYearProjection()
+  const { data, isLoading, isError } = useTaxPayments({ year, fullYearProjection })
+  const { isDesktop } = useSizeClass()
+
+  const dataWithIds = useMemo(
+    () => data?.quarters.map(q => ({ ...q, id: `Q${q.quarter}` })),
+    [data?.quarters],
+  )
 
   const props = useMemo(() => ({
     data: dataWithIds,
     isLoading,
     isError,
     slots: {
-      EmptyState: emptyState,
-      ErrorState: errorState,
+      EmptyState,
+      ErrorState,
     },
-  }), [dataWithIds, isError, isLoading, errorState, emptyState])
+  }), [dataWithIds, isError, isLoading])
 
   const Header = useCallback(() => (
     <TaxPaymentsHeader isMobile={!isDesktop} />
