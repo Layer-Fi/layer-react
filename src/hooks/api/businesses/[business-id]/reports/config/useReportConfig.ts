@@ -8,7 +8,7 @@ import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const REPORT_CONFIG_TAG_KEY = '#report-config'
+export const REPORT_CONFIG_TAG_KEY = '#report-config'
 
 type GetReportConfigParams = {
   businessId: string
