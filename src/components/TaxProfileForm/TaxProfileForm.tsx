@@ -10,13 +10,12 @@ import { Button } from '@ui/Button/Button'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { Form } from '@ui/Form/Form'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { P, Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { DeductionsSection } from '@components/TaxProfileForm/sections/DeductionsSection'
 import { FederalTaxSection } from '@components/TaxProfileForm/sections/FederalTaxSection'
 import { StateTaxSection } from '@components/TaxProfileForm/sections/StateTaxSection'
 import { useTaxProfileForm } from '@components/TaxProfileForm/useTaxProfileForm'
-import { ErrorText } from '@components/Typography/ErrorText'
-import { Text, TextSize } from '@components/Typography/Text'
 
 import './taxProfileForm.scss'
 
@@ -48,7 +47,6 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
               icon={<AlertTriangle size={16} />}
               status={DataStateStatus.failed}
               title={displayError}
-              titleSize={TextSize.sm}
               inline
             />
           )
@@ -59,7 +57,6 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
               icon={<CheckCircle size={16} />}
               status={DataStateStatus.success}
               title={submitSuccess}
-              titleSize={TextSize.sm}
               inline
             />
           )
@@ -92,12 +89,12 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
         <DeductionsSection form={form} isReadOnly={isReadOnly} isDesktop={isDesktop} />
 
         <VStack className='Layer__TaxProfileForm__Disclaimer' gap='sm'>
-          <Text size={TextSize.sm}>
+          <P size='sm' variant='subtle'>
             {t(
               'taxEstimates:disclaimer.content',
               'The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us.',
             )}
-          </Text>
+          </P>
           <form.Field
             name='acknowledgedDisclaimer'
             validators={{
@@ -116,24 +113,26 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
 
               return (
                 <VStack gap='xs'>
-                  <Checkbox
-                    isSelected={field.state.value ?? false}
-                    onChange={field.handleChange}
-                    onBlur={field.handleBlur}
-                    isInvalid={isInvalid}
-                    variant={isInvalid ? 'error' : 'default'}
-                    isReadOnly={isReadOnly}
-                  >
-                    {t(
-                      'taxEstimates:disclaimer.acknowledgment',
-                      'By continuing, I certify that I understand the above.',
-                    )}
-                  </Checkbox>
+                  <P size='sm' variant='subtle'>
+                    <Checkbox
+                      isSelected={field.state.value ?? false}
+                      onChange={field.handleChange}
+                      onBlur={field.handleBlur}
+                      isInvalid={isInvalid}
+                      variant={isInvalid ? 'error' : 'default'}
+                      isReadOnly={isReadOnly}
+                    >
+                      {t(
+                        'taxEstimates:disclaimer.acknowledgment',
+                        'By continuing, I certify that I understand the above.',
+                      )}
+                    </Checkbox>
+                  </P>
                   {errorMessage
                     ? (
-                      <ErrorText size={TextSize.sm}>
+                      <Span size='sm' status='error'>
                         {errorMessage}
-                      </ErrorText>
+                      </Span>
                     )
                     : null}
                 </VStack>

@@ -20,28 +20,28 @@
     box-shadow: none;
   }
 
-  &__MetricRow {
+  .Layer__MetricRow {
     min-block-size: 2.5rem;
   }
 
-  &__MetricCard {
+  .Layer__MetricCard {
     min-width: 0;
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius-xs);
     background-color: var(--color-base-50);
   }
 
-  &__MetricCardLabel {
+  .Layer__MetricCardLabel {
     flex-shrink: 0;
     white-space: nowrap;
   }
 
-  &__MetricCardMeter {
+  .Layer__MetricCardMeter {
     flex: 1;
     min-width: 0;
   }
 
-  &__MetricValue {
+  .Layer__MetricValue {
     flex: 0 0 56%;
     justify-content: flex-end;
     min-width: 0;
@@ -53,13 +53,13 @@
     min-width: 9rem;
   }
 
-  &__MetricCard .Layer__TaxOverview__IncomeMeter,
-  &__MetricCard .Layer__TaxOverview__DeductionsMeter {
+  .Layer__MetricCard .Layer__TaxOverview__IncomeMeter,
+  .Layer__MetricCard .Layer__TaxOverview__DeductionsMeter {
     width: 100%;
     min-width: 0;
   }
 
-  &__MetricCard .Layer__MoneySpan {
+  .Layer__MetricCard .Layer__MoneySpan {
     flex-shrink: 0;
   }
 
@@ -163,8 +163,8 @@
 }
 
 @container (max-width: 720px) {
-  .Layer__TaxOverview__MetricRow,
-  .Layer__TaxOverview__MetricValue,
+  .Layer__TaxOverview .Layer__MetricRow,
+  .Layer__TaxOverview .Layer__MetricValue,
   .Layer__TaxOverview__DeadlineReviewRow {
     flex-direction: column;
     align-items: stretch;
@@ -175,7 +175,7 @@
     padding: var(--spacing-md);
   }
 
-  .Layer__TaxOverview__MetricValue {
+  .Layer__TaxOverview .Layer__MetricValue {
     flex-basis: auto;
   }
 
