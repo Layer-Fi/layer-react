@@ -1,7 +1,5 @@
 import { pipe, Schema } from 'effect'
 
-import type { TaxOverviewDeadlineStatus, TaxOverviewNextTax } from '@schemas/taxEstimates/overview'
-
 const TaxEstimatesBannerQuarterSchema = Schema.Struct({
   quarter: Schema.Number,
   dueDate: pipe(
@@ -47,46 +45,6 @@ const TaxEstimatesBannerSchema = Schema.Struct({
 })
 
 export type TaxEstimatesBanner = typeof TaxEstimatesBannerSchema.Type
-
-export const getTaxEstimatesBannerQuarterStatus = (
-  quarter: TaxEstimatesBannerQuarter,
-): TaxOverviewDeadlineStatus => {
-  if (quarter.amountOwed > 0 && quarter.balance <= 0) {
-    return { kind: 'paid' }
-  }
-
-  if (quarter.isPastDue) {
-    return { kind: 'pastDue' }
-  }
-
-  if (quarter.uncategorizedCount > 0) {
-    return { kind: 'categorizationIncomplete' }
-  }
-
-  return { kind: 'due' }
-}
-
-export const getNextTaxFromTaxEstimatesBanner = (
-  taxBanner?: TaxEstimatesBanner,
-): TaxOverviewNextTax | undefined => {
-  if (!taxBanner) {
-    return
-  }
-
-  const nextQuarter = taxBanner.quarters.find(quarter => !quarter.isPastDue && quarter.balance > 0)
-    ?? taxBanner.quarters.find(quarter => quarter.balance > 0)
-
-  if (!nextQuarter) {
-    return
-  }
-
-  return {
-    quarter: nextQuarter.quarter,
-    amount: nextQuarter.balance,
-    dueAt: nextQuarter.dueDate,
-    status: getTaxEstimatesBannerQuarterStatus(nextQuarter),
-  }
-}
 
 export const TaxEstimatesBannerResponseSchema = Schema.Struct({
   data: TaxEstimatesBannerSchema,
