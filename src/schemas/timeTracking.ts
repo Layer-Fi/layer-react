@@ -124,7 +124,7 @@ export const TimeEntrySummarySchema = Schema.Struct({
 export type TimeEntrySummary = typeof TimeEntrySummarySchema.Type
 
 export const TimeEntryFormSchema = Schema.Struct({
-  entryDate: Schema.NullOr(CalendarDateFromSelf),
+  date: Schema.NullOr(CalendarDateFromSelf),
   durationMinutes: Schema.Number,
   billable: Schema.Boolean,
   description: Schema.String,
