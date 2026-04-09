@@ -42,10 +42,7 @@ export const TimeEntrySchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
 
-  date: pipe(
-    Schema.propertySignature(CalendarDateSchema),
-    Schema.fromKey('date'),
-  ),
+  date: CalendarDateSchema,
 
   durationMinutes: pipe(
     Schema.propertySignature(Schema.Int),
@@ -140,10 +137,7 @@ export const UpsertTimeEntrySchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
 
-  date: pipe(
-    Schema.propertySignature(CalendarDateSchema),
-    Schema.fromKey('date'),
-  ),
+  date: CalendarDateSchema,
 
   durationMinutes: pipe(
     Schema.propertySignature(Schema.Int),
