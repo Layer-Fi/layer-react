@@ -52,7 +52,7 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
       mode: 'submit',
       modeAfterSubmission: 'submit',
     }),
-    canSubmitWhenInvalid: false,
+    canSubmitWhenInvalid: true,
   })
 
   // Update the default values for the form when the tax profile changes
