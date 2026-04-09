@@ -72,78 +72,45 @@ const getTableRows = (
 ): TaxPaymentTableRow[] | undefined => {
   if (!data) return undefined
 
-  let previousFederalRolledOver = 0
-  let previousStateRolledOver = 0
-  let previousUncategorizedRolledOver = 0
-
-  return data.map((payment) => {
-    const federalEstimated = payment.owedThisQuarterBreakdown.usFederal
-    const federalPaid = payment.totalPaidBreakdown.usFederal
-    const federalCumulativeTaxesOwed = previousFederalRolledOver + federalEstimated
-    const federalRemainingBalance = federalCumulativeTaxesOwed - federalPaid
-
-    const stateEstimated = payment.owedThisQuarterBreakdown.usState
-    const statePaid = payment.totalPaidBreakdown.usState
-    const stateCumulativeTaxesOwed = previousStateRolledOver + stateEstimated
-    const stateRemainingBalance = stateCumulativeTaxesOwed - statePaid
-
-    const uncategorizedEstimated =
-      payment.owedThisQuarter - federalEstimated - stateEstimated
-    const uncategorizedPaid = payment.totalPaidBreakdown.uncategorized
-    const uncategorizedRemainingBalance =
-      previousUncategorizedRolledOver + uncategorizedEstimated - uncategorizedPaid
-    const shouldShowUncategorizedRow =
-      previousUncategorizedRolledOver !== 0
-      || uncategorizedEstimated !== 0
-      || uncategorizedPaid !== 0
-      || uncategorizedRemainingBalance !== 0
-
-    const row: TaxPaymentTableRow = {
-      id: payment.id,
-      label: getQuarterLabel(payment.quarter),
-      rolledOverFromPreviousQuarter: payment.owedRolledOverFromPrevious,
-      remainingBalance: payment.total,
-      estimated: payment.owedThisQuarter,
-      paid: payment.totalPaid,
-      subRows: [
-        {
-          id: `${payment.id}-federal`,
-          label: t(
-            'taxEstimates:label.federal_income_self_employment_taxes',
-            'Federal Income + Self-Employment Taxes',
-          ),
-          rolledOverFromPreviousQuarter: previousFederalRolledOver,
-          remainingBalance: federalRemainingBalance,
-          estimated: federalEstimated,
-          paid: federalPaid,
-        },
-        {
-          id: `${payment.id}-state`,
-          label: t('taxEstimates:label.state_taxes', 'State Taxes'),
-          rolledOverFromPreviousQuarter: previousStateRolledOver,
-          remainingBalance: stateRemainingBalance,
-          estimated: stateEstimated,
-          paid: statePaid,
-        },
-        ...(shouldShowUncategorizedRow
-          ? [{
-            id: `${payment.id}-uncategorized`,
-            label: t('taxEstimates:label.uncategorized_tax_payment', 'Uncategorized Tax Payment'),
-            rolledOverFromPreviousQuarter: previousUncategorizedRolledOver,
-            remainingBalance: uncategorizedRemainingBalance,
-            estimated: uncategorizedEstimated,
-            paid: uncategorizedPaid,
-          }]
-          : []),
-      ],
-    }
-
-    previousFederalRolledOver = federalRemainingBalance
-    previousStateRolledOver = stateRemainingBalance
-    previousUncategorizedRolledOver = uncategorizedRemainingBalance
-
-    return row
-  })
+  return data.map(payment => ({
+    id: payment.id,
+    label: getQuarterLabel(payment.quarter),
+    rolledOverFromPreviousQuarter: payment.owedRolledOverFromPrevious,
+    remainingBalance: payment.total,
+    estimated: payment.owedThisQuarter,
+    paid: payment.totalPaid,
+    subRows: [
+      {
+        id: `${payment.id}-federal`,
+        label: t(
+          'taxEstimates:label.federal_income_self_employment_taxes',
+          'Federal Income + Self-Employment Taxes',
+        ),
+        rolledOverFromPreviousQuarter: payment.breakdown.federal.rolledOverFromPrevious,
+        remainingBalance: payment.breakdown.federal.remainingBalance,
+        estimated: payment.breakdown.federal.owedThisQuarter,
+        paid: payment.breakdown.federal.totalPaid,
+      },
+      {
+        id: `${payment.id}-state`,
+        label: t('taxEstimates:label.state_taxes', 'State Taxes'),
+        rolledOverFromPreviousQuarter: payment.breakdown.state.rolledOverFromPrevious,
+        remainingBalance: payment.breakdown.state.remainingBalance,
+        estimated: payment.breakdown.state.owedThisQuarter,
+        paid: payment.breakdown.state.totalPaid,
+      },
+      ...(payment.breakdown.uncategorized
+        ? [{
+          id: `${payment.id}-uncategorized`,
+          label: t('taxEstimates:label.uncategorized_tax_payment', 'Uncategorized Tax Payment'),
+          rolledOverFromPreviousQuarter: payment.breakdown.uncategorized.rolledOverFromPrevious,
+          remainingBalance: payment.breakdown.uncategorized.remainingBalance,
+          estimated: payment.breakdown.uncategorized.owedThisQuarter,
+          paid: payment.breakdown.uncategorized.totalPaid,
+        }]
+        : []),
+    ],
+  }))
 }
 
 export const TaxPaymentsTable = ({ data, isLoading, isError, slots }: CommonTaxPaymentsListProps) => {

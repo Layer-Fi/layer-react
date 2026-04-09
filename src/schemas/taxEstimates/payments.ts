@@ -1,28 +1,33 @@
 import { pipe, Schema } from 'effect'
 
-const jurisdictionFields = {
-  usFederal: pipe(
+const JurisdictionBreakdownSchema = Schema.Struct({
+  rolledOverFromPrevious: pipe(
     Schema.propertySignature(Schema.Number),
-    Schema.fromKey('us_federal'),
+    Schema.fromKey('rolled_over_from_previous'),
   ),
-  usState: pipe(
+  owedThisQuarter: pipe(
     Schema.propertySignature(Schema.Number),
-    Schema.fromKey('us_state'),
+    Schema.fromKey('owed_this_quarter'),
   ),
-}
-
-const TaxOwedBreakdownSchema = Schema.Struct({
-  ...jurisdictionFields,
+  totalPaid: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('total_paid'),
+  ),
+  remainingBalance: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('remaining_balance'),
+  ),
 })
 
-export type TaxOwedBreakdown = typeof TaxOwedBreakdownSchema.Type
+export type JurisdictionBreakdown = typeof JurisdictionBreakdownSchema.Type
 
-const TaxPaidBreakdownSchema = Schema.Struct({
-  ...jurisdictionFields,
-  uncategorized: Schema.Number,
+const TaxBreakdownSchema = Schema.Struct({
+  federal: JurisdictionBreakdownSchema,
+  state: JurisdictionBreakdownSchema,
+  uncategorized: Schema.optional(JurisdictionBreakdownSchema),
 })
 
-export type TaxPaidBreakdown = typeof TaxPaidBreakdownSchema.Type
+export type TaxBreakdown = typeof TaxBreakdownSchema.Type
 
 const TaxPaymentQuarterSchema = Schema.Struct({
   quarter: Schema.Number,
@@ -34,19 +39,12 @@ const TaxPaymentQuarterSchema = Schema.Struct({
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('owed_this_quarter'),
   ),
-  owedThisQuarterBreakdown: pipe(
-    Schema.propertySignature(TaxOwedBreakdownSchema),
-    Schema.fromKey('owed_this_quarter_breakdown'),
-  ),
   totalPaid: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('total_paid'),
   ),
-  totalPaidBreakdown: pipe(
-    Schema.propertySignature(TaxPaidBreakdownSchema),
-    Schema.fromKey('total_paid_breakdown'),
-  ),
   total: Schema.Number,
+  breakdown: TaxBreakdownSchema,
 })
 
 export type TaxPaymentQuarter = typeof TaxPaymentQuarterSchema.Type
