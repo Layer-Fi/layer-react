@@ -5,7 +5,6 @@ import { del } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useTimeEntriesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
-import { useActiveTimeTrackerGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -77,8 +76,6 @@ export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => 
 
   const { forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
   const { invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()
-  const { invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
-
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
@@ -87,11 +84,10 @@ export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => 
 
       void forceReloadTimeEntries()
       void invalidateTimeTrackingSummary()
-      void invalidateActiveTimeTracker()
 
       return triggerResult
     },
-    [originalTrigger, forceReloadTimeEntries, invalidateTimeTrackingSummary, invalidateActiveTimeTracker],
+    [originalTrigger, forceReloadTimeEntries, invalidateTimeTrackingSummary],
   )
 
   return new Proxy(mutationResponse, {
