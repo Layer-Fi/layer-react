@@ -42,7 +42,7 @@ export const TimeEntrySchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
 
-  entryDate: pipe(
+  date: pipe(
     Schema.propertySignature(CalendarDateSchema),
     Schema.fromKey('date'),
   ),
