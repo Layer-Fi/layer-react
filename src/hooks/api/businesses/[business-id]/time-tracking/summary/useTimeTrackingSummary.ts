@@ -3,13 +3,17 @@ import { formatISO } from 'date-fns'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { type TimeEntrySummary, TimeEntrySummarySchema } from '@schemas/timeTracking'
+import { TimeEntrySummarySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+
+const TimeTrackingSummaryResponseSchema = Schema.Struct({
+  data: TimeEntrySummarySchema,
+})
 
 export const TIME_TRACKING_SUMMARY_TAG_KEY = '#time-tracking-summary'
 
@@ -48,7 +52,7 @@ function buildKey({
 }
 
 const getTimeTrackingSummary = get<
-  { data: TimeEntrySummary },
+  typeof TimeTrackingSummaryResponseSchema.Encoded,
   { businessId: string, customerId?: string, serviceId?: string, startDate?: string, endDate?: string }
 >(({ businessId, customerId, serviceId, startDate, endDate }) => {
   const parameters = toDefinedSearchParameters({
@@ -77,7 +81,9 @@ export function useTimeTrackingSummary(filterParams: TimeTrackingSummaryFilterPa
       {
         params: { businessId, customerId, serviceId, startDate, endDate },
       },
-    )().then(({ data }) => Schema.decodeUnknownPromise(TimeEntrySummarySchema)(data)),
+    )()
+      .then(Schema.decodeUnknownPromise(TimeTrackingSummaryResponseSchema))
+      .then(({ data }) => data),
   )
 
   return new SWRQueryResult(response)
