@@ -138,7 +138,7 @@ export const InvoicePaymentLedgerEntrySourceSchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
   invoiceId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('invoice_id'),
   ),
   invoicePaymentId: pipe(

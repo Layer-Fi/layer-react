@@ -6,8 +6,10 @@ import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { type Trip, TripSchema } from '@schemas/trip'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -80,18 +82,19 @@ const listTrips = get<
 })
 
 export function useListTrips(filterParams: ListTripsFilterParams = {}) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListTripsResponse | null) => keyLoader(
+    (_index, previousPageData: ListTripsResponse | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...data,
         businessId,
         ...filterParams,
       },
-    ),
+    )),
     ({ accessToken, apiUrl, businessId, cursor, query, vehicleId, purpose, year }) => listTrips(
       apiUrl,
       accessToken,
@@ -113,6 +116,8 @@ export function useListTrips(filterParams: ListTripsFilterParams = {}) {
       initialSize: 1,
     },
   )
+
+  usePreserveInfiniteSize(swrResponse)
 
   return new SWRInfiniteResult(swrResponse)
 }

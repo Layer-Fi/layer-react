@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import type { BusinessPersonnel, PersonnelRole, RawBusinessPersonnel } from '@internal-types/businessPersonnel'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BUSINESS_PERSONNEL_TAG_KEY } from '@hooks/api/businesses/[business-id]/personnel/useBusinessPersonnel'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -56,16 +57,17 @@ function buildKey({
 }
 
 export function useUpdateBusinessPersonnel({ businessPersonnelId }: { businessPersonnelId?: string }) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       businessPersonnelId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, businessPersonnelId },
       { arg: body }: { arg: UpdateBusinessPersonnelBody },

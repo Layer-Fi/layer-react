@@ -23,7 +23,6 @@ export interface ChartOfAccountsProps {
   stringOverrides?: ChartOfAccountsStringOverrides
   showAddAccountButton?: boolean
   templateAccountsEditable?: boolean
-  showReversalEntries?: boolean
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
@@ -31,9 +30,7 @@ export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
   const chartOfAccountsContextData = useChartOfAccounts({
     withDates: props.withDateControl,
   })
-  const ledgerAccountsContextData = useLedgerAccounts(
-    props.showReversalEntries ?? false,
-  )
+  const ledgerAccountsContextData = useLedgerAccounts()
   return (
     <ChartOfAccountsContext.Provider value={chartOfAccountsContextData}>
       <LedgerAccountsContext.Provider value={ledgerAccountsContextData}>

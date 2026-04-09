@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { type ProfitAndLossSummaries, type ProfitAndLossSummariesRequestParams, ProfitAndLossSummariesSchema } from '@schemas/reports/profitAndLoss'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -75,11 +76,12 @@ export function useProfitAndLossSummaries({
   reportingBasis,
   keepPreviousData,
 }: UseProfitAndLossSummariesProps) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       startYear,
@@ -89,7 +91,7 @@ export function useProfitAndLossSummaries({
       tagKey,
       tagValues,
       reportingBasis,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => getProfitAndLossSummaries(
       apiUrl,
       accessToken,

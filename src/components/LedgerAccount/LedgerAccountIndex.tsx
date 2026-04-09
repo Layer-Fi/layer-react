@@ -58,7 +58,7 @@ export const LedgerAccount = ({
 
   const {
     data: rawData,
-    error,
+    isError,
     isLoading,
     isValidating,
     selectedAccount,
@@ -212,7 +212,7 @@ export const LedgerAccount = ({
           />
         )}
 
-        {error
+        {isError
           ? (
             <div className='Layer__table-state-container Layer__border-top'>
               <DataState
@@ -226,7 +226,7 @@ export const LedgerAccount = ({
           )
           : null}
 
-        {(!data || isLoading) && !error
+        {(!data || isLoading) && !isError
           ? (
             <div className='Layer__ledger-account__loader-container'>
               <Loader />
@@ -234,7 +234,7 @@ export const LedgerAccount = ({
           )
           : null}
 
-        {!isLoading && !error && data?.length === 0
+        {!isLoading && !isError && data?.length === 0
           ? (
             <div className='Layer__table-state-container Layer__border-top'>
               <DataState

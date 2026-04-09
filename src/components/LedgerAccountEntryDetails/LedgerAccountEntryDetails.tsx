@@ -374,7 +374,7 @@ export const LedgerAccountEntryDetails = ({
 }) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
-  const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
+  const { entryData, isLoadingEntry, closeSelectedEntry, isErrorEntry } =
     useContext(LedgerAccountsContext)
   const { renderInAppLink } = useInAppLinkContext()
 
@@ -508,7 +508,7 @@ export const LedgerAccountEntryDetails = ({
         )}
       </DetailsList>
 
-      {!isLoadingEntry && !errorEntry
+      {!isLoadingEntry && !isErrorEntry
         ? (
           <div className='Layer__ledger-account__entry-details__line-items'>
             <Card>

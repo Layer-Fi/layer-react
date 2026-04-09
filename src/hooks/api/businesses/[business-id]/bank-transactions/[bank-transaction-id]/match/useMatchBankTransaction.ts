@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import type { BankTransactionMatch } from '@internal-types/bankTransactions'
 import { put } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
@@ -57,6 +58,7 @@ type MatchBankTransactionArgs = MatchBankTransactionBody & {
 }
 
 export function useMatchBankTransaction() {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
@@ -66,11 +68,11 @@ export function useMatchBankTransaction() {
   const { forceReloadBackgroundBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       access_token: auth?.access_token,
       apiUrl: auth?.apiUrl,
       businessId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: { bankTransactionId, ...body } }: { arg: MatchBankTransactionArgs },

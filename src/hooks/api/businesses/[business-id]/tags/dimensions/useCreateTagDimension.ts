@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { type TagDimensionSchema, TagDimensionStrictnessSchema } from '@schemas/tag'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { TAG_DIMENSIONS_TAG_KEY } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -46,16 +47,17 @@ const createTagDimension = post<
 >(({ businessId }) => `/v1/businesses/${businessId}/tags/dimensions`)
 
 export function useCreateTagDimension() {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { apiUrl } = useEnvironment()
   const { businessId } = useLayerContext()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       apiUrl,
       businessId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: tagDimension }: { arg: typeof CreateTagDimensionBodySchema.Type },

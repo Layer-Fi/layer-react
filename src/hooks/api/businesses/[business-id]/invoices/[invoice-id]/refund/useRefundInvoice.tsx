@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import { type CreateCustomerRefundSchema, CustomerRefundSchema } from '@schemas/invoices/customerRefund'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
@@ -55,6 +56,7 @@ export const updateInvoiceWithRefund = (invoice: Invoice): Invoice => {
 
 type UseRefundInvoiceProps = { invoiceId: string }
 export const useRefundInvoice = ({ invoiceId }: UseRefundInvoiceProps) => {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -65,11 +67,11 @@ export const useRefundInvoice = ({ invoiceId }: UseRefundInvoiceProps) => {
     }, [invoiceId])
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       invoiceId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, invoiceId },
       { arg: body }: { arg: RefundInvoiceBody },

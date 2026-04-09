@@ -6,8 +6,10 @@ import type { BankTransaction } from '@internal-types/bankTransactions'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -144,11 +146,12 @@ export function useBankTransactions({
   endDate,
   tagFilterQueryString,
 }: UseBankTransactionsOptions) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const swrResponse = useSWRInfinite(
-    (_index, previousPageData: GetBankTransactionsReturn | null) => keyLoader(
+    (_index, previousPageData: GetBankTransactionsReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...data,
@@ -160,7 +163,7 @@ export function useBankTransactions({
         endDate,
         tagFilterQueryString,
       },
-    ),
+    )),
     ({
       accessToken,
       apiUrl,
@@ -172,7 +175,7 @@ export function useBankTransactions({
       startDate,
       endDate,
       tagFilterQueryString,
-    }) => {
+    }: NonNullable<ReturnType<typeof keyLoader>>) => {
       return getBankTransactions(
         apiUrl,
         accessToken,
@@ -197,6 +200,8 @@ export function useBankTransactions({
       initialSize: 1,
     },
   )
+
+  usePreserveInfiniteSize(swrResponse)
 
   return new BankTransactionsSWRResponse(swrResponse)
 }

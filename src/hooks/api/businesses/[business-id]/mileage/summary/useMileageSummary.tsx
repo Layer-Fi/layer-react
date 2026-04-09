@@ -4,6 +4,7 @@ import useSWR from 'swr'
 
 import { type MileageSummary, MileageSummarySchema } from '@schemas/mileage'
 import { get } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -36,14 +37,15 @@ const getMileageSummary = get<
 >(({ businessId }) => `/v1/businesses/${businessId}/mileage/summary`)
 
 export function useMileageSummary() {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => getMileageSummary(
       apiUrl,
       accessToken,

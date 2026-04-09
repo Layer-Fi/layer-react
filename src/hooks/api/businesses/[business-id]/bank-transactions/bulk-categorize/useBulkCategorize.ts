@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -51,6 +52,7 @@ function buildKey({
 }
 
 export const useBulkCategorize = () => {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId, eventCallbacks } = useLayerContext()
 
@@ -58,10 +60,10 @@ export const useBulkCategorize = () => {
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg }: { arg: BulkCategorizeRequest },

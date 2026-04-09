@@ -2,6 +2,7 @@ import useSWR from 'swr'
 
 import type { LinkedAccounts } from '@internal-types/linkedAccounts'
 import { get } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -35,17 +36,18 @@ function buildKey({
 }
 
 export function useListExternalAccounts() {
+  const withLocale = useLocalizedKey()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   return useSWR(
     () =>
-      buildKey({
+      withLocale(buildKey({
         ...auth,
         apiUrl,
         businessId,
-      }),
+      })),
     ({ accessToken, apiUrl, businessId }) => listExternalAccounts(
       apiUrl,
       accessToken,

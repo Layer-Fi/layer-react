@@ -4,6 +4,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import type { RawCustomTransaction } from '@internal-types/customAccounts'
 import { type APIError } from '@utils/api/apiError'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -45,10 +46,10 @@ function buildKey({
       tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:create-transactions`],
     } as const
   }
-  return null
 }
 
 export function useCreateCustomAccountTransactions() {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -57,10 +58,10 @@ export function useCreateCustomAccountTransactions() {
     APIError,
     () => ReturnType<typeof buildKey>,
     CreateCustomAccountTransactionsArgs>(
-      () => buildKey({
+      () => withLocale(buildKey({
         ...data,
         businessId,
-      }),
+      })),
       (
         { accessToken, apiUrl, businessId },
         { arg: { customAccountId, ...body } },

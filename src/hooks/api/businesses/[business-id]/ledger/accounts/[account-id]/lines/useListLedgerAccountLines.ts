@@ -5,7 +5,10 @@ import useSWRInfinite from 'swr/infinite'
 import { type LedgerAccountLineItem, type LedgerAccountLineItems } from '@internal-types/ledgerAccounts'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -141,12 +144,13 @@ export function useListLedgerAccountLines({
   limit,
   show_total_count,
 }: UseListLedgerAccountLinesOptions) {
+  const withLocale = useLocalizedKey()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  return useSWRInfinite(
-    (_index, previousPageData: ListLedgerAccountLinesReturn | null) => keyLoader(
+  const swrResponse = useSWRInfinite(
+    (_index, previousPageData: ListLedgerAccountLinesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...auth,
@@ -162,7 +166,7 @@ export function useListLedgerAccountLines({
         limit,
         show_total_count,
       },
-    ),
+    )),
     ({
       accessToken,
       apiUrl,
@@ -202,6 +206,10 @@ export function useListLedgerAccountLines({
       initialSize: 1,
     },
   )
+
+  usePreserveInfiniteSize(swrResponse)
+
+  return new SWRInfiniteResult(swrResponse)
 }
 
 const INVALIDATION_DEBOUNCE_OPTIONS = {

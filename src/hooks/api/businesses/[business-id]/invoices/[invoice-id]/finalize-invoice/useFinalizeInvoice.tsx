@@ -6,6 +6,7 @@ import useSWRMutation from 'swr/mutation'
 import { InvoiceSchema } from '@schemas/invoices/invoice'
 import { InvoicePaymentMethodsSchema } from '@schemas/invoices/invoicePaymentMethod'
 import { put } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { INVOICE_PAYMENT_METHODS_TAG_KEY } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
@@ -72,16 +73,17 @@ type UseFinalizeInvoiceProps = {
 }
 
 export function useFinalizeInvoice({ invoiceId }: UseFinalizeInvoiceProps) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       invoiceId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, invoiceId },
       { arg: body }: { arg: FinalizeInvoiceBodyEncoded },

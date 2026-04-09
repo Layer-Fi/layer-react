@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { type ProfitAndLoss, type ProfitAndLossReportRequestParams, ProfitAndLossReportSchema } from '@schemas/reports/profitAndLoss'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -61,11 +62,12 @@ const getProfitAndLoss = get<
 
 type UseProfitAndLossReportProps = Omit<ProfitAndLossReportRequestParams, 'businessId'>
 export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized }: UseProfitAndLossReportProps) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       startDate,
@@ -74,7 +76,7 @@ export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, 
       tagValues,
       reportingBasis,
       includeUncategorized,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => getProfitAndLoss(
       apiUrl,
       accessToken,

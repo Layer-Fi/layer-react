@@ -20,7 +20,6 @@ export interface GeneralLedgerStringOverrides {
 
 export interface ChartOfAccountsOptions {
   templateAccountsEditable?: boolean
-  showReversalEntries?: boolean
   showAddAccountButton?: boolean
 }
 export interface GeneralLedgerProps {
@@ -79,7 +78,6 @@ export const GeneralLedgerView = ({
               templateAccountsEditable={
                 chartOfAccountsOptions?.templateAccountsEditable
               }
-              showReversalEntries={chartOfAccountsOptions?.showReversalEntries}
               renderInAppLink={renderInAppLink}
             />
           )
