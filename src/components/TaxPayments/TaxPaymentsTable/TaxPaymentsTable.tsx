@@ -3,12 +3,14 @@ import { type Row } from '@tanstack/react-table'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
+import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
+import { asMutable } from '@utils/asMutable'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
-import { type CommonTaxPaymentsListProps, getQuarterLabel, type TaxPaymentQuarterWithId } from '@components/TaxPayments/utils'
+import { type CommonTaxPaymentsListProps } from '@components/TaxPayments/utils'
 
 import './taxPaymentsTable.scss'
 
@@ -22,19 +24,9 @@ enum TaxPaymentColumns {
   RemainingBalance = 'RemainingBalance',
 }
 
-type TaxPaymentTableRow = {
-  id: string
-  label: string
-  rolledOverFromPreviousQuarter: number
-  remainingBalance: number
-  estimated: number
-  paid: number
-  subRows?: TaxPaymentTableRow[]
-}
+type TaxPaymentRowType = Row<TaxPaymentRow>
 
-type TaxPaymentRowType = Row<TaxPaymentTableRow>
-
-const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentTableRow> => [
+const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentRow> => [
   {
     id: TaxPaymentColumns.Quarter,
     header: t('taxEstimates:label.quarter', 'Quarter'),
@@ -44,17 +36,17 @@ const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentTableRow> =
   {
     id: TaxPaymentColumns.RolledOverFromPrevious,
     header: t('taxEstimates:label.rolled_over_from_previous_quarter', 'Rolled Over From Previous Quarter'),
-    cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.rolledOverFromPreviousQuarter} />,
+    cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.rolledOverFromPrevious} />,
   },
   {
     id: TaxPaymentColumns.Estimated,
     header: t('taxEstimates:label.owed_quarter', 'Owed This Quarter'),
-    cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.estimated} />,
+    cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.owedThisQuarter} />,
   },
   {
     id: TaxPaymentColumns.Paid,
     header: t('taxEstimates:label.total_paid', 'Total Paid'),
-    cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.paid} />,
+    cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.totalPaid} />,
   },
   {
     id: TaxPaymentColumns.RemainingBalance,
@@ -63,68 +55,21 @@ const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentTableRow> =
   },
 ]
 
-const getSubRows = (row: TaxPaymentTableRow): TaxPaymentTableRow[] | undefined => row.subRows
-const getRowId = (row: TaxPaymentTableRow): string => row.id
-
-const getTableRows = (
-  data: TaxPaymentQuarterWithId[] | undefined,
-  t: TFunction,
-): TaxPaymentTableRow[] | undefined => {
-  if (!data) return undefined
-
-  return data.map(payment => ({
-    id: payment.id,
-    label: getQuarterLabel(payment.quarter),
-    rolledOverFromPreviousQuarter: payment.owedRolledOverFromPrevious,
-    remainingBalance: payment.total,
-    estimated: payment.owedThisQuarter,
-    paid: payment.totalPaid,
-    subRows: [
-      {
-        id: `${payment.id}-federal`,
-        label: t(
-          'taxEstimates:label.federal_income_self_employment_taxes',
-          'Federal Income + Self-Employment Taxes',
-        ),
-        rolledOverFromPreviousQuarter: payment.breakdown.federal.rolledOverFromPrevious,
-        remainingBalance: payment.breakdown.federal.remainingBalance,
-        estimated: payment.breakdown.federal.owedThisQuarter,
-        paid: payment.breakdown.federal.totalPaid,
-      },
-      {
-        id: `${payment.id}-state`,
-        label: t('taxEstimates:label.state_taxes', 'State Taxes'),
-        rolledOverFromPreviousQuarter: payment.breakdown.state.rolledOverFromPrevious,
-        remainingBalance: payment.breakdown.state.remainingBalance,
-        estimated: payment.breakdown.state.owedThisQuarter,
-        paid: payment.breakdown.state.totalPaid,
-      },
-      ...(payment.breakdown.uncategorized
-        ? [{
-          id: `${payment.id}-uncategorized`,
-          label: t('taxEstimates:label.uncategorized_tax_payment', 'Uncategorized Tax Payment'),
-          rolledOverFromPreviousQuarter: payment.breakdown.uncategorized.rolledOverFromPrevious,
-          remainingBalance: payment.breakdown.uncategorized.remainingBalance,
-          estimated: payment.breakdown.uncategorized.owedThisQuarter,
-          paid: payment.breakdown.uncategorized.totalPaid,
-        }]
-        : []),
-    ],
-  }))
-}
+const getSubRows = (row: TaxPaymentRow): TaxPaymentRow[] | undefined => row?.breakdown ? asMutable(row.breakdown) : undefined
+const getRowId = (row: TaxPaymentRow): string => row.rowKey
 
 export const TaxPaymentsTable = ({ data, isLoading, isError, slots }: CommonTaxPaymentsListProps) => {
   const { t } = useTranslation()
   const columnConfig = useMemo(() => getColumnConfig(t), [t])
-  const tableRows = useMemo(() => getTableRows(data, t), [data, t])
+  const mutableRows = data ? asMutable(data.data) : undefined
 
   return (
     <ExpandableDataTableProvider>
-      <ExpandableDataTable<TaxPaymentTableRow>
+      <ExpandableDataTable
         componentName={COMPONENT_NAME}
         ariaLabel={t('taxEstimates:label.tax_payments', 'Tax Payments')}
         columnConfig={columnConfig}
-        data={tableRows}
+        data={mutableRows}
         isLoading={isLoading}
         isError={isError}
         slots={slots}
