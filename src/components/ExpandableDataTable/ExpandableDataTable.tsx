@@ -105,6 +105,11 @@ export function ExpandableDataTable<TData extends object>({
     row.toggleExpanded()
   }, [])
 
+  const withClickableRow = useMemo(() => ({
+    onRowClick,
+    isRowClickable,
+  }), [onRowClick, isRowClickable])
+
   return (
     <DataTable
       ariaLabel={ariaLabel}
@@ -117,10 +122,7 @@ export function ExpandableDataTable<TData extends object>({
       hideHeader={hideHeader}
       dependencies={dependencies}
       headerGroups={headerGroups}
-      withClickableRow={{
-        onRowClick,
-        isRowClickable,
-      }}
+      withClickableRow={withClickableRow}
     />
   )
 }
