@@ -99,6 +99,7 @@ export function useUpdateCatalogService({ serviceId }: UseUpdateCatalogServicePr
         return stableProxiedTrigger
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return Reflect.get(target, prop)
     },
   })

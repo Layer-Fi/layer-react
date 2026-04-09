@@ -137,7 +137,10 @@ export function useListTimeEntries(filterParams: ListTimeEntriesFilterParams = {
         ...filterParams,
       },
     ),
-    ({ accessToken, apiUrl, businessId, cursor, customerId, serviceId, startDate, endDate, includeDeleted, status, billable, hasCustomer, sortBy, sortOrder }) => listTimeEntries(
+    ({
+      accessToken, apiUrl, businessId, cursor, customerId, serviceId,
+      startDate, endDate, includeDeleted, status, billable, hasCustomer, sortBy, sortOrder,
+    }) => listTimeEntries(
       apiUrl,
       accessToken,
       {
