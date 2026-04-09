@@ -9,7 +9,7 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { Form } from '@ui/Form/Form'
-import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { Stack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { DeductionsSection } from '@components/TaxProfileForm/sections/DeductionsSection'
@@ -35,51 +35,9 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
     e.stopPropagation()
   }, [])
 
-  const formStatusMessage = (
-    <form.Subscribe selector={state => ({ errorMap: state.errorMap, isDirty: state.isDirty })}>
-      {({ errorMap, isDirty }) => {
-        const validationErrors = flattenValidationErrors(errorMap)
-        const displayError = validationErrors[0] || submitError
-
-        if (displayError) {
-          return (
-            <DataState
-              icon={<AlertTriangle size={16} />}
-              status={DataStateStatus.failed}
-              title={displayError}
-              inline
-            />
-          )
-        }
-        if (submitSuccess && !isDirty) {
-          return (
-            <DataState
-              icon={<CheckCircle size={16} />}
-              status={DataStateStatus.success}
-              title={submitSuccess}
-              inline
-            />
-          )
-        }
-      }}
-    </form.Subscribe>
-  )
-
-  const saveProfileButton = (
-    <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
-      {([canSubmit, isSubmitting]) => (
-        <Button
-          type='submit'
-          isDisabled={!canSubmit || isReadOnly}
-          isPending={isSubmitting}
-          onPress={() => { void form.handleSubmit() }}
-        >
-          <Save size={14} />
-          {t('taxEstimates:action.save_profile', 'Save Profile')}
-        </Button>
-      )}
-    </form.Subscribe>
-  )
+  const actionsStackProps = isDesktop
+    ? { direction: 'row', align: 'center', justify: 'space-between' } as const
+    : { direction: 'column', gap: 'md' } as const
 
   return (
     <Form className='Layer__TaxProfileForm' onSubmit={blockNativeOnSubmit}>
@@ -141,20 +99,48 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
           </form.Field>
         </VStack>
 
-        {isDesktop
-          ? (
-            <HStack align='center'>
-              {formStatusMessage}
-              <Spacer />
-              {saveProfileButton}
-            </HStack>
-          )
-          : (
-            <VStack gap='md'>
-              {formStatusMessage}
-              {saveProfileButton}
-            </VStack>
-          )}
+        <Stack {...actionsStackProps}>
+          <form.Subscribe selector={state => ({ errorMap: state.errorMap, isDirty: state.isDirty })}>
+            {({ errorMap, isDirty }) => {
+              const validationErrors = flattenValidationErrors(errorMap)
+              const displayError = validationErrors[0] || submitError
+
+              if (displayError) {
+                return (
+                  <DataState
+                    icon={<AlertTriangle size={16} />}
+                    status={DataStateStatus.failed}
+                    title={displayError}
+                    inline
+                  />
+                )
+              }
+              if (submitSuccess && !isDirty) {
+                return (
+                  <DataState
+                    icon={<CheckCircle size={16} />}
+                    status={DataStateStatus.success}
+                    title={submitSuccess}
+                    inline
+                  />
+                )
+              }
+            }}
+          </form.Subscribe>
+          <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
+            {([canSubmit, isSubmitting]) => (
+              <Button
+                type='submit'
+                isDisabled={!canSubmit || isReadOnly}
+                isPending={isSubmitting}
+                onPress={() => { void form.handleSubmit() }}
+              >
+                <Save size={14} />
+                {t('taxEstimates:action.save_profile', 'Save Profile')}
+              </Button>
+            )}
+          </form.Subscribe>
+        </Stack>
 
       </VStack>
     </Form>
