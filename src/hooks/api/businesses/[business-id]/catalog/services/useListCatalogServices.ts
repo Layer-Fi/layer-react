@@ -10,6 +10,7 @@ import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const CATALOG_SERVICES_TAG_KEY = '#catalog-services'
+const LIST_CATALOG_SERVICES_TAG_KEY = '#list-catalog-services'
 
 const ListCatalogServicesResponseSchema = Schema.Struct({
   data: Schema.Array(CatalogServiceSchema),
@@ -30,7 +31,7 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: [CATALOG_SERVICES_TAG_KEY],
+      tags: [CATALOG_SERVICES_TAG_KEY, LIST_CATALOG_SERVICES_TAG_KEY],
     } as const
   }
 }
@@ -73,7 +74,7 @@ export const useCatalogServicesGlobalCacheActions = () => {
 
   const patchCatalogServiceByKey = useCallback((updatedService: CatalogService) =>
     patchCache<ListCatalogServicesResponse | undefined>(
-      ({ tags }) => tags.includes(CATALOG_SERVICES_TAG_KEY),
+      ({ tags }) => tags.includes(LIST_CATALOG_SERVICES_TAG_KEY),
       (currentData) => {
         if (!currentData) {
           return currentData
