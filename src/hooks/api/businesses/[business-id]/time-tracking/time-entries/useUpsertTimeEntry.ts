@@ -60,13 +60,13 @@ const UpsertTimeEntryReturnSchema = Schema.Struct({
 type UpsertTimeEntryReturn = typeof UpsertTimeEntryReturnSchema.Type
 
 const CreateParamsSchema = Schema.Struct({
-  businessId: Schema.String,
+  businessId: Schema.UUID,
   timeEntryId: Schema.Undefined,
 })
 
 const UpdateParamsSchema = Schema.Struct({
-  businessId: Schema.String,
-  timeEntryId: Schema.String,
+  businessId: Schema.UUID,
+  timeEntryId: Schema.UUID,
 })
 
 export type CreateParams = typeof CreateParamsSchema.Type
