@@ -107,7 +107,7 @@ const DownloadButton = ({
         iconOnly={iconOnly}
         onClick={handleDownloadTransactions}
         isDownloading={isMutating}
-        requestFailed={Boolean(error)}
+        requestFailed={!!(error)}
         text={downloadButtonTextOverride}
         disabled={disabled}
       />

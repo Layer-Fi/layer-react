@@ -55,6 +55,14 @@ export default tsEslint.config(
     rules: {
       'no-console': ['error', { allow: ['warn', 'error', 'debug'] }],
 
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'CallExpression[callee.name="Boolean"][arguments.length>0]',
+          message: 'Use `!!` instead of `Boolean()` for explicit coercion (keep `.filter(Boolean)` as-is).',
+        },
+      ],
+
       '@stylistic/quotes': ['error', 'single', { avoidEscape: false }],
       '@stylistic/jsx-quotes': ['error', 'prefer-single'],
       '@stylistic/semi': ['error', 'never'],

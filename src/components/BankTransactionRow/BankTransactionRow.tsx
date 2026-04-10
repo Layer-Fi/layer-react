@@ -75,7 +75,7 @@ export const BankTransactionRow = ({
 
   const categorized = isCategorized(bankTransaction)
 
-  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: !!(initialLoad) })
 
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()

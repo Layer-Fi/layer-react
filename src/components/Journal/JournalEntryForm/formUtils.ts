@@ -16,17 +16,17 @@ import type { ApiCustomJournalEntryWithEntry, CreateCustomJournalEntry, JournalE
  */
 export function isLineItemBlank(lineItem: JournalEntryFormLineItem): boolean {
   const hasAccount = lineItem.accountIdentifier.type === 'AccountId'
-    ? Boolean(lineItem.accountIdentifier.id)
+    ? !!(lineItem.accountIdentifier.id)
     : lineItem.accountIdentifier.type === 'StableName'
-      ? Boolean(lineItem.accountIdentifier.stableName)
+      ? !!(lineItem.accountIdentifier.stableName)
       : false
 
   const hasAmount = !BD.equals(lineItem.amount, BIG_DECIMAL_ZERO)
-  const hasMemo = Boolean(lineItem.memo?.trim())
-  const hasCustomer = Boolean(lineItem.customer)
-  const hasVendor = Boolean(lineItem.vendor)
+  const hasMemo = !!(lineItem.memo?.trim())
+  const hasCustomer = !!(lineItem.customer)
+  const hasVendor = !!(lineItem.vendor)
   const hasTags = lineItem.tags.length > 0
-  const hasExternalId = Boolean(lineItem.externalId)
+  const hasExternalId = !!(lineItem.externalId)
 
   return !hasAccount && !hasAmount && !hasMemo && !hasCustomer && !hasVendor && !hasTags && !hasExternalId
 }

@@ -45,7 +45,7 @@ export function ProfitAndLossDetailLinesDownloadButton({
         iconOnly={iconOnly}
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
-        requestFailed={Boolean(error)}
+        requestFailed={!!(error)}
         text={stringOverrides?.downloadButtonText || t('common:action.download_label', 'Download')}
         retryText={stringOverrides?.retryButtonText || t('common:action.retry_label', 'Retry')}
       />
