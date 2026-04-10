@@ -14,7 +14,8 @@
     "load_tax_payments": "We couldnʼt load your tax payments",
     "retrieve_tax_profile": "We couldn’t retrieve your tax profile. Please check your connection and try again.",
     "while_loading_tax_payments": "An error occurred while loading your tax payments. Please check your connection and try again.",
-    "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
+    "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again.",
+    "disclaimer_required": "You must acknowledge the disclaimer to continue."
   },
   "label": {
     "additional_actions": "Additional actions",

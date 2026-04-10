@@ -36,7 +36,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
   }, [])
 
   const actionsStackProps = isDesktop
-    ? { direction: 'row', align: 'center', justify: 'space-between' } as const
+    ? { direction: 'row', justify: 'end' } as const
     : { direction: 'column', gap: 'md' } as const
 
   return (

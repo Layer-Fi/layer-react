@@ -1,4 +1,5 @@
 import { BigDecimal as BD } from 'effect'
+import type { TFunction } from 'i18next'
 
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import { BIG_DECIMAL_ZERO, convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
@@ -150,4 +151,14 @@ export const formValuesToTaxProfile = (form: TaxProfileForm): TaxProfile => {
         : null,
     },
   }
+}
+
+export function validateTaxProfileForm({ value }: { value: TaxProfileForm }, t: TFunction) {
+  const errors: Array<Record<string, string>> = []
+
+  if (!value.acknowledgedDisclaimer) {
+    errors.push({ acknowledgedDisclaimer: t('taxEstimates:error.disclaimer_required', 'You must acknowledge the disclaimer to continue.') })
+  }
+
+  return errors.length > 0 ? errors : null
 }

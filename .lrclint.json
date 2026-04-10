@@ -87,7 +87,10 @@
         "additionalLocales": [
           "fr-CA"
         ],
-        "translationFunction": "translationKey"
+        "translationFunctions": [
+          "translationKey",
+          "t"
+        ]
       }
     },
     "simple-component-styling": {
