@@ -20,7 +20,7 @@ export type TaxBannerReviewHandler = (payload?: TaxBannerReviewPayload) => void
 
 export type TaxBannerProps = {
   uncategorizedReviewPayload?: TaxBannerReviewPayload
-  onPressReviewButton: TaxBannerReviewHandler
+  onPressReviewButton?: TaxBannerReviewHandler
   icon?: ReactNode
 }
 

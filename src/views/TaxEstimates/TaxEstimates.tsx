@@ -8,7 +8,7 @@ import { TaxEstimatesViewContent } from '@views/TaxEstimates/TaxEstimatesViewCon
 import { TaxEstimatesViewHeader } from '@views/TaxEstimates/TaxEstimatesViewHeader'
 
 export type TaxEstimatesProps = {
-  onPressReviewButton: TaxBannerReviewHandler
+  onPressReviewButton?: TaxBannerReviewHandler
 }
 
 export const TaxEstimates = ({ onPressReviewButton }: TaxEstimatesProps) => {

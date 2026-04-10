@@ -34,7 +34,7 @@ const getTaxBannerReviewPayload = (taxBanner?: TaxEstimatesBanner): TaxBannerRev
 }
 
 export type TaxEstimatesOnboardedViewContentProps = {
-  onPressReviewButton: TaxBannerReviewHandler
+  onPressReviewButton?: TaxBannerReviewHandler
 }
 
 export const TaxEstimatesOnboardedViewContent = ({ onPressReviewButton }: TaxEstimatesOnboardedViewContentProps) => {
