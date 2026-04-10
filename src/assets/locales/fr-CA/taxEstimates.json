@@ -1,5 +1,6 @@
 {
   "action": {
+    "review_banner": "",
     "save_profile": "Enregistrer le profil",
     "update_tax_profile": "Mettre à jour le profil fiscal"
   },
@@ -24,6 +25,7 @@
     "amount_applied_federal_w2": "Montant appliqué de la retenue fédérale du formulaire W-2",
     "amount_applied_state_withholding": "Montant appliqué de la retenue d'impôt de l'État",
     "annual_w2_income": "Revenu annuel indiqué sur le formulaire W-2",
+    "annual_income_taxes": "",
     "business_income": "Revenu d’entreprise",
     "business_income_deduction_rate": "Déduction pour revenu d’entreprise ({{rate}})",
     "business_income_taxes": "Impôts sur le revenu d’entreprise",
@@ -32,6 +34,8 @@
     "deductible_expenses": "Dépenses déductibles",
     "deductible_mileage_expenses": "Frais de kilométrage déductibles",
     "deductions": "Déductions",
+    "due_with_date": "",
+    "estimated_tax": "",
     "enter_amount": "Saisissez un montant",
     "enter_area": "Saisissez la superficie",
     "estimates": "Estimations",
@@ -61,6 +65,7 @@
     "qualified_overtime_deduction": "Déduction admissible pour heures supplémentaires",
     "qualified_tip_deduction": "Déduction admissible pour pourboires",
     "qualifying_widow_er": "Veuf(ve) admissible",
+    "quarter_taxes": "",
     "quarter": "Trimestre",
     "remaining_balance": "Solde restant",
     "rolled_over_from_previous_quarter": "Reporté du trimestre précédent",
@@ -97,6 +102,8 @@
     "taxes_owed_projected": "Impôts dus projetés",
     "taxes_paid": "Impôts payés",
     "tip_income": "Revenu de pourboires",
+    "uncategorized_transactions_one": "",
+    "uncategorized_transactions_other": "",
     "uncategorized_tax_payment": "",
     "total_federal_tax_estimate": "Estimation totale de l’impôt fédéral",
     "total_paid": "Total payé",
@@ -106,6 +113,7 @@
     "use_standard_mileage_deduction": "Utiliser la déduction forfaitaire kilométrique?",
     "w2_income": "Revenu W-2",
     "withholding_amount": "Montant de la retenue",
+    "your_tax_deadlines": "",
     "year_to_date": "Cumul annuel"
   }
 }

@@ -19,9 +19,10 @@ type UseTaxEstimatesBannerOptions = {
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
+  enabled?: boolean
 }
 
-type GetTaxEstimatesBannerParams = UseTaxEstimatesBannerOptions & {
+type GetTaxEstimatesBannerParams = Omit<UseTaxEstimatesBannerOptions, 'enabled'> & {
   businessId: string
 }
 
@@ -43,6 +44,7 @@ function buildKey({
   year,
   reportingBasis,
   fullYearProjection,
+  enabled = true,
 }: {
   access_token?: string
   apiUrl?: string
@@ -50,7 +52,12 @@ function buildKey({
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
+  enabled?: boolean
 }) {
+  if (!enabled) {
+    return
+  }
+
   if (accessToken && apiUrl) {
     return {
       accessToken,
@@ -64,7 +71,7 @@ function buildKey({
   }
 }
 
-export function useTaxEstimatesBanner({ year, reportingBasis, fullYearProjection }: UseTaxEstimatesBannerOptions) {
+export function useTaxEstimatesBanner({ year, reportingBasis, fullYearProjection, enabled = true }: UseTaxEstimatesBannerOptions) {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
@@ -76,6 +83,7 @@ export function useTaxEstimatesBanner({ year, reportingBasis, fullYearProjection
       year,
       reportingBasis,
       fullYearProjection,
+      enabled,
     })),
     async ({ accessToken, apiUrl, businessId, year, reportingBasis, fullYearProjection }) => {
       return getTaxEstimatesBanner(
