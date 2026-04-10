@@ -22,12 +22,15 @@ export const MetricRow = ({
   maxMeterValue,
   meterClassName,
 }: MetricRowProps) => {
+  const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
+  const boundedMeterValue = Math.min(Math.max(amount, 0), boundedMaxMeterValue)
+
   if (isMobile) {
     return (
       <HStack className={classNames('Layer__MetricCard', classNamePrefix && `${classNamePrefix}__MetricCard`)} align='center' gap='md'>
         <Span size='md' className={classNames('Layer__MetricCardLabel', classNamePrefix && `${classNamePrefix}__MetricCardLabel`)}>{label}</Span>
         <HStack className={classNames('Layer__MetricCardMeter', classNamePrefix && `${classNamePrefix}__MetricCardMeter`)} align='center'>
-          <Meter className={meterClassName} label={label} minValue={0} maxValue={maxMeterValue} value={amount} meterOnly />
+          <Meter className={meterClassName} label={label} minValue={0} maxValue={boundedMaxMeterValue} value={boundedMeterValue} meterOnly />
         </HStack>
         <MoneySpan size='md' weight='bold' amount={amount} />
       </HStack>
@@ -39,7 +42,7 @@ export const MetricRow = ({
       <Span size='md'>{label}</Span>
       <HStack className={classNames('Layer__MetricValue', classNamePrefix && `${classNamePrefix}__MetricValue`)} align='center' gap='md'>
         <MoneySpan size='md' weight='bold' amount={amount} />
-        <Meter className={meterClassName} label={label} minValue={0} maxValue={maxMeterValue} value={amount} meterOnly />
+        <Meter className={meterClassName} label={label} minValue={0} maxValue={boundedMaxMeterValue} value={boundedMeterValue} meterOnly />
       </HStack>
     </HStack>
   )
