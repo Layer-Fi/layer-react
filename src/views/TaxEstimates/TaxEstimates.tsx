@@ -2,12 +2,13 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { OnboardingStatus, TaxEstimatesRouteStoreProvider, useTaxEstimatesOnboardingStatus } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { type TaxBannerReviewHandler } from '@components/TaxDetails/TaxBanner'
 import { View } from '@components/View/View'
 import { TaxEstimatesViewContent } from '@views/TaxEstimates/TaxEstimatesViewContent'
 import { TaxEstimatesViewHeader } from '@views/TaxEstimates/TaxEstimatesViewHeader'
 
 export type TaxEstimatesProps = {
-  onPressReviewButton: () => void
+  onPressReviewButton: TaxBannerReviewHandler
 }
 
 export const TaxEstimates = ({ onPressReviewButton }: TaxEstimatesProps) => {

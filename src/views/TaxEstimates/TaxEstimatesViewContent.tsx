@@ -4,12 +4,13 @@ import { OnboardingStatus, useTaxEstimatesOnboardingStatus } from '@providers/Ta
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
+import { type TaxBannerReviewHandler } from '@components/TaxDetails/TaxBanner'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 import { TaxEstimatesOnboardedViewContent } from './TaxEstimatesOnboardedViewContent'
 
 export type TaxEstimatesViewContentProps = {
-  onPressReviewButton: () => void
+  onPressReviewButton: TaxBannerReviewHandler
 }
 
 export const TaxEstimatesViewContent = ({ onPressReviewButton }: TaxEstimatesViewContentProps) => {

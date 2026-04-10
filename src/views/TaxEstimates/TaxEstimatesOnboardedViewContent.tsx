@@ -1,10 +1,12 @@
-import { type PropsWithChildren, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
+import type { TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
 import type { TaxOverviewData } from '@schemas/taxEstimates/overview'
 import { tConditional } from '@utils/i18n/conditional'
 import { translationKey } from '@utils/i18n/translationKey'
+import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { TaxEstimatesRoute, useFullYearProjection, useTaxEstimatesNavigation, useTaxEstimatesRouteState, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
@@ -12,7 +14,7 @@ import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
-import { TaxBanner } from '@components/TaxDetails/TaxBanner'
+import { TaxBanner, type TaxBannerReviewHandler, type TaxBannerReviewPayload } from '@components/TaxDetails/TaxBanner'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxOverview } from '@components/TaxOverview/TaxOverview'
@@ -28,9 +30,21 @@ const TAX_ESTIMATES_TAB_CONFIG = [
   { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates:label.payments', 'Payments') },
 ]
 
+const getTaxBannerReviewPayload = (taxBanner?: TaxEstimatesBanner): TaxBannerReviewPayload | undefined => {
+  if (!taxBanner || taxBanner.totalUncategorizedCount <= 0) {
+    return
+  }
+
+  return {
+    type: 'UNCATEGORIZED_TRANSACTIONS',
+    count: taxBanner.totalUncategorizedCount,
+    amount: taxBanner.totalUncategorizedSum,
+  }
+}
+
 export type TaxEstimatesOnboardedViewContentProps = {
-  onPressReviewButton: () => void
-} & PropsWithChildren
+  onPressReviewButton: TaxBannerReviewHandler
+}
 
 export const TaxEstimatesOnboardedViewContent = ({ onPressReviewButton }: TaxEstimatesOnboardedViewContentProps) => {
   const { t } = useTranslation()
@@ -39,6 +53,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onPressReviewButton }: TaxEst
   const navigate = useTaxEstimatesNavigation()
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
+  const { data: taxBannerData } = useTaxEstimatesBanner({ year, fullYearProjection })
   const { isMobile } = useSizeClass()
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
   const { data: taxOverviewApi, isLoading: isTaxOverviewLoading, isError: isTaxOverviewError } = useTaxOverview({
@@ -58,6 +73,11 @@ export const TaxEstimatesOnboardedViewContent = ({ onPressReviewButton }: TaxEst
   const handleTabChange = useCallback((key: Key) => {
     navigate(key as TaxEstimatesRoute)
   }, [navigate])
+
+  const uncategorizedReviewPayload = useMemo(
+    () => getTaxBannerReviewPayload(taxBannerData),
+    [taxBannerData],
+  )
 
   const taxOverviewData = useMemo((): TaxOverviewData | undefined => {
     if (!taxOverviewApi) {
@@ -100,12 +120,15 @@ export const TaxEstimatesOnboardedViewContent = ({ onPressReviewButton }: TaxEst
 
   return (
     <VStack gap='md'>
-      <TaxBanner onPressReviewButton={onPressReviewButton} />
       <Toggle
         ariaLabel={t('taxEstimates:label.tax_estimate_view', 'Tax estimate view')}
         options={tabOptions}
         selectedKey={route}
         onSelectionChange={handleTabChange}
+      />
+      <TaxBanner
+        uncategorizedReviewPayload={uncategorizedReviewPayload}
+        onPressReviewButton={onPressReviewButton}
       />
       {isOverviewRoute && (
         <VStack gap='md'>
