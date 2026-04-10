@@ -63,12 +63,12 @@ export function useTaxEstimatesOnboardingStatus() {
   const { accountingConfiguration } = useLayerContext()
 
   const isFeatureEnabled = useMemo(() => {
-    return accountingConfiguration?.enableTaxEstimates ?? false
+    return accountingConfiguration && accountingConfiguration.enableTaxEstimates
   }, [accountingConfiguration])
 
   const store = useContext(TaxEstimatesRouteStoreContext)
   return useStore(store, (state) => {
-    if (!isFeatureEnabled) {
+    if (accountingConfiguration && !isFeatureEnabled) {
       return OnboardingStatus.FeatureDisabled
     }
 
