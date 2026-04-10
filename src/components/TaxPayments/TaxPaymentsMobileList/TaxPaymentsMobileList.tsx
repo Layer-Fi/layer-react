@@ -46,7 +46,7 @@ type TaxPaymentRowWithId = TaxPaymentRow & { id: string }
 export const TaxPaymentsMobileList = ({ data, isLoading, isError, slots }: CommonTaxPaymentsListProps) => {
   const { t } = useTranslation()
   const mutableData = data
-    ? asMutable(data.data.data.map(row => ({ ...row, id: row.rowKey })))
+    ? asMutable(data.map(row => ({ ...row, id: row.rowKey })))
     : undefined
   const renderItem = useCallback(
     (payment: TaxPaymentRowWithId) => <TaxPaymentsMobileListItem payment={payment} />,

@@ -87,6 +87,7 @@ export function useTaxPayments({ year, reportingBasis, fullYearProjection }: Use
         },
       )()
         .then(Schema.decodeUnknownPromise(TaxPaymentsResponseSchema))
+        .then(({ data }) => data.data)
     },
   )
 
