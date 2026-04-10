@@ -130,6 +130,7 @@
     "archived": "Archivé",
     "confirming": "Confirmation...",
     "disabled": "Désactivé",
+    "feature_not_enabled": "",
     "due_in_count_days_one": "Échéance dans {{displayCount}} jour",
     "due_in_count_days_other": "Échéance dans {{displayCount}} jours",
     "due_soon": "Bientôt à échéance",

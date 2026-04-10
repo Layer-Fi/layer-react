@@ -73,6 +73,7 @@
     "state_tax_rate": "State Tax Rate",
     "state_taxable_income": "State Taxable Income",
     "tax_estimate_view": "Tax estimate view",
+    "tax_estimates": "Tax estimates",
     "tax_information": "State Tax Information",
     "tax_name_estimate_owed": "{{taxName}} Estimate (Owed)",
     "tax_name_rate": "{{taxName}} Rate",
