@@ -61,7 +61,7 @@ const getRowId = (row: TaxPaymentRow): string => row.rowKey
 export const TaxPaymentsTable = ({ data, isLoading, isError, slots }: CommonTaxPaymentsListProps) => {
   const { t } = useTranslation()
   const columnConfig = useMemo(() => getColumnConfig(t), [t])
-  const mutableRows = data ? asMutable(data.data) : undefined
+  const mutableRows = data ? asMutable(data.data.data) : undefined
 
   return (
     <ExpandableDataTableProvider>

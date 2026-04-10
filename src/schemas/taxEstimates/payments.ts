@@ -47,7 +47,10 @@ const TaxPaymentsRowSchema = Schema.Struct({
 export type TaxPaymentRow = typeof TaxPaymentsRowSchema.Type
 
 export const TaxPaymentsResponseSchema = Schema.Struct({
-  data: Schema.Array(TaxPaymentsRowSchema),
+  data: Schema.Struct({
+    type: Schema.Literal('US_Tax_Payments'),
+    data: Schema.Array(TaxPaymentsRowSchema),
+  }),
 })
 
 export type TaxPaymentsResponse = typeof TaxPaymentsResponseSchema.Type
