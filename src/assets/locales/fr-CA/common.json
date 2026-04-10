@@ -117,6 +117,7 @@
     "source": "Source",
     "status": "Statut",
     "taxes": "Taxes",
+    "tax_estimates": "",
     "today": "Aujourd’hui",
     "total": "Total",
     "transaction": "Transaction",
