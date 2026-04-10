@@ -126,8 +126,6 @@ export const TaxEstimatesOnboardedViewContent = () => {
             {({ data: overviewData }) => (
               <TaxOverview
                 data={overviewData}
-                title={taxableIncomeTitle}
-                description={taxableIncomeDescription}
               />
             )}
           </ConditionalBlock>

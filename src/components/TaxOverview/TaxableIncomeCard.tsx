@@ -10,8 +10,8 @@ import { Card } from '@components/Card/Card'
 import { MetricRow } from '@components/MetricRow/MetricRow'
 
 type TaxableIncomeCardProps = Pick<TaxOverviewData, 'deductionsTotal' | 'incomeTotal'> & {
-  title: string
-  description: string
+  title?: string
+  description?: string
   showHeader?: boolean
   headerAction?: ReactNode
 }
