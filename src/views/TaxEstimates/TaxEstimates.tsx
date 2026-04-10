@@ -2,19 +2,24 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { OnboardingStatus, TaxEstimatesRouteStoreProvider, useTaxEstimatesOnboardingStatus } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { type TaxBannerReviewHandler } from '@components/TaxDetails/TaxBanner'
 import { View } from '@components/View/View'
 import { TaxEstimatesViewContent } from '@views/TaxEstimates/TaxEstimatesViewContent'
 import { TaxEstimatesViewHeader } from '@views/TaxEstimates/TaxEstimatesViewHeader'
 
-export const TaxEstimates = () => {
+export type TaxEstimatesProps = {
+  onPressReviewButton?: TaxBannerReviewHandler
+}
+
+export const TaxEstimates = ({ onPressReviewButton }: TaxEstimatesProps) => {
   return (
     <TaxEstimatesRouteStoreProvider>
-      <TaxEstimatesView />
+      <TaxEstimatesView onPressReviewButton={onPressReviewButton} />
     </TaxEstimatesRouteStoreProvider>
   )
 }
 
-const TaxEstimatesView = () => {
+const TaxEstimatesView = ({ onPressReviewButton }: TaxEstimatesProps) => {
   const { t } = useTranslation()
   const onboardingStatus = useTaxEstimatesOnboardingStatus()
 
@@ -24,8 +29,8 @@ const TaxEstimatesView = () => {
   )
 
   return (
-    <View title={t('common:label.tax_estimates', 'Tax estimates')} header={header}>
-      <TaxEstimatesViewContent onboardingStatus={onboardingStatus} />
+    <View title={t('taxEstimates:label.tax_estimates', 'Tax estimates')} header={header}>
+      <TaxEstimatesViewContent onboardingStatus={onboardingStatus} onPressReviewButton={onPressReviewButton} />
     </View>
   )
 }
