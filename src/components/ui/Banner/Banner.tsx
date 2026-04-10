@@ -126,7 +126,7 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
       {...dataProperties}
       {...ariaProperties}
     >
-      {slots?.Icon !== null && (
+      {renderedIcon && (
         <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
           {renderedIcon}
         </HStack>

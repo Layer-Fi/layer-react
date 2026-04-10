@@ -66,6 +66,15 @@ export const getTaxEstimatesBannerQuarterStatus = (
   return { kind: 'due' }
 }
 
+const findEarliestQuarter = (
+  quarters: TaxEstimatesBannerQuarter[],
+): TaxEstimatesBannerQuarter | undefined =>
+  quarters.reduce<TaxEstimatesBannerQuarter | undefined>(
+    (earliest, quarter) =>
+      !earliest || quarter.dueDate < earliest.dueDate ? quarter : earliest,
+    undefined,
+  )
+
 export const getNextTaxFromTaxEstimatesBanner = (
   taxBanner?: TaxEstimatesBanner,
 ): TaxOverviewNextTax | undefined => {
@@ -73,8 +82,13 @@ export const getNextTaxFromTaxEstimatesBanner = (
     return
   }
 
-  const nextQuarter = taxBanner.quarters.find(quarter => !quarter.isPastDue && quarter.balance > 0)
-    ?? taxBanner.quarters.find(quarter => quarter.balance > 0)
+  const upcomingWithBalance = taxBanner.quarters.filter(
+    quarter => !quarter.isPastDue && quarter.balance > 0,
+  )
+  const anyWithBalance = taxBanner.quarters.filter(quarter => quarter.balance > 0)
+
+  const nextQuarter = findEarliestQuarter(upcomingWithBalance)
+    ?? findEarliestQuarter(anyWithBalance)
 
   if (!nextQuarter) {
     return
