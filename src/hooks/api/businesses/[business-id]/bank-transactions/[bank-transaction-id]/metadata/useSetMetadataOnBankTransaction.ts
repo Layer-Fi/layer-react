@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 import { type CustomerSchema, encodeCustomer } from '@schemas/customer'
 import { encodeVendor, type VendorSchema } from '@schemas/vendor'
 import { patch } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useMinMutatingMutation } from '@hooks/utils/swr/useMinMutatingMutation'
@@ -62,15 +63,16 @@ type UseSetMetadataOnBankTransactionParameters = {
 export function useSetMetadataOnBankTransaction({
   bankTransactionId,
 }: UseSetMetadataOnBankTransactionParameters) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       bankTransactionId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, bankTransactionId },
       { arg: { vendor, customer } }: { arg: SetMetadataOnBankTransactionArg },

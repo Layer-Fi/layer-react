@@ -3,6 +3,7 @@ import useSWRMutation from 'swr/mutation'
 import { v4 as uuidv4 } from 'uuid'
 
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useLedgerEntriesCacheActions, useLedgerEntriesOptimisticUpdater } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -61,15 +62,16 @@ type TagLedgerEntryOptions = {
 }
 
 export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       ledgerEntryId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, ledgerEntryId },
       { arg: { key, value, dimensionDisplayName, valueDisplayName } }: { arg: TagLedgerEntryArg },

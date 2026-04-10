@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -41,16 +42,17 @@ export const archiveCategorizationRule = post<ArchiveCategorizationRuleReturn>(
 )
 
 export function useArchiveCategorizationRule() {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
 
   const mutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       access_token: auth?.access_token,
       apiUrl: auth?.apiUrl,
       businessId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: categorizationRuleId }: { arg: string },

@@ -8,6 +8,7 @@ import {
   TransactionTaggingStrategy,
 } from '@schemas/bookkeepingConfiguration'
 import { get } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -49,15 +50,16 @@ const getBookkeepingConfiguration = get<
 })
 
 export function useBookkeepingConfiguration() {
+  const withLocale = useLocalizedKey()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
-  const queryKey = buildKey({
+  const queryKey = withLocale(buildKey({
     ...auth,
     apiUrl,
     businessId,
-  })
+  }))
 
   const response = useSWR(
     () => queryKey,

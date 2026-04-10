@@ -1,5 +1,3 @@
-import '@utils/i18n/init'
-
 /*
 ==========================================================
 ======================= Components =======================
@@ -70,3 +68,4 @@ export { useLayerContext } from './contexts/LayerContext/LayerContext'
 export { LayerProvider } from './providers/LayerProvider/LayerProvider'
 export { DisplayState } from './types/bankTransactions'
 export { Direction } from './types/general'
+export { SupportedLocale } from './utils/i18n/supportedLocale'

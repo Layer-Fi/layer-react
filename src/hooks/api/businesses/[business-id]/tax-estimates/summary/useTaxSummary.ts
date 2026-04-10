@@ -6,6 +6,7 @@ import type { ReportingBasis } from '@internal-types/general'
 import { type TaxSummaryResponse, TaxSummaryResponseSchema } from '@schemas/taxEstimates/summary'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -18,9 +19,10 @@ type UseTaxSummaryOptions = {
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
+  enabled?: boolean
 }
 
-type GetTaxSummaryParams = UseTaxSummaryOptions & {
+type GetTaxSummaryParams = Omit<UseTaxSummaryOptions, 'enabled'> & {
   businessId: string
 }
 
@@ -38,6 +40,7 @@ function buildKey({
   year,
   reportingBasis,
   fullYearProjection,
+  enabled = true,
 }: {
   access_token?: string
   apiUrl?: string
@@ -45,7 +48,12 @@ function buildKey({
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
+  enabled?: boolean
 }) {
+  if (!enabled) {
+    return
+  }
+
   if (accessToken && apiUrl) {
     return {
       accessToken,
@@ -59,18 +67,20 @@ function buildKey({
   }
 }
 
-export function useTaxSummary({ year, reportingBasis, fullYearProjection }: UseTaxSummaryOptions) {
+export function useTaxSummary({ year, reportingBasis, fullYearProjection, enabled = true }: UseTaxSummaryOptions) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
   const swrResponse = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       businessId,
       year,
       reportingBasis,
       fullYearProjection,
-    }),
+      enabled,
+    })),
     async ({ accessToken, apiUrl, businessId, year, reportingBasis, fullYearProjection }) => {
       return getTaxSummary(
         apiUrl,

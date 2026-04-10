@@ -2,6 +2,7 @@ import useSWRMutation from 'swr/mutation'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -109,6 +110,7 @@ export function useBulkSetOpeningBalanceAndDate(
   data: OpeningBalanceData[],
   { onSuccess }: { onSuccess: (results: OpeningBalanceAPIResponseResult[]) => Awaitable<void> },
 ) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -131,7 +133,7 @@ export function useBulkSetOpeningBalanceAndDate(
   }
 
   return useSWRMutation(
-    () => buildKey({ access_token: auth?.access_token, apiUrl: auth?.apiUrl, businessId, data }),
+    () => withLocale(buildKey({ access_token: auth?.access_token, apiUrl: auth?.apiUrl, businessId, data })),
     ({ accessToken, apiUrl, businessId, data }) => (
       Promise.allSettled(
         data.map(

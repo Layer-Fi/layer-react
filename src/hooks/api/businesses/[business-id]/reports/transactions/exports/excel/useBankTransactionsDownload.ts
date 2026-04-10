@@ -4,6 +4,7 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import { type APIError } from '@utils/api/apiError'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import type { UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -69,6 +70,7 @@ function buildKey({
 type UseBankTransactionsDownloadOptions = UseBankTransactionsOptions
 
 export function useBankTransactionsDownload() {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -77,10 +79,10 @@ export function useBankTransactionsDownload() {
     APIError,
     () => ReturnType<typeof buildKey>,
     UseBankTransactionsDownloadOptions>(
-      () => buildKey({
+      () => withLocale(buildKey({
         ...data,
         businessId,
-      }),
+      })),
       (
         {
           accessToken,

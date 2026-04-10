@@ -3,6 +3,7 @@ import useSWR from 'swr'
 
 import { TagDimensionSchema } from '@schemas/tag'
 import { get } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -47,17 +48,18 @@ type UseTagDimensionsParameters = {
 }
 
 export function useTagDimensions({ isEnabled = true }: UseTagDimensionsParameters = {}) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { apiUrl } = useEnvironment()
   const { businessId } = useLayerContext()
 
   const swrResponse = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       apiUrl,
       businessId,
       isEnabled,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => getTagDimensions(
       apiUrl,
       accessToken,

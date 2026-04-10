@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { InvoiceSchema, type UpsertInvoiceSchema } from '@schemas/invoices/invoice'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
@@ -123,6 +124,7 @@ type UseUpsertInvoiceProps =
   | { mode: UpsertInvoiceMode.Update, invoiceId: string }
 
 export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -130,11 +132,11 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
   const invoiceId = mode === UpsertInvoiceMode.Update ? props.invoiceId : undefined
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       invoiceId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, invoiceId },
       { arg: body }: { arg: UpsertInvoiceBody },

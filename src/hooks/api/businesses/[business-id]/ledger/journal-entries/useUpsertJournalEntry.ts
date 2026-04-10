@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { DataModel } from '@internal-types/general'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
@@ -52,6 +53,7 @@ type UseUpsertJournalEntryProps =
   | { mode: UpsertJournalEntryMode.Update, journalEntryId: string }
 
 export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId, touch } = useLayerContext()
 
@@ -67,10 +69,10 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
   const { invalidate } = useGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: body }: { arg: UpsertJournalEntryBody },

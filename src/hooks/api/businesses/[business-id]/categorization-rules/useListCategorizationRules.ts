@@ -6,8 +6,10 @@ import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type Sor
 import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -110,12 +112,13 @@ export function useListCategorizationRules({
   limit,
   showTotalCount = true,
 }: ListCategorizationRulesOptions = {}) {
+  const withLocale = useLocalizedKey()
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListCategorizationRulesReturn | null) => keyLoader(
+    (_index, previousPageData: ListCategorizationRulesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...auth,
@@ -128,7 +131,7 @@ export function useListCategorizationRules({
         limit,
         showTotalCount,
       },
-    ),
+    )),
     ({
       accessToken,
       apiUrl,
@@ -162,6 +165,8 @@ export function useListCategorizationRules({
       initialSize: 1,
     },
   )
+
+  usePreserveInfiniteSize(swrResponse)
 
   return new ListCategorizationRulesSWRResponse(swrResponse)
 }

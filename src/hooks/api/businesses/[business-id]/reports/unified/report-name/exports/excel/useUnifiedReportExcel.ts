@@ -5,6 +5,7 @@ import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/co
 import type { DateGroupBy, ReportEnum, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -63,16 +64,17 @@ type UseUnifiedReportExcelOptions = {
 }
 
 export function useUnifiedReportExcel({ dateSelectionMode, onSuccess }: UseUnifiedReportExcelOptions) {
+  const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const reportState = useUnifiedReportState({ dateSelectionMode })
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...auth,
       businessId,
       reportState,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, tags, ...reportParams }) =>
       getUnifiedReportExcel(apiUrl, accessToken, {
         params: { businessId, ...reportParams },

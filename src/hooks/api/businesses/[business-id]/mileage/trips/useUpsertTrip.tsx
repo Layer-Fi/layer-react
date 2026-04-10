@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { TripSchema, type UpsertTripEncoded } from '@schemas/trip'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useMileageSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
 import { useTripsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
@@ -124,6 +125,7 @@ type UseUpsertTripProps =
   | { mode: UpsertTripMode.Update, tripId: string }
 
 export const useUpsertTrip = (props: UseUpsertTripProps) => {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -131,11 +133,11 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
   const tripId = mode === UpsertTripMode.Update ? props.tripId : undefined
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       tripId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, tripId },
       { arg: body }: { arg: UpsertTripBody },
