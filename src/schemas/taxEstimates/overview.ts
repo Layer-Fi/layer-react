@@ -35,21 +35,3 @@ export const TaxOverviewApiResponseSchema = Schema.Struct({
 })
 
 export type TaxOverviewApiResponse = typeof TaxOverviewApiResponseSchema.Type
-
-export type TaxOverviewDeadlineStatusKind = 'pastDue' | 'paid' | 'due' | 'categorizationIncomplete'
-
-export type TaxOverviewDeadlineStatus = {
-  kind: TaxOverviewDeadlineStatusKind
-}
-
-export type TaxOverviewNextTax = {
-  amount: number
-  dueAt: Date
-  quarter: number
-  status: TaxOverviewDeadlineStatus
-}
-
-export type TaxOverviewData = {
-  deductionsTotal: number
-  incomeTotal: number
-}
