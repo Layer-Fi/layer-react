@@ -8,18 +8,14 @@ import './taxOverview.scss'
 
 type TaxOverviewProps = {
   data: TaxOverviewData
-  title: string
-  description: string
   isTaxDeadlinesLoading?: boolean
   onTaxBannerReviewClick?: (payload: TaxOverviewBannerReview) => void
 }
 
 export const TaxOverview = ({
   data,
-  description,
   isTaxDeadlinesLoading = false,
   onTaxBannerReviewClick,
-  title,
 }: TaxOverviewProps) => {
   const annualDeadline = data.annualDeadline
   const paymentDeadlines = data.paymentDeadlines
@@ -27,10 +23,8 @@ export const TaxOverview = ({
   return (
     <VStack className='Layer__TaxOverview' gap='md'>
       <TaxableIncomeCard
-        description={description}
         incomeTotal={data.incomeTotal}
         deductionsTotal={data.deductionsTotal}
-        title={title}
         showHeader={false}
       />
       {isTaxDeadlinesLoading && <Loader />}
