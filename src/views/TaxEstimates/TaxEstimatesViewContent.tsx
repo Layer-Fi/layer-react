@@ -12,8 +12,24 @@ export const TaxEstimatesViewContent = () => {
   const { t } = useTranslation()
   const onboardingStatus = useTaxEstimatesOnboardingStatus()
 
-  if (onboardingStatus === OnboardingStatus.Onboarded) {
-    return <TaxEstimatesOnboardedViewContent />
+  if (onboardingStatus === OnboardingStatus.FeatureDisabled) {
+    return (
+      <Container name='tax-estimates'>
+        <DataState
+          status={DataStateStatus.info}
+          title={t('common:state.feature_not_enabled', 'Feature not enabled')}
+          description={t(
+            'taxEstimates:error.feature_not_enabled',
+            'Tax estimates are not enabled.',
+          )}
+          spacing
+        />
+      </Container>
+    )
+  }
+
+  if (onboardingStatus === OnboardingStatus.NotOnboarded) {
+    return <TaxProfile />
   }
 
   if (onboardingStatus === OnboardingStatus.Loading) {
@@ -32,21 +48,7 @@ export const TaxEstimatesViewContent = () => {
     )
   }
 
-  if (onboardingStatus === OnboardingStatus.FeatureDisabled) {
-    return (
-      <Container name='tax-estimates'>
-        <DataState
-          status={DataStateStatus.info}
-          title={t('common:state.feature_not_enabled', 'Feature not enabled')}
-          description={t(
-            'taxEstimates:error.feature_not_enabled',
-            'Tax estimates are not enabled.',
-          )}
-          spacing
-        />
-      </Container>
-    )
+  if (onboardingStatus === OnboardingStatus.Onboarded) {
+    return <TaxEstimatesOnboardedViewContent />
   }
-
-  return <TaxProfile />
 }
