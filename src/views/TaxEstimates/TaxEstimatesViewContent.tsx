@@ -48,7 +48,5 @@ export const TaxEstimatesViewContent = () => {
     )
   }
 
-  if (onboardingStatus === OnboardingStatus.Onboarded) {
-    return <TaxEstimatesOnboardedViewContent />
-  }
+  return <TaxEstimatesOnboardedViewContent />
 }
