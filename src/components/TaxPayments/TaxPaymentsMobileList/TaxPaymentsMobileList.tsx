@@ -1,8 +1,7 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
-import { asMutable } from '@utils/asMutable'
 import { MobileList } from '@ui/MobileList/MobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -45,9 +44,7 @@ type TaxPaymentRowWithId = TaxPaymentRow & { id: string }
 
 export const TaxPaymentsMobileList = ({ data, isLoading, isError, slots }: CommonTaxPaymentsListProps) => {
   const { t } = useTranslation()
-  const mutableData = data
-    ? asMutable(data.map(row => ({ ...row, id: row.rowKey })))
-    : undefined
+  const mutableData = useMemo(() => data ? data.map(row => ({ ...row, id: row.rowKey })) : undefined, [data])
   const renderItem = useCallback(
     (payment: TaxPaymentRowWithId) => <TaxPaymentsMobileListItem payment={payment} />,
     [],
