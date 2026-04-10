@@ -152,10 +152,7 @@ export const useJournal: UseJournal = () => {
   const hasMore = useMemo(() => {
     if (paginatedData && paginatedData.length > 0) {
       const lastPage = paginatedData[paginatedData.length - 1]
-      return !!(
-        lastPage.meta?.pagination.cursor
-        && lastPage.meta?.pagination.has_more
-      )
+      return !!lastPage.meta?.pagination.cursor && lastPage.meta?.pagination.has_more
     }
     return false
   }, [paginatedData])

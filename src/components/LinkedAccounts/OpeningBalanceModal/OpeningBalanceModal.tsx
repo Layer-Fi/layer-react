@@ -174,7 +174,7 @@ export function OpeningBalanceModal({
     setAccountsToAddOpeningBalanceInModal,
   } = useContext(LinkedAccountsContext)
 
-  const shouldShowModal = !!(accountsToAddOpeningBalanceInModal.length)
+  const shouldShowModal = !!accountsToAddOpeningBalanceInModal.length
 
   if (!shouldShowModal) {
     return null

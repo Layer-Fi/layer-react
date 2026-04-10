@@ -27,7 +27,7 @@ export function CashflowStatementDownloadButton({
         iconOnly={iconOnly}
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
-        requestFailed={!!(error)}
+        requestFailed={!!error}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

@@ -149,7 +149,7 @@ export const ChartOfAccountsForm = ({
             value={form?.data.parent}
             onChange={sel => changeFormData('parent', sel)}
             disabled={sendingForm}
-            isInvalid={!!(form?.errors?.find(x => x.field === 'parent'))}
+            isInvalid={!!form?.errors?.find(x => x.field === 'parent')}
             errorMessage={form?.errors?.find(x => x.field === 'parent')?.message}
           />
         </InputGroup>
@@ -162,7 +162,7 @@ export const ChartOfAccountsForm = ({
             name='name'
             placeholder={t('chartOfAccounts:label.enter_name', 'Enter name...')}
             value={form?.data.name}
-            isInvalid={!!(form?.errors?.find(x => x.field === 'name'))}
+            isInvalid={!!form?.errors?.find(x => x.field === 'name')}
             errorMessage={form?.errors?.find(x => x.field === 'name')?.message}
             disabled={sendingForm}
             onChange={e =>
@@ -178,7 +178,7 @@ export const ChartOfAccountsForm = ({
             name='accountNumber'
             placeholder={t('chartOfAccounts:label.enter_account_number', 'Enter account number...')}
             value={form?.data.accountNumber}
-            isInvalid={!!(form?.errors?.find(x => x.field === 'accountNumber'))}
+            isInvalid={!!form?.errors?.find(x => x.field === 'accountNumber')}
             errorMessage={form?.errors?.find(x => x.field === 'accountNumber')?.message}
             disabled={sendingForm}
             onChange={e =>
@@ -194,7 +194,7 @@ export const ChartOfAccountsForm = ({
             options={ledgerAccountTypesOptions}
             value={form?.data.type}
             onChange={sel => changeFormData('type', sel)}
-            isInvalid={!!(form?.errors?.find(x => x.field === 'type'))}
+            isInvalid={!!form?.errors?.find(x => x.field === 'type')}
             errorMessage={form?.errors?.find(x => x.field === 'type')?.message}
             disabled={
               sendingForm
@@ -215,7 +215,7 @@ export const ChartOfAccountsForm = ({
                 : Object.values(ledgerAccountSubtypesForType).flat()
             }
             value={form?.data.subType}
-            isInvalid={!!(form?.errors?.find(x => x.field === 'subType'))}
+            isInvalid={!!form?.errors?.find(x => x.field === 'subType')}
             errorMessage={form?.errors?.find(x => x.field === 'subType')?.message}
             onChange={sel => changeFormData('subType', sel)}
             disabled={sendingForm}
@@ -229,9 +229,7 @@ export const ChartOfAccountsForm = ({
           <Select
             options={normalityOptions}
             value={form?.data.normality}
-            isInvalid={!!(
-              form?.errors?.find(x => x.field === 'normality')
-            )}
+            isInvalid={!!form?.errors?.find(x => x.field === 'normality')}
             errorMessage={
               form?.errors?.find(x => x.field === 'normality')?.message
             }

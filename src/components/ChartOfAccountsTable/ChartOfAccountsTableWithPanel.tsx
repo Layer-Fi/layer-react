@@ -71,7 +71,7 @@ export const ChartOfAccountsTableWithPanel = ({
           stringOverrides={stringOverrides?.chartOfAccountsForm}
         />
       )}
-      sidebarIsOpen={!!(form)}
+      sidebarIsOpen={!!form}
       parentRef={containerRef}
     >
       <Header className={`Layer__${COMPONENT_NAME}__header`} asHeader rounded>

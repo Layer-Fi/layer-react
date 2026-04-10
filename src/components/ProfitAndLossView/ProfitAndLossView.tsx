@@ -58,7 +58,7 @@ const ProfitAndLossPanel = ({
           stringOverrides={stringOverrides?.profitAndLossDetailedCharts}
         />
       )}
-      sidebarIsOpen={!!(sidebarScope)}
+      sidebarIsOpen={!!sidebarScope}
       parentRef={containerRef}
     >
       <ProfitAndLoss.Header

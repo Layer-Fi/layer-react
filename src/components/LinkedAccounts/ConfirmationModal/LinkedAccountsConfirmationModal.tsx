@@ -93,7 +93,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
-  const hasError = !!(error)
+  const hasError = !!error
 
   const handleFinish = async () => {
     const success = await trigger(formState)

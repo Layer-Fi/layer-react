@@ -265,7 +265,7 @@ export const JournalEntryDetails = () => {
                         ? t('generalLedger:error.operation_retry', 'Operation failed. Try again.')
                         : undefined
                   }
-                  disabled={!!(entry?.reversal_id)}
+                  disabled={!!entry?.reversal_id}
                 >
                   {t('generalLedger:action.reverse_entry', 'Reverse entry')}
                 </Button>

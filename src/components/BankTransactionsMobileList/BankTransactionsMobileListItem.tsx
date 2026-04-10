@@ -169,7 +169,7 @@ export const BankTransactionsMobileListItem = ({
     return getInAppLink(bankTransaction, renderInAppLink)
   }, [displayAsCategorized, bankTransaction, renderInAppLink])
 
-  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: !!(initialLoad) })
+  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: !!initialLoad })
 
   const className = 'Layer__bank-transaction-mobile-list-item'
   const openClassName = open ? `${className}--expanded` : ''

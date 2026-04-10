@@ -30,7 +30,7 @@ export function AccountBalancesDownloadButton({
         iconOnly={iconOnly}
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
-        requestFailed={!!(error)}
+        requestFailed={!!error}
         text={t('common:action.download_csv', 'Download CSV')}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />

@@ -96,7 +96,7 @@ export function LinkAccountsLinkStep() {
             </VStack>
           </ElevatedLoadingSpinnerContainer>
         )}
-        isError={!!(error)}
+        isError={!!error}
         Error={(
           <DataState
             status={DataStateStatus.failed}

@@ -174,7 +174,7 @@ export const useReceipts: UseReceipts = ({
     const existingNames = [
       ...receiptUrls
         .map(r => r.name)
-        .filter((name): name is string => !!(name)),
+        .filter((name): name is string => !!name),
       ...pendingUploadNamesRef.current,
     ]
     const uniqueName = getUniqueFileName(file.name, existingNames)
