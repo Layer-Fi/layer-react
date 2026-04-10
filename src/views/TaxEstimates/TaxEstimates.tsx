@@ -29,7 +29,7 @@ const TaxEstimatesView = ({ onPressReviewButton }: TaxEstimatesProps) => {
   )
 
   return (
-    <View title={t('common:label.tax_estimates', 'Tax estimates')} header={header}>
+    <View title={t('taxEstimates:label.tax_estimates', 'Tax estimates')} header={header}>
       <TaxEstimatesViewContent onboardingStatus={onboardingStatus} onPressReviewButton={onPressReviewButton} />
     </View>
   )
