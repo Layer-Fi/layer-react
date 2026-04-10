@@ -17,10 +17,9 @@ type UseTaxOverviewOptions = {
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
-  enabled?: boolean
 }
 
-type GetTaxOverviewParams = Omit<UseTaxOverviewOptions, 'enabled'> & {
+type GetTaxOverviewParams = UseTaxOverviewOptions & {
   businessId: string
 }
 
@@ -42,7 +41,6 @@ function buildKey({
   year,
   reportingBasis,
   fullYearProjection,
-  enabled = true,
 }: {
   access_token?: string
   apiUrl?: string
@@ -50,12 +48,7 @@ function buildKey({
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
-  enabled?: boolean
 }) {
-  if (!enabled) {
-    return
-  }
-
   if (accessToken && apiUrl) {
     return {
       accessToken,
@@ -69,7 +62,7 @@ function buildKey({
   }
 }
 
-export function useTaxOverview({ year, reportingBasis, fullYearProjection, enabled = true }: UseTaxOverviewOptions) {
+export function useTaxOverview({ year, reportingBasis, fullYearProjection }: UseTaxOverviewOptions) {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
@@ -81,7 +74,6 @@ export function useTaxOverview({ year, reportingBasis, fullYearProjection, enabl
       year,
       reportingBasis,
       fullYearProjection,
-      enabled,
     })),
     async ({ accessToken, apiUrl, businessId, year, reportingBasis, fullYearProjection }) => {
       return getTaxOverview(
