@@ -60,7 +60,13 @@
     min-block-size: 2rem;
   }
 
+  &__LegendLabel {
+    flex: 1;
+    min-width: 0;
+  }
+
   &__LegendValueGroup {
+    flex-shrink: 0;
     justify-content: flex-end;
     min-inline-size: 12rem;
   }

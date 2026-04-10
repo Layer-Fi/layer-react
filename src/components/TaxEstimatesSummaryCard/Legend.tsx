@@ -35,7 +35,7 @@ export const Legend = ({
       </HStack>
       {categories.map(category => (
         <HStack key={category.key} className='Layer__TaxEstimatesSummaryCard__LegendRow' justify='space-between' align='center' gap='md'>
-          <Span size='sm'>{category.label}</Span>
+          <Span size='sm' className='Layer__TaxEstimatesSummaryCard__LegendLabel'>{category.label}</Span>
           <HStack className='Layer__TaxEstimatesSummaryCard__LegendValueGroup' align='center' gap='sm'>
             <MoneySpan size='sm' weight='bold' amount={category.amount} />
             <Span size='sm' variant='subtle'>
