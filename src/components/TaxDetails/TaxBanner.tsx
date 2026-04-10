@@ -2,7 +2,6 @@ import { FileText } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { TaxOverviewBannerReview } from '@schemas/taxEstimates/overview'
 import { convertCentsToDecimalString } from '@utils/format'
 import { tPlural } from '@utils/i18n/plural'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -12,7 +11,11 @@ import { HStack } from '@ui/Stack/Stack'
 
 import './taxBanner.scss'
 
-export type TaxBannerReviewPayload = TaxOverviewBannerReview
+export type TaxBannerReviewPayload = {
+  type: 'UNCATEGORIZED_TRANSACTIONS'
+  count: number
+  amount: number
+}
 export type TaxBannerReviewHandler = (payload?: TaxBannerReviewPayload) => void
 
 export type TaxBannerProps = {
