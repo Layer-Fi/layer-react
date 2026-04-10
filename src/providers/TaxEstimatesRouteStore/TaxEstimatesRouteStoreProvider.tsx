@@ -3,6 +3,7 @@ import { getYear } from 'date-fns'
 import { createStore, useStore } from 'zustand'
 
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export enum TaxEstimatesRoute {
   Estimates = 'Estimates',
@@ -15,6 +16,7 @@ export enum OnboardingStatus {
   Error = 'Error',
   NotOnboarded = 'NotOnboarded',
   Onboarded = 'Onboarded',
+  FeatureDisabled = 'FeatureDisabled',
 }
 
 type TaxEstimatesRouteState = {
@@ -58,8 +60,20 @@ export function useTaxEstimatesNavigation() {
 }
 
 export function useTaxEstimatesOnboardingStatus() {
+  const { accountingConfiguration } = useLayerContext()
+
+  const isFeatureEnabled = useMemo(() => {
+    return accountingConfiguration?.enableTaxEstimates ?? false
+  }, [accountingConfiguration])
+
   const store = useContext(TaxEstimatesRouteStoreContext)
-  return useStore(store, state => state.onboardingStatus)
+  return useStore(store, (state) => {
+    if (!isFeatureEnabled) {
+      return OnboardingStatus.FeatureDisabled
+    }
+
+    return state.onboardingStatus
+  })
 }
 
 export function useTaxEstimatesYear() {

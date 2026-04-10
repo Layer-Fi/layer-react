@@ -1,58 +1,53 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { OnboardingStatus, useTaxEstimatesOnboardingStatus } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
-import { View } from '@components/View/View'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 import { TaxEstimatesOnboardedViewContent } from './TaxEstimatesOnboardedViewContent'
-import { TaxEstimatesViewHeader } from './TaxEstimatesViewHeader'
 
 export const TaxEstimatesViewContent = () => {
   const { t } = useTranslation()
   const onboardingStatus = useTaxEstimatesOnboardingStatus()
 
-  const header = useMemo(
-    () => onboardingStatus === OnboardingStatus.Onboarded && <TaxEstimatesViewHeader />,
-    [onboardingStatus],
-  )
+  if (onboardingStatus === OnboardingStatus.Onboarded) {
+    return <TaxEstimatesOnboardedViewContent />
+  }
 
-  const viewContent = useMemo(() => {
-    switch (onboardingStatus) {
-      case OnboardingStatus.Loading:
-        return (
-          <Container name='tax-estimates'>
-            <Loader />
-          </Container>
-        )
+  if (onboardingStatus === OnboardingStatus.Loading) {
+    return (
+      <Container name='tax-estimates'>
+        <Loader />
+      </Container>
+    )
+  }
 
-      case OnboardingStatus.Error:
-        return (
-          <Container name='tax-estimates'>
-            <DataState
-              status={DataStateStatus.failed}
-              title={t('taxEstimates:error.load_tax_information', 'Unable to load tax information')}
-              description={t('taxEstimates:error.retrieve_tax_profile', 'We couldn’t retrieve your tax profile. Please check your connection and try again.')}
-              spacing
-            />
-          </Container>
-        )
+  if (onboardingStatus === OnboardingStatus.Error) {
+    return (
+      <Container name='tax-estimates'>
+        <DataState status={DataStateStatus.failed} title={t('taxEstimates:error.load_tax_information', 'Unable to load tax information')} description={t('taxEstimates:error.retrieve_tax_profile', 'We couldn’t retrieve your tax profile. Please check your connection and try again.')} spacing />
+      </Container>
+    )
+  }
 
-      case OnboardingStatus.Onboarded:
-        return <TaxEstimatesOnboardedViewContent />
+  if (onboardingStatus === OnboardingStatus.FeatureDisabled) {
+    return (
+      <Container name='tax-estimates'>
+        <DataState
+          status={DataStateStatus.info}
+          title={t('common:state.feature_not_enabled', 'Feature not enabled')}
+          description={t(
+            'common:label.feature_not_enabled_for_business',
+            '{{featureName}} is not enabled.',
+            { featureName: t('taxEstimates:label.tax_estimates', 'Tax estimates') },
+          )}
+          spacing
+        />
+      </Container>
+    )
+  }
 
-      case OnboardingStatus.NotOnboarded:
-      default:
-        return <TaxProfile />
-    }
-  }, [onboardingStatus, t])
-
-  return (
-    <View title={t('common:label.taxes', 'Taxes')} header={header}>
-      {viewContent}
-    </View>
-  )
+  return <TaxProfile />
 }
