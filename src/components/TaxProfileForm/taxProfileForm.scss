@@ -3,6 +3,12 @@
   flex-direction: column;
   width: 100%;
 
+  &__Content {
+    .Layer__Checkbox > .Layer__Span {
+      margin-inline-start: var(--spacing-xs);
+    }
+  }
+
   .Layer__TaxProfileForm__Section {
     padding: var(--spacing-md);
     border-radius: var(--border-radius-sm);
