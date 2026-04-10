@@ -114,7 +114,7 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
   const dataProperties = toDataProperties({ variant })
   const ariaProperties = getAriaProperties(variant, ariaLabel)
 
-  const renderedIcon = slots?.Icon ?? getDefaultIcon(variant)
+  const renderedIcon = slots?.Icon !== undefined ? slots.Icon : getDefaultIcon(variant)
 
   return (
     <HStack
