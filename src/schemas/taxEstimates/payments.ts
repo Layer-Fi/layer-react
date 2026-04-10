@@ -1,65 +1,56 @@
 import { pipe, Schema } from 'effect'
 
-const jurisdictionFields = {
-  usFederal: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('us_federal'),
+const taxPaymentBreakdownFields = {
+  rowKey: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('row_key'),
   ),
-  usState: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('us_state'),
+  label: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('label'),
   ),
-}
-
-const TaxOwedBreakdownSchema = Schema.Struct({
-  ...jurisdictionFields,
-})
-
-export type TaxOwedBreakdown = typeof TaxOwedBreakdownSchema.Type
-
-const TaxPaidBreakdownSchema = Schema.Struct({
-  ...jurisdictionFields,
-  uncategorized: Schema.Number,
-})
-
-export type TaxPaidBreakdown = typeof TaxPaidBreakdownSchema.Type
-
-const TaxPaymentQuarterSchema = Schema.Struct({
-  quarter: Schema.Number,
-  owedRolledOverFromPrevious: pipe(
+  rolledOverFromPrevious: pipe(
     Schema.propertySignature(Schema.Number),
-    Schema.fromKey('owed_rolled_over_from_previous'),
+    Schema.fromKey('rolled_over_from_previous'),
   ),
   owedThisQuarter: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('owed_this_quarter'),
   ),
-  owedThisQuarterBreakdown: pipe(
-    Schema.propertySignature(TaxOwedBreakdownSchema),
-    Schema.fromKey('owed_this_quarter_breakdown'),
-  ),
   totalPaid: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('total_paid'),
   ),
-  totalPaidBreakdown: pipe(
-    Schema.propertySignature(TaxPaidBreakdownSchema),
-    Schema.fromKey('total_paid_breakdown'),
+  remainingBalance: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('remaining_balance'),
   ),
-  total: Schema.Number,
+}
+
+export interface TaxPaymentBreakdown extends Schema.Struct.Type<typeof taxPaymentBreakdownFields> {
+  breakdown?: ReadonlyArray<TaxPaymentBreakdown>
+}
+
+export interface TaxPaymentBreakdownEncoded extends Schema.Struct.Encoded<typeof taxPaymentBreakdownFields> {
+  readonly breakdown?: ReadonlyArray<TaxPaymentBreakdownEncoded>
+}
+
+const TaxPaymentsRowSchema = Schema.Struct({
+  ...taxPaymentBreakdownFields,
+  breakdown: Schema.optional(
+    Schema.Array(
+      Schema.suspend((): Schema.Schema<TaxPaymentBreakdown, TaxPaymentBreakdownEncoded> => TaxPaymentsRowSchema),
+    ),
+  ),
 })
 
-export type TaxPaymentQuarter = typeof TaxPaymentQuarterSchema.Type
-
-const TaxPaymentsSchema = Schema.Struct({
-  year: Schema.Number,
-  quarters: Schema.Array(TaxPaymentQuarterSchema),
-})
-
-export type TaxPayments = typeof TaxPaymentsSchema.Type
+export type TaxPaymentRow = typeof TaxPaymentsRowSchema.Type
 
 export const TaxPaymentsResponseSchema = Schema.Struct({
-  data: TaxPaymentsSchema,
+  data: Schema.Struct({
+    type: Schema.Literal('US_Tax_Payments'),
+    data: Schema.Array(TaxPaymentsRowSchema),
+  }),
 })
 
 export type TaxPaymentsResponse = typeof TaxPaymentsResponseSchema.Type
