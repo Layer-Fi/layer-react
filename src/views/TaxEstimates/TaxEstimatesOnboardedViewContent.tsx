@@ -110,7 +110,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
   })
 
   const taxOverviewData = useMemo((): TaxOverviewData | undefined => {
-    if (!taxOverviewApi) {
+    if (!taxOverviewApi || !taxSummaryApi) {
       return undefined
     }
 
@@ -118,7 +118,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
       deductionsTotal: taxOverviewApi.totalDeductions,
       estimatedTaxCategories,
       estimatedTaxesTitle,
-      estimatedTaxesTotal: taxSummaryApi?.projectedTaxesOwed ?? 0,
+      estimatedTaxesTotal: taxSummaryApi.projectedTaxesOwed,
       incomeTotal: taxOverviewApi.totalIncome,
     }
   }, [estimatedTaxCategories, estimatedTaxesTitle, taxOverviewApi, taxSummaryApi])
