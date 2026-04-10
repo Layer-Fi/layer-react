@@ -3,10 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import {
-  OnboardingStatus,
   TaxEstimatesRoute,
   useTaxEstimatesNavigation,
-  useTaxEstimatesOnboardingStatus,
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
 import { Heading } from '@ui/Typography/Heading'
@@ -15,7 +13,6 @@ import { TaxProfileForm } from '@components/TaxProfileForm/TaxProfileForm'
 
 export const TaxProfile = () => {
   const { t } = useTranslation()
-  const onboardingStatus = useTaxEstimatesOnboardingStatus()
   const navigate = useTaxEstimatesNavigation()
   const { data: taxProfile } = useTaxProfile()
 
@@ -31,7 +28,7 @@ export const TaxProfile = () => {
     <BaseDetailView
       slots={{ Header: TaxProfileHeader, BackIcon: BackArrow }}
       name='TaxProfile'
-      onGoBack={onboardingStatus === OnboardingStatus.Onboarded ? handleGoBack : undefined}
+      onGoBack={handleGoBack}
     >
       <TaxProfileForm taxProfile={taxProfile} />
     </BaseDetailView>
