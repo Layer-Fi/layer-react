@@ -65,9 +65,8 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
             }}
           >
             {(field) => {
-              const firstError = field.state.meta.errors[0]
-              const errorMessage = typeof firstError === 'string' ? firstError : undefined
-              const isInvalid = Boolean(errorMessage)
+              const errorMessage = field.state.meta.errors[0]
+              const isInvalid = !!errorMessage
 
               return (
                 <VStack gap='xs'>
