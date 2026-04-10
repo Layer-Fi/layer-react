@@ -5,11 +5,17 @@ export const DONUT_STROKE_WIDTH = 12
 export const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS
 export const DONUT_SEGMENT_GAP = 4
 
-export const getCategoryClassName = (key: TaxOverviewCategory['key']) => `Layer__TaxEstimatesSummaryCard__LegendSwatch--${key}`
+const CATEGORY_COLOR_MAP: Record<TaxOverviewCategory['key'], string> = {
+  federal: '#6D3CC8',
+  state: '#D8B8F4',
+}
 
-export const getCategoryStroke = (key: TaxOverviewCategory['key']) => {
-  switch (key) {
-    case 'federal': return '#6D3CC8'
-    case 'state': return '#D8B8F4'
+const HEX_COLOR_REGEX = /^#[0-9A-Fa-f]{6}$/
+
+export const resolveCategoryColor = ({ color, key }: Pick<TaxOverviewCategory, 'color' | 'key'>) => {
+  if (color && HEX_COLOR_REGEX.test(color)) {
+    return color
   }
+
+  return CATEGORY_COLOR_MAP[key]
 }

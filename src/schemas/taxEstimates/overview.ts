@@ -40,6 +40,7 @@ export type TaxOverviewCategoryKey = 'federal' | 'state'
 
 export type TaxOverviewCategory = {
   amount: number
+  color?: string
   key: TaxOverviewCategoryKey
   label: string
 }

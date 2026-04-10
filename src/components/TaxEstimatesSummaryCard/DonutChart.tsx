@@ -9,7 +9,7 @@ import {
   DONUT_RADIUS,
   DONUT_SEGMENT_GAP,
   DONUT_STROKE_WIDTH,
-  getCategoryStroke,
+  resolveCategoryColor,
 } from './constants'
 import type { SummaryCardProps } from './types'
 
@@ -44,7 +44,7 @@ export const DonutChart = ({
               r={DONUT_RADIUS}
               strokeWidth={DONUT_STROKE_WIDTH}
               fill='none'
-              stroke={getCategoryStroke(category.key)}
+              stroke={resolveCategoryColor(category)}
               strokeDasharray={`${segmentLength} ${DONUT_CIRCUMFERENCE}`}
               strokeDashoffset={-offset}
               strokeLinecap='round'

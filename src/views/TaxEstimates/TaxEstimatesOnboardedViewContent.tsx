@@ -67,6 +67,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
 
     return taxSummaryApi.sections.map(section => ({
       amount: section.taxesOwed,
+      color: section.color ?? undefined,
       key: section.type,
       label: section.label,
     }))

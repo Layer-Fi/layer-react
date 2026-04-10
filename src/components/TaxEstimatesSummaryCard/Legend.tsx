@@ -6,7 +6,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
-import { getCategoryClassName } from './constants'
+import { resolveCategoryColor } from './constants'
 import type { SummaryCardProps } from './types'
 
 type LegendProps = Pick<SummaryCardProps, 'categories' | 'total'> & {
@@ -41,7 +41,9 @@ export const Legend = ({
             <Span size='sm' variant='subtle'>
               {formatPercent(total === 0 ? 0 : category.amount / total)}
             </Span>
-            <Span nonAria className={`Layer__TaxEstimatesSummaryCard__LegendSwatch ${getCategoryClassName(category.key)}`} />
+            <svg className='Layer__TaxEstimatesSummaryCard__LegendSwatch' viewBox='0 0 12 12' aria-hidden='true' focusable='false'>
+              <rect width='12' height='12' rx='2' fill={resolveCategoryColor(category)} />
+            </svg>
           </HStack>
         </HStack>
       ))}

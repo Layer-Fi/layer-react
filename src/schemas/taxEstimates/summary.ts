@@ -7,6 +7,10 @@ export type TaxSummarySectionType = typeof TaxSummarySectionTypeSchema.Type
 const TaxSummarySectionSchema = Schema.Struct({
   type: TaxSummarySectionTypeSchema,
   label: Schema.String,
+  color: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('color'),
+  ),
   total: Schema.Number,
   taxesPaid: pipe(
     Schema.propertySignature(Schema.Number),
