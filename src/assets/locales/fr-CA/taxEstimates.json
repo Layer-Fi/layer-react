@@ -8,7 +8,7 @@
     "tax_payments": "Aucun paiement d’impôt trouvé"
   },
   "error": {
-    "feature_not_enabled": "Tax estimates are not enabled.",
+    "feature_not_enabled": "Les estimations d'impôt ne sont pas activées.",
     "load_tax_estimates": "Nous n’avons pas pu charger vos estimations fiscales",
     "load_tax_estimates_tax": "Nous n’avons pas pu charger votre sommaire fiscal",
     "load_tax_information": "Impossible de charger les renseignements fiscaux",
