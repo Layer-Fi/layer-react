@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 
 import { translationKey } from '@utils/i18n/translationKey'
 import { TaxEstimatesRoute, useTaxEstimatesNavigation, useTaxEstimatesRouteState } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
@@ -39,7 +38,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
   }
 
   return (
-    <VStack gap='md'>
+    <>
       <Toggle
         ariaLabel={t('taxEstimates:label.tax_estimate_view', 'Tax estimate view')}
         options={tabOptions}
@@ -48,6 +47,6 @@ export const TaxEstimatesOnboardedViewContent = () => {
       />
       {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
       {route === TaxEstimatesRoute.Payments && <TaxPayments />}
-    </VStack>
+    </>
   )
 }
