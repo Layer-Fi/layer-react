@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { type PropsWithChildren, useCallback, useMemo } from 'react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
@@ -12,8 +12,9 @@ import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
-import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { TaxBanner } from '@components/TaxDetails/TaxBanner'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
+import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxOverview } from '@components/TaxOverview/TaxOverview'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
@@ -27,7 +28,11 @@ const TAX_ESTIMATES_TAB_CONFIG = [
   { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates:label.payments', 'Payments') },
 ]
 
-export const TaxEstimatesOnboardedViewContent = () => {
+export type TaxEstimatesOnboardedViewContentProps = {
+  onPressReviewButton: () => void
+} & PropsWithChildren
+
+export const TaxEstimatesOnboardedViewContent = ({ onPressReviewButton }: TaxEstimatesOnboardedViewContentProps) => {
   const { t } = useTranslation()
   const { route } = useTaxEstimatesRouteState()
   const isOverviewRoute = route === TaxEstimatesRoute.Overview
@@ -95,6 +100,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
 
   return (
     <VStack gap='md'>
+      <TaxBanner onPressReviewButton={onPressReviewButton} />
       <Toggle
         ariaLabel={t('taxEstimates:label.tax_estimate_view', 'Tax estimate view')}
         options={tabOptions}

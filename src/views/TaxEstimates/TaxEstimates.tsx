@@ -6,15 +6,19 @@ import { View } from '@components/View/View'
 import { TaxEstimatesViewContent } from '@views/TaxEstimates/TaxEstimatesViewContent'
 import { TaxEstimatesViewHeader } from '@views/TaxEstimates/TaxEstimatesViewHeader'
 
-export const TaxEstimates = () => {
+export type TaxEstimatesProps = {
+  onPressReviewButton: () => void
+}
+
+export const TaxEstimates = ({ onPressReviewButton }: TaxEstimatesProps) => {
   return (
     <TaxEstimatesRouteStoreProvider>
-      <TaxEstimatesView />
+      <TaxEstimatesView onPressReviewButton={onPressReviewButton} />
     </TaxEstimatesRouteStoreProvider>
   )
 }
 
-const TaxEstimatesView = () => {
+const TaxEstimatesView = ({ onPressReviewButton }: TaxEstimatesProps) => {
   const { t } = useTranslation()
   const onboardingStatus = useTaxEstimatesOnboardingStatus()
 
@@ -25,7 +29,7 @@ const TaxEstimatesView = () => {
 
   return (
     <View title={t('common:label.tax_estimates', 'Tax estimates')} header={header}>
-      <TaxEstimatesViewContent />
+      <TaxEstimatesViewContent onPressReviewButton={onPressReviewButton} />
     </View>
   )
 }

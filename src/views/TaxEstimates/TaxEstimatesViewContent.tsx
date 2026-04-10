@@ -8,7 +8,11 @@ import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 import { TaxEstimatesOnboardedViewContent } from './TaxEstimatesOnboardedViewContent'
 
-export const TaxEstimatesViewContent = () => {
+export type TaxEstimatesViewContentProps = {
+  onPressReviewButton: () => void
+}
+
+export const TaxEstimatesViewContent = ({ onPressReviewButton }: TaxEstimatesViewContentProps) => {
   const { t } = useTranslation()
   const onboardingStatus = useTaxEstimatesOnboardingStatus()
 
@@ -49,6 +53,6 @@ export const TaxEstimatesViewContent = () => {
   }
 
   if (onboardingStatus === OnboardingStatus.Onboarded) {
-    return <TaxEstimatesOnboardedViewContent />
+    return <TaxEstimatesOnboardedViewContent onPressReviewButton={onPressReviewButton} />
   }
 }

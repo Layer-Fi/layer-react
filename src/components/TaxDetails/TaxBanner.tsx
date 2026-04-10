@@ -1,55 +1,45 @@
 import { FileText } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import type { TaxOverviewBannerReview } from '@schemas/taxEstimates/overview'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Banner } from '@ui/Banner/Banner'
 import { Button } from '@ui/Button/Button'
+import { HStack } from '@ui/Stack/Stack'
 
-export type TaxBannerReviewPayload = TaxOverviewBannerReview
-
-type TaxBannerAction = {
-  label: ReactNode
-  onPress: (payload: TaxBannerReviewPayload) => void
-  payload: TaxBannerReviewPayload
-  isDisabled?: boolean
-  isPending?: boolean
-}
+import './taxBanner.scss'
 
 export type TaxBannerProps = {
-  title: string
-  description?: string
-  action?: TaxBannerAction
-  icon?: ReactNode
+  onPressReviewButton: () => void
 }
 
-export const TaxBanner = ({
-  title,
-  description,
-  action,
-  icon = <FileText size={16} />,
-}: TaxBannerProps) => {
+export const TaxBanner = ({ onPressReviewButton }: TaxBannerProps) => {
   const { isMobile } = useSizeClass()
+  const { t } = useTranslation()
+
+  const title = t('taxEstimates:label.tax_banner_title', 'Tax banner title')
+  const description = t('taxEstimates:label.tax_banner_description', 'Tax banner description')
+  const icon = <FileText size={16} />
+
   return (
-    <Banner
-      variant='dark'
-      title={title}
-      description={description}
-      slots={{
-        Icon: isMobile ? null : icon,
-        Button: action
-          ? (
-            <Button
-              variant='solid'
-              onPress={() => action.onPress(action.payload)}
-              isDisabled={action.isDisabled}
-              isPending={action.isPending}
-            >
-              {action.label}
-            </Button>
-          )
-          : undefined,
-      }}
-    />
+    <HStack className='Layer__TaxBanner'>
+      <Banner
+        variant='dark'
+        title={title}
+        description={description}
+        slots={{
+          Icon: isMobile ? null : icon,
+          Button: onPressReviewButton
+            ? (
+              <Button
+                variant='solid'
+                onPress={onPressReviewButton}
+              >
+                {t('taxEstimates:label.tax_banner_review_button', 'Review')}
+              </Button>
+            )
+            : undefined,
+        }}
+      />
+    </HStack>
   )
 }
