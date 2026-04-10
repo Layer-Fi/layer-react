@@ -16,7 +16,7 @@ export const TaxEstimatesView = () => {
       <View title={t('common:label.taxes', 'Taxes')}>
         <Container name='tax-estimates'>
           <DataState
-            status={DataStateStatus.failed}
+            status={DataStateStatus.info}
             title={t('common:state.feature_not_enabled', 'Feature not enabled')}
             description={t(
               'common:label.feature_not_enabled_for_business',
