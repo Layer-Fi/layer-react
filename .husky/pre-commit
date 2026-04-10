@@ -1,1 +1,4 @@
+npm install
+npx i18next-cli extract
+npm run clear:react
 npx lint-staged
