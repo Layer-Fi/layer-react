@@ -42,10 +42,10 @@ const TaxOverviewDeadlineStatusIcon = ({ status }: { status?: TaxOverviewDeadlin
       case 'paid':
         return Check
       case 'due':
+      default:
         return Clock3
       case 'pastDue':
       case 'categorizationIncomplete':
-      default:
         return CircleAlert
     }
   })()
