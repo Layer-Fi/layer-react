@@ -75,14 +75,14 @@ export const useDataSync: UseDataSync = () => {
       return false
     }
 
-    return Boolean(
+    return !!(
       DEPENDENCIES[lastRead.m]?.find((dep) => {
         return (
           dep in syncTimestamps
-          && Boolean(syncTimestamps[dep])
-          && (syncTimestamps[dep] as number) > (lastRead.t)
+          && !!(syncTimestamps[dep])
+          && (syncTimestamps[dep]) > (lastRead.t)
         )
-      }),
+      })
     )
   }
 

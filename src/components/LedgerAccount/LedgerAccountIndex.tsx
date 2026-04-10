@@ -109,7 +109,7 @@ export const LedgerAccount = ({
           stringOverrides={stringOverrides?.ledgerEntryDetail}
         />
       )}
-      sidebarIsOpen={Boolean(selectedEntryId)}
+      sidebarIsOpen={!!selectedEntryId}
       parentRef={containerRef}
       className='Layer__ledger-account__panel'
     >

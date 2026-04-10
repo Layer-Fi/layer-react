@@ -85,7 +85,7 @@ export const JournalTableWithPanel = ({
     <Panel
       className={`Layer__${COMPONENT_NAME}`}
       sidebar={<JournalSidebar parentRef={containerRef} />}
-      sidebarIsOpen={Boolean(selectedEntryId && selectedEntryId !== 'new')}
+      sidebarIsOpen={!!(selectedEntryId && selectedEntryId !== 'new')}
       parentRef={containerRef}
     >
       <Header

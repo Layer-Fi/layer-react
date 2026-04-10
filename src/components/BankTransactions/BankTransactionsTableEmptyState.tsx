@@ -28,7 +28,7 @@ export const BankTransactionsTableEmptyState = () => {
   const { filters } = useBankTransactionsFiltersContext()
 
   const isCategorizationMode = display !== DisplayState.categorized
-  const isFiltered = Boolean(filters?.query)
+  const isFiltered = !!filters?.query
 
   if (isFiltered) {
     return (

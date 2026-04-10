@@ -24,7 +24,7 @@ export function BalanceSheetDownloadButton({
         iconOnly={iconOnly}
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
-        requestFailed={Boolean(error)}
+        requestFailed={!!error}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>
