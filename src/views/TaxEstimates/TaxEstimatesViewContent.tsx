@@ -39,9 +39,8 @@ export const TaxEstimatesViewContent = () => {
           status={DataStateStatus.info}
           title={t('common:state.feature_not_enabled', 'Feature not enabled')}
           description={t(
-            'common:label.feature_not_enabled_for_business',
-            '{{featureName}} is not enabled.',
-            { featureName: t('taxEstimates:label.tax_estimates', 'Tax estimates') },
+            'taxEstimates:error.feature_not_enabled',
+            'Tax estimates are not enabled.',
           )}
           spacing
         />

@@ -8,6 +8,7 @@
     "tax_payments": "No tax payments found"
   },
   "error": {
+    "feature_not_enabled": "Tax estimates are not enabled.",
     "load_tax_estimates": "We couldn't load your tax estimates",
     "load_tax_estimates_tax": "We couldn't load your tax summary",
     "load_tax_information": "Unable to load tax information",
