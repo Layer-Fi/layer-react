@@ -13,6 +13,11 @@ import { Loader } from '@components/Loader/Loader'
 
 import './dataTable.scss'
 
+type ClickableRowProps<TData> = {
+  onRowClick: (row: RowType<TData>) => void
+  isRowClickable: (row: RowType<TData>) => boolean
+}
+
 export interface BaseDataTableProps {
   componentName: string
   ariaLabel: string
@@ -31,6 +36,7 @@ export interface DataTableProps<TData> extends BaseDataTableProps {
   data: RowType<TData>[] | undefined
   headerGroups: HeaderGroup<TData>[]
   numColumns: number
+  withClickableRow?: ClickableRowProps<TData>
 }
 
 export const DataTable = <TData extends object>({
@@ -44,6 +50,7 @@ export const DataTable = <TData extends object>({
   data,
   headerGroups,
   numColumns,
+  withClickableRow,
 }: DataTableProps<TData>) => {
   const nonAria = headerGroups.length > 1
 
@@ -83,22 +90,36 @@ export const DataTable = <TData extends object>({
 
     return (
       <>
-        {data?.map(row => (
-          <Row key={row.id} depth={row.depth} nonAria={nonAria}>
-            {row.getVisibleCells().map(cell => (
-              <Cell
-                key={`${row.id}-${cell.id}`}
-                className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
-                nonAria={nonAria}
-              >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </Cell>
-            ))}
-          </Row>
-        ))}
+        {data?.map((row) => {
+          const isClickable = withClickableRow?.isRowClickable(row)
+
+          const onAction = isClickable && withClickableRow?.onRowClick
+            ? () => withClickableRow.onRowClick(row)
+            : undefined
+
+          return (
+            <Row
+              key={row.id}
+              depth={row.depth}
+              nonAria={nonAria}
+              onAction={onAction}
+              className={isClickable ? 'Layer__DataTable__ClickableRow' : undefined}
+            >
+              {row.getVisibleCells().map(cell => (
+                <Cell
+                  key={`${row.id}-${cell.id}`}
+                  className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
+                  nonAria={nonAria}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </Cell>
+              ))}
+            </Row>
+          )
+        })}
       </>
     )
-  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, componentName])
+  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, withClickableRow, componentName])
 
   return (
     <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>

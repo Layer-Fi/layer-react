@@ -53,20 +53,15 @@ export const TaxPayments = () => {
   const { data, isLoading, isError } = useTaxPayments({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
 
-  const dataWithIds = useMemo(
-    () => data?.quarters.map(q => ({ ...q, id: `Q${q.quarter}` })),
-    [data?.quarters],
-  )
-
   const props = useMemo(() => ({
-    data: dataWithIds,
+    data,
     isLoading,
     isError,
     slots: {
       EmptyState,
       ErrorState,
     },
-  }), [dataWithIds, isError, isLoading])
+  }), [data, isError, isLoading])
 
   const Header = useCallback(() => (
     <TaxPaymentsHeader isMobile={!isDesktop} />

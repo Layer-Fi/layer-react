@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -33,6 +33,7 @@ const getRowIndentStyle = (
 })
 
 const EMPTY_ARRAY: never[] = []
+
 export function ExpandableDataTable<TData extends object>({
   data,
   isLoading,
@@ -64,7 +65,7 @@ export function ExpandableDataTable<TData extends object>({
         return (
           <div style={rowIndentStyle}>
             <HStack align='center' gap='xs'>
-              <ExpandButton isExpanded={row.getIsExpanded()} onClick={row.getToggleExpandedHandler()} />
+              <ExpandButton isExpanded={row.getIsExpanded()} />
               {originalFirstCell(row)}
             </HStack>
           </div>
@@ -96,6 +97,19 @@ export function ExpandableDataTable<TData extends object>({
   const headerGroups = table.getHeaderGroups()
   const numColumns = table.getVisibleLeafColumns().length
 
+  const isRowClickable = useCallback((row: Row<TData>) => {
+    return row.getCanExpand()
+  }, [])
+
+  const onRowClick = useCallback((row: Row<TData>) => {
+    row.toggleExpanded()
+  }, [])
+
+  const withClickableRow = useMemo(() => ({
+    onRowClick,
+    isRowClickable,
+  }), [onRowClick, isRowClickable])
+
   return (
     <DataTable
       ariaLabel={ariaLabel}
@@ -108,6 +122,7 @@ export function ExpandableDataTable<TData extends object>({
       hideHeader={hideHeader}
       dependencies={dependencies}
       headerGroups={headerGroups}
+      withClickableRow={withClickableRow}
     />
   )
 }
