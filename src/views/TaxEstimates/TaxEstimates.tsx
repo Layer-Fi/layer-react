@@ -7,8 +7,6 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { View } from '@components/View/View'
 import { TaxEstimatesViewContent } from '@views/TaxEstimates/TaxEstimatesViewContent'
 
-export type { TaxEstimatesViewProps } from '@views/TaxEstimates/taxEstimatesTypes'
-
 export const TaxEstimatesView = () => {
   const { t } = useTranslation()
   const { accountingConfiguration } = useLayerContext()
