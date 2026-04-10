@@ -1,5 +1,6 @@
 {
   "action": {
+    "review_banner": "Review",
     "save_profile": "Save Profile",
     "update_tax_profile": "Update tax profile"
   },
@@ -24,6 +25,7 @@
     "amount_applied_federal_w2": "Amount Applied from Federal W-2 Withholding",
     "amount_applied_state_withholding": "Amount Applied from State Withholding",
     "annual_w2_income": "Annual W-2 income",
+    "annual_income_taxes": "Annual income taxes",
     "business_income": "Business Income",
     "business_income_deduction_rate": "Business Income Deduction ({{rate}})",
     "business_income_taxes": "Business Income Taxes",
@@ -32,6 +34,8 @@
     "deductible_expenses": "Deductible Expenses",
     "deductible_mileage_expenses": "Deductible Mileage Expenses",
     "deductions": "Deductions",
+    "due_with_date": "Due: {{date}}",
+    "estimated_tax": "Estimated tax",
     "enter_amount": "Enter amount",
     "enter_area": "Enter area",
     "estimates": "Estimates",
@@ -61,6 +65,7 @@
     "qualified_overtime_deduction": "Qualified Overtime Deduction",
     "qualified_tip_deduction": "Qualified Tip Deduction",
     "qualifying_widow_er": "Qualifying widow(er)",
+    "quarter_taxes": "Q{{quarter}} taxes",
     "quarter": "Quarter",
     "remaining_balance": "Remaining Balance",
     "rolled_over_from_previous_quarter": "Rolled Over From Previous Quarter",
@@ -97,6 +102,8 @@
     "taxes_owed_projected": "Projected Taxes Owed",
     "taxes_paid": "Taxes Paid",
     "tip_income": "Tip income",
+    "uncategorized_transactions_one": "{{count}} uncategorized transaction",
+    "uncategorized_transactions_other": "{{count}} uncategorized transactions",
     "uncategorized_tax_payment": "Uncategorized Tax Payment",
     "total_federal_tax_estimate": "Total Federal Tax Estimate",
     "total_paid": "Total Paid",
@@ -106,6 +113,7 @@
     "use_standard_mileage_deduction": "Use standard mileage deduction?",
     "w2_income": "W-2 Income",
     "withholding_amount": "Withholding amount",
+    "your_tax_deadlines": "Your tax deadlines",
     "year_to_date": "Year to date"
   }
 }
