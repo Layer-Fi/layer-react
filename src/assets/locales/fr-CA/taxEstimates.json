@@ -16,7 +16,8 @@
     "retrieve_tax_profile": "Nous n’avons pas pu récupérer votre profil fiscal. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_estimates": "",
     "while_loading_tax_payments": "Une erreur s’est produite lors du chargement de vos paiements d’impôt. Veuillez vérifier votre connexion et réessayer.",
-    "while_loading_tax_summary": "Une erreur s’est produite lors du chargement de votre sommaire fiscal. Veuillez vérifier votre connexion et réessayer."
+    "while_loading_tax_summary": "Une erreur s’est produite lors du chargement de votre sommaire fiscal. Veuillez vérifier votre connexion et réessayer.",
+    "disclaimer_required": ""
   },
   "label": {
     "additional_actions": "Actions supplémentaires",

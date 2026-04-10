@@ -7,14 +7,15 @@ import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import { flattenValidationErrors } from '@utils/form'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
+import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { Form } from '@ui/Form/Form'
-import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { Stack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { DeductionsSection } from '@components/TaxProfileForm/sections/DeductionsSection'
 import { FederalTaxSection } from '@components/TaxProfileForm/sections/FederalTaxSection'
 import { StateTaxSection } from '@components/TaxProfileForm/sections/StateTaxSection'
 import { useTaxProfileForm } from '@components/TaxProfileForm/useTaxProfileForm'
-import { TextSize } from '@components/Typography/Text'
 
 import './taxProfileForm.scss'
 
@@ -34,6 +35,10 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
     e.stopPropagation()
   }, [])
 
+  const actionsStackProps = isDesktop
+    ? { direction: 'row', justify: 'end' } as const
+    : { direction: 'column', gap: 'md' } as const
+
   return (
     <Form className='Layer__TaxProfileForm' onSubmit={blockNativeOnSubmit}>
       <VStack className='Layer__TaxProfileForm__Content' gap='lg' pi='md' pb='md'>
@@ -41,17 +46,70 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
         <StateTaxSection form={form} isReadOnly={isReadOnly} isDesktop={isDesktop} />
         <DeductionsSection form={form} isReadOnly={isReadOnly} isDesktop={isDesktop} />
 
-        <HStack align='center'>
+        <VStack gap='sm'>
+          <Span size='sm' variant='subtle'>
+            {t(
+              'taxEstimates:disclaimer.content',
+              'The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us.',
+            )}
+          </Span>
+          <form.Field
+            name='acknowledgedDisclaimer'
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) {
+                  return t('taxEstimates:error.disclaimer_required', 'You must acknowledge the disclaimer to continue.')
+                }
+                return undefined
+              },
+            }}
+          >
+            {(field) => {
+              const errorMessage = field.state.meta.errors[0]
+              const isInvalid = !!errorMessage
+
+              return (
+                <VStack gap='xs'>
+                  <Checkbox
+                    isSelected={field.state.value ?? false}
+                    onChange={field.handleChange}
+                    onBlur={field.handleBlur}
+                    isInvalid={isInvalid}
+                    variant={isInvalid ? 'error' : 'default'}
+                    isReadOnly={isReadOnly}
+                  >
+                    <Span size='sm'>
+                      {t(
+                        'taxEstimates:disclaimer.acknowledgment',
+                        'By continuing, I certify that I understand the above.',
+                      )}
+                    </Span>
+                  </Checkbox>
+                  {errorMessage
+                    ? (
+                      <Span size='sm' status='error'>
+                        {errorMessage}
+                      </Span>
+                    )
+                    : null}
+                </VStack>
+              )
+            }}
+          </form.Field>
+        </VStack>
+
+        <Stack {...actionsStackProps}>
           <form.Subscribe selector={state => ({ errorMap: state.errorMap, isDirty: state.isDirty })}>
             {({ errorMap, isDirty }) => {
               const validationErrors = flattenValidationErrors(errorMap)
-              if (validationErrors.length > 0 || submitError) {
+              const displayError = validationErrors[0] || submitError
+
+              if (displayError) {
                 return (
                   <DataState
                     icon={<AlertTriangle size={16} />}
                     status={DataStateStatus.failed}
-                    title={validationErrors[0] || submitError}
-                    titleSize={TextSize.md}
+                    title={displayError}
                     inline
                   />
                 )
@@ -62,14 +120,12 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
                     icon={<CheckCircle size={16} />}
                     status={DataStateStatus.success}
                     title={submitSuccess}
-                    titleSize={TextSize.md}
                     inline
                   />
                 )
               }
             }}
           </form.Subscribe>
-          <Spacer />
           <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
             {([canSubmit, isSubmitting]) => (
               <Button
@@ -83,7 +139,8 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
               </Button>
             )}
           </form.Subscribe>
-        </HStack>
+        </Stack>
+
       </VStack>
     </Form>
   )

@@ -11,6 +11,7 @@ import { TaxEstimatesOnboardedViewContent } from './TaxEstimatesOnboardedViewCon
 
 export type TaxEstimatesViewContentProps = {
   onPressReviewButton: TaxBannerReviewHandler
+  onboardingStatus: OnboardingStatus
 }
 
 export const TaxEstimatesViewContent = ({ onPressReviewButton }: TaxEstimatesViewContentProps) => {
@@ -53,7 +54,5 @@ export const TaxEstimatesViewContent = ({ onPressReviewButton }: TaxEstimatesVie
     )
   }
 
-  if (onboardingStatus === OnboardingStatus.Onboarded) {
-    return <TaxEstimatesOnboardedViewContent onPressReviewButton={onPressReviewButton} />
-  }
+  return <TaxEstimatesOnboardedViewContent onPressReviewButton={onPressReviewButton} />
 }
