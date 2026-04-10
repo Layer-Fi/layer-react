@@ -2,10 +2,11 @@ import { useCallback, useMemo } from 'react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
-import type { TaxOverviewData } from '@schemas/taxEstimates/overview'
+import type { TaxOverviewCategory, TaxOverviewData } from '@schemas/taxEstimates/overview'
 import { tConditional } from '@utils/i18n/conditional'
 import { translationKey } from '@utils/i18n/translationKey'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
+import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { TaxEstimatesRoute, useFullYearProjection, useTaxEstimatesNavigation, useTaxEstimatesRouteState, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
@@ -41,6 +42,11 @@ export const TaxEstimatesOnboardedViewContent = () => {
     fullYearProjection,
     enabled: isOverviewRoute,
   })
+  const { data: taxSummaryApi, isLoading: isTaxSummaryLoading } = useTaxSummary({
+    year,
+    fullYearProjection,
+    enabled: isOverviewRoute,
+  })
 
   const tabOptions = useMemo(
     () => TAX_ESTIMATES_TAB_CONFIG.map(opt => ({
@@ -54,16 +60,17 @@ export const TaxEstimatesOnboardedViewContent = () => {
     navigate(key as TaxEstimatesRoute)
   }, [navigate])
 
-  const taxOverviewData = useMemo((): TaxOverviewData | undefined => {
-    if (!taxOverviewApi) {
-      return undefined
+  const estimatedTaxCategories = useMemo((): TaxOverviewCategory[] => {
+    if (!taxSummaryApi) {
+      return []
     }
 
-    return {
-      incomeTotal: taxOverviewApi.totalIncome,
-      deductionsTotal: taxOverviewApi.totalDeductions,
-    }
-  }, [taxOverviewApi])
+    return taxSummaryApi.sections.map(section => ({
+      amount: section.taxesOwed,
+      key: section.type,
+      label: section.label,
+    }))
+  }, [taxSummaryApi])
 
   const taxableIncomeTitle = tConditional(t, 'taxEstimates:label.taxable_income_for_year', {
     condition: projectedCondition,
@@ -89,6 +96,32 @@ export const TaxEstimatesOnboardedViewContent = () => {
     year,
   })
 
+  const estimatedTaxesTitle = tConditional(t, 'taxEstimates:label.estimated_taxes_for_year', {
+    condition: projectedCondition,
+    cases: {
+      default: 'Estimated taxes for {{year}}',
+      projected: 'Projected taxes for {{year}}',
+    },
+    contexts: {
+      projected: 'projected',
+    },
+    year,
+  })
+
+  const taxOverviewData = useMemo((): TaxOverviewData | undefined => {
+    if (!taxOverviewApi) {
+      return undefined
+    }
+
+    return {
+      deductionsTotal: taxOverviewApi.totalDeductions,
+      estimatedTaxCategories,
+      estimatedTaxesTitle,
+      estimatedTaxesTotal: taxSummaryApi?.projectedTaxesOwed ?? 0,
+      incomeTotal: taxOverviewApi.totalIncome,
+    }
+  }, [estimatedTaxCategories, estimatedTaxesTitle, taxOverviewApi, taxSummaryApi])
+
   if (route === TaxEstimatesRoute.Profile) {
     return <TaxProfile />
   }
@@ -109,7 +142,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
             isMobile={isMobile}
           />
           <ConditionalBlock
-            isLoading={isTaxOverviewLoading}
+            isLoading={isTaxOverviewLoading || isTaxSummaryLoading}
             isError={isTaxOverviewError}
             data={taxOverviewData}
             Loading={<Loader />}
