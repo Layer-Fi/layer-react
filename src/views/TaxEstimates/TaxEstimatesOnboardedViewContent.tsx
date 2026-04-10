@@ -4,7 +4,7 @@ import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
-import type { TaxOverviewData, TaxOverviewDeadline, TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
+import type { TaxOverviewBannerReview, TaxOverviewData, TaxOverviewDeadline, TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
 import { tConditional } from '@utils/i18n/conditional'
 import { translationKey } from '@utils/i18n/translationKey'
 import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
@@ -86,6 +86,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
   const { data: taxBannerData, isLoading: isTaxBannerLoading } = useTaxEstimatesBanner({
     year,
     fullYearProjection,
+    enabled: isOverviewRoute,
   })
 
   const tabOptions = useMemo(
@@ -98,6 +99,10 @@ export const TaxEstimatesOnboardedViewContent = () => {
 
   const handleTabChange = useCallback((key: Key) => {
     navigate(key as TaxEstimatesRoute)
+  }, [navigate])
+
+  const handleTaxBannerReviewClick = useCallback((_payload: TaxOverviewBannerReview) => {
+    navigate(TaxEstimatesRoute.Estimates)
   }, [navigate])
 
   const taxOverviewData = useMemo((): TaxOverviewData | undefined => {
@@ -165,7 +170,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
             isMobile={isMobile}
           />
           <ConditionalBlock
-            isLoading={isTaxOverviewLoading || isTaxBannerLoading}
+            isLoading={isTaxOverviewLoading}
             isError={isTaxOverviewError}
             data={taxOverviewData}
             Loading={<Loader />}
@@ -184,6 +189,8 @@ export const TaxEstimatesOnboardedViewContent = () => {
                 data={overviewData}
                 title={taxableIncomeTitle}
                 description={taxableIncomeDescription}
+                isTaxDeadlinesLoading={isTaxBannerLoading}
+                onTaxBannerReviewClick={handleTaxBannerReviewClick}
               />
             )}
           </ConditionalBlock>
