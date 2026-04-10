@@ -42,7 +42,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
     fullYearProjection,
     enabled: isOverviewRoute,
   })
-  const { data: taxSummaryApi, isLoading: isTaxSummaryLoading } = useTaxSummary({
+  const { data: taxSummaryApi, isLoading: isTaxSummaryLoading, isError: isTaxSummaryError } = useTaxSummary({
     year,
     fullYearProjection,
     enabled: isOverviewRoute,
@@ -144,7 +144,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
           />
           <ConditionalBlock
             isLoading={isTaxOverviewLoading || isTaxSummaryLoading}
-            isError={isTaxOverviewError}
+            isError={isTaxOverviewError || isTaxSummaryError}
             data={taxOverviewData}
             Loading={<Loader />}
             Inactive={null}
