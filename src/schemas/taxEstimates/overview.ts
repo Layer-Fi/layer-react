@@ -54,3 +54,8 @@ export type TaxOverviewNextTax = {
   quarter: number
   status: TaxOverviewDeadlineStatus
 }
+
+export type TaxOverviewData = {
+  deductionsTotal: number
+  incomeTotal: number
+}
