@@ -7,7 +7,16 @@ import { TaxEstimatesViewContent } from '@views/TaxEstimates/TaxEstimatesViewCon
 
 import { TaxEstimatesViewHeader } from './TaxEstimatesViewHeader'
 
-export const TaxEstimatesView = () => {
+export const TaxEstimates = () => {
+  return (
+    <TaxEstimatesRouteStoreProvider>
+
+      <TaxEstimatesView />
+    </TaxEstimatesRouteStoreProvider>
+  )
+}
+
+const TaxEstimatesView = () => {
   const { t } = useTranslation()
   const onboardingStatus = useTaxEstimatesOnboardingStatus()
 
@@ -17,10 +26,8 @@ export const TaxEstimatesView = () => {
   )
 
   return (
-    <TaxEstimatesRouteStoreProvider>
-      <View title={t('common:label.tax_estimates', 'Tax estimates')} header={header}>
-        <TaxEstimatesViewContent />
-      </View>
-    </TaxEstimatesRouteStoreProvider>
+    <View title={t('common:label.tax_estimates', 'Tax estimates')} header={header}>
+      <TaxEstimatesViewContent />
+    </View>
   )
 }
