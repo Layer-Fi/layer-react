@@ -85,14 +85,9 @@
     width: 9.5rem;
   }
 
-  &__DonutChartSvg {
+  &__DonutChartPie {
     height: 100%;
     width: 100%;
-    transform: rotate(-90deg);
-  }
-
-  &__DonutChartTrack {
-    stroke: var(--color-base-100);
   }
 
   &__DonutChartCenter {

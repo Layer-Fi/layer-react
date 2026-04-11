@@ -1,9 +1,9 @@
 import { type TaxOverviewCategory } from '@schemas/taxEstimates/overview'
 
-export const DONUT_RADIUS = 52
+export const DONUT_INNER_RADIUS = 52
 export const DONUT_STROKE_WIDTH = 12
-export const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS
-export const DONUT_SEGMENT_GAP = 4
+export const DONUT_OUTER_RADIUS = DONUT_INNER_RADIUS + DONUT_STROKE_WIDTH
+export const DONUT_PADDING_ANGLE = 2
 
 const CATEGORY_COLOR_MAP: Record<TaxOverviewCategory['key'], string> = {
   federal: '#6D3CC8',
