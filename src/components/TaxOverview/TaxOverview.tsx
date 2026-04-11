@@ -1,5 +1,5 @@
-import { t } from 'i18next'
 import { Loader } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { tConditional } from '@utils/i18n/conditional'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
@@ -14,6 +14,7 @@ import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import './taxOverview.scss'
 
 export const TaxOverview = () => {
+  const { t } = useTranslation()
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
   const { isMobile } = useSizeClass()
