@@ -37,3 +37,8 @@
     padding: var(--spacing-md);
   }
 }
+
+.Layer__TaxOverview__Card__MetricRow--mobile {
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+}
