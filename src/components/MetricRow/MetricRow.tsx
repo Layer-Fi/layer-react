@@ -22,25 +22,27 @@ export const MetricRow = ({
   slotProps,
 }: MetricRowProps) => {
   const { isMobile } = useSizeClass()
-  if (isMobile) {
-    return (
-      <HStack className={classNames('Layer__MetricCard', className)} align='center' gap='md'>
-        <Span size='md' className='Layer__MetricCardLabel'>{slotProps.Meter.label}</Span>
-        <HStack className='Layer__MetricCardMeter' align='center'>
-          <Meter {...slotProps.Meter} meterOnly />
-        </HStack>
-        <MoneySpan size='md' weight='bold' amount={amount} />
-      </HStack>
-    )
-  }
+  const stackProps = isMobile ? { className: classNames('Layer__MetricCard', className) } : { className: classNames('Layer__MetricRow', className), justify: 'space-between' as const }
+  const labelProps = isMobile ? { className: 'Layer__MetricCardLabel' } : { className: 'Layer__MetricRowLabel' }
+  const meterContainerProps = isMobile ? { className: 'Layer__MetricCardMeter' } : { className: 'Layer__MetricRowValue', gap: 'md' as const }
 
   return (
-    <HStack className={classNames('Layer__MetricRow', className)} justify='space-between' align='center' gap='md'>
-      <Span size='md' className='Layer__MetricRowLabel'>{slotProps.Meter.label}</Span>
-      <HStack className='Layer__MetricRowValue' align='center' gap='md'>
-        <MoneySpan size='md' weight='bold' amount={amount} />
-        <Meter {...slotProps.Meter} meterOnly />
-      </HStack>
+    <HStack {...stackProps} align='center' gap='md'>
+      <Span size='md' {...labelProps}>{slotProps.Meter.label}</Span>
+      {isMobile && (
+        <>
+          <HStack {...meterContainerProps} align='center'>
+            <Meter {...slotProps.Meter} meterOnly />
+          </HStack>
+          <MoneySpan size='md' weight='bold' amount={amount} />
+        </>
+      )}
+      {!isMobile && (
+        <HStack {...meterContainerProps} align='center'>
+          <MoneySpan size='md' weight='bold' amount={amount} />
+          <Meter {...slotProps.Meter} meterOnly />
+        </HStack>
+      )}
     </HStack>
   )
 }

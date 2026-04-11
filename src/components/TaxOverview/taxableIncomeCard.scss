@@ -13,6 +13,7 @@
 
 .Layer__TaxOverview_TotalIncomeMeter,
 .Layer__TaxOverview_DeductionsMeter {
+  box-sizing: border-box;
   width: 100%;
   min-width: 0;
 }
