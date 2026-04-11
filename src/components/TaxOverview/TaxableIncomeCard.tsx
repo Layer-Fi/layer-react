@@ -9,6 +9,8 @@ import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
 import { MetricRow } from '@components/MetricRow/MetricRow'
 
+import './taxableIncomeCard.scss'
+
 type TaxableIncomeCardProps = Pick<TaxOverviewData, 'deductionsTotal' | 'incomeTotal'> & {
   title?: string
   description?: string
@@ -16,6 +18,51 @@ type TaxableIncomeCardProps = Pick<TaxOverviewData, 'deductionsTotal' | 'incomeT
   headerAction?: ReactNode
 }
 const METRIC_ROW_MOBILE_BREAKPOINT = 600
+
+function TotalIncomeMetricRow({ incomeTotal, maxMeterValue }: { incomeTotal: number, maxMeterValue: number }) {
+  const { t } = useTranslation()
+  const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
+  const boundedMeterValue = Math.min(Math.max(incomeTotal, 0), boundedMaxMeterValue)
+  const slotProps = {
+    Meter: {
+      label: t('taxEstimates:label.total_income', 'Total income'),
+      minValue: 0,
+      value: boundedMeterValue,
+      className: 'Layer__TaxOverview__IncomeMeter',
+      maxValue: boundedMaxMeterValue,
+    },
+  }
+  return (
+    <MetricRow
+      amount={boundedMeterValue}
+      className='Layer__TaxOverview_TotalIncomeMeter'
+      slotProps={slotProps}
+    />
+
+  )
+}
+
+function DeductionsMetricRow({ deductionsTotal, maxMeterValue }: { deductionsTotal: number, maxMeterValue: number }) {
+  const { t } = useTranslation()
+  const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
+  const boundedMeterValue = Math.min(Math.max(deductionsTotal, 0), boundedMaxMeterValue)
+  const slotProps = {
+    Meter: {
+      label: t('taxEstimates:label.deductions', 'Deductions'),
+      minValue: 0,
+      value: boundedMeterValue,
+      className: 'Layer__TaxOverview__DeductionsMeter',
+      maxValue: boundedMaxMeterValue,
+    },
+  }
+  return (
+    <MetricRow
+      amount={boundedMeterValue}
+      className='Layer__TaxOverview_DeductionsMeter'
+      slotProps={slotProps}
+    />
+  )
+}
 
 export const TaxableIncomeCard = ({
   description,
@@ -25,7 +72,6 @@ export const TaxableIncomeCard = ({
   showHeader = true,
   title,
 }: TaxableIncomeCardProps) => {
-  const { t } = useTranslation()
   const [viewportWidth] = useWindowSize()
   const isMetricRowMobile = viewportWidth < METRIC_ROW_MOBILE_BREAKPOINT
   const maxMeterValue = Math.max(incomeTotal, deductionsTotal, 1)
@@ -42,22 +88,8 @@ export const TaxableIncomeCard = ({
         </VStack>
       )}
       <VStack gap={isMetricRowMobile ? 'sm' : 'md'}>
-        <MetricRow
-          label={t('taxEstimates:label.total_income', 'Total income')}
-          amount={incomeTotal}
-          classNamePrefix='Layer__TaxOverview'
-          maxMeterValue={maxMeterValue}
-          meterClassName='Layer__TaxOverview__IncomeMeter'
-          isMobile={isMetricRowMobile}
-        />
-        <MetricRow
-          label={t('taxEstimates:label.deductions', 'Deductions')}
-          amount={deductionsTotal}
-          classNamePrefix='Layer__TaxOverview'
-          maxMeterValue={maxMeterValue}
-          meterClassName='Layer__TaxOverview__DeductionsMeter'
-          isMobile={isMetricRowMobile}
-        />
+        <TotalIncomeMetricRow incomeTotal={incomeTotal} maxMeterValue={maxMeterValue} />
+        <DeductionsMetricRow deductionsTotal={deductionsTotal} maxMeterValue={maxMeterValue} />
       </VStack>
     </Card>
   )

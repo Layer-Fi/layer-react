@@ -1,0 +1,38 @@
+.Layer__TaxOverview__Card.Layer__card {
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-base-200);
+  box-shadow: none;
+}
+
+.Layer__TaxOverview__IncomeMeter,
+.Layer__TaxOverview__DeductionsMeter {
+  flex: 1;
+  min-width: 9rem;
+}
+
+.Layer__TaxOverview_TotalIncomeMeter,
+.Layer__TaxOverview_DeductionsMeter {
+  width: 100%;
+  min-width: 0;
+}
+
+.Layer__TaxOverview__IncomeMeter__track,
+.Layer__TaxOverview__DeductionsMeter__track {
+  fill: var(--color-base-100);
+}
+
+.Layer__TaxOverview__IncomeMeter__fill {
+  fill: #6d3cc8;
+}
+
+.Layer__TaxOverview__DeductionsMeter__fill {
+  fill: #1c7e9a;
+}
+
+@container (max-width: 720px) {
+  .Layer__TaxOverview__Card.Layer__card {
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+}

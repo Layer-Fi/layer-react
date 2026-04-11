@@ -1,0 +1,42 @@
+.Layer__MetricRow {
+  min-block-size: 2.5rem;
+}
+
+.Layer__MetricCard {
+  min-width: 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-xs);
+  background-color: var(--color-base-50);
+}
+
+.Layer__MetricCardLabel {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.Layer__MetricCardMeter {
+  flex: 1;
+  min-width: 0;
+}
+
+.Layer__MetricRowValue {
+  flex: 0 0 56%;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.Layer__MetricCard .Layer__MoneySpan {
+  flex-shrink: 0;
+}
+
+@container (max-width: 720px) {
+  .Layer__MetricRow,
+  .Layer__MetricRowValue {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .Layer__MetricRowValue {
+    flex-basis: auto;
+  }
+}

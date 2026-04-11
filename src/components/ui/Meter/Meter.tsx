@@ -11,7 +11,7 @@ const getClassnameForSubComponent = (className: string | undefined, suffix: stri
   return classNames(`${METER_CLASS_NAME}__${suffix}`, className && `${className}__${suffix}`)
 }
 
-type MeterProps = Omit<ReactAriaMeterProps, 'children' | 'className'> & {
+export type MeterProps = Omit<ReactAriaMeterProps, 'children' | 'className'> & {
   label: string
   meterOnly?: boolean
   className?: string
