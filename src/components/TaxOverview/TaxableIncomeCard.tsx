@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { TaxOverviewData } from '@schemas/taxEstimates/overview'
+import { type TaxOverviewApiData } from '@schemas/taxEstimates/overview'
 import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -11,7 +11,7 @@ import { MetricRow } from '@components/MetricRow/MetricRow'
 
 import './taxableIncomeCard.scss'
 
-type TaxableIncomeCardProps = Pick<TaxOverviewData, 'deductionsTotal' | 'incomeTotal'> & {
+type TaxableIncomeCardProps = Pick<TaxOverviewApiData, 'totalDeductions' | 'totalIncome'> & {
   title?: string
   description?: string
   showHeader?: boolean
@@ -19,10 +19,10 @@ type TaxableIncomeCardProps = Pick<TaxOverviewData, 'deductionsTotal' | 'incomeT
 }
 const METRIC_ROW_MOBILE_BREAKPOINT = 600
 
-function TotalIncomeMetricRow({ incomeTotal, maxMeterValue }: { incomeTotal: number, maxMeterValue: number }) {
+function TotalIncomeMetricRow({ totalIncome, maxMeterValue }: { totalIncome: number, maxMeterValue: number }) {
   const { t } = useTranslation()
   const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
-  const boundedMeterValue = Math.min(Math.max(incomeTotal, 0), boundedMaxMeterValue)
+  const boundedMeterValue = Math.min(Math.max(totalIncome, 0), boundedMaxMeterValue)
   const slotProps = {
     Meter: {
       label: t('taxEstimates:label.total_income', 'Total income'),
@@ -42,10 +42,10 @@ function TotalIncomeMetricRow({ incomeTotal, maxMeterValue }: { incomeTotal: num
   )
 }
 
-function DeductionsMetricRow({ deductionsTotal, maxMeterValue }: { deductionsTotal: number, maxMeterValue: number }) {
+function DeductionsMetricRow({ totalDeductions, maxMeterValue }: { totalDeductions: number, maxMeterValue: number }) {
   const { t } = useTranslation()
   const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
-  const boundedMeterValue = Math.min(Math.max(deductionsTotal, 0), boundedMaxMeterValue)
+  const boundedMeterValue = Math.min(Math.max(totalDeductions, 0), boundedMaxMeterValue)
   const slotProps = {
     Meter: {
       label: t('taxEstimates:label.deductions', 'Deductions'),
@@ -66,15 +66,15 @@ function DeductionsMetricRow({ deductionsTotal, maxMeterValue }: { deductionsTot
 
 export const TaxableIncomeCard = ({
   description,
-  deductionsTotal,
+  totalDeductions,
   headerAction,
-  incomeTotal,
+  totalIncome,
   showHeader = true,
   title,
 }: TaxableIncomeCardProps) => {
   const [viewportWidth] = useWindowSize()
   const isMetricRowMobile = viewportWidth < METRIC_ROW_MOBILE_BREAKPOINT
-  const maxMeterValue = Math.max(incomeTotal, deductionsTotal, 1)
+  const maxMeterValue = Math.max(totalIncome, totalDeductions, 1)
 
   return (
     <Card className='Layer__TaxOverview__Card'>
@@ -88,8 +88,8 @@ export const TaxableIncomeCard = ({
         </VStack>
       )}
       <VStack gap={isMetricRowMobile ? 'sm' : 'md'}>
-        <TotalIncomeMetricRow incomeTotal={incomeTotal} maxMeterValue={maxMeterValue} />
-        <DeductionsMetricRow deductionsTotal={deductionsTotal} maxMeterValue={maxMeterValue} />
+        <TotalIncomeMetricRow totalIncome={totalIncome} maxMeterValue={maxMeterValue} />
+        <DeductionsMetricRow totalDeductions={totalDeductions} maxMeterValue={maxMeterValue} />
       </VStack>
     </Card>
   )

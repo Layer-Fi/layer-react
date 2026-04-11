@@ -1,30 +1,24 @@
-import { Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { type TaxOverviewApiData } from '@schemas/taxEstimates/overview'
 import { tConditional } from '@utils/i18n/conditional'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
-import { TaxableIncomeCard } from '@components/TaxOverview/TaxableIncomeCard'
-import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxOverview.scss'
 
-export const TaxOverview = () => {
+import { TaxableIncomeCard } from './TaxableIncomeCard'
+
+const TaxOverviewHeader = () => {
   const { t } = useTranslation()
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
-  const { isMobile } = useSizeClass()
+  const { isDesktop } = useSizeClass()
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
-  const { data, isLoading: isTaxOverviewLoading, isError: isTaxOverviewError } = useTaxOverview({
-    year,
-    fullYearProjection,
-    enabled: true,
-  })
-
   const taxableIncomeTitle = tConditional(t, 'taxEstimates:label.taxable_income_for_year', {
     condition: projectedCondition,
     cases: {
@@ -48,38 +42,40 @@ export const TaxOverview = () => {
     },
     year,
   })
+  return (
+    <TaxEstimatesHeader
+      title={taxableIncomeTitle}
+      description={taxableIncomeDescription}
+      isMobile={!isDesktop}
+    />
+  )
+}
 
+const TaxOverviewContent = ({ data }: { data: TaxOverviewApiData }) => {
   return (
     <VStack className='Layer__TaxOverview' gap='md'>
-
-      <TaxEstimatesHeader
-        title={taxableIncomeTitle}
-        description={taxableIncomeDescription}
-        isMobile={isMobile}
+      <TaxableIncomeCard
+        totalIncome={data.totalIncome}
+        totalDeductions={data.totalDeductions}
       />
-      <ConditionalBlock
-        isLoading={isTaxOverviewLoading}
-        isError={isTaxOverviewError}
-        data={data}
-        Loading={<Loader />}
-        Inactive={null}
-        Error={(
-          <DataState
-            status={DataStateStatus.failed}
-            title={t('taxEstimates:error.load_tax_estimates', 'We couldn\'t load your tax estimates')}
-            description={t('taxEstimates:error.while_loading_tax_estimates', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
-            spacing
-          />
-        )}
-      >
-        {({ data: overviewData }) => (
-          <TaxableIncomeCard
-            incomeTotal={overviewData.totalIncome}
-            deductionsTotal={overviewData.totalDeductions}
-            showHeader={false}
-          />
-        )}
-      </ConditionalBlock>
     </VStack>
+  )
+}
+
+export const TaxOverview = () => {
+  const { year } = useTaxEstimatesYear()
+  const { fullYearProjection } = useFullYearProjection()
+  const { data } = useTaxOverview({
+    year,
+    fullYearProjection,
+    enabled: true,
+  })
+
+  return (
+    <ResponsiveDetailView name='TaxOverview' slots={{ Header: TaxOverviewHeader }}>
+      { data && (
+        <TaxOverviewContent data={data} />
+      )}
+    </ResponsiveDetailView>
   )
 }

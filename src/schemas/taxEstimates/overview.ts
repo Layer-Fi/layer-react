@@ -35,8 +35,3 @@ export const TaxOverviewApiResponseSchema = Schema.Struct({
 })
 
 export type TaxOverviewApiResponse = typeof TaxOverviewApiResponseSchema.Type
-
-export type TaxOverviewData = {
-  deductionsTotal: number
-  incomeTotal: number
-}
