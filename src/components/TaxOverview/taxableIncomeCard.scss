@@ -42,3 +42,9 @@
   gap: var(--spacing-sm);
   padding: var(--spacing-sm);
 }
+
+.Layer__MetricCard .Layer__TaxOverview__IncomeMeter,
+.Layer__MetricCard .Layer__TaxOverview__DeductionsMeter {
+  width: 100%;
+  min-width: 0;
+}
