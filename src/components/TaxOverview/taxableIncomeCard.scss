@@ -1,3 +1,8 @@
+.Layer__TaxOverview__Card {
+  --color-tax-overview-income-meter-fill: #6d3cc8;
+  --color-tax-overview-deductions-meter-fill: #1c7e9a;
+}
+
 .Layer__TaxOverview__Card.Layer__card {
   gap: var(--spacing-lg);
   padding: var(--spacing-lg);
@@ -24,11 +29,11 @@
 }
 
 .Layer__TaxOverview__IncomeMeter__fill {
-  fill: #6d3cc8;
+  fill: var(--color-tax-overview-income-meter-fill);
 }
 
 .Layer__TaxOverview__DeductionsMeter__fill {
-  fill: #1c7e9a;
+  fill: var(--color-tax-overview-deductions-meter-fill);
 }
 
 @container (max-width: 720px) {

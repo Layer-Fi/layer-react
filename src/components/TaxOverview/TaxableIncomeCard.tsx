@@ -1,22 +1,14 @@
-import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxOverviewApiData } from '@schemas/taxEstimates/overview'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { Heading } from '@ui/Typography/Heading'
-import { Span } from '@ui/Typography/Text'
+import { VStack } from '@ui/Stack/Stack'
 import { Card } from '@components/Card/Card'
 import { MetricRow } from '@components/MetricRow/MetricRow'
 
 import './taxableIncomeCard.scss'
 const METRIC_ROW_MOBILE_BREAKPOINT = 600
-type TaxableIncomeCardProps = Pick<TaxOverviewApiData, 'totalDeductions' | 'totalIncome'> & {
-  title?: string
-  description?: string
-  showHeader?: boolean
-  headerAction?: ReactNode
-}
+type TaxableIncomeCardProps = Pick<TaxOverviewApiData, 'totalDeductions' | 'totalIncome'>
 
 function TotalIncomeMetricRow({ totalIncome, maxMeterValue }: { totalIncome: number, maxMeterValue: number }) {
   const { t } = useTranslation()
@@ -34,7 +26,7 @@ function TotalIncomeMetricRow({ totalIncome, maxMeterValue }: { totalIncome: num
   }
   return (
     <MetricRow
-      amount={boundedMeterValue}
+      amount={totalIncome}
       style={viewportWidth < METRIC_ROW_MOBILE_BREAKPOINT ? 'bordered' : 'default'}
       className='Layer__TaxOverview_TotalIncomeMeter'
       slotProps={slotProps}
@@ -59,7 +51,7 @@ function DeductionsMetricRow({ totalDeductions, maxMeterValue }: { totalDeductio
   }
   return (
     <MetricRow
-      amount={boundedMeterValue}
+      amount={totalDeductions}
       style={viewportWidth < METRIC_ROW_MOBILE_BREAKPOINT ? 'bordered' : 'default'}
       className='Layer__TaxOverview_DeductionsMeter'
       slotProps={slotProps}
@@ -68,27 +60,14 @@ function DeductionsMetricRow({ totalDeductions, maxMeterValue }: { totalDeductio
 }
 
 export const TaxableIncomeCard = ({
-  description,
   totalDeductions,
-  headerAction,
   totalIncome,
-  showHeader = true,
-  title,
 }: TaxableIncomeCardProps) => {
   const { isDesktop } = useSizeClass()
   const maxMeterValue = Math.max(totalIncome, totalDeductions, 1)
 
   return (
     <VStack className='Layer__TaxOverview__Card' pi={!isDesktop ? undefined : 'md'}>
-      {showHeader && (
-        <VStack gap='xs'>
-          <HStack justify='space-between' align='start' gap='md'>
-            <Heading level={2} size='md'>{title}</Heading>
-            {headerAction}
-          </HStack>
-          <Span size='sm' variant='subtle'>{description}</Span>
-        </VStack>
-      )}
       {!isDesktop
         ? (
           <Card className='Layer__TaxOverview__Card__MetricRow--mobile'>
