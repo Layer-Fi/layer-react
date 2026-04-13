@@ -121,7 +121,8 @@ const listTimeEntries = get<
     sortOrder,
   })
   const baseUrl = `/v1/businesses/${businessId}/time-tracking/time-entries`
-  return parameters ? `${baseUrl}?${parameters}` : baseUrl
+  const query = parameters.toString()
+  return query ? `${baseUrl}?${query}` : baseUrl
 })
 
 export function useListTimeEntries(filterParams: ListTimeEntriesFilterParams = {}) {
