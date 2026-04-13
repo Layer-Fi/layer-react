@@ -12,16 +12,16 @@ import {
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const UNARCHIVE_CATALOG_SERVICE_TAG_KEY = '#unarchive-catalog-service'
+const REACTIVATE_CATALOG_SERVICE_TAG_KEY = '#reactivate-catalog-service'
 
-const UnarchiveCatalogServiceResponseSchema = Schema.Struct({
+const ReactivateCatalogServiceResponseSchema = Schema.Struct({
   data: CatalogServiceSchema,
 })
-type UnarchiveCatalogServiceResponse = typeof UnarchiveCatalogServiceResponseSchema.Type
+type ReactivateCatalogServiceResponse = typeof ReactivateCatalogServiceResponseSchema.Type
 
-const unarchiveCatalogService = post<UnarchiveCatalogServiceResponse>(
+const reactivateCatalogService = post<ReactivateCatalogServiceResponse>(
   ({ businessId, serviceId }) =>
-    `/v1/businesses/${businessId}/catalog/services/${serviceId}/unarchive`,
+    `/v1/businesses/${businessId}/catalog/services/${serviceId}/reactivate`,
 )
 
 function buildKey({
@@ -41,16 +41,16 @@ function buildKey({
       apiUrl,
       businessId,
       serviceId,
-      tags: [UNARCHIVE_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY],
+      tags: [REACTIVATE_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY],
     } as const
   }
 }
 
-type UseUnarchiveCatalogServiceProps = {
+type UseReactivateCatalogServiceProps = {
   serviceId: string
 }
 
-export function useUnarchiveCatalogService({ serviceId }: UseUnarchiveCatalogServiceProps) {
+export function useReactivateCatalogService({ serviceId }: UseReactivateCatalogServiceProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
@@ -61,13 +61,13 @@ export function useUnarchiveCatalogService({ serviceId }: UseUnarchiveCatalogSer
       businessId,
       serviceId,
     }),
-    ({ accessToken, apiUrl, businessId, serviceId: sid }) => unarchiveCatalogService(
+    ({ accessToken, apiUrl, businessId, serviceId: sid }) => reactivateCatalogService(
       apiUrl,
       accessToken,
       {
         params: { businessId, serviceId: sid },
       },
-    ).then(Schema.decodeUnknownPromise(UnarchiveCatalogServiceResponseSchema)),
+    ).then(Schema.decodeUnknownPromise(ReactivateCatalogServiceResponseSchema)),
     {
       revalidate: false,
       throwOnError: true,
