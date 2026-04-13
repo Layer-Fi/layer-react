@@ -60,7 +60,7 @@ const getTimeTrackingSummary = get<
     serviceId,
     startDate,
     endDate,
-  })
+  }).toString()
   const baseUrl = `/v1/businesses/${businessId}/time-tracking/time-entries/summary`
   return parameters ? `${baseUrl}?${parameters}` : baseUrl
 })
