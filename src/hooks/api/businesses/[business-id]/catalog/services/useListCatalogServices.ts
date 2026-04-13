@@ -22,13 +22,13 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
-  allowDeleted,
+  allowArchived,
   isEnabled = true,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
-  allowDeleted?: boolean
+  allowArchived?: boolean
   isEnabled?: boolean
 }) {
   if (!isEnabled) {
@@ -40,7 +40,7 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      allowDeleted,
+      allowArchived,
       tags: [CATALOG_SERVICES_TAG_KEY, LIST_CATALOG_SERVICES_TAG_KEY],
     } as const
   }
@@ -48,20 +48,20 @@ function buildKey({
 
 const listCatalogServices = get<
   typeof ListCatalogServicesResponseSchema.Encoded,
-  { businessId: string, allowDeleted?: boolean }
->(({ businessId, allowDeleted }) => {
-  const parameters = toDefinedSearchParameters({ allowDeleted })
+  { businessId: string, allowArchived?: boolean }
+>(({ businessId, allowArchived }) => {
+  const parameters = toDefinedSearchParameters({ allowArchived })
   const baseUrl = `/v1/businesses/${businessId}/catalog/services`
   const query = parameters.toString()
   return query ? `${baseUrl}?${query}` : baseUrl
 })
 
 export type UseListCatalogServicesOptions = {
-  allowDeleted?: boolean
+  allowArchived?: boolean
   isEnabled?: boolean
 }
 
-export function useListCatalogServices({ allowDeleted, isEnabled = true }: UseListCatalogServicesOptions = {}) {
+export function useListCatalogServices({ allowArchived, isEnabled = true }: UseListCatalogServicesOptions = {}) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -69,14 +69,14 @@ export function useListCatalogServices({ allowDeleted, isEnabled = true }: UseLi
     () => buildKey({
       ...data,
       businessId,
-      allowDeleted,
+      allowArchived,
       isEnabled,
     }),
-    ({ accessToken, apiUrl, businessId, allowDeleted: allowDeletedParam }) => listCatalogServices(
+    ({ accessToken, apiUrl, businessId, allowArchived: allowArchivedParam }) => listCatalogServices(
       apiUrl,
       accessToken,
       {
-        params: { businessId, allowDeleted: allowDeletedParam },
+        params: { businessId, allowArchived: allowArchivedParam },
       },
     )().then(Schema.decodeUnknownPromise(ListCatalogServicesResponseSchema)),
   )

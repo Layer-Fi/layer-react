@@ -17,9 +17,9 @@ const GetCatalogServiceResponseSchema = Schema.Struct({
 
 const getCatalogService = get<
   typeof GetCatalogServiceResponseSchema.Encoded,
-  { businessId: string, serviceId: string, allowDeleted?: boolean }
->(({ businessId, serviceId, allowDeleted }) => {
-  const parameters = toDefinedSearchParameters({ allowDeleted })
+  { businessId: string, serviceId: string, allowArchived?: boolean }
+>(({ businessId, serviceId, allowArchived }) => {
+  const parameters = toDefinedSearchParameters({ allowArchived })
   const baseUrl = `/v1/businesses/${businessId}/catalog/services/${serviceId}`
   const query = parameters.toString()
   return query ? `${baseUrl}?${query}` : baseUrl
@@ -30,14 +30,14 @@ function buildKey({
   apiUrl,
   businessId,
   serviceId,
-  allowDeleted,
+  allowArchived,
   isEnabled,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
   serviceId: string
-  allowDeleted?: boolean
+  allowArchived?: boolean
   isEnabled: boolean
 }) {
   if (!isEnabled) {
@@ -50,7 +50,7 @@ function buildKey({
       apiUrl,
       businessId,
       serviceId,
-      allowDeleted,
+      allowArchived,
       tags: [GET_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY],
     } as const
   }
@@ -58,11 +58,11 @@ function buildKey({
 
 type UseGetCatalogServiceParameters = {
   serviceId: string
-  allowDeleted?: boolean
+  allowArchived?: boolean
   isEnabled?: boolean
 }
 
-export function useGetCatalogService({ serviceId, allowDeleted, isEnabled = true }: UseGetCatalogServiceParameters) {
+export function useGetCatalogService({ serviceId, allowArchived, isEnabled = true }: UseGetCatalogServiceParameters) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -71,14 +71,14 @@ export function useGetCatalogService({ serviceId, allowDeleted, isEnabled = true
       ...data,
       businessId,
       serviceId,
-      allowDeleted,
+      allowArchived,
       isEnabled: isEnabled && serviceId !== '',
     }),
-    ({ accessToken, apiUrl, businessId, serviceId: sid, allowDeleted: allowDeletedParam }) => getCatalogService(
+    ({ accessToken, apiUrl, businessId, serviceId: sid, allowArchived: allowArchivedParam }) => getCatalogService(
       apiUrl,
       accessToken,
       {
-        params: { businessId, serviceId: sid, allowDeleted: allowDeletedParam },
+        params: { businessId, serviceId: sid, allowArchived: allowArchivedParam },
       },
     )()
       .then(Schema.decodeUnknownPromise(GetCatalogServiceResponseSchema))
