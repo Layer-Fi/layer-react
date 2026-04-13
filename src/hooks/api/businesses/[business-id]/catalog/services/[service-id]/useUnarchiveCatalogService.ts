@@ -1,7 +1,9 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
-import { del } from '@utils/api/authenticatedHttp'
+import { CatalogServiceSchema } from '@schemas/catalogService'
+import { post } from '@utils/api/authenticatedHttp'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import {
   CATALOG_SERVICES_TAG_KEY,
@@ -10,12 +12,17 @@ import {
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const DELETE_CATALOG_SERVICE_TAG_KEY = '#delete-catalog-service'
+const UNARCHIVE_CATALOG_SERVICE_TAG_KEY = '#unarchive-catalog-service'
 
-const deleteCatalogService = del<
-  Record<string, never>,
-  { businessId: string, serviceId: string }
->(({ businessId, serviceId }) => `/v1/businesses/${businessId}/catalog/services/${serviceId}`)
+const UnarchiveCatalogServiceResponseSchema = Schema.Struct({
+  data: CatalogServiceSchema,
+})
+type UnarchiveCatalogServiceResponse = typeof UnarchiveCatalogServiceResponseSchema.Type
+
+const unarchiveCatalogService = post<UnarchiveCatalogServiceResponse>(
+  ({ businessId, serviceId }) =>
+    `/v1/businesses/${businessId}/catalog/services/${serviceId}/unarchive`,
+)
 
 function buildKey({
   access_token: accessToken,
@@ -34,16 +41,16 @@ function buildKey({
       apiUrl,
       businessId,
       serviceId,
-      tags: [DELETE_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY],
+      tags: [UNARCHIVE_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY],
     } as const
   }
 }
 
-type UseDeleteCatalogServiceProps = {
+type UseUnarchiveCatalogServiceProps = {
   serviceId: string
 }
 
-export function useDeleteCatalogService({ serviceId }: UseDeleteCatalogServiceProps) {
+export function useUnarchiveCatalogService({ serviceId }: UseUnarchiveCatalogServiceProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
@@ -54,13 +61,13 @@ export function useDeleteCatalogService({ serviceId }: UseDeleteCatalogServicePr
       businessId,
       serviceId,
     }),
-    ({ accessToken, apiUrl, businessId, serviceId }) => deleteCatalogService(
+    ({ accessToken, apiUrl, businessId, serviceId: sid }) => unarchiveCatalogService(
       apiUrl,
       accessToken,
       {
-        params: { businessId, serviceId },
+        params: { businessId, serviceId: sid },
       },
-    ),
+    ).then(Schema.decodeUnknownPromise(UnarchiveCatalogServiceResponseSchema)),
     {
       revalidate: false,
       throwOnError: true,

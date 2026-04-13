@@ -9,6 +9,10 @@ export const CatalogServiceSchema = Schema.Struct({
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
     Schema.fromKey('billable_rate_per_minute_amount'),
   ),
+
+  deletedAt: Schema.optional(Schema.NullOr(Schema.Date)).pipe(
+    Schema.fromKey('deleted_at'),
+  ),
 })
 export type CatalogService = typeof CatalogServiceSchema.Type
 

@@ -3,6 +3,7 @@ import useSWR from 'swr'
 
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
 import { get } from '@utils/api/authenticatedHttp'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { CATALOG_SERVICES_TAG_KEY } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -16,20 +17,27 @@ const GetCatalogServiceResponseSchema = Schema.Struct({
 
 const getCatalogService = get<
   typeof GetCatalogServiceResponseSchema.Encoded,
-  { businessId: string, serviceId: string }
->(({ businessId, serviceId }) => `/v1/businesses/${businessId}/catalog/services/${serviceId}`)
+  { businessId: string, serviceId: string, allowDeleted?: boolean }
+>(({ businessId, serviceId, allowDeleted }) => {
+  const parameters = toDefinedSearchParameters({ allowDeleted })
+  const baseUrl = `/v1/businesses/${businessId}/catalog/services/${serviceId}`
+  const query = parameters.toString()
+  return query ? `${baseUrl}?${query}` : baseUrl
+})
 
 function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
   serviceId,
+  allowDeleted,
   isEnabled,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
   serviceId: string
+  allowDeleted?: boolean
   isEnabled: boolean
 }) {
   if (!isEnabled) {
@@ -42,6 +50,7 @@ function buildKey({
       apiUrl,
       businessId,
       serviceId,
+      allowDeleted,
       tags: [GET_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY],
     } as const
   }
@@ -49,10 +58,11 @@ function buildKey({
 
 type UseGetCatalogServiceParameters = {
   serviceId: string
+  allowDeleted?: boolean
   isEnabled?: boolean
 }
 
-export function useGetCatalogService({ serviceId, isEnabled = true }: UseGetCatalogServiceParameters) {
+export function useGetCatalogService({ serviceId, allowDeleted, isEnabled = true }: UseGetCatalogServiceParameters) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -61,13 +71,14 @@ export function useGetCatalogService({ serviceId, isEnabled = true }: UseGetCata
       ...data,
       businessId,
       serviceId,
+      allowDeleted,
       isEnabled: isEnabled && serviceId !== '',
     }),
-    ({ accessToken, apiUrl, businessId, serviceId }) => getCatalogService(
+    ({ accessToken, apiUrl, businessId, serviceId: sid, allowDeleted: allowDeletedParam }) => getCatalogService(
       apiUrl,
       accessToken,
       {
-        params: { businessId, serviceId },
+        params: { businessId, serviceId: sid, allowDeleted: allowDeletedParam },
       },
     )()
       .then(Schema.decodeUnknownPromise(GetCatalogServiceResponseSchema))

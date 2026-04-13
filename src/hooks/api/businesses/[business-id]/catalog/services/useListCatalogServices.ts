@@ -4,6 +4,7 @@ import useSWR from 'swr'
 
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
 import { get } from '@utils/api/authenticatedHttp'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -21,16 +22,25 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
+  allowDeleted,
+  isEnabled = true,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
+  allowDeleted?: boolean
+  isEnabled?: boolean
 }) {
+  if (!isEnabled) {
+    return
+  }
+
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
+      allowDeleted,
       tags: [CATALOG_SERVICES_TAG_KEY, LIST_CATALOG_SERVICES_TAG_KEY],
     } as const
   }
@@ -38,10 +48,20 @@ function buildKey({
 
 const listCatalogServices = get<
   typeof ListCatalogServicesResponseSchema.Encoded,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/catalog/services`)
+  { businessId: string, allowDeleted?: boolean }
+>(({ businessId, allowDeleted }) => {
+  const parameters = toDefinedSearchParameters({ allowDeleted })
+  const baseUrl = `/v1/businesses/${businessId}/catalog/services`
+  const query = parameters.toString()
+  return query ? `${baseUrl}?${query}` : baseUrl
+})
 
-export function useListCatalogServices() {
+export type UseListCatalogServicesOptions = {
+  allowDeleted?: boolean
+  isEnabled?: boolean
+}
+
+export function useListCatalogServices({ allowDeleted, isEnabled = true }: UseListCatalogServicesOptions = {}) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -49,12 +69,14 @@ export function useListCatalogServices() {
     () => buildKey({
       ...data,
       businessId,
+      allowDeleted,
+      isEnabled,
     }),
-    ({ accessToken, apiUrl, businessId }) => listCatalogServices(
+    ({ accessToken, apiUrl, businessId, allowDeleted: allowDeletedParam }) => listCatalogServices(
       apiUrl,
       accessToken,
       {
-        params: { businessId },
+        params: { businessId, allowDeleted: allowDeletedParam },
       },
     )().then(Schema.decodeUnknownPromise(ListCatalogServicesResponseSchema)),
   )
