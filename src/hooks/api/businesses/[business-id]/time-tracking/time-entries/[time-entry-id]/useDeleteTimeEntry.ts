@@ -12,6 +12,7 @@ const DELETE_TIME_ENTRY_TAG_KEY = '#delete-time-entry'
 
 const deleteTimeEntry = del<
   Record<string, never>,
+  Record<string, never>,
   { businessId: string, timeEntryId: string }
 >(({ businessId, timeEntryId }) => `/v1/businesses/${businessId}/time-tracking/time-entries/${timeEntryId}`)
 
