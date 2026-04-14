@@ -18,16 +18,6 @@ type MetricRowProps = {
   }
 }
 
-const CLASS_NAME_PREFIX_MAP = {
-  Layer__TaxOverview: {
-    metricCard: 'Layer__TaxOverview__MetricCard',
-    metricCardLabel: 'Layer__TaxOverview__MetricCardLabel',
-    metricCardMeter: 'Layer__TaxOverview__MetricCardMeter',
-    metricRow: 'Layer__TaxOverview__MetricRow',
-    metricValue: 'Layer__TaxOverview__MetricValue',
-  },
-} as const
-
 export const MetricRow = ({
   amount,
   className,
