@@ -54,17 +54,30 @@ const TaxOverviewHeader = () => {
 }
 
 const TaxOverviewContent = ({ data }: { data: TaxOverviewData }) => {
+  const { isDesktop } = useSizeClass()
   return (
-    <VStack className='Layer__TaxOverview' gap='md'>
-      <TaxableIncomeCard data={data.incomeCard} />
-      <TaxEstimatesSummaryCard data={data.summaryCard} />
-    </VStack>
+    isDesktop
+      ? (
+        <>
+          <VStack className='Layer__TaxOverview' gap='md'>
+            <TaxableIncomeCard data={data.incomeCard} />
+          </VStack>
+          <TaxEstimatesSummaryCard data={data.summaryCard} />
+        </>
+      )
+      : (
+        <VStack className='Layer__TaxOverview' gap='md'>
+          <TaxableIncomeCard data={data.incomeCard} />
+          <TaxEstimatesSummaryCard data={data.summaryCard} />
+        </VStack>
+      )
   )
 }
 
 export const TaxOverview = () => {
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
+  const { isDesktop } = useSizeClass()
   const { data: taxOverviewData } = useTaxOverview({
     year,
     fullYearProjection,
@@ -93,12 +106,12 @@ export const TaxOverview = () => {
           key: section.type,
           label: section.label,
         })),
-        layout: 'summaryCard' as const,
+        layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
         title: 'Tax Summary',
         total: taxSummaryData.projectedTaxesOwed,
       },
     }
-  }, [taxSummaryData, taxOverviewData])
+  }, [isDesktop, taxSummaryData, taxOverviewData])
 
   return (
     <ResponsiveDetailView name='TaxOverview' slots={{ Header: TaxOverviewHeader }}>

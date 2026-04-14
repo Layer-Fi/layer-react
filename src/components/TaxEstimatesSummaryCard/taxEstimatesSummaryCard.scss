@@ -1,6 +1,5 @@
 .Layer__SummaryCard__ContainerHeader {
   box-sizing: border-box;
-  min-height: 85px;
   border-bottom: 1px solid var(--color-base-300);
 }
 
@@ -111,7 +110,6 @@
       align-items: center;
       padding-block: var(--spacing-md);
       padding-inline: var(--spacing-lg);
-      border-bottom: 1px solid var(--color-base-300);
     }
 
     .Layer__TaxEstimatesSummaryCard__Legend {
@@ -120,29 +118,11 @@
   }
 }
 
-@container (max-width: 760px) {
-  .Layer__TaxEstimatesSummaryCard.Layer__card:not(.Layer__TaxEstimatesSummaryCard--summaryCard) {
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
-  }
-
-  .Layer__TaxEstimatesSummaryCard__Content {
-    align-items: center;
-  }
-
-  .Layer__TaxEstimatesSummaryCard__LegendCard {
-    min-inline-size: 0;
-  }
-
-  .Layer__TaxEstimatesSummaryCard__LegendValueGroup {
-    min-inline-size: 0;
-  }
-
-  .Layer__TaxEstimatesSummaryCard__DonutChart {
-    width: 11rem;
-  }
-
-  .Layer__TaxEstimatesSummaryCard--summaryCard .Layer__TaxEstimatesSummaryCard__Header {
-    padding: var(--spacing-md);
+@media (width >= 760px) {
+  .Layer__card.Layer__TaxEstimatesSummaryCard {
+    border-radius: 0;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
   }
 }
