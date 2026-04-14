@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo, useState } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
@@ -72,7 +72,6 @@ export function CustomerSelector({
   showLabel = true,
 }: CustomerSelectorProps) {
   const { t } = useTranslation()
-  const [createError, setCreateError] = useState<string | null>(null)
   const combinedClassName = classNames(
     'Layer__CustomerSelector',
     inline && 'Layer__CustomerSelector--inline',
@@ -98,8 +97,6 @@ export function CustomerSelector({
 
   const handleSelectionChange = useCallback(
     (selectedOption: { value: string } | null) => {
-      setCreateError(null)
-
       if (selectedOption === null) {
         handleInputChange('')
 
@@ -127,26 +124,6 @@ export function CustomerSelector({
     [options, handleInputChange, selectedCustomerId, onSelectedCustomerChange],
   )
 
-  const handleCreateCustomer = useCallback((inputValue: string) => {
-    const customerName = inputValue.trim()
-
-    if (customerName === '') {
-      setCreateError(t('customerVendor:validation.customer_name_required', 'Customer name is a required field.'))
-      return
-    }
-
-    setCreateError(null)
-    onCreateCustomer?.(customerName)
-  }, [onCreateCustomer, t])
-
-  const handleInputValueChange = useCallback((value: string) => {
-    if (createError) {
-      setCreateError(null)
-    }
-
-    handleInputChange(value)
-  }, [createError, handleInputChange])
-
   const selectedCustomerForComboBox = useMemo(
     () => {
       if (selectedCustomer === null) {
@@ -171,49 +148,31 @@ export function CustomerSelector({
   )
 
   const ErrorMessage = useMemo(
-    () => {
-      if (createError) {
-        return (
-          <P
-            size='xs'
-            status='error'
-          >
-            {createError}
-          </P>
-        )
-      }
-
-      if (isError) {
-        return (
-          <P
-            size='xs'
-            status='error'
-          >
-            {t('customerVendor:error.load_customers', 'An error occurred while loading customers.')}
-          </P>
-        )
-      }
-
-      return null
-    },
-    [createError, isError, t],
+    () => (
+      <P
+        size='xs'
+        status='error'
+      >
+        {t('customerVendor:error.load_customers', 'An error occurred while loading customers.')}
+      </P>
+    ),
+    [t],
   )
 
   const inputId = useId()
 
   const isLoadingWithoutFallback = isLoading && !data
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
-  const shouldShowError = isError || createError !== null
 
   const sharedProps = {
     selectedValue: selectedCustomerForComboBox,
     onSelectedValueChange: handleSelectionChange,
-    onInputValueChange: handleInputValueChange,
+    onInputValueChange: handleInputChange,
     inputId,
     placeholder,
     slots: { EmptyMessage, ErrorMessage },
     isDisabled: shouldDisableComboBox,
-    isError: shouldShowError,
+    isError,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
     ['aria-label']: showLabel
@@ -224,7 +183,7 @@ export function CustomerSelector({
   const creatableProps = isCreatable
     ? {
       isCreatable: true as const,
-      onCreateOption: handleCreateCustomer,
+      onCreateOption: onCreateCustomer,
       formatCreateLabel: (inputValue: string) => formatCreateLabel(inputValue, t),
       groups: [{ label: t('customerVendor:label.customers', 'Customers'), options }],
     }

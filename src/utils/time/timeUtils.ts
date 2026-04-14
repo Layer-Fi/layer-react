@@ -1,5 +1,5 @@
 import { type CalendarDate, fromDate, getLocalTimeZone, ZonedDateTime } from '@internationalized/date'
-import { addDays, differenceInDays, formatISO, isSameDay } from 'date-fns'
+import { addDays, differenceInDays, formatISO } from 'date-fns'
 
 import type { DateFormatFn } from '@utils/i18n/date/formatters'
 
@@ -42,7 +42,5 @@ export const formatMinutesAsDuration = (
 
 export const getTimeTrackingDateFilterParams = ({ startDate, endDate }: { startDate: Date, endDate: Date }) => ({
   startDate,
-  endDate: isSameDay(endDate, new Date())
-    ? addDays(endDate, 1)
-    : endDate,
+  endDate: addDays(endDate, 1),
 })
