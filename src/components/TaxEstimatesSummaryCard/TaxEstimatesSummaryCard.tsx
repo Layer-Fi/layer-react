@@ -10,17 +10,12 @@ import './taxEstimatesSummaryCard.scss'
 
 import { DonutChart } from './DonutChart'
 import { Legend } from './Legend'
-import { NextPaymentBanner } from './NextPaymentBanner'
 
 export const TaxEstimatesSummaryCard = ({
-  categories,
-  title,
-  total,
-  layout = 'taxOverview',
-  nextTax,
-}: TaxOverviewSummaryCard) => {
+  data,
+}: { data: TaxOverviewSummaryCard }) => {
   const { isMobile } = useSizeClass()
-  const isSummaryCardLayout = layout === 'summaryCard'
+  const isSummaryCardLayout = data.layout === 'summaryCard'
 
   return (
     <VStack className='Layer__TaxEstimatesSummaryCard__Container'>
@@ -32,28 +27,21 @@ export const TaxEstimatesSummaryCard = ({
             align={isSummaryCardLayout ? 'center' : 'start'}
             gap='md'
           >
-            <Span size='lg' weight='bold'>{title}</Span>
+            <Span size='lg' weight='bold'>{data.title}</Span>
           </HStack>
           {(isMobile || isSummaryCardLayout)
             ? (
               <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
-                <DonutChart categories={categories} total={total} />
-                <Legend categories={categories} total={total} isMobile={isMobile} />
+                <DonutChart categories={data.categories} total={data.total} />
+                <Legend categories={data.categories} total={data.total} isMobile={isMobile} />
               </VStack>
             )
             : (
               <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
-                <DonutChart categories={categories} total={total} />
-                <Legend categories={categories} total={total} isMobile={false} />
+                <DonutChart categories={data.categories} total={data.total} />
+                <Legend categories={data.categories} total={data.total} isMobile={false} />
               </HStack>
             )}
-          {nextTax && (
-            <NextPaymentBanner
-              isSummaryCardLayout={isSummaryCardLayout}
-              isMobile={isMobile}
-              nextTax={nextTax}
-            />
-          )}
         </VStack>
       </Card>
     </VStack>

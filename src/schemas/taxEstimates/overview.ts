@@ -40,7 +40,7 @@ export type TaxOverviewCategoryKey = 'federal' | 'state'
 
 export type TaxOverviewCategory = {
   amount: number
-  color?: string
+  color?: string | null
   key: TaxOverviewCategoryKey
   label: string
 }
@@ -68,9 +68,6 @@ export type TaxOverviewSummaryCard = {
   layout?: 'taxOverview' | 'summaryCard'
   title: string
   total: number
-  // Is defined when the next tax banner should be presented (e.g. 4 weeks before the next tax due date)
-  // logic is set on the backend
-  nextTax?: TaxOverviewNextTax
 }
 
 export type TaxOverviewData = {
