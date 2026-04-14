@@ -82,6 +82,7 @@ export const TaxOverview = () => {
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
   const { isDesktop } = useSizeClass()
+  const { t } = useTranslation()
   const { data: taxOverviewData } = useTaxOverview({
     year,
     fullYearProjection,
@@ -111,11 +112,11 @@ export const TaxOverview = () => {
           label: section.label,
         })),
         layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
-        title: 'Tax Summary',
+        title: t('taxEstimates:label.tax_summary', 'Tax Summary'),
         total: taxSummaryData.projectedTaxesOwed,
       },
     }
-  }, [isDesktop, taxSummaryData, taxOverviewData])
+  }, [isDesktop, taxSummaryData, taxOverviewData, t])
 
   return (
     <ResponsiveDetailView name='TaxOverview' slots={{ Header: TaxOverviewHeader }}>

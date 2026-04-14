@@ -86,6 +86,7 @@
     "tax_payments": "Paiements d’impôt",
     "tax_profile": "Profil fiscal",
     "tax_profile_saved": "Profil fiscal enregistré",
+    "tax_summary": "",
     "taxable_amount_tax_name": "Montant imposable pour {{taxName}}",
     "taxable_business_income": "Revenu d’entreprise imposable",
     "taxable_business_income_projected": "Revenu d’entreprise imposable projeté",
