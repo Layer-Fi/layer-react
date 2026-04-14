@@ -58,11 +58,22 @@ export type TaxOverviewNextTax = {
   status: TaxOverviewDeadlineStatus
 }
 
-export type TaxOverviewData = {
+export type TaxOverviewIncomeCard = {
   deductionsTotal: number
-  estimatedTaxCategories: TaxOverviewCategory[]
-  estimatedTaxesTitle: string
-  estimatedTaxesTotal: number
   incomeTotal: number
+}
+
+export type TaxOverviewSummaryCard = {
+  categories: readonly TaxOverviewCategory[]
+  layout?: 'taxOverview' | 'summaryCard'
+  title: string
+  total: number
+  // Is defined when the next tax banner should be presented (e.g. 4 weeks before the next tax due date)
+  // logic is set on the backend
   nextTax?: TaxOverviewNextTax
+}
+
+export type TaxOverviewData = {
+  incomeCard: TaxOverviewIncomeCard
+  summaryCard: TaxOverviewSummaryCard
 }

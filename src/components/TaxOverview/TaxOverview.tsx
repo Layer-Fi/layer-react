@@ -12,18 +12,8 @@ type TaxOverviewProps = {
 export const TaxOverview = ({ data }: TaxOverviewProps) => {
   return (
     <VStack className='Layer__TaxOverview' gap='md'>
-      <TaxableIncomeCard
-        incomeTotal={data.incomeTotal}
-        deductionsTotal={data.deductionsTotal}
-        showHeader={false}
-      />
-      {data.estimatedTaxCategories.length > 0 && (
-        <TaxEstimatesSummaryCard
-          categories={data.estimatedTaxCategories}
-          title={data.estimatedTaxesTitle}
-          total={data.estimatedTaxesTotal}
-        />
-      )}
+      <TaxableIncomeCard {...data.incomeCard} />
+      <TaxEstimatesSummaryCard {...data.summaryCard} />
     </VStack>
   )
 }

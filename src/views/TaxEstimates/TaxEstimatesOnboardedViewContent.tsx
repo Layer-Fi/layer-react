@@ -13,8 +13,8 @@ import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
-import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
+import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxOverview } from '@components/TaxOverview/TaxOverview'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
@@ -110,18 +110,30 @@ export const TaxEstimatesOnboardedViewContent = () => {
   })
 
   const taxOverviewData = useMemo((): TaxOverviewData | undefined => {
-    if (!taxOverviewApi || !taxSummaryApi) {
+    if (!taxOverviewApi) {
       return undefined
     }
 
     return {
-      deductionsTotal: taxOverviewApi.totalDeductions,
-      estimatedTaxCategories,
-      estimatedTaxesTitle,
-      estimatedTaxesTotal: taxSummaryApi.projectedTaxesOwed,
-      incomeTotal: taxOverviewApi.totalIncome,
+      incomeCard: {
+        deductionsTotal: taxOverviewApi.totalDeductions,
+        incomeTotal: taxOverviewApi.totalIncome,
+      },
+      summaryCard: {
+        title: estimatedTaxesTitle,
+        categories: estimatedTaxCategories,
+        total: taxOverviewApi.estimatedTaxesOwed,
+        nextTax: {
+          amount: taxOverviewApi.estimatedTaxesOwed,
+          dueAt: taxOverviewApi.taxesDueDate ?? new Date(),
+          quarter: taxOverviewApi.year,
+          status: {
+            kind: 'due',
+          },
+        },
+      },
     }
-  }, [estimatedTaxCategories, estimatedTaxesTitle, taxOverviewApi, taxSummaryApi])
+  }, [taxOverviewApi, estimatedTaxCategories, estimatedTaxesTitle])
 
   if (route === TaxEstimatesRoute.Profile) {
     return <TaxProfile />
