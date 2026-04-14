@@ -187,10 +187,18 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
       return
     }
 
+    let cancelled = false
+
     setActionError(null)
     void saveActiveTimerChangesRef.current().catch(() => {
-      setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
+      if (!cancelled) {
+        setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
+      }
     })
+
+    return () => {
+      cancelled = true
+    }
   }, [hasActiveTimer, memo, selectedCustomer?.id, selectedServiceId, t])
 
   useEffect(() => {
