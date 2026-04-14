@@ -40,13 +40,13 @@ export const TaxEstimatesSummaryCard = ({
             ? (
               <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
                 <DonutChart categories={data.categories} total={data.total} />
-                <Legend categories={data.categories} total={data.total} isMobile={isMobile} />
+                <Legend categories={data.categories} total={data.total} />
               </VStack>
             )
             : (
               <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
                 <DonutChart categories={data.categories} total={data.total} />
-                <Legend categories={data.categories} total={data.total} isMobile={false} />
+                <Legend categories={data.categories} total={data.total} />
               </HStack>
             )}
         </VStack>

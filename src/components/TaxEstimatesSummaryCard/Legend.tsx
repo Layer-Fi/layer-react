@@ -2,6 +2,7 @@ import { ArrowUpDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -9,23 +10,18 @@ import { Span } from '@ui/Typography/Text'
 import { resolveCategoryColor } from './constants'
 import type { SummaryChartProps } from './types'
 
-type LegendProps = SummaryChartProps & {
-  isMobile: boolean
-}
+type LegendProps = SummaryChartProps
 
 export const Legend = ({
   categories,
-  isMobile,
   total,
 }: LegendProps) => {
   const { t } = useTranslation()
   const { formatPercent } = useIntlFormatter()
-  const className = isMobile
-    ? 'Layer__TaxEstimatesSummaryCard__LegendCard'
-    : 'Layer__TaxEstimatesSummaryCard__Legend'
+  const { isMobile } = useSizeClass()
 
   return (
-    <VStack className={className} gap='sm' fluid>
+    <VStack className='Layer__TaxEstimatesSummaryCard__Legend' gap='sm' fluid>
       <HStack justify='space-between' className='Layer__TaxEstimatesSummaryCard__LegendHeader'>
         <Span size='sm' variant='subtle'>{t('common:label.category', 'Category')}</Span>
         <HStack className='Layer__TaxEstimatesSummaryCard__LegendHeaderValue' align='center' gap='2xs'>
@@ -35,7 +31,13 @@ export const Legend = ({
       </HStack>
       {categories.map(category => (
         <HStack key={category.key} className='Layer__TaxEstimatesSummaryCard__LegendRow' justify='space-between' align='center' gap='md'>
-          <Span size='sm' className='Layer__TaxEstimatesSummaryCard__LegendLabel'>{category.label}</Span>
+          <Span size='sm' className='Layer__TaxEstimatesSummaryCard__LegendLabel'>
+            {isMobile
+              ? category.key === 'federal'
+                ? t('taxEstimates:label.federal', 'Federal')
+                : t('taxEstimates:label.state', 'State')
+              : category.label}
+          </Span>
           <HStack className='Layer__TaxEstimatesSummaryCard__LegendValueGroup' align='center' gap='sm'>
             <MoneySpan size='sm' weight='bold' amount={category.amount} />
             <Span size='sm' variant='subtle'>
