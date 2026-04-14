@@ -1,8 +1,5 @@
 import { pipe, Schema } from 'effect'
 
-import { type TaxEstimatesSummaryCardProps } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
-import { type TaxableIncomeCardProps } from '@components/TaxOverview/TaxableIncomeCard'
-
 const TaxOverviewApiDataSchema = Schema.Struct({
   year: Schema.Number,
   excludesPendingTransactions: pipe(
@@ -52,16 +49,4 @@ export type TaxOverviewDeadlineStatusKind = 'pastDue' | 'paid' | 'due' | 'catego
 
 export type TaxOverviewDeadlineStatus = {
   kind: TaxOverviewDeadlineStatusKind
-}
-
-export type TaxOverviewNextTax = {
-  amount: number
-  dueAt: Date
-  quarter: number
-  status: TaxOverviewDeadlineStatus
-}
-
-export type TaxOverviewData = {
-  incomeCard: TaxableIncomeCardProps
-  summaryCard: TaxEstimatesSummaryCardProps
 }

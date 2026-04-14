@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxOverviewData } from '@schemas/taxEstimates/overview'
 import { tConditional } from '@utils/i18n/conditional'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
@@ -10,10 +9,15 @@ import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstima
 import { VStack } from '@ui/Stack/Stack'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
-import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
-import { TaxableIncomeCard } from '@components/TaxOverview/TaxableIncomeCard'
+import { TaxEstimatesSummaryCard, type TaxEstimatesSummaryCardProps } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
+import { TaxableIncomeCard, type TaxableIncomeCardProps } from '@components/TaxOverview/TaxableIncomeCard'
 
 import './taxOverview.scss'
+
+export type TaxOverviewProps = {
+  incomeCard: TaxableIncomeCardProps
+  summaryCard: TaxEstimatesSummaryCardProps
+}
 
 const TaxOverviewHeader = () => {
   const { t } = useTranslation()
@@ -53,7 +57,7 @@ const TaxOverviewHeader = () => {
   )
 }
 
-const TaxOverviewContent = ({ data }: { data: TaxOverviewData }) => {
+const TaxOverviewContent = ({ data }: { data: TaxOverviewProps }) => {
   const { isDesktop } = useSizeClass()
   return (
     isDesktop
