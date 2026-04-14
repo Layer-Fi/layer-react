@@ -48,6 +48,10 @@ export type BaseComboBoxProps<T extends ComboBoxOption> = {
   isReadOnly?: boolean
 
   displayDisabledAsSelected?: boolean
+
+  menuIsOpen?: boolean
+  onMenuOpen?: () => void
+  onMenuClose?: () => void
 } & OptionsOrGroups<T> & AriaLabelProps
 
 export type SingleSelectComboBoxProps<T extends ComboBoxOption> = BaseComboBoxProps<T> & {
