@@ -101,7 +101,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     isDisabled,
     isSearchable: isSearchable && !isReadOnly,
     isLoading: isLoading || isMutating,
-    menuIsOpen,
+    menuIsOpen: isReadOnly ? false : menuIsOpen,
     onMenuOpen,
     onMenuClose,
     openMenuOnClick: !isReadOnly,
