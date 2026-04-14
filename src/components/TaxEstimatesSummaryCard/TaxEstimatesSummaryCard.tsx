@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { type TaxOverviewSummaryCard } from '@schemas/taxEstimates/overview'
+import { type TaxOverviewCategory } from '@schemas/taxEstimates/overview'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -11,9 +11,16 @@ import './taxEstimatesSummaryCard.scss'
 import { DonutChart } from './DonutChart'
 import { Legend } from './Legend'
 
+export type TaxEstimatesSummaryCardProps = {
+  categories: readonly TaxOverviewCategory[]
+  layout?: 'taxOverview' | 'summaryCard'
+  title: string
+  total: number
+}
+
 export const TaxEstimatesSummaryCard = ({
   data,
-}: { data: TaxOverviewSummaryCard }) => {
+}: { data: TaxEstimatesSummaryCardProps }) => {
   const { isMobile } = useSizeClass()
   const isSummaryCardLayout = data.layout === 'summaryCard'
 

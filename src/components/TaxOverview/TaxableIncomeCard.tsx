@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { type TaxOverviewIncomeCard } from '@schemas/taxEstimates/overview'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { Card } from '@components/Card/Card'
@@ -58,9 +57,14 @@ function DeductionsMetricRow({ totalDeductions, maxMeterValue }: { totalDeductio
   )
 }
 
+export type TaxableIncomeCardProps = {
+  deductionsTotal: number
+  incomeTotal: number
+}
+
 export const TaxableIncomeCard = ({
   data,
-}: { data: TaxOverviewIncomeCard }) => {
+}: { data: TaxableIncomeCardProps }) => {
   const { isDesktop } = useSizeClass()
   const maxMeterValue = Math.max(data.incomeTotal, data.deductionsTotal, 1)
 
