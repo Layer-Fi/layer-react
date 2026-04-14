@@ -7,9 +7,9 @@ import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
 import { resolveCategoryColor } from './constants'
-import type { SummaryCardProps } from './types'
+import type { SummaryChartProps } from './types'
 
-type LegendProps = Pick<SummaryCardProps, 'categories' | 'total'> & {
+type LegendProps = SummaryChartProps & {
   isMobile: boolean
 }
 

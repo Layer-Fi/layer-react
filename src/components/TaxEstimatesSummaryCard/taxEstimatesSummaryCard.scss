@@ -95,42 +95,6 @@
     inset: 0;
   }
 
-  &__NextPaymentBanner {
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius-xs);
-    border: 1px solid var(--color-info-warning-bg);
-    background-color: var(--color-info-warning-bg);
-    color: var(--color-info-warning-fg);
-  }
-
-  &__NextPaymentBanner .Layer__MoneySpan {
-    color: var(--color-info-warning-fg);
-  }
-
-  &__NextPaymentCopy {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__NextPaymentText {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &__NextPaymentIcon {
-    display: inline-flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    height: 1.5rem;
-    width: 1.5rem;
-    border-radius: 999px;
-    background-color: color-mix(in srgb, var(--color-base-0), white 20%);
-    color: var(--color-info-warning-fg);
-    opacity: 0.75;
-  }
-
   &--summaryCard {
     &.Layer__card {
       gap: 0;
@@ -152,10 +116,6 @@
 
     .Layer__TaxEstimatesSummaryCard__Legend {
       width: 100%;
-    }
-
-    .Layer__TaxEstimatesSummaryCard__NextPaymentBanner {
-      margin: var(--spacing-sm);
     }
   }
 }
@@ -180,16 +140,6 @@
 
   .Layer__TaxEstimatesSummaryCard__DonutChart {
     width: 11rem;
-  }
-
-  .Layer__TaxEstimatesSummaryCard__NextPaymentBanner {
-    gap: var(--spacing-sm);
-  }
-
-  .Layer__TaxEstimatesSummaryCard__NextPaymentText {
-    overflow: visible;
-    text-overflow: clip;
-    white-space: normal;
   }
 
   .Layer__TaxEstimatesSummaryCard--summaryCard .Layer__TaxEstimatesSummaryCard__Header {

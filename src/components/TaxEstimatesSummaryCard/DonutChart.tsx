@@ -13,9 +13,9 @@ import {
   DONUT_STROKE_WIDTH,
   resolveCategoryColor,
 } from './constants'
-import type { SummaryCardProps } from './types'
+import type { SummaryChartProps } from './types'
 
-type DonutChartProps = Pick<SummaryCardProps, 'categories' | 'total'>
+type DonutChartProps = SummaryChartProps
 
 export const DonutChart = ({
   categories,
