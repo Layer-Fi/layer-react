@@ -86,11 +86,12 @@ export const TimeEntries = ({ filterParams, onStartTimer, isStartTimerDisabled }
   }, [])
 
   const handleDeleteSuccess = useCallback(() => {
+    setEntryToDelete(null)
     setSelectedEntry(null)
     setIsDrawerOpen(false)
   }, [])
 
-  const handleDrawerSuccess = useCallback(() => {
+  const handleDrawerSuccess = useCallback((_entry: TimeEntry) => {
     setSelectedEntry(null)
   }, [])
 

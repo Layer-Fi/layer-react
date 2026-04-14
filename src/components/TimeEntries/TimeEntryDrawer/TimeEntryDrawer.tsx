@@ -15,7 +15,7 @@ interface TimeEntryDrawerProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   entry: TimeEntry | null
-  onSuccess: () => void
+  onSuccess: (entry: TimeEntry) => void
   onDeleteEntry: (entry: TimeEntry) => void
 }
 
@@ -105,8 +105,8 @@ export const TimeEntryDrawer = ({ isOpen, onOpenChange, entry, onDeleteEntry, on
               <TimeEntryForm
                 isReadOnly={isReadOnly}
                 entry={entry ?? undefined}
-                onSuccess={() => {
-                  onSuccess()
+                onSuccess={(savedEntry) => {
+                  onSuccess(savedEntry)
                   close()
                 }}
               />
