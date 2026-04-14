@@ -30,8 +30,8 @@ export const formatMinutesAsDuration = (
   totalMinutes: number,
   { compact = false }: { compact?: boolean } = {},
 ): string => {
-  const hours = Math.floor(totalMinutes / 60)
-  const minutes = totalMinutes % 60
+  const hours = Math.trunc(totalMinutes / 60)
+  const minutes = totalMinutes - hours * 60
 
   if (compact) {
     return `${String(hours).padStart(2, '0')}h${String(minutes).padStart(2, '0')}`
