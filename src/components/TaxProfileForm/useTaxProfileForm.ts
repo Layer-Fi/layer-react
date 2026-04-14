@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { type TaxProfile, TaxProfileRequestSchema } from '@schemas/taxEstimates/profile'
 import { UpsertTaxProfileMode, useUpsertTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useUpsertTaxProfile'
 import { useAppForm } from '@hooks/features/forms/useForm'
-import { formValuesToTaxProfile, taxProfileToFormValues } from '@components/TaxProfileForm/formUtils'
+import { formValuesToTaxProfile, taxProfileToFormValues, validateTaxProfileForm } from '@components/TaxProfileForm/formUtils'
 import { type TaxProfileForm } from '@components/TaxProfileForm/taxProfileFormSchema'
 
 type UseTaxProfileFormProps = {
@@ -28,6 +28,10 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
 
   const defaultValuesRef = useRef<TaxProfileForm>(formDefaults)
 
+  const validators = useMemo(() => ({
+    onDynamic: (arg: { value: TaxProfileForm }) => validateTaxProfileForm(arg, t),
+  }), [t])
+
   const onSubmit = useCallback(async ({ value }: { value: TaxProfileForm }) => {
     try {
       const taxProfileValue = formValuesToTaxProfile(value)
@@ -48,6 +52,7 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
   const form = useAppForm<TaxProfileForm>({
     defaultValues: defaultValuesRef.current,
     onSubmit,
+    validators,
     validationLogic: revalidateLogic({
       mode: 'submit',
       modeAfterSubmission: 'submit',

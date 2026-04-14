@@ -1,17 +1,21 @@
 import classNames from 'classnames'
 
-import { Meter } from '@ui/Meter/Meter'
+import { Meter, type MeterProps } from '@ui/Meter/Meter'
 import { HStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
+import './metricRow.scss'
+
+type MetricRowStyle = 'default' | 'bordered'
+
 type MetricRowProps = {
   amount: number
-  isMobile: boolean
-  label: string
-  maxMeterValue: number
-  meterClassName: string
-  classNamePrefix?: string
+  className?: string
+  style?: MetricRowStyle
+  slotProps: {
+    Meter: MeterProps
+  }
 }
 
 const CLASS_NAME_PREFIX_MAP = {
@@ -26,35 +30,32 @@ const CLASS_NAME_PREFIX_MAP = {
 
 export const MetricRow = ({
   amount,
-  classNamePrefix,
-  isMobile,
-  label,
-  maxMeterValue,
-  meterClassName,
+  className,
+  style = 'default',
+  slotProps,
 }: MetricRowProps) => {
-  const prefixedClassNames = classNamePrefix ? CLASS_NAME_PREFIX_MAP[classNamePrefix as keyof typeof CLASS_NAME_PREFIX_MAP] : undefined
-  const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
-  const boundedMeterValue = Math.min(Math.max(amount, 0), boundedMaxMeterValue)
-
-  if (isMobile) {
-    return (
-      <HStack className={classNames('Layer__MetricCard', prefixedClassNames?.metricCard)} align='center' gap='md'>
-        <Span size='md' className={classNames('Layer__MetricCardLabel', prefixedClassNames?.metricCardLabel)}>{label}</Span>
-        <HStack className={classNames('Layer__MetricCardMeter', prefixedClassNames?.metricCardMeter)} align='center'>
-          <Meter className={meterClassName} label={label} minValue={0} maxValue={boundedMaxMeterValue} value={boundedMeterValue} meterOnly />
-        </HStack>
-        <MoneySpan size='md' weight='bold' amount={amount} />
-      </HStack>
-    )
-  }
+  const isBordered = style === 'bordered'
+  const stackProps = isBordered ? { className: classNames('Layer__MetricCard', className) } : { className: classNames('Layer__MetricRow', className), justify: 'space-between' as const }
+  const labelProps = isBordered ? { className: 'Layer__MetricCardLabel' } : { className: 'Layer__MetricRowLabel' }
+  const meterContainerProps = isBordered ? { className: 'Layer__MetricCardMeter' } : { className: 'Layer__MetricRowValue', gap: 'md' as const }
 
   return (
-    <HStack className={classNames('Layer__MetricRow', prefixedClassNames?.metricRow)} justify='space-between' align='center' gap='md'>
-      <Span size='md'>{label}</Span>
-      <HStack className={classNames('Layer__MetricValue', prefixedClassNames?.metricValue)} align='center' gap='md'>
-        <MoneySpan size='md' weight='bold' amount={amount} />
-        <Meter className={meterClassName} label={label} minValue={0} maxValue={boundedMaxMeterValue} value={boundedMeterValue} meterOnly />
-      </HStack>
+    <HStack {...stackProps} align='center' gap='md'>
+      <Span size='md' {...labelProps}>{slotProps.Meter.label}</Span>
+      {isBordered && (
+        <>
+          <HStack {...meterContainerProps} align='center'>
+            <Meter {...slotProps.Meter} meterOnly />
+          </HStack>
+          <MoneySpan size='md' weight='bold' amount={amount} />
+        </>
+      )}
+      {!isBordered && (
+        <HStack {...meterContainerProps} align='center'>
+          <MoneySpan size='md' weight='bold' amount={amount} />
+          <Meter {...slotProps.Meter} meterOnly />
+        </HStack>
+      )}
     </HStack>
   )
 }

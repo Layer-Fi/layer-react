@@ -8,6 +8,7 @@
     "tax_payments": "No tax payments found"
   },
   "error": {
+    "feature_not_enabled": "Tax estimates are not enabled.",
     "load_tax_estimates": "We couldn't load your tax estimates",
     "load_tax_estimates_tax": "We couldn't load your tax summary",
     "load_tax_information": "Unable to load tax information",
@@ -15,7 +16,8 @@
     "retrieve_tax_profile": "We couldn’t retrieve your tax profile. Please check your connection and try again.",
     "while_loading_tax_estimates": "An error occurred while loading your tax estimates. Please check your connection and try again.",
     "while_loading_tax_payments": "An error occurred while loading your tax payments. Please check your connection and try again.",
-    "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
+    "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again.",
+    "disclaimer_required": "You must acknowledge the disclaimer to continue."
   },
   "label": {
     "additional_actions": "Additional actions",
@@ -35,7 +37,6 @@
     "enter_amount": "Enter amount",
     "enter_area": "Enter area",
     "estimates": "Estimates",
-    "federal_income_self_employment_taxes": "Federal Income + Self-Employment Taxes",
     "federal_deductions": "Federal Deductions",
     "federal_state_tax_payments": "Federal and state tax payments for the selected tax year",
     "federal_tax": "Federal Tax",
@@ -74,7 +75,6 @@
     "state_deductions": "State Deductions",
     "state_income_tax_estimate_owed": "State Income Tax Estimate (Owed)",
     "state_tax": "State Tax",
-    "state_taxes": "State Taxes",
     "state_tax_rate": "State Tax Rate",
     "state_taxable_income": "State Taxable Income",
     "tax_estimate_view": "Tax estimate view",
