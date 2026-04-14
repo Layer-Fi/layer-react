@@ -1,5 +1,5 @@
 import { type CalendarDate, fromDate, getLocalTimeZone, ZonedDateTime } from '@internationalized/date'
-import { addDays, differenceInDays, formatISO } from 'date-fns'
+import { differenceInDays, formatISO } from 'date-fns'
 
 import type { DateFormatFn } from '@utils/i18n/date/formatters'
 
@@ -39,8 +39,3 @@ export const formatMinutesAsDuration = (
 
   return `${hours}h ${String(minutes).padStart(2, '0')}m`
 }
-
-export const getTimeTrackingDateFilterParams = ({ startDate, endDate }: { startDate: Date, endDate: Date }) => ({
-  startDate,
-  endDate: addDays(endDate, 1),
-})
