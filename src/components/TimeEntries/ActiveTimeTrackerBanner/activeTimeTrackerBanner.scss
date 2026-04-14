@@ -1,0 +1,220 @@
+.Layer__ActiveTimeTrackerBanner__Loading {
+  min-block-size: 5rem;
+  padding: var(--spacing-md);
+}
+
+.Layer__ActiveTimeTrackerBanner__Container {
+  border-color: #0f1114 !important;
+  background-color: #0f1114 !important;
+}
+
+.Layer__ActiveTimeTrackerBanner__Main {
+  flex-wrap: nowrap;
+  padding-block: var(--spacing-xs);
+  padding-inline: var(--spacing-md);
+}
+
+.Layer__ActiveTimeTrackerBanner__Controls {
+  flex: 1;
+  flex-wrap: nowrap;
+  min-inline-size: 0;
+}
+
+.Layer__ActiveTimeTrackerBanner__InlineFields {
+  flex: 1;
+  flex-wrap: nowrap;
+  min-inline-size: 0;
+}
+
+.Layer__ActiveTimeTrackerBanner__Timer {
+  min-inline-size: 10rem;
+}
+
+.Layer__ActiveTimeTrackerBanner__TimerDot {
+  block-size: 0.5rem;
+  inline-size: 0.5rem;
+  border-radius: 50%;
+  background-color: #2aa4bb;
+}
+
+.Layer__ActiveTimeTrackerBanner__TimerValue {
+  font-size: 1.75rem;
+  line-height: 1;
+  color: #f6f7f9;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.Layer__ActiveTimeTrackerBanner__Actions {
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.Layer__ActiveTimeTrackerBanner__ActionButton {
+  .Layer__UI__Button {
+    border-radius: var(--border-radius-sm);
+  }
+}
+
+.Layer__ActiveTimeTrackerBanner__ActionButton--cancel {
+  .Layer__UI__Button {
+    color: #9ca8ba;
+  }
+}
+
+.Layer__ActiveTimeTrackerBanner__ActionButton--complete,
+.Layer__ActiveTimeTrackerBanner__ActionButton--start {
+  .Layer__UI__Button {
+    border-color: #f3f5f7;
+    background-color: #f3f5f7;
+    color: #0f1114;
+  }
+}
+
+.Layer__ActiveTimeTrackerBanner__DrawerContent {
+  padding-block-end: var(--spacing-lg);
+  padding-inline: var(--spacing-lg);
+}
+
+.Layer__ActiveTimeTrackerBanner__DurationDisplay {
+  padding-block: var(--spacing-md);
+}
+
+.Layer__ActiveTimeTrackerBanner__DurationValue {
+  font-size: var(--text-heading-3xl);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.Layer__ActiveTimeTrackerBanner__DurationLabel {
+  text-transform: uppercase;
+}
+
+.Layer__ActiveTimeTrackerBanner__Field__Service,
+.Layer__ActiveTimeTrackerBanner__Field__Customer,
+.Layer__ActiveTimeTrackerBanner__Field__Memo {
+  grid-template-columns: 10rem auto;
+  width: 100%;
+}
+
+.Layer__ActiveTimeTrackerBanner__Field--inline {
+  flex: 1 1 14rem;
+  grid-template-columns: minmax(0, 1fr);
+  width: auto;
+  min-inline-size: 0;
+  max-inline-size: 18rem;
+
+  .Layer__ComboBoxControl {
+    border-color: #e2e5ea;
+    background-color: #f3f5f7;
+  }
+}
+
+.Layer__ActiveTimeTrackerBanner__ActiveDetails {
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-base-300);
+}
+
+@container (max-width: 1100px) {
+  .Layer__ActiveTimeTrackerBanner__Controls {
+    flex-wrap: wrap;
+    align-items: flex-end;
+    inline-size: 100%;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__InlineFields {
+    flex-wrap: wrap;
+    inline-size: 100%;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Actions {
+    justify-content: flex-end;
+    inline-size: 100%;
+  }
+}
+
+@container (max-width: 760px) {
+  .Layer__ActiveTimeTrackerBanner__Main[data-direction='row'] {
+    flex-direction: column;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Main[data-align='center'] {
+    align-items: flex-start;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Main[data-justify='space-between'] {
+    justify-content: flex-start;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Controls[data-direction='row'] {
+    flex-direction: column;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Controls[data-align='center'] {
+    align-items: stretch;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__TimerValue {
+    font-size: 1.25rem;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Controls {
+    inline-size: 100%;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__InlineFields[data-align='center'] {
+    align-items: stretch;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__InlineFields {
+    inline-size: 100%;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Field--inline {
+    flex-basis: 100%;
+    max-inline-size: 100%;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Actions {
+    justify-content: flex-start;
+    inline-size: 100%;
+  }
+}
+
+@container (min-width: 761px) {
+  .Layer__ActiveTimeTrackerBanner__Main[data-direction='row'] {
+    flex-direction: row;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Main[data-align='center'] {
+    align-items: center;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Main[data-justify='space-between'] {
+    justify-content: space-between;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Controls[data-direction='row'] {
+    flex-direction: row;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Controls[data-align='center'] {
+    align-items: center;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Controls {
+    flex-wrap: nowrap;
+    inline-size: auto;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__InlineFields {
+    flex-wrap: nowrap;
+    inline-size: auto;
+  }
+
+  .Layer__ActiveTimeTrackerBanner__Actions {
+    justify-content: normal;
+    inline-size: auto;
+  }
+}
