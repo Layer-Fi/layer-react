@@ -30,7 +30,6 @@
     "vendors": "Vendors"
   },
   "validation": {
-    "customer_name_required": "Customer name is a required field.",
     "either_individual_required": "Either individual name or company name is required.",
     "email_required": "Email is a required field."
   }

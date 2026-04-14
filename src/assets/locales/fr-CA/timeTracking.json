@@ -44,7 +44,7 @@
     "entry_details": "Détails de l'entrée de temps",
     "invoiced": "Facturé",
     "memo": "Note",
-    "no_activity_breakdown": "",
+    "no_activity_breakdown": "Aucune répartition d'activité disponible pour cette période.",
     "no_services": "Aucun service disponible",
     "other": "Autre",
     "select_customer": "Sélectionner un client (facultatif)",
