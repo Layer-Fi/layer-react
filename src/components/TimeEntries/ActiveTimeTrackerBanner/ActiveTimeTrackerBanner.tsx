@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Check, Play } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -77,7 +77,7 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
   const { invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
   const { trigger: updateTimeEntry, isMutating: isUpdating } = useUpsertTimeEntry({
     mode: UpsertTimeEntryMode.Update,
-    timeEntryId: activeEntry?.id ?? '',
+    timeEntryId: activeEntry?.id,
   })
 
   const hasActiveTimer = activeEntry !== null && activeEntry !== undefined
@@ -172,6 +172,9 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
     }
   }, [activeEntry, memo, selectedCustomer?.id, selectedServiceId, updateTimeEntry])
 
+  const saveActiveTimerChangesRef = useRef(saveActiveTimerChanges)
+  saveActiveTimerChangesRef.current = saveActiveTimerChanges
+
   const handleDrawerOpenChange = useCallback((nextIsOpen: boolean) => {
     setIsDrawerOpen(nextIsOpen)
     if (!nextIsOpen) {
@@ -185,10 +188,10 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
     }
 
     setActionError(null)
-    void saveActiveTimerChanges().catch(() => {
+    void saveActiveTimerChangesRef.current().catch(() => {
       setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
     })
-  }, [hasActiveTimer, saveActiveTimerChanges, selectedCustomer?.id, selectedServiceId, t])
+  }, [hasActiveTimer, memo, selectedCustomer?.id, selectedServiceId, t])
 
   useEffect(() => {
     if (hasActiveTimer && isDrawerOpen) {
