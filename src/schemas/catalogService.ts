@@ -5,9 +5,9 @@ export const CatalogServiceSchema = Schema.Struct({
 
   name: Schema.String,
 
-  billableRatePerMinuteAmount: pipe(
+  billableRatePerHourAmount: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('billable_rate_per_minute_amount'),
+    Schema.fromKey('billable_rate_per_hour_amount'),
   ),
 
   archivedAt: Schema.optional(Schema.NullOr(Schema.Date)).pipe(
@@ -27,8 +27,8 @@ export const CreateCatalogServiceSchema = Schema.Struct({
     Schema.fromKey('account_identifier'),
   ),
 
-  billableRatePerMinuteAmount: Schema.optional(Schema.NullOr(Schema.Number)).pipe(
-    Schema.fromKey('billable_rate_per_minute_amount'),
+  billableRatePerHourAmount: Schema.optional(Schema.NullOr(Schema.Number)).pipe(
+    Schema.fromKey('billable_rate_per_hour_amount'),
   ),
 
   memo: Schema.optional(Schema.NullOr(Schema.String)),
@@ -49,8 +49,8 @@ export const UpdateCatalogServiceSchema = Schema.Struct({
     Schema.fromKey('account_identifier'),
   ),
 
-  billableRatePerMinuteAmount: Schema.optional(Schema.NullOr(Schema.Number)).pipe(
-    Schema.fromKey('billable_rate_per_minute_amount'),
+  billableRatePerHourAmount: Schema.optional(Schema.NullOr(Schema.Number)).pipe(
+    Schema.fromKey('billable_rate_per_hour_amount'),
   ),
 
   memo: Schema.optional(Schema.NullOr(Schema.String)),

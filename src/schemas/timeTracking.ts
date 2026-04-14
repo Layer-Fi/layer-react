@@ -9,9 +9,9 @@ export const TimeEntryServiceSchema = Schema.Struct({
 
   name: Schema.NullishOr(Schema.String),
 
-  billableRatePerMinuteAmount: pipe(
+  billableRatePerHourAmount: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('billable_rate_per_minute_amount'),
+    Schema.fromKey('billable_rate_per_hour_amount'),
   ),
 })
 export type TimeEntryService = typeof TimeEntryServiceSchema.Type
