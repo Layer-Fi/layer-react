@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Edit, Lock, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -52,6 +52,12 @@ export const TimeEntryDrawer = ({ isOpen, onOpenChange, entry, onDeleteEntry, on
   const { t } = useTranslation()
   const { isMobile, isTablet } = useSizeClass()
   const [isEditMode, setIsEditMode] = useState(false)
+
+  useEffect(() => {
+    if (!isOpen) {
+      setIsEditMode(false)
+    }
+  }, [isOpen])
 
   const hasEntry = entry !== null
   const isLocked = !!entry?.invoiceLineItem
