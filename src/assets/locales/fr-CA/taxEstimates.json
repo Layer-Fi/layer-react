@@ -1,5 +1,6 @@
 {
   "action": {
+    "review_banner": "",
     "save_profile": "Enregistrer le profil",
     "update_tax_profile": "Mettre à jour le profil fiscal"
   },
@@ -34,9 +35,12 @@
     "deductible_expenses": "Dépenses déductibles",
     "deductible_mileage_expenses": "Frais de kilométrage déductibles",
     "deductions": "Déductions",
+    "due_with_date": "",
     "enter_amount": "Saisissez un montant",
     "enter_area": "Saisissez la superficie",
+    "estimated_tax": "",
     "estimates": "Estimations",
+    "federal": "",
     "federal_deductions": "Déductions fédérales",
     "federal_state_tax_payments": "Paiements d’impôt fédéral et d’État pour l’année d’imposition sélectionnée",
     "federal_tax": "Impôt fédéral",
@@ -61,6 +65,7 @@
     "overtime_income": "Revenu d’heures supplémentaires",
     "owed_quarter": "À payer ce trimestre",
     "payments": "Paiements",
+    "quarter_taxes": "",
     "qualified_overtime_deduction": "Déduction admissible pour heures supplémentaires",
     "qualified_tip_deduction": "Déduction admissible pour pourboires",
     "qualifying_widow_er": "Veuf(ve) admissible",
@@ -71,6 +76,7 @@
     "single": "Célibataire",
     "social_security_tax_estimate_owed": "Estimation de la taxe de sécurité sociale (à payer)",
     "social_security_tax_rate": "Taux de la taxe de sécurité sociale",
+    "state": "",
     "state_adjusted_gross_income": "Revenu brut ajusté de l’État",
     "state_deductions": "Déductions d’État",
     "state_income_tax_estimate_owed": "Estimation de l’impôt sur le revenu de l’État (à payer)",
@@ -102,6 +108,8 @@
     "taxes_paid": "Impôts payés",
     "tip_income": "Revenu de pourboires",
     "uncategorized_tax_payment": "",
+    "uncategorized_transactions": "",
+    "annual_income_taxes": "",
     "total_income": "",
     "total_federal_tax_estimate": "Estimation totale de l’impôt fédéral",
     "total_paid": "Total payé",
@@ -111,6 +119,7 @@
     "use_standard_mileage_deduction": "Utiliser la déduction forfaitaire kilométrique?",
     "w2_income": "Revenu W-2",
     "withholding_amount": "Montant de la retenue",
-    "year_to_date": "Cumul annuel"
+    "year_to_date": "Cumul annuel",
+    "your_tax_deadlines": ""
   }
 }

@@ -1,4 +1,26 @@
 .Layer__TaxOverview {
   inline-size: min(100%, 1406px);
   container-type: inline-size;
+
+  &__DesktopLayout {
+    align-items: flex-start;
+  }
+
+  &__PrimaryColumn {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+
+  &__SecondaryColumn {
+    flex: 0 0 38%;
+    min-width: 23rem;
+    max-width: 32rem;
+  }
+}
+
+@container (max-width: 1140px) {
+  .Layer__TaxOverview__SecondaryColumn {
+    flex-basis: 36%;
+    min-width: 22rem;
+  }
 }

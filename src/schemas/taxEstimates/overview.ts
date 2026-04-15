@@ -50,3 +50,21 @@ export type TaxOverviewDeadlineStatusKind = 'pastDue' | 'paid' | 'due' | 'catego
 export type TaxOverviewDeadlineStatus = {
   kind: TaxOverviewDeadlineStatusKind
 }
+
+export type TaxOverviewDeadlineReview = {
+  payload: {
+    type: 'UNCATEGORIZED_TRANSACTIONS'
+    count: number
+    amount: number
+  }
+}
+
+export type TaxOverviewDeadline = {
+  amount: number
+  description: string
+  dueAt: Date
+  id: string
+  reviewAction?: TaxOverviewDeadlineReview
+  status?: TaxOverviewDeadlineStatus
+  title: string
+}

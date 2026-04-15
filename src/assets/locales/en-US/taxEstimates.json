@@ -1,5 +1,6 @@
 {
   "action": {
+    "review_banner": "Review",
     "save_profile": "Save Profile",
     "update_tax_profile": "Update tax profile"
   },
@@ -34,9 +35,12 @@
     "deductible_expenses": "Deductible Expenses",
     "deductible_mileage_expenses": "Deductible Mileage Expenses",
     "deductions": "Deductions",
+    "due_with_date": "Due: {{date}}",
     "enter_amount": "Enter amount",
     "enter_area": "Enter area",
+    "estimated_tax": "Estimated tax",
     "estimates": "Estimates",
+    "federal": "Federal",
     "federal_deductions": "Federal Deductions",
     "federal_state_tax_payments": "Federal and state tax payments for the selected tax year",
     "federal_tax": "Federal Tax",
@@ -61,6 +65,7 @@
     "overtime_income": "Overtime income",
     "owed_quarter": "Owed This Quarter",
     "payments": "Payments",
+    "quarter_taxes": "Q{{quarter}} taxes",
     "qualified_overtime_deduction": "Qualified Overtime Deduction",
     "qualified_tip_deduction": "Qualified Tip Deduction",
     "qualifying_widow_er": "Qualifying widow(er)",
@@ -71,6 +76,7 @@
     "single": "Single",
     "social_security_tax_estimate_owed": "Social Security Tax Estimate (Owed)",
     "social_security_tax_rate": "Social Security Tax Rate",
+    "state": "State",
     "state_adjusted_gross_income": "State Adjusted Gross Income",
     "state_deductions": "State Deductions",
     "state_income_tax_estimate_owed": "State Income Tax Estimate (Owed)",
@@ -102,6 +108,8 @@
     "taxes_paid": "Taxes Paid",
     "tip_income": "Tip income",
     "uncategorized_tax_payment": "Uncategorized Tax Payment",
+    "uncategorized_transactions": "{{count}} uncategorized transactions",
+    "annual_income_taxes": "Annual income taxes",
     "total_income": "Total income",
     "total_federal_tax_estimate": "Total Federal Tax Estimate",
     "total_paid": "Total Paid",
@@ -111,6 +119,7 @@
     "use_standard_mileage_deduction": "Use standard mileage deduction?",
     "w2_income": "W-2 Income",
     "withholding_amount": "Withholding amount",
-    "year_to_date": "Year to date"
+    "year_to_date": "Year to date",
+    "your_tax_deadlines": "Your tax deadlines"
   }
 }
