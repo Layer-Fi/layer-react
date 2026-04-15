@@ -14,8 +14,7 @@ import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxEstimatesSummaryCard, type TaxEstimatesSummaryCardProps } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { TaxableIncomeCard, type TaxableIncomeCardProps } from '@components/TaxOverview/TaxableIncomeCard'
 
-import './taxOverview.scss'
-
+import '@components/TaxOverview/taxOverview.scss'
 export type TaxOverviewProps = {
   incomeCard: TaxableIncomeCardProps
   summaryCard: TaxEstimatesSummaryCardProps
@@ -63,24 +62,26 @@ const TaxOverviewHeader = () => {
   )
 }
 
-const TaxOverviewContent = ({ data }: { data: TaxOverviewProps }) => {
+const TaxOverviewContent = (data: TaxOverviewProps) => {
+  const { incomeCard, summaryCard } = data
   const { isDesktop } = useSizeClass()
   return (
     isDesktop
       ? (
         <>
           <VStack className='Layer__TaxOverview' gap='md'>
-            <TaxableIncomeCard data={data.incomeCard} />
+            <TaxableIncomeCard {...incomeCard} />
           </VStack>
-          <TaxEstimatesSummaryCard data={data.summaryCard} />
+          <TaxEstimatesSummaryCard {...summaryCard} />
         </>
       )
       : (
         <VStack className='Layer__TaxOverview' gap='md'>
-          <TaxableIncomeCard data={data.incomeCard} />
-          <TaxEstimatesSummaryCard data={data.summaryCard} />
+          <TaxableIncomeCard {...incomeCard} />
+          <TaxEstimatesSummaryCard {...summaryCard} />
         </VStack>
       )
+
   )
 }
 
@@ -101,9 +102,20 @@ export const TaxOverview = () => {
     enabled: true,
   })
 
-  const data = useMemo(() => {
+  const data: TaxOverviewProps = useMemo(() => {
     if (!taxOverviewData || !taxSummaryData) {
-      return null
+      return {
+        incomeCard: {
+          deductionsTotal: 0,
+          incomeTotal: 0,
+        },
+        summaryCard: {
+          categories: [],
+          layout: 'taxOverview' as const,
+          title: '',
+          total: 0,
+        },
+      }
     }
     return {
       incomeCard: {
@@ -126,7 +138,7 @@ export const TaxOverview = () => {
 
   return (
     <ResponsiveDetailView name='TaxOverview' slots={{ Header: TaxOverviewHeader }}>
-      { data && <TaxOverviewContent data={data} />}
+      {data && <TaxOverviewContent {...data} />}
     </ResponsiveDetailView>
   )
 }
