@@ -11,10 +11,7 @@ import {
 } from '@utils/i18n/date/formatters'
 import type { DateInput } from '@utils/i18n/date/input'
 import { type DateFormat } from '@utils/i18n/date/patterns'
-import {
-  formatMinutesAsDuration as formatMinutesAsDurationFn,
-  type MinutesAsDurationFormatFn,
-} from '@utils/i18n/duration/formatters'
+import { formatMinutesAsDuration as formatMinutesAsDurationFn } from '@utils/i18n/duration/formatters'
 import {
   type CurrencyFormatFn,
   formatCurrencyFromCents as formatCurrencyFromCentsFn,
@@ -31,7 +28,7 @@ export type IntlFormatter = {
   formatDate: DateFormatFn
   formatDateRange: DateRangeFormatFn
   formatMonthName: MonthNameFormatFn
-  formatMinutesAsDuration: MinutesAsDurationFormatFn
+  formatMinutesAsDuration: (totalMinutes: number, options?: { compact?: boolean }) => string
 }
 
 export function useIntlFormatter(): IntlFormatter {
@@ -61,7 +58,7 @@ export function useIntlFormatter(): IntlFormatter {
     return formatPercentFn(intl, value, options)
   }, [intl])
 
-  const formatMinutesAsDuration: MinutesAsDurationFormatFn = useCallback((totalMinutes, options) => {
+  const formatMinutesAsDuration = useCallback<IntlFormatter['formatMinutesAsDuration']>((totalMinutes, options) => {
     return formatMinutesAsDurationFn(intl, totalMinutes, options)
   }, [intl])
 
