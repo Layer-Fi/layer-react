@@ -51,9 +51,7 @@ const listCatalogServices = get<
   { businessId: string, allowArchived?: boolean }
 >(({ businessId, allowArchived }) => {
   const parameters = toDefinedSearchParameters({ allowArchived })
-  const baseUrl = `/v1/businesses/${businessId}/catalog/services`
-  const query = parameters.toString()
-  return query ? `${baseUrl}?${query}` : baseUrl
+  return `/v1/businesses/${businessId}/catalog/services?${parameters}`
 })
 
 export type UseListCatalogServicesOptions = {
