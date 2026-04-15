@@ -26,12 +26,13 @@ export const useTimeEntryForm = (props: UseTimeEntryFormProps) => {
   const defaultValues = defaultValuesRef.current
 
   const onSubmit = useCallback(async ({ value }: { value: TimeEntryForm }) => {
+    setSubmitError(undefined)
+
     try {
       const entryParams = convertTimeEntryFormToUpsertTimeEntry(value, entry)
       const upsertRequest = Schema.encodeUnknownSync(UpsertTimeEntrySchema)(entryParams)
       const result = await upsertTimeEntry(upsertRequest)
 
-      setSubmitError(undefined)
       onSuccess(result.data)
     }
     catch {

@@ -36,8 +36,8 @@ export const validateTimeEntryForm = ({ entry }: { entry: TimeEntryForm }, t: TF
     errors.push({ date: t('timeTracking:validation.entry_date_not_future', 'Entry date cannot be in the future.') })
   }
 
-  if (!(durationMinutes > 0)) {
-    errors.push({ durationMinutes: t('timeTracking:validation.duration_greater_than_zero', 'Duration must be greater than zero.') })
+  if (!(durationMinutes > 0) || !Number.isInteger(durationMinutes)) {
+    errors.push({ durationMinutes: t('timeTracking:validation.duration_whole_minutes', 'Duration must be a whole number of minutes greater than zero.') })
   }
 
   if (!serviceId) {
