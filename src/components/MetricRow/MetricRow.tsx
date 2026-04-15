@@ -7,12 +7,10 @@ import { Span } from '@ui/Typography/Text'
 
 import './metricRow.scss'
 
-type MetricRowStyle = 'default' | 'bordered'
-
 type MetricRowProps = {
   amount: number
   className?: string
-  style?: MetricRowStyle
+  showBorder?: boolean
   slotProps: {
     Meter: MeterProps
   }
@@ -21,13 +19,32 @@ type MetricRowProps = {
 export const MetricRow = ({
   amount,
   className,
-  style = 'default',
+  showBorder = false,
   slotProps,
 }: MetricRowProps) => {
-  const isBordered = style === 'bordered'
-  const stackProps = isBordered ? { className: classNames('Layer__MetricCard', className) } : { className: classNames('Layer__MetricRow', className), justify: 'space-between' as const }
-  const labelProps = isBordered ? { className: 'Layer__MetricCardLabel' } : { className: 'Layer__MetricRowLabel' }
-  const meterContainerProps = isBordered ? { className: 'Layer__MetricCardMeter' } : { className: 'Layer__MetricRowValue', gap: 'md' as const }
+  const isBordered = showBorder
+  const stackProps = {
+    className: classNames(className, {
+      Layer__MetricCard: showBorder,
+      Layer__MetricRow: !showBorder,
+    }),
+    ...(!showBorder && { justify: 'space-between' as const }),
+  }
+
+  const labelProps = {
+    className: classNames({
+      Layer__MetricCard__Label: showBorder,
+      Layer__MetricRow__Label: !showBorder,
+    }),
+  }
+
+  const meterContainerProps = {
+    className: classNames({
+      Layer__MetricCard__Meter: showBorder,
+      Layer__MetricRow__Meter: !showBorder,
+    }),
+    gap: 'md' as const,
+  }
 
   return (
     <HStack {...stackProps} align='center' gap='md'>

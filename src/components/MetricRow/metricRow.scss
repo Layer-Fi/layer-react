@@ -9,12 +9,12 @@
   background-color: var(--color-base-50);
 }
 
-.Layer__MetricCardLabel {
+.Layer__MetricCard__Label {
   flex-shrink: 0;
   white-space: nowrap;
 }
 
-.Layer__MetricCardMeter {
+.Layer__MetricCard__Meter {
   flex: 1;
   min-width: 0;
 }
