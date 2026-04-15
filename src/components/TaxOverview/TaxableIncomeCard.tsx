@@ -10,7 +10,7 @@ import './taxableIncomeCard.scss'
 const METRIC_ROW_MOBILE_BREAKPOINT = 600
 type TaxableIncomeCardProps = Pick<TaxOverviewApiData, 'totalDeductions' | 'totalIncome'>
 
-function useMetricRowProps(type: 'income' | 'deductions', amount: number, maxMeterValue: number) {
+function useMetricRowProps({ type, amount, maxMeterValue }: { type: 'income' | 'deductions', amount: number, maxMeterValue: number }) {
   const { t } = useTranslation()
   const [viewportWidth] = useWindowSize()
   const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
@@ -30,25 +30,13 @@ function useMetricRowProps(type: 'income' | 'deductions', amount: number, maxMet
   return { slotProps, showBorder }
 }
 
-function TotalIncomeMetricRow({ totalIncome, maxMeterValue }: { totalIncome: number, maxMeterValue: number }) {
-  const { slotProps, showBorder } = useMetricRowProps('income', totalIncome, maxMeterValue)
+function TotalMetricRow({ type, amount, maxMeterValue }: { type: 'income' | 'deductions', amount: number, maxMeterValue: number }) {
+  const { slotProps, showBorder } = useMetricRowProps({ type, amount, maxMeterValue })
   return (
     <MetricRow
-      amount={totalIncome}
+      amount={amount}
       showBorder={showBorder}
-      slotProps={{ Meter: slotProps.Meter }}
-    />
-
-  )
-}
-
-function DeductionsMetricRow({ totalDeductions, maxMeterValue }: { totalDeductions: number, maxMeterValue: number }) {
-  const { slotProps, showBorder } = useMetricRowProps('deductions', totalDeductions, maxMeterValue)
-  return (
-    <MetricRow
-      amount={totalDeductions}
-      showBorder={showBorder}
-      slotProps={{ Meter: slotProps.Meter }}
+      slotProps={slotProps}
     />
   )
 }
@@ -62,18 +50,18 @@ export const TaxableIncomeCard = ({
 
   return (
     <VStack className='Layer__TaxOverview__Card' pi={!isDesktop ? undefined : 'md'}>
-      {!isDesktop
+      {isDesktop
         ? (
-          <Card className='Layer__TaxOverview__Card__MetricRow--mobile'>
-            <TotalIncomeMetricRow totalIncome={totalIncome} maxMeterValue={maxMeterValue} />
-            <DeductionsMetricRow totalDeductions={totalDeductions} maxMeterValue={maxMeterValue} />
-          </Card>
+          <VStack gap='sm'>
+            <TotalMetricRow type='income' amount={totalIncome} maxMeterValue={maxMeterValue} />
+            <TotalMetricRow type='deductions' amount={totalDeductions} maxMeterValue={maxMeterValue} />
+          </VStack>
         )
         : (
-          <VStack gap='sm'>
-            <TotalIncomeMetricRow totalIncome={totalIncome} maxMeterValue={maxMeterValue} />
-            <DeductionsMetricRow totalDeductions={totalDeductions} maxMeterValue={maxMeterValue} />
-          </VStack>
+          <Card className='Layer__TaxOverview__Card__MetricRow--mobile'>
+            <TotalMetricRow type='income' amount={totalIncome} maxMeterValue={maxMeterValue} />
+            <TotalMetricRow type='deductions' amount={totalDeductions} maxMeterValue={maxMeterValue} />
+          </Card>
         )}
     </VStack>
   )
