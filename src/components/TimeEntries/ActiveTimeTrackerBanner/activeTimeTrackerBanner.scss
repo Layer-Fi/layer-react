@@ -1,28 +1,20 @@
-.Layer__ActiveTimeTrackerBanner__Loading {
-  min-block-size: 5rem;
-  padding: var(--spacing-md);
-}
-
-.Layer__ActiveTimeTrackerBanner__Container {
-  border-color: #0f1114 !important;
-  background-color: #0f1114 !important;
+.Layer__component-container.Layer__ActiveTimeTrackerBanner {
+  --border-color: #0f1114;
+  --bg-color: #0f1114;
 }
 
 .Layer__ActiveTimeTrackerBanner__Main {
-  flex-wrap: nowrap;
   padding-block: var(--spacing-xs);
   padding-inline: var(--spacing-md);
 }
 
 .Layer__ActiveTimeTrackerBanner__Controls {
   flex: 1;
-  flex-wrap: nowrap;
   min-inline-size: 0;
 }
 
 .Layer__ActiveTimeTrackerBanner__InlineFields {
   flex: 1;
-  flex-wrap: nowrap;
   min-inline-size: 0;
 }
 
@@ -34,13 +26,13 @@
   block-size: 0.5rem;
   inline-size: 0.5rem;
   border-radius: 50%;
-  background-color: #2aa4bb;
+  background-color: var(--color-info-success);
 }
 
 .Layer__ActiveTimeTrackerBanner__TimerValue {
   font-size: 1.75rem;
   line-height: 1;
-  color: #f6f7f9;
+  color: var(--color-base-0);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
 }
@@ -48,26 +40,19 @@
 .Layer__ActiveTimeTrackerBanner__Actions {
   flex-shrink: 0;
   flex-wrap: wrap;
+
+  .Layer__UI__Button[data-variant='text'] {
+    color: var(--color-base-300);
+  }
 }
 
-.Layer__ActiveTimeTrackerBanner__ActionButton {
-  .Layer__UI__Button {
+.Layer__ActiveTimeTrackerBanner__CompleteButton {
+  .Layer__UI__Button[data-variant='outlined'] {
+    padding-inline: var(--spacing-md);
     border-radius: var(--border-radius-sm);
-  }
-}
-
-.Layer__ActiveTimeTrackerBanner__ActionButton--cancel {
-  .Layer__UI__Button {
-    color: #9ca8ba;
-  }
-}
-
-.Layer__ActiveTimeTrackerBanner__ActionButton--complete,
-.Layer__ActiveTimeTrackerBanner__ActionButton--start {
-  .Layer__UI__Button {
-    border-color: #f3f5f7;
-    background-color: #f3f5f7;
-    color: #0f1114;
+    background-color: var(--color-base-0);
+    color: var(--color-base-900);
+    border-color: var(--color-base-300);
   }
 }
 
@@ -103,17 +88,6 @@
   width: auto;
   min-inline-size: 0;
   max-inline-size: 18rem;
-
-  .Layer__ComboBoxControl {
-    border-color: #e2e5ea;
-    background-color: #f3f5f7;
-  }
-}
-
-.Layer__ActiveTimeTrackerBanner__ActiveDetails {
-  padding: var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-base-300);
 }
 
 @container (max-width: 1100px) {

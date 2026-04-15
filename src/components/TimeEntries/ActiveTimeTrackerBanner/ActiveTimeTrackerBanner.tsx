@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Check, Play } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -77,7 +77,7 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
   const { invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
   const { trigger: updateTimeEntry, isMutating: isUpdating } = useUpsertTimeEntry({
     mode: UpsertTimeEntryMode.Update,
-    timeEntryId: activeEntry?.id ?? '',
+    timeEntryId: activeEntry?.id,
   })
 
   const hasActiveTimer = activeEntry !== null && activeEntry !== undefined
@@ -150,21 +150,30 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
       return
     }
 
+    const selectedCustomerId = selectedCustomer?.id ?? null
+    const activeCustomerId = activeEntry.customer?.id ?? null
+    const memoValue = memo.trim() || null
+
     const hasChanges = selectedServiceId !== activeEntry.service?.id
-      || selectedCustomer?.id !== activeEntry.customer?.id
-      || (memo.trim() || null) !== (activeEntry.memo || null)
+      || selectedCustomerId !== activeCustomerId
+      || memoValue !== (activeEntry.memo || null)
 
     if (hasChanges) {
-      await updateTimeEntry({
+      const updatePayload: Partial<UpsertTimeEntryEncoded> = {
         billable: activeEntry.billable,
-        service_id: selectedServiceId,
         description: activeEntry.description ?? null,
-        memo: memo.trim() || null,
+        memo: memoValue,
         metadata: activeEntry.metadata ?? null,
-        ...(selectedCustomer?.id && { customer_id: selectedCustomer.id }),
-      } as UpsertTimeEntryEncoded)
+        customer_id: selectedCustomerId,
+        service_id: selectedServiceId,
+      }
+
+      await updateTimeEntry(updatePayload)
     }
-  }, [activeEntry, selectedServiceId, selectedCustomer?.id, memo, updateTimeEntry])
+  }, [activeEntry, memo, selectedCustomer?.id, selectedServiceId, updateTimeEntry])
+
+  const saveActiveTimerChangesRef = useRef(saveActiveTimerChanges)
+  saveActiveTimerChangesRef.current = saveActiveTimerChanges
 
   const handleDrawerOpenChange = useCallback((nextIsOpen: boolean) => {
     setIsDrawerOpen(nextIsOpen)
@@ -178,8 +187,19 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
       return
     }
 
-    void saveActiveTimerChanges()
-  }, [hasActiveTimer, saveActiveTimerChanges, selectedCustomer?.id, selectedServiceId])
+    let cancelled = false
+
+    setActionError(null)
+    void saveActiveTimerChangesRef.current().catch(() => {
+      if (!cancelled) {
+        setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
+      }
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [hasActiveTimer, memo, selectedCustomer?.id, selectedServiceId, t])
 
   useEffect(() => {
     if (hasActiveTimer && isDrawerOpen) {
@@ -253,8 +273,8 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
 
   if (isError) {
     return (
-      <Container name='active-time-tracker-banner'>
-        <VStack className='Layer__ActiveTimeTrackerBanner' pi='lg' pbe='md'>
+      <Container name='ActiveTimeTrackerBanner'>
+        <VStack pi='lg' pbe='md'>
           <DataState
             status={DataStateStatus.failed}
             title={t('timeTracking:error.load_active_timer', 'Failed to load active timer. Please check your connection and try again.')}
@@ -267,7 +287,17 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
   return (
     <>
       {hasActiveTimer && (
-        <Container name='active-time-tracker-banner' className='Layer__ActiveTimeTrackerBanner__Container'>
+        <Container name='ActiveTimeTrackerBanner'>
+          {actionError && (
+            <VStack pi='md' pbe='2xs'>
+              <DataState
+                status={DataStateStatus.failed}
+                title={actionError}
+                inline
+              />
+            </VStack>
+          )}
+
           <HStack className='Layer__ActiveTimeTrackerBanner__Main' gap='md' justify='space-between' align='center'>
             <HStack className='Layer__ActiveTimeTrackerBanner__Controls' gap='sm' align='center'>
               <HStack className='Layer__ActiveTimeTrackerBanner__Timer' gap='sm' align='center'>
@@ -296,19 +326,18 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
             </HStack>
 
             <HStack className='Layer__ActiveTimeTrackerBanner__Actions' gap='sm' align='center'>
-              <HStack className='Layer__ActiveTimeTrackerBanner__ActionButton Layer__ActiveTimeTrackerBanner__ActionButton--cancel'>
-                <Button
-                  variant='text'
-                  onPress={() => { void handleCancelTimer() }}
-                  isPending={isCancelling}
-                  isDisabled={isStopping || isUpdating}
-                >
-                  {t('timeTracking:action.cancel_timer', 'Cancel')}
-                </Button>
-              </HStack>
+              <Button
+                variant='text'
+                onPress={() => { void handleCancelTimer() }}
+                isPending={isCancelling}
+                isDisabled={isStopping || isUpdating}
+              >
+                {t('timeTracking:action.cancel_timer', 'Cancel')}
+              </Button>
 
-              <HStack className='Layer__ActiveTimeTrackerBanner__ActionButton Layer__ActiveTimeTrackerBanner__ActionButton--complete'>
+              <HStack className='Layer__ActiveTimeTrackerBanner__CompleteButton'>
                 <Button
+                  variant='outlined'
                   onPress={() => { void handleCompleteTimer() }}
                   isPending={isStopping || isUpdating}
                   isDisabled={isCancelling || !selectedServiceId}
