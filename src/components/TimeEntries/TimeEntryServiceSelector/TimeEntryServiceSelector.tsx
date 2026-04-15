@@ -10,11 +10,28 @@ import { Label, P } from '@ui/Typography/Text'
 
 import './timeEntryServiceSelector.scss'
 
-type ServiceAsOption = {
-  id: string
-  label: string
-  value: string
-  original?: CatalogService
+class ServiceAsOption {
+  private internalService: CatalogService
+
+  constructor(service: CatalogService) {
+    this.internalService = service
+  }
+
+  get original() {
+    return this.internalService
+  }
+
+  get label() {
+    return this.internalService.name
+  }
+
+  get id() {
+    return this.internalService.id
+  }
+
+  get value() {
+    return this.internalService.id
+  }
 }
 
 interface TimeEntryServiceSelectorProps {
@@ -51,12 +68,7 @@ export function TimeEntryServiceSelector({
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   const serviceOptions = useMemo<ServiceAsOption[]>(
-    () => servicesResponse?.data.map(service => ({
-      id: service.id,
-      original: service,
-      label: service.name,
-      value: service.id,
-    })) ?? [],
+    () => servicesResponse?.data.map(service => new ServiceAsOption(service)) ?? [],
     [servicesResponse],
   )
 
