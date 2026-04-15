@@ -1,0 +1,87 @@
+{
+  "action": {
+    "add_entry": "",
+    "cancel_timer": "",
+    "complete_timer": "",
+    "delete_entry": "",
+    "discard_timer": "",
+    "edit_entry": "",
+    "save_entry": "",
+    "start_timer": "",
+    "view_entry": ""
+  },
+  "empty": {
+    "add_first_entry": "",
+    "no_entries_yet": ""
+  },
+  "error": {
+    "archive_service": "",
+    "cancel_timer": "",
+    "create_service": "",
+    "delete_entry": "",
+    "load_active_timer": "",
+    "load_entries": "",
+    "load_entries_detail": "",
+    "load_services": "",
+    "load_summary": "",
+    "start_timer": "",
+    "unarchive_service": "",
+    "update_service": "",
+    "update_timer": ""
+  },
+  "label": {
+    "active": "",
+    "add_memo": "",
+    "all_customers": "",
+    "all_services": "",
+    "customer": "",
+    "delete_entry_warning": "",
+    "discard_timer_warning": "",
+    "duration": "",
+    "duration_minutes": "",
+    "enter_duration": "",
+    "entry_date": "",
+    "entry_details": "",
+    "invoiced": "",
+    "memo": "",
+    "no_activity_breakdown": "",
+    "no_services": "",
+    "other": "",
+    "select_customer": "",
+    "select_service": "",
+    "service": "",
+    "time_entries": "",
+    "time_tracking": ""
+  },
+  "prompt": {
+    "delete_entry": "",
+    "discard_timer": ""
+  },
+  "services": {
+    "add": "",
+    "add_service": "",
+    "archive": "",
+    "archive_confirm_description": "",
+    "archive_confirm_title": "",
+    "archived": "",
+    "cancel": "",
+    "hourly_rate_optional": "",
+    "no_active": "",
+    "no_archived": "",
+    "rate_per_hour_suffix": "",
+    "save": "",
+    "service_name": "",
+    "tab_group_label": "",
+    "title": "",
+    "unarchive": "",
+    "unarchive_confirm_description": "",
+    "unarchive_confirm_title": ""
+  },
+  "validation": {
+    "duration_greater_than_zero": "",
+    "entry_date_not_future": "",
+    "entry_date_required": "",
+    "service_name_required": "",
+    "service_required": ""
+  }
+}
