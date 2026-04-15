@@ -22,7 +22,6 @@ export const MetricRow = ({
   showBorder = false,
   slotProps,
 }: MetricRowProps) => {
-  const isBordered = showBorder
   const stackProps = {
     className: classNames(className, {
       Layer__MetricCard: showBorder,
@@ -49,7 +48,7 @@ export const MetricRow = ({
   return (
     <HStack {...stackProps} align='center' gap='md'>
       <Span size='md' {...labelProps}>{slotProps.Meter.label}</Span>
-      {isBordered && (
+      {showBorder && (
         <>
           <HStack {...meterContainerProps} align='center'>
             <Meter {...slotProps.Meter} meterOnly />
@@ -57,7 +56,7 @@ export const MetricRow = ({
           <MoneySpan size='md' weight='bold' amount={amount} />
         </>
       )}
-      {!isBordered && (
+      {!showBorder && (
         <HStack {...meterContainerProps} align='center'>
           <MoneySpan size='md' weight='bold' amount={amount} />
           <Meter {...slotProps.Meter} meterOnly />
