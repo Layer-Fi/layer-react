@@ -10,6 +10,7 @@ import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParamet
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -170,6 +171,8 @@ export function useListTimeEntries(filterParams: ListTimeEntriesFilterParams = {
       initialSize: 1,
     },
   )
+
+  usePreserveInfiniteSize(swrResponse)
 
   return new SWRInfiniteResult(swrResponse)
 }
