@@ -28,6 +28,18 @@ export const AccountInstitutionSchema = Schema.Struct({
   logo: Schema.NullOr(Schema.String),
 })
 
+export const BankTransactionTaxOptionSchema = Schema.Struct({
+  code: Schema.String,
+  displayName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_name'),
+  ),
+})
+
+export const BankTransactionTaxOptionsSchema = Schema.Struct({
+  canada: Schema.Array(BankTransactionTaxOptionSchema),
+})
+
 export const InputStrategySchema = Schema.Enums(InputStrategy)
 
 export const CategorizationFlowSchema = Schema.Struct({
@@ -73,6 +85,14 @@ export const BankTransactionSchema = Schema.Struct({
   categorizationFlow: pipe(
     Schema.optional(Schema.NullOr(CategorizationFlowSchema)),
     Schema.fromKey('categorization_flow'),
+  ),
+  taxCode: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('tax_code'),
+  ),
+  taxOptions: pipe(
+    Schema.optional(Schema.NullOr(BankTransactionTaxOptionsSchema)),
+    Schema.fromKey('tax_options'),
   ),
   suggestedMatches: pipe(
     Schema.propertySignature(Schema.Array(SuggestedMatchSchema)),
