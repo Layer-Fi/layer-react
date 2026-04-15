@@ -1,0 +1,71 @@
+.Layer__TimeEntriesTable__Filters {
+  flex: 1;
+}
+
+.Layer__TimeEntriesTable__FilterCustomer,
+.Layer__TimeEntriesTable__FilterService {
+  flex: 1 1 12rem;
+  max-width: 20rem;
+}
+
+@container (max-width: 760px) {
+  .Layer__TimeEntriesTable {
+    .Layer__DataTableHeader__Header,
+    .Layer__DataTableHeader__Filters {
+      height: auto;
+    }
+
+    .Layer__DataTableHeader__Header[data-direction='row'] {
+      flex-direction: column;
+      align-items: stretch;
+      padding-block: var(--spacing-sm);
+    }
+
+    .Layer__DataTableHeader__Header > .Layer__Stack:first-child,
+    .Layer__DataTableHeader__Header > .Layer__Stack:last-child,
+    .Layer__DataTableHeader__Filters > .Layer__Stack {
+      box-sizing: border-box;
+      inline-size: 100%;
+    }
+
+    .Layer__DataTableHeader__Header > .Layer__Stack:first-child,
+    .Layer__DataTableHeader__Header > .Layer__Stack:last-child,
+    .Layer__DataTableHeader__Filters {
+      padding-inline: var(--spacing-md);
+    }
+
+    .Layer__DataTableHeader__Header > .Layer__Stack:first-child {
+      justify-content: space-between;
+    }
+
+    .Layer__DataTableHeader__Header > .Layer__Stack:last-child {
+      gap: var(--spacing-sm);
+      justify-content: flex-start;
+      padding-top: var(--spacing-xs);
+      padding-bottom: var(--spacing-xs);
+    }
+
+    .Layer__DataTableHeader__Header > .Layer__Stack:last-child > .Layer__Stack {
+      flex-wrap: wrap;
+      inline-size: 100%;
+    }
+
+    .Layer__DataTableHeader__Filters {
+      padding-top: var(--spacing-sm);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .Layer__TimeEntriesTable__Filters[data-direction='row'] {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      align-items: stretch;
+    }
+
+    .Layer__TimeEntriesTable__FilterCustomer,
+    .Layer__TimeEntriesTable__FilterService {
+      flex: 1 1 auto;
+      max-width: none;
+    }
+  }
+}
