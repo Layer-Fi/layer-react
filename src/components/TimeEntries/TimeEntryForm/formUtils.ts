@@ -55,6 +55,6 @@ export const convertTimeEntryFormToUpsertTimeEntry = (form: TimeEntryForm, entry
     description: entry?.description?.trim() || null,
     memo: form.memo.trim() || null,
     serviceId: form.serviceId,
-    ...(form.customerId ? { customerId: form.customerId } : {}),
+    customerId: form.customerId ?? null,
   }
 }

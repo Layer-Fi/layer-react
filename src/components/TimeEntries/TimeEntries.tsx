@@ -48,6 +48,7 @@ export const TimeEntries = ({ filterParams, onStartTimer, isStartTimerDisabled }
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null)
   const [entryToDelete, setEntryToDelete] = useState<TimeEntry | null>(null)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null)
 
@@ -77,16 +78,15 @@ export const TimeEntries = ({ filterParams, onStartTimer, isStartTimerDisabled }
 
   const onDeleteEntry = useCallback((entry: TimeEntry) => {
     setEntryToDelete(entry)
+    setIsDeleteModalOpen(true)
   }, [])
 
   const handleDeleteConfirmationOpenChange = useCallback((isOpen: boolean) => {
-    if (!isOpen) {
-      setEntryToDelete(null)
-    }
+    setIsDeleteModalOpen(isOpen)
   }, [])
 
   const handleDeleteSuccess = useCallback(() => {
-    setEntryToDelete(null)
+    setIsDeleteModalOpen(false)
     setSelectedEntry(null)
     setIsDrawerOpen(false)
   }, [])
@@ -136,7 +136,7 @@ export const TimeEntries = ({ filterParams, onStartTimer, isStartTimerDisabled }
       />
       {entryToDelete && (
         <TimeEntryDeleteConfirmationModal
-          isOpen={!!entryToDelete}
+          isOpen={isDeleteModalOpen}
           onOpenChange={handleDeleteConfirmationOpenChange}
           entry={entryToDelete}
           onSuccess={handleDeleteSuccess}
