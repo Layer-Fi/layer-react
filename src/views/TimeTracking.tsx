@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getTimeTrackingDateFilterParams } from '@utils/time/timeUtils'
 import { useActiveTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -31,7 +30,7 @@ export const unstable_TimeTracking = ({ showTitle = true, onReportsClick }: Unst
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const summaryFilterParams = useMemo(
-    () => getTimeTrackingDateFilterParams({ startDate, endDate }),
+    () => ({ startDate, endDate }),
     [endDate, startDate],
   )
 

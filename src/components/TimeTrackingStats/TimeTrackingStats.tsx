@@ -2,8 +2,8 @@ import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-import { formatMinutesAsDuration } from '@utils/time/timeUtils'
 import { type TimeTrackingSummaryFilterParams, useTimeTrackingSummary } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
@@ -92,6 +92,7 @@ const TimeTrackingStatsLegendSwatch = ({ color }: { color: string }) => (
 )
 
 const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ entries }: { entries: TimeTrackingServiceBreakdown[] }) {
+  const { formatMinutesAsDuration } = useIntlFormatter()
   const chartData = useMemo(() => {
     const stackedEntry = entries.reduce<Record<string, number | string>>((acc, entry) => {
       acc[entry.key] = entry.totalMinutes
@@ -153,6 +154,7 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
 
 export const TimeTrackingStats = ({ selectedFilterParams }: TimeTrackingStatsProps) => {
   const { t } = useTranslation()
+  const { formatMinutesAsDuration } = useIntlFormatter()
   const { data: selectedSummary, isLoading: selectedLoading, isError: selectedError } = useTimeTrackingSummary(selectedFilterParams)
 
   const serviceBreakdown = useMemo<TimeTrackingServiceBreakdown[]>(() => {

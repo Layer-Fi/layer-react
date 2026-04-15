@@ -98,8 +98,8 @@ const ServiceEditCard = ({ service, onCollapse, onOpenArchive }: ServiceEditCard
     setSaveError(null)
     const trimmedRate = hourlyRaw.trim()
     const billableRatePerHourAmount = trimmedRate === ''
-      ? null
-      : (toLocalizedCents(hourlyRaw, intl.locale) ?? null)
+      ? undefined
+      : toLocalizedCents(hourlyRaw, intl.locale)
     try {
       await updateService({
         name: trimmed,
@@ -183,7 +183,7 @@ const AddServiceCard = ({ onCancel, onCreated }: AddServiceCardProps) => {
     try {
       await createService({
         name: trimmed,
-        billable_rate_per_hour_amount: billableRatePerHourAmount == null ? null : billableRatePerHourAmount,
+        billable_rate_per_hour_amount: billableRatePerHourAmount ?? undefined,
       })
       onCreated()
     }
