@@ -17,13 +17,6 @@
   min-width: 9rem;
 }
 
-.Layer__TaxOverview_TotalIncomeMeter,
-.Layer__TaxOverview_DeductionsMeter {
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-}
-
 .Layer__TaxOverview__IncomeMeter__track,
 .Layer__TaxOverview__DeductionsMeter__track {
   fill: var(--color-base-100);
