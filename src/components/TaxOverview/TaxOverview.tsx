@@ -34,7 +34,7 @@ const TaxOverviewHeader = () => {
     contexts: {
       projected: 'projected',
     },
-    formattedYear,
+    year: formattedYear,
   })
 
   const taxableIncomeDescription = tConditional(t, 'taxEstimates:label.taxable_income_estimate_to_date_for_year', {
@@ -46,7 +46,7 @@ const TaxOverviewHeader = () => {
     contexts: {
       projected: 'projected',
     },
-    formattedYear,
+    year: formattedYear,
   })
   return (
     <TaxEstimatesHeader
