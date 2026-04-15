@@ -23,16 +23,6 @@ const formatHoursMinutesAscii = (hours: number, minutes: number, compact: boolea
   return `${hours}h ${String(minutes).padStart(2, '0')}m`
 }
 
-const tryAsciiFallbackForSimpleDuration = (
-  value: Duration,
-  compact: boolean,
-): string | null => {
-  if (value.years || value.months || value.weeks || value.days) {
-    return null
-  }
-  return formatHoursMinutesAscii(value.hours ?? 0, value.minutes ?? 0, compact)
-}
-
 export const formatDuration = (
   intl: IntlShape,
   value: Duration,
@@ -42,9 +32,8 @@ export const formatDuration = (
   if (typeof DurationFormat === 'function') {
     return new DurationFormat(intl.locale, options).format(value)
   }
-  const ascii = tryAsciiFallbackForSimpleDuration(value, options.style === 'digital')
-  if (ascii !== null) {
-    return ascii
+  if (!value.years && !value.months && !value.weeks && !value.days) {
+    return formatHoursMinutesAscii(value.hours ?? 0, value.minutes ?? 0, options.style === 'digital')
   }
   throw new Error('Intl.DurationFormat is not available in this environment')
 }
@@ -61,10 +50,5 @@ export const formatMinutesAsDuration = (
 ): string => {
   const hours = Math.trunc(totalMinutes / 60)
   const minutes = totalMinutes - hours * 60
-  const duration: Duration = { hours, minutes, seconds: 0 }
-  const DurationFormat = getDurationFormatConstructor()
-  if (typeof DurationFormat === 'function') {
-    return new DurationFormat(intl.locale, { style: compact ? 'digital' : 'short' }).format(duration)
-  }
-  return formatHoursMinutesAscii(hours, minutes, compact)
+  return formatDuration(intl, { hours, minutes, seconds: 0 }, { style: compact ? 'digital' : 'short' })
 }
