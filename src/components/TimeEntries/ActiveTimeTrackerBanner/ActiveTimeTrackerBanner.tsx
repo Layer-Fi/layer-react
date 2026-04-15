@@ -77,7 +77,7 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
   const { invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
   const { trigger: updateTimeEntry, isMutating: isUpdating } = useUpsertTimeEntry({
     mode: UpsertTimeEntryMode.Update,
-    timeEntryId: activeEntry?.id,
+    timeEntryId: activeEntry?.id ?? '',
   })
 
   const hasActiveTimer = activeEntry !== null && activeEntry !== undefined
