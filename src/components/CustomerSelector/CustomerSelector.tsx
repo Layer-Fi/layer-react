@@ -75,7 +75,6 @@ export function CustomerSelector({
   const combinedClassName = classNames(
     'Layer__CustomerSelector',
     inline && 'Layer__CustomerSelector--inline',
-    !showLabel && 'Layer__CustomerSelector--without-label',
     className,
   )
 
