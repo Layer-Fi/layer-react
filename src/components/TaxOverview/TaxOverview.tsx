@@ -2,8 +2,10 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { tConditional } from '@utils/i18n/conditional'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
@@ -22,9 +24,13 @@ export type TaxOverviewProps = {
 const TaxOverviewHeader = () => {
   const { t } = useTranslation()
   const { year } = useTaxEstimatesYear()
+  const { formatDate } = useIntlFormatter()
   const { fullYearProjection } = useFullYearProjection()
   const { isDesktop } = useSizeClass()
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
+
+  const formattedYear = formatDate(new Date(year, 0, 1), DateFormat.Year)
+
   const taxableIncomeTitle = tConditional(t, 'taxEstimates:label.taxable_income_for_year', {
     condition: projectedCondition,
     cases: {
@@ -34,7 +40,7 @@ const TaxOverviewHeader = () => {
     contexts: {
       projected: 'projected',
     },
-    year,
+    year: formattedYear,
   })
 
   const taxableIncomeDescription = tConditional(t, 'taxEstimates:label.taxable_income_estimate_to_date_for_year', {
@@ -46,7 +52,7 @@ const TaxOverviewHeader = () => {
     contexts: {
       projected: 'projected',
     },
-    year,
+    year: formattedYear,
   })
   return (
     <TaxEstimatesHeader
@@ -120,9 +126,7 @@ export const TaxOverview = () => {
 
   return (
     <ResponsiveDetailView name='TaxOverview' slots={{ Header: TaxOverviewHeader }}>
-      { data && (
-        <TaxOverviewContent data={data} />
-      )}
+      { data && <TaxOverviewContent data={data} />}
     </ResponsiveDetailView>
   )
 }

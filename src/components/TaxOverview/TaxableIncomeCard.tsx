@@ -8,51 +8,45 @@ import { MetricRow } from '@components/MetricRow/MetricRow'
 import './taxableIncomeCard.scss'
 const METRIC_ROW_MOBILE_BREAKPOINT = 600
 
-function TotalIncomeMetricRow({ totalIncome, maxMeterValue }: { totalIncome: number, maxMeterValue: number }) {
+function useMetricRowProps(type: 'income' | 'deductions', amount: number, maxMeterValue: number) {
   const { t } = useTranslation()
   const [viewportWidth] = useWindowSize()
   const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
-  const boundedMeterValue = Math.min(Math.max(totalIncome, 0), boundedMaxMeterValue)
+  const boundedMeterValue = Math.min(Math.max(amount, 0), boundedMaxMeterValue)
+  const showBorder = viewportWidth < METRIC_ROW_MOBILE_BREAKPOINT
+
   const slotProps = {
     Meter: {
-      label: t('taxEstimates:label.total_income', 'Total income'),
+      className: type === 'income' ? 'Layer__TaxOverview__IncomeMeter' : 'Layer__TaxOverview__DeductionsMeter',
+      label: type === 'income' ? t('taxEstimates:label.total_income', 'Total income') : t('taxEstimates:label.deductions', 'Deductions'),
       minValue: 0,
       value: boundedMeterValue,
-      className: 'Layer__TaxOverview__IncomeMeter',
       maxValue: boundedMaxMeterValue,
+
     },
   }
+  return { slotProps, showBorder }
+}
+
+function TotalIncomeMetricRow({ totalIncome, maxMeterValue }: { totalIncome: number, maxMeterValue: number }) {
+  const { slotProps, showBorder } = useMetricRowProps('income', totalIncome, maxMeterValue)
   return (
     <MetricRow
       amount={totalIncome}
-      style={viewportWidth < METRIC_ROW_MOBILE_BREAKPOINT ? 'bordered' : 'default'}
-      className='Layer__TaxOverview_TotalIncomeMeter'
-      slotProps={slotProps}
+      showBorder={showBorder}
+      slotProps={{ Meter: slotProps.Meter }}
     />
 
   )
 }
 
 function DeductionsMetricRow({ totalDeductions, maxMeterValue }: { totalDeductions: number, maxMeterValue: number }) {
-  const { t } = useTranslation()
-  const [viewportWidth] = useWindowSize()
-  const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
-  const boundedMeterValue = Math.min(Math.max(totalDeductions, 0), boundedMaxMeterValue)
-  const slotProps = {
-    Meter: {
-      label: t('taxEstimates:label.deductions', 'Deductions'),
-      minValue: 0,
-      value: boundedMeterValue,
-      className: 'Layer__TaxOverview__DeductionsMeter',
-      maxValue: boundedMaxMeterValue,
-    },
-  }
+  const { slotProps, showBorder } = useMetricRowProps('deductions', totalDeductions, maxMeterValue)
   return (
     <MetricRow
       amount={totalDeductions}
-      style={viewportWidth < METRIC_ROW_MOBILE_BREAKPOINT ? 'bordered' : 'default'}
-      className='Layer__TaxOverview_DeductionsMeter'
-      slotProps={slotProps}
+      showBorder={showBorder}
+      slotProps={{ Meter: slotProps.Meter }}
     />
   )
 }

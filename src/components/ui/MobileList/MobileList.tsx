@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { GridList, type Selection } from 'react-aria-components'
 
 import { MobileListItem } from '@ui/MobileList/MobileListItem'
@@ -48,6 +49,10 @@ export const MobileList = <TData extends { id: string }>(props: MobileListProps<
   const resolvedSelectionMode = isSelectionEnabled(props) ? selectionMode : 'none'
   const resolvedSelectionBehavior = resolvedSelectionMode === 'none' ? 'toggle' : undefined
 
+  const renderEmptyState = useCallback(() => {
+    return <EmptyState />
+  }, [EmptyState])
+
   if (isLoading) {
     return <MobileListSkeleton />
   }
@@ -61,7 +66,7 @@ export const MobileList = <TData extends { id: string }>(props: MobileListProps<
       items={data}
       selectionMode={resolvedSelectionMode}
       selectionBehavior={resolvedSelectionBehavior}
-      renderEmptyState={EmptyState}
+      renderEmptyState={renderEmptyState}
       aria-label={ariaLabel}
       className='Layer__MobileList'
       {...restSelectionProps}
