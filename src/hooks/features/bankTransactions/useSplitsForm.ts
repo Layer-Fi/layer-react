@@ -115,6 +115,9 @@ export const useSplitsForm = ({
 
     const newLocalSplits = [...localSplits]
     newLocalSplits[index].category = newCategory
+    if (newCategory.classification?.type === 'Exclusion') {
+      newLocalSplits[index].taxCode = null
+    }
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
 

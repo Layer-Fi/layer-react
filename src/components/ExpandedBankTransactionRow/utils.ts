@@ -137,7 +137,9 @@ export const getLocalSplitStateForExpandedTransaction = (
       return {
         amount: splitEntry.amount || 0,
         category: splitEntry.category,
-        taxCode: splitEntry.taxCode ?? null,
+        taxCode: splitEntry.category?.classification?.type === 'Exclusion'
+          ? null
+          : splitEntry.taxCode ?? null,
         tags: splitEntry.tags,
         customerVendor: splitEntry.customerVendor,
       }
@@ -148,7 +150,9 @@ export const getLocalSplitStateForExpandedTransaction = (
     {
       amount: bankTransaction.amount,
       category: coercedSelectedCategory ?? null,
-      taxCode: bankTransaction.tax_code ?? null,
+      taxCode: coercedSelectedCategory?.classification?.type === 'Exclusion'
+        ? null
+        : bankTransaction.tax_code ?? null,
       tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
       customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
     },
