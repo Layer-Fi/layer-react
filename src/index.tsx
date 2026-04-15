@@ -58,7 +58,7 @@ export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
 export { unstable_MileageTracking } from './views/MileageTracking'
 export { ProjectProfitabilityView } from './views/ProjectProfitability/ProjectProfitability'
 export { Reports } from './views/Reports/Reports'
-export { TaxEstimatesView } from './views/TaxEstimates/TaxEstimates'
+export { TaxEstimates } from './views/TaxEstimates/TaxEstimates'
 export { unstable_TimeTracking, type UnstableTimeTrackingProps } from './views/TimeTracking'
 
 /*
