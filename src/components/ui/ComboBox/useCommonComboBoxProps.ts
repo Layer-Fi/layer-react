@@ -22,9 +22,6 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   isSearchable = true,
   isLoading,
   isMutating,
-  menuIsOpen,
-  onMenuOpen,
-  onMenuClose,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   'aria-describedby': ariaDescribedby,
@@ -45,9 +42,6 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   | 'isSearchable'
   | 'isLoading'
   | 'isMutating'
-  | 'menuIsOpen'
-  | 'onMenuOpen'
-  | 'onMenuClose'
 > & AriaLabelProps) {
   const internalInputId = useId()
   const effectiveInputId = inputId ?? internalInputId
@@ -101,9 +95,6 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     isDisabled,
     isSearchable: isSearchable && !isReadOnly,
     isLoading: isLoading || isMutating,
-    menuIsOpen: isReadOnly ? false : menuIsOpen,
-    onMenuOpen,
-    onMenuClose,
     openMenuOnClick: !isReadOnly,
     menuPlacement: 'auto' as const,
     menuShouldScrollIntoView: false,
@@ -124,9 +115,6 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     isMutating,
     isReadOnly,
     isSearchable,
-    menuIsOpen,
-    onMenuOpen,
-    onMenuClose,
     onInputValueChange,
     options,
     placeholder,
