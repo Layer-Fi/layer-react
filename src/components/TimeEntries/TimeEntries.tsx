@@ -1,11 +1,10 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Clock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { Customer } from '@schemas/customer'
-import type { TimeEntry } from '@schemas/timeTracking'
 import { type ListTimeEntriesFilterParams, useListTimeEntries } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
 import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
+import { TimeEntriesStoreProvider, useTimeEntriesDeleteModal, useTimeEntriesFilters } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TimeEntriesTable } from '@components/TimeEntries/TimeEntriesTable/TimeEntriesTable'
 import { TimeEntryDeleteConfirmationModal } from '@components/TimeEntries/TimeEntryDeleteConfirmationModal/TimeEntryDeleteConfirmationModal'
@@ -44,12 +43,15 @@ const TimeEntriesErrorState = () => {
   )
 }
 
-export const TimeEntries = ({ filterParams, onStartTimer, isStartTimerDisabled }: TimeEntriesProps) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null)
-  const [entryToDelete, setEntryToDelete] = useState<TimeEntry | null>(null)
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
-  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null)
+export const TimeEntries = ({ filterParams, onStartTimer, isStartTimerDisabled }: TimeEntriesProps) => (
+  <TimeEntriesStoreProvider onStartTimer={onStartTimer} isStartTimerDisabled={isStartTimerDisabled}>
+    <TimeEntriesContent filterParams={filterParams} />
+  </TimeEntriesStoreProvider>
+)
+
+const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterParams'>) => {
+  const { selectedCustomer, selectedServiceId } = useTimeEntriesFilters()
+  const { entryToDelete } = useTimeEntriesDeleteModal()
 
   const timeEntriesFilterParams = useMemo(() => ({
     ...filterParams,
@@ -69,30 +71,6 @@ export const TimeEntries = ({ filterParams, onStartTimer, isStartTimerDisabled }
       void setSize(size + 1)
     }
   }, [hasMore, setSize, size])
-
-  const onViewOrUpsertEntry = useCallback((entry: TimeEntry | null) => {
-    setSelectedEntry(entry)
-    setIsDrawerOpen(true)
-  }, [])
-
-  const onDeleteEntry = useCallback((entry: TimeEntry) => {
-    setEntryToDelete(entry)
-  }, [])
-
-  const handleDeleteConfirmationOpenChange = useCallback((isOpen: boolean) => {
-    if (!isOpen) {
-      setEntryToDelete(null)
-    }
-  }, [])
-
-  const handleDeleteSuccess = useCallback(() => {
-    setSelectedEntry(null)
-    setIsDrawerOpen(false)
-  }, [])
-
-  const handleDrawerSuccess = useCallback(() => {
-    setSelectedEntry(null)
-  }, [])
 
   const tableSlots = useMemo(
     () => ({
@@ -116,30 +94,11 @@ export const TimeEntries = ({ filterParams, onStartTimer, isStartTimerDisabled }
         isLoading={isLoading}
         isError={isError}
         paginationProps={paginationProps}
-        onDeleteEntry={onDeleteEntry}
-        onViewOrUpsertEntry={onViewOrUpsertEntry}
-        onStartTimer={onStartTimer}
-        isStartTimerDisabled={isStartTimerDisabled}
-        selectedCustomer={selectedCustomer}
-        onSelectedCustomerChange={setSelectedCustomer}
-        selectedServiceId={selectedServiceId}
-        onSelectedServiceIdChange={setSelectedServiceId}
         slots={tableSlots}
       />
-      <TimeEntryDrawer
-        isOpen={isDrawerOpen && !entryToDelete}
-        onOpenChange={setIsDrawerOpen}
-        entry={selectedEntry}
-        onSuccess={handleDrawerSuccess}
-        onDeleteEntry={onDeleteEntry}
-      />
+      <TimeEntryDrawer />
       {entryToDelete && (
-        <TimeEntryDeleteConfirmationModal
-          isOpen={!!entryToDelete}
-          onOpenChange={handleDeleteConfirmationOpenChange}
-          entry={entryToDelete}
-          onSuccess={handleDeleteSuccess}
-        />
+        <TimeEntryDeleteConfirmationModal entry={entryToDelete} />
       )}
     </>
   )

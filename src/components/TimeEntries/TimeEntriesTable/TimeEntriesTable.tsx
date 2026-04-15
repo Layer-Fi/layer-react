@@ -1,13 +1,13 @@
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
 import type { TFunction } from 'i18next'
 import { Edit, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { Customer } from '@schemas/customer'
-import { type TimeEntry } from '@schemas/timeTracking'
-import { formatCalendarDate, formatMinutesAsDuration } from '@utils/time/timeUtils'
+import type { TimeEntry } from '@schemas/timeTracking'
+import { formatCalendarDate } from '@utils/time/timeUtils'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useTimeEntriesDeleteModal, useTimeEntriesDrawer } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -28,11 +28,6 @@ enum TimeEntryColumns {
   Actions = 'Actions',
 }
 
-type TimeEntryActions = {
-  onViewOrUpsertEntry: (entry: TimeEntry) => void
-  onDeleteEntry: (entry: TimeEntry) => void
-}
-
 type TimeEntryRowType = Row<TimeEntry>
 
 const TimeEntryDateCell = memo(function TimeEntryDateCell({ date }: { date: TimeEntry['date'] }) {
@@ -40,10 +35,44 @@ const TimeEntryDateCell = memo(function TimeEntryDateCell({ date }: { date: Time
   return formatCalendarDate(date, formatDate)
 })
 
-const getColumnConfig = (
-  { onViewOrUpsertEntry, onDeleteEntry }: TimeEntryActions,
-  t: TFunction,
-): NestedColumnConfig<TimeEntry> => [
+const TimeEntryDurationCell = memo(function TimeEntryDurationCell({ durationMinutes }: { durationMinutes: TimeEntry['durationMinutes'] }) {
+  const { formatMinutesAsDuration } = useIntlFormatter()
+  return <Span>{formatMinutesAsDuration(durationMinutes)}</Span>
+})
+
+const TimeEntryActionsCell = memo(function TimeEntryActionsCell({ entry }: { entry: TimeEntry }) {
+  const { t } = useTranslation()
+  const { openDrawer } = useTimeEntriesDrawer()
+  const { openDeleteModal } = useTimeEntriesDeleteModal()
+  const isLocked = !!entry.invoiceLineItem
+
+  return (
+    <HStack gap='3xs'>
+      <Button
+        inset
+        icon
+        onPress={() => openDrawer(entry)}
+        aria-label={t('timeTracking:action.view_entry', 'View Entry')}
+        variant='ghost'
+      >
+        <Edit size={20} />
+      </Button>
+      {!isLocked && (
+        <Button
+          inset
+          icon
+          onPress={() => openDeleteModal(entry)}
+          aria-label={t('timeTracking:action.delete_entry', 'Delete Entry')}
+          variant='ghost'
+        >
+          <Trash2 size={20} />
+        </Button>
+      )}
+    </HStack>
+  )
+})
+
+const getColumnConfig = (t: TFunction): NestedColumnConfig<TimeEntry> => [
   {
     id: TimeEntryColumns.EntryDate,
     header: t('common:label.date', 'Date'),
@@ -52,7 +81,7 @@ const getColumnConfig = (
   {
     id: TimeEntryColumns.Duration,
     header: t('timeTracking:label.duration', 'Duration'),
-    cell: (row: TimeEntryRowType) => <Span>{formatMinutesAsDuration(row.original.durationMinutes)}</Span>,
+    cell: (row: TimeEntryRowType) => <TimeEntryDurationCell durationMinutes={row.original.durationMinutes} />,
   },
   {
     id: TimeEntryColumns.Customer,
@@ -73,34 +102,7 @@ const getColumnConfig = (
   },
   {
     id: TimeEntryColumns.Actions,
-    cell: (row: TimeEntryRowType) => {
-      const isLocked = !!row.original.invoiceLineItem
-
-      return (
-        <HStack gap='3xs'>
-          <Button
-            inset
-            icon
-            onPress={() => onViewOrUpsertEntry(row.original)}
-            aria-label={t('timeTracking:action.view_entry', 'View Entry')}
-            variant='ghost'
-          >
-            <Edit size={20} />
-          </Button>
-          {!isLocked && (
-            <Button
-              inset
-              icon
-              onPress={() => onDeleteEntry(row.original)}
-              aria-label={t('timeTracking:action.delete_entry', 'Delete Entry')}
-              variant='ghost'
-            >
-              <Trash2 size={20} />
-            </Button>
-          )}
-        </HStack>
-      )
-    },
+    cell: (row: TimeEntryRowType) => <TimeEntryActionsCell entry={row.original} />,
   },
 ]
 
@@ -109,14 +111,6 @@ export interface TimeEntriesTableProps {
   isLoading: boolean
   isError: boolean
   paginationProps: TablePaginationProps
-  onDeleteEntry: (entry: TimeEntry) => void
-  onViewOrUpsertEntry: (entry: TimeEntry | null) => void
-  onStartTimer?: () => void
-  isStartTimerDisabled?: boolean
-  selectedCustomer: Customer | null
-  onSelectedCustomerChange: (customer: Customer | null) => void
-  selectedServiceId: string | null
-  onSelectedServiceIdChange: (serviceId: string | null) => void
   slots: {
     EmptyState: React.FC
     ErrorState: React.FC
@@ -128,34 +122,14 @@ const TimeEntriesTableComponent = ({
   isLoading,
   isError,
   paginationProps,
-  onDeleteEntry,
-  onViewOrUpsertEntry,
-  onStartTimer,
-  isStartTimerDisabled,
-  selectedCustomer,
-  onSelectedCustomerChange,
-  selectedServiceId,
-  onSelectedServiceIdChange,
   slots,
 }: TimeEntriesTableProps) => {
   const { t } = useTranslation()
-  const columnConfig = useMemo(
-    () => getColumnConfig({ onViewOrUpsertEntry, onDeleteEntry }, t),
-    [onViewOrUpsertEntry, onDeleteEntry, t],
-  )
-  const onAddEntry = useCallback(() => onViewOrUpsertEntry(null), [onViewOrUpsertEntry])
+  const columnConfig = useMemo(() => getColumnConfig(t), [t])
 
   return (
     <Container name='TimeEntriesTable'>
-      <TimeEntriesTableHeader
-        onAddEntry={onAddEntry}
-        onStartTimer={onStartTimer}
-        isStartTimerDisabled={isStartTimerDisabled}
-        selectedCustomer={selectedCustomer}
-        onSelectedCustomerChange={onSelectedCustomerChange}
-        selectedServiceId={selectedServiceId}
-        onSelectedServiceIdChange={onSelectedServiceIdChange}
-      />
+      <TimeEntriesTableHeader />
       <PaginatedTable
         ariaLabel={t('timeTracking:label.time_entries', 'Time Entries')}
         data={data}

@@ -36,7 +36,7 @@ export const validateTimeEntryForm = ({ entry }: { entry: TimeEntryForm }, t: TF
     errors.push({ date: t('timeTracking:validation.entry_date_not_future', 'Entry date cannot be in the future.') })
   }
 
-  if (durationMinutes <= 0) {
+  if (!(durationMinutes > 0)) {
     errors.push({ durationMinutes: t('timeTracking:validation.duration_greater_than_zero', 'Duration must be greater than zero.') })
   }
 
@@ -55,6 +55,6 @@ export const convertTimeEntryFormToUpsertTimeEntry = (form: TimeEntryForm, entry
     description: entry?.description?.trim() || null,
     memo: form.memo.trim() || null,
     serviceId: form.serviceId,
-    ...(form.customerId ? { customerId: form.customerId } : {}),
+    customerId: form.customerId ?? null,
   }
 }

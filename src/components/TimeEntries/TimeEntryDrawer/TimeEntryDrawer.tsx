@@ -1,23 +1,15 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Edit, Lock, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { TimeEntry } from '@schemas/timeTracking'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useTimeEntriesDeleteModal, useTimeEntriesDrawer } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { TimeEntryForm } from '@components/TimeEntries/TimeEntryForm/TimeEntryForm'
-
-interface TimeEntryDrawerProps {
-  isOpen: boolean
-  onOpenChange: (isOpen: boolean) => void
-  entry: TimeEntry | null
-  onSuccess: () => void
-  onDeleteEntry: (entry: TimeEntry) => void
-}
 
 const TimeEntryDrawerHeader = ({
   title,
@@ -48,23 +40,31 @@ const TimeEntryDrawerHeader = ({
   />
 )
 
-export const TimeEntryDrawer = ({ isOpen, onOpenChange, entry, onDeleteEntry, onSuccess }: TimeEntryDrawerProps) => {
+export const TimeEntryDrawer = () => {
   const { t } = useTranslation()
   const { isMobile, isTablet } = useSizeClass()
   const [isEditMode, setIsEditMode] = useState(false)
+  const { isDrawerOpen, selectedEntry, setDrawerOpen, clearSelectedEntry } = useTimeEntriesDrawer()
+  const { openDeleteModal } = useTimeEntriesDeleteModal()
 
-  const hasEntry = entry !== null
-  const isLocked = !!entry?.invoiceLineItem
+  useEffect(() => {
+    if (!isDrawerOpen) {
+      setIsEditMode(false)
+    }
+  }, [isDrawerOpen])
+
+  const hasEntry = selectedEntry !== null
+  const isLocked = !!selectedEntry?.invoiceLineItem
   const isReadOnly = isLocked || (!isEditMode && hasEntry && (isMobile || isTablet))
-  const title = entry ? t('timeTracking:label.entry_details', 'Time entry details') : t('timeTracking:action.add_entry', 'Add time entry')
+  const title = selectedEntry ? t('timeTracking:label.entry_details', 'Time entry details') : t('timeTracking:action.add_entry', 'Add time entry')
   const invoicedLabel = t('timeTracking:label.invoiced', 'Invoiced')
 
   const handleOpenChange = useCallback((nextIsOpen: boolean) => {
     if (!nextIsOpen) {
       setIsEditMode(false)
     }
-    onOpenChange(nextIsOpen)
-  }, [onOpenChange])
+    setDrawerOpen(nextIsOpen)
+  }, [setDrawerOpen])
 
   const Header = useCallback(({ close }: { close: () => void }) => (
     <TimeEntryDrawerHeader
@@ -77,14 +77,14 @@ export const TimeEntryDrawer = ({ isOpen, onOpenChange, entry, onDeleteEntry, on
   ), [title, isLocked, isMobile, invoicedLabel])
 
   const handleDeleteEntry = useCallback(() => {
-    if (entry) {
-      onDeleteEntry(entry)
+    if (selectedEntry) {
+      openDeleteModal(selectedEntry)
     }
-  }, [entry, onDeleteEntry])
+  }, [selectedEntry, openDeleteModal])
 
   return (
     <Drawer
-      isOpen={isOpen}
+      isOpen={isDrawerOpen}
       onOpenChange={handleOpenChange}
       isDismissable
       variant={isMobile ? 'mobile-drawer' : 'drawer'}
@@ -98,9 +98,9 @@ export const TimeEntryDrawer = ({ isOpen, onOpenChange, entry, onDeleteEntry, on
             <VStack gap='md'>
               <TimeEntryForm
                 isReadOnly={isReadOnly}
-                entry={entry ?? undefined}
+                entry={selectedEntry ?? undefined}
                 onSuccess={() => {
-                  onSuccess()
+                  clearSelectedEntry()
                   close()
                 }}
               />
