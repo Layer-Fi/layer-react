@@ -73,9 +73,7 @@ export const TaxOverview = () => {
 
   return (
     <ResponsiveDetailView name='TaxOverview' slots={{ Header: TaxOverviewHeader }}>
-      { data && (
-        <TaxOverviewContent data={data} />
-      )}
+      { data && <TaxOverviewContent data={data} />}
     </ResponsiveDetailView>
   )
 }
