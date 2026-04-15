@@ -59,6 +59,7 @@ export const calculateAddSplit = (
   const newSplit = {
     amount: 0,
     category: null,
+    taxCode: null,
     tags: [],
     customerVendor: null,
   }
@@ -136,6 +137,7 @@ export const getLocalSplitStateForExpandedTransaction = (
       return {
         amount: splitEntry.amount || 0,
         category: splitEntry.category,
+        taxCode: splitEntry.taxCode ?? null,
         tags: splitEntry.tags,
         customerVendor: splitEntry.customerVendor,
       }
@@ -146,6 +148,7 @@ export const getLocalSplitStateForExpandedTransaction = (
     {
       amount: bankTransaction.amount,
       category: coercedSelectedCategory ?? null,
+      taxCode: bankTransaction.tax_code ?? null,
       tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
       customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
     },

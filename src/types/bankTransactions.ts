@@ -97,6 +97,7 @@ export interface DocumentS3Urls {
 export type Split = {
   amount: number
   category: BankTransactionCategoryComboBoxOption | null
+  taxCode: string | null
   tags: readonly Tag[]
   customerVendor: typeof CustomerVendorSchema.Type | null
 }
