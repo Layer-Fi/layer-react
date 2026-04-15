@@ -10,7 +10,7 @@ export const CatalogServiceSchema = Schema.Struct({
     Schema.fromKey('billable_rate_per_hour_amount'),
   ),
 
-  archivedAt: Schema.optional(Schema.NullOr(Schema.Date)).pipe(
+  archivedAt: Schema.NullishOr(Schema.Date).pipe(
     Schema.fromKey('archived_at'),
   ),
 })
