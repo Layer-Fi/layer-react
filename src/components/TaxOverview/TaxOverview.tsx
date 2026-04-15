@@ -10,10 +10,9 @@ import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstima
 import { VStack } from '@ui/Stack/Stack'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { TaxableIncomeCard } from '@components/TaxOverview/TaxableIncomeCard'
 
-import './taxOverview.scss'
-
-import { TaxableIncomeCard } from './TaxableIncomeCard'
+import '@components/TaxOverview/taxOverview.scss'
 
 const TaxOverviewHeader = () => {
   const { t } = useTranslation()
@@ -79,7 +78,7 @@ export const TaxOverview = () => {
 
   return (
     <ResponsiveDetailView name='TaxOverview' slots={{ Header: TaxOverviewHeader }}>
-      { data && <TaxOverviewContent data={data} />}
+      {data && <TaxOverviewContent data={data} />}
     </ResponsiveDetailView>
   )
 }
