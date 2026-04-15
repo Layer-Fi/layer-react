@@ -46,7 +46,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onPressReviewButton }: TaxEst
 
   const uncategorizedReviewPayload = useMemo(
     () => {
-      if (!taxBannerData) {
+      if (!taxBannerData || taxBannerData.totalUncategorizedCount <= 0) {
         return undefined
       }
 
