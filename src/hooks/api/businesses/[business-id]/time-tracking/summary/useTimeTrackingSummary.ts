@@ -6,6 +6,7 @@ import useSWR from 'swr'
 import { TimeEntrySummarySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -66,15 +67,16 @@ const getTimeTrackingSummary = get<
 })
 
 export function useTimeTrackingSummary(filterParams: TimeTrackingSummaryFilterParams = {}) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       ...filterParams,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, customerId, serviceId, startDate, endDate }) => getTimeTrackingSummary(
       apiUrl,
       accessToken,

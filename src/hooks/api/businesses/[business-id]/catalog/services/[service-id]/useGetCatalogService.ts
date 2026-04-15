@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { CATALOG_SERVICES_TAG_KEY } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -63,17 +64,18 @@ type UseGetCatalogServiceParameters = {
 }
 
 export function useGetCatalogService({ serviceId, allowArchived, isEnabled = true }: UseGetCatalogServiceParameters) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       serviceId,
       allowArchived,
       isEnabled: isEnabled && serviceId !== '',
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, serviceId: sid, allowArchived: allowArchivedParam }) => getCatalogService(
       apiUrl,
       accessToken,

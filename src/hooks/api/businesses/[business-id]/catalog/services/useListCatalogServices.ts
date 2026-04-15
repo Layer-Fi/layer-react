@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -51,9 +52,7 @@ const listCatalogServices = get<
   { businessId: string, allowArchived?: boolean }
 >(({ businessId, allowArchived }) => {
   const parameters = toDefinedSearchParameters({ allowArchived })
-  const baseUrl = `/v1/businesses/${businessId}/catalog/services`
-  const query = parameters.toString()
-  return query ? `${baseUrl}?${query}` : baseUrl
+  return `/v1/businesses/${businessId}/catalog/services?${parameters}`
 })
 
 export type UseListCatalogServicesOptions = {
@@ -62,16 +61,17 @@ export type UseListCatalogServicesOptions = {
 }
 
 export function useListCatalogServices({ allowArchived, isEnabled = true }: UseListCatalogServicesOptions = {}) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       allowArchived,
       isEnabled,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId, allowArchived: allowArchivedParam }) => listCatalogServices(
       apiUrl,
       accessToken,
@@ -85,14 +85,7 @@ export function useListCatalogServices({ allowArchived, isEnabled = true }: UseL
 }
 
 export const useCatalogServicesGlobalCacheActions = () => {
-  const { invalidate, patchCache, forceReload } = useGlobalCacheActions()
-
-  const invalidateCatalogServices = useCallback(
-    () => invalidate(
-      ({ tags }) => tags.includes(CATALOG_SERVICES_TAG_KEY),
-    ),
-    [invalidate],
-  )
+  const { patchCache, forceReload } = useGlobalCacheActions()
 
   const patchCatalogServiceByKey = useCallback((updatedService: CatalogService) =>
     patchCache<ListCatalogServicesResponse | undefined>(
@@ -117,7 +110,6 @@ export const useCatalogServicesGlobalCacheActions = () => {
   )
 
   return {
-    invalidateCatalogServices,
     patchCatalogServiceByKey,
     forceReloadCatalogServices,
   }

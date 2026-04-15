@@ -108,11 +108,6 @@ export const TimeEntrySummarySchema = Schema.Struct({
     Schema.fromKey('total_billable_amount'),
   ),
 
-  byCustomer: pipe(
-    Schema.propertySignature(Schema.Array(Schema.Unknown)),
-    Schema.fromKey('by_customer'),
-  ),
-
   byService: pipe(
     Schema.propertySignature(Schema.Array(Schema.Unknown)),
     Schema.fromKey('by_service'),
@@ -150,7 +145,8 @@ export const UpsertTimeEntrySchema = Schema.Struct({
 
   metadata: Schema.NullishOr(Schema.Unknown),
 
-  customerId: Schema.propertySignature(Schema.NullishOr(Schema.UUID)).pipe(
+  customerId: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
     Schema.fromKey('customer_id'),
   ),
 

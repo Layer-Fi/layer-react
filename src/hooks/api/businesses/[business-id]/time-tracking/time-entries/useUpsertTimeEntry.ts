@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { TimeEntrySchema, type UpsertTimeEntryEncoded } from '@schemas/timeTracking'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useTimeEntriesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
@@ -17,17 +18,19 @@ export enum UpsertTimeEntryMode {
   Update = 'Update',
 }
 
-type UpsertTimeEntryBody = UpsertTimeEntryEncoded
+type CreateTimeEntryBody = UpsertTimeEntryEncoded
+type UpdateTimeEntryBody = Partial<UpsertTimeEntryEncoded>
+type UpsertTimeEntryBody = CreateTimeEntryBody | UpdateTimeEntryBody
 
 const createTimeEntry = post<
   UpsertTimeEntryReturn,
-  UpsertTimeEntryBody,
+  CreateTimeEntryBody,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/time-tracking/time-entries`)
 
 const updateTimeEntry = patch<
   UpsertTimeEntryReturn,
-  UpsertTimeEntryBody,
+  UpdateTimeEntryBody,
   { businessId: string, timeEntryId: string }
 >(({ businessId, timeEntryId }) => `/v1/businesses/${businessId}/time-tracking/time-entries/${timeEntryId}`)
 
@@ -59,38 +62,15 @@ const UpsertTimeEntryReturnSchema = Schema.Struct({
 
 type UpsertTimeEntryReturn = typeof UpsertTimeEntryReturnSchema.Type
 
-type RequestArgs = {
-  apiUrl: string
-  accessToken: string
-  body: UpsertTimeEntryBody
-}
+type UseUpsertTimeEntryCreateProps = { mode: UpsertTimeEntryMode.Create }
+type UseUpsertTimeEntryUpdateProps = { mode: UpsertTimeEntryMode.Update, timeEntryId: string }
+type UseUpsertTimeEntryProps = UseUpsertTimeEntryCreateProps | UseUpsertTimeEntryUpdateProps
 
-type UpsertRequestFn = (args: RequestArgs) => Promise<UpsertTimeEntryReturn>
-
-function getRequestFn(
-  mode: UpsertTimeEntryMode,
-  params: { businessId: string, timeEntryId: string | undefined },
-): UpsertRequestFn {
-  if (mode === UpsertTimeEntryMode.Update) {
-    if (params.timeEntryId === undefined) {
-      throw new Error('timeEntryId is required for update mode')
-    }
-
-    const updateParams = { businessId: params.businessId, timeEntryId: params.timeEntryId }
-
-    return ({ apiUrl, accessToken, body }) =>
-      updateTimeEntry(apiUrl, accessToken, { params: updateParams, body })
-  }
-
-  return ({ apiUrl, accessToken, body }) =>
-    createTimeEntry(apiUrl, accessToken, { params: { businessId: params.businessId }, body })
-}
-
-type UseUpsertTimeEntryProps =
-  | { mode: UpsertTimeEntryMode.Create }
-  | { mode: UpsertTimeEntryMode.Update, timeEntryId: string }
-
-export const useUpsertTimeEntry = (props: UseUpsertTimeEntryProps) => {
+export function useUpsertTimeEntry(props: UseUpsertTimeEntryCreateProps): SWRMutationResult<UpsertTimeEntryReturn, CreateTimeEntryBody>
+export function useUpsertTimeEntry(props: UseUpsertTimeEntryUpdateProps): SWRMutationResult<UpsertTimeEntryReturn, UpdateTimeEntryBody>
+export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps): SWRMutationResult<UpsertTimeEntryReturn, UpsertTimeEntryBody>
+export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -98,21 +78,29 @@ export const useUpsertTimeEntry = (props: UseUpsertTimeEntryProps) => {
   const timeEntryId = mode === UpsertTimeEntryMode.Update ? props.timeEntryId : undefined
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       timeEntryId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, timeEntryId },
       { arg: body }: { arg: UpsertTimeEntryBody },
     ) => {
-      const request = getRequestFn(mode, { businessId, timeEntryId })
+      if (mode === UpsertTimeEntryMode.Create) {
+        return createTimeEntry(apiUrl, accessToken, {
+          params: { businessId },
+          body: body as CreateTimeEntryBody,
+        }).then(Schema.decodeUnknownPromise(UpsertTimeEntryReturnSchema))
+      }
 
-      return request({
-        apiUrl,
-        accessToken,
-        body,
+      if (timeEntryId === undefined) {
+        throw new Error('timeEntryId is required for update mode')
+      }
+
+      return updateTimeEntry(apiUrl, accessToken, {
+        params: { businessId, timeEntryId },
+        body: body as UpdateTimeEntryBody,
       }).then(Schema.decodeUnknownPromise(UpsertTimeEntryReturnSchema))
     },
     {
@@ -146,7 +134,7 @@ export const useUpsertTimeEntry = (props: UseUpsertTimeEntryProps) => {
     [originalTrigger, mode, patchTimeEntryByKey, forceReloadTimeEntries, invalidateTimeTrackingSummary],
   )
 
-  return new Proxy(mutationResponse, {
+  const proxiedMutationResponse = new Proxy(mutationResponse, {
     get(target, prop) {
       if (prop === 'trigger') {
         return stableProxiedTrigger
@@ -156,4 +144,10 @@ export const useUpsertTimeEntry = (props: UseUpsertTimeEntryProps) => {
       return Reflect.get(target, prop)
     },
   })
+
+  if (mode === UpsertTimeEntryMode.Create) {
+    return proxiedMutationResponse as SWRMutationResult<UpsertTimeEntryReturn, CreateTimeEntryBody>
+  }
+
+  return proxiedMutationResponse as SWRMutationResult<UpsertTimeEntryReturn, UpdateTimeEntryBody>
 }
