@@ -3,8 +3,10 @@ import { getYear } from 'date-fns'
 import { createStore, useStore } from 'zustand'
 
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export enum TaxEstimatesRoute {
+  Overview = 'Overview',
   Estimates = 'Estimates',
   Payments = 'Payments',
   Profile = 'Profile',
@@ -15,6 +17,7 @@ export enum OnboardingStatus {
   Error = 'Error',
   NotOnboarded = 'NotOnboarded',
   Onboarded = 'Onboarded',
+  FeatureDisabled = 'FeatureDisabled',
 }
 
 type TaxEstimatesRouteState = {
@@ -35,7 +38,7 @@ type TaxEstimatesRouteStoreShape = {
 
 const TaxEstimatesRouteStoreContext = createContext(
   createStore<TaxEstimatesRouteStoreShape>(() => ({
-    routeState: { route: TaxEstimatesRoute.Estimates },
+    routeState: { route: TaxEstimatesRoute.Overview },
     onboardingStatus: OnboardingStatus.Loading,
     navigate: () => {},
     year: getYear(new Date()),
@@ -58,8 +61,20 @@ export function useTaxEstimatesNavigation() {
 }
 
 export function useTaxEstimatesOnboardingStatus() {
+  const { accountingConfiguration } = useLayerContext()
+
+  const isFeatureEnabled = useMemo(() => {
+    return accountingConfiguration && accountingConfiguration.enableTaxEstimates
+  }, [accountingConfiguration])
+
   const store = useContext(TaxEstimatesRouteStoreContext)
-  return useStore(store, state => state.onboardingStatus)
+  return useStore(store, (state) => {
+    if (accountingConfiguration && !isFeatureEnabled) {
+      return OnboardingStatus.FeatureDisabled
+    }
+
+    return state.onboardingStatus
+  })
 }
 
 export function useTaxEstimatesYear() {
@@ -86,7 +101,7 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   const { data: taxProfile, isLoading, isError } = useTaxProfile()
   const [store] = useState(() =>
     createStore<TaxEstimatesRouteStoreShape>(set => ({
-      routeState: { route: TaxEstimatesRoute.Estimates },
+      routeState: { route: TaxEstimatesRoute.Overview },
       onboardingStatus: OnboardingStatus.Loading,
       navigate: (route: TaxEstimatesRoute) => {
         set({ routeState: { route } })

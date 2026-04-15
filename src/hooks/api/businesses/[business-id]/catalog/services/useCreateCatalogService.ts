@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CatalogServiceSchema, type CreateCatalogServiceEncoded } from '@schemas/catalogService'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import {
   CATALOG_SERVICES_TAG_KEY,
@@ -47,15 +48,16 @@ function buildKey({
 }
 
 export function useCreateCatalogService() {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: body }: { arg: CreateCatalogServiceBody },

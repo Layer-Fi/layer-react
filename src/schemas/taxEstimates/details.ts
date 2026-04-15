@@ -39,7 +39,10 @@ const DeductionsSchema = Schema.Struct({
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('self_employment_tax_deduction'),
   ),
-  total: Schema.Number,
+  preAdjustedGrossIncomeDeduction: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('pre_adjusted_gross_income_deduction'),
+  ),
 })
 
 export type Deductions = typeof DeductionsSchema.Type

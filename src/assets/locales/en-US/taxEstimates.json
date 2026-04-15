@@ -8,6 +8,7 @@
     "tax_payments": "No tax payments found"
   },
   "error": {
+    "feature_not_enabled": "Tax estimates are not enabled.",
     "load_tax_estimates": "We couldn't load your tax estimates",
     "load_tax_estimates_tax": "We couldn't load your tax summary",
     "load_tax_information": "Unable to load tax information",
@@ -36,7 +37,6 @@
     "enter_amount": "Enter amount",
     "enter_area": "Enter area",
     "estimates": "Estimates",
-    "federal_income_self_employment_taxes": "Federal Income + Self-Employment Taxes",
     "federal_deductions": "Federal Deductions",
     "federal_state_tax_payments": "Federal and state tax payments for the selected tax year",
     "federal_tax": "Federal Tax",
@@ -73,7 +73,6 @@
     "state_deductions": "State Deductions",
     "state_income_tax_estimate_owed": "State Income Tax Estimate (Owed)",
     "state_tax": "State Tax",
-    "state_taxes": "State Taxes",
     "state_tax_rate": "State Tax Rate",
     "state_taxable_income": "State Taxable Income",
     "tax_estimate_view": "Tax estimate view",
@@ -97,7 +96,6 @@
     "taxes_owed_projected": "Projected Taxes Owed",
     "taxes_paid": "Taxes Paid",
     "tip_income": "Tip income",
-    "uncategorized_tax_payment": "Uncategorized Tax Payment",
     "total_federal_tax_estimate": "Total Federal Tax Estimate",
     "total_paid": "Total Paid",
     "total_state_tax_estimate": "Total State Tax Estimate",
