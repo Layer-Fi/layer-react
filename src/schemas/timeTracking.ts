@@ -150,7 +150,8 @@ export const UpsertTimeEntrySchema = Schema.Struct({
 
   metadata: Schema.NullishOr(Schema.Unknown),
 
-  customerId: Schema.optional(Schema.NullOr(Schema.UUID)).pipe(
+  customerId: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
     Schema.fromKey('customer_id'),
   ),
 
