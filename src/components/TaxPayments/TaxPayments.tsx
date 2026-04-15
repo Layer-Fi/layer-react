@@ -9,6 +9,7 @@ import { ResponsiveDetailView } from '@components/ResponsiveDetailView/Responsiv
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
 
 import { TaxPaymentsMobileList } from './TaxPaymentsMobileList/TaxPaymentsMobileList'
+import { TaxPaymentsTable } from './TaxPaymentsTable/TaxPaymentsTable'
 
 const TaxPaymentsHeader = ({ isMobile }: { isMobile: boolean }) => {
   const { t } = useTranslation()
@@ -68,9 +69,7 @@ export const TaxPayments = () => {
 
   return (
     <ResponsiveDetailView name='TaxPayments' slots={{ Header }}>
-      {/* <TaxPaymentsTable {...props} /> */}
-      {/* {isDesktop ?  : <TaxPaymentsMobileList {...props} />} */}
-      <TaxPaymentsMobileList {...props} />
+      {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
     </ResponsiveDetailView>
   )
 }
