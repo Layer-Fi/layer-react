@@ -12,4 +12,8 @@
 
     align-items: center;
   }
+
+  &--without-label {
+    grid-template-areas: 'input';
+  }
 }

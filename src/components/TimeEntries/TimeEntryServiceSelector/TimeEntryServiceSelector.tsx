@@ -58,6 +58,7 @@ export function TimeEntryServiceSelector({
   const combinedClassName = classNames(
     'Layer__TimeEntryServiceSelector',
     inline && 'Layer__TimeEntryServiceSelector--inline',
+    !showLabel && 'Layer__TimeEntryServiceSelector--without-label',
     className,
   )
 
