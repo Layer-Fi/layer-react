@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { type StartTrackerEncoded, TimeEntrySchema } from '@schemas/timeTracking'
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useActiveTimeTrackerGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -45,15 +46,16 @@ function buildKey({
 }
 
 export const useStartTimeTracker = () => {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId },
       { arg: body }: { arg: StartTimeTrackerBody },

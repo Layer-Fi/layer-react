@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useTimeEntriesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
@@ -43,6 +44,7 @@ type UseDeleteTimeEntryProps = {
 }
 
 export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -52,11 +54,11 @@ export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => 
         return undefined
       }
 
-      return buildKey({
+      return withLocale(buildKey({
         ...data,
         businessId,
         timeEntryId,
-      })
+      }))
     },
     (
       { accessToken, apiUrl, businessId, timeEntryId },
