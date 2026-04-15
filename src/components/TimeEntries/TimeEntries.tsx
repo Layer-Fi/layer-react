@@ -43,13 +43,13 @@ const TimeEntriesErrorState = () => {
   )
 }
 
-export const TimeEntries = (props: TimeEntriesProps) => (
-  <TimeEntriesStoreProvider>
-    <TimeEntriesContent {...props} />
+export const TimeEntries = ({ filterParams, onStartTimer, isStartTimerDisabled }: TimeEntriesProps) => (
+  <TimeEntriesStoreProvider onStartTimer={onStartTimer} isStartTimerDisabled={isStartTimerDisabled}>
+    <TimeEntriesContent filterParams={filterParams} />
   </TimeEntriesStoreProvider>
 )
 
-const TimeEntriesContent = ({ filterParams, onStartTimer, isStartTimerDisabled }: TimeEntriesProps) => {
+const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterParams'>) => {
   const { selectedCustomer, selectedServiceId } = useTimeEntriesFilters()
   const { entryToDelete } = useTimeEntriesDeleteModal()
 
@@ -94,8 +94,6 @@ const TimeEntriesContent = ({ filterParams, onStartTimer, isStartTimerDisabled }
         isLoading={isLoading}
         isError={isError}
         paginationProps={paginationProps}
-        onStartTimer={onStartTimer}
-        isStartTimerDisabled={isStartTimerDisabled}
         slots={tableSlots}
       />
       <TimeEntryDrawer />

@@ -111,8 +111,6 @@ export interface TimeEntriesTableProps {
   isLoading: boolean
   isError: boolean
   paginationProps: TablePaginationProps
-  onStartTimer?: () => void
-  isStartTimerDisabled?: boolean
   slots: {
     EmptyState: React.FC
     ErrorState: React.FC
@@ -124,8 +122,6 @@ const TimeEntriesTableComponent = ({
   isLoading,
   isError,
   paginationProps,
-  onStartTimer,
-  isStartTimerDisabled,
   slots,
 }: TimeEntriesTableProps) => {
   const { t } = useTranslation()
@@ -133,10 +129,7 @@ const TimeEntriesTableComponent = ({
 
   return (
     <Container name='TimeEntriesTable'>
-      <TimeEntriesTableHeader
-        onStartTimer={onStartTimer}
-        isStartTimerDisabled={isStartTimerDisabled}
-      />
+      <TimeEntriesTableHeader />
       <PaginatedTable
         ariaLabel={t('timeTracking:label.time_entries', 'Time Entries')}
         data={data}

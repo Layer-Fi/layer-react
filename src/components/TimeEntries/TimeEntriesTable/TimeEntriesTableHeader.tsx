@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { Clock3, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useTimeEntriesDrawer, useTimeEntriesFilters } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
+import { useTimeEntriesDrawer, useTimeEntriesFilters, useTimeEntriesTimerConfig } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
@@ -11,18 +11,11 @@ import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServi
 
 import './timeEntriesTableHeader.scss'
 
-interface TimeEntriesTableHeaderProps {
-  onStartTimer?: () => void
-  isStartTimerDisabled?: boolean
-}
-
-export const TimeEntriesTableHeader = ({
-  onStartTimer,
-  isStartTimerDisabled,
-}: TimeEntriesTableHeaderProps) => {
+export const TimeEntriesTableHeader = () => {
   const { t } = useTranslation()
   const { openDrawer } = useTimeEntriesDrawer()
   const { selectedCustomer, selectedServiceId, setSelectedCustomer, setSelectedServiceId } = useTimeEntriesFilters()
+  const { onStartTimer, isStartTimerDisabled } = useTimeEntriesTimerConfig()
 
   const onAddEntry = useCallback(() => openDrawer(null), [openDrawer])
 

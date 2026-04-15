@@ -1,4 +1,4 @@
-import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
+import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
 import type { Customer } from '@schemas/customer'
@@ -11,6 +11,8 @@ type TimeEntriesStoreShape = {
   entryToDelete: TimeEntry | null
   selectedCustomer: Customer | null
   selectedServiceId: string | null
+  onStartTimer?: () => void
+  isStartTimerDisabled?: boolean
   actions: {
     openDrawer: (entry: TimeEntry | null) => void
     setDrawerOpen: (isOpen: boolean) => void
@@ -31,6 +33,8 @@ const TimeEntriesStoreContext = createContext(
     entryToDelete: null,
     selectedCustomer: null,
     selectedServiceId: null,
+    onStartTimer: undefined,
+    isStartTimerDisabled: undefined,
     actions: {
       openDrawer: () => {},
       setDrawerOpen: () => {},
@@ -82,7 +86,26 @@ export function useTimeEntriesDeleteModal() {
   )
 }
 
-export function TimeEntriesStoreProvider(props: PropsWithChildren) {
+export function useTimeEntriesTimerConfig() {
+  const store = useContext(TimeEntriesStoreContext)
+  const onStartTimer = useStore(store, state => state.onStartTimer)
+  const isStartTimerDisabled = useStore(store, state => state.isStartTimerDisabled)
+  return useMemo(
+    () => ({ onStartTimer, isStartTimerDisabled }),
+    [onStartTimer, isStartTimerDisabled],
+  )
+}
+
+interface TimeEntriesStoreProviderProps extends PropsWithChildren {
+  onStartTimer?: () => void
+  isStartTimerDisabled?: boolean
+}
+
+export function TimeEntriesStoreProvider({
+  onStartTimer,
+  isStartTimerDisabled,
+  children,
+}: TimeEntriesStoreProviderProps) {
   const [store] = useState(() =>
     createStore<TimeEntriesStoreShape>(set => ({
       isDrawerOpen: false,
@@ -91,6 +114,8 @@ export function TimeEntriesStoreProvider(props: PropsWithChildren) {
       entryToDelete: null,
       selectedCustomer: null,
       selectedServiceId: null,
+      onStartTimer,
+      isStartTimerDisabled,
       actions: {
         openDrawer: (entry: TimeEntry | null) => {
           set({ selectedEntry: entry, isDrawerOpen: true })
@@ -120,9 +145,13 @@ export function TimeEntriesStoreProvider(props: PropsWithChildren) {
     })),
   )
 
+  useEffect(() => {
+    store.setState({ onStartTimer, isStartTimerDisabled })
+  }, [store, onStartTimer, isStartTimerDisabled])
+
   return (
     <TimeEntriesStoreContext.Provider value={store}>
-      {props.children}
+      {children}
     </TimeEntriesStoreContext.Provider>
   )
 }
