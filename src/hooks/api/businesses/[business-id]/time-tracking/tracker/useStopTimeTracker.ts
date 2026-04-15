@@ -3,6 +3,7 @@ import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useTimeEntriesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
@@ -46,6 +47,7 @@ function buildKey({
 }
 
 export const useStopTimeTracker = () => {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
@@ -53,10 +55,10 @@ export const useStopTimeTracker = () => {
   const { invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => stopTimeTracker(
       apiUrl,
       accessToken,

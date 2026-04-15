@@ -7,6 +7,7 @@ import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -126,18 +127,19 @@ const listTimeEntries = get<
 })
 
 export function useListTimeEntries(filterParams: ListTimeEntriesFilterParams = {}) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListTimeEntriesResponse | null) => keyLoader(
+    (_index, previousPageData: ListTimeEntriesResponse | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...data,
         businessId,
         ...filterParams,
       },
-    ),
+    )),
     ({
       accessToken, apiUrl, businessId, cursor, customerId, serviceId,
       startDate, endDate, includeDeleted, status, billable, hasCustomer, sortBy, sortOrder,

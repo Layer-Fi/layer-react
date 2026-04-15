@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { TimeEntrySchema, type UpsertTimeEntryEncoded } from '@schemas/timeTracking'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useTimeEntriesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
@@ -69,6 +70,7 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryCreateProps): SWRMut
 export function useUpsertTimeEntry(props: UseUpsertTimeEntryUpdateProps): SWRMutationResult<UpsertTimeEntryReturn, UpdateTimeEntryBody>
 export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps): SWRMutationResult<UpsertTimeEntryReturn, UpsertTimeEntryBody>
 export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -76,11 +78,11 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
   const timeEntryId = mode === UpsertTimeEntryMode.Update ? props.timeEntryId : undefined
 
   const rawMutationResponse = useSWRMutation(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
       timeEntryId,
-    }),
+    })),
     (
       { accessToken, apiUrl, businessId, timeEntryId },
       { arg: body }: { arg: UpsertTimeEntryBody },

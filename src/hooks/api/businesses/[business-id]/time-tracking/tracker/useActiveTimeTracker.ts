@@ -4,6 +4,7 @@ import useSWR from 'swr'
 
 import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
+import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -45,14 +46,15 @@ function buildKey({
 }
 
 export function useActiveTimeTracker() {
+  const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => buildKey({
+    () => withLocale(buildKey({
       ...data,
       businessId,
-    }),
+    })),
     ({ accessToken, apiUrl, businessId }) => getActiveTimeTracker(
       apiUrl,
       accessToken,
