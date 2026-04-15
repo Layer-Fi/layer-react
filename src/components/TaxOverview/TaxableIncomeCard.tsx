@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { type TaxOverviewApiData } from '@schemas/taxEstimates/overview'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { Card } from '@components/Card/Card'
@@ -8,7 +7,6 @@ import { MetricRow } from '@components/MetricRow/MetricRow'
 
 import './taxableIncomeCard.scss'
 const METRIC_ROW_MOBILE_BREAKPOINT = 600
-type TaxableIncomeCardProps = Pick<TaxOverviewApiData, 'totalDeductions' | 'totalIncome'>
 
 function useMetricRowProps({ type, amount, maxMeterValue }: { type: 'income' | 'deductions', amount: number, maxMeterValue: number }) {
   const { t } = useTranslation()
@@ -41,26 +39,28 @@ function TotalMetricRow({ type, amount, maxMeterValue }: { type: 'income' | 'ded
   )
 }
 
-export const TaxableIncomeCard = ({
-  totalDeductions,
-  totalIncome,
-}: TaxableIncomeCardProps) => {
+export type TaxableIncomeCardProps = {
+  deductionsTotal: number
+  incomeTotal: number
+}
+export const TaxableIncomeCard = (data: TaxableIncomeCardProps) => {
   const { isDesktop } = useSizeClass()
-  const maxMeterValue = Math.max(totalIncome, totalDeductions, 1)
+  const { incomeTotal, deductionsTotal } = data
+  const maxMeterValue = Math.max(incomeTotal, deductionsTotal, 1)
 
   return (
     <VStack className='Layer__TaxOverview__Card' pi={!isDesktop ? undefined : 'md'}>
       {isDesktop
         ? (
           <VStack gap='sm'>
-            <TotalMetricRow type='income' amount={totalIncome} maxMeterValue={maxMeterValue} />
-            <TotalMetricRow type='deductions' amount={totalDeductions} maxMeterValue={maxMeterValue} />
+            <TotalMetricRow type='income' amount={incomeTotal} maxMeterValue={maxMeterValue} />
+            <TotalMetricRow type='deductions' amount={deductionsTotal} maxMeterValue={maxMeterValue} />
           </VStack>
         )
         : (
           <Card className='Layer__TaxOverview__Card__MetricRow--mobile'>
-            <TotalMetricRow type='income' amount={totalIncome} maxMeterValue={maxMeterValue} />
-            <TotalMetricRow type='deductions' amount={totalDeductions} maxMeterValue={maxMeterValue} />
+            <TotalMetricRow type='income' amount={incomeTotal} maxMeterValue={maxMeterValue} />
+            <TotalMetricRow type='deductions' amount={deductionsTotal} maxMeterValue={maxMeterValue} />
           </Card>
         )}
     </VStack>

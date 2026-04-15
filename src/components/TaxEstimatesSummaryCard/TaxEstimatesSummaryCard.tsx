@@ -18,11 +18,10 @@ export type TaxEstimatesSummaryCardProps = {
   total: number
 }
 
-export const TaxEstimatesSummaryCard = ({
-  data,
-}: { data: TaxEstimatesSummaryCardProps }) => {
+export const TaxEstimatesSummaryCard = (data: TaxEstimatesSummaryCardProps) => {
   const { isMobile } = useSizeClass()
-  const isSummaryCardLayout = data.layout === 'summaryCard'
+  const { categories, layout, title, total } = data
+  const isSummaryCardLayout = layout === 'summaryCard'
 
   return (
     <VStack className='Layer__TaxEstimatesSummaryCard__Container'>
@@ -34,19 +33,19 @@ export const TaxEstimatesSummaryCard = ({
             align={isSummaryCardLayout ? 'center' : 'start'}
             gap='md'
           >
-            <Span size='lg' weight='bold'>{data.title}</Span>
+            <Span size='lg' weight='bold'>{title}</Span>
           </HStack>
           {(isMobile || isSummaryCardLayout)
             ? (
               <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
-                <DonutChart categories={data.categories} total={data.total} />
-                <Legend categories={data.categories} total={data.total} />
+                <DonutChart categories={categories} total={total} />
+                <Legend categories={categories} total={total} />
               </VStack>
             )
             : (
               <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
-                <DonutChart categories={data.categories} total={data.total} />
-                <Legend categories={data.categories} total={data.total} />
+                <DonutChart categories={categories} total={total} />
+                <Legend categories={categories} total={total} />
               </HStack>
             )}
         </VStack>
