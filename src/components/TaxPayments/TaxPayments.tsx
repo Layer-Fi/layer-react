@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { useTaxPayments } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
@@ -8,11 +7,11 @@ import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstima
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
-import { TaxPaymentsMobileList } from '@components/TaxPayments/TaxPaymentsMobileList/TaxPaymentsMobileList'
-import { TaxPaymentsTable } from '@components/TaxPayments/TaxPaymentsTable/TaxPaymentsTable'
 
-const TaxPaymentsHeader = ({ isMobile, translation }: { isMobile: boolean, translation: TFunction }) => {
-  const t = translation
+import { TaxPaymentsMobileList } from './TaxPaymentsMobileList/TaxPaymentsMobileList'
+
+const TaxPaymentsHeader = ({ isMobile }: { isMobile: boolean }) => {
+  const { t } = useTranslation()
   return (
     <TaxEstimatesHeader
       title={t('taxEstimates:label.tax_payments', 'Tax Payments')}
@@ -22,8 +21,8 @@ const TaxPaymentsHeader = ({ isMobile, translation }: { isMobile: boolean, trans
   )
 }
 
-const ErrorState = ({ translation }: { translation: TFunction }) => {
-  const t = translation
+const ErrorState = () => {
+  const { t } = useTranslation()
   return (
     <DataState
       spacing
@@ -35,8 +34,8 @@ const ErrorState = ({ translation }: { translation: TFunction }) => {
   )
 }
 
-const EmptyState = ({ translation }: { translation: TFunction }) => {
-  const t = translation
+const EmptyState = () => {
+  const { t } = useTranslation()
   return (
     <DataState
       spacing
@@ -53,24 +52,25 @@ export const TaxPayments = () => {
   const { fullYearProjection } = useFullYearProjection()
   const { data, isLoading, isError } = useTaxPayments({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
-  const { t } = useTranslation()
   const props = useMemo(() => ({
     data,
     isLoading,
     isError,
     slots: {
-      EmptyState: () => <EmptyState translation={t} />,
-      ErrorState: () => <ErrorState translation={t} />,
+      EmptyState,
+      ErrorState,
     },
-  }), [data, isError, isLoading, t])
+  }), [data, isError, isLoading])
 
   const Header = useCallback(() => (
-    <TaxPaymentsHeader isMobile={!isDesktop} translation={t} />
-  ), [isDesktop, t])
+    <TaxPaymentsHeader isMobile={!isDesktop} />
+  ), [isDesktop])
 
   return (
     <ResponsiveDetailView name='TaxPayments' slots={{ Header }}>
-      {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
+      {/* <TaxPaymentsTable {...props} /> */}
+      {/* {isDesktop ?  : <TaxPaymentsMobileList {...props} />} */}
+      <TaxPaymentsMobileList {...props} />
     </ResponsiveDetailView>
   )
 }
