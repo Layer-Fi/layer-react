@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -29,6 +30,7 @@ import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/Ban
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
@@ -80,6 +82,11 @@ type ExpandedBankTransactionRowProps = {
 
   variant?: 'list' | 'row'
   onValidityChange?: (isValid: boolean) => void
+}
+
+type TaxCodeOption = {
+  label: string
+  value: string
 }
 
 export const ExpandedBankTransactionRow = ({
@@ -201,6 +208,27 @@ export const ExpandedBankTransactionRow = ({
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
+  const taxCodeOptions = useMemo<TaxCodeOption[]>(
+    () => bankTransaction.tax_options?.canada.map(taxOption => ({
+      label: taxOption.display_name,
+      value: taxOption.code,
+    })) ?? [],
+    [bankTransaction.tax_options?.canada],
+  )
+
+  const showTaxCodeSelector = taxCodeOptions.length > 0
+
+  const getSelectedTaxCodeOption = useCallback(
+    (taxCode: string | null): TaxCodeOption | null => {
+      if (!taxCode) {
+        return null
+      }
+
+      return taxCodeOptions.find(option => option.value === taxCode) ?? null
+    },
+    [taxCodeOptions],
+  )
+
   const toggleOptions = useMemo(() => [
     {
       value: 'categorize',
@@ -311,6 +339,23 @@ export const ExpandedBankTransactionRow = ({
                               isDisabled={!isCategorizationEnabled}
                               includeSuggestedMatches={false}
                             />
+                            {showTaxCodeSelector && (
+                              <ComboBox<TaxCodeOption>
+                                selectedValue={getSelectedTaxCodeOption(split.taxCode)}
+                                onSelectedValueChange={(option) => {
+                                  updateSplitAtIndex(index, currentSplit => ({
+                                    ...currentSplit,
+                                    taxCode: option?.value ?? null,
+                                  }))
+                                }}
+                                options={taxCodeOptions}
+                                isDisabled={!isCategorizationEnabled}
+                                isSearchable={false}
+                                isClearable
+                                placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
+                                className={`${className}__table-cell--split-entry__tax-code`}
+                              />
+                            )}
                             {showTags && (
                               <TagDimensionsGroup
                                 value={split.tags}
