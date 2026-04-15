@@ -1,7 +1,13 @@
+import { DurationFormat } from '@formatjs/intl-durationformat'
 import type { Duration } from 'date-fns'
 import type { IntlShape } from 'react-intl'
 
 export type DurationFormatStyle = 'long' | 'short' | 'narrow' | 'digital'
+
+export type DurationFormatFn = (
+  totalMinutes: number,
+  options?: { compact?: boolean },
+) => string
 
 type DurationFormatOptions = { style: DurationFormatStyle }
 
@@ -10,7 +16,7 @@ export const formatDuration = (
   value: Duration,
   options: DurationFormatOptions,
 ): string => {
-  return new Intl.DurationFormat(intl.locale, options).format(value)
+  return new DurationFormat(intl.locale, options).format(value)
 }
 
 export const formatMinutesAsDuration = (
