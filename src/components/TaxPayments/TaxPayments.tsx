@@ -52,7 +52,6 @@ export const TaxPayments = () => {
   const { fullYearProjection } = useFullYearProjection()
   const { data, isLoading, isError } = useTaxPayments({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
-
   const props = useMemo(() => ({
     data,
     isLoading,
