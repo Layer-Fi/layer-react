@@ -27,7 +27,7 @@ export const CreateCatalogServiceSchema = Schema.Struct({
     Schema.fromKey('account_identifier'),
   ),
 
-  billableRatePerHourAmount: Schema.optional(Schema.NullOr(Schema.Number)).pipe(
+  billableRatePerHourAmount: Schema.optional(Schema.Number).pipe(
     Schema.fromKey('billable_rate_per_hour_amount'),
   ),
 
