@@ -128,7 +128,7 @@ export const TimeEntries = ({ filterParams, onStartTimer, isStartTimerDisabled }
         slots={tableSlots}
       />
       <TimeEntryDrawer
-        isOpen={isDrawerOpen && !entryToDelete}
+        isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
         entry={selectedEntry}
         onSuccess={handleDrawerSuccess}
