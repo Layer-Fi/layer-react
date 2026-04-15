@@ -19,7 +19,7 @@
   min-width: 0;
 }
 
-.Layer__MetricRowValue {
+.Layer__MetricRow__Value {
   flex: 0 0 56%;
   justify-content: flex-end;
   min-width: 0;
@@ -31,12 +31,12 @@
 
 @container (max-width: 720px) {
   .Layer__MetricRow,
-  .Layer__MetricRowValue {
+  .Layer__MetricRow__Value {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .Layer__MetricRowValue {
+  .Layer__MetricRow__Value {
     flex-basis: auto;
   }
 }

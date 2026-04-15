@@ -41,7 +41,7 @@ export const MetricRow = ({
   const meterContainerProps = {
     className: classNames({
       Layer__MetricCard__Meter: showBorder,
-      Layer__MetricRow__Meter: !showBorder,
+      Layer__MetricRow__Value: !showBorder,
     }),
     gap: 'md' as const,
   }
