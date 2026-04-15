@@ -130,10 +130,10 @@ export function TimeEntriesStoreProvider({
           set({ entryToDelete: entry, isDeleteModalOpen: true })
         },
         setDeleteModalOpen: (isOpen: boolean) => {
-          set({ isDeleteModalOpen: isOpen })
+          set({ isDeleteModalOpen: isOpen, ...(!isOpen && { entryToDelete: null }) })
         },
         onDeleteSuccess: () => {
-          set({ isDeleteModalOpen: false, selectedEntry: null, isDrawerOpen: false })
+          set({ isDeleteModalOpen: false, entryToDelete: null, selectedEntry: null, isDrawerOpen: false })
         },
         setSelectedCustomer: (customer: Customer | null) => {
           set({ selectedCustomer: customer })
