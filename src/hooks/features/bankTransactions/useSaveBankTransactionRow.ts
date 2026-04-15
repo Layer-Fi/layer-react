@@ -44,9 +44,14 @@ export const useSaveBankTransactionRow = () => {
 
     if (!selectedCategory.classification) return
 
+    const taxCode = selectedCategory.classification.type === 'Exclusion'
+      ? null
+      : bankTransaction.tax_code ?? null
+
     return categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: selectedCategory.classification,
+      taxCode,
     })
   }, [categorizeBankTransaction, matchBankTransaction])
 

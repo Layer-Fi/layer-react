@@ -123,6 +123,7 @@ export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): 
     ? ({
       type: 'Category',
       category: splits[0].category.classification!,
+      taxCode: splits[0].taxCode,
     })
     : ({
       type: 'Split',
@@ -130,6 +131,7 @@ export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): 
         // TODO: enforce upstream in the category combobox that split.category is non-null
         category: split.category!.classification!,
         amount: split.amount,
+        taxCode: split.taxCode,
         tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
         customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
         vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
