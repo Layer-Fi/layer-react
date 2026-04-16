@@ -13,11 +13,11 @@ import './timeEntriesTableHeader.scss'
 
 export const TimeEntriesTableHeader = () => {
   const { t } = useTranslation()
-  const { openDrawer } = useTimeEntriesDrawer()
+  const { setDrawerOpen } = useTimeEntriesDrawer()
   const { selectedCustomer, selectedServiceId, setSelectedCustomer, setSelectedServiceId } = useTimeEntriesFilters()
   const { onStartTimer, isStartTimerDisabled } = useTimeEntriesTimerConfig()
 
-  const onAddEntry = useCallback(() => openDrawer(null), [openDrawer])
+  const onAddEntry = useCallback(() => setDrawerOpen(true, null), [setDrawerOpen])
 
   const HeaderActions = useCallback(() => (
     <HStack gap='xs'>
@@ -38,7 +38,7 @@ export const TimeEntriesTableHeader = () => {
   ), [t, onAddEntry, onStartTimer, isStartTimerDisabled])
 
   const Filters = useCallback(() => (
-    <HStack gap='lg' align='end' className='Layer__TimeEntriesTable__Filters'>
+    <HStack fluid gap='lg' align='end' className='Layer__TimeEntriesTable__Filters'>
       <CustomerSelector
         selectedCustomer={selectedCustomer}
         onSelectedCustomerChange={setSelectedCustomer}
