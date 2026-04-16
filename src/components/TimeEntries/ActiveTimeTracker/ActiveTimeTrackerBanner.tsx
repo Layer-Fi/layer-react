@@ -10,7 +10,7 @@ import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
-type ActiveTimeTrackerActiveBannerProps = {
+type ActiveTimeTrackerBannerProps = {
   actionError: string | null
   timerDisplayValue: string
   selectedServiceId: string | null
@@ -24,7 +24,7 @@ type ActiveTimeTrackerActiveBannerProps = {
   isUpdating: boolean
 }
 
-export const ActiveTimeTrackerActiveBanner = ({
+export const ActiveTimeTrackerBanner = ({
   actionError,
   timerDisplayValue,
   selectedServiceId,
@@ -36,11 +36,11 @@ export const ActiveTimeTrackerActiveBanner = ({
   isCancelling,
   isStopping,
   isUpdating,
-}: ActiveTimeTrackerActiveBannerProps) => {
+}: ActiveTimeTrackerBannerProps) => {
   const { t } = useTranslation()
 
   return (
-    <Container name='ActiveTimeTrackerBanner'>
+    <Container name='ActiveTimeTracker'>
       {actionError && (
         <VStack pi='md' pbe='2xs'>
           <DataState
@@ -51,20 +51,20 @@ export const ActiveTimeTrackerActiveBanner = ({
         </VStack>
       )}
 
-      <HStack className='Layer__ActiveTimeTrackerBanner__Main' gap='md' justify='space-between' align='center'>
-        <HStack className='Layer__ActiveTimeTrackerBanner__Controls' gap='sm' align='center'>
-          <HStack className='Layer__ActiveTimeTrackerBanner__Timer' gap='sm' align='center'>
-            <Span className='Layer__ActiveTimeTrackerBanner__TimerDot' />
-            <Span className='Layer__ActiveTimeTrackerBanner__TimerValue'>{timerDisplayValue}</Span>
+      <HStack className='Layer__ActiveTimeTracker__Main' gap='md' justify='space-between' align='center'>
+        <HStack className='Layer__ActiveTimeTracker__Controls' gap='sm' align='center'>
+          <HStack className='Layer__ActiveTimeTracker__Timer' gap='sm' align='center'>
+            <Span className='Layer__ActiveTimeTracker__TimerDot' />
+            <Span className='Layer__ActiveTimeTracker__TimerValue'>{timerDisplayValue}</Span>
           </HStack>
 
-          <HStack className='Layer__ActiveTimeTrackerBanner__InlineFields' gap='sm' align='center'>
+          <HStack className='Layer__ActiveTimeTracker__InlineFields' gap='sm' align='center'>
             <TimeEntryServiceSelector
               selectedServiceId={selectedServiceId}
               onSelectedServiceIdChange={onSelectedServiceIdChange}
               inline
               showLabel={false}
-              className='Layer__ActiveTimeTrackerBanner__Field__Service Layer__ActiveTimeTrackerBanner__Field--inline'
+              className='Layer__ActiveTimeTracker__Field__Service Layer__ActiveTimeTracker__Field--inline'
             />
 
             <CustomerSelector
@@ -73,12 +73,12 @@ export const ActiveTimeTrackerActiveBanner = ({
               inline
               showLabel={false}
               placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
-              className='Layer__ActiveTimeTrackerBanner__Field__Customer Layer__ActiveTimeTrackerBanner__Field--inline'
+              className='Layer__ActiveTimeTracker__Field__Customer Layer__ActiveTimeTracker__Field--inline'
             />
           </HStack>
         </HStack>
 
-        <HStack className='Layer__ActiveTimeTrackerBanner__Actions' gap='sm' align='center'>
+        <HStack className='Layer__ActiveTimeTracker__Actions' gap='sm' align='center'>
           <Button
             variant='text'
             onPress={onCancelTimer}
@@ -88,7 +88,7 @@ export const ActiveTimeTrackerActiveBanner = ({
             {t('timeTracking:action.cancel_timer', 'Cancel')}
           </Button>
 
-          <HStack className='Layer__ActiveTimeTrackerBanner__CompleteButton'>
+          <HStack className='Layer__ActiveTimeTracker__CompleteButton'>
             <Button
               variant='outlined'
               onPress={onCompleteTimer}
