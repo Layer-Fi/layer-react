@@ -1,8 +1,5 @@
 .Layer__TimeTrackingServicesDrawer {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
   padding-block-start: var(--spacing-md);
   padding-block-end: var(--spacing-lg);
   padding-inline: var(--spacing-md);
@@ -128,7 +125,6 @@
 }
 
 .Layer__TimeTrackingServicesDrawer__rateInputRow {
-  display: flex;
   align-items: stretch;
   border-radius: var(--border-radius-2xs);
 

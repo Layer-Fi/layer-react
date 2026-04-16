@@ -52,15 +52,19 @@ const normalizeByServiceEntry = (entry: unknown): ByServiceEntry | null => {
 
   const serviceId = typeof encodedEntry.serviceId === 'string'
     ? encodedEntry.serviceId
-    : typeof encodedEntry.id === 'string'
-      ? encodedEntry.id
-      : null
+    : typeof encodedEntry.service_id === 'string'
+      ? encodedEntry.service_id
+      : typeof encodedEntry.id === 'string'
+        ? encodedEntry.id
+        : null
 
   const serviceName = typeof encodedEntry.serviceName === 'string'
     ? encodedEntry.serviceName
-    : typeof encodedEntry.name === 'string'
-      ? encodedEntry.name
-      : null
+    : typeof encodedEntry.service_name === 'string'
+      ? encodedEntry.service_name
+      : typeof encodedEntry.name === 'string'
+        ? encodedEntry.name
+        : null
 
   return {
     serviceId,
@@ -97,7 +101,7 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
   return (
     <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center'>
       <div className='Layer__TimeTrackingStats__ChartBar'>
-        <ResponsiveContainer width='100%' height={CHART_HEIGHT} style={{ padding: 0 }}>
+        <ResponsiveContainer width='100%' height={CHART_HEIGHT}>
           <BarChart
             data={chartData}
             layout='vertical'

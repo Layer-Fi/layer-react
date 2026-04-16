@@ -44,7 +44,7 @@ function HourlyRateField({ inputId, name, value, onChange }: HourlyRateFieldProp
   const { t } = useTranslation()
 
   return (
-    <div className='Layer__TimeTrackingServicesDrawer__rateInputRow'>
+    <HStack className='Layer__TimeTrackingServicesDrawer__rateInputRow'>
       <div className='Layer__TimeTrackingServicesDrawer__rateAmountWrap'>
         <AmountInput
           id={inputId}
@@ -57,7 +57,7 @@ function HourlyRateField({ inputId, name, value, onChange }: HourlyRateFieldProp
       <Span className='Layer__TimeTrackingServicesDrawer__rateSuffix'>
         {t('timeTracking:services.rate_per_hour_suffix', '/hr')}
       </Span>
-    </div>
+    </HStack>
   )
 }
 
@@ -342,11 +342,10 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
 
   const activeServices = useMemo(() => data?.data ?? [], [data])
 
-  const archivedServices = useMemo(() => {
-    const rows = archivedData?.data ?? []
-    const withArchived = rows.filter(s => s.archivedAt != null)
-    return withArchived.length > 0 ? withArchived : rows
-  }, [archivedData])
+  const archivedServices = useMemo(
+    () => (archivedData?.data ?? []).filter(s => s.archivedAt != null),
+    [archivedData],
+  )
 
   const formatHourly = useCallback(
     (service: CatalogService) => {
@@ -423,7 +422,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
         slots={{ Header }}
       >
         {() => (
-          <div className='Layer__TimeTrackingServicesDrawer'>
+          <VStack className='Layer__TimeTrackingServicesDrawer' gap='md'>
             {isError && (
               <DataState
                 status={DataStateStatus.failed}
@@ -546,7 +545,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
                 )}
               </VStack>
             )}
-          </div>
+          </VStack>
         )}
       </Drawer>
       {archiveTarget !== null && (
