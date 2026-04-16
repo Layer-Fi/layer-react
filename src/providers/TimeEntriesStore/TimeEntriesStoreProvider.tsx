@@ -130,7 +130,7 @@ export function TimeEntriesStoreProvider({
           set({ entryToDelete: entry, isDeleteModalOpen: true })
         },
         setDeleteModalOpen: (isOpen: boolean) => {
-          set({ isDeleteModalOpen: isOpen, ...(!isOpen && { entryToDelete: null }) })
+          set({ isDeleteModalOpen: isOpen })
         },
         onDeleteSuccess: () => {
           set({ isDeleteModalOpen: false, entryToDelete: null, selectedEntry: null, isDrawerOpen: false })
