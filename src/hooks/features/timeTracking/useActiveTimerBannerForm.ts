@@ -3,12 +3,13 @@ import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type TimeEntry } from '@schemas/timeTracking'
-import { type ActiveTimerDraft, getDraftFromEntry, hasDraftChanges, toUpdatePayload } from '@utils/timeTracking/activeTimerDraft'
+import { type ActiveTimerDraft, type ActiveTimerDraftWithService, getDraftFromEntry, hasDraftChanges, toUpdatePayload } from '@utils/timeTracking/activeTimerDraft'
 import { useDeleteTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/useDeleteTimeEntry'
 import { UpsertTimeEntryMode, useUpsertTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useUpsertTimeEntry'
 import { useActiveTimeTrackerGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
 import { useStopTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useStopTimeTracker'
 import { useAppForm } from '@hooks/features/forms/useForm'
+import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 
 type UseActiveTimerBannerFormProps = {
   activeEntry: TimeEntry
@@ -61,6 +62,12 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
     }
   }, [activeEntry.id, defaultValues, form])
 
+  const debouncedUpdateTimeEntry = useDebounce((draft: ActiveTimerDraftWithService) => {
+    void updateTimeEntry(toUpdatePayload(activeEntry, draft)).catch(() => {
+      setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
+    })
+  })
+
   const values = useStore(form.store, s => s.values)
   useEffect(() => {
     if (!values.selectedServiceId) return
@@ -68,10 +75,8 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
     if (!hasDraftChanges(activeEntry, draft)) return
 
     setActionError(null)
-    void updateTimeEntry(toUpdatePayload(activeEntry, draft)).catch(() => {
-      setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
-    })
-  }, [values, activeEntry, updateTimeEntry, t])
+    debouncedUpdateTimeEntry(draft)
+  }, [values, activeEntry, debouncedUpdateTimeEntry])
 
   const cancelTimer = useCallback(async () => {
     setActionError(null)
