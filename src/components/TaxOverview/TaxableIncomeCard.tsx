@@ -7,7 +7,7 @@ import { MetricRow } from '@components/MetricRow/MetricRow'
 import './taxableIncomeCard.scss'
 const METRIC_ROW_MOBILE_BREAKPOINT = 600
 
-type TaxableIncomeCardProps = {
+export type TaxableIncomeCardProps = {
   metrics: readonly TaxOverviewMetric[]
 }
 

@@ -11,7 +11,7 @@ import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstima
 import { VStack } from '@ui/Stack/Stack'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
-import { type TaxEstimatesSummaryCardProps } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
+import { TaxEstimatesSummaryCard, type TaxEstimatesSummaryCardProps } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { TaxableIncomeCard, type TaxableIncomeCardProps } from '@components/TaxOverview/TaxableIncomeCard'
 
 import '@components/TaxOverview/taxOverview.scss'
@@ -63,14 +63,25 @@ const TaxOverviewHeader = () => {
 }
 
 const TaxOverviewContent = (data: TaxOverviewProps) => {
-  const { incomeCard, summaryCard } = data
+  const { incomeCard: { metrics }, summaryCard } = data
   const { isDesktop } = useSizeClass()
   return (
-    <VStack className='Layer__TaxOverview' gap='md'>
-      <TaxableIncomeCard
-        metrics={data.metrics}
-      />
-    </VStack>
+    isDesktop
+      ? (
+        <>
+          <VStack className='Layer__TaxOverview' gap='md'>
+            <TaxableIncomeCard metrics={metrics} />
+          </VStack>
+          <TaxEstimatesSummaryCard {...summaryCard} />
+        </>
+      )
+      : (
+        <VStack className='Layer__TaxOverview' gap='md'>
+          <TaxableIncomeCard metrics={metrics} />
+          <TaxEstimatesSummaryCard {...summaryCard} />
+        </VStack>
+      )
+
   )
 }
 
@@ -95,8 +106,7 @@ export const TaxOverview = () => {
     if (!taxOverviewData || !taxSummaryData) {
       return {
         incomeCard: {
-          deductionsTotal: 0,
-          incomeTotal: 0,
+          metrics: [],
         },
         summaryCard: {
           categories: [],
