@@ -8,6 +8,7 @@ import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useTimeEntriesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
+import { useActiveTimeTrackerGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -113,6 +114,7 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
 
   const { patchTimeEntryByKey, forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
   const { invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()
+  const { invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 
@@ -122,6 +124,7 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
 
       if (mode === UpsertTimeEntryMode.Update) {
         void patchTimeEntryByKey(triggerResult.data)
+        void invalidateActiveTimeTracker()
       }
       else {
         void forceReloadTimeEntries()
@@ -131,7 +134,7 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
 
       return triggerResult
     },
-    [originalTrigger, mode, patchTimeEntryByKey, forceReloadTimeEntries, invalidateTimeTrackingSummary],
+    [originalTrigger, mode, patchTimeEntryByKey, forceReloadTimeEntries, invalidateActiveTimeTracker, invalidateTimeTrackingSummary],
   )
 
   const proxiedMutationResponse = new Proxy(mutationResponse, {
