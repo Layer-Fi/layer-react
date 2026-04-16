@@ -135,11 +135,6 @@ export const TimeEntrySummarySchema = Schema.Struct({
     Schema.fromKey('total_billable_amount'),
   ),
 
-  byCustomer: pipe(
-    Schema.propertySignature(Schema.Array(TimeEntrySummaryGroupSchema)),
-    Schema.fromKey('by_customer'),
-  ),
-
   byService: pipe(
     Schema.propertySignature(Schema.Array(TimeEntrySummaryGroupSchema)),
     Schema.fromKey('by_service'),
