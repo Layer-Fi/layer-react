@@ -7,7 +7,7 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 
 type ServiceRestoreModalProps = {
-  service: CatalogService
+  service: CatalogService | null
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   onSuccess: () => void
@@ -21,12 +21,15 @@ export function ServiceRestoreModal({
 }: ServiceRestoreModalProps) {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
-  const { trigger: reactivateService } = useReactivateCatalogService({ serviceId: service.id })
+  const { trigger: reactivateService } = useReactivateCatalogService({ serviceId: service?.id ?? '' })
 
   const onConfirm = useCallback(async () => {
+    if (!service) {
+      return
+    }
     await reactivateService()
     onSuccess()
-  }, [onSuccess, reactivateService])
+  }, [onSuccess, reactivateService, service])
 
   return (
     <BaseConfirmationModal

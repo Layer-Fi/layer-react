@@ -7,6 +7,7 @@ import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import { type TimeTrackingSummaryFilterParams, useTimeTrackingSummary } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
@@ -79,7 +80,7 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
   )
 
   return (
-    <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center'>
+    <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center' pbs='lg'>
       <div className='Layer__TimeTrackingStats__ChartBar'>
         <ResponsiveContainer width='100%' height={CHART_HEIGHT}>
           <BarChart
@@ -133,13 +134,13 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
   )
 
   return (
-    <VStack className='Layer__TimeTrackingStats__Content' gap='lg'>
+    <VStack className='Layer__TimeTrackingStats__Content' gap='lg' pb='md' pi='md'>
       <HStack className='Layer__TimeTrackingStats__TopRow' justify='space-between' align='center' gap='lg'>
         <VStack className='Layer__TimeTrackingStats__Summary' gap='2xs'>
           <Span size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
-          <Span className='Layer__TimeTrackingStats__SummaryValue' size='xl' weight='bold'>
+          <Heading className='Layer__TimeTrackingStats__SummaryValue' level={3} size='3xl' weight='bold'>
             {formatMinutesAsDuration(summary.totalMinutes, { compact: true })}
-          </Span>
+          </Heading>
         </VStack>
         <VStack className='Layer__TimeTrackingStats__DateSelection'>
           <CombinedDateRangeSelection mode='full' showLabels={false} />
@@ -150,7 +151,7 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
           <TimeTrackingStatsBreakdown entries={serviceBreakdown} />
         )
         : (
-          <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center'>
+          <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center' pbs='lg'>
             <HStack className='Layer__TimeTrackingStats__ChartBar Layer__TimeTrackingStats__ChartBar--empty' />
             <Span size='sm' variant='subtle'>
               {t('timeTracking:label.no_activity_breakdown', 'No activity breakdown available for this period.')}
@@ -172,7 +173,7 @@ export const TimeTrackingStats = ({ selectedFilterParams }: TimeTrackingStatsPro
         isLoading={isLoading}
         isError={isError}
         Loading={(
-          <HStack className='Layer__TimeTrackingStats__Content' gap='lg' justify='center' align='center'>
+          <HStack className='Layer__TimeTrackingStats__Content' gap='lg' justify='center' align='center' pb='md' pi='md'>
             <Loader />
           </HStack>
         )}

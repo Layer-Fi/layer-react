@@ -7,7 +7,7 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 
 type ServiceArchiveModalProps = {
-  service: CatalogService
+  service: CatalogService | null
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   onSuccess: () => void
@@ -21,12 +21,15 @@ export function ServiceArchiveModal({
 }: ServiceArchiveModalProps) {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
-  const { trigger: archiveService } = useArchiveCatalogService({ serviceId: service.id })
+  const { trigger: archiveService } = useArchiveCatalogService({ serviceId: service?.id ?? '' })
 
   const onConfirm = useCallback(async () => {
+    if (!service) {
+      return
+    }
     await archiveService()
     onSuccess()
-  }, [archiveService, onSuccess])
+  }, [archiveService, onSuccess, service])
 
   return (
     <BaseConfirmationModal

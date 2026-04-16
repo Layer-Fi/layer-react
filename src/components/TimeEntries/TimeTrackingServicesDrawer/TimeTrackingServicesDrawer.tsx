@@ -219,19 +219,13 @@ function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: Archive
               className='Layer__TimeTrackingServicesDrawer__archivedRow'
               gap='sm'
               align='center'
+              pb='sm'
+              pi='md'
             >
-              <Span className='Layer__TimeTrackingServicesDrawer__rowName' size='sm'>
-                {service.name}
-              </Span>
-              <Spacer />
-              {formatHourly(service) && (
-                <Span className='Layer__TimeTrackingServicesDrawer__rowRate' size='sm'>
-                  {formatHourly(service)}
-                </Span>
-              )}
+              <ServiceRowLabels name={service.name} rateLabel={formatHourly(service)} />
               <Button variant='outlined' inset onPress={() => onRestore(service)}>
                 <ArchiveRestore size={14} />
-                {t('timeTracking:services.unarchive', 'Restore')}
+                <Span size='sm'>{t('timeTracking:services.unarchive', 'Restore')}</Span>
               </Button>
             </HStack>
           )}
@@ -250,17 +244,31 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)
   const [archiveTarget, setArchiveTarget] = useState<CatalogService | null>(null)
+  const [isArchiveOpen, setIsArchiveOpen] = useState(false)
   const [restoreTarget, setRestoreTarget] = useState<CatalogService | null>(null)
+  const [isRestoreOpen, setIsRestoreOpen] = useState(false)
 
   useEffect(() => {
     if (!isOpen) {
       setExpandedId(null)
       setIsAdding(false)
       setArchiveTarget(null)
+      setIsArchiveOpen(false)
       setRestoreTarget(null)
+      setIsRestoreOpen(false)
       setTab('active')
     }
   }, [isOpen])
+
+  const openArchive = useCallback((service: CatalogService) => {
+    setArchiveTarget(service)
+    setIsArchiveOpen(true)
+  }, [])
+
+  const openRestore = useCallback((service: CatalogService) => {
+    setRestoreTarget(service)
+    setIsRestoreOpen(true)
+  }, [])
 
   const activeServices = useMemo(() => data?.data ?? [], [data])
 
@@ -285,7 +293,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
   const Header = useCallback(
     ({ close }: { close: () => void }) => (
       <VStack gap='md'>
-        <HStack className='Layer__TimeTrackingServicesDrawer__headerTop' gap='sm' align='center'>
+        <HStack gap='sm' align='center' justify='space-between'>
           <ModalHeading>{t('timeTracking:services.title', 'Services')}</ModalHeading>
           <HStack gap='xs' align='center'>
             <Button onPress={startAdd} isDisabled={isAdding}>
@@ -295,7 +303,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
             <ModalCloseButton onClose={close} />
           </HStack>
         </HStack>
-        <HStack className='Layer__TimeTrackingServicesDrawer__tabs'>
+        <HStack className='Layer__TimeTrackingServicesDrawer__tabs' justify='end' fluid>
           <Toggle
             ariaLabel={t('timeTracking:services.tab_group_label', 'Service list')}
             options={tabOptions}
@@ -321,7 +329,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
         slots={{ Header }}
       >
         {() => (
-          <VStack className='Layer__TimeTrackingServicesDrawer' gap='md'>
+          <VStack className='Layer__TimeTrackingServicesDrawer' gap='md' pbs='md' pbe='lg' pi='md'>
             <ConditionalBlock
               data={data}
               isLoading={isLoading}
@@ -331,7 +339,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
               Error={<LoadServicesErrorState />}
             >
               {() => (
-                <VStack className='Layer__TimeTrackingServicesDrawer__list' gap='sm'>
+                <VStack gap='sm'>
                   {tab === 'active'
                     ? (
                       <ActiveServicesContent
@@ -342,7 +350,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
                         onCancelAdd={() => setIsAdding(false)}
                         onCreateSuccess={() => setIsAdding(false)}
                         onToggleExpanded={toggleExpanded}
-                        onArchive={setArchiveTarget}
+                        onArchive={openArchive}
                         onEditSuccess={() => setExpandedId(null)}
                       />
                     )
@@ -350,7 +358,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
                       <ArchivedServicesContent
                         isEnabled={isOpen && tab === 'archived'}
                         formatHourly={formatHourly}
-                        onRestore={setRestoreTarget}
+                        onRestore={openRestore}
                       />
                     )}
                 </VStack>
@@ -359,37 +367,35 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
           </VStack>
         )}
       </Drawer>
-      {archiveTarget !== null && (
-        <ServiceArchiveModal
-          key={archiveTarget.id}
-          service={archiveTarget}
-          isOpen={archiveTarget !== null}
-          onOpenChange={(open) => {
-            if (!open) {
-              setArchiveTarget(null)
-            }
-          }}
-          onSuccess={() => {
-            setExpandedId(null)
+      <ServiceArchiveModal
+        service={archiveTarget}
+        isOpen={isArchiveOpen}
+        onOpenChange={(open) => {
+          setIsArchiveOpen(open)
+          if (!open) {
             setArchiveTarget(null)
-          }}
-        />
-      )}
-      {restoreTarget !== null && (
-        <ServiceRestoreModal
-          key={restoreTarget.id}
-          service={restoreTarget}
-          isOpen={restoreTarget !== null}
-          onOpenChange={(open) => {
-            if (!open) {
-              setRestoreTarget(null)
-            }
-          }}
-          onSuccess={() => {
+          }
+        }}
+        onSuccess={() => {
+          setExpandedId(null)
+          setIsArchiveOpen(false)
+          setArchiveTarget(null)
+        }}
+      />
+      <ServiceRestoreModal
+        service={restoreTarget}
+        isOpen={isRestoreOpen}
+        onOpenChange={(open) => {
+          setIsRestoreOpen(open)
+          if (!open) {
             setRestoreTarget(null)
-          }}
-        />
-      )}
+          }
+        }}
+        onSuccess={() => {
+          setIsRestoreOpen(false)
+          setRestoreTarget(null)
+        }}
+      />
     </>
   )
 }

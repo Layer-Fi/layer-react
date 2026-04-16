@@ -1,11 +1,8 @@
 .Layer__TimeTrackingStats__Content {
   container: time-tracking-stats / inline-size;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-md);
 }
 
 .Layer__TimeTrackingStats__TopRow {
-  gap: var(--spacing-lg);
   min-inline-size: 0;
 }
 
@@ -21,13 +18,11 @@
 }
 
 .Layer__TimeTrackingStats__SummaryValue {
-  font-size: var(--text-heading-3xl);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
 .Layer__TimeTrackingStats__Chart {
-  padding-block-start: var(--spacing-lg);
   border-top: 1px solid var(--color-base-300);
 }
 

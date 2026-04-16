@@ -1,20 +1,8 @@
 .Layer__TimeTrackingServicesDrawer {
   box-sizing: border-box;
-  padding-block-start: var(--spacing-md);
-  padding-block-end: var(--spacing-lg);
-  padding-inline: var(--spacing-md);
-}
-
-.Layer__TimeTrackingServicesDrawer__headerTop {
-  align-items: center;
-  justify-content: space-between;
 }
 
 .Layer__TimeTrackingServicesDrawer__tabs {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-
   .Layer__UI__Toggle[data-size='xsmall'] {
     height: auto;
     padding: 2px;
@@ -30,12 +18,6 @@
   .Layer__UI__Toggle[data-size='xsmall'] .Layer__UI__ToggleOption-SelectionIndicator {
     border-radius: var(--border-radius-2xs);
   }
-}
-
-.Layer__TimeTrackingServicesDrawer__list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
 }
 
 .Layer__TimeTrackingServicesDrawer__addWrap {
@@ -66,8 +48,6 @@
 .Layer__TimeTrackingServicesDrawer__archivedRow {
   box-sizing: border-box;
 
-  padding: var(--spacing-sm) var(--spacing-md);
-
   border-block-start: 1px solid var(--border-color);
 
   background-color: white;
@@ -79,7 +59,6 @@
   .Layer__UI__Button {
     gap: var(--spacing-2xs);
     padding-inline: var(--spacing-sm);
-    font-size: var(--text-sm);
   }
 }
 
@@ -94,23 +73,12 @@
 
 .Layer__TimeTrackingServicesDrawer__addCard {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-
-  padding: var(--spacing-md);
 
   background-color: var(--bg-subtle);
 }
 
-.Layer__TimeTrackingServicesDrawer__addCardTitle {
-  font-weight: var(--font-weight-semibold);
-}
-
 .Layer__TimeTrackingServicesDrawer__editForm {
   box-sizing: border-box;
-
-  padding: var(--spacing-md);
 
   margin-inline: calc(-1 * var(--spacing-md));
 
@@ -150,19 +118,4 @@
 
     background: transparent;
   }
-}
-
-.Layer__TimeTrackingServicesDrawer__rateSuffix {
-  display: flex;
-  align-items: center;
-
-  padding-inline: var(--spacing-sm);
-
-  font-size: var(--text-sm);
-
-  color: var(--color-base-600);
-}
-
-.Layer__TimeTrackingServicesDrawer__cardActions {
-  justify-content: space-between;
 }
