@@ -10,8 +10,6 @@ import { useActiveTimeTrackerGlobalCacheActions } from '@hooks/api/businesses/[b
 import { useStopTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useStopTimeTracker'
 import { useAppForm } from '@hooks/features/forms/useForm'
 
-const AUTOSAVE_DEBOUNCE_MS = 500
-
 type UseActiveTimerBannerFormProps = {
   activeEntry: TimeEntry
 }
@@ -70,12 +68,9 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
     if (!hasDraftChanges(activeEntry, draft)) return
 
     setActionError(null)
-    const id = window.setTimeout(() => {
-      void updateTimeEntry(toUpdatePayload(activeEntry, draft)).catch(() => {
-        setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
-      })
-    }, AUTOSAVE_DEBOUNCE_MS)
-    return () => window.clearTimeout(id)
+    void updateTimeEntry(toUpdatePayload(activeEntry, draft)).catch(() => {
+      setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
+    })
   }, [values, activeEntry, updateTimeEntry, t])
 
   const cancelTimer = useCallback(async () => {
