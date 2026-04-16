@@ -15,7 +15,6 @@ import type { CartesianViewBox } from 'recharts/types/util/types'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { VStack } from '@ui/Stack/Stack'
 import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData, type ValueFormatter } from '@components/DetailedCharts/types'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 import './detailedChart.scss'
 
@@ -142,7 +141,7 @@ export const DetailedChart = <T extends SeriesData>({
     <VStack className='Layer__DetailedChart'>
       {slots?.header && (
         <VStack className='Layer__DetailedChart__header'>
-          {stylingProps?.showDatePicker && <GlobalMonthPicker />}
+          {slots.header}
         </VStack>
       )}
       <VStack className='Layer__DetailedChart__container'>
@@ -223,12 +222,9 @@ export const DetailedChart = <T extends SeriesData>({
                           interactionProps.hoveredItem && !active && 'Layer__DetailedChart__slice--inactive',
                           (stylingProps?.isBordered || isFallbackSlice) && 'Layer__DetailedChart__slice--bordered',
                         )}
-                        style={{
-                          fill:
-                          isFallbackSlice && fill
-                            ? 'url(#layer-pie-dots-pattern)'
-                            : fill,
-                        }}
+                        fill={isFallbackSlice && fill
+                          ? 'url(#layer-pie-dots-pattern)'
+                          : fill}
                         opacity={colorMapping.opacity}
                         onMouseEnter={() => interactionProps.setHoveredItem(entry)}
                         onMouseLeave={() => interactionProps.setHoveredItem(undefined)}

@@ -92,14 +92,23 @@ const ValueIcon = <T extends SeriesData>({
     )
   }
 
+  const colorMapping = colorSelector(item)
+
   return (
-    <div
+    <svg
       className='share-icon'
-      style={{
-        background: colorSelector(item)?.color,
-        opacity: colorSelector(item)?.opacity,
-      }}
-    />
+      viewBox='0 0 12 12'
+      xmlns='http://www.w3.org/2000/svg'
+      aria-hidden='true'
+    >
+      <rect
+        width='12'
+        height='12'
+        rx='2'
+        fill={colorMapping.color}
+        fillOpacity={colorMapping.opacity}
+      />
+    </svg>
   )
 }
 
