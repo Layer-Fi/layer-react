@@ -1,7 +1,8 @@
+import { useCallback, useMemo } from 'react'
 import { Play } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customer'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { TextField } from '@ui/Form/Form'
 import { TextArea } from '@ui/Input/TextArea'
@@ -11,25 +12,13 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { useStartTimerForm } from '@components/TimeEntries/ActiveTimeTracker/useStartTimerForm'
 import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 type ActiveTimeTrackerStartDrawerProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   isMobile: boolean
-  actionError: string | null
-  duration: string
-  selectedServiceId: string | null
-  onSelectedServiceIdChange: (serviceId: string | null) => void
-  selectedCustomer: Customer | null
-  onSelectedCustomerChange: (customer: Customer | null) => void
-  memo: string
-  onMemoChange: (memo: string) => void
-  onStartTimer: () => void
-  isStarting: boolean
-  isStopping: boolean
-  isCancelling: boolean
-  canStartTimer: boolean
 }
 
 const ActiveTimeTrackerDrawerHeader = ({ title, close, isMobile }: { title: string, close: () => void, isMobile: boolean }) => (
@@ -57,26 +46,29 @@ export const ActiveTimeTrackerStartDrawer = ({
   isOpen,
   onOpenChange,
   isMobile,
-  actionError,
-  duration,
-  selectedServiceId,
-  onSelectedServiceIdChange,
-  selectedCustomer,
-  onSelectedCustomerChange,
-  memo,
-  onMemoChange,
-  onStartTimer,
-  isStarting,
-  isStopping,
-  isCancelling,
-  canStartTimer,
 }: ActiveTimeTrackerStartDrawerProps) => {
   const { t } = useTranslation()
+  const { formatSecondsAsDuration } = useIntlFormatter()
+
+  const onStarted = useCallback(() => {
+    onOpenChange(false)
+  }, [onOpenChange])
+
+  const { form, state, clearActionError } = useStartTimerForm({ onStarted })
+
+  const handleOpenChange = useCallback((nextIsOpen: boolean) => {
+    if (!nextIsOpen) {
+      clearActionError()
+    }
+    onOpenChange(nextIsOpen)
+  }, [clearActionError, onOpenChange])
+
+  const duration = useMemo(() => formatSecondsAsDuration(0), [formatSecondsAsDuration])
 
   return (
     <Drawer
       isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       isDismissable
       variant={isMobile ? 'mobile-drawer' : 'drawer'}
       flexBlock={isMobile}
@@ -92,10 +84,10 @@ export const ActiveTimeTrackerStartDrawer = ({
       }}
     >
       <VStack className='Layer__ActiveTimeTracker__DrawerContent' gap='md'>
-        {actionError && (
+        {state.actionError && (
           <DataState
             status={DataStateStatus.failed}
-            title={actionError}
+            title={state.actionError}
             inline
           />
         )}
@@ -103,50 +95,66 @@ export const ActiveTimeTrackerStartDrawer = ({
         <ActiveTimerDurationDisplay duration={duration} />
 
         <VStack gap='md'>
-          <TimeEntryServiceSelector
-            selectedServiceId={selectedServiceId}
-            onSelectedServiceIdChange={onSelectedServiceIdChange}
-            inline
-            className='Layer__ActiveTimeTracker__Field__Service'
-          />
+          <form.Field name='selectedServiceId'>
+            {field => (
+              <TimeEntryServiceSelector
+                selectedServiceId={field.state.value}
+                onSelectedServiceIdChange={field.handleChange}
+                inline
+                className='Layer__ActiveTimeTracker__Field__Service'
+              />
+            )}
+          </form.Field>
 
-          <CustomerSelector
-            selectedCustomer={selectedCustomer}
-            onSelectedCustomerChange={onSelectedCustomerChange}
-            inline
-            placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
-            className='Layer__ActiveTimeTracker__Field__Customer'
-          />
+          <form.Field name='selectedCustomer'>
+            {field => (
+              <CustomerSelector
+                selectedCustomer={field.state.value}
+                onSelectedCustomerChange={field.handleChange}
+                inline
+                placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
+                className='Layer__ActiveTimeTracker__Field__Customer'
+              />
+            )}
+          </form.Field>
 
-          <TextField
-            name='active-time-tracker-memo'
-            inline
-            textarea
-            className='Layer__ActiveTimeTracker__Field__Memo'
-          >
-            <Label slot='label' size='sm' htmlFor='active-time-tracker-memo'>
-              {t('timeTracking:label.memo', 'Memo')}
-            </Label>
-            <TextArea
-              slot='input'
-              id='active-time-tracker-memo'
-              name='active-time-tracker-memo'
-              value={memo}
-              onChange={e => onMemoChange(e.target.value)}
-              placeholder={t('timeTracking:label.add_memo', 'Add memo')}
-            />
-          </TextField>
+          <form.Field name='memo'>
+            {field => (
+              <TextField
+                name='active-time-tracker-memo'
+                inline
+                textarea
+                className='Layer__ActiveTimeTracker__Field__Memo'
+              >
+                <Label slot='label' size='sm' htmlFor='active-time-tracker-memo'>
+                  {t('timeTracking:label.memo', 'Memo')}
+                </Label>
+                <TextArea
+                  slot='input'
+                  id='active-time-tracker-memo'
+                  name='active-time-tracker-memo'
+                  value={field.state.value}
+                  onChange={e => field.handleChange(e.target.value)}
+                  placeholder={t('timeTracking:label.add_memo', 'Add memo')}
+                />
+              </TextField>
+            )}
+          </form.Field>
 
-          <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
-            <Button
-              onPress={onStartTimer}
-              isPending={isStarting}
-              isDisabled={!canStartTimer || isStopping || isCancelling}
-            >
-              <Play size={16} />
-              {t('timeTracking:action.start_timer', 'Start Timer')}
-            </Button>
-          </HStack>
+          <form.Subscribe selector={s => s.values.selectedServiceId}>
+            {selectedServiceId => (
+              <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
+                <Button
+                  onPress={() => { void form.handleSubmit() }}
+                  isPending={state.isStarting}
+                  isDisabled={!selectedServiceId}
+                >
+                  <Play size={16} />
+                  {t('timeTracking:action.start_timer', 'Start Timer')}
+                </Button>
+              </HStack>
+            )}
+          </form.Subscribe>
         </VStack>
       </VStack>
     </Drawer>
