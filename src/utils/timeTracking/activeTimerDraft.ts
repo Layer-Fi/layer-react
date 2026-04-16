@@ -48,7 +48,7 @@ export function hasDraftChanges(activeEntry: TimeEntry, draft: ActiveTimerDraftW
   return (
     draft.selectedServiceId !== (activeEntry.service?.id ?? null)
     || (draft.selectedCustomer?.id ?? null) !== (activeEntry.customer?.id ?? null)
-    || memoValue !== (activeEntry.memo || null)
+    || memoValue !== (activeEntry.memo?.trim() || null)
   )
 }
 
