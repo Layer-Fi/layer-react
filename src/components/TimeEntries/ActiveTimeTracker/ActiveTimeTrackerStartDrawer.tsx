@@ -44,7 +44,7 @@ const ActiveTimerDurationDisplay = ({ duration }: { duration: string }) => {
   const { t } = useTranslation()
 
   return (
-    <VStack className='Layer__ActiveTimeTracker__DurationDisplay' align='center' gap='2xs'>
+    <VStack align='center' gap='2xs' pb='md'>
       <Span className='Layer__ActiveTimeTracker__DurationValue'>{duration}</Span>
       <Span className='Layer__ActiveTimeTracker__DurationLabel' size='xs' weight='bold'>
         {t('timeTracking:label.duration', 'Duration')}

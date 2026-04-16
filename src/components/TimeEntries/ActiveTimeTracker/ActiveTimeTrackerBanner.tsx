@@ -63,6 +63,7 @@ export const ActiveTimeTrackerBanner = ({
               selectedServiceId={selectedServiceId}
               onSelectedServiceIdChange={onSelectedServiceIdChange}
               inline
+              isClearable={false}
               showLabel={false}
               className='Layer__ActiveTimeTracker__Field__Service Layer__ActiveTimeTracker__Field--inline'
             />

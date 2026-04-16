@@ -1,13 +1,16 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customer'
-import { type StartTrackerEncoded, type UpsertTimeEntryEncoded } from '@schemas/timeTracking'
+import { hasDraftChanges, toStartPayload, toUpdatePayload } from '@utils/timeTracking/activeTimerDraft'
 import { useDeleteTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/useDeleteTimeEntry'
 import { UpsertTimeEntryMode, useUpsertTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useUpsertTimeEntry'
 import { useActiveTimeTracker, useActiveTimeTrackerGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
 import { useStartTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useStartTimeTracker'
 import { useStopTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useStopTimeTracker'
+import { useActiveTimerDraft } from '@hooks/features/timeTracking/useActiveTimerDraft'
+import { useAutosaveActiveTimer } from '@hooks/features/timeTracking/useAutosaveActiveTimer'
+import { useElapsedSeconds } from '@hooks/utils/dates/useElapsedSeconds'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { Container } from '@components/Container/Container'
@@ -17,18 +20,6 @@ import { ActiveTimeTrackerStartDrawer } from '@components/TimeEntries/ActiveTime
 
 import './activeTimeTracker.scss'
 
-const formatElapsedTime = (totalSeconds: number): string => {
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-
-  return [hours, minutes, seconds]
-    .map(value => value.toString().padStart(2, '0'))
-    .join(':')
-}
-
-const EMPTY_DURATION = formatElapsedTime(0)
-
 interface ActiveTimeTrackerProps {
   isDrawerOpen?: boolean
   onDrawerOpenChange?: (isOpen: boolean) => void
@@ -37,13 +28,9 @@ interface ActiveTimeTrackerProps {
 export const ActiveTimeTracker = ({ isDrawerOpen: externallyControlledIsDrawerOpen, onDrawerOpenChange }: ActiveTimeTrackerProps) => {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
+  const { formatSecondsAsDuration } = useIntlFormatter()
   const [internallyControlledIsDrawerOpen, setInternallyControlledIsDrawerOpen] = useState(false)
-  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null)
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
-  const [memo, setMemo] = useState('')
   const [actionError, setActionError] = useState<string | null>(null)
-  const [now, setNow] = useState(() => Date.now())
-  const syncedActiveEntryIdRef = useRef<string | null>(null)
 
   const { data: activeEntry, isLoading, isError } = useActiveTimeTracker()
   const { trigger: startTimeTracker, isMutating: isStarting } = useStartTimeTracker()
@@ -66,94 +53,39 @@ export const ActiveTimeTracker = ({ isDrawerOpen: externallyControlledIsDrawerOp
     onDrawerOpenChange?.(isOpen)
   }, [externallyControlledIsDrawerOpen, onDrawerOpenChange])
 
-  useEffect(() => {
-    if (!activeEntry) {
-      syncedActiveEntryIdRef.current = null
-      return
-    }
+  const {
+    draft,
+    setSelectedServiceId,
+    setSelectedCustomer,
+    setMemo,
+    reset: resetDraft,
+  } = useActiveTimerDraft(activeEntry)
 
-    if (syncedActiveEntryIdRef.current === activeEntry.id) {
-      return
-    }
+  const elapsedSeconds = useElapsedSeconds(activeEntry?.createdAt)
+  const timerDisplayValue = useMemo(
+    () => formatSecondsAsDuration(elapsedSeconds),
+    [elapsedSeconds, formatSecondsAsDuration],
+  )
+  const emptyDuration = useMemo(
+    () => formatSecondsAsDuration(0),
+    [formatSecondsAsDuration],
+  )
 
-    syncedActiveEntryIdRef.current = activeEntry.id
-    setSelectedServiceId(activeEntry.service?.id ?? null)
-    setSelectedCustomer(activeEntry.customer ?? null)
-    setMemo(activeEntry.memo ?? '')
-  }, [activeEntry])
+  const startPayload = useMemo(() => toStartPayload(draft), [draft])
+
+  useAutosaveActiveTimer({
+    activeEntry,
+    draft,
+    updateTimeEntry,
+    setError: setActionError,
+    errorMessage: t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'),
+  })
 
   useEffect(() => {
     if (!hasActiveTimer) {
-      return
+      setActionError(null)
     }
-
-    setNow(Date.now())
-
-    const intervalId = window.setInterval(() => {
-      setNow(Date.now())
-    }, 1000)
-
-    return () => window.clearInterval(intervalId)
   }, [hasActiveTimer])
-
-  const elapsedSeconds = useMemo(() => {
-    if (!activeEntry) {
-      return 0
-    }
-
-    const createdAtTimestamp = activeEntry.createdAt.getTime()
-    return Math.max(0, Math.floor((now - createdAtTimestamp) / 1000))
-  }, [activeEntry, now])
-
-  const timerDisplayValue = useMemo(
-    () => formatElapsedTime(elapsedSeconds),
-    [elapsedSeconds],
-  )
-
-  const startPayload = useMemo<StartTrackerEncoded | null>(() => {
-    if (!selectedServiceId) {
-      return null
-    }
-
-    return {
-      service_id: selectedServiceId,
-      billable: true,
-      description: null,
-      memo: memo.trim() || null,
-      metadata: null,
-      ...(selectedCustomer?.id && { customer_id: selectedCustomer.id }),
-    }
-  }, [memo, selectedCustomer?.id, selectedServiceId])
-
-  const saveActiveTimerChanges = useCallback(async () => {
-    if (!activeEntry || !selectedServiceId) {
-      return
-    }
-
-    const selectedCustomerId = selectedCustomer?.id ?? null
-    const activeCustomerId = activeEntry.customer?.id ?? null
-    const memoValue = memo.trim() || null
-
-    const hasChanges = selectedServiceId !== activeEntry.service?.id
-      || selectedCustomerId !== activeCustomerId
-      || memoValue !== (activeEntry.memo || null)
-
-    if (hasChanges) {
-      const updatePayload: Partial<UpsertTimeEntryEncoded> = {
-        billable: activeEntry.billable,
-        description: activeEntry.description ?? null,
-        memo: memoValue,
-        metadata: activeEntry.metadata ?? null,
-        customer_id: selectedCustomerId,
-        service_id: selectedServiceId,
-      }
-
-      await updateTimeEntry(updatePayload)
-    }
-  }, [activeEntry, memo, selectedCustomer?.id, selectedServiceId, updateTimeEntry])
-
-  const saveActiveTimerChangesRef = useRef(saveActiveTimerChanges)
-  saveActiveTimerChangesRef.current = saveActiveTimerChanges
 
   const handleDrawerOpenChange = useCallback((nextIsOpen: boolean) => {
     setIsDrawerOpen(nextIsOpen)
@@ -161,37 +93,6 @@ export const ActiveTimeTracker = ({ isDrawerOpen: externallyControlledIsDrawerOp
       setActionError(null)
     }
   }, [setIsDrawerOpen])
-
-  useEffect(() => {
-    if (!hasActiveTimer || !selectedServiceId) {
-      return
-    }
-
-    let cancelled = false
-
-    setActionError(null)
-    void saveActiveTimerChangesRef.current().catch(() => {
-      if (!cancelled) {
-        setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
-      }
-    })
-
-    return () => {
-      cancelled = true
-    }
-  }, [hasActiveTimer, memo, selectedCustomer?.id, selectedServiceId, t])
-
-  useEffect(() => {
-    if (hasActiveTimer && isDrawerOpen) {
-      setIsDrawerOpen(false)
-    }
-  }, [hasActiveTimer, isDrawerOpen, setIsDrawerOpen])
-
-  useEffect(() => {
-    if (!hasActiveTimer) {
-      setActionError(null)
-    }
-  }, [hasActiveTimer])
 
   const handleStartTimer = useCallback(async () => {
     if (!startPayload) {
@@ -203,42 +104,42 @@ export const ActiveTimeTracker = ({ isDrawerOpen: externallyControlledIsDrawerOp
 
     try {
       await startTimeTracker(startPayload)
-      setSelectedCustomer(null)
-      setSelectedServiceId(null)
-      setMemo('')
+      resetDraft()
       setIsDrawerOpen(false)
     }
     catch {
       setActionError(t('timeTracking:error.start_timer', 'Failed to start timer. Please try again.'))
     }
-  }, [setIsDrawerOpen, startPayload, startTimeTracker, t])
+  }, [resetDraft, setIsDrawerOpen, startPayload, startTimeTracker, t])
 
   const handleCompleteTimer = useCallback(async () => {
-    if (!activeEntry || !selectedServiceId) {
+    if (!activeEntry || !draft.selectedServiceId) {
       return
     }
 
     setActionError(null)
 
-    try {
-      await saveActiveTimerChanges()
-    }
-    catch {
-      setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
-      return
+    const draftWithService = { ...draft, selectedServiceId: draft.selectedServiceId }
+
+    if (hasDraftChanges(activeEntry, draftWithService)) {
+      try {
+        await updateTimeEntry(toUpdatePayload(activeEntry, draftWithService))
+      }
+      catch {
+        setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
+        return
+      }
     }
 
     try {
       await stopTimeTracker()
-      setSelectedServiceId(null)
-      setSelectedCustomer(null)
-      setMemo('')
+      resetDraft()
       setIsDrawerOpen(false)
     }
     catch {
       setActionError(t('timeTracking:error.complete_timer', 'Failed to complete timer. Please try again.'))
     }
-  }, [activeEntry, selectedServiceId, saveActiveTimerChanges, setIsDrawerOpen, stopTimeTracker, t])
+  }, [activeEntry, draft, resetDraft, setIsDrawerOpen, stopTimeTracker, t, updateTimeEntry])
 
   const handleCancelTimer = useCallback(async () => {
     if (!activeEntry) {
@@ -250,15 +151,13 @@ export const ActiveTimeTracker = ({ isDrawerOpen: externallyControlledIsDrawerOp
     try {
       await deleteTimeEntry()
       void invalidateActiveTimeTracker()
-      setSelectedServiceId(null)
-      setSelectedCustomer(null)
-      setMemo('')
+      resetDraft()
       setIsDrawerOpen(false)
     }
     catch {
       setActionError(t('timeTracking:error.cancel_timer', 'Failed to cancel timer. Please try again.'))
     }
-  }, [activeEntry, deleteTimeEntry, invalidateActiveTimeTracker, setIsDrawerOpen, t])
+  }, [activeEntry, deleteTimeEntry, invalidateActiveTimeTracker, resetDraft, setIsDrawerOpen, t])
 
   const onStartTimer = useCallback(() => {
     void handleStartTimer()
@@ -295,9 +194,9 @@ export const ActiveTimeTracker = ({ isDrawerOpen: externallyControlledIsDrawerOp
         <ActiveTimeTrackerBanner
           actionError={actionError}
           timerDisplayValue={timerDisplayValue}
-          selectedServiceId={selectedServiceId}
+          selectedServiceId={draft.selectedServiceId}
           onSelectedServiceIdChange={setSelectedServiceId}
-          selectedCustomer={selectedCustomer}
+          selectedCustomer={draft.selectedCustomer}
           onSelectedCustomerChange={setSelectedCustomer}
           onCancelTimer={onCancelTimer}
           onCompleteTimer={onCompleteTimer}
@@ -313,12 +212,12 @@ export const ActiveTimeTracker = ({ isDrawerOpen: externallyControlledIsDrawerOp
           onOpenChange={handleDrawerOpenChange}
           isMobile={isMobile}
           actionError={actionError}
-          duration={EMPTY_DURATION}
-          selectedServiceId={selectedServiceId}
+          duration={emptyDuration}
+          selectedServiceId={draft.selectedServiceId}
           onSelectedServiceIdChange={setSelectedServiceId}
-          selectedCustomer={selectedCustomer}
+          selectedCustomer={draft.selectedCustomer}
           onSelectedCustomerChange={setSelectedCustomer}
-          memo={memo}
+          memo={draft.memo}
           onMemoChange={setMemo}
           onStartTimer={onStartTimer}
           isStarting={isStarting}
