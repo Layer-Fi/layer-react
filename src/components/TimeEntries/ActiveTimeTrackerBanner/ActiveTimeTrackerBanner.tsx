@@ -222,6 +222,13 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
 
     try {
       await saveActiveTimerChanges()
+    }
+    catch {
+      setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
+      return
+    }
+
+    try {
       await stopTimeTracker()
       setSelectedServiceId(null)
       setSelectedCustomer(null)
@@ -229,7 +236,7 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
       setIsDrawerOpen(false)
     }
     catch {
-      setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
+      setActionError(t('timeTracking:error.complete_timer', 'Failed to complete timer. Please try again.'))
     }
   }, [activeEntry, selectedServiceId, saveActiveTimerChanges, setIsDrawerOpen, stopTimeTracker, t])
 
