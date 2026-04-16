@@ -25,6 +25,7 @@ function useMetricRowProps({ metricType, amount, maxMeterValue, label }: {
     TOTAL_INCOME: 'Layer__TaxOverview__IncomeMeter',
     TOTAL_PRE_AGI_DEDUCTIONS: 'Layer__TaxOverview__DeductionsMeter',
     TAXABLE_INCOME: 'Layer__TaxOverview__TaxableIncomeMeter',
+    UNKNOWN_TYPE: 'Layer__TaxOverview__UnknownMetricMeter',
   }
 
   const slotProps = {
@@ -65,12 +66,12 @@ export const TaxableIncomeCard = ({
       {isDesktop
         ? (
           <VStack gap='sm'>
-            {metrics.map(metric => <TotalMetricRow key={metric.metricType} metric={metric} />)}
+            {metrics.map((metric, index) => <TotalMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
           </VStack>
         )
         : (
           <Card className='Layer__TaxOverview__Card__MetricRow--mobile'>
-            {metrics.map(metric => <TotalMetricRow key={metric.metricType} metric={metric} />)}
+            {metrics.map((metric, index) => <TotalMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
           </Card>
         )}
     </VStack>
