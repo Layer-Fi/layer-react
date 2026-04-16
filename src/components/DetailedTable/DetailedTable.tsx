@@ -7,16 +7,20 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
 import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData, type ValueFormatter } from '@components/DetailedCharts/types'
+
+import './detailedTable.scss'
+
+import { type DetailedTableRow, useDetailedTableRows } from './useDetailedTableRows'
 
 export interface DetailedTableStringOverrides {
   categoryColumnHeader?: string
   typeColumnHeader?: string
   valueColumnHeader?: string
 }
-
-export const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
 
 type DetailedTableStylingProps<T extends SeriesData> = {
   valueFormatter: ValueFormatter
@@ -32,12 +36,17 @@ type DetailedTableInteractionProps<T extends SeriesData> = {
 
 type SortFunction<T extends SeriesData> = (data: DetailData<T>, sortParams: SortParams<string>) => void
 
-export interface DetailedTableProps<T extends SeriesData> {
+export type SeriesDataWithType = SeriesData & {
+  type: string
+}
+
+export interface DetailedTableProps<T extends SeriesDataWithType> {
   data: DetailData<T>
   sortParams: SortParams<string>
   sortFunction: SortFunction<T>
   stylingProps: DetailedTableStylingProps<T>
   interactionProps: DetailedTableInteractionProps<T>
+  rows?: DetailedTableRow<T>[]
   stringOverrides?: DetailedTableStringOverrides
 }
 
@@ -94,28 +103,23 @@ const ValueIcon = <T extends SeriesData>({
   )
 }
 
-export type SeriesDataWithType = SeriesData & {
-  type: string
-}
-
 export const DetailedTable = <T extends SeriesDataWithType>({
   data,
   stylingProps,
   sortParams,
   sortFunction,
   interactionProps,
+  rows,
   stringOverrides,
 }: DetailedTableProps<T>) => {
   const { t } = useTranslation()
   const { formatPercent } = useIntlFormatter()
+  const defaultRows = useDetailedTableRows({ data, formatPercent })
+  const detailedTableRows = rows ?? defaultRows
 
   const setAndToggleSortDirection = (field: 'category' | 'type' | 'value') => {
     sortFunction(data, { sortBy: field })
   }
-
-  const positiveTotal = data.data
-    .filter(x => x.value > 0)
-    .reduce((sum, x) => sum + x.value, 0)
 
   const buildColClass = useCallback((column: string) => {
     if (sortParams.sortBy === column) {
@@ -128,9 +132,9 @@ export const DetailedTable = <T extends SeriesDataWithType>({
   const { isMobile } = useSizeClass()
 
   return (
-    <div className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
-      <div className='details-container'>
-        <div className='table'>
+    <VStack className='Layer__DetailedTable'>
+      <VStack className='Layer__DetailedTable__container' pi='md' pbs='2xs' pbe='md'>
+        <VStack className='Layer__DetailedTable__table'>
           <table>
             <thead>
               <tr>
@@ -139,83 +143,81 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                   className={classNames('Layer__sortable-col', buildColClass('category'))}
                   onClick={() => setAndToggleSortDirection('category')}
                 >
-                  {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
-                  {' '}
-                  <SortArrows className='Layer__sort-arrows' />
+                  <HStack align='center' gap='3xs'>
+                    {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
+                    <SortArrows className='Layer__DetailedTable__sortArrows' />
+                  </HStack>
                 </th>
                 {!isMobile && (
                   <th
                     className={classNames('Layer__sortable-col', buildColClass('type'))}
                     onClick={() => setAndToggleSortDirection('type')}
                   >
-                    {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
-                    {' '}
-                    <SortArrows className='Layer__sort-arrows' />
+                    <HStack align='center' gap='3xs'>
+                      {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
+                      <SortArrows className='Layer__DetailedTable__sortArrows' />
+                    </HStack>
                   </th>
                 )}
                 <th
                   className={classNames('Layer__sortable-col', buildColClass('value'), 'value-col')}
                   onClick={() => setAndToggleSortDirection('value')}
                 >
-                  {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
-                  {' '}
-                  <SortArrows className='Layer__sort-arrows' />
+                  <HStack align='center' gap='3xs' justify='end'>
+                    {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
+                    <SortArrows className='Layer__DetailedTable__sortArrows' />
+                  </HStack>
                 </th>
                 <th className='percent-col'></th>
               </tr>
             </thead>
             <tbody>
-              {data.data
-                .map((item, idx) => {
-                  const share = item.value > 0 ? item.value / positiveTotal : 0
-                  const shareFractionDigits = Math.abs(share) < 0.1 && share !== 0 ? 1 : 0
-                  const formattedShare = formatPercent(share, {
-                    maximumFractionDigits: shareFractionDigits,
-                  })
+              {detailedTableRows
+                .map((row) => {
                   return (
                     <tr
-                      key={`pl-side-table-item-${idx}`}
+                      key={row.key}
                       className={classNames(
-                        'Layer__profit-and-loss-detailed-table__row',
-                        interactionProps.hoveredItem && interactionProps.hoveredItem.name === item.name
+                        'Layer__DetailedTable__row',
+                        interactionProps.hoveredItem && interactionProps.hoveredItem.name === row.item.name
                           ? 'active'
                           : '',
                       )}
-                      onMouseEnter={() => interactionProps.setHoveredItem(item)}
+                      onMouseEnter={() => interactionProps.setHoveredItem(row.item)}
                       onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
                     >
                       <td className='color-col'>
                         <ValueIcon
-                          item={item}
+                          item={row.item}
                           colorSelector={stylingProps.colorSelector}
                           fallbackFillSelector={stylingProps.fallbackFillSelector}
                         />
                       </td>
-                      <td className='category-col'>{item.displayName}</td>
+                      <td className='category-col'>{row.item.displayName}</td>
                       {!isMobile && (
-                        <td className='type-col'>{item.type}</td>
+                        <td className='type-col'>{row.item.type}</td>
                       )}
                       <td className='value-col'>
                         <Button
                           variant='text'
-                          onPress={() => interactionProps.onValueClick?.(item)}
-                          isDisabled={!interactionProps.onValueClick || UNCATEGORIZED_TYPES.includes(item.name)}
+                          onPress={() => interactionProps.onValueClick?.(row.item)}
+                          isDisabled={!interactionProps.onValueClick || row.isValueDisabled}
                         >
-                          <MoneySpan size='sm' amount={item.value} />
+                          <MoneySpan size='sm' amount={row.item.value} />
                         </Button>
                       </td>
                       <td className='percent-col'>
-                        <span className='share-text'>
-                          {item.value < 0 ? '-' : formattedShare}
-                        </span>
+                        <Span className='share-text'>
+                          {row.item.value < 0 ? '-' : row.formattedShare}
+                        </Span>
                       </td>
                     </tr>
                   )
                 })}
             </tbody>
           </table>
-        </div>
-      </div>
-    </div>
+        </VStack>
+      </VStack>
+    </VStack>
   )
 }

@@ -25,6 +25,7 @@ import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDe
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
+import { usePnlDetailedTableRows } from './usePnlDetailedTableRows'
 import { isLineItemUncategorized, mapTypesToColors } from './utils'
 
 export interface DetailedChartStringOverrides {
@@ -73,7 +74,7 @@ export const ProfitAndLossDetailedCharts = ({
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
 }) => {
   const { t } = useTranslation()
-  const { formatDate } = useIntlFormatter()
+  const { formatDate, formatPercent } = useIntlFormatter()
   const intl = useIntl()
   const {
     chartDataRevenue,
@@ -138,6 +139,13 @@ export const ProfitAndLossDetailedCharts = ({
     colorSelector,
     fallbackFillSelector,
   }
+  const detailedTableRows = usePnlDetailedTableRows({
+    data: {
+      data: tableData,
+      total,
+    },
+    formatPercent,
+  })
 
   const sortFunction = useCallback((_data: DetailData<PnlChartLineItem>, sortParams: SortParams<string>) => {
     if (sortParams.sortBy) {
@@ -207,6 +215,7 @@ export const ProfitAndLossDetailedCharts = ({
                 isLoading={isLoading}
               />
               <DetailedTable<PnlChartLineItem>
+                key={activeScope}
                 data={{
                   data: tableData,
                   total: total,
@@ -222,6 +231,7 @@ export const ProfitAndLossDetailedCharts = ({
                   setHoveredItem: (item: PnlChartLineItem | undefined) => setHoveredItem(item),
                   onValueClick: (item: PnlChartLineItem) => handleValueClick(item),
                 }}
+                rows={detailedTableRows}
                 stringOverrides={stringOverrides?.detailedTableStringOverrides}
               />
             </>
