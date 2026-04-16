@@ -100,12 +100,18 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
 
   const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
     setFilters((prev) => {
+      const prevSortBy = prev[scope]?.sortBy
       const prevSortOrder = prev[scope]?.sortOrder
-      const nextSortOrder = direction
-        ? (direction === 'asc' ? SortOrder.ASC : SortOrder.DESC)
-        : (prevSortOrder === SortOrder.ASC || prevSortOrder === SortOrder.ASCENDING
-          ? SortOrder.DESC
-          : SortOrder.ASC)
+      const isSameField = prevSortBy === field
+      const prevSortOrderIsAscending = prevSortOrder === SortOrder.ASC || prevSortOrder === SortOrder.ASCENDING
+
+      let nextSortOrder: SortOrder = SortOrder.DESC
+      if (direction) {
+        nextSortOrder = direction === 'asc' ? SortOrder.ASC : SortOrder.DESC
+      }
+      else if (isSameField) {
+        nextSortOrder = prevSortOrderIsAscending ? SortOrder.DESC : SortOrder.ASC
+      }
 
       return {
         ...prev,

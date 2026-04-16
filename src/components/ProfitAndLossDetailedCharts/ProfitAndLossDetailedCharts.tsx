@@ -140,8 +140,14 @@ export const ProfitAndLossDetailedCharts = ({
   }
 
   const sortFunction = useCallback((_data: DetailData<PnlChartLineItem>, sortParams: SortParams<string>) => {
-    if (sortParams.sortBy && sortParams.sortOrder) {
-      _oldSortByScope(activeScope, sortParams.sortBy, sortParams.sortOrder === SortOrder.ASC ? 'asc' : 'desc')
+    if (sortParams.sortBy) {
+      _oldSortByScope(
+        activeScope,
+        sortParams.sortBy,
+        sortParams.sortOrder
+          ? (sortParams.sortOrder === SortOrder.ASC ? 'asc' : 'desc')
+          : undefined,
+      )
     }
   }, [_oldSortByScope, activeScope])
 

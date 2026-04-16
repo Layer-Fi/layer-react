@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -101,26 +101,16 @@ export type SeriesDataWithType = SeriesData & {
 export const DetailedTable = <T extends SeriesDataWithType>({
   data,
   stylingProps,
-  sortParams: initialSortParams,
+  sortParams,
   sortFunction,
   interactionProps,
   stringOverrides,
 }: DetailedTableProps<T>) => {
   const { t } = useTranslation()
   const { formatPercent } = useIntlFormatter()
-  const [sortParams, setSortParams] = useState<SortParams<string>>(initialSortParams)
 
   const setAndToggleSortDirection = (field: 'category' | 'type' | 'value') => {
-    setSortParams((prev) => {
-      const oppositeSortOrder = prev.sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC
-
-      if (prev.sortBy === field) {
-        sortFunction(data, { sortBy: field, sortOrder: oppositeSortOrder })
-        return { ...prev, sortOrder: oppositeSortOrder }
-      }
-      sortFunction(data, { sortBy: field, sortOrder: oppositeSortOrder })
-      return { ...prev, sortBy: field }
-    })
+    sortFunction(data, { sortBy: field })
   }
 
   const positiveTotal = data.data
