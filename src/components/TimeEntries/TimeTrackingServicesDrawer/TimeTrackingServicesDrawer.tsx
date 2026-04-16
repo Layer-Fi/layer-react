@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArchiveRestore, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -247,6 +247,10 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
   const [isArchiveOpen, setIsArchiveOpen] = useState(false)
   const [restoreTarget, setRestoreTarget] = useState<CatalogService | null>(null)
   const [isRestoreOpen, setIsRestoreOpen] = useState(false)
+  const tabRef = useRef<ServicesTab>(tab)
+  const isAddingRef = useRef(isAdding)
+  tabRef.current = tab
+  isAddingRef.current = isAdding
 
   useEffect(() => {
     if (!isOpen) {
@@ -296,7 +300,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
         <HStack gap='sm' align='center' justify='space-between'>
           <ModalHeading>{t('timeTracking:services.title', 'Services')}</ModalHeading>
           <HStack gap='xs' align='center'>
-            <Button onPress={startAdd} isDisabled={isAdding}>
+            <Button onPress={startAdd} isDisabled={isAddingRef.current}>
               <Plus size={16} />
               {t('timeTracking:services.add', 'Add')}
             </Button>
@@ -307,14 +311,14 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
           <Toggle
             ariaLabel={t('timeTracking:services.tab_group_label', 'Service list')}
             options={tabOptions}
-            selectedKey={tab}
+            selectedKey={tabRef.current}
             onSelectionChange={key => setTab(key as ServicesTab)}
             size={ToggleSize.xsmall}
           />
         </HStack>
       </VStack>
     ),
-    [isAdding, startAdd, t, tab, tabOptions],
+    [startAdd, t, tabOptions],
   )
 
   return (
