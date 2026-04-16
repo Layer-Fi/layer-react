@@ -62,9 +62,9 @@ const EmptyState = () => {
 
 const DetailedChartsDatePickerHeader = () => {
   return (
-    <div className='Layer__DetailedChart__headerTablet'>
+    <HStack className='Layer__ProfitAndLossDetailedCharts__DatePickerHeader--tablet'>
       <GlobalMonthPicker />
-    </div>
+    </HStack>
   )
 }
 

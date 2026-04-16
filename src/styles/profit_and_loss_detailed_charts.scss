@@ -50,6 +50,10 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   }
 }
 
+.Layer__ProfitAndLossDetailedCharts__DatePickerHeader--tablet {
+  display: none;
+}
+
 .Layer__profit-and-loss-detailed-charts {
   width: 100%;
   border-radius: var(--border-radius-sm);
@@ -96,6 +100,10 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 }
 
 @container (max-width: 1023px) and (min-width: 768px) {
+  .Layer__ProfitAndLossDetailedCharts__DatePickerHeader--tablet {
+    display: flex;
+  }
+
   .Layer__profit-and-loss-detailed-charts {
     .Layer__profit-and-loss-detailed-charts__content {
       display: flex;
