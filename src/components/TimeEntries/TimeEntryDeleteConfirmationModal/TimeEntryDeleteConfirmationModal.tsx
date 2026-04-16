@@ -23,15 +23,21 @@ export function TimeEntryDeleteConfirmationModal({ entry }: TimeEntryDeleteConfi
   }, [deleteEntry, onDeleteSuccess])
 
   const isActive = entry.status === 'ACTIVE' || (entry.status == null && entry.stoppedAt == null)
-  const title = isActive
-    ? t('timeTracking:prompt.discard_timer', 'Discard this timer?')
-    : t('timeTracking:prompt.delete_entry', 'Delete this time entry?')
-  const description = isActive
-    ? t('timeTracking:label.discard_timer_warning', 'The active timer will be discarded and no time entry will be recorded.')
-    : t('timeTracking:label.delete_entry_warning', 'This time entry will be permanently deleted. This action cannot be undone.')
-  const confirmLabel = isActive
-    ? t('timeTracking:action.discard_timer', 'Discard Timer')
-    : t('timeTracking:action.delete_entry', 'Delete Entry')
+  const modalContentProps = useMemo(() => {
+    if (isActive) {
+      return ({
+        title: t('timeTracking:prompt.discard_timer', 'Discard this timer?'),
+        description:  t('timeTracking:label.discard_timer_warning', 'The active timer will be discarded and no time entry will be recorded.'),
+        confirmLabel: t('timeTracking:action.discard_timer', 'Discard Timer')
+      })
+    }
+    
+    return ({
+      title: t('timeTracking:prompt.delete_entry', 'Delete this time entry?'),
+      description: t('timeTracking:label.delete_entry_warning', 'This time entry will be permanently deleted. This action cannot be undone.'),
+      confirmLabel: t('timeTracking:action.delete_entry', 'Delete Entry')
+    })
+  }, [isActive, t])
 
   return (
     <BaseConfirmationModal
