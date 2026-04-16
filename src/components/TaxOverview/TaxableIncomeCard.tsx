@@ -30,7 +30,7 @@ function useMetricRowProps({ metricType, amount, maxMeterValue, label }: {
 
   const slotProps = {
     Meter: {
-      className: meterClassByType[metricType],
+      className: `${meterClassByType[metricType]} Layer__TaxOverview__Meter`,
       label,
       minValue: 0,
       value: boundedMeterValue,
