@@ -1,0 +1,87 @@
+{
+  "action": {
+    "add_entry": "Add Entry",
+    "cancel_timer": "Cancel",
+    "complete_timer": "Complete",
+    "delete_entry": "Delete Entry",
+    "discard_timer": "Discard Timer",
+    "edit_entry": "Edit Entry",
+    "save_entry": "Save Entry",
+    "start_timer": "Start Timer",
+    "view_entry": "View Entry"
+  },
+  "empty": {
+    "add_first_entry": "Add your first time entry to start tracking.",
+    "no_entries_yet": "No time entries yet"
+  },
+  "error": {
+    "archive_service": "Could not archive this service. Please try again.",
+    "cancel_timer": "Failed to cancel timer. Please try again.",
+    "create_service": "Failed to create service. Please try again.",
+    "delete_entry": "Failed to delete time entry. Please check your connection and try again.",
+    "load_active_timer": "Failed to load active timer. Please check your connection and try again.",
+    "load_entries": "We couldn't load your time entries",
+    "load_entries_detail": "An error occurred while loading your time entries. Please check your connection and try again.",
+    "load_services": "Failed to load services.",
+    "load_summary": "Failed to load time tracking summary",
+    "start_timer": "Failed to start timer. Please try again.",
+    "unarchive_service": "Could not restore this service. Please try again.",
+    "update_service": "Could not save this service. Please try again.",
+    "update_timer": "Failed to update timer. Please try again."
+  },
+  "label": {
+    "active": "Active",
+    "add_memo": "Add memo",
+    "all_customers": "All Customers",
+    "all_services": "All Services",
+    "customer": "Customer",
+    "delete_entry_warning": "This time entry will be permanently deleted. This action cannot be undone.",
+    "discard_timer_warning": "The active timer will be discarded and no time entry will be recorded.",
+    "duration": "Duration",
+    "duration_minutes": "Duration (minutes)",
+    "enter_duration": "Enter duration",
+    "entry_date": "Entry date",
+    "entry_details": "Time entry details",
+    "invoiced": "Invoiced",
+    "memo": "Memo",
+    "no_activity_breakdown": "No activity breakdown available for this period.",
+    "no_services": "No services available",
+    "other": "Other",
+    "select_customer": "Select a customer (optional)",
+    "select_service": "Select a service",
+    "service": "Service",
+    "time_entries": "Time Entries",
+    "time_tracking": "Time Tracking"
+  },
+  "prompt": {
+    "delete_entry": "Delete this time entry?",
+    "discard_timer": "Discard this timer?"
+  },
+  "services": {
+    "add": "Add",
+    "add_service": "Add service",
+    "archive": "Archive",
+    "archive_confirm_description": "This service will be removed from your active list. Time entries that used it are unchanged.",
+    "archive_confirm_title": "Archive this service?",
+    "archived": "Archived",
+    "cancel": "Cancel",
+    "hourly_rate_optional": "Default hourly rate (optional)",
+    "no_active": "No services yet",
+    "no_archived": "No archived services",
+    "rate_per_hour_suffix": "/hr",
+    "save": "Save",
+    "service_name": "Service name",
+    "tab_group_label": "Service list",
+    "title": "Services",
+    "unarchive": "Restore",
+    "unarchive_confirm_description": "This service will appear in your active list again.",
+    "unarchive_confirm_title": "Restore this service?"
+  },
+  "validation": {
+    "duration_greater_than_zero": "Duration must be greater than zero.",
+    "entry_date_not_future": "Entry date cannot be in the future.",
+    "entry_date_required": "Entry date is a required field.",
+    "service_name_required": "Service name is a required field.",
+    "service_required": "Service is a required field."
+  }
+}
