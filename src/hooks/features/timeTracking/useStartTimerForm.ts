@@ -1,18 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customer'
-import { EMPTY_DRAFT, toStartPayload } from '@utils/timeTracking/activeTimerDraft'
+import { type ActiveTimerDraft, EMPTY_DRAFT, toStartPayload } from '@utils/timeTracking/activeTimerDraft'
 import { useStartTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useStartTimeTracker'
 import { useAppForm } from '@hooks/features/forms/useForm'
-
-export type StartTimerFormValues = {
-  selectedServiceId: string | null
-  selectedCustomer: Customer | null
-  memo: string
-}
-
-export type StartTimerFormType = ReturnType<typeof useAppForm<StartTimerFormValues>>
 
 type UseStartTimerFormProps = {
   onStarted: () => void
@@ -27,8 +18,8 @@ export const useStartTimerForm = ({ onStarted }: UseStartTimerFormProps) => {
     value,
     formApi,
   }: {
-    value: StartTimerFormValues
-    formApi: { reset: (values?: StartTimerFormValues) => void }
+    value: ActiveTimerDraft
+    formApi: { reset: (values?: ActiveTimerDraft) => void }
   }) => {
     const payload = toStartPayload(value)
     if (!payload) {
@@ -48,7 +39,7 @@ export const useStartTimerForm = ({ onStarted }: UseStartTimerFormProps) => {
     }
   }, [onStarted, startTimeTracker, t])
 
-  const form = useAppForm<StartTimerFormValues>({
+  const form = useAppForm<ActiveTimerDraft>({
     defaultValues: EMPTY_DRAFT,
     onSubmit,
   })
