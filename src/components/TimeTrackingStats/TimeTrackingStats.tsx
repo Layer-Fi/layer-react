@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
+import { type TimeEntrySummary, type TimeEntrySummaryGroup } from '@schemas/timeTracking'
 import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import { type TimeTrackingSummaryFilterParams, useTimeTrackingSummary } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -11,21 +12,17 @@ import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { Loader } from '@components/Loader/Loader'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './timeTrackingStats.scss'
 
 const CHART_HEIGHT = 24
 const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
 
-type ByServiceEntry = {
-  serviceId?: string | null
-  serviceName?: string | null
-  totalMinutes: number
-}
-
-type TimeTrackingServiceBreakdown = ByServiceEntry & {
+type TimeTrackingServiceBreakdown = {
   color: string
   key: string
+  totalMinutes: number
   percentage: number
   serviceName: string
 }
@@ -34,43 +31,33 @@ type TimeTrackingStatsProps = {
   selectedFilterParams: TimeTrackingSummaryFilterParams
 }
 
-const normalizeByServiceEntry = (entry: unknown): ByServiceEntry | null => {
-  if (!entry || typeof entry !== 'object') {
-    return null
-  }
+function buildServiceBreakdown(
+  byService: ReadonlyArray<TimeEntrySummaryGroup>,
+  otherLabel: string,
+): TimeTrackingServiceBreakdown[] {
+  const positive = byService.filter(entry => entry.totalMinutes > 0)
+  const totalMinutes = positive.reduce((total, entry) => total + entry.totalMinutes, 0)
 
-  const encodedEntry = entry as Record<string, unknown>
-  const totalMinutes = typeof encodedEntry.totalMinutes === 'number'
-    ? encodedEntry.totalMinutes
-    : typeof encodedEntry.total_minutes === 'number'
-      ? encodedEntry.total_minutes
-      : 0
+  return [...positive]
+    .sort((a, b) => b.totalMinutes - a.totalMinutes)
+    .map((entry, index) => ({
+      color: DEFAULT_CHART_COLORS[index % DEFAULT_CHART_COLORS.length],
+      key: entry.id ?? `service-${index}`,
+      totalMinutes: entry.totalMinutes,
+      percentage: totalMinutes > 0 ? entry.totalMinutes / totalMinutes : 0,
+      serviceName: entry.name || otherLabel,
+    }))
+}
 
-  if (totalMinutes <= 0) {
-    return null
-  }
-
-  const serviceId = typeof encodedEntry.serviceId === 'string'
-    ? encodedEntry.serviceId
-    : typeof encodedEntry.service_id === 'string'
-      ? encodedEntry.service_id
-      : typeof encodedEntry.id === 'string'
-        ? encodedEntry.id
-        : null
-
-  const serviceName = typeof encodedEntry.serviceName === 'string'
-    ? encodedEntry.serviceName
-    : typeof encodedEntry.service_name === 'string'
-      ? encodedEntry.service_name
-      : typeof encodedEntry.name === 'string'
-        ? encodedEntry.name
-        : null
-
-  return {
-    serviceId,
-    serviceName,
-    totalMinutes,
-  }
+function buildStackedChartData(entries: TimeTrackingServiceBreakdown[]) {
+  const stackedEntry = entries.reduce<Record<string, number | string>>(
+    (acc, entry) => {
+      acc[entry.key] = entry.totalMinutes
+      return acc
+    },
+    { label: 'services' },
+  )
+  return [stackedEntry]
 }
 
 const TimeTrackingStatsLegendSwatch = ({ color }: { color: string }) => (
@@ -84,15 +71,8 @@ const TimeTrackingStatsLegendSwatch = ({ color }: { color: string }) => (
 )
 
 const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ entries }: { entries: TimeTrackingServiceBreakdown[] }) {
-  const { formatMinutesAsDuration } = useIntlFormatter()
-  const chartData = useMemo(() => {
-    const stackedEntry = entries.reduce<Record<string, number | string>>((acc, entry) => {
-      acc[entry.key] = entry.totalMinutes
-      return acc
-    }, { label: 'services' })
-
-    return [stackedEntry]
-  }, [entries])
+  const { formatMinutesAsDuration, formatPercent } = useIntlFormatter()
+  const chartData = useMemo(() => buildStackedChartData(entries), [entries])
   const chartTotalMinutes = useMemo(
     () => entries.reduce((total, entry) => total + entry.totalMinutes, 0),
     [entries],
@@ -134,8 +114,7 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
             </HStack>
             <Span size='xl' weight='bold'>{formatMinutesAsDuration(totalMinutes, { compact: true })}</Span>
             <Span size='sm' variant='subtle'>
-              {percentage}
-              %
+              {formatPercent(percentage, { maximumFractionDigits: 0 })}
             </Span>
           </VStack>
         ))}
@@ -144,80 +123,70 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
   )
 })
 
-export const TimeTrackingStats = ({ selectedFilterParams }: TimeTrackingStatsProps) => {
+function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
   const { t } = useTranslation()
   const { formatMinutesAsDuration } = useIntlFormatter()
-  const { data: selectedSummary, isLoading: selectedLoading, isError: selectedError } = useTimeTrackingSummary(selectedFilterParams)
 
-  const serviceBreakdown = useMemo<TimeTrackingServiceBreakdown[]>(() => {
-    if (!selectedSummary?.byService) {
-      return []
-    }
+  const serviceBreakdown = useMemo(
+    () => buildServiceBreakdown(summary.byService, t('timeTracking:label.other', 'Other')),
+    [summary.byService, t],
+  )
 
-    const byService = selectedSummary.byService
-      .map(normalizeByServiceEntry)
-      .filter((entry): entry is ByServiceEntry => entry !== null)
+  return (
+    <VStack className='Layer__TimeTrackingStats__Content' gap='lg'>
+      <HStack className='Layer__TimeTrackingStats__TopRow' justify='space-between' align='center' gap='lg'>
+        <VStack className='Layer__TimeTrackingStats__Summary' gap='2xs'>
+          <Span size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
+          <Span className='Layer__TimeTrackingStats__SummaryValue' size='xl' weight='bold'>
+            {formatMinutesAsDuration(summary.totalMinutes, { compact: true })}
+          </Span>
+        </VStack>
+        <VStack className='Layer__TimeTrackingStats__DateSelection'>
+          <CombinedDateRangeSelection mode='full' showLabels={false} />
+        </VStack>
+      </HStack>
+      {serviceBreakdown.length > 0
+        ? (
+          <TimeTrackingStatsBreakdown entries={serviceBreakdown} />
+        )
+        : (
+          <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center'>
+            <HStack className='Layer__TimeTrackingStats__ChartBar Layer__TimeTrackingStats__ChartBar--empty' />
+            <Span size='sm' variant='subtle'>
+              {t('timeTracking:label.no_activity_breakdown', 'No activity breakdown available for this period.')}
+            </Span>
+          </VStack>
+        )}
+    </VStack>
+  )
+}
 
-    const totalMinutes = byService.reduce((total, entry) => total + entry.totalMinutes, 0)
-
-    const sorted = [...byService].sort((a, b) => b.totalMinutes - a.totalMinutes)
-
-    return sorted.map((entry, index) => ({
-      ...entry,
-      color: DEFAULT_CHART_COLORS[index % DEFAULT_CHART_COLORS.length],
-      key: entry.serviceId ?? `service-${index}`,
-      percentage: totalMinutes > 0
-        ? Math.round((entry.totalMinutes / totalMinutes) * 100)
-        : 0,
-      serviceName: entry.serviceName || t('timeTracking:label.other', 'Other'),
-    }))
-  }, [selectedSummary, t])
-
-  if (selectedError) {
-    return (
-      <Container name='time-tracking-stats'>
-        <DataState status={DataStateStatus.failed} title={t('timeTracking:error.load_summary', 'Failed to load time tracking summary')} spacing />
-      </Container>
-    )
-  }
-
-  if (selectedLoading || !selectedSummary) {
-    return (
-      <Container name='time-tracking-stats'>
-        <HStack className='Layer__TimeTrackingStats__Content' gap='lg' justify='center' align='center'>
-          <Loader />
-        </HStack>
-      </Container>
-    )
-  }
+export const TimeTrackingStats = ({ selectedFilterParams }: TimeTrackingStatsProps) => {
+  const { t } = useTranslation()
+  const { data: summary, isLoading, isError } = useTimeTrackingSummary(selectedFilterParams)
 
   return (
     <Container name='time-tracking-stats'>
-      <VStack className='Layer__TimeTrackingStats__Content' gap='lg'>
-        <HStack className='Layer__TimeTrackingStats__TopRow' justify='space-between' align='center' gap='lg'>
-          <VStack className='Layer__TimeTrackingStats__Summary' gap='2xs'>
-            <Span size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
-            <Span className='Layer__TimeTrackingStats__SummaryValue' size='xl' weight='bold'>
-              {formatMinutesAsDuration(selectedSummary.totalMinutes, { compact: true })}
-            </Span>
-          </VStack>
-          <VStack className='Layer__TimeTrackingStats__DateSelection'>
-            <CombinedDateRangeSelection mode='full' showLabels={false} />
-          </VStack>
-        </HStack>
-        {serviceBreakdown.length > 0
-          ? (
-            <TimeTrackingStatsBreakdown entries={serviceBreakdown} />
-          )
-          : (
-            <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center'>
-              <HStack className='Layer__TimeTrackingStats__ChartBar Layer__TimeTrackingStats__ChartBar--empty' />
-              <Span size='sm' variant='subtle'>
-                {t('timeTracking:label.no_activity_breakdown', 'No activity breakdown available for this period.')}
-              </Span>
-            </VStack>
-          )}
-      </VStack>
+      <ConditionalBlock
+        data={summary}
+        isLoading={isLoading}
+        isError={isError}
+        Loading={(
+          <HStack className='Layer__TimeTrackingStats__Content' gap='lg' justify='center' align='center'>
+            <Loader />
+          </HStack>
+        )}
+        Inactive={null}
+        Error={(
+          <DataState
+            status={DataStateStatus.failed}
+            title={t('timeTracking:error.load_summary', 'Failed to load time tracking summary')}
+            spacing
+          />
+        )}
+      >
+        {({ data }) => <TimeTrackingStatsContent summary={data} />}
+      </ConditionalBlock>
     </Container>
   )
 }

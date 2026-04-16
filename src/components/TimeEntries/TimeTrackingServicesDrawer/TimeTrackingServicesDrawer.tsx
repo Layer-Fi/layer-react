@@ -16,33 +16,237 @@ import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableCard } from '@components/ExpandableCard/ExpandableCard'
 import { TextSize } from '@components/Typography/Text'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
+import { ConditionalList } from '@components/utility/ConditionalList'
 
 import './timeTrackingServicesDrawer.scss'
 
-import { ServiceArchiveModal, ServiceRestoreModal } from './ServiceActionModal'
+import { ServiceArchiveModal } from './ServiceArchiveModal'
 import { ServiceFormCard } from './ServiceFormCard'
+import { ServiceRestoreModal } from './ServiceRestoreModal'
 
 type ServicesTab = 'active' | 'archived'
+
+type FormatHourly = (service: CatalogService) => string | null
 
 export type TimeTrackingServicesDrawerProps = {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackingServicesDrawerProps) {
+function useFormatHourly(): FormatHourly {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
+
+  return useCallback(
+    (service) => {
+      const cents = service.billableRatePerHourAmount
+      if (cents == null) {
+        return null
+      }
+      return t('timeTracking:services.rate_per_hour', '{{rate}}/hr', {
+        rate: formatCurrencyFromCents(cents),
+      })
+    },
+    [formatCurrencyFromCents, t],
+  )
+}
+
+function ServiceRowLabels({ name, rateLabel }: { name: string, rateLabel: string | null }) {
+  return (
+    <HStack align='center' gap='sm' fluid>
+      <Span className='Layer__TimeTrackingServicesDrawer__rowName' size='sm'>
+        {name}
+      </Span>
+      <Spacer />
+      {rateLabel && (
+        <Span className='Layer__TimeTrackingServicesDrawer__rowRate' size='sm'>
+          {rateLabel}
+        </Span>
+      )}
+    </HStack>
+  )
+}
+
+const LoadingState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      status={DataStateStatus.info}
+      title={t('common:label.loading', 'Loading...')}
+      icon={<Loader className='Layer__anim--rotating' />}
+      titleSize={TextSize.md}
+      spacing
+    />
+  )
+}
+
+const LoadServicesErrorState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      status={DataStateStatus.failed}
+      title={t('timeTracking:error.load_services', 'Failed to load services.')}
+      titleSize={TextSize.md}
+      spacing
+    />
+  )
+}
+
+type ActiveServicesContentProps = {
+  services: ReadonlyArray<CatalogService>
+  isAdding: boolean
+  expandedId: string | null
+  formatHourly: FormatHourly
+  onCancelAdd: () => void
+  onCreateSuccess: () => void
+  onToggleExpanded: (serviceId: string) => void
+  onArchive: (service: CatalogService) => void
+  onEditSuccess: () => void
+}
+
+function ActiveServicesContent({
+  services,
+  isAdding,
+  expandedId,
+  formatHourly,
+  onCancelAdd,
+  onCreateSuccess,
+  onToggleExpanded,
+  onArchive,
+  onEditSuccess,
+}: ActiveServicesContentProps) {
+  const { t } = useTranslation()
+
+  const empty = isAdding
+    ? null
+    : (
+      <DataState
+        status={DataStateStatus.allDone}
+        title={t('timeTracking:services.no_active', 'No services yet')}
+        titleSize={TextSize.md}
+        spacing
+      />
+    )
+
+  return (
+    <>
+      {isAdding && (
+        <VStack className='Layer__TimeTrackingServicesDrawer__addWrap'>
+          <ServiceFormCard
+            mode='create'
+            onCancel={onCancelAdd}
+            onSuccess={onCreateSuccess}
+          />
+        </VStack>
+      )}
+      <ConditionalList
+        list={services}
+        Empty={empty}
+        Container={({ children }) => (
+          <VStack className='Layer__TimeTrackingServicesDrawer__accordion'>{children}</VStack>
+        )}
+      >
+        {({ item: service }) => (
+          <ExpandableCard
+            key={service.id}
+            isExpanded={expandedId === service.id}
+            onToggleExpanded={() => onToggleExpanded(service.id)}
+            slots={{
+              Heading: (
+                <ServiceRowLabels name={service.name} rateLabel={formatHourly(service)} />
+              ),
+            }}
+          >
+            <ServiceFormCard
+              mode='edit'
+              service={service}
+              onSuccess={onEditSuccess}
+              onArchive={() => onArchive(service)}
+            />
+          </ExpandableCard>
+        )}
+      </ConditionalList>
+    </>
+  )
+}
+
+type ArchivedServicesContentProps = {
+  isEnabled: boolean
+  formatHourly: FormatHourly
+  onRestore: (service: CatalogService) => void
+}
+
+function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: ArchivedServicesContentProps) {
+  const { t } = useTranslation()
+  const { data, isLoading, isError } = useListCatalogServices({
+    allowArchived: true,
+    isEnabled,
+  })
+
+  const archivedServices = useMemo(
+    () => (data?.data ?? []).filter(s => s.archivedAt != null),
+    [data],
+  )
+
+  return (
+    <ConditionalBlock
+      data={data}
+      isLoading={isLoading}
+      isError={isError}
+      Loading={<LoadingState />}
+      Inactive={null}
+      Error={<LoadServicesErrorState />}
+    >
+      {() => (
+        <ConditionalList
+          list={archivedServices}
+          Empty={(
+            <DataState
+              status={DataStateStatus.allDone}
+              title={t('timeTracking:services.no_archived', 'No archived services')}
+              titleSize={TextSize.md}
+              spacing
+            />
+          )}
+          Container={({ children }) => (
+            <VStack className='Layer__TimeTrackingServicesDrawer__archivedList'>{children}</VStack>
+          )}
+        >
+          {({ item: service }) => (
+            <HStack
+              key={service.id}
+              className='Layer__TimeTrackingServicesDrawer__archivedRow'
+              gap='sm'
+              align='center'
+            >
+              <Span className='Layer__TimeTrackingServicesDrawer__rowName' size='sm'>
+                {service.name}
+              </Span>
+              <Spacer />
+              {formatHourly(service) && (
+                <Span className='Layer__TimeTrackingServicesDrawer__rowRate' size='sm'>
+                  {formatHourly(service)}
+                </Span>
+              )}
+              <Button variant='outlined' inset onPress={() => onRestore(service)}>
+                <ArchiveRestore size={14} />
+                {t('timeTracking:services.unarchive', 'Restore')}
+              </Button>
+            </HStack>
+          )}
+        </ConditionalList>
+      )}
+    </ConditionalBlock>
+  )
+}
+
+export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackingServicesDrawerProps) {
+  const { t } = useTranslation()
   const { isMobile } = useSizeClass()
+  const formatHourly = useFormatHourly()
   const { data, isLoading, isError } = useListCatalogServices()
   const [tab, setTab] = useState<ServicesTab>('active')
-  const {
-    data: archivedData,
-    isLoading: isArchivedLoading,
-    isError: isArchivedError,
-  } = useListCatalogServices({
-    allowArchived: true,
-    isEnabled: isOpen && tab === 'archived',
-  })
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)
   const [archiveTarget, setArchiveTarget] = useState<CatalogService | null>(null)
@@ -60,22 +264,6 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
 
   const activeServices = useMemo(() => data?.data ?? [], [data])
 
-  const archivedServices = useMemo(
-    () => (archivedData?.data ?? []).filter(s => s.archivedAt != null),
-    [archivedData],
-  )
-
-  const formatHourly = useCallback(
-    (service: CatalogService) => {
-      const cents = service.billableRatePerHourAmount
-      if (cents == null) {
-        return null
-      }
-      return `${formatCurrencyFromCents(cents)}${t('timeTracking:services.rate_per_hour_suffix', '/hr')}`
-    },
-    [formatCurrencyFromCents, t],
-  )
-
   const tabOptions = useMemo(
     () => [
       { value: 'active' as const, label: t('timeTracking:label.active', 'Active') },
@@ -89,12 +277,10 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
     setExpandedId(null)
   }, [])
 
-  const listForTab = tab === 'active' ? activeServices : archivedServices
-  const isArchivedInitialLoading = tab === 'archived' && isArchivedLoading && archivedData === undefined
-  const showEmptyList = listForTab.length === 0
-    && !(tab === 'active' && isAdding)
-    && !isArchivedInitialLoading
-    && !(tab === 'archived' && isArchivedError)
+  const toggleExpanded = useCallback((serviceId: string) => {
+    setIsAdding(false)
+    setExpandedId(prev => (prev === serviceId ? null : serviceId))
+  }, [])
 
   const Header = useCallback(
     ({ close }: { close: () => void }) => (
@@ -123,11 +309,6 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
     [isAdding, startAdd, t, tab, tabOptions],
   )
 
-  const toggleExpanded = useCallback((serviceId: string) => {
-    setIsAdding(false)
-    setExpandedId(prev => (prev === serviceId ? null : serviceId))
-  }, [])
-
   return (
     <>
       <Drawer
@@ -141,130 +322,40 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
       >
         {() => (
           <VStack className='Layer__TimeTrackingServicesDrawer' gap='md'>
-            {isError && (
-              <DataState
-                status={DataStateStatus.failed}
-                title={t('timeTracking:error.load_services', 'Failed to load services.')}
-                titleSize={TextSize.md}
-                spacing
-              />
-            )}
-            {!isError && isLoading && !data && (
-              <DataState
-                status={DataStateStatus.info}
-                title={t('common:label.loading', 'Loading...')}
-                icon={<Loader className='Layer__anim--rotating' />}
-                titleSize={TextSize.md}
-                spacing
-              />
-            )}
-            {!isError && data && (
-              <VStack className='Layer__TimeTrackingServicesDrawer__list' gap='sm'>
-                {tab === 'archived' && isArchivedError && (
-                  <DataState
-                    status={DataStateStatus.failed}
-                    title={t('timeTracking:error.load_services', 'Failed to load services.')}
-                    titleSize={TextSize.md}
-                    spacing
-                  />
-                )}
-                {tab === 'archived' && !isArchivedError && isArchivedInitialLoading && (
-                  <DataState
-                    status={DataStateStatus.info}
-                    title={t('common:label.loading', 'Loading...')}
-                    icon={<Loader className='Layer__anim--rotating' />}
-                    titleSize={TextSize.md}
-                    spacing
-                  />
-                )}
-                {tab === 'active' && isAdding && (
-                  <VStack className='Layer__TimeTrackingServicesDrawer__addWrap'>
-                    <ServiceFormCard
-                      mode='create'
-                      onCancel={() => setIsAdding(false)}
-                      onSuccess={() => {
-                        setIsAdding(false)
-                      }}
-                    />
-                  </VStack>
-                )}
-                {showEmptyList && (
-                  <DataState
-                    status={DataStateStatus.allDone}
-                    title={tab === 'active'
-                      ? t('timeTracking:services.no_active', 'No services yet')
-                      : t('timeTracking:services.no_archived', 'No archived services')}
-                    titleSize={TextSize.md}
-                    spacing
-                  />
-                )}
-                {tab === 'active' && activeServices.length > 0 && (
-                  <VStack className='Layer__TimeTrackingServicesDrawer__accordion'>
-                    {activeServices.map((service) => {
-                      const rateLabel = formatHourly(service)
-                      return (
-                        <ExpandableCard
-                          key={service.id}
-                          isExpanded={expandedId === service.id}
-                          onToggleExpanded={() => toggleExpanded(service.id)}
-                          slots={{
-                            Heading: (
-                              <HStack align='center' gap='sm' fluid>
-                                <Span className='Layer__TimeTrackingServicesDrawer__rowName' size='sm'>
-                                  {service.name}
-                                </Span>
-                                <Spacer />
-                                {rateLabel && (
-                                  <Span className='Layer__TimeTrackingServicesDrawer__rowRate' size='sm'>
-                                    {rateLabel}
-                                  </Span>
-                                )}
-                              </HStack>
-                            ),
-                          }}
-                        >
-                          <ServiceFormCard
-                            mode='edit'
-                            service={service}
-                            onSuccess={() => setExpandedId(null)}
-                            onArchive={() => setArchiveTarget(service)}
-                          />
-                        </ExpandableCard>
-                      )
-                    })}
-                  </VStack>
-                )}
-                {tab === 'archived' && !isArchivedError && !isArchivedInitialLoading && archivedServices.length > 0 && (
-                  <VStack className='Layer__TimeTrackingServicesDrawer__archivedList'>
-                    {archivedServices.map((service) => {
-                      const archivedRate = formatHourly(service)
-                      return (
-                        <HStack
-                          key={service.id}
-                          className='Layer__TimeTrackingServicesDrawer__archivedRow'
-                          gap='sm'
-                          align='center'
-                        >
-                          <Span className='Layer__TimeTrackingServicesDrawer__rowName' size='sm'>
-                            {service.name}
-                          </Span>
-                          <Spacer />
-                          {archivedRate && (
-                            <Span className='Layer__TimeTrackingServicesDrawer__rowRate' size='sm'>
-                              {archivedRate}
-                            </Span>
-                          )}
-                          <Button variant='outlined' inset onPress={() => setRestoreTarget(service)}>
-                            <ArchiveRestore size={14} />
-                            {t('timeTracking:services.unarchive', 'Restore')}
-                          </Button>
-                        </HStack>
-                      )
-                    })}
-                  </VStack>
-                )}
-              </VStack>
-            )}
+            <ConditionalBlock
+              data={data}
+              isLoading={isLoading}
+              isError={isError}
+              Loading={<LoadingState />}
+              Inactive={null}
+              Error={<LoadServicesErrorState />}
+            >
+              {() => (
+                <VStack className='Layer__TimeTrackingServicesDrawer__list' gap='sm'>
+                  {tab === 'active'
+                    ? (
+                      <ActiveServicesContent
+                        services={activeServices}
+                        isAdding={isAdding}
+                        expandedId={expandedId}
+                        formatHourly={formatHourly}
+                        onCancelAdd={() => setIsAdding(false)}
+                        onCreateSuccess={() => setIsAdding(false)}
+                        onToggleExpanded={toggleExpanded}
+                        onArchive={setArchiveTarget}
+                        onEditSuccess={() => setExpandedId(null)}
+                      />
+                    )
+                    : (
+                      <ArchivedServicesContent
+                        isEnabled={isOpen && tab === 'archived'}
+                        formatHourly={formatHourly}
+                        onRestore={setRestoreTarget}
+                      />
+                    )}
+                </VStack>
+              )}
+            </ConditionalBlock>
           </VStack>
         )}
       </Drawer>
@@ -272,6 +363,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
         <ServiceArchiveModal
           key={archiveTarget.id}
           service={archiveTarget}
+          isOpen={archiveTarget !== null}
           onOpenChange={(open) => {
             if (!open) {
               setArchiveTarget(null)
@@ -287,6 +379,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
         <ServiceRestoreModal
           key={restoreTarget.id}
           service={restoreTarget}
+          isOpen={restoreTarget !== null}
           onOpenChange={(open) => {
             if (!open) {
               setRestoreTarget(null)
