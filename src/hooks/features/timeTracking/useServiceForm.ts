@@ -44,7 +44,9 @@ export function useServiceForm(props: ServiceFormProps) {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const { trigger: createService } = useCreateCatalogService()
   const { trigger: updateService } = useUpdateCatalogService({ serviceId })
-  const defaultValuesRef = useRef<ServiceFormValues>(getServiceFormDefaultValues(service))
+
+  const formDefaults = useMemo(() => getServiceFormDefaultValues(service), [service])
+  const defaultValuesRef = useRef<ServiceFormValues>(formDefaults)
   const defaultValues = defaultValuesRef.current
 
   const onSubmit = useCallback(async ({ value }: { value: ServiceFormValues }) => {
@@ -103,9 +105,9 @@ export function useServiceForm(props: ServiceFormProps) {
   })
 
   useEffect(() => {
-    form.reset(getServiceFormDefaultValues(service))
+    form.reset(formDefaults)
     setSubmitError(null)
-  }, [form, service])
+  }, [form, formDefaults])
 
   return useMemo(
     () => ({ form, submitError }),
