@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
+import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import { type TimeTrackingSummaryFilterParams, useTimeTrackingSummary } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -13,21 +14,8 @@ import { Loader } from '@components/Loader/Loader'
 
 import './timeTrackingStats.scss'
 
-const SERVICE_COLORS = [
-  '#1F4F4C',
-  '#DCA900',
-  '#B79BD0',
-  '#4D9CA3',
-  '#D4845A',
-  '#8B6BAE',
-  '#5C8A4D',
-  '#7CB9E0',
-]
-
 const CHART_HEIGHT = 24
 const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
-const SERVICE_BREAKDOWN_TOP_N = 5
-const OTHER_BUCKET_KEY = '__other__'
 
 type ByServiceEntry = {
   serviceId?: string | null
@@ -169,35 +157,16 @@ export const TimeTrackingStats = ({ selectedFilterParams }: TimeTrackingStatsPro
     const totalMinutes = byService.reduce((total, entry) => total + entry.totalMinutes, 0)
 
     const sorted = [...byService].sort((a, b) => b.totalMinutes - a.totalMinutes)
-    const topEntries = sorted.slice(0, SERVICE_BREAKDOWN_TOP_N)
-    const remainder = sorted.slice(SERVICE_BREAKDOWN_TOP_N)
 
-    const rows: TimeTrackingServiceBreakdown[] = topEntries.map((entry, index) => ({
+    return sorted.map((entry, index) => ({
       ...entry,
-      color: SERVICE_COLORS[index % SERVICE_COLORS.length],
+      color: DEFAULT_CHART_COLORS[index % DEFAULT_CHART_COLORS.length],
       key: entry.serviceId ?? `service-${index}`,
       percentage: totalMinutes > 0
         ? Math.round((entry.totalMinutes / totalMinutes) * 100)
         : 0,
       serviceName: entry.serviceName || t('timeTracking:label.other', 'Other'),
     }))
-
-    if (remainder.length > 0) {
-      const otherMinutes = remainder.reduce((sum, entry) => sum + entry.totalMinutes, 0)
-      const otherIndex = topEntries.length
-      rows.push({
-        serviceId: null,
-        serviceName: t('timeTracking:label.other', 'Other'),
-        totalMinutes: otherMinutes,
-        color: SERVICE_COLORS[otherIndex % SERVICE_COLORS.length],
-        key: OTHER_BUCKET_KEY,
-        percentage: totalMinutes > 0
-          ? Math.round((otherMinutes / totalMinutes) * 100)
-          : 0,
-      })
-    }
-
-    return rows
   }, [selectedSummary, t])
 
   if (selectedError) {

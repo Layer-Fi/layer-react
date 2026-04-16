@@ -1,21 +1,7 @@
+import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 
 import { UNCATEGORIZED_TYPES } from './DetailedTable'
-
-const DEFAULT_CHART_COLOR_TYPE = [
-  '#008028',
-  '#7417B3',
-  '#006A80',
-  '#8FB300',
-  '#3D87CC',
-  '#CC3DCC',
-  '#3DCCB2',
-  '#CCB129',
-  '#2949CC',
-  '#619900',
-  '#6A52CC',
-  '#71CC56',
-]
 
 export interface TypeColorMapping {
   color: string
@@ -27,7 +13,7 @@ export const isLineItemUncategorized = (item: PnlChartLineItem) => {
 
 export const mapTypesToColors = (
   data: PnlChartLineItem[],
-  colorList: string[] = DEFAULT_CHART_COLOR_TYPE,
+  colorList: string[] = DEFAULT_CHART_COLORS,
 ): TypeColorMapping[] => {
   const nameToColor: Record<string, string> = {}
   const nameToLastOpacity: Record<string, number> = {}
