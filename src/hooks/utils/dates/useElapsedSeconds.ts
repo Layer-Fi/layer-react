@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 
 export function useElapsedSeconds(startedAt: Date | null | undefined): number {
   const [now, setNow] = useState(() => Date.now())
+  const startedAtMs = startedAt?.getTime()
 
   useEffect(() => {
-    if (!startedAt) {
+    if (startedAtMs === undefined) {
       return
     }
 
@@ -15,13 +16,13 @@ export function useElapsedSeconds(startedAt: Date | null | undefined): number {
     }, 1000)
 
     return () => window.clearInterval(intervalId)
-  }, [startedAt])
+  }, [startedAtMs])
 
   return useMemo(() => {
-    if (!startedAt) {
+    if (startedAtMs === undefined) {
       return 0
     }
 
-    return Math.max(0, Math.floor((now - startedAt.getTime()) / 1000))
-  }, [now, startedAt])
+    return Math.max(0, Math.floor((now - startedAtMs) / 1000))
+  }, [now, startedAtMs])
 }
