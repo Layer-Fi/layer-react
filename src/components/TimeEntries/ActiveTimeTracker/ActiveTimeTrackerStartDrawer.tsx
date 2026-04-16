@@ -44,9 +44,9 @@ const ActiveTimerDurationDisplay = ({ duration }: { duration: string }) => {
   const { t } = useTranslation()
 
   return (
-    <VStack className='Layer__ActiveTimeTrackerBanner__DurationDisplay' align='center' gap='2xs'>
-      <Span className='Layer__ActiveTimeTrackerBanner__DurationValue'>{duration}</Span>
-      <Span className='Layer__ActiveTimeTrackerBanner__DurationLabel' size='xs' weight='bold'>
+    <VStack className='Layer__ActiveTimeTracker__DurationDisplay' align='center' gap='2xs'>
+      <Span className='Layer__ActiveTimeTracker__DurationValue'>{duration}</Span>
+      <Span className='Layer__ActiveTimeTracker__DurationLabel' size='xs' weight='bold'>
         {t('timeTracking:label.duration', 'Duration')}
       </Span>
     </VStack>
@@ -91,7 +91,7 @@ export const ActiveTimeTrackerStartDrawer = ({
         ),
       }}
     >
-      <VStack className='Layer__ActiveTimeTrackerBanner__DrawerContent' gap='md'>
+      <VStack className='Layer__ActiveTimeTracker__DrawerContent' gap='md'>
         {actionError && (
           <DataState
             status={DataStateStatus.failed}
@@ -107,7 +107,7 @@ export const ActiveTimeTrackerStartDrawer = ({
             selectedServiceId={selectedServiceId}
             onSelectedServiceIdChange={onSelectedServiceIdChange}
             inline
-            className='Layer__ActiveTimeTrackerBanner__Field__Service'
+            className='Layer__ActiveTimeTracker__Field__Service'
           />
 
           <CustomerSelector
@@ -115,14 +115,14 @@ export const ActiveTimeTrackerStartDrawer = ({
             onSelectedCustomerChange={onSelectedCustomerChange}
             inline
             placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
-            className='Layer__ActiveTimeTrackerBanner__Field__Customer'
+            className='Layer__ActiveTimeTracker__Field__Customer'
           />
 
           <TextField
             name='active-time-tracker-memo'
             inline
             textarea
-            className='Layer__ActiveTimeTrackerBanner__Field__Memo'
+            className='Layer__ActiveTimeTracker__Field__Memo'
           >
             <Label slot='label' size='sm' htmlFor='active-time-tracker-memo'>
               {t('timeTracking:label.memo', 'Memo')}

@@ -12,10 +12,10 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { ActiveTimeTrackerActiveBanner } from '@components/TimeEntries/ActiveTimeTrackerBanner/ActiveTimeTrackerActiveBanner'
-import { ActiveTimeTrackerStartDrawer } from '@components/TimeEntries/ActiveTimeTrackerBanner/ActiveTimeTrackerStartDrawer'
+import { ActiveTimeTrackerBanner } from '@components/TimeEntries/ActiveTimeTracker/ActiveTimeTrackerBanner'
+import { ActiveTimeTrackerStartDrawer } from '@components/TimeEntries/ActiveTimeTracker/ActiveTimeTrackerStartDrawer'
 
-import './activeTimeTrackerBanner.scss'
+import './activeTimeTracker.scss'
 
 const formatElapsedTime = (totalSeconds: number): string => {
   const hours = Math.floor(totalSeconds / 3600)
@@ -29,12 +29,12 @@ const formatElapsedTime = (totalSeconds: number): string => {
 
 const EMPTY_DURATION = formatElapsedTime(0)
 
-interface ActiveTimeTrackerBannerProps {
+interface ActiveTimeTrackerProps {
   isDrawerOpen?: boolean
   onDrawerOpenChange?: (isOpen: boolean) => void
 }
 
-export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDrawerOpen, onDrawerOpenChange }: ActiveTimeTrackerBannerProps) => {
+export const ActiveTimeTracker = ({ isDrawerOpen: externallyControlledIsDrawerOpen, onDrawerOpenChange }: ActiveTimeTrackerProps) => {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
   const [internallyControlledIsDrawerOpen, setInternallyControlledIsDrawerOpen] = useState(false)
@@ -278,7 +278,7 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
 
   if (isError) {
     return (
-      <Container name='ActiveTimeTrackerBanner'>
+      <Container name='ActiveTimeTracker'>
         <VStack pi='lg' pbe='md'>
           <DataState
             status={DataStateStatus.failed}
@@ -292,7 +292,7 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
   return (
     <>
       {hasActiveTimer && (
-        <ActiveTimeTrackerActiveBanner
+        <ActiveTimeTrackerBanner
           actionError={actionError}
           timerDisplayValue={timerDisplayValue}
           selectedServiceId={selectedServiceId}
