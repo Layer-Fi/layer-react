@@ -3,6 +3,7 @@ import { Archive } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
+import { useServiceForm } from '@hooks/features/timeTracking/useServiceForm'
 import { Button } from '@ui/Button/Button'
 import { FieldError, Form, TextField } from '@ui/Form/Form'
 import { Input } from '@ui/Input/Input'
@@ -10,8 +11,6 @@ import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { AmountInput } from '@components/Input/AmountInput'
-
-import { useServiceForm } from './useServiceForm'
 
 type AddServiceFormCardProps = {
   mode: 'create'
