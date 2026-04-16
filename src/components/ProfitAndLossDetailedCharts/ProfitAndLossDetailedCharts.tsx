@@ -48,13 +48,13 @@ const EmptyState = () => {
       <div className='Layer__profit-and-loss-detailed-charts__empty-chart'>
         <VStack align='center' justify='center' gap='md' className='Layer__profit-and-loss-detailed-charts__empty-chart-content'>
           <Hourglass size={36} className='Layer__profit-and-loss-detailed-charts__empty-chart-icon' />
-          <Span size={TextSize.md} weight={TextWeight.bold} variant='subtle'>
+          <Span size='md' weight='bold' variant='subtle'>
             {t('bankTransactions:empty.no_transactions_found', 'No transactions found')}
           </Span>
         </VStack>
       </div>
       <HStack align='center' justify='center' gap='md' pb='md' className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
-        <Span size={TextSize.md} variant='subtle'>{t('bankTransactions:label.upload_transactions_or_wait_for_bank_sync', 'Upload your transactions or wait for transactions to be synced from your bank.')}</Span>
+        <Span size='md' variant='subtle'>{t('bankTransactions:label.upload_transactions_or_wait_for_bank_sync', 'Upload your transactions or wait for transactions to be synced from your bank.')}</Span>
       </HStack>
     </>
   )

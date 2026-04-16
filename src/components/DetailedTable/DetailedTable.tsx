@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { type SortParams } from '@internal-types/utility/pagination'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import SortArrows from '@icons/SortArrows'
@@ -131,13 +131,9 @@ export const DetailedTable = <T extends SeriesDataWithType>({
     sortFunction(data, { sortBy: field })
   }
 
-  const buildColClass = useCallback((column: string) => {
-    if (sortParams.sortBy === column) {
-      const sortOrderClass = sortParams.sortOrder === SortOrder.ASC ? 'asc' : 'desc'
-      return `sort--${sortOrderClass}`
-    }
-    return ''
-  }, [sortParams])
+  const buildHeaderVariant = useCallback((column: string) => {
+    return sortParams.sortBy === column ? undefined : 'subtle'
+  }, [sortParams.sortBy])
 
   const { isMobile } = useSizeClass()
   const renderValue = valueRenderer ?? ((item: T) => <MoneySpan size='sm' amount={item.value} />)
@@ -151,31 +147,37 @@ export const DetailedTable = <T extends SeriesDataWithType>({
               <tr>
                 <th></th>
                 <th
-                  className={classNames('Layer__sortable-col', buildColClass('category'))}
+                  className='Layer__sortable-col'
                   onClick={() => setAndToggleSortDirection('category')}
                 >
                   <HStack align='center' gap='3xs'>
-                    {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
+                    <Span variant={buildHeaderVariant('category')} size='sm'>
+                      {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
+                    </Span>
                     <SortArrows className='Layer__DetailedTable__sortArrows' />
                   </HStack>
                 </th>
                 {!isMobile && (
                   <th
-                    className={classNames('Layer__sortable-col', buildColClass('type'))}
+                    className='Layer__sortable-col'
                     onClick={() => setAndToggleSortDirection('type')}
                   >
                     <HStack align='center' gap='3xs'>
-                      {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
+                      <Span variant={buildHeaderVariant('type')} size='sm'>
+                        {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
+                      </Span>
                       <SortArrows className='Layer__DetailedTable__sortArrows' />
                     </HStack>
                   </th>
                 )}
                 <th
-                  className={classNames('Layer__sortable-col', buildColClass('value'), 'value-col')}
+                  className='Layer__sortable-col value-col'
                   onClick={() => setAndToggleSortDirection('value')}
                 >
                   <HStack align='center' gap='3xs' justify='end'>
-                    {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
+                    <Span variant={buildHeaderVariant('value')} size='sm'>
+                      {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
+                    </Span>
                     <SortArrows className='Layer__DetailedTable__sortArrows' />
                   </HStack>
                 </th>
@@ -185,14 +187,13 @@ export const DetailedTable = <T extends SeriesDataWithType>({
             <tbody>
               {detailedTableRows
                 .map((row) => {
+                  const isRowActive = interactionProps.hoveredItem?.name === row.item.name
                   return (
                     <tr
                       key={row.key}
                       className={classNames(
                         'Layer__DetailedTable__row',
-                        interactionProps.hoveredItem && interactionProps.hoveredItem.name === row.item.name
-                          ? 'active'
-                          : '',
+                        isRowActive ? 'active' : '',
                       )}
                       onMouseEnter={() => interactionProps.setHoveredItem(row.item)}
                       onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
@@ -204,9 +205,13 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                           fallbackFillSelector={stylingProps.fallbackFillSelector}
                         />
                       </td>
-                      <td className='category-col'>{row.item.displayName}</td>
+                      <td className='category-col'>
+                        <Span size='sm'>{row.item.displayName}</Span>
+                      </td>
                       {!isMobile && (
-                        <td className='type-col'>{row.item.type}</td>
+                        <td className='type-col'>
+                          <Span variant={isRowActive ? undefined : 'subtle'} size='sm'>{row.item.type}</Span>
+                        </td>
                       )}
                       <td className='value-col'>
                         <Button
@@ -214,11 +219,11 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                           onPress={() => interactionProps.onValueClick?.(row.item)}
                           isDisabled={!interactionProps.onValueClick || row.isValueDisabled}
                         >
-                          {renderValue(row.item)}
+                          <Span size='sm'>{renderValue(row.item)}</Span>
                         </Button>
                       </td>
                       <td className='percent-col'>
-                        <Span className='share-text'>
+                        <Span className='share-text' variant={isRowActive ? undefined : 'subtle'} size='sm'>
                           {row.item.value < 0 ? '-' : row.formattedShare}
                         </Span>
                       </td>
