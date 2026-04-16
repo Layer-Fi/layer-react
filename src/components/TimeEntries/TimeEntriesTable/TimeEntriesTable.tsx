@@ -42,7 +42,7 @@ const TimeEntryDurationCell = memo(function TimeEntryDurationCell({ durationMinu
 
 const TimeEntryActionsCell = memo(function TimeEntryActionsCell({ entry }: { entry: TimeEntry }) {
   const { t } = useTranslation()
-  const { openDrawer } = useTimeEntriesDrawer()
+  const { setDrawerOpen } = useTimeEntriesDrawer()
   const { openDeleteModal } = useTimeEntriesDeleteModal()
   const isLocked = !!entry.invoiceLineItem
 
@@ -51,7 +51,7 @@ const TimeEntryActionsCell = memo(function TimeEntryActionsCell({ entry }: { ent
       <Button
         inset
         icon
-        onPress={() => openDrawer(entry)}
+        onPress={() => setDrawerOpen(true, entry)}
         aria-label={t('timeTracking:action.view_entry', 'View Entry')}
         variant='ghost'
       >
@@ -144,4 +144,4 @@ const TimeEntriesTableComponent = ({
   )
 }
 
-export const TimeEntriesTable = memo(TimeEntriesTableComponent)
+export const TimeEntriesTable = TimeEntriesTableComponent

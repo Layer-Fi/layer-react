@@ -14,8 +14,7 @@ type TimeEntriesStoreShape = {
   onStartTimer?: () => void
   isStartTimerDisabled?: boolean
   actions: {
-    openDrawer: (entry: TimeEntry | null) => void
-    setDrawerOpen: (isOpen: boolean) => void
+    setDrawerOpen: (isOpen: boolean, entry?: TimeEntry | null) => void
     clearSelectedEntry: () => void
     openDeleteModal: (entry: TimeEntry) => void
     setDeleteModalOpen: (isOpen: boolean) => void
@@ -36,7 +35,6 @@ const TimeEntriesStoreContext = createContext(
     onStartTimer: undefined,
     isStartTimerDisabled: undefined,
     actions: {
-      openDrawer: () => {},
       setDrawerOpen: () => {},
       clearSelectedEntry: () => {},
       openDeleteModal: () => {},
@@ -64,12 +62,11 @@ export function useTimeEntriesDrawer() {
   const store = useContext(TimeEntriesStoreContext)
   const isDrawerOpen = useStore(store, state => state.isDrawerOpen)
   const selectedEntry = useStore(store, state => state.selectedEntry)
-  const openDrawer = useStore(store, state => state.actions.openDrawer)
   const setDrawerOpen = useStore(store, state => state.actions.setDrawerOpen)
   const clearSelectedEntry = useStore(store, state => state.actions.clearSelectedEntry)
   return useMemo(
-    () => ({ isDrawerOpen, selectedEntry, openDrawer, setDrawerOpen, clearSelectedEntry }),
-    [isDrawerOpen, selectedEntry, openDrawer, setDrawerOpen, clearSelectedEntry],
+    () => ({ isDrawerOpen, selectedEntry, setDrawerOpen, clearSelectedEntry }),
+    [isDrawerOpen, selectedEntry, setDrawerOpen, clearSelectedEntry],
   )
 }
 
@@ -117,11 +114,11 @@ export function TimeEntriesStoreProvider({
       onStartTimer,
       isStartTimerDisabled,
       actions: {
-        openDrawer: (entry: TimeEntry | null) => {
-          set({ selectedEntry: entry, isDrawerOpen: true })
-        },
-        setDrawerOpen: (isOpen: boolean) => {
-          set({ isDrawerOpen: isOpen })
+        setDrawerOpen: (isOpen: boolean, entry?: TimeEntry | null) => {
+          set(state => ({
+            isDrawerOpen: isOpen,
+            selectedEntry: entry === undefined ? state.selectedEntry : entry,
+          }))
         },
         clearSelectedEntry: () => {
           set({ selectedEntry: null })
