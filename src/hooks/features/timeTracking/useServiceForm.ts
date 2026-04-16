@@ -38,6 +38,7 @@ const getServiceFormDefaultValues = (service?: CatalogService): ServiceFormValue
 export function useServiceForm(props: ServiceFormProps) {
   const { t } = useTranslation()
   const intl = useIntl()
+  const { mode, onSuccess } = props
   const service = props.mode === 'edit' ? props.service : undefined
   const serviceId = service?.id ?? ''
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -56,7 +57,7 @@ export function useServiceForm(props: ServiceFormProps) {
     setSubmitError(null)
 
     try {
-      if (props.mode === 'edit') {
+      if (mode === 'edit') {
         await updateService({
           name: trimmedName,
           billable_rate_per_hour_amount: billableRatePerHourAmount,
@@ -69,16 +70,16 @@ export function useServiceForm(props: ServiceFormProps) {
         })
       }
 
-      props.onSuccess()
+      onSuccess()
     }
     catch {
       setSubmitError(
-        props.mode === 'edit'
+        mode === 'edit'
           ? t('timeTracking:error.update_service', 'Could not save this service. Please try again.')
           : t('timeTracking:error.create_service', 'Failed to create service. Please try again.'),
       )
     }
-  }, [createService, intl.locale, props, t, updateService])
+  }, [createService, intl.locale, mode, onSuccess, t, updateService])
 
   const onDynamic = useCallback(({ value }: { value: ServiceFormValues }) => {
     if (value.name.trim() === '') {

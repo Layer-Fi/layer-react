@@ -50,7 +50,7 @@
 
   border-block-start: 1px solid var(--border-color);
 
-  background-color: white;
+  background-color: var(--color-base-0);
 
   &:first-child {
     border-block-start: none;
@@ -98,7 +98,7 @@
 
   border: 1px solid var(--border-color);
 
-  background-color: white;
+  background-color: var(--color-base-0);
 }
 
 .Layer__TimeTrackingServicesDrawer__rateAmountWrap {
