@@ -1,0 +1,49 @@
+#layer-pie-dots-pattern rect {
+  fill: var(--color-base-500);
+}
+
+#layer-pie-dots-pattern rect.bg {
+  fill: var(--color-base-100);
+}
+
+.Layer__DetailedChart {
+  width: 100%;
+}
+
+.Layer__DetailedChart__headerTablet {
+  display: none;
+}
+
+.Layer__DetailedChart__container {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+
+.Layer__DetailedChart__centerLabelTitle,
+.Layer__DetailedChart__centerLabelShare {
+  fill: var(--color-base-600);
+  font-size: 12px;
+}
+
+.Layer__DetailedChart__centerLabelValue {
+  fill: var(--text-color-primary);
+  font-size: 14px;
+}
+
+.Layer__DetailedChart__centerLabelLoading {
+  fill: var(--color-base-600);
+  font-size: 14px;
+}
+
+.Layer__DetailedChart__slice {
+  transition: fill 1000ms ease-out;
+}
+
+.Layer__DetailedChart__slice--inactive {
+  fill: var(--color-base-300);
+}
+
+.Layer__DetailedChart__slice--bordered {
+  stroke: var(--color-base-200);
+}
