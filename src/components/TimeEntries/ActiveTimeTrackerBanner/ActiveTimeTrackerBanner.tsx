@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Check, Play } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
@@ -10,27 +9,13 @@ import { useActiveTimeTracker, useActiveTimeTrackerGlobalCacheActions } from '@h
 import { useStartTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useStartTimeTracker'
 import { useStopTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useStopTimeTracker'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { Button } from '@ui/Button/Button'
-import { TextField } from '@ui/Form/Form'
-import { TextArea } from '@ui/Input/TextArea'
-import { Drawer } from '@ui/Modal/Modal'
-import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { Label, Span } from '@ui/Typography/Text'
+import { VStack } from '@ui/Stack/Stack'
 import { Container } from '@components/Container/Container'
-import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
+import { ActiveTimeTrackerActiveBanner } from '@components/TimeEntries/ActiveTimeTrackerBanner/ActiveTimeTrackerActiveBanner'
+import { ActiveTimeTrackerStartDrawer } from '@components/TimeEntries/ActiveTimeTrackerBanner/ActiveTimeTrackerStartDrawer'
 
 import './activeTimeTrackerBanner.scss'
-
-const ActiveTimeTrackerDrawerHeader = ({ title, close, isMobile }: { title: string, close: () => void, isMobile: boolean }) => (
-  <ModalTitleWithClose
-    heading={<ModalHeading size='md'>{title}</ModalHeading>}
-    onClose={close}
-    hideBottomPadding={isMobile}
-  />
-)
 
 const formatElapsedTime = (totalSeconds: number): string => {
   const hours = Math.floor(totalSeconds / 3600)
@@ -42,18 +27,7 @@ const formatElapsedTime = (totalSeconds: number): string => {
     .join(':')
 }
 
-const ActiveTimerDurationDisplay = ({ duration }: { duration: string }) => {
-  const { t } = useTranslation()
-
-  return (
-    <VStack className='Layer__ActiveTimeTrackerBanner__DurationDisplay' align='center' gap='2xs'>
-      <Span className='Layer__ActiveTimeTrackerBanner__DurationValue'>{duration}</Span>
-      <Span className='Layer__ActiveTimeTrackerBanner__DurationLabel' size='xs' weight='bold'>
-        {t('timeTracking:label.duration', 'Duration')}
-      </Span>
-    </VStack>
-  )
-}
+const EMPTY_DURATION = formatElapsedTime(0)
 
 interface ActiveTimeTrackerBannerProps {
   isDrawerOpen?: boolean
@@ -69,6 +43,7 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
   const [memo, setMemo] = useState('')
   const [actionError, setActionError] = useState<string | null>(null)
   const [now, setNow] = useState(() => Date.now())
+  const syncedActiveEntryIdRef = useRef<string | null>(null)
 
   const { data: activeEntry, isLoading, isError } = useActiveTimeTracker()
   const { trigger: startTimeTracker, isMutating: isStarting } = useStartTimeTracker()
@@ -93,9 +68,15 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
 
   useEffect(() => {
     if (!activeEntry) {
+      syncedActiveEntryIdRef.current = null
       return
     }
 
+    if (syncedActiveEntryIdRef.current === activeEntry.id) {
+      return
+    }
+
+    syncedActiveEntryIdRef.current = activeEntry.id
     setSelectedServiceId(activeEntry.service?.id ?? null)
     setSelectedCustomer(activeEntry.customer ?? null)
     setMemo(activeEntry.memo ?? '')
@@ -124,11 +105,10 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
     return Math.max(0, Math.floor((now - createdAtTimestamp) / 1000))
   }, [activeEntry, now])
 
-  const elapsedTime = useMemo(
+  const timerDisplayValue = useMemo(
     () => formatElapsedTime(elapsedSeconds),
     [elapsedSeconds],
   )
-  const timerDisplayValue = elapsedTime
 
   const startPayload = useMemo<StartTrackerEncoded | null>(() => {
     if (!selectedServiceId) {
@@ -207,6 +187,12 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
     }
   }, [hasActiveTimer, isDrawerOpen, setIsDrawerOpen])
 
+  useEffect(() => {
+    if (!hasActiveTimer) {
+      setActionError(null)
+    }
+  }, [hasActiveTimer])
+
   const handleStartTimer = useCallback(async () => {
     if (!startPayload) {
       setActionError(t('timeTracking:validation.service_required', 'Service is a required field.'))
@@ -267,6 +253,18 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
     }
   }, [activeEntry, deleteTimeEntry, invalidateActiveTimeTracker, setIsDrawerOpen, t])
 
+  const onStartTimer = useCallback(() => {
+    void handleStartTimer()
+  }, [handleStartTimer])
+
+  const onCompleteTimer = useCallback(() => {
+    void handleCompleteTimer()
+  }, [handleCompleteTimer])
+
+  const onCancelTimer = useCallback(() => {
+    void handleCancelTimer()
+  }, [handleCancelTimer])
+
   if (isLoading) {
     return null
   }
@@ -287,147 +285,40 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
   return (
     <>
       {hasActiveTimer && (
-        <Container name='ActiveTimeTrackerBanner'>
-          {actionError && (
-            <VStack pi='md' pbe='2xs'>
-              <DataState
-                status={DataStateStatus.failed}
-                title={actionError}
-                inline
-              />
-            </VStack>
-          )}
-
-          <HStack className='Layer__ActiveTimeTrackerBanner__Main' gap='md' justify='space-between' align='center'>
-            <HStack className='Layer__ActiveTimeTrackerBanner__Controls' gap='sm' align='center'>
-              <HStack className='Layer__ActiveTimeTrackerBanner__Timer' gap='sm' align='center'>
-                <Span className='Layer__ActiveTimeTrackerBanner__TimerDot' />
-                <Span className='Layer__ActiveTimeTrackerBanner__TimerValue'>{timerDisplayValue}</Span>
-              </HStack>
-
-              <HStack className='Layer__ActiveTimeTrackerBanner__InlineFields' gap='sm' align='center'>
-                <TimeEntryServiceSelector
-                  selectedServiceId={selectedServiceId}
-                  onSelectedServiceIdChange={setSelectedServiceId}
-                  inline
-                  showLabel={false}
-                  className='Layer__ActiveTimeTrackerBanner__Field__Service Layer__ActiveTimeTrackerBanner__Field--inline'
-                />
-
-                <CustomerSelector
-                  selectedCustomer={selectedCustomer}
-                  onSelectedCustomerChange={setSelectedCustomer}
-                  inline
-                  showLabel={false}
-                  placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
-                  className='Layer__ActiveTimeTrackerBanner__Field__Customer Layer__ActiveTimeTrackerBanner__Field--inline'
-                />
-              </HStack>
-            </HStack>
-
-            <HStack className='Layer__ActiveTimeTrackerBanner__Actions' gap='sm' align='center'>
-              <Button
-                variant='text'
-                onPress={() => { void handleCancelTimer() }}
-                isPending={isCancelling}
-                isDisabled={isStopping || isUpdating}
-              >
-                {t('timeTracking:action.cancel_timer', 'Cancel')}
-              </Button>
-
-              <HStack className='Layer__ActiveTimeTrackerBanner__CompleteButton'>
-                <Button
-                  variant='outlined'
-                  onPress={() => { void handleCompleteTimer() }}
-                  isPending={isStopping || isUpdating}
-                  isDisabled={isCancelling || !selectedServiceId}
-                >
-                  {t('timeTracking:action.complete_timer', 'Complete')}
-                  <Check size={16} />
-                </Button>
-              </HStack>
-            </HStack>
-          </HStack>
-        </Container>
+        <ActiveTimeTrackerActiveBanner
+          actionError={actionError}
+          timerDisplayValue={timerDisplayValue}
+          selectedServiceId={selectedServiceId}
+          onSelectedServiceIdChange={setSelectedServiceId}
+          selectedCustomer={selectedCustomer}
+          onSelectedCustomerChange={setSelectedCustomer}
+          onCancelTimer={onCancelTimer}
+          onCompleteTimer={onCompleteTimer}
+          isCancelling={isCancelling}
+          isStopping={isStopping}
+          isUpdating={isUpdating}
+        />
       )}
 
       {!hasActiveTimer && (
-        <Drawer
+        <ActiveTimeTrackerStartDrawer
           isOpen={isDrawerOpen}
           onOpenChange={handleDrawerOpenChange}
-          isDismissable
-          variant={isMobile ? 'mobile-drawer' : 'drawer'}
-          flexBlock={isMobile}
-          aria-label={t('timeTracking:action.start_timer', 'Start Timer')}
-          slots={{
-            Header: ({ close }) => (
-              <ActiveTimeTrackerDrawerHeader
-                title={t('timeTracking:action.start_timer', 'Start Timer')}
-                close={close}
-                isMobile={isMobile}
-              />
-            ),
-          }}
-        >
-          <VStack className='Layer__ActiveTimeTrackerBanner__DrawerContent' gap='md'>
-            {actionError && (
-              <DataState
-                status={DataStateStatus.failed}
-                title={actionError}
-                inline
-              />
-            )}
-
-            <ActiveTimerDurationDisplay duration={formatElapsedTime(0)} />
-
-            <VStack gap='md'>
-              <TimeEntryServiceSelector
-                selectedServiceId={selectedServiceId}
-                onSelectedServiceIdChange={setSelectedServiceId}
-                inline
-                className='Layer__ActiveTimeTrackerBanner__Field__Service'
-              />
-
-              <CustomerSelector
-                selectedCustomer={selectedCustomer}
-                onSelectedCustomerChange={setSelectedCustomer}
-                inline
-                placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
-                className='Layer__ActiveTimeTrackerBanner__Field__Customer'
-              />
-
-              <TextField
-                name='active-time-tracker-memo'
-                inline
-                textarea
-                className='Layer__ActiveTimeTrackerBanner__Field__Memo'
-              >
-                <Label slot='label' size='sm' htmlFor='active-time-tracker-memo'>
-                  {t('timeTracking:label.memo', 'Memo')}
-                </Label>
-                <TextArea
-                  slot='input'
-                  id='active-time-tracker-memo'
-                  name='active-time-tracker-memo'
-                  value={memo}
-                  onChange={e => setMemo(e.target.value)}
-                  placeholder={t('timeTracking:label.add_memo', 'Add memo')}
-                />
-              </TextField>
-
-              <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
-                <Button
-                  onPress={() => { void handleStartTimer() }}
-                  isPending={isStarting}
-                  isDisabled={!startPayload || isStopping || isCancelling}
-                >
-                  <Play size={16} />
-                  {t('timeTracking:action.start_timer', 'Start Timer')}
-                </Button>
-              </HStack>
-            </VStack>
-          </VStack>
-        </Drawer>
+          isMobile={isMobile}
+          actionError={actionError}
+          duration={EMPTY_DURATION}
+          selectedServiceId={selectedServiceId}
+          onSelectedServiceIdChange={setSelectedServiceId}
+          selectedCustomer={selectedCustomer}
+          onSelectedCustomerChange={setSelectedCustomer}
+          memo={memo}
+          onMemoChange={setMemo}
+          onStartTimer={onStartTimer}
+          isStarting={isStarting}
+          isStopping={isStopping}
+          isCancelling={isCancelling}
+          canStartTimer={!!startPayload}
+        />
       )}
     </>
   )
