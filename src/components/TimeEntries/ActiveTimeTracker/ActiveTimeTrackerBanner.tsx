@@ -1,7 +1,8 @@
 import { Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customer'
+import { type TimeEntry } from '@schemas/timeTracking'
+import { useActiveTimerBannerForm } from '@hooks/features/timeTracking/useActiveTimerBannerForm'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -11,41 +12,21 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 type ActiveTimeTrackerBannerProps = {
-  actionError: string | null
+  activeEntry: TimeEntry
   timerDisplayValue: string
-  selectedServiceId: string | null
-  onSelectedServiceIdChange: (serviceId: string | null) => void
-  selectedCustomer: Customer | null
-  onSelectedCustomerChange: (customer: Customer | null) => void
-  onCancelTimer: () => void
-  onCompleteTimer: () => void
-  isCancelling: boolean
-  isStopping: boolean
-  isUpdating: boolean
 }
 
-export const ActiveTimeTrackerBanner = ({
-  actionError,
-  timerDisplayValue,
-  selectedServiceId,
-  onSelectedServiceIdChange,
-  selectedCustomer,
-  onSelectedCustomerChange,
-  onCancelTimer,
-  onCompleteTimer,
-  isCancelling,
-  isStopping,
-  isUpdating,
-}: ActiveTimeTrackerBannerProps) => {
+export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: ActiveTimeTrackerBannerProps) => {
   const { t } = useTranslation()
+  const { form, actions, state } = useActiveTimerBannerForm({ activeEntry })
 
   return (
     <Container name='ActiveTimeTracker'>
-      {actionError && (
+      {state.actionError && (
         <VStack pi='md' pbe='2xs'>
           <DataState
             status={DataStateStatus.failed}
-            title={actionError}
+            title={state.actionError}
             inline
           />
         </VStack>
@@ -59,46 +40,59 @@ export const ActiveTimeTrackerBanner = ({
           </HStack>
 
           <HStack className='Layer__ActiveTimeTracker__InlineFields' gap='sm' align='center'>
-            <TimeEntryServiceSelector
-              selectedServiceId={selectedServiceId}
-              onSelectedServiceIdChange={onSelectedServiceIdChange}
-              inline
-              showLabel={false}
-              className='Layer__ActiveTimeTracker__Field__Service Layer__ActiveTimeTracker__Field--inline'
-            />
+            <form.Field name='selectedServiceId'>
+              {field => (
+                <TimeEntryServiceSelector
+                  selectedServiceId={field.state.value}
+                  onSelectedServiceIdChange={field.handleChange}
+                  inline
+                  isClearable={false}
+                  showLabel={false}
+                  className='Layer__ActiveTimeTracker__Field__Service Layer__ActiveTimeTracker__Field--inline'
+                />
+              )}
+            </form.Field>
 
-            <CustomerSelector
-              selectedCustomer={selectedCustomer}
-              onSelectedCustomerChange={onSelectedCustomerChange}
-              inline
-              showLabel={false}
-              placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
-              className='Layer__ActiveTimeTracker__Field__Customer Layer__ActiveTimeTracker__Field--inline'
-            />
+            <form.Field name='selectedCustomer'>
+              {field => (
+                <CustomerSelector
+                  selectedCustomer={field.state.value}
+                  onSelectedCustomerChange={field.handleChange}
+                  inline
+                  showLabel={false}
+                  placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
+                  className='Layer__ActiveTimeTracker__Field__Customer Layer__ActiveTimeTracker__Field--inline'
+                />
+              )}
+            </form.Field>
           </HStack>
         </HStack>
 
         <HStack className='Layer__ActiveTimeTracker__Actions' gap='sm' align='center'>
           <Button
             variant='text'
-            onPress={onCancelTimer}
-            isPending={isCancelling}
-            isDisabled={isStopping || isUpdating}
+            onPress={actions.cancelTimer}
+            isPending={state.isCancelling}
+            isDisabled={state.isStopping || state.isUpdating}
           >
             {t('timeTracking:action.cancel_timer', 'Cancel')}
           </Button>
 
-          <HStack className='Layer__ActiveTimeTracker__CompleteButton'>
-            <Button
-              variant='outlined'
-              onPress={onCompleteTimer}
-              isPending={isStopping || isUpdating}
-              isDisabled={isCancelling || !selectedServiceId}
-            >
-              {t('timeTracking:action.complete_timer', 'Complete')}
-              <Check size={16} />
-            </Button>
-          </HStack>
+          <form.Subscribe selector={s => s.values.selectedServiceId}>
+            {selectedServiceId => (
+              <HStack className='Layer__ActiveTimeTracker__CompleteButton'>
+                <Button
+                  variant='outlined'
+                  onPress={actions.completeTimer}
+                  isPending={state.isStopping || state.isUpdating}
+                  isDisabled={state.isCancelling || !selectedServiceId}
+                >
+                  {t('timeTracking:action.complete_timer', 'Complete')}
+                  <Check size={16} />
+                </Button>
+              </HStack>
+            )}
+          </form.Subscribe>
         </HStack>
       </HStack>
     </Container>

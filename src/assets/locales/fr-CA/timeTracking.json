@@ -17,6 +17,7 @@
   "error": {
     "archive_service": "",
     "cancel_timer": "",
+    "complete_timer": "",
     "create_service": "",
     "delete_entry": "",
     "load_active_timer": "",
