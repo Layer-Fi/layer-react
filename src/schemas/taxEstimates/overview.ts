@@ -1,28 +1,21 @@
 import { pipe, Schema } from 'effect'
 
+import { createTransformedEnumSchema } from '@schemas/utils'
+
 export enum TaxOverviewMetricType {
   TotalIncome = 'TOTAL_INCOME',
   TotalPreAgiDeductions = 'TOTAL_PRE_AGI_DEDUCTIONS',
   TaxableIncome = 'TAXABLE_INCOME',
+  UnknownType = 'UNKNOWN_TYPE',
 }
 
-const TaxOverviewMetricTypeSchema = Schema.Enums(TaxOverviewMetricType)
-
-const TransformedTaxOverviewMetricTypeSchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(TaxOverviewMetricTypeSchema),
-  {
-    decode: (input) => {
-      if (Object.values(TaxOverviewMetricTypeSchema.enums).includes(input as TaxOverviewMetricType)) {
-        return input as TaxOverviewMetricType
-      }
-      return TaxOverviewMetricType.TotalIncome
-    },
-    encode: input => input,
-  },
+const TaxOverviewMetricTypeSchema = createTransformedEnumSchema(
+  Schema.Enums(TaxOverviewMetricType),
+  TaxOverviewMetricType,
+  TaxOverviewMetricType.UnknownType,
 )
 
-export type TaxOverviewMetricTypeValue = typeof TransformedTaxOverviewMetricTypeSchema.Type
+export type TaxOverviewMetricTypeValue = typeof TaxOverviewMetricTypeSchema.Type
 
 const TaxOverviewMetricSchema = Schema.Struct({
   value: Schema.Number,
@@ -32,7 +25,7 @@ const TaxOverviewMetricSchema = Schema.Struct({
   ),
   label: Schema.String,
   metricType: pipe(
-    Schema.propertySignature(TransformedTaxOverviewMetricTypeSchema),
+    Schema.propertySignature(TaxOverviewMetricTypeSchema),
     Schema.fromKey('metric_type'),
   ),
 })
