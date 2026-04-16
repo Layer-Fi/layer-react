@@ -83,7 +83,7 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
   }, [activeEntry])
 
   useEffect(() => {
-    if (!activeEntry) {
+    if (!hasActiveTimer) {
       return
     }
 
@@ -94,7 +94,7 @@ export const ActiveTimeTrackerBanner = ({ isDrawerOpen: externallyControlledIsDr
     }, 1000)
 
     return () => window.clearInterval(intervalId)
-  }, [activeEntry])
+  }, [hasActiveTimer])
 
   const elapsedSeconds = useMemo(() => {
     if (!activeEntry) {
