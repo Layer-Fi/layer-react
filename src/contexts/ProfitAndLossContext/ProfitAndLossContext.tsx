@@ -5,10 +5,12 @@ import { type useProfitAndLoss } from '@hooks/features/profitAndLoss/useProfitAn
 
 export const ProfitAndLossContext = createContext<ReturnType<typeof useProfitAndLoss>>({
   data: undefined,
-  filteredDataRevenue: [],
-  filteredTotalRevenue: undefined,
-  filteredDataExpenses: [],
-  filteredTotalExpenses: undefined,
+  chartDataRevenue: [],
+  tableDataRevenue: [],
+  totalRevenue: undefined,
+  chartDataExpenses: [],
+  tableDataExpenses: [],
+  totalExpenses: undefined,
   isLoading: true,
   isValidating: false,
   isError: false,

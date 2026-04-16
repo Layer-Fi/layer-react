@@ -2,9 +2,19 @@ import { pipe, Schema } from 'effect'
 
 export enum SortOrder {
   ASC = 'ASC',
-  ASCENDING = 'ASCENDING',
-  DES = 'DES',
   DESC = 'DESC',
+
+  /**
+   * @deprecated Use SortOrder.ASC instead
+   */
+  ASCENDING = 'ASCENDING',
+  /**
+   * @deprecated Use SortOrder.DESC instead
+   */
+  DES = 'DES',
+  /**
+   * @deprecated Use SortOrder.DESC instead
+   */
   DESCENDING = 'DESCENDING',
 }
 

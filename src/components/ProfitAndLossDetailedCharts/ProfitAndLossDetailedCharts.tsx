@@ -1,11 +1,14 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { Hourglass } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useIntl } from 'react-intl'
 
+import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import { DateFormat } from '@utils/i18n/date/patterns'
+import { formatCurrencyFromCents } from '@utils/i18n/number/formatters'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { humanizeTitle } from '@utils/profitAndLossUtils'
-import { type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
+import { type Scope, type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import XIcon from '@icons/X'
@@ -13,13 +16,16 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BackButton } from '@components/Button/BackButton'
 import { Button, ButtonVariant } from '@components/Button/Button'
+import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
+import { type ColorSelector, type DetailData, type FallbackFillSelector, type ValueFormatter } from '@components/DetailedCharts/types'
+import { DetailedTable, type DetailedTableStringOverrides } from '@components/DetailedTable/DetailedTable'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { DetailedChart } from '@components/ProfitAndLossDetailedCharts/DetailedChart'
-import { DetailedTable, type DetailedTableStringOverrides } from '@components/ProfitAndLossDetailedCharts/DetailedTable'
 import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
 import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+
+import { isLineItemUncategorized, mapTypesToColors } from './utils'
 
 export interface DetailedChartStringOverrides {
   expenseChartHeader?: string
@@ -32,6 +38,25 @@ export interface ProfitAndLossDetailedChartsStringOverrides {
   detailedChartStringOverrides?: DetailedChartStringOverrides
   detailedTableStringOverrides?: DetailedTableStringOverrides
   detailReportStringOverrides?: ProfitAndLossDetailReportProps['stringOverrides']
+}
+
+const EmptyState = () => {
+  const { t } = useTranslation()
+  return (
+    <>
+      <div className='Layer__profit-and-loss-detailed-charts__empty-chart'>
+        <VStack align='center' justify='center' gap='md' className='Layer__profit-and-loss-detailed-charts__empty-chart-content'>
+          <Hourglass size={36} className='Layer__profit-and-loss-detailed-charts__empty-chart-icon' />
+          <Span size={TextSize.md} weight={TextWeight.bold} variant='subtle'>
+            {t('bankTransactions:empty.no_transactions_found', 'No transactions found')}
+          </Span>
+        </VStack>
+      </div>
+      <HStack align='center' justify='center' gap='md' pb='md' className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
+        <Span size={TextSize.md} variant='subtle'>{t('bankTransactions:label.upload_transactions_or_wait_for_bank_sync', 'Upload your transactions or wait for transactions to be synced from your bank.')}</Span>
+      </HStack>
+    </>
+  )
 }
 
 export const ProfitAndLossDetailedCharts = ({
@@ -49,12 +74,15 @@ export const ProfitAndLossDetailedCharts = ({
 }) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
+  const intl = useIntl()
   const {
-    filteredDataRevenue,
-    filteredTotalRevenue,
-    filteredDataExpenses,
-    filteredTotalExpenses,
-    sortBy,
+    chartDataRevenue,
+    tableDataRevenue,
+    totalRevenue,
+    chartDataExpenses,
+    tableDataExpenses,
+    totalExpenses,
+    sortBy: _oldSortByScope,
     isLoading,
     filters,
     dateRange,
@@ -62,20 +90,25 @@ export const ProfitAndLossDetailedCharts = ({
     setSidebarScope,
   } = useContext(ProfitAndLossContext)
 
-  const theScope = scope ? scope : sidebarScope
-  const data =
-    theScope === 'revenue' ? filteredDataRevenue : filteredDataExpenses
+  const activeScope: Scope = scope ?? sidebarScope ?? 'expenses'
+  const sortOrder = filters[activeScope]?.sortOrder === SortOrder.ASC ? SortOrder.ASC : SortOrder.DESC
+  const sortByField = filters[activeScope]?.sortBy ?? 'value'
+
+  const chartData =
+    activeScope === 'revenue' ? chartDataRevenue : chartDataExpenses
+  const tableData =
+    activeScope === 'revenue' ? tableDataRevenue : tableDataExpenses
   const total =
-    theScope === 'revenue' ? filteredTotalRevenue : filteredTotalExpenses
+    (activeScope === 'revenue' ? totalRevenue : totalExpenses) ?? 0
 
   const isEmpty = useMemo(() => {
     if (isLoading) return false
-    const chartData = data.map(x => ({
+    const chartDataValues = chartData.map(x => ({
       ...x,
       value: x.value > 0 ? x.value : 0,
     }))
-    return chartData.length === 0 || !chartData.find(x => x.value !== 0)
-  }, [data, isLoading])
+    return chartDataValues.length === 0 || !chartDataValues.find(x => x.value !== 0)
+  }, [chartData, isLoading])
 
   const [hoveredItem, setHoveredItem] = useState<PnlChartLineItem | undefined>(undefined)
   const [selectedItem, setSelectedItem] = useState<SelectedLineItem | null>(null)
@@ -89,12 +122,35 @@ export const ProfitAndLossDetailedCharts = ({
     setIsModalOpen(true)
   }, [])
 
+  const typeColorMapping = useMemo(
+    () => mapTypesToColors<PnlChartLineItem>(chartData, chartColorsList),
+    [chartData, chartColorsList],
+  )
+  const colorSelector: ColorSelector<PnlChartLineItem> = useCallback(
+    (item: PnlChartLineItem) => typeColorMapping(item.name)!,
+    [typeColorMapping],
+  )
+  const valueFormatter: ValueFormatter = useCallback((value: number) => formatCurrencyFromCents(intl, value), [intl])
+  const fallbackFillSelector: FallbackFillSelector<PnlChartLineItem> = (item: PnlChartLineItem) => isLineItemUncategorized(item)
+
+  const stylingProps = {
+    valueFormatter,
+    colorSelector,
+    fallbackFillSelector,
+  }
+
+  const sortFunction = useCallback((_data: DetailData<PnlChartLineItem>, sortParams: SortParams<string>) => {
+    if (sortParams.sortBy && sortParams.sortOrder) {
+      _oldSortByScope(activeScope, sortParams.sortBy, sortParams.sortOrder === SortOrder.ASC ? 'asc' : 'desc')
+    }
+  }, [_oldSortByScope, activeScope])
+
   return (
     <div className='Layer__profit-and-loss-detailed-charts'>
       <header className='Layer__profit-and-loss-detailed-charts__header'>
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides, t)}
+            {humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
           </Text>
           <Text size={TextSize.sm} className='date'>
             {formatDate(dateRange.startDate, DateFormat.MonthYear)}
@@ -117,7 +173,7 @@ export const ProfitAndLossDetailedCharts = ({
         )}
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(theScope, stringOverrides?.detailedChartStringOverrides, t)}
+            {humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
           </Text>
           <Text size={TextSize.sm} className='date'>
             {formatDate(dateRange.startDate, DateFormat.MonthYear)}
@@ -127,47 +183,41 @@ export const ProfitAndLossDetailedCharts = ({
 
       <div className='Layer__profit-and-loss-detailed-charts__content'>
         {isEmpty
-          ? (
-            <>
-              <div className='Layer__profit-and-loss-detailed-charts__empty-chart'>
-                <VStack align='center' justify='center' gap='md' className='Layer__profit-and-loss-detailed-charts__empty-chart-content'>
-                  <Hourglass size={36} className='Layer__profit-and-loss-detailed-charts__empty-chart-icon' />
-                  <Span size={TextSize.md} weight={TextWeight.bold} variant='subtle'>
-                    {t('bankTransactions:empty.no_transactions_found', 'No transactions found')}
-                  </Span>
-                </VStack>
-              </div>
-              <HStack align='center' justify='center' gap='md' pb='md' className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
-                <Span size={TextSize.md} variant='subtle'>{t('bankTransactions:label.upload_transactions_or_wait_for_bank_sync', 'Upload your transactions or wait for transactions to be synced from your bank.')}</Span>
-              </HStack>
-            </>
-          )
+          ? <EmptyState />
           : (
             <>
-              <DetailedChart
-                filteredData={data}
-                filteredTotal={total}
-                hoveredItem={hoveredItem}
-                setHoveredItem={setHoveredItem}
-                sidebarScope={theScope}
-                date={dateRange.startDate}
+
+              <DetailedChart<PnlChartLineItem>
+                data={{
+                  data: chartData,
+                  total: total,
+                }}
+                interactionProps={{
+                  hoveredItem,
+                  setHoveredItem: (item: PnlChartLineItem | undefined) => setHoveredItem(item),
+                }}
+
+                stylingProps={stylingProps}
                 isLoading={isLoading}
-                chartColorsList={chartColorsList}
-                showDatePicker={showDatePicker}
               />
-              <div className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
-                <DetailedTable
-                  filteredData={data}
-                  sidebarScope={theScope}
-                  filters={filters}
-                  sortBy={sortBy}
-                  hoveredItem={hoveredItem}
-                  setHoveredItem={setHoveredItem}
-                  chartColorsList={chartColorsList}
-                  stringOverrides={stringOverrides?.detailedTableStringOverrides}
-                  onValueClick={handleValueClick}
-                />
-              </div>
+              <DetailedTable<PnlChartLineItem>
+                data={{
+                  data: tableData,
+                  total: total,
+                }}
+                sortParams={{
+                  sortBy: sortByField,
+                  sortOrder: sortOrder,
+                }}
+                sortFunction={sortFunction}
+                stylingProps={stylingProps}
+                interactionProps={{
+                  hoveredItem,
+                  setHoveredItem: (item: PnlChartLineItem | undefined) => setHoveredItem(item),
+                  onValueClick: (item: PnlChartLineItem) => handleValueClick(item),
+                }}
+                stringOverrides={stringOverrides?.detailedTableStringOverrides}
+              />
             </>
           )}
       </div>

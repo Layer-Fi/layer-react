@@ -3,18 +3,22 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type SortDirection } from '@internal-types/general'
+import { SortOrder } from '@internal-types/utility/pagination'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import {
-  type ProfitAndLossFilters,
   type Scope,
   type SidebarScope,
+  type SortParamsByScope,
 } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
-import { isLineItemUncategorized, mapTypesToColors, type TypeColorMapping } from '@components/ProfitAndLossDetailedCharts/utils'
+import { type TypeColorMapping } from '@components/DetailedCharts/types'
+
+import { isLineItemUncategorized } from './utils'
+import { mapTypesToColors } from './utils'
 
 export interface DetailedTableStringOverrides {
   categoryColumnHeader?: string
@@ -29,7 +33,7 @@ export interface DetailedTableProps {
   hoveredItem: PnlChartLineItem | undefined
   setHoveredItem: (item: PnlChartLineItem | undefined) => void
   sidebarScope: SidebarScope
-  filters: ProfitAndLossFilters
+  filters: SortParamsByScope
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
   chartColorsList?: string[]
   stringOverrides?: DetailedTableStringOverrides
@@ -108,11 +112,11 @@ export const DetailedTable = ({
     .reduce((sum, x) => sum + x.value, 0)
 
   const buildColClass = useCallback((column: string) => {
-    if (!sidebarScope || !filters[sidebarScope]?.sortDirection) {
+    if (!sidebarScope || !filters[sidebarScope]?.sortOrder) {
       return ''
     }
     if (filters[sidebarScope]?.sortBy === column) {
-      return `sort--${filters[sidebarScope]?.sortDirection}`
+      return `sort--${filters[sidebarScope]?.sortOrder === SortOrder.ASC ? 'asc' : 'desc'}`
     }
     return ''
   }, [sidebarScope, filters])
@@ -178,7 +182,7 @@ export const DetailedTable = ({
                     <td className='color-col'>
                       <ValueIcon
                         item={item}
-                        typeColorMapping={typeColorMapping}
+                        typeColorMapping={typeColorMapping[item.name as keyof typeof typeColorMapping]}
                         idx={idx}
                       />
                     </td>

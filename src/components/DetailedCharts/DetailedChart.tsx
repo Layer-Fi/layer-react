@@ -12,61 +12,76 @@ import {
 } from 'recharts'
 import type { CartesianViewBox } from 'recharts/types/util/types'
 
-import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
-import { type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData, type ValueFormatter } from '@components/DetailedCharts/types'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
-import { isLineItemUncategorized, mapTypesToColors } from './utils'
+import './detailedChart.scss'
 
-interface DetailedChartProps {
-  filteredData: PnlChartLineItem[]
-  filteredTotal?: number
-  hoveredItem: PnlChartLineItem | undefined
-  setHoveredItem: (item: PnlChartLineItem | undefined) => void
-  sidebarScope?: SidebarScope
-  date: number | Date
-  isLoading?: boolean
+type DetailedChartStylingProps<T extends SeriesData> = {
+  colorSelector: ColorSelector<T>
+  fallbackFillSelector?: FallbackFillSelector<T>
+  valueFormatter: ValueFormatter
   showDatePicker?: boolean
-  chartColorsList?: string[]
+  isBordered?: boolean
+  thickness?: 'sm' | 'md' | 'lg'
 }
 
-export const DetailedChart = ({
-  filteredData,
-  filteredTotal,
-  hoveredItem,
-  setHoveredItem,
-  chartColorsList,
+type DetailedChartInteractionProps<T extends SeriesData> = {
+  hoveredItem: T | undefined
+  setHoveredItem: (item: T | undefined) => void
+}
+
+export type DetailedChartProps<T extends SeriesData> = {
+  data: DetailData<T>
+
+  isLoading?: boolean
+  isError?: boolean
+
+  interactionProps: DetailedChartInteractionProps<T>
+  stylingProps: DetailedChartStylingProps<T>
+}
+
+export const DetailedChart = <T extends SeriesData>({
+  data,
   isLoading,
-  showDatePicker = true,
-}: DetailedChartProps) => {
+  interactionProps,
+  stylingProps,
+}: DetailedChartProps<T>) => {
   const { t } = useTranslation()
-  const { formatCurrencyFromCents, formatPercent } = useIntlFormatter()
-  const chartData = useMemo(() => filteredData.map(x => ({
+  const { formatPercent } = useIntlFormatter()
+  const { data: chartData, total } = data
+  const thickness = stylingProps.thickness ?? 'sm'
+  const innerRadiusByThickness: Record<'sm' | 'md' | 'lg', string> = {
+    sm: '91%',
+    md: '86%',
+    lg: '80%',
+  }
+  const innerRadius = innerRadiusByThickness[thickness]
+
+  const normalizedChartData = useMemo(() => chartData.map(x => ({
     ...x,
     value: x.value > 0 ? x.value : 0,
   }
   )),
-  [filteredData])
+  [chartData])
 
-  const typeColorMapping = useMemo(() => mapTypesToColors<PnlChartLineItem>(chartData, chartColorsList), [chartData, chartColorsList])
-
-  const text = hoveredItem
-    ? hoveredItem.displayName
+  const text = interactionProps.hoveredItem
+    ? interactionProps.hoveredItem.displayName
     : t('common:label.total', 'Total')
 
-  const value = hoveredItem
-    ? filteredData.find(
-      x => x.name === hoveredItem.name,
+  const value = interactionProps.hoveredItem
+    ? chartData.find(
+      x => x.name === interactionProps.hoveredItem?.name,
     )?.value
-    : filteredTotal
+    : total
 
   let share = null
-  if (hoveredItem) {
-    const item = filteredData.find(
-      x => x.name === hoveredItem.name,
+  if (interactionProps.hoveredItem) {
+    const item = chartData.find(
+      x => x.name === interactionProps.hoveredItem?.name,
     )
-    const positiveTotal = chartData.reduce((sum, x) => sum + x.value, 0)
+    const positiveTotal = normalizedChartData.reduce((sum, x) => sum + x.value, 0)
 
     const value = Math.max(item?.value ?? 0, 0)
     share = value > 0 && positiveTotal > 0 ? value / positiveTotal : null
@@ -107,7 +122,7 @@ export const DetailedChart = ({
           verticalAnchor='middle'
           className='pie-center-label__value'
         >
-          {formatCurrencyFromCents(value)}
+          {stylingProps.valueFormatter(value ?? total)}
         </ChartText>
         {share != null && (
           <ChartText
@@ -122,12 +137,12 @@ export const DetailedChart = ({
         )}
       </>
     )
-  }, [text, formatCurrencyFromCents, value, share, formattedShare])
+  }, [text, value, total, stylingProps, share, formattedShare])
 
   return (
     <div className='chart-field'>
       <div className='header--tablet'>
-        {showDatePicker && <GlobalMonthPicker />}
+        {stylingProps?.showDatePicker && <GlobalMonthPicker />}
       </div>
 
       <div className='chart-container'>
@@ -166,7 +181,7 @@ export const DetailedChart = ({
                   nameKey='displayName'
                   cx='50%'
                   cy='50%'
-                  innerRadius='91%'
+                  innerRadius={innerRadius}
                   outerRadius='100%'
                   paddingAngle={0}
                   fill='#F8F8FA'
@@ -178,22 +193,22 @@ export const DetailedChart = ({
               )
               : (
                 <Pie
-                  data={chartData}
+                  data={normalizedChartData}
                   dataKey='value'
                   nameKey='displayName'
                   cx='50%'
                   cy='50%'
-                  innerRadius='91%'
+                  innerRadius={innerRadius}
                   outerRadius='100%'
                   paddingAngle={0.5}
                   fill='#8884d8'
                   animationDuration={200}
                   animationEasing='ease-in-out'
                 >
-                  {chartData.map((entry, index) => {
-                    let fill: string | undefined = typeColorMapping(entry.name)?.color
+                  {normalizedChartData.map((entry, index) => {
+                    let fill: string | undefined = stylingProps.colorSelector(entry)?.color
                     let active = true
-                    if (hoveredItem && entry.name !== hoveredItem.name) {
+                    if (interactionProps.hoveredItem && entry.name !== interactionProps.hoveredItem?.name) {
                       active = false
                       fill = undefined
                     }
@@ -203,19 +218,18 @@ export const DetailedChart = ({
                         key={`cell-${index}`}
                         className={classNames(
                           'Layer__profit-and-loss-detailed-charts__pie',
-                          hoveredItem && active ? 'active' : 'inactive',
-                          isLineItemUncategorized(entry)
-                          && 'Layer__profit-and-loss-detailed-charts__pie--border',
+                          interactionProps.hoveredItem && active ? 'active' : 'inactive',
+                          stylingProps?.isBordered && 'Layer__profit-and-loss-detailed-charts__pie--border',
                         )}
                         style={{
                           fill:
-                          isLineItemUncategorized(entry) && fill
+                          stylingProps.fallbackFillSelector?.(entry) && fill
                             ? 'url(#layer-pie-dots-pattern)'
                             : fill,
                         }}
-                        opacity={typeColorMapping(entry.name)?.opacity}
-                        onMouseEnter={() => setHoveredItem(entry)}
-                        onMouseLeave={() => setHoveredItem(undefined)}
+                        opacity={stylingProps.colorSelector(entry)?.opacity}
+                        onMouseEnter={() => interactionProps.setHoveredItem(entry)}
+                        onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
                       />
                     )
                   })}
