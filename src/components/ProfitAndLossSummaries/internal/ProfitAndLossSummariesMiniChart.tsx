@@ -107,12 +107,12 @@ export function ProfitAndLossSummariesMiniChart({
         animationEasing='ease-in-out'
       >
         {chartData.map((entry, index) => {
-          const colorConfig = typeColorMapping(entry)
+          const colorConfig = typeColorMapping(entry.name)
 
           return (
             <Cell
               key={`cell-${index}`}
-              className='Layer__profit-and-loss-detailed-charts__pie'
+              className='Layer__DetailedChart__slice'
               fill={
                 entry.name === 'placeholder' ? '#e6e6e6' : colorConfig?.color
               }

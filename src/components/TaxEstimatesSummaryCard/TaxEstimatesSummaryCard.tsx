@@ -8,8 +8,8 @@ import { Card } from '@components/Card/Card'
 
 import './taxEstimatesSummaryCard.scss'
 
-import { DonutChart } from './DonutChart'
 import { Legend } from './Legend'
+import { TaxEstimateChart } from './TaxEstimateChart'
 
 export type TaxEstimatesSummaryCardProps = {
   categories: readonly TaxOverviewCategory[]
@@ -38,13 +38,13 @@ export const TaxEstimatesSummaryCard = (data: TaxEstimatesSummaryCardProps) => {
           {(isMobile || isSummaryCardLayout)
             ? (
               <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
-                <DonutChart categories={categories} total={total} />
+                <TaxEstimateChart categories={categories} total={total} />
                 <Legend categories={categories} total={total} />
               </VStack>
             )
             : (
               <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
-                <DonutChart categories={categories} total={total} />
+                <TaxEstimateChart categories={categories} total={total} />
                 <Legend categories={categories} total={total} />
               </HStack>
             )}

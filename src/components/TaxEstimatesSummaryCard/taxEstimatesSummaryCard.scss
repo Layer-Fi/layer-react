@@ -75,14 +75,15 @@
     width: 9.5rem;
   }
 
-  &__DonutChartPie {
+  &__DonutChartInner {
     height: 100%;
     width: 100%;
-  }
 
-  &__DonutChartCenter {
-    position: absolute;
-    inset: 0;
+    .Layer__DetailedChart,
+    .Layer__DetailedChart__container {
+      height: 100%;
+      width: 100%;
+    }
   }
 
   &--summaryCard {

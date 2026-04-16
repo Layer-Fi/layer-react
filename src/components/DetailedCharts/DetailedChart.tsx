@@ -111,7 +111,7 @@ export const DetailedChart = <T extends SeriesData>({
           x={x + width / 2}
           textAnchor='middle'
           verticalAnchor='middle'
-          className='pie-center-label__title'
+          className='Layer__DetailedChart__centerLabelTitle'
         >
           {text}
         </ChartText>
@@ -120,7 +120,7 @@ export const DetailedChart = <T extends SeriesData>({
           x={x + width / 2}
           textAnchor='middle'
           verticalAnchor='middle'
-          className='pie-center-label__value'
+          className='Layer__DetailedChart__centerLabelValue'
         >
           {stylingProps.valueFormatter(value ?? total)}
         </ChartText>
@@ -130,7 +130,7 @@ export const DetailedChart = <T extends SeriesData>({
             x={x + width / 2}
             textAnchor='middle'
             verticalAnchor='middle'
-            className='pie-center-label__share'
+            className='Layer__DetailedChart__centerLabelShare'
           >
             {formattedShare}
           </ChartText>
@@ -140,12 +140,12 @@ export const DetailedChart = <T extends SeriesData>({
   }, [text, value, total, stylingProps, share, formattedShare])
 
   return (
-    <div className='chart-field'>
-      <div className='header--tablet'>
+    <div className='Layer__DetailedChart'>
+      <div className='Layer__DetailedChart__headerTablet'>
         {stylingProps?.showDatePicker && <GlobalMonthPicker />}
       </div>
 
-      <div className='chart-container'>
+      <div className='Layer__DetailedChart__container'>
         <ResponsiveContainer>
           <PieChart>
             <defs>
@@ -188,7 +188,7 @@ export const DetailedChart = <T extends SeriesData>({
                   animationDuration={200}
                   animationEasing='ease-in-out'
                 >
-                  <Label position='center' value='Loading...' className='pie-center-label__loading' />
+                  <Label position='center' value='Loading...' className='Layer__DetailedChart__centerLabelLoading' />
                 </Pie>
               )
               : (
@@ -217,9 +217,9 @@ export const DetailedChart = <T extends SeriesData>({
                       <Cell
                         key={`cell-${index}`}
                         className={classNames(
-                          'Layer__profit-and-loss-detailed-charts__pie',
-                          interactionProps.hoveredItem && active ? 'active' : 'inactive',
-                          stylingProps?.isBordered && 'Layer__profit-and-loss-detailed-charts__pie--border',
+                          'Layer__DetailedChart__slice',
+                          interactionProps.hoveredItem && !active && 'Layer__DetailedChart__slice--inactive',
+                          stylingProps?.isBordered && 'Layer__DetailedChart__slice--bordered',
                         )}
                         style={{
                           fill:
