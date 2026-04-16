@@ -17,7 +17,7 @@ function useMetricRowProps({ metricType, amount, maxMeterValue, label }: {
   label: string
 }) {
   const [viewportWidth] = useWindowSize()
-  const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
+  const boundedMaxMeterValue = Math.max(maxMeterValue, 1)
   const boundedMeterValue = Math.min(Math.max(amount, 0), boundedMaxMeterValue)
   const showBorder = viewportWidth < METRIC_ROW_MOBILE_BREAKPOINT
 
