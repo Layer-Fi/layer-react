@@ -1,310 +1,30 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Archive, ArchiveRestore, Plus } from 'lucide-react'
+import { ArchiveRestore, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useIntl } from 'react-intl'
 
 import { type CatalogService } from '@schemas/catalogService'
-import { convertCentsToDecimalString } from '@utils/format'
-import { toLocalizedCents } from '@utils/i18n/number/input'
-import { useArchiveCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/[service-id]/useArchiveCatalogService'
-import { useReactivateCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/[service-id]/useReactivateCatalogService'
-import { useUpdateCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/[service-id]/useUpdateCatalogService'
-import { useCreateCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/useCreateCatalogService'
 import { useListCatalogServices } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import Loader from '@icons/Loader'
 import { Button } from '@ui/Button/Button'
-import { FieldError, TextField } from '@ui/Form/Form'
-import { Input } from '@ui/Input/Input'
-import { InputGroup } from '@ui/Input/InputGroup'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalCloseButton, ModalHeading } from '@ui/Modal/ModalSlots'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
-import { Label, Span } from '@ui/Typography/Text'
-import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
+import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableCard } from '@components/ExpandableCard/ExpandableCard'
-import { AmountInput } from '@components/Input/AmountInput'
 import { TextSize } from '@components/Typography/Text'
 
 import './timeTrackingServicesDrawer.scss'
 
+import { AddServiceCard } from './AddServiceCard'
+import { ServiceArchiveModal } from './ServiceArchiveModal'
+import { ServiceEditCard } from './ServiceEditCard'
+import { ServiceRestoreModal } from './ServiceRestoreModal'
+
 type ServicesTab = 'active' | 'archived'
-
-type HourlyRateFieldProps = {
-  inputId: string
-  name: string
-  value: string
-  onChange: (value: string) => void
-}
-
-function HourlyRateField({ inputId, name, value, onChange }: HourlyRateFieldProps) {
-  const { t } = useTranslation()
-
-  return (
-    <HStack className='Layer__TimeTrackingServicesDrawer__rateInputRow'>
-      <div className='Layer__TimeTrackingServicesDrawer__rateAmountWrap'>
-        <AmountInput
-          id={inputId}
-          name={name}
-          value={value}
-          onChange={next => onChange(next ?? '')}
-          className='Layer__TimeTrackingServicesDrawer__rateAmountInput'
-        />
-      </div>
-      <Span className='Layer__TimeTrackingServicesDrawer__rateSuffix'>
-        {t('timeTracking:services.rate_per_hour_suffix', '/hr')}
-      </Span>
-    </HStack>
-  )
-}
-
-type ServiceEditCardProps = {
-  service: CatalogService
-  onCollapse: () => void
-  onOpenArchive: () => void
-}
-
-const ServiceEditCard = ({ service, onCollapse, onOpenArchive }: ServiceEditCardProps) => {
-  const { t } = useTranslation()
-  const intl = useIntl()
-  const { trigger: updateService, isMutating } = useUpdateCatalogService({ serviceId: service.id })
-  const [name, setName] = useState(service.name)
-  const [hourlyRaw, setHourlyRaw] = useState(
-    () => service.billableRatePerHourAmount != null && !Number.isNaN(service.billableRatePerHourAmount)
-      ? convertCentsToDecimalString(service.billableRatePerHourAmount)
-      : '',
-  )
-  const [saveError, setSaveError] = useState<string | null>(null)
-
-  useEffect(() => {
-    setName(service.name)
-    setHourlyRaw(
-      service.billableRatePerHourAmount != null && !Number.isNaN(service.billableRatePerHourAmount)
-        ? convertCentsToDecimalString(service.billableRatePerHourAmount)
-        : '',
-    )
-    setSaveError(null)
-  }, [service])
-
-  const onSave = useCallback(async () => {
-    const trimmed = name.trim()
-    if (!trimmed) {
-      setSaveError(t('timeTracking:validation.service_name_required', 'Service name is a required field.'))
-      return
-    }
-    setSaveError(null)
-    const trimmedRate = hourlyRaw.trim()
-    const billableRatePerHourAmount = trimmedRate === ''
-      ? undefined
-      : toLocalizedCents(hourlyRaw, intl.locale)
-    try {
-      await updateService({
-        name: trimmed,
-        billable_rate_per_hour_amount: billableRatePerHourAmount,
-      })
-      onCollapse()
-    }
-    catch {
-      setSaveError(t('timeTracking:error.update_service', 'Could not save this service. Please try again.'))
-    }
-  }, [hourlyRaw, intl.locale, name, onCollapse, t, updateService])
-
-  return (
-    <VStack className='Layer__TimeTrackingServicesDrawer__editForm' gap='md'>
-      <TextField
-        name={`service-name-${service.id}`}
-        className='Layer__TimeTrackingServicesDrawer__rateField'
-      >
-        <Label slot='label' size='sm' htmlFor={`service-name-${service.id}`} pbe='3xs'>
-          {t('timeTracking:services.service_name', 'Service name')}
-        </Label>
-        <InputGroup slot='input'>
-          <Input
-            id={`service-name-${service.id}`}
-            name={`service-name-${service.id}`}
-            value={name}
-            onChange={e => setName(e.target.value)}
-            inset
-          />
-        </InputGroup>
-      </TextField>
-      <div className='Layer__TimeTrackingServicesDrawer__rateField'>
-        <Label size='sm' htmlFor={`service-rate-${service.id}`} pbe='3xs'>
-          {t('timeTracking:services.hourly_rate_optional', 'Default hourly rate (optional)')}
-        </Label>
-        <HourlyRateField
-          inputId={`service-rate-${service.id}`}
-          name={`service-rate-${service.id}`}
-          value={hourlyRaw}
-          onChange={setHourlyRaw}
-        />
-      </div>
-      {saveError && <FieldError>{saveError}</FieldError>}
-      <HStack className='Layer__TimeTrackingServicesDrawer__cardActions' gap='sm' align='center'>
-        <Button variant='outlined' onPress={onOpenArchive}>
-          <Archive size={16} />
-          {t('timeTracking:services.archive', 'Archive')}
-        </Button>
-        <Button onPress={() => void onSave()} isDisabled={isMutating}>
-          {t('timeTracking:services.save', 'Save')}
-        </Button>
-      </HStack>
-    </VStack>
-  )
-}
-
-type AddServiceCardProps = {
-  onCancel: () => void
-  onCreated: () => void
-}
-
-const AddServiceCard = ({ onCancel, onCreated }: AddServiceCardProps) => {
-  const { t } = useTranslation()
-  const intl = useIntl()
-  const { trigger: createService, isMutating } = useCreateCatalogService()
-  const [name, setName] = useState('')
-  const [hourlyRaw, setHourlyRaw] = useState('')
-  const [saveError, setSaveError] = useState<string | null>(null)
-
-  const onSave = useCallback(async () => {
-    const trimmed = name.trim()
-    if (!trimmed) {
-      setSaveError(t('timeTracking:validation.service_name_required', 'Service name is a required field.'))
-      return
-    }
-    setSaveError(null)
-    const trimmedRate = hourlyRaw.trim()
-    const billableRatePerHourAmount = trimmedRate === ''
-      ? undefined
-      : toLocalizedCents(hourlyRaw, intl.locale)
-    try {
-      await createService({
-        name: trimmed,
-        billable_rate_per_hour_amount: billableRatePerHourAmount ?? undefined,
-      })
-      onCreated()
-    }
-    catch {
-      setSaveError(t('timeTracking:error.create_service', 'Failed to create service. Please try again.'))
-    }
-  }, [createService, hourlyRaw, intl.locale, name, onCreated, t])
-
-  return (
-    <VStack className='Layer__TimeTrackingServicesDrawer__addCard' gap='md'>
-      <Span className='Layer__TimeTrackingServicesDrawer__addCardTitle' size='sm' weight='bold'>
-        {t('timeTracking:services.add_service', 'Add service')}
-      </Span>
-      <TextField
-        name='add-service-name'
-        className='Layer__TimeTrackingServicesDrawer__rateField'
-      >
-        <Label slot='label' size='sm' htmlFor='add-service-name' pbe='3xs'>
-          {t('timeTracking:services.service_name', 'Service name')}
-        </Label>
-        <InputGroup slot='input'>
-          <Input
-            id='add-service-name'
-            name='add-service-name'
-            value={name}
-            onChange={e => setName(e.target.value)}
-            inset
-          />
-        </InputGroup>
-      </TextField>
-      <div className='Layer__TimeTrackingServicesDrawer__rateField'>
-        <Label size='sm' htmlFor='add-service-rate' pbe='3xs'>
-          {t('timeTracking:services.hourly_rate_optional', 'Default hourly rate (optional)')}
-        </Label>
-        <HourlyRateField
-          inputId='add-service-rate'
-          name='add-service-rate'
-          value={hourlyRaw}
-          onChange={setHourlyRaw}
-        />
-      </div>
-      {saveError && <FieldError>{saveError}</FieldError>}
-      <HStack gap='sm' justify='end' align='center'>
-        <Button variant='outlined' onPress={onCancel}>
-          {t('timeTracking:services.cancel', 'Cancel')}
-        </Button>
-        <Button onPress={() => void onSave()} isDisabled={isMutating}>
-          {t('timeTracking:services.save', 'Save')}
-        </Button>
-      </HStack>
-    </VStack>
-  )
-}
-
-type ArchiveServiceModalProps = {
-  service: CatalogService
-  onOpenChange: (open: boolean) => void
-  onArchiveSuccess: () => void
-}
-
-const ArchiveServiceModal = ({
-  service,
-  onOpenChange,
-  onArchiveSuccess,
-}: ArchiveServiceModalProps) => {
-  const { t } = useTranslation()
-  const { isMobile } = useSizeClass()
-  const { trigger: archiveService } = useArchiveCatalogService({ serviceId: service.id })
-
-  const onConfirm = useCallback(async () => {
-    await archiveService()
-    onArchiveSuccess()
-  }, [archiveService, onArchiveSuccess])
-
-  return (
-    <BaseConfirmationModal
-      isOpen={true}
-      onOpenChange={onOpenChange}
-      title={t('timeTracking:services.archive_confirm_title', 'Archive this service?')}
-      description={t('timeTracking:services.archive_confirm_description', 'This service will be removed from your active list. Time entries that used it are unchanged.')}
-      onConfirm={onConfirm}
-      confirmLabel={t('timeTracking:services.archive', 'Archive')}
-      errorText={t('timeTracking:error.archive_service', 'Could not archive this service. Please try again.')}
-      useDrawer={isMobile}
-    />
-  )
-}
-
-type UnarchiveServiceModalProps = {
-  service: CatalogService
-  onOpenChange: (open: boolean) => void
-  onUnarchiveSuccess: () => void
-}
-
-const UnarchiveServiceModal = ({
-  service,
-  onOpenChange,
-  onUnarchiveSuccess,
-}: UnarchiveServiceModalProps) => {
-  const { t } = useTranslation()
-  const { isMobile } = useSizeClass()
-  const { trigger: reactivateService } = useReactivateCatalogService({ serviceId: service.id })
-
-  const onConfirm = useCallback(async () => {
-    await reactivateService()
-    onUnarchiveSuccess()
-  }, [onUnarchiveSuccess, reactivateService])
-
-  return (
-    <BaseConfirmationModal
-      isOpen={true}
-      onOpenChange={onOpenChange}
-      title={t('timeTracking:services.unarchive_confirm_title', 'Restore this service?')}
-      description={t('timeTracking:services.unarchive_confirm_description', 'This service will appear in your active list again.')}
-      onConfirm={onConfirm}
-      confirmLabel={t('timeTracking:services.unarchive', 'Restore')}
-      errorText={t('timeTracking:error.unarchive_service', 'Could not restore this service. Please try again.')}
-      useDrawer={isMobile}
-    />
-  )
-}
 
 export type TimeTrackingServicesDrawerProps = {
   isOpen: boolean
@@ -328,14 +48,14 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)
   const [archiveTarget, setArchiveTarget] = useState<CatalogService | null>(null)
-  const [unarchiveTarget, setUnarchiveTarget] = useState<CatalogService | null>(null)
+  const [restoreTarget, setRestoreTarget] = useState<CatalogService | null>(null)
 
   useEffect(() => {
     if (!isOpen) {
       setExpandedId(null)
       setIsAdding(false)
       setArchiveTarget(null)
-      setUnarchiveTarget(null)
+      setRestoreTarget(null)
       setTab('active')
     }
   }, [isOpen])
@@ -391,7 +111,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
             <ModalCloseButton onClose={close} />
           </HStack>
         </HStack>
-        <div className='Layer__TimeTrackingServicesDrawer__tabs'>
+        <HStack className='Layer__TimeTrackingServicesDrawer__tabs'>
           <Toggle
             ariaLabel={t('timeTracking:services.tab_group_label', 'Service list')}
             options={tabOptions}
@@ -399,7 +119,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
             onSelectionChange={key => setTab(key as ServicesTab)}
             size={ToggleSize.xsmall}
           />
-        </div>
+        </HStack>
       </VStack>
     ),
     [isAdding, startAdd, t, tab, tabOptions],
@@ -460,14 +180,14 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
                   />
                 )}
                 {tab === 'active' && isAdding && (
-                  <div className='Layer__TimeTrackingServicesDrawer__addWrap'>
+                  <VStack className='Layer__TimeTrackingServicesDrawer__addWrap'>
                     <AddServiceCard
                       onCancel={() => setIsAdding(false)}
                       onCreated={() => {
                         setIsAdding(false)
                       }}
                     />
-                  </div>
+                  </VStack>
                 )}
                 {showEmptyList && (
                   <DataState
@@ -480,7 +200,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
                   />
                 )}
                 {tab === 'active' && activeServices.length > 0 && (
-                  <div className='Layer__TimeTrackingServicesDrawer__accordion'>
+                  <VStack className='Layer__TimeTrackingServicesDrawer__accordion'>
                     {activeServices.map((service) => {
                       const rateLabel = formatHourly(service)
                       return (
@@ -512,10 +232,10 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
                         </ExpandableCard>
                       )
                     })}
-                  </div>
+                  </VStack>
                 )}
                 {tab === 'archived' && !isArchivedError && !isArchivedInitialLoading && archivedServices.length > 0 && (
-                  <div className='Layer__TimeTrackingServicesDrawer__archivedList'>
+                  <VStack className='Layer__TimeTrackingServicesDrawer__archivedList'>
                     {archivedServices.map((service) => {
                       const archivedRate = formatHourly(service)
                       return (
@@ -534,14 +254,14 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
                               {archivedRate}
                             </Span>
                           )}
-                          <Button variant='outlined' inset onPress={() => setUnarchiveTarget(service)}>
+                          <Button variant='outlined' inset onPress={() => setRestoreTarget(service)}>
                             <ArchiveRestore size={14} />
                             {t('timeTracking:services.unarchive', 'Restore')}
                           </Button>
                         </HStack>
                       )
                     })}
-                  </div>
+                  </VStack>
                 )}
               </VStack>
             )}
@@ -549,7 +269,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
         )}
       </Drawer>
       {archiveTarget !== null && (
-        <ArchiveServiceModal
+        <ServiceArchiveModal
           key={archiveTarget.id}
           service={archiveTarget}
           onOpenChange={(open) => {
@@ -559,20 +279,21 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
           }}
           onArchiveSuccess={() => {
             setExpandedId(null)
+            setArchiveTarget(null)
           }}
         />
       )}
-      {unarchiveTarget !== null && (
-        <UnarchiveServiceModal
-          key={unarchiveTarget.id}
-          service={unarchiveTarget}
+      {restoreTarget !== null && (
+        <ServiceRestoreModal
+          key={restoreTarget.id}
+          service={restoreTarget}
           onOpenChange={(open) => {
             if (!open) {
-              setUnarchiveTarget(null)
+              setRestoreTarget(null)
             }
           }}
-          onUnarchiveSuccess={() => {
-            setUnarchiveTarget(null)
+          onRestoreSuccess={() => {
+            setRestoreTarget(null)
           }}
         />
       )}
