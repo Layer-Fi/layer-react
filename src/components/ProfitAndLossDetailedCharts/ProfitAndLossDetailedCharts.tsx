@@ -17,7 +17,7 @@ import { Span } from '@ui/Typography/Text'
 import { BackButton } from '@components/Button/BackButton'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
-import { type ColorSelector, type DetailData, type FallbackFillSelector, type ValueFormatter } from '@components/DetailedCharts/types'
+import { DEFAULT_TYPE_COLOR_MAPPING, type ColorSelector, type DetailData, type FallbackFillSelector, type ValueFormatter } from '@components/DetailedCharts/types'
 import { DetailedTable, type DetailedTableStringOverrides } from '@components/DetailedTable/DetailedTable'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
@@ -57,6 +57,14 @@ const EmptyState = () => {
         <Span size={TextSize.md} variant='subtle'>{t('bankTransactions:label.upload_transactions_or_wait_for_bank_sync', 'Upload your transactions or wait for transactions to be synced from your bank.')}</Span>
       </HStack>
     </>
+  )
+}
+
+const DetailedChartsDatePickerHeader = () => {
+  return (
+    <div className='Layer__DetailedChart__headerTablet'>
+      <GlobalMonthPicker />
+    </div>
   )
 }
 
@@ -128,7 +136,7 @@ export const ProfitAndLossDetailedCharts = ({
     [chartData, chartColorsList],
   )
   const colorSelector: ColorSelector<PnlChartLineItem> = useCallback(
-    (item: PnlChartLineItem) => typeColorMapping(item.name)!,
+    (item: PnlChartLineItem) => typeColorMapping(item.name) ?? DEFAULT_TYPE_COLOR_MAPPING,
     [typeColorMapping],
   )
   const valueFormatter: ValueFormatter = useCallback((value: number) => formatCurrencyFromCents(intl, value), [intl])
@@ -205,6 +213,9 @@ export const ProfitAndLossDetailedCharts = ({
                 data={{
                   data: chartData,
                   total: total,
+                }}
+                slots={{
+                  header: showDatePicker ? <DetailedChartsDatePickerHeader /> : undefined,
                 }}
                 interactionProps={{
                   hoveredItem,
