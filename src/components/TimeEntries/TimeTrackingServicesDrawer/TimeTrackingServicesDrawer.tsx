@@ -19,10 +19,8 @@ import { TextSize } from '@components/Typography/Text'
 
 import './timeTrackingServicesDrawer.scss'
 
-import { AddServiceCard } from './AddServiceCard'
-import { ServiceArchiveModal } from './ServiceArchiveModal'
-import { ServiceEditCard } from './ServiceEditCard'
-import { ServiceRestoreModal } from './ServiceRestoreModal'
+import { ServiceArchiveModal, ServiceRestoreModal } from './ServiceActionModal'
+import { ServiceFormCard } from './ServiceFormCard'
 
 type ServicesTab = 'active' | 'archived'
 
@@ -181,9 +179,10 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
                 )}
                 {tab === 'active' && isAdding && (
                   <VStack className='Layer__TimeTrackingServicesDrawer__addWrap'>
-                    <AddServiceCard
+                    <ServiceFormCard
+                      mode='create'
                       onCancel={() => setIsAdding(false)}
-                      onCreated={() => {
+                      onSuccess={() => {
                         setIsAdding(false)
                       }}
                     />
@@ -224,10 +223,11 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
                             ),
                           }}
                         >
-                          <ServiceEditCard
+                          <ServiceFormCard
+                            mode='edit'
                             service={service}
-                            onCollapse={() => setExpandedId(null)}
-                            onOpenArchive={() => setArchiveTarget(service)}
+                            onSuccess={() => setExpandedId(null)}
+                            onArchive={() => setArchiveTarget(service)}
                           />
                         </ExpandableCard>
                       )
@@ -277,7 +277,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
               setArchiveTarget(null)
             }
           }}
-          onArchiveSuccess={() => {
+          onSuccess={() => {
             setExpandedId(null)
             setArchiveTarget(null)
           }}
@@ -292,7 +292,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
               setRestoreTarget(null)
             }
           }}
-          onRestoreSuccess={() => {
+          onSuccess={() => {
             setRestoreTarget(null)
           }}
         />
