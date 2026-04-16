@@ -16,8 +16,7 @@ type TimeEntriesStoreShape = {
   actions: {
     setDrawerOpen: (isOpen: boolean, entry?: TimeEntry | null) => void
     clearSelectedEntry: () => void
-    openDeleteModal: (entry: TimeEntry) => void
-    setDeleteModalOpen: (isOpen: boolean) => void
+    setDeleteModalOpen: (isOpen: boolean, entry?: TimeEntry | null) => void
     onDeleteSuccess: () => void
     setSelectedCustomer: (customer: Customer | null) => void
     setSelectedServiceId: (serviceId: string | null) => void
@@ -37,7 +36,6 @@ const TimeEntriesStoreContext = createContext(
     actions: {
       setDrawerOpen: () => {},
       clearSelectedEntry: () => {},
-      openDeleteModal: () => {},
       setDeleteModalOpen: () => {},
       onDeleteSuccess: () => {},
       setSelectedCustomer: () => {},
@@ -74,12 +72,11 @@ export function useTimeEntriesDeleteModal() {
   const store = useContext(TimeEntriesStoreContext)
   const isDeleteModalOpen = useStore(store, state => state.isDeleteModalOpen)
   const entryToDelete = useStore(store, state => state.entryToDelete)
-  const openDeleteModal = useStore(store, state => state.actions.openDeleteModal)
   const setDeleteModalOpen = useStore(store, state => state.actions.setDeleteModalOpen)
   const onDeleteSuccess = useStore(store, state => state.actions.onDeleteSuccess)
   return useMemo(
-    () => ({ isDeleteModalOpen, entryToDelete, openDeleteModal, setDeleteModalOpen, onDeleteSuccess }),
-    [isDeleteModalOpen, entryToDelete, openDeleteModal, setDeleteModalOpen, onDeleteSuccess],
+    () => ({ isDeleteModalOpen, entryToDelete, setDeleteModalOpen, onDeleteSuccess }),
+    [isDeleteModalOpen, entryToDelete, setDeleteModalOpen, onDeleteSuccess],
   )
 }
 
@@ -123,11 +120,11 @@ export function TimeEntriesStoreProvider({
         clearSelectedEntry: () => {
           set({ selectedEntry: null })
         },
-        openDeleteModal: (entry: TimeEntry) => {
-          set({ entryToDelete: entry, isDeleteModalOpen: true })
-        },
-        setDeleteModalOpen: (isOpen: boolean) => {
-          set({ isDeleteModalOpen: isOpen })
+        setDeleteModalOpen: (isOpen: boolean, entry?: TimeEntry | null) => {
+          set(state => ({
+            isDeleteModalOpen: isOpen,
+            entryToDelete: entry === undefined ? state.entryToDelete : entry,
+          }))
         },
         onDeleteSuccess: () => {
           set({ isDeleteModalOpen: false, entryToDelete: null, selectedEntry: null, isDrawerOpen: false })

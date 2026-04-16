@@ -45,7 +45,7 @@ export const TimeEntryDrawer = () => {
   const { isMobile, isTablet } = useSizeClass()
   const [isEditMode, setIsEditMode] = useState(false)
   const { isDrawerOpen, selectedEntry, setDrawerOpen, clearSelectedEntry } = useTimeEntriesDrawer()
-  const { openDeleteModal } = useTimeEntriesDeleteModal()
+  const { setDeleteModalOpen } = useTimeEntriesDeleteModal()
 
   useEffect(() => {
     if (!isDrawerOpen) {
@@ -78,9 +78,9 @@ export const TimeEntryDrawer = () => {
 
   const handleDeleteEntry = useCallback(() => {
     if (selectedEntry) {
-      openDeleteModal(selectedEntry)
+      setDeleteModalOpen(true, selectedEntry)
     }
-  }, [selectedEntry, openDeleteModal])
+  }, [selectedEntry, setDeleteModalOpen])
 
   return (
     <Drawer

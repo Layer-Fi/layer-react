@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type TimeEntry } from '@schemas/timeTracking'
@@ -43,10 +43,10 @@ export function TimeEntryDeleteConfirmationModal({ entry }: TimeEntryDeleteConfi
     <BaseConfirmationModal
       isOpen={isDeleteModalOpen}
       onOpenChange={setDeleteModalOpen}
-      title={title}
-      description={description}
+      title={modalContentProps.title}
+      description={modalContentProps.description}
       onConfirm={onConfirm}
-      confirmLabel={confirmLabel}
+      confirmLabel={modalContentProps.confirmLabel}
       errorText={t('timeTracking:error.delete_entry', 'Failed to delete time entry. Please check your connection and try again.')}
       useDrawer={isMobile}
     />
