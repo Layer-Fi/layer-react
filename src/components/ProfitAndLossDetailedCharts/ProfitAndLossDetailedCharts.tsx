@@ -140,13 +140,16 @@ export const ProfitAndLossDetailedCharts = ({
     [typeColorMapping],
   )
   const valueFormatter: ValueFormatter = useCallback((value: number) => formatCurrencyFromCents(intl, value), [intl])
-  const fallbackFillSelector: FallbackFillSelector<PnlChartLineItem> = (item: PnlChartLineItem) => isLineItemUncategorized(item)
+  const fallbackFillSelector: FallbackFillSelector<PnlChartLineItem> = useCallback(
+    (item: PnlChartLineItem) => isLineItemUncategorized(item),
+    [],
+  )
 
-  const stylingProps = {
+  const stylingProps = useMemo(() => ({
     valueFormatter,
     colorSelector,
     fallbackFillSelector,
-  }
+  }), [valueFormatter, colorSelector, fallbackFillSelector])
   const detailedTableRows = usePnlDetailedTableRows({
     data: {
       data: tableData,
