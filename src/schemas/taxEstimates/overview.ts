@@ -1,31 +1,47 @@
 import { pipe, Schema } from 'effect'
 
+export enum TaxOverviewMetricType {
+  TotalIncome = 'TOTAL_INCOME',
+  TotalPreAgiDeductions = 'TOTAL_PRE_AGI_DEDUCTIONS',
+  TaxableIncome = 'TAXABLE_INCOME',
+}
+
+const TaxOverviewMetricTypeSchema = Schema.Enums(TaxOverviewMetricType)
+
+const TransformedTaxOverviewMetricTypeSchema = Schema.transform(
+  Schema.NonEmptyTrimmedString,
+  Schema.typeSchema(TaxOverviewMetricTypeSchema),
+  {
+    decode: (input) => {
+      if (Object.values(TaxOverviewMetricTypeSchema.enums).includes(input as TaxOverviewMetricType)) {
+        return input as TaxOverviewMetricType
+      }
+      return TaxOverviewMetricType.TotalIncome
+    },
+    encode: input => input,
+  },
+)
+
+export type TaxOverviewMetricTypeValue = typeof TransformedTaxOverviewMetricTypeSchema.Type
+
+const TaxOverviewMetricSchema = Schema.Struct({
+  value: Schema.Number,
+  maxValue: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('max_value'),
+  ),
+  label: Schema.String,
+  metricType: pipe(
+    Schema.propertySignature(TransformedTaxOverviewMetricTypeSchema),
+    Schema.fromKey('metric_type'),
+  ),
+})
+
+export type TaxOverviewMetric = typeof TaxOverviewMetricSchema.Type
+
 const TaxOverviewApiDataSchema = Schema.Struct({
   year: Schema.Number,
-  excludesPendingTransactions: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
-    Schema.fromKey('excludes_pending_transactions'),
-  ),
-  taxableIncomeEstimate: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('taxable_income_estimate'),
-  ),
-  totalIncome: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('total_income'),
-  ),
-  totalDeductions: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('total_deductions'),
-  ),
-  estimatedTaxesOwed: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('estimated_taxes_owed'),
-  ),
-  taxesDueDate: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
-    Schema.fromKey('taxes_due_date'),
-  ),
+  metrics: Schema.Array(TaxOverviewMetricSchema),
 })
 
 export type TaxOverviewApiData = typeof TaxOverviewApiDataSchema.Type

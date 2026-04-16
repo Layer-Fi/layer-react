@@ -1,6 +1,7 @@
 .Layer__TaxOverview__Card {
   --color-tax-overview-income-meter-fill: #6d3cc8;
   --color-tax-overview-deductions-meter-fill: #1c7e9a;
+  --color-tax-overview-taxable-income-meter-fill: #3b9c63;
 
   gap: var(--spacing-lg);
   padding: var(--spacing-lg);
@@ -12,13 +13,15 @@
 }
 
 .Layer__TaxOverview__IncomeMeter,
-.Layer__TaxOverview__DeductionsMeter {
+.Layer__TaxOverview__DeductionsMeter,
+.Layer__TaxOverview__TaxableIncomeMeter {
   flex: 1;
   min-width: 9rem;
 }
 
 .Layer__TaxOverview__IncomeMeter__track,
-.Layer__TaxOverview__DeductionsMeter__track {
+.Layer__TaxOverview__DeductionsMeter__track,
+.Layer__TaxOverview__TaxableIncomeMeter__track {
   fill: var(--color-base-100);
 }
 
@@ -28,6 +31,10 @@
 
 .Layer__TaxOverview__DeductionsMeter__fill {
   fill: var(--color-tax-overview-deductions-meter-fill);
+}
+
+.Layer__TaxOverview__TaxableIncomeMeter__fill {
+  fill: var(--color-tax-overview-taxable-income-meter-fill);
 }
 
 @container (max-width: 720px) {
@@ -43,7 +50,8 @@
 }
 
 .Layer__MetricCard .Layer__TaxOverview__IncomeMeter,
-.Layer__MetricCard .Layer__TaxOverview__DeductionsMeter {
+.Layer__MetricCard .Layer__TaxOverview__DeductionsMeter,
+.Layer__MetricCard .Layer__TaxOverview__TaxableIncomeMeter {
   width: 100%;
   min-width: 0;
 }
