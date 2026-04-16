@@ -1,0 +1,45 @@
+.Layer__TimeEntriesTable {
+  overflow: hidden;
+  width: min(100%, 1406px);
+}
+
+.Layer__UI__Table__TimeEntriesTable {
+  table-layout: fixed;
+  width: 100%;
+
+  .Layer__UI__Table-Row,
+  .Layer__UI__Table-TableHeader > tr {
+    display: grid;
+    grid-template-columns:
+      minmax(7rem, 12%)
+      minmax(6rem, 10%)
+      minmax(8rem, 1fr)
+      minmax(8rem, 1fr)
+      5rem;
+  }
+
+  .Layer__UI__Table-Column__TimeEntriesTable,
+  .Layer__UI__Table-Cell__TimeEntriesTable {
+    &--Actions {
+      justify-content: flex-end;
+    }
+  }
+}
+
+@container (max-width: 760px) {
+  .Layer__UI__Table__TimeEntriesTable {
+    .Layer__UI__Table-Row,
+    .Layer__UI__Table-TableHeader > tr {
+      grid-template-columns:
+        minmax(0, 1.1fr)
+        minmax(0, 0.9fr)
+        minmax(0, 1.2fr)
+        4.5rem;
+    }
+
+    .Layer__UI__Table-Column__TimeEntriesTable--Service,
+    .Layer__UI__Table-Cell__TimeEntriesTable--Service {
+      display: none;
+    }
+  }
+}
