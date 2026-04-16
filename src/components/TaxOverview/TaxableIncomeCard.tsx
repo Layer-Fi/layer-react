@@ -10,7 +10,12 @@ type TaxableIncomeCardProps = {
   metrics: readonly TaxOverviewMetric[]
 }
 
-function useMetricRowProps({ metricType, amount, maxMeterValue, label }: { metricType: TaxOverviewMetricType, amount: number, maxMeterValue: number, label: string }) {
+function useMetricRowProps({ metricType, amount, maxMeterValue, label }: {
+  metricType: TaxOverviewMetricType
+  amount: number
+  maxMeterValue: number
+  label: string
+}) {
   const [viewportWidth] = useWindowSize()
   const boundedMaxMeterValue = Math.max(maxMeterValue, 0)
   const boundedMeterValue = Math.min(Math.max(amount, 0), boundedMaxMeterValue)
