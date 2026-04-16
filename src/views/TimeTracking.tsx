@@ -5,7 +5,7 @@ import { useActiveTimeTracker } from '@hooks/api/businesses/[business-id]/time-t
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { ActiveTimeTrackerBanner } from '@components/TimeEntries/ActiveTimeTrackerBanner/ActiveTimeTrackerBanner'
+import { ActiveTimeTracker } from '@components/TimeEntries/ActiveTimeTracker/ActiveTimeTracker'
 import { TimeEntries } from '@components/TimeEntries/TimeEntries'
 import { TimeTrackingServicesDrawer } from '@components/TimeEntries/TimeTrackingServicesDrawer/TimeTrackingServicesDrawer'
 import { TimeTrackingStats } from '@components/TimeTrackingStats/TimeTrackingStats'
@@ -56,7 +56,7 @@ export const unstable_TimeTracking = ({ showTitle = true, onReportsClick }: Unst
         </HStack>
       )}
     >
-      <ActiveTimeTrackerBanner
+      <ActiveTimeTracker
         isDrawerOpen={isActiveTimerDrawerOpen}
         onDrawerOpenChange={setIsActiveTimerDrawerOpen}
       />
