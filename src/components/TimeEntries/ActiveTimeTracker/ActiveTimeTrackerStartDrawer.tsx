@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { Play } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { useStartTimerForm } from '@hooks/features/timeTracking/useStartTimerForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { TextField } from '@ui/Form/Form'
@@ -12,7 +13,6 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { useStartTimerForm } from '@components/TimeEntries/ActiveTimeTracker/useStartTimerForm'
 import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 type ActiveTimeTrackerStartDrawerProps = {

@@ -2,13 +2,13 @@ import { Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type TimeEntry } from '@schemas/timeTracking'
+import { useActiveTimerBannerForm } from '@hooks/features/timeTracking/useActiveTimerBannerForm'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { useActiveTimerBannerForm } from '@components/TimeEntries/ActiveTimeTracker/useActiveTimerBannerForm'
 import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 type ActiveTimeTrackerBannerProps = {
