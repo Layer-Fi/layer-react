@@ -19,6 +19,7 @@ export function useActiveTimerDraft(activeEntry: TimeEntry | null | undefined): 
   useEffect(() => {
     if (!activeEntry) {
       syncedActiveEntryIdRef.current = null
+      setDraft(EMPTY_DRAFT)
       return
     }
 
