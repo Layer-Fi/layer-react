@@ -147,16 +147,19 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
 
   return (
     <VStack className='Layer__TimeTrackingStats__Content' gap='lg' pb='md' pi='md'>
-      <HStack className='Layer__TimeTrackingStats__TopRow' justify='space-between' align='center' gap='lg'>
-        <VStack className='Layer__TimeTrackingStats__Summary' gap='2xs'>
-          <Span size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
-          <Heading className='Layer__TimeTrackingStats__SummaryValue' level={3} size='3xl' weight='bold'>
-            {formatMinutesAsDuration(summary.totalMinutes, { compact: true })}
-          </Heading>
-        </VStack>
-        <VStack className='Layer__TimeTrackingStats__DateSelection'>
-          <CombinedDateRangeSelection mode='full' showLabels={false} />
-        </VStack>
+      <HStack className='Layer__TimeTrackingStats__TopRow' justify='space-between' align='center' gap='md'>
+        <Heading size='md'>{t('common:label.overview', 'Overview')}</Heading>
+        <HStack className='Layer__TimeTrackingStats__Controls' gap='lg' align='center'>
+          <VStack className='Layer__TimeTrackingStats__DateSelection'>
+            <CombinedDateRangeSelection mode='full' showLabels={false} />
+          </VStack>
+          <VStack className='Layer__TimeTrackingStats__Summary' gap='3xs' pi='md'>
+            <Span size='sm' variant='subtle'>{t('timeTracking:label.this_period', 'This Period')}</Span>
+            <Span className='Layer__TimeTrackingStats__SummaryValue' weight='bold'>
+              {formatMinutesAsDuration(summary.totalMinutes, { compact: true })}
+            </Span>
+          </VStack>
+        </HStack>
       </HStack>
       {serviceBreakdown.length > 0
         ? (
