@@ -154,7 +154,7 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
             <CombinedDateRangeSelection mode='full' showLabels={false} />
           </VStack>
           <VStack className='Layer__TimeTrackingStats__Summary' gap='3xs' pi='md'>
-            <Span size='sm' variant='subtle'>{t('timeTracking:label.this_period', 'This Period')}</Span>
+            <Span size='sm' variant='subtle'>{t('common:label.this_period', 'This Period')}</Span>
             <Span className='Layer__TimeTrackingStats__SummaryValue' weight='bold'>
               {formatMinutesAsDuration(summary.totalMinutes, { compact: true })}
             </Span>

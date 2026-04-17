@@ -38,7 +38,7 @@ const TimeEntryDateCell = memo(function TimeEntryDateCell({ date }: { date: Time
 const TimeEntryDurationCell = memo(function TimeEntryDurationCell({ durationMinutes }: { durationMinutes: TimeEntry['durationMinutes'] }) {
   const { t } = useTranslation()
   const { formatMinutesAsDuration } = useIntlFormatter()
-  if (durationMinutes < 1) {
+  if (durationMinutes === 0) {
     return <Span>{t('timeTracking:label.less_than_one_minute', '< 1 min')}</Span>
   }
   return <Span>{formatMinutesAsDuration(durationMinutes)}</Span>
