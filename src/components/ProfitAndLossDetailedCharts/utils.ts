@@ -2,7 +2,7 @@ import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { type TypeColorMapping } from '@components/DetailedCharts/types'
 
-import { UNCATEGORIZED_TYPES } from './pnlDetailedTable.constants'
+export const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
 
 export const isLineItemUncategorized = (item: PnlChartLineItem) => {
   return UNCATEGORIZED_TYPES.includes(item.name)

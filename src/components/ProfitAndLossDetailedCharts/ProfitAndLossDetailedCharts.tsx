@@ -110,6 +110,11 @@ export const ProfitAndLossDetailedCharts = ({
   const total =
     (activeScope === 'revenue' ? totalRevenue : totalExpenses) ?? 0
 
+  const sortParams = useMemo(() => ({
+    sortBy: sortByField,
+    sortOrder: sortOrder,
+  }), [sortByField, sortOrder])
+
   const isEmpty = useMemo(() => {
     if (isLoading) return false
     const chartDataValues = chartData.map(x => ({
@@ -145,16 +150,34 @@ export const ProfitAndLossDetailedCharts = ({
     [],
   )
 
+  const chartInteractionProps = useMemo(() => ({
+    hoveredItem,
+    setHoveredItem: (item: PnlChartLineItem | undefined) => setHoveredItem(item),
+  }), [hoveredItem])
+
+  const tableInteractionProps = useMemo(() => ({
+    ...chartInteractionProps,
+    onValueClick: (item: PnlChartLineItem) => handleValueClick(item),
+  }), [chartInteractionProps, handleValueClick])
+
   const stylingProps = useMemo(() => ({
     valueFormatter,
     colorSelector,
     fallbackFillSelector,
   }), [valueFormatter, colorSelector, fallbackFillSelector])
+
+  const tableDataWithTotal = useMemo(() => ({
+    data: tableData,
+    total,
+  }), [tableData, total])
+
+  const chartDataWithTotal = useMemo(() => ({
+    data: chartData,
+    total,
+  }), [chartData, total])
+
   const detailedTableRows = usePnlDetailedTableRows({
-    data: {
-      data: tableData,
-      total,
-    },
+    data: tableDataWithTotal,
     formatPercent,
   })
 
@@ -213,38 +236,21 @@ export const ProfitAndLossDetailedCharts = ({
             <>
 
               <DetailedChart<PnlChartLineItem>
-                data={{
-                  data: chartData,
-                  total: total,
-                }}
+                data={chartDataWithTotal}
                 slots={{
                   header: showDatePicker ? <DetailedChartsDatePickerHeader /> : undefined,
                 }}
-                interactionProps={{
-                  hoveredItem,
-                  setHoveredItem: (item: PnlChartLineItem | undefined) => setHoveredItem(item),
-                }}
-
+                interactionProps={chartInteractionProps}
                 stylingProps={stylingProps}
                 isLoading={isLoading}
               />
               <DetailedTable<PnlChartLineItem>
                 key={activeScope}
-                data={{
-                  data: tableData,
-                  total: total,
-                }}
-                sortParams={{
-                  sortBy: sortByField,
-                  sortOrder: sortOrder,
-                }}
+                data={tableDataWithTotal}
+                sortParams={sortParams}
                 sortFunction={sortFunction}
                 stylingProps={stylingProps}
-                interactionProps={{
-                  hoveredItem,
-                  setHoveredItem: (item: PnlChartLineItem | undefined) => setHoveredItem(item),
-                  onValueClick: (item: PnlChartLineItem) => handleValueClick(item),
-                }}
+                interactionProps={tableInteractionProps}
                 rows={detailedTableRows}
                 stringOverrides={stringOverrides?.detailedTableStringOverrides}
               />

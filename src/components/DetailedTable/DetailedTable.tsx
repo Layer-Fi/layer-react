@@ -46,7 +46,6 @@ export interface DetailedTableProps<T extends SeriesDataWithType> {
   stylingProps: DetailedTableStylingProps<T>
   interactionProps: DetailedTableInteractionProps<T>
   rows?: DetailedTableRow<T>[]
-  valueRenderer?: (item: T) => React.ReactNode
   stringOverrides?: DetailedTableStringOverrides
 }
 
@@ -119,7 +118,6 @@ export const DetailedTable = <T extends SeriesDataWithType>({
   sortFunction,
   interactionProps,
   rows,
-  valueRenderer,
   stringOverrides,
 }: DetailedTableProps<T>) => {
   const { t } = useTranslation()
@@ -136,7 +134,6 @@ export const DetailedTable = <T extends SeriesDataWithType>({
   }, [sortParams.sortBy])
 
   const { isMobile } = useSizeClass()
-  const renderValue = valueRenderer ?? ((item: T) => <MoneySpan size='sm' amount={item.value} />)
 
   return (
     <VStack className='Layer__DetailedTable'>
@@ -219,7 +216,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                           onPress={() => interactionProps.onValueClick?.(row.item)}
                           isDisabled={!interactionProps.onValueClick || row.isValueDisabled}
                         >
-                          <Span size='sm'>{renderValue(row.item)}</Span>
+                          <MoneySpan size='sm' amount={row.item.value} />
                         </Button>
                       </td>
                       <td className='percent-col'>

@@ -22,7 +22,6 @@ type DetailedChartStylingProps<T extends SeriesData> = {
   colorSelector: ColorSelector<T>
   fallbackFillSelector?: FallbackFillSelector<T>
   valueFormatter: ValueFormatter
-  isBordered?: boolean
 }
 
 type DetailedChartInteractionProps<T extends SeriesData> = {
@@ -54,7 +53,6 @@ export const DetailedChart = <T extends SeriesData>({
   const { t } = useTranslation()
   const { formatPercent } = useIntlFormatter()
   const { data: chartData, total } = data
-  const innerRadius = '91%'
 
   const normalizedChartData = useMemo(() => chartData.map(x => ({
     ...x,
@@ -179,7 +177,7 @@ export const DetailedChart = <T extends SeriesData>({
                   nameKey='displayName'
                   cx='50%'
                   cy='50%'
-                  innerRadius={innerRadius}
+                  innerRadius='91%'
                   outerRadius='100%'
                   paddingAngle={0}
                   fill='#F8F8FA'
@@ -196,7 +194,7 @@ export const DetailedChart = <T extends SeriesData>({
                   nameKey='displayName'
                   cx='50%'
                   cy='50%'
-                  innerRadius={innerRadius}
+                  innerRadius='91%'
                   outerRadius='100%'
                   paddingAngle={0.5}
                   fill='#8884d8'
@@ -219,7 +217,6 @@ export const DetailedChart = <T extends SeriesData>({
                         className={classNames(
                           'Layer__DetailedChart__slice',
                           interactionProps.hoveredItem && !active && 'Layer__DetailedChart__slice--inactive',
-                          (stylingProps?.isBordered || isFallbackSlice) && 'Layer__DetailedChart__slice--bordered',
                         )}
                         fill={isFallbackSlice && fill
                           ? 'url(#layer-pie-dots-pattern)'
