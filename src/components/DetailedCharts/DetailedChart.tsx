@@ -174,7 +174,7 @@ export const DetailedChart = <T extends SeriesData>({
                   animationDuration={200}
                   animationEasing='ease-in-out'
                 >
-                  <Label position='center' value='Loading...' className='Layer__DetailedChart__centerLabelLoading' />
+                  <Label position='center' value={t('common:label.loading', 'Loading...')} className='Layer__DetailedChart__centerLabelLoading' />
                 </Pie>
               )
               : (
