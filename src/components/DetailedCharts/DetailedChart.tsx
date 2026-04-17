@@ -18,25 +18,18 @@ import { type ColorSelector, type DetailData, type FallbackFillSelector, type Se
 
 import './detailedChart.scss'
 
-type DetailedChartStylingProps<T extends SeriesData> = {
-  colorSelector: ColorSelector<T>
-  fallbackFillSelector?: FallbackFillSelector<T>
-}
-
-type DetailedChartInteractionProps<T extends SeriesData> = {
-  hoveredItem: T | undefined
-  setHoveredItem: (item: T | undefined) => void
-}
-
 export type DetailedChartProps<T extends SeriesData> = {
   data: DetailData<T>
-
   isLoading?: boolean
   isError?: boolean
-
-  interactionProps: DetailedChartInteractionProps<T>
-  stylingProps: DetailedChartStylingProps<T>
-
+  interactionProps: {
+    hoveredItem: T | undefined
+    setHoveredItem: (item: T | undefined) => void
+  }
+  stylingProps: {
+    colorSelector: ColorSelector<T>
+    fallbackFillSelector?: FallbackFillSelector<T>
+  }
   slots?: {
     header?: React.ReactNode
   }
