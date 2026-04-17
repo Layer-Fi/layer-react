@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type SortParams } from '@internal-types/utility/pagination'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
@@ -121,8 +120,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
   stringOverrides,
 }: DetailedTableProps<T>) => {
   const { t } = useTranslation()
-  const { formatPercent } = useIntlFormatter()
-  const defaultRows = useDetailedTableRows({ data, formatPercent })
+  const defaultRows = useDetailedTableRows({ data })
   const detailedTableRows = rows ?? defaultRows
 
   const setAndToggleSortDirection = (field: 'category' | 'type' | 'value') => {

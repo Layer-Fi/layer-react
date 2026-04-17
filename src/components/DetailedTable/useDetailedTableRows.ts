@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { type DetailData } from '@components/DetailedCharts/types'
 
 import { type SeriesDataWithType } from './DetailedTable'
@@ -13,15 +14,15 @@ export type DetailedTableRow<T extends SeriesDataWithType> = {
 
 type UseDetailedTableRowsParams<T extends SeriesDataWithType> = {
   data: DetailData<T>
-  formatPercent: (value: number, options?: Intl.NumberFormatOptions) => string
-  isValueDisabled?: (item: T) => boolean
+  isDisabled?: (item: T) => boolean
 }
 
 export const useDetailedTableRows = <T extends SeriesDataWithType>({
   data,
-  formatPercent,
-  isValueDisabled,
+  isDisabled,
 }: UseDetailedTableRowsParams<T>): DetailedTableRow<T>[] => {
+  const { formatPercent } = useIntlFormatter()
+
   return useMemo(() => {
     const positiveTotal = data.data
       .filter(x => x.value > 0)
@@ -44,8 +45,8 @@ export const useDetailedTableRows = <T extends SeriesDataWithType>({
         key: `${baseKey}-${occurrence}`,
         item,
         formattedShare,
-        isValueDisabled: isValueDisabled?.(item) ?? false,
+        isValueDisabled: isDisabled?.(item) ?? false,
       }
     })
-  }, [data, formatPercent, isValueDisabled])
+  }, [data, formatPercent, isDisabled])
 }

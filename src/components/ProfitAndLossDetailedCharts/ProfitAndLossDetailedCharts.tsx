@@ -82,7 +82,7 @@ export const ProfitAndLossDetailedCharts = ({
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
 }) => {
   const { t } = useTranslation()
-  const { formatDate, formatPercent } = useIntlFormatter()
+  const { formatDate } = useIntlFormatter()
   const intl = useIntl()
   const {
     chartDataRevenue,
@@ -178,7 +178,6 @@ export const ProfitAndLossDetailedCharts = ({
 
   const detailedTableRows = usePnlDetailedTableRows({
     data: tableDataWithTotal,
-    formatPercent,
   })
 
   const sortFunction = useCallback((_data: DetailData<PnlChartLineItem>, sortParams: SortParams<string>) => {
