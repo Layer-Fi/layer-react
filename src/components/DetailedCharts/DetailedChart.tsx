@@ -14,14 +14,13 @@ import type { CartesianViewBox } from 'recharts/types/util/types'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { VStack } from '@ui/Stack/Stack'
-import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData, type ValueFormatter } from '@components/DetailedCharts/types'
+import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData } from '@components/DetailedCharts/types'
 
 import './detailedChart.scss'
 
 type DetailedChartStylingProps<T extends SeriesData> = {
   colorSelector: ColorSelector<T>
   fallbackFillSelector?: FallbackFillSelector<T>
-  valueFormatter: ValueFormatter
 }
 
 type DetailedChartInteractionProps<T extends SeriesData> = {
@@ -51,7 +50,7 @@ export const DetailedChart = <T extends SeriesData>({
   slots,
 }: DetailedChartProps<T>) => {
   const { t } = useTranslation()
-  const { formatPercent } = useIntlFormatter()
+  const { formatPercent, formatCurrencyFromCents } = useIntlFormatter()
   const { data: chartData, total } = data
 
   const normalizedChartData = useMemo(() => chartData.map(x => ({
@@ -65,11 +64,9 @@ export const DetailedChart = <T extends SeriesData>({
     ? interactionProps.hoveredItem.displayName
     : t('common:label.total', 'Total')
 
-  const value = interactionProps.hoveredItem
-    ? chartData.find(
-      x => x.name === interactionProps.hoveredItem?.name,
-    )?.value
-    : total
+  const value = chartData.find(
+    x => x.name === interactionProps.hoveredItem?.name,
+  )?.value ?? total
 
   let share = null
   if (interactionProps.hoveredItem) {
@@ -117,7 +114,7 @@ export const DetailedChart = <T extends SeriesData>({
           verticalAnchor='middle'
           className='Layer__DetailedChart__centerLabelValue'
         >
-          {stylingProps.valueFormatter(value ?? total)}
+          {formatCurrencyFromCents(value)}
         </ChartText>
         {share != null && (
           <ChartText
@@ -132,7 +129,7 @@ export const DetailedChart = <T extends SeriesData>({
         )}
       </>
     )
-  }, [text, value, total, stylingProps, share, formattedShare])
+  }, [text, value, share, formattedShare, formatCurrencyFromCents])
 
   return (
     <VStack className='Layer__DetailedChart'>
