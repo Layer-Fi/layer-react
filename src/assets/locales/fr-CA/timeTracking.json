@@ -51,8 +51,7 @@
     "select_customer": "Sélectionner un client (facultatif)",
     "select_service": "Sélectionner un service",
     "service": "Service",
-    "time_entries": "Entrées de temps",
-    "time_tracking": "Suivi du temps"
+    "time_entries": "Entrées de temps"
   },
   "prompt": {
     "delete_entry": "Supprimer cette entrée de temps?",
@@ -69,6 +68,7 @@
     "hourly_rate_optional": "Taux horaire par défaut (facultatif)",
     "no_active": "Aucun service pour le moment",
     "no_archived": "Aucun service archivé",
+    "rate_per_hour": "",
     "rate_per_hour_suffix": "/h",
     "save": "Enregistrer",
     "service_name": "Nom du service",
@@ -79,7 +79,7 @@
     "unarchive_confirm_title": "Restaurer ce service?"
   },
   "validation": {
-    "duration_greater_than_zero": "La durée doit être supérieure à zéro.",
+    "duration_whole_minutes": "",
     "entry_date_not_future": "La date de l'entrée ne peut pas être dans le futur.",
     "entry_date_required": "La date de l'entrée est un champ obligatoire.",
     "service_name_required": "Le nom du service est un champ obligatoire.",
