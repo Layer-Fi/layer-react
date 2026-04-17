@@ -91,31 +91,3 @@
   display: grid;
   gap: var(--spacing-3xs);
 }
-
-.Layer__TimeTrackingServicesDrawer__rateInputRow {
-  align-items: stretch;
-  border-radius: var(--border-radius-2xs);
-
-  border: 1px solid var(--border-color);
-
-  background-color: var(--color-base-0);
-}
-
-.Layer__TimeTrackingServicesDrawer__rateAmountWrap {
-  flex: 1;
-  min-width: 0;
-
-  .Layer__input-tooltip {
-    display: block;
-    height: 100%;
-  }
-
-  .Layer__TimeTrackingServicesDrawer__rateAmountInput {
-    width: 100%;
-    border-radius: 0;
-
-    border: none;
-
-    background: transparent;
-  }
-}

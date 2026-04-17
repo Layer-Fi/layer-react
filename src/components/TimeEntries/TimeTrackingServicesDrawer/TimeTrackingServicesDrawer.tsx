@@ -118,7 +118,7 @@ function ActiveServicesContent({
 }: ActiveServicesContentProps) {
   const { t } = useTranslation()
 
-  const empty = isAdding
+  const empty = useMemo(() => isAdding
     ? null
     : (
       <DataState
@@ -127,7 +127,7 @@ function ActiveServicesContent({
         titleSize={TextSize.md}
         spacing
       />
-    )
+    ), [isAdding, t])
 
   return (
     <>

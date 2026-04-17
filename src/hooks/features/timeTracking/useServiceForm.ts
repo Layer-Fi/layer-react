@@ -1,11 +1,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
+import { BigDecimal as BD } from 'effect'
 import { useTranslation } from 'react-i18next'
-import { useIntl } from 'react-intl'
 
 import { type CatalogService } from '@schemas/catalogService'
-import { convertCentsToDecimalString } from '@utils/format'
-import { toLocalizedCents } from '@utils/i18n/number/input'
+import {
+  fromNonRecursiveBigDecimal,
+  type NonRecursiveBigDecimal,
+  NRBD_ZERO,
+  toNonRecursiveBigDecimal,
+} from '@schemas/nonRecursiveBigDecimal'
+import {
+  BIG_DECIMAL_ZERO,
+  convertBigDecimalToCents,
+  convertCentsToBigDecimal,
+} from '@utils/bigDecimalUtils'
 import { useUpdateCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/[service-id]/useUpdateCatalogService'
 import { useCreateCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/useCreateCatalogService'
 import { useAppForm } from '@hooks/features/forms/useForm'
@@ -25,19 +34,18 @@ export type ServiceFormProps = CreateServiceFormProps | EditServiceFormProps
 
 type ServiceFormValues = {
   name: string
-  hourlyRaw: string
+  hourlyRate: NonRecursiveBigDecimal
 }
 
 const getServiceFormDefaultValues = (service?: CatalogService): ServiceFormValues => ({
   name: service?.name ?? '',
-  hourlyRaw: service?.billableRatePerHourAmount != null && !Number.isNaN(service.billableRatePerHourAmount)
-    ? convertCentsToDecimalString(service.billableRatePerHourAmount)
-    : '',
+  hourlyRate: service?.billableRatePerHourAmount != null && !Number.isNaN(service.billableRatePerHourAmount)
+    ? toNonRecursiveBigDecimal(convertCentsToBigDecimal(service.billableRatePerHourAmount))
+    : NRBD_ZERO,
 })
 
 export function useServiceForm(props: ServiceFormProps) {
   const { t } = useTranslation()
-  const intl = useIntl()
   const { mode, onSuccess } = props
   const service = props.mode === 'edit' ? props.service : undefined
   const serviceId = service?.id ?? ''
@@ -51,10 +59,10 @@ export function useServiceForm(props: ServiceFormProps) {
 
   const onSubmit = useCallback(async ({ value }: { value: ServiceFormValues }) => {
     const trimmedName = value.name.trim()
-    const trimmedRate = value.hourlyRaw.trim()
-    const billableRatePerHourAmount = trimmedRate === ''
+    const hourlyRateBd = fromNonRecursiveBigDecimal(value.hourlyRate)
+    const billableRatePerHourAmount = BD.equals(hourlyRateBd, BIG_DECIMAL_ZERO)
       ? undefined
-      : toLocalizedCents(trimmedRate, intl.locale)
+      : convertBigDecimalToCents(hourlyRateBd)
 
     setSubmitError(null)
 
@@ -81,7 +89,7 @@ export function useServiceForm(props: ServiceFormProps) {
           : t('timeTracking:error.create_service', 'Failed to create service. Please try again.'),
       )
     }
-  }, [createService, intl.locale, mode, onSuccess, t, updateService])
+  }, [createService, mode, onSuccess, t, updateService])
 
   const onDynamic = useCallback(({ value }: { value: ServiceFormValues }) => {
     if (value.name.trim() === '') {
