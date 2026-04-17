@@ -29,7 +29,7 @@ enum TimeTrackingHeaderMenuActions {
 export const TimeTracking = ({ showTitle = true, onReportsClick, stringOverrides }: TimeTrackingProps) => {
   const { t } = useTranslation()
   const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
-  const { data: activeTimeEntry, isLoading: isActiveTimeEntryLoading } = useActiveTimeTracker()
+  const { data: activeTimeEntry, isLoading: isActiveTimeEntryLoading, isError: isActiveTimeEntryError } = useActiveTimeTracker()
   const [isActiveTimerDrawerOpen, setIsActiveTimerDrawerOpen] = useState(false)
   const [isServicesDrawerOpen, setIsServicesDrawerOpen] = useState(false)
 
@@ -77,7 +77,7 @@ export const TimeTracking = ({ showTitle = true, onReportsClick, stringOverrides
       <TimeTrackingStats selectedFilterParams={summaryFilterParams} />
       <TimeEntries
         onStartTimer={onStartTimer}
-        isStartTimerDisabled={isActiveTimeEntryLoading || activeTimeEntry !== null}
+        isStartTimerDisabled={isActiveTimeEntryLoading || isActiveTimeEntryError || activeTimeEntry !== null}
       />
       <TimeTrackingServicesDrawer isOpen={isServicesDrawerOpen} onOpenChange={setIsServicesDrawerOpen} />
     </View>
