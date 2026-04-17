@@ -1,10 +1,8 @@
 import { useMemo } from 'react'
 
-import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
+import { type DetailData } from '@components/DetailedCharts/types'
 
-type SeriesDataWithType = SeriesData & {
-  type: string
-}
+import { type SeriesDataWithType } from './DetailedTable'
 
 export type DetailedTableRow<T extends SeriesDataWithType> = {
   key: string

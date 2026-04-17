@@ -22,7 +22,6 @@ type DetailedChartStylingProps<T extends SeriesData> = {
   colorSelector: ColorSelector<T>
   fallbackFillSelector?: FallbackFillSelector<T>
   valueFormatter: ValueFormatter
-  showDatePicker?: boolean
   isBordered?: boolean
 }
 
