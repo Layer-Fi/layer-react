@@ -233,7 +233,7 @@ export const ProfitAndLossDetailedCharts = ({
               <DetailedChart<PnlChartLineItem>
                 data={chartDataWithTotal}
                 slots={{
-                  header: showDatePicker ? <DetailedChartsDatePickerHeader /> : undefined,
+                  Header: showDatePicker ? <DetailedChartsDatePickerHeader /> : undefined,
                 }}
                 interactionProps={chartInteractionProps}
                 stylingProps={stylingProps}

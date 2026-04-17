@@ -31,7 +31,7 @@ export type DetailedChartProps<T extends SeriesData> = {
     fallbackFillSelector?: FallbackFillSelector<T>
   }
   slots?: {
-    header?: React.ReactNode
+    Header?: React.ReactNode
   }
 }
 
@@ -126,9 +126,9 @@ export const DetailedChart = <T extends SeriesData>({
 
   return (
     <VStack className='Layer__DetailedChart'>
-      {slots?.header && (
+      {slots?.Header && (
         <VStack className='Layer__DetailedChart__header'>
-          {slots.header}
+          {slots.Header}
         </VStack>
       )}
       <VStack className='Layer__DetailedChart__container'>
