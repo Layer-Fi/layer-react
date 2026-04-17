@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import {
-  TaxEstimatesRoute,
   useTaxEstimatesNavigation,
+  useTaxEstimatesRouteState,
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
 import { Heading } from '@ui/Typography/Heading'
@@ -14,11 +14,12 @@ import { TaxProfileForm } from '@components/TaxProfileForm/TaxProfileForm'
 export const TaxProfile = () => {
   const { t } = useTranslation()
   const navigate = useTaxEstimatesNavigation()
+  const { backRoute } = useTaxEstimatesRouteState()
   const { data: taxProfile } = useTaxProfile()
 
   const handleGoBack = useCallback(() => {
-    navigate(TaxEstimatesRoute.Estimates)
-  }, [navigate])
+    navigate(backRoute)
+  }, [backRoute, navigate])
 
   const TaxProfileHeader = useCallback(() => {
     return <Heading size='md'>{t('taxEstimates:label.tax_profile', 'Tax Profile')}</Heading>

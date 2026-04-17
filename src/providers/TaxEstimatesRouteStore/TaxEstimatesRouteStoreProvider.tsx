@@ -22,6 +22,7 @@ export enum OnboardingStatus {
 
 type TaxEstimatesRouteState = {
   route: TaxEstimatesRoute
+  backRoute: TaxEstimatesRoute
 }
 
 type TaxEstimatesRouteStoreShape = {
@@ -38,7 +39,7 @@ type TaxEstimatesRouteStoreShape = {
 
 const TaxEstimatesRouteStoreContext = createContext(
   createStore<TaxEstimatesRouteStoreShape>(() => ({
-    routeState: { route: TaxEstimatesRoute.Overview },
+    routeState: { route: TaxEstimatesRoute.Overview, backRoute: TaxEstimatesRoute.Overview },
     onboardingStatus: OnboardingStatus.Loading,
     navigate: () => {},
     year: getYear(new Date()),
@@ -49,6 +50,24 @@ const TaxEstimatesRouteStoreContext = createContext(
     },
   })),
 )
+
+function createRouteState(currentState: TaxEstimatesRouteState, nextRoute: TaxEstimatesRoute): TaxEstimatesRouteState {
+  if (nextRoute === TaxEstimatesRoute.Profile) {
+    if (currentState.route === TaxEstimatesRoute.Profile) {
+      return currentState
+    }
+
+    return {
+      route: TaxEstimatesRoute.Profile,
+      backRoute: currentState.route,
+    }
+  }
+
+  return {
+    route: nextRoute,
+    backRoute: nextRoute,
+  }
+}
 
 export function useTaxEstimatesRouteState() {
   const store = useContext(TaxEstimatesRouteStoreContext)
@@ -101,10 +120,10 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   const { data: taxProfile, isLoading, isError } = useTaxProfile()
   const [store] = useState(() =>
     createStore<TaxEstimatesRouteStoreShape>(set => ({
-      routeState: { route: TaxEstimatesRoute.Overview },
+      routeState: { route: TaxEstimatesRoute.Overview, backRoute: TaxEstimatesRoute.Overview },
       onboardingStatus: OnboardingStatus.Loading,
       navigate: (route: TaxEstimatesRoute) => {
-        set({ routeState: { route } })
+        set(state => ({ routeState: createRouteState(state.routeState, route) }))
       },
       year: getYear(new Date()),
       fullYearProjection: false,
