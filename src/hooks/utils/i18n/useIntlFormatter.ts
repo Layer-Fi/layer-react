@@ -14,6 +14,8 @@ import { type DateFormat } from '@utils/i18n/date/patterns'
 import {
   type DurationFormatFn,
   formatMinutesAsDuration as formatMinutesAsDurationFn,
+  formatSecondsAsDuration as formatSecondsAsDurationFn,
+  type SecondsDurationFormatFn,
 } from '@utils/i18n/duration/formatters'
 import {
   type CurrencyFormatFn,
@@ -32,6 +34,7 @@ export type IntlFormatter = {
   formatDateRange: DateRangeFormatFn
   formatMonthName: MonthNameFormatFn
   formatMinutesAsDuration: DurationFormatFn
+  formatSecondsAsDuration: SecondsDurationFormatFn
 }
 
 export function useIntlFormatter(): IntlFormatter {
@@ -65,6 +68,10 @@ export function useIntlFormatter(): IntlFormatter {
     return formatMinutesAsDurationFn(intl, totalMinutes, options)
   }, [intl])
 
+  const formatSecondsAsDuration: SecondsDurationFormatFn = useCallback((totalSeconds) => {
+    return formatSecondsAsDurationFn(intl, totalSeconds)
+  }, [intl])
+
   return useMemo(
     () => ({
       formatCurrencyFromCents,
@@ -74,6 +81,7 @@ export function useIntlFormatter(): IntlFormatter {
       formatDateRange,
       formatMonthName,
       formatMinutesAsDuration,
+      formatSecondsAsDuration,
     }),
     [
       formatCurrencyFromCents,
@@ -83,6 +91,7 @@ export function useIntlFormatter(): IntlFormatter {
       formatDateRange,
       formatMonthName,
       formatMinutesAsDuration,
+      formatSecondsAsDuration,
     ],
   )
 }
