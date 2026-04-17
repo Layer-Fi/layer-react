@@ -1,0 +1,101 @@
+.Layer__TimeTrackingStats__Content {
+  container: time-tracking-stats / inline-size;
+}
+
+.Layer__TimeTrackingStats__TopRow {
+  min-inline-size: 0;
+}
+
+.Layer__TimeTrackingStats__DateSelection {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  container: time-tracking-stats-dates / inline-size;
+}
+
+.Layer__TimeTrackingStats__Summary {
+  flex: 0 0 auto;
+  min-inline-size: 0;
+}
+
+.Layer__TimeTrackingStats__SummaryValue {
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.Layer__TimeTrackingStats__Chart {
+  border-top: 1px solid var(--color-base-300);
+}
+
+.Layer__TimeTrackingStats__ChartBar {
+  .recharts-responsive-container {
+    padding: 0;
+  }
+
+  overflow: hidden;
+  block-size: 1.5rem;
+  border-radius: var(--border-radius-xs);
+  background-color: var(--color-base-100);
+}
+
+.Layer__TimeTrackingStats__ChartBar--empty {
+  inline-size: 100%;
+}
+
+.Layer__TimeTrackingStats__Legend {
+  flex-wrap: wrap;
+}
+
+.Layer__TimeTrackingStats__LegendItem {
+  min-inline-size: 10rem;
+}
+
+.Layer__TimeTrackingStats__LegendSwatch {
+  flex-shrink: 0;
+  block-size: 0.625rem;
+  inline-size: 0.625rem;
+}
+
+@container time-tracking-stats (max-width: 760px) {
+  .Layer__TimeTrackingStats__TopRow[data-direction='row'] {
+    flex-direction: column;
+  }
+
+  .Layer__TimeTrackingStats__TopRow[data-align='center'] {
+    align-items: stretch;
+  }
+
+  .Layer__TimeTrackingStats__TopRow[data-justify='space-between'] {
+    justify-content: flex-start;
+  }
+
+  .Layer__TimeTrackingStats__DateSelection {
+    inline-size: 100%;
+
+    .Layer__GlobalDateRangeSelection {
+      grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+      inline-size: 100%;
+      min-inline-size: 0;
+
+      &.Layer__GlobalDateRangeSelection--mobile {
+        grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+      }
+
+      & > * {
+        min-inline-size: 0;
+      }
+    }
+  }
+}
+
+@container time-tracking-stats (max-width: 430px) {
+  .Layer__TimeTrackingStats__DateSelection .Layer__GlobalDateRangeSelection,
+  .Layer__TimeTrackingStats__DateSelection .Layer__GlobalDateRangeSelection.Layer__GlobalDateRangeSelection--mobile {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@container time-tracking-stats (max-width: 640px) {
+  .Layer__TimeTrackingStats__LegendItem {
+    min-inline-size: 100%;
+  }
+}
