@@ -37,27 +37,29 @@ export const TimeEntriesTableHeader = () => {
     </HStack>
   ), [t, onAddEntry, onStartTimer, isStartTimerDisabled])
 
-  const Filters = useCallback(() => (
-    <HStack fluid gap='lg' align='end' className='Layer__TimeEntriesTable__Filters'>
+  const HeaderFilters = useCallback(() => (
+    <HStack gap='sm' align='end' className='Layer__TimeEntriesTable__Filters'>
       <CustomerSelector
         selectedCustomer={selectedCustomer}
         onSelectedCustomerChange={setSelectedCustomer}
         isCreatable={false}
         className='Layer__TimeEntriesTable__FilterCustomer'
         placeholder={t('timeTracking:label.all_customers', 'All Customers')}
+        showLabel={false}
       />
       <TimeEntryServiceSelector
         selectedServiceId={selectedServiceId}
         onSelectedServiceIdChange={setSelectedServiceId}
         className='Layer__TimeEntriesTable__FilterService'
         placeholder={t('timeTracking:label.all_services', 'All Services')}
+        showLabel={false}
       />
     </HStack>
   ), [selectedCustomer, setSelectedCustomer, selectedServiceId, setSelectedServiceId, t])
 
   const headerSlots = useMemo(
-    () => ({ HeaderActions, Filters }),
-    [HeaderActions, Filters],
+    () => ({ HeaderActions, HeaderFilters }),
+    [HeaderActions, HeaderFilters],
   )
 
   return (

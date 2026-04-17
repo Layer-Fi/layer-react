@@ -31,14 +31,15 @@
     padding: 0;
   }
 
-  overflow: hidden;
+  overflow: visible;
   block-size: 1.5rem;
-  border-radius: var(--border-radius-xs);
-  background-color: var(--color-base-100);
+  border-radius: 0.625rem;
+  background-color: transparent;
 }
 
 .Layer__TimeTrackingStats__ChartBar--empty {
   inline-size: 100%;
+  background-color: var(--color-base-100);
 }
 
 .Layer__TimeTrackingStats__Legend {
@@ -94,8 +95,44 @@
   }
 }
 
-@container time-tracking-stats (max-width: 640px) {
+@container time-tracking-stats (max-width: 1100px) {
+  .Layer__TimeTrackingStats__Legend {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    align-items: stretch;
+  }
+
   .Layer__TimeTrackingStats__LegendItem {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    row-gap: 0;
+    column-gap: var(--spacing-sm);
+    align-items: center;
     min-inline-size: 100%;
+  }
+
+  .Layer__TimeTrackingStats__LegendLabel {
+    min-inline-size: 0;
+  }
+
+  .Layer__TimeTrackingStats__LegendLabel .Layer__UI__Text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .Layer__TimeTrackingStats__LegendDuration,
+  .Layer__TimeTrackingStats__LegendPercentage {
+    white-space: nowrap;
+  }
+
+  .Layer__TimeTrackingStats__LegendDuration {
+    justify-self: end;
+  }
+
+  .Layer__TimeTrackingStats__LegendPercentage {
+    justify-self: end;
+    min-inline-size: 2.25rem;
+    text-align: right;
   }
 }
