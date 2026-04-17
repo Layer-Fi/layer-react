@@ -60,8 +60,7 @@ const TaxOverviewContent = ({ data }: { data: TaxOverviewApiData }) => {
   return (
     <VStack className='Layer__TaxOverview' gap='md'>
       <TaxableIncomeCard
-        totalIncome={data.totalIncome}
-        totalDeductions={data.totalDeductions}
+        metrics={data.metrics}
       />
     </VStack>
   )

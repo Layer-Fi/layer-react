@@ -2,24 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customer'
 import { type TimeEntry } from '@schemas/timeTracking'
-import { hasDraftChanges, toUpdatePayload } from '@utils/timeTracking/activeTimerDraft'
+import { type ActiveTimerDraft, type ActiveTimerDraftWithService, getDraftFromEntry, hasDraftChanges, toUpdatePayload } from '@utils/timeTracking/activeTimerDraft'
 import { useDeleteTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/useDeleteTimeEntry'
 import { UpsertTimeEntryMode, useUpsertTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useUpsertTimeEntry'
 import { useActiveTimeTrackerGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
 import { useStopTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useStopTimeTracker'
 import { useAppForm } from '@hooks/features/forms/useForm'
-
-const AUTOSAVE_DEBOUNCE_MS = 500
-
-export type ActiveTimerBannerFormValues = {
-  selectedServiceId: string | null
-  selectedCustomer: Customer | null
-  memo: string
-}
-
-export type ActiveTimerBannerFormType = ReturnType<typeof useAppForm<ActiveTimerBannerFormValues>>
+import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 
 type UseActiveTimerBannerFormProps = {
   activeEntry: TimeEntry
@@ -37,13 +27,9 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
   })
   const { invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
 
-  const defaultValues = useMemo<ActiveTimerBannerFormValues>(() => ({
-    selectedServiceId: activeEntry.service?.id ?? null,
-    selectedCustomer: activeEntry.customer ?? null,
-    memo: activeEntry.memo ?? '',
-  }), [activeEntry])
+  const defaultValues = useMemo<ActiveTimerDraft>(() => getDraftFromEntry(activeEntry), [activeEntry])
 
-  const onSubmit = useCallback(async ({ value }: { value: ActiveTimerBannerFormValues }) => {
+  const onSubmit = useCallback(async ({ value }: { value: ActiveTimerDraft }) => {
     if (!value.selectedServiceId) return
     setActionError(null)
     const draft = { ...value, selectedServiceId: value.selectedServiceId }
@@ -66,7 +52,7 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
     }
   }, [activeEntry, stopTimeTracker, t, updateTimeEntry])
 
-  const form = useAppForm<ActiveTimerBannerFormValues>({ defaultValues, onSubmit })
+  const form = useAppForm<ActiveTimerDraft>({ defaultValues, onSubmit })
 
   const syncedIdRef = useRef(activeEntry.id)
   useEffect(() => {
@@ -76,6 +62,12 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
     }
   }, [activeEntry.id, defaultValues, form])
 
+  const debouncedUpdateTimeEntry = useDebounce((draft: ActiveTimerDraftWithService) => {
+    void updateTimeEntry(toUpdatePayload(activeEntry, draft)).catch(() => {
+      setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
+    })
+  })
+
   const values = useStore(form.store, s => s.values)
   useEffect(() => {
     if (!values.selectedServiceId) return
@@ -83,13 +75,8 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
     if (!hasDraftChanges(activeEntry, draft)) return
 
     setActionError(null)
-    const id = window.setTimeout(() => {
-      void updateTimeEntry(toUpdatePayload(activeEntry, draft)).catch(() => {
-        setActionError(t('timeTracking:error.update_timer', 'Failed to update timer. Please try again.'))
-      })
-    }, AUTOSAVE_DEBOUNCE_MS)
-    return () => window.clearTimeout(id)
-  }, [values, activeEntry, updateTimeEntry, t])
+    debouncedUpdateTimeEntry(draft)
+  }, [values, activeEntry, debouncedUpdateTimeEntry])
 
   const cancelTimer = useCallback(async () => {
     setActionError(null)

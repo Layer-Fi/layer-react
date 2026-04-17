@@ -5,12 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { useStartTimerForm } from '@hooks/features/timeTracking/useStartTimerForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
-import { TextField } from '@ui/Form/Form'
-import { TextArea } from '@ui/Input/TextArea'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { Label, Span } from '@ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
@@ -118,28 +116,16 @@ export const ActiveTimeTrackerStartDrawer = ({
             )}
           </form.Field>
 
-          <form.Field name='memo'>
+          <form.AppField name='memo'>
             {field => (
-              <TextField
-                name='active-time-tracker-memo'
+              <field.FormTextAreaField
+                label={t('timeTracking:label.memo', 'Memo')}
                 inline
-                textarea
+                placeholder={t('timeTracking:label.add_memo', 'Add memo')}
                 className='Layer__ActiveTimeTracker__Field__Memo'
-              >
-                <Label slot='label' size='sm' htmlFor='active-time-tracker-memo'>
-                  {t('timeTracking:label.memo', 'Memo')}
-                </Label>
-                <TextArea
-                  slot='input'
-                  id='active-time-tracker-memo'
-                  name='active-time-tracker-memo'
-                  value={field.state.value}
-                  onChange={e => field.handleChange(e.target.value)}
-                  placeholder={t('timeTracking:label.add_memo', 'Add memo')}
-                />
-              </TextField>
+              />
             )}
-          </form.Field>
+          </form.AppField>
 
           <form.Subscribe selector={s => s.values.selectedServiceId}>
             {selectedServiceId => (
