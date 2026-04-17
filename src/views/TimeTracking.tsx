@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { FileText, Wrench } from 'lucide-react'
+import { Briefcase, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useActiveTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
@@ -54,7 +54,7 @@ export const TimeTracking = ({ showTitle = true, onReportsClick, stringOverrides
     {
       key: TimeTrackingHeaderMenuActions.Services,
       onClick: () => setIsServicesDrawerOpen(true),
-      icon: <Wrench size={20} strokeWidth={1.25} />,
+      icon: <Briefcase size={20} strokeWidth={1.25} />,
       label: t('timeTracking:services.title', 'Services'),
     },
   ], [t, onReportsClick])

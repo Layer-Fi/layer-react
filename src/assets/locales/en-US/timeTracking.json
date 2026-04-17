@@ -45,6 +45,7 @@
     "entry_date": "Entry date",
     "entry_details": "Time entry details",
     "invoiced": "Invoiced",
+    "less_than_one_minute": "< 1 min",
     "memo": "Memo",
     "no_activity_breakdown": "No activity breakdown available for this period.",
     "no_services": "No services available",
@@ -52,6 +53,7 @@
     "select_customer": "Select a customer (optional)",
     "select_service": "Select a service",
     "service": "Service",
+    "this_period": "This Period",
     "time_entries": "Time Entries",
     "time_tracking": "Time Tracking"
   },
@@ -71,7 +73,6 @@
     "no_active": "No services yet",
     "no_archived": "No archived services",
     "rate_per_hour": "{{rate}}/hr",
-    "rate_per_hour_suffix": "/hr",
     "save": "Save",
     "service_name": "Service name",
     "tab_group_label": "Service list",
