@@ -124,11 +124,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                       onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
                     >
                       <td className='color-col'>
-                        <ValueIcon<T>
-                          item={row.item}
-                          colorSelector={stylingProps.colorSelector}
-                          fallbackFillSelector={stylingProps.fallbackFillSelector}
-                        />
+                        <ValueIcon<T> item={row.item} {...stylingProps} />
                       </td>
                       <td className='category-col'>
                         <Span size='sm'>{row.item.displayName}</Span>

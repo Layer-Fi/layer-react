@@ -1,4 +1,4 @@
-import { type ColorSelector, type FallbackFillSelector, type SeriesData } from '@components/DetailedCharts/types'
+import { type ColorSelector, type FallbackFillSelector, type SeriesData, type TypeColorMapping } from '@components/DetailedCharts/types'
 
 export const ValueIcon = <T extends SeriesData>({
   item,
@@ -10,40 +10,26 @@ export const ValueIcon = <T extends SeriesData>({
   fallbackFillSelector?: FallbackFillSelector<T>
 }) => {
   if (fallbackFillSelector?.(item)) {
-    return (
-      <svg
-        viewBox='0 0 12 12'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-        width='12'
-        height='12'
-      >
-        <defs>
-          <pattern
-            id='layer-pie-dots-pattern-legend'
-            x='0'
-            y='0'
-            width='3'
-            height='3'
-            patternUnits='userSpaceOnUse'
-          >
-            <rect width='1' height='1' opacity={0.76} className='Layer__charts__dots-pattern-legend__dot' />
-          </pattern>
-        </defs>
-        <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' className='Layer__charts__dots-pattern-legend__bg' />
-        <rect
-          x='1'
-          y='1'
-          width='10'
-          height='10'
-          fill='url(#layer-pie-dots-pattern-legend)'
-        />
-      </svg>
-    )
+    return <UncategorizedValueIcon />
   }
+  return <RegularValueIcon colorMapping={colorSelector(item)} />
+}
 
-  const colorMapping = colorSelector(item)
+const UncategorizedValueIcon = () => {
+  return (
+    <svg viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg' width='12' height='12'>
+      <defs>
+        <pattern id='layer-pie-dots-pattern-legend' x='0' y='0' width='3' height='3' patternUnits='userSpaceOnUse'>
+          <rect width='1' height='1' opacity={0.76} className='Layer__charts__dots-pattern-legend__dot' />
+        </pattern>
+      </defs>
+      <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' className='Layer__charts__dots-pattern-legend__bg' />
+      <rect x='1' y='1' width='10' height='10' fill='url(#layer-pie-dots-pattern-legend)' />
+    </svg>
+  )
+}
 
+const RegularValueIcon = ({ colorMapping }: { colorMapping: TypeColorMapping }) => {
   return (
     <svg
       className='share-icon'
