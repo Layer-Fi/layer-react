@@ -33,7 +33,7 @@ export const TimeTracking = ({ showTitle = true, onReportsClick, stringOverrides
   const [isActiveTimerDrawerOpen, setIsActiveTimerDrawerOpen] = useState(false)
   const [isServicesDrawerOpen, setIsServicesDrawerOpen] = useState(false)
 
-  const summaryFilterParams = useMemo(
+  const globalDateFilterParams = useMemo(
     () => ({ startDate, endDate }),
     [endDate, startDate],
   )
@@ -74,8 +74,9 @@ export const TimeTracking = ({ showTitle = true, onReportsClick, stringOverrides
         isDrawerOpen={isActiveTimerDrawerOpen}
         onDrawerOpenChange={setIsActiveTimerDrawerOpen}
       />
-      <TimeTrackingStats selectedFilterParams={summaryFilterParams} />
+      <TimeTrackingStats selectedFilterParams={globalDateFilterParams} />
       <TimeEntries
+        filterParams={globalDateFilterParams}
         onStartTimer={onStartTimer}
         isStartTimerDisabled={isActiveTimeEntryLoading || isActiveTimeEntryError || activeTimeEntry !== null}
       />
