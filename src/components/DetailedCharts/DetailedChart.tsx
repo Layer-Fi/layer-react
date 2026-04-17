@@ -21,7 +21,6 @@ import './detailedChart.scss'
 export type DetailedChartProps<T extends SeriesData> = {
   data: DetailData<T>
   isLoading?: boolean
-  isError?: boolean
   interactionProps: {
     hoveredItem: T | undefined
     setHoveredItem: (item: T | undefined) => void
