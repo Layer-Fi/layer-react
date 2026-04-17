@@ -116,7 +116,7 @@
   }
 
   .Layer__ActiveTimeTracker__TimerValue {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
 
   .Layer__ActiveTimeTracker__Controls {
@@ -137,7 +137,7 @@
   }
 
   .Layer__ActiveTimeTracker__Actions {
-    justify-content: flex-start;
+    justify-content: space-between;
     inline-size: 100%;
   }
 }

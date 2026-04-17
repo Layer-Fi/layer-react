@@ -36,7 +36,11 @@ const TimeEntryDateCell = memo(function TimeEntryDateCell({ date }: { date: Time
 })
 
 const TimeEntryDurationCell = memo(function TimeEntryDurationCell({ durationMinutes }: { durationMinutes: TimeEntry['durationMinutes'] }) {
+  const { t } = useTranslation()
   const { formatMinutesAsDuration } = useIntlFormatter()
+  if (durationMinutes === 0) {
+    return <Span>{t('timeTracking:label.less_than_one_minute', '< 1 min')}</Span>
+  }
   return <Span>{formatMinutesAsDuration(durationMinutes)}</Span>
 })
 
@@ -84,20 +88,20 @@ const getColumnConfig = (t: TFunction): NestedColumnConfig<TimeEntry> => [
     cell: (row: TimeEntryRowType) => <TimeEntryDurationCell durationMinutes={row.original.durationMinutes} />,
   },
   {
+    id: TimeEntryColumns.Service,
+    header: t('timeTracking:label.service', 'Service'),
+    cell: (row: TimeEntryRowType) => (
+      <Span ellipsis withTooltip>{row.original.service?.name || '—'}</Span>
+    ),
+    isRowHeader: true,
+  },
+  {
     id: TimeEntryColumns.Customer,
     header: t('timeTracking:label.customer', 'Customer'),
     cell: (row: TimeEntryRowType) => (
       <Span ellipsis withTooltip>
         {row.original.customer?.individualName || row.original.customer?.companyName || '—'}
       </Span>
-    ),
-    isRowHeader: true,
-  },
-  {
-    id: TimeEntryColumns.Service,
-    header: t('timeTracking:label.service', 'Service'),
-    cell: (row: TimeEntryRowType) => (
-      <Span ellipsis withTooltip>{row.original.service?.name || '—'}</Span>
     ),
   },
   {

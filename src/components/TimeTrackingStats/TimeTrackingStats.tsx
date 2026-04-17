@@ -19,6 +19,7 @@ import './timeTrackingStats.scss'
 
 const CHART_HEIGHT = 24
 const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
+const CHART_BORDER_RADIUS = 8
 
 type TimeTrackingServiceBreakdown = {
   color: string
@@ -78,11 +79,12 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
     () => entries.reduce((total, entry) => total + entry.totalMinutes, 0),
     [entries],
   )
+  const chartKey = entries.map(entry => entry.key).join('|')
 
   return (
     <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center' pbs='lg'>
       <div className='Layer__TimeTrackingStats__ChartBar'>
-        <ResponsiveContainer width='100%' height={CHART_HEIGHT}>
+        <ResponsiveContainer key={chartKey} width='100%' height={CHART_HEIGHT}>
           <BarChart
             data={chartData}
             layout='vertical'
@@ -93,28 +95,38 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
           >
             <XAxis type='number' hide domain={[0, Math.max(chartTotalMinutes, 1)]} allowDataOverflow />
             <YAxis type='category' dataKey='label' hide width={0} />
-            {entries.map(({ color, key }) => (
-              <Bar
-                key={key}
-                dataKey={key}
-                barSize={CHART_HEIGHT}
-                fill={color}
-                stackId='time-tracking-services'
-                isAnimationActive={false}
-              />
-            ))}
+            {entries.map(({ color, key }, index) => {
+              const isFirstSegment = index === 0
+              const isLastSegment = index === entries.length - 1
+              return (
+                <Bar
+                  key={key}
+                  dataKey={key}
+                  barSize={CHART_HEIGHT}
+                  fill={color}
+                  stackId='time-tracking-services'
+                  isAnimationActive={false}
+                  radius={[
+                    isFirstSegment ? CHART_BORDER_RADIUS : 0,
+                    isLastSegment ? CHART_BORDER_RADIUS : 0,
+                    isLastSegment ? CHART_BORDER_RADIUS : 0,
+                    isFirstSegment ? CHART_BORDER_RADIUS : 0,
+                  ]}
+                />
+              )
+            })}
           </BarChart>
         </ResponsiveContainer>
       </div>
       <HStack className='Layer__TimeTrackingStats__Legend' gap='lg' align='start'>
         {entries.map(({ color, key, percentage, serviceName, totalMinutes }) => (
           <VStack key={key} className='Layer__TimeTrackingStats__LegendItem' gap='2xs'>
-            <HStack gap='2xs' align='center'>
+            <HStack className='Layer__TimeTrackingStats__LegendLabel' gap='2xs' align='center'>
               <TimeTrackingStatsLegendSwatch color={color} />
               <Span size='md'>{serviceName}</Span>
             </HStack>
-            <Span size='xl' weight='bold'>{formatMinutesAsDuration(totalMinutes, { compact: true })}</Span>
-            <Span size='sm' variant='subtle'>
+            <Span className='Layer__TimeTrackingStats__LegendDuration' size='xl' weight='bold'>{formatMinutesAsDuration(totalMinutes, { compact: true })}</Span>
+            <Span className='Layer__TimeTrackingStats__LegendPercentage' size='sm' variant='subtle'>
               {formatPercent(percentage, { maximumFractionDigits: 0 })}
             </Span>
           </VStack>
@@ -135,16 +147,19 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
 
   return (
     <VStack className='Layer__TimeTrackingStats__Content' gap='lg' pb='md' pi='md'>
-      <HStack className='Layer__TimeTrackingStats__TopRow' justify='space-between' align='center' gap='lg'>
-        <VStack className='Layer__TimeTrackingStats__Summary' gap='2xs'>
-          <Span size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
-          <Heading className='Layer__TimeTrackingStats__SummaryValue' level={3} size='3xl' weight='bold'>
-            {formatMinutesAsDuration(summary.totalMinutes, { compact: true })}
-          </Heading>
-        </VStack>
-        <VStack className='Layer__TimeTrackingStats__DateSelection'>
-          <CombinedDateRangeSelection mode='full' showLabels={false} />
-        </VStack>
+      <HStack className='Layer__TimeTrackingStats__TopRow' justify='space-between' align='center' gap='md'>
+        <Heading size='md'>{t('common:label.overview', 'Overview')}</Heading>
+        <HStack className='Layer__TimeTrackingStats__Controls' gap='lg' align='center'>
+          <VStack className='Layer__TimeTrackingStats__DateSelection'>
+            <CombinedDateRangeSelection mode='full' showLabels={false} />
+          </VStack>
+          <VStack className='Layer__TimeTrackingStats__Summary' gap='3xs' pi='md'>
+            <Span size='sm' variant='subtle'>{t('common:label.this_period', 'This Period')}</Span>
+            <Span className='Layer__TimeTrackingStats__SummaryValue' weight='bold'>
+              {formatMinutesAsDuration(summary.totalMinutes, { compact: true })}
+            </Span>
+          </VStack>
+        </HStack>
       </HStack>
       {serviceBreakdown.length > 0
         ? (
