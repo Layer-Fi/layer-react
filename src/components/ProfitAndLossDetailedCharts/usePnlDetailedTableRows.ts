@@ -3,7 +3,7 @@ import { type DetailData } from '@components/DetailedCharts/types'
 import type { DetailedTableRow } from '@components/DetailedTable/useDetailedTableRows'
 import { useDetailedTableRows } from '@components/DetailedTable/useDetailedTableRows'
 
-import { UNCATEGORIZED_TYPES } from './pnlDetailedTable.constants'
+import { UNCATEGORIZED_TYPES } from './utils'
 
 type UsePnlDetailedTableRowsParams = {
   data: DetailData<PnlChartLineItem>
