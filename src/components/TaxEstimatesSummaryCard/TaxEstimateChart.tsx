@@ -57,7 +57,6 @@ export const TaxEstimateChart = ({
               color: colorByKey[item.key] ?? 'var(--color-base-300)',
               opacity: 1,
             }),
-            thickness: 'lg',
           }}
         />
       </VStack>
