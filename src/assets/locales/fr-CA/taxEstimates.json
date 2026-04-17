@@ -4,8 +4,8 @@
     "update_tax_profile": "Mettre à jour le profil fiscal"
   },
   "disclaimer": {
-    "acknowledgment": "",
-    "content": ""
+    "acknowledgment": "En continuant, j’atteste que je comprends ce qui précède.",
+    "content": "L’outil Tax Estimates et le contenu connexe sont fournis à titre informatif seulement et ne constituent pas des conseils juridiques, comptables ou fiscaux, ni un substitut à des conseils professionnels. Nous ne sommes ni un planificateur financier ni un conseiller fiscal, et les utilisateurs assument l’entière responsabilité de leurs obligations fiscales, de l’exactitude des données et du respect des lois. Tous les calculs sont des estimations et peuvent contenir des erreurs. Ils sont fondés uniquement sur les renseignements que vous nous fournissez."
   },
   "empty": {
     "no_tax_payments_to_display": "Il n’y a aucun paiement d’impôt à afficher.",
@@ -90,10 +90,10 @@
     "taxable_business_income": "Revenu d’entreprise imposable",
     "taxable_business_income_projected": "Revenu d’entreprise imposable projeté",
     "taxable_income": "Revenu imposable",
-    "taxable_income_estimate_to_date_for_year": "",
-    "taxable_income_estimate_to_date_for_year_projected": "",
-    "taxable_income_for_year": "",
-    "taxable_income_for_year_projected": "",
+    "taxable_income_estimate_to_date_for_year": "Estimation du revenu imposable à ce jour pour l’année {{year}}",
+    "taxable_income_estimate_to_date_for_year_projected": "Projection du revenu imposable pour l’année {{year}}",
+    "taxable_income_for_year": "Revenu imposable pour {{year}}",
+    "taxable_income_for_year_projected": "Revenu imposable projeté pour {{year}}",
     "taxable_medicare_income": "Revenu Medicare imposable",
     "taxable_medicare_surtax_income": "Revenu imposable pour la surtaxe Medicare",
     "taxable_social_security_income": "Revenu imposable de la Sécurité Sociale",
