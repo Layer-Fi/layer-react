@@ -13,8 +13,8 @@ import {
 import type { CartesianViewBox } from 'recharts/types/util/types'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { VStack } from '@ui/Stack/Stack'
 import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData, type ValueFormatter } from '@components/DetailedCharts/types'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 import './detailedChart.scss'
 
@@ -22,9 +22,7 @@ type DetailedChartStylingProps<T extends SeriesData> = {
   colorSelector: ColorSelector<T>
   fallbackFillSelector?: FallbackFillSelector<T>
   valueFormatter: ValueFormatter
-  showDatePicker?: boolean
   isBordered?: boolean
-  thickness?: 'sm' | 'md' | 'lg'
 }
 
 type DetailedChartInteractionProps<T extends SeriesData> = {
@@ -40,6 +38,10 @@ export type DetailedChartProps<T extends SeriesData> = {
 
   interactionProps: DetailedChartInteractionProps<T>
   stylingProps: DetailedChartStylingProps<T>
+
+  slots?: {
+    header?: React.ReactNode
+  }
 }
 
 export const DetailedChart = <T extends SeriesData>({
@@ -47,17 +49,12 @@ export const DetailedChart = <T extends SeriesData>({
   isLoading,
   interactionProps,
   stylingProps,
+  slots,
 }: DetailedChartProps<T>) => {
   const { t } = useTranslation()
   const { formatPercent } = useIntlFormatter()
   const { data: chartData, total } = data
-  const thickness = stylingProps.thickness ?? 'sm'
-  const innerRadiusByThickness: Record<'sm' | 'md' | 'lg', string> = {
-    sm: '91%',
-    md: '86%',
-    lg: '80%',
-  }
-  const innerRadius = innerRadiusByThickness[thickness]
+  const innerRadius = '91%'
 
   const normalizedChartData = useMemo(() => chartData.map(x => ({
     ...x,
@@ -140,12 +137,13 @@ export const DetailedChart = <T extends SeriesData>({
   }, [text, value, total, stylingProps, share, formattedShare])
 
   return (
-    <div className='Layer__DetailedChart'>
-      <div className='Layer__DetailedChart__headerTablet'>
-        {stylingProps?.showDatePicker && <GlobalMonthPicker />}
-      </div>
-
-      <div className='Layer__DetailedChart__container'>
+    <VStack className='Layer__DetailedChart'>
+      {slots?.header && (
+        <VStack className='Layer__DetailedChart__header'>
+          {slots.header}
+        </VStack>
+      )}
+      <VStack className='Layer__DetailedChart__container'>
         <ResponsiveContainer>
           <PieChart>
             <defs>
@@ -206,7 +204,9 @@ export const DetailedChart = <T extends SeriesData>({
                   animationEasing='ease-in-out'
                 >
                   {normalizedChartData.map((entry, index) => {
-                    let fill: string | undefined = stylingProps.colorSelector(entry)?.color
+                    const colorMapping = stylingProps.colorSelector(entry)
+                    const isFallbackSlice = stylingProps.fallbackFillSelector?.(entry) ?? false
+                    let fill: string | undefined = colorMapping.color
                     let active = true
                     if (interactionProps.hoveredItem && entry.name !== interactionProps.hoveredItem?.name) {
                       active = false
@@ -219,15 +219,12 @@ export const DetailedChart = <T extends SeriesData>({
                         className={classNames(
                           'Layer__DetailedChart__slice',
                           interactionProps.hoveredItem && !active && 'Layer__DetailedChart__slice--inactive',
-                          stylingProps?.isBordered && 'Layer__DetailedChart__slice--bordered',
+                          (stylingProps?.isBordered || isFallbackSlice) && 'Layer__DetailedChart__slice--bordered',
                         )}
-                        style={{
-                          fill:
-                          stylingProps.fallbackFillSelector?.(entry) && fill
-                            ? 'url(#layer-pie-dots-pattern)'
-                            : fill,
-                        }}
-                        opacity={stylingProps.colorSelector(entry)?.opacity}
+                        fill={isFallbackSlice && fill
+                          ? 'url(#layer-pie-dots-pattern)'
+                          : fill}
+                        opacity={colorMapping.opacity}
                         onMouseEnter={() => interactionProps.setHoveredItem(entry)}
                         onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
                       />
@@ -238,7 +235,7 @@ export const DetailedChart = <T extends SeriesData>({
               )}
           </PieChart>
         </ResponsiveContainer>
-      </div>
-    </div>
+      </VStack>
+    </VStack>
   )
 }

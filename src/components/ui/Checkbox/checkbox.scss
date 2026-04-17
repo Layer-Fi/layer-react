@@ -63,15 +63,11 @@
     border-color: var(--fg-default);
   }
 
-  &[data-variant='success'] {
-    [slot='checkbox'] {
-      background-color: var(--color-info-success);
-    }
-  }
-
   &[data-selected][data-variant='success'] {
     [slot='checkbox'] {
-      border-color: var(--color-info-success);
+      background-color: var(--bg-brand-accent, var(--color-accent));
+      border-color: var(--bg-brand-accent, var(--color-accent));
+      color: var(--fg-brand-accent, var(--color-primary));
     }
   }
 

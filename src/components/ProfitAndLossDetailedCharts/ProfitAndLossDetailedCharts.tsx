@@ -17,15 +17,15 @@ import { Span } from '@ui/Typography/Text'
 import { BackButton } from '@components/Button/BackButton'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
-import { type ColorSelector, type DetailData, type FallbackFillSelector, type ValueFormatter } from '@components/DetailedCharts/types'
+import { type ColorSelector, DEFAULT_TYPE_COLOR_MAPPING, type DetailData, type FallbackFillSelector, type ValueFormatter } from '@components/DetailedCharts/types'
 import { DetailedTable, type DetailedTableStringOverrides } from '@components/DetailedTable/DetailedTable'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
+import { usePnlDetailedTableRows } from '@components/ProfitAndLossDetailedCharts/usePnlDetailedTableRows'
+import { isLineItemUncategorized, mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
-
-import { isLineItemUncategorized, mapTypesToColors } from './utils'
 
 export interface DetailedChartStringOverrides {
   expenseChartHeader?: string
@@ -47,15 +47,23 @@ const EmptyState = () => {
       <div className='Layer__profit-and-loss-detailed-charts__empty-chart'>
         <VStack align='center' justify='center' gap='md' className='Layer__profit-and-loss-detailed-charts__empty-chart-content'>
           <Hourglass size={36} className='Layer__profit-and-loss-detailed-charts__empty-chart-icon' />
-          <Span size={TextSize.md} weight={TextWeight.bold} variant='subtle'>
+          <Span size='md' weight='bold' variant='subtle'>
             {t('bankTransactions:empty.no_transactions_found', 'No transactions found')}
           </Span>
         </VStack>
       </div>
       <HStack align='center' justify='center' gap='md' pb='md' className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
-        <Span size={TextSize.md} variant='subtle'>{t('bankTransactions:label.upload_transactions_or_wait_for_bank_sync', 'Upload your transactions or wait for transactions to be synced from your bank.')}</Span>
+        <Span size='md' variant='subtle'>{t('bankTransactions:label.upload_transactions_or_wait_for_bank_sync', 'Upload your transactions or wait for transactions to be synced from your bank.')}</Span>
       </HStack>
     </>
+  )
+}
+
+const DetailedChartsDatePickerHeader = () => {
+  return (
+    <HStack className='Layer__ProfitAndLossDetailedCharts__DatePickerHeader--tablet'>
+      <GlobalMonthPicker />
+    </HStack>
   )
 }
 
@@ -73,7 +81,7 @@ export const ProfitAndLossDetailedCharts = ({
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
 }) => {
   const { t } = useTranslation()
-  const { formatDate } = useIntlFormatter()
+  const { formatDate, formatPercent } = useIntlFormatter()
   const intl = useIntl()
   const {
     chartDataRevenue,
@@ -127,21 +135,37 @@ export const ProfitAndLossDetailedCharts = ({
     [chartData, chartColorsList],
   )
   const colorSelector: ColorSelector<PnlChartLineItem> = useCallback(
-    (item: PnlChartLineItem) => typeColorMapping(item.name)!,
+    (item: PnlChartLineItem) => typeColorMapping(item.name) ?? DEFAULT_TYPE_COLOR_MAPPING,
     [typeColorMapping],
   )
   const valueFormatter: ValueFormatter = useCallback((value: number) => formatCurrencyFromCents(intl, value), [intl])
-  const fallbackFillSelector: FallbackFillSelector<PnlChartLineItem> = (item: PnlChartLineItem) => isLineItemUncategorized(item)
+  const fallbackFillSelector: FallbackFillSelector<PnlChartLineItem> = useCallback(
+    (item: PnlChartLineItem) => isLineItemUncategorized(item),
+    [],
+  )
 
-  const stylingProps = {
+  const stylingProps = useMemo(() => ({
     valueFormatter,
     colorSelector,
     fallbackFillSelector,
-  }
+  }), [valueFormatter, colorSelector, fallbackFillSelector])
+  const detailedTableRows = usePnlDetailedTableRows({
+    data: {
+      data: tableData,
+      total,
+    },
+    formatPercent,
+  })
 
   const sortFunction = useCallback((_data: DetailData<PnlChartLineItem>, sortParams: SortParams<string>) => {
-    if (sortParams.sortBy && sortParams.sortOrder) {
-      _oldSortByScope(activeScope, sortParams.sortBy, sortParams.sortOrder === SortOrder.ASC ? 'asc' : 'desc')
+    if (sortParams.sortBy) {
+      _oldSortByScope(
+        activeScope,
+        sortParams.sortBy,
+        sortParams.sortOrder
+          ? (sortParams.sortOrder === SortOrder.ASC ? 'asc' : 'desc')
+          : undefined,
+      )
     }
   }, [_oldSortByScope, activeScope])
 
@@ -192,6 +216,9 @@ export const ProfitAndLossDetailedCharts = ({
                   data: chartData,
                   total: total,
                 }}
+                slots={{
+                  header: showDatePicker ? <DetailedChartsDatePickerHeader /> : undefined,
+                }}
                 interactionProps={{
                   hoveredItem,
                   setHoveredItem: (item: PnlChartLineItem | undefined) => setHoveredItem(item),
@@ -201,6 +228,7 @@ export const ProfitAndLossDetailedCharts = ({
                 isLoading={isLoading}
               />
               <DetailedTable<PnlChartLineItem>
+                key={activeScope}
                 data={{
                   data: tableData,
                   total: total,
@@ -216,6 +244,7 @@ export const ProfitAndLossDetailedCharts = ({
                   setHoveredItem: (item: PnlChartLineItem | undefined) => setHoveredItem(item),
                   onValueClick: (item: PnlChartLineItem) => handleValueClick(item),
                 }}
+                rows={detailedTableRows}
                 stringOverrides={stringOverrides?.detailedTableStringOverrides}
               />
             </>

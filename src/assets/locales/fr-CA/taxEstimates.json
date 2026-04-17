@@ -3,21 +3,25 @@
     "save_profile": "Enregistrer le profil",
     "update_tax_profile": "Mettre à jour le profil fiscal"
   },
+  "disclaimer": {
+    "acknowledgment": "",
+    "content": ""
+  },
   "empty": {
     "no_tax_payments_to_display": "Il n’y a aucun paiement d’impôt à afficher.",
     "tax_payments": "Aucun paiement d’impôt trouvé"
   },
   "error": {
-    "feature_not_enabled": "",
+    "disclaimer_required": "Vous devez reconnaître l’avis de non-responsabilité pour continuer.",
+    "feature_not_enabled": "Les estimations d'impôt ne sont pas activées.",
     "load_tax_estimates": "Nous n’avons pas pu charger vos estimations fiscales",
     "load_tax_estimates_tax": "Nous n’avons pas pu charger votre sommaire fiscal",
     "load_tax_information": "Impossible de charger les renseignements fiscaux",
     "load_tax_payments": "Nous n’avons pas pu charger vos paiements d’impôt",
     "retrieve_tax_profile": "Nous n’avons pas pu récupérer votre profil fiscal. Veuillez vérifier votre connexion et réessayer.",
-    "while_loading_tax_estimates": "",
+    "while_loading_tax_estimates": "Une erreur s’est produite lors du chargement de vos estimations d’impôt. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_payments": "Une erreur s’est produite lors du chargement de vos paiements d’impôt. Veuillez vérifier votre connexion et réessayer.",
-    "while_loading_tax_summary": "Une erreur s’est produite lors du chargement de votre sommaire fiscal. Veuillez vérifier votre connexion et réessayer.",
-    "disclaimer_required": ""
+    "while_loading_tax_summary": "Une erreur s’est produite lors du chargement de votre sommaire fiscal. Veuillez vérifier votre connexion et réessayer."
   },
   "label": {
     "additional_actions": "Actions supplémentaires",
@@ -91,6 +95,10 @@
     "taxable_business_income": "Revenu d’entreprise imposable",
     "taxable_business_income_projected": "Revenu d’entreprise imposable projeté",
     "taxable_income": "Revenu imposable",
+    "taxable_income_estimate_to_date_for_year": "",
+    "taxable_income_estimate_to_date_for_year_projected": "",
+    "taxable_income_for_year": "",
+    "taxable_income_for_year_projected": "",
     "taxable_medicare_income": "Revenu Medicare imposable",
     "taxable_medicare_surtax_income": "Revenu imposable pour la surtaxe Medicare",
     "taxable_social_security_income": "Revenu imposable de la Sécurité Sociale",
