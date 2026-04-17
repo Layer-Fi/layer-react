@@ -1,5 +1,6 @@
+import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
-import { DEFAULT_CHART_COLOR_TYPE, type TypeColorMapping } from '@components/DetailedCharts/types'
+import { type TypeColorMapping } from '@components/DetailedCharts/types'
 
 import { UNCATEGORIZED_TYPES } from './pnlDetailedTable.constants'
 
@@ -9,10 +10,10 @@ export const isLineItemUncategorized = (item: PnlChartLineItem) => {
 
 export const mapTypesToColors = <T extends PnlChartLineItem>(
   data: T[],
-  colorList: string[] = DEFAULT_CHART_COLOR_TYPE,
+  colorList: string[] = DEFAULT_CHART_COLORS,
 ): (name: string) => TypeColorMapping | undefined => {
   const opacityTiers = [1, 0.82, 0.64, 0.46]
-  const palette = colorList.length > 0 ? colorList : DEFAULT_CHART_COLOR_TYPE
+  const palette = colorList.length > 0 ? colorList : DEFAULT_CHART_COLORS
   const mapping: Record<string, TypeColorMapping> = {}
   const nonUncategorizedNames = Array.from(
     new Set(
@@ -27,7 +28,7 @@ export const mapTypesToColors = <T extends PnlChartLineItem>(
     const cycle = Math.floor(index / palette.length)
     const opacity = opacityTiers[cycle % opacityTiers.length] ?? 1
     mapping[name] = {
-      color: palette[colorIndex] ?? DEFAULT_CHART_COLOR_TYPE[0],
+      color: palette[colorIndex] ?? DEFAULT_CHART_COLORS[0],
       opacity,
     }
   })
