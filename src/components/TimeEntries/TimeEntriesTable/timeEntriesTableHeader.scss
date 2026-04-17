@@ -1,13 +1,7 @@
-.Layer__CustomerSelector.Layer__TimeEntriesTable__FilterCustomer {
-  grid-template-areas: 'input';
-  gap: 0;
-}
-
 .Layer__TimeEntriesTable__FilterCustomer,
 .Layer__TimeEntriesTable__FilterService {
-  flex: 0 0 13rem;
-  min-width: 13rem;
-  max-width: 13rem;
+  flex: 0 0 12rem;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 @container (max-width: 760px) {
@@ -54,7 +48,6 @@
     .Layer__TimeEntriesTable__FilterCustomer,
     .Layer__TimeEntriesTable__FilterService {
       flex: 1 1 auto;
-      max-width: none;
     }
   }
 }

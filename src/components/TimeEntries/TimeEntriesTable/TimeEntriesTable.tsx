@@ -84,20 +84,20 @@ const getColumnConfig = (t: TFunction): NestedColumnConfig<TimeEntry> => [
     cell: (row: TimeEntryRowType) => <TimeEntryDurationCell durationMinutes={row.original.durationMinutes} />,
   },
   {
+    id: TimeEntryColumns.Service,
+    header: t('timeTracking:label.service', 'Service'),
+    cell: (row: TimeEntryRowType) => (
+      <Span ellipsis withTooltip>{row.original.service?.name || '—'}</Span>
+    ),
+    isRowHeader: true,
+  },
+  {
     id: TimeEntryColumns.Customer,
     header: t('timeTracking:label.customer', 'Customer'),
     cell: (row: TimeEntryRowType) => (
       <Span ellipsis withTooltip>
         {row.original.customer?.individualName || row.original.customer?.companyName || '—'}
       </Span>
-    ),
-    isRowHeader: true,
-  },
-  {
-    id: TimeEntryColumns.Service,
-    header: t('timeTracking:label.service', 'Service'),
-    cell: (row: TimeEntryRowType) => (
-      <Span ellipsis withTooltip>{row.original.service?.name || '—'}</Span>
     ),
   },
   {

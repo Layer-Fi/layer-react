@@ -39,6 +39,14 @@ export const TimeEntriesTableHeader = () => {
 
   const HeaderFilters = useCallback(() => (
     <HStack gap='sm' align='end' className='Layer__TimeEntriesTable__Filters'>
+      <TimeEntryServiceSelector
+        selectedServiceId={selectedServiceId}
+        onSelectedServiceIdChange={setSelectedServiceId}
+        className='Layer__TimeEntriesTable__FilterService'
+        placeholder={t('timeTracking:label.all_services', 'All Services')}
+        showLabel={false}
+        inline
+      />
       <CustomerSelector
         selectedCustomer={selectedCustomer}
         onSelectedCustomerChange={setSelectedCustomer}
@@ -46,13 +54,7 @@ export const TimeEntriesTableHeader = () => {
         className='Layer__TimeEntriesTable__FilterCustomer'
         placeholder={t('timeTracking:label.all_customers', 'All Customers')}
         showLabel={false}
-      />
-      <TimeEntryServiceSelector
-        selectedServiceId={selectedServiceId}
-        onSelectedServiceIdChange={setSelectedServiceId}
-        className='Layer__TimeEntriesTable__FilterService'
-        placeholder={t('timeTracking:label.all_services', 'All Services')}
-        showLabel={false}
+        inline
       />
     </HStack>
   ), [selectedCustomer, setSelectedCustomer, selectedServiceId, setSelectedServiceId, t])

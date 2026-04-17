@@ -31,14 +31,12 @@
     padding: 0;
   }
 
-  overflow: visible;
   block-size: 1.5rem;
-  border-radius: 0.625rem;
-  background-color: transparent;
 }
 
 .Layer__TimeTrackingStats__ChartBar--empty {
   inline-size: 100%;
+  border-radius: var(--border-radius-xs);
   background-color: var(--color-base-100);
 }
 
