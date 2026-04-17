@@ -33,6 +33,7 @@
   "label": {
     "active": "Active",
     "add_memo": "Add memo",
+    "additional_time_tracking_actions": "Additional time tracking actions",
     "all_customers": "All Customers",
     "all_services": "All Services",
     "customer": "Customer",
@@ -51,7 +52,8 @@
     "select_customer": "Select a customer (optional)",
     "select_service": "Select a service",
     "service": "Service",
-    "time_entries": "Time Entries"
+    "time_entries": "Time Entries",
+    "time_tracking": "Time Tracking"
   },
   "prompt": {
     "delete_entry": "Delete this time entry?",

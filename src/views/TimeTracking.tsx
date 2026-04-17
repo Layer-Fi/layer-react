@@ -11,9 +11,14 @@ import { TimeTrackingServicesDrawer } from '@components/TimeEntries/TimeTracking
 import { TimeTrackingStats } from '@components/TimeTrackingStats/TimeTrackingStats'
 import { View } from '@components/View/View'
 
+export interface TimeTrackingStringOverrides {
+  title?: string
+}
+
 export interface TimeTrackingProps {
   showTitle?: boolean
   onReportsClick?: () => void
+  stringOverrides?: TimeTrackingStringOverrides
 }
 
 enum TimeTrackingHeaderMenuActions {
@@ -21,7 +26,7 @@ enum TimeTrackingHeaderMenuActions {
   Services = 'Services',
 }
 
-export const TimeTracking = ({ showTitle = true, onReportsClick }: TimeTrackingProps) => {
+export const TimeTracking = ({ showTitle = true, onReportsClick, stringOverrides }: TimeTrackingProps) => {
   const { t } = useTranslation()
   const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { data: activeTimeEntry, isLoading: isActiveTimeEntryLoading } = useActiveTimeTracker()
@@ -56,7 +61,7 @@ export const TimeTracking = ({ showTitle = true, onReportsClick }: TimeTrackingP
 
   return (
     <View
-      title={t('timeTracking:label.time_tracking', 'Time Tracking')}
+      title={stringOverrides?.title || t('timeTracking:label.time_tracking', 'Time Tracking')}
       showHeader={showTitle}
       header={(
         <DataTableHeaderMenu
