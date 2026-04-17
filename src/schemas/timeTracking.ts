@@ -92,6 +92,33 @@ export const TimeEntrySchema = Schema.Struct({
 export type TimeEntry = typeof TimeEntrySchema.Type
 export type TimeEntryEncoded = typeof TimeEntrySchema.Encoded
 
+export const TimeEntrySummaryGroupSchema = Schema.Struct({
+  id: Schema.NullishOr(Schema.UUID),
+
+  name: Schema.String,
+
+  totalMinutes: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('total_minutes'),
+  ),
+
+  totalBillableMinutes: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('total_billable_minutes'),
+  ),
+
+  totalBillableAmount: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('total_billable_amount'),
+  ),
+
+  entryCount: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('entry_count'),
+  ),
+})
+export type TimeEntrySummaryGroup = typeof TimeEntrySummaryGroupSchema.Type
+
 export const TimeEntrySummarySchema = Schema.Struct({
   totalMinutes: pipe(
     Schema.propertySignature(Schema.Number),
@@ -109,7 +136,7 @@ export const TimeEntrySummarySchema = Schema.Struct({
   ),
 
   byService: pipe(
-    Schema.propertySignature(Schema.Array(Schema.Unknown)),
+    Schema.propertySignature(Schema.Array(TimeEntrySummaryGroupSchema)),
     Schema.fromKey('by_service'),
   ),
 })
