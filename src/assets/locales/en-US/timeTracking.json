@@ -51,8 +51,7 @@
     "select_customer": "Select a customer (optional)",
     "select_service": "Select a service",
     "service": "Service",
-    "time_entries": "Time Entries",
-    "time_tracking": "Time Tracking"
+    "time_entries": "Time Entries"
   },
   "prompt": {
     "delete_entry": "Delete this time entry?",
@@ -69,6 +68,7 @@
     "hourly_rate_optional": "Default hourly rate (optional)",
     "no_active": "No services yet",
     "no_archived": "No archived services",
+    "rate_per_hour": "{{rate}}/hr",
     "rate_per_hour_suffix": "/hr",
     "save": "Save",
     "service_name": "Service name",
@@ -79,7 +79,7 @@
     "unarchive_confirm_title": "Restore this service?"
   },
   "validation": {
-    "duration_greater_than_zero": "Duration must be greater than zero.",
+    "duration_whole_minutes": "Duration must be a whole number of minutes greater than zero.",
     "entry_date_not_future": "Entry date cannot be in the future.",
     "entry_date_required": "Entry date is a required field.",
     "service_name_required": "Service name is a required field.",
