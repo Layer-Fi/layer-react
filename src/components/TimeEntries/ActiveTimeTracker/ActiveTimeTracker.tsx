@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useActiveTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
@@ -14,27 +14,16 @@ import { ActiveTimeTrackerStartDrawer } from '@components/TimeEntries/ActiveTime
 import './activeTimeTracker.scss'
 
 interface ActiveTimeTrackerProps {
-  isDrawerOpen?: boolean
-  onDrawerOpenChange?: (isOpen: boolean) => void
+  isDrawerOpen: boolean
+  onDrawerOpenChange: (isOpen: boolean) => void
 }
 
-export const ActiveTimeTracker = ({ isDrawerOpen: externallyControlledIsDrawerOpen, onDrawerOpenChange }: ActiveTimeTrackerProps) => {
+export const ActiveTimeTracker = ({ isDrawerOpen, onDrawerOpenChange }: ActiveTimeTrackerProps) => {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
   const { formatSecondsAsDuration } = useIntlFormatter()
-  const [internallyControlledIsDrawerOpen, setInternallyControlledIsDrawerOpen] = useState(false)
 
   const { data: activeEntry, isLoading, isError } = useActiveTimeTracker()
-
-  const isDrawerOpen = externallyControlledIsDrawerOpen ?? internallyControlledIsDrawerOpen
-
-  const setIsDrawerOpen = useCallback((isOpen: boolean) => {
-    if (externallyControlledIsDrawerOpen === undefined) {
-      setInternallyControlledIsDrawerOpen(isOpen)
-    }
-
-    onDrawerOpenChange?.(isOpen)
-  }, [externallyControlledIsDrawerOpen, onDrawerOpenChange])
 
   const elapsedSeconds = useElapsedSeconds(activeEntry?.createdAt)
   const timerDisplayValue = useMemo(
@@ -71,7 +60,7 @@ export const ActiveTimeTracker = ({ isDrawerOpen: externallyControlledIsDrawerOp
   return (
     <ActiveTimeTrackerStartDrawer
       isOpen={isDrawerOpen}
-      onOpenChange={setIsDrawerOpen}
+      onOpenChange={onDrawerOpenChange}
       isMobile={isMobile}
     />
   )

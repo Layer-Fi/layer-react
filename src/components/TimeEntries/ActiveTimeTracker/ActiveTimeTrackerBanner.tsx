@@ -80,17 +80,15 @@ export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: Acti
 
           <form.Subscribe selector={s => s.values.selectedServiceId}>
             {selectedServiceId => (
-              <HStack className='Layer__ActiveTimeTracker__CompleteButton'>
-                <Button
-                  variant='outlined'
-                  onPress={actions.completeTimer}
-                  isPending={state.isStopping || state.isUpdating}
-                  isDisabled={state.isCancelling || !selectedServiceId}
-                >
-                  {t('timeTracking:action.complete_timer', 'Complete')}
-                  <Check size={16} />
-                </Button>
-              </HStack>
+              <Button
+                variant='outlined-light'
+                onPress={actions.completeTimer}
+                isPending={state.isStopping || state.isUpdating}
+                isDisabled={state.isCancelling || !selectedServiceId}
+              >
+                {t('timeTracking:action.complete_timer', 'Complete')}
+                <Check size={16} />
+              </Button>
             )}
           </form.Subscribe>
         </HStack>

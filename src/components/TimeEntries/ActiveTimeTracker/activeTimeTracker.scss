@@ -46,16 +46,6 @@
   }
 }
 
-.Layer__ActiveTimeTracker__CompleteButton {
-  .Layer__UI__Button[data-variant='outlined'] {
-    padding-inline: var(--spacing-md);
-    border-radius: var(--border-radius-sm);
-    background-color: var(--color-base-0);
-    color: var(--color-base-900);
-    border-color: var(--color-base-300);
-  }
-}
-
 .Layer__ActiveTimeTracker__DrawerContent {
   padding-block-end: var(--spacing-lg);
   padding-inline: var(--spacing-lg);
