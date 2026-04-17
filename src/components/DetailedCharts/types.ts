@@ -21,4 +21,3 @@ export const DEFAULT_TYPE_COLOR_MAPPING: TypeColorMapping = {
 
 export type ColorSelector<T extends SeriesData> = (item: T) => TypeColorMapping
 export type FallbackFillSelector<T extends SeriesData> = (item: T) => boolean
-export type ValueFormatter = (value: number) => string

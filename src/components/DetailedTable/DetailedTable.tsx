@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type SortParams } from '@internal-types/utility/pagination'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
@@ -15,6 +14,7 @@ import { type ColorSelector, type DetailData, type FallbackFillSelector, type Se
 import './detailedTable.scss'
 
 import { type DetailedTableRow, useDetailedTableRows } from './useDetailedTableRows'
+import { ValueIcon } from './ValueIcon'
 
 export interface DetailedTableStringOverrides {
   categoryColumnHeader?: string
@@ -22,93 +22,22 @@ export interface DetailedTableStringOverrides {
   valueColumnHeader?: string
 }
 
-type DetailedTableStylingProps<T extends SeriesData> = {
-  colorSelector: ColorSelector<T>
-  fallbackFillSelector?: FallbackFillSelector<T>
-}
-
-type DetailedTableInteractionProps<T extends SeriesData> = {
-  hoveredItem: T | undefined
-  setHoveredItem: (item: T | undefined) => void
-  onValueClick?: (item: T) => void
-}
-
-type SortFunction<T extends SeriesData> = (data: DetailData<T>, sortParams: SortParams<string>) => void
-
-export type SeriesDataWithType = SeriesData & {
-  type: string
-}
-
+export type SeriesDataWithType = SeriesData & { type: string }
 export interface DetailedTableProps<T extends SeriesDataWithType> {
   data: DetailData<T>
   sortParams: SortParams<string>
-  sortFunction: SortFunction<T>
-  stylingProps: DetailedTableStylingProps<T>
-  interactionProps: DetailedTableInteractionProps<T>
+  sortFunction: (data: DetailData<T>, sortParams: SortParams<string>) => void
+  stylingProps: {
+    colorSelector: ColorSelector<T>
+    fallbackFillSelector?: FallbackFillSelector<T>
+  }
+  interactionProps: {
+    hoveredItem: T | undefined
+    setHoveredItem: (item: T | undefined) => void
+    onValueClick?: (item: T) => void
+  }
   rows?: DetailedTableRow<T>[]
   stringOverrides?: DetailedTableStringOverrides
-}
-
-const ValueIcon = <T extends SeriesData>({
-  item,
-  colorSelector,
-  fallbackFillSelector,
-}: {
-  item: T
-  colorSelector: ColorSelector<T>
-  fallbackFillSelector?: FallbackFillSelector<T>
-}) => {
-  if (fallbackFillSelector?.(item)) {
-    return (
-      <svg
-        viewBox='0 0 12 12'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-        width='12'
-        height='12'
-      >
-        <defs>
-          <pattern
-            id='layer-pie-dots-pattern-legend'
-            x='0'
-            y='0'
-            width='3'
-            height='3'
-            patternUnits='userSpaceOnUse'
-          >
-            <rect width='1' height='1' opacity={0.76} className='Layer__charts__dots-pattern-legend__dot' />
-          </pattern>
-        </defs>
-        <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' className='Layer__charts__dots-pattern-legend__bg' />
-        <rect
-          x='1'
-          y='1'
-          width='10'
-          height='10'
-          fill='url(#layer-pie-dots-pattern-legend)'
-        />
-      </svg>
-    )
-  }
-
-  const colorMapping = colorSelector(item)
-
-  return (
-    <svg
-      className='share-icon'
-      viewBox='0 0 12 12'
-      xmlns='http://www.w3.org/2000/svg'
-      aria-hidden='true'
-    >
-      <rect
-        width='12'
-        height='12'
-        rx='2'
-        fill={colorMapping.color}
-        fillOpacity={colorMapping.opacity}
-      />
-    </svg>
-  )
 }
 
 export const DetailedTable = <T extends SeriesDataWithType>({
@@ -121,8 +50,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
   stringOverrides,
 }: DetailedTableProps<T>) => {
   const { t } = useTranslation()
-  const { formatPercent } = useIntlFormatter()
-  const defaultRows = useDetailedTableRows({ data, formatPercent })
+  const defaultRows = useDetailedTableRows({ data })
   const detailedTableRows = rows ?? defaultRows
 
   const setAndToggleSortDirection = (field: 'category' | 'type' | 'value') => {
@@ -196,11 +124,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                       onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
                     >
                       <td className='color-col'>
-                        <ValueIcon
-                          item={row.item}
-                          colorSelector={stylingProps.colorSelector}
-                          fallbackFillSelector={stylingProps.fallbackFillSelector}
-                        />
+                        <ValueIcon<T> item={row.item} {...stylingProps} />
                       </td>
                       <td className='category-col'>
                         <Span size='sm'>{row.item.displayName}</Span>

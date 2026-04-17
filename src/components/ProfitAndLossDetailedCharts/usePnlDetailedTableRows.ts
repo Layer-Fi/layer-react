@@ -7,16 +7,13 @@ import { UNCATEGORIZED_TYPES } from './utils'
 
 type UsePnlDetailedTableRowsParams = {
   data: DetailData<PnlChartLineItem>
-  formatPercent: (value: number, options?: Intl.NumberFormatOptions) => string
 }
 
 export const usePnlDetailedTableRows = ({
   data,
-  formatPercent,
 }: UsePnlDetailedTableRowsParams): DetailedTableRow<PnlChartLineItem>[] => {
   return useDetailedTableRows({
     data,
-    formatPercent,
-    isValueDisabled: item => UNCATEGORIZED_TYPES.includes(item.name),
+    isDisabled: item => UNCATEGORIZED_TYPES.includes(item.name),
   })
 }

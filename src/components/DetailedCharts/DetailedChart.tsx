@@ -14,32 +14,23 @@ import type { CartesianViewBox } from 'recharts/types/util/types'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { VStack } from '@ui/Stack/Stack'
-import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData, type ValueFormatter } from '@components/DetailedCharts/types'
+import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData } from '@components/DetailedCharts/types'
 
 import './detailedChart.scss'
 
-type DetailedChartStylingProps<T extends SeriesData> = {
-  colorSelector: ColorSelector<T>
-  fallbackFillSelector?: FallbackFillSelector<T>
-  valueFormatter: ValueFormatter
-}
-
-type DetailedChartInteractionProps<T extends SeriesData> = {
-  hoveredItem: T | undefined
-  setHoveredItem: (item: T | undefined) => void
-}
-
 export type DetailedChartProps<T extends SeriesData> = {
   data: DetailData<T>
-
   isLoading?: boolean
-  isError?: boolean
-
-  interactionProps: DetailedChartInteractionProps<T>
-  stylingProps: DetailedChartStylingProps<T>
-
+  interactionProps: {
+    hoveredItem: T | undefined
+    setHoveredItem: (item: T | undefined) => void
+  }
+  stylingProps: {
+    colorSelector: ColorSelector<T>
+    fallbackFillSelector?: FallbackFillSelector<T>
+  }
   slots?: {
-    header?: React.ReactNode
+    Header?: React.ReactNode
   }
 }
 
@@ -51,7 +42,7 @@ export const DetailedChart = <T extends SeriesData>({
   slots,
 }: DetailedChartProps<T>) => {
   const { t } = useTranslation()
-  const { formatPercent } = useIntlFormatter()
+  const { formatPercent, formatCurrencyFromCents } = useIntlFormatter()
   const { data: chartData, total } = data
 
   const normalizedChartData = useMemo(() => chartData.map(x => ({
@@ -65,11 +56,9 @@ export const DetailedChart = <T extends SeriesData>({
     ? interactionProps.hoveredItem.displayName
     : t('common:label.total', 'Total')
 
-  const value = interactionProps.hoveredItem
-    ? chartData.find(
-      x => x.name === interactionProps.hoveredItem?.name,
-    )?.value
-    : total
+  const value = chartData.find(
+    x => x.name === interactionProps.hoveredItem?.name,
+  )?.value ?? total
 
   let share = null
   if (interactionProps.hoveredItem) {
@@ -117,7 +106,7 @@ export const DetailedChart = <T extends SeriesData>({
           verticalAnchor='middle'
           className='Layer__DetailedChart__centerLabelValue'
         >
-          {stylingProps.valueFormatter(value ?? total)}
+          {formatCurrencyFromCents(value)}
         </ChartText>
         {share != null && (
           <ChartText
@@ -132,13 +121,13 @@ export const DetailedChart = <T extends SeriesData>({
         )}
       </>
     )
-  }, [text, value, total, stylingProps, share, formattedShare])
+  }, [text, value, share, formattedShare, formatCurrencyFromCents])
 
   return (
     <VStack className='Layer__DetailedChart'>
-      {slots?.header && (
+      {slots?.Header && (
         <VStack className='Layer__DetailedChart__header'>
-          {slots.header}
+          {slots.Header}
         </VStack>
       )}
       <VStack className='Layer__DetailedChart__container'>
@@ -184,7 +173,7 @@ export const DetailedChart = <T extends SeriesData>({
                   animationDuration={200}
                   animationEasing='ease-in-out'
                 >
-                  <Label position='center' value='Loading...' className='Layer__DetailedChart__centerLabelLoading' />
+                  <Label position='center' value={t('common:label.loading', 'Loading...')} className='Layer__DetailedChart__centerLabelLoading' />
                 </Pie>
               )
               : (

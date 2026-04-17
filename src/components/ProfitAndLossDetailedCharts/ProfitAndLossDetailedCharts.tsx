@@ -1,11 +1,9 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { Hourglass } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useIntl } from 'react-intl'
 
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { formatCurrencyFromCents } from '@utils/i18n/number/formatters'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { humanizeTitle } from '@utils/profitAndLossUtils'
 import { type Scope, type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
@@ -17,7 +15,7 @@ import { Span } from '@ui/Typography/Text'
 import { BackButton } from '@components/Button/BackButton'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
-import { type ColorSelector, DEFAULT_TYPE_COLOR_MAPPING, type DetailData, type FallbackFillSelector, type ValueFormatter } from '@components/DetailedCharts/types'
+import { type ColorSelector, DEFAULT_TYPE_COLOR_MAPPING, type DetailData, type FallbackFillSelector } from '@components/DetailedCharts/types'
 import { DetailedTable, type DetailedTableStringOverrides } from '@components/DetailedTable/DetailedTable'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
@@ -81,8 +79,7 @@ export const ProfitAndLossDetailedCharts = ({
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
 }) => {
   const { t } = useTranslation()
-  const { formatDate, formatPercent } = useIntlFormatter()
-  const intl = useIntl()
+  const { formatDate } = useIntlFormatter()
   const {
     chartDataRevenue,
     tableDataRevenue,
@@ -143,7 +140,7 @@ export const ProfitAndLossDetailedCharts = ({
     (item: PnlChartLineItem) => typeColorMapping(item.name) ?? DEFAULT_TYPE_COLOR_MAPPING,
     [typeColorMapping],
   )
-  const valueFormatter: ValueFormatter = useCallback((value: number) => formatCurrencyFromCents(intl, value), [intl])
+
   const fallbackFillSelector: FallbackFillSelector<PnlChartLineItem> = useCallback(
     (item: PnlChartLineItem) => isLineItemUncategorized(item),
     [],
@@ -160,10 +157,9 @@ export const ProfitAndLossDetailedCharts = ({
   }), [chartInteractionProps, handleValueClick])
 
   const stylingProps = useMemo(() => ({
-    valueFormatter,
     colorSelector,
     fallbackFillSelector,
-  }), [valueFormatter, colorSelector, fallbackFillSelector])
+  }), [colorSelector, fallbackFillSelector])
 
   const tableDataWithTotal = useMemo(() => ({
     data: tableData,
@@ -177,7 +173,6 @@ export const ProfitAndLossDetailedCharts = ({
 
   const detailedTableRows = usePnlDetailedTableRows({
     data: tableDataWithTotal,
-    formatPercent,
   })
 
   const sortFunction = useCallback((_data: DetailData<PnlChartLineItem>, sortParams: SortParams<string>) => {
@@ -237,7 +232,7 @@ export const ProfitAndLossDetailedCharts = ({
               <DetailedChart<PnlChartLineItem>
                 data={chartDataWithTotal}
                 slots={{
-                  header: showDatePicker ? <DetailedChartsDatePickerHeader /> : undefined,
+                  Header: showDatePicker ? <DetailedChartsDatePickerHeader /> : undefined,
                 }}
                 interactionProps={chartInteractionProps}
                 stylingProps={stylingProps}
