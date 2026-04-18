@@ -10,6 +10,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData } from '@components/DetailedCharts/types'
+import { NoOpHoverInteractionProps } from '@components/DetailedCharts/utils'
 
 import './detailedTable.scss'
 
@@ -62,6 +63,7 @@ export const DetailedTable = <T extends SeriesData>({
 
   const { isMobile } = useSizeClass()
   const hasType = detailedTableRows.length > 0 && 'type' in detailedTableRows[0].item
+  const isNotSortable = interactionProps === NoOpHoverInteractionProps
 
   return (
     <VStack className='Layer__DetailedTable'>
@@ -79,7 +81,7 @@ export const DetailedTable = <T extends SeriesData>({
                     <Span variant={buildHeaderVariant('category')} size='sm'>
                       {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
                     </Span>
-                    <SortArrows className='Layer__DetailedTable__sortArrows' />
+                    {!isNotSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                   </HStack>
                 </th>
                 {!isMobile && hasType && (
@@ -91,7 +93,7 @@ export const DetailedTable = <T extends SeriesData>({
                       <Span variant={buildHeaderVariant('type')} size='sm'>
                         {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
                       </Span>
-                      <SortArrows className='Layer__DetailedTable__sortArrows' />
+                      {!isNotSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                     </HStack>
                   </th>
                 )}
@@ -103,7 +105,7 @@ export const DetailedTable = <T extends SeriesData>({
                     <Span variant={buildHeaderVariant('value')} size='sm'>
                       {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
                     </Span>
-                    <SortArrows className='Layer__DetailedTable__sortArrows' />
+                    {!isNotSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                   </HStack>
                 </th>
                 <th className='percent-col'></th>
