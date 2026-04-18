@@ -3,10 +3,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxOverviewCategory } from '@schemas/taxEstimates/overview'
-import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
-import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
@@ -15,32 +12,9 @@ import { type DetailData, type SeriesData } from '@components/DetailedCharts/typ
 import { NoOpHoverInteractionProps } from '@components/DetailedCharts/utils'
 import { DetailedTable } from '@components/DetailedTable/DetailedTable'
 import { resolveCategoryColor } from '@components/TaxEstimatesSummaryCard/constants'
+import { useTaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/useTaxEstimatesSummaryCard'
 
 import './taxEstimatesSummaryCard.scss'
-
-const useTaxEstimatesSummaryCard = () => {
-  const { year } = useTaxEstimatesYear()
-  const { fullYearProjection } = useFullYearProjection()
-  const { t } = useTranslation()
-  const { isDesktop } = useSizeClass()
-  const { data: taxSummaryData } = useTaxSummary({
-    year,
-    fullYearProjection,
-    enabled: true,
-  })
-
-  return {
-    categories: taxSummaryData?.sections.map((section, index) => ({
-      amount: section.taxesOwed,
-      color: DEFAULT_CHART_COLORS[index % DEFAULT_CHART_COLORS.length],
-      key: section.type,
-      label: section.label,
-    })) ?? [],
-    layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
-    title: t('taxEstimates:label.tax_summary', 'Tax Summary'),
-    total: taxSummaryData?.projectedTaxesOwed ?? 0,
-  }
-}
 
 export type TaxEstimatesSummaryCardProps = {
   categories: readonly TaxOverviewCategory[]
