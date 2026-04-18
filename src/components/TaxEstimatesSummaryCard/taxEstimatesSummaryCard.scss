@@ -11,6 +11,16 @@
 .Layer__TaxEstimatesSummaryCard {
   min-width: 0;
 
+  .Layer__DetailedChart {
+    height: 12rem;
+  }
+
+  @media (width >= 760px) {
+    .Layer__DetailedTable {
+      min-width: 25rem;
+    }
+  }
+
   &.Layer__card {
     gap: var(--spacing-lg);
     padding: var(--spacing-lg);
@@ -100,8 +110,6 @@
 
     .Layer__TaxEstimatesSummaryCard__Content {
       align-items: center;
-      padding-block: var(--spacing-md);
-      padding-inline: var(--spacing-lg);
     }
 
     .Layer__TaxEstimatesSummaryCard__Legend {

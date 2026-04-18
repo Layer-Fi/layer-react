@@ -22,8 +22,7 @@ export interface DetailedTableStringOverrides {
   valueColumnHeader?: string
 }
 
-export type SeriesDataWithType = SeriesData & { type: string }
-export interface DetailedTableProps<T extends SeriesDataWithType> {
+export interface DetailedTableProps<T extends SeriesData> {
   data: DetailData<T>
   sortParams: SortParams<string>
   sortFunction: (data: DetailData<T>, sortParams: SortParams<string>) => void
@@ -40,7 +39,7 @@ export interface DetailedTableProps<T extends SeriesDataWithType> {
   stringOverrides?: DetailedTableStringOverrides
 }
 
-export const DetailedTable = <T extends SeriesDataWithType>({
+export const DetailedTable = <T extends SeriesData>({
   data,
   stylingProps,
   sortParams,
@@ -62,6 +61,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
   }, [sortParams.sortBy])
 
   const { isMobile } = useSizeClass()
+  const hasType = detailedTableRows.length > 0 && 'type' in detailedTableRows[0].item
 
   return (
     <VStack className='Layer__DetailedTable'>
@@ -82,7 +82,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                     <SortArrows className='Layer__DetailedTable__sortArrows' />
                   </HStack>
                 </th>
-                {!isMobile && (
+                {!isMobile && hasType && (
                   <th
                     className='Layer__sortable-col'
                     onClick={() => setAndToggleSortDirection('type')}
@@ -129,7 +129,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                       <td className='category-col'>
                         <Span size='sm'>{row.item.displayName}</Span>
                       </td>
-                      {!isMobile && (
+                      {!isMobile && 'type' in row.item && (
                         <td className='type-col'>
                           <Span variant={isRowActive ? undefined : 'subtle'} size='sm'>{row.item.type}</Span>
                         </td>

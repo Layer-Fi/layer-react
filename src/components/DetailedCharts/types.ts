@@ -7,6 +7,7 @@ export type SeriesData = {
   value: number
   displayName: string
   name: string
+  type?: string
 }
 
 export interface TypeColorMapping {

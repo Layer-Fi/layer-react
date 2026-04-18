@@ -1,4 +1,8 @@
 .Layer__DetailedTable {
+  .value-col {
+    text-align: right;
+  }
+
   &__table {
     table {
       width: 100%;
