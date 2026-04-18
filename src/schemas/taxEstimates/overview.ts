@@ -52,9 +52,3 @@ export type TaxOverviewCategory = {
   key: TaxOverviewCategoryKey
   label: string
 }
-
-export type TaxOverviewDeadlineStatusKind = 'pastDue' | 'paid' | 'due' | 'categorizationIncomplete'
-
-export type TaxOverviewDeadlineStatus = {
-  kind: TaxOverviewDeadlineStatusKind
-}

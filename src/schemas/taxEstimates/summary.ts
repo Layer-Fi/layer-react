@@ -44,5 +44,3 @@ export const TaxSummaryResponseSchema = Schema.Struct({
 })
 
 export type TaxSummaryResponse = typeof TaxSummaryResponseSchema.Type
-
-export type TaxSummaryApiData = typeof TaxSummarySchema.Type
