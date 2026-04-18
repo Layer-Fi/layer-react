@@ -42,60 +42,6 @@
     min-width: 0;
   }
 
-  &__Legend {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__LegendHeader {
-    padding-block-end: var(--spacing-xs);
-    border-block-end: 1px solid var(--color-base-100);
-  }
-
-  &__LegendHeaderValue {
-    color: var(--color-base-500);
-  }
-
-  &__LegendRow {
-    min-block-size: 2rem;
-  }
-
-  &__LegendLabel {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__LegendValueGroup {
-    flex-shrink: 0;
-    justify-content: flex-end;
-    min-inline-size: 12rem;
-  }
-
-  &__LegendSwatch {
-    display: inline-flex;
-    height: 0.75rem;
-    width: 0.75rem;
-    border-radius: var(--border-radius-2xs);
-  }
-
-  &__DonutChart {
-    position: relative;
-    flex-shrink: 0;
-    aspect-ratio: 1;
-    width: 9.5rem;
-  }
-
-  &__DonutChartInner {
-    height: 100%;
-    width: 100%;
-
-    .Layer__DetailedChart,
-    .Layer__DetailedChart__container {
-      height: 100%;
-      width: 100%;
-    }
-  }
-
   &--summaryCard {
     &.Layer__card {
       gap: 0;
@@ -110,10 +56,6 @@
 
     .Layer__TaxEstimatesSummaryCard__Content {
       align-items: center;
-    }
-
-    .Layer__TaxEstimatesSummaryCard__Legend {
-      width: 100%;
     }
   }
 }
