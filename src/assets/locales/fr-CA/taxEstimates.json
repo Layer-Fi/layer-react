@@ -15,7 +15,7 @@
     "disclaimer_required": "Vous devez reconnaître l’avis de non-responsabilité pour continuer.",
     "feature_not_enabled": "Les estimations d'impôt ne sont pas activées.",
     "load_tax_estimates": "Nous n’avons pas pu charger vos estimations fiscales",
-    "load_tax_estimates_tax": "Nous n’avons pas pu charger votre sommaire fiscal",
+    "load_tax_estimates_summary": "Nous n’avons pas pu charger votre sommaire fiscal",
     "load_tax_information": "Impossible de charger les renseignements fiscaux",
     "load_tax_payments": "Nous n’avons pas pu charger vos paiements d’impôt",
     "retrieve_tax_profile": "Nous n’avons pas pu récupérer votre profil fiscal. Veuillez vérifier votre connexion et réessayer.",

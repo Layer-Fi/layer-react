@@ -5,16 +5,19 @@ export interface SkeletonLoaderProps {
   width?: string
   height?: string
   className?: string
+  isRounded?: boolean
 }
 
 export const SkeletonLoader = ({
   height,
   width,
   className,
+  isRounded = false,
 }: SkeletonLoaderProps) => {
   const baseClassName = classNames(
     'Layer__skeleton-loader Layer__anim--skeleton-loading',
     className,
+    isRounded && 'Layer__skeleton-loader--rounded',
   )
   return <div className={baseClassName} style={{ width, height }} />
 }

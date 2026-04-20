@@ -84,6 +84,12 @@
   animation: 1.5s shine linear infinite;
 }
 
+.Layer__skeleton-loader--rounded {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+}
+
 .Layer__syncing-component {
   display: flex;
   gap: var(--spacing-md);
