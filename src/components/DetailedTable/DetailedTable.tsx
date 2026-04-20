@@ -72,12 +72,12 @@ export const DetailedTable = <T extends SeriesData>({
 
   const { isMobile } = useSizeClass()
   const hasType = rows.length > 0 && rows.map(r => r.item.type).some(type => type !== undefined)
-  const isNotSortable = interactionProps === NoOpHoverInteractionProps
+  const isSortable = interactionProps !== NoOpHoverInteractionProps
 
   return (
     <VStack className='Layer__DetailedTable'>
       <VStack className='Layer__DetailedTable__container' pi='md' pbs='2xs' pbe='md'>
-        <VStack className='Layer__DetailedTable__table'>
+        <VStack className={classNames('Layer__DetailedTable__table', isSortable && 'Layer__DetailedTable__table--sortable')}>
           <table>
             <thead>
               <tr>
@@ -93,7 +93,7 @@ export const DetailedTable = <T extends SeriesData>({
                     <Span variant={buildHeaderVariant('category')} size='sm'>
                       {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
                     </Span>
-                    {!isNotSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
+                    {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                   </HStack>
                 </th>
                 {!isMobile && hasType && (
@@ -108,7 +108,7 @@ export const DetailedTable = <T extends SeriesData>({
                       <Span variant={buildHeaderVariant('type')} size='sm'>
                         {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
                       </Span>
-                      {!isNotSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
+                      {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                     </HStack>
                   </th>
                 )}
@@ -124,7 +124,7 @@ export const DetailedTable = <T extends SeriesData>({
                     <Span variant={buildHeaderVariant('value')} size='sm'>
                       {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
                     </Span>
-                    {!isNotSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
+                    {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                   </HStack>
                 </th>
                 <th className='percent-col'></th>
@@ -143,27 +143,27 @@ export const DetailedTable = <T extends SeriesData>({
                     onMouseEnter={() => interactionProps.setHoveredItem(row.item)}
                     onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
                   >
-                    <td className='color-col'>
+                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--color'>
                       <ValueIcon<T> item={row.item} {...stylingProps} />
                     </td>
-                    <td className='category-col'>
+                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--category'>
                       <Span size='sm'>{row.item.displayName}</Span>
                     </td>
-                    {!isMobile && (
-                      <td className='type-col'>
+                    {!isMobile && hasType && (
+                      <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--type'>
                         <Span variant={isRowActive ? undefined : 'subtle'} size='sm'>{row.item.type}</Span>
                       </td>
                     )}
-                    <td className='value-col'>
+                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--value'>
                       <Button
                         variant='text'
                         onPress={() => interactionProps.onValueClick?.(row.item)}
                         isDisabled={!interactionProps.onValueClick || row.isValueDisabled}
                       >
-                        <MoneySpan size='sm' amount={row.item.value} />
+                        <MoneySpan size='sm' align='right' amount={row.item.value} />
                       </Button>
                     </td>
-                    <td className='percent-col'>
+                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--percent'>
                       <Span className='share-text' variant={isRowActive ? undefined : 'subtle'} size='sm'>
                         {row.item.value < 0 ? '-' : row.formattedShare}
                       </Span>

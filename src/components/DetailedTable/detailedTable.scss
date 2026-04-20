@@ -1,9 +1,7 @@
 .Layer__DetailedTable {
-  .value-col {
-    text-align: right;
-  }
-
   &__table {
+    text-align: left;
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -12,7 +10,7 @@
       td {
         padding: var(--spacing-2xs) var(--spacing-xs);
         font-size: 12px;
-        text-align: left;
+
 
         &:first-child {
           width: 20px;
@@ -22,42 +20,47 @@
         &:last-child {
           text-align: right;
         }
-
-        &.percent-col {
-          width: 4ch;
-          padding-left: 0;
-          text-align: right;
-        }
       }
 
       th {
         padding-bottom: var(--spacing-sm);
         border-bottom: 1px solid var(--color-base-300);
-        cursor: pointer;
         transition: color 150ms ease-out;
-
-        &:first-child {
-          cursor: default;
-        }
       }
+    }
 
-      tbody tr {
-        height: 2.5rem;
+    &--sortable table th {
+      cursor: pointer;
+
+      &:first-child {
+        cursor: default;
       }
+    }
+
+    table tbody tr {
+      height: 2.5rem;
     }
   }
 
-  .color-col {
-    .share-icon {
-      height: 12px;
-      width: 12px;
-      border-radius: 2px;
+  &__Column {
+    &--color {
+      .share-icon {
+        height: 12px;
+        width: 12px;
+        border-radius: 2px;
+      }
     }
-  }
 
-  .percent-col .share-text {
-    font-size: var(--text-sm);
-    line-height: 140%;
+    &--percent {
+      width: 4ch;
+      padding-left: 0;
+      text-align: right;
+
+      .share-text {
+        font-size: var(--text-sm);
+        line-height: 140%;
+      }
+    }
   }
 
   &__row {
@@ -70,7 +73,8 @@
     }
   }
 
-  &__SortableColumn--value {
+  &__SortableColumn--value,
+  &__Column--value {
     text-align: right;
   }
 

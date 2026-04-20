@@ -9,7 +9,7 @@ import { Card } from '@components/Card/Card'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
 import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
 import { NoOpHoverInteractionProps } from '@components/DetailedCharts/utils'
-import { DetailedTable } from '@components/DetailedTable/DetailedTable'
+import { DetailedTableWithData } from '@components/DetailedTable/DetailedTable'
 import { resolveCategoryColor } from '@components/TaxEstimatesSummaryCard/constants'
 import { useTaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/useTaxEstimatesSummaryCard'
 
@@ -72,7 +72,7 @@ export const TaxEstimatesSummaryCard = () => {
                   interactionProps={NoOpHoverInteractionProps}
                   stylingProps={StylingProps}
                 />
-                <DetailedTable<SeriesData>
+                <DetailedTableWithData<SeriesData>
                   data={data}
                   interactionProps={NoOpHoverInteractionProps}
                   stylingProps={StylingProps}
@@ -88,7 +88,7 @@ export const TaxEstimatesSummaryCard = () => {
                   interactionProps={NoOpHoverInteractionProps}
                   stylingProps={StylingProps}
                 />
-                <DetailedTable<SeriesData>
+                <DetailedTableWithData<SeriesData>
                   data={data}
                   interactionProps={NoOpHoverInteractionProps}
                   stylingProps={StylingProps}
