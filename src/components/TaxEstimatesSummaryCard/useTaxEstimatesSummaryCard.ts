@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
@@ -20,15 +20,18 @@ export const useTaxEstimatesSummaryCard = () => {
     return key
   }, [t])
 
-  return {
-    detailData: {
+  const DetailData = useMemo(() => {
+    return {
       data: taxSummaryData?.sections.map(section => ({
         value: Math.max(section.taxesOwed, 0),
         name: section.type,
         displayName: isMobile ? shortenedDisplayName(section.type) : section.label,
       })) ?? [],
-      total: taxSummaryData?.projectedTaxesOwed ?? 0,
-    } as DetailData<SeriesData>,
+    } as DetailData<SeriesData>
+  }, [taxSummaryData, isMobile, shortenedDisplayName])
+
+  return {
+    detailData: DetailData,
     layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
     title: t('taxEstimates:label.tax_summary', 'Tax Summary'),
   }
