@@ -28,10 +28,9 @@ type SetAndToggleSortDirectionParams = {
   sortOrderOverride?: SortOrder
   defaultSortOrder?: SortOrder
 }
-export interface DetailedTableProps<T extends SeriesData> {
-  data: DetailData<T>
+interface DetailedTableBaseProps<T extends SeriesData> {
   sortParams: SortParams<string>
-  sortFunction: (data: DetailData<T>, sortParams: SortParams<string>, defaultDirection?: SortOrder) => void
+  sortFunction: (sortParams: SortParams<string>, defaultDirection?: SortOrder) => void
   stylingProps: {
     colorSelector: ColorSelector<T>
     fallbackFillSelector?: FallbackFillSelector<T>
@@ -41,12 +40,18 @@ export interface DetailedTableProps<T extends SeriesData> {
     setHoveredItem: (item: T | undefined) => void
     onValueClick?: (item: T) => void
   }
-  rows?: DetailedTableRow<T>[]
   stringOverrides?: DetailedTableStringOverrides
 }
 
+export interface DetailedTableProps<T extends SeriesData> extends DetailedTableBaseProps<T> {
+  rows: DetailedTableRow<T>[]
+}
+
+export interface DetailedTableWithDataProps<T extends SeriesData> extends DetailedTableBaseProps<T> {
+  data: DetailData<T>
+}
+
 export const DetailedTable = <T extends SeriesData>({
-  data,
   stylingProps,
   sortParams,
   sortFunction,
@@ -55,12 +60,10 @@ export const DetailedTable = <T extends SeriesData>({
   stringOverrides,
 }: DetailedTableProps<T>) => {
   const { t } = useTranslation()
-  const defaultRows = useDetailedTableRows({ data })
-  const detailedTableRows = rows ?? defaultRows
 
   const setAndToggleSortDirection = (params: SetAndToggleSortDirectionParams) => {
     const { field, sortOrderOverride, defaultSortOrder } = params
-    sortFunction(data, { sortBy: field, sortOrder: sortOrderOverride }, defaultSortOrder)
+    sortFunction({ sortBy: field, sortOrder: sortOrderOverride }, defaultSortOrder)
   }
 
   const buildHeaderVariant = useCallback((column: string) => {
@@ -68,7 +71,7 @@ export const DetailedTable = <T extends SeriesData>({
   }, [sortParams.sortBy])
 
   const { isMobile } = useSizeClass()
-  const hasType = detailedTableRows.length > 0 && detailedTableRows.map(r => r.item.type).some(type => type !== undefined)
+  const hasType = rows.length > 0 && rows.map(r => r.item.type).some(type => type !== undefined)
   const isNotSortable = interactionProps === NoOpHoverInteractionProps
 
   return (
@@ -80,7 +83,10 @@ export const DetailedTable = <T extends SeriesData>({
               <tr>
                 <th></th>
                 <th
-                  className='Layer__sortable-col'
+                  className={classNames(
+                    'Layer__DetailedTable__SortableColumn',
+                    sortParams.sortBy === 'category' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
+                  )}
                   onClick={() => setAndToggleSortDirection({ field: 'category' })}
                 >
                   <HStack align='center' gap='3xs'>
@@ -92,7 +98,10 @@ export const DetailedTable = <T extends SeriesData>({
                 </th>
                 {!isMobile && hasType && (
                   <th
-                    className='Layer__sortable-col'
+                    className={classNames(
+                      'Layer__DetailedTable__SortableColumn',
+                      sortParams.sortBy === 'type' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
+                    )}
                     onClick={() => setAndToggleSortDirection({ field: 'type' })}
                   >
                     <HStack align='center' gap='3xs'>
@@ -104,7 +113,11 @@ export const DetailedTable = <T extends SeriesData>({
                   </th>
                 )}
                 <th
-                  className='Layer__sortable-col value-col'
+                  className={classNames(
+                    'Layer__DetailedTable__SortableColumn',
+                    'Layer__DetailedTable__SortableColumn--value',
+                    sortParams.sortBy === 'value' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
+                  )}
                   onClick={() => setAndToggleSortDirection({ field: 'value', defaultSortOrder: SortOrder.DESC })}
                 >
                   <HStack align='center' gap='3xs' justify='end'>
@@ -118,51 +131,58 @@ export const DetailedTable = <T extends SeriesData>({
               </tr>
             </thead>
             <tbody>
-              {detailedTableRows
-                .map((row) => {
-                  const isRowActive = interactionProps.hoveredItem?.name === row.item.name
-                  return (
-                    <tr
-                      key={row.key}
-                      className={classNames(
-                        'Layer__DetailedTable__row',
-                        isRowActive ? 'active' : '',
-                      )}
-                      onMouseEnter={() => interactionProps.setHoveredItem(row.item)}
-                      onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
-                    >
-                      <td className='color-col'>
-                        <ValueIcon<T> item={row.item} {...stylingProps} />
+              {rows.map((row) => {
+                const isRowActive = interactionProps.hoveredItem?.name === row.item.name
+                return (
+                  <tr
+                    key={row.key}
+                    className={classNames(
+                      'Layer__DetailedTable__row',
+                      isRowActive ? 'active' : '',
+                    )}
+                    onMouseEnter={() => interactionProps.setHoveredItem(row.item)}
+                    onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
+                  >
+                    <td className='color-col'>
+                      <ValueIcon<T> item={row.item} {...stylingProps} />
+                    </td>
+                    <td className='category-col'>
+                      <Span size='sm'>{row.item.displayName}</Span>
+                    </td>
+                    {!isMobile && (
+                      <td className='type-col'>
+                        <Span variant={isRowActive ? undefined : 'subtle'} size='sm'>{row.item.type}</Span>
                       </td>
-                      <td className='category-col'>
-                        <Span size='sm'>{row.item.displayName}</Span>
-                      </td>
-                      {!isMobile && 'type' in row.item && (
-                        <td className='type-col'>
-                          <Span variant={isRowActive ? undefined : 'subtle'} size='sm'>{row.item.type}</Span>
-                        </td>
-                      )}
-                      <td className='value-col'>
-                        <Button
-                          variant='text'
-                          onPress={() => interactionProps.onValueClick?.(row.item)}
-                          isDisabled={!interactionProps.onValueClick || row.isValueDisabled}
-                        >
-                          <MoneySpan size='sm' amount={row.item.value} />
-                        </Button>
-                      </td>
-                      <td className='percent-col'>
-                        <Span className='share-text' variant={isRowActive ? undefined : 'subtle'} size='sm'>
-                          {row.item.value < 0 ? '-' : row.formattedShare}
-                        </Span>
-                      </td>
-                    </tr>
-                  )
-                })}
+                    )}
+                    <td className='value-col'>
+                      <Button
+                        variant='text'
+                        onPress={() => interactionProps.onValueClick?.(row.item)}
+                        isDisabled={!interactionProps.onValueClick || row.isValueDisabled}
+                      >
+                        <MoneySpan size='sm' amount={row.item.value} />
+                      </Button>
+                    </td>
+                    <td className='percent-col'>
+                      <Span className='share-text' variant={isRowActive ? undefined : 'subtle'} size='sm'>
+                        {row.item.value < 0 ? '-' : row.formattedShare}
+                      </Span>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </VStack>
       </VStack>
     </VStack>
   )
+}
+
+export const DetailedTableWithData = <T extends SeriesData>({
+  data,
+  ...props
+}: DetailedTableWithDataProps<T>) => {
+  const rows = useDetailedTableRows({ data })
+  return <DetailedTable<T> rows={rows} {...props} />
 }

@@ -47,11 +47,6 @@
     }
   }
 
-  &__sortArrows {
-    position: relative;
-    top: 1px;
-  }
-
   .color-col {
     .share-icon {
       height: 12px;
@@ -72,6 +67,36 @@
 
     &.active {
       background: var(--color-base-50);
+    }
+  }
+
+  &__SortableColumn--value {
+    text-align: right;
+  }
+
+  &__sortArrows {
+    position: relative;
+    top: 1px;
+
+    .Layer__SortArrows__DescArrow,
+    .Layer__SortArrows__AscArrow {
+      stroke: var(--color-base-500);
+    }
+  }
+
+  &__SortableColumn--sortdesc {
+    .Layer__DetailedTable__sortArrows {
+      .Layer__SortArrows__DescArrow {
+        stroke: var(--color-base-1000);
+      }
+    }
+  }
+
+  &__SortableColumn--sortasc {
+    .Layer__DetailedTable__sortArrows {
+      .Layer__SortArrows__AscArrow {
+        stroke: var(--color-base-1000);
+      }
     }
   }
 }

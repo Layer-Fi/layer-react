@@ -15,7 +15,7 @@ import { Span } from '@ui/Typography/Text'
 import { BackButton } from '@components/Button/BackButton'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
-import { type ColorSelector, type DetailData, type FallbackFillSelector } from '@components/DetailedCharts/types'
+import { type ColorSelector, type FallbackFillSelector } from '@components/DetailedCharts/types'
 import { DetailedTable, type DetailedTableStringOverrides } from '@components/DetailedTable/DetailedTable'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
@@ -24,7 +24,6 @@ import { isLineItemUncategorized, mapTypesToColors } from '@components/ProfitAnd
 import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
-
 export interface DetailedChartStringOverrides {
   expenseChartHeader?: string
   revenueChartHeader?: string
@@ -175,7 +174,7 @@ export const ProfitAndLossDetailedCharts = ({
     data: tableDataWithTotal,
   })
 
-  const sortFunction = useCallback((_data: DetailData<PnlChartLineItem>, sortParams: SortParams<string>, defaultSortOrder?: SortOrder) => {
+  const sortFunction = useCallback((sortParams: SortParams<string>, defaultSortOrder?: SortOrder) => {
     if (sortParams.sortBy) {
       _oldSortByScope(activeScope, sortParams.sortBy, sortParams.sortOrder, defaultSortOrder)
     }
@@ -234,7 +233,6 @@ export const ProfitAndLossDetailedCharts = ({
               />
               <DetailedTable<PnlChartLineItem>
                 key={activeScope}
-                data={tableDataWithTotal}
                 sortParams={sortParams}
                 sortFunction={sortFunction}
                 stylingProps={stylingProps}

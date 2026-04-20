@@ -95,13 +95,6 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
               label={t('timeTracking:services.hourly_rate_optional', 'Default hourly rate (optional)')}
               mode='currency'
               className='Layer__TimeTrackingServicesDrawer__rateField'
-              slots={{
-                badge: (
-                  <Span size='sm' variant='subtle'>
-                    {t('timeTracking:services.rate_per_hour_suffix', '/hr')}
-                  </Span>
-                ),
-              }}
             />
           )}
         </form.AppField>
