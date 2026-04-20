@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { Clock } from 'lucide-react'
+import { Clock, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type ListTimeEntriesFilterParams, useListTimeEntries } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
@@ -16,8 +16,26 @@ interface TimeEntriesProps {
   isStartTimerDisabled?: boolean
 }
 
-const TimeEntriesEmptyState = () => {
+type TimeEntriesEmptyStateProps = {
+  isFiltered: boolean
+}
+
+const TimeEntriesEmptyState = ({ isFiltered }: TimeEntriesEmptyStateProps) => {
   const { t } = useTranslation()
+
+  if (isFiltered) {
+    return (
+      <DataState
+        status={DataStateStatus.info}
+        title={t('timeTracking:empty.no_matching_entries', 'No time entries found')}
+        description={t('timeTracking:empty.try_adjusting_filters', 'Try adjusting your filters.')}
+        icon={<SearchX />}
+        spacing
+        className='Layer__TimeEntries__EmptyState'
+      />
+    )
+  }
+
   return (
     <DataState
       status={DataStateStatus.allDone}
@@ -58,6 +76,7 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
     ...(selectedCustomer && { customerId: selectedCustomer.id }),
     ...(selectedServiceId && { serviceId: selectedServiceId }),
   }), [filterParams, selectedCustomer, selectedServiceId])
+  const hasActiveTableFilters = Boolean(timeEntriesFilterParams.customerId || timeEntriesFilterParams.serviceId)
 
   const { data, isLoading, isError, size, setSize } = useListTimeEntries(timeEntriesFilterParams)
   const entries = useMemo(() => data?.flatMap(({ data }) => data), [data])
@@ -74,10 +93,10 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
 
   const tableSlots = useMemo(
     () => ({
-      EmptyState: TimeEntriesEmptyState,
+      EmptyState: () => <TimeEntriesEmptyState isFiltered={hasActiveTableFilters} />,
       ErrorState: TimeEntriesErrorState,
     }),
-    [],
+    [hasActiveTableFilters],
   )
 
   const paginationProps = useMemo(() => ({

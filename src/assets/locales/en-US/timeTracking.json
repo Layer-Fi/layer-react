@@ -12,7 +12,9 @@
   },
   "empty": {
     "add_first_entry": "Add your first time entry to start tracking.",
-    "no_entries_yet": "No time entries yet"
+    "no_entries_yet": "No time entries yet",
+    "no_matching_entries": "No time entries found",
+    "try_adjusting_filters": "Try adjusting your filters."
   },
   "error": {
     "archive_service": "Could not archive this service. Please try again.",

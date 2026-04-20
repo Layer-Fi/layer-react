@@ -117,6 +117,7 @@ export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormPro
             isReadOnly={isReadOnly}
             inline
             className='Layer__TimeEntryForm__Field__Service'
+            showAddServiceAction
           />
         )}
       </form.Field>

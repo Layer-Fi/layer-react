@@ -100,6 +100,7 @@ export const ActiveTimeTrackerStartDrawer = ({
                 onSelectedServiceIdChange={field.handleChange}
                 inline
                 className='Layer__ActiveTimeTracker__Field__Service'
+                showAddServiceAction
               />
             )}
           </form.Field>
@@ -129,7 +130,7 @@ export const ActiveTimeTrackerStartDrawer = ({
 
           <form.Subscribe selector={s => s.values.selectedServiceId}>
             {selectedServiceId => (
-              <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
+              <HStack className='Layer__ActiveTimeTracker__DrawerSubmit' gap='xs' justify='end'>
                 <Button
                   onPress={() => { void form.handleSubmit() }}
                   isPending={state.isStarting}

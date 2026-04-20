@@ -12,7 +12,9 @@
   },
   "empty": {
     "add_first_entry": "Ajoutez votre première entrée de temps pour commencer le suivi.",
-    "no_entries_yet": "Aucune entrée de temps pour le moment"
+    "no_entries_yet": "Aucune entrée de temps pour le moment",
+    "no_matching_entries": "",
+    "try_adjusting_filters": ""
   },
   "error": {
     "archive_service": "Impossible d'archiver ce service. Veuillez réessayer.",

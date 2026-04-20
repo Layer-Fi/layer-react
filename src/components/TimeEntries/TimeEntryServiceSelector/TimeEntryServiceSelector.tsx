@@ -1,9 +1,12 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
 import { useListCatalogServices } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
+import { useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
+import { Button } from '@ui/Button/Button'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
@@ -43,6 +46,7 @@ interface TimeEntryServiceSelectorProps {
   inline?: boolean
   className?: string
   showLabel?: boolean
+  showAddServiceAction?: boolean
 }
 
 export function TimeEntryServiceSelector({
@@ -54,14 +58,10 @@ export function TimeEntryServiceSelector({
   inline,
   className,
   showLabel = true,
+  showAddServiceAction = false,
 }: TimeEntryServiceSelectorProps) {
   const { t } = useTranslation()
-
-  const combinedClassName = classNames(
-    'Layer__TimeEntryServiceSelector',
-    inline && 'Layer__TimeEntryServiceSelector--inline',
-    className,
-  )
+  const { openServicesDrawer } = useTimeTrackingServicesDrawer()
 
   const { data: servicesResponse, isLoading, isError } = useListCatalogServices()
 
@@ -71,6 +71,18 @@ export function TimeEntryServiceSelector({
   const serviceOptions = useMemo<ServiceAsOption[]>(
     () => servicesResponse?.data.map(service => new ServiceAsOption(service)) ?? [],
     [servicesResponse],
+  )
+  const shouldShowAddServiceAction = showAddServiceAction
+    && !isReadOnly
+    && !isLoadingWithoutFallback
+    && !isError
+    && serviceOptions.length === 0
+
+  const combinedClassName = classNames(
+    'Layer__TimeEntryServiceSelector',
+    inline && 'Layer__TimeEntryServiceSelector--inline',
+    shouldShowAddServiceAction && 'Layer__TimeEntryServiceSelector--with-add-action',
+    className,
   )
 
   const handleSelectionChange = useCallback(
@@ -90,6 +102,10 @@ export function TimeEntryServiceSelector({
     },
     [serviceOptions, selectedServiceId],
   )
+
+  const handleAddService = useCallback(() => {
+    openServicesDrawer({ startInCreateMode: true })
+  }, [openServicesDrawer])
 
   const EmptyMessage = useMemo(
     () => (
@@ -124,6 +140,7 @@ export function TimeEntryServiceSelector({
         selectedValue={selectedServiceForComboBox}
         onSelectedValueChange={handleSelectionChange}
         inputId={inputId}
+        className='Layer__TimeEntryServiceSelector__Input'
         placeholder={placeholder ?? t('timeTracking:label.select_service', 'Select a service')}
         slots={{ EmptyMessage, ErrorMessage }}
         isClearable={isClearable}
@@ -134,6 +151,17 @@ export function TimeEntryServiceSelector({
         options={serviceOptions}
         aria-label={showLabel ? undefined : t('timeTracking:label.service', 'Service')}
       />
+      {shouldShowAddServiceAction && (
+        <VStack className='Layer__TimeEntryServiceSelector__AddAction'>
+          <Button
+            variant='outlined-light'
+            onPress={handleAddService}
+          >
+            <Plus size={14} />
+            {t('timeTracking:services.add_service', 'Add service')}
+          </Button>
+        </VStack>
+      )}
     </VStack>
   )
 }

@@ -32,6 +32,7 @@ type FormatHourly = (service: CatalogService) => string | null
 export type TimeTrackingServicesDrawerProps = {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
+  startInCreateMode?: boolean
 }
 
 function useFormatHourly(): FormatHourly {
@@ -95,11 +96,14 @@ const LoadServicesErrorState = () => {
 
 type ActiveServicesContentProps = {
   services: ReadonlyArray<CatalogService>
-  isAdding: boolean
+  showCreateForm: boolean
+  showAddButton: boolean
+  canCancelCreate: boolean
   expandedId: string | null
   formatHourly: FormatHourly
   onCancelAdd: () => void
   onCreateSuccess: () => void
+  onStartAdd: () => void
   onToggleExpanded: (serviceId: string) => void
   onArchive: (service: CatalogService) => void
   onEditSuccess: () => void
@@ -107,18 +111,21 @@ type ActiveServicesContentProps = {
 
 function ActiveServicesContent({
   services,
-  isAdding,
+  showCreateForm,
+  showAddButton,
+  canCancelCreate,
   expandedId,
   formatHourly,
   onCancelAdd,
   onCreateSuccess,
+  onStartAdd,
   onToggleExpanded,
   onArchive,
   onEditSuccess,
 }: ActiveServicesContentProps) {
   const { t } = useTranslation()
 
-  const empty = useMemo(() => isAdding
+  const empty = useMemo(() => showCreateForm
     ? null
     : (
       <DataState
@@ -127,19 +134,10 @@ function ActiveServicesContent({
         titleSize={TextSize.md}
         spacing
       />
-    ), [isAdding, t])
+    ), [showCreateForm, t])
 
   return (
     <>
-      {isAdding && (
-        <VStack className='Layer__TimeTrackingServicesDrawer__addWrap'>
-          <ServiceFormCard
-            mode='create'
-            onCancel={onCancelAdd}
-            onSuccess={onCreateSuccess}
-          />
-        </VStack>
-      )}
       <ConditionalList
         list={services}
         Empty={empty}
@@ -167,6 +165,24 @@ function ActiveServicesContent({
           </ExpandableCard>
         )}
       </ConditionalList>
+      {showCreateForm && (
+        <VStack className='Layer__TimeTrackingServicesDrawer__addWrap'>
+          <ServiceFormCard
+            mode='create'
+            onCancel={onCancelAdd}
+            onSuccess={onCreateSuccess}
+            showCancel={canCancelCreate}
+          />
+        </VStack>
+      )}
+      {showAddButton && (
+        <HStack justify='end' fluid>
+          <Button onPress={onStartAdd}>
+            <Plus size={16} />
+            {t('timeTracking:services.add', 'Add')}
+          </Button>
+        </HStack>
+      )}
     </>
   )
 }
@@ -235,7 +251,11 @@ function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: Archive
   )
 }
 
-export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackingServicesDrawerProps) {
+export function TimeTrackingServicesDrawer({
+  isOpen,
+  onOpenChange,
+  startInCreateMode = false,
+}: TimeTrackingServicesDrawerProps) {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
   const formatHourly = useFormatHourly()
@@ -248,9 +268,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
   const [restoreTarget, setRestoreTarget] = useState<CatalogService | null>(null)
   const [isRestoreOpen, setIsRestoreOpen] = useState(false)
   const tabRef = useRef<ServicesTab>(tab)
-  const isAddingRef = useRef(isAdding)
   tabRef.current = tab
-  isAddingRef.current = isAdding
 
   useEffect(() => {
     if (!isOpen) {
@@ -264,6 +282,14 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
     }
   }, [isOpen])
 
+  useEffect(() => {
+    if (isOpen && startInCreateMode) {
+      setTab('active')
+      setExpandedId(null)
+      setIsAdding(true)
+    }
+  }, [isOpen, startInCreateMode])
+
   const openArchive = useCallback((service: CatalogService) => {
     setArchiveTarget(service)
     setIsArchiveOpen(true)
@@ -275,6 +301,11 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
   }, [])
 
   const activeServices = useMemo(() => data?.data ?? [], [data])
+  const showCreateForm = useMemo(
+    () => isAdding || (!isLoading && !isError && activeServices.length === 0),
+    [activeServices.length, isAdding, isError, isLoading],
+  )
+  const showAddButton = !showCreateForm && activeServices.length > 0
 
   const tabOptions = useMemo(
     () => [
@@ -299,13 +330,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
       <VStack gap='md'>
         <HStack gap='sm' align='center' justify='space-between'>
           <ModalHeading>{t('timeTracking:services.title', 'Services')}</ModalHeading>
-          <HStack gap='xs' align='center'>
-            <Button onPress={startAdd} isDisabled={isAddingRef.current}>
-              <Plus size={16} />
-              {t('timeTracking:services.add', 'Add')}
-            </Button>
-            <ModalCloseButton onClose={close} />
-          </HStack>
+          <ModalCloseButton onClose={close} />
         </HStack>
         <HStack className='Layer__TimeTrackingServicesDrawer__tabs' justify='end' fluid>
           <Toggle
@@ -318,7 +343,7 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
         </HStack>
       </VStack>
     ),
-    [startAdd, t, tabOptions],
+    [t, tabOptions],
   )
 
   return (
@@ -348,11 +373,14 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
                     ? (
                       <ActiveServicesContent
                         services={activeServices}
-                        isAdding={isAdding}
+                        showCreateForm={showCreateForm}
+                        showAddButton={showAddButton}
+                        canCancelCreate={activeServices.length > 0}
                         expandedId={expandedId}
                         formatHourly={formatHourly}
                         onCancelAdd={() => setIsAdding(false)}
                         onCreateSuccess={() => setIsAdding(false)}
+                        onStartAdd={startAdd}
                         onToggleExpanded={toggleExpanded}
                         onArchive={openArchive}
                         onEditSuccess={() => setExpandedId(null)}

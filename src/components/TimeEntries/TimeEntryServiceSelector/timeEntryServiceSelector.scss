@@ -13,3 +13,39 @@
     align-items: center;
   }
 }
+
+.Layer__TimeEntryServiceSelector--with-add-action {
+  grid-template-areas:
+    'label'
+    'input'
+    'action';
+
+  &.Layer__TimeEntryServiceSelector--inline {
+    grid-template-areas:
+      'label input'
+      '. action';
+    row-gap: var(--spacing-3xs);
+    column-gap: 0;
+  }
+
+  .Layer__Label {
+    grid-area: label;
+  }
+
+  .Layer__TimeEntryServiceSelector__Input__Container {
+    grid-area: input;
+  }
+}
+
+.Layer__TimeEntryServiceSelector__AddAction {
+  grid-area: action;
+  justify-self: start;
+
+  .Layer__UI__Button {
+    --size: 2rem;
+
+    gap: var(--spacing-2xs);
+    padding-inline: var(--spacing-sm);
+    font-size: var(--text-sm);
+  }
+}
