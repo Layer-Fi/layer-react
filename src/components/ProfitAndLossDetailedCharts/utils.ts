@@ -1,6 +1,6 @@
 import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
-import { type TypeColorMapping } from '@components/DetailedCharts/types'
+import { DEFAULT_TYPE_COLOR_MAPPING, type TypeColorMapping } from '@components/DetailedCharts/types'
 
 export const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
 
@@ -11,11 +11,11 @@ export const isLineItemUncategorized = (item: PnlChartLineItem) => {
 export const mapTypesToColors = <T extends PnlChartLineItem>(
   data: T[],
   colorList: string[] = DEFAULT_CHART_COLORS,
-): (name: string) => TypeColorMapping | undefined => {
+): (name: string) => TypeColorMapping => {
   const opacityTiers = [1, 0.82, 0.64, 0.46]
   const palette = colorList.length > 0 ? colorList : DEFAULT_CHART_COLORS
   const mapping: Record<string, TypeColorMapping> = {}
-  const nonUncategorizedNames = Array.from(
+  const categorizedNames = Array.from(
     new Set(
       data
         .filter(lineItem => !isLineItemUncategorized(lineItem))
@@ -23,7 +23,7 @@ export const mapTypesToColors = <T extends PnlChartLineItem>(
     ),
   ).sort((left, right) => left.localeCompare(right))
 
-  nonUncategorizedNames.forEach((name, index) => {
+  categorizedNames.forEach((name, index) => {
     const colorIndex = index % palette.length
     const cycle = Math.floor(index / palette.length)
     const opacity = opacityTiers[cycle % opacityTiers.length] ?? 1
@@ -48,5 +48,5 @@ export const mapTypesToColors = <T extends PnlChartLineItem>(
     }
   })
 
-  return (name: string): TypeColorMapping | undefined => mapping[name]
+  return (name: string): TypeColorMapping => mapping[name] ?? DEFAULT_TYPE_COLOR_MAPPING
 }

@@ -15,7 +15,7 @@ import { Span } from '@ui/Typography/Text'
 import { BackButton } from '@components/Button/BackButton'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
-import { type ColorSelector, DEFAULT_TYPE_COLOR_MAPPING, type DetailData, type FallbackFillSelector } from '@components/DetailedCharts/types'
+import { type ColorSelector, type DetailData, type FallbackFillSelector } from '@components/DetailedCharts/types'
 import { DetailedTable, type DetailedTableStringOverrides } from '@components/DetailedTable/DetailedTable'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
@@ -137,7 +137,7 @@ export const ProfitAndLossDetailedCharts = ({
     [chartData, chartColorsList],
   )
   const colorSelector: ColorSelector<PnlChartLineItem> = useCallback(
-    (item: PnlChartLineItem) => typeColorMapping(item.name) ?? DEFAULT_TYPE_COLOR_MAPPING,
+    (item: PnlChartLineItem) => typeColorMapping(item.name),
     [typeColorMapping],
   )
 
@@ -177,13 +177,7 @@ export const ProfitAndLossDetailedCharts = ({
 
   const sortFunction = useCallback((_data: DetailData<PnlChartLineItem>, sortParams: SortParams<string>) => {
     if (sortParams.sortBy) {
-      _oldSortByScope(
-        activeScope,
-        sortParams.sortBy,
-        sortParams.sortOrder
-          ? (sortParams.sortOrder === SortOrder.ASC ? 'asc' : 'desc')
-          : undefined,
-      )
+      _oldSortByScope(activeScope, sortParams.sortBy, sortParams.sortOrder)
     }
   }, [_oldSortByScope, activeScope])
 

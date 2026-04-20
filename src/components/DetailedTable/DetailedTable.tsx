@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { type SortParams } from '@internal-types/utility/pagination'
+import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
@@ -53,8 +53,8 @@ export const DetailedTable = <T extends SeriesData>({
   const defaultRows = useDetailedTableRows({ data })
   const detailedTableRows = rows ?? defaultRows
 
-  const setAndToggleSortDirection = (field: 'category' | 'type' | 'value') => {
-    sortFunction(data, { sortBy: field })
+  const setAndToggleSortDirection = (field: 'category' | 'type' | 'value', sortOrder?: SortOrder) => {
+    sortFunction(data, { sortBy: field, sortOrder: sortOrder })
   }
 
   const buildHeaderVariant = useCallback((column: string) => {
@@ -99,7 +99,7 @@ export const DetailedTable = <T extends SeriesData>({
                 )}
                 <th
                   className='Layer__sortable-col value-col'
-                  onClick={() => setAndToggleSortDirection('value')}
+                  onClick={() => setAndToggleSortDirection('value', SortOrder.DESC)}
                 >
                   <HStack align='center' gap='3xs' justify='end'>
                     <Span variant={buildHeaderVariant('value')} size='sm'>

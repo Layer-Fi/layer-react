@@ -29,6 +29,10 @@ export type PaginationParams = {
   showTotalCount?: boolean
 }
 
+export function getNextSortOrder(currentSortOrder: SortOrder): SortOrder {
+  return currentSortOrder === SortOrder.ASC || currentSortOrder === SortOrder.ASCENDING ? SortOrder.DESC : SortOrder.ASC
+}
+
 export const PaginatedResponseMetaSchema = Schema.Struct({
   cursor: Schema.NullOr(Schema.String),
 
