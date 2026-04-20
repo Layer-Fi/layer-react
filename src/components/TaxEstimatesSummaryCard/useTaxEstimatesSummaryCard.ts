@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
@@ -11,15 +12,13 @@ export const useTaxEstimatesSummaryCard = () => {
   const { fullYearProjection } = useFullYearProjection()
   const { t } = useTranslation()
   const { isDesktop, isMobile } = useSizeClass()
-  const { data: taxSummaryData } = useTaxSummary({
-    year,
-    fullYearProjection,
-    enabled: true,
-  })
+  const { data: taxSummaryData } = useTaxSummary({ year, fullYearProjection, enabled: true })
 
-  const shortenedDisplayName = (key: string) => {
-    return key === 'federal' ? t('taxEstimates:label.federal', 'Federal') : t('taxEstimates:label.state', 'State')
-  }
+  const shortenedDisplayName = useCallback((key: string) => {
+    if (key === 'federal') return t('taxEstimates:label.federal', 'Federal')
+    if (key === 'state') return t('taxEstimates:label.state', 'State')
+    return key
+  }, [t])
 
   return {
     detailData: {
