@@ -79,7 +79,10 @@ export const DetailedTable = <T extends SeriesDataWithType>({
               <tr>
                 <th></th>
                 <th
-                  className='Layer__sortable-col'
+                  className={classNames(
+                    'Layer__DetailedTable__SortableColumn',
+                    sortParams.sortBy === 'category' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
+                  )}
                   onClick={() => setAndToggleSortDirection({ field: 'category' })}
                 >
                   <HStack align='center' gap='3xs'>
@@ -91,7 +94,10 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                 </th>
                 {!isMobile && (
                   <th
-                    className='Layer__sortable-col'
+                    className={classNames(
+                      'Layer__DetailedTable__SortableColumn',
+                      sortParams.sortBy === 'type' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort--${sortParams.sortOrder.toLowerCase()}`,
+                    )}
                     onClick={() => setAndToggleSortDirection({ field: 'type' })}
                   >
                     <HStack align='center' gap='3xs'>
@@ -103,7 +109,11 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                   </th>
                 )}
                 <th
-                  className='Layer__sortable-col value-col'
+                  className={classNames(
+                    'Layer__DetailedTable__SortableColumn',
+                    'Layer__DetailedTable__SortableColumn--value',
+                    sortParams.sortBy === 'value' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
+                  )}
                   onClick={() => setAndToggleSortDirection({ field: 'value', defaultSortOrder: SortOrder.DESC })}
                 >
                   <HStack align='center' gap='3xs' justify='end'>
