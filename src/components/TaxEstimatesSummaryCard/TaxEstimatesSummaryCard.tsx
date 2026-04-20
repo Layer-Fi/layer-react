@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxOverviewCategory } from '@schemas/taxEstimates/overview'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -15,13 +14,6 @@ import { resolveCategoryColor } from '@components/TaxEstimatesSummaryCard/consta
 import { useTaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/useTaxEstimatesSummaryCard'
 
 import './taxEstimatesSummaryCard.scss'
-
-export type TaxEstimatesSummaryCardProps = {
-  categories: readonly TaxOverviewCategory[]
-  layout?: 'taxOverview' | 'summaryCard'
-  title: string
-  total: number
-}
 
 export const TaxEstimatesSummaryCard = () => {
   const { isMobile } = useSizeClass()
