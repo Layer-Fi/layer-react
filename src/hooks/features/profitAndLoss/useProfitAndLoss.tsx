@@ -1,10 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 
-import {
-  type SortDirection,
-} from '@internal-types/general'
 import { type ReportingBasis } from '@internal-types/general'
-import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { getNextSortOrder, SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import {
   applyShare,
   collectExpensesItems,
@@ -39,24 +36,14 @@ export type SortParamsByScope = Record<
 
 const createPnlLineItemComparator = (filters: SortParams<string> | undefined) => {
   return (a: PnlChartLineItem, b: PnlChartLineItem) => {
+    const isAscending = filters?.sortOrder === SortOrder.ASC || filters?.sortOrder === SortOrder.ASCENDING
     switch (filters?.sortBy) {
       case 'category':
-        if (filters?.sortOrder === SortOrder.ASC || filters?.sortOrder === SortOrder.ASCENDING) {
-          return a.displayName.localeCompare(b.displayName)
-        }
-        return b.displayName.localeCompare(a.displayName)
-
+        return (isAscending) ? a.displayName.localeCompare(b.displayName) : b.displayName.localeCompare(a.displayName)
       case 'type':
-        if (filters?.sortOrder === SortOrder.ASC || filters?.sortOrder === SortOrder.ASCENDING) {
-          return a.type.localeCompare(b.type)
-        }
-        return b.type.localeCompare(a.type)
-
+        return (isAscending) ? a.type.localeCompare(b.type) : b.type.localeCompare(a.type)
       default:
-        if (filters?.sortOrder === SortOrder.ASC || filters?.sortOrder === SortOrder.ASCENDING) {
-          return a.value - b.value
-        }
-        return b.value - a.value
+        return (isAscending) ? a.value - b.value : b.value - a.value
     }
   }
 }
@@ -98,19 +85,18 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
       includeUncategorized: true,
     })
 
-  const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
+  const sortBy = (scope: Scope, field: string, direction?: SortOrder) => {
     setFilters((prev) => {
       const prevSortBy = prev[scope]?.sortBy
       const prevSortOrder = prev[scope]?.sortOrder
       const isSameField = prevSortBy === field
-      const prevSortOrderIsAscending = prevSortOrder === SortOrder.ASC || prevSortOrder === SortOrder.ASCENDING
 
-      let nextSortOrder: SortOrder = SortOrder.DESC
+      let nextSortOrder: SortOrder = SortOrder.ASC
       if (direction) {
-        nextSortOrder = direction === 'asc' ? SortOrder.ASC : SortOrder.DESC
+        nextSortOrder = direction
       }
       else if (isSameField) {
-        nextSortOrder = prevSortOrderIsAscending ? SortOrder.DESC : SortOrder.ASC
+        nextSortOrder = prevSortOrder ? getNextSortOrder(prevSortOrder) : SortOrder.ASC
       }
 
       return {
