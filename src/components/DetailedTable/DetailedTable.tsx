@@ -71,7 +71,7 @@ export const DetailedTable = <T extends SeriesData>({
   }, [sortParams.sortBy])
 
   const { isMobile } = useSizeClass()
-  const hasType = rows.length > 0 && rows.map(r => r.item.type).some(type => type !== undefined)
+  const hasType = rows.length > 0 && rows.map(r => r.item.type).every(type => type !== undefined)
   const isSortable = interactionProps !== NoOpHoverInteractionProps
 
   return (
