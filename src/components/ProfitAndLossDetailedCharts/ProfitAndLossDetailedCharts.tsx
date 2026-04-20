@@ -175,9 +175,9 @@ export const ProfitAndLossDetailedCharts = ({
     data: tableDataWithTotal,
   })
 
-  const sortFunction = useCallback((_data: DetailData<PnlChartLineItem>, sortParams: SortParams<string>) => {
+  const sortFunction = useCallback((_data: DetailData<PnlChartLineItem>, sortParams: SortParams<string>, defaultSortOrder?: SortOrder) => {
     if (sortParams.sortBy) {
-      _oldSortByScope(activeScope, sortParams.sortBy, sortParams.sortOrder)
+      _oldSortByScope(activeScope, sortParams.sortBy, sortParams.sortOrder, defaultSortOrder)
     }
   }, [_oldSortByScope, activeScope])
 
