@@ -13,11 +13,12 @@
 
   .Layer__DetailedChart {
     height: 12rem;
+    max-width: 18rem;
   }
 
   @media (width >= 760px) {
-    .Layer__DetailedTable {
-      min-width: 25rem;
+    .Layer__DetailedChart {
+      width: 18rem;
     }
   }
 

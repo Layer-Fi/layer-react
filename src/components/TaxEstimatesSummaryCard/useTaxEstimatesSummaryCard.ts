@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
@@ -18,9 +17,8 @@ export const useTaxEstimatesSummaryCard = () => {
   })
 
   return {
-    categories: taxSummaryData?.sections.map((section, index) => ({
+    categories: taxSummaryData?.sections.map(section => ({
       amount: section.taxesOwed,
-      color: DEFAULT_CHART_COLORS[index % DEFAULT_CHART_COLORS.length],
       key: section.type,
       label: section.label,
     })) ?? [],
