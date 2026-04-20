@@ -86,6 +86,7 @@
     "duration_whole_minutes": "Duration must be a whole number of minutes greater than zero.",
     "entry_date_not_future": "Entry date cannot be in the future.",
     "entry_date_required": "Entry date is a required field.",
+    "hourly_rate_positive": "Default hourly rate must be greater than zero.",
     "service_name_required": "Service name is a required field.",
     "service_required": "Service is a required field."
   }

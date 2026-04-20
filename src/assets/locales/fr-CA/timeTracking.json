@@ -86,6 +86,7 @@
     "duration_whole_minutes": "",
     "entry_date_not_future": "La date de l'entrée ne peut pas être dans le futur.",
     "entry_date_required": "La date de l'entrée est un champ obligatoire.",
+    "hourly_rate_positive": "",
     "service_name_required": "Le nom du service est un champ obligatoire.",
     "service_required": "Le service est un champ obligatoire."
   }

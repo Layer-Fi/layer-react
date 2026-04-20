@@ -7,11 +7,9 @@ import { type CatalogService } from '@schemas/catalogService'
 import {
   fromNonRecursiveBigDecimal,
   type NonRecursiveBigDecimal,
-  NRBD_ZERO,
   toNonRecursiveBigDecimal,
 } from '@schemas/nonRecursiveBigDecimal'
 import {
-  BIG_DECIMAL_ZERO,
   convertBigDecimalToCents,
   convertCentsToBigDecimal,
 } from '@utils/bigDecimalUtils'
@@ -34,14 +32,14 @@ export type ServiceFormProps = CreateServiceFormProps | EditServiceFormProps
 
 type ServiceFormValues = {
   name: string
-  hourlyRate: NonRecursiveBigDecimal
+  hourlyRate: NonRecursiveBigDecimal | null
 }
 
 const getServiceFormDefaultValues = (service?: CatalogService): ServiceFormValues => ({
   name: service?.name ?? '',
   hourlyRate: service?.billableRatePerHourAmount != null && !Number.isNaN(service.billableRatePerHourAmount)
     ? toNonRecursiveBigDecimal(convertCentsToBigDecimal(service.billableRatePerHourAmount))
-    : NRBD_ZERO,
+    : null,
 })
 
 export function useServiceForm(props: ServiceFormProps) {
@@ -59,10 +57,9 @@ export function useServiceForm(props: ServiceFormProps) {
 
   const onSubmit = useCallback(async ({ value }: { value: ServiceFormValues }) => {
     const trimmedName = value.name.trim()
-    const hourlyRateBd = fromNonRecursiveBigDecimal(value.hourlyRate)
-    const billableRatePerHourAmount = BD.equals(hourlyRateBd, BIG_DECIMAL_ZERO)
+    const billableRatePerHourAmount = value.hourlyRate === null
       ? undefined
-      : convertBigDecimalToCents(hourlyRateBd)
+      : convertBigDecimalToCents(fromNonRecursiveBigDecimal(value.hourlyRate))
 
     setSubmitError(null)
 
@@ -92,11 +89,23 @@ export function useServiceForm(props: ServiceFormProps) {
   }, [createService, mode, onSuccess, t, updateService])
 
   const onDynamic = useCallback(({ value }: { value: ServiceFormValues }) => {
+    const errors: { [field: string]: string }[] = []
+
     if (value.name.trim() === '') {
-      return [{ name: t('timeTracking:validation.service_name_required', 'Service name is a required field.') }]
+      errors.push({ name: t('timeTracking:validation.service_name_required', 'Service name is a required field.') })
     }
 
-    return null
+    if (value.hourlyRate !== null
+      && !BD.isPositive(fromNonRecursiveBigDecimal(value.hourlyRate))) {
+      errors.push({
+        hourlyRate: t(
+          'timeTracking:validation.hourly_rate_positive',
+          'Default hourly rate must be greater than zero.',
+        ),
+      })
+    }
+
+    return errors.length > 0 ? errors : null
   }, [t])
 
   const validators = useMemo(() => ({ onDynamic }), [onDynamic])

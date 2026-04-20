@@ -124,6 +124,7 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
               label={t('timeTracking:services.hourly_rate_optional', 'Default hourly rate (optional)')}
               mode='currency'
               className='Layer__TimeTrackingServicesDrawer__rateField'
+              allowEmpty
             />
           )}
         </form.AppField>
