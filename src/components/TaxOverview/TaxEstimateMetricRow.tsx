@@ -9,11 +9,5 @@ export function TaxEstimateMetricRow({ metric }: { metric: TaxOverviewMetric }) 
     maxMeterValue: metric.maxValue,
     label: metric.label,
   })
-  return (
-    <MetricRow
-      amount={metric.value}
-      showBorder={showBorder}
-      slotProps={slotProps}
-    />
-  )
+  return <MetricRow amount={metric.value} showBorder={showBorder} slotProps={slotProps} />
 }
