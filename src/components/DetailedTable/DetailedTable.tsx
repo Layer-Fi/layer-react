@@ -102,7 +102,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                   <th
                     className={classNames(
                       'Layer__DetailedTable__SortableColumn',
-                      sortParams.sortBy === 'type' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort--${sortParams.sortOrder.toLowerCase()}`,
+                      sortParams.sortBy === 'type' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
                     )}
                     onClick={() => setAndToggleSortDirection({ field: 'type' })}
                   >
