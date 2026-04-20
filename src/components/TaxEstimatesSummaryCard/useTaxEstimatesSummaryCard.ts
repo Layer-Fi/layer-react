@@ -20,7 +20,7 @@ export const useTaxEstimatesSummaryCard = () => {
     return key
   }, [t])
 
-  const DetailData = useMemo(() => {
+  const detailData = useMemo(() => {
     const data = taxSummaryData?.sections.map(section => ({
       value: Math.max(section.taxesOwed, 0),
       name: section.type,
@@ -34,7 +34,7 @@ export const useTaxEstimatesSummaryCard = () => {
   }, [taxSummaryData, isMobile, shortenedDisplayName])
 
   return {
-    detailData: DetailData,
+    detailData,
     layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
     title: t('taxEstimates:label.tax_summary', 'Tax Summary'),
   }
