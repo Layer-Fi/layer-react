@@ -57,7 +57,31 @@ export const TaxEstimatesSummaryCard = () => {
   }, [detailData.data])
 
   const CommonProps = useMemo(() => ({ data: detailData, interactionProps: NoOpHoverInteractionProps, stylingProps: StylingProps }), [detailData, StylingProps])
-  const state = isLoading ? 'loading' : isError ? 'error' : 'ready'
+
+  const Content = useMemo(() => {
+    const state = isLoading ? 'loading' : isError ? 'error' : 'ready'
+    if (state === 'loading') return <LoadingState />
+    if (state === 'error') return <ErrorState />
+    if (state === 'ready') {
+      if (isMobile || isSummaryCardLayout) {
+        return (
+          <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
+            <DetailedChart<SeriesData> {...CommonProps} />
+            <DetailedTableWithData<SeriesData> {...CommonProps} {...NoSortProps} />
+          </VStack>
+        )
+      }
+    }
+    else {
+      return (
+        <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
+          <DetailedChart<SeriesData> {...CommonProps} />
+          <DetailedTableWithData<SeriesData> {...CommonProps} {...NoSortProps} />
+        </HStack>
+      )
+    }
+    return null
+  }, [isLoading, isError, isMobile, isSummaryCardLayout, CommonProps])
 
   return (
     <VStack className='Layer__TaxEstimatesSummaryCard__Container'>
@@ -71,21 +95,7 @@ export const TaxEstimatesSummaryCard = () => {
           >
             <Span size='lg' weight='bold'>{title}</Span>
           </HStack>
-          {(state === 'loading') && <LoadingState />}
-          {(state === 'error') && <ErrorState />}
-          {(state === 'ready' && (isMobile || isSummaryCardLayout))
-            ? (
-              <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
-                <DetailedChart<SeriesData> {...CommonProps} />
-                <DetailedTableWithData<SeriesData> {...CommonProps} {...NoSortProps} />
-              </VStack>
-            )
-            : (
-              <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
-                <DetailedChart {...CommonProps} />
-                <DetailedTableWithData<SeriesData> {...CommonProps} {...NoSortProps} />
-              </HStack>
-            )}
+          {Content}
         </VStack>
       </Card>
     </VStack>
