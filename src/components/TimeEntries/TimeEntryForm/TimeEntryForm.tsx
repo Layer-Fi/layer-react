@@ -50,7 +50,8 @@ const TimeEntryCustomerField = ({ value, entryCustomer, isReadOnly, onChange }: 
       onSelectedCustomerChange={handleSelectedCustomerChange}
       isReadOnly={isReadOnly}
       inline
-      placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
+      label={t('timeTracking:label.customer_optional', 'Customer (optional)')}
+      placeholder={t('timeTracking:label.select_customer_short', 'Select a customer')}
       className='Layer__TimeEntryForm__Field__Customer'
     />
   )

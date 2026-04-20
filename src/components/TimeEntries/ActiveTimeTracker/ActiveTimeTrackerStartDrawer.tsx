@@ -111,7 +111,8 @@ export const ActiveTimeTrackerStartDrawer = ({
                 selectedCustomer={field.state.value}
                 onSelectedCustomerChange={field.handleChange}
                 inline
-                placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
+                label={t('timeTracking:label.customer_optional', 'Customer (optional)')}
+                placeholder={t('timeTracking:label.select_customer_short', 'Select a customer')}
                 className='Layer__ActiveTimeTracker__Field__Customer'
               />
             )}
