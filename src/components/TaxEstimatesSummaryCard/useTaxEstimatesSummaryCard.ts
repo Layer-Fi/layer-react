@@ -4,26 +4,33 @@ import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
 
 export const useTaxEstimatesSummaryCard = () => {
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
   const { t } = useTranslation()
-  const { isDesktop } = useSizeClass()
+  const { isDesktop, isMobile } = useSizeClass()
   const { data: taxSummaryData } = useTaxSummary({
     year,
     fullYearProjection,
     enabled: true,
   })
 
+  const shortenedDisplayName = (key: string) => {
+    return key === 'federal' ? t('taxEstimates:label.federal', 'Federal') : t('taxEstimates:label.state', 'State')
+  }
+
   return {
-    categories: taxSummaryData?.sections.map(section => ({
-      amount: section.taxesOwed,
-      key: section.type,
-      label: section.label,
-    })) ?? [],
+    detailData: {
+      data: taxSummaryData?.sections.map(section => ({
+        value: Math.max(section.taxesOwed, 0),
+        name: section.type,
+        displayName: isMobile ? shortenedDisplayName(section.type) : section.label,
+      })) ?? [],
+      total: taxSummaryData?.projectedTaxesOwed ?? 0,
+    } as DetailData<SeriesData>,
     layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
     title: t('taxEstimates:label.tax_summary', 'Tax Summary'),
-    total: taxSummaryData?.projectedTaxesOwed ?? 0,
   }
 }

@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import classNames from 'classnames'
-import { useTranslation } from 'react-i18next'
 
+import { type TaxOverviewCategoryKey } from '@schemas/taxEstimates/overview'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
-import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
+import { type SeriesData } from '@components/DetailedCharts/types'
 import { NoOpHoverInteractionProps } from '@components/DetailedCharts/utils'
 import { DetailedTableWithData } from '@components/DetailedTable/DetailedTable'
 import { resolveCategoryColor } from '@components/TaxEstimatesSummaryCard/constants'
@@ -17,40 +17,22 @@ import './taxEstimatesSummaryCard.scss'
 
 export const TaxEstimatesSummaryCard = () => {
   const { isMobile } = useSizeClass()
-  const { t } = useTranslation()
-  const { categories, layout, title, total } = useTaxEstimatesSummaryCard()
+  const { detailData, layout, title } = useTaxEstimatesSummaryCard()
   const isSummaryCardLayout = layout === 'summaryCard'
 
-  const data: DetailData<SeriesData> = useMemo(() => {
-    if (total <= 0) return { data: [], total: 0 }
-
-    const shortenedDisplayName = (key: string) => {
-      return key === 'federal' ? t('taxEstimates:label.federal', 'Federal') : t('taxEstimates:label.state', 'State')
-    }
-
-    return {
-      data: categories.map(category => ({
-        value: Math.max(category.amount, 0),
-        name: category.key,
-        displayName: isMobile ? shortenedDisplayName(category.key) : category.label,
-      })),
-      total,
-    }
-  }, [categories, total, isMobile, t])
-
-  const colorByKey = useMemo(() => {
-    return categories.reduce<Record<string, string>>((acc, category) => {
-      acc[category.key] = resolveCategoryColor(category)
+  const StylingProps = useMemo(() => {
+    const colorByKey = detailData.data.reduce<Record<string, string>>((acc, item) => {
+      acc[item.name] = resolveCategoryColor({ key: item.name as TaxOverviewCategoryKey })
       return acc
     }, {})
-  }, [categories])
 
-  const StylingProps = useMemo(() => ({
-    colorSelector: (item: SeriesData) => ({
-      color: colorByKey[item.name] ?? 'var(--color-base-300)',
-      opacity: 1,
-    }),
-  }), [colorByKey])
+    return ({
+      colorSelector: (item: SeriesData) => ({
+        color: colorByKey[item.name] ?? 'var(--color-base-300)',
+        opacity: 1,
+      }),
+    })
+  }, [detailData.data])
 
   return (
     <VStack className='Layer__TaxEstimatesSummaryCard__Container'>
@@ -68,12 +50,12 @@ export const TaxEstimatesSummaryCard = () => {
             ? (
               <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
                 <DetailedChart<SeriesData>
-                  data={data}
+                  data={detailData}
                   interactionProps={NoOpHoverInteractionProps}
                   stylingProps={StylingProps}
                 />
                 <DetailedTableWithData<SeriesData>
-                  data={data}
+                  data={detailData}
                   interactionProps={NoOpHoverInteractionProps}
                   stylingProps={StylingProps}
                   sortParams={{ sortBy: 'value' }}
@@ -84,12 +66,12 @@ export const TaxEstimatesSummaryCard = () => {
             : (
               <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
                 <DetailedChart
-                  data={data}
+                  data={detailData}
                   interactionProps={NoOpHoverInteractionProps}
                   stylingProps={StylingProps}
                 />
                 <DetailedTableWithData<SeriesData>
-                  data={data}
+                  data={detailData}
                   interactionProps={NoOpHoverInteractionProps}
                   stylingProps={StylingProps}
                   sortParams={{ sortBy: 'value' }}
