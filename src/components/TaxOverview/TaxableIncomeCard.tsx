@@ -3,7 +3,7 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Card } from '@components/Card/Card'
-import { TotalMetricRow } from '@components/TaxOverview/TotalMetricRow'
+import { TaxEstimateMetricRow } from '@components/TaxOverview/TaxEstimateMetricRow'
 
 import './taxableIncomeCard.scss'
 
@@ -24,12 +24,12 @@ export const TaxableIncomeCard = () => {
       {isDesktop
         ? (
           <VStack gap='sm'>
-            {metrics.map((metric, index) => <TotalMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
+            {metrics.map((metric, index) => <TaxEstimateMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
           </VStack>
         )
         : (
           <Card className='Layer__TaxOverview__Card__MetricRow--mobile'>
-            {metrics.map((metric, index) => <TotalMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
+            {metrics.map((metric, index) => <TaxEstimateMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
           </Card>
         )}
     </VStack>
