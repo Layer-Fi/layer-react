@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 
+import { type TaxOverviewCategory } from '@schemas/taxEstimates/overview'
 import { VStack } from '@ui/Stack/Stack'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
 
 import { resolveCategoryColor } from './constants'
-import type { SummaryChartProps } from './types'
 
 type TaxEstimateChartDataItem = {
   key: string
@@ -12,8 +12,10 @@ type TaxEstimateChartDataItem = {
   displayName: string
   value: number
 }
-
-type TaxEstimateChartProps = SummaryChartProps
+export type TaxEstimateChartProps = {
+  categories: readonly TaxOverviewCategory[]
+  total: number
+}
 
 export const TaxEstimateChart = ({
   categories,
