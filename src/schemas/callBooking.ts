@@ -79,7 +79,7 @@ const CallBookingSchema = Schema.Struct({
   ),
 
   callLink: pipe(
-    Schema.propertySignature(Schema.URL),
+    Schema.propertySignature(Schema.Union(Schema.URL, Schema.Literal(''))),
     Schema.fromKey('call_link'),
   ),
 

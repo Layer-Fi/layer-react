@@ -8,12 +8,15 @@
   "label": {
     "ad_hoc_call": "Ad hoc call",
     "book_call_with_bookkeeper": "Book a call with your bookkeeper",
+    "date": "Date",
     "date_colon": "Date:",
     "google_calendar": "Google Calendar",
+    "location": "Location",
     "location_colon": "Location:",
     "meet_bookkeeping_team": "Meet with our bookkeeping team",
     "onboarding_call": "Onboarding call",
     "outlook_calendar": "Outlook Calendar",
+    "purpose": "Purpose",
     "purpose_colon": "Purpose:",
     "upcoming_call": "Upcoming Call",
     "yahoo_calendar": "Yahoo Calendar"

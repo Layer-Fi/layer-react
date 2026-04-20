@@ -1,7 +1,9 @@
+import { useCallback } from 'react'
 import useSWR from 'swr'
 
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 import { get } from '@utils/api/authenticatedHttp'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -32,6 +34,8 @@ const getBookkeepingStatus = get<
   {
     data: {
       status: RawBookkeepingStatus
+      show_embedded_onboarding: boolean
+      onboarding_call_url: string | null
     }
   },
   { businessId: string }
@@ -40,7 +44,7 @@ const getBookkeepingStatus = get<
 })
 
 export const BOOKKEEPING_TAG_KEY = '#bookkeeping'
-const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
+export const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
 
 function buildKey({
   access_token: accessToken,
@@ -78,8 +82,21 @@ export function useBookkeepingStatus() {
       .then(({ data }) => ({
         ...data,
         status: constrainToKnownBookkeepingStatus(data.status),
+        showEmbeddedOnboarding: data.show_embedded_onboarding,
+        onboardingCallUrl: data.onboarding_call_url,
       })),
   )
+}
+
+export function useBookkeepingStatusGlobalCacheActions() {
+  const { forceReload } = useGlobalCacheActions()
+
+  const forceReloadBookkeepingStatus = useCallback(
+    () => forceReload(({ tags }) => tags.includes(BOOKKEEPING_STATUS_TAG_KEY)),
+    [forceReload],
+  )
+
+  return { forceReloadBookkeepingStatus }
 }
 
 export function useEffectiveBookkeepingStatus(): BookkeepingStatus {

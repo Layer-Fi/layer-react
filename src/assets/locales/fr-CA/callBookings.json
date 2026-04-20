@@ -8,12 +8,15 @@
   "label": {
     "ad_hoc_call": "Appel ponctuel",
     "book_call_with_bookkeeper": "Réservez un appel avec votre teneur de livres",
+    "date": "Date",
     "date_colon": "Date :",
     "google_calendar": "Google Calendar",
+    "location": "Lieu",
     "location_colon": "Lieu :",
     "meet_bookkeeping_team": "Rencontrez notre équipe de tenue de livres",
     "onboarding_call": "Appel d’intégration",
     "outlook_calendar": "Outlook Calendar",
+    "purpose": "Objet",
     "purpose_colon": "Objet :",
     "upcoming_call": "Appel à venir",
     "yahoo_calendar": "Yahoo Calendar"

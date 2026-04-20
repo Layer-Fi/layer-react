@@ -1,13 +1,49 @@
 .Layer__call-booking {
   padding: var(--spacing-lg);
 
+  .Layer__call-booking-scheduled {
+    width: 100%;
+  }
+
+  .Layer__call-booking-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    margin-block-end: var(--spacing-2xs);
+    background-color: var(--color-base-50);
+    color: var(--color-base-900);
+  }
+
   .Layer__call-booking-details {
     width: 100%;
   }
 
-  .Layer__call-booking-actions {
-    position: relative;
+  .Layer__call-booking-detail-row {
+    display: grid;
+    grid-template-columns: 16px 72px 1fr;
+    column-gap: var(--spacing-sm);
+    align-items: center;
     width: 100%;
+  }
+
+  .Layer__call-booking-detail-icon {
+    color: var(--color-base-500);
+  }
+
+  .Layer__call-booking-detail-label {
+    white-space: nowrap;
+  }
+
+  .Layer__call-booking-actions {
+    width: 100%;
+
+    > * {
+      flex: 1;
+      min-width: 0;
+    }
   }
 
   .Layer__call-booking-state {
@@ -15,7 +51,6 @@
   }
 }
 
-// Responsive design for smaller screens
 @media (width <= 480px) {
   .Layer__call-booking {
     padding: var(--spacing-md);

@@ -1,15 +1,18 @@
-import classNames from 'classnames'
-import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
-import { type CallBooking as CallBookingData } from '@schemas/callBooking'
+import {
+  type CallBooking as CallBookingData,
+  CallBookingPurpose,
+  CallBookingState,
+} from '@schemas/callBooking'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
+import { useBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
-import { useCalendly } from '@hooks/features/calendly/useCalendly'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { CallBooking } from '@components/CallBooking/CallBooking'
 import { Container } from '@components/Container/Container'
+import { EmbeddedOnboarding } from '@components/EmbeddedOnboarding/EmbeddedOnboarding'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
@@ -58,7 +61,6 @@ export const BookkeepingOverview = ({
   const { t } = useTranslation()
   const [width] = useWindowSize()
   const { value: sizeClass } = useSizeClass()
-  const { isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly } = useCalendly()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -66,11 +68,20 @@ export const BookkeepingOverview = ({
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
 
-  const handleBookCall = () => {} // TODO
+  const { data: bookkeepingStatus } = useBookkeepingStatus()
 
-  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings({ limit: 1 })
-  const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
-  const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
+  const { data: callBookings } = useCallBookings()
+  const onboardingBooking: CallBookingData | undefined = callBookings
+    ?.flatMap(({ data }) => data)
+    .find(({ purpose }) => purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING)
+  const upcomingOnboardingBooking = onboardingBooking?.state === CallBookingState.SCHEDULED
+    ? onboardingBooking
+    : undefined
+
+  const onboardingCallUrl = bookkeepingStatus?.onboardingCallUrl
+  if (bookkeepingStatus?.showEmbeddedOnboarding === true && onboardingCallUrl) {
+    return <EmbeddedOnboarding onboardingCallUrl={onboardingCallUrl} />
+  }
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -89,8 +100,8 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={(
           <VStack gap='lg'>
-            {callBookingVisible && (
-              <CallBooking callBooking={callBooking} onBookCall={handleBookCall} />
+            {upcomingOnboardingBooking && (
+              <CallBooking callBooking={upcomingOnboardingBooking} />
             )}
             <Tasks
               stringOverrides={stringOverrides?.tasks}
@@ -106,8 +117,8 @@ export const BookkeepingOverview = ({
             onClick={() => (upperElementInFocus.current = true)}
           >
             <VStack gap='lg'>
-              {callBookingVisible && (
-                <CallBooking callBooking={callBooking} onBookCall={handleBookCall} />
+              {upcomingOnboardingBooking && (
+                <CallBooking callBooking={upcomingOnboardingBooking} />
               )}
               <Tasks
                 mobile
@@ -147,19 +158,6 @@ export const BookkeepingOverview = ({
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
         />
       </View>
-      {isCalendlyVisible && (
-        <div
-          ref={calendlyRef}
-          className={classNames('Layer__calendly-container', { visible: isCalendlyVisible })}
-        >
-          <PopupModal
-            url={calendlyLink}
-            onModalClose={closeCalendly}
-            open={isCalendlyVisible}
-            rootElement={document.body}
-          />
-        </div>
-      )}
     </ProfitAndLoss>
   )
 }

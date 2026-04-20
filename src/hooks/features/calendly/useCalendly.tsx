@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { type LandingPageLink } from '@components/LandingPage/types'
 
-interface CalendlyPayload {
+export interface CalendlyPayload {
   event: {
     uri: string
   }
@@ -17,21 +17,40 @@ export interface CalendlyMessageData {
 }
 
 const ALLOWED_CALENDLY_HOSTS = ['calendly.com', 'www.calendly.com']
+
+const isCalendlyHostname = (hostname: string) => (
+  ALLOWED_CALENDLY_HOSTS.includes(hostname) || hostname.endsWith('.calendly.com')
+)
+
 export const isCalendlyLink = (link?: LandingPageLink) => {
   try {
     if (!link) return false
     const hostname = new URL(link.url).hostname
-    return (ALLOWED_CALENDLY_HOSTS.includes(hostname) || hostname.endsWith('.calendly.com'))
+    return isCalendlyHostname(hostname)
   }
   catch (_) {
     return false
   }
 }
 
-export const createCalendlyMessageHandler = (
-  onEventScheduled?: (payload?: CalendlyPayload) => void,
-) => {
+export interface CreateCalendlyMessageHandlerOptions {
+  onEventScheduled?: (payload?: CalendlyPayload) => void
+}
+
+export const createCalendlyMessageHandler = ({
+  onEventScheduled,
+}: CreateCalendlyMessageHandlerOptions = {}) => {
   return (e: MessageEvent) => {
+    try {
+      const hostname = new URL(e.origin).hostname
+      if (!isCalendlyHostname(hostname)) {
+        return
+      }
+    }
+    catch (_) {
+      return
+    }
+
     const data = e.data as CalendlyMessageData
 
     if (data.event && typeof data.event === 'string' && data.event.startsWith('calendly')) {
@@ -52,7 +71,9 @@ export const useCalendly = (options?: UseCalendlyOptions) => {
   const calendlyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleCalendlyMessage = createCalendlyMessageHandler(options?.onEventScheduled)
+    const handleCalendlyMessage = createCalendlyMessageHandler({
+      onEventScheduled: options?.onEventScheduled,
+    })
     window.addEventListener('message', handleCalendlyMessage)
     return () => {
       window.removeEventListener('message', handleCalendlyMessage)
