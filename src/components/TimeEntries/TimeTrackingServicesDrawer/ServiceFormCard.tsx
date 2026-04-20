@@ -2,14 +2,14 @@ import { type FormEvent, useCallback } from 'react'
 import { AlertTriangle, Archive } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { flattenValidationErrors } from '@utils/form'
 import { type CatalogService } from '@schemas/catalogService'
+import { flattenValidationErrors } from '@utils/form'
 import { useServiceForm } from '@hooks/features/timeTracking/useServiceForm'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Span } from '@ui/Typography/Text'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TextSize } from '@components/Typography/Text'
 
 type AddServiceFormCardProps = {
