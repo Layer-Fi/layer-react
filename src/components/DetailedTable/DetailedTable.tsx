@@ -22,11 +22,17 @@ export interface DetailedTableStringOverrides {
   valueColumnHeader?: string
 }
 
+type SetAndToggleSortDirectionParams = {
+  field: 'category' | 'type' | 'value'
+  sortOrderOverride?: SortOrder
+  defaultSortOrder?: SortOrder
+}
+
 export type SeriesDataWithType = SeriesData & { type: string }
 export interface DetailedTableProps<T extends SeriesDataWithType> {
   data: DetailData<T>
   sortParams: SortParams<string>
-  sortFunction: (data: DetailData<T>, sortParams: SortParams<string>) => void
+  sortFunction: (data: DetailData<T>, sortParams: SortParams<string>, defaultDirection?: SortOrder) => void
   stylingProps: {
     colorSelector: ColorSelector<T>
     fallbackFillSelector?: FallbackFillSelector<T>
@@ -53,8 +59,9 @@ export const DetailedTable = <T extends SeriesDataWithType>({
   const defaultRows = useDetailedTableRows({ data })
   const detailedTableRows = rows ?? defaultRows
 
-  const setAndToggleSortDirection = (field: 'category' | 'type' | 'value', sortOrder?: SortOrder) => {
-    sortFunction(data, { sortBy: field, sortOrder: sortOrder })
+  const setAndToggleSortDirection = (params: SetAndToggleSortDirectionParams) => {
+    const { field, sortOrderOverride, defaultSortOrder } = params
+    sortFunction(data, { sortBy: field, sortOrder: sortOrderOverride }, defaultSortOrder)
   }
 
   const buildHeaderVariant = useCallback((column: string) => {
@@ -73,7 +80,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                 <th></th>
                 <th
                   className='Layer__sortable-col'
-                  onClick={() => setAndToggleSortDirection('category')}
+                  onClick={() => setAndToggleSortDirection({ field: 'category' })}
                 >
                   <HStack align='center' gap='3xs'>
                     <Span variant={buildHeaderVariant('category')} size='sm'>
@@ -85,7 +92,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                 {!isMobile && (
                   <th
                     className='Layer__sortable-col'
-                    onClick={() => setAndToggleSortDirection('type')}
+                    onClick={() => setAndToggleSortDirection({ field: 'type' })}
                   >
                     <HStack align='center' gap='3xs'>
                       <Span variant={buildHeaderVariant('type')} size='sm'>
@@ -97,7 +104,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                 )}
                 <th
                   className='Layer__sortable-col value-col'
-                  onClick={() => setAndToggleSortDirection('value', SortOrder.DESC)}
+                  onClick={() => setAndToggleSortDirection({ field: 'value', defaultSortOrder: SortOrder.DESC })}
                 >
                   <HStack align='center' gap='3xs' justify='end'>
                     <Span variant={buildHeaderVariant('value')} size='sm'>

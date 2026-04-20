@@ -85,18 +85,19 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
       includeUncategorized: true,
     })
 
-  const sortBy = (scope: Scope, field: string, direction?: SortOrder) => {
+  const sortBy = (scope: Scope, field: string, sortOrderOverride?: SortOrder, defaultSortOrder?: SortOrder) => {
     setFilters((prev) => {
       const prevSortBy = prev[scope]?.sortBy
       const prevSortOrder = prev[scope]?.sortOrder
       const isSameField = prevSortBy === field
+      const defaultSort = defaultSortOrder ?? SortOrder.ASC
 
-      let nextSortOrder: SortOrder = SortOrder.ASC
-      if (direction) {
-        nextSortOrder = direction
+      let nextSortOrder: SortOrder = defaultSort
+      if (sortOrderOverride) {
+        nextSortOrder = sortOrderOverride
       }
       else if (isSameField) {
-        nextSortOrder = prevSortOrder ? getNextSortOrder(prevSortOrder) : SortOrder.ASC
+        nextSortOrder = prevSortOrder ? getNextSortOrder(prevSortOrder) : defaultSort
       }
 
       return {
