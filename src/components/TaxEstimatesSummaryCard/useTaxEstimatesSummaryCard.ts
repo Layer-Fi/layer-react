@@ -21,12 +21,15 @@ export const useTaxEstimatesSummaryCard = () => {
   }, [t])
 
   const DetailData = useMemo(() => {
+    const data = taxSummaryData?.sections.map(section => ({
+      value: Math.max(section.taxesOwed, 0),
+      name: section.type,
+      displayName: isMobile ? shortenedDisplayName(section.type) : section.label,
+    })) ?? []
+
     return {
-      data: taxSummaryData?.sections.map(section => ({
-        value: Math.max(section.taxesOwed, 0),
-        name: section.type,
-        displayName: isMobile ? shortenedDisplayName(section.type) : section.label,
-      })) ?? [],
+      data,
+      total: data.reduce((sum, section) => sum + section.value, 0),
     } as DetailData<SeriesData>
   }, [taxSummaryData, isMobile, shortenedDisplayName])
 
