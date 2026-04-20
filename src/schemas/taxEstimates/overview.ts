@@ -1,31 +1,40 @@
 import { pipe, Schema } from 'effect'
 
+import { createTransformedEnumSchema } from '@schemas/utils'
+
+export enum TaxOverviewMetricType {
+  TotalIncome = 'TOTAL_INCOME',
+  TotalPreAgiDeductions = 'TOTAL_PRE_AGI_DEDUCTIONS',
+  TaxableIncome = 'TAXABLE_INCOME',
+  UnknownType = 'UNKNOWN_TYPE',
+}
+
+const TaxOverviewMetricTypeSchema = createTransformedEnumSchema(
+  Schema.Enums(TaxOverviewMetricType),
+  TaxOverviewMetricType,
+  TaxOverviewMetricType.UnknownType,
+)
+
+export type TaxOverviewMetricTypeValue = typeof TaxOverviewMetricTypeSchema.Type
+
+const TaxOverviewMetricSchema = Schema.Struct({
+  value: Schema.Number,
+  maxValue: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('max_value'),
+  ),
+  label: Schema.String,
+  metricType: pipe(
+    Schema.propertySignature(TaxOverviewMetricTypeSchema),
+    Schema.fromKey('metric_type'),
+  ),
+})
+
+export type TaxOverviewMetric = typeof TaxOverviewMetricSchema.Type
+
 const TaxOverviewApiDataSchema = Schema.Struct({
   year: Schema.Number,
-  excludesPendingTransactions: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
-    Schema.fromKey('excludes_pending_transactions'),
-  ),
-  taxableIncomeEstimate: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('taxable_income_estimate'),
-  ),
-  totalIncome: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('total_income'),
-  ),
-  totalDeductions: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('total_deductions'),
-  ),
-  estimatedTaxesOwed: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('estimated_taxes_owed'),
-  ),
-  taxesDueDate: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
-    Schema.fromKey('taxes_due_date'),
-  ),
+  metrics: Schema.Array(TaxOverviewMetricSchema),
 })
 
 export type TaxOverviewApiData = typeof TaxOverviewApiDataSchema.Type

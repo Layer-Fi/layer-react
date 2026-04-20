@@ -39,6 +39,7 @@ interface TimeEntryServiceSelectorProps {
   onSelectedServiceIdChange: (serviceId: string | null) => void
   placeholder?: string
   isReadOnly?: boolean
+  isClearable?: boolean
   inline?: boolean
   className?: string
   showLabel?: boolean
@@ -49,6 +50,7 @@ export function TimeEntryServiceSelector({
   onSelectedServiceIdChange,
   placeholder,
   isReadOnly,
+  isClearable,
   inline,
   className,
   showLabel = true,
@@ -58,7 +60,6 @@ export function TimeEntryServiceSelector({
   const combinedClassName = classNames(
     'Layer__TimeEntryServiceSelector',
     inline && 'Layer__TimeEntryServiceSelector--inline',
-    !showLabel && 'Layer__TimeEntryServiceSelector--without-label',
     className,
   )
 
@@ -125,6 +126,7 @@ export function TimeEntryServiceSelector({
         inputId={inputId}
         placeholder={placeholder ?? t('timeTracking:label.select_service', 'Select a service')}
         slots={{ EmptyMessage, ErrorMessage }}
+        isClearable={isClearable}
         isDisabled={shouldDisableComboBox}
         isError={isError}
         isLoading={isLoadingWithoutFallback}
