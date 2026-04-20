@@ -69,8 +69,8 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
   const dateRange = useGlobalDateRange({ dateSelectionMode })
 
   const [filters, setFilters] = useState<SortParamsByScope>({
-    expenses: undefined,
-    revenue: undefined,
+    expenses: { sortBy: 'value', sortOrder: SortOrder.DESC },
+    revenue: { sortBy: 'value', sortOrder: SortOrder.DESC },
   })
 
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
