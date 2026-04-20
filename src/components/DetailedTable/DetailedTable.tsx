@@ -127,7 +127,7 @@ export const DetailedTable = <T extends SeriesData>({
                     {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                   </HStack>
                 </th>
-                <th className='percent-col'></th>
+                <th className='Layer__DetailedTable__Column--percent'></th>
               </tr>
             </thead>
             <tbody>
