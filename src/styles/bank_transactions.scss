@@ -419,6 +419,11 @@
     grid-area: button;
   }
 
+  & > &__tax-code__Container {
+    flex: 0 1 auto;
+    width: 12.5rem;
+  }
+
   @container (max-width: 768px) {
     display: grid;
     grid-template-areas: 'amount category button';
