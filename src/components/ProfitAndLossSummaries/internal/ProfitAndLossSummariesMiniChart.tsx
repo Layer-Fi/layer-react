@@ -114,7 +114,7 @@ export function ProfitAndLossSummariesMiniChart({
               key={`cell-${index}`}
               className='Layer__DetailedChart__slice'
               fill={
-                entry.name === 'placeholder' ? '#e6e6e6' : colorConfig?.color
+                entry.name === 'placeholder' ? '#e6e6e6' : colorConfig.color
               }
               opacity={colorConfig?.opacity}
             />
