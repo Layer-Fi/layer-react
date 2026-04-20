@@ -58,7 +58,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     if (!shouldFetch || !paginatedData || paginatedData.length === 0) return false
 
     const lastPage = paginatedData[paginatedData.length - 1]
-    return !!lastPage.meta?.pagination.cursor && lastPage.meta?.pagination.has_more
+    return !!(lastPage.meta?.pagination.cursor && lastPage.meta?.pagination.has_more)
   }, [paginatedData, shouldFetch])
 
   const fetchMore = useCallback(() => {
