@@ -2,9 +2,19 @@ import { pipe, Schema } from 'effect'
 
 export enum SortOrder {
   ASC = 'ASC',
-  ASCENDING = 'ASCENDING',
-  DES = 'DES',
   DESC = 'DESC',
+
+  /**
+   * @deprecated Use SortOrder.ASC instead
+   */
+  ASCENDING = 'ASCENDING',
+  /**
+   * @deprecated Use SortOrder.DESC instead
+   */
+  DES = 'DES',
+  /**
+   * @deprecated Use SortOrder.DESC instead
+   */
   DESCENDING = 'DESCENDING',
 }
 
@@ -17,6 +27,10 @@ export type PaginationParams = {
   cursor?: string | null
   limit?: number
   showTotalCount?: boolean
+}
+
+export function getNextSortOrder(currentSortOrder: SortOrder): SortOrder {
+  return currentSortOrder === SortOrder.ASC || currentSortOrder === SortOrder.ASCENDING ? SortOrder.DESC : SortOrder.ASC
 }
 
 export const PaginatedResponseMetaSchema = Schema.Struct({

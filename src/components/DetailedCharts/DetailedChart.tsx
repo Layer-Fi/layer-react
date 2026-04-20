@@ -12,63 +12,63 @@ import {
 } from 'recharts'
 import type { CartesianViewBox } from 'recharts/types/util/types'
 
-import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
-import { type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { isLineItemUncategorized, mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
+import { VStack } from '@ui/Stack/Stack'
+import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData } from '@components/DetailedCharts/types'
 
-interface DetailedChartProps {
-  filteredData: PnlChartLineItem[]
-  filteredTotal?: number
-  hoveredItem: PnlChartLineItem | undefined
-  setHoveredItem: (item: PnlChartLineItem | undefined) => void
-  sidebarScope?: SidebarScope
-  date: number | Date
+import './detailedChart.scss'
+
+export type DetailedChartProps<T extends SeriesData> = {
+  data: DetailData<T>
   isLoading?: boolean
-  showDatePicker?: boolean
-  chartColorsList?: string[]
+  interactionProps: {
+    hoveredItem: T | undefined
+    setHoveredItem: (item: T | undefined) => void
+  }
+  stylingProps: {
+    colorSelector: ColorSelector<T>
+    fallbackFillSelector?: FallbackFillSelector<T>
+  }
+  slots?: {
+    Header?: React.ReactNode
+  }
 }
 
-export const DetailedChart = ({
-  filteredData,
-  filteredTotal,
-  hoveredItem,
-  setHoveredItem,
-  chartColorsList,
+export const DetailedChart = <T extends SeriesData>({
+  data,
   isLoading,
-  showDatePicker = true,
-}: DetailedChartProps) => {
+  interactionProps,
+  stylingProps,
+  slots,
+}: DetailedChartProps<T>) => {
   const { t } = useTranslation()
-  const { formatCurrencyFromCents, formatPercent } = useIntlFormatter()
-  const chartData = useMemo(() => filteredData.map(x => ({
+  const { formatPercent, formatCurrencyFromCents } = useIntlFormatter()
+  const { data: chartData, total } = data
+
+  const normalizedChartData = useMemo(() => chartData.map(x => ({
     ...x,
     value: x.value > 0 ? x.value : 0,
   }
   )),
-  [filteredData])
+  [chartData])
 
-  const typeColorMapping = mapTypesToColors(chartData, chartColorsList)
-
-  const text = hoveredItem
-    ? hoveredItem.displayName
+  const text = interactionProps.hoveredItem
+    ? interactionProps.hoveredItem.displayName
     : t('common:label.total', 'Total')
 
-  const value = hoveredItem
-    ? filteredData.find(
-      x => x.name === hoveredItem.name,
-    )?.value
-    : filteredTotal
+  const value = chartData.find(
+    x => x.name === interactionProps.hoveredItem?.name,
+  )?.value ?? total
 
   let share = null
-  if (hoveredItem) {
-    const item = filteredData.find(
-      x => x.name === hoveredItem.name,
+  if (interactionProps.hoveredItem) {
+    const item = chartData.find(
+      x => x.name === interactionProps.hoveredItem?.name,
     )
-    const positiveTotal = chartData.reduce((sum, x) => sum + x.value, 0)
+    const positiveTotal = normalizedChartData.reduce((sum, x) => sum + x.value, 0)
 
-    const value = item?.value ?? 0
-    share = value > 0 ? value / positiveTotal : 0
+    const value = Math.max(item?.value ?? 0, 0)
+    share = value > 0 && positiveTotal > 0 ? value / positiveTotal : null
   }
 
   const formattedShare = useMemo(() => {
@@ -95,7 +95,7 @@ export const DetailedChart = ({
           x={x + width / 2}
           textAnchor='middle'
           verticalAnchor='middle'
-          className='pie-center-label__title'
+          className='Layer__DetailedChart__centerLabelTitle'
         >
           {text}
         </ChartText>
@@ -104,7 +104,7 @@ export const DetailedChart = ({
           x={x + width / 2}
           textAnchor='middle'
           verticalAnchor='middle'
-          className='pie-center-label__value'
+          className='Layer__DetailedChart__centerLabelValue'
         >
           {formatCurrencyFromCents(value)}
         </ChartText>
@@ -114,22 +114,23 @@ export const DetailedChart = ({
             x={x + width / 2}
             textAnchor='middle'
             verticalAnchor='middle'
-            className='pie-center-label__share'
+            className='Layer__DetailedChart__centerLabelShare'
           >
             {formattedShare}
           </ChartText>
         )}
       </>
     )
-  }, [text, formatCurrencyFromCents, value, share, formattedShare])
+  }, [text, value, share, formattedShare, formatCurrencyFromCents])
 
   return (
-    <div className='chart-field'>
-      <div className='header--tablet'>
-        {showDatePicker && <GlobalMonthPicker />}
-      </div>
-
-      <div className='chart-container'>
+    <VStack className='Layer__DetailedChart'>
+      {slots?.Header && (
+        <VStack className='Layer__DetailedChart__header'>
+          {slots.Header}
+        </VStack>
+      )}
+      <VStack className='Layer__DetailedChart__container'>
         <ResponsiveContainer>
           <PieChart>
             <defs>
@@ -172,12 +173,12 @@ export const DetailedChart = ({
                   animationDuration={200}
                   animationEasing='ease-in-out'
                 >
-                  <Label position='center' value='Loading...' className='pie-center-label__loading' />
+                  <Label position='center' value={t('common:label.loading', 'Loading...')} className='Layer__DetailedChart__centerLabelLoading' />
                 </Pie>
               )
               : (
                 <Pie
-                  data={chartData}
+                  data={normalizedChartData}
                   dataKey='value'
                   nameKey='displayName'
                   cx='50%'
@@ -189,10 +190,12 @@ export const DetailedChart = ({
                   animationDuration={200}
                   animationEasing='ease-in-out'
                 >
-                  {chartData.map((entry, index) => {
-                    let fill: string | undefined = typeColorMapping[index].color
+                  {normalizedChartData.map((entry, index) => {
+                    const colorMapping = stylingProps.colorSelector(entry)
+                    const isFallbackSlice = stylingProps.fallbackFillSelector?.(entry) ?? false
+                    let fill: string | undefined = colorMapping.color
                     let active = true
-                    if (hoveredItem && entry.name !== hoveredItem.name) {
+                    if (interactionProps.hoveredItem && entry.name !== interactionProps.hoveredItem?.name) {
                       active = false
                       fill = undefined
                     }
@@ -201,20 +204,15 @@ export const DetailedChart = ({
                       <Cell
                         key={`cell-${index}`}
                         className={classNames(
-                          'Layer__profit-and-loss-detailed-charts__pie',
-                          hoveredItem && active ? 'active' : 'inactive',
-                          isLineItemUncategorized(entry)
-                          && 'Layer__profit-and-loss-detailed-charts__pie--border',
+                          'Layer__DetailedChart__slice',
+                          interactionProps.hoveredItem && !active && 'Layer__DetailedChart__slice--inactive',
                         )}
-                        style={{
-                          fill:
-                          isLineItemUncategorized(entry) && fill
-                            ? 'url(#layer-pie-dots-pattern)'
-                            : fill,
-                        }}
-                        opacity={typeColorMapping[index].opacity}
-                        onMouseEnter={() => setHoveredItem(entry)}
-                        onMouseLeave={() => setHoveredItem(undefined)}
+                        fill={isFallbackSlice && fill
+                          ? 'url(#layer-pie-dots-pattern)'
+                          : fill}
+                        opacity={colorMapping.opacity}
+                        onMouseEnter={() => interactionProps.setHoveredItem(entry)}
+                        onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
                       />
                     )
                   })}
@@ -223,7 +221,7 @@ export const DetailedChart = ({
               )}
           </PieChart>
         </ResponsiveContainer>
-      </div>
-    </div>
+      </VStack>
+    </VStack>
   )
 }

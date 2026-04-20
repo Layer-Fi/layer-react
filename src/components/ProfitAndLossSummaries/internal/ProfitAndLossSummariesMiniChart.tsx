@@ -71,7 +71,7 @@ export function ProfitAndLossSummariesMiniChart({
   )),
   [data])
 
-  const typeColorMapping = mapTypesToColors(chartData, chartColorsList)
+  const typeColorMapping = useMemo(() => mapTypesToColors<PnlChartLineItem>(chartData, chartColorsList), [chartData, chartColorsList])
 
   let chartDimension: number = 52
   let innerRadius: number = 10
@@ -107,16 +107,16 @@ export function ProfitAndLossSummariesMiniChart({
         animationEasing='ease-in-out'
       >
         {chartData.map((entry, index) => {
-          const colorConfig = typeColorMapping[index]
+          const colorConfig = typeColorMapping(entry.name)
 
           return (
             <Cell
               key={`cell-${index}`}
-              className='Layer__profit-and-loss-detailed-charts__pie'
+              className='Layer__DetailedChart__slice'
               fill={
                 entry.name === 'placeholder' ? '#e6e6e6' : colorConfig.color
               }
-              opacity={colorConfig.opacity}
+              opacity={colorConfig?.opacity}
             />
           )
         })}
