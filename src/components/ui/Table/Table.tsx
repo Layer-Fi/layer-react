@@ -177,7 +177,7 @@ type ColumnStyleProps = {
 
 const Column = forwardRef<HTMLTableCellElement, ColumnProps & ColumnStyleProps & TableRenderingProps>(
   ({ children, className, nonAria, id, alignment = Alignment.Left, colSpan = 1, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ alignment: toAlignmentDataValue(alignment) })
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment) })
     const columnClassName = getClassName(TableSubComponent.Column, className)
 
     const ColumnComponent = nonAria
@@ -208,7 +208,7 @@ type CellStyleProps = {
 
 const Cell = forwardRef<HTMLTableCellElement, CellProps & CellStyleProps & TableRenderingProps>(
   ({ children, className, nonAria, id, alignment, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ alignment: toAlignmentDataValue(alignment) })
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment) })
 
     const CellComponent = nonAria
       ? 'td'

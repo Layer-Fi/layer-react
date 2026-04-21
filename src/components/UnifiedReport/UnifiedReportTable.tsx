@@ -18,11 +18,15 @@ import './unifiedReportTable.scss'
 
 const COMPONENT_NAME = 'UnifiedReport'
 
-const makeLeafColumn = (col: UnifiedReportColumn): LeafColumn<UnifiedReportRow> => ({
+const makeBaseColumn = (col: UnifiedReportColumn) => ({
   id: col.columnKey,
   header: col.displayName,
   isRowHeader: col.isRowHeader,
   alignment: col.alignment,
+})
+
+const makeLeafColumn = (col: UnifiedReportColumn): LeafColumn<UnifiedReportRow> => ({
+  ...makeBaseColumn(col),
   cell: (row: RowType) => {
     const cellValue = row.original.cells[col.columnKey]?.value
 
@@ -34,19 +38,13 @@ const makeLeafColumn = (col: UnifiedReportColumn): LeafColumn<UnifiedReportRow> 
       return <MoneySpan ellipsis amount={cellValue.value} />
     }
 
-    if (isEmptyCellValue(cellValue)) {
-      return null
-    }
-
     return <Span ellipsis>{String(cellValue.value)}</Span>
   },
 })
 
 type UnifiedReportColumnWithRequiredColumns = UnifiedReportColumn & Required<Pick<UnifiedReportColumn, 'columns'>>
 const makeGroupColumn = (col: UnifiedReportColumnWithRequiredColumns): GroupColumn<UnifiedReportRow> => ({
-  id: col.columnKey,
-  header: col.displayName,
-  alignment: col.alignment,
+  ...makeBaseColumn(col),
   columns: buildNestedColumnConfig(col.columns),
 })
 
