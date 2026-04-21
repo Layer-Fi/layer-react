@@ -2,7 +2,6 @@ import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
-import type { ReportType } from '@schemas/reports/reportConfig'
 import type { DateGroupBy, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -19,7 +18,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type GetUnifiedReportExcelParams = {
   businessId: string
-  report: ReportType
+  report: string
   groupBy: DateGroupBy | null
 } & UnifiedReportDateQueryParams
 
@@ -32,7 +31,7 @@ const getUnifiedReportExcel = get<
   return `/v1/businesses/${businessId}/reports/unified/${report}/exports/excel?${parameters}`
 })
 
-const getTag = (report: ReportType) => `#unified-${report}-report-excel`
+const getTag = (report: string) => `#unified-${report}-report-excel`
 
 const UnifiedReportExcelReturnSchema = Schema.Struct({
   data: S3PresignedUrlSchema,

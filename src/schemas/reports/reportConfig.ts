@@ -8,33 +8,18 @@ export enum ReportControl {
   Unknown = 'unknown',
 }
 
-export enum ReportType {
-  ProfitAndLoss = 'profit-and-loss',
-  BalanceSheet = 'balance-sheet',
-  CashflowStatement = 'cashflow-statement',
-  TrialBalance = 'trial-balance',
-  Unknown = 'unknown',
-}
-
 export enum ReportGroupType {
   Accounting = 'accounting',
   Unknown = 'unknown',
 }
 
 const ReportControlSchema = Schema.Enums(ReportControl)
-const ReportTypeSchema = Schema.Enums(ReportType)
 const ReportGroupTypeSchema = Schema.Enums(ReportGroupType)
 
 const TransformedReportControlSchema = createTransformedEnumSchema(
   ReportControlSchema,
   ReportControl,
   ReportControl.Unknown,
-)
-
-const TransformedReportTypeSchema = createTransformedEnumSchema(
-  ReportTypeSchema,
-  ReportType,
-  ReportType.Unknown,
 )
 
 const TransformedReportGroupTypeSchema = createTransformedEnumSchema(
@@ -46,7 +31,7 @@ const TransformedReportGroupTypeSchema = createTransformedEnumSchema(
 export const ReportConfigSchema = Schema.Struct({
   key: Schema.String,
   reportType: pipe(
-    Schema.propertySignature(TransformedReportTypeSchema),
+    Schema.propertySignature(Schema.String),
     Schema.fromKey('report_type'),
   ),
   displayName: pipe(

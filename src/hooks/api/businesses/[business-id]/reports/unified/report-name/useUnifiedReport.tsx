@@ -1,7 +1,6 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import type { ReportType } from '@schemas/reports/reportConfig'
 import type { DateGroupBy, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { UnifiedReportSchema } from '@schemas/reports/unifiedReport'
 import { get } from '@utils/api/authenticatedHttp'
@@ -39,7 +38,7 @@ function buildKey({
 
 const getUnifiedReport = get<
   { data: unknown },
-  { businessId: string, report: ReportType, groupBy: DateGroupBy | null } & UnifiedReportDateQueryParams
+  { businessId: string, report: string, groupBy: DateGroupBy | null } & UnifiedReportDateQueryParams
 >(({ businessId, report, groupBy, ...dateParams }) => {
   const parameters = toDefinedSearchParameters({ ...dateParams, groupBy })
 

@@ -1,7 +1,7 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
 import { createStore, type StoreApi, useStore } from 'zustand'
 
-import { type ReportConfig, ReportControl, type ReportGroup, type ReportType } from '@schemas/reports/reportConfig'
+import { type ReportConfig, ReportControl, type ReportGroup } from '@schemas/reports/reportConfig'
 import { DateGroupBy, type DateQueryParams, type DateRangeQueryParams } from '@schemas/reports/unifiedReport'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
@@ -32,7 +32,7 @@ const hasGroupByControl = (report: ReportConfig): boolean =>
   report.controls.includes(ReportControl.GroupBy)
 
 export type UnifiedReportParams = {
-  report: ReportType
+  report: string
   groupBy: DateGroupBy | null
 } & (DateQueryParams | DateRangeQueryParams)
 
