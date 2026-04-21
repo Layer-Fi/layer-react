@@ -204,8 +204,8 @@ export const DetailedChart = <T extends SeriesData>({
                       <Cell
                         key={`cell-${index}`}
                         className={classNames(
-                          'Layer__DetailedChart__slice',
-                          interactionProps.hoveredItem && !active && 'Layer__DetailedChart__slice--inactive',
+                          'Layer__DetailedChart__Slice',
+                          interactionProps.hoveredItem && !active && 'Layer__DetailedChart__Slice--inactive',
                         )}
                         fill={isFallbackSlice && fill
                           ? 'url(#layer-pie-dots-pattern)'

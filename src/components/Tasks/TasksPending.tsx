@@ -83,7 +83,7 @@ export const TasksPending = () => {
                     return (
                       <Cell
                         key={`cell-${index}`}
-                        className='Layer__DetailedChart__slice'
+                        className='Layer__DetailedChart__Slice'
                         fill={
                           TASKS_CHARTS_COLORS[
                             task.name as keyof typeof TASKS_CHARTS_COLORS
