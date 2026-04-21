@@ -21,7 +21,7 @@ export const UnifiedReport = ({ dateSelectionMode = 'full' }: UnifiedReportProps
     <View title={t('reports:label.reports', 'Reports')} viewClassName='Layer__UnifiedReport'>
       <UnifiedReportStoreProvider>
         <ExpandableDataTableProvider>
-          <HStack className='Layer__UnifiedReport__Layout'>
+          <HStack>
             <VStack className='Layer__UnifiedReport__Sidebar'>
               <ReportsNavigation />
             </VStack>
