@@ -138,7 +138,6 @@ export const BankTransactionsMobileListSplitForm = ({
                 <VStack
                   key={`split-${index}`}
                   gap='xs'
-                  className='Layer__BankTransactionsMobileSplitForm__SplitEntry'
                 >
                   <HStack
                     justify='space-between'
@@ -195,35 +194,27 @@ export const BankTransactionsMobileListSplitForm = ({
                         )}
                     </HStack>
                   </HStack>
-                  <HStack
-                    gap='xs'
-                    align='start'
-                    className='Layer__BankTransactionsMobileSplitForm__SplitSelectors'
-                  >
-                    <HStack className='Layer__BankTransactionsMobileSplitForm__CategorySelect'>
-                      <CategorySelectDrawerWithTrigger
-                        value={split.category}
-                        onChange={handleCategoryChange(index)}
-                        showTooltips={showTooltips}
-                      />
-                    </HStack>
-                    {showTaxCodeSelector && (
-                      <ComboBox<TaxCodeOption>
-                        selectedValue={getSelectedTaxCodeOption(split.taxCode)}
-                        onSelectedValueChange={handleTaxCodeChange(index)}
-                        options={taxCodeOptions}
-                        isDisabled={
-                          !showCategorization
-                          || split.category === null
-                          || split.category.classification?.type === 'Exclusion'
-                        }
-                        isSearchable={false}
-                        isClearable
-                        placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
-                        className='Layer__BankTransactionsMobileSplitForm__TaxCodeSelect'
-                      />
-                    )}
-                  </HStack>
+                  <CategorySelectDrawerWithTrigger
+                    value={split.category}
+                    onChange={handleCategoryChange(index)}
+                    showTooltips={showTooltips}
+                  />
+                  {showTaxCodeSelector && (
+                    <ComboBox<TaxCodeOption>
+                      selectedValue={getSelectedTaxCodeOption(split.taxCode)}
+                      onSelectedValueChange={handleTaxCodeChange(index)}
+                      options={taxCodeOptions}
+                      isDisabled={
+                        !showCategorization
+                        || split.category === null
+                        || split.category.classification?.type === 'Exclusion'
+                      }
+                      isSearchable={false}
+                      isClearable
+                      placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
+                      className='Layer__BankTransactionsMobileSplitForm__TaxCodeSelect'
+                    />
+                  )}
                 </VStack>
               ))}
             </VStack>
