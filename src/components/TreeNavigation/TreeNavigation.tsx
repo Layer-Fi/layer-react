@@ -95,7 +95,7 @@ const renderTreeLeaf = <TLeaf extends object>({
     textValue={leafConfig.getTextValue(leaf)}
   >
     <TreeItemContent>
-      <HStack className='Layer__TreeNavigation-Row' align='center' justify='space-between'>
+      <HStack align='center' justify='space-between'>
         {leafConfig.renderLabel(leaf)}
         <Check className='Layer__TreeNavigation-Check' width={14} height={14} />
       </HStack>
@@ -180,6 +180,7 @@ export function TreeNavigation<TGroup extends object, TLeaf extends object>({
       expandedKeys={expandedKeys}
       onExpandedChange={setExpandedKeys}
       items={itemArray}
+      className='Layer__TreeNavigation'
     >
       {renderItem}
     </Tree>

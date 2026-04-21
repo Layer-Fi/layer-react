@@ -1,4 +1,5 @@
 import { forwardRef, type ReactNode } from 'react'
+import classNames from 'classnames'
 import {
   Tree as ReactAriaTree,
   TreeItem as ReactAriaTreeItem,
@@ -15,12 +16,12 @@ import './tree.scss'
 const TREE_CLASS_NAME = 'Layer__UI__Tree'
 const TREE_ITEM_CLASS_NAME = 'Layer__UI__TreeItem'
 
-type TreeProps<T> = Omit<ReactAriaTreeProps<T>, 'className'>
+type TreeProps<T> = ReactAriaTreeProps<T>
 const TreeInner = <T extends object>(
-  { children, ...restProps }: TreeProps<T>,
+  { children, className, ...restProps }: TreeProps<T>,
   ref: React.Ref<HTMLDivElement>,
 ) => (
-  <ReactAriaTree {...restProps} className={TREE_CLASS_NAME} ref={ref}>
+  <ReactAriaTree {...restProps} className={classNames(TREE_CLASS_NAME, className)} ref={ref}>
     {withRenderProp(children, node => node) as ReactNode}
   </ReactAriaTree>
 )

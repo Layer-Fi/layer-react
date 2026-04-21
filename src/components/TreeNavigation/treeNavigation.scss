@@ -1,8 +1,4 @@
-.Layer__TreeNavigation-Row {
-  cursor: pointer;
-}
-
-.Layer__UI__TreeItem {
+.Layer__TreeNavigation .Layer__UI__TreeItem {
   position: relative;
   align-content: center;
   height: var(--spacing-5xl);
@@ -11,6 +7,7 @@
   padding-inline-end: var(--spacing-md);
 
   border-bottom: 1px solid var(--color-base-300);
+  cursor: pointer;
 
   .Layer__TreeNavigation-Check {
     visibility: hidden;
@@ -22,6 +19,10 @@
 
   &[aria-level='2'] {
     background-color: var(--color-base-50);
+  }
+
+  &[data-hovered] {
+    background-color: var(--color-base-100);
   }
 
   &[data-selected] {
