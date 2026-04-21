@@ -32,10 +32,10 @@
   font-size: 14px;
 }
 
-.Layer__DetailedChart__slice {
+.Layer__DetailedChart__Slice {
   transition: fill 1000ms ease-out;
 }
 
-.Layer__DetailedChart__slice--inactive {
+.Layer__DetailedChart__Slice--inactive {
   fill: var(--color-base-300);
 }

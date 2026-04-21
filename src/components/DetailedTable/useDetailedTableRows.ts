@@ -2,22 +2,21 @@ import { useMemo } from 'react'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { type DetailData } from '@components/DetailedCharts/types'
+import { type SeriesData } from '@components/DetailedCharts/types'
 
-import { type SeriesDataWithType } from './DetailedTable'
-
-export type DetailedTableRow<T extends SeriesDataWithType> = {
+export type DetailedTableRow<T extends SeriesData> = {
   key: string
   item: T
   formattedShare: string
   isValueDisabled: boolean
 }
 
-type UseDetailedTableRowsParams<T extends SeriesDataWithType> = {
+type UseDetailedTableRowsParams<T extends SeriesData> = {
   data: DetailData<T>
   isDisabled?: (item: T) => boolean
 }
 
-export const useDetailedTableRows = <T extends SeriesDataWithType>({
+export const useDetailedTableRows = <T extends SeriesData>({
   data,
   isDisabled,
 }: UseDetailedTableRowsParams<T>): DetailedTableRow<T>[] => {
@@ -37,7 +36,7 @@ export const useDetailedTableRows = <T extends SeriesDataWithType>({
         maximumFractionDigits: shareFractionDigits,
       })
 
-      const baseKey = `DetailedTableRow-${item.type}-${item.name}-${item.displayName}-${item.value}`
+      const baseKey = `DetailedTableRow-${'type' in item ? item.type : ''}-${item.name}-${item.displayName}-${item.value}`
       const occurrence = rowKeyOccurrences.get(baseKey) ?? 0
       rowKeyOccurrences.set(baseKey, occurrence + 1)
 

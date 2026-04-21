@@ -1,15 +1,14 @@
 import { useTranslation } from 'react-i18next'
 
-import { type TaxOverviewApiData } from '@schemas/taxEstimates/overview'
 import { tConditional } from '@utils/i18n/conditional'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { TaxableIncomeCard } from '@components/TaxOverview/TaxableIncomeCard'
 
 import '@components/TaxOverview/taxOverview.scss'
@@ -56,28 +55,26 @@ const TaxOverviewHeader = () => {
   )
 }
 
-const TaxOverviewContent = ({ data }: { data: TaxOverviewApiData }) => {
-  return (
-    <VStack className='Layer__TaxOverview' gap='md'>
-      <TaxableIncomeCard
-        metrics={data.metrics}
-      />
-    </VStack>
-  )
-}
-
 export const TaxOverview = () => {
-  const { year } = useTaxEstimatesYear()
-  const { fullYearProjection } = useFullYearProjection()
-  const { data } = useTaxOverview({
-    year,
-    fullYearProjection,
-    enabled: true,
-  })
-
+  const { isDesktop } = useSizeClass()
   return (
     <ResponsiveDetailView name='TaxOverview' slots={{ Header: TaxOverviewHeader }}>
-      {data && <TaxOverviewContent data={data} />}
+      {isDesktop
+        ? (
+          <>
+            <VStack className='Layer__TaxOverview' gap='md'>
+              <TaxableIncomeCard />
+            </VStack>
+            <TaxEstimatesSummaryCard />
+          </>
+        )
+        : (
+          <VStack className='Layer__TaxOverview' gap='md'>
+            <TaxableIncomeCard />
+            <TaxEstimatesSummaryCard />
+          </VStack>
+        )}
+
     </ResponsiveDetailView>
   )
 }

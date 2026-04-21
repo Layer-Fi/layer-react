@@ -19,13 +19,11 @@ import { type ColorSelector, type FallbackFillSelector } from '@components/Detai
 import { DetailedTable, type DetailedTableStringOverrides } from '@components/DetailedTable/DetailedTable'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
+import { usePnlDetailedTableRows } from '@components/ProfitAndLossDetailedCharts/usePnlDetailedTableRows'
+import { isLineItemUncategorized, mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
-
-import { usePnlDetailedTableRows } from './usePnlDetailedTableRows'
-import { isLineItemUncategorized, mapTypesToColors } from './utils'
-
 export interface DetailedChartStringOverrides {
   expenseChartHeader?: string
   revenueChartHeader?: string

@@ -192,7 +192,6 @@ export const TimeTrackingStats = ({ selectedFilterParams }: TimeTrackingStatsPro
             <Loader />
           </HStack>
         )}
-        Inactive={null}
         Error={(
           <DataState
             status={DataStateStatus.failed}

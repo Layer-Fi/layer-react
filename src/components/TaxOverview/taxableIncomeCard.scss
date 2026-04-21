@@ -22,19 +22,19 @@
   fill: var(--color-base-100);
 }
 
-.Layer__TaxOverview__IncomeMeter__fill {
+.Layer__TaxOverview__IncomeMeter.Layer__TaxOverview__Meter__fill {
   fill: var(--color-tax-overview-income-meter-fill);
 }
 
-.Layer__TaxOverview__DeductionsMeter__fill {
+.Layer__TaxOverview__DeductionsMeter.Layer__TaxOverview__Meter__fill {
   fill: var(--color-tax-overview-deductions-meter-fill);
 }
 
-.Layer__TaxOverview__TaxableIncomeMeter__fill {
+.Layer__TaxOverview__TaxableIncomeMeter.Layer__TaxOverview__Meter__fill {
   fill: var(--color-tax-overview-taxable-income-meter-fill);
 }
 
-.Layer__TaxOverview__UnknownMetricMeter__fill {
+.Layer__TaxOverview__UnknownMetricMeter.Layer__TaxOverview__Meter__fill {
   fill: var(--color-tax-overview-unknown-meter-fill);
 }
 
