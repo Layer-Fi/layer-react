@@ -71,16 +71,15 @@ export const TaxEstimatesSummaryCard = () => {
           </VStack>
         )
       }
+      else {
+        return (
+          <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
+            <DetailedChart<SeriesData> {...CommonProps} />
+            <DetailedTableWithData<SeriesData> {...CommonProps} {...NoSortProps} />
+          </HStack>
+        )
+      }
     }
-    else {
-      return (
-        <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
-          <DetailedChart<SeriesData> {...CommonProps} />
-          <DetailedTableWithData<SeriesData> {...CommonProps} {...NoSortProps} />
-        </HStack>
-      )
-    }
-    return null
   }, [isLoading, isError, isMobile, isSummaryCardLayout, CommonProps])
 
   return (
