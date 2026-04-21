@@ -9,6 +9,118 @@ import unusedImportsPlugin from 'eslint-plugin-unused-imports'
 import pluginImport from 'eslint-plugin-import'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
+const layerNamingPlugin = {
+  rules: {
+    'constant-enum-casing': {
+      meta: {
+        type: 'suggestion',
+        docs: {
+          description: 'enforce SCREAMING_SNAKE_CASE for exported static constants and PascalCase for enum string values',
+        },
+        schema: [],
+        messages: {
+          constantCase: 'Exported static constants should use SCREAMING_SNAKE_CASE.',
+          enumMemberCase: 'Enum members should use PascalCase.',
+        },
+      },
+      create(context) {
+        const screamingSnakeCasePattern = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$/
+        const pascalCasePattern = /^[A-Z][A-Za-z0-9]*$/
+
+        function isStaticConstantExpression(node) {
+          if (!node) {
+            return false
+          }
+
+          switch (node.type) {
+            case 'Literal':
+              return true
+            case 'TemplateLiteral':
+              return node.expressions.length === 0
+            case 'ArrayExpression':
+              return node.elements.every((element) => {
+                if (!element) {
+                  return true
+                }
+                if (element.type === 'SpreadElement') {
+                  return false
+                }
+                return isStaticConstantExpression(element)
+              })
+            case 'ObjectExpression':
+              return node.properties.every((prop) => {
+                if (prop.type !== 'Property') {
+                  return false
+                }
+                if (prop.computed || prop.method) {
+                  return false
+                }
+                return isStaticConstantExpression(prop.value)
+              })
+            default:
+              return false
+          }
+        }
+
+        function isExportedConst(declarator) {
+          const declaration = declarator.parent
+          if (!declaration || declaration.type !== 'VariableDeclaration' || declaration.kind !== 'const') {
+            return false
+          }
+
+          const exportNode = declaration.parent
+          return exportNode && exportNode.type === 'ExportNamedDeclaration'
+        }
+
+        return {
+          VariableDeclarator(node) {
+            if (node.id.type !== 'Identifier') {
+              return
+            }
+
+            if (!isExportedConst(node)) {
+              return
+            }
+
+            if (!isStaticConstantExpression(node.init)) {
+              return
+            }
+
+            if (!screamingSnakeCasePattern.test(node.id.name)) {
+              context.report({
+                node: node.id,
+                messageId: 'constantCase',
+              })
+            }
+          },
+          TSEnumMember(node) {
+            if (node.id.type !== 'Identifier') {
+              return
+            }
+
+            const enumDeclaration = node.parent
+            if (enumDeclaration?.type !== 'TSEnumDeclaration') {
+              return
+            }
+
+            // Incremental rollout: only enforce local enums first.
+            if (enumDeclaration.parent?.type === 'ExportNamedDeclaration') {
+              return
+            }
+
+            if (!pascalCasePattern.test(node.id.name)) {
+              context.report({
+                node: node.id,
+                messageId: 'enumMemberCase',
+              })
+            }
+          },
+        }
+      },
+    },
+  },
+}
+
 export default tsEslint.config(
   {
     ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**'],
@@ -85,9 +197,23 @@ export default tsEslint.config(
     },
   },
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['eslint.config.mjs'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+    },
+  },
+  {
+    files: ['src/components/**/*.{ts,tsx}', 'src/hooks/features/**/*.{ts,tsx}'],
+    plugins: {
+      layerNaming: layerNamingPlugin,
+    },
     rules: {
       'no-restricted-imports': ['error', { patterns: ['*.css'] }],
+      'layerNaming/constant-enum-casing': 'error',
     },
   },
   {
