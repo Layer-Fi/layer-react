@@ -48,9 +48,11 @@ export const ActiveTimeTrackerStartDrawer = ({
 }: ActiveTimeTrackerStartDrawerProps) => {
   const { t } = useTranslation()
 
-  const { form, state, clearActionError } = useStartTimerForm({
-    onStarted: () => onOpenChange(false),
-  })
+  const onStarted = useCallback(() => {
+    onOpenChange(false)
+  }, [onOpenChange])
+
+  const { form, state, clearActionError } = useStartTimerForm({ onStarted })
 
   const handleOpenChange = useCallback((nextIsOpen: boolean) => {
     if (!nextIsOpen) {
