@@ -22,13 +22,3 @@ declare namespace Intl {
     format(duration: DurationInput): string
   }
 }
-
-declare module '@formatjs/intl-durationformat' {
-  export type DurationInput = Intl.DurationInput
-  export type DurationFormatOptions = Intl.DurationFormatOptions
-
-  export class DurationFormat {
-    constructor(locales?: string | string[], options?: DurationFormatOptions)
-    format(duration: DurationInput): string
-  }
-}
