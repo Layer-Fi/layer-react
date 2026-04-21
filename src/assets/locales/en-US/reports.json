@@ -1,6 +1,8 @@
 {
   "action": {
+    "collapse_all": "Collapse All",
     "collapse_rows": "Collapse all rows",
+    "expand_all": "Expand All",
     "expand_rows": "Expand all rows"
   },
   "empty": {
@@ -11,15 +13,16 @@
   },
   "error": {
     "couldnt_load_report": "We couldn’t load your report",
+    "couldnt_load_reports": "Failed to load reports",
     "load_detail_lines": "Error loading detail lines",
     "load_pnl_detail_lines": "There was an error loading the profit and loss detail lines",
-    "load_report": "An error occurred while loading your report. Please check your connection and try again."
+    "load_report": "An error occurred while loading your report. Please check your connection and try again.",
+    "load_reports_navigation": "Something went wrong while loading this navigation. Please try again."
   },
   "label": {
     "adjustments_net_income": "Adjustments to Net Income",
     "assets": "Assets",
     "balance_sheet": "Balance Sheet",
-    "balance_sheet_report": "Balance Sheet Report",
     "cash_beginning_of_period": "Cash at Beginning of Period",
     "cash_end_of_period": "Cash at End of Period",
     "compare": "Compare by",
@@ -36,12 +39,11 @@
     "other_outflows": "Other Outflows",
     "profit_before_taxes": "Profit Before Taxes",
     "profit_loss_detail_report": "Profit and Loss Detail Report",
-    "profit_loss_report": "Profit & Loss Report",
     "report_period": "Report period",
     "report_type": "Report type",
     "reports": "Reports",
+    "reports_navigation": "Reports navigation",
     "statement_cash_flow": "Statement of Cash Flow",
-    "statement_cash_flow_report": "Statement of Cash Flow Report",
     "total_display_name": "Total of {{displayName}}"
   }
 }
