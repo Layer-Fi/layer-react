@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
@@ -118,4 +118,15 @@ export function useCallBookingsGlobalCacheActions() {
   )
 
   return { forceReloadCallBookings }
+}
+
+export function useOnboardingCallBooking() {
+  const { data } = useCallBookings()
+
+  return useMemo(
+    () => data
+      ?.flatMap(({ data: page }) => page)
+      .find(({ purpose }) => purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING),
+    [data],
+  )
 }
