@@ -26,8 +26,47 @@ const layerNamingPlugin = {
       create(context) {
         const screamingSnakeCasePattern = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$/
         const pascalCasePattern = /^[A-Z][A-Za-z0-9]*$/
+        const program = context.sourceCode.ast
 
-        function isStaticConstantExpression(node) {
+        function isExportedIdentifierName(identifierName) {
+          return program.body.some((statement) => {
+            if (statement.type !== 'ExportNamedDeclaration') {
+              return false
+            }
+
+            if (statement.declaration?.type === 'VariableDeclaration' && statement.declaration.kind === 'const') {
+              return statement.declaration.declarations.some(
+                declaration => declaration.id.type === 'Identifier' && declaration.id.name === identifierName,
+              )
+            }
+
+            if (statement.source) {
+              return false
+            }
+
+            return statement.specifiers.some(
+              specifier => specifier.type === 'ExportSpecifier'
+                && specifier.local.type === 'Identifier'
+                && specifier.local.name === identifierName,
+            )
+          })
+        }
+
+        function findVariableInScope(scope, variableName) {
+          let currentScope = scope
+
+          while (currentScope) {
+            const variable = currentScope.set.get(variableName)
+            if (variable) {
+              return variable
+            }
+            currentScope = currentScope.upper
+          }
+
+          return null
+        }
+
+        function isStaticConstantExpression(node, seenVariables = new Set()) {
           if (!node) {
             return false
           }
@@ -50,13 +89,43 @@ const layerNamingPlugin = {
             case 'ObjectExpression':
               return node.properties.every((prop) => {
                 if (prop.type !== 'Property') {
-                  return false
+                  if (prop.type !== 'SpreadElement') {
+                    return false
+                  }
+                  return isStaticConstantExpression(prop.argument, seenVariables)
                 }
                 if (prop.computed || prop.method) {
                   return false
                 }
-                return isStaticConstantExpression(prop.value)
+                return isStaticConstantExpression(prop.value, seenVariables)
               })
+            case 'UnaryExpression':
+              if (!['-', '+', '!', '~'].includes(node.operator)) {
+                return false
+              }
+              return isStaticConstantExpression(node.argument, seenVariables)
+            case 'Identifier': {
+              const scope = context.sourceCode.getScope(node)
+              const variable = findVariableInScope(scope, node.name)
+              if (!variable || seenVariables.has(variable)) {
+                return false
+              }
+
+              const definition = variable.defs.find(
+                def => def.type === 'Variable' && def.node.type === 'VariableDeclarator',
+              )
+              if (!definition) {
+                return false
+              }
+
+              const variableDeclaration = definition.parent
+              if (!variableDeclaration || variableDeclaration.type !== 'VariableDeclaration' || variableDeclaration.kind !== 'const') {
+                return false
+              }
+
+              const identifierDeclaration = definition.node
+              return isStaticConstantExpression(identifierDeclaration.init, new Set([...seenVariables, variable]))
+            }
             default:
               return false
           }
@@ -68,8 +137,7 @@ const layerNamingPlugin = {
             return false
           }
 
-          const exportNode = declaration.parent
-          return exportNode && exportNode.type === 'ExportNamedDeclaration'
+          return declarator.id.type === 'Identifier' && isExportedIdentifierName(declarator.id.name)
         }
 
         return {
@@ -212,7 +280,6 @@ export default tsEslint.config(
       layerNaming: layerNamingPlugin,
     },
     rules: {
-      'no-restricted-imports': ['error', { patterns: ['*.css'] }],
       'layerNaming/constant-enum-casing': 'error',
     },
   },
@@ -244,6 +311,7 @@ export default tsEslint.config(
   {
     files: ['**/*.{ts,tsx}'],
     rules: {
+      'no-restricted-imports': ['error', { patterns: ['*.css'] }],
       '@typescript-eslint/consistent-type-imports': ['error', {
         prefer: 'type-imports',
         fixStyle: 'inline-type-imports',
