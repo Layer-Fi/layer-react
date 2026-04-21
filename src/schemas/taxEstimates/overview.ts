@@ -2,6 +2,8 @@ import { pipe, Schema } from 'effect'
 
 import { createTransformedEnumSchema } from '@schemas/utils'
 
+import { type TaxSummarySectionType } from './summary'
+
 export enum TaxOverviewMetricType {
   TotalIncome = 'TOTAL_INCOME',
   TotalPreAgiDeductions = 'TOTAL_PRE_AGI_DEDUCTIONS',
@@ -45,10 +47,8 @@ export const TaxOverviewApiResponseSchema = Schema.Struct({
 
 export type TaxOverviewApiResponse = typeof TaxOverviewApiResponseSchema.Type
 
-export type TaxOverviewCategoryKey = 'federal' | 'state'
-
 export type TaxOverviewCategory = {
   amount: number
-  key: TaxOverviewCategoryKey
+  key: TaxSummarySectionType
   label: string
 }
