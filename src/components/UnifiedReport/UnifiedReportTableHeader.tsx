@@ -1,4 +1,5 @@
 import { useCallback, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { UnifiedReportDateVariant, useActiveUnifiedReport, useUnifiedReportDateVariant, useUnifiedReportGroupByParam } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
@@ -19,6 +20,7 @@ type UnifiedReportTableHeaderProps = {
 }
 
 export const UnifiedReportTableHeader = ({ dateSelectionMode }: UnifiedReportTableHeaderProps) => {
+  const { t } = useTranslation()
   const dateVariant = useUnifiedReportDateVariant()
   const groupBySetter = useUnifiedReportGroupByParam()
   const { report } = useActiveUnifiedReport()
@@ -52,7 +54,9 @@ export const UnifiedReportTableHeader = ({ dateSelectionMode }: UnifiedReportTab
         </HStack>
         <HStack pi='lg' className='Layer__UnifiedReport__Header__SecondaryActions'>
           <Button variant='outlined' onClick={onClickExpandOrCollapse}>
-            {shouldCollapse ? 'Collapse All' : 'Expand All'}
+            {shouldCollapse
+              ? t('reports:action.collapse_all', 'Collapse All')
+              : t('reports:action.expand_all', 'Expand All')}
           </Button>
           <UnifiedReportDownloadButton dateSelectionMode={dateSelectionMode} />
         </HStack>

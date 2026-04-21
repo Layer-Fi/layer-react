@@ -1,5 +1,6 @@
 import { Landmark } from 'lucide-react'
 import type { ComponentType } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { ReportConfig, ReportGroup } from '@schemas/reports/reportConfig'
 import { ReportGroupType } from '@schemas/reports/reportConfig'
@@ -20,14 +21,17 @@ import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './reportsNavigation.scss'
 
-const ReportsNavigationError = () => (
-  <DataState
-    status={DataStateStatus.failed}
-    title='Failed to load reports'
-    description='Something went wrong while loading this navigation. Please try again.'
-    spacing
-  />
-)
+const ReportsNavigationError = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      status={DataStateStatus.failed}
+      title={t('reports:error.couldnt_load_reports', 'Failed to load reports')}
+      description={t('reports:error.load_reports_navigation', 'Something went wrong while loading this navigation. Please try again.')}
+      spacing
+    />
+  )
+}
 
 const REPORT_GROUP_ICON: Record<ReportGroupType, ComponentType<IconSvgProps>> = {
   [ReportGroupType.Accounting]: Landmark,
@@ -38,6 +42,7 @@ const isReportGroup = (item: ReportGroup | ReportConfig): item is ReportGroup =>
   'reports' in item
 
 export function ReportsNavigation() {
+  const { t } = useTranslation()
   const { data, isLoading, isError } = useReportConfig()
   const { report, setReport } = useActiveUnifiedReport()
 
@@ -74,7 +79,7 @@ export function ReportsNavigation() {
     >
       {({ data }) => (
         <TreeNavigation
-          ariaLabel='Reports navigation'
+          ariaLabel={t('reports:label.reports_navigation', 'Reports navigation')}
           items={data}
           selectedItem={report?.key ?? null}
           isGroup={isReportGroup}

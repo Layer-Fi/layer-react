@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { UnifiedReportStoreProvider } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -14,8 +16,9 @@ type UnifiedReportProps = {
 }
 
 export const UnifiedReport = ({ dateSelectionMode = 'full' }: UnifiedReportProps) => {
+  const { t } = useTranslation()
   return (
-    <View title='Reports' viewClassName='Layer__UnifiedReport'>
+    <View title={t('reports:label.reports', 'Reports')} viewClassName='Layer__UnifiedReport'>
       <UnifiedReportStoreProvider>
         <ExpandableDataTableProvider>
           <HStack className='Layer__UnifiedReport__Layout'>
