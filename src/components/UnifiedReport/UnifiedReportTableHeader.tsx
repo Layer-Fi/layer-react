@@ -5,7 +5,7 @@ import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateSto
 import { UnifiedReportDateVariant, useActiveUnifiedReport, useUnifiedReportDateVariant, useUnifiedReportGroupByParam } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { Header } from '@ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
@@ -40,7 +40,7 @@ export const UnifiedReportTableHeader = ({ dateSelectionMode }: UnifiedReportTab
     <VStack gap='lg'>
       <HStack pis='lg' pbs='lg'>
         {report
-          ? <Header>{report.displayName}</Header>
+          ? <Span size='lg' weight='bold'>{report.displayName}</Span>
           : <SkeletonLoader width='192px' height='24px' />}
       </HStack>
       <HStack fluid justify='space-between' align='end' pbe='lg' className='Layer__UnifiedReport__Header'>
