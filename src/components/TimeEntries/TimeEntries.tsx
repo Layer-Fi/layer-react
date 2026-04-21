@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { createContext, useCallback, useContext, useMemo } from 'react'
 import { Clock, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -16,12 +16,11 @@ interface TimeEntriesProps {
   isStartTimerDisabled?: boolean
 }
 
-type TimeEntriesEmptyStateProps = {
-  isFiltered: boolean
-}
+const TimeEntriesEmptyTableContext = createContext({ isFiltered: false })
 
-const TimeEntriesEmptyState = ({ isFiltered }: TimeEntriesEmptyStateProps) => {
+const TimeEntriesEmptyState = () => {
   const { t } = useTranslation()
+  const { isFiltered } = useContext(TimeEntriesEmptyTableContext)
 
   if (isFiltered) {
     return (
@@ -89,12 +88,17 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
     }
   }, [hasMore, setSize, size])
 
+  const emptyTableContextValue = useMemo(
+    () => ({ isFiltered: hasActiveTableFilters }),
+    [hasActiveTableFilters],
+  )
+
   const tableSlots = useMemo(
     () => ({
-      EmptyState: () => <TimeEntriesEmptyState isFiltered={hasActiveTableFilters} />,
+      EmptyState: TimeEntriesEmptyState,
       ErrorState: TimeEntriesErrorState,
     }),
-    [hasActiveTableFilters],
+    [],
   )
 
   const paginationProps = useMemo(() => ({
@@ -106,13 +110,15 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
 
   return (
     <>
-      <TimeEntriesTable
-        data={entries}
-        isLoading={isLoading}
-        isError={isError}
-        paginationProps={paginationProps}
-        slots={tableSlots}
-      />
+      <TimeEntriesEmptyTableContext.Provider value={emptyTableContextValue}>
+        <TimeEntriesTable
+          data={entries}
+          isLoading={isLoading}
+          isError={isError}
+          paginationProps={paginationProps}
+          slots={tableSlots}
+        />
+      </TimeEntriesEmptyTableContext.Provider>
       <TimeEntryDrawer />
       {entryToDelete && (
         <TimeEntryDeleteConfirmationModal entry={entryToDelete} />
