@@ -12,6 +12,7 @@ export enum ReportType {
   ProfitAndLoss = 'profit-and-loss',
   BalanceSheet = 'balance-sheet',
   CashflowStatement = 'cashflow-statement',
+  TrialBalance = 'trial-balance',
   Unknown = 'unknown',
 }
 
