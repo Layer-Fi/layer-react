@@ -1,10 +1,11 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
 import { ActionableList, type ActionableListOption } from '@components/ActionableList/ActionableList'
+import { SearchField } from '@components/SearchField/SearchField'
 
 const CLEAR_ROW_ID = '__tax_code_clear__'
 
@@ -31,6 +32,7 @@ export const TaxCodeSelectDrawer = ({
   isClearable = true,
 }: TaxCodeSelectDrawerProps) => {
   const { t } = useTranslation()
+  const [query, setQuery] = useState('')
 
   const listOptions: ActionableListOption<TaxCodeSelectOption | null>[] = options.map(option => ({
     id: option.value,
@@ -46,6 +48,18 @@ export const TaxCodeSelectDrawer = ({
     })
   }
 
+  const queryTrimmed = query.trim().toLowerCase()
+  const filteredListOptions = queryTrimmed
+    ? listOptions.filter(opt => opt.label.toLowerCase().includes(queryTrimmed))
+    : listOptions
+
+  const handleOpenChange = useCallback((nextIsOpen: boolean) => {
+    if (!nextIsOpen) {
+      setQuery('')
+    }
+    onOpenChange(nextIsOpen)
+  }, [onOpenChange])
+
   const Header = useCallback(({ close }: { close: () => void }) => (
     <ModalTitleWithClose
       heading={<ModalHeading size='sm' weight='bold'>{t('bankTransactions:action.select_tax_code', 'Select tax code')}</ModalHeading>}
@@ -58,15 +72,16 @@ export const TaxCodeSelectDrawer = ({
     <Drawer
       slots={{ Header }}
       isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       variant='mobile-drawer'
       fixedHeight
       isDismissable
     >
       {({ close }) => (
         <VStack className='Layer__bank-transaction-mobile-list-item__categories_list-container' pb='md' gap='md'>
+          <SearchField value={query} onChange={setQuery} label={t('bankTransactions:action.search_tax_codes', 'Search tax codes...')} />
           <ActionableList<TaxCodeSelectOption | null>
-            options={listOptions}
+            options={filteredListOptions}
             onClick={(item) => {
               if (item.id === CLEAR_ROW_ID) {
                 onSelect(null)
