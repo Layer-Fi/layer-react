@@ -8,6 +8,7 @@ import {
 import { type Variants } from '@utils/styleUtils/sizeVariants'
 import { useBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
+import { useEmbeddedOnboardingConfirmationHold } from '@hooks/features/bookkeeping/useEmbeddedOnboardingConfirmationHold'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { CallBooking } from '@components/CallBooking/CallBooking'
@@ -78,9 +79,22 @@ export const BookkeepingOverview = ({
     ? onboardingBooking
     : undefined
 
-  const onboardingCallUrl = bookkeepingStatus?.onboardingCallUrl
-  if (bookkeepingStatus?.showEmbeddedOnboarding === true && onboardingCallUrl) {
-    return <EmbeddedOnboarding onboardingCallUrl={onboardingCallUrl} />
+  const {
+    shouldShow: shouldShowEmbeddedOnboarding,
+    onboardingCallUrl,
+    onEventScheduled: onOnboardingEventScheduled,
+  } = useEmbeddedOnboardingConfirmationHold({
+    showEmbeddedOnboarding: bookkeepingStatus?.showEmbeddedOnboarding === true,
+    onboardingCallUrl: bookkeepingStatus?.onboardingCallUrl ?? undefined,
+  })
+
+  if (shouldShowEmbeddedOnboarding && onboardingCallUrl) {
+    return (
+      <EmbeddedOnboarding
+        onboardingCallUrl={onboardingCallUrl}
+        onEventScheduled={onOnboardingEventScheduled}
+      />
+    )
   }
 
   return (

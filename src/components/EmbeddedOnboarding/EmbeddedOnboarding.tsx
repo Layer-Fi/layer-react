@@ -3,7 +3,6 @@ import { InlineWidget } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
 import { CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
-import { useBookkeepingStatusGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { useCreateCallBooking } from '@hooks/api/businesses/[business-id]/call-bookings/useCreateCallBooking'
 import {
   type CalendlyPayload,
@@ -18,21 +17,18 @@ import './embeddedOnboarding.scss'
 
 export interface EmbeddedOnboardingProps {
   onboardingCallUrl: string
+  onEventScheduled?: () => void
 }
 
-export const EmbeddedOnboarding = ({ onboardingCallUrl }: EmbeddedOnboardingProps) => {
+export const EmbeddedOnboarding = ({ onboardingCallUrl, onEventScheduled }: EmbeddedOnboardingProps) => {
   const { t } = useTranslation()
 
   const { trigger: createCallBooking } = useCreateCallBooking()
-  const { forceReloadBookkeepingStatus } = useBookkeepingStatusGlobalCacheActions()
 
   const handleEventScheduled = useCallback((payload?: CalendlyPayload) => {
-    const reloadStatus = () => {
-      void forceReloadBookkeepingStatus()
-    }
+    onEventScheduled?.()
 
     if (!payload?.event.uri) {
-      reloadStatus()
       return
     }
 
@@ -42,12 +38,10 @@ export const EmbeddedOnboarding = ({ onboardingCallUrl }: EmbeddedOnboardingProp
       externalId = segments.at(-1)
     }
     catch (_) {
-      reloadStatus()
       return
     }
 
     if (!externalId) {
-      reloadStatus()
       return
     }
 
@@ -59,8 +53,7 @@ export const EmbeddedOnboarding = ({ onboardingCallUrl }: EmbeddedOnboardingProp
       .catch((error: unknown) => {
         console.error('Failed to record onboarding call booking', error)
       })
-      .finally(reloadStatus)
-  }, [createCallBooking, forceReloadBookkeepingStatus])
+  }, [createCallBooking, onEventScheduled])
 
   useEffect(() => {
     const handleCalendlyMessage = createCalendlyMessageHandler({
