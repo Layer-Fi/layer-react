@@ -14,17 +14,12 @@
 
 .Layer__BankTransactionsMobileSplitForm__AmountInput {
   inline-size: 100%;
-  max-inline-size: 100%;
   text-align: right;
 }
 
 .Layer__BankTransactionsMobileSplitForm__ActionButtonContainer {
   flex: 1 0 26%;
   min-inline-size: 0;
-}
-
-.Layer__BankTransactionsMobileSplitForm__ActionButtonContainer .Layer__UI__Button {
-  inline-size: 100%;
 }
 
 .Layer__BankTransactionsMobileSplitForm__SplitSelectors {
