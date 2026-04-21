@@ -1,13 +1,8 @@
-import { useCallback, useEffect } from 'react'
-import { InlineWidget } from 'react-calendly'
+import { InlineWidget, useCalendlyEventListener } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
 import { CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
 import { useCreateCallBooking } from '@hooks/api/businesses/[business-id]/call-bookings/useCreateCallBooking'
-import {
-  type CalendlyPayload,
-  createCalendlyMessageHandler,
-} from '@hooks/features/calendly/useCalendly'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
@@ -25,47 +20,38 @@ export const EmbeddedOnboarding = ({ onboardingCallUrl, onEventScheduled }: Embe
 
   const { trigger: createCallBooking } = useCreateCallBooking()
 
-  const handleEventScheduled = useCallback((payload?: CalendlyPayload) => {
-    onEventScheduled?.()
+  useCalendlyEventListener({
+    onEventScheduled: (e) => {
+      onEventScheduled?.()
 
-    if (!payload?.event.uri) {
-      return
-    }
+      const eventUri = e.data.payload.event.uri
+      if (!eventUri) {
+        return
+      }
 
-    let externalId: string | undefined
-    try {
-      const segments = new URL(payload.event.uri).pathname.split('/').filter(Boolean)
-      externalId = segments.at(-1)
-    }
-    catch (_) {
-      return
-    }
+      let externalId: string | undefined
+      try {
+        const segments = new URL(eventUri).pathname.split('/').filter(Boolean)
+        externalId = segments.at(-1)
+      }
+      catch (_) {
+        return
+      }
 
-    if (!externalId) {
-      return
-    }
+      if (!externalId) {
+        return
+      }
 
-    createCallBooking({
-      external_id: externalId,
-      purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
-      call_type: CallBookingType.GOOGLE_MEET,
-    })
-      .catch((error: unknown) => {
-        console.error('Failed to record onboarding call booking', error)
+      createCallBooking({
+        external_id: externalId,
+        purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
+        call_type: CallBookingType.GOOGLE_MEET,
       })
-  }, [createCallBooking, onEventScheduled])
-
-  useEffect(() => {
-    const handleCalendlyMessage = createCalendlyMessageHandler({
-      onEventScheduled: handleEventScheduled,
-    })
-
-    window.addEventListener('message', handleCalendlyMessage)
-
-    return () => {
-      window.removeEventListener('message', handleCalendlyMessage)
-    }
-  }, [handleEventScheduled])
+        .catch((error: unknown) => {
+          console.error('Failed to record onboarding call booking', error)
+        })
+    },
+  })
 
   return (
     <VStack className='Layer__embedded-onboarding' gap='lg'>
