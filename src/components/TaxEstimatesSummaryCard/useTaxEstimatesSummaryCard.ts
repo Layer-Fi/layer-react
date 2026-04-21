@@ -30,7 +30,9 @@ export const useTaxEstimatesSummaryCard = () => {
   }, [t])
 
   const detailData = useMemo(() => {
-    const data = taxSummaryData ? prepareTaxSummaryData(taxSummaryData, shortenedDisplayName, isMobile) : []
+    if (!taxSummaryData) return null
+
+    const data = prepareTaxSummaryData(taxSummaryData, shortenedDisplayName, isMobile)
     return {
       data,
       total: data.reduce((sum, section) => sum + section.value, 0),
