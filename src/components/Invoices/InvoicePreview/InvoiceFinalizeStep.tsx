@@ -44,7 +44,6 @@ export const InvoiceFinalizeStep = ({
               <Loader />
             </VStack>
           )}
-          Inactive={null}
           Error={(
             <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelError'>
               <DataState

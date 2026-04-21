@@ -91,7 +91,6 @@ export const TaxDetails = () => {
         isError={isError}
         data={summaryData}
         Loading={<Loader />}
-        Inactive={null}
         Error={(
           <DataState
             status={DataStateStatus.failed}
@@ -108,7 +107,6 @@ export const TaxDetails = () => {
         isError={isError}
         data={data}
         Loading={<Loader />}
-        Inactive={null}
         Error={(
           <DataState
             status={DataStateStatus.failed}

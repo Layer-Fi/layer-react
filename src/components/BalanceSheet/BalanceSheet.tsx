@@ -80,7 +80,6 @@ const BalanceSheetView = ({
           totalColumnHeader={stringOverrides?.balanceSheetTable?.totalColumnHeader}
         />
       )}
-      Inactive={null}
       Error={(
         <ReportsTableErrorState
           isLoading={isValidating}
