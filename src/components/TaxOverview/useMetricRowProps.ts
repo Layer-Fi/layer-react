@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import { type TaxOverviewMetricType } from '@schemas/taxEstimates/overview'
 import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 
@@ -20,7 +22,7 @@ export function useMetricRowProps({ metricType, amount, maxMeterValue, label }: 
   const boundedMeterValue = Math.min(Math.max(amount, 0), boundedMaxMeterValue)
   const showBorder = viewportWidth < METRIC_ROW_MOBILE_BREAKPOINT
 
-  const slotProps = {
+  const slotProps = useMemo(() => ({
     Meter: {
       className: `${meterClassByType[metricType]} Layer__TaxOverview__Meter`,
       label,
@@ -28,6 +30,6 @@ export function useMetricRowProps({ metricType, amount, maxMeterValue, label }: 
       value: boundedMeterValue,
       maxValue: boundedMaxMeterValue,
     },
-  }
+  }), [metricType, boundedMeterValue, boundedMaxMeterValue, label])
   return { slotProps, showBorder }
 }
