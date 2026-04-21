@@ -108,8 +108,8 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
       if (confirmedCount === totalCount) {
         return tPlural(t, 'linkedAccounts:action.confirm_accounts', {
           count: totalCount,
-          one: 'Confirm Account',
-          other: 'Confirm All Accounts',
+          one: 'Connect Account',
+          other: 'Connect All Accounts',
         })
       }
 
@@ -124,8 +124,8 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
       return tPlural(t, 'linkedAccounts:action.confirm_accounts_selected', {
         count: confirmedCount,
         displayCount: formatNumber(confirmedCount),
-        one: 'Confirm {{displayCount}} Selected Account',
-        other: 'Confirm {{displayCount}} Selected Accounts',
+        one: 'Connect {{displayCount}} Account',
+        other: 'Connect {{displayCount}} Accounts',
       })
     },
     [formatNumber, t],
@@ -140,8 +140,8 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     const buttonLabel = getButtonLabel({ totalCount, confirmedCount })
     const descriptionLabel = tPlural(t, 'linkedAccounts:label.select_accounts_use', {
       count: totalCount,
-      one: 'Is this account relevant to your business?',
-      other: 'Select the accounts you use for your business.',
+      one: 'We’ve pulled the below account from your institution. Unselect it if you do not want it connected.',
+      other: 'We’ve pulled the below accounts from your institution. Please unselect any accounts you do not want connected.',
     })
 
     return { buttonLabel, descriptionLabel }
@@ -154,7 +154,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
       <ModalTitleWithClose
         heading={(
           <ModalHeading pbe='2xs' size='md'>
-            {t('linkedAccounts:label.confirm_business_accounts', 'Confirm Business Accounts')}
+            {t('linkedAccounts:label.confirm_business_accounts', 'Confirm Accounts')}
           </ModalHeading>
         )}
         onClose={onClose}

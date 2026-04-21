@@ -9,6 +9,7 @@ import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { TaxBanner, type TaxBannerReviewHandler } from '@components/TaxDetails/TaxBanner'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
+import { TaxOverview } from '@components/TaxOverview/TaxOverview'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
@@ -77,6 +78,7 @@ export const TaxEstimatesOnboardedViewContent = ({ onPressReviewButton }: TaxEst
           onPressReviewButton={onPressReviewButton}
         />
       )}
+      {route === TaxEstimatesRoute.Overview && <TaxOverview />}
       {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
       {route === TaxEstimatesRoute.Payments && <TaxPayments />}
     </VStack>

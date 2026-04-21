@@ -1,15 +1,19 @@
 import { type ColumnDef, createColumnHelper, type Row } from '@tanstack/react-table'
 
-export type LeafColumn<TData> = {
+import { type Alignment } from '@schemas/reports/unifiedReport'
+
+type BaseColumn = {
   id: string
   header?: React.ReactNode
-  cell: (row: Row<TData>) => React.ReactNode
-  isRowHeader?: true
+  alignment?: Alignment
+  isRowHeader?: boolean
 }
 
-export type GroupColumn<TData> = {
-  id: string
-  header?: React.ReactNode
+export type LeafColumn<TData> = BaseColumn & {
+  cell: (row: Row<TData>) => React.ReactNode
+}
+
+export type GroupColumn<TData> = BaseColumn & {
   columns: ColumnNode<TData>[]
 }
 
@@ -25,6 +29,11 @@ export const isGroupColumn = <TData>(col: ColumnNode<TData>): col is GroupColumn
 
 export type NestedColumnConfig<TData> = ColumnNode<TData>[]
 
+const getColumnMeta = (col: BaseColumn) => ({
+  alignment: col.alignment,
+  isRowHeader: col.isRowHeader ?? false,
+})
+
 export const getColumnDefs = <TData>(
   columnConfig: NestedColumnConfig<TData>,
 ): ColumnDef<TData>[] => {
@@ -36,9 +45,7 @@ export const getColumnDefs = <TData>(
         id: col.id,
         header: () => col.header,
         cell: ({ row }) => col.cell(row),
-        meta: {
-          isRowHeader: col.isRowHeader || false,
-        },
+        meta: getColumnMeta(col),
       })
     }
 
@@ -46,6 +53,7 @@ export const getColumnDefs = <TData>(
       id: col.id,
       header: () => col.header,
       columns: getColumnDefs(col.columns),
+      meta: getColumnMeta(col),
     })
   })
 }

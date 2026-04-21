@@ -4,7 +4,7 @@ type ConditionalBlockProps<T> = {
 } & ({
   isLoading: boolean
   Loading: React.ReactNode
-  Inactive: React.ReactNode
+  Inactive?: React.ReactNode
 } | {
   isLoading?: never
   Loading?: never
@@ -22,7 +22,7 @@ export function ConditionalBlock<T>({
   children,
   isLoading,
   Loading,
-  Inactive,
+  Inactive = null,
   isError,
   Error,
 }: ConditionalBlockProps<T>) {

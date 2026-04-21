@@ -179,7 +179,6 @@ export const ProfitAndLossCompareTable = ({
       isLoading={isLoading}
       isError={isError}
       Loading={<ReportsTableLoader showHeader={false} />}
-      Inactive={null}
       Error={(
         <ReportsTableErrorState
           isLoading={isValidating}

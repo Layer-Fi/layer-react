@@ -1,6 +1,8 @@
 {
   "action": {
+    "collapse_all": "",
     "collapse_rows": "Réduire toutes les lignes",
+    "expand_all": "",
     "expand_rows": "Afficher toutes les lignes"
   },
   "empty": {
@@ -11,15 +13,16 @@
   },
   "error": {
     "couldnt_load_report": "Nous n’avons pas pu charger votre rapport",
+    "couldnt_load_reports": "",
     "load_detail_lines": "Erreur lors du chargement des lignes de détail",
     "load_pnl_detail_lines": "Une erreur s’est produite lors du chargement des lignes de détail de l’état des résultats",
-    "load_report": "Une erreur s’est produite lors du chargement de votre rapport. Veuillez vérifier votre connexion et réessayer."
+    "load_report": "Une erreur s’est produite lors du chargement de votre rapport. Veuillez vérifier votre connexion et réessayer.",
+    "load_reports_navigation": ""
   },
   "label": {
     "adjustments_net_income": "Ajustements au bénéfice net",
     "assets": "Actifs",
     "balance_sheet": "Bilan",
-    "balance_sheet_report": "Rapport du bilan",
     "cash_beginning_of_period": "Trésorerie au début de la période",
     "cash_end_of_period": "Trésorerie à la fin de la période",
     "compare": "Comparer par",
@@ -36,12 +39,11 @@
     "other_outflows": "Autres sorties de fonds",
     "profit_before_taxes": "Bénéfice avant impôts",
     "profit_loss_detail_report": "Rapport détaillé de l’état des résultats",
-    "profit_loss_report": "Rapport de l’état des résultats",
     "report_period": "Période du rapport",
     "report_type": "Type de rapport",
     "reports": "Rapports",
+    "reports_navigation": "",
     "statement_cash_flow": "État des flux de trésorerie",
-    "statement_cash_flow_report": "Rapport de l’état des flux de trésorerie",
     "total_display_name": "Total de {{displayName}}"
   }
 }

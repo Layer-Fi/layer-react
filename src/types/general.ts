@@ -1,7 +1,5 @@
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 
-export type SortDirection = 'asc' | 'desc'
-
 export type View = 'mobile' | 'tablet' | 'desktop'
 
 export interface BaseSelectOption {

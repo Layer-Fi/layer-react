@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { OnboardingStatus } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { OnboardingStatus, useTaxEstimatesOnboardingStatus } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
@@ -11,11 +11,11 @@ import { TaxEstimatesOnboardedViewContent } from './TaxEstimatesOnboardedViewCon
 
 export type TaxEstimatesViewContentProps = {
   onPressReviewButton?: TaxBannerReviewHandler
-  onboardingStatus: OnboardingStatus
 }
 
-export const TaxEstimatesViewContent = ({ onPressReviewButton, onboardingStatus }: TaxEstimatesViewContentProps) => {
+export const TaxEstimatesViewContent = ({ onPressReviewButton }: TaxEstimatesViewContentProps) => {
   const { t } = useTranslation()
+  const onboardingStatus = useTaxEstimatesOnboardingStatus()
 
   if (onboardingStatus === OnboardingStatus.FeatureDisabled) {
     return (

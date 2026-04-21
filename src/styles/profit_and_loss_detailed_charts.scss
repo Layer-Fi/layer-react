@@ -50,16 +50,20 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   }
 }
 
+.Layer__ProfitAndLossDetailedCharts__DatePickerHeader--tablet {
+  display: none;
+}
+
 .Layer__profit-and-loss-detailed-charts {
   width: 100%;
   border-radius: var(--border-radius-sm);
   background: var(--color-base-0);
 
-  .chart-field {
+  .Layer__DetailedChart {
     width: 100%;
   }
 
-  .chart-container {
+  .Layer__DetailedChart__container {
     box-sizing: border-box;
     height: 280px;
     width: 100%;
@@ -86,137 +90,6 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   .Layer__profit-and-loss-detailed-charts__empty-chart-icon {
     color: var(--color-base-400);
   }
-
-  .pie-center-label__title,
-  .pie-center-label__share {
-    fill: var(--color-base-600);
-    font-size: 12px;
-  }
-
-  .pie-center-label__value {
-    fill: var(--text-color-primary);
-    font-size: 14px;
-  }
-
-  .pie-center-label__loading {
-    fill: var(--color-base-600);
-    font-size: 14px;
-  }
-
-  .details-container {
-    padding: var(--spacing-md);
-    padding-top: var(--spacing-2xs);
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-
-      th,
-      td {
-        padding: var(--spacing-2xs) var(--spacing-xs);
-        font-size: 12px;
-        text-align: left;
-
-        &:first-child {
-          width: 20px;
-          padding-right: 0;
-        }
-
-        &:last-child {
-          text-align: right;
-        }
-
-        &.percent-col {
-          width: 4ch;
-          padding-left: 0;
-          text-align: right;
-        }
-      }
-
-      th {
-        padding-bottom: var(--spacing-sm);
-        border-bottom: 1px solid var(--color-base-300);
-        cursor: pointer;
-        color: var(--color-base-500);
-        transition: color 150ms ease-out;
-
-        &:first-child {
-          cursor: default;
-        }
-
-        &:hover {
-          color: var(--color-base-800);
-        }
-
-        &.sort--asc,
-        &.sort--desc {
-          color: var(--color-base-1000);
-        }
-      }
-    }
-
-    .Layer__sort-arrows {
-      position: relative;
-      top: 1px;
-    }
-
-    .color-col {
-      .share-icon {
-        height: 12px;
-        width: 12px;
-        border-radius: 2px;
-      }
-    }
-
-    .percent-col .share-text {
-      font-size: var(--text-sm);
-      line-height: 140%;
-      color: var(--color-base-600);
-    }
-
-    tbody tr {
-      height: 2.5rem;
-    }
-  }
-}
-
-.Layer__profit-and-loss-detailed-table__row {
-  border-radius: 2px;
-  background: transparent;
-  transition: background-color 300ms ease-out;
-
-  .category-col,
-  .value-col {
-    color: var(--text-color-primary);
-  }
-
-  .type-col,
-  .percent-col {
-    color: var(--color-base-500);
-  }
-
-  &.active {
-    background: var(--color-base-50);
-
-    .category-col,
-    .value-col,
-    .type-col,
-    .percent-col {
-      color: var(--color-base-1000);
-    }
-  }
-}
-
-.Layer__profit-and-loss-detailed-charts__pie {
-  transition: fill 1000ms ease-out;
-
-  &.inactive {
-    fill: var(--color-base-300);
-  }
-}
-
-.Layer__profit-and-loss-detailed-charts .header--tablet {
-  display: none;
 }
 
 @container (max-width: 1023px) {
@@ -227,20 +100,24 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 }
 
 @container (max-width: 1023px) and (min-width: 768px) {
+  .Layer__ProfitAndLossDetailedCharts__DatePickerHeader--tablet {
+    display: flex;
+  }
+
   .Layer__profit-and-loss-detailed-charts {
     .Layer__profit-and-loss-detailed-charts__content {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
 
-      .chart-field {
+      .Layer__DetailedChart {
         display: flex;
         flex-direction: column;
 
         max-width: 300px;
       }
 
-      .chart-container {
+      .Layer__DetailedChart__container {
         max-width: 300px;
       }
 
@@ -253,21 +130,6 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       display: flex;
       flex: 1;
       flex-direction: column;
-    }
-
-    .header--tablet {
-      display: flex;
-      flex-direction: column;
-      padding-top: var(--spacing-lg);
-      padding-left: var(--spacing-xl);
-
-      .Layer__text {
-        margin: 0;
-      }
-
-      .title {
-        font-size: 24px;
-      }
     }
   }
 }

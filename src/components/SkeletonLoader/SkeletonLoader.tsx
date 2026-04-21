@@ -5,16 +5,19 @@ export interface SkeletonLoaderProps {
   width?: string
   height?: string
   className?: string
+  isCircle?: boolean
 }
 
-export const SkeletonLoader = ({
+const BaseSkeletonLoader = ({
   height,
   width,
   className,
+  isCircle = false,
 }: SkeletonLoaderProps) => {
   const baseClassName = classNames(
     'Layer__skeleton-loader Layer__anim--skeleton-loading',
     className,
+    isCircle && 'Layer__skeleton-loader--circle',
   )
   return <div className={baseClassName} style={{ width, height }} />
 }
@@ -41,3 +44,6 @@ export const FallbackWithSkeletonLoader = ({
 
   return children
 }
+
+export const CircleSkeletonLoader = (props: SkeletonLoaderProps) => <BaseSkeletonLoader {...props} isCircle={true} />
+export const SkeletonLoader = (props: SkeletonLoaderProps) => <BaseSkeletonLoader {...props} isCircle={false} />

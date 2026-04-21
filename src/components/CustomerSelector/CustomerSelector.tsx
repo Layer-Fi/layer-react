@@ -42,6 +42,7 @@ type CustomerSelectorBaseProps = {
   onSelectedCustomerChange: (customer: Customer | null) => void
 
   placeholder?: string
+  showLabel?: boolean
 
   isReadOnly?: boolean
   inline?: boolean
@@ -68,6 +69,7 @@ export function CustomerSelector({
   isReadOnly,
   inline,
   className,
+  showLabel = true,
 }: CustomerSelectorProps) {
   const { t } = useTranslation()
   const combinedClassName = classNames(
@@ -172,6 +174,9 @@ export function CustomerSelector({
     isError,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
+    ['aria-label']: showLabel
+      ? undefined
+      : t('customerVendor:label.customer', 'Customer'),
   }
 
   const creatableProps = isCreatable
@@ -185,7 +190,7 @@ export function CustomerSelector({
 
   return (
     <VStack className={combinedClassName}>
-      <Label htmlFor={inputId} size='sm'>{t('customerVendor:label.customer', 'Customer')}</Label>
+      {showLabel && <Label htmlFor={inputId} size='sm'>{t('customerVendor:label.customer', 'Customer')}</Label>}
       <MaybeCreatableComboBox {...sharedProps} {...creatableProps} />
     </VStack>
   )
