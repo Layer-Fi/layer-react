@@ -15,6 +15,7 @@ import {
   type TableProps,
 } from 'react-aria-components'
 
+import { Alignment } from '@schemas/reports/unifiedReport'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { withRenderProp } from '@components/utility/withRenderProp'
 
@@ -29,6 +30,19 @@ enum TableSubComponent {
   Cell = 'Cell',
 }
 const CSS_PREFIX = 'Layer__UI__Table'
+
+const toAlignmentDataValue = (alignment: Alignment | undefined) => {
+  switch (alignment) {
+    case Alignment.Left:
+      return 'start'
+    case Alignment.Right:
+      return 'end'
+    case Alignment.Center:
+      return 'center'
+    default:
+      return undefined
+  }
+}
 
 const getClassName = (component: TableSubComponent, additionalClassNames?: Argument, withHidden?: boolean) =>
   classNames(`${CSS_PREFIX}-${component}`, withHidden && `${CSS_PREFIX}-${component}--hidden`, additionalClassNames)
@@ -157,13 +171,13 @@ Row.displayName = TableSubComponent.Row
 
 // TABLE COLUMN
 type ColumnStyleProps = {
-  textAlign?: 'left' | 'center' | 'right'
+  alignment?: Alignment
   colSpan?: number
 }
 
 const Column = forwardRef<HTMLTableCellElement, ColumnProps & ColumnStyleProps & TableRenderingProps>(
-  ({ children, className, nonAria, id, textAlign = 'left', colSpan = 1, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ 'text-align': textAlign })
+  ({ children, className, nonAria, id, alignment = Alignment.Left, colSpan = 1, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment) })
     const columnClassName = getClassName(TableSubComponent.Column, className)
 
     const ColumnComponent = nonAria
@@ -188,9 +202,14 @@ const Column = forwardRef<HTMLTableCellElement, ColumnProps & ColumnStyleProps &
 Column.displayName = TableSubComponent.Column
 
 // TABLE CELL
+type CellStyleProps = {
+  alignment?: Alignment
+}
 
-const Cell = forwardRef<HTMLTableCellElement, CellProps & TableRenderingProps>(
-  ({ children, className, nonAria, id, ...restProps }, ref) => {
+const Cell = forwardRef<HTMLTableCellElement, CellProps & CellStyleProps & TableRenderingProps>(
+  ({ children, className, nonAria, id, alignment, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment) })
+
     const CellComponent = nonAria
       ? 'td'
       : ReactAriaCell
@@ -199,6 +218,7 @@ const Cell = forwardRef<HTMLTableCellElement, CellProps & TableRenderingProps>(
       <CellComponent
         className={getClassName(TableSubComponent.Cell, className)}
         {...restProps}
+        {...dataProperties}
         ref={ref}
         id={id?.toString()}
       >
