@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { Play } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -27,12 +27,13 @@ const ActiveTimeTrackerDrawerHeader = ({ title, close, isMobile }: { title: stri
   />
 )
 
-const ActiveTimerDurationDisplay = ({ duration }: { duration: string }) => {
+const ActiveTimerDurationDisplay = () => {
   const { t } = useTranslation()
+  const { formatSecondsAsDuration } = useIntlFormatter()
 
   return (
     <VStack align='center' gap='2xs' pb='md'>
-      <Span className='Layer__ActiveTimeTracker__DurationValue'>{duration}</Span>
+      <Span className='Layer__ActiveTimeTracker__DurationValue'>{formatSecondsAsDuration(0)}</Span>
       <Span className='Layer__ActiveTimeTracker__DurationLabel' size='xs' weight='bold'>
         {t('timeTracking:label.duration', 'Duration')}
       </Span>
@@ -46,13 +47,10 @@ export const ActiveTimeTrackerStartDrawer = ({
   isMobile,
 }: ActiveTimeTrackerStartDrawerProps) => {
   const { t } = useTranslation()
-  const { formatSecondsAsDuration } = useIntlFormatter()
 
-  const onStarted = useCallback(() => {
-    onOpenChange(false)
-  }, [onOpenChange])
-
-  const { form, state, clearActionError } = useStartTimerForm({ onStarted })
+  const { form, state, clearActionError } = useStartTimerForm({
+    onStarted: () => onOpenChange(false),
+  })
 
   const handleOpenChange = useCallback((nextIsOpen: boolean) => {
     if (!nextIsOpen) {
@@ -60,8 +58,6 @@ export const ActiveTimeTrackerStartDrawer = ({
     }
     onOpenChange(nextIsOpen)
   }, [clearActionError, onOpenChange])
-
-  const duration = useMemo(() => formatSecondsAsDuration(0), [formatSecondsAsDuration])
 
   return (
     <Drawer
@@ -90,7 +86,7 @@ export const ActiveTimeTrackerStartDrawer = ({
           />
         )}
 
-        <ActiveTimerDurationDisplay duration={duration} />
+        <ActiveTimerDurationDisplay />
 
         <VStack gap='md'>
           <form.Field name='selectedServiceId'>
@@ -131,7 +127,7 @@ export const ActiveTimeTrackerStartDrawer = ({
 
           <form.Subscribe selector={s => s.values.selectedServiceId}>
             {selectedServiceId => (
-              <HStack className='Layer__ActiveTimeTracker__DrawerSubmit' gap='xs' justify='end'>
+              <HStack gap='xs' justify='end'>
                 <Button
                   onPress={() => { void form.handleSubmit() }}
                   isPending={state.isStarting}

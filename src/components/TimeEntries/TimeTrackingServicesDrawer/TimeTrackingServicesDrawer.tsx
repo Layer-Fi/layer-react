@@ -15,7 +15,6 @@ import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableCard } from '@components/ExpandableCard/ExpandableCard'
-import { TextSize } from '@components/Typography/Text'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { ConditionalList } from '@components/utility/ConditionalList'
 
@@ -76,7 +75,6 @@ const LoadingState = () => {
       status={DataStateStatus.info}
       title={t('common:label.loading', 'Loading...')}
       icon={<Loader className='Layer__anim--rotating' />}
-      titleSize={TextSize.md}
       spacing
     />
   )
@@ -88,7 +86,6 @@ const LoadServicesErrorState = () => {
     <DataState
       status={DataStateStatus.failed}
       title={t('timeTracking:error.load_services', 'Failed to load services.')}
-      titleSize={TextSize.md}
       spacing
     />
   )
@@ -131,7 +128,6 @@ function ActiveServicesContent({
       <DataState
         status={DataStateStatus.allDone}
         title={t('timeTracking:services.no_active', 'No services yet')}
-        titleSize={TextSize.md}
         spacing
       />
     ), [showCreateForm, t])
@@ -221,7 +217,6 @@ function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: Archive
             <DataState
               status={DataStateStatus.allDone}
               title={t('timeTracking:services.no_archived', 'No archived services')}
-              titleSize={TextSize.md}
               spacing
             />
           )}
@@ -325,6 +320,39 @@ export function TimeTrackingServicesDrawer({
     setExpandedId(prev => (prev === serviceId ? null : serviceId))
   }, [])
 
+  const cancelAdd = useCallback(() => {
+    setIsAdding(false)
+  }, [])
+
+  const clearExpanded = useCallback(() => {
+    setExpandedId(null)
+  }, [])
+
+  const handleArchiveOpenChange = useCallback((open: boolean) => {
+    setIsArchiveOpen(open)
+    if (!open) {
+      setArchiveTarget(null)
+    }
+  }, [])
+
+  const handleArchiveSuccess = useCallback(() => {
+    setExpandedId(null)
+    setIsArchiveOpen(false)
+    setArchiveTarget(null)
+  }, [])
+
+  const handleRestoreOpenChange = useCallback((open: boolean) => {
+    setIsRestoreOpen(open)
+    if (!open) {
+      setRestoreTarget(null)
+    }
+  }, [])
+
+  const handleRestoreSuccess = useCallback(() => {
+    setIsRestoreOpen(false)
+    setRestoreTarget(null)
+  }, [])
+
   const Header = useCallback(
     ({ close }: { close: () => void }) => (
       <VStack gap='md'>
@@ -378,12 +406,12 @@ export function TimeTrackingServicesDrawer({
                         canCancelCreate={activeServices.length > 0}
                         expandedId={expandedId}
                         formatHourly={formatHourly}
-                        onCancelAdd={() => setIsAdding(false)}
-                        onCreateSuccess={() => setIsAdding(false)}
+                        onCancelAdd={cancelAdd}
+                        onCreateSuccess={cancelAdd}
                         onStartAdd={startAdd}
                         onToggleExpanded={toggleExpanded}
                         onArchive={openArchive}
-                        onEditSuccess={() => setExpandedId(null)}
+                        onEditSuccess={clearExpanded}
                       />
                     )
                     : (
@@ -402,31 +430,14 @@ export function TimeTrackingServicesDrawer({
       <ServiceArchiveModal
         service={archiveTarget}
         isOpen={isArchiveOpen}
-        onOpenChange={(open) => {
-          setIsArchiveOpen(open)
-          if (!open) {
-            setArchiveTarget(null)
-          }
-        }}
-        onSuccess={() => {
-          setExpandedId(null)
-          setIsArchiveOpen(false)
-          setArchiveTarget(null)
-        }}
+        onOpenChange={handleArchiveOpenChange}
+        onSuccess={handleArchiveSuccess}
       />
       <ServiceRestoreModal
         service={restoreTarget}
         isOpen={isRestoreOpen}
-        onOpenChange={(open) => {
-          setIsRestoreOpen(open)
-          if (!open) {
-            setRestoreTarget(null)
-          }
-        }}
-        onSuccess={() => {
-          setIsRestoreOpen(false)
-          setRestoreTarget(null)
-        }}
+        onOpenChange={handleRestoreOpenChange}
+        onSuccess={handleRestoreSuccess}
       />
     </>
   )

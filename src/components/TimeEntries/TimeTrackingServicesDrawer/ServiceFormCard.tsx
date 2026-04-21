@@ -10,7 +10,6 @@ import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { TextSize } from '@components/Typography/Text'
 
 type AddServiceFormCardProps = {
   mode: 'create'
@@ -40,34 +39,25 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
     void form.handleSubmit()
   }, [form])
 
-  let actionButtons
-
-  if (mode === 'edit') {
-    actionButtons = (
-      <HStack gap='sm' align='center' justify='space-between'>
+  const actionButtonParams = {
+    justify: mode === 'edit' ? 'space-between' as const : 'end' as const,
+    primaryButtonLabel: mode === 'edit'
+      ? t('timeTracking:services.save', 'Save')
+      : t('timeTracking:services.add', 'Add'),
+    secondaryButton: mode === 'edit'
+      ? (
         <Button variant='outlined' onPress={props.onArchive}>
           <Archive size={16} />
           {t('timeTracking:services.archive', 'Archive')}
         </Button>
-        <Button onPress={() => { void form.handleSubmit() }} isDisabled={isSubmitting} isPending={isSubmitting}>
-          {t('timeTracking:services.save', 'Save')}
-        </Button>
-      </HStack>
-    )
-  }
-  else {
-    actionButtons = (
-      <HStack gap='sm' justify='end' align='center'>
-        {props.showCancel && (
+      )
+      : (
+        props.showCancel && (
           <Button variant='outlined' onPress={props.onCancel}>
             {t('timeTracking:services.cancel', 'Cancel')}
           </Button>
-        )}
-        <Button onPress={() => { void form.handleSubmit() }} isDisabled={isSubmitting} isPending={isSubmitting}>
-          {t('timeTracking:services.add', 'Add')}
-        </Button>
-      </HStack>
-    )
+        )
+      ),
   }
 
   return (
@@ -95,7 +85,6 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={formError}
-                  titleSize={TextSize.md}
                   inline
                 />
               </HStack>
@@ -129,7 +118,12 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
           )}
         </form.AppField>
 
-        {actionButtons}
+        <HStack gap='sm' align='center' justify={actionButtonParams.justify}>
+          {actionButtonParams.secondaryButton}
+          <Button onPress={() => { void form.handleSubmit() }} isDisabled={isSubmitting} isPending={isSubmitting}>
+            {actionButtonParams.primaryButtonLabel}
+          </Button>
+        </HStack>
       </VStack>
     </Form>
   )

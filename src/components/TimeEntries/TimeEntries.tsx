@@ -31,7 +31,6 @@ const TimeEntriesEmptyState = ({ isFiltered }: TimeEntriesEmptyStateProps) => {
         description={t('timeTracking:empty.try_adjusting_filters', 'Try adjusting your filters.')}
         icon={<SearchX />}
         spacing
-        className='Layer__TimeEntries__EmptyState'
       />
     )
   }
@@ -43,7 +42,6 @@ const TimeEntriesEmptyState = ({ isFiltered }: TimeEntriesEmptyStateProps) => {
       description={t('timeTracking:empty.add_first_entry', 'Add your first time entry to start tracking.')}
       icon={<Clock />}
       spacing
-      className='Layer__TimeEntries__EmptyState'
     />
   )
 }
@@ -76,7 +74,7 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
     ...(selectedCustomer && { customerId: selectedCustomer.id }),
     ...(selectedServiceId && { serviceId: selectedServiceId }),
   }), [filterParams, selectedCustomer, selectedServiceId])
-  const hasActiveTableFilters = Boolean(timeEntriesFilterParams.customerId || timeEntriesFilterParams.serviceId)
+  const hasActiveTableFilters = !!(timeEntriesFilterParams.customerId || timeEntriesFilterParams.serviceId)
 
   const { data, isLoading, isError, size, setSize } = useListTimeEntries(timeEntriesFilterParams)
   const entries = useMemo(() => data?.flatMap(({ data }) => data), [data])

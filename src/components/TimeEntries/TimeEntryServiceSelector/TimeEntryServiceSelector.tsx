@@ -103,9 +103,9 @@ export function TimeEntryServiceSelector({
     [serviceOptions, selectedServiceId],
   )
 
-  const handleAddService = useCallback(() => {
+  const handleAddService = () => {
     openServicesDrawer({ startInCreateMode: true })
-  }, [openServicesDrawer])
+  }
 
   const EmptyMessage = useMemo(
     () => (

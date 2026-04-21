@@ -61,7 +61,7 @@ const TimeTrackingContent = ({ showTitle, onReportsClick, stringOverrides }: Tim
       : []),
     {
       key: TimeTrackingHeaderMenuActions.Services,
-      onClick: () => openServicesDrawer(),
+      onClick: openServicesDrawer,
       icon: <Briefcase size={20} strokeWidth={1.25} />,
       label: t('timeTracking:services.title', 'Services'),
     },
