@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxOverviewCategoryKey } from '@schemas/taxEstimates/overview'
+import { type TaxSummarySectionType } from '@schemas/taxEstimates/summary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -14,6 +14,7 @@ import { DetailedTableWithData } from '@components/DetailedTable/DetailedTable'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { resolveCategoryColor } from '@components/TaxEstimatesSummaryCard/constants'
 import { useTaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/useTaxEstimatesSummaryCard'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxEstimatesSummaryCard.scss'
 
@@ -44,7 +45,7 @@ export const TaxEstimatesSummaryCard = () => {
 
   const StylingProps = useMemo(() => {
     const colorByKey = detailData.data.reduce<Record<string, string>>((acc, item) => {
-      acc[item.name] = resolveCategoryColor({ key: item.name as TaxOverviewCategoryKey })
+      acc[item.name] = resolveCategoryColor({ key: item.name as TaxSummarySectionType })
       return acc
     }, {})
 
@@ -56,31 +57,7 @@ export const TaxEstimatesSummaryCard = () => {
     })
   }, [detailData.data])
 
-  const CommonProps = useMemo(() => ({ data: detailData, interactionProps: NoOpHoverInteractionProps, stylingProps: StylingProps }), [detailData, StylingProps])
-
-  const Content = useMemo(() => {
-    const state = isLoading ? 'loading' : isError ? 'error' : 'ready'
-    if (state === 'loading') return <LoadingState />
-    if (state === 'error') return <ErrorState />
-    if (state === 'ready') {
-      if (isMobile || isSummaryCardLayout) {
-        return (
-          <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
-            <DetailedChart<SeriesData> {...CommonProps} />
-            <DetailedTableWithData<SeriesData> {...CommonProps} {...NoSortProps} />
-          </VStack>
-        )
-      }
-      else {
-        return (
-          <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
-            <DetailedChart<SeriesData> {...CommonProps} />
-            <DetailedTableWithData<SeriesData> {...CommonProps} {...NoSortProps} />
-          </HStack>
-        )
-      }
-    }
-  }, [isLoading, isError, isMobile, isSummaryCardLayout, CommonProps])
+  const CommonProps = useMemo(() => ({ interactionProps: NoOpHoverInteractionProps, stylingProps: StylingProps }), [StylingProps])
 
   return (
     <VStack className='Layer__TaxEstimatesSummaryCard__Container'>
@@ -94,7 +71,23 @@ export const TaxEstimatesSummaryCard = () => {
           >
             <Span size='lg' weight='bold'>{title}</Span>
           </HStack>
-          {Content}
+          <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState />} Error={<ErrorState />}>
+            {({ data }) => (
+              isMobile || isSummaryCardLayout
+                ? (
+                  <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
+                    <DetailedChart<SeriesData> data={data} {...CommonProps} />
+                    <DetailedTableWithData<SeriesData> data={data} {...CommonProps} {...NoSortProps} />
+                  </VStack>
+                )
+                : (
+                  <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
+                    <DetailedChart<SeriesData> data={data} {...CommonProps} />
+                    <DetailedTableWithData<SeriesData> data={data} {...CommonProps} {...NoSortProps} />
+                  </HStack>
+                )
+            )}
+          </ConditionalBlock>
         </VStack>
       </Card>
     </VStack>
