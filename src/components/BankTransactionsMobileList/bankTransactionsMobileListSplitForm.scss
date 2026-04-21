@@ -1,37 +1,35 @@
-.Layer__BankTransactionsMobileSplitForm__SplitEntry {
-  max-inline-size: 100%;
-}
+.Layer__BankTransactionsMobileSplitForm {
+  &__SplitEntry {
+    max-inline-size: 100%;
+  }
 
-.Layer__BankTransactionsMobileSplitForm__AmountInputContainer {
-  flex: 1 0 75%;
-  min-inline-size: 0;
-}
+  &__AmountInputContainer {
+    flex: 1 0 75%;
+    min-inline-size: 0;
 
-.Layer__BankTransactionsMobileSplitForm__AmountInputContainer .Layer__input-tooltip {
-  flex: 1;
-  inline-size: 100%;
-}
+    .Layer__input-tooltip {
+      flex: 1;
+      inline-size: 100%;
+    }
+  }
 
-.Layer__BankTransactionsMobileSplitForm__AmountInput {
-  inline-size: 100%;
-  text-align: right;
-}
+  &__AmountInput {
+    inline-size: 100%;
+    text-align: right;
+  }
 
-.Layer__BankTransactionsMobileSplitForm__ActionButtonContainer {
-  flex: 1 0 26%;
-  min-inline-size: 0;
-}
+  &__ActionButtonContainer {
+    flex: 1 0 26%;
+    min-inline-size: 0;
+  }
 
-.Layer__BankTransactionsMobileSplitForm__SplitSelectors {
-  inline-size: 100%;
-}
+  &__SplitSelectors {
+    inline-size: 100%;
+  }
 
-.Layer__BankTransactionsMobileSplitForm__CategorySelect {
-  flex: 1 1 0;
-  min-inline-size: 0;
-}
-
-.Layer__BankTransactionsMobileSplitForm__TaxCodeSelect__Container {
-  flex: 1 1 0;
-  min-inline-size: 0;
+  &__CategorySelect,
+  &__TaxCodeSelect__Container {
+    flex: 1 1 0;
+    min-inline-size: 0;
+  }
 }

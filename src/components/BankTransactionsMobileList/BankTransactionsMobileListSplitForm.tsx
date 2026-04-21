@@ -143,7 +143,6 @@ export const BankTransactionsMobileListSplitForm = ({
                   <HStack
                     justify='space-between'
                     align='center'
-                    className='Layer__BankTransactionsMobileSplitForm__SplitHeader'
                   >
                     <Text>
                       {t('bankTransactions:action.split_label', 'Split')}
@@ -156,7 +155,6 @@ export const BankTransactionsMobileListSplitForm = ({
                     align='center'
                     gap='xs'
                     pie='xs'
-                    className='Layer__BankTransactionsMobileSplitForm__SplitActions'
                   >
                     <HStack className='Layer__BankTransactionsMobileSplitForm__AmountInputContainer'>
                       <AmountInput
