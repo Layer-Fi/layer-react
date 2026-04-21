@@ -110,7 +110,7 @@ export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProp
 
   return (
     <ExpandableDataTable
-      ariaLabel={report?.displayName ?? ''}
+      ariaLabel={report?.displayName ?? t('reports:label.reports', 'Reports')}
       data={mutableRows}
       isLoading={data === undefined || isLoading}
       isError={isError}

@@ -9,6 +9,7 @@ import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParamet
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import {
   type UnifiedReportParams,
@@ -67,12 +68,14 @@ type UseUnifiedReportExcelOptions = {
 export function useUnifiedReportExcel({ dateSelectionMode, onSuccess }: UseUnifiedReportExcelOptions) {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
+  const { apiUrl } = useEnvironment()
   const { businessId } = useLayerContext()
   const reportState = useUnifiedReportParams({ dateSelectionMode })
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
       ...auth,
+      apiUrl,
       businessId,
       reportState,
     })),

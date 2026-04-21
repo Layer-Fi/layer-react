@@ -128,7 +128,8 @@ const createUnifiedReportStore = () =>
 
 function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>) {
   const { data } = useReportConfig()
-  const { report, setReport } = useActiveUnifiedReport()
+  const report = useStore(store, state => state.report)
+  const setReport = useStore(store, state => state.actions.setReport)
 
   useEffect(() => {
     if (!data) return
@@ -136,7 +137,7 @@ function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>) 
 
     const firstLeaf = findFirstLeaf(data)
     if (firstLeaf) setReport(firstLeaf)
-  }, [report, data, store, setReport])
+  }, [report, data, setReport])
 }
 
 export function UnifiedReportStoreProvider({ children }: PropsWithChildren) {

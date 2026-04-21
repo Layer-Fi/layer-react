@@ -1,4 +1,5 @@
 import { type ReactElement, type ReactNode, useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Button as ReactAriaButton,
   Collection as ReactAriaCollection,
@@ -43,6 +44,7 @@ type RenderTreeGroupArgs<TGroup extends object, TLeaf extends object> = {
   groupConfig: TreeNavigationGroupConfig<TGroup, TLeaf>
   onToggle: (groupId: Key) => void
   renderItem: (item: TGroup | TLeaf) => ReactElement
+  chevronLabel: (groupName: string) => string
 }
 
 const renderTreeGroup = <TGroup extends object, TLeaf extends object>({
@@ -50,18 +52,24 @@ const renderTreeGroup = <TGroup extends object, TLeaf extends object>({
   groupConfig,
   onToggle,
   renderItem,
+  chevronLabel,
 }: RenderTreeGroupArgs<TGroup, TLeaf>): ReactElement => {
   const groupId = groupConfig.getId(group)
+  const textValue = groupConfig.getTextValue(group)
   return (
     <TreeItem
       id={groupId}
-      textValue={groupConfig.getTextValue(group)}
+      textValue={textValue}
       onAction={() => onToggle(groupId)}
     >
       <TreeItemContent>
         <HStack className='Layer__TreeNavigation-Row' align='center' justify='space-between'>
           {groupConfig.renderLabel(group)}
-          <ReactAriaButton className='Layer__TreeNavigation-Chevron' slot='chevron'>
+          <ReactAriaButton
+            className='Layer__TreeNavigation-Chevron'
+            slot='chevron'
+            aria-label={chevronLabel(textValue)}
+          >
             <ChevronRight width={16} height={16} />
           </ReactAriaButton>
         </HStack>
@@ -103,6 +111,11 @@ export function TreeNavigation<TGroup extends object, TLeaf extends object>({
   leafConfig,
   ariaLabel,
 }: TreeNavigationProps<TGroup, TLeaf>) {
+  const { t } = useTranslation()
+  const chevronLabel = useCallback(
+    (groupName: string) => t('common:action.toggle_section', 'Toggle {{name}}', { name: groupName }),
+    [t],
+  )
   const itemArray = useMemo(() => Array.from(items), [items])
 
   const { groupIds, leafMap } = useMemo(
@@ -150,6 +163,7 @@ export function TreeNavigation<TGroup extends object, TLeaf extends object>({
         groupConfig,
         onToggle: toggleGroup,
         renderItem,
+        chevronLabel,
       })
     }
     return renderTreeLeaf({ leaf: item, leafConfig })
