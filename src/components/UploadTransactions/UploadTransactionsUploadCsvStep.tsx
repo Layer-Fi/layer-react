@@ -17,7 +17,7 @@ import { CsvUpload } from '@components/CsvUpload/CsvUpload'
 import { DownloadCsvTemplateButton } from '@components/CsvUpload/DownloadCsvTemplateButton'
 import { CustomAccountForm } from '@components/CustomAccountForm/CustomAccountForm'
 import { Separator } from '@components/Separator/Separator'
-import { allHeaders, templateExampleTransactions, templateHeaders } from '@components/UploadTransactions/template'
+import { allHeaders, TEMPLATE_HEADERS, templateExampleTransactions } from '@components/UploadTransactions/template'
 import { useWizard } from '@components/Wizard/Wizard'
 
 export type AccountOption = {
@@ -174,7 +174,7 @@ export function UploadTransactionsUploadCsvStep(
               <P size='sm'>{t('upload:action.click_copy_required', 'Click to copy the required column headers')}</P>
               <HStack align='center' gap='xs' className='Layer__upload-transactions__template-section__button-row'>
                 <CopyTemplateHeadersButtonGroup
-                  headers={templateHeaders}
+                  headers={TEMPLATE_HEADERS}
                   className='Layer__upload-transactions__template-section__button-row-item'
                 />
                 <DownloadCsvTemplateButton
