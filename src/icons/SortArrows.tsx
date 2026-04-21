@@ -1,5 +1,9 @@
 import { type IconSvgProps } from '@icons/types'
 
+const ClassNames = {
+  DESC_ARROW: 'Layer__SortArrows__DescArrow',
+  ASC_ARROW: 'Layer__SortArrows__AscArrow',
+}
 const SortArrows = ({ size = 13, ...props }: IconSvgProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
@@ -15,28 +19,28 @@ const SortArrows = ({ size = 13, ...props }: IconSvgProps) => (
         stroke='currentColor'
         strokeLinecap='round'
         strokeLinejoin='round'
-        className='desc-arrow'
+        className={ClassNames.DESC_ARROW}
       />
       <path
         d='M4 2.5L4 11.1667'
         stroke='currentColor'
         strokeLinecap='round'
         strokeLinejoin='round'
-        className='desc-arrow'
+        className={ClassNames.DESC_ARROW}
       />
       <path
         d='M5.99988 5.16602L8.66654 2.49935L11.3332 5.16602'
         stroke='currentColor'
         strokeLinecap='round'
         strokeLinejoin='round'
-        className='asc-arrow'
+        className={ClassNames.ASC_ARROW}
       />
       <path
         d='M8.66663 11.166L8.66663 2.49935'
         stroke='currentColor'
         strokeLinecap='round'
         strokeLinejoin='round'
-        className='asc-arrow'
+        className={ClassNames.ASC_ARROW}
       />
     </g>
     <defs>

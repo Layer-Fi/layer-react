@@ -1,17 +1,19 @@
 # Agent Instructions
 
-- For significant changes, provide implementation options with a recommended approach before coding
-- Pause and ask for guidance when: task scope is unclear, complications arise, or phase completion
-- If user provides information broadly relevant to codebase, ask if it should be added to relevant docs
-- Do not add comments when writing code
-- Generate designs and code in reviewable phases
 - For all code changes: KISS, YAGNI, DRY
-- **Refer to documentation files below when relevant to current task**
+- Generate designs and code in reviewable phases
+- Do not add comments when writing code
+- Pause and ask for guidance when: task scope is unclear, complications arise, or phase completion
 
-# Codebase Conventions
+# Code Convention
 
-- Fix lint errors: `npx lint-staged`
-- Before completing work: run `npm run typecheck` and fix issues
+- Before creating a new definition, ensure no similar implementation already exists in the repo. If so, expand the existing implementation instead
+- Always use the most specific path alias from `tsconfig.json` for imports
+- Use components located in `src/components/ui`. Import with `@ui` alias
+- Place new, reusable components in `src/components/ui`
+- Stabilize code as follows:
+  - **`useCallback`**: Only for functions passed as props to `memo()`-wrapped children or used in Hook dependency arrays. Not needed for handlers on plain HTML elements.
+  - **`useMemo`**: Only when (a) the computation is expensive (>1ms), (b) the result is an object/array prop to a `memo()`-wrapped child, or (c) the result is used in a Hook dependency array. Never memoize primitives.
 
 # Components
 
@@ -21,11 +23,10 @@
 
 # Style
 
-- No inline styles. Use existing component props
-- Use existing props when available instead of creating a new css class
-- Use design system spacing scale
+- Do not use inline styles
 - Create `.scss` file matching component name but with lowercase first letter and import directly
-- Use BEM naming for css classes
+- Use design system spacing scale
+- For css class names, use BEM in PascalCase
 
 # Abstractions
 

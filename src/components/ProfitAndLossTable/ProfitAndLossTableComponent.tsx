@@ -158,7 +158,6 @@ export const ProfitAndLossTableComponent = ({
                 depth: 0,
                 rowKey: 'cost_of_goods_sold',
                 rowIndex: 1,
-                variant: 'summation',
               })}
             {renderLineItem({
               lineItem: {

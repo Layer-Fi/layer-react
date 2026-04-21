@@ -1,47 +1,52 @@
 import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
+import { DEFAULT_TYPE_COLOR_MAPPING, type TypeColorMapping } from '@components/DetailedCharts/types'
 
-import { UNCATEGORIZED_TYPES } from './DetailedTable'
+export const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
 
-export interface TypeColorMapping {
-  color: string
-  opacity: number
-}
 export const isLineItemUncategorized = (item: PnlChartLineItem) => {
   return UNCATEGORIZED_TYPES.includes(item.name)
 }
 
-export const mapTypesToColors = (
-  data: PnlChartLineItem[],
+export const mapTypesToColors = <T extends PnlChartLineItem>(
+  data: T[],
   colorList: string[] = DEFAULT_CHART_COLORS,
-): TypeColorMapping[] => {
-  const nameToColor: Record<string, string> = {}
-  const nameToLastOpacity: Record<string, number> = {}
-  let colorIndex = 0
+): (name: string) => TypeColorMapping => {
+  const opacityTiers = [1, 0.82, 0.64, 0.46]
+  const palette = colorList.length > 0 ? colorList : DEFAULT_CHART_COLORS
+  const mapping: Record<string, TypeColorMapping> = {}
+  const categorizedNames = Array.from(
+    new Set(
+      data
+        .filter(lineItem => !isLineItemUncategorized(lineItem))
+        .map(lineItem => lineItem.name),
+    ),
+  ).sort((left, right) => left.localeCompare(right))
 
-  return data.map((lineItem) => {
+  categorizedNames.forEach((name, index) => {
+    const colorIndex = index % palette.length
+    const cycle = Math.floor(index / palette.length)
+    const opacity = opacityTiers[cycle % opacityTiers.length] ?? 1
+    mapping[name] = {
+      color: palette[colorIndex] ?? DEFAULT_CHART_COLORS[0],
+      opacity,
+    }
+  })
+
+  data.forEach((lineItem) => {
+    const key = lineItem.name
+    if (mapping[key]) {
+      return
+    }
+
     if (isLineItemUncategorized(lineItem)) {
-      return {
+      mapping[key] = {
         color: '#EEEEF0',
         opacity: 1,
       }
-    }
-
-    const name = lineItem.name
-    if (!nameToColor[name]) {
-      nameToColor[name] = colorList[colorIndex % colorList.length]
-      colorIndex++
-      nameToLastOpacity[name] = 1
-    }
-    else {
-      nameToLastOpacity[name] -= 0.1
-    }
-
-    const opacity = nameToLastOpacity[name]
-
-    return {
-      color: nameToColor[name],
-      opacity: opacity,
+      return
     }
   })
+
+  return (name: string): TypeColorMapping => mapping[name] ?? DEFAULT_TYPE_COLOR_MAPPING
 }
