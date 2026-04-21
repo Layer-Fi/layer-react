@@ -9,7 +9,7 @@ import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
 import { type SeriesData } from '@components/DetailedCharts/types'
-import { NoOpHoverInteractionProps, NoSortProps } from '@components/DetailedCharts/utils'
+import { NO_OP_INTERACTION_PROPS, NO_SORT_PROPS } from '@components/DetailedCharts/utils'
 import { DetailedTableWithData } from '@components/DetailedTable/DetailedTable'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { resolveCategoryColor } from '@components/TaxEstimatesSummaryCard/constants'
@@ -43,7 +43,7 @@ export const TaxEstimatesSummaryCard = () => {
   const { detailData, layout, title, isLoading, isError } = useTaxEstimatesSummaryCard()
   const isSummaryCardLayout = layout === 'summaryCard'
 
-  const StylingProps = useMemo(() => {
+  const stylingProps = useMemo(() => {
     const colorByKey = detailData.data.reduce<Record<string, string>>((acc, item) => {
       acc[item.name] = resolveCategoryColor({ key: item.name as TaxSummarySectionType })
       return acc
@@ -57,7 +57,7 @@ export const TaxEstimatesSummaryCard = () => {
     })
   }, [detailData.data])
 
-  const CommonProps = useMemo(() => ({ interactionProps: NoOpHoverInteractionProps, stylingProps: StylingProps }), [StylingProps])
+  const commonProps = useMemo(() => ({ interactionProps: NO_OP_INTERACTION_PROPS, stylingProps }), [stylingProps])
 
   return (
     <VStack className='Layer__TaxEstimatesSummaryCard__Container'>
@@ -76,14 +76,14 @@ export const TaxEstimatesSummaryCard = () => {
               isMobile || isSummaryCardLayout
                 ? (
                   <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
-                    <DetailedChart<SeriesData> data={data} {...CommonProps} />
-                    <DetailedTableWithData<SeriesData> data={data} {...CommonProps} {...NoSortProps} />
+                    <DetailedChart<SeriesData> data={data} {...commonProps} />
+                    <DetailedTableWithData<SeriesData> data={data} {...commonProps} {...NO_SORT_PROPS} />
                   </VStack>
                 )
                 : (
                   <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
-                    <DetailedChart<SeriesData> data={data} {...CommonProps} />
-                    <DetailedTableWithData<SeriesData> data={data} {...CommonProps} {...NoSortProps} />
+                    <DetailedChart<SeriesData> data={data} {...commonProps} />
+                    <DetailedTableWithData<SeriesData> data={data} {...commonProps} {...NO_SORT_PROPS} />
                   </HStack>
                 )
             )}

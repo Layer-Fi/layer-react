@@ -10,7 +10,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData } from '@components/DetailedCharts/types'
-import { NoOpHoverInteractionProps } from '@components/DetailedCharts/utils'
+import { NO_OP_INTERACTION_PROPS } from '@components/DetailedCharts/utils'
 
 import './detailedTable.scss'
 
@@ -72,7 +72,7 @@ export const DetailedTable = <T extends SeriesData>({
 
   const { isMobile } = useSizeClass()
   const hasType = rows.length > 0 && rows.map(r => r.item.type).every(type => type !== undefined)
-  const isSortable = interactionProps !== NoOpHoverInteractionProps
+  const isSortable = interactionProps !== NO_OP_INTERACTION_PROPS
 
   return (
     <VStack className='Layer__DetailedTable'>
