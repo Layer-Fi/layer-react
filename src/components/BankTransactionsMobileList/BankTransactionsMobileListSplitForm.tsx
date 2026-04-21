@@ -14,7 +14,6 @@ import PaperclipIcon from '@icons/Paperclip'
 import Scissors from '@icons/Scissors'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
-import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
@@ -23,6 +22,8 @@ import { type BankTransactionReceiptsHandle } from '@components/BankTransactionR
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'
+import type { TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
+import { TaxCodeSelectDrawerWithTrigger } from '@components/TaxCodeSelect/TaxCodeSelectDrawerWithTrigger'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { Text } from '@components/Typography/Text'
 
@@ -34,11 +35,6 @@ interface BankTransactionsMobileListSplitFormProps {
   showCategorization?: boolean
   showReceiptUploads?: boolean
   showDescriptions?: boolean
-}
-
-type TaxCodeOption = {
-  label: string
-  value: string
 }
 
 export const BankTransactionsMobileListSplitForm = ({
@@ -76,7 +72,7 @@ export const BankTransactionsMobileListSplitForm = ({
     selectedCategory,
   })
 
-  const taxCodeOptions = useMemo<TaxCodeOption[]>(
+  const taxCodeOptions = useMemo<TaxCodeSelectOption[]>(
     () => bankTransaction.tax_options?.canada.map(taxOption => ({
       label: taxOption.display_name,
       value: taxOption.code,
@@ -108,7 +104,7 @@ export const BankTransactionsMobileListSplitForm = ({
   }, [changeCategoryForSplitAtIndex])
 
   const getSelectedTaxCodeOption = useCallback(
-    (taxCode: string | null): TaxCodeOption | null => {
+    (taxCode: string | null): TaxCodeSelectOption | null => {
       if (!taxCode) {
         return null
       }
@@ -119,7 +115,7 @@ export const BankTransactionsMobileListSplitForm = ({
   )
 
   const handleTaxCodeChange = useCallback(
-    (index: number) => (option: TaxCodeOption | null) => {
+    (index: number) => (option: TaxCodeSelectOption | null) => {
       updateSplitAtIndex(index, split => ({
         ...split,
         taxCode: option?.value ?? null,
@@ -200,18 +196,16 @@ export const BankTransactionsMobileListSplitForm = ({
                     showTooltips={showTooltips}
                   />
                   {showTaxCodeSelector && (
-                    <ComboBox<TaxCodeOption>
-                      selectedValue={getSelectedTaxCodeOption(split.taxCode)}
-                      onSelectedValueChange={handleTaxCodeChange(index)}
+                    <TaxCodeSelectDrawerWithTrigger
                       options={taxCodeOptions}
+                      value={getSelectedTaxCodeOption(split.taxCode)}
+                      onChange={handleTaxCodeChange(index)}
                       isDisabled={
                         !showCategorization
                         || split.category === null
                         || split.category.classification?.type === 'Exclusion'
                       }
-                      isSearchable={false}
                       isClearable
-                      placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
                       className='Layer__BankTransactionsMobileSplitForm__TaxCodeSelect'
                     />
                   )}
