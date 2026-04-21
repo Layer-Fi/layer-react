@@ -11,7 +11,7 @@ import { DetailedChart, type DetailedChartProps } from '@components/DetailedChar
 import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
 import { NO_OP_INTERACTION_PROPS, NO_SORT_PROPS } from '@components/DetailedCharts/utils'
 import { DetailedTableWithData } from '@components/DetailedTable/DetailedTable'
-import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
+import { CircleSkeletonLoader, SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { resolveCategoryColor } from '@components/TaxEstimatesSummaryCard/constants'
 import { useTaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/useTaxEstimatesSummaryCard'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
@@ -21,7 +21,7 @@ import './taxEstimatesSummaryCard.scss'
 const LoadingState = () => {
   return (
     <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Content'>
-      <SkeletonLoader height='128px' width='128px' isRounded={true} />
+      <CircleSkeletonLoader height='128px' width='128px' />
       <SkeletonLoader height='24px' width='80%' />
       <SkeletonLoader height='24px' width='80%' />
       <SkeletonLoader height='24px' width='80%' />
