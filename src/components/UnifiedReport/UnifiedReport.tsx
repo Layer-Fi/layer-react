@@ -1,9 +1,11 @@
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { UnifiedReportStoreProvider } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
-import { Container } from '@components/Container/Container'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
+import { ReportsNavigation } from '@components/ReportsNavigation/ReportsNavigation'
 import { UnifiedReportTable } from '@components/UnifiedReport/UnifiedReportTable'
 import { UnifiedReportTableHeader } from '@components/UnifiedReport/UnifiedReportTableHeader'
+import { View } from '@components/View/View'
 
 import './unifiedReport.scss'
 
@@ -13,13 +15,20 @@ type UnifiedReportProps = {
 
 export const UnifiedReport = ({ dateSelectionMode = 'full' }: UnifiedReportProps) => {
   return (
-    <Container name='UnifiedReport'>
+    <View title='Reports' viewClassName='Layer__UnifiedReport'>
       <UnifiedReportStoreProvider>
         <ExpandableDataTableProvider>
-          <UnifiedReportTableHeader dateSelectionMode={dateSelectionMode} />
-          <UnifiedReportTable dateSelectionMode={dateSelectionMode} />
+          <HStack className='Layer__UnifiedReport__Layout'>
+            <VStack className='Layer__UnifiedReport__Sidebar'>
+              <ReportsNavigation />
+            </VStack>
+            <VStack fluid className='Layer__UnifiedReport__Content'>
+              <UnifiedReportTableHeader dateSelectionMode={dateSelectionMode} />
+              <UnifiedReportTable dateSelectionMode={dateSelectionMode} />
+            </VStack>
+          </HStack>
         </ExpandableDataTableProvider>
       </UnifiedReportStoreProvider>
-    </Container>
+    </View>
   )
 }

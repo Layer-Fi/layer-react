@@ -3,20 +3,21 @@ import { pipe, Schema } from 'effect'
 import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum ReportControl {
-  DATE_RANGE = 'date_range',
-  GROUP_BY = 'group_by',
-  UNKNOWN = 'unknown',
+  DateRange = 'date_range',
+  GroupBy = 'group_by',
+  Unknown = 'unknown',
 }
 
 export enum ReportType {
-  PROFIT_AND_LOSS = 'profit-and-loss',
-  CASHFLOW_STATEMENT = 'cashflow-statement',
-  UNKNOWN = 'unknown',
+  ProfitAndLoss = 'profit-and-loss',
+  BalanceSheet = 'balance-sheet',
+  CashflowStatement = 'cashflow-statement',
+  Unknown = 'unknown',
 }
 
 export enum ReportGroupType {
-  ACCOUNTING = 'accounting',
-  UNKNOWN = 'unknown',
+  Accounting = 'accounting',
+  Unknown = 'unknown',
 }
 
 const ReportControlSchema = Schema.Enums(ReportControl)
@@ -26,19 +27,19 @@ const ReportGroupTypeSchema = Schema.Enums(ReportGroupType)
 const TransformedReportControlSchema = createTransformedEnumSchema(
   ReportControlSchema,
   ReportControl,
-  ReportControl.UNKNOWN,
+  ReportControl.Unknown,
 )
 
 const TransformedReportTypeSchema = createTransformedEnumSchema(
   ReportTypeSchema,
   ReportType,
-  ReportType.UNKNOWN,
+  ReportType.Unknown,
 )
 
 const TransformedReportGroupTypeSchema = createTransformedEnumSchema(
   ReportGroupTypeSchema,
   ReportGroupType,
-  ReportGroupType.UNKNOWN,
+  ReportGroupType.Unknown,
 )
 
 export const ReportConfigSchema = Schema.Struct({

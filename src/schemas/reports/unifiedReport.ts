@@ -1,16 +1,26 @@
 import { pipe, Schema } from 'effect'
 
-export enum ReportEnum {
-  BalanceSheet = 'balance-sheet',
-  CashflowStatement = 'cashflow-statement',
-  ProfitAndLoss = 'profit-and-loss',
-}
+import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum DateGroupBy {
   AllTime = 'ALL_TIME',
   Month = 'MONTH',
   Year = 'YEAR',
 }
+
+export enum Alignment {
+  Left = 'LEFT',
+  Right = 'RIGHT',
+  Center = 'CENTER',
+}
+
+const AlignmentSchema = Schema.Enums(Alignment)
+
+const TransformedAlignmentSchema = createTransformedEnumSchema(
+  AlignmentSchema,
+  Alignment,
+  Alignment.Left,
+)
 
 export const DateQueryParamsSchema = Schema.Struct({
   effectiveDate: pipe(
@@ -47,6 +57,8 @@ const unifiedReportColumnFields = {
     Schema.propertySignature(Schema.String),
     Schema.fromKey('display_name'),
   ),
+  isRowHeader: Schema.optional(Schema.Boolean).pipe(Schema.fromKey('is_row_header')),
+  alignment: Schema.optional(TransformedAlignmentSchema),
 }
 
 export interface UnifiedReportColumn extends Schema.Struct.Type<typeof unifiedReportColumnFields> {
@@ -108,10 +120,6 @@ const unifiedReportRowFields = {
   rowKey: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('row_key'),
-  ),
-  displayName: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('display_name'),
   ),
   cells: Schema.Record({
     key: Schema.String,

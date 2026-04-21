@@ -11,6 +11,7 @@ import classNames from 'classnames'
 
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
+import { type Alignment } from '@schemas/reports/unifiedReport'
 import { getColumnDefs, type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { Loader } from '@components/Loader/Loader'
 
@@ -20,6 +21,7 @@ declare module '@tanstack/react-table' {
   // eslint-disable-next-line unused-imports/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
     isRowHeader: boolean
+    alignment?: Alignment
   }
 }
 

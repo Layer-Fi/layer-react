@@ -1,0 +1,55 @@
+.Layer__TreeNavigation-Row {
+  cursor: pointer;
+}
+
+.Layer__UI__TreeItem {
+  position: relative;
+  align-content: center;
+  height: var(--spacing-5xl);
+
+  padding-inline-start: calc(var(--spacing-sm) * calc(var(--tree-item-level) - 1) + var(--spacing-md) * var(--tree-item-level));
+  padding-inline-end: var(--spacing-md);
+
+  border-bottom: 1px solid var(--color-base-300);
+
+  .Layer__TreeNavigation-Check {
+    visibility: hidden;
+  }
+
+  &[aria-level='1'] {
+    background-color: var(--color-base-0);
+  }
+
+  &[aria-level='2'] {
+    background-color: var(--color-base-50);
+  }
+
+  &[data-selected] {
+    font-weight: var(--font-weight-bold);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 2px;
+      background: black;
+    }
+
+    .Layer__TreeNavigation-Check {
+      visibility: visible;
+    }
+  }
+}
+
+.Layer__TreeNavigation-Chevron {
+  padding: 0;
+  border: none;
+  background: transparent;
+  transition: transform var(--transition-speed) ease;
+}
+
+.Layer__UI__TreeItem[data-expanded] .Layer__TreeNavigation-Chevron {
+  transform: rotate(90deg);
+}

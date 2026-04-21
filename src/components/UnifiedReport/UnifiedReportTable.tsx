@@ -6,11 +6,11 @@ import { isAmountCellValue, isEmptyCellValue, type UnifiedReportColumn, type Uni
 import { asMutable } from '@utils/asMutable'
 import { useUnifiedReport } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/useUnifiedReport'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useUnifiedReportName, useUnifiedReportState } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useActiveUnifiedReport, useUnifiedReportParams } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { type ColumnNode, type GroupColumn, type LeafColumn, type NestedColumnConfig } from '@components/DataTable/columnUtils'
+import { type ColumnNode, type GroupColumn, type LeafColumn } from '@components/DataTable/columnUtils'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 
@@ -21,6 +21,8 @@ const COMPONENT_NAME = 'UnifiedReport'
 const makeLeafColumn = (col: UnifiedReportColumn): LeafColumn<UnifiedReportRow> => ({
   id: col.columnKey,
   header: col.displayName,
+  isRowHeader: col.isRowHeader,
+  alignment: col.alignment,
   cell: (row: RowType) => {
     const cellValue = row.original.cells[col.columnKey]?.value
 
@@ -44,6 +46,7 @@ type UnifiedReportColumnWithRequiredColumns = UnifiedReportColumn & Required<Pic
 const makeGroupColumn = (col: UnifiedReportColumnWithRequiredColumns): GroupColumn<UnifiedReportRow> => ({
   id: col.columnKey,
   header: col.displayName,
+  alignment: col.alignment,
   columns: buildNestedColumnConfig(col.columns),
 })
 
@@ -61,19 +64,6 @@ const buildNestedColumnConfig = (columns: ReadonlyArray<UnifiedReportColumn>): C
   })
 }
 
-export const buildColumnConfig = (columns: ReadonlyArray<UnifiedReportColumn>): NestedColumnConfig<UnifiedReportRow> => {
-  const displayNameColumn: LeafColumn<UnifiedReportRow> = {
-    id: 'displayName',
-    header: '',
-    cell: (row: RowType) => (
-      <Span weight={row.depth === 0 ? 'bold' : 'normal'} ellipsis>{row.original.displayName}</Span>
-    ),
-    isRowHeader: true,
-  }
-
-  return [displayNameColumn, ...buildNestedColumnConfig(columns)]
-}
-
 const getSubRows = (row: UnifiedReportRow) => row.rows ? asMutable(row.rows) : undefined
 
 type UnifiedReportTableProps = {
@@ -82,13 +72,13 @@ type UnifiedReportTableProps = {
 
 export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProps) => {
   const { t } = useTranslation()
-  const reportName = useUnifiedReportName()
-  const { report, groupBy, ...dateParams } = useUnifiedReportState({ dateSelectionMode })
-  const { data, isLoading, isError, refetch } = useUnifiedReport({ report, groupBy, ...dateParams })
+  const { report } = useActiveUnifiedReport()
+  const reportState = useUnifiedReportParams({ dateSelectionMode })
+  const { data, isLoading, isError, refetch } = useUnifiedReport(reportState)
   const { setExpanded } = useContext(ExpandableDataTableContext)
   const mutableRows = data?.rows ? asMutable(data.rows) : undefined
 
-  const columnConfig = useMemo(() => data ? buildColumnConfig(data.columns) : [], [data])
+  const columnConfig = useMemo(() => data ? buildNestedColumnConfig(data.columns) : [], [data])
 
   useEffect(() => {
     // Expand the top-level rows on initial data load
@@ -120,7 +110,7 @@ export const UnifiedReportTable = ({ dateSelectionMode }: UnifiedReportTableProp
 
   return (
     <ExpandableDataTable
-      ariaLabel={reportName}
+      ariaLabel={report?.displayName ?? ''}
       data={mutableRows}
       isLoading={data === undefined || isLoading}
       isError={isError}

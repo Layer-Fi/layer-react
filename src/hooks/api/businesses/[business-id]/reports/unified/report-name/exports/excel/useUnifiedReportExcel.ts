@@ -2,7 +2,8 @@ import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
-import type { DateGroupBy, ReportEnum, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
+import type { ReportType } from '@schemas/reports/reportConfig'
+import type { DateGroupBy, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
@@ -10,14 +11,14 @@ import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import {
-  type UnifiedReportState,
-  useUnifiedReportState,
+  type UnifiedReportParams,
+  useUnifiedReportParams,
 } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type GetUnifiedReportExcelParams = {
   businessId: string
-  report: ReportEnum
+  report: ReportType
   groupBy: DateGroupBy | null
 } & UnifiedReportDateQueryParams
 
@@ -30,7 +31,7 @@ const getUnifiedReportExcel = get<
   return `/v1/businesses/${businessId}/reports/unified/${report}/exports/excel?${parameters}`
 })
 
-const getTag = (report: ReportEnum) => `#unified-${report}-report-excel`
+const getTag = (report: ReportType) => `#unified-${report}-report-excel`
 
 const UnifiedReportExcelReturnSchema = Schema.Struct({
   data: S3PresignedUrlSchema,
@@ -45,16 +46,16 @@ function buildKey({
   access_token?: string
   apiUrl?: string
   businessId: string
-  reportState: UnifiedReportState
+  reportState: UnifiedReportParams | null
 }) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      ...reportState,
-      tags: [getTag(reportState.report)],
-    }
+  if (!reportState || !accessToken || !apiUrl) return
+
+  return {
+    accessToken,
+    apiUrl,
+    businessId,
+    ...reportState,
+    tags: [getTag(reportState.report)],
   }
 }
 
@@ -67,7 +68,7 @@ export function useUnifiedReportExcel({ dateSelectionMode, onSuccess }: UseUnifi
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
-  const reportState = useUnifiedReportState({ dateSelectionMode })
+  const reportState = useUnifiedReportParams({ dateSelectionMode })
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
