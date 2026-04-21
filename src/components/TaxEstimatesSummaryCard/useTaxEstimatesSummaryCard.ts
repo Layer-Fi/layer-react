@@ -1,11 +1,20 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type TaxSummary } from '@schemas/taxEstimates/summary'
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
+
+const prepareTaxSummaryData = (taxSummaryData: TaxSummary, shortenedDisplayName: (key: string) => string, isMobile: boolean) => {
+  return taxSummaryData.sections.map(section => ({
+    value: Math.max(section.taxesOwed, 0),
+    name: section.type,
+    displayName: isMobile ? shortenedDisplayName(section.label) : section.label,
+  }))
+}
 
 export const useTaxEstimatesSummaryCard = () => {
   const { year } = useTaxEstimatesYear()
@@ -21,12 +30,7 @@ export const useTaxEstimatesSummaryCard = () => {
   }, [t])
 
   const detailData = useMemo(() => {
-    const data = taxSummaryData?.sections.map(section => ({
-      value: Math.max(section.taxesOwed, 0),
-      name: section.type,
-      displayName: isMobile ? shortenedDisplayName(section.type) : section.label,
-    })) ?? []
-
+    const data = taxSummaryData ? prepareTaxSummaryData(taxSummaryData, shortenedDisplayName, isMobile) : []
     return {
       data,
       total: data.reduce((sum, section) => sum + section.value, 0),
