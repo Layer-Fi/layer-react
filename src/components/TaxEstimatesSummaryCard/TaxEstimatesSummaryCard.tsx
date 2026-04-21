@@ -33,7 +33,7 @@ const ErrorState = () => {
   const { t } = useTranslation()
   return (
     <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Content'>
-      <Span size='lg'>{t('taxEstimates:error.load_tax_estimates_summary', 'We couldn\'t load your tax summary.')}</Span>
+      <Span size='lg'>{t('taxEstimates:error.load_tax_estimates_summary', 'We couldn\'t load your tax summary')}</Span>
     </VStack>
   )
 }
