@@ -411,7 +411,7 @@
   }
 
   & > &__tax-code__Container {
-    width: 12.5rem;
+    flex: 0 0 12.5rem;
   }
 
   @container (max-width: 768px) {
