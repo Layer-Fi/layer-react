@@ -15,18 +15,25 @@
   - **`useCallback`**: Only for functions passed as props to `memo()`-wrapped children or used in Hook dependency arrays. Not needed for handlers on plain HTML elements.
   - **`useMemo`**: Only when (a) the computation is expensive (>1ms), (b) the result is an object/array prop to a `memo()`-wrapped child, or (c) the result is used in a Hook dependency array. Never memoize primitives.
 
+# CSS Styles
+
+- Do not use the `style` prop or write raw utility/atomic class strings in `className`
+- Do not re-state styles the target component or its parent stack already set
+- Use design-system props exposed by components instead of a new declaration. For any styling that component props can't express, add a BEM class in PascalCase: `Layer__ComponentName__Element--modifier`
+- Put component rules in a side-effect imported `.scss` file with camelCased component name: `componentName.scss`
+- Use the following spacing scale: (`4xs|3xs|2xs|xs|sm|md|lg|xl|2xl|3xl|5xl`)
+
+## CSS Selectors
+
+- Nest selectors that share a block prefix under one `&__` root; do not nest more than one level (excluding pseudo-classes, pseudo-elements, and media queries): `.Layer__<ComponentName> { &__Element { … } }`
+- Only use descendant combinator selectors when the element can't own a class.
+- Do not target another component's internal classes. Instead, add a prop or exposed class to that component
+
 # Components
 
 - Use `Span` from `@ui/Typography/Text` instead of `<span>`
 - Use `<HStack>` and `<VStack>` from `@ui/Stack/Stack` instead of `<div>`
 - Build on existing components in `@ui` before creating new ones
-
-# Style
-
-- Do not use inline styles
-- Create `.scss` file matching component name but with lowercase first letter and import directly
-- Use design system spacing scale
-- For css class names, use BEM in PascalCase
 
 # Abstractions
 
