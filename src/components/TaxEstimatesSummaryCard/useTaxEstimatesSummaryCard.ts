@@ -30,7 +30,7 @@ export const useTaxEstimatesSummaryCard = () => {
   }, [t])
 
   const detailData = useMemo(() => {
-    if (!taxSummaryData) return null
+    if (!taxSummaryData) return undefined
 
     const data = prepareTaxSummaryData(taxSummaryData, shortenedDisplayName, isMobile)
     return {

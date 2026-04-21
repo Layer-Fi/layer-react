@@ -70,16 +70,16 @@ export const TaxEstimatesSummaryCard = () => {
   const isSummaryCardLayout = layout === 'summaryCard'
 
   const commonProps: CommonProps = useMemo(() => {
-    const colorByKey = detailData.data.reduce<Record<string, string>>((acc, item) => {
+    const colorByKey = detailData?.data?.reduce<Record<string, string>>((acc, item) => {
       acc[item.name] = resolveCategoryColor({ key: item.name as TaxSummarySectionType })
       return acc
     }, {})
 
     return {
       interactionProps: NO_OP_INTERACTION_PROPS,
-      stylingProps: { colorSelector: (item: SeriesData) => ({ color: colorByKey[item.name] ?? 'var(--color-base-300)', opacity: 1 }) },
+      stylingProps: { colorSelector: (item: SeriesData) => ({ color: colorByKey?.[item.name] ?? 'var(--color-base-300)', opacity: 1 }) },
     }
-  }, [detailData.data])
+  }, [detailData?.data])
 
   return (
     <VStack className='Layer__TaxEstimatesSummaryCard__Container'>
