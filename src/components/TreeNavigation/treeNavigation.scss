@@ -9,7 +9,7 @@
   border-bottom: 1px solid var(--color-base-300);
   cursor: pointer;
 
-  .Layer__TreeNavigation-Check {
+  .Layer__TreeNavigation__Check {
     visibility: hidden;
   }
 
@@ -38,19 +38,19 @@
       background: black;
     }
 
-    .Layer__TreeNavigation-Check {
+    .Layer__TreeNavigation__Check {
       visibility: visible;
     }
   }
 }
 
-.Layer__TreeNavigation-Chevron {
+.Layer__TreeNavigation__Chevron {
   padding: 0;
   border: none;
   background: transparent;
   transition: transform var(--transition-speed) ease;
 }
 
-.Layer__UI__TreeItem[data-expanded] .Layer__TreeNavigation-Chevron {
+.Layer__UI__TreeItem[data-expanded] .Layer__TreeNavigation__Chevron {
   transform: rotate(90deg);
 }

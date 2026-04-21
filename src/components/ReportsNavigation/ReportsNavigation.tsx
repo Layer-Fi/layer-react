@@ -41,32 +41,34 @@ const REPORT_GROUP_ICON: Record<ReportGroupType, ComponentType<IconSvgProps>> = 
 const isReportGroup = (item: ReportGroup | ReportConfig): item is ReportGroup =>
   'reports' in item
 
+const groupConfig: TreeNavigationGroupConfig<ReportGroup, ReportConfig> = {
+  getId: group => group.groupType,
+  getTextValue: group => group.displayName,
+  getChildren: group => group.reports,
+  renderLabel: (group) => {
+    const Icon = REPORT_GROUP_ICON[group.groupType]
+    return (
+      <HStack className='Layer__ReportsNavigation__GroupLabel' gap='sm' align='center'>
+        <Icon className='Layer__ReportsNavigation__GroupIcon' strokeWidth={1.5} size={16} />
+        <Span ellipsis variant='subtle' weight='bold'>{group.displayName}</Span>
+      </HStack>
+    )
+  },
+}
+
+const buildLeafConfig = (onSelectLeaf: (report: ReportConfig) => void): TreeNavigationLeafConfig<ReportConfig> => ({
+  getId: leaf => leaf.key,
+  getTextValue: leaf => leaf.displayName,
+  renderLabel: leaf => <Span ellipsis>{leaf.displayName}</Span>,
+  onSelectLeaf,
+})
+
 export function ReportsNavigation() {
   const { t } = useTranslation()
   const { data, isLoading, isError } = useReportConfig()
   const { report, setReport } = useActiveUnifiedReport()
 
-  const groupConfig = useMemo<TreeNavigationGroupConfig<ReportGroup, ReportConfig>>(() => ({
-    getId: group => group.groupType,
-    getTextValue: group => group.displayName,
-    getChildren: group => group.reports,
-    renderLabel: (group) => {
-      const Icon = REPORT_GROUP_ICON[group.groupType]
-      return (
-        <HStack className='Layer__ReportsNavigation-GroupLabel' gap='sm' align='center'>
-          <Icon className='Layer__ReportsNavigation-GroupIcon' strokeWidth={1.5} size={16} />
-          <Span ellipsis variant='subtle' weight='bold'>{group.displayName}</Span>
-        </HStack>
-      )
-    },
-  }), [])
-
-  const leafConfig = useMemo<TreeNavigationLeafConfig<ReportConfig>>(() => ({
-    getId: leaf => leaf.key,
-    getTextValue: leaf => leaf.displayName,
-    renderLabel: leaf => <Span ellipsis>{leaf.displayName}</Span>,
-    onAction: setReport,
-  }), [setReport])
+  const leafConfig = useMemo(() => buildLeafConfig(setReport), [setReport])
 
   return (
     <ConditionalBlock

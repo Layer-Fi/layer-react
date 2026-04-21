@@ -87,7 +87,7 @@
   $alignments: start, center, end;
 
   @each $alignment in $alignments {
-    &[data-alignment="#{$alignment}"] {
+    &[data-align="#{$alignment}"] {
       text-align: $alignment;
     }
   }

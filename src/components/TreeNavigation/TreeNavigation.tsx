@@ -25,7 +25,7 @@ export type TreeNavigationGroupConfig<TGroup, TLeaf> = TreeNavigationItemConfig<
 }
 
 export type TreeNavigationLeafConfig<TLeaf> = TreeNavigationItemConfig<TLeaf> & {
-  onAction: (leaf: TLeaf) => void
+  onSelectLeaf: (leaf: TLeaf) => void
 }
 
 type TreeNavigationProps<TGroup extends object, TLeaf extends object> = {
@@ -57,16 +57,12 @@ const renderTreeGroup = <TGroup extends object, TLeaf extends object>({
   const groupId = groupConfig.getId(group)
   const textValue = groupConfig.getTextValue(group)
   return (
-    <TreeItem
-      id={groupId}
-      textValue={textValue}
-      onAction={() => onToggle(groupId)}
-    >
+    <TreeItem id={groupId} textValue={textValue} onAction={() => onToggle(groupId)}>
       <TreeItemContent>
-        <HStack className='Layer__TreeNavigation-Row' align='center' justify='space-between'>
+        <HStack className='Layer__TreeNavigation__Row' align='center' justify='space-between'>
           {groupConfig.renderLabel(group)}
           <ReactAriaButton
-            className='Layer__TreeNavigation-Chevron'
+            className='Layer__TreeNavigation__Chevron'
             slot='chevron'
             aria-label={chevronLabel(textValue)}
           >
@@ -86,18 +82,12 @@ type RenderTreeLeafArgs<TLeaf extends object> = {
   leafConfig: TreeNavigationLeafConfig<TLeaf>
 }
 
-const renderTreeLeaf = <TLeaf extends object>({
-  leaf,
-  leafConfig,
-}: RenderTreeLeafArgs<TLeaf>): ReactElement => (
-  <TreeItem
-    id={leafConfig.getId(leaf)}
-    textValue={leafConfig.getTextValue(leaf)}
-  >
+const renderTreeLeaf = <TLeaf extends object>({ leaf, leafConfig }: RenderTreeLeafArgs<TLeaf>): ReactElement => (
+  <TreeItem id={leafConfig.getId(leaf)} textValue={leafConfig.getTextValue(leaf)}>
     <TreeItemContent>
       <HStack align='center' justify='space-between'>
         {leafConfig.renderLabel(leaf)}
-        <Check className='Layer__TreeNavigation-Check' width={14} height={14} />
+        <Check className='Layer__TreeNavigation__Check' width={14} height={14} />
       </HStack>
     </TreeItemContent>
   </TreeItem>
@@ -151,7 +141,7 @@ export function TreeNavigation<TGroup extends object, TLeaf extends object>({
     if (nextKey == null) return
 
     const leaf = leafMap.get(nextKey)
-    if (leaf) leafConfig.onAction(leaf)
+    if (leaf) leafConfig.onSelectLeaf(leaf)
   }, [leafMap, leafConfig])
 
   const selectedItems = selectedItem != null ? [selectedItem] : []

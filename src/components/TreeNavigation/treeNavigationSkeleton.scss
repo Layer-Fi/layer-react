@@ -1,14 +1,14 @@
 .Layer__TreeNavigationSkeleton {
   width: 100%;
 
-  &-Group,
-  &-Leaf {
+  &__Group,
+  &__Leaf {
     height: var(--spacing-5xl);
     padding-inline: var(--spacing-md);
     border-bottom: 1px solid var(--color-base-300);
   }
 
-  &-Leaf {
+  &__Leaf {
     padding-inline-start: calc(var(--spacing-lg) + var(--spacing-md));
     background-color: var(--color-base-50);
   }

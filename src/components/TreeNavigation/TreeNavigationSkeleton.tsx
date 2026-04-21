@@ -15,12 +15,12 @@ export const TreeNavigationSkeleton = ({
   <VStack className='Layer__TreeNavigationSkeleton' aria-hidden='true'>
     {Array.from({ length: groups }).map((_, groupIndex) => (
       <VStack key={groupIndex}>
-        <HStack className='Layer__TreeNavigationSkeleton-Group' align='center' gap='sm'>
+        <HStack className='Layer__TreeNavigationSkeleton__Group' align='center' gap='sm'>
           <SkeletonLoader width='16px' height='16px' />
           <SkeletonLoader width='60%' height='12px' />
         </HStack>
         {Array.from({ length: leavesPerGroup }).map((_, leafIndex) => (
-          <HStack key={leafIndex} className='Layer__TreeNavigationSkeleton-Leaf' align='center'>
+          <HStack key={leafIndex} className='Layer__TreeNavigationSkeleton__Leaf' align='center'>
             <SkeletonLoader width='70%' height='12px' />
           </HStack>
         ))}
