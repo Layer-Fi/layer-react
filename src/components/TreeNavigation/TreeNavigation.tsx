@@ -1,10 +1,10 @@
 import { type ReactElement, type ReactNode, useCallback, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
   Button as ReactAriaButton,
   Collection as ReactAriaCollection,
   type Selection,
 } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import Check from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'

@@ -9,9 +9,9 @@ import {
 import { useVirtualizer } from '@tanstack/react-virtual'
 import classNames from 'classnames'
 
+import { type Alignment } from '@schemas/reports/unifiedReport'
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
-import { type Alignment } from '@schemas/reports/unifiedReport'
 import { getColumnDefs, type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { Loader } from '@components/Loader/Loader'
 
