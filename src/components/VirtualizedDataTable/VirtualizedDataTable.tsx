@@ -140,6 +140,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
             <TableColumn
               key={header.id}
               isRowHeader={header.column.columnDef.meta?.isRowHeader}
+              alignment={header.column.columnDef.meta?.alignment}
               className={classNames(
                 `${CSS_PREFIX}__header-cell`,
                 `Layer__UI__Table-Column__${componentName}--${header.id}`,
@@ -164,6 +165,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
                 {row.getVisibleCells().map(cell => (
                   <Cell
                     key={cell.id}
+                    alignment={cell.column.columnDef.meta?.alignment}
                     className={classNames(
                       `${CSS_PREFIX}__cell`,
                       `Layer__UI__Table-Cell__${componentName}--${cell.column.id}`,

@@ -1,6 +1,6 @@
 export type Key = string | number
 
-export const visitTree = <TGroup extends object, TLeaf extends object>(
+const visitTree = <TGroup extends object, TLeaf extends object>(
   items: Iterable<TGroup | TLeaf>,
   isGroup: (item: TGroup | TLeaf) => item is TGroup,
   getChildren: (group: TGroup) => Iterable<TGroup | TLeaf>,

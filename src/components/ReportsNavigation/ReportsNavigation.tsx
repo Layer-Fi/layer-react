@@ -1,5 +1,5 @@
+import { type ComponentType, useMemo } from 'react'
 import { Landmark } from 'lucide-react'
-import type { ComponentType } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { ReportConfig, ReportGroup } from '@schemas/reports/reportConfig'
@@ -46,7 +46,7 @@ export function ReportsNavigation() {
   const { data, isLoading, isError } = useReportConfig()
   const { report, setReport } = useActiveUnifiedReport()
 
-  const groupConfig: TreeNavigationGroupConfig<ReportGroup, ReportConfig> = {
+  const groupConfig = useMemo<TreeNavigationGroupConfig<ReportGroup, ReportConfig>>(() => ({
     getId: group => group.groupType,
     getTextValue: group => group.displayName,
     getChildren: group => group.reports,
@@ -59,14 +59,14 @@ export function ReportsNavigation() {
         </HStack>
       )
     },
-  }
+  }), [])
 
-  const leafConfig: TreeNavigationLeafConfig<ReportConfig> = {
+  const leafConfig = useMemo<TreeNavigationLeafConfig<ReportConfig>>(() => ({
     getId: leaf => leaf.key,
     getTextValue: leaf => leaf.displayName,
     renderLabel: leaf => <Span ellipsis>{leaf.displayName}</Span>,
     onAction: setReport,
-  }
+  }), [setReport])
 
   return (
     <ConditionalBlock
