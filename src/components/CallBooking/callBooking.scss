@@ -1,23 +1,37 @@
-.Layer__call-booking {
+.Layer__CallBooking {
   padding: var(--spacing-lg);
 
-  .Layer__call-booking-details {
+  .Layer__CallBooking__Icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    width: 3rem;
+    border-radius: 50%;
+    background-color: var(--color-base-50);
+    color: var(--color-base-900);
+  }
+
+  .Layer__CallBooking__DetailRow {
+    display: grid;
+    grid-template-columns: 16px 72px 1fr;
+    column-gap: var(--spacing-sm);
+    align-items: center;
     width: 100%;
   }
 
-  .Layer__call-booking-actions {
-    position: relative;
+  .Layer__CallBooking__Actions {
     width: 100%;
-  }
 
-  .Layer__call-booking-state {
-    text-align: center;
+    > * {
+      flex: 1;
+      min-width: 0;
+    }
   }
 }
 
-// Responsive design for smaller screens
 @media (width <= 480px) {
-  .Layer__call-booking {
+  .Layer__CallBooking {
     padding: var(--spacing-md);
   }
 }
