@@ -40,27 +40,6 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
     void form.handleSubmit()
   }, [form])
 
-  const actionButtonParams = {
-    justify: mode === 'edit' ? 'space-between' as const : 'end' as const,
-    primaryButtonLabel: mode === 'edit'
-      ? t('timeTracking:services.save', 'Save')
-      : t('timeTracking:services.add', 'Add'),
-    secondaryButton: mode === 'edit'
-      ? (
-        <Button variant='outlined' onPress={props.onArchive}>
-          <Archive size={16} />
-          {t('timeTracking:services.archive', 'Archive')}
-        </Button>
-      )
-      : (
-        props.showCancel && (
-          <Button variant='outlined' onPress={props.onCancel}>
-            {t('timeTracking:services.cancel', 'Cancel')}
-          </Button>
-        )
-      ),
-  }
-
   return (
     <Form
       className={
@@ -119,10 +98,25 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
           )}
         </form.AppField>
 
-        <HStack gap='sm' align='center' justify={actionButtonParams.justify}>
-          {actionButtonParams.secondaryButton}
+        <HStack gap='sm' align='center' justify={mode === 'edit' ? 'space-between' : 'end'}>
+          {mode === 'edit'
+            ? (
+              <Button variant='outlined' onPress={props.onArchive}>
+                <Archive size={16} />
+                {t('timeTracking:services.archive', 'Archive')}
+              </Button>
+            )
+            : (
+              props.showCancel && (
+                <Button variant='outlined' onPress={props.onCancel}>
+                  {t('timeTracking:services.cancel', 'Cancel')}
+                </Button>
+              )
+            )}
           <Button onPress={() => { void form.handleSubmit() }} isDisabled={isSubmitting} isPending={isSubmitting}>
-            {actionButtonParams.primaryButtonLabel}
+            {mode === 'edit'
+              ? t('timeTracking:services.save', 'Save')
+              : t('timeTracking:services.add', 'Add')}
           </Button>
         </HStack>
       </VStack>
