@@ -1,9 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 
-import {
-  type SortDirection,
-} from '@internal-types/general'
 import { type ReportingBasis } from '@internal-types/general'
+import { getNextSortOrder, SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import {
   applyShare,
   collectExpensesItems,
@@ -31,45 +29,30 @@ export type PnlTagFilter = {
   values: string[]
 }
 
-type ProfitAndLossFilter = {
-  sortBy?: string
-  sortDirection?: SortDirection
-}
-
-export type ProfitAndLossFilters = Record<
+export type SortParamsByScope = Record<
   Scope,
-  ProfitAndLossFilter | undefined
+  SortParams<string> | undefined
 >
 
-const createPnlLineItemComparator = (filters: ProfitAndLossFilter | undefined) => {
+const createPnlLineItemComparator = (filters: SortParams<string> | undefined) => {
   return (a: PnlChartLineItem, b: PnlChartLineItem) => {
+    const isAscending = filters?.sortOrder === SortOrder.ASC || filters?.sortOrder === SortOrder.ASCENDING
     switch (filters?.sortBy) {
       case 'category':
-        if (filters?.sortDirection === 'asc') {
-          return a.displayName.localeCompare(b.displayName)
-        }
-        return b.displayName.localeCompare(a.displayName)
-
+        return (isAscending) ? a.displayName.localeCompare(b.displayName) : b.displayName.localeCompare(a.displayName)
       case 'type':
-        if (filters?.sortDirection === 'asc') {
-          return a.type.localeCompare(b.type)
-        }
-        return b.type.localeCompare(a.type)
-
+        return (isAscending) ? a.type.localeCompare(b.type) : b.type.localeCompare(a.type)
       default:
-        if (filters?.sortDirection === 'asc') {
-          return a.value - b.value
-        }
-        return b.value - a.value
+        return (isAscending) ? a.value - b.value : b.value - a.value
     }
   }
 }
 
 const sortPnlLineItemsAndCalculateTotal = (
   items: PnlChartLineItem[],
-  filter: ProfitAndLossFilter | undefined,
+  filter: SortParams<string> | undefined,
 ) => {
-  const sorted = items.sort(createPnlLineItemComparator(filter))
+  const sorted = [...items].sort(createPnlLineItemComparator(filter))
   const total = sorted.reduce((x, { value }) => x + value, 0)
   const withShare = applyShare(sorted, total)
 
@@ -85,9 +68,9 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
   const [dateSelectionMode, setDateSelectionMode] = useState<DateSelectionMode>('month')
   const dateRange = useGlobalDateRange({ dateSelectionMode })
 
-  const [filters, setFilters] = useState<ProfitAndLossFilters>({
-    expenses: undefined,
-    revenue: undefined,
+  const [filters, setFilters] = useState<SortParamsByScope>({
+    expenses: { sortBy: 'value', sortOrder: SortOrder.DESC },
+    revenue: { sortBy: 'value', sortOrder: SortOrder.DESC },
   })
 
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
@@ -102,40 +85,71 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
       includeUncategorized: true,
     })
 
-  const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
-    setFilters({
-      ...filters,
-      [scope]: {
-        ...filters[scope],
-        sortBy: field,
-        sortDirection:
-          (direction ?? filters[scope]?.sortDirection === 'desc')
-            ? 'asc'
-            : 'desc',
-      },
+  const sortBy = (scope: Scope, field: string, sortOrderOverride?: SortOrder, defaultSortOrder?: SortOrder) => {
+    setFilters((prev) => {
+      const prevSortBy = prev[scope]?.sortBy
+      const prevSortOrder = prev[scope]?.sortOrder
+      const isSameField = prevSortBy === field
+      const defaultSort = defaultSortOrder ?? SortOrder.ASC
+
+      let nextSortOrder: SortOrder = defaultSort
+      if (sortOrderOverride) {
+        nextSortOrder = sortOrderOverride
+      }
+      else if (isSameField) {
+        nextSortOrder = prevSortOrder ? getNextSortOrder(prevSortOrder) : defaultSort
+      }
+
+      return {
+        ...prev,
+        [scope]: {
+          ...prev[scope],
+          sortBy: field,
+          sortOrder: nextSortOrder,
+        },
+      }
     })
   }
 
-  const { filteredDataRevenue, filteredTotalRevenue } = useMemo(() => {
+  const { chartDataRevenue, tableDataRevenue, totalRevenue } = useMemo(() => {
     if (!data) {
-      return { filteredDataRevenue: [], filteredTotalRevenue: undefined }
+      return {
+        chartDataRevenue: [],
+        tableDataRevenue: [],
+        totalRevenue: undefined,
+      }
     }
 
     const items = collectRevenueItems(data)
-    const { items: withShare, total } = sortPnlLineItemsAndCalculateTotal(items, filters['revenue'])
+    const total = items.reduce((sum, { value }) => sum + value, 0)
+    const chartItemsWithShare = applyShare(items, total)
+    const { items: sortedItemsWithShare } = sortPnlLineItemsAndCalculateTotal(items, filters['revenue'])
 
-    return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
+    return {
+      chartDataRevenue: chartItemsWithShare,
+      tableDataRevenue: sortedItemsWithShare,
+      totalRevenue: total,
+    }
   }, [data, filters])
 
-  const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
+  const { chartDataExpenses, tableDataExpenses, totalExpenses } = useMemo(() => {
     if (!data) {
-      return { filteredDataExpenses: [], filteredTotalExpenses: undefined }
+      return {
+        chartDataExpenses: [],
+        tableDataExpenses: [],
+        totalExpenses: undefined,
+      }
     }
-
     const items = collectExpensesItems(data)
-    const { items: withShare, total } = sortPnlLineItemsAndCalculateTotal(items, filters['expenses'])
+    const total = items.reduce((sum, { value }) => sum + value, 0)
+    const chartItemsWithShare = applyShare(items, total)
+    const { items: sortedItemsWithShare } = sortPnlLineItemsAndCalculateTotal(items, filters['expenses'])
 
-    return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
+    return {
+      chartDataExpenses: chartItemsWithShare,
+      tableDataExpenses: sortedItemsWithShare,
+      totalExpenses: total,
+    }
   }, [data, filters])
 
   const refetch = useCallback(() => {
@@ -144,10 +158,12 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
 
   return {
     data,
-    filteredDataRevenue,
-    filteredTotalRevenue,
-    filteredDataExpenses,
-    filteredTotalExpenses,
+    chartDataRevenue,
+    tableDataRevenue,
+    totalRevenue,
+    chartDataExpenses,
+    tableDataExpenses,
+    totalExpenses,
     isLoading,
     isValidating,
     isError,

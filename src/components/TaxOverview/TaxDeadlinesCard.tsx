@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import type { TaxOverviewDeadline, TaxOverviewDeadlineReview } from '@schemas/taxEstimates/overview'
+import type { TaxOverviewDeadlineReview } from '@schemas/taxEstimates/overview'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -9,18 +9,11 @@ import { TaxOverviewDeadlineCard } from '@components/TaxOverview/TaxOverviewDead
 
 import './taxDeadlinesCard.scss'
 
-export type TaxDeadlinesCardData = {
-  annualDeadline: TaxOverviewDeadline
-  paymentDeadlines: TaxOverviewDeadline[]
-}
-
 export type TaxDeadlinesCardProps = {
-  data: TaxDeadlinesCardData
   onTaxBannerReviewClick?: (payload: TaxOverviewDeadlineReview['payload']) => void
 }
 
 export const TaxDeadlinesCard = ({
-  data,
   onTaxBannerReviewClick,
 }: TaxDeadlinesCardProps) => {
   const { t } = useTranslation()

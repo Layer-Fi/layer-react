@@ -1,43 +1,62 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { TaxEstimatesBannerQuarter } from '@schemas/taxEstimates/banner'
-import type { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
-import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
-import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
-import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
-import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
+import { tConditional } from '@utils/i18n/conditional'
+import { DateFormat } from '@utils/i18n/date/patterns'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { TaxEstimatesSummaryCard, type TaxEstimatesSummaryCardProps } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
-import { TaxableIncomeCard, type TaxableIncomeCardProps } from '@components/TaxOverview/TaxableIncomeCard'
-import { TaxDeadlinesCard, type TaxDeadlinesCardData } from '@components/TaxOverview/TaxDeadlinesCard'
+import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
+import { TaxableIncomeCard } from '@components/TaxOverview/TaxableIncomeCard'
 
-import './taxOverview.scss'
+import '@components/TaxOverview/taxOverview.scss'
 
-export type TaxOverviewProps = {
-  deadlinesCard: TaxDeadlinesCardData
-  incomeCard: TaxableIncomeCardProps
-  summaryCard: TaxEstimatesSummaryCardProps
+import { TaxDeadlinesCard, type TaxDeadlinesCardProps } from './TaxDeadlinesCard'
+
+const TaxOverviewHeader = () => {
+  const { t } = useTranslation()
+  const { year } = useTaxEstimatesYear()
+  const { formatDate } = useIntlFormatter()
+  const { fullYearProjection } = useFullYearProjection()
+  const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
+
+  const formattedYear = formatDate(new Date(year, 0, 1), DateFormat.Year)
+
+  const taxableIncomeTitle = tConditional(t, 'taxEstimates:label.taxable_income_for_year', {
+    condition: projectedCondition,
+    cases: {
+      default: 'Taxable income for {{year}}',
+      projected: 'Projected taxable income for {{year}}',
+    },
+    contexts: {
+      projected: 'projected',
+    },
+    year: formattedYear,
+  })
+
+  const taxableIncomeDescription = tConditional(t, 'taxEstimates:label.taxable_income_estimate_to_date_for_year', {
+    condition: projectedCondition,
+    cases: {
+      default: 'Taxable income estimate to date for year {{year}}',
+      projected: 'Taxable income projection for year {{year}}',
+    },
+    contexts: {
+      projected: 'projected',
+    },
+    year: formattedYear,
+  })
+  return (
+    <TaxEstimatesHeader
+      title={taxableIncomeTitle}
+      description={taxableIncomeDescription}
+    />
+  )
 }
 
-const getQuarterDeadlineStatus = (quarter: TaxEstimatesBannerQuarter): TaxOverviewDeadlineStatus => {
-  if (quarter.uncategorizedCount > 0) {
-    return { kind: 'categorizationIncomplete' }
-  }
+export type TaxOverviewProps = TaxDeadlinesCardProps
 
-  if (quarter.balance <= 0) {
-    return { kind: 'paid' }
-  }
-
-  if (quarter.isPastDue) {
-    return { kind: 'pastDue' }
-  }
-
-  return { kind: 'due' }
-}
-
-const TaxOverviewContent = ({ data }: { data: TaxOverviewProps }) => {
+export const TaxOverview = ({ onTaxBannerReviewClick }: TaxOverviewProps) => {
   const [viewportWidth] = useWindowSize()
   const isMobile = viewportWidth <= 1440
   if (!isMobile) {
@@ -45,11 +64,11 @@ const TaxOverviewContent = ({ data }: { data: TaxOverviewProps }) => {
       <VStack className='Layer__TaxOverview' gap='md'>
         <HStack className='Layer__TaxOverview__DesktopLayout' gap='md' align='start'>
           <VStack className='Layer__TaxOverview__PrimaryColumn' gap='md'>
-            <TaxableIncomeCard data={data.incomeCard} />
-            <TaxEstimatesSummaryCard data={data.summaryCard} />
+            <TaxableIncomeCard />
+            <TaxEstimatesSummaryCard />
           </VStack>
           <VStack className='Layer__TaxOverview__SecondaryColumn'>
-            <TaxDeadlinesCard data={data.deadlinesCard} />
+            <TaxDeadlinesCard onTaxBannerReviewClick={onTaxBannerReviewClick} />
           </VStack>
         </HStack>
       </VStack>
@@ -58,88 +77,9 @@ const TaxOverviewContent = ({ data }: { data: TaxOverviewProps }) => {
 
   return (
     <VStack className='Layer__TaxOverview' gap='md'>
-      <TaxableIncomeCard data={data.incomeCard} />
-      <TaxEstimatesSummaryCard data={data.summaryCard} />
-      <TaxDeadlinesCard data={data.deadlinesCard} />
-    </VStack>
-  )
-}
-
-export const TaxOverview = () => {
-  const { year } = useTaxEstimatesYear()
-  const { fullYearProjection } = useFullYearProjection()
-  const { isDesktop } = useSizeClass()
-  const { t } = useTranslation()
-  const { data: taxOverviewData } = useTaxOverview({
-    year,
-    fullYearProjection,
-    enabled: true,
-  })
-
-  const { data: taxSummaryData } = useTaxSummary({
-    year,
-    fullYearProjection,
-    enabled: true,
-  })
-  const { data: taxBannerData } = useTaxEstimatesBanner({
-    year,
-    fullYearProjection,
-  })
-
-  const data = useMemo(() => {
-    if (!taxOverviewData || !taxSummaryData || !taxBannerData) {
-      return null
-    }
-    return {
-      deadlinesCard: {
-        paymentDeadlines: taxBannerData.quarters.map(quarter => ({
-          amount: quarter.balance,
-          description: t('taxEstimates:label.estimated_tax', 'Estimated tax'),
-          dueAt: quarter.dueDate,
-          id: `quarter-${quarter.quarter}`,
-          reviewAction: quarter.uncategorizedCount > 0
-            ? {
-              payload: {
-                type: 'UNCATEGORIZED_TRANSACTIONS' as const,
-                count: quarter.uncategorizedCount,
-                amount: quarter.uncategorizedSum,
-              },
-            }
-            : undefined,
-          status: getQuarterDeadlineStatus(quarter),
-          title: t('taxEstimates:label.quarter_taxes', 'Q{{quarter}} taxes', { quarter: quarter.quarter }),
-        })),
-        annualDeadline: {
-          amount: taxSummaryData.projectedTaxesOwed,
-          description: t('taxEstimates:label.estimated_tax', 'Estimated tax'),
-          dueAt: taxOverviewData.taxesDueDate ?? new Date(year + 1, 3, 15),
-          id: 'annual-income-taxes',
-          title: t('taxEstimates:label.annual_income_taxes', 'Annual income taxes'),
-        },
-      },
-      incomeCard: {
-        deductionsTotal: taxOverviewData.totalDeductions,
-        incomeTotal: taxOverviewData.totalIncome,
-      },
-      summaryCard: {
-        categories: taxSummaryData.sections.map(section => ({
-          amount: section.taxesOwed,
-          color: section.color,
-          key: section.type,
-          label: section.label,
-        })),
-        layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
-        title: t('taxEstimates:label.tax_summary', 'Tax Summary'),
-        total: taxSummaryData.projectedTaxesOwed,
-      },
-    }
-  }, [isDesktop, taxBannerData, taxSummaryData, taxOverviewData, t, year])
-
-  return (
-    <VStack className='Layer__TaxOverview' gap='md'>
-      { data && (
-        <TaxOverviewContent data={data} />
-      )}
+      <TaxableIncomeCard />
+      <TaxEstimatesSummaryCard />
+      <TaxDeadlinesCard />
     </VStack>
   )
 }

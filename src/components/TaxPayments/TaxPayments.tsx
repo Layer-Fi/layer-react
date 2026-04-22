@@ -8,8 +8,9 @@ import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstima
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
-import { TaxPaymentsMobileList } from '@components/TaxPayments/TaxPaymentsMobileList/TaxPaymentsMobileList'
-import { TaxPaymentsTable } from '@components/TaxPayments/TaxPaymentsTable/TaxPaymentsTable'
+
+import { TaxPaymentsMobileList } from './TaxPaymentsMobileList/TaxPaymentsMobileList'
+import { TaxPaymentsTable } from './TaxPaymentsTable/TaxPaymentsTable'
 
 const TaxPaymentsHeader = ({ isMobile, translation }: { isMobile: boolean, translation: TFunction }) => {
   const t = translation

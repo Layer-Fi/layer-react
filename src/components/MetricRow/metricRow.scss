@@ -9,17 +9,17 @@
   background-color: var(--color-base-50);
 }
 
-.Layer__MetricCardLabel {
+.Layer__MetricCard__Label {
   flex-shrink: 0;
   white-space: nowrap;
 }
 
-.Layer__MetricCardMeter {
+.Layer__MetricCard__Meter {
   flex: 1;
   min-width: 0;
 }
 
-.Layer__MetricRowValue {
+.Layer__MetricRow__Value {
   flex: 0 0 56%;
   justify-content: flex-end;
   min-width: 0;
@@ -31,12 +31,12 @@
 
 @container (max-width: 720px) {
   .Layer__MetricRow,
-  .Layer__MetricRowValue {
+  .Layer__MetricRow__Value {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .Layer__MetricRowValue {
+  .Layer__MetricRow__Value {
     flex-basis: auto;
   }
 }

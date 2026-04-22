@@ -1,19 +1,19 @@
-import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { createStore, useStore } from 'zustand'
+import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import { createStore, type StoreApi, useStore } from 'zustand'
 
-import { DateGroupBy, type DateQueryParams, type DateRangeQueryParams, ReportEnum } from '@schemas/reports/unifiedReport'
-import { translationKey } from '@utils/i18n/translationKey'
+import { type ReportConfig, ReportControl, type ReportGroup } from '@schemas/reports/reportConfig'
+import { DateGroupBy, type DateQueryParams, type DateRangeQueryParams } from '@schemas/reports/unifiedReport'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
 import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
 type UnifiedReportStoreActions = {
-  setReport: (report: ReportEnum) => void
+  setReport: (report: ReportConfig) => void
   setGroupBy: (groupBy: DateGroupBy | null) => void
 }
 
 type UnifiedReportStoreShape = {
-  report: ReportEnum
+  report: ReportConfig | null
   groupBy: DateGroupBy | null
   actions: UnifiedReportStoreActions
 }
@@ -23,30 +23,22 @@ export enum UnifiedReportDateVariant {
   DateRange = 'DateRange',
 }
 
-const reportToDateVariantMap = {
-  [ReportEnum.BalanceSheet]: UnifiedReportDateVariant.Date,
-  [ReportEnum.CashflowStatement]: UnifiedReportDateVariant.DateRange,
-  [ReportEnum.ProfitAndLoss]: UnifiedReportDateVariant.DateRange,
-} as const
+const getDateVariant = (report: ReportConfig): UnifiedReportDateVariant =>
+  report.controls.includes(ReportControl.DateRange)
+    ? UnifiedReportDateVariant.DateRange
+    : UnifiedReportDateVariant.Date
 
-export type UnifiedReportWithDateParams =
-  | {
-    report: ReportEnum.BalanceSheet
-  } & DateQueryParams
-  | {
-    report: ReportEnum.CashflowStatement
-  } & DateRangeQueryParams
-  | {
-    report: ReportEnum.ProfitAndLoss
-  } & DateRangeQueryParams
+const hasGroupByControl = (report: ReportConfig): boolean =>
+  report.controls.includes(ReportControl.GroupBy)
 
-export type UnifiedReportState = UnifiedReportWithDateParams & {
+export type UnifiedReportParams = {
+  report: string
   groupBy: DateGroupBy | null
-}
+} & (DateQueryParams | DateRangeQueryParams)
 
 const UnifiedReportStoreContext = createContext(
   createStore<UnifiedReportStoreShape>(() => ({
-    report: ReportEnum.ProfitAndLoss,
+    report: null,
     groupBy: DateGroupBy.AllTime,
     actions: {
       setReport: () => {},
@@ -55,51 +47,39 @@ const UnifiedReportStoreContext = createContext(
   })),
 )
 
-const UNIFIED_REPORT_NAME_TRANSLATIONS = {
-  [ReportEnum.BalanceSheet]: translationKey('reports:label.balance_sheet_report', 'Balance Sheet Report'),
-  [ReportEnum.CashflowStatement]: translationKey('reports:label.statement_cash_flow_report', 'Statement of Cash Flow Report'),
-  [ReportEnum.ProfitAndLoss]: translationKey('reports:label.profit_loss_report', 'Profit & Loss Report'),
-}
-
-export function useUnifiedReportName() {
-  const store = useContext(UnifiedReportStoreContext)
-  const { t } = useTranslation()
-
-  const report = useStore(store, state => state.report)
-
-  const { i18nKey, defaultValue } = UNIFIED_REPORT_NAME_TRANSLATIONS[report]
-  return t(i18nKey, defaultValue)
-}
-
-export function useUnifiedReportDateVariant(): UnifiedReportDateVariant {
-  const store = useContext(UnifiedReportStoreContext)
-
-  const report = useStore(store, state => state.report)
-  return reportToDateVariantMap[report]
-}
-
-export function useUnifiedReportGroupBy() {
+export function useActiveUnifiedReport() {
   const store = useContext(UnifiedReportStoreContext)
   const report = useStore(store, state => state.report)
+  const setReport = useStore(store, state => state.actions.setReport)
+  return useMemo(() => ({ report, setReport }), [report, setReport])
+}
+
+export function useUnifiedReportDateVariant(): UnifiedReportDateVariant | null {
+  const { report } = useActiveUnifiedReport()
+  return report ? getDateVariant(report) : null
+}
+
+export function useUnifiedReportGroupByParam() {
+  const { report } = useActiveUnifiedReport()
+  const store = useContext(UnifiedReportStoreContext)
   const groupBy = useStore(store, state => state.groupBy)
   const setGroupBy = useStore(store, state => state.actions.setGroupBy)
 
   const groupByState = useMemo(() => ({ groupBy, setGroupBy }), [groupBy, setGroupBy])
 
-  if (report === ReportEnum.ProfitAndLoss) {
+  if (report && hasGroupByControl(report)) {
     return groupByState
   }
 
   return null
 }
 
-export function useUnifiedReportDateParams({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }): DateQueryParams | DateRangeQueryParams {
-  const store = useContext(UnifiedReportStoreContext)
+export function useUnifiedReportDateParams({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }): DateQueryParams | DateRangeQueryParams | null {
+  const dateVariant = useUnifiedReportDateVariant()
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
   const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode })
 
-  const report = useStore(store, state => state.report)
-  const dateVariant = reportToDateVariantMap[report]
+  if (dateVariant === null) return null
 
   switch (dateVariant) {
     case UnifiedReportDateVariant.Date:
@@ -114,31 +94,59 @@ export function useUnifiedReportDateParams({ dateSelectionMode }: { dateSelectio
   }
 }
 
-export function useUnifiedReportState({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }): UnifiedReportState {
-  const store = useContext(UnifiedReportStoreContext)
-  const report = useStore(store, state => state.report)
-
-  const groupByParam = useUnifiedReportGroupBy()
+export function useUnifiedReportParams({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }): UnifiedReportParams | null {
+  const { report } = useActiveUnifiedReport()
+  const groupByParam = useUnifiedReportGroupByParam()
   const dateParams = useUnifiedReportDateParams({ dateSelectionMode })
 
-  return { report, groupBy: groupByParam?.groupBy ?? null, ...dateParams } as UnifiedReportState
+  if (!report || !dateParams) return null
+
+  return { report: report.reportType, groupBy: groupByParam?.groupBy ?? null, ...dateParams } as UnifiedReportParams
 }
 
-export function UnifiedReportStoreProvider(props: PropsWithChildren) {
-  const [store] = useState(() =>
-    createStore<UnifiedReportStoreShape>(set => ({
-      report: ReportEnum.ProfitAndLoss,
-      groupBy: DateGroupBy.AllTime,
-      actions: {
-        setReport: (report: ReportEnum) => set({ report }),
-        setGroupBy: (groupBy: DateGroupBy | null) => set({ groupBy }),
-      },
-    })),
-  )
+const findFirstLeaf = (groups: ReadonlyArray<ReportGroup>): ReportConfig | null => {
+  for (const group of groups) {
+    if (group.reports.length > 0) {
+      return group.reports[0]
+    }
+  }
+  return null
+}
+
+const hasLeafWithKey = (groups: ReadonlyArray<ReportGroup>, key: string): boolean =>
+  groups.some(group => group.reports.some(report => report.key === key))
+
+const createUnifiedReportStore = () =>
+  createStore<UnifiedReportStoreShape>(set => ({
+    report: null,
+    groupBy: DateGroupBy.AllTime,
+    actions: {
+      setReport: (report: ReportConfig) => set({ report }),
+      setGroupBy: (groupBy: DateGroupBy | null) => set({ groupBy }),
+    },
+  }))
+
+function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>) {
+  const { data } = useReportConfig()
+  const report = useStore(store, state => state.report)
+  const setReport = useStore(store, state => state.actions.setReport)
+
+  useEffect(() => {
+    if (!data) return
+    if (report && hasLeafWithKey(data, report.key)) return
+
+    const firstLeaf = findFirstLeaf(data)
+    if (firstLeaf) setReport(firstLeaf)
+  }, [report, data, setReport])
+}
+
+export function UnifiedReportStoreProvider({ children }: PropsWithChildren) {
+  const [store] = useState(createUnifiedReportStore)
+  useHydrateUnifiedReportStore(store)
 
   return (
     <UnifiedReportStoreContext.Provider value={store}>
-      {props.children}
+      {children}
     </UnifiedReportStoreContext.Provider>
   )
 }

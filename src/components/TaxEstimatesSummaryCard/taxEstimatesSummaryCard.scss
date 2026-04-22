@@ -11,6 +11,17 @@
 .Layer__TaxEstimatesSummaryCard {
   min-width: 0;
 
+  .Layer__DetailedChart {
+    height: 12rem;
+    max-width: 18rem;
+  }
+
+  @media (width >= 760px) {
+    .Layer__DetailedChart {
+      width: 18rem;
+    }
+  }
+
   &.Layer__card {
     gap: var(--spacing-lg);
     padding: var(--spacing-lg);
@@ -30,59 +41,6 @@
   &__Header,
   &__Body {
     min-width: 0;
-  }
-
-  &__Legend {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__LegendHeader {
-    padding-block-end: var(--spacing-xs);
-    border-block-end: 1px solid var(--color-base-100);
-  }
-
-  &__LegendHeaderValue {
-    color: var(--color-base-500);
-  }
-
-  &__LegendRow {
-    min-block-size: 2rem;
-  }
-
-  &__LegendLabel {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__LegendValueGroup {
-    flex-shrink: 0;
-    justify-content: flex-end;
-    min-inline-size: 12rem;
-  }
-
-  &__LegendSwatch {
-    display: inline-flex;
-    height: 0.75rem;
-    width: 0.75rem;
-    border-radius: var(--border-radius-2xs);
-  }
-
-  &__DonutChart {
-    position: relative;
-    flex-shrink: 0;
-    aspect-ratio: 1;
-    width: 9.5rem;
-  }
-
-  &__DonutChartPie {
-    height: 100%;
-    width: 100%;
-  }
-
-  &__DonutChartCenter {
-    position: absolute;
-    inset: 0;
   }
 
   &--summaryCard {
@@ -106,5 +64,14 @@
     .Layer__TaxEstimatesSummaryCard__Legend {
       width: 100%;
     }
+  }
+}
+
+@media (width >= 760px) {
+  .Layer__card.Layer__TaxEstimatesSummaryCard {
+    border-radius: 0;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
   }
 }

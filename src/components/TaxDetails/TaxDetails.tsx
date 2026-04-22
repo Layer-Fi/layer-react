@@ -91,11 +91,10 @@ export const TaxDetails = () => {
         isError={isError}
         data={summaryData}
         Loading={<Loader />}
-        Inactive={null}
         Error={(
           <DataState
             status={DataStateStatus.failed}
-            title={t('taxEstimates:error.load_tax_estimates_tax', 'We couldn\'t load your tax summary')}
+            title={t('taxEstimates:error.load_tax_estimates_summary', 'We couldn\'t load your tax summary')}
             description={t('taxEstimates:error.while_loading_tax_summary', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
             spacing
           />
@@ -108,7 +107,6 @@ export const TaxDetails = () => {
         isError={isError}
         data={data}
         Loading={<Loader />}
-        Inactive={null}
         Error={(
           <DataState
             status={DataStateStatus.failed}

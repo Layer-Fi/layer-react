@@ -4,21 +4,25 @@
     "save_profile": "Save Profile",
     "update_tax_profile": "Update tax profile"
   },
+  "disclaimer": {
+    "acknowledgment": "By continuing, I certify that I understand the above.",
+    "content": "The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us."
+  },
   "empty": {
     "no_tax_payments_to_display": "There are no tax payments to display.",
     "tax_payments": "No tax payments found"
   },
   "error": {
+    "disclaimer_required": "You must acknowledge the disclaimer to continue.",
     "feature_not_enabled": "Tax estimates are not enabled.",
     "load_tax_estimates": "We couldn't load your tax estimates",
-    "load_tax_estimates_tax": "We couldn't load your tax summary",
+    "load_tax_estimates_summary": "We couldn't load your tax summary",
     "load_tax_information": "Unable to load tax information",
     "load_tax_payments": "We couldnʼt load your tax payments",
     "retrieve_tax_profile": "We couldn’t retrieve your tax profile. Please check your connection and try again.",
     "while_loading_tax_estimates": "An error occurred while loading your tax estimates. Please check your connection and try again.",
     "while_loading_tax_payments": "An error occurred while loading your tax payments. Please check your connection and try again.",
-    "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again.",
-    "disclaimer_required": "You must acknowledge the disclaimer to continue."
+    "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
   },
   "label": {
     "additional_actions": "Additional actions",
@@ -26,6 +30,7 @@
     "adjusted_gross_income": "Adjusted Gross Income",
     "amount_applied_federal_w2": "Amount Applied from Federal W-2 Withholding",
     "amount_applied_state_withholding": "Amount Applied from State Withholding",
+    "annual_income_taxes": "Annual income taxes",
     "annual_w2_income": "Annual W-2 income",
     "business_income": "Business Income",
     "business_income_deduction_rate": "Business Income Deduction ({{rate}})",
@@ -97,6 +102,10 @@
     "taxable_business_income": "Taxable Business Income",
     "taxable_business_income_projected": "Projected Taxable Business Income",
     "taxable_income": "Taxable Income",
+    "taxable_income_estimate_to_date_for_year": "Taxable income estimate to date for year {{year}}",
+    "taxable_income_estimate_to_date_for_year_projected": "Taxable income projection for year {{year}}",
+    "taxable_income_for_year": "Taxable income for {{year}}",
+    "taxable_income_for_year_projected": "Projected taxable income for {{year}}",
     "taxable_medicare_income": "Taxable Medicare Income",
     "taxable_medicare_surtax_income": "Taxable Medicare Surtax Income",
     "taxable_social_security_income": "Taxable Social Security Income",
@@ -109,7 +118,6 @@
     "tip_income": "Tip income",
     "uncategorized_tax_payment": "Uncategorized Tax Payment",
     "uncategorized_transactions": "{{count}} uncategorized transactions",
-    "annual_income_taxes": "Annual income taxes",
     "total_income": "Total income",
     "total_federal_tax_estimate": "Total Federal Tax Estimate",
     "total_paid": "Total Paid",
