@@ -24,9 +24,11 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   const { t } = useTranslation()
 
   return (
-    <VStack gap='md' align='center' className='Layer__CallBooking__State' pb='md'>
-      <Heading size='sm'>{t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}</Heading>
-      <Span variant='subtle'>
+    <VStack gap='md' align='center' pb='md'>
+      <Heading size='sm' align='center'>
+        {t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}
+      </Heading>
+      <Span variant='subtle' align='center'>
         {t('callBookings:label.book_call_with_bookkeeper', 'Book a call with your bookkeeper')}
       </Span>
       <Button variant='solid' onClick={onBookCall}>
@@ -68,23 +70,23 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
         </VStack>
         <Separator mbs='2xs' mbe='2xs' />
         <VStack align='start' gap='sm'>
-          <HStack align='center' gap='sm' className='Layer__CallBooking__DetailRow'>
-            <Milestone size={16} className='Layer__CallBooking__DetailIcon' />
-            <Span variant='subtle' size='sm' className='Layer__CallBooking__DetailLabel'>
+          <HStack className='Layer__CallBooking__DetailRow'>
+            <Milestone size={16} color='var(--color-base-500)' />
+            <Span variant='subtle' size='sm' noWrap>
               {t('callBookings:label.purpose', 'Purpose')}
             </Span>
             <Span size='sm'>{purpose}</Span>
           </HStack>
-          <HStack align='center' gap='sm' className='Layer__CallBooking__DetailRow'>
-            <Video size={16} className='Layer__CallBooking__DetailIcon' />
-            <Span variant='subtle' size='sm' className='Layer__CallBooking__DetailLabel'>
+          <HStack className='Layer__CallBooking__DetailRow'>
+            <Video size={16} color='var(--color-base-500)' />
+            <Span variant='subtle' size='sm' noWrap>
               {t('callBookings:label.location', 'Location')}
             </Span>
             <Span size='sm'>{callPlatform}</Span>
           </HStack>
-          <HStack align='center' gap='sm' className='Layer__CallBooking__DetailRow'>
-            <Clock size={16} className='Layer__CallBooking__DetailIcon' />
-            <Span variant='subtle' size='sm' className='Layer__CallBooking__DetailLabel'>
+          <HStack className='Layer__CallBooking__DetailRow'>
+            <Clock size={16} color='var(--color-base-500)' />
+            <Span variant='subtle' size='sm' noWrap>
               {t('callBookings:label.date', 'Date')}
             </Span>
             <Span size='sm'>

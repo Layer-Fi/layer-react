@@ -8,7 +8,6 @@
     height: 48px;
     width: 48px;
     border-radius: 50%;
-    margin-block-end: var(--spacing-2xs);
     background-color: var(--color-base-50);
     color: var(--color-base-900);
   }
@@ -21,14 +20,6 @@
     width: 100%;
   }
 
-  .Layer__CallBooking__DetailIcon {
-    color: var(--color-base-500);
-  }
-
-  .Layer__CallBooking__DetailLabel {
-    white-space: nowrap;
-  }
-
   .Layer__CallBooking__Actions {
     width: 100%;
 
@@ -36,10 +27,6 @@
       flex: 1;
       min-width: 0;
     }
-  }
-
-  .Layer__CallBooking__State {
-    text-align: center;
   }
 }
 
