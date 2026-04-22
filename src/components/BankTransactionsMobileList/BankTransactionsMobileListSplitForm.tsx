@@ -156,9 +156,16 @@ export const BankTransactionsMobileListSplitForm = ({
                       className='Layer__BankTransactionsMobileSplitForm__AmountInput'
                     />
                   </HStack>
-                  <HStack className='Layer__BankTransactionsMobileSplitForm__ActionButtonContainer'>
-                    {index > 0
-                      && (
+                  <HStack className='Layer__BankTransactionsMobileSplitForm__CategoryInputContainer'>
+                    <CategorySelectDrawerWithTrigger
+                      value={split.category}
+                      onChange={handleCategoryChange(index)}
+                      showTooltips={showTooltips}
+                    />
+                  </HStack>
+                  {index > 0
+                    && (
+                      <HStack className='Layer__BankTransactionsMobileSplitForm__ActionButtonContainer'>
                         <Button
                           onClick={() => removeSplit(index)}
                           variant='outlined'
@@ -169,14 +176,9 @@ export const BankTransactionsMobileListSplitForm = ({
                             <Trash size={14} />
                           </HStack>
                         </Button>
-                      )}
-                  </HStack>
+                      </HStack>
+                    )}
                 </HStack>
-                <CategorySelectDrawerWithTrigger
-                  value={split.category}
-                  onChange={handleCategoryChange(index)}
-                  showTooltips={showTooltips}
-                />
                 {showTaxCodeSelector && (
                   <TaxCodeSelectDrawerWithTrigger
                     options={taxCodeOptions}
