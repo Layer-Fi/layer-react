@@ -16,7 +16,7 @@ import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/u
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
-import { BankTransactionsCategoryStoreProvider } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { BankTransactionsProvider } from '@providers/BankTransactionsProvider/BankTransactionsProvider'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { BulkSelectionStoreProvider } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -134,9 +134,9 @@ export const BankTransactions = ({
                   <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
                     <InAppLinkProvider renderInAppLink={renderInAppLink}>
                       <BulkSelectionStoreProvider>
-                        <BankTransactionsCategoryStoreProvider>
+                        <BankTransactionsCategorizationStoreProvider>
                           <BankTransactionsContent {...restProps} />
-                        </BankTransactionsCategoryStoreProvider>
+                        </BankTransactionsCategorizationStoreProvider>
                       </BulkSelectionStoreProvider>
                     </InAppLinkProvider>
                   </BankTransactionCustomerVendorVisibilityProvider>

@@ -9,11 +9,11 @@ import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useGetAllBankTransactionsCategories } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { type BankTransactionCategorization, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
@@ -21,13 +21,14 @@ type MatchOrCategorizeTransaction = typeof MatchOrCategorizeTransactionRequestSc
 
 const buildBulkMatchOrCategorizePayload = (
   selectedIds: Iterable<string>,
-  transactionCategories: Map<string, BankTransactionCategoryComboBoxOption | null>,
+  categorizations: Map<string, BankTransactionCategorization>,
   bankTransactionsById: Map<string, BankTransaction>,
 ): Record<string, MatchOrCategorizeTransaction> => {
   const transactions: Record<string, MatchOrCategorizeTransaction> = {}
 
   for (const transactionId of selectedIds) {
-    const transactionCategory = transactionCategories.get(transactionId) ?? null
+    const selectedCategorization = categorizations.get(transactionId)
+    const transactionCategory = selectedCategorization?.category ?? null
     const bankTransaction = bankTransactionsById.get(transactionId)
 
     if (!transactionCategory || isPlaceholderAsOption(transactionCategory)) {
@@ -76,9 +77,14 @@ const buildBulkMatchOrCategorizePayload = (
     else if (isCategoryAsOption(transactionCategory) || isApiCategorizationAsOption(transactionCategory)) {
       const classification = transactionCategory.classification
       if (classification) {
+        const selectedTaxCode = selectedCategorization && 'taxCode' in selectedCategorization
+          ? selectedCategorization.taxCode
+          : undefined
         const taxCode = classification.type === 'Exclusion'
           ? null
-          : bankTransaction?.tax_code ?? null
+          : selectedTaxCode === undefined
+            ? bankTransaction?.tax_code ?? null
+            : selectedTaxCode?.value ?? null
         transactions[transactionId] = {
           type: 'categorize',
           categorization: {
@@ -162,7 +168,7 @@ export const useBulkMatchOrCategorize = () => {
   const { data } = useAuth()
   const { businessId, eventCallbacks } = useLayerContext()
   const { selectedIds } = useSelectedIds()
-  const { transactionCategories } = useGetAllBankTransactionsCategories()
+  const { categorizations } = useGetAllBankTransactionsCategorizations()
   const { data: bankTransactions } = useBankTransactionsContext()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
@@ -174,9 +180,9 @@ export const useBulkMatchOrCategorize = () => {
   )
 
   const buildTransactionsPayload: () => BulkMatchOrCategorizeRequest = useCallback(() => {
-    const transactions = buildBulkMatchOrCategorizePayload(selectedIds, transactionCategories, bankTransactionsById)
+    const transactions = buildBulkMatchOrCategorizePayload(selectedIds, categorizations, bankTransactionsById)
     return { transactions }
-  }, [selectedIds, transactionCategories, bankTransactionsById])
+  }, [selectedIds, categorizations, bankTransactionsById])
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({

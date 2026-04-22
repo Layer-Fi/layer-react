@@ -5,34 +5,37 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
-import { hasReceipts } from '@utils/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions'
+import { hasReceipts, isCategorized } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBankTransactionsCategorizationActions, useGetBankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
-import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { BankTransactionReceipts, type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
 import { type BusinessFormMobileItemOption, type BusinessFormOptionValue } from '@components/BusinessForm/BusinessFormMobileItem'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { FileInput } from '@components/Input/FileInput'
+import { TaxCodeSelectDrawer, type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
+const SELECT_TAX_CODE_VALUE = '__select_tax_code__'
+const NO_TAX_CODE_VALUE = '__no_tax_code__'
 
 export const isSelectCategoryOption = (
-  value: BusinessFormOptionValue,
+  value: BankTransactionCategoryComboBoxOption,
 ): boolean => {
   return isPlaceholderAsOption(value) && value.value === SELECT_CATEGORY_VALUE
 }
 
-type DisplayOption = BusinessFormMobileItemOption
+type DisplayOption = BusinessFormMobileItemOption<BankTransactionCategoryComboBoxOption>
+type TaxCodeDisplayOptionValue = TaxCodeSelectOption | BusinessFormOptionValue
+type TaxCodeDisplayOption = BusinessFormMobileItemOption<TaxCodeDisplayOptionValue>
 
 interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
@@ -68,19 +71,26 @@ export const BankTransactionsMobileListBusinessForm = ({
 
     if (bankTransaction?.categorization_flow?.type === CategorizationType.ASK_FROM_SUGGESTIONS) {
       bankTransaction.categorization_flow.suggestions.forEach((suggestion) => {
-        const opt = new ApiCategorizationAsOption(suggestion)
-        initialMap.set(opt.value, opt)
+        const option = new ApiCategorizationAsOption(suggestion)
+        initialMap.set(option.value, option)
       })
     }
 
     return initialMap
   })
 
-  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
+  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const selectedCategory = selectedCategorization?.category
+  const selectedTaxCode = selectedCategorization?.taxCode
+  const hasSelectedTaxCode = selectedCategorization !== undefined && 'taxCode' in selectedCategorization
+  const sessionTaxCodes = useMemo(() => {
+    return hasSelectedTaxCode && selectedTaxCode ? [selectedTaxCode] : []
+  }, [hasSelectedTaxCode, selectedTaxCode])
 
   const [showRetry, setShowRetry] = useState(false)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isCategoryDrawerOpen, setIsCategoryDrawerOpen] = useState(false)
+  const [isTaxCodeDrawerOpen, setIsTaxCodeDrawerOpen] = useState(false)
 
   useEffect(() => {
     if (isErrorCategorizing) {
@@ -88,7 +98,38 @@ export const BankTransactionsMobileListBusinessForm = ({
     }
   }, [isErrorCategorizing])
 
-  const options = useMemo((): DisplayOption[] => {
+  const taxCodeOptions = useMemo<TaxCodeSelectOption[]>(
+    () => bankTransaction.tax_options?.canada.map(taxOption => ({
+      label: taxOption.display_name,
+      value: taxOption.code,
+    })) ?? [],
+    [bankTransaction.tax_options?.canada],
+  )
+
+  const getTaxCodeOption = useCallback((taxCode: string | null | undefined): TaxCodeSelectOption | null => {
+    if (!taxCode) {
+      return null
+    }
+
+    return sessionTaxCodes.find(option => option.value === taxCode)
+      ?? taxCodeOptions.find(option => option.value === taxCode)
+      ?? null
+  }, [sessionTaxCodes, taxCodeOptions])
+
+  const initialTaxCode = useMemo(
+    () => getTaxCodeOption(bankTransaction.tax_code),
+    [bankTransaction.tax_code, getTaxCodeOption],
+  )
+
+  const currentTaxCode = useMemo(() => {
+    if (hasSelectedTaxCode) {
+      return selectedTaxCode ?? null
+    }
+
+    return initialTaxCode
+  }, [hasSelectedTaxCode, initialTaxCode, selectedTaxCode])
+
+  const categoryOptions = useMemo((): DisplayOption[] => {
     const options: DisplayOption[] = Array.from(sessionCategories.values()).map(category => ({
       value: category,
     }))
@@ -96,36 +137,110 @@ export const BankTransactionsMobileListBusinessForm = ({
     options.push({
       value: new PlaceholderAsOption({
         label: t('bankTransactions:action.show_all_categories', 'Show all categories'),
-        value: 'SELECT_CATEGORY',
+        value: SELECT_CATEGORY_VALUE,
       }),
       asLink: true,
     })
 
     return options
-  }, [t, sessionCategories])
+  }, [sessionCategories, t])
 
-  const onCategorySelect = (category: DisplayOption) => {
+  const taxCodeSectionOptions = useMemo((): TaxCodeDisplayOption[] => {
+    const options: TaxCodeDisplayOption[] = []
+    const seenValues = new Set<string>()
+
+    const appendOption = (option: TaxCodeDisplayOptionValue, asLink = false) => {
+      if (seenValues.has(option.value)) {
+        return
+      }
+
+      seenValues.add(option.value)
+      options.push({ value: option, asLink })
+    }
+
+    appendOption({
+      label: t('bankTransactions:action.no_tax_code', 'No tax code'),
+      value: NO_TAX_CODE_VALUE,
+    })
+
+    if (currentTaxCode) {
+      appendOption(currentTaxCode)
+    }
+
+    if (initialTaxCode) {
+      appendOption(initialTaxCode)
+    }
+
+    sessionTaxCodes.forEach(option => appendOption(option))
+
+    appendOption({
+      label: `+ ${t('common:action.add_label', 'Add')} ${t('common:label.more', 'More')}`,
+      value: SELECT_TAX_CODE_VALUE,
+    }, true)
+
+    return options
+  }, [currentTaxCode, initialTaxCode, sessionTaxCodes, t])
+
+  const syncTaxCodeWithCategory = useCallback((category: BankTransactionCategoryComboBoxOption | null) => {
+    if (category?.classification?.type === 'Exclusion') {
+      setTransactionCategorization(bankTransaction.id, { taxCode: null })
+    }
+  }, [bankTransaction.id, setTransactionCategorization])
+
+  const onCategorySelect = useCallback((category: DisplayOption) => {
     if (isSelectCategoryOption(category.value)) {
-      setIsDrawerOpen(true)
+      setIsCategoryDrawerOpen(true)
+      return
     }
-    else {
-      const option = category.value
 
-      if (!isPlaceholderAsOption(option)) {
-        setSessionCategories(prev => new Map(prev).set(option.value, option))
-      }
+    const option = category.value
 
-      if (
-        selectedCategory
-        && option.value === selectedCategory.value
-      ) {
-        setTransactionCategory(bankTransaction.id, null)
-      }
-      else {
-        setTransactionCategory(bankTransaction.id, option)
-      }
+    if (!isPlaceholderAsOption(option)) {
+      setSessionCategories(prev => new Map(prev).set(option.value, option))
+      syncTaxCodeWithCategory(option)
     }
-  }
+
+    if (
+      selectedCategory
+      && option.value === selectedCategory.value
+    ) {
+      setTransactionCategorization(bankTransaction.id, { category: null })
+      return
+    }
+
+    setTransactionCategorization(bankTransaction.id, { category: option })
+  }, [bankTransaction.id, selectedCategory, setTransactionCategorization, syncTaxCodeWithCategory])
+
+  const onCategoryDrawerSelect = useCallback((category: BankTransactionCategoryComboBoxOption | null) => {
+    if (!category) return
+
+    setSessionCategories(prev => new Map(prev).set(category.value, category))
+    syncTaxCodeWithCategory(category)
+    setTransactionCategorization(bankTransaction.id, { category })
+  }, [bankTransaction.id, setTransactionCategorization, syncTaxCodeWithCategory])
+
+  const onTaxCodeSelect = useCallback((taxCode: TaxCodeDisplayOption) => {
+    if (taxCode.value.value === SELECT_TAX_CODE_VALUE) {
+      setIsTaxCodeDrawerOpen(true)
+      return
+    }
+
+    if (taxCode.value.value === NO_TAX_CODE_VALUE) {
+      setTransactionCategorization(bankTransaction.id, { taxCode: null })
+      return
+    }
+
+    setTransactionCategorization(bankTransaction.id, {
+      taxCode: {
+        label: taxCode.value.label,
+        value: taxCode.value.value,
+      },
+    })
+  }, [bankTransaction.id, setTransactionCategorization])
+
+  const onTaxCodeDrawerSelect = useCallback((taxCode: TaxCodeSelectOption | null) => {
+    setTransactionCategorization(bankTransaction.id, { taxCode })
+  }, [bankTransaction.id, setTransactionCategorization])
 
   const save = () => {
     if (!selectedCategory) {
@@ -135,33 +250,42 @@ export const BankTransactionsMobileListBusinessForm = ({
     const payload = selectedCategory.classification
     if (payload === null) return
 
+    const taxCode = payload.type === 'Exclusion'
+      ? null
+      : currentTaxCode?.value ?? null
+
     void categorizeBankTransaction(
       bankTransaction.id,
       {
         type: 'Category',
         category: payload,
+        taxCode,
       },
       true,
     )
   }
-
-  const onDrawerSelect = useCallback((category: BankTransactionCategoryComboBoxOption | null) => {
-    if (!category) return
-
-    setSessionCategories(prev => new Map(prev).set(category.value, category))
-    setTransactionCategory(bankTransaction.id, category)
-  }, [bankTransaction.id, setTransactionCategory])
 
   return (
     <>
       <VStack gap='sm'>
         {showCategorization
           && (
-            <BusinessFormMobile
-              options={options}
-              onSelect={onCategorySelect}
-              selectedId={selectedCategory?.value}
-            />
+            <>
+              <BusinessFormMobile<BankTransactionCategoryComboBoxOption>
+                options={categoryOptions}
+                onSelect={onCategorySelect}
+                selectedId={selectedCategory?.value}
+                ariaLabel={t('bankTransactions:action.select_a_category', 'Select a category')}
+              />
+              {taxCodeOptions.length > 0 && (
+                <BusinessFormMobile<TaxCodeDisplayOptionValue>
+                  options={taxCodeSectionOptions}
+                  onSelect={onTaxCodeSelect}
+                  selectedId={currentTaxCode?.value ?? NO_TAX_CODE_VALUE}
+                  ariaLabel={t('bankTransactions:action.select_tax_code', 'Select tax code')}
+                />
+              )}
+            </>
           )}
         <BankTransactionFormFields
           bankTransaction={bankTransaction}
@@ -223,13 +347,20 @@ export const BankTransactionsMobileListBusinessForm = ({
           : null}
       </VStack>
       <CategorySelectDrawer
-        onSelect={onDrawerSelect}
+        onSelect={onCategoryDrawerSelect}
         selectedId={selectedCategory?.value}
         showTooltips={showTooltips}
-        isOpen={isDrawerOpen}
-        onOpenChange={setIsDrawerOpen}
+        isOpen={isCategoryDrawerOpen}
+        onOpenChange={setIsCategoryDrawerOpen}
+      />
+      <TaxCodeSelectDrawer
+        options={taxCodeOptions}
+        onSelect={onTaxCodeDrawerSelect}
+        selectedId={currentTaxCode?.value}
+        isOpen={isTaxCodeDrawerOpen}
+        onOpenChange={setIsTaxCodeDrawerOpen}
+        isClearable
       />
     </>
-
   )
 }

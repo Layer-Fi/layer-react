@@ -4,24 +4,26 @@ import ChevronRight from '@icons/ChevronRight'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 import './businessFormMobileItem.scss'
 
-export type BusinessFormOptionValue = BankTransactionCategoryComboBoxOption
+export interface BusinessFormOptionValue {
+  label: string
+  value: string
+}
 
-export interface BusinessFormMobileItemOption {
-  value: BusinessFormOptionValue
+export interface BusinessFormMobileItemOption<T extends BusinessFormOptionValue = BusinessFormOptionValue> {
+  value: T
   asLink?: boolean
 }
 
-interface BusinessFormMobileItemProps {
-  option: BusinessFormMobileItemOption
+interface BusinessFormMobileItemProps<T extends BusinessFormOptionValue> {
+  option: BusinessFormMobileItemOption<T>
 }
 
-export const BusinessFormMobileItem = ({
+export const BusinessFormMobileItem = <T extends BusinessFormOptionValue,>({
   option,
-}: BusinessFormMobileItemProps) => {
+}: BusinessFormMobileItemProps<T>) => {
   const value = option.value.value
   const label = option.value.label
 
