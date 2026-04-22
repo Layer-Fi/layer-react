@@ -36,6 +36,7 @@ import { Button } from '@ui/Button/Button'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
+import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { useBankTransactionCustomerVendorVisibility } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
@@ -332,78 +333,90 @@ export const ExpandedBankTransactionRow = ({
                             || split.category.classification?.type === 'Exclusion'
 
                           return (
-                            <div
-                              className={`${className}__table-cell--split-entry`}
+                            <VStack
+                              className={classNames(
+                                `${className}__split-section`,
+                                asListItem && `${className}__split-section--list-item`,
+                              )}
+                              gap='xs'
                               key={`split-${index}`}
                             >
-                              <AmountInput
-                                name={`split-${index}${asListItem ? '-li' : ''}`}
-                                disabled={
-                                  index === 0 || !isCategorizationEnabled
-                                }
-                                onChange={updateSplitAmount(index)}
-                                value={getInputValueForSplitAtIndex(index, split)}
-                                onBlur={onBlurSplitAmount}
-                                className={`${className}__table-cell--split-entry__amount`}
-                                isInvalid={split.amount < 0}
-                              />
-                              <BankTransactionCategoryComboBox
-                                bankTransaction={bankTransaction}
-                                selectedValue={split.category}
-                                onSelectedValueChange={(value) => {
-                                  changeCategoryForSplitAtIndex(index, value)
-                                }}
-                                isDisabled={!isCategorizationEnabled}
-                                includeSuggestedMatches={false}
-                              />
-                              {showTaxCodeSelector && (
-                                <ComboBox<TaxCodeOption>
-                                  selectedValue={getSelectedTaxCodeOption(split.taxCode)}
-                                  onSelectedValueChange={(option) => {
-                                    updateSplitAtIndex(index, currentSplit => ({
-                                      ...currentSplit,
-                                      taxCode: option?.value ?? null,
-                                    }))
+                              {asListItem && effectiveSplits.length > 1 && (
+                                <HStack justify='space-between' align='center'>
+                                  <Span>{t('bankTransactions:action.split_label', 'Split')}</Span>
+                                  <Span>{`#${index + 1}`}</Span>
+                                </HStack>
+                              )}
+                              <div className={`${className}__table-cell--split-entry`}>
+                                <AmountInput
+                                  name={`split-${index}${asListItem ? '-li' : ''}`}
+                                  disabled={
+                                    index === 0 || !isCategorizationEnabled
+                                  }
+                                  onChange={updateSplitAmount(index)}
+                                  value={getInputValueForSplitAtIndex(index, split)}
+                                  onBlur={onBlurSplitAmount}
+                                  className={`${className}__table-cell--split-entry__amount`}
+                                  isInvalid={split.amount < 0}
+                                />
+                                <BankTransactionCategoryComboBox
+                                  bankTransaction={bankTransaction}
+                                  selectedValue={split.category}
+                                  onSelectedValueChange={(value) => {
+                                    changeCategoryForSplitAtIndex(index, value)
                                   }}
-                                  options={taxCodeOptions}
-                                  isDisabled={isTaxCodeSelectorDisabled}
-                                  isSearchable={false}
-                                  isClearable
-                                  placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
-                                  className={`${className}__table-cell--split-entry__tax-code`}
+                                  isDisabled={!isCategorizationEnabled}
+                                  includeSuggestedMatches={false}
                                 />
-                              )}
-                              {showTags && (
-                                <TagDimensionsGroup
-                                  value={split.tags}
-                                  onChange={tags => changeTags(index, tags)}
-                                  showLabels={false}
-                                  isReadOnly={!isCategorizationEnabled}
-                                  className={`${className}__table-cell--split-entry__tags`}
-                                />
-                              )}
-                              {showCustomerVendor && (
-                                <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__customer'>
-                                  <CustomerVendorSelector
-                                    selectedCustomerVendor={split.customerVendor}
-                                    onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
-                                    placeholder={t('customerVendor:action.set_customer_vendor', 'Set customer or vendor')}
-                                    isReadOnly={!isCategorizationEnabled}
-                                    showLabel={false}
+                                {showTaxCodeSelector && (
+                                  <ComboBox<TaxCodeOption>
+                                    selectedValue={getSelectedTaxCodeOption(split.taxCode)}
+                                    onSelectedValueChange={(option) => {
+                                      updateSplitAtIndex(index, currentSplit => ({
+                                        ...currentSplit,
+                                        taxCode: option?.value ?? null,
+                                      }))
+                                    }}
+                                    options={taxCodeOptions}
+                                    isDisabled={isTaxCodeSelectorDisabled}
+                                    isSearchable={false}
+                                    isClearable
+                                    placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
+                                    className={`${className}__table-cell--split-entry__tax-code`}
                                   />
+                                )}
+                                {showTags && (
+                                  <TagDimensionsGroup
+                                    value={split.tags}
+                                    onChange={tags => changeTags(index, tags)}
+                                    showLabels={false}
+                                    isReadOnly={!isCategorizationEnabled}
+                                    className={`${className}__table-cell--split-entry__tags`}
+                                  />
+                                )}
+                                {showCustomerVendor && (
+                                  <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__customer'>
+                                    <CustomerVendorSelector
+                                      selectedCustomerVendor={split.customerVendor}
+                                      onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
+                                      placeholder={t('customerVendor:action.set_customer_vendor', 'Set customer or vendor')}
+                                      isReadOnly={!isCategorizationEnabled}
+                                      showLabel={false}
+                                    />
+                                  </div>
+                                )}
+                                <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__button'>
+                                  <Button
+                                    onPress={() => removeSplit(index)}
+                                    variant='outlined'
+                                    icon
+                                    isDisabled={index === 0}
+                                  >
+                                    <Trash size={18} />
+                                  </Button>
                                 </div>
-                              )}
-                              <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__button'>
-                                <Button
-                                  onPress={() => removeSplit(index)}
-                                  variant='outlined'
-                                  icon
-                                  isDisabled={index === 0}
-                                >
-                                  <Trash size={18} />
-                                </Button>
                               </div>
-                            </div>
+                            </VStack>
                           )
                         })}
                       </div>

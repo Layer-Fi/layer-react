@@ -323,6 +323,16 @@
   padding-top: 2px;
 }
 
+.Layer__expanded-bank-transaction-row__split-section--list-item {
+  padding: var(--spacing-xs) 0;
+  border-top: 1px solid var(--border-color);
+
+  &:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
 .Layer__expanded-bank-transaction-row__splits-total {
   padding: var(--spacing-3xs);
   color: var(--color-base-500);
