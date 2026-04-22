@@ -32,11 +32,11 @@ export const ActionableList = <T,>({
 }: ActionableListProps<T>) => {
   return (
     <ul className={classNames('Layer__actionable-list', className)}>
-      {options.map((x, idx) => (
+      {options.map(x => (
         <li
           role='button'
           onClick={() => onClick(x)}
-          key={`actionable-list-item-${idx}`}
+          key={x.id}
           className={classNames(
             x.secondary && 'Layer__actionable-list-item--secondary',
             x.asLink && 'Layer__actionable-list-item--as-link',
