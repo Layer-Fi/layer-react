@@ -55,7 +55,6 @@ const useTaxEstimatesHeaderHook = ({ type }: TaxEstimatesHeaderProps): TaxEstima
             default: 'Taxable income estimate to date for year {{year}}',
             projected: 'Taxable income projection for year {{year}}',
           },
-          description: 'Taxable income estimate to date for year {{year}}',
           year: formattedYear,
         }),
       }
