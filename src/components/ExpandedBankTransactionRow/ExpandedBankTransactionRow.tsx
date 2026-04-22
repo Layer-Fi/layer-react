@@ -336,7 +336,8 @@ export const ExpandedBankTransactionRow = ({
                             <VStack
                               className={`${className}__split-section`}
                               gap='xs'
-                              pbe={asListItem ? 'sm' : undefined}
+                              pbs={asListItem && effectiveSplits.length === 1 ? 'sm' : undefined}
+                              pbe={asListItem && effectiveSplits.length > 1 ? 'sm' : undefined}
                               key={`split-${index}`}
                             >
                               {asListItem && effectiveSplits.length > 1 && (
