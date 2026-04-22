@@ -4,6 +4,7 @@
     grid-template-columns: 5.5rem 1fr;
     gap: var(--spacing-xs);
     align-items: center;
+    padding-block-start: var(--spacing-sm);
   }
 
   &__AmountInput {

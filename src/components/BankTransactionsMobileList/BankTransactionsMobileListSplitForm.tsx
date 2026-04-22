@@ -137,11 +137,6 @@ export const BankTransactionsMobileListSplitForm = ({
                 key={`split-${index}`}
                 gap='xs'
               >
-
-                <Span>
-                  {`${t('bankTransactions:action.split_label', 'Split')} #${index + 1}`}
-                </Span>
-
                 <div className='Layer__BankTransactionsMobileSplitForm__SplitGridContainer'>
 
                   <AmountInput
@@ -181,7 +176,6 @@ export const BankTransactionsMobileListSplitForm = ({
                     <>
                       <HStack pis='3xs'>
                         <Span>
-                          {t('bankTransactions:label.tax_code_colon', 'Tax Code:')}
                         </Span>
                       </HStack>
                       <TaxCodeSelectDrawerWithTrigger
@@ -201,13 +195,15 @@ export const BankTransactionsMobileListSplitForm = ({
             ))}
 
             {localSplits.length > 1 && (
-              <Input
-                disabled={true}
-                leftText={t('common:label.total', 'Total')}
-                inputMode='numeric'
-                value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
-                className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'
-              />
+              <HStack pbs='xs'>
+                <Input
+                  disabled={true}
+                  leftText={t('common:label.total', 'Total')}
+                  inputMode='numeric'
+                  value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
+                  className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'
+                />
+              </HStack>
             )}
 
             <HStack justify='end'>
@@ -222,11 +218,9 @@ export const BankTransactionsMobileListSplitForm = ({
               </Button>
             </HStack>
             {splitFormError && (
-              <HStack pbe='sm'>
-                <ErrorText>
-                  {splitFormError}
-                </ErrorText>
-              </HStack>
+              <ErrorText>
+                {splitFormError}
+              </ErrorText>
             )}
           </VStack>
         )}
