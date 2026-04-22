@@ -125,7 +125,7 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
               <TimeTrackingStatsLegendSwatch color={color} />
               <Span size='md'>{serviceName}</Span>
             </HStack>
-            <Span className='Layer__TimeTrackingStats__LegendDuration' size='xl' weight='bold'>{formatMinutesAsDuration(totalMinutes, { compact: true })}</Span>
+            <Span className='Layer__TimeTrackingStats__LegendDuration' size='xl' weight='bold'>{formatMinutesAsDuration(totalMinutes)}</Span>
             <Span className='Layer__TimeTrackingStats__LegendPercentage' size='sm' variant='subtle'>
               {formatPercent(percentage, { maximumFractionDigits: 0 })}
             </Span>
@@ -156,7 +156,7 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
           <VStack className='Layer__TimeTrackingStats__Summary' gap='3xs' pi='md'>
             <Span size='sm' variant='subtle'>{t('common:label.this_period', 'This Period')}</Span>
             <Span className='Layer__TimeTrackingStats__SummaryValue' weight='bold'>
-              {formatMinutesAsDuration(summary.totalMinutes, { compact: true })}
+              {formatMinutesAsDuration(summary.totalMinutes)}
             </Span>
           </VStack>
         </HStack>

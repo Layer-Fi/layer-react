@@ -12,7 +12,9 @@
   },
   "empty": {
     "add_first_entry": "Ajoutez votre première entrée de temps pour commencer le suivi.",
-    "no_entries_yet": "Aucune entrée de temps pour le moment"
+    "no_entries_yet": "Aucune entrée de temps pour le moment",
+    "no_matching_entries": "",
+    "try_adjusting_filters": ""
   },
   "error": {
     "archive_service": "Impossible d'archiver ce service. Veuillez réessayer.",
@@ -37,6 +39,7 @@
     "all_customers": "Tous les clients",
     "all_services": "Tous les services",
     "customer": "Client",
+    "customer_optional": "",
     "delete_entry_warning": "Cette entrée de temps sera définitivement supprimée. Cette action ne peut pas être annulée.",
     "discard_timer_warning": "Le minuteur actif sera annulé et aucune entrée de temps ne sera enregistrée.",
     "duration": "Durée",
@@ -51,6 +54,7 @@
     "no_services": "Aucun service disponible",
     "other": "Autre",
     "select_customer": "Sélectionner un client (facultatif)",
+    "select_customer_short": "",
     "select_service": "Sélectionner un service",
     "service": "Service",
     "time_entries": "Entrées de temps",
@@ -68,6 +72,7 @@
     "archive_confirm_title": "Archiver ce service?",
     "archived": "Archivés",
     "cancel": "Annuler",
+    "create_service_input_value": "",
     "hourly_rate_optional": "Taux horaire par défaut (facultatif)",
     "no_active": "Aucun service pour le moment",
     "no_archived": "Aucun service archivé",
@@ -84,6 +89,7 @@
     "duration_whole_minutes": "",
     "entry_date_not_future": "La date de l'entrée ne peut pas être dans le futur.",
     "entry_date_required": "La date de l'entrée est un champ obligatoire.",
+    "hourly_rate_positive": "",
     "service_name_required": "Le nom du service est un champ obligatoire.",
     "service_required": "Le service est un champ obligatoire."
   }
