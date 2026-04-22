@@ -83,17 +83,6 @@ export const BookkeepingOverview = ({
   const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
   const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
 
-  if (embeddedOnboardingCallUrl != null) {
-    return (
-      <EmbeddedOnboarding
-        onboardingCallUrl={embeddedOnboardingCallUrl}
-        onContinueToBookkeeping={() => {
-          setEmbedDismissed(true)
-        }}
-      />
-    )
-  }
-
   return (
     <ProfitAndLoss asContainer={false}>
       <View
@@ -169,6 +158,14 @@ export const BookkeepingOverview = ({
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
         />
       </View>
+      {embeddedOnboardingCallUrl != null && (
+        <EmbeddedOnboarding
+          onboardingCallUrl={embeddedOnboardingCallUrl}
+          onComplete={() => {
+            setEmbedDismissed(true)
+          }}
+        />
+      )}
     </ProfitAndLoss>
   )
 }
