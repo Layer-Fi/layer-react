@@ -30,15 +30,23 @@ export const useCalendly = (options?: UseCalendlyOptions) => {
 
   const { onEventScheduled, onClose, closeOnEventScheduled } = options ?? {}
 
+  const closeCalendly = useCallback(() => {
+    setIsCalendlyVisible(false)
+    onClose?.()
+  }, [onClose])
+
   const eventHandlers = useMemo(() => ({
     onEventScheduled: (e: EventScheduledEvent) => {
-      void onEventScheduled?.(e.data.payload)
+      Promise.resolve(onEventScheduled?.(e.data.payload))
+        .catch((error: unknown) => {
+          console.error('Calendly onEventScheduled handler failed', error)
+        })
 
       if (closeOnEventScheduled) {
-        setIsCalendlyVisible(false)
+        closeCalendly()
       }
     },
-  }), [onEventScheduled, closeOnEventScheduled])
+  }), [onEventScheduled, closeOnEventScheduled, closeCalendly])
 
   useCalendlyEventListener(eventHandlers)
 
@@ -46,11 +54,6 @@ export const useCalendly = (options?: UseCalendlyOptions) => {
     setCalendlyLink(link)
     setIsCalendlyVisible(true)
   }, [])
-
-  const closeCalendly = useCallback(() => {
-    setIsCalendlyVisible(false)
-    onClose?.()
-  }, [onClose])
 
   return {
     isCalendlyVisible,

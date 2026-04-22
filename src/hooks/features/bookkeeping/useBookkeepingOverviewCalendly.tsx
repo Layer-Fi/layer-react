@@ -21,7 +21,7 @@ export const useBookkeepingOverviewCalendly = () => {
   const { data: bookkeepingStatus } = useBookkeepingStatus()
   const { forceReloadBookkeepingStatus } = useBookkeepingStatusGlobalCacheActions()
   const { trigger: createCallBooking } = useCreateCallBooking()
-  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings({ limit: 1 })
+  const { data: callBookings, isError, isLoading } = useCallBookings({ limit: 1 })
 
   const [embedDismissed, setEmbedDismissed] = useState(false)
   const [hasScheduledCallInSession, setHasScheduledCallInSession] = useState(false)
@@ -31,8 +31,6 @@ export const useBookkeepingOverviewCalendly = () => {
     : undefined
 
   const recordCalendlyScheduled = useCallback(async (payload: CalendlyPayload) => {
-    setHasScheduledCallInSession(true)
-
     const externalId = getExternalIdFromCalendlyPayload(payload)
 
     if (externalId == null) {
@@ -45,6 +43,7 @@ export const useBookkeepingOverviewCalendly = () => {
         purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
         call_type: CallBookingType.GOOGLE_MEET,
       })
+      setHasScheduledCallInSession(true)
       void forceReloadBookkeepingStatus()
     }
     catch (error: unknown) {
@@ -64,7 +63,7 @@ export const useBookkeepingOverviewCalendly = () => {
   })
 
   const callBooking: CallBooking | null = callBookings?.[0]?.data[0] ?? null
-  const hasResolvedCallBooking = !isLoading && !isValidating && !isError
+  const hasResolvedCallBooking = !isLoading && !isError
 
   const shouldOfferOnboarding = hasResolvedCallBooking
     && callBooking == null
