@@ -59,14 +59,6 @@
   &:last-child {
     padding-right: var(--spacing-md);
   }
-
-  $alignments: left, center, right;
-
-  @each $alignment in $alignments {
-    &[data-text-align="#{$alignment}"] {
-      text-align: $alignment;
-    }
-  }
 }
 
 .Layer__UI__Table-Cell {
@@ -87,5 +79,16 @@
 
   &:last-child {
     padding-right: var(--spacing-md);
+  }
+}
+
+.Layer__UI__Table-Column,
+.Layer__UI__Table-Cell {
+  $alignments: start, center, end;
+
+  @each $alignment in $alignments {
+    &[data-align="#{$alignment}"] {
+      text-align: $alignment;
+    }
   }
 }

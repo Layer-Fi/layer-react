@@ -109,6 +109,7 @@ export const DataTable = <TData extends object>({
                 <Cell
                   key={`${row.id}-${cell.id}`}
                   className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
+                  alignment={cell.column.columnDef.meta?.alignment}
                   nonAria={nonAria}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -131,6 +132,7 @@ export const DataTable = <TData extends object>({
                 key={header.id}
                 isRowHeader={header.column.columnDef.meta?.isRowHeader}
                 className={`Layer__UI__Table-Column__${componentName}--${header.id}`}
+                alignment={header.column.columnDef.meta?.alignment}
                 nonAria={nonAria}
                 colSpan={header.colSpan}
               >

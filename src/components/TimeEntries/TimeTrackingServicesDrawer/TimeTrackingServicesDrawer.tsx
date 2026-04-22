@@ -195,7 +195,6 @@ function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: Archive
       isLoading={isLoading}
       isError={isError}
       Loading={<LoadingState />}
-      Inactive={null}
       Error={<LoadServicesErrorState />}
     >
       {() => (
@@ -339,7 +338,6 @@ export function TimeTrackingServicesDrawer({ isOpen, onOpenChange }: TimeTrackin
               isLoading={isLoading}
               isError={isError}
               Loading={<LoadingState />}
-              Inactive={null}
               Error={<LoadServicesErrorState />}
             >
               {() => (

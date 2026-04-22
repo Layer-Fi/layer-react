@@ -1,4 +1,18 @@
 .Layer__UnifiedReport {
   overflow: hidden;
   min-width: clamp(24rem, 100%, 1406px);
+
+  .Layer__view-main.Layer__view-main {
+    padding: 0;
+  }
+}
+
+.Layer__UnifiedReport__Sidebar {
+  flex-shrink: 0;
+  width: 18rem;
+  border-right: 1px solid var(--color-base-300);
+}
+
+.Layer__UnifiedReport__Content {
+  min-width: 0;
 }

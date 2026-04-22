@@ -10,12 +10,11 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData } from '@components/DetailedCharts/types'
+import { NO_OP_INTERACTION_PROPS } from '@components/DetailedCharts/utils'
 
 import './detailedTable.scss'
 
 import { type DetailedTableRow, useDetailedTableRows } from './useDetailedTableRows'
-
-export type { DetailedTableRow }
 import { ValueIcon } from './ValueIcon'
 
 export interface DetailedTableStringOverrides {
@@ -29,10 +28,7 @@ type SetAndToggleSortDirectionParams = {
   sortOrderOverride?: SortOrder
   defaultSortOrder?: SortOrder
 }
-
-export type SeriesDataWithType = SeriesData & { type: string }
-
-interface DetailedTableBaseProps<T extends SeriesDataWithType> {
+interface DetailedTableBaseProps<T extends SeriesData> {
   sortParams: SortParams<string>
   sortFunction: (sortParams: SortParams<string>, defaultDirection?: SortOrder) => void
   stylingProps: {
@@ -47,15 +43,15 @@ interface DetailedTableBaseProps<T extends SeriesDataWithType> {
   stringOverrides?: DetailedTableStringOverrides
 }
 
-export interface DetailedTableProps<T extends SeriesDataWithType> extends DetailedTableBaseProps<T> {
+export interface DetailedTableProps<T extends SeriesData> extends DetailedTableBaseProps<T> {
   rows: DetailedTableRow<T>[]
 }
 
-export interface DetailedTableWithDataProps<T extends SeriesDataWithType> extends DetailedTableBaseProps<T> {
+export interface DetailedTableWithDataProps<T extends SeriesData> extends DetailedTableBaseProps<T> {
   data: DetailData<T>
 }
 
-export const DetailedTable = <T extends SeriesDataWithType>({
+export const DetailedTable = <T extends SeriesData>({
   stylingProps,
   sortParams,
   sortFunction,
@@ -75,11 +71,13 @@ export const DetailedTable = <T extends SeriesDataWithType>({
   }, [sortParams.sortBy])
 
   const { isMobile } = useSizeClass()
+  const hasType = rows.length > 0 && rows.map(r => r.item.type).every(type => type !== undefined)
+  const isSortable = interactionProps !== NO_OP_INTERACTION_PROPS
 
   return (
     <VStack className='Layer__DetailedTable'>
       <VStack className='Layer__DetailedTable__container' pi='md' pbs='2xs' pbe='md'>
-        <VStack className='Layer__DetailedTable__table'>
+        <VStack className={classNames('Layer__DetailedTable__table', isSortable && 'Layer__DetailedTable__table--sortable')}>
           <table>
             <thead>
               <tr>
@@ -95,10 +93,10 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                     <Span variant={buildHeaderVariant('category')} size='sm'>
                       {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
                     </Span>
-                    <SortArrows className='Layer__DetailedTable__sortArrows' />
+                    {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                   </HStack>
                 </th>
-                {!isMobile && (
+                {!isMobile && hasType && (
                   <th
                     className={classNames(
                       'Layer__DetailedTable__SortableColumn',
@@ -110,7 +108,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                       <Span variant={buildHeaderVariant('type')} size='sm'>
                         {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
                       </Span>
-                      <SortArrows className='Layer__DetailedTable__sortArrows' />
+                      {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                     </HStack>
                   </th>
                 )}
@@ -126,10 +124,10 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                     <Span variant={buildHeaderVariant('value')} size='sm'>
                       {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
                     </Span>
-                    <SortArrows className='Layer__DetailedTable__sortArrows' />
+                    {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                   </HStack>
                 </th>
-                <th className='percent-col'></th>
+                <th className='Layer__DetailedTable__Column--percent'></th>
               </tr>
             </thead>
             <tbody>
@@ -145,27 +143,27 @@ export const DetailedTable = <T extends SeriesDataWithType>({
                     onMouseEnter={() => interactionProps.setHoveredItem(row.item)}
                     onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
                   >
-                    <td className='color-col'>
+                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--color'>
                       <ValueIcon<T> item={row.item} {...stylingProps} />
                     </td>
-                    <td className='category-col'>
+                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--category'>
                       <Span size='sm'>{row.item.displayName}</Span>
                     </td>
-                    {!isMobile && (
-                      <td className='type-col'>
+                    {!isMobile && hasType && (
+                      <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--type'>
                         <Span variant={isRowActive ? undefined : 'subtle'} size='sm'>{row.item.type}</Span>
                       </td>
                     )}
-                    <td className='value-col'>
+                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--value'>
                       <Button
                         variant='text'
                         onPress={() => interactionProps.onValueClick?.(row.item)}
                         isDisabled={!interactionProps.onValueClick || row.isValueDisabled}
                       >
-                        <MoneySpan size='sm' amount={row.item.value} />
+                        <MoneySpan size='sm' align='right' amount={row.item.value} />
                       </Button>
                     </td>
-                    <td className='percent-col'>
+                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--percent'>
                       <Span className='share-text' variant={isRowActive ? undefined : 'subtle'} size='sm'>
                         {row.item.value < 0 ? '-' : row.formattedShare}
                       </Span>
@@ -181,7 +179,7 @@ export const DetailedTable = <T extends SeriesDataWithType>({
   )
 }
 
-export const DetailedTableWithData = <T extends SeriesDataWithType>({
+export const DetailedTableWithData = <T extends SeriesData>({
   data,
   ...props
 }: DetailedTableWithDataProps<T>) => {

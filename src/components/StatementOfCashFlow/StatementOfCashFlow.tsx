@@ -88,7 +88,6 @@ const StatementOfCashFlowView = ({
               totalColumnHeader={tableStringOverrides?.totalColumnHeader}
             />
           )}
-          Inactive={null}
           Error={(
             <ReportsTableErrorState
               isLoading={isValidating}
