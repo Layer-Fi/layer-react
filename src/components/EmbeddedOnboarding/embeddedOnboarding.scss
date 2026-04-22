@@ -5,51 +5,41 @@
   padding: var(--spacing-lg);
 }
 
-.Layer__embedded-onboarding__card {
-  box-sizing: border-box;
-  width: 100%;
-}
-
 .Layer__embedded-onboarding__state {
   box-sizing: border-box;
-  width: 100%;
   padding: var(--spacing-xl);
-}
 
-.Layer__embedded-onboarding__copy {
-  box-sizing: border-box;
-  width: 100%;
-}
-
-.Layer__embedded-onboarding__widget {
-  box-sizing: border-box;
-  min-height: 1150px;
-  width: 100%;
-}
-
-.Layer__embedded-onboarding__widget.calendly-inline-widget {
-  width: 100%;
-}
-
-@media screen and (width <= 767px) {
-  .Layer__embedded-onboarding {
-    padding: var(--spacing-sm);
-  }
-
-  .Layer__embedded-onboarding__state {
+  @container (max-width: 767px) {
     gap: var(--spacing-md);
     padding: var(--spacing-lg);
   }
 }
 
-@media screen and (width >= 768px) {
-  .Layer__embedded-onboarding__widget {
-    min-height: 900px;
+.Layer__embedded-onboarding__header {
+  flex-wrap: wrap;
+}
+
+.Layer__embedded-onboarding__headline {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.Layer__embedded-onboarding__header-continue {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}
+
+.Layer__embedded-onboarding__widget {
+  height: 910px;
+  min-width: 320px;
+
+  @container (min-width: 1080px) {
+    height: 700px;
   }
 }
 
-@media screen and (width >= 1080px) {
-  .Layer__embedded-onboarding__widget {
-    min-height: 700px;
+@media screen and (width <= 767px) {
+  .Layer__embedded-onboarding {
+    padding: var(--spacing-sm);
   }
 }

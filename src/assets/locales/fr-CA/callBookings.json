@@ -2,6 +2,7 @@
   "action": {
     "add_calendar": "Ajouter au calendrier",
     "book_call": "Réserver un appel",
+    "continue_to_bookkeeping": "",
     "download_ics_file": "Télécharger le fichier .ics",
     "join_call": "Rejoindre l’appel"
   },

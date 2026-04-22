@@ -1,14 +1,10 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import {
-  type CallBooking as CallBookingData,
-  CallBookingPurpose,
-  CallBookingState,
-} from '@schemas/callBooking'
+import { type CallBooking as CallBookingData } from '@schemas/callBooking'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
 import { useBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
-import { useEmbeddedOnboardingConfirmationHold } from '@hooks/features/bookkeeping/useEmbeddedOnboardingConfirmationHold'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { CallBooking } from '@components/CallBooking/CallBooking'
@@ -71,28 +67,29 @@ export const BookkeepingOverview = ({
 
   const { data: bookkeepingStatus } = useBookkeepingStatus()
 
-  const { data: callBookings } = useCallBookings()
-  const onboardingBooking: CallBookingData | undefined = callBookings
-    ?.flatMap(({ data }) => data)
-    .find(({ purpose }) => purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING)
-  const upcomingOnboardingBooking = onboardingBooking?.state === CallBookingState.SCHEDULED
-    ? onboardingBooking
-    : undefined
+  const [embedDismissed, setEmbedDismissed] = useState(false)
 
-  const {
-    shouldShow: shouldShowEmbeddedOnboarding,
-    onboardingCallUrl,
-    onEventScheduled: onOnboardingEventScheduled,
-  } = useEmbeddedOnboardingConfirmationHold({
-    showEmbeddedOnboarding: bookkeepingStatus?.showEmbeddedOnboarding === true,
-    onboardingCallUrl: bookkeepingStatus?.onboardingCallUrl ?? undefined,
-  })
+  const onboardingCallUrlFromApi =
+    bookkeepingStatus != null
+    && bookkeepingStatus.showEmbeddedOnboarding
+    && bookkeepingStatus.onboardingCallUrl != null
+      ? bookkeepingStatus.onboardingCallUrl
+      : undefined
 
-  if (shouldShowEmbeddedOnboarding && onboardingCallUrl) {
+  const embeddedOnboardingCallUrl =
+    embedDismissed ? undefined : onboardingCallUrlFromApi
+
+  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings({ limit: 1 })
+  const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
+  const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
+
+  if (embeddedOnboardingCallUrl != null) {
     return (
       <EmbeddedOnboarding
-        onboardingCallUrl={onboardingCallUrl}
-        onEventScheduled={onOnboardingEventScheduled}
+        onboardingCallUrl={embeddedOnboardingCallUrl}
+        onContinueToBookkeeping={() => {
+          setEmbedDismissed(true)
+        }}
       />
     )
   }
@@ -114,8 +111,8 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={(
           <VStack gap='lg'>
-            {upcomingOnboardingBooking && (
-              <CallBooking callBooking={upcomingOnboardingBooking} />
+            {callBookingVisible && callBooking && (
+              <CallBooking callBooking={callBooking} />
             )}
             <Tasks
               stringOverrides={stringOverrides?.tasks}
@@ -131,8 +128,8 @@ export const BookkeepingOverview = ({
             onClick={() => (upperElementInFocus.current = true)}
           >
             <VStack gap='lg'>
-              {upcomingOnboardingBooking && (
-                <CallBooking callBooking={upcomingOnboardingBooking} />
+              {callBookingVisible && callBooking && (
+                <CallBooking callBooking={callBooking} />
               )}
               <Tasks
                 mobile
