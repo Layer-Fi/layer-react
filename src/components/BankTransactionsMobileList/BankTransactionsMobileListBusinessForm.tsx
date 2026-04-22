@@ -61,24 +61,6 @@ export const BankTransactionsMobileListBusinessForm = ({
     isError: isErrorCategorizing,
   } = useCategorizeBankTransactionWithCacheUpdate()
 
-  const [sessionCategories, setSessionCategories] = useState<Map<string, BankTransactionCategoryComboBoxOption>>(() => {
-    const initialMap = new Map<string, BankTransactionCategoryComboBoxOption>()
-
-    if (bankTransaction.category) {
-      const existingCategory = convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
-      initialMap.set(existingCategory.value, existingCategory)
-    }
-
-    if (bankTransaction?.categorization_flow?.type === CategorizationType.ASK_FROM_SUGGESTIONS) {
-      bankTransaction.categorization_flow.suggestions.forEach((suggestion) => {
-        const option = new ApiCategorizationAsOption(suggestion)
-        initialMap.set(option.value, option)
-      })
-    }
-
-    return initialMap
-  })
-
   const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
   const selectedCategory = selectedCategorization?.category
@@ -129,10 +111,38 @@ export const BankTransactionsMobileListBusinessForm = ({
     return initialTaxCode
   }, [hasSelectedTaxCode, initialTaxCode, selectedTaxCode])
 
+  const initialCategory = useMemo(() => {
+    if (!bankTransaction.category) {
+      return null
+    }
+
+    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
+  }, [bankTransaction.category])
+
+  const categorySuggestionOptions = useMemo(() => {
+    if (bankTransaction?.categorization_flow?.type !== CategorizationType.ASK_FROM_SUGGESTIONS) {
+      return []
+    }
+
+    return bankTransaction.categorization_flow.suggestions.map(suggestion => new ApiCategorizationAsOption(suggestion))
+  }, [bankTransaction.categorization_flow])
+
   const categoryOptions = useMemo((): DisplayOption[] => {
-    const options: DisplayOption[] = Array.from(sessionCategories.values()).map(category => ({
-      value: category,
-    }))
+    const options: DisplayOption[] = []
+    const seenValues = new Set<string>()
+
+    const appendOption = (category: BankTransactionCategoryComboBoxOption | null) => {
+      if (!category || seenValues.has(category.value)) {
+        return
+      }
+
+      seenValues.add(category.value)
+      options.push({ value: category })
+    }
+
+    appendOption(selectedCategory ?? null)
+    appendOption(initialCategory)
+    categorySuggestionOptions.forEach(appendOption)
 
     options.push({
       value: new PlaceholderAsOption({
@@ -143,7 +153,7 @@ export const BankTransactionsMobileListBusinessForm = ({
     })
 
     return options
-  }, [sessionCategories, t])
+  }, [categorySuggestionOptions, initialCategory, selectedCategory, t])
 
   const taxCodeSectionOptions = useMemo((): TaxCodeDisplayOption[] => {
     const options: TaxCodeDisplayOption[] = []
@@ -196,7 +206,6 @@ export const BankTransactionsMobileListBusinessForm = ({
     const option = category.value
 
     if (!isPlaceholderAsOption(option)) {
-      setSessionCategories(prev => new Map(prev).set(option.value, option))
       syncTaxCodeWithCategory(option)
     }
 
@@ -214,7 +223,6 @@ export const BankTransactionsMobileListBusinessForm = ({
   const onCategoryDrawerSelect = useCallback((category: BankTransactionCategoryComboBoxOption | null) => {
     if (!category) return
 
-    setSessionCategories(prev => new Map(prev).set(category.value, category))
     syncTaxCodeWithCategory(category)
     setTransactionCategorization(bankTransaction.id, { category })
   }, [bankTransaction.id, setTransactionCategorization, syncTaxCodeWithCategory])
@@ -321,7 +329,7 @@ export const BankTransactionsMobileListBusinessForm = ({
               accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
             />
           )}
-          {showCategorization && sessionCategories.size > 0
+          {showCategorization && categoryOptions.length > 1
             && (
               <Button
                 onClick={save}
