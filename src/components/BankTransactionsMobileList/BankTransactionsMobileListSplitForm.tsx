@@ -154,20 +154,8 @@ export const BankTransactionsMobileListSplitForm = ({
                     />
                   </HStack>
                   <HStack className='Layer__BankTransactionsMobileSplitForm__ActionButtonContainer'>
-                    {index === 0
-                      ? (
-                        <Button
-                          onClick={addSplit}
-                          variant='outlined'
-                          fullWidth
-                        >
-                          <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
-                            {t('bankTransactions:action.split_label', 'Split')}
-                            <Scissors size={14} />
-                          </HStack>
-                        </Button>
-                      )
-                      : (
+                    {index > 0
+                      && (
                         <Button
                           onClick={() => removeSplit(index)}
                           variant='outlined'
@@ -202,6 +190,17 @@ export const BankTransactionsMobileListSplitForm = ({
                 )}
               </VStack>
             ))}
+            <HStack className='Layer__BankTransactionsMobileSplitForm__SplitButtonContainer'>
+              <Button
+                onClick={addSplit}
+                variant='outlined'
+              >
+                <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
+                  {t('bankTransactions:action.split_label', 'Split')}
+                  <Scissors size={14} />
+                </HStack>
+              </Button>
+            </HStack>
             {splitFormError && <HStack pbe='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
           </VStack>
         )}
