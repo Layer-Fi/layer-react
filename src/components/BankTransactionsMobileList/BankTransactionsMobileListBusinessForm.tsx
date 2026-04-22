@@ -168,11 +168,6 @@ export const BankTransactionsMobileListBusinessForm = ({
       options.push({ value: option, asLink })
     }
 
-    appendOption({
-      label: t('bankTransactions:action.no_tax_code', 'No tax code'),
-      value: NO_TAX_CODE_VALUE,
-    })
-
     if (currentTaxCode) {
       appendOption(currentTaxCode)
     }
@@ -182,6 +177,11 @@ export const BankTransactionsMobileListBusinessForm = ({
     }
 
     sessionTaxCodes.forEach(option => appendOption(option))
+
+    appendOption({
+      label: t('bankTransactions:action.no_tax_code', 'No tax code'),
+      value: NO_TAX_CODE_VALUE,
+    })
 
     appendOption({
       label: `+ ${t('common:action.add_label', 'Add')} ${t('common:label.more', 'More')}`,
