@@ -16,18 +16,6 @@
     cursor: pointer;
     font-size: 12px;
 
-    .Layer__actionable-list__content {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-2xs);
-      align-items: flex-start;
-      max-width: 36ch;
-
-      .Layer__actionable-list__content-description {
-        color: var(--color-base-500);
-      }
-    }
-
     &.Layer__actionable-list-item--secondary {
       color: var(--color-base-500);
 
@@ -39,6 +27,18 @@
     &.Layer__actionable-list__item--selected {
       background-color: var(--color-base-50);
     }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xs);
+    align-items: flex-start;
+    max-width: 36ch;
+  }
+
+  &__content-description {
+    color: var(--color-base-500);
   }
 
   .Layer__actionable-list__select {

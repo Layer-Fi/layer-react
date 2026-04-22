@@ -63,7 +63,6 @@ export const ActionableList = <T,>({
               <span className='Layer__actionable-list__select Layer__actionable-list__select--selected'>
                 <CheckIcon
                   size={14}
-                  className='Layer__actionable-list__selected-icon'
                 />
               </span>
             )
@@ -76,7 +75,6 @@ export const ActionableList = <T,>({
           {x.asLink && (
             <ChevronRight
               size={16}
-              className='Layer__actionable-list__link-icon'
             />
           )}
         </li>

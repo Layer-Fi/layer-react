@@ -47,7 +47,6 @@ export const BusinessFormMobileItem = <T extends BusinessFormOptionValue,>({
         {option.asLink && (
           <ChevronRight
             size={16}
-            className='Layer__BusinessFormMobileItem__link-icon'
           />
         )}
       </HStack>
