@@ -8,6 +8,7 @@ import { buildCategorizeBankTransactionPayloadForSplit } from '@utils/bankTransa
 import { isCategorized } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { useGetBankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
@@ -22,6 +23,7 @@ import { type BankTransactionReceiptsHandle } from '@components/BankTransactionR
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'
+import { Input } from '@components/Input/Input'
 import type { TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
 import { TaxCodeSelectDrawerWithTrigger } from '@components/TaxCodeSelect/TaxCodeSelectDrawerWithTrigger'
 import { ErrorText } from '@components/Typography/ErrorText'
@@ -45,6 +47,7 @@ export const BankTransactionsMobileListSplitForm = ({
   showDescriptions,
 }: BankTransactionsMobileListSplitFormProps) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -190,6 +193,14 @@ export const BankTransactionsMobileListSplitForm = ({
                 )}
               </VStack>
             ))}
+            {localSplits.length > 1 && (
+              <Input
+                disabled={true}
+                leftText={t('common:label.total', 'Total')}
+                inputMode='numeric'
+                value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
+              />
+            )}
             <HStack className='Layer__BankTransactionsMobileSplitForm__SplitButtonContainer'>
               <Button
                 onClick={addSplit}
