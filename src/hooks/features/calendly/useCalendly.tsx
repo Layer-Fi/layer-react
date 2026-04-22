@@ -1,20 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { type EventScheduledEvent, useCalendlyEventListener } from 'react-calendly'
 
 import { type LandingPageLink } from '@components/LandingPage/types'
 
-export interface CalendlyPayload {
-  event: {
-    uri: string
-  }
-  invitee: {
-    uri: string
-  }
-}
-
-export interface CalendlyMessageData {
-  event?: string
-  payload?: CalendlyPayload
-}
+export type CalendlyPayload = EventScheduledEvent['data']['payload']
 
 const ALLOWED_CALENDLY_HOSTS = ['calendly.com', 'www.calendly.com']
 export const isCalendlyLink = (link?: LandingPageLink) => {
@@ -23,13 +12,13 @@ export const isCalendlyLink = (link?: LandingPageLink) => {
     const hostname = new URL(link.url).hostname
     return (ALLOWED_CALENDLY_HOSTS.includes(hostname) || hostname.endsWith('.calendly.com'))
   }
-  catch (_) {
+  catch {
     return false
   }
 }
 
 export interface UseCalendlyOptions {
-  onEventScheduled?: (payload?: CalendlyPayload) => void | Promise<void>
+  onEventScheduled?: (payload: CalendlyPayload) => void | Promise<void>
   onClose?: () => void
   closeOnEventScheduled?: boolean
 }
@@ -41,32 +30,17 @@ export const useCalendly = (options?: UseCalendlyOptions) => {
 
   const { onEventScheduled, onClose, closeOnEventScheduled } = options ?? {}
 
-  useEffect(() => {
-    const handleCalendlyMessage = (e: MessageEvent) => {
-      const data = e.data as CalendlyMessageData
+  const eventHandlers = useMemo(() => ({
+    onEventScheduled: (e: EventScheduledEvent) => {
+      void onEventScheduled?.(e.data.payload)
 
-      if (
-        !data.event
-        || typeof data.event !== 'string'
-        || !data.event.startsWith('calendly')
-      ) {
-        return
+      if (closeOnEventScheduled) {
+        setIsCalendlyVisible(false)
       }
+    },
+  }), [onEventScheduled, closeOnEventScheduled])
 
-      if (data.event === 'calendly.event_scheduled') {
-        void onEventScheduled?.(data.payload)
-
-        if (closeOnEventScheduled) {
-          setIsCalendlyVisible(false)
-        }
-      }
-    }
-
-    window.addEventListener('message', handleCalendlyMessage)
-    return () => {
-      window.removeEventListener('message', handleCalendlyMessage)
-    }
-  }, [onEventScheduled, closeOnEventScheduled])
+  useCalendlyEventListener(eventHandlers)
 
   const openCalendly = useCallback((link: string) => {
     setCalendlyLink(link)

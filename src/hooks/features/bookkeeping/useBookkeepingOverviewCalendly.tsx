@@ -6,15 +6,9 @@ import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookin
 import { useCreateCallBooking } from '@hooks/api/businesses/[business-id]/call-bookings/useCreateCallBooking'
 import { type CalendlyPayload, useCalendly } from '@hooks/features/calendly/useCalendly'
 
-const getExternalIdFromCalendlyPayload = (payload?: CalendlyPayload) => {
-  const eventUri = payload?.event.uri
-
-  if (eventUri == null) {
-    return
-  }
-
+const getExternalIdFromCalendlyPayload = (payload: CalendlyPayload) => {
   try {
-    const segments = new URL(eventUri).pathname.split('/').filter(Boolean)
+    const segments = new URL(payload.event.uri).pathname.split('/').filter(Boolean)
 
     return segments.at(-1)
   }
@@ -36,7 +30,7 @@ export const useBookkeepingOverviewCalendly = () => {
     ? bookkeepingStatus.onboardingCallUrl ?? undefined
     : undefined
 
-  const recordCalendlyScheduled = useCallback(async (payload?: CalendlyPayload) => {
+  const recordCalendlyScheduled = useCallback(async (payload: CalendlyPayload) => {
     setHasScheduledCallInSession(true)
 
     const externalId = getExternalIdFromCalendlyPayload(payload)
