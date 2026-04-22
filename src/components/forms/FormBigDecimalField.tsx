@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback } from 'react'
+import { type ReactNode } from 'react'
 import { BigDecimal as BD } from 'effect'
 
 import { BIG_DECIMAL_ONE } from '@utils/bigDecimalUtils'
@@ -39,13 +39,9 @@ export function FormBigDecimalField({
   const { name, state, handleChange, handleBlur } = field
   const { value } = state
 
-  const onChange = useCallback((bd: BD.BigDecimal | null) => {
-    handleChange(bd)
-  }, [handleChange])
-
   const { inputValue, onInputChange, onInputBlur, onBeforeInput, onPaste } = useBigDecimalInput({
     value,
-    onChange,
+    onChange: handleChange,
     onBlur: handleBlur,
     mode,
     maxValue,

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Clock, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -16,11 +16,10 @@ interface TimeEntriesProps {
   isStartTimerDisabled?: boolean
 }
 
-const TimeEntriesEmptyTableContext = createContext({ isFiltered: false })
-
 const TimeEntriesEmptyState = () => {
   const { t } = useTranslation()
-  const { isFiltered } = useContext(TimeEntriesEmptyTableContext)
+  const { selectedCustomer, selectedServiceId } = useTimeEntriesFilters()
+  const isFiltered = !!(selectedCustomer || selectedServiceId)
 
   if (isFiltered) {
     return (
@@ -73,7 +72,6 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
     ...(selectedCustomer && { customerId: selectedCustomer.id }),
     ...(selectedServiceId && { serviceId: selectedServiceId }),
   }), [filterParams, selectedCustomer, selectedServiceId])
-  const hasActiveTableFilters = !!(timeEntriesFilterParams.customerId || timeEntriesFilterParams.serviceId)
 
   const { data, isLoading, isError, size, setSize } = useListTimeEntries(timeEntriesFilterParams)
   const entries = useMemo(() => data?.flatMap(({ data }) => data), [data])
@@ -87,11 +85,6 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
       void setSize(size + 1)
     }
   }, [hasMore, setSize, size])
-
-  const emptyTableContextValue = useMemo(
-    () => ({ isFiltered: hasActiveTableFilters }),
-    [hasActiveTableFilters],
-  )
 
   const tableSlots = useMemo(
     () => ({
@@ -110,15 +103,13 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
 
   return (
     <>
-      <TimeEntriesEmptyTableContext.Provider value={emptyTableContextValue}>
-        <TimeEntriesTable
-          data={entries}
-          isLoading={isLoading}
-          isError={isError}
-          paginationProps={paginationProps}
-          slots={tableSlots}
-        />
-      </TimeEntriesEmptyTableContext.Provider>
+      <TimeEntriesTable
+        data={entries}
+        isLoading={isLoading}
+        isError={isError}
+        paginationProps={paginationProps}
+        slots={tableSlots}
+      />
       <TimeEntryDrawer />
       {entryToDelete && (
         <TimeEntryDeleteConfirmationModal entry={entryToDelete} />

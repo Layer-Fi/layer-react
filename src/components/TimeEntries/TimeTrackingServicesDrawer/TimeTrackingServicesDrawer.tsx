@@ -296,10 +296,7 @@ export function TimeTrackingServicesDrawer({
   }, [])
 
   const activeServices = useMemo(() => data?.data ?? [], [data])
-  const showCreateForm = useMemo(
-    () => isAdding || (!isLoading && !isError && activeServices.length === 0),
-    [activeServices.length, isAdding, isError, isLoading],
-  )
+  const showCreateForm = isAdding || (!isLoading && !isError && activeServices.length === 0)
   const showAddButton = !showCreateForm && activeServices.length > 0
 
   const tabOptions = useMemo(
