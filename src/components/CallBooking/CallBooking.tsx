@@ -25,7 +25,7 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
 
   return (
     <VStack gap='md' align='center' className='Layer__call-booking-state' pb='md'>
-      <Heading size='sm'>{t('callBookings:prompt.have_questions', 'Have any questions?')}</Heading>
+      <Heading size='sm'>{t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}</Heading>
       <Span variant='subtle'>
         {t('callBookings:label.book_call_with_bookkeeper', 'Book a call with your bookkeeper')}
       </Span>
