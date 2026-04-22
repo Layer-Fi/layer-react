@@ -1,8 +1,8 @@
 import { useCallback, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { UnifiedReportDateVariant, useActiveUnifiedReport, useUnifiedReportDateVariant, useUnifiedReportGroupByParam } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { ReportControl } from '@schemas/reports/reportConfig'
+import { hasControl, useActiveUnifiedReport, useUnifiedReportDateSelectionMode, useUnifiedReportGroupByParam } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -15,15 +15,11 @@ import { UnifiedReportDownloadButton } from '@components/UnifiedReport/UnifiedRe
 
 import './unifiedReportTableHeader.scss'
 
-type UnifiedReportTableHeaderProps = {
-  dateSelectionMode: DateSelectionMode
-}
-
-export const UnifiedReportTableHeader = ({ dateSelectionMode }: UnifiedReportTableHeaderProps) => {
+export const UnifiedReportTableHeader = () => {
   const { t } = useTranslation()
-  const dateVariant = useUnifiedReportDateVariant()
-  const groupBySetter = useUnifiedReportGroupByParam()
   const { report } = useActiveUnifiedReport()
+  const { groupBy, setGroupBy } = useUnifiedReportGroupByParam()
+  const dateSelectionMode = useUnifiedReportDateSelectionMode()
 
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
   const shouldCollapse = expanded === true
@@ -45,11 +41,14 @@ export const UnifiedReportTableHeader = ({ dateSelectionMode }: UnifiedReportTab
       </HStack>
       <HStack fluid justify='space-between' align='end' pbe='lg' className='Layer__UnifiedReport__Header'>
         <HStack pi='lg' gap='xs'>
-          {dateVariant === UnifiedReportDateVariant.DateRange
-            ? <CombinedDateRangeSelection mode={dateSelectionMode} />
-            : <CombinedDateSelection mode={dateSelectionMode} />}
-          {dateSelectionMode === 'full' && groupBySetter && (
-            <DateGroupByComboBox value={groupBySetter.groupBy} onValueChange={groupBySetter.setGroupBy} />
+          {hasControl(report, ReportControl.DateRange) && (
+            <CombinedDateRangeSelection mode={dateSelectionMode} />
+          )}
+          {hasControl(report, ReportControl.Date) && (
+            <CombinedDateSelection mode={dateSelectionMode} />
+          )}
+          {dateSelectionMode === 'full' && hasControl(report, ReportControl.GroupBy) && (
+            <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />
           )}
         </HStack>
         <HStack pi='lg' className='Layer__UnifiedReport__Header__SecondaryActions'>
@@ -58,7 +57,7 @@ export const UnifiedReportTableHeader = ({ dateSelectionMode }: UnifiedReportTab
               ? t('reports:action.collapse_all', 'Collapse All')
               : t('reports:action.expand_all', 'Expand All')}
           </Button>
-          <UnifiedReportDownloadButton dateSelectionMode={dateSelectionMode} />
+          <UnifiedReportDownloadButton />
         </HStack>
       </HStack>
     </VStack>

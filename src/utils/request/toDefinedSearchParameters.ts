@@ -21,9 +21,10 @@ const ParameterValuesSchema = Schema.Union(
   Schema.Boolean,
 )
 export type ParameterValues = typeof ParameterValuesSchema.Type
+export type QueryParams = Record<string, ParameterValues | null | undefined>
 
 export function toDefinedSearchParameters(
-  input: Record<string, ParameterValues | null | undefined>,
+  input: QueryParams,
 ) {
   const definedParameterPairs = Object.entries(input)
     .flatMap(([key, value]) => {

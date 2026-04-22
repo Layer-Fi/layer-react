@@ -15,19 +15,19 @@ type UnifiedReportProps = {
   dateSelectionMode?: DateSelectionMode
 }
 
-export const UnifiedReport = ({ dateSelectionMode = 'full' }: UnifiedReportProps) => {
+export const UnifiedReport = ({ dateSelectionMode }: UnifiedReportProps) => {
   const { t } = useTranslation()
   return (
     <View title={t('reports:label.reports', 'Reports')} viewClassName='Layer__UnifiedReport'>
-      <UnifiedReportStoreProvider>
+      <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode}>
         <ExpandableDataTableProvider>
           <HStack>
             <VStack className='Layer__UnifiedReport__Sidebar'>
               <ReportsNavigation />
             </VStack>
             <VStack fluid className='Layer__UnifiedReport__Content'>
-              <UnifiedReportTableHeader dateSelectionMode={dateSelectionMode} />
-              <UnifiedReportTable dateSelectionMode={dateSelectionMode} />
+              <UnifiedReportTableHeader />
+              <UnifiedReportTable />
             </VStack>
           </HStack>
         </ExpandableDataTableProvider>
