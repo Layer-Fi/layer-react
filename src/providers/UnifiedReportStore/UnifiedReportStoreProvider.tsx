@@ -19,11 +19,6 @@ type UnifiedReportStoreShape = {
   actions: UnifiedReportStoreActions
 }
 
-export enum UnifiedReportDateVariant {
-  Date = 'Date',
-  DateRange = 'DateRange',
-}
-
 export const hasControl = (report: ReportConfig | null, control: ReportControl): boolean =>
   report?.controls.includes(control) ?? false
 
@@ -100,13 +95,18 @@ export function useUnifiedReportParams(): UnifiedReportParams | null {
 }
 
 const findDefaultReport = (groups: ReadonlyArray<ReportGroup>): ReportConfig | null => {
+  let firstReport: ReportConfig | null = null
   for (const group of groups) {
     for (const report of group.reports) {
       if (report.isDefaultReport) return report
+      if (!firstReport) firstReport = report
     }
   }
-  return null
+  return firstReport
 }
+
+const hasReportWithKey = (groups: ReadonlyArray<ReportGroup>, key: string): boolean =>
+  groups.some(group => group.reports.some(report => report.key === key))
 
 const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
   createStore<UnifiedReportStoreShape>(set => ({
@@ -121,14 +121,16 @@ const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
 
 function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>) {
   const { data } = useReportConfig()
+  const report = useStore(store, state => state.report)
   const setReport = useStore(store, state => state.actions.setReport)
 
   useEffect(() => {
     if (!data) return
+    if (report && hasReportWithKey(data, report.key)) return
 
     const defaultReport = findDefaultReport(data)
     if (defaultReport) setReport(defaultReport)
-  }, [data, setReport])
+  }, [data, report, setReport])
 }
 
 function useSyncExternalDateSelectionMode(store: StoreApi<UnifiedReportStoreShape>, dateSelectionMode: DateSelectionMode) {
