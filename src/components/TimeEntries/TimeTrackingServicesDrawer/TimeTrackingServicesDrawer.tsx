@@ -32,6 +32,7 @@ export type TimeTrackingServicesDrawerProps = {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   startInCreateMode?: boolean
+  initialCreateName?: string
 }
 
 function useFormatHourly(): FormatHourly {
@@ -96,6 +97,7 @@ type ActiveServicesContentProps = {
   showCreateForm: boolean
   showAddButton: boolean
   canCancelCreate: boolean
+  createInitialName?: string
   expandedId: string | null
   formatHourly: FormatHourly
   onCancelAdd: () => void
@@ -111,6 +113,7 @@ function ActiveServicesContent({
   showCreateForm,
   showAddButton,
   canCancelCreate,
+  createInitialName,
   expandedId,
   formatHourly,
   onCancelAdd,
@@ -165,6 +168,7 @@ function ActiveServicesContent({
         <VStack className='Layer__TimeTrackingServicesDrawer__addWrap'>
           <ServiceFormCard
             mode='create'
+            initialName={createInitialName}
             onCancel={onCancelAdd}
             onSuccess={onCreateSuccess}
             showCancel={canCancelCreate}
@@ -250,6 +254,7 @@ export function TimeTrackingServicesDrawer({
   isOpen,
   onOpenChange,
   startInCreateMode = false,
+  initialCreateName,
 }: TimeTrackingServicesDrawerProps) {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
@@ -401,6 +406,7 @@ export function TimeTrackingServicesDrawer({
                         showCreateForm={showCreateForm}
                         showAddButton={showAddButton}
                         canCancelCreate={activeServices.length > 0}
+                        createInitialName={initialCreateName}
                         expandedId={expandedId}
                         formatHourly={formatHourly}
                         onCancelAdd={cancelAdd}

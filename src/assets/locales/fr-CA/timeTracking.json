@@ -72,6 +72,7 @@
     "archive_confirm_title": "Archiver ce service?",
     "archived": "Archivés",
     "cancel": "Annuler",
+    "create_service_input_value": "",
     "hourly_rate_optional": "Taux horaire par défaut (facultatif)",
     "no_active": "Aucun service pour le moment",
     "no_archived": "Aucun service archivé",

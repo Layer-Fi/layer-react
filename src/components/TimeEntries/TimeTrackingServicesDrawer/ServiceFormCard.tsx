@@ -13,6 +13,7 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 type AddServiceFormCardProps = {
   mode: 'create'
+  initialName?: string
   onCancel: () => void
   onSuccess: () => void
   showCancel?: boolean

@@ -1,13 +1,11 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
-import { Plus } from 'lucide-react'
+import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
 import { useListCatalogServices } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
-import { useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
-import { Button } from '@ui/Button/Button'
-import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
 
@@ -37,7 +35,7 @@ class ServiceAsOption {
   }
 }
 
-interface TimeEntryServiceSelectorProps {
+type TimeEntryServiceSelectorBaseProps = {
   selectedServiceId: string | null
   onSelectedServiceIdChange: (serviceId: string | null) => void
   placeholder?: string
@@ -46,8 +44,17 @@ interface TimeEntryServiceSelectorProps {
   inline?: boolean
   className?: string
   showLabel?: boolean
-  showAddServiceAction?: boolean
 }
+
+type TimeEntryServiceSelectorProps = TimeEntryServiceSelectorBaseProps & (
+  | { isCreatable: true, onCreateService: (name: string) => void }
+  | { isCreatable?: false, onCreateService?: (name: string) => void }
+)
+
+const formatCreateLabel = (inputValue: string, t: TFunction) =>
+  inputValue
+    ? t('timeTracking:services.create_service_input_value', 'Create service "{{inputValue}}"', { inputValue })
+    : t('timeTracking:services.add_service', 'Add service')
 
 export function TimeEntryServiceSelector({
   selectedServiceId,
@@ -58,10 +65,10 @@ export function TimeEntryServiceSelector({
   inline,
   className,
   showLabel = true,
-  showAddServiceAction = false,
+  isCreatable,
+  onCreateService,
 }: TimeEntryServiceSelectorProps) {
   const { t } = useTranslation()
-  const { openServicesDrawer } = useTimeTrackingServicesDrawer()
 
   const { data: servicesResponse, isLoading, isError } = useListCatalogServices()
 
@@ -72,16 +79,10 @@ export function TimeEntryServiceSelector({
     () => servicesResponse?.data.map(service => new ServiceAsOption(service)) ?? [],
     [servicesResponse],
   )
-  const shouldShowAddServiceAction = showAddServiceAction
-    && !isReadOnly
-    && !isLoadingWithoutFallback
-    && !isError
-    && serviceOptions.length === 0
 
   const combinedClassName = classNames(
     'Layer__TimeEntryServiceSelector',
     inline && 'Layer__TimeEntryServiceSelector--inline',
-    shouldShowAddServiceAction && 'Layer__TimeEntryServiceSelector--with-add-action',
     className,
   )
 
@@ -102,10 +103,6 @@ export function TimeEntryServiceSelector({
     },
     [serviceOptions, selectedServiceId],
   )
-
-  const handleAddService = useCallback(() => {
-    openServicesDrawer({ startInCreateMode: true })
-  }, [openServicesDrawer])
 
   const EmptyMessage = useMemo(
     () => (
@@ -133,35 +130,34 @@ export function TimeEntryServiceSelector({
 
   const inputId = useId()
 
+  const sharedProps = {
+    selectedValue: selectedServiceForComboBox,
+    onSelectedValueChange: handleSelectionChange,
+    inputId,
+    className: 'Layer__TimeEntryServiceSelector__Input',
+    placeholder: placeholder ?? t('timeTracking:label.select_service', 'Select a service'),
+    slots: { EmptyMessage, ErrorMessage },
+    isClearable,
+    isDisabled: shouldDisableComboBox,
+    isError,
+    isLoading: isLoadingWithoutFallback,
+    isReadOnly,
+    ['aria-label']: showLabel ? undefined : t('timeTracking:label.service', 'Service'),
+  }
+
+  const creatableProps = isCreatable
+    ? {
+      isCreatable: true as const,
+      onCreateOption: onCreateService,
+      formatCreateLabel: (inputValue: string) => formatCreateLabel(inputValue, t),
+      groups: [{ label: t('timeTracking:services.title', 'Services'), options: serviceOptions }],
+    }
+    : { isCreatable: false as const, options: serviceOptions }
+
   return (
     <VStack className={combinedClassName}>
       {showLabel && <Label htmlFor={inputId} size='sm'>{t('timeTracking:label.service', 'Service')}</Label>}
-      <ComboBox
-        selectedValue={selectedServiceForComboBox}
-        onSelectedValueChange={handleSelectionChange}
-        inputId={inputId}
-        className='Layer__TimeEntryServiceSelector__Input'
-        placeholder={placeholder ?? t('timeTracking:label.select_service', 'Select a service')}
-        slots={{ EmptyMessage, ErrorMessage }}
-        isClearable={isClearable}
-        isDisabled={shouldDisableComboBox}
-        isError={isError}
-        isLoading={isLoadingWithoutFallback}
-        isReadOnly={isReadOnly}
-        options={serviceOptions}
-        aria-label={showLabel ? undefined : t('timeTracking:label.service', 'Service')}
-      />
-      {shouldShowAddServiceAction && (
-        <VStack className='Layer__TimeEntryServiceSelector__AddAction'>
-          <Button
-            variant='outlined-light'
-            onPress={handleAddService}
-          >
-            <Plus size={14} />
-            {t('timeTracking:services.add_service', 'Add service')}
-          </Button>
-        </VStack>
-      )}
+      <MaybeCreatableComboBox {...sharedProps} {...creatableProps} />
     </VStack>
   )
 }

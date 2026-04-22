@@ -5,11 +5,13 @@ import { TimeTrackingServicesDrawer } from '@components/TimeEntries/TimeTracking
 
 type OpenServicesDrawerOptions = {
   startInCreateMode?: boolean
+  initialName?: string
 }
 
 type TimeTrackingServicesDrawerStoreShape = {
   isOpen: boolean
   startInCreateMode: boolean
+  initialName: string | undefined
   actions: {
     openServicesDrawer: (options?: OpenServicesDrawerOptions) => void
     setOpen: (isOpen: boolean) => void
@@ -20,6 +22,7 @@ const TimeTrackingServicesDrawerStoreContext = createContext(
   createStore<TimeTrackingServicesDrawerStoreShape>(() => ({
     isOpen: false,
     startInCreateMode: false,
+    initialName: undefined,
     actions: {
       openServicesDrawer: () => {},
       setOpen: () => {},
@@ -37,10 +40,11 @@ function useTimeTrackingServicesDrawerState() {
   const store = useContext(TimeTrackingServicesDrawerStoreContext)
   const isOpen = useStore(store, state => state.isOpen)
   const startInCreateMode = useStore(store, state => state.startInCreateMode)
+  const initialName = useStore(store, state => state.initialName)
   const setOpen = useStore(store, state => state.actions.setOpen)
   return useMemo(
-    () => ({ isOpen, startInCreateMode, setOpen }),
-    [isOpen, startInCreateMode, setOpen],
+    () => ({ isOpen, startInCreateMode, initialName, setOpen }),
+    [isOpen, startInCreateMode, initialName, setOpen],
   )
 }
 
@@ -49,14 +53,16 @@ export function TimeTrackingServicesDrawerProvider({ children }: PropsWithChildr
     createStore<TimeTrackingServicesDrawerStoreShape>(set => ({
       isOpen: false,
       startInCreateMode: false,
+      initialName: undefined,
       actions: {
-        openServicesDrawer: ({ startInCreateMode = false }: OpenServicesDrawerOptions = {}) => {
-          set({ isOpen: true, startInCreateMode })
+        openServicesDrawer: ({ startInCreateMode = false, initialName }: OpenServicesDrawerOptions = {}) => {
+          set({ isOpen: true, startInCreateMode, initialName })
         },
         setOpen: (isOpen: boolean) => {
           set(state => ({
             isOpen,
             startInCreateMode: isOpen ? state.startInCreateMode : false,
+            initialName: isOpen ? state.initialName : undefined,
           }))
         },
       },
@@ -72,13 +78,14 @@ export function TimeTrackingServicesDrawerProvider({ children }: PropsWithChildr
 }
 
 function TimeTrackingServicesDrawerHost() {
-  const { isOpen, startInCreateMode, setOpen } = useTimeTrackingServicesDrawerState()
+  const { isOpen, startInCreateMode, initialName, setOpen } = useTimeTrackingServicesDrawerState()
 
   return (
     <TimeTrackingServicesDrawer
       isOpen={isOpen}
       onOpenChange={setOpen}
       startInCreateMode={startInCreateMode}
+      initialCreateName={initialName}
     />
   )
 }

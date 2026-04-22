@@ -19,6 +19,7 @@ import { useAppForm } from '@hooks/features/forms/useForm'
 
 type CreateServiceFormProps = {
   mode: 'create'
+  initialName?: string
   onSuccess: () => void
 }
 
@@ -35,8 +36,14 @@ type ServiceFormValues = {
   hourlyRate: NonRecursiveBigDecimal | null
 }
 
-const getServiceFormDefaultValues = (service?: CatalogService): ServiceFormValues => ({
-  name: service?.name ?? '',
+const getServiceFormDefaultValues = ({
+  service,
+  initialName,
+}: {
+  service?: CatalogService
+  initialName?: string
+}): ServiceFormValues => ({
+  name: service?.name ?? initialName ?? '',
   hourlyRate: service?.billableRatePerHourAmount != null && !Number.isNaN(service.billableRatePerHourAmount)
     ? toNonRecursiveBigDecimal(convertCentsToBigDecimal(service.billableRatePerHourAmount))
     : null,
@@ -46,12 +53,16 @@ export function useServiceForm(props: ServiceFormProps) {
   const { t } = useTranslation()
   const { mode, onSuccess } = props
   const service = props.mode === 'edit' ? props.service : undefined
+  const initialName = props.mode === 'create' ? props.initialName : undefined
   const serviceId = service?.id ?? ''
   const [submitError, setSubmitError] = useState<string | null>(null)
   const { trigger: createService } = useCreateCatalogService()
   const { trigger: updateService } = useUpdateCatalogService({ serviceId })
 
-  const formDefaults = useMemo(() => getServiceFormDefaultValues(service), [service])
+  const formDefaults = useMemo(
+    () => getServiceFormDefaultValues({ service, initialName }),
+    [service, initialName],
+  )
   const defaultValuesRef = useRef<ServiceFormValues>(formDefaults)
   const defaultValues = defaultValuesRef.current
 

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useStartTimerForm } from '@hooks/features/timeTracking/useStartTimerForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
@@ -47,6 +48,7 @@ export const ActiveTimeTrackerStartDrawer = ({
   isMobile,
 }: ActiveTimeTrackerStartDrawerProps) => {
   const { t } = useTranslation()
+  const { openServicesDrawer } = useTimeTrackingServicesDrawer()
 
   const onStarted = useCallback(() => {
     onOpenChange(false)
@@ -60,6 +62,10 @@ export const ActiveTimeTrackerStartDrawer = ({
     }
     onOpenChange(nextIsOpen)
   }, [clearActionError, onOpenChange])
+
+  const handleCreateService = useCallback((name: string) => {
+    openServicesDrawer({ startInCreateMode: true, initialName: name })
+  }, [openServicesDrawer])
 
   return (
     <Drawer
@@ -98,7 +104,8 @@ export const ActiveTimeTrackerStartDrawer = ({
                 onSelectedServiceIdChange={field.handleChange}
                 inline
                 className='Layer__ActiveTimeTracker__Field__Service'
-                showAddServiceAction
+                isCreatable
+                onCreateService={handleCreateService}
               />
             )}
           </form.Field>

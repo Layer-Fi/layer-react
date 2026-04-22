@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { type Customer } from '@schemas/customer'
 import { type TimeEntry } from '@schemas/timeTracking'
 import { flattenValidationErrors } from '@utils/form'
+import { useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -60,11 +61,16 @@ const TimeEntryCustomerField = ({ value, entryCustomer, isReadOnly, onChange }: 
 export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormProps) => {
   const { t } = useTranslation()
   const { form, submitError } = useTimeEntryForm({ onSuccess, entry })
+  const { openServicesDrawer } = useTimeTrackingServicesDrawer()
 
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     e.stopPropagation()
   }, [])
+
+  const handleCreateService = useCallback((name: string) => {
+    openServicesDrawer({ startInCreateMode: true, initialName: name })
+  }, [openServicesDrawer])
 
   return (
     <Form className='Layer__TimeEntryForm' onSubmit={blockNativeOnSubmit}>
@@ -118,7 +124,8 @@ export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormPro
             isReadOnly={isReadOnly}
             inline
             className='Layer__TimeEntryForm__Field__Service'
-            showAddServiceAction
+            isCreatable={!isReadOnly}
+            onCreateService={handleCreateService}
           />
         )}
       </form.Field>

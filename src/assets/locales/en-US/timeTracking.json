@@ -72,6 +72,7 @@
     "archive_confirm_title": "Archive this service?",
     "archived": "Archived",
     "cancel": "Cancel",
+    "create_service_input_value": "Create service \"{{inputValue}}\"",
     "hourly_rate_optional": "Default hourly rate (optional)",
     "no_active": "No services yet",
     "no_archived": "No archived services",
