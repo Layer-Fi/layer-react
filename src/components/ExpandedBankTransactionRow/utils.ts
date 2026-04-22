@@ -8,7 +8,8 @@ import { isSplitCategorizationEncoded } from '@schemas/categorization'
 import { decodeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag, TransactionTagSchema } from '@schemas/tag'
 import { toLocalizedCents } from '@utils/i18n/number/input'
-import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
@@ -116,8 +117,12 @@ export const getCustomerVendorForBankTransaction = (bankTransaction: BankTransac
 
 export const getLocalSplitStateForExpandedTransaction = (
   bankTransaction: BankTransaction,
-  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+  selectedCategorization: BankTransactionCategorization | undefined,
 ): Split[] => {
+  const selectedCategory = selectedCategorization?.category
+  const selectedTaxCode = selectedCategorization && 'taxCode' in selectedCategorization
+    ? selectedCategorization.taxCode
+    : undefined
   let coercedSelectedCategory = selectedCategory
   if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
     coercedSelectedCategory = null
@@ -152,7 +157,9 @@ export const getLocalSplitStateForExpandedTransaction = (
       category: coercedSelectedCategory ?? null,
       taxCode: coercedSelectedCategory?.classification?.type === 'Exclusion'
         ? null
-        : bankTransaction.tax_code ?? null,
+        : selectedTaxCode === undefined
+          ? bankTransaction.tax_code ?? null
+          : selectedTaxCode?.value ?? null,
       tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
       customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
     },

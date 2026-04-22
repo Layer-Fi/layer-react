@@ -4,11 +4,11 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export type SaveBankTransactionRowFn = (
-  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+  selectedCategorization: BankTransactionCategorization | undefined,
   bankTransaction: BankTransaction,
 ) => Promise<void> | void
 
@@ -26,9 +26,11 @@ export const useSaveBankTransactionRow = () => {
   } = useMatchBankTransactionWithCacheUpdate()
 
   const saveBankTransactionRow = useCallback(async (
-    selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+    selectedCategorization: BankTransactionCategorization | undefined,
     bankTransaction: BankTransaction,
   ) => {
+    const selectedCategory = selectedCategorization?.category
+
     if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
       return
     }
@@ -44,9 +46,14 @@ export const useSaveBankTransactionRow = () => {
 
     if (!selectedCategory.classification) return
 
+    const selectedTaxCode = selectedCategorization && 'taxCode' in selectedCategorization
+      ? selectedCategorization.taxCode
+      : undefined
     const taxCode = selectedCategory.classification.type === 'Exclusion'
       ? null
-      : bankTransaction.tax_code ?? null
+      : selectedTaxCode === undefined
+        ? bankTransaction.tax_code ?? null
+        : selectedTaxCode?.value ?? null
 
     return categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',

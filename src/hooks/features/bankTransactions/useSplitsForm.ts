@@ -6,7 +6,10 @@ import { type BankTransaction, type Split } from '@internal-types/bankTransactio
 import { SplitAsOption } from '@internal-types/categorizationOption'
 import { convertCentsToDecimalString } from '@utils/format'
 import { toLocalizedNumber } from '@utils/i18n/number/input'
-import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import {
+  type BankTransactionCategorization,
+  useBankTransactionsCategorizationActions,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import {
   calculateAddSplit,
@@ -19,7 +22,7 @@ import {
 
 interface UseSplitsFormOptions {
   bankTransaction: BankTransaction
-  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined
+  selectedCategorization: BankTransactionCategorization | undefined
   isOpen?: boolean
 }
 
@@ -42,24 +45,24 @@ export interface UseSplitsFormReturn {
 
 export const useSplitsForm = ({
   bankTransaction,
-  selectedCategory,
+  selectedCategorization,
   isOpen,
 }: UseSplitsFormOptions): UseSplitsFormReturn => {
   const { t } = useTranslation()
   const intl = useIntl()
 
   const [localSplits, setLocalSplits] = useState<Split[]>(
-    getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory),
+    getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategorization),
   )
   const [inputValues, setInputValues] = useState<Record<number, string>>({})
   const [splitFormError, setSplitFormError] = useState<string | undefined>()
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
+  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
 
   useEffect(() => {
-    setLocalSplits(getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory))
+    setLocalSplits(getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategorization))
     setSplitFormError(undefined)
     setInputValues({})
-  }, [bankTransaction, selectedCategory, isOpen])
+  }, [bankTransaction, selectedCategorization, isOpen])
 
   const saveLocalSplitsToCategoryStore = useCallback((splits: Split[]) => {
     if (!isSplitsValid(splits)) {
@@ -67,9 +70,12 @@ export const useSplitsForm = ({
       return
     }
 
-    setTransactionCategory(bankTransaction.id, new SplitAsOption(splits))
+    setTransactionCategorization(bankTransaction.id, {
+      category: new SplitAsOption(splits),
+      taxCode: undefined,
+    })
     setSplitFormError(undefined)
-  }, [bankTransaction.id, setTransactionCategory, t])
+  }, [bankTransaction.id, setTransactionCategorization, t])
 
   const addSplit = useCallback(() => {
     const newSplits = calculateAddSplit(localSplits)

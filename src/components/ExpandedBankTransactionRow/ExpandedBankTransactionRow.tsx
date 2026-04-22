@@ -25,7 +25,10 @@ import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import {
+  useBankTransactionsCategorizationActions,
+  useGetBankTransactionCategorization,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
@@ -100,8 +103,8 @@ export const ExpandedBankTransactionRow = ({
 }: ExpandedBankTransactionRowProps) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
-  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
+  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
   // Hooks for auto-saving tags and customer/vendor in unsplit state
   const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
   const { trigger: removeTagFromBankTransaction } = useRemoveTagFromBankTransaction({ bankTransactionId: bankTransaction.id })
@@ -136,7 +139,7 @@ export const ExpandedBankTransactionRow = ({
     onBlurSplitAmount,
     getInputValueForSplitAtIndex,
     setSplitFormError,
-  } = useSplitsForm({ bankTransaction, selectedCategory, isOpen })
+  } = useSplitsForm({ bankTransaction, selectedCategorization, isOpen })
 
   useEffect(() => {
     const isValid = purpose === Purpose.match
@@ -153,11 +156,17 @@ export const ExpandedBankTransactionRow = ({
     setPurpose(newPurpose)
 
     if (newPurpose === Purpose.match) {
-      setTransactionCategory(bankTransaction.id, selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null)
+      setTransactionCategorization(bankTransaction.id, {
+        category: selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null,
+        taxCode: undefined,
+      })
     }
 
     else if (newPurpose === Purpose.categorize && isSplitsValid) {
-      setTransactionCategory(bankTransaction.id, new SplitAsOption(localSplits))
+      setTransactionCategorization(bankTransaction.id, {
+        category: new SplitAsOption(localSplits),
+        taxCode: undefined,
+      })
     }
 
     setSplitFormError(undefined)
@@ -293,9 +302,12 @@ export const ExpandedBankTransactionRow = ({
                         setSelectedMatch={(suggestedMatch) => {
                           setSelectedMatch(suggestedMatch)
                           setMatchFormError(!suggestedMatch ? t('bankTransactions:error.select_option_match_transaction', 'Select an option to match the transaction') : undefined)
-                          setTransactionCategory(
+                          setTransactionCategorization(
                             bankTransaction.id,
-                            suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null,
+                            {
+                              category: suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null,
+                              taxCode: undefined,
+                            },
                           )
                         }}
                         matchFormError={matchFormError}
