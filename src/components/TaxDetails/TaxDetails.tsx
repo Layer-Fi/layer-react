@@ -18,7 +18,7 @@ import { FederalTaxTable } from '@components/TaxDetails/FederalTaxTable/FederalT
 import { StateTaxTable } from '@components/TaxDetails/StateTaxTable/StateTaxTable'
 import { TaxDetailsExpandableCardHeading } from '@components/TaxDetails/TaxDetailsExpandableCardHeading'
 import { TaxSummaryCard } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCard'
-import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxDetails.scss'
@@ -29,27 +29,7 @@ type ExpandedState = {
   stateTaxes: boolean
 }
 
-const TaxDetailsHeader = ({ isMobile }: { isMobile: boolean }) => {
-  const { t } = useTranslation()
-  const { fullYearProjection } = useFullYearProjection()
-  const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
-  return (
-    <TaxEstimatesHeader
-      title={tConditional(t, 'taxEstimates:label.business_income_taxes', {
-        condition: projectedCondition,
-        cases: {
-          default: 'Business Income Taxes',
-          projected: 'Projected Business Income Taxes',
-        },
-        contexts: {
-          projected: 'projected',
-        },
-      })}
-      description={t('taxEstimates:label.calculated_from_categorized_transactions', 'Calculated based on your categorized transactions and tracked mileage')}
-      isMobile={isMobile}
-    />
-  )
-}
+const TaxDetailsHeader = () => <TaxEstimatesHeader type={TaxEstimatesHeaderType.Estimates} />
 
 const MobileExpandableCardsWrapper = ({ children }: { children: ReactNode }) => (
   <Card className='Layer__TaxDetails__ExpandableCardsWrapper'>{children}</Card>
@@ -76,14 +56,10 @@ export const TaxDetails = () => {
 
   const ExpandableCardsWrapper = isDesktop ? VStack : MobileExpandableCardsWrapper
 
-  const Header = useCallback(() => (
-    <TaxDetailsHeader isMobile={!isDesktop} />
-  ), [isDesktop])
-
   return (
     <ResponsiveDetailView
       name='TaxDetails'
-      slots={{ Header }}
+      slots={{ Header: TaxDetailsHeader }}
       mobileProps={{ className: 'Layer__TaxDetails--mobile' }}
     >
       <ConditionalBlock

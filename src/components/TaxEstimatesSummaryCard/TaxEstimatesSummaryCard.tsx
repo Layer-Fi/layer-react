@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { type TaxSummarySectionType } from '@schemas/taxEstimates/summary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
 import { DetailedChart, type DetailedChartProps } from '@components/DetailedCharts/DetailedChart'
@@ -67,6 +68,7 @@ const Content = ({ data, commonProps, layout }: ContentProps) => {
 
 export const TaxEstimatesSummaryCard = () => {
   const { detailData, layout, title, isLoading, isError } = useTaxEstimatesSummaryCard()
+  const { isDesktop } = useSizeClass()
   const isSummaryCardLayout = layout === 'summaryCard'
 
   const commonProps: CommonProps = useMemo(() => {
@@ -91,7 +93,7 @@ export const TaxEstimatesSummaryCard = () => {
             align={isSummaryCardLayout ? 'center' : 'start'}
             gap='md'
           >
-            <Span size='lg' weight='bold'>{title}</Span>
+            <Heading size={!isDesktop ? 'sm' : 'md'}>{title}</Heading>
           </HStack>
           <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState />} Error={<ErrorState />}>
             {({ data }) => <Content data={data} commonProps={commonProps} layout={layout} />}

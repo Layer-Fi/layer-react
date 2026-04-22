@@ -7,21 +7,10 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
-import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
 
 import { TaxPaymentsMobileList } from './TaxPaymentsMobileList/TaxPaymentsMobileList'
 import { TaxPaymentsTable } from './TaxPaymentsTable/TaxPaymentsTable'
-
-const TaxPaymentsHeader = ({ isMobile, translation }: { isMobile: boolean, translation: TFunction }) => {
-  const t = translation
-  return (
-    <TaxEstimatesHeader
-      title={t('taxEstimates:label.tax_payments', 'Tax Payments')}
-      description={t('taxEstimates:label.federal_state_tax_payments', 'Federal and state tax payments for the selected tax year')}
-      isMobile={isMobile}
-    />
-  )
-}
 
 const ErrorState = ({ translation }: { translation: TFunction }) => {
   const t = translation
@@ -65,12 +54,12 @@ export const TaxPayments = () => {
     },
   }), [data, isError, isLoading, t])
 
-  const Header = useCallback(() => (
-    <TaxPaymentsHeader isMobile={!isDesktop} translation={t} />
-  ), [isDesktop, t])
+  const TaxPaymentsHeader = useCallback(() => (
+    <TaxEstimatesHeader type={TaxEstimatesHeaderType.Payments} />
+  ), [])
 
   return (
-    <ResponsiveDetailView name='TaxPayments' slots={{ Header }}>
+    <ResponsiveDetailView name='TaxPayments' slots={{ Header: TaxPaymentsHeader }}>
       {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
     </ResponsiveDetailView>
   )

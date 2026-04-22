@@ -1,3 +1,10 @@
+.Layer__TaxDetails.Layer__BaseDetailView,
+ .Layer__TaxPayments.Layer__BaseDetailView {
+  .Layer__BaseDetailView__Header {
+    padding-inline: 1.25rem;
+  }
+}
+
 @container (max-width: 500px) {
   .Layer__TaxEstimatesHeader {
     flex-direction: column;
