@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
@@ -57,8 +58,8 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
     fullYearProjection,
   })
 
-  const paymentDeadlines = data?.quarters.map(quarter => mapQuarterToSection(t, quarter)) ?? []
-  const annualDeadline: TaxEstimateDeadlineRow = {
+  const paymentDeadlines = useMemo(() => data?.quarters.map(quarter => mapQuarterToSection(t, quarter)) ?? [], [data, t])
+  const annualDeadline: TaxEstimateDeadlineRow = useMemo(() => ({
     type: 'annual',
     title: t('taxEstimates:label.annual_taxes', 'Annual taxes'),
     dueDate: new Date(year + 1, 3, 15),
@@ -66,10 +67,10 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
     status: TaxOverviewDeadlineStatus.Due,
     uncategorizedCount: paymentDeadlines.reduce((count, deadline) => count + deadline.uncategorizedCount, 0),
     uncategorizedSum: paymentDeadlines.reduce((sum, deadline) => sum + deadline.uncategorizedSum, 0),
-  }
+  }), [data, t, paymentDeadlines, year])
 
   return {
-    data: [...paymentDeadlines, annualDeadline],
+    data: useMemo(() => [...paymentDeadlines, annualDeadline], [paymentDeadlines, annualDeadline]),
     isLoading,
     isError,
   }
