@@ -334,11 +334,9 @@ export const ExpandedBankTransactionRow = ({
 
                           return (
                             <VStack
-                              className={classNames(
-                                `${className}__split-section`,
-                                asListItem && `${className}__split-section--list-item`,
-                              )}
+                              className={`${className}__split-section`}
                               gap='xs'
+                              pbe={asListItem ? 'sm' : undefined}
                               key={`split-${index}`}
                             >
                               {asListItem && effectiveSplits.length > 1 && (
@@ -420,7 +418,12 @@ export const ExpandedBankTransactionRow = ({
                         })}
                       </div>
                       {splitFormError && <HStack pb='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
-                      <div className={`${className}__total-and-btns`}>
+                      <div
+                        className={classNames(
+                          `${className}__total-and-btns`,
+                          asListItem && `${className}__total-and-btns--list-item`,
+                        )}
+                      >
                         {effectiveSplits.length > 1 && (
                           <Input
                             disabled={true}

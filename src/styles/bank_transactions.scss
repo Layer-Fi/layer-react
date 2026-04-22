@@ -323,16 +323,6 @@
   padding-top: 2px;
 }
 
-.Layer__expanded-bank-transaction-row__split-section--list-item {
-  padding: var(--spacing-xs) 0;
-  border-top: 1px solid var(--border-color);
-
-  &:first-child {
-    padding-top: 0;
-    border-top: 0;
-  }
-}
-
 .Layer__expanded-bank-transaction-row__splits-total {
   padding: var(--spacing-3xs);
   color: var(--color-base-500);
@@ -351,6 +341,11 @@
   &:empty {
     display: none;
   }
+}
+
+.Layer__expanded-bank-transaction-row__total-and-btns--list-item {
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .Layer__expanded-bank-transaction-row__file-upload {
@@ -880,6 +875,15 @@
     }
 
     .Layer__input {
+      max-width: 100%;
+    }
+  }
+
+  .Layer__expanded-bank-transaction-row__total-and-btns--list-item {
+    flex-direction: column;
+    align-items: stretch;
+
+    .Layer__input-tooltip {
       max-width: 100%;
     }
   }
