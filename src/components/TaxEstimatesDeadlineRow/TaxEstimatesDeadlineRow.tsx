@@ -16,7 +16,7 @@ import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
 
-import '@components/TaxOverview/taxOverviewDeadlineCard.scss'
+import '@components/TaxEstimatesDeadlineRow/taxEstimatesDeadlineRow.scss'
 
 const getDeadlineAmountTone = (status?: TaxOverviewDeadlineStatus) => {
   switch (status) {

@@ -33,8 +33,8 @@ const Content = ({ metrics }: { metrics: TaxOverviewMetric[] }) => {
 export const TaxableIncomeCard = () => {
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
-  const { isDesktop } = useSizeClass()
   const [viewportWidth] = useWindowSize()
+  const { isDesktop } = useSizeClass()
   const { data: taxOverviewData } = useTaxOverview({
     year,
     fullYearProjection,
@@ -42,7 +42,7 @@ export const TaxableIncomeCard = () => {
   })
 
   const metrics = taxOverviewData?.metrics ?? []
-  const isHeaderVisible = viewportWidth > 1440
+  const isHeaderVisible = viewportWidth > 1200
   return (
     <>
       <Card className='Layer__TaxOverview__Card'>

@@ -12,8 +12,8 @@ export type TaxOverviewProps = TaxDeadlinesCardProps
 
 export const TaxOverview = ({ onTaxBannerReviewClick }: TaxOverviewProps) => {
   const [viewportWidth] = useWindowSize()
+  const isMobile = viewportWidth < 1200
 
-  const isMobile = viewportWidth <= 1440
   if (!isMobile) {
     return (
       <VStack className='Layer__TaxOverview' gap='md'>
