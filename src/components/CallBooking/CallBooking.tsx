@@ -52,7 +52,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
     ? t('callBookings:label.onboarding_call', 'Onboarding call')
     : t('callBookings:label.ad_hoc_call', 'Ad hoc call')
   const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
-  const callLink = callBooking.callLink.toString()
+  const { callLink } = callBooking
   const hasCallLink = callLink.length > 0
 
   return (
