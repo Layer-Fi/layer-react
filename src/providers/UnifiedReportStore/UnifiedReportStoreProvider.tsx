@@ -3,7 +3,7 @@ import { createStore, type StoreApi, useStore } from 'zustand'
 
 import { type ReportConfig, ReportControl, type ReportGroup } from '@schemas/reports/reportConfig'
 import { DateGroupBy, type DateQueryParams, type DateRangeQueryParams } from '@schemas/reports/unifiedReport'
-import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
 import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 
@@ -15,6 +15,7 @@ type UnifiedReportStoreActions = {
 type UnifiedReportStoreShape = {
   report: ReportConfig | null
   groupBy: DateGroupBy | null
+  dateSelectionMode: DateSelectionMode
   actions: UnifiedReportStoreActions
 }
 
@@ -23,23 +24,30 @@ export enum UnifiedReportDateVariant {
   DateRange = 'DateRange',
 }
 
-const getDateVariant = (report: ReportConfig): UnifiedReportDateVariant =>
-  report.controls.includes(ReportControl.DateRange)
-    ? UnifiedReportDateVariant.DateRange
-    : UnifiedReportDateVariant.Date
+export const hasControl = (report: ReportConfig | null, control: ReportControl): boolean =>
+  report?.controls.includes(control) ?? false
 
-const hasGroupByControl = (report: ReportConfig): boolean =>
-  report.controls.includes(ReportControl.GroupBy)
+export type ReportControlParams = {
+  [ReportControl.Date]: DateQueryParams
+  [ReportControl.DateRange]: DateRangeQueryParams
+  [ReportControl.GroupBy]: { groupBy: DateGroupBy }
+}
+
+export type UnifiedReportControlParams = Partial<
+  & ReportControlParams[ReportControl.Date]
+  & ReportControlParams[ReportControl.DateRange]
+  & ReportControlParams[ReportControl.GroupBy]
+>
 
 export type UnifiedReportParams = {
-  report: string
-  groupBy: DateGroupBy | null
-} & (DateQueryParams | DateRangeQueryParams)
+  route: string
+} & UnifiedReportControlParams & QueryParams
 
 const UnifiedReportStoreContext = createContext(
   createStore<UnifiedReportStoreShape>(() => ({
     report: null,
     groupBy: DateGroupBy.AllTime,
+    dateSelectionMode: 'full',
     actions: {
       setReport: () => {},
       setGroupBy: () => {},
@@ -47,79 +55,64 @@ const UnifiedReportStoreContext = createContext(
   })),
 )
 
+export function useUnifiedReportDateSelectionMode() {
+  const store = useContext(UnifiedReportStoreContext)
+  return useStore(store, state => state.dateSelectionMode)
+}
+
 export function useActiveUnifiedReport() {
   const store = useContext(UnifiedReportStoreContext)
+
   const report = useStore(store, state => state.report)
   const setReport = useStore(store, state => state.actions.setReport)
+
   return useMemo(() => ({ report, setReport }), [report, setReport])
 }
 
-export function useUnifiedReportDateVariant(): UnifiedReportDateVariant | null {
-  const { report } = useActiveUnifiedReport()
-  return report ? getDateVariant(report) : null
-}
-
 export function useUnifiedReportGroupByParam() {
-  const { report } = useActiveUnifiedReport()
   const store = useContext(UnifiedReportStoreContext)
+
   const groupBy = useStore(store, state => state.groupBy)
   const setGroupBy = useStore(store, state => state.actions.setGroupBy)
 
   const groupByState = useMemo(() => ({ groupBy, setGroupBy }), [groupBy, setGroupBy])
 
-  if (report && hasGroupByControl(report)) {
-    return groupByState
-  }
-
-  return null
+  return groupByState
 }
 
-export function useUnifiedReportDateParams({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }): DateQueryParams | DateRangeQueryParams | null {
-  const dateVariant = useUnifiedReportDateVariant()
+export function useUnifiedReportParams(): UnifiedReportParams | null {
+  const { report } = useActiveUnifiedReport()
+  const store = useContext(UnifiedReportStoreContext)
+  const groupBy = useStore(store, state => state.groupBy)
+  const dateSelectionMode = useUnifiedReportDateSelectionMode()
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
   const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode })
 
-  if (dateVariant === null) return null
+  if (!report) return null
 
-  switch (dateVariant) {
-    case UnifiedReportDateVariant.Date:
-      return { effectiveDate }
-    case UnifiedReportDateVariant.DateRange:
-      return { startDate, endDate }
-    default:
-      unsafeAssertUnreachable({
-        value: dateVariant,
-        message: 'Unexpected date variant',
-      })
+  return {
+    route: report.reportRoute,
+    ...report.baseQueryParameters,
+    ...(hasControl(report, ReportControl.Date) && { effectiveDate }),
+    ...(hasControl(report, ReportControl.DateRange) && { startDate, endDate }),
+    ...(hasControl(report, ReportControl.GroupBy) && groupBy != null && { groupBy }),
   }
 }
 
-export function useUnifiedReportParams({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }): UnifiedReportParams | null {
-  const { report } = useActiveUnifiedReport()
-  const groupByParam = useUnifiedReportGroupByParam()
-  const dateParams = useUnifiedReportDateParams({ dateSelectionMode })
-
-  if (!report || !dateParams) return null
-
-  return { report: report.reportType, groupBy: groupByParam?.groupBy ?? null, ...dateParams } as UnifiedReportParams
-}
-
-const findFirstLeaf = (groups: ReadonlyArray<ReportGroup>): ReportConfig | null => {
+const findDefaultReport = (groups: ReadonlyArray<ReportGroup>): ReportConfig | null => {
   for (const group of groups) {
-    if (group.reports.length > 0) {
-      return group.reports[0]
+    for (const report of group.reports) {
+      if (report.isDefaultReport) return report
     }
   }
   return null
 }
 
-const hasLeafWithKey = (groups: ReadonlyArray<ReportGroup>, key: string): boolean =>
-  groups.some(group => group.reports.some(report => report.key === key))
-
-const createUnifiedReportStore = () =>
+const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
   createStore<UnifiedReportStoreShape>(set => ({
     report: null,
     groupBy: DateGroupBy.AllTime,
+    dateSelectionMode,
     actions: {
       setReport: (report: ReportConfig) => set({ report }),
       setGroupBy: (groupBy: DateGroupBy | null) => set({ groupBy }),
@@ -128,21 +121,30 @@ const createUnifiedReportStore = () =>
 
 function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>) {
   const { data } = useReportConfig()
-  const report = useStore(store, state => state.report)
   const setReport = useStore(store, state => state.actions.setReport)
 
   useEffect(() => {
     if (!data) return
-    if (report && hasLeafWithKey(data, report.key)) return
 
-    const firstLeaf = findFirstLeaf(data)
-    if (firstLeaf) setReport(firstLeaf)
-  }, [report, data, setReport])
+    const defaultReport = findDefaultReport(data)
+    if (defaultReport) setReport(defaultReport)
+  }, [data, setReport])
 }
 
-export function UnifiedReportStoreProvider({ children }: PropsWithChildren) {
-  const [store] = useState(createUnifiedReportStore)
+function useSyncExternalDateSelectionMode(store: StoreApi<UnifiedReportStoreShape>, dateSelectionMode: DateSelectionMode) {
+  useEffect(() => {
+    store.setState({ dateSelectionMode })
+  }, [store, dateSelectionMode])
+}
+
+type UnifiedReportStoreProviderProps = {
+  dateSelectionMode?: DateSelectionMode
+}
+
+export function UnifiedReportStoreProvider({ children, dateSelectionMode = 'full' }: PropsWithChildren<UnifiedReportStoreProviderProps>) {
+  const [store] = useState(() => createUnifiedReportStore(dateSelectionMode))
   useHydrateUnifiedReportStore(store)
+  useSyncExternalDateSelectionMode(store, dateSelectionMode)
 
   return (
     <UnifiedReportStoreContext.Provider value={store}>
