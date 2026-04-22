@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { type LandingPageLink } from '@components/LandingPage/types'
 
-interface CalendlyPayload {
+export interface CalendlyPayload {
   event: {
     uri: string
   }
@@ -28,22 +28,10 @@ export const isCalendlyLink = (link?: LandingPageLink) => {
   }
 }
 
-export const createCalendlyMessageHandler = (
-  onEventScheduled?: (payload?: CalendlyPayload) => void,
-) => {
-  return (e: MessageEvent) => {
-    const data = e.data as CalendlyMessageData
-
-    if (data.event && typeof data.event === 'string' && data.event.startsWith('calendly')) {
-      if (data.event === 'calendly.event_scheduled') {
-        onEventScheduled?.(data.payload)
-      }
-    }
-  }
-}
-
 export interface UseCalendlyOptions {
-  onEventScheduled?: (payload?: CalendlyPayload) => void
+  onEventScheduled?: (payload?: CalendlyPayload) => void | Promise<void>
+  onClose?: () => void
+  closeOnEventScheduled?: boolean
 }
 
 export const useCalendly = (options?: UseCalendlyOptions) => {
@@ -51,22 +39,44 @@ export const useCalendly = (options?: UseCalendlyOptions) => {
   const [calendlyLink, setCalendlyLink] = useState('')
   const calendlyRef = useRef<HTMLDivElement>(null)
 
+  const { onEventScheduled, onClose, closeOnEventScheduled } = options ?? {}
+
   useEffect(() => {
-    const handleCalendlyMessage = createCalendlyMessageHandler(options?.onEventScheduled)
+    const handleCalendlyMessage = (e: MessageEvent) => {
+      const data = e.data as CalendlyMessageData
+
+      if (
+        !data.event
+        || typeof data.event !== 'string'
+        || !data.event.startsWith('calendly')
+      ) {
+        return
+      }
+
+      if (data.event === 'calendly.event_scheduled') {
+        void onEventScheduled?.(data.payload)
+
+        if (closeOnEventScheduled) {
+          setIsCalendlyVisible(false)
+        }
+      }
+    }
+
     window.addEventListener('message', handleCalendlyMessage)
     return () => {
       window.removeEventListener('message', handleCalendlyMessage)
     }
-  }, [options?.onEventScheduled])
+  }, [onEventScheduled, closeOnEventScheduled])
 
   const openCalendly = useCallback((link: string) => {
     setCalendlyLink(link)
     setIsCalendlyVisible(true)
-  }, [setCalendlyLink, setIsCalendlyVisible])
+  }, [])
 
   const closeCalendly = useCallback(() => {
     setIsCalendlyVisible(false)
-  }, [setIsCalendlyVisible])
+    onClose?.()
+  }, [onClose])
 
   return {
     isCalendlyVisible,

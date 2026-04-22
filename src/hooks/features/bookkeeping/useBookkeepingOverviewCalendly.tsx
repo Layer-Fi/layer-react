@@ -4,9 +4,7 @@ import { type CallBooking, CallBookingPurpose, CallBookingType } from '@schemas/
 import { useBookkeepingStatus, useBookkeepingStatusGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
 import { useCreateCallBooking } from '@hooks/api/businesses/[business-id]/call-bookings/useCreateCallBooking'
-import { useCalendly, type UseCalendlyOptions } from '@hooks/features/calendly/useCalendly'
-
-type CalendlyPayload = Parameters<NonNullable<UseCalendlyOptions['onEventScheduled']>>[0]
+import { type CalendlyPayload, useCalendly } from '@hooks/features/calendly/useCalendly'
 
 const getExternalIdFromCalendlyPayload = (payload?: CalendlyPayload) => {
   const eventUri = payload?.event.uri
@@ -20,7 +18,7 @@ const getExternalIdFromCalendlyPayload = (payload?: CalendlyPayload) => {
 
     return segments.at(-1)
   }
-  catch (_) {
+  catch {
     return
   }
 }
@@ -34,21 +32,18 @@ export const useBookkeepingOverviewCalendly = () => {
   const [embedDismissed, setEmbedDismissed] = useState(false)
   const [hasScheduledCallInSession, setHasScheduledCallInSession] = useState(false)
 
-  const onboardingCallUrl =
-    bookkeepingStatus != null
-    && bookkeepingStatus.showEmbeddedOnboarding
-    && bookkeepingStatus.onboardingCallUrl != null
-      ? bookkeepingStatus.onboardingCallUrl
-      : undefined
+  const onboardingCallUrl = bookkeepingStatus?.showEmbeddedOnboarding
+    ? bookkeepingStatus.onboardingCallUrl ?? undefined
+    : undefined
 
   const recordCalendlyScheduled = useCallback(async (payload?: CalendlyPayload) => {
+    setHasScheduledCallInSession(true)
+
     const externalId = getExternalIdFromCalendlyPayload(payload)
 
     if (externalId == null) {
       return
     }
-
-    setHasScheduledCallInSession(true)
 
     try {
       await createCallBooking({
@@ -63,22 +58,28 @@ export const useBookkeepingOverviewCalendly = () => {
     }
   }, [createCallBooking, forceReloadBookkeepingStatus])
 
-  const handleCalendlyScheduled = useCallback((payload?: CalendlyPayload) => {
-    void recordCalendlyScheduled(payload)
-  }, [recordCalendlyScheduled])
+  const handleCalendlyClose = useCallback(() => {
+    setEmbedDismissed(true)
+    void forceReloadBookkeepingStatus()
+  }, [forceReloadBookkeepingStatus])
 
   const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly({
-    onEventScheduled: handleCalendlyScheduled,
+    onEventScheduled: recordCalendlyScheduled,
+    onClose: handleCalendlyClose,
+    closeOnEventScheduled: true,
   })
 
   const callBooking: CallBooking | null = callBookings?.[0]?.data[0] ?? null
   const hasResolvedCallBooking = !isLoading && !isValidating && !isError
-  const showScheduledCallBooking = hasResolvedCallBooking && callBooking != null
-  const showEmptyCallBooking = hasResolvedCallBooking
+
+  const shouldOfferOnboarding = hasResolvedCallBooking
     && callBooking == null
     && onboardingCallUrl != null
-    && embedDismissed
     && !hasScheduledCallInSession
+
+  const shouldAutoOpenEmbed = shouldOfferOnboarding && !embedDismissed
+  const showScheduledCallBooking = hasResolvedCallBooking && callBooking != null
+  const showEmptyCallBooking = shouldOfferOnboarding && embedDismissed
 
   const handleBookCall = useCallback(() => {
     if (onboardingCallUrl != null) {
@@ -86,42 +87,21 @@ export const useBookkeepingOverviewCalendly = () => {
     }
   }, [onboardingCallUrl, openCalendly])
 
-  const handleCloseCalendly = useCallback(() => {
-    setEmbedDismissed(true)
-    void forceReloadBookkeepingStatus()
-    closeCalendly()
-  }, [closeCalendly, forceReloadBookkeepingStatus])
-
   useEffect(() => {
-    if (
-      !hasResolvedCallBooking
-      || callBooking != null
-      || onboardingCallUrl == null
-      || embedDismissed
-      || hasScheduledCallInSession
-      || isCalendlyVisible
-    ) {
+    if (!shouldAutoOpenEmbed || onboardingCallUrl == null) {
       return
     }
 
     openCalendly(onboardingCallUrl)
-  }, [
-    callBooking,
-    embedDismissed,
-    hasResolvedCallBooking,
-    hasScheduledCallInSession,
-    isCalendlyVisible,
-    onboardingCallUrl,
-    openCalendly,
-  ])
+  }, [shouldAutoOpenEmbed, onboardingCallUrl, openCalendly])
 
   return {
-    callBooking: showScheduledCallBooking ? callBooking ?? undefined : undefined,
+    callBooking: callBooking ?? undefined,
     showCallBookingCard: showScheduledCallBooking || showEmptyCallBooking,
     handleBookCall,
     isCalendlyVisible,
     calendlyLink,
     calendlyRef,
-    handleCloseCalendly,
+    closeCalendly,
   }
 }

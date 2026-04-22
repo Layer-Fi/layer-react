@@ -70,7 +70,7 @@ export const BookkeepingOverview = ({
     isCalendlyVisible,
     calendlyLink,
     calendlyRef,
-    handleCloseCalendly,
+    closeCalendly,
   } = useBookkeepingOverviewCalendly()
 
   return (
@@ -161,7 +161,7 @@ export const BookkeepingOverview = ({
         >
           <PopupModal
             url={calendlyLink}
-            onModalClose={handleCloseCalendly}
+            onModalClose={closeCalendly}
             open={isCalendlyVisible}
             rootElement={document.body}
           />
