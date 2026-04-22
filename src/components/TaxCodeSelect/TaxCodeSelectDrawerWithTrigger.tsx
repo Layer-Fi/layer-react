@@ -35,11 +35,13 @@ export const TaxCodeSelectDrawerWithTrigger = ({
       <Button
         fullWidth
         aria-label={t('bankTransactions:action.select_tax_code', 'Select tax code')}
-        onClick={() => { setIsDrawerOpen(true) }}
+        onClick={() => {
+          setIsDrawerOpen(true)
+        }}
         variant='outlined'
         isDisabled={isDisabled}
       >
-        <Span ellipsis>{value?.label ?? t('common:action.select_label', 'Select...')}</Span>
+        <Span ellipsis>{value?.label ?? t('bankTransactions:action.no_tax_code', 'No tax code')}</Span>
         <ChevronDown size={16} />
       </Button>
 

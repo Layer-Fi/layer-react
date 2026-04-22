@@ -190,8 +190,7 @@ export const BankTransactionsMobileListSplitForm = ({
                         onChange={handleTaxCodeChange(index)}
                         isDisabled={
                           !showCategorization
-                          || split.category === null
-                          || split.category.classification?.type === 'Exclusion'
+                          || split.category?.classification?.type === 'Exclusion'
                         }
                         isClearable
                       />
