@@ -201,6 +201,16 @@ export const BankTransactionsMobileListSplitForm = ({
               </VStack>
             ))}
 
+            {localSplits.length > 1 && (
+              <Input
+                disabled={true}
+                leftText={t('common:label.total', 'Total')}
+                inputMode='numeric'
+                value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
+                className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'
+              />
+            )}
+
             <HStack justify='end'>
               <Button
                 onClick={addSplit}
@@ -212,18 +222,16 @@ export const BankTransactionsMobileListSplitForm = ({
                 </HStack>
               </Button>
             </HStack>
-            {localSplits.length > 1 && (
-              <Input
-                disabled={true}
-                leftText={t('common:label.total', 'Total')}
-                inputMode='numeric'
-                value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
-                className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'
-              />
+            {splitFormError && (
+              <HStack pbe='sm'>
+                <ErrorText>
+                  {splitFormError}
+                </ErrorText>
+              </HStack>
             )}
-            {splitFormError && <HStack pbe='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
           </VStack>
         )}
+
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
@@ -231,6 +239,7 @@ export const BankTransactionsMobileListSplitForm = ({
         hideTags
         isMobile
       />
+
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',
