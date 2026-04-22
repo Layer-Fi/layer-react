@@ -1,9 +1,11 @@
 import { pipe, Schema } from 'effect'
 
+import { CalendarDateSchema } from '@schemas/common/calendarDateFromSelf'
+
 const TaxEstimatesBannerQuarterSchema = Schema.Struct({
   quarter: Schema.Number,
   dueDate: pipe(
-    Schema.propertySignature(Schema.Date),
+    Schema.propertySignature(CalendarDateSchema),
     Schema.fromKey('due_date'),
   ),
   isPastDue: pipe(

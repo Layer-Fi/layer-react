@@ -2,15 +2,13 @@ import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
-import { TaxDeadlinesCard, type TaxDeadlinesCardProps } from '@components/TaxOverview/TaxDeadlinesCard'
+import { TaxDeadlinesCard } from '@components/TaxOverview/TaxDeadlinesCard'
 
 import '@components/TaxOverview/taxOverview.scss'
 
 import { TaxableIncomeCard } from './TaxableIncomeCard'
 
-export type TaxOverviewProps = TaxDeadlinesCardProps
-
-export const TaxOverview = ({ onTaxBannerReviewClick }: TaxOverviewProps) => {
+export const TaxOverview = () => {
   const [viewportWidth] = useWindowSize()
   const isMobile = viewportWidth < 1200
 
@@ -23,7 +21,7 @@ export const TaxOverview = ({ onTaxBannerReviewClick }: TaxOverviewProps) => {
             <TaxEstimatesSummaryCard />
           </VStack>
           <VStack className='Layer__TaxOverview__SecondaryColumn'>
-            <TaxDeadlinesCard onTaxBannerReviewClick={onTaxBannerReviewClick} />
+            <TaxDeadlinesCard />
           </VStack>
         </HStack>
       </VStack>

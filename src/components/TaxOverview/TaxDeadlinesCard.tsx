@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { type TaxOverviewBannerReview } from '@schemas/taxEstimates/overview'
 import { useTaxEstimatesDeadlines } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxDeadlines'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
@@ -10,13 +9,7 @@ import { TaxEstimatesDeadlineRow } from '@components/TaxEstimatesDeadlineRow/Tax
 
 import './taxDeadlinesCard.scss'
 
-export type TaxDeadlinesCardProps = {
-  onTaxBannerReviewClick?: (payload: TaxOverviewBannerReview) => void
-}
-
-export const TaxDeadlinesCard = ({
-  onTaxBannerReviewClick,
-}: TaxDeadlinesCardProps) => {
+export const TaxDeadlinesCard = () => {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
   const { data } = useTaxEstimatesDeadlines()
@@ -30,16 +23,15 @@ export const TaxDeadlinesCard = ({
         <VStack gap='2xs'>
           {paymentDeadlines.map(deadline => (
             <TaxEstimatesDeadlineRow
-              key={deadline.dueDate.toISOString()}
+              key={deadline.dueDate.toString()}
               data={deadline}
-              onTaxBannerReviewClick={onTaxBannerReviewClick}
             />
           ))}
           {annualDeadline && (
             <TaxEstimatesDeadlineRow
-              key={annualDeadline.dueDate.toISOString()}
+              key={annualDeadline.dueDate.toString()}
               data={annualDeadline}
-              onTaxBannerReviewClick={onTaxBannerReviewClick}
+              isAnnual
             />
           )}
         </VStack>

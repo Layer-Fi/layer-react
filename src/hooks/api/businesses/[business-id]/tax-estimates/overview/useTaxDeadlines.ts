@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { CalendarDate, type CalendarDate as CalendarDateType } from '@internationalized/date'
 import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
@@ -10,7 +11,7 @@ import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstima
 export type TaxEstimateDeadlineRow = {
   type: 'quarter' | 'annual'
   title: string
-  dueDate: Date
+  dueDate: CalendarDateType
   amount: number
   status: TaxOverviewDeadlineStatus
   uncategorizedCount: number
@@ -62,7 +63,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
   const annualDeadline: TaxEstimateDeadlineRow = useMemo(() => ({
     type: 'annual',
     title: t('taxEstimates:label.annual_taxes', 'Annual taxes'),
-    dueDate: new Date(year + 1, 3, 15),
+    dueDate: new CalendarDate(year + 1, 4, 15),
     amount: data?.totalUncategorizedSum ?? 0,
     status: TaxOverviewDeadlineStatus.Due,
     uncategorizedCount: paymentDeadlines.reduce((count, deadline) => count + deadline.uncategorizedCount, 0),

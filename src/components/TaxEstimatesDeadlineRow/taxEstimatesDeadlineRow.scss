@@ -2,10 +2,21 @@
   &__DeadlineCard {
     box-sizing: border-box;
     min-width: 0;
-    padding: var(--spacing-md);
+    padding: 0;
     border-radius: var(--border-radius-xs);
     border: 1px solid var(--color-base-200);
     background-color: var(--color-base-0);
+  }
+
+  &__DeadlineRow {
+    padding-block: var(--spacing-md);
+    padding-inline: var(--spacing-md);
+  }
+
+  &__DeadlineReviewRow {
+    padding-block: var(--spacing-md);
+    padding-inline: var(--spacing-md);
+    background-color: var(--color-base-50);
   }
 
   &__DeadlineContent {
@@ -56,11 +67,6 @@
       background-color: var(--color-info-bg);
       color: var(--color-info);
     }
-  }
-
-  &__DeadlineReviewRow {
-    padding-block-start: var(--spacing-xs);
-    border-block-start: 1px solid var(--color-base-100);
   }
 
   &__DeadlineReviewContent {
