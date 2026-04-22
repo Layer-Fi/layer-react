@@ -42,7 +42,7 @@ export const TaxableIncomeCard = () => {
   })
 
   const metrics = taxOverviewData?.metrics ?? []
-  const isHeaderVisible = viewportWidth > 1200
+  const isHeaderVisible = viewportWidth >= 1200
   return (
     <>
       <Card className='Layer__TaxOverview__Card'>
