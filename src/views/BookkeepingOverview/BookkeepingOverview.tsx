@@ -3,6 +3,7 @@ import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
 import { type Variants } from '@utils/styleUtils/sizeVariants'
+import { useBookkeepingOverviewCalendly } from '@hooks/features/bookkeeping/useBookkeepingOverviewCalendly'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { CallBooking } from '@components/CallBooking/CallBooking'
@@ -17,7 +18,6 @@ import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOv
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
-import { useBookkeepingOverviewCalendly } from '@views/BookkeepingOverview/useBookkeepingOverviewCalendly'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
 
 export interface BookkeepingOverviewProps {
