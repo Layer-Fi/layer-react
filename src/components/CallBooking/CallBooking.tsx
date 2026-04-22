@@ -52,8 +52,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
     ? t('callBookings:label.onboarding_call', 'Onboarding call')
     : t('callBookings:label.ad_hoc_call', 'Ad hoc call')
   const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
-  const { callLink } = callBooking
-  const hasCallLink = callLink.length > 0
+  const callLink = callBooking.callLink.toString()
 
   return (
     <Container name='call-booking'>
@@ -102,12 +101,10 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
             endDate={callBooking.eventEndAt}
             organizer={{ name: callBooking.bookkeeperName, email: callBooking.bookkeeperEmail }}
           />
-          {hasCallLink && (
-            <LinkButton href={callLink} external variant='outlined'>
-              <LinkIcon size={16} />
-              {t('callBookings:action.join_call', 'Join call')}
-            </LinkButton>
-          )}
+          <LinkButton href={callLink} external variant='outlined'>
+            <LinkIcon size={16} />
+            {t('callBookings:action.join_call', 'Join call')}
+          </LinkButton>
         </HStack>
       </VStack>
     </Container>
