@@ -41,7 +41,7 @@ export const TaxCodeSelectDrawer = ({
   }))
 
   if (isClearable) {
-    listOptions.unshift({
+    listOptions.push({
       id: CLEAR_ROW_ID,
       label: t('bankTransactions:action.no_tax_code', 'No tax code'),
       value: null,
