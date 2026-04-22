@@ -2,7 +2,6 @@
   "action": {
     "add_calendar": "Add to Calendar",
     "book_call": "Book a call",
-    "continue_to_bookkeeping": "Continue to bookkeeping",
     "download_ics_file": "Download .ics file",
     "join_call": "Join call"
   },

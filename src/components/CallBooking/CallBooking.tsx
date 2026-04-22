@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -15,12 +16,37 @@ import { Separator } from '@components/Separator/Separator'
 import './callBooking.scss'
 
 export interface CallBookingProps {
-  callBooking: CallBookingData
+  callBooking?: CallBookingData
+  onBookCall?: () => void
 }
 
-export const CallBooking = ({ callBooking }: CallBookingProps) => {
+const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
+  const { t } = useTranslation()
+
+  return (
+    <VStack gap='md' align='center' className='Layer__call-booking-state' pb='md'>
+      <Heading size='sm'>{t('callBookings:prompt.have_questions', 'Have any questions?')}</Heading>
+      <Span variant='subtle'>
+        {t('callBookings:label.book_call_with_bookkeeper', 'Book a call with your bookkeeper')}
+      </Span>
+      <Button variant='solid' onClick={onBookCall}>
+        {t('callBookings:action.book_call', 'Book a call')}
+      </Button>
+    </VStack>
+  )
+}
+
+export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
+
+  if (callBooking == null) {
+    return (
+      <Container name='call-booking'>
+        <EmptyState onBookCall={onBookCall} />
+      </Container>
+    )
+  }
 
   const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING
     ? t('callBookings:label.onboarding_call', 'Onboarding call')

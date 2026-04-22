@@ -81,7 +81,15 @@ export const BookkeepingOverview = ({
 
   const { data: callBookings, isError, isLoading, isValidating } = useCallBookings({ limit: 1 })
   const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
-  const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
+  const hasResolvedCallBooking = !isLoading && !isValidating && !isError
+  const callBookingVisible = hasResolvedCallBooking && callBooking != null
+  const callBookingEmptyStateVisible = hasResolvedCallBooking
+    && callBooking == null
+    && onboardingCallUrlFromApi != null
+
+  const handleBookCall = () => {
+    setEmbedDismissed(false)
+  }
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -100,8 +108,11 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={(
           <VStack gap='lg'>
-            {callBookingVisible && callBooking && (
-              <CallBooking callBooking={callBooking} />
+            {(callBookingVisible || callBookingEmptyStateVisible) && (
+              <CallBooking
+                callBooking={callBooking ?? undefined}
+                onBookCall={handleBookCall}
+              />
             )}
             <Tasks
               stringOverrides={stringOverrides?.tasks}
@@ -117,8 +128,11 @@ export const BookkeepingOverview = ({
             onClick={() => (upperElementInFocus.current = true)}
           >
             <VStack gap='lg'>
-              {callBookingVisible && callBooking && (
-                <CallBooking callBooking={callBooking} />
+              {(callBookingVisible || callBookingEmptyStateVisible) && (
+                <CallBooking
+                  callBooking={callBooking ?? undefined}
+                  onBookCall={handleBookCall}
+                />
               )}
               <Tasks
                 mobile
