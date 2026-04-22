@@ -129,89 +129,79 @@ export const BankTransactionsMobileListSplitForm = ({
       {showCategorization
         && (
           <VStack gap='sm'>
-            <VStack gap='sm'>
-              {localSplits.map((split, index) => (
-                <VStack
-                  key={`split-${index}`}
+            {localSplits.map((split, index) => (
+              <VStack
+                key={`split-${index}`}
+                gap='xs'
+              >
+                <Text>
+                  {`${t('bankTransactions:action.split_label', 'Split')} #${index + 1}`}
+                </Text>
+                <HStack
+                  align='center'
                   gap='xs'
+                  pie='xs'
                 >
-                  <HStack
-                    justify='space-between'
-                    align='center'
-                  >
-                    <Text>
-                      {t('bankTransactions:action.split_label', 'Split')}
-                    </Text>
-                    <Text>
-                      {`#${index + 1}`}
-                    </Text>
-                  </HStack>
-                  <HStack
-                    align='center'
-                    gap='xs'
-                    pie='xs'
-                  >
-                    <HStack className='Layer__BankTransactionsMobileSplitForm__AmountInputContainer'>
-                      <AmountInput
-                        name={`split-${index}`}
-                        disabled={index === 0 || !showCategorization}
-                        onChange={updateSplitAmount(index)}
-                        value={getInputValueForSplitAtIndex(index, split)}
-                        onBlur={onBlurSplitAmount}
-                        isInvalid={split.amount < 0}
-                        className='Layer__BankTransactionsMobileSplitForm__AmountInput'
-                      />
-                    </HStack>
-                    <HStack className='Layer__BankTransactionsMobileSplitForm__ActionButtonContainer'>
-                      {index === 0
-                        ? (
-                          <Button
-                            onClick={addSplit}
-                            variant='outlined'
-                            fullWidth
-                          >
-                            <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
-                              {t('bankTransactions:action.split_label', 'Split')}
-                              <Scissors size={14} />
-                            </HStack>
-                          </Button>
-                        )
-                        : (
-                          <Button
-                            onClick={() => removeSplit(index)}
-                            variant='outlined'
-                            fullWidth
-                          >
-                            <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
-                              {t('common:action.remove', 'Remove')}
-                              <Trash size={14} />
-                            </HStack>
-                          </Button>
-                        )}
-                    </HStack>
-                  </HStack>
-                  <CategorySelectDrawerWithTrigger
-                    value={split.category}
-                    onChange={handleCategoryChange(index)}
-                    showTooltips={showTooltips}
-                  />
-                  {showTaxCodeSelector && (
-                    <TaxCodeSelectDrawerWithTrigger
-                      options={taxCodeOptions}
-                      value={getSelectedTaxCodeOption(split.taxCode)}
-                      onChange={handleTaxCodeChange(index)}
-                      isDisabled={
-                        !showCategorization
-                        || split.category === null
-                        || split.category.classification?.type === 'Exclusion'
-                      }
-                      isClearable
-                      className='Layer__BankTransactionsMobileSplitForm__TaxCodeSelect'
+                  <HStack className='Layer__BankTransactionsMobileSplitForm__AmountInputContainer'>
+                    <AmountInput
+                      name={`split-${index}`}
+                      disabled={index === 0 || !showCategorization}
+                      onChange={updateSplitAmount(index)}
+                      value={getInputValueForSplitAtIndex(index, split)}
+                      onBlur={onBlurSplitAmount}
+                      isInvalid={split.amount < 0}
+                      className='Layer__BankTransactionsMobileSplitForm__AmountInput'
                     />
-                  )}
-                </VStack>
-              ))}
-            </VStack>
+                  </HStack>
+                  <HStack className='Layer__BankTransactionsMobileSplitForm__ActionButtonContainer'>
+                    {index === 0
+                      ? (
+                        <Button
+                          onClick={addSplit}
+                          variant='outlined'
+                          fullWidth
+                        >
+                          <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
+                            {t('bankTransactions:action.split_label', 'Split')}
+                            <Scissors size={14} />
+                          </HStack>
+                        </Button>
+                      )
+                      : (
+                        <Button
+                          onClick={() => removeSplit(index)}
+                          variant='outlined'
+                          fullWidth
+                        >
+                          <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
+                            {t('common:action.remove', 'Remove')}
+                            <Trash size={14} />
+                          </HStack>
+                        </Button>
+                      )}
+                  </HStack>
+                </HStack>
+                <CategorySelectDrawerWithTrigger
+                  value={split.category}
+                  onChange={handleCategoryChange(index)}
+                  showTooltips={showTooltips}
+                />
+                {showTaxCodeSelector && (
+                  <TaxCodeSelectDrawerWithTrigger
+                    options={taxCodeOptions}
+                    value={getSelectedTaxCodeOption(split.taxCode)}
+                    onChange={handleTaxCodeChange(index)}
+                    isDisabled={
+                      !showCategorization
+                      || split.category === null
+                      || split.category.classification?.type === 'Exclusion'
+                    }
+                    isClearable
+                    className='Layer__BankTransactionsMobileSplitForm__TaxCodeSelect'
+                  />
+                )}
+              </VStack>
+            ))}
             {splitFormError && <HStack pbe='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
           </VStack>
         )}

@@ -208,11 +208,9 @@ export const BankTransactionsMobileListItem = ({
                 )}
                 <HStack gap='2xs' align='center'>
                   <Span size='sm' ellipsis>
-                    <Span ellipsis size='sm'>
-                      {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
-                      {bankTransaction.account_name}
-                      {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
-                    </Span>
+                    {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
+                    {bankTransaction.account_name}
+                    {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
                   </Span>
                   {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
                 </HStack>

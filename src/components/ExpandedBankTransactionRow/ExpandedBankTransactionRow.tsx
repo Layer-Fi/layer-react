@@ -342,10 +342,9 @@ export const ExpandedBankTransactionRow = ({
                               key={`split-${index}`}
                             >
                               {asListItem && effectiveSplits.length > 1 && (
-                                <HStack justify='space-between' align='center'>
-                                  <Span>{t('bankTransactions:action.split_label', 'Split')}</Span>
-                                  <Span>{`#${index + 1}`}</Span>
-                                </HStack>
+                                <Span>
+                                  {`${t('bankTransactions:action.split_label', 'Split')} #${index + 1}`}
+                                </Span>
                               )}
                               <div className={`${className}__table-cell--split-entry`}>
                                 <AmountInput
