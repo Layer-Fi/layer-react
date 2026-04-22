@@ -3,7 +3,7 @@ import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
 import { type Variants } from '@utils/styleUtils/sizeVariants'
-import { useBookkeepingOverviewCalendly } from '@hooks/features/bookkeeping/useBookkeepingOverviewCalendly'
+import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { CallBooking } from '@components/CallBooking/CallBooking'
@@ -71,7 +71,7 @@ export const BookkeepingOverview = ({
     calendlyLink,
     calendlyRef,
     closeCalendly,
-  } = useBookkeepingOverviewCalendly()
+  } = useBookkeepingOnboardingCallBooking()
 
   return (
     <ProfitAndLoss asContainer={false}>

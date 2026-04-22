@@ -17,7 +17,7 @@ const getExternalIdFromCalendlyPayload = (payload: CalendlyPayload) => {
   }
 }
 
-export const useBookkeepingOverviewCalendly = () => {
+export const useBookkeepingOnboardingCallBooking = () => {
   const { data: bookkeepingStatus } = useBookkeepingStatus()
   const { forceReloadBookkeepingStatus } = useBookkeepingStatusGlobalCacheActions()
   const { trigger: createCallBooking } = useCreateCallBooking()
