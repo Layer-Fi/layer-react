@@ -8,8 +8,8 @@ import { buildCategorizeBankTransactionPayloadForSplit } from '@utils/bankTransa
 import { isCategorized } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGetBankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import Scissors from '@icons/Scissors'
@@ -169,12 +169,11 @@ export const BankTransactionsMobileListSplitForm = ({
                         <Button
                           onClick={() => removeSplit(index)}
                           variant='outlined'
-                          fullWidth
+                          icon
+                          inset
+                          aria-label={t('common:action.remove', 'Remove')}
                         >
-                          <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
-                            {t('common:action.remove', 'Remove')}
-                            <Trash size={14} />
-                          </HStack>
+                          <Trash size={14} />
                         </Button>
                       </HStack>
                     )}
