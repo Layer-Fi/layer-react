@@ -26,10 +26,6 @@ export const formatMinutesAsDuration = (
   totalMinutes: number,
   { compact = false }: { compact?: boolean } = {},
 ): string => {
-  if (!compact && totalMinutes === 0) {
-    return intl.formatNumber(0, { style: 'unit', unit: 'minute', unitDisplay: 'short' })
-  }
-
   const hours = Math.trunc(totalMinutes / 60)
   const minutes = totalMinutes - hours * 60
   return formatDuration(intl, { hours, minutes, seconds: 0 }, { style: compact ? 'digital' : 'short' })
