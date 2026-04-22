@@ -75,9 +75,7 @@ export function useUnifiedReportGroupByParam() {
   const groupBy = useStore(store, state => state.groupBy)
   const setGroupBy = useStore(store, state => state.actions.setGroupBy)
 
-  const groupByState = useMemo(() => ({ groupBy, setGroupBy }), [groupBy, setGroupBy])
-
-  return groupByState
+  return useMemo(() => ({ groupBy, setGroupBy }), [groupBy, setGroupBy])
 }
 
 export function useUnifiedReportParams(): UnifiedReportParams | null {
@@ -88,15 +86,17 @@ export function useUnifiedReportParams(): UnifiedReportParams | null {
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
   const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode })
 
-  if (!report) return null
+  return useMemo(() => {
+    if (!report) return null
 
-  return {
-    route: report.reportRoute,
-    ...report.baseQueryParameters,
-    ...(hasControl(report, ReportControl.Date) && { effectiveDate }),
-    ...(hasControl(report, ReportControl.DateRange) && { startDate, endDate }),
-    ...(hasControl(report, ReportControl.GroupBy) && groupBy != null && { groupBy }),
-  }
+    return {
+      route: report.reportRoute,
+      ...report.baseQueryParameters,
+      ...(hasControl(report, ReportControl.Date) && { effectiveDate }),
+      ...(hasControl(report, ReportControl.DateRange) && { startDate, endDate }),
+      ...(hasControl(report, ReportControl.GroupBy) && groupBy != null && { groupBy }),
+    }
+  }, [effectiveDate, endDate, groupBy, report, startDate])
 }
 
 const findDefaultReport = (groups: ReadonlyArray<ReportGroup>): ReportConfig | null => {
