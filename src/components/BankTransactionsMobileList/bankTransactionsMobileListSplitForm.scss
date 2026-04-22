@@ -1,11 +1,8 @@
-.Layer__BankTransactionsMobileSplitForm__AmountInputContainer {
-  flex: 0 0 38%;
-  min-inline-size: 0;
-
-  .Layer__input-tooltip {
-    flex: 1;
-    inline-size: 100%;
-  }
+.Layer__BankTransactionsMobileSplitForm__SplitGridContainer {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: var(--spacing-xs);
+  align-items: center;
 }
 
 .Layer__BankTransactionsMobileSplitForm__AmountInput {
@@ -13,20 +10,6 @@
   text-align: right;
 }
 
-.Layer__BankTransactionsMobileSplitForm__ActionButtonContainer {
-  flex: 0 0 auto;
-}
-
-.Layer__BankTransactionsMobileSplitForm__CategoryInputContainer {
-  flex: 1 1 0;
-  min-inline-size: 0;
-}
-
-.Layer__BankTransactionsMobileSplitForm__TaxCodeSelect__Container {
-  flex: 1 1 0;
-  min-inline-size: 0;
-}
-
-.Layer__BankTransactionsMobileSplitForm__SplitButtonContainer {
-  justify-content: flex-start;
+.Layer__BankTransactionsMobileSplitForm__TotalAmountInput {
+  width: 9rem;
 }
