@@ -1,43 +1,18 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
+import { BookkeepingStatus, BookkeepingStatusResponseSchema } from '@schemas/bookkeepingStatus'
 import { get } from '@utils/api/authenticatedHttp'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-export enum BookkeepingStatus {
-  NOT_PURCHASED = 'NOT_PURCHASED',
-  ACTIVE = 'ACTIVE',
-  ONBOARDING = 'ONBOARDING',
-  BOOKKEEPING_PAUSED = 'BOOKKEEPING_PAUSED',
-}
-const BOOKKEEPING_STATUSES: string[] = Object.values(BookkeepingStatus)
-
-type RawBookkeepingStatus = EnumWithUnknownValues<BookkeepingStatus>
-
-function isBookkeepingStatus(status: RawBookkeepingStatus): status is BookkeepingStatus {
-  return BOOKKEEPING_STATUSES.includes(status)
-}
-
-function constrainToKnownBookkeepingStatus(status: RawBookkeepingStatus): BookkeepingStatus {
-  if (isBookkeepingStatus(status)) {
-    return status
-  }
-
-  return BookkeepingStatus.NOT_PURCHASED
-}
+export { BookkeepingStatus }
 
 const getBookkeepingStatus = get<
-  {
-    data: {
-      status: RawBookkeepingStatus
-      show_embedded_onboarding: boolean
-      onboarding_call_url: string | null
-    }
-  },
+  Record<string, unknown>,
   { businessId: string }
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/bookkeeping/status`
@@ -79,12 +54,8 @@ export function useBookkeepingStatus() {
       accessToken,
       { params: { businessId } },
     )()
-      .then(({ data }) => ({
-        ...data,
-        status: constrainToKnownBookkeepingStatus(data.status),
-        showEmbeddedOnboarding: data.show_embedded_onboarding,
-        onboardingCallUrl: data.onboarding_call_url,
-      })),
+      .then(Schema.decodeUnknownPromise(BookkeepingStatusResponseSchema))
+      .then(({ data }) => data),
   )
 }
 
