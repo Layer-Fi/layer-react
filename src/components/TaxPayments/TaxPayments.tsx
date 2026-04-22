@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { useTaxPayments } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
@@ -12,8 +11,8 @@ import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstim
 import { TaxPaymentsMobileList } from './TaxPaymentsMobileList/TaxPaymentsMobileList'
 import { TaxPaymentsTable } from './TaxPaymentsTable/TaxPaymentsTable'
 
-const ErrorState = ({ translation }: { translation: TFunction }) => {
-  const t = translation
+const ErrorState = () => {
+  const { t } = useTranslation()
   return (
     <DataState
       spacing
@@ -25,8 +24,8 @@ const ErrorState = ({ translation }: { translation: TFunction }) => {
   )
 }
 
-const EmptyState = ({ translation }: { translation: TFunction }) => {
-  const t = translation
+const EmptyState = () => {
+  const { t } = useTranslation()
   return (
     <DataState
       spacing
@@ -43,16 +42,15 @@ export const TaxPayments = () => {
   const { fullYearProjection } = useFullYearProjection()
   const { data, isLoading, isError } = useTaxPayments({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
-  const { t } = useTranslation()
   const props = useMemo(() => ({
     data,
     isLoading,
     isError,
     slots: {
-      EmptyState: () => <EmptyState translation={t} />,
-      ErrorState: () => <ErrorState translation={t} />,
+      EmptyState,
+      ErrorState,
     },
-  }), [data, isError, isLoading, t])
+  }), [data, isError, isLoading])
 
   const TaxPaymentsHeader = useCallback(() => (
     <TaxEstimatesHeader type={TaxEstimatesHeaderType.Payments} />
