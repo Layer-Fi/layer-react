@@ -44,12 +44,11 @@ export const useBookkeepingOnboardingCallBooking = () => {
         call_type: CallBookingType.GOOGLE_MEET,
       })
       setHasScheduledCallInSession(true)
-      void forceReloadBookkeepingStatus()
     }
     catch (error: unknown) {
       console.error('Failed to record onboarding call booking', error)
     }
-  }, [createCallBooking, forceReloadBookkeepingStatus])
+  }, [createCallBooking])
 
   const handleCalendlyClose = useCallback(() => {
     setEmbedDismissed(true)

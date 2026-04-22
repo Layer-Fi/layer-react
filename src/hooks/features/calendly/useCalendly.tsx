@@ -37,14 +37,17 @@ export const useCalendly = (options?: UseCalendlyOptions) => {
 
   const eventHandlers = useMemo(() => ({
     onEventScheduled: (e: EventScheduledEvent) => {
-      Promise.resolve(onEventScheduled?.(e.data.payload))
-        .catch((error: unknown) => {
+      void (async () => {
+        try {
+          await Promise.resolve(onEventScheduled?.(e.data.payload))
+          if (closeOnEventScheduled) {
+            closeCalendly()
+          }
+        }
+        catch (error: unknown) {
           console.error('Calendly onEventScheduled handler failed', error)
-        })
-
-      if (closeOnEventScheduled) {
-        closeCalendly()
-      }
+        }
+      })()
     },
   }), [onEventScheduled, closeOnEventScheduled, closeCalendly])
 
