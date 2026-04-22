@@ -24,7 +24,7 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   const { t } = useTranslation()
 
   return (
-    <VStack gap='md' align='center' className='Layer__call-booking-state' pb='md'>
+    <VStack gap='md' align='center' className='Layer__CallBooking__State' pb='md'>
       <Heading size='sm'>{t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}</Heading>
       <Span variant='subtle'>
         {t('callBookings:label.book_call_with_bookkeeper', 'Book a call with your bookkeeper')}
@@ -42,7 +42,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
 
   if (callBooking == null) {
     return (
-      <Container name='call-booking'>
+      <Container name='CallBooking'>
         <EmptyState onBookCall={onBookCall} />
       </Container>
     )
@@ -55,10 +55,10 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
   const callLink = callBooking.callLink.toString()
 
   return (
-    <Container name='call-booking'>
-      <VStack gap='md' align='center' className='Layer__call-booking-scheduled'>
+    <Container name='CallBooking'>
+      <VStack gap='md' align='center'>
         <VStack gap='xs' align='center'>
-          <div className='Layer__call-booking-icon'>
+          <div className='Layer__CallBooking__Icon'>
             <Users size={24} strokeWidth={1.5} />
           </div>
           <Heading size='sm'>{t('callBookings:label.upcoming_call', 'Upcoming Call')}</Heading>
@@ -67,24 +67,24 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
           </Span>
         </VStack>
         <Separator mbs='2xs' mbe='2xs' />
-        <VStack align='start' className='Layer__call-booking-details' gap='sm'>
-          <HStack align='center' gap='sm' className='Layer__call-booking-detail-row'>
-            <Milestone size={16} className='Layer__call-booking-detail-icon' />
-            <Span variant='subtle' size='sm' className='Layer__call-booking-detail-label'>
+        <VStack align='start' gap='sm'>
+          <HStack align='center' gap='sm' className='Layer__CallBooking__DetailRow'>
+            <Milestone size={16} className='Layer__CallBooking__DetailIcon' />
+            <Span variant='subtle' size='sm' className='Layer__CallBooking__DetailLabel'>
               {t('callBookings:label.purpose', 'Purpose')}
             </Span>
             <Span size='sm'>{purpose}</Span>
           </HStack>
-          <HStack align='center' gap='sm' className='Layer__call-booking-detail-row'>
-            <Video size={16} className='Layer__call-booking-detail-icon' />
-            <Span variant='subtle' size='sm' className='Layer__call-booking-detail-label'>
+          <HStack align='center' gap='sm' className='Layer__CallBooking__DetailRow'>
+            <Video size={16} className='Layer__CallBooking__DetailIcon' />
+            <Span variant='subtle' size='sm' className='Layer__CallBooking__DetailLabel'>
               {t('callBookings:label.location', 'Location')}
             </Span>
             <Span size='sm'>{callPlatform}</Span>
           </HStack>
-          <HStack align='center' gap='sm' className='Layer__call-booking-detail-row'>
-            <Clock size={16} className='Layer__call-booking-detail-icon' />
-            <Span variant='subtle' size='sm' className='Layer__call-booking-detail-label'>
+          <HStack align='center' gap='sm' className='Layer__CallBooking__DetailRow'>
+            <Clock size={16} className='Layer__CallBooking__DetailIcon' />
+            <Span variant='subtle' size='sm' className='Layer__CallBooking__DetailLabel'>
               {t('callBookings:label.date', 'Date')}
             </Span>
             <Span size='sm'>
@@ -92,7 +92,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
             </Span>
           </HStack>
         </VStack>
-        <HStack gap='sm' align='center' className='Layer__call-booking-actions'>
+        <HStack gap='sm' align='center' className='Layer__CallBooking__Actions'>
           <AddToCalendar
             title={purpose}
             description={callPlatform}
