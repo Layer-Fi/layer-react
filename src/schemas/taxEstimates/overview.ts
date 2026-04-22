@@ -58,6 +58,7 @@ export enum TaxOverviewDeadlineStatus {
   Paid = 'PAID',
   Due = 'DUE',
   CategorizationIncomplete = 'CATEGORIZATION_INCOMPLETE',
+  Neutral = 'NEUTRAL',
 }
 
 export type TaxOverviewCategory = {

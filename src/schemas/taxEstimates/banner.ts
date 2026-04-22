@@ -2,19 +2,12 @@ import { pipe, Schema } from 'effect'
 
 import { CalendarDateSchema } from '@schemas/common/calendarDateFromSelf'
 import { createTransformedEnumSchema } from '@schemas/utils'
+import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
 
-export enum TaxQuarterState {
-  PastDue = 'PAST_DUE',
-  Due = 'DUE',
-  Paid = 'PAID',
-  CategorizationIncomplete = 'CATEGORIZATION_INCOMPLETE',
-  Neutral = 'NEUTRAL',
-}
-
-const TransformedTaxQuarterStateSchema = createTransformedEnumSchema(
-  Schema.Enums(TaxQuarterState),
-  TaxQuarterState,
-  TaxQuarterState.Neutral,
+const TransformedTaxOverviewDeadlineStatusSchema = createTransformedEnumSchema(
+  Schema.Enums(TaxOverviewDeadlineStatus),
+  TaxOverviewDeadlineStatus,
+  TaxOverviewDeadlineStatus.Neutral,
 )
 
 const TaxEstimatesBannerQuarterSchema = Schema.Struct({
@@ -32,7 +25,7 @@ const TaxEstimatesBannerQuarterSchema = Schema.Struct({
     Schema.fromKey('amount_owed'),
   ),
   state: pipe(
-    Schema.propertySignature(TransformedTaxQuarterStateSchema),
+    Schema.propertySignature(TransformedTaxOverviewDeadlineStatusSchema),
     Schema.fromKey('state'),
   ),
   amountPaid: pipe(

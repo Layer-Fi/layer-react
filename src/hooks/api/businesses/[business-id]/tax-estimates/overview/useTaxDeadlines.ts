@@ -3,7 +3,8 @@ import { type CalendarDate as CalendarDateType } from '@internationalized/date'
 import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxEstimatesBannerQuarter, TaxQuarterState } from '@schemas/taxEstimates/banner'
+import { type TaxEstimatesBannerQuarter } from '@schemas/taxEstimates/banner'
+import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
 import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 
@@ -12,7 +13,7 @@ export type TaxEstimateDeadlineRow = {
   title: string
   dueDate: CalendarDateType
   amount: number
-  status: TaxQuarterState
+  status: TaxOverviewDeadlineStatus
   uncategorizedCount: number
   uncategorizedSum: number
 }
@@ -53,7 +54,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
       title: t('taxEstimates:label.annual_taxes', 'Annual taxes'),
       dueDate: data.taxesDueAt,
       amount: data.totalTaxesOwed,
-      status: TaxQuarterState.Neutral,
+      status: TaxOverviewDeadlineStatus.Neutral,
       uncategorizedCount: data.totalUncategorizedCount,
       uncategorizedSum: data.totalUncategorizedSum,
     }
