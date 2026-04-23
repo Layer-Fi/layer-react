@@ -59,7 +59,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
       <VStack gap='lg' align='center' pi='lg' pb='lg'>
         <HStack
           className='Layer__CallBooking__DetailsSideBySide'
-          align='start'
+          align='center'
           gap='lg'
         >
           <VStack
@@ -80,7 +80,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
           <VStack
             className='Layer__CallBooking__MetaColumn'
             align='center'
-            gap='sm'
+            gap='md'
           >
             <HStack className='Layer__CallBooking__DetailRow'>
               <Video size={16} color='var(--color-base-500)' />
