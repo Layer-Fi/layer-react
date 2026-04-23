@@ -16,5 +16,10 @@
     &[data-current] {
       color: var(--color-base-1000);
     }
+
+    &[data-focus-visible] {
+      outline: -webkit-focus-ring-color auto 1px;
+      outline-offset: 2px;
+    }
   }
 }

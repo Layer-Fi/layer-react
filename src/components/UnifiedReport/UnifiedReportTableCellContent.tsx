@@ -1,7 +1,7 @@
 import type { ReportConfig } from '@schemas/reports/reportConfig'
 import { isAmountCellValue, isDateCellValue, isEmptyCellValue, type UnifiedReportCell, type UnifiedReportColumn } from '@schemas/reports/unifiedReport'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useDetailUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useOpenDetailReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -14,7 +14,7 @@ type UnifiedReportTableCellContentProps = {
 
 export const UnifiedReportTableCellContent = ({ cell, column, breadcrumb }: UnifiedReportTableCellContentProps) => {
   const { formatDate } = useIntlFormatter()
-  const { openDetailReport } = useDetailUnifiedReport()
+  const openDetailReport = useOpenDetailReport()
 
   if (!cell) return
 
