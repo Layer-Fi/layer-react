@@ -50,7 +50,7 @@
     "invoiced": "Facturé",
     "less_than_one_minute": "",
     "memo": "Note",
-    "no_activity_breakdown": "Aucune répartition des activités n'est disponible pour cette période.",
+    "no_activity_breakdown": "",
     "no_services": "Aucun service disponible",
     "other": "Autre",
     "select_customer": "Sélectionner un client (facultatif)",
@@ -58,7 +58,8 @@
     "select_service": "Sélectionner un service",
     "service": "Service",
     "time_entries": "Entrées de temps",
-    "time_tracking": ""
+    "time_tracking": "",
+    "zero_minutes": ""
   },
   "prompt": {
     "delete_entry": "Supprimer cette entrée de temps?",

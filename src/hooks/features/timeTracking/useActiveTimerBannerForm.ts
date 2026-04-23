@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { getLocalTimeZone, today } from '@internationalized/date'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
@@ -45,7 +46,7 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
     }
 
     try {
-      await stopTimeTracker()
+      await stopTimeTracker({ date: today(getLocalTimeZone()).toString() })
     }
     catch {
       setActionError(t('timeTracking:error.complete_timer', 'Failed to complete timer. Please try again.'))

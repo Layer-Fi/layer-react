@@ -50,7 +50,7 @@
     "invoiced": "Invoiced",
     "less_than_one_minute": "< 1 min",
     "memo": "Memo",
-    "no_activity_breakdown": "No activity breakdown available for this period.",
+    "no_activity_breakdown": "No activity this period",
     "no_services": "No services available",
     "other": "Other",
     "select_customer": "Select a customer (optional)",
@@ -58,7 +58,8 @@
     "select_service": "Select a service",
     "service": "Service",
     "time_entries": "Time Entries",
-    "time_tracking": "Time Tracking"
+    "time_tracking": "Time Tracking",
+    "zero_minutes": "0 min"
   },
   "prompt": {
     "delete_entry": "Delete this time entry?",
