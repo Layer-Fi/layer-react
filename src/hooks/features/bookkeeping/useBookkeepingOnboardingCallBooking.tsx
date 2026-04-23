@@ -25,10 +25,16 @@ export const useBookkeepingOnboardingCallBooking = () => {
 
   const [embedDismissed, setEmbedDismissed] = useState(false)
   const [hasScheduledCallInSession, setHasScheduledCallInSession] = useState(false)
+  const [persistedOnboardingCallUrl, setPersistedOnboardingCallUrl] = useState<string>()
 
-  const onboardingCallUrl = bookkeepingStatus?.showEmbeddedOnboarding
-    ? bookkeepingStatus.onboardingCallUrl ?? undefined
-    : undefined
+  useEffect(() => {
+    if (bookkeepingStatus?.onboardingCallUrl != null) {
+      setPersistedOnboardingCallUrl(bookkeepingStatus.onboardingCallUrl)
+    }
+  }, [bookkeepingStatus?.onboardingCallUrl])
+
+  const onboardingCallUrl = bookkeepingStatus?.onboardingCallUrl ?? persistedOnboardingCallUrl
+  const shouldShowEmbeddedOnboarding = bookkeepingStatus?.showEmbeddedOnboarding === true
 
   const recordCalendlyScheduled = useCallback(async (payload: CalendlyPayload) => {
     const externalId = getExternalIdFromCalendlyPayload(payload)
@@ -68,7 +74,9 @@ export const useBookkeepingOnboardingCallBooking = () => {
     && onboardingCallUrl != null
     && !hasScheduledCallInSession
 
-  const shouldAutoOpenEmbed = shouldOfferOnboarding && !embedDismissed
+  const shouldAutoOpenEmbed = shouldOfferOnboarding
+    && shouldShowEmbeddedOnboarding
+    && !embedDismissed
   const showScheduledCallBooking = hasResolvedCallBooking && callBooking != null
   const showEmptyCallBooking = shouldOfferOnboarding
 
