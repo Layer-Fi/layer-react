@@ -57,6 +57,15 @@
 
 .Layer__TimeTrackingStats__LegendItem {
   min-inline-size: 10rem;
+  max-inline-size: 10rem;
+}
+
+.Layer__TimeTrackingStats__LegendLabel {
+  min-inline-size: 0;
+
+  > .Layer__Span {
+    min-inline-size: 0;
+  }
 }
 
 .Layer__TimeTrackingStats__LegendSwatch {
@@ -120,11 +129,12 @@
 
   .Layer__TimeTrackingStats__LegendItem {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     row-gap: 0;
     column-gap: var(--spacing-sm);
     align-items: center;
     min-inline-size: 100%;
+    max-inline-size: none;
   }
 
   .Layer__TimeTrackingStats__LegendLabel {
@@ -137,18 +147,12 @@
     white-space: nowrap;
   }
 
+  .Layer__TimeTrackingStats__LegendMeta {
+    justify-self: end;
+  }
+
   .Layer__TimeTrackingStats__LegendDuration,
   .Layer__TimeTrackingStats__LegendPercentage {
     white-space: nowrap;
-  }
-
-  .Layer__TimeTrackingStats__LegendDuration {
-    justify-self: end;
-  }
-
-  .Layer__TimeTrackingStats__LegendPercentage {
-    justify-self: end;
-    min-inline-size: 2.25rem;
-    text-align: right;
   }
 }

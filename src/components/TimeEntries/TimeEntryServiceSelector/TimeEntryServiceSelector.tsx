@@ -1,21 +1,30 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
 import type { TFunction } from 'i18next'
+import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
 import { useListCatalogServices } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
-import { Label, P } from '@ui/Typography/Text'
+import { Label, P, Span } from '@ui/Typography/Text'
 
 import './timeEntryServiceSelector.scss'
 
+function getServiceLabel(service: CatalogService, t: TFunction): string {
+  return service.archivedAt
+    ? t('timeTracking:services.archived_service', '{{name}} (Archived)', { name: service.name })
+    : service.name
+}
+
 class ServiceAsOption {
   private internalService: CatalogService
+  private t: TFunction
 
-  constructor(service: CatalogService) {
+  constructor(service: CatalogService, t: TFunction) {
     this.internalService = service
+    this.t = t
   }
 
   get original() {
@@ -23,7 +32,7 @@ class ServiceAsOption {
   }
 
   get label() {
-    return this.internalService.name
+    return getServiceLabel(this.internalService, this.t)
   }
 
   get id() {
@@ -35,7 +44,7 @@ class ServiceAsOption {
   }
 }
 
-type TimeEntryServiceSelectorBaseProps = {
+type TimeEntryServiceSelectorSharedProps = {
   selectedServiceId: string | null
   onSelectedServiceIdChange: (serviceId: string | null) => void
   placeholder?: string
@@ -46,15 +55,26 @@ type TimeEntryServiceSelectorBaseProps = {
   showLabel?: boolean
 }
 
-type TimeEntryServiceSelectorProps = TimeEntryServiceSelectorBaseProps & (
-  | { isCreatable: true, onCreateService: (name: string) => void }
-  | { isCreatable?: false, onCreateService?: (name: string) => void }
-)
+type TimeEntryServiceSelectorProps =
+  | (TimeEntryServiceSelectorSharedProps & {
+    isCreatable: true
+    onCreateService: (name: string) => void
+    allowArchived?: never
+  })
+  | (TimeEntryServiceSelectorSharedProps & {
+    isCreatable?: false
+    onCreateService?: (name: string) => void
+    allowArchived?: boolean
+  })
 
-const formatCreateLabel = (inputValue: string, t: TFunction) =>
-  inputValue
-    ? t('timeTracking:services.create_service_input_value', 'Create service "{{inputValue}}"', { inputValue })
-    : t('timeTracking:services.add_service', 'Add service')
+const formatCreateLabel = (inputValue: string, t: TFunction) => (
+  <Span variant='inherit' className='Layer__TimeEntryServiceSelector__CreateLabel'>
+    <Plus size={14} aria-hidden='true' />
+    {inputValue
+      ? t('timeTracking:services.create_service_input_value', 'Create service "{{inputValue}}"', { inputValue })
+      : t('timeTracking:services.add_service', 'Add service')}
+  </Span>
+)
 
 export function TimeEntryServiceSelector({
   selectedServiceId,
@@ -65,19 +85,20 @@ export function TimeEntryServiceSelector({
   inline,
   className,
   showLabel = true,
+  allowArchived,
   isCreatable,
   onCreateService,
 }: TimeEntryServiceSelectorProps) {
   const { t } = useTranslation()
 
-  const { data: servicesResponse, isLoading, isError } = useListCatalogServices()
+  const { data: servicesResponse, isLoading, isError } = useListCatalogServices({ allowArchived })
 
   const isLoadingWithoutFallback = isLoading && !servicesResponse
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   const serviceOptions = useMemo<ServiceAsOption[]>(
-    () => servicesResponse?.data.map(service => new ServiceAsOption(service)) ?? [],
-    [servicesResponse],
+    () => servicesResponse?.data.map(service => new ServiceAsOption(service, t)) ?? [],
+    [servicesResponse, t],
   )
 
   const combinedClassName = classNames(

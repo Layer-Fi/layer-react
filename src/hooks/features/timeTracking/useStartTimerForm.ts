@@ -1,12 +1,20 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiEnumErrorType, APIError } from '@utils/api/apiError'
 import { type ActiveTimerDraft, EMPTY_DRAFT, toStartPayload } from '@utils/timeTracking/activeTimerDraft'
 import { useStartTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useStartTimeTracker'
 import { useAppForm } from '@hooks/features/forms/useForm'
 
 type UseStartTimerFormProps = {
   onStarted: () => void
+}
+
+const isActiveTimerAlreadyExistsError = (error: unknown) => {
+  if (!(error instanceof APIError)) return false
+  return error.messages?.some(
+    m => m.error_enum === ApiEnumErrorType.SpecifiedBadRequest,
+  ) === true
 }
 
 export const useStartTimerForm = ({ onStarted }: UseStartTimerFormProps) => {
@@ -34,8 +42,13 @@ export const useStartTimerForm = ({ onStarted }: UseStartTimerFormProps) => {
       formApi.reset(EMPTY_DRAFT)
       onStarted()
     }
-    catch {
-      setActionError(t('timeTracking:error.start_timer', 'Failed to start timer. Please try again.'))
+    catch (error) {
+      if (isActiveTimerAlreadyExistsError(error)) {
+        setActionError(t('timeTracking:error.start_timer_already_active', 'A timer is already running. Please reload the page.'))
+      }
+      else {
+        setActionError(t('timeTracking:error.start_timer', 'Failed to start timer. Please try again.'))
+      }
     }
   }, [onStarted, startTimeTracker, t])
 

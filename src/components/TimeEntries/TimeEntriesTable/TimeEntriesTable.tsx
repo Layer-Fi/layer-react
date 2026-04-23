@@ -59,7 +59,7 @@ const TimeEntryActionsCell = memo(function TimeEntryActionsCell({ entry }: { ent
         aria-label={t('timeTracking:action.view_entry', 'View Entry')}
         variant='ghost'
       >
-        <Edit size={20} />
+        <Edit size={20} strokeWidth={1.25} />
       </Button>
       {!isLocked && (
         <Button
@@ -69,7 +69,7 @@ const TimeEntryActionsCell = memo(function TimeEntryActionsCell({ entry }: { ent
           aria-label={t('timeTracking:action.delete_entry', 'Delete Entry')}
           variant='ghost'
         >
-          <Trash2 size={20} />
+          <Trash2 size={20} strokeWidth={1.25} />
         </Button>
       )}
     </HStack>

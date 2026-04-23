@@ -3,6 +3,34 @@
   --bg-color: #000;
 }
 
+.Layer__component-container.Layer__ActiveTimeTracker.Layer__ActiveTimeTracker__Container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.Layer__ActiveTimeTracker__ErrorStrip {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border-block-end: 1px solid rgb(255 255 255 / 14%);
+  background-color: color-mix(in srgb, var(--color-info-error), transparent);
+}
+
+.Layer__ActiveTimeTracker__ErrorStripRow {
+  min-inline-size: 0;
+}
+
+.Layer__ActiveTimeTracker__ErrorStripIcon {
+  flex-shrink: 0;
+  color: var(--color-base-0);
+}
+
+.Layer__ActiveTimeTracker__ErrorStripText {
+  flex: 1;
+  min-inline-size: 0;
+  color: var(--color-base-0);
+}
+
 .Layer__ActiveTimeTracker__Main {
   padding-block: var(--spacing-xs);
   padding-inline: var(--spacing-md);

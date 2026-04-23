@@ -21,7 +21,7 @@ export const TimeEntriesTableHeader = () => {
 
   const HeaderActions = useCallback(() => (
     <HStack gap='xs'>
-      <Button onPress={onAddEntry}>
+      <Button variant='outlined-light' onPress={onAddEntry}>
         {t('timeTracking:action.add_entry', 'Add Entry')}
         <Plus size={16} />
       </Button>
@@ -45,6 +45,7 @@ export const TimeEntriesTableHeader = () => {
         className='Layer__TimeEntriesTable__FilterService'
         placeholder={t('timeTracking:label.all_services', 'All Services')}
         showLabel={false}
+        allowArchived
         inline
       />
       <CustomerSelector

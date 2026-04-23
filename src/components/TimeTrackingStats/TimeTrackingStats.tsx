@@ -123,12 +123,16 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
           <VStack key={key} className='Layer__TimeTrackingStats__LegendItem' gap='2xs'>
             <HStack className='Layer__TimeTrackingStats__LegendLabel' gap='2xs' align='center'>
               <TimeTrackingStatsLegendSwatch color={color} />
-              <Span size='md'>{serviceName}</Span>
+              <Span size='md' ellipsis withTooltip>{serviceName}</Span>
             </HStack>
-            <Span className='Layer__TimeTrackingStats__LegendDuration' size='xl' weight='bold'>{formatMinutesAsDuration(totalMinutes)}</Span>
-            <Span className='Layer__TimeTrackingStats__LegendPercentage' size='sm' variant='subtle'>
-              {formatPercent(percentage, { maximumFractionDigits: 0 })}
-            </Span>
+            <HStack className='Layer__TimeTrackingStats__LegendMeta' gap='2xs' align='baseline'>
+              <Span className='Layer__TimeTrackingStats__LegendDuration' size='sm'>
+                {formatMinutesAsDuration(totalMinutes)}
+              </Span>
+              <Span className='Layer__TimeTrackingStats__LegendPercentage' size='sm' variant='subtle'>
+                {formatPercent(percentage, { maximumFractionDigits: 0 })}
+              </Span>
+            </HStack>
           </VStack>
         ))}
       </HStack>
@@ -145,6 +149,10 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
     [summary.byService, t],
   )
 
+  const totalDurationDisplay = summary.totalMinutes > 0
+    ? formatMinutesAsDuration(summary.totalMinutes)
+    : t('timeTracking:label.zero_minutes', '0 min')
+
   return (
     <VStack className='Layer__TimeTrackingStats__Content' gap='lg' pb='md' pi='md'>
       <HStack className='Layer__TimeTrackingStats__TopRow' justify='space-between' align='center' gap='md'>
@@ -156,7 +164,7 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
           <VStack className='Layer__TimeTrackingStats__Summary' gap='3xs' pi='md'>
             <Span size='sm' variant='subtle'>{t('common:label.this_period', 'This Period')}</Span>
             <Span className='Layer__TimeTrackingStats__SummaryValue' weight='bold'>
-              {formatMinutesAsDuration(summary.totalMinutes)}
+              {totalDurationDisplay}
             </Span>
           </VStack>
         </HStack>
@@ -169,7 +177,7 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
           <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center' pbs='lg'>
             <HStack className='Layer__TimeTrackingStats__ChartBar Layer__TimeTrackingStats__ChartBar--empty' />
             <Span size='sm' variant='subtle'>
-              {t('timeTracking:label.no_activity_breakdown', 'No activity breakdown available for this period.')}
+              {t('timeTracking:label.no_activity_breakdown', 'No activity during this period')}
             </Span>
           </VStack>
         )}
