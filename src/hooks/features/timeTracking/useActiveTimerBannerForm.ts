@@ -62,7 +62,7 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
         setActionError(
           t(
             'timeTracking:error.complete_timer_stale',
-            'This timer was already completed. Reload the page.',
+            'This timer was already completed or cancelled. Reload the page.',
           ),
         )
       }

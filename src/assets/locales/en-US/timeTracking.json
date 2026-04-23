@@ -20,7 +20,7 @@
     "archive_service": "Could not archive this service. Please try again.",
     "cancel_timer": "Failed to cancel timer. Please try again.",
     "complete_timer": "Failed to complete timer. Please try again.",
-    "complete_timer_stale": "This timer was already completed. Reload the page.",
+    "complete_timer_stale": "This timer was already completed or cancelled. Reload the page.",
     "create_service": "Failed to create service. Please try again.",
     "delete_entry": "Failed to delete time entry. Please check your connection and try again.",
     "load_active_timer": "Failed to load active timer. Please check your connection and try again.",
