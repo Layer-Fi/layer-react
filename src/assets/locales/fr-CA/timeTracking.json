@@ -20,6 +20,7 @@
     "archive_service": "Impossible d'archiver ce service. Veuillez réessayer.",
     "cancel_timer": "Impossible d'annuler le minuteur. Veuillez réessayer.",
     "complete_timer": "Impossible de terminer le minuteur. Veuillez réessayer.",
+    "complete_timer_stale": "",
     "create_service": "Impossible de créer le service. Veuillez réessayer.",
     "delete_entry": "Impossible de supprimer l'entrée de temps. Veuillez vérifier votre connexion et réessayer.",
     "load_active_timer": "Impossible de charger le minuteur actif. Veuillez vérifier votre connexion et réessayer.",

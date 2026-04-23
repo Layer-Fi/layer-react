@@ -1,14 +1,13 @@
-import { Check } from 'lucide-react'
+import { AlertTriangle, Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type TimeEntry } from '@schemas/timeTracking'
 import { useActiveTimerBannerForm } from '@hooks/features/timeTracking/useActiveTimerBannerForm'
 import { Button } from '@ui/Button/Button'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 type ActiveTimeTrackerBannerProps = {
@@ -21,16 +20,19 @@ export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: Acti
   const { form, actions, state } = useActiveTimerBannerForm({ activeEntry })
 
   return (
-    <Container name='ActiveTimeTracker'>
+    <Container name='ActiveTimeTracker' className='Layer__ActiveTimeTracker__Shell'>
       {state.actionError && (
-        <VStack pi='md' pbe='2xs'>
-          <DataState
-            className='Layer__ActiveTimeTracker__BannerError'
-            status={DataStateStatus.failed}
-            title={state.actionError}
-            inline
-          />
-        </VStack>
+        <HStack className='Layer__ActiveTimeTracker__ErrorStrip' role='alert'>
+          <HStack className='Layer__ActiveTimeTracker__ErrorStripRow' gap='sm' align='center'>
+            <AlertTriangle
+              aria-hidden
+              className='Layer__ActiveTimeTracker__ErrorStripIcon'
+              size={16}
+              strokeWidth={1.25}
+            />
+            <Span size='sm' className='Layer__ActiveTimeTracker__ErrorStripText'>{state.actionError}</Span>
+          </HStack>
+        </HStack>
       )}
 
       <HStack className='Layer__ActiveTimeTracker__Main' gap='md' justify='space-between' align='center'>
