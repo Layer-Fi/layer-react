@@ -7,6 +7,7 @@
 
   .Layer__TimeEntryForm__FormError {
     padding-block-end: var(--spacing-xs);
+    margin-block-start: calc(-1 * var(--spacing-md));
   }
 
   .Layer__TimeEntryForm__Field__EntryDate,

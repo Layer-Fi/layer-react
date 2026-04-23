@@ -1,6 +1,16 @@
 .Layer__component-container.Layer__ActiveTimeTracker {
   --border-color: #000;
   --bg-color: #000;
+
+  .Layer__ActiveTimeTracker__BannerError.Layer__data-state--inline {
+    .Layer__data-state__title {
+      color: var(--color-base-0);
+    }
+
+    .Layer__data-state__description {
+      color: var(--color-base-200);
+    }
+  }
 }
 
 .Layer__ActiveTimeTracker__Main {

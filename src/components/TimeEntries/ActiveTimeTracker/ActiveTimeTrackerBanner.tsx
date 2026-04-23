@@ -25,6 +25,7 @@ export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: Acti
       {state.actionError && (
         <VStack pi='md' pbe='2xs'>
           <DataState
+            className='Layer__ActiveTimeTracker__BannerError'
             status={DataStateStatus.failed}
             title={state.actionError}
             inline
@@ -83,8 +84,7 @@ export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: Acti
               <Button
                 variant='outlined-light'
                 onPress={actions.completeTimer}
-                isPending={state.isStopping || state.isUpdating}
-                isDisabled={state.isCancelling || !selectedServiceId}
+                isDisabled={state.isCancelling || state.isStopping || state.isUpdating || !selectedServiceId}
               >
                 {t('timeTracking:action.complete_timer', 'Complete')}
                 <Check size={16} />
