@@ -9,6 +9,8 @@ type RowType = Row<UnifiedReportRow>
 
 type UnifiedReportColumnWithRequiredColumns = UnifiedReportColumn & Required<Pick<UnifiedReportColumn, 'columns'>>
 
+const getCell = (row: Row<UnifiedReportRow>, col: UnifiedReportColumn) => row.original.cells[col.columnKey]
+
 const isGroupColumn = (col: UnifiedReportColumn): col is UnifiedReportColumnWithRequiredColumns =>
   col.columns !== undefined && col.columns.length > 0
 
@@ -21,9 +23,22 @@ const makeBaseColumn = (col: UnifiedReportColumn) => ({
 
 const makeLeafColumn = (col: UnifiedReportColumn): LeafColumn<UnifiedReportRow> => ({
   ...makeBaseColumn(col),
-  cell: (row: RowType) => (
-    <UnifiedReportTableCellContent cell={row.original.cells[col.columnKey]} />
-  ),
+  cell: (row: RowType) => {
+    const cell = getCell(row, col)
+    const cellConfig = cell?.reportConfig ?? null
+    const breadcrumb = cellConfig ? [cellConfig] : []
+
+    let parentRow = row.getParentRow()
+    while (parentRow) {
+      const parentConfig = getCell(parentRow, col)?.reportConfig
+      if (!parentConfig) break
+
+      breadcrumb.push(parentConfig)
+      parentRow = parentRow.getParentRow()
+    }
+
+    return <UnifiedReportTableCellContent cell={cell} column={col} breadcrumb={breadcrumb.reverse()} />
+  },
 })
 
 const makeGroupColumn = (col: UnifiedReportColumnWithRequiredColumns): GroupColumn<UnifiedReportRow> => ({
