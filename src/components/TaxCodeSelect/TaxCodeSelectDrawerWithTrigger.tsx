@@ -41,7 +41,9 @@ export const TaxCodeSelectDrawerWithTrigger = ({
         variant='outlined'
         isDisabled={isDisabled}
       >
-        <Span ellipsis>{value?.label ?? t('bankTransactions:action.no_tax_code', 'No tax code')}</Span>
+        <Span ellipsis variant={value ? undefined : 'placeholder'}>
+          {value?.label ?? t('bankTransactions:action.no_tax_code', 'No tax code')}
+        </Span>
         <ChevronDown size={16} />
       </Button>
 

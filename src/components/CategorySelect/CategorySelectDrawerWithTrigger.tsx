@@ -29,7 +29,9 @@ export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips 
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
       >
-        <Span ellipsis>{value?.label ?? t('common:action.select_label', 'Select...')}</Span>
+        <Span ellipsis variant={value ? undefined : 'placeholder'}>
+          {value?.label ?? t('common:action.select_label', 'Select...')}
+        </Span>
         <ChevronDown size={16} />
       </Button>
 

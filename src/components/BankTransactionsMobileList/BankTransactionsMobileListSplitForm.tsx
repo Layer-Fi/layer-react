@@ -144,7 +144,6 @@ export const BankTransactionsMobileListSplitForm = ({
                   </Span>
                 )}
                 <VStack
-
                   gap='xs'
                 >
                   <div className='Layer__BankTransactionsMobileSplitForm__SplitGridContainer'>
