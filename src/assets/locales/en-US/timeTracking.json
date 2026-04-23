@@ -12,7 +12,9 @@
   },
   "empty": {
     "add_first_entry": "Add your first time entry to start tracking.",
-    "no_entries_yet": "No time entries yet"
+    "no_entries_yet": "No time entries yet",
+    "no_matching_entries": "No time entries found",
+    "try_adjusting_filters": "Try adjusting your filters."
   },
   "error": {
     "archive_service": "Could not archive this service. Please try again.",
@@ -37,6 +39,7 @@
     "all_customers": "All Customers",
     "all_services": "All Services",
     "customer": "Customer",
+    "customer_optional": "Customer (optional)",
     "delete_entry_warning": "This time entry will be permanently deleted. This action cannot be undone.",
     "discard_timer_warning": "The active timer will be discarded and no time entry will be recorded.",
     "duration": "Duration",
@@ -51,6 +54,7 @@
     "no_services": "No services available",
     "other": "Other",
     "select_customer": "Select a customer (optional)",
+    "select_customer_short": "Select a customer",
     "select_service": "Select a service",
     "service": "Service",
     "time_entries": "Time Entries",
@@ -68,6 +72,7 @@
     "archive_confirm_title": "Archive this service?",
     "archived": "Archived",
     "cancel": "Cancel",
+    "create_service_input_value": "Create service \"{{inputValue}}\"",
     "hourly_rate_optional": "Default hourly rate (optional)",
     "no_active": "No services yet",
     "no_archived": "No archived services",
@@ -84,6 +89,7 @@
     "duration_whole_minutes": "Duration must be a whole number of minutes greater than zero.",
     "entry_date_not_future": "Entry date cannot be in the future.",
     "entry_date_required": "Entry date is a required field.",
+    "hourly_rate_positive": "Default hourly rate must be greater than zero.",
     "service_name_required": "Service name is a required field.",
     "service_required": "Service is a required field."
   }
