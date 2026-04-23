@@ -80,7 +80,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
           <VStack
             className='Layer__CallBooking__MetaColumn'
             align='center'
-            gap='md'
+            gap='sm'
           >
             <HStack className='Layer__CallBooking__DetailRow'>
               <Video size={16} color='var(--color-base-500)' />
