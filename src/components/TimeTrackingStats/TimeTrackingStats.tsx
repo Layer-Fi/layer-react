@@ -177,7 +177,7 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
           <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center' pbs='lg'>
             <HStack className='Layer__TimeTrackingStats__ChartBar Layer__TimeTrackingStats__ChartBar--empty' />
             <Span size='sm' variant='subtle'>
-              {t('timeTracking:label.no_activity_breakdown', 'No activity this period')}
+              {t('timeTracking:label.no_activity_breakdown', 'No activity during this period')}
             </Span>
           </VStack>
         )}

@@ -3,7 +3,7 @@
   --bg-color: #000;
 }
 
-.Layer__component-container.Layer__ActiveTimeTracker.Layer__ActiveTimeTracker__Shell {
+.Layer__component-container.Layer__ActiveTimeTracker.Layer__ActiveTimeTracker__Container {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -12,8 +12,6 @@
 .Layer__ActiveTimeTracker__ErrorStrip {
   box-sizing: border-box;
   flex-shrink: 0;
-  padding-block: var(--spacing-xs);
-  padding-inline: var(--spacing-md);
   border-block-end: 1px solid rgb(255 255 255 / 14%);
   background-color: color-mix(in srgb, var(--color-info-error) 32%, transparent);
 }

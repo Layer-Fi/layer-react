@@ -1,6 +1,13 @@
+export const ApiEnumErrorType = {
+  SpecifiedIdNotFound: 'SpecifiedIdNotFound',
+  SpecifiedBadRequest: 'SpecifiedBadRequest',
+} as const
+export type ApiEnumErrorType = typeof ApiEnumErrorType[keyof typeof ApiEnumErrorType]
+
 export type APIErrorMessage = {
   type?: string
   description?: string
+  error_enum?: ApiEnumErrorType
 }
 
 export class APIError extends Error {

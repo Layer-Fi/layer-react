@@ -29,6 +29,7 @@
     "load_services": "Impossible de charger les services.",
     "load_summary": "Impossible de charger le sommaire du suivi du temps",
     "start_timer": "Impossible de démarrer le minuteur. Veuillez réessayer.",
+    "start_timer_already_active": "",
     "unarchive_service": "Impossible de restaurer ce service. Veuillez réessayer.",
     "update_service": "Impossible d'enregistrer ce service. Veuillez réessayer.",
     "update_timer": "Impossible de mettre à jour le minuteur. Veuillez réessayer."

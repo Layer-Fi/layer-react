@@ -14,11 +14,11 @@ import './timeEntryServiceSelector.scss'
 
 class ServiceAsOption {
   private internalService: CatalogService
-  private labelSuffix: string
+  private computedLabel: string
 
-  constructor(service: CatalogService, labelSuffix = '') {
+  constructor(service: CatalogService, computedLabel?: string) {
     this.internalService = service
-    this.labelSuffix = labelSuffix
+    this.computedLabel = computedLabel ?? service.name
   }
 
   get original() {
@@ -26,7 +26,7 @@ class ServiceAsOption {
   }
 
   get label() {
-    return this.labelSuffix ? `${this.internalService.name}${this.labelSuffix}` : this.internalService.name
+    return this.computedLabel
   }
 
   get id() {
@@ -92,10 +92,10 @@ export function TimeEntryServiceSelector({
 
   const serviceOptions = useMemo<ServiceAsOption[]>(
     () => servicesResponse?.data.map((service) => {
-      const suffix = service.archivedAt
-        ? ` (${t('timeTracking:services.archived', 'Archived')})`
-        : ''
-      return new ServiceAsOption(service, suffix)
+      const label = service.archivedAt
+        ? t('timeTracking:services.archived_service', '{{name}} (Archived)', { name: service.name })
+        : service.name
+      return new ServiceAsOption(service, label)
     }) ?? [],
     [servicesResponse, t],
   )

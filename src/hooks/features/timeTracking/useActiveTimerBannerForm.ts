@@ -4,7 +4,7 @@ import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type TimeEntry } from '@schemas/timeTracking'
-import { APIError } from '@utils/api/apiError'
+import { ApiEnumErrorType, APIError } from '@utils/api/apiError'
 import { type ActiveTimerDraft, type ActiveTimerDraftWithService, getDraftFromEntry, hasDraftChanges, toUpdatePayload } from '@utils/timeTracking/activeTimerDraft'
 import { useDeleteTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/useDeleteTimeEntry'
 import { UpsertTimeEntryMode, useUpsertTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useUpsertTimeEntry'
@@ -21,7 +21,7 @@ const isNoActiveTimerResponse = (error: unknown) => {
   if (!(error instanceof APIError)) return false
   if (error.code === 404) return true
   return error.messages?.some(
-    m => m.type === 'ResourceNotFound' || m.description === 'No active timer found',
+    m => m.error_enum === ApiEnumErrorType.SpecifiedIdNotFound,
   ) === true
 }
 
