@@ -1,7 +1,7 @@
 .Layer__CallBooking {
-  padding: var(--spacing-lg);
+  box-sizing: border-box;
 
-  .Layer__CallBooking__Icon {
+  &__Icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -12,26 +12,46 @@
     color: var(--color-base-900);
   }
 
-  .Layer__CallBooking__DetailRow {
-    display: grid;
-    grid-template-columns: 16px 72px 1fr;
-    column-gap: var(--spacing-sm);
-    align-items: center;
-    width: 100%;
-  }
-
-  .Layer__CallBooking__Actions {
+  &__DetailsSideBySide {
+    align-self: stretch;
     width: 100%;
 
-    > * {
-      flex: 1;
-      min-width: 0;
+    @media (width <= 480px) {
+      &[data-direction='row'] {
+        flex-direction: column;
+      }
     }
   }
-}
 
-@media (width <= 480px) {
-  .Layer__CallBooking {
-    padding: var(--spacing-md);
+  &__HeaderColumn {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  &__MetaColumn {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  &__DetailRow {
+    display: grid;
+    grid-template-columns: 16px minmax(4.5rem, auto) 1fr;
+    column-gap: var(--spacing-md);
+    align-items: center;
+    width: 100%;
+    padding-block: var(--spacing-2xs);
+  }
+
+  &__Actions {
+    align-self: stretch;
+    width: 100%;
+  }
+
+  @media (width <= 480px) {
+    &__HeaderColumn,
+    &__MetaColumn {
+      width: 100%;
+      max-width: none;
+    }
   }
 }

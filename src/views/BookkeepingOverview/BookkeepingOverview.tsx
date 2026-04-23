@@ -73,6 +73,40 @@ export const BookkeepingOverview = ({
     closeCalendly,
   } = useBookkeepingOnboardingCallBooking()
 
+  const callBookingEmptyPromptFirst =
+    showCallBookingCard && callBooking == null
+
+  const callBookingWithTasks = (tasksMobile: boolean) =>
+    callBookingEmptyPromptFirst
+      ? (
+        <>
+          <CallBooking
+            callBooking={callBooking}
+            onBookCall={handleBookCall}
+          />
+          <Tasks
+            mobile={tasksMobile}
+            stringOverrides={stringOverrides?.tasks}
+            onClickReconnectAccounts={onClickReconnectAccounts}
+          />
+        </>
+      )
+      : (
+        <>
+          <Tasks
+            mobile={tasksMobile}
+            stringOverrides={stringOverrides?.tasks}
+            onClickReconnectAccounts={onClickReconnectAccounts}
+          />
+          {showCallBookingCard && (
+            <CallBooking
+              callBooking={callBooking}
+              onBookCall={handleBookCall}
+            />
+          )}
+        </>
+      )
+
   return (
     <ProfitAndLoss asContainer={false}>
       <View
@@ -89,18 +123,7 @@ export const BookkeepingOverview = ({
         )}
         withSidebar={width > 1100}
         sidebar={(
-          <VStack gap='lg'>
-            {showCallBookingCard && (
-              <CallBooking
-                callBooking={callBooking}
-                onBookCall={handleBookCall}
-              />
-            )}
-            <Tasks
-              stringOverrides={stringOverrides?.tasks}
-              onClickReconnectAccounts={onClickReconnectAccounts}
-            />
-          </VStack>
+          <VStack gap='lg'>{callBookingWithTasks(false)}</VStack>
         )}
         showHeader={showTitle}
       >
@@ -109,19 +132,7 @@ export const BookkeepingOverview = ({
             ref={upperContentRef}
             onClick={() => (upperElementInFocus.current = true)}
           >
-            <VStack gap='lg'>
-              {showCallBookingCard && (
-                <CallBooking
-                  callBooking={callBooking}
-                  onBookCall={handleBookCall}
-                />
-              )}
-              <Tasks
-                mobile
-                stringOverrides={stringOverrides?.tasks}
-                onClickReconnectAccounts={onClickReconnectAccounts}
-              />
-            </VStack>
+            <VStack gap='lg'>{callBookingWithTasks(true)}</VStack>
           </div>
         )}
         <div

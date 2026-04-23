@@ -1,4 +1,4 @@
-import { Clock, Link as LinkIcon, Milestone, Users, Video } from 'lucide-react'
+import { Clock, Link as LinkIcon, Users, Video } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
@@ -9,9 +9,7 @@ import { LinkButton } from '@ui/Button/LinkButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { AddToCalendar } from '@components/AddToCalendar/AddToCalendar'
 import { Container } from '@components/Container/Container'
-import { Separator } from '@components/Separator/Separator'
 
 import './callBooking.scss'
 
@@ -24,7 +22,7 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   const { t } = useTranslation()
 
   return (
-    <VStack gap='md' align='center' pb='md'>
+    <VStack gap='md' align='center' pi='lg' pb='lg'>
       <Heading size='sm' align='center'>
         {t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}
       </Heading>
@@ -58,51 +56,56 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
 
   return (
     <Container name='CallBooking'>
-      <VStack gap='md' align='center'>
-        <VStack gap='xs' align='center'>
-          <div className='Layer__CallBooking__Icon'>
-            <Users size={24} strokeWidth={1.5} />
-          </div>
-          <Heading size='sm'>{t('callBookings:label.upcoming_call', 'Upcoming Call')}</Heading>
-          <Span variant='subtle' size='sm'>
-            {t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')}
-          </Span>
-        </VStack>
-        <Separator mbs='2xs' mbe='2xs' />
-        <VStack align='start' gap='sm'>
-          <HStack className='Layer__CallBooking__DetailRow'>
-            <Milestone size={16} color='var(--color-base-500)' />
-            <Span variant='subtle' size='sm' noWrap>
-              {t('callBookings:label.purpose', 'Purpose')}
+      <VStack gap='lg' align='center' pi='lg' pb='lg'>
+        <HStack
+          className='Layer__CallBooking__DetailsSideBySide'
+          align='start'
+          gap='lg'
+        >
+          <VStack
+            gap='xs'
+            align='center'
+            className='Layer__CallBooking__HeaderColumn'
+          >
+            <div className='Layer__CallBooking__Icon'>
+              <Users size={24} strokeWidth={1.5} />
+            </div>
+            <Heading size='sm' align='center'>
+              {purpose}
+            </Heading>
+            <Span variant='subtle' size='sm' align='center'>
+              {t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')}
             </Span>
-            <Span size='sm'>{purpose}</Span>
-          </HStack>
-          <HStack className='Layer__CallBooking__DetailRow'>
-            <Video size={16} color='var(--color-base-500)' />
-            <Span variant='subtle' size='sm' noWrap>
-              {t('callBookings:label.location', 'Location')}
-            </Span>
-            <Span size='sm'>{callPlatform}</Span>
-          </HStack>
-          <HStack className='Layer__CallBooking__DetailRow'>
-            <Clock size={16} color='var(--color-base-500)' />
-            <Span variant='subtle' size='sm' noWrap>
-              {t('callBookings:label.date', 'Date')}
-            </Span>
-            <Span size='sm'>
-              {formatDate(callBooking.eventStartAt, DateFormat.DateWithTimeReadableWithTimezone)}
-            </Span>
-          </HStack>
-        </VStack>
-        <HStack gap='sm' align='center' className='Layer__CallBooking__Actions'>
-          <AddToCalendar
-            title={purpose}
-            description={callPlatform}
-            location={callLink}
-            startDate={callBooking.eventStartAt}
-            endDate={callBooking.eventEndAt}
-            organizer={{ name: callBooking.bookkeeperName, email: callBooking.bookkeeperEmail }}
-          />
+          </VStack>
+          <VStack
+            className='Layer__CallBooking__MetaColumn'
+            align='center'
+            gap='sm'
+          >
+            <HStack className='Layer__CallBooking__DetailRow'>
+              <Video size={16} color='var(--color-base-500)' />
+              <Span variant='subtle' size='sm' noWrap>
+                {t('callBookings:label.location', 'Location')}
+              </Span>
+              <Span size='sm'>{callPlatform}</Span>
+            </HStack>
+            <HStack className='Layer__CallBooking__DetailRow'>
+              <Clock size={16} color='var(--color-base-500)' />
+              <Span variant='subtle' size='sm' noWrap>
+                {t('callBookings:label.date', 'Date')}
+              </Span>
+              <Span size='sm'>
+                {formatDate(callBooking.eventStartAt, DateFormat.DateWithTimeReadableWithTimezone)}
+              </Span>
+            </HStack>
+          </VStack>
+        </HStack>
+        <HStack
+          gap='sm'
+          align='center'
+          justify='center'
+          className='Layer__CallBooking__Actions'
+        >
           <LinkButton href={callLink} external variant='outlined'>
             <LinkIcon size={16} />
             {t('callBookings:action.join_call', 'Join call')}

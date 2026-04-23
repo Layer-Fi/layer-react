@@ -58,7 +58,6 @@ export const useBookkeepingOnboardingCallBooking = () => {
   const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly({
     onEventScheduled: recordCalendlyScheduled,
     onClose: handleCalendlyClose,
-    closeOnEventScheduled: true,
   })
 
   const callBooking: CallBooking | null = callBookings?.[0]?.data[0] ?? null
@@ -71,7 +70,7 @@ export const useBookkeepingOnboardingCallBooking = () => {
 
   const shouldAutoOpenEmbed = shouldOfferOnboarding && !embedDismissed
   const showScheduledCallBooking = hasResolvedCallBooking && callBooking != null
-  const showEmptyCallBooking = shouldOfferOnboarding && embedDismissed
+  const showEmptyCallBooking = shouldOfferOnboarding
 
   const handleBookCall = useCallback(() => {
     if (onboardingCallUrl != null) {
