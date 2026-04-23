@@ -12,11 +12,12 @@ import './taxCodeSelectDrawerWithTrigger.scss'
 
 type Props = {
   options: TaxCodeSelectOption[]
-  value: TaxCodeSelectOption | null
+  value: TaxCodeSelectOption | null | undefined
   onChange: (newValue: TaxCodeSelectOption | null) => void
   isDisabled?: boolean
   isClearable?: boolean
   className?: string
+  placeholder?: string
 }
 
 export const TaxCodeSelectDrawerWithTrigger = ({
@@ -26,6 +27,7 @@ export const TaxCodeSelectDrawerWithTrigger = ({
   isDisabled = false,
   isClearable = true,
   className,
+  placeholder,
 }: Props) => {
   const { t } = useTranslation()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -42,7 +44,9 @@ export const TaxCodeSelectDrawerWithTrigger = ({
         isDisabled={isDisabled}
       >
         <Span ellipsis variant={value ? undefined : 'placeholder'}>
-          {value?.label ?? t('bankTransactions:action.no_tax_code', 'No tax code')}
+          {value === undefined
+            ? (placeholder ?? t('bankTransactions:action.select_tax_code', 'Select tax code'))
+            : (value?.label ?? t('bankTransactions:action.no_tax_code', 'No tax code'))}
         </Span>
         <ChevronDown size={16} />
       </Button>

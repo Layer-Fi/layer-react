@@ -1,16 +1,22 @@
-import { useCallback, useId, useState } from 'react'
+import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type Classification } from '@schemas/categorization'
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
+import { type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
+import { TaxCodeSelectDrawerWithTrigger } from '@components/TaxCodeSelect/TaxCodeSelectDrawerWithTrigger'
 
 export enum CategorizationMode {
   Categorize = 'Categorize',
@@ -24,6 +30,35 @@ interface BankTransactionsCategorizeAllModalProps {
   isMobileView?: boolean
 }
 
+const getTaxCodeOptions = (bankTransaction: BankTransaction): TaxCodeSelectOption[] => {
+  return bankTransaction.tax_options?.canada.map(taxOption => ({
+    label: taxOption.display_name,
+    value: taxOption.code,
+  })) ?? []
+}
+
+const resolveBulkTaxCode = (
+  bankTransaction: BankTransaction | undefined,
+  classification: Classification,
+  selectedTaxCode: string | null | undefined,
+): string | null => {
+  if (classification.type === 'Exclusion') {
+    return null
+  }
+
+  if (selectedTaxCode === undefined) {
+    return bankTransaction?.tax_code ?? null
+  }
+
+  if (selectedTaxCode === null) {
+    return null
+  }
+
+  return bankTransaction?.tax_options?.canada.some(taxOption => taxOption.code === selectedTaxCode)
+    ? selectedTaxCode
+    : null
+}
+
 export const BankTransactionsCategorizeAllModal = ({
   isOpen,
   onOpenChange,
@@ -35,15 +70,57 @@ export const BankTransactionsCategorizeAllModal = ({
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
+  const { data: bankTransactions } = useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState<BankTransactionCategoryComboBoxOption | null>(null)
+  const [selectedTaxCode, setSelectedTaxCode] = useState<TaxCodeSelectOption | null | undefined>(undefined)
   const { trigger, isMutating } = useBulkCategorize()
+
+  const bankTransactionsById = useMemo(
+    () => new Map((bankTransactions ?? []).map(bankTransaction => [bankTransaction.id, bankTransaction])),
+    [bankTransactions],
+  )
+
+  const selectedTransactions = useMemo(() => {
+    return Array.from(selectedIds)
+      .map(transactionId => bankTransactionsById.get(transactionId))
+      .filter((bankTransaction): bankTransaction is BankTransaction => bankTransaction !== undefined)
+  }, [bankTransactionsById, selectedIds])
+
+  const taxCodeOptions = useMemo(() => {
+    const taxCodesByValue = new Map<string, TaxCodeSelectOption>()
+
+    selectedTransactions.forEach((bankTransaction) => {
+      getTaxCodeOptions(bankTransaction).forEach((option) => {
+        if (!taxCodesByValue.has(option.value)) {
+          taxCodesByValue.set(option.value, option)
+        }
+      })
+    })
+
+    return Array.from(taxCodesByValue.values())
+  }, [selectedTransactions])
+
+  useEffect(() => {
+    if (selectedTaxCode && !taxCodeOptions.some(option => option.value === selectedTaxCode.value)) {
+      setSelectedTaxCode(undefined)
+    }
+  }, [selectedTaxCode, taxCodeOptions])
 
   const handleCategorizeModalClose = useCallback((isOpen: boolean) => {
     onOpenChange(isOpen)
     if (!isOpen) {
       setSelectedCategory(null)
+      setSelectedTaxCode(undefined)
     }
   }, [onOpenChange])
+
+  const handleCategoryChange = useCallback((nextCategory: BankTransactionCategoryComboBoxOption | null) => {
+    setSelectedCategory(nextCategory)
+
+    if (nextCategory?.classification?.type === 'Exclusion') {
+      setSelectedTaxCode(null)
+    }
+  }, [])
 
   const handleConfirm = useCallback(async () => {
     if (!selectedCategory || selectedCategory.classification === null) {
@@ -54,23 +131,36 @@ export const BankTransactionsCategorizeAllModal = ({
       return
     }
 
-    const transactionIds = Array.from(selectedIds)
+    const classification = selectedCategory.classification
+    const selectedTaxCodeValue = selectedTaxCode === undefined
+      ? undefined
+      : selectedTaxCode?.value ?? null
     const categorization = {
       type: 'Category' as const,
-      category: selectedCategory.classification,
+      category: classification,
     }
 
     await trigger({
-      transactions: transactionIds.map(transactionId => ({
+      transactions: Array.from(selectedIds).map(transactionId => ({
         transactionId,
-        categorization,
+        categorization: {
+          ...categorization,
+          taxCode: resolveBulkTaxCode(
+            bankTransactionsById.get(transactionId),
+            classification,
+            selectedTaxCodeValue,
+          ),
+        },
       })),
     })
 
     clearSelection()
-  }, [selectedIds, selectedCategory, trigger, clearSelection])
+  }, [selectedIds, selectedCategory, selectedTaxCode, trigger, clearSelection, bankTransactionsById])
 
   const categorySelectId = useId()
+  const taxCodeSelectId = useId()
+  const showTaxCodeSelector = taxCodeOptions.length > 0
+  const isTaxCodeDisabled = isMutating || selectedCategory?.classification?.type === 'Exclusion'
 
   return (
     <BaseConfirmationModal
@@ -86,7 +176,7 @@ export const BankTransactionsCategorizeAllModal = ({
                 <CategorySelectDrawerWithTrigger
                   aria-labelledby={categorySelectId}
                   value={selectedCategory}
-                  onChange={setSelectedCategory}
+                  onChange={handleCategoryChange}
                   showTooltips={false}
                 />
               )
@@ -94,12 +184,39 @@ export const BankTransactionsCategorizeAllModal = ({
                 <BankTransactionCategoryComboBox
                   inputId={categorySelectId}
                   selectedValue={selectedCategory}
-                  onSelectedValueChange={setSelectedCategory}
+                  onSelectedValueChange={handleCategoryChange}
                   includeSuggestedMatches={false}
                   isDisabled={isMutating}
                 />
               )}
           </VStack>
+          {showTaxCodeSelector && (
+            <VStack gap='3xs'>
+              <Label size='sm' htmlFor={taxCodeSelectId}>{t('bankTransactions:action.select_tax_code', 'Select tax code')}</Label>
+              {isMobileView
+                ? (
+                  <TaxCodeSelectDrawerWithTrigger
+                    options={taxCodeOptions}
+                    value={selectedTaxCode}
+                    onChange={setSelectedTaxCode}
+                    isDisabled={isTaxCodeDisabled}
+                    placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
+                  />
+                )
+                : (
+                  <ComboBox<TaxCodeSelectOption>
+                    inputId={taxCodeSelectId}
+                    selectedValue={selectedTaxCode ?? null}
+                    onSelectedValueChange={setSelectedTaxCode}
+                    options={taxCodeOptions}
+                    isDisabled={isTaxCodeDisabled}
+                    isSearchable={false}
+                    isClearable
+                    placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
+                  />
+                )}
+            </VStack>
+          )}
           {selectedCategory && isCategoryAsOption(selectedCategory) && (
             <Span>
               {mode === CategorizationMode.Categorize
