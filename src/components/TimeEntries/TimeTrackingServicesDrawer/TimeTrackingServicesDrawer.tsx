@@ -128,7 +128,7 @@ function ActiveServicesContent({
   const empty = useMemo(() => showCreateForm
     ? null
     : (
-      <VStack className='Layer__TimeTrackingServicesDrawer__emptyState'>
+      <VStack className='Layer__TimeTrackingServicesDrawer__EmptyState'>
         <DataState
           status={DataStateStatus.allDone}
           title={t('timeTracking:services.no_active', 'No services yet')}
@@ -219,7 +219,7 @@ function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: Archive
         <ConditionalList
           list={archivedServices}
           Empty={(
-            <VStack className='Layer__TimeTrackingServicesDrawer__emptyState'>
+            <VStack className='Layer__TimeTrackingServicesDrawer__EmptyState'>
               <DataState
                 status={DataStateStatus.allDone}
                 title={t('timeTracking:services.no_archived', 'No archived services')}

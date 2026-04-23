@@ -74,6 +74,7 @@
     "archive_confirm_description": "Ce service sera retiré de votre liste active. Les entrées de temps qui l'utilisaient ne sont pas modifiées.",
     "archive_confirm_title": "Archiver ce service?",
     "archived": "Archivés",
+    "archived_service": "",
     "cancel": "Annuler",
     "create_service_input_value": "",
     "hourly_rate_optional": "Taux horaire par défaut (facultatif)",
