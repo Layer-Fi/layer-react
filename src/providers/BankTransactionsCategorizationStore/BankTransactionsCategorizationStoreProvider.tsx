@@ -5,6 +5,11 @@ import type { BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import { type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
 
 export type BankTransactionCategorization = {
+  category: BankTransactionCategoryComboBoxOption | null
+  taxCode: TaxCodeSelectOption | null
+}
+
+type BankTransactionCategorizationUpdate = {
   category?: BankTransactionCategoryComboBoxOption | null
   taxCode?: TaxCodeSelectOption | null
 }
@@ -17,58 +22,33 @@ type BankTransactionsCategorizationActions = {
   actions: {
     setTransactionCategorization: (
       id: string,
-      categorization: BankTransactionCategorization,
+      categorization: BankTransactionCategorizationUpdate,
     ) => void
     setOnlyNewTransactionCategorizations: (
       categorizations: Map<string, BankTransactionCategorization>
     ) => void
     clearTransactionCategorizations: (ids: string[]) => void
+    clearAllTransactionTaxCodes: () => void
     clearAllTransactionCategorizations: () => void
   }
 }
 
 type BankTransactionsCategorizationStore = BankTransactionsCategorizationState & BankTransactionsCategorizationActions
 
-function hasCategory(
-  categorization: BankTransactionCategorization | undefined,
-): categorization is BankTransactionCategorization & { category: BankTransactionCategoryComboBoxOption | null } {
-  return categorization !== undefined && 'category' in categorization
-}
-
-function hasTaxCode(
-  categorization: BankTransactionCategorization | undefined,
-): categorization is BankTransactionCategorization & { taxCode: TaxCodeSelectOption | null } {
-  return categorization !== undefined && 'taxCode' in categorization
-}
-
 function normalizeCategorization(
   currentCategorization: BankTransactionCategorization | undefined,
-  nextCategorization: BankTransactionCategorization,
-): BankTransactionCategorization | undefined {
-  const mergedCategorization: BankTransactionCategorization = { ...currentCategorization }
+  nextCategorization: BankTransactionCategorizationUpdate,
+): BankTransactionCategorization {
+  const mergedCategorization: BankTransactionCategorization = currentCategorization
+    ? { ...currentCategorization }
+    : { category: null, taxCode: null }
 
-  if ('category' in nextCategorization) {
-    if (nextCategorization.category === undefined) {
-      delete mergedCategorization.category
-    }
-
-    else {
-      mergedCategorization.category = nextCategorization.category
-    }
+  if (nextCategorization.category !== undefined) {
+    mergedCategorization.category = nextCategorization.category
   }
 
-  if ('taxCode' in nextCategorization) {
-    if (nextCategorization.taxCode === undefined) {
-      delete mergedCategorization.taxCode
-    }
-
-    else {
-      mergedCategorization.taxCode = nextCategorization.taxCode
-    }
-  }
-
-  if (Object.keys(mergedCategorization).length === 0) {
-    return undefined
+  if (nextCategorization.taxCode !== undefined) {
+    mergedCategorization.taxCode = nextCategorization.taxCode
   }
 
   return mergedCategorization
@@ -78,18 +58,12 @@ function buildStore() {
   return createStore<BankTransactionsCategorizationStore>(set => ({
     categorizations: new Map<string, BankTransactionCategorization>(),
     actions: {
-      setTransactionCategorization: (id: string, categorization: BankTransactionCategorization): void => {
+      setTransactionCategorization: (id: string, categorization: BankTransactionCategorizationUpdate): void => {
         set((state) => {
           const newMap = new Map(state.categorizations)
           const nextCategorization = normalizeCategorization(newMap.get(id), categorization)
 
-          if (nextCategorization === undefined) {
-            newMap.delete(id)
-          }
-
-          else {
-            newMap.set(id, nextCategorization)
-          }
+          newMap.set(id, nextCategorization)
 
           return { categorizations: newMap }
         })
@@ -104,27 +78,13 @@ function buildStore() {
             const currCategorization = newMap.get(id)
 
             if (currCategorization === undefined) {
-              const nextCategorization = normalizeCategorization(undefined, newCategorization)
-
-              if (nextCategorization === undefined) {
-                return
-              }
-
-              newMap.set(id, nextCategorization)
+              newMap.set(id, normalizeCategorization(undefined, newCategorization))
               hasChanges = true
               return
             }
 
-            const applyCategory = hasCategory(newCategorization)
-              && (
-                !hasCategory(currCategorization)
-                || (currCategorization.category === null && newCategorization.category !== null)
-              )
-            const applyTaxCode = hasTaxCode(newCategorization)
-              && (
-                !hasTaxCode(currCategorization)
-                || (currCategorization.taxCode === null && newCategorization.taxCode !== null)
-              )
+            const applyCategory = currCategorization.category === null && newCategorization.category !== null
+            const applyTaxCode = currCategorization.taxCode === null && newCategorization.taxCode !== null
 
             if (applyCategory || applyTaxCode) {
               const nextCategorization = normalizeCategorization(currCategorization, {
@@ -132,14 +92,7 @@ function buildStore() {
                 ...(applyTaxCode ? { taxCode: newCategorization.taxCode } : {}),
               })
 
-              if (nextCategorization === undefined) {
-                newMap.delete(id)
-              }
-
-              else {
-                newMap.set(id, nextCategorization)
-              }
-
+              newMap.set(id, nextCategorization)
               hasChanges = true
             }
           })
@@ -152,6 +105,16 @@ function buildStore() {
         set((state) => {
           const newMap = new Map(state.categorizations)
           ids.forEach(id => newMap.delete(id))
+          return { categorizations: newMap }
+        })
+      },
+
+      clearAllTransactionTaxCodes: () => {
+        set((state) => {
+          const newMap = new Map(state.categorizations)
+          newMap.forEach((categorization, id) => {
+            newMap.set(id, { ...categorization, taxCode: null })
+          })
           return { categorizations: newMap }
         })
       },
@@ -219,7 +182,7 @@ export function useBankTransactionsCategoryActions(): BankTransactionsCategoryAc
     },
     setOnlyNewTransactionCategories: (transactionCategories) => {
       setOnlyNewTransactionCategorizations(new Map(
-        transactionCategories.map(({ id, category }) => [id, { category }]),
+        transactionCategories.map(({ id, category }) => [id, { category, taxCode: null }]),
       ))
     },
     clearTransactionCategory: (id) => {
@@ -248,9 +211,7 @@ export function useGetAllBankTransactionsCategories(): { transactionCategories: 
   const transactionCategories = new Map<string, BankTransactionCategoryComboBoxOption | null>()
 
   categorizations.forEach((categorization, id) => {
-    if (hasCategory(categorization)) {
-      transactionCategories.set(id, categorization.category)
-    }
+    transactionCategories.set(id, categorization.category)
   })
 
   return {
@@ -268,7 +229,7 @@ type BankTransactionsTaxCodeActions = {
 export function useBankTransactionsTaxCodeActions(): BankTransactionsTaxCodeActions {
   const {
     setTransactionCategorization,
-    clearAllTransactionCategorizations,
+    clearAllTransactionTaxCodes,
   } = useBankTransactionsCategorizationActions()
 
   return useMemo(() => ({
@@ -276,16 +237,16 @@ export function useBankTransactionsTaxCodeActions(): BankTransactionsTaxCodeActi
       setTransactionCategorization(id, { taxCode })
     },
     clearTransactionTaxCode: (id) => {
-      setTransactionCategorization(id, { taxCode: undefined })
+      setTransactionCategorization(id, { taxCode: null })
     },
     clearMultipleTransactionTaxCodes: (ids) => {
       ids.forEach((id) => {
-        setTransactionCategorization(id, { taxCode: undefined })
+        setTransactionCategorization(id, { taxCode: null })
       })
     },
-    clearAllTransactionTaxCodes: clearAllTransactionCategorizations,
+    clearAllTransactionTaxCodes,
   }), [
-    clearAllTransactionCategorizations,
+    clearAllTransactionTaxCodes,
     setTransactionCategorization,
   ])
 }
@@ -298,7 +259,7 @@ export function useGetBankTransactionTaxCode(transactionId: string): {
 
   return {
     selectedTaxCode: selectedCategorization?.taxCode,
-    hasSelectedTaxCode: hasTaxCode(selectedCategorization),
+    hasSelectedTaxCode: selectedCategorization !== undefined,
   }
 }
 

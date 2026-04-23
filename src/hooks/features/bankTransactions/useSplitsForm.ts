@@ -72,7 +72,7 @@ export const useSplitsForm = ({
 
     setTransactionCategorization(bankTransaction.id, {
       category: new SplitAsOption(splits),
-      taxCode: undefined,
+      taxCode: null,
     })
     setSplitFormError(undefined)
   }, [bankTransaction.id, setTransactionCategorization, t])

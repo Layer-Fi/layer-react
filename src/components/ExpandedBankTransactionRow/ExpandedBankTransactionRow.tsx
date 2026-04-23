@@ -159,14 +159,14 @@ export const ExpandedBankTransactionRow = ({
     if (newPurpose === Purpose.match) {
       setTransactionCategorization(bankTransaction.id, {
         category: selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null,
-        taxCode: undefined,
+        taxCode: null,
       })
     }
 
     else if (newPurpose === Purpose.categorize && isSplitsValid) {
       setTransactionCategorization(bankTransaction.id, {
         category: new SplitAsOption(localSplits),
-        taxCode: undefined,
+        taxCode: null,
       })
     }
 
@@ -307,7 +307,7 @@ export const ExpandedBankTransactionRow = ({
                             bankTransaction.id,
                             {
                               category: suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null,
-                              taxCode: undefined,
+                              taxCode: null,
                             },
                           )
                         }}

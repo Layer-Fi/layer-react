@@ -65,7 +65,7 @@ export const BankTransactionsMobileListBusinessForm = ({
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
   const selectedCategory = selectedCategorization?.category
   const selectedTaxCode = selectedCategorization?.taxCode
-  const hasSelectedTaxCode = selectedCategorization !== undefined && 'taxCode' in selectedCategorization
+  const hasSelectedTaxCode = selectedCategorization !== undefined
   const sessionTaxCodes = useMemo(() => {
     return hasSelectedTaxCode && selectedTaxCode ? [selectedTaxCode] : []
   }, [hasSelectedTaxCode, selectedTaxCode])

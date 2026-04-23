@@ -46,14 +46,10 @@ export const useSaveBankTransactionRow = () => {
 
     if (!selectedCategory.classification) return
 
-    const selectedTaxCode = selectedCategorization && 'taxCode' in selectedCategorization
-      ? selectedCategorization.taxCode
-      : undefined
+    const selectedTaxCode = selectedCategorization.taxCode
     const taxCode = selectedCategory.classification.type === 'Exclusion'
       ? null
-      : selectedTaxCode === undefined
-        ? bankTransaction.tax_code ?? null
-        : selectedTaxCode?.value ?? null
+      : selectedTaxCode?.value ?? null
 
     return categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
