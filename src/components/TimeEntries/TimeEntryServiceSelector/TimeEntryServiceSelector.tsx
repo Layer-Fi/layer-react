@@ -12,13 +12,19 @@ import { Label, P, Span } from '@ui/Typography/Text'
 
 import './timeEntryServiceSelector.scss'
 
+function getServiceLabel(service: CatalogService, t: TFunction): string {
+  return service.archivedAt
+    ? t('timeTracking:services.archived_service', '{{name}} (Archived)', { name: service.name })
+    : service.name
+}
+
 class ServiceAsOption {
   private internalService: CatalogService
-  private computedLabel: string
+  private t: TFunction
 
-  constructor(service: CatalogService, computedLabel?: string) {
+  constructor(service: CatalogService, t: TFunction) {
     this.internalService = service
-    this.computedLabel = computedLabel ?? service.name
+    this.t = t
   }
 
   get original() {
@@ -26,7 +32,7 @@ class ServiceAsOption {
   }
 
   get label() {
-    return this.computedLabel
+    return getServiceLabel(this.internalService, this.t)
   }
 
   get id() {
@@ -91,12 +97,7 @@ export function TimeEntryServiceSelector({
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   const serviceOptions = useMemo<ServiceAsOption[]>(
-    () => servicesResponse?.data.map((service) => {
-      const label = service.archivedAt
-        ? t('timeTracking:services.archived_service', '{{name}} (Archived)', { name: service.name })
-        : service.name
-      return new ServiceAsOption(service, label)
-    }) ?? [],
+    () => servicesResponse?.data.map(service => new ServiceAsOption(service, t)) ?? [],
     [servicesResponse, t],
   )
 
