@@ -103,7 +103,7 @@ export function useDetailUnifiedReport() {
   }), [detailReportConfig, openDetailReport, closeDetailReport])
 }
 
-// This variant exists so that the UnifiedReportCell does not depend on the report config.
+// This variant exists so that the UnifiedReportCell does not depend on the detail report config.
 export function useOpenDetailReport() {
   const store = useContext(UnifiedReportStoreContext)
   return useStore(store, state => state.actions.openDetailReport)
