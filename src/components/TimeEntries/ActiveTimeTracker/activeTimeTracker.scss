@@ -13,7 +13,7 @@
   box-sizing: border-box;
   flex-shrink: 0;
   border-block-end: 1px solid rgb(255 255 255 / 14%);
-  background-color: color-mix(in srgb, var(--color-info-error) 32%, transparent);
+  background-color: color-mix(in srgb, var(--color-info-error), transparent);
 }
 
 .Layer__ActiveTimeTracker__ErrorStripRow {
