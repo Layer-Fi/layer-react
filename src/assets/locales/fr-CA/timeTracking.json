@@ -20,7 +20,7 @@
     "archive_service": "Impossible d'archiver ce service. Veuillez réessayer.",
     "cancel_timer": "Impossible d'annuler le minuteur. Veuillez réessayer.",
     "complete_timer": "Impossible de terminer le minuteur. Veuillez réessayer.",
-    "complete_timer_stale": "This timer was already completed or cancelled. Reload the page.",
+    "complete_timer_stale": "Cette minuterie a déjà été terminée ou annulée. Rechargez la page.",
     "create_service": "Impossible de créer le service. Veuillez réessayer.",
     "delete_entry": "Impossible de supprimer l'entrée de temps. Veuillez vérifier votre connexion et réessayer.",
     "load_active_timer": "Impossible de charger le minuteur actif. Veuillez vérifier votre connexion et réessayer.",
@@ -29,7 +29,7 @@
     "load_services": "Impossible de charger les services.",
     "load_summary": "Impossible de charger le sommaire du suivi du temps",
     "start_timer": "Impossible de démarrer le minuteur. Veuillez réessayer.",
-    "start_timer_already_active": "A timer is already running. Please reload the page.",
+    "start_timer_already_active": "Une minuterie est déjà en cours. Veuillez recharger la page.",
     "unarchive_service": "Impossible de restaurer ce service. Veuillez réessayer.",
     "update_service": "Impossible d'enregistrer ce service. Veuillez réessayer.",
     "update_timer": "Impossible de mettre à jour le minuteur. Veuillez réessayer."
@@ -52,7 +52,7 @@
     "invoiced": "Facturé",
     "less_than_one_minute": "< 1 min",
     "memo": "Note",
-    "no_activity_breakdown": "No activity during this period",
+    "no_activity_breakdown": "Aucune activité pendant cette période",
     "no_services": "Aucun service disponible",
     "other": "Autre",
     "select_customer": "Sélectionner un client (facultatif)",
@@ -61,7 +61,7 @@
     "service": "Service",
     "time_entries": "Entrées de temps",
     "time_tracking": "Suivi du temps",
-    "zero_minutes": "0 min"
+    "zero_minutes": "0 min"
   },
   "prompt": {
     "delete_entry": "Supprimer cette entrée de temps?",
@@ -74,7 +74,7 @@
     "archive_confirm_description": "Ce service sera retiré de votre liste active. Les entrées de temps qui l'utilisaient ne sont pas modifiées.",
     "archive_confirm_title": "Archiver ce service?",
     "archived": "Archivés",
-    "archived_service": "{{name}} (Archived)",
+    "archived_service": "{{name}} (archivé)",
     "cancel": "Annuler",
     "create_service_input_value": "Créer le service \"{{inputValue}}\"",
     "hourly_rate_optional": "Taux horaire par défaut (facultatif)",
