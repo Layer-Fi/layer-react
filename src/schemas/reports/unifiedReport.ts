@@ -1,5 +1,6 @@
 import { pipe, Schema } from 'effect'
 
+import { ReportConfigSchema } from '@schemas/reports/reportConfig'
 import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum DateGroupBy {
@@ -131,6 +132,10 @@ export type UnifiedCellFormat = typeof UnifiedCellFormatSchema.Type
 const UnifiedReportCellSchema = Schema.Struct({
   value: UnifiedCellValueSchema,
   format: Schema.optional(UnifiedCellFormatSchema),
+  reportConfig: pipe(
+    Schema.propertySignature(Schema.NullishOr(ReportConfigSchema)),
+    Schema.fromKey('report_config'),
+  ),
 })
 
 export type UnifiedReportCell = typeof UnifiedReportCellSchema.Type

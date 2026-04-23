@@ -17,6 +17,7 @@ type UnifiedReportProps = {
 
 export const UnifiedReport = ({ dateSelectionMode }: UnifiedReportProps) => {
   const { t } = useTranslation()
+
   return (
     <View title={t('reports:label.reports', 'Reports')} viewClassName='Layer__UnifiedReport'>
       <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode}>

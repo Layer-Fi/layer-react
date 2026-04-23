@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import type { ReportConfig, ReportGroup } from '@schemas/reports/reportConfig'
 import { ReportGroupType } from '@schemas/reports/reportConfig'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
-import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import Folder from '@icons/Folder'
 import type { IconSvgProps } from '@icons/types'
 import { HStack } from '@ui/Stack/Stack'
@@ -66,9 +66,9 @@ const buildLeafConfig = (onSelectLeaf: (report: ReportConfig) => void): TreeNavi
 export function ReportsNavigation() {
   const { t } = useTranslation()
   const { data, isLoading, isError } = useReportConfig()
-  const { report, setReport } = useActiveUnifiedReport()
+  const { baseReport, setBaseReport } = useBaseUnifiedReport()
 
-  const leafConfig = useMemo(() => buildLeafConfig(setReport), [setReport])
+  const leafConfig = useMemo(() => buildLeafConfig(setBaseReport), [setBaseReport])
 
   return (
     <ConditionalBlock
@@ -83,7 +83,7 @@ export function ReportsNavigation() {
         <TreeNavigation
           ariaLabel={t('reports:label.reports_navigation', 'Reports navigation')}
           items={data}
-          selectedItem={report?.key ?? null}
+          selectedItem={baseReport?.key ?? null}
           isGroup={isReportGroup}
           groupConfig={groupConfig}
           leafConfig={leafConfig}
