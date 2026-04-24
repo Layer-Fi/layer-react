@@ -35,6 +35,7 @@ export const TaxEstimatesDeadlineRow = ({
   const { year } = useTaxEstimatesYear()
   const { onTaxBannerReviewClick } = useTaxEstimatesContext()
   const { isMobile } = useSizeClass()
+  const isAnnualWithYear = isAnnual && year !== undefined && year !== null
 
   return (
     <Card className='Layer__TaxOverview__DeadlineCard'>
@@ -48,8 +49,8 @@ export const TaxEstimatesDeadlineRow = ({
         <VStack className='Layer__TaxOverview__DeadlineAmountColumn' align='end' gap='xs'>
           <VStack align='end' gap='3xs'>
             <HStack className='Layer__TaxOverview__DeadlineValueRow' align='center' gap='sm'>
-              <StatusIcon status={data.status} />
-              <MoneySpan size='lg' weight='bold' amount={data.amount} />
+              <StatusIcon status={data.state} />
+              <MoneySpan size='lg' weight='bold' amount={data.amountOwed} />
             </HStack>
             <VStack className='Layer__TaxOverview__DeadlineAmountCopy' align='end' gap='3xs'>
               <Span size='xs' variant='subtle'>{t('taxEstimates:label.estimated_taxes', 'Estimated taxes')}</Span>
@@ -64,13 +65,18 @@ export const TaxEstimatesDeadlineRow = ({
               <FileText size={ICON_SIZE} />
             </Span>
             <Span className='Layer__TaxOverview__DeadlineReviewLabel' size='sm' weight='bold'>
-              {tPlural(t, 'taxEstimates:label.uncategorized_transactions', {
-                count: data.uncategorizedCount,
-                one: '{{count}} uncategorized transaction',
-                other: '{{count}} uncategorized transactions',
-              })}
-              {' '}
-              {isAnnual && `(${year ?? 0})`}
+              {isAnnualWithYear
+                ? tPlural(t, 'taxEstimates:label.uncategorized_transactions_with_year', {
+                  count: data.uncategorizedCount,
+                  one: '{{count}} uncategorized transaction ({{year}})',
+                  other: '{{count}} uncategorized transactions ({{year}})',
+                  year,
+                })
+                : tPlural(t, 'taxEstimates:label.uncategorized_transactions', {
+                  count: data.uncategorizedCount,
+                  one: '{{count}} uncategorized transaction',
+                  other: '{{count}} uncategorized transactions',
+                })}
             </Span>
           </HStack>
           {onTaxBannerReviewClick && (
