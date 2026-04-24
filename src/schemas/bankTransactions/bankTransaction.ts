@@ -36,8 +36,9 @@ export const BankTransactionTaxOptionSchema = Schema.Struct({
   ),
 })
 
-export const BankTransactionTaxOptionsSchema = Schema.Struct({
-  canada: Schema.Array(BankTransactionTaxOptionSchema),
+export const BankTransactionTaxOptionsSchema = Schema.Record({
+  key: Schema.String,
+  value: Schema.Array(BankTransactionTaxOptionSchema),
 })
 
 export const InputStrategySchema = Schema.Enums(InputStrategy)

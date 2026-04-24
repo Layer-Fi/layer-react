@@ -30,9 +30,7 @@ export interface BankTransactionTaxOption {
   display_name: string
 }
 
-export interface BankTransactionTaxOptions {
-  canada: BankTransactionTaxOption[]
-}
+export type BankTransactionTaxOptions = Record<string, BankTransactionTaxOption[]>
 
 // This isn't my favorite but BankTransaction contains much
 // more than we're using right now.

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type Classification } from '@schemas/categorization'
+import { getBankTransactionTaxCodeOptions, hasBankTransactionTaxCode } from '@utils/bankTransactions'
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -32,13 +33,6 @@ interface BankTransactionsCategorizeAllModalProps {
 
 const NO_TAX_CODE_COMBO_VALUE = '__no_tax_code__'
 
-const getTaxCodeOptions = (bankTransaction: BankTransaction): TaxCodeSelectOption[] => {
-  return bankTransaction.tax_options?.canada.map(taxOption => ({
-    label: taxOption.display_name,
-    value: taxOption.code,
-  })) ?? []
-}
-
 const resolveBulkTaxCode = (
   bankTransaction: BankTransaction | undefined,
   classification: Classification,
@@ -53,11 +47,7 @@ const resolveBulkTaxCode = (
     return bankTransaction?.tax_code ?? null
   }
 
-  const hasSelectedTaxCode = bankTransaction?.tax_options?.canada.some(
-    taxOption => taxOption.code === selectedTaxCode,
-  )
-
-  return hasSelectedTaxCode ? selectedTaxCode : null
+  return hasBankTransactionTaxCode(bankTransaction, selectedTaxCode) ? selectedTaxCode : null
 }
 
 export const BankTransactionsCategorizeAllModal = ({
@@ -91,7 +81,7 @@ export const BankTransactionsCategorizeAllModal = ({
     const taxCodesByValue = new Map<string, TaxCodeSelectOption>()
 
     selectedTransactions.forEach((bankTransaction) => {
-      getTaxCodeOptions(bankTransaction).forEach((option) => {
+      getBankTransactionTaxCodeOptions(bankTransaction).forEach((option) => {
         if (!taxCodesByValue.has(option.value)) {
           taxCodesByValue.set(option.value, option)
         }
