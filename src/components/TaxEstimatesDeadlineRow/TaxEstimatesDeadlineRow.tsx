@@ -14,10 +14,9 @@ import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
+import { StatusIcon } from '@components/TaxEstimatesDeadlineRow/StatusIcon'
 
 import '@components/TaxEstimatesDeadlineRow/taxEstimatesDeadlineRow.scss'
-
-import { StatusIcon } from './StatusIcon'
 
 type TaxEstimatesDeadlineRowProps = {
   data: TaxEstimateDeadlineRow
