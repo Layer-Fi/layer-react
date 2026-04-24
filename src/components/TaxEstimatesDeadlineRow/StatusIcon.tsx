@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
 import classNames from 'classnames'
+import type { TFunction } from 'i18next'
 import { Check, CircleAlert, Clock3 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -22,6 +22,34 @@ const getDeadlineAmountTone = (status?: TaxOverviewDeadlineStatus) => {
   }
 }
 
+const getDeadlineStatusLabel = (t: TFunction, status?: TaxOverviewDeadlineStatus) => {
+  switch (status) {
+    case TaxOverviewDeadlineStatus.Paid:
+      return t('taxEstimates:label.paid', 'Paid')
+    case TaxOverviewDeadlineStatus.PastDue:
+      return t('taxEstimates:label.past_payment_due', 'Past Payment Due')
+    case TaxOverviewDeadlineStatus.Due:
+      return t('taxEstimates:label.due', 'Due')
+    case TaxOverviewDeadlineStatus.CategorizationIncomplete:
+      return t('taxEstimates:label.categorization_incomplete', 'Categorization Incomplete')
+    default:
+      return t('common:state.unknown', 'Unknown')
+  }
+}
+
+const getDeadlineStatusIcon = (status: TaxOverviewDeadlineStatus) => {
+  switch (status) {
+    case TaxOverviewDeadlineStatus.Paid:
+      return Check
+    case TaxOverviewDeadlineStatus.PastDue:
+    case TaxOverviewDeadlineStatus.CategorizationIncomplete:
+      return CircleAlert
+    case TaxOverviewDeadlineStatus.Due:
+    default:
+      return Clock3
+  }
+}
+
 const AMOUNT_ICON_CLASS_MAP = {
   due: 'Layer__TaxOverview__AmountIcon--due',
   neutral: 'Layer__TaxOverview__AmountIcon--neutral',
@@ -33,33 +61,8 @@ const AMOUNT_ICON_CLASS_MAP = {
 export const StatusIcon = ({ status }: { status: TaxOverviewDeadlineStatus }) => {
   const { t } = useTranslation()
   const tone = getDeadlineAmountTone(status)
-  const Icon = (() => {
-    switch (status) {
-      case TaxOverviewDeadlineStatus.Paid:
-        return Check
-      case TaxOverviewDeadlineStatus.PastDue:
-      case TaxOverviewDeadlineStatus.CategorizationIncomplete:
-        return CircleAlert
-      case TaxOverviewDeadlineStatus.Due:
-      default:
-        return Clock3
-    }
-  })()
-
-  const label = useMemo(() => {
-    switch (status) {
-      case TaxOverviewDeadlineStatus.Paid:
-        return t('taxEstimates:label.paid', 'Paid')
-      case TaxOverviewDeadlineStatus.PastDue:
-        return t('taxEstimates:label.past_payment_due', 'Past Payment Due')
-      case TaxOverviewDeadlineStatus.Due:
-        return t('taxEstimates:label.due', 'Due')
-      case TaxOverviewDeadlineStatus.CategorizationIncomplete:
-        return t('taxEstimates:label.categorization_incomplete', 'Categorization Incomplete')
-      default:
-        return t('common:state.unknown', 'Unknown')
-    }
-  }, [status, t])
+  const Icon = getDeadlineStatusIcon(status)
+  const label = getDeadlineStatusLabel(t, status)
 
   return (
     <Tooltip>
