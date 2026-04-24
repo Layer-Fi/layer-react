@@ -8,6 +8,9 @@
   "label": {
     "ad_hoc_call": "Appel ponctuel",
     "book_call_with_bookkeeper": "Réservez un appel avec votre teneur de livres",
+    "cover_accounts_and_documents": "",
+    "cover_business_and_books": "",
+    "cover_first_month_expectations": "",
     "date": "Date",
     "date_colon": "Date :",
     "google_calendar": "Google Calendar",
@@ -19,9 +22,17 @@
     "purpose": "Objet",
     "purpose_colon": "Objet :",
     "upcoming_call": "Appel à venir",
+    "what_well_cover": "",
     "yahoo_calendar": "Yahoo Calendar"
   },
   "prompt": {
     "ready_to_get_started": ""
+  },
+  "state": {
+    "call_in_count_days_one": "",
+    "call_in_count_days_other": "",
+    "call_in_count_hours_one": "",
+    "call_in_count_hours_other": "",
+    "starting_soon": ""
   }
 }
