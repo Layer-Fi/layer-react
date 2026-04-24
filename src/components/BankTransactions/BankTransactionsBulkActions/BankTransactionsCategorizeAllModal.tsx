@@ -74,7 +74,7 @@ export const BankTransactionsCategorizeAllModal = ({
   const { clearSelection } = useBulkSelectionActions()
   const { data: bankTransactions } = useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState<BankTransactionCategoryComboBoxOption | null>(null)
-  const [selectedTaxCode, setSelectedTaxCode] = useState<TaxCodeSelectOption | null | undefined>(undefined)
+  const [selectedTaxCode, setSelectedTaxCode] = useState<TaxCodeSelectOption | null>(null)
   const { trigger, isMutating } = useBulkCategorize()
 
   const bankTransactionsById = useMemo(
@@ -120,7 +120,7 @@ export const BankTransactionsCategorizeAllModal = ({
       return
     }
     if (!taxCodeOptions.some(option => option.value === selectedTaxCode.value)) {
-      setSelectedTaxCode(undefined)
+      setSelectedTaxCode(null)
     }
   }, [selectedTaxCode, taxCodeOptions])
 
@@ -128,7 +128,7 @@ export const BankTransactionsCategorizeAllModal = ({
     onOpenChange(isOpen)
     if (!isOpen) {
       setSelectedCategory(null)
-      setSelectedTaxCode(undefined)
+      setSelectedTaxCode(null)
     }
   }, [onOpenChange])
 
@@ -140,6 +140,17 @@ export const BankTransactionsCategorizeAllModal = ({
     }
   }, [])
 
+  const handleTaxCodeChange = useCallback((next: TaxCodeSelectOption | null) => {
+    if (next === null) {
+      setSelectedTaxCode({
+        label: t('bankTransactions:action.no_tax_code', 'No tax code'),
+        value: NO_TAX_CODE_COMBO_VALUE,
+      })
+      return
+    }
+    setSelectedTaxCode(next)
+  }, [t])
+
   const handleConfirm = useCallback(async () => {
     if (!selectedCategory || selectedCategory.classification === null) {
       return
@@ -150,13 +161,11 @@ export const BankTransactionsCategorizeAllModal = ({
     }
 
     const classification = selectedCategory.classification
-    const selectedTaxCodeValue = selectedTaxCode === undefined
+    const selectedTaxCodeValue = selectedTaxCode === null
       ? undefined
-      : selectedTaxCode === null
+      : selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE
         ? null
-        : selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE
-          ? null
-          : selectedTaxCode.value
+        : selectedTaxCode.value
     const categorization = {
       type: 'Category' as const,
       category: classification,
@@ -219,8 +228,8 @@ export const BankTransactionsCategorizeAllModal = ({
                 ? (
                   <TaxCodeSelectDrawerWithTrigger
                     options={taxCodeOptions}
-                    value={selectedTaxCode}
-                    onChange={setSelectedTaxCode}
+                    value={selectedTaxCode === null ? undefined : selectedTaxCode}
+                    onChange={handleTaxCodeChange}
                     isDisabled={isTaxCodeDisabled}
                     placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
                   />
@@ -228,8 +237,8 @@ export const BankTransactionsCategorizeAllModal = ({
                 : (
                   <ComboBox<TaxCodeSelectOption>
                     inputId={taxCodeSelectId}
-                    selectedValue={selectedTaxCode ?? null}
-                    onSelectedValueChange={setSelectedTaxCode}
+                    selectedValue={selectedTaxCode}
+                    onSelectedValueChange={handleTaxCodeChange}
                     options={taxCodeComboBoxOptions}
                     isDisabled={isTaxCodeDisabled}
                     isSearchable={false}
