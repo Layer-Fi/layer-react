@@ -62,11 +62,10 @@ const OnboardingCallCoverage = () => {
 
   return (
     <>
-      <Span nonAria className='Layer__CallBooking__Divider' />
+      <Span className='Layer__CallBooking__Divider' />
 
       <VStack pbe='md'>
         <Span
-          nonAria
           size='2xs'
           variant='subtle'
           weight='bold'
@@ -135,7 +134,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
                 {purpose}
               </Heading>
               {countdownLabel && (
-                <Span nonAria size='xs' variant='subtle'>
+                <Span size='xs' variant='subtle'>
                   ·
                   {' '}
                   {countdownLabel}
@@ -164,7 +163,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
 
         <HStack className='Layer__CallBooking__DateTimeRow' align='center' gap='sm' pbs='md'>
           <Clock3 size={16} strokeWidth={2} />
-          <Span nonAria noWrap size='lg' weight='bold'>
+          <Span noWrap size='lg' weight='bold'>
             {timeLabel}
           </Span>
         </HStack>
