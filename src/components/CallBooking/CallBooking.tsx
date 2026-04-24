@@ -117,7 +117,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
 
   return (
     <Container name='CallBooking'>
-      <VStack className='Layer__CallBooking__Content'>
+      <VStack pi='lg' pb='lg'>
         <HStack className='Layer__CallBooking__HeaderRow' align='start'>
           <VStack className='Layer__CallBooking__DateColumn'>
             <DateTile date={callBooking.eventStartAt} />
