@@ -30,6 +30,8 @@ interface BankTransactionsCategorizeAllModalProps {
   isMobileView?: boolean
 }
 
+const NO_TAX_CODE_COMBO_VALUE = '__no_tax_code__'
+
 const getTaxCodeOptions = (bankTransaction: BankTransaction): TaxCodeSelectOption[] => {
   return bankTransaction.tax_options?.canada.map(taxOption => ({
     label: taxOption.display_name,
@@ -100,8 +102,24 @@ export const BankTransactionsCategorizeAllModal = ({
     return Array.from(taxCodesByValue.values())
   }, [selectedTransactions])
 
+  const taxCodeComboBoxOptions = useMemo((): TaxCodeSelectOption[] => {
+    return [
+      {
+        label: t('bankTransactions:action.no_tax_code', 'No tax code'),
+        value: NO_TAX_CODE_COMBO_VALUE,
+      },
+      ...taxCodeOptions,
+    ]
+  }, [t, taxCodeOptions])
+
   useEffect(() => {
-    if (selectedTaxCode && !taxCodeOptions.some(option => option.value === selectedTaxCode.value)) {
+    if (!selectedTaxCode) {
+      return
+    }
+    if (selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE) {
+      return
+    }
+    if (!taxCodeOptions.some(option => option.value === selectedTaxCode.value)) {
       setSelectedTaxCode(undefined)
     }
   }, [selectedTaxCode, taxCodeOptions])
@@ -134,7 +152,11 @@ export const BankTransactionsCategorizeAllModal = ({
     const classification = selectedCategory.classification
     const selectedTaxCodeValue = selectedTaxCode === undefined
       ? undefined
-      : selectedTaxCode?.value ?? null
+      : selectedTaxCode === null
+        ? null
+        : selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE
+          ? null
+          : selectedTaxCode.value
     const categorization = {
       type: 'Category' as const,
       category: classification,
@@ -208,7 +230,7 @@ export const BankTransactionsCategorizeAllModal = ({
                     inputId={taxCodeSelectId}
                     selectedValue={selectedTaxCode ?? null}
                     onSelectedValueChange={setSelectedTaxCode}
-                    options={taxCodeOptions}
+                    options={taxCodeComboBoxOptions}
                     isDisabled={isTaxCodeDisabled}
                     isSearchable={false}
                     isClearable
