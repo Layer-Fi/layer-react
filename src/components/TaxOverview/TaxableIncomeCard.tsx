@@ -9,7 +9,7 @@ import { TaxEstimateMetricRow } from '@components/TaxOverview/TaxEstimateMetricR
 
 import './taxableIncomeCard.scss'
 
-const DesktopContent = ({ metrics }: { metrics: TaxOverviewMetric[] }) => {
+const DesktopContent = ({ metrics }: { metrics: readonly TaxOverviewMetric[] }) => {
   return (
     <VStack gap='4xs'>
       {metrics.map((metric, index) => <TaxEstimateMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
@@ -17,7 +17,7 @@ const DesktopContent = ({ metrics }: { metrics: TaxOverviewMetric[] }) => {
   )
 }
 
-const MobileContent = ({ metrics }: { metrics: TaxOverviewMetric[] }) => {
+const MobileContent = ({ metrics }: { metrics: readonly TaxOverviewMetric[] }) => {
   return (
     <VStack className='Layer__TaxOverview__Card__MetricRow--mobile' gap='4xs'>
       {metrics.map((metric, index) => <TaxEstimateMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
@@ -25,7 +25,7 @@ const MobileContent = ({ metrics }: { metrics: TaxOverviewMetric[] }) => {
   )
 }
 
-const Content = ({ metrics }: { metrics: TaxOverviewMetric[] }) => {
+const Content = ({ metrics }: { metrics: readonly TaxOverviewMetric[] }) => {
   const { isDesktop } = useSizeClass()
   return isDesktop ? <DesktopContent metrics={metrics} /> : <MobileContent metrics={metrics} />
 }
@@ -48,7 +48,7 @@ export const TaxableIncomeCard = () => {
       <Card className='Layer__TaxOverview__Card'>
         {isHeaderVisible && <TaxEstimatesHeader type={TaxEstimatesHeaderType.Overview} />}
         <VStack pi={!isDesktop ? undefined : 'md'}>
-          <Content metrics={Array.from(metrics)} />
+          <Content metrics={metrics} />
         </VStack>
       </Card>
     </>
