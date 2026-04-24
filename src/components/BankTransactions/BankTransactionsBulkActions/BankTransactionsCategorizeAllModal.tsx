@@ -15,6 +15,7 @@ import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirm
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode, hasBankTransactionTaxCode } from '@components/BankTransactions/utils'
+import { NO_TAX_CODE } from "@components/TaxCodeSelect/constants"
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
 import { TaxCodeSelectDrawerWithTrigger } from '@components/TaxCodeSelect/TaxCodeSelectDrawerWithTrigger'
@@ -30,8 +31,6 @@ interface BankTransactionsCategorizeAllModalProps {
   mode: CategorizationMode
   isMobileView?: boolean
 }
-
-const NO_TAX_CODE_COMBO_VALUE = '__no_tax_code__'
 
 const resolveBulkTaxCode = (
   bankTransaction: BankTransaction | undefined,
@@ -87,14 +86,14 @@ export const BankTransactionsCategorizeAllModal = ({
     return [
       {
         label: t('bankTransactions:action.no_tax_code', 'No tax code'),
-        value: NO_TAX_CODE_COMBO_VALUE,
+        value: NO_TAX_CODE,
       },
       ...taxCodeSelectOptions,
     ]
   }, [t, taxCodeSelectOptions])
 
   useEffect(() => {
-    if (!selectedTaxCode || selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE) {
+    if (!selectedTaxCode || selectedTaxCode.value === NO_TAX_CODE) {
       return
     }
     if (!taxCodeSelectOptions.some(option => option.value === selectedTaxCode.value)) {
@@ -122,7 +121,7 @@ export const BankTransactionsCategorizeAllModal = ({
     if (next === null) {
       setSelectedTaxCode({
         label: t('bankTransactions:action.no_tax_code', 'No tax code'),
-        value: NO_TAX_CODE_COMBO_VALUE,
+        value: NO_TAX_CODE,
       })
       return
     }
@@ -139,7 +138,7 @@ export const BankTransactionsCategorizeAllModal = ({
     }
 
     const classification = selectedCategory.classification
-    const selectedTaxCodeValue = selectedTaxCode?.value === NO_TAX_CODE_COMBO_VALUE
+    const selectedTaxCodeValue = selectedTaxCode?.value === NO_TAX_CODE
       ? null
       : selectedTaxCode?.value ?? null
     const categorization = {

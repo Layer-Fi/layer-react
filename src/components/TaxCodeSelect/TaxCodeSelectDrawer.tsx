@@ -5,9 +5,8 @@ import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
 import { ActionableList, type ActionableListOption } from '@components/ActionableList/ActionableList'
+import { NO_TAX_CODE } from "./constants"
 import { SearchField } from '@components/SearchField/SearchField'
-
-const CLEAR_ROW_ID = '__tax_code_clear__'
 
 export type TaxCodeSelectOption = {
   label: string
@@ -42,7 +41,7 @@ export const TaxCodeSelectDrawer = ({
 
   if (isClearable) {
     listOptions.push({
-      id: CLEAR_ROW_ID,
+      id: NO_TAX_CODE,
       label: t('bankTransactions:action.no_tax_code', 'No tax code'),
       value: null,
     })
@@ -83,7 +82,7 @@ export const TaxCodeSelectDrawer = ({
           <ActionableList<TaxCodeSelectOption | null>
             options={filteredListOptions}
             onClick={(item) => {
-              if (item.id === CLEAR_ROW_ID) {
+              if (item.id === NO_TAX_CODE) {
                 onSelect(null)
               }
               else {

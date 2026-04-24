@@ -23,9 +23,9 @@ import { FileInput } from '@components/Input/FileInput'
 import { TaxCodeSelectDrawer, type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
 import { ErrorText } from '@components/Typography/ErrorText'
 
+import { NO_TAX_CODE } from "@components/TaxCodeSelect/constants"
+
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
-const SELECT_TAX_CODE_VALUE = '__select_tax_code__'
-const NO_TAX_CODE_VALUE = '__no_tax_code__'
 
 export const isSelectCategoryOption = (
   value: BankTransactionCategoryComboBoxOption,
@@ -177,12 +177,12 @@ export const BankTransactionsMobileListBusinessForm = ({
 
     appendOption({
       label: t('bankTransactions:action.no_tax_code', 'No tax code'),
-      value: NO_TAX_CODE_VALUE,
+      value: NO_TAX_CODE,
     })
 
     appendOption({
       label: `+ ${t('common:action.add_label', 'Add')} ${t('common:label.more', 'More')}`,
-      value: SELECT_TAX_CODE_VALUE,
+      value: '__select_tax_code__',
     }, true)
 
     return options
@@ -225,12 +225,12 @@ export const BankTransactionsMobileListBusinessForm = ({
   }, [bankTransaction.id, setTransactionCategorization, syncTaxCodeWithCategory])
 
   const onTaxCodeSelect = useCallback((taxCode: TaxCodeDisplayOption) => {
-    if (taxCode.value.value === SELECT_TAX_CODE_VALUE) {
+    if (taxCode.value.value === '__select_tax_code__') {
       setIsTaxCodeDrawerOpen(true)
       return
     }
 
-    if (taxCode.value.value === NO_TAX_CODE_VALUE) {
+    if (taxCode.value.value === NO_TAX_CODE) {
       setTransactionCategorization(bankTransaction.id, { taxCode: null })
       return
     }
@@ -282,7 +282,7 @@ export const BankTransactionsMobileListBusinessForm = ({
                 <BusinessFormMobile<TaxCodeDisplayOptionValue>
                   options={taxCodeSectionOptions}
                   onSelect={onTaxCodeSelect}
-                  selectedId={currentTaxCode?.value ?? NO_TAX_CODE_VALUE}
+                  selectedId={currentTaxCode?.value ?? NO_TAX_CODE}
                   ariaLabel={t('bankTransactions:action.select_tax_code', 'Select tax code')}
                 />
               )}
