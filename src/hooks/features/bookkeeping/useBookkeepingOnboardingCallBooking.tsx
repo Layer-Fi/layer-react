@@ -6,9 +6,9 @@ import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookin
 import { useCreateCallBooking } from '@hooks/api/businesses/[business-id]/call-bookings/useCreateCallBooking'
 import { type CalendlyPayload, useCalendly } from '@hooks/features/calendly/useCalendly'
 
-const getExternalIdFromCalendlyPayload = (payload: CalendlyPayload) => {
+const getUuidFromCalendlyUri = (uri: string) => {
   try {
-    const segments = new URL(payload.event.uri).pathname.split('/').filter(Boolean)
+    const segments = new URL(uri).pathname.split('/').filter(Boolean)
 
     return segments.at(-1)
   }
@@ -31,15 +31,22 @@ export const useBookkeepingOnboardingCallBooking = () => {
     : undefined
 
   const recordCalendlyScheduled = useCallback(async (payload: CalendlyPayload) => {
-    const externalId = getExternalIdFromCalendlyPayload(payload)
+    const externalId = getUuidFromCalendlyUri(payload.event.uri)
 
     if (externalId == null) {
+      return
+    }
+
+    const inviteeId = getUuidFromCalendlyUri(payload.invitee.uri)
+
+    if (inviteeId == null) {
       return
     }
 
     try {
       await createCallBooking({
         external_id: externalId,
+        invitee_id: inviteeId,
         purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
         call_type: CallBookingType.GOOGLE_MEET,
       })
