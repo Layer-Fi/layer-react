@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { getBankTransactionTaxCodeOption } from '@components/BankTransactions/utils'
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
+import { getBankTransactionTaxCodeOption } from '@components/BankTransactions/utils'
 
 export const useUpsertBankTransactionsDefaultCategories = (bankTransactions: BankTransaction[] | undefined) => {
   const { setOnlyNewTransactionCategorizations } = useBankTransactionsCategorizationActions()

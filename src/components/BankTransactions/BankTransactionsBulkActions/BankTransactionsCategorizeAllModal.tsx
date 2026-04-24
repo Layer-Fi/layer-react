@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type Classification } from '@schemas/categorization'
-import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode, hasBankTransactionTaxCode } from '@components/BankTransactions/utils'
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -15,6 +14,7 @@ import { Label, Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode, hasBankTransactionTaxCode } from '@components/BankTransactions/utils'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
 import { TaxCodeSelectDrawerWithTrigger } from '@components/TaxCodeSelect/TaxCodeSelectDrawerWithTrigger'
@@ -37,9 +37,9 @@ const resolveBulkTaxCode = (
   bankTransaction: BankTransaction | undefined,
   classification: Classification,
   selectedTaxCode: string | null,
-  shouldKeepExistingTaxCode: boolean,
+  keepExistingTaxCode: boolean,
 ): string | null => {
-  if (shouldKeepExistingTaxCode) {
+  if (keepExistingTaxCode) {
     return getCategoryPayloadTaxCode(classification, bankTransaction?.tax_code)
   }
 
@@ -148,7 +148,7 @@ export const BankTransactionsCategorizeAllModal = ({
     }
 
     const classification = selectedCategory.classification
-    const shouldKeepExistingTaxCode = selectedTaxCode === null
+    const keepExistingTaxCode = selectedTaxCode === null
     const selectedTaxCodeValue = selectedTaxCode === null || selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE
       ? null
       : selectedTaxCode.value
@@ -166,7 +166,7 @@ export const BankTransactionsCategorizeAllModal = ({
             bankTransactionsById.get(transactionId),
             classification,
             selectedTaxCodeValue,
-            shouldKeepExistingTaxCode,
+            keepExistingTaxCode,
           ),
         },
       })),
