@@ -8,8 +8,6 @@ import { Span } from '@ui/Typography/Text'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 
-import './categorySelectDrawerWithTrigger.scss'
-
 type Props = {
   value: BankTransactionCategoryComboBoxOption | null
   onChange: (newValue: BankTransactionCategoryComboBoxOption | null) => void
@@ -22,17 +20,20 @@ export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   return (
-    <HStack fluid className='Layer__CategorySelectDrawerWithTrigger'>
+    <HStack fluid>
       <Button
+        flex
         fullWidth
         aria-label={t('bankTransactions:action.select_category', 'Select category')}
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
       >
-        <Span ellipsis variant={value ? undefined : 'placeholder'}>
-          {value?.label ?? t('common:action.select_label', 'Select...')}
-        </Span>
-        <ChevronDown size={16} />
+        <HStack fluid align='center' justify='space-between' gap='2xs'>
+          <Span ellipsis variant={value ? undefined : 'placeholder'}>
+            {value?.label ?? t('common:action.select_label', 'Select...')}
+          </Span>
+          <ChevronDown size={16} />
+        </HStack>
       </Button>
 
       <CategorySelectDrawer
