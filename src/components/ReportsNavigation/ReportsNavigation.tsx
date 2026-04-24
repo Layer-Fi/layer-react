@@ -1,14 +1,9 @@
-import { type ComponentType, useMemo } from 'react'
-import { Landmark } from 'lucide-react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { ReportConfig, ReportGroup } from '@schemas/reports/reportConfig'
-import { ReportGroupType } from '@schemas/reports/reportConfig'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
-import Folder from '@icons/Folder'
-import type { IconSvgProps } from '@icons/types'
-import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import {
@@ -18,8 +13,6 @@ import {
 } from '@components/TreeNavigation/TreeNavigation'
 import { TreeNavigationSkeleton } from '@components/TreeNavigation/TreeNavigationSkeleton'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
-
-import './reportsNavigation.scss'
 
 const ReportsNavigationError = () => {
   const { t } = useTranslation()
@@ -33,11 +26,6 @@ const ReportsNavigationError = () => {
   )
 }
 
-const REPORT_GROUP_ICON: Record<ReportGroupType, ComponentType<IconSvgProps>> = {
-  [ReportGroupType.Accounting]: Landmark,
-  [ReportGroupType.Unknown]: Folder,
-}
-
 const isReportGroup = (item: ReportGroup | ReportConfig): item is ReportGroup =>
   'reports' in item
 
@@ -46,13 +34,7 @@ const groupConfig: TreeNavigationGroupConfig<ReportGroup, ReportConfig> = {
   getTextValue: group => group.displayName,
   getChildren: group => group.reports,
   renderLabel: (group) => {
-    const Icon = REPORT_GROUP_ICON[group.groupType]
-    return (
-      <HStack className='Layer__ReportsNavigation__GroupLabel' gap='sm' align='center'>
-        <Icon className='Layer__ReportsNavigation__GroupIcon' strokeWidth={1.5} size={16} />
-        <Span ellipsis variant='subtle' weight='bold'>{group.displayName}</Span>
-      </HStack>
-    )
+    return <Span ellipsis weight='bold'>{group.displayName}</Span>
   },
 }
 
