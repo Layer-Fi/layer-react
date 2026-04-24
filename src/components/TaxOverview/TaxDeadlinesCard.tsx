@@ -59,15 +59,15 @@ export const TaxDeadlinesCard = () => {
             <VStack gap='lg'>
               <Heading size={!isDesktop ? 'sm' : 'md'}>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
               <VStack gap='2xs'>
-                {paymentDeadlines.map(deadline => (
+                {paymentDeadlines.map((deadline, index) => (
                   <TaxEstimatesDeadlineRow
-                    key={deadline.dueDate.toString()}
+                    key={`${deadline.type}-${index}`}
                     data={deadline}
                   />
                 ))}
                 {annualDeadline && (
                   <TaxEstimatesDeadlineRow
-                    key={annualDeadline.dueDate.toString()}
+                    key='annual'
                     data={annualDeadline}
                     isAnnual
                   />
