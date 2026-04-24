@@ -33,9 +33,6 @@
     "call_in_count_days_other": "in {{displayCount}} days",
     "call_in_count_hours_one": "in {{displayCount}} hour",
     "call_in_count_hours_other": "in {{displayCount}} hours",
-    "call_in_count_minutes_one": "in {{displayCount}} minute",
-    "call_in_count_minutes_other": "in {{displayCount}} minutes",
-    "in_progress": "in progress",
     "starting_soon": "starting soon"
   }
 }

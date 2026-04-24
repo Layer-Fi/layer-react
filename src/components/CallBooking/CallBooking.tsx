@@ -1,11 +1,13 @@
 import { Check, Clock3, Video } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useIntl } from 'react-intl'
 
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { tPlural } from '@utils/i18n/plural'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
+import { DateTile } from '@ui/DateTile/DateTile'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
@@ -20,9 +22,7 @@ export interface CallBookingProps {
 
 type CountdownDescriptor =
   | { kind: 'days' | 'hours', value: number }
-  | { kind: 'startingSoon' | 'inProgress' | 'none' }
-
-const DEFAULT_CALL_DURATION_MS = 30 * 60 * 1000
+  | { kind: 'startingSoon' | 'none' }
 
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   const { t } = useTranslation()
@@ -42,19 +42,10 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   )
 }
 
-const getEffectiveEndAt = (startAt: Date, endAt?: Date | null) => {
-  return endAt ?? new Date(startAt.getTime() + DEFAULT_CALL_DURATION_MS)
-}
-
-const getCountdownDescriptor = (now: number, startAt: Date, endAt: Date): CountdownDescriptor => {
+const getCountdownDescriptor = (now: number, startAt: Date): CountdownDescriptor => {
   const startTime = startAt.getTime()
-  const endTime = endAt.getTime()
 
-  if (now >= startTime && now <= endTime) {
-    return { kind: 'inProgress' }
-  }
-
-  if (now > endTime) {
+  if (now >= startTime) {
     return { kind: 'none' }
   }
 
@@ -78,7 +69,7 @@ const getCountdownDescriptor = (now: number, startAt: Date, endAt: Date): Countd
 
 export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
   const { t } = useTranslation()
-  const intl = useIntl()
+  const { formatDate } = useIntlFormatter()
 
   if (callBooking == null) {
     return (
@@ -94,8 +85,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
   const subtitle = t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
   const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
   const callLink = callBooking.callLink.toString()
-  const eventEndAt = getEffectiveEndAt(callBooking.eventStartAt, callBooking.eventEndAt)
-  const countdownDescriptor = getCountdownDescriptor(Date.now(), callBooking.eventStartAt, eventEndAt)
+  const countdownDescriptor = getCountdownDescriptor(Date.now(), callBooking.eventStartAt)
   const countdownLabel = (() => {
     switch (countdownDescriptor.kind) {
       case 'days':
@@ -114,26 +104,11 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
         })
       case 'startingSoon':
         return t('callBookings:state.starting_soon', 'starting soon')
-      case 'inProgress':
-        return t('callBookings:state.in_progress', 'in progress')
       case 'none':
         return ''
     }
   })()
-  const dateTileMonthLabel = new Intl.DateTimeFormat(intl.locale, {
-    month: 'short',
-    year: 'numeric',
-  }).format(callBooking.eventStartAt).toUpperCase()
-  const dateTileDayLabel = new Intl.DateTimeFormat(intl.locale, {
-    day: 'numeric',
-  }).format(callBooking.eventStartAt)
-  const dateTileWeekdayLabel = new Intl.DateTimeFormat(intl.locale, {
-    weekday: 'short',
-  }).format(callBooking.eventStartAt).toUpperCase()
-  const timeLabel = new Intl.DateTimeFormat(intl.locale, {
-    hour: 'numeric',
-    minute: '2-digit',
-  }).format(callBooking.eventStartAt)
+  const timeLabel = formatDate(callBooking.eventStartAt, DateFormat.MonthDayWithTimeReadable)
   const whatWeWillCoverItems = [
     t('callBookings:label.cover_business_and_books', 'Walk through your business and books'),
     t('callBookings:label.cover_accounts_and_documents', 'Connect your accounts and documents'),
@@ -145,43 +120,25 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
       <VStack className='Layer__CallBooking__Content'>
         <HStack className='Layer__CallBooking__HeaderRow' align='start'>
           <VStack className='Layer__CallBooking__DateColumn'>
-            <VStack className='Layer__CallBooking__DateTile'>
-              <Span nonAria className='Layer__CallBooking__DateTileMonth'>
-                {dateTileMonthLabel}
-              </Span>
-              <VStack className='Layer__CallBooking__DateTileBody'>
-                <Span nonAria className='Layer__CallBooking__DateTileDay'>
-                  {dateTileDayLabel}
-                </Span>
-                <Span nonAria className='Layer__CallBooking__DateTileWeekday'>
-                  {dateTileWeekdayLabel}
-                </Span>
-              </VStack>
-            </VStack>
-            <HStack className='Layer__CallBooking__TimeRow' align='center'>
-              <Clock3 size={16} strokeWidth={2} />
-              <Span nonAria noWrap className='Layer__CallBooking__TimeLabel'>
-                {timeLabel}
-              </Span>
-            </HStack>
+            <DateTile date={callBooking.eventStartAt} />
           </VStack>
-          <VStack className='Layer__CallBooking__HeaderDetails'>
-            <HStack className='Layer__CallBooking__TitleRow' align='baseline'>
+          <VStack className='Layer__CallBooking__HeaderDetails' pbs='3xs'>
+            <HStack className='Layer__CallBooking__TitleRow' align='baseline' gap='xs'>
               <Heading size='xs' className='Layer__CallBooking__Title'>
                 {purpose}
               </Heading>
               {countdownLabel && (
-                <Span nonAria size='xs' className='Layer__CallBooking__Countdown'>
+                <Span nonAria size='xs' variant='subtle'>
                   ·
                   {' '}
                   {countdownLabel}
                 </Span>
               )}
             </HStack>
-            <Span size='sm' className='Layer__CallBooking__Subtitle'>
+            <Span size='sm' variant='subtle' className='Layer__CallBooking__Subtitle'>
               {subtitle}
             </Span>
-            <VStack className='Layer__CallBooking__MetaList'>
+            <VStack gap='xs' pbs='sm'>
               <HStack className='Layer__CallBooking__LocationRow' align='center'>
                 <Video size={14} />
                 <Span size='sm' className='Layer__CallBooking__LocationLabel'>
@@ -192,17 +149,25 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
           </VStack>
         </HStack>
 
+        <HStack className='Layer__CallBooking__DateTimeRow' align='center'>
+          <Clock3 size={16} strokeWidth={2} />
+          <Span nonAria noWrap className='Layer__CallBooking__TimeLabel'>
+            {timeLabel}
+          </Span>
+        </HStack>
+
         <Span nonAria className='Layer__CallBooking__Divider' />
 
-        <VStack className='Layer__CallBooking__CoverageSection'>
+        <VStack pbe='md'>
           <Span
             nonAria
             size='2xs'
+            variant='subtle'
             className='Layer__CallBooking__CoverageEyebrow'
           >
             {t('callBookings:label.what_well_cover', 'What we\'ll cover')}
           </Span>
-          <VStack className='Layer__CallBooking__CoverageList' role='list'>
+          <VStack role='list' gap='xs'>
             {whatWeWillCoverItems.map(item => (
               <HStack
                 key={item}
@@ -221,7 +186,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
           </VStack>
         </VStack>
 
-        <HStack className='Layer__CallBooking__ActionRow' align='center'>
+        <HStack className='Layer__CallBooking__ActionRow' align='center' gap='xs'>
           <HStack className='Layer__CallBooking__JoinAction'>
             <LinkButton href={callLink} external variant='solid'>
               <Video size={15} />

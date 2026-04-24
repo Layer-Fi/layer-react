@@ -1,0 +1,58 @@
+.Layer__UI__DateTile {
+  .Layer__Span {
+    max-inline-size: none;
+  }
+
+  gap: 0;
+  overflow: hidden;
+  width: 5.5rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+
+  &__Month,
+  &__Day,
+  &__Weekday {
+    display: block;
+    text-align: center;
+  }
+
+  &__Month {
+    padding: 0.3125rem 0;
+    background: #0b2239;
+    font-size: 0.625rem;
+    line-height: 1.2;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #fff;
+    letter-spacing: 0.14em;
+  }
+
+  &__Body {
+    gap: 0;
+  }
+
+  &__Day {
+    font-size: 2rem;
+    line-height: 1;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+  }
+
+  &__Weekday {
+    margin-top: 0.25rem;
+    font-size: 0.6875rem;
+    line-height: 1.2;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 0.06em;
+  }
+
+  @container (width <= 400px) {
+    &__Day {
+      font-size: 1.75rem;
+    }
+  }
+}
