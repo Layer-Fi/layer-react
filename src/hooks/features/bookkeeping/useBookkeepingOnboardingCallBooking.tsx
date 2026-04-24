@@ -33,8 +33,9 @@ export const useBookkeepingOnboardingCallBooking = () => {
     }
   }, [bookkeepingStatus?.onboardingCallUrl])
 
-  const onboardingCallUrl = bookkeepingStatus?.onboardingCallUrl ?? persistedOnboardingCallUrl
-  const shouldShowEmbeddedOnboarding = bookkeepingStatus?.showEmbeddedOnboarding === true
+  const onboardingCallUrl = bookkeepingStatus?.showEmbeddedOnboarding
+    ? bookkeepingStatus.onboardingCallUrl ?? persistedOnboardingCallUrl
+    : undefined
 
   const recordCalendlyScheduled = useCallback(async (payload: CalendlyPayload) => {
     const externalId = getExternalIdFromCalendlyPayload(payload)
@@ -50,16 +51,16 @@ export const useBookkeepingOnboardingCallBooking = () => {
         call_type: CallBookingType.GOOGLE_MEET,
       })
       setHasScheduledCallInSession(true)
+      void forceReloadBookkeepingStatus()
     }
     catch (error: unknown) {
       console.error('Failed to record onboarding call booking', error)
     }
-  }, [createCallBooking])
+  }, [createCallBooking, forceReloadBookkeepingStatus])
 
   const handleCalendlyClose = useCallback(() => {
     setEmbedDismissed(true)
-    void forceReloadBookkeepingStatus()
-  }, [forceReloadBookkeepingStatus])
+  }, [])
 
   const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly({
     onEventScheduled: recordCalendlyScheduled,
@@ -74,11 +75,9 @@ export const useBookkeepingOnboardingCallBooking = () => {
     && onboardingCallUrl != null
     && !hasScheduledCallInSession
 
-  const shouldAutoOpenEmbed = shouldOfferOnboarding
-    && shouldShowEmbeddedOnboarding
-    && !embedDismissed
+  const shouldAutoOpenEmbed = shouldOfferOnboarding && !embedDismissed
   const showScheduledCallBooking = hasResolvedCallBooking && callBooking != null
-  const showEmptyCallBooking = shouldOfferOnboarding
+  const showEmptyCallBooking = bookkeepingStatus?.showEmbeddedOnboarding === true
 
   const handleBookCall = useCallback(() => {
     if (onboardingCallUrl != null) {
