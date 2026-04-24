@@ -37,12 +37,7 @@ const resolveBulkTaxCode = (
   bankTransaction: BankTransaction | undefined,
   classification: Classification,
   selectedTaxCode: string | null,
-  keepExistingTaxCode: boolean,
 ): string | null => {
-  if (keepExistingTaxCode) {
-    return getCategoryPayloadTaxCode(classification, bankTransaction?.tax_code)
-  }
-
   const taxCode = hasBankTransactionTaxCode(bankTransaction, selectedTaxCode) ? selectedTaxCode : null
 
   return getCategoryPayloadTaxCode(classification, taxCode)
@@ -148,10 +143,9 @@ export const BankTransactionsCategorizeAllModal = ({
     }
 
     const classification = selectedCategory.classification
-    const keepExistingTaxCode = selectedTaxCode === null
-    const selectedTaxCodeValue = selectedTaxCode === null || selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE
+    const selectedTaxCodeValue = selectedTaxCode?.value === NO_TAX_CODE_COMBO_VALUE
       ? null
-      : selectedTaxCode.value
+      : selectedTaxCode?.value ?? null
     const categorization = {
       type: 'Category' as const,
       category: classification,
@@ -166,7 +160,6 @@ export const BankTransactionsCategorizeAllModal = ({
             bankTransactionsById.get(transactionId),
             classification,
             selectedTaxCodeValue,
-            keepExistingTaxCode,
           ),
         },
       })),
