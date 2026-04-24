@@ -92,3 +92,19 @@
     }
   }
 }
+
+.Layer__UI__Table-ScrollContainer {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.Layer__UI__Table-Column[data-pinned],
+.Layer__UI__Table-Cell[data-pinned] {
+  z-index: 1;
+  background-color: inherit;
+}
+
+.Layer__UI__Table-TableHeader .Layer__UI__Table-Column[data-pinned] {
+  z-index: 2;
+  background-color: var(--color-base-0);
+}

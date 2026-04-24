@@ -3,7 +3,7 @@
   align-content: center;
   height: var(--spacing-5xl);
 
-  padding-inline-start: calc(var(--spacing-sm) * calc(var(--tree-item-level) - 1) + var(--spacing-md) * var(--tree-item-level));
+  padding-inline-start: calc(4px + var(--spacing-sm) * var(--tree-item-level));
   padding-inline-end: var(--spacing-md);
 
   border-bottom: 1px solid var(--color-base-300);
@@ -11,6 +11,8 @@
 
   .Layer__TreeNavigation__Check {
     visibility: hidden;
+    height: 16px;
+    min-width: 16px;
   }
 
   &[aria-level='1'] {

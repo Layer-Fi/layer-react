@@ -9,24 +9,11 @@ export enum ReportControl {
   Unknown = 'unknown',
 }
 
-export enum ReportGroupType {
-  Accounting = 'accounting',
-  Unknown = 'unknown',
-}
-
 const ReportControlSchema = Schema.Enums(ReportControl)
-const ReportGroupTypeSchema = Schema.Enums(ReportGroupType)
-
 const TransformedReportControlSchema = createTransformedEnumSchema(
   ReportControlSchema,
   ReportControl,
   ReportControl.Unknown,
-)
-
-const TransformedReportGroupTypeSchema = createTransformedEnumSchema(
-  ReportGroupTypeSchema,
-  ReportGroupType,
-  ReportGroupType.Unknown,
 )
 
 export const ReportConfigSchema = Schema.Struct({
@@ -50,7 +37,7 @@ export type ReportConfig = typeof ReportConfigSchema.Type
 
 export const ReportGroupSchema = Schema.Struct({
   groupType: pipe(
-    Schema.propertySignature(TransformedReportGroupTypeSchema),
+    Schema.propertySignature(Schema.String),
     Schema.fromKey('group_type'),
   ),
   displayName: pipe(

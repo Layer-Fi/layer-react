@@ -21,6 +21,8 @@ import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './table.scss'
 
+type PinnedSide = 'left' | 'right' | false
+
 enum TableSubComponent {
   Table = 'Table',
   TableHeader = 'TableHeader',
@@ -173,11 +175,12 @@ Row.displayName = TableSubComponent.Row
 type ColumnStyleProps = {
   alignment?: Alignment
   colSpan?: number
+  pinned?: PinnedSide
 }
 
 const Column = forwardRef<HTMLTableCellElement, ColumnProps & ColumnStyleProps & TableRenderingProps>(
-  ({ children, className, nonAria, id, alignment = Alignment.Left, colSpan = 1, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment) })
+  ({ children, className, nonAria, id, alignment = Alignment.Left, colSpan = 1, pinned, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment), pinned })
     const columnClassName = getClassName(TableSubComponent.Column, className)
 
     const ColumnComponent = nonAria
@@ -204,11 +207,12 @@ Column.displayName = TableSubComponent.Column
 // TABLE CELL
 type CellStyleProps = {
   alignment?: Alignment
+  pinned?: PinnedSide
 }
 
 const Cell = forwardRef<HTMLTableCellElement, CellProps & CellStyleProps & TableRenderingProps>(
-  ({ children, className, nonAria, id, alignment, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment) })
+  ({ children, className, nonAria, id, alignment, pinned, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment), pinned })
 
     const CellComponent = nonAria
       ? 'td'

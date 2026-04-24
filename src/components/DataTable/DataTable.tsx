@@ -9,6 +9,7 @@ import {
   TableBody,
   TableHeader,
 } from '@ui/Table/Table'
+import { useColumnPinningStyles } from '@hooks/utils/tables/useColumnPinningStyles'
 import { Loader } from '@components/Loader/Loader'
 
 import './dataTable.scss'
@@ -53,8 +54,9 @@ export const DataTable = <TData extends object>({
   withClickableRow,
 }: DataTableProps<TData>) => {
   const nonAria = headerGroups.length > 1
-
   const { EmptyState, ErrorState } = slots
+
+  const { headerRef, pinningStyles } = useColumnPinningStyles(headerGroups)
 
   const isEmptyTable = data?.length === 0
   const renderTableBody = useMemo(() => {
@@ -110,6 +112,8 @@ export const DataTable = <TData extends object>({
                   key={`${row.id}-${cell.id}`}
                   className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
                   alignment={cell.column.columnDef.meta?.alignment}
+                  pinned={cell.column.getIsPinned()}
+                  style={pinningStyles.get(cell.column.id)}
                   nonAria={nonAria}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -120,35 +124,39 @@ export const DataTable = <TData extends object>({
         })}
       </>
     )
-  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, withClickableRow, componentName])
+  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, withClickableRow, componentName, pinningStyles])
 
   return (
-    <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>
-      <TableHeader hideHeader={hideHeader} nonAria={nonAria}>
-        {headerGroups.map(headerGroup => (
-          <Row key={headerGroup.id} nonAria={nonAria}>
-            {headerGroup.headers.map(header => (
-              <Column
-                key={header.id}
-                isRowHeader={header.column.columnDef.meta?.isRowHeader}
-                className={`Layer__UI__Table-Column__${componentName}--${header.id}`}
-                alignment={header.column.columnDef.meta?.alignment}
-                nonAria={nonAria}
-                colSpan={header.colSpan}
-              >
-                {header.isPlaceholder
-                  ? null
-                  : (typeof header.column.columnDef.header === 'function'
-                    ? header.column.columnDef.header(header.getContext())
-                    : header.column.columnDef.header)}
-              </Column>
-            ))}
-          </Row>
-        ))}
-      </TableHeader>
-      <TableBody dependencies={dependencies} nonAria={nonAria}>
-        {renderTableBody}
-      </TableBody>
-    </Table>
+    <div className='Layer__UI__Table-ScrollContainer'>
+      <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>
+        <TableHeader ref={headerRef} hideHeader={hideHeader} nonAria={nonAria}>
+          {headerGroups.map(headerGroup => (
+            <Row key={headerGroup.id} nonAria={nonAria}>
+              {headerGroup.headers.map(header => (
+                <Column
+                  key={header.id}
+                  isRowHeader={header.column.columnDef.meta?.isRowHeader}
+                  className={`Layer__UI__Table-Column__${componentName}--${header.id}`}
+                  alignment={header.column.columnDef.meta?.alignment}
+                  pinned={header.column.getIsPinned()}
+                  style={pinningStyles.get(header.column.id)}
+                  nonAria={nonAria}
+                  colSpan={header.colSpan}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : (typeof header.column.columnDef.header === 'function'
+                      ? header.column.columnDef.header(header.getContext())
+                      : header.column.columnDef.header)}
+                </Column>
+              ))}
+            </Row>
+          ))}
+        </TableHeader>
+        <TableBody dependencies={dependencies} nonAria={nonAria}>
+          {renderTableBody}
+        </TableBody>
+      </Table>
+    </div>
   )
 }
