@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { buildCategorizeBankTransactionPayloadForSplit, getBankTransactionTaxCodeOptions, hasReceipts, isCategorized } from '@utils/bankTransactions'
+import { buildCategorizeBankTransactionPayloadForSplit, getBankTransactionTaxCodeOptions, hasReceipts, isCategorized } from '@components/BankTransactions/utils'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'

@@ -6,7 +6,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import {
   isCategorized,
   isCredit,
-} from '@utils/bankTransactions'
+} from '@components/BankTransactions/utils'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'

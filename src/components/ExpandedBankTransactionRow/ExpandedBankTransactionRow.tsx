@@ -20,7 +20,7 @@ import {
   getBankTransactionFirstSuggestedMatch,
   getBankTransactionTaxCodeOptions,
   hasMatch,
-} from '@utils/bankTransactions'
+} from '@components/BankTransactions/utils'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'

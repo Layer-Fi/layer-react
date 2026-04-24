@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type Classification } from '@schemas/categorization'
-import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode, hasBankTransactionTaxCode } from '@utils/bankTransactions'
+import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode, hasBankTransactionTaxCode } from '@components/BankTransactions/utils'
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

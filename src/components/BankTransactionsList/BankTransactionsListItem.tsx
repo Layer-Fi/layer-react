@@ -7,7 +7,7 @@ import {
   hasReceipts,
   isCategorized,
   isCredit,
-} from '@utils/bankTransactions'
+} from '@components/BankTransactions/utils'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
