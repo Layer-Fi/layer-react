@@ -28,7 +28,6 @@ export interface BaseDataTableProps {
     EmptyState: React.FC
     ErrorState: React.FC
   }
-  hideHeader?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dependencies?: readonly any[]
 }
@@ -46,7 +45,6 @@ export const DataTable = <TData extends object>({
   componentName,
   ariaLabel,
   slots,
-  hideHeader,
   dependencies,
   data,
   headerGroups,
@@ -129,7 +127,7 @@ export const DataTable = <TData extends object>({
   return (
     <div className='Layer__UI__Table-ScrollContainer'>
       <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>
-        <TableHeader ref={headerRef} hideHeader={hideHeader} nonAria={nonAria}>
+        <TableHeader ref={headerRef} nonAria={nonAria}>
           {headerGroups.map(headerGroup => (
             <Row key={headerGroup.id} nonAria={nonAria}>
               {headerGroup.headers.map(header => (

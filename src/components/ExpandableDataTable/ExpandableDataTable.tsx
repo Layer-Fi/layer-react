@@ -43,7 +43,6 @@ export function ExpandableDataTable<TData extends object>({
   componentName,
   ariaLabel,
   slots,
-  hideHeader,
   getSubRows,
   getRowId,
 }: ExpandableDataTableProps<TData>) {
@@ -125,7 +124,6 @@ export function ExpandableDataTable<TData extends object>({
       isError={isError}
       componentName={componentName}
       slots={slots}
-      hideHeader={hideHeader}
       dependencies={dependencies}
       headerGroups={headerGroups}
       withClickableRow={withClickableRow}

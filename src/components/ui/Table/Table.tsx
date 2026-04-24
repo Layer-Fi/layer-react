@@ -46,8 +46,8 @@ const toAlignmentDataValue = (alignment: Alignment | undefined) => {
   }
 }
 
-const getClassName = (component: TableSubComponent, additionalClassNames?: Argument, withHidden?: boolean) =>
-  classNames(`${CSS_PREFIX}-${component}`, withHidden && `${CSS_PREFIX}-${component}--hidden`, additionalClassNames)
+const getClassName = (component: TableSubComponent, additionalClassNames?: Argument) =>
+  classNames(`${CSS_PREFIX}-${component}`, additionalClassNames)
 
 type TableRenderingProps = {
   nonAria?: boolean
@@ -76,12 +76,8 @@ const Table = forwardRef<HTMLTableElement, TableProps & TableRenderingProps>(
 Table.displayName = TableSubComponent.Table
 
 // TABLE HEADER
-type TableHeaderStyleProps = {
-  hideHeader?: boolean
-}
-
 const TableHeaderInner = <T extends object>(
-  { children, className, hideHeader, nonAria, ...restProps }: TableHeaderProps<T> & TableHeaderStyleProps & TableRenderingProps,
+  { children, className, nonAria, ...restProps }: TableHeaderProps<T> & TableRenderingProps,
   ref: React.Ref<HTMLTableSectionElement>,
 ) => {
   const TableHeaderComponent = nonAria
@@ -90,7 +86,7 @@ const TableHeaderInner = <T extends object>(
 
   return (
     <TableHeaderComponent
-      className={getClassName(TableSubComponent.TableHeader, className, hideHeader)}
+      className={getClassName(TableSubComponent.TableHeader, className)}
       {...restProps}
       ref={ref}
     >
@@ -100,7 +96,7 @@ const TableHeaderInner = <T extends object>(
 }
 
 const TableHeader = forwardRef(TableHeaderInner) as (<T>(
-  props: TableHeaderProps<T> & TableHeaderStyleProps & TableRenderingProps & { ref?: React.Ref<HTMLTableSectionElement> }
+  props: TableHeaderProps<T> & TableRenderingProps & { ref?: React.Ref<HTMLTableSectionElement> }
 ) => React.ReactElement) & { displayName?: string }
 
 TableHeader.displayName = TableSubComponent.TableHeader
