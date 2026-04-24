@@ -1,4 +1,3 @@
-import classNames from 'classnames'
 import type { TFunction } from 'i18next'
 import { Check, CircleAlert, Clock3 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -50,14 +49,6 @@ const getDeadlineStatusIcon = (status: TaxOverviewDeadlineStatus) => {
   }
 }
 
-const AMOUNT_ICON_CLASS_MAP = {
-  due: 'Layer__TaxOverview__AmountIcon--due',
-  neutral: 'Layer__TaxOverview__AmountIcon--neutral',
-  paid: 'Layer__TaxOverview__AmountIcon--paid',
-  pastDue: 'Layer__TaxOverview__AmountIcon--pastDue',
-  warning: 'Layer__TaxOverview__AmountIcon--warning',
-} as const
-
 export const StatusIcon = ({ status }: { status: TaxOverviewDeadlineStatus }) => {
   const { t } = useTranslation()
   const tone = getDeadlineAmountTone(status)
@@ -69,7 +60,7 @@ export const StatusIcon = ({ status }: { status: TaxOverviewDeadlineStatus }) =>
       <TooltipTrigger asChild>
         <Span
           nonAria
-          className={classNames('Layer__TaxOverview__AmountIcon', AMOUNT_ICON_CLASS_MAP[tone])}
+          className={`Layer__TaxOverview__AmountIcon Layer__TaxOverview__AmountIcon--${tone}`}
         >
           <Icon size={14} strokeWidth={2.25} />
         </Span>
