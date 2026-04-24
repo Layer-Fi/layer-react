@@ -6,6 +6,9 @@ import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { Span } from '@ui/Typography/Text'
 
+const ICON_SIZE = 14
+const ICON_STROKE_WIDTH = 2.25
+
 const getDeadlineAmountTone = (status?: TaxOverviewDeadlineStatus) => {
   switch (status) {
     case TaxOverviewDeadlineStatus.PastDue:
@@ -62,7 +65,7 @@ export const StatusIcon = ({ status }: { status: TaxOverviewDeadlineStatus }) =>
           nonAria
           className={`Layer__TaxOverview__AmountIcon Layer__TaxOverview__AmountIcon--${tone}`}
         >
-          <Icon size={14} strokeWidth={2.25} />
+          <Icon size={ICON_SIZE} strokeWidth={ICON_STROKE_WIDTH} />
         </Span>
       </TooltipTrigger>
       <TooltipContent>

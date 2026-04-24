@@ -18,6 +18,9 @@ import { StatusIcon } from '@components/TaxEstimatesDeadlineRow/StatusIcon'
 
 import '@components/TaxEstimatesDeadlineRow/taxEstimatesDeadlineRow.scss'
 
+const HEADING_LEVEL = 3
+const ICON_SIZE = 12
+
 type TaxEstimatesDeadlineRowProps = {
   data: TaxEstimateDeadlineRow
   isAnnual?: boolean
@@ -37,7 +40,7 @@ export const TaxEstimatesDeadlineRow = ({
     <Card className='Layer__TaxOverview__DeadlineCard'>
       <HStack className='Layer__TaxOverview__DeadlineRow' justify='space-between' align='start' gap='md' pb='md' pi='md'>
         <VStack className='Layer__TaxOverview__DeadlineContent' gap='3xs' fluid>
-          <Heading level={3} size='sm'>{data.title}</Heading>
+          <Heading level={HEADING_LEVEL} size='sm'>{data.title}</Heading>
           <Span size='sm' variant='subtle'>
             {t('taxEstimates:label.due_with_date', 'Due: {{date}}', { date: formatCalendarDate(data.dueDate, formatDate) })}
           </Span>
@@ -58,7 +61,7 @@ export const TaxEstimatesDeadlineRow = ({
         <Stack direction={isMobile ? 'column' : 'row'} align={isMobile ? undefined : 'center'} className='Layer__TaxOverview__DeadlineReviewRow' justify='space-between' gap='md' pb='md' pi='md'>
           <HStack className='Layer__TaxOverview__DeadlineReviewContent' align='center' gap='xs'>
             <Span nonAria className='Layer__TaxOverview__DeadlineReviewIcon'>
-              <FileText size={12} />
+              <FileText size={ICON_SIZE} />
             </Span>
             <Span className='Layer__TaxOverview__DeadlineReviewLabel' size='sm' weight='bold'>
               {tPlural(t, 'taxEstimates:label.uncategorized_transactions', {
