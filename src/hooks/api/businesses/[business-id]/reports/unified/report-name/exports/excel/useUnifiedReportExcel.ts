@@ -2,15 +2,14 @@ import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
-import type { DateGroupBy, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { type QueryParams, toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import {
+  type UnifiedReportControlParams,
   type UnifiedReportParams,
   useUnifiedReportParams,
 } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
@@ -18,17 +17,16 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type GetUnifiedReportExcelParams = {
   businessId: string
-  report: string
-  groupBy: DateGroupBy | null
-} & UnifiedReportDateQueryParams
+  route: string
+} & UnifiedReportControlParams & QueryParams
 
 const getUnifiedReportExcel = get<
   { data: S3PresignedUrlSchemaType },
   GetUnifiedReportExcelParams
->(({ businessId, report, groupBy, ...dateParams }) => {
-  const parameters = toDefinedSearchParameters({ ...dateParams, groupBy })
+>(({ businessId, route, ...restParams }) => {
+  const parameters = toDefinedSearchParameters({ ...restParams })
 
-  return `/v1/businesses/${businessId}/reports/unified/${report}/exports/excel?${parameters}`
+  return `/v1/businesses/${businessId}/reports/unified/${route}/exports/excel?${parameters}`
 })
 
 const getTag = (report: string) => `#unified-${report}-report-excel`
@@ -41,46 +39,45 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
-  reportState,
+  params,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
-  reportState: UnifiedReportParams | null
+  params: UnifiedReportParams | null
 }) {
-  if (!reportState || !accessToken || !apiUrl) return
+  if (!params || !accessToken || !apiUrl) return
 
   return {
     accessToken,
     apiUrl,
     businessId,
-    ...reportState,
-    tags: [getTag(reportState.report)],
+    ...params,
+    tags: [getTag(params.route)],
   }
 }
 
 type UseUnifiedReportExcelOptions = {
-  dateSelectionMode: DateSelectionMode
   onSuccess?: (url: S3PresignedUrlSchemaType) => Promise<void> | void
 }
 
-export function useUnifiedReportExcel({ dateSelectionMode, onSuccess }: UseUnifiedReportExcelOptions) {
+export function useUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOptions = {}) {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { apiUrl } = useEnvironment()
   const { businessId } = useLayerContext()
-  const reportState = useUnifiedReportParams({ dateSelectionMode })
+  const params = useUnifiedReportParams()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
       ...auth,
       apiUrl,
       businessId,
-      reportState,
+      params,
     })),
-    ({ accessToken, apiUrl, businessId, tags, ...reportParams }) =>
+    ({ accessToken, apiUrl, businessId, tags, ...restParams }) =>
       getUnifiedReportExcel(apiUrl, accessToken, {
-        params: { businessId, ...reportParams },
+        params: { businessId, ...restParams },
       })()
         .then(Schema.decodeUnknownPromise(UnifiedReportExcelReturnSchema))
         .then(async ({ data }) => {

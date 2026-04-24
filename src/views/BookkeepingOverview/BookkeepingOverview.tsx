@@ -2,10 +2,8 @@ import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
-import { type CallBooking as CallBookingData } from '@schemas/callBooking'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
-import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
-import { useCalendly } from '@hooks/features/calendly/useCalendly'
+import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { CallBooking } from '@components/CallBooking/CallBooking'
@@ -58,7 +56,6 @@ export const BookkeepingOverview = ({
   const { t } = useTranslation()
   const [width] = useWindowSize()
   const { value: sizeClass } = useSizeClass()
-  const { isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly } = useCalendly()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -66,11 +63,15 @@ export const BookkeepingOverview = ({
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
 
-  const handleBookCall = () => {} // TODO
-
-  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings({ limit: 1 })
-  const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
-  const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
+  const {
+    callBooking,
+    showCallBookingCard,
+    handleBookCall,
+    isCalendlyVisible,
+    calendlyLink,
+    calendlyRef,
+    closeCalendly,
+  } = useBookkeepingOnboardingCallBooking()
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -89,8 +90,11 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={(
           <VStack gap='lg'>
-            {callBookingVisible && (
-              <CallBooking callBooking={callBooking} onBookCall={handleBookCall} />
+            {showCallBookingCard && (
+              <CallBooking
+                callBooking={callBooking}
+                onBookCall={handleBookCall}
+              />
             )}
             <Tasks
               stringOverrides={stringOverrides?.tasks}
@@ -106,8 +110,11 @@ export const BookkeepingOverview = ({
             onClick={() => (upperElementInFocus.current = true)}
           >
             <VStack gap='lg'>
-              {callBookingVisible && (
-                <CallBooking callBooking={callBooking} onBookCall={handleBookCall} />
+              {showCallBookingCard && (
+                <CallBooking
+                  callBooking={callBooking}
+                  onBookCall={handleBookCall}
+                />
               )}
               <Tasks
                 mobile
