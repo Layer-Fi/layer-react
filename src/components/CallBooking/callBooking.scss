@@ -3,20 +3,12 @@
     max-inline-size: none;
   }
 
-  &__HeaderRow {
-    gap: 2rem;
-    width: 100%;
-  }
-
   &__DateColumn {
     flex: 0 0 auto;
-    gap: 0;
     min-width: 5.5rem;
   }
 
   &__HeaderDetails {
-    flex: 1 1 0;
-    gap: 0;
     min-width: 0;
   }
 
@@ -37,7 +29,6 @@
     line-height: 1.45;
   }
 
-  &__TimeRow,
   &__DateTimeRow,
   &__LocationRow,
   &__CoverageItem,
@@ -45,20 +36,8 @@
     min-width: 0;
   }
 
-  &__TimeRow,
-  &__DateTimeRow,
-  &__LocationRow {
-    gap: 0.625rem;
-  }
-
-  &__TimeRow {
-    align-self: flex-start;
-    color: #1f2937;
-  }
-
   &__DateTimeRow {
     align-self: flex-start;
-    margin-top: 0.875rem;
     color: #1f2937;
   }
 
@@ -66,7 +45,6 @@
     font-size: 1rem;
     line-height: 1.35;
     font-weight: 600;
-    white-space: nowrap;
     color: #0f172a;
     letter-spacing: -0.005em;
   }
@@ -95,15 +73,10 @@
 
   &__CoverageEyebrow {
     display: block;
-    margin-bottom: 0.625rem;
     line-height: 1.2;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-  }
-
-  &__CoverageItem {
-    gap: 0.625rem;
   }
 
   &__CoverageBadge {
@@ -122,10 +95,6 @@
   &__CoverageText {
     line-height: 1.45;
     color: #1f2937;
-  }
-
-  &__JoinAction {
-    display: flex;
   }
 
   @container (width <= 400px) {

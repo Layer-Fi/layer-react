@@ -118,11 +118,11 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
   return (
     <Container name='CallBooking'>
       <VStack pi='lg' pb='lg'>
-        <HStack className='Layer__CallBooking__HeaderRow' align='start'>
+        <HStack className='Layer__CallBooking__HeaderRow' align='start' gap='xl'>
           <VStack className='Layer__CallBooking__DateColumn'>
             <DateTile date={callBooking.eventStartAt} />
           </VStack>
-          <VStack className='Layer__CallBooking__HeaderDetails' pbs='3xs'>
+          <VStack className='Layer__CallBooking__HeaderDetails' fluid pbs='3xs'>
             <HStack className='Layer__CallBooking__TitleRow' align='baseline' gap='xs'>
               <Heading size='xs' className='Layer__CallBooking__Title'>
                 {purpose}
@@ -139,7 +139,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
               {subtitle}
             </Span>
             <VStack gap='xs' pbs='sm'>
-              <HStack className='Layer__CallBooking__LocationRow' align='center'>
+              <HStack className='Layer__CallBooking__LocationRow' align='center' gap='sm'>
                 <Video size={14} />
                 <Span size='sm' className='Layer__CallBooking__LocationLabel'>
                   {callPlatform}
@@ -149,7 +149,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
           </VStack>
         </HStack>
 
-        <HStack className='Layer__CallBooking__DateTimeRow' align='center'>
+        <HStack className='Layer__CallBooking__DateTimeRow' align='center' gap='sm' pbs='md'>
           <Clock3 size={16} strokeWidth={2} />
           <Span nonAria noWrap className='Layer__CallBooking__TimeLabel'>
             {timeLabel}
@@ -163,6 +163,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
             nonAria
             size='2xs'
             variant='subtle'
+            pbe='sm'
             className='Layer__CallBooking__CoverageEyebrow'
           >
             {t('callBookings:label.what_well_cover', 'What we\'ll cover')}
@@ -173,6 +174,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
                 key={item}
                 className='Layer__CallBooking__CoverageItem'
                 align='start'
+                gap='sm'
                 role='listitem'
               >
                 <Span nonAria className='Layer__CallBooking__CoverageBadge'>
