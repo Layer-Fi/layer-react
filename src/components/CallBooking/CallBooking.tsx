@@ -83,9 +83,9 @@ const OnboardingCallCoverage = () => {
               gap='sm'
               role='listitem'
             >
-              <Span nonAria className='Layer__CallBooking__CoverageBadge'>
+              <HStack className='Layer__CallBooking__CoverageBadge' align='center' justify='center'>
                 <Check size={12} strokeWidth={2.5} />
-              </Span>
+              </HStack>
               <Span size='sm' className='Layer__CallBooking__CoverageText'>
                 {t(translationKey, defaultLabel)}
               </Span>
@@ -143,7 +143,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
               {subtitle}
             </Span>
             <VStack gap='xs' pbs='sm'>
-              <HStack className='Layer__CallBooking__LocationRow' align='center' gap='sm'>
+              <HStack className='Layer__CallBooking__LocationRow' align='center' gap='sm' pb='xs' pi='sm'>
                 <Video size={14} />
                 <Span size='sm' className='Layer__CallBooking__LocationLabel'>
                   {callPlatform}

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 
 export const TasksHeader = ({
@@ -9,10 +10,17 @@ export const TasksHeader = ({
 }) => {
   const { t } = useTranslation()
   return (
-    <div className='Layer__tasks-header'>
+    <HStack
+      className='Layer__tasks-header'
+      align='center'
+      justify='space-between'
+      gap='md'
+      pb='md'
+      pi='lg'
+    >
       <Heading size='sm'>
         {tasksHeader ?? t('bookkeeping:label.bookkeeping_tasks', 'Bookkeeping Tasks')}
       </Heading>
-    </div>
+    </HStack>
   )
 }

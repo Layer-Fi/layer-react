@@ -16,7 +16,7 @@ export const DateTile = ({ date }: DateTileProps) => {
   const weekdayLabel = formatDate(date, DateFormat.WeekdayShort)
 
   return (
-    <VStack className='Layer__UI__DateTile'>
+    <VStack className='Layer__UI__DateTile' overflow='hidden'>
       <Span className='Layer__UI__DateTile__Month'>
         {monthLabel}
       </Span>
