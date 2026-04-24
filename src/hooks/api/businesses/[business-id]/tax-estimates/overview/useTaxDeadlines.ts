@@ -19,9 +19,25 @@ export type TaxEstimateDeadlineRow = {
 }
 
 function mapQuarterToSection(t: TFunction, quarter: TaxEstimatesBannerQuarter): TaxEstimateDeadlineRow {
+  let quarterLabel
+  switch (quarter.quarter) {
+    case 1:
+      quarterLabel = t('taxEstimates:label.q1', 'Q1')
+      break
+    case 2:
+      quarterLabel = t('taxEstimates:label.q2', 'Q2')
+      break
+    case 3:
+      quarterLabel = t('taxEstimates:label.q3', 'Q3')
+      break
+    case 4:
+      quarterLabel = t('taxEstimates:label.q4', 'Q4')
+      break
+  }
+
   return {
     type: 'quarter',
-    title: t('taxEstimates:label.quarter_taxes', 'Q{{quarter}} taxes', { quarter: quarter.quarter }),
+    title: t('taxEstimates:label.quarter_taxes', '{{quarterLabel}} taxes', { quarterLabel }),
     dueDate: quarter.dueDate,
     amount: quarter.amountOwed,
     status: quarter.state,
