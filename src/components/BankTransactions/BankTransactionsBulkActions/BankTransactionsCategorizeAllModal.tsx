@@ -94,10 +94,7 @@ export const BankTransactionsCategorizeAllModal = ({
   }, [t, taxCodeSelectOptions])
 
   useEffect(() => {
-    if (!selectedTaxCode) {
-      return
-    }
-    if (selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE) {
+    if (!selectedTaxCode || selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE) {
       return
     }
     if (!taxCodeSelectOptions.some(option => option.value === selectedTaxCode.value)) {
