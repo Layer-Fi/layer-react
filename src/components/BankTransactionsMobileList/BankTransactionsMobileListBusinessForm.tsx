@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
-import { hasReceipts, isCategorized } from '@utils/bankTransactions'
+import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode, hasReceipts, isCategorized } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { useBankTransactionsCategorizationActions, useGetBankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -81,11 +81,8 @@ export const BankTransactionsMobileListBusinessForm = ({
   }, [isErrorCategorizing])
 
   const taxCodeOptions = useMemo<TaxCodeSelectOption[]>(
-    () => bankTransaction.tax_options?.canada.map(taxOption => ({
-      label: taxOption.display_name,
-      value: taxOption.code,
-    })) ?? [],
-    [bankTransaction.tax_options?.canada],
+    () => getBankTransactionTaxCodeOptions(bankTransaction),
+    [bankTransaction],
   )
 
   const getTaxCodeOption = useCallback((taxCode: string | null): TaxCodeSelectOption | null => {
@@ -258,16 +255,12 @@ export const BankTransactionsMobileListBusinessForm = ({
     const payload = selectedCategory.classification
     if (payload === null) return
 
-    const taxCode = payload.type === 'Exclusion'
-      ? null
-      : currentTaxCode?.value ?? null
-
     void categorizeBankTransaction(
       bankTransaction.id,
       {
         type: 'Category',
         category: payload,
-        taxCode,
+        taxCode: getCategoryPayloadTaxCode(payload, currentTaxCode?.value),
       },
       true,
     )

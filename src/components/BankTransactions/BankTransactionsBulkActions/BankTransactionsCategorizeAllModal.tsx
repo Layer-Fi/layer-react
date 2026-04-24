@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type Classification } from '@schemas/categorization'
-import { getBankTransactionTaxCodeOptions, hasBankTransactionTaxCode } from '@utils/bankTransactions'
+import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode, hasBankTransactionTaxCode } from '@utils/bankTransactions'
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -39,15 +39,13 @@ const resolveBulkTaxCode = (
   selectedTaxCode: string | null,
   shouldKeepExistingTaxCode: boolean,
 ): string | null => {
-  if (classification.type === 'Exclusion') {
-    return null
-  }
-
   if (shouldKeepExistingTaxCode) {
-    return bankTransaction?.tax_code ?? null
+    return getCategoryPayloadTaxCode(classification, bankTransaction?.tax_code)
   }
 
-  return hasBankTransactionTaxCode(bankTransaction, selectedTaxCode) ? selectedTaxCode : null
+  const taxCode = hasBankTransactionTaxCode(bankTransaction, selectedTaxCode) ? selectedTaxCode : null
+
+  return getCategoryPayloadTaxCode(classification, taxCode)
 }
 
 export const BankTransactionsCategorizeAllModal = ({

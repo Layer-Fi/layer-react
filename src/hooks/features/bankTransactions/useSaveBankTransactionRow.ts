@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { buildCategorizeBankTransactionPayloadForSplit } from '@utils/bankTransactions'
+import { buildCategorizeBankTransactionPayloadForSplit, getCategoryPayloadTaxCode } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -46,15 +46,10 @@ export const useSaveBankTransactionRow = () => {
 
     if (!selectedCategory.classification) return
 
-    const selectedTaxCode = selectedCategorization.taxCode
-    const taxCode = selectedCategory.classification.type === 'Exclusion'
-      ? null
-      : selectedTaxCode === null ? null : selectedTaxCode.value
-
     return categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: selectedCategory.classification,
-      taxCode,
+      taxCode: getCategoryPayloadTaxCode(selectedCategory.classification, selectedCategorization?.taxCode?.value),
     })
   }, [categorizeBankTransaction, matchBankTransaction])
 

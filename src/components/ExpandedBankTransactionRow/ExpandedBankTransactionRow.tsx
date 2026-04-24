@@ -17,9 +17,10 @@ import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categoriz
 import { type CustomerVendorSchema } from '@schemas/customerVendor'
 import { type Tag } from '@schemas/tag'
 import {
+  getBankTransactionFirstSuggestedMatch,
+  getBankTransactionTaxCodeOptions,
   hasMatch,
 } from '@utils/bankTransactions'
-import { getBankTransactionFirstSuggestedMatch } from '@utils/bankTransactions'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
@@ -219,11 +220,8 @@ export const ExpandedBankTransactionRow = ({
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const taxCodeOptions = useMemo<TaxCodeOption[]>(
-    () => bankTransaction.tax_options?.canada.map(taxOption => ({
-      label: taxOption.display_name,
-      value: taxOption.code,
-    })) ?? [],
-    [bankTransaction.tax_options?.canada],
+    () => getBankTransactionTaxCodeOptions(bankTransaction),
+    [bankTransaction],
   )
 
   const showTaxCodeSelector = taxCodeOptions.length > 0

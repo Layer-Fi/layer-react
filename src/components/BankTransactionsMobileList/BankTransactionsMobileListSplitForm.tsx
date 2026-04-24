@@ -3,9 +3,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { hasReceipts } from '@utils/bankTransactions'
-import { buildCategorizeBankTransactionPayloadForSplit } from '@utils/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions'
+import { buildCategorizeBankTransactionPayloadForSplit, getBankTransactionTaxCodeOptions, hasReceipts, isCategorized } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
@@ -76,11 +74,8 @@ export const BankTransactionsMobileListSplitForm = ({
   })
 
   const taxCodeOptions = useMemo<TaxCodeSelectOption[]>(
-    () => bankTransaction.tax_options?.canada.map(taxOption => ({
-      label: taxOption.display_name,
-      value: taxOption.code,
-    })) ?? [],
-    [bankTransaction.tax_options?.canada],
+    () => getBankTransactionTaxCodeOptions(bankTransaction),
+    [bankTransaction],
   )
 
   const showTaxCodeSelector = taxCodeOptions.length > 0

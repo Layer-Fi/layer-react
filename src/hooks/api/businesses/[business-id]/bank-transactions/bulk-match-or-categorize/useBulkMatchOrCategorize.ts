@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { getCategoryPayloadTaxCode } from '@utils/bankTransactions'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -51,7 +52,7 @@ const buildBulkMatchOrCategorizePayload = (
           return {
             amount: split.amount,
             category: classification,
-            taxCode: split.taxCode,
+            taxCode: getCategoryPayloadTaxCode(classification, split.taxCode),
             tags: split.tags,
             customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
             vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
@@ -74,15 +75,12 @@ const buildBulkMatchOrCategorizePayload = (
       const classification = transactionCategory.classification
       if (classification) {
         const selectedTaxCode = selectedCategorization?.taxCode ?? null
-        const taxCode = classification.type === 'Exclusion'
-          ? null
-          : selectedTaxCode === null ? null : selectedTaxCode.value
         transactions[transactionId] = {
           type: 'categorize',
           categorization: {
             type: 'Category',
             category: classification,
-            taxCode,
+            taxCode: getCategoryPayloadTaxCode(classification, selectedTaxCode?.value),
           },
         }
       }
