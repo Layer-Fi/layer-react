@@ -170,7 +170,7 @@ export const BankTransactionsCategorizeAllModal = ({
       content={(
         <VStack gap='xs'>
           <VStack gap='3xs'>
-            <Label size='sm' htmlFor={categorySelectId}>{t('bankTransactions:action.select_category', 'Select category')}</Label>
+            <Label size='sm' htmlFor={categorySelectId}>{t('bankTransactions:label.category', 'Category')}</Label>
             {isMobileView
               ? (
                 <CategorySelectDrawerWithTrigger
@@ -191,8 +191,8 @@ export const BankTransactionsCategorizeAllModal = ({
               )}
           </VStack>
           {showTaxCodeSelector && (
-            <VStack gap='3xs'>
-              <Label size='sm' htmlFor={taxCodeSelectId}>{t('bankTransactions:action.select_tax_code', 'Select tax code')}</Label>
+            <VStack gap='3xs' pbs='sm'>
+              <Label size='sm' htmlFor={taxCodeSelectId}>{t('bankTransactions:label.tax_code', 'Tax Code')}</Label>
               {isMobileView
                 ? (
                   <TaxCodeSelectDrawerWithTrigger
