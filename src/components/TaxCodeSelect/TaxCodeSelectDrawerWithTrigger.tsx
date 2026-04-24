@@ -9,10 +9,11 @@ import { TaxCodeSelectDrawer, type TaxCodeSelectOption } from '@components/TaxCo
 
 type Props = {
   options: TaxCodeSelectOption[]
-  value: TaxCodeSelectOption | null | undefined
+  value: TaxCodeSelectOption | null
   onChange: (newValue: TaxCodeSelectOption | null) => void
   isDisabled?: boolean
   isClearable?: boolean
+  hasSelection?: boolean
   className?: string
   placeholder?: string
 }
@@ -23,6 +24,7 @@ export const TaxCodeSelectDrawerWithTrigger = ({
   onChange,
   isDisabled = false,
   isClearable = true,
+  hasSelection = true,
   className,
   placeholder,
 }: Props) => {
@@ -42,8 +44,8 @@ export const TaxCodeSelectDrawerWithTrigger = ({
         isDisabled={isDisabled}
       >
         <HStack fluid align='center' justify='space-between' gap='2xs'>
-          <Span ellipsis variant={value ? undefined : 'placeholder'}>
-            {value === undefined
+          <Span ellipsis variant={hasSelection ? undefined : 'placeholder'}>
+            {!hasSelection
               ? (placeholder ?? t('bankTransactions:action.select_tax_code', 'Select tax code'))
               : (value?.label ?? t('bankTransactions:action.no_tax_code', 'No tax code'))}
           </Span>

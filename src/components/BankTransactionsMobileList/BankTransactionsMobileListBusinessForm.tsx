@@ -64,7 +64,7 @@ export const BankTransactionsMobileListBusinessForm = ({
   const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
   const selectedCategory = selectedCategorization?.category
-  const selectedTaxCode = selectedCategorization?.taxCode
+  const selectedTaxCode = selectedCategorization?.taxCode ?? null
   const hasSelectedTaxCode = selectedCategorization !== undefined
   const sessionTaxCodes = useMemo(() => {
     return hasSelectedTaxCode && selectedTaxCode ? [selectedTaxCode] : []
@@ -88,7 +88,7 @@ export const BankTransactionsMobileListBusinessForm = ({
     [bankTransaction.tax_options?.canada],
   )
 
-  const getTaxCodeOption = useCallback((taxCode: string | null | undefined): TaxCodeSelectOption | null => {
+  const getTaxCodeOption = useCallback((taxCode: string | null): TaxCodeSelectOption | null => {
     if (!taxCode) {
       return null
     }
@@ -99,7 +99,7 @@ export const BankTransactionsMobileListBusinessForm = ({
   }, [sessionTaxCodes, taxCodeOptions])
 
   const initialTaxCode = useMemo(
-    () => getTaxCodeOption(bankTransaction.tax_code),
+    () => getTaxCodeOption(bankTransaction.tax_code ?? null),
     [bankTransaction.tax_code, getTaxCodeOption],
   )
 

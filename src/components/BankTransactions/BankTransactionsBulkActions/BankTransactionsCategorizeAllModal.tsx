@@ -42,13 +42,14 @@ const getTaxCodeOptions = (bankTransaction: BankTransaction): TaxCodeSelectOptio
 const resolveBulkTaxCode = (
   bankTransaction: BankTransaction | undefined,
   classification: Classification,
-  selectedTaxCode: string | null | undefined,
+  selectedTaxCode: string | null,
+  shouldKeepExistingTaxCode: boolean,
 ): string | null => {
   if (classification.type === 'Exclusion') {
     return null
   }
 
-  if (selectedTaxCode === undefined) {
+  if (shouldKeepExistingTaxCode) {
     return bankTransaction?.tax_code ?? null
   }
 
@@ -161,11 +162,10 @@ export const BankTransactionsCategorizeAllModal = ({
     }
 
     const classification = selectedCategory.classification
-    const selectedTaxCodeValue = selectedTaxCode === null
-      ? undefined
-      : selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE
-        ? null
-        : selectedTaxCode.value
+    const shouldKeepExistingTaxCode = selectedTaxCode === null
+    const selectedTaxCodeValue = selectedTaxCode === null || selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE
+      ? null
+      : selectedTaxCode.value
     const categorization = {
       type: 'Category' as const,
       category: classification,
@@ -180,6 +180,7 @@ export const BankTransactionsCategorizeAllModal = ({
             bankTransactionsById.get(transactionId),
             classification,
             selectedTaxCodeValue,
+            shouldKeepExistingTaxCode,
           ),
         },
       })),
@@ -228,9 +229,10 @@ export const BankTransactionsCategorizeAllModal = ({
                 ? (
                   <TaxCodeSelectDrawerWithTrigger
                     options={taxCodeOptions}
-                    value={selectedTaxCode === null ? undefined : selectedTaxCode}
+                    value={selectedTaxCode}
                     onChange={handleTaxCodeChange}
                     isDisabled={isTaxCodeDisabled}
+                    hasSelection={selectedTaxCode !== null}
                     placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
                   />
                 )

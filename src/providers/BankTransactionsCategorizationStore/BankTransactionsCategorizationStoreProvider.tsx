@@ -9,10 +9,10 @@ export type BankTransactionCategorization = {
   taxCode: TaxCodeSelectOption | null
 }
 
-type BankTransactionCategorizationUpdate = {
-  category?: BankTransactionCategoryComboBoxOption | null
-  taxCode?: TaxCodeSelectOption | null
-}
+type BankTransactionCategorizationUpdate =
+  | Pick<BankTransactionCategorization, 'category'>
+  | Pick<BankTransactionCategorization, 'taxCode'>
+  | BankTransactionCategorization
 
 export type BankTransactionsCategorizationState = {
   categorizations: Map<string, BankTransactionCategorization>
@@ -43,11 +43,11 @@ function normalizeCategorization(
     ? { ...currentCategorization }
     : { category: null, taxCode: null }
 
-  if (nextCategorization.category !== undefined) {
+  if ('category' in nextCategorization) {
     mergedCategorization.category = nextCategorization.category
   }
 
-  if (nextCategorization.taxCode !== undefined) {
+  if ('taxCode' in nextCategorization) {
     mergedCategorization.taxCode = nextCategorization.taxCode
   }
 
@@ -87,10 +87,10 @@ function buildStore() {
             const applyTaxCode = currCategorization.taxCode === null && newCategorization.taxCode !== null
 
             if (applyCategory || applyTaxCode) {
-              const nextCategorization = normalizeCategorization(currCategorization, {
-                ...(applyCategory ? { category: newCategorization.category } : {}),
-                ...(applyTaxCode ? { taxCode: newCategorization.taxCode } : {}),
-              })
+              const nextCategorization = {
+                category: applyCategory ? newCategorization.category : currCategorization.category,
+                taxCode: applyTaxCode ? newCategorization.taxCode : currCategorization.taxCode,
+              }
 
               newMap.set(id, nextCategorization)
               hasChanges = true
@@ -252,13 +252,13 @@ export function useBankTransactionsTaxCodeActions(): BankTransactionsTaxCodeActi
 }
 
 export function useGetBankTransactionTaxCode(transactionId: string): {
-  selectedTaxCode: TaxCodeSelectOption | null | undefined
+  selectedTaxCode: TaxCodeSelectOption | null
   hasSelectedTaxCode: boolean
 } {
   const { selectedCategorization } = useGetBankTransactionCategorization(transactionId)
 
   return {
-    selectedTaxCode: selectedCategorization?.taxCode,
+    selectedTaxCode: selectedCategorization?.taxCode ?? null,
     hasSelectedTaxCode: selectedCategorization !== undefined,
   }
 }

@@ -120,7 +120,7 @@ export const getLocalSplitStateForExpandedTransaction = (
   selectedCategorization: BankTransactionCategorization | undefined,
 ): Split[] => {
   const selectedCategory = selectedCategorization?.category
-  const selectedTaxCode = selectedCategorization?.taxCode
+  const selectedTaxCode = selectedCategorization?.taxCode ?? null
   let coercedSelectedCategory = selectedCategory
   if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
     coercedSelectedCategory = null
@@ -157,7 +157,7 @@ export const getLocalSplitStateForExpandedTransaction = (
         ? null
         : selectedCategorization === undefined
           ? bankTransaction.tax_code ?? null
-          : selectedTaxCode?.value ?? null,
+          : selectedTaxCode === null ? null : selectedTaxCode.value,
       tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
       customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
     },

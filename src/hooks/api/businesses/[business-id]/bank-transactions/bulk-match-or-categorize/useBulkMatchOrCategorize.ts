@@ -76,7 +76,7 @@ const buildBulkMatchOrCategorizePayload = (
         const selectedTaxCode = selectedCategorization?.taxCode ?? null
         const taxCode = classification.type === 'Exclusion'
           ? null
-          : selectedTaxCode?.value ?? null
+          : selectedTaxCode === null ? null : selectedTaxCode.value
         transactions[transactionId] = {
           type: 'categorize',
           categorization: {
