@@ -5,10 +5,11 @@ import { tPlural } from '@utils/i18n/plural'
 import { formatCalendarDate } from '@utils/time/timeUtils'
 import { type TaxEstimateDeadlineRow } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxDeadlines'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { useTaxEstimatesContext } from '@contexts/TaxEstimatesContext/TaxEstimatesContext'
 import { Button } from '@ui/Button/Button'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { HStack, Stack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -31,11 +32,12 @@ export const TaxEstimatesDeadlineRow = ({
   const { formatDate } = useIntlFormatter()
   const { year } = useTaxEstimatesYear()
   const { onTaxBannerReviewClick } = useTaxEstimatesContext()
+  const { isMobile } = useSizeClass()
 
   return (
     <Card className='Layer__TaxOverview__DeadlineCard'>
       <HStack className='Layer__TaxOverview__DeadlineRow' justify='space-between' align='start' gap='md' pb='md' pi='md'>
-        <VStack className='Layer__TaxOverview__DeadlineContent' gap='3xs'>
+        <VStack className='Layer__TaxOverview__DeadlineContent' gap='3xs' fluid>
           <Heading level={3} size='sm'>{data.title}</Heading>
           <Span size='sm' variant='subtle'>
             {t('taxEstimates:label.due_with_date', 'Due: {{date}}', { date: formatCalendarDate(data.dueDate, formatDate) })}
@@ -54,7 +56,7 @@ export const TaxEstimatesDeadlineRow = ({
         </VStack>
       </HStack>
       {data.uncategorizedCount > 0 && (
-        <HStack className='Layer__TaxOverview__DeadlineReviewRow' justify='space-between' align='center' gap='md' pb='md' pi='md'>
+        <Stack direction={isMobile ? 'column' : 'row'} align={isMobile ? undefined : 'center'} className='Layer__TaxOverview__DeadlineReviewRow' justify='space-between' gap='md' pb='md' pi='md'>
           <HStack className='Layer__TaxOverview__DeadlineReviewContent' align='center' gap='xs'>
             <Span nonAria className='Layer__TaxOverview__DeadlineReviewIcon'>
               <FileText size={12} />
@@ -81,7 +83,7 @@ export const TaxEstimatesDeadlineRow = ({
               {t('taxEstimates:action.review_banner', 'Review')}
             </Button>
           )}
-        </HStack>
+        </Stack>
       )}
     </Card>
   )

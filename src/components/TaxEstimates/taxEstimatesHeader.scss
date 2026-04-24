@@ -1,16 +1,4 @@
-.Layer__TaxDetails.Layer__BaseDetailView,
-.Layer__TaxPayments.Layer__BaseDetailView {
-  .Layer__BaseDetailView__Header {
-    padding-inline: 1.25rem;
-  }
-}
-
 @media (width <= 500px) {
-  .Layer__TaxEstimatesHeader {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .Layer__TaxEstimatesHeader__ComboBoxContainer {
     justify-content: flex-start;
     width: 100%;

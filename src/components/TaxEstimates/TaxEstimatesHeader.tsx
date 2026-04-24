@@ -111,6 +111,7 @@ export const TaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps) => {
     justify: 'space-between' as const,
     align: 'start' as const,
     fluid: true,
+    pie: 'lg' as Spacing,
     className: 'Layer__TaxEstimatesHeader',
     direction: 'row' as const,
   }

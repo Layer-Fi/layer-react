@@ -15,7 +15,7 @@ export const TaxOverview = () => {
   if (!isMobile) {
     return (
       <VStack className='Layer__TaxOverview' gap='md'>
-        <HStack className='Layer__TaxOverview__DesktopLayout' gap='md' align='start'>
+        <HStack gap='md' align='start'>
           <VStack className='Layer__TaxOverview__PrimaryColumn' gap='md'>
             <TaxableIncomeCard />
             <TaxEstimatesSummaryCard />

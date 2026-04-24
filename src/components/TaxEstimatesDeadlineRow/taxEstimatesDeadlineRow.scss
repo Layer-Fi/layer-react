@@ -13,7 +13,6 @@
   }
 
   &__DeadlineContent {
-    flex: 1;
     min-width: 0;
   }
 
@@ -79,11 +78,6 @@
 }
 
 @media (width <= 500px) {
-  .Layer__TaxOverview__DeadlineReviewRow {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
   .Layer__TaxOverview__DeadlineReviewRow .Layer__UI__Button {
     width: fit-content;
   }
