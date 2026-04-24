@@ -15,8 +15,8 @@ import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirm
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode, hasBankTransactionTaxCode } from '@components/BankTransactions/utils'
-import { NO_TAX_CODE } from "@components/TaxCodeSelect/constants"
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
+import { NO_TAX_CODE } from '@components/TaxCodeSelect/constants'
 import { type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
 import { TaxCodeSelectDrawerWithTrigger } from '@components/TaxCodeSelect/TaxCodeSelectDrawerWithTrigger'
 

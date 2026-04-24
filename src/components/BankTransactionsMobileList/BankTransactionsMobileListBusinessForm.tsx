@@ -20,10 +20,9 @@ import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
 import { type BusinessFormMobileItemOption, type BusinessFormOptionValue } from '@components/BusinessForm/BusinessFormMobileItem'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { FileInput } from '@components/Input/FileInput'
+import { NO_TAX_CODE } from '@components/TaxCodeSelect/constants'
 import { TaxCodeSelectDrawer, type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
 import { ErrorText } from '@components/Typography/ErrorText'
-
-import { NO_TAX_CODE } from "@components/TaxCodeSelect/constants"
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
 

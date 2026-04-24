@@ -5,8 +5,9 @@ import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
 import { ActionableList, type ActionableListOption } from '@components/ActionableList/ActionableList'
-import { NO_TAX_CODE } from './constants'
 import { SearchField } from '@components/SearchField/SearchField'
+
+import { NO_TAX_CODE } from './constants'
 
 export type TaxCodeSelectOption = {
   label: string
