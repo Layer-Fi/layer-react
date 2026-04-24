@@ -34,7 +34,7 @@ export const TaxEstimatesDeadlineRow = ({
 
   return (
     <Card className='Layer__TaxOverview__DeadlineCard'>
-      <HStack className='Layer__TaxOverview__DeadlineRow' justify='space-between' align='start' gap='md'>
+      <HStack className='Layer__TaxOverview__DeadlineRow' justify='space-between' align='start' gap='md' pb='md' pi='md'>
         <VStack className='Layer__TaxOverview__DeadlineContent' gap='3xs'>
           <Heading level={3} size='sm'>{data.title}</Heading>
           <Span size='sm' variant='subtle'>
@@ -54,7 +54,7 @@ export const TaxEstimatesDeadlineRow = ({
         </VStack>
       </HStack>
       {data.uncategorizedCount > 0 && (
-        <HStack className='Layer__TaxOverview__DeadlineReviewRow' justify='space-between' align='center' gap='md'>
+        <HStack className='Layer__TaxOverview__DeadlineReviewRow' justify='space-between' align='center' gap='md' pb='md' pi='md'>
           <HStack className='Layer__TaxOverview__DeadlineReviewContent' align='center' gap='xs'>
             <Span nonAria className='Layer__TaxOverview__DeadlineReviewIcon'>
               <FileText size={12} />

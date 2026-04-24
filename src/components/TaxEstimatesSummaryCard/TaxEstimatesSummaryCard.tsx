@@ -21,7 +21,7 @@ import './taxEstimatesSummaryCard.scss'
 
 const LoadingState = () => {
   return (
-    <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Content'>
+    <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Content' pb='md' pi='lg' align='center'>
       <CircleSkeletonLoader height='128px' width='128px' />
       <SkeletonLoader height='24px' width='80%' />
       <SkeletonLoader height='24px' width='80%' />
@@ -33,7 +33,7 @@ const LoadingState = () => {
 const ErrorState = () => {
   const { t } = useTranslation()
   return (
-    <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Content'>
+    <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Content' pb='md' pi='lg' align='center'>
       <Span size='lg'>{t('taxEstimates:error.load_tax_estimates_summary', 'We couldn\'t load your tax summary')}</Span>
     </VStack>
   )
