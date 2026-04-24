@@ -63,7 +63,7 @@ const getCountdownDescriptor = (now: number, startAt: Date): CountdownDescriptor
 
   return {
     kind: 'days',
-    value: Math.ceil(millisecondsUntilStart / (24 * 60 * 60 * 1000)),
+    value: Math.floor(millisecondsUntilStart / (24 * 60 * 60 * 1000)),
   }
 }
 
@@ -79,7 +79,8 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
     )
   }
 
-  const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING
+  const isOnboardingCall = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING
+  const purpose = isOnboardingCall
     ? t('callBookings:label.onboarding_call', 'Onboarding call')
     : t('callBookings:label.ad_hoc_call', 'Ad hoc call')
   const subtitle = t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
@@ -156,37 +157,41 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
           </Span>
         </HStack>
 
-        <Span nonAria className='Layer__CallBooking__Divider' />
+        {isOnboardingCall && (
+          <>
+            <Span nonAria className='Layer__CallBooking__Divider' />
 
-        <VStack pbe='md'>
-          <Span
-            nonAria
-            size='2xs'
-            variant='subtle'
-            pbe='sm'
-            className='Layer__CallBooking__CoverageEyebrow'
-          >
-            {t('callBookings:label.what_well_cover', 'What we\'ll cover')}
-          </Span>
-          <VStack role='list' gap='xs'>
-            {whatWeWillCoverItems.map(([key, label]) => (
-              <HStack
-                key={key}
-                className='Layer__CallBooking__CoverageItem'
-                align='start'
-                gap='sm'
-                role='listitem'
+            <VStack pbe='md'>
+              <Span
+                nonAria
+                size='2xs'
+                variant='subtle'
+                pbe='sm'
+                className='Layer__CallBooking__CoverageEyebrow'
               >
-                <Span nonAria className='Layer__CallBooking__CoverageBadge'>
-                  <Check size={12} strokeWidth={2.5} />
-                </Span>
-                <Span size='sm' className='Layer__CallBooking__CoverageText'>
-                  {label}
-                </Span>
-              </HStack>
-            ))}
-          </VStack>
-        </VStack>
+                {t('callBookings:label.what_well_cover', 'What we\'ll cover')}
+              </Span>
+              <VStack role='list' gap='xs'>
+                {whatWeWillCoverItems.map(([key, label]) => (
+                  <HStack
+                    key={key}
+                    className='Layer__CallBooking__CoverageItem'
+                    align='start'
+                    gap='sm'
+                    role='listitem'
+                  >
+                    <Span nonAria className='Layer__CallBooking__CoverageBadge'>
+                      <Check size={12} strokeWidth={2.5} />
+                    </Span>
+                    <Span size='sm' className='Layer__CallBooking__CoverageText'>
+                      {label}
+                    </Span>
+                  </HStack>
+                ))}
+              </VStack>
+            </VStack>
+          </>
+        )}
 
         <HStack className='Layer__CallBooking__ActionRow' align='center' gap='xs'>
           <HStack className='Layer__CallBooking__JoinAction'>
