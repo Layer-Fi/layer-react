@@ -53,13 +53,11 @@ const resolveBulkTaxCode = (
     return bankTransaction?.tax_code ?? null
   }
 
-  if (selectedTaxCode === null) {
-    return null
-  }
+  const hasSelectedTaxCode = bankTransaction?.tax_options?.canada.some(
+    taxOption => taxOption.code === selectedTaxCode,
+  )
 
-  return bankTransaction?.tax_options?.canada.some(taxOption => taxOption.code === selectedTaxCode)
-    ? selectedTaxCode
-    : null
+  return hasSelectedTaxCode ? selectedTaxCode : null
 }
 
 export const BankTransactionsCategorizeAllModal = ({
