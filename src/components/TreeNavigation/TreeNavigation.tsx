@@ -87,7 +87,7 @@ const renderTreeLeaf = <TLeaf extends object>({ leaf, leafConfig }: RenderTreeLe
     <TreeItemContent>
       <HStack align='center' justify='space-between'>
         {leafConfig.renderLabel(leaf)}
-        <Check className='Layer__TreeNavigation__Check' width={14} height={14} />
+        <Check className='Layer__TreeNavigation__Check' />
       </HStack>
     </TreeItemContent>
   </TreeItem>

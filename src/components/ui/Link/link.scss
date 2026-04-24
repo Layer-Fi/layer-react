@@ -10,6 +10,10 @@
 
   text-decoration: none;
 
+  &[data-hovered] {
+    text-decoration: underline;
+  }
+
   &[data-ellipsis],
   &[data-with-tooltip] {
     display: inline-block;

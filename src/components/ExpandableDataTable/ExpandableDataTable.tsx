@@ -9,6 +9,7 @@ import {
 import { HStack } from '@ui/Stack/Stack'
 import {
   getColumnDefs,
+  getColumnPinning,
   isLeafColumn,
   type NestedColumnConfig,
 } from '@components/DataTable/columnUtils'
@@ -42,7 +43,6 @@ export function ExpandableDataTable<TData extends object>({
   componentName,
   ariaLabel,
   slots,
-  hideHeader,
   getSubRows,
   getRowId,
 }: ExpandableDataTableProps<TData>) {
@@ -78,13 +78,18 @@ export function ExpandableDataTable<TData extends object>({
 
   const columnDefs = getColumnDefs<TData>(wrappedColumnConfig)
 
+  const columnPinning = useMemo(
+    () => getColumnPinning(wrappedColumnConfig),
+    [wrappedColumnConfig],
+  )
+
   const table = useReactTable<TData>({
     data: data ?? EMPTY_ARRAY,
     columns: columnDefs,
     getSubRows,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    state: { expanded },
+    state: { expanded, columnPinning },
     onExpandedChange: setExpanded,
     autoResetPageIndex: false,
     getRowId,
@@ -119,7 +124,6 @@ export function ExpandableDataTable<TData extends object>({
       isError={isError}
       componentName={componentName}
       slots={slots}
-      hideHeader={hideHeader}
       dependencies={dependencies}
       headerGroups={headerGroups}
       withClickableRow={withClickableRow}
