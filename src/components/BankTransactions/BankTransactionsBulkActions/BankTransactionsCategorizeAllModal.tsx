@@ -70,18 +70,17 @@ export const BankTransactionsCategorizeAllModal = ({
       .filter((bankTransaction): bankTransaction is BankTransaction => bankTransaction !== undefined)
   }, [bankTransactionsById, selectedIds])
 
-  const taxCodeOptions = useMemo(() => {
-    const taxCodesByValue = new Map<string, TaxCodeSelectOption>()
+  // NOTE: Only taking tax codes from one txn for Canada taxes. Need to expand if more tax codes are supported.
+  const taxCodeSelectOptions = useMemo(() => {
+    for (const bankTransaction of selectedTransactions) {
+      const options = getBankTransactionTaxCodeOptions(bankTransaction)
 
-    selectedTransactions.forEach((bankTransaction) => {
-      getBankTransactionTaxCodeOptions(bankTransaction).forEach((option) => {
-        if (!taxCodesByValue.has(option.value)) {
-          taxCodesByValue.set(option.value, option)
-        }
-      })
-    })
+      if (options.length > 0) {
+        return options
+      }
+    }
 
-    return Array.from(taxCodesByValue.values())
+    return []
   }, [selectedTransactions])
 
   const taxCodeComboBoxOptions = useMemo((): TaxCodeSelectOption[] => {
@@ -90,9 +89,9 @@ export const BankTransactionsCategorizeAllModal = ({
         label: t('bankTransactions:action.no_tax_code', 'No tax code'),
         value: NO_TAX_CODE_COMBO_VALUE,
       },
-      ...taxCodeOptions,
+      ...taxCodeSelectOptions,
     ]
-  }, [t, taxCodeOptions])
+  }, [t, taxCodeSelectOptions])
 
   useEffect(() => {
     if (!selectedTaxCode) {
@@ -101,10 +100,10 @@ export const BankTransactionsCategorizeAllModal = ({
     if (selectedTaxCode.value === NO_TAX_CODE_COMBO_VALUE) {
       return
     }
-    if (!taxCodeOptions.some(option => option.value === selectedTaxCode.value)) {
+    if (!taxCodeSelectOptions.some(option => option.value === selectedTaxCode.value)) {
       setSelectedTaxCode(null)
     }
-  }, [selectedTaxCode, taxCodeOptions])
+  }, [selectedTaxCode, taxCodeSelectOptions])
 
   const handleCategorizeModalClose = useCallback((isOpen: boolean) => {
     onOpenChange(isOpen)
@@ -170,7 +169,7 @@ export const BankTransactionsCategorizeAllModal = ({
 
   const categorySelectId = useId()
   const taxCodeSelectId = useId()
-  const showTaxCodeSelector = taxCodeOptions.length > 0
+  const showTaxCodeSelector = taxCodeSelectOptions.length > 0
   const isTaxCodeDisabled = isMutating || selectedCategory?.classification?.type === 'Exclusion'
 
   return (
@@ -207,7 +206,7 @@ export const BankTransactionsCategorizeAllModal = ({
               {isMobileView
                 ? (
                   <TaxCodeSelectDrawerWithTrigger
-                    options={taxCodeOptions}
+                    options={taxCodeSelectOptions}
                     value={selectedTaxCode}
                     onChange={handleTaxCodeChange}
                     isDisabled={isTaxCodeDisabled}
