@@ -360,7 +360,6 @@ export const BankTransactionsMobileListBusinessForm = ({
         selectedId={currentTaxCode?.value}
         isOpen={isTaxCodeDrawerOpen}
         onOpenChange={setIsTaxCodeDrawerOpen}
-        isClearable
       />
     </>
   )

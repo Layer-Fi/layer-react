@@ -5,7 +5,7 @@ import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
 import { ActionableList, type ActionableListOption } from '@components/ActionableList/ActionableList'
-import { NO_TAX_CODE } from "./constants"
+import { NO_TAX_CODE } from './constants'
 import { SearchField } from '@components/SearchField/SearchField'
 
 export type TaxCodeSelectOption = {
@@ -19,7 +19,6 @@ type TaxCodeSelectDrawerProps = {
   onSelect: (value: TaxCodeSelectOption | null) => void
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
-  isClearable?: boolean
 }
 
 export const TaxCodeSelectDrawer = ({
@@ -28,7 +27,6 @@ export const TaxCodeSelectDrawer = ({
   onSelect,
   isOpen,
   onOpenChange,
-  isClearable = true,
 }: TaxCodeSelectDrawerProps) => {
   const { t } = useTranslation()
   const [query, setQuery] = useState('')
@@ -39,13 +37,11 @@ export const TaxCodeSelectDrawer = ({
     value: option,
   }))
 
-  if (isClearable) {
-    listOptions.push({
-      id: NO_TAX_CODE,
-      label: t('bankTransactions:action.no_tax_code', 'No tax code'),
-      value: null,
-    })
-  }
+  listOptions.push({
+    id: NO_TAX_CODE,
+    label: t('bankTransactions:action.no_tax_code', 'No tax code'),
+    value: null,
+  })
 
   const queryTrimmed = query.trim().toLowerCase()
   const filteredListOptions = queryTrimmed

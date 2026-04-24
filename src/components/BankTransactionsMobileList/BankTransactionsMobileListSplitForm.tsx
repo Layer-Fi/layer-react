@@ -189,7 +189,6 @@ export const BankTransactionsMobileListSplitForm = ({
                             !showCategorization
                             || split.category?.classification?.type === 'Exclusion'
                           }
-                          isClearable
                         />
                       </>
                     )}

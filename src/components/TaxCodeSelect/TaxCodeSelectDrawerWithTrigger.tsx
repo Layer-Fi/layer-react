@@ -12,7 +12,6 @@ type Props = {
   value: TaxCodeSelectOption | null
   onChange: (newValue: TaxCodeSelectOption | null) => void
   isDisabled?: boolean
-  isClearable?: boolean
   hasSelection?: boolean
   className?: string
   placeholder?: string
@@ -23,7 +22,6 @@ export const TaxCodeSelectDrawerWithTrigger = ({
   value,
   onChange,
   isDisabled = false,
-  isClearable = true,
   hasSelection = true,
   className,
   placeholder,
@@ -59,7 +57,6 @@ export const TaxCodeSelectDrawerWithTrigger = ({
         selectedId={value?.value}
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
-        isClearable={isClearable}
       />
     </HStack>
   )
