@@ -1,4 +1,5 @@
 import { type TaxOverviewMetric } from '@schemas/taxEstimates/overview'
+import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
@@ -42,7 +43,7 @@ export const TaxableIncomeCard = () => {
   })
 
   const metrics = taxOverviewData?.metrics ?? []
-  const isHeaderVisible = viewportWidth >= 1200
+  const isHeaderVisible = viewportWidth >= BREAKPOINTS.DESKTOP
   return (
     <>
       <Card className='Layer__TaxOverview__Card'>
