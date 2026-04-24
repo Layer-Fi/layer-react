@@ -8,9 +8,9 @@
   "label": {
     "ad_hoc_call": "Appel ponctuel",
     "book_call_with_bookkeeper": "Réservez un appel avec votre teneur de livres",
-    "cover_accounts_and_documents": "Connect your accounts and documents",
-    "cover_business_and_books": "Walk through your business and books",
-    "cover_first_month_expectations": "Set expectations for our first month",
+    "cover_accounts_and_documents": "Connectez vos comptes et vos documents",
+    "cover_business_and_books": "Passez en revue votre entreprise et votre comptabilité",
+    "cover_first_month_expectations": "Établissez les attentes pour notre premier mois",
     "date": "Date",
     "date_colon": "Date :",
     "google_calendar": "Google Calendar",
@@ -22,17 +22,17 @@
     "purpose": "Objet",
     "purpose_colon": "Objet :",
     "upcoming_call": "Appel à venir",
-    "what_well_cover": "What we'll cover",
+    "what_well_cover": "Ce que nous aborderons",
     "yahoo_calendar": "Yahoo Calendar"
   },
   "prompt": {
     "ready_to_get_started": "Prêt à commencer?"
   },
   "state": {
-    "call_in_count_days_one": "in {{displayCount}} day",
-    "call_in_count_days_other": "in {{displayCount}} days",
-    "call_in_count_hours_one": "in {{displayCount}} hour",
-    "call_in_count_hours_other": "in {{displayCount}} hours",
-    "starting_soon": "starting soon"
+    "call_in_count_days_one": "dans {{displayCount}} jour",
+    "call_in_count_days_other": "dans {{displayCount}} jours",
+    "call_in_count_hours_one": "dans {{displayCount}} heure",
+    "call_in_count_hours_other": "dans {{displayCount}} heures",
+    "starting_soon": "commence bientôt"
   }
 }
