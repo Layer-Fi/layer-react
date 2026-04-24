@@ -15,6 +15,7 @@
   "error": {
     "disclaimer_required": "You must acknowledge the disclaimer to continue.",
     "feature_not_enabled": "Tax estimates are not enabled.",
+    "load_tax_deadlines": "We couldn't load your tax deadlines",
     "load_tax_estimates": "We couldn't load your tax estimates",
     "load_tax_estimates_summary": "We couldn't load your tax summary",
     "load_tax_information": "Unable to load tax information",
