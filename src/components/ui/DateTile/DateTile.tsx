@@ -11,7 +11,7 @@ export type DateTileProps = {
 
 export const DateTile = ({ date }: DateTileProps) => {
   const { formatDate } = useIntlFormatter()
-  const monthLabel = formatDate(date, DateFormat.MonthYearShort)
+  const monthLabel = formatDate(date, DateFormat.MonthShort)
   const dayLabel = formatDate(date, DateFormat.Day)
   const weekdayLabel = formatDate(date, DateFormat.WeekdayShort)
 
