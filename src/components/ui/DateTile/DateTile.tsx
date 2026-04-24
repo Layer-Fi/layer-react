@@ -17,14 +17,32 @@ export const DateTile = ({ date }: DateTileProps) => {
 
   return (
     <VStack className='Layer__UI__DateTile' overflow='hidden'>
-      <Span className='Layer__UI__DateTile__Month'>
+      <Span
+        className='Layer__UI__DateTile__Month'
+        align='center'
+        size='2xs'
+        weight='bold'
+        pbs='2xs'
+        pbe='2xs'
+      >
         {monthLabel}
       </Span>
-      <VStack className='Layer__UI__DateTile__Body' align='center' justify='center' pbs='2xs' pbe='xs'>
-        <Span className='Layer__UI__DateTile__Day'>
+      <VStack align='center' justify='center' pbs='2xs' pbe='xs'>
+        <Span
+          className='Layer__UI__DateTile__Day'
+          align='center'
+          weight='bold'
+        >
           {dayLabel}
         </Span>
-        <Span className='Layer__UI__DateTile__Weekday'>
+        <Span
+          className='Layer__UI__DateTile__Weekday'
+          align='center'
+          size='xs'
+          weight='bold'
+          variant='subtle'
+          pbs='3xs'
+        >
           {weekdayLabel}
         </Span>
       </VStack>

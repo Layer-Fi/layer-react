@@ -1,13 +1,4 @@
 .Layer__CallBooking {
-  .Layer__Span {
-    max-inline-size: none;
-  }
-
-  &__DateColumn {
-    flex: 0 0 auto;
-    min-width: 5.5rem;
-  }
-
   &__HeaderDetails {
     min-width: 0;
   }
@@ -16,104 +7,56 @@
     flex-wrap: wrap;
   }
 
-  &__Title {
-    font-size: 1rem;
-    line-height: 1.35;
-    font-weight: 600;
-    color: #0f172a;
-    letter-spacing: -0.01em;
-  }
-
-  &__Subtitle {
-    margin-top: 0.1875rem;
-    line-height: 1.45;
-  }
-
   &__DateTimeRow,
   &__LocationRow,
-  &__CoverageItem,
-  &__ActionRow {
+  &__CoverageItem {
     min-width: 0;
   }
 
   &__DateTimeRow {
     align-self: flex-start;
-    color: #1f2937;
-  }
-
-  &__TimeLabel {
-    font-size: 1rem;
-    line-height: 1.35;
-    font-weight: 600;
-    color: #0f172a;
-    letter-spacing: -0.005em;
+    color: var(--color-base-800);
   }
 
   &__LocationRow {
-    align-self: flex-start;
-    border-radius: 999px;
-    background: #eef0f3;
-    color: #64748b;
-  }
-
-  &__LocationLabel {
-    line-height: 1.45;
-    font-weight: 600;
-    color: #334155;
+    border-radius: var(--border-radius-5xl);
+    background: var(--bg-muted);
+    color: var(--fg-subtle);
   }
 
   &__Divider {
     display: block;
     height: 1px;
     width: 100%;
-    margin-block: 1.125rem;
-    background: #eef0f3;
+    margin-block: var(--spacing-md);
+    background: var(--bg-muted);
   }
 
   &__CoverageHeading {
     display: block;
     line-height: 1.2;
-    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
   }
 
   &__CoverageBadge {
     flex: 0 0 auto;
-    height: 1.125rem;
-    width: 1.125rem;
-    border-radius: 999px;
-    margin-top: 0.0625rem;
-    background: #eef7dc;
-    color: #5b8a12;
-  }
-
-  &__CoverageText {
-    line-height: 1.45;
-    color: #1f2937;
+    height: var(--spacing-md);
+    width: var(--spacing-md);
+    border-radius: var(--border-radius-5xl);
+    margin-top: var(--spacing-4xs);
+    background: var(--color-info-success-bg);
+    color: var(--color-info-success-fg);
   }
 
   @container (width <= 400px) {
     &__HeaderRow {
-      gap: 1.5rem;
-    }
-
-    &__DateColumn {
-      min-width: 4.5rem;
-    }
-
-    &__TimeLabel {
-      font-size: 0.9375rem;
+      gap: var(--spacing-lg);
     }
   }
 
   @container (width <= 360px) {
     &__JoinAction {
       flex: 1 1 100%;
-    }
-
-    &__JoinAction .Layer__UI__Button {
-      width: 100%;
     }
   }
 }

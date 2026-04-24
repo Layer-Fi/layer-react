@@ -69,6 +69,7 @@ const OnboardingCallCoverage = () => {
           nonAria
           size='2xs'
           variant='subtle'
+          weight='bold'
           pbe='sm'
           className='Layer__CallBooking__CoverageHeading'
         >
@@ -83,10 +84,14 @@ const OnboardingCallCoverage = () => {
               gap='sm'
               role='listitem'
             >
-              <HStack className='Layer__CallBooking__CoverageBadge' align='center' justify='center'>
+              <HStack
+                className='Layer__CallBooking__CoverageBadge'
+                align='center'
+                justify='center'
+              >
                 <Check size={12} strokeWidth={2.5} />
               </HStack>
-              <Span size='sm' className='Layer__CallBooking__CoverageText'>
+              <Span size='sm'>
                 {t(translationKey, defaultLabel)}
               </Span>
             </HStack>
@@ -123,12 +128,10 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
     <Container name='CallBooking'>
       <VStack pi='lg' pb='lg'>
         <HStack className='Layer__CallBooking__HeaderRow' align='start' gap='xl'>
-          <VStack className='Layer__CallBooking__DateColumn'>
-            <DateTile date={callBooking.eventStartAt} />
-          </VStack>
+          <DateTile date={callBooking.eventStartAt} />
           <VStack className='Layer__CallBooking__HeaderDetails' fluid pbs='3xs'>
             <HStack className='Layer__CallBooking__TitleRow' align='baseline' gap='xs'>
-              <Heading size='xs' className='Layer__CallBooking__Title'>
+              <Heading size='sm'>
                 {purpose}
               </Heading>
               {countdownLabel && (
@@ -139,13 +142,19 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
                 </Span>
               )}
             </HStack>
-            <Span size='sm' variant='subtle' className='Layer__CallBooking__Subtitle'>
+            <Span size='sm' variant='subtle' pbs='3xs'>
               {subtitle}
             </Span>
-            <VStack gap='xs' pbs='sm'>
-              <HStack className='Layer__CallBooking__LocationRow' align='center' gap='sm' pb='xs' pi='sm'>
+            <VStack gap='xs' align='start' pbs='sm'>
+              <HStack
+                className='Layer__CallBooking__LocationRow'
+                align='center'
+                gap='sm'
+                pb='xs'
+                pi='sm'
+              >
                 <Video size={14} />
-                <Span size='sm' className='Layer__CallBooking__LocationLabel'>
+                <Span size='sm' weight='bold' variant='placeholder'>
                   {callPlatform}
                 </Span>
               </HStack>
@@ -155,16 +164,16 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
 
         <HStack className='Layer__CallBooking__DateTimeRow' align='center' gap='sm' pbs='md'>
           <Clock3 size={16} strokeWidth={2} />
-          <Span nonAria noWrap className='Layer__CallBooking__TimeLabel'>
+          <Span nonAria noWrap size='lg' weight='bold'>
             {timeLabel}
           </Span>
         </HStack>
 
         {isOnboardingCall && <OnboardingCallCoverage />}
 
-        <HStack className='Layer__CallBooking__ActionRow' align='center' gap='xs'>
+        <HStack align='center' gap='xs'>
           <HStack className='Layer__CallBooking__JoinAction'>
-            <LinkButton href={callLink} external variant='solid'>
+            <LinkButton href={callLink} external variant='solid' fullWidth>
               <Video size={15} />
               {t('callBookings:action.join_call', 'Join call')}
             </LinkButton>
