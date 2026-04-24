@@ -25,16 +25,9 @@ export const useBookkeepingOnboardingCallBooking = () => {
 
   const [embedDismissed, setEmbedDismissed] = useState(false)
   const [hasScheduledCallInSession, setHasScheduledCallInSession] = useState(false)
-  const [persistedOnboardingCallUrl, setPersistedOnboardingCallUrl] = useState<string>()
-
-  useEffect(() => {
-    if (bookkeepingStatus?.onboardingCallUrl != null) {
-      setPersistedOnboardingCallUrl(bookkeepingStatus.onboardingCallUrl)
-    }
-  }, [bookkeepingStatus?.onboardingCallUrl])
 
   const onboardingCallUrl = bookkeepingStatus?.showEmbeddedOnboarding
-    ? bookkeepingStatus.onboardingCallUrl ?? persistedOnboardingCallUrl
+    ? bookkeepingStatus.onboardingCallUrl
     : undefined
 
   const recordCalendlyScheduled = useCallback(async (payload: CalendlyPayload) => {

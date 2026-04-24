@@ -16,6 +16,24 @@ import './callBooking.scss'
 
 import { useCallBookingCountdownLabel } from './useCallBookingCountdownLabel'
 
+const ONBOARDING_CALL_COVERAGE_ITEMS = [
+  {
+    key: 'business_and_books',
+    translationKey: 'callBookings:label.cover_business_and_books',
+    defaultLabel: 'Walk through your business and books',
+  },
+  {
+    key: 'accounts_and_documents',
+    translationKey: 'callBookings:label.cover_accounts_and_documents',
+    defaultLabel: 'Connect your accounts and documents',
+  },
+  {
+    key: 'first_month_expectations',
+    translationKey: 'callBookings:label.cover_first_month_expectations',
+    defaultLabel: 'Set expectations for our first month',
+  },
+] as const
+
 export interface CallBookingProps {
   callBooking?: CallBookingData
   onBookCall?: () => void
@@ -41,11 +59,6 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
 
 const OnboardingCallCoverage = () => {
   const { t } = useTranslation()
-  const whatWeWillCoverItems: Array<[string, string]> = [
-    ['business_and_books', t('callBookings:label.cover_business_and_books', 'Walk through your business and books')],
-    ['accounts_and_documents', t('callBookings:label.cover_accounts_and_documents', 'Connect your accounts and documents')],
-    ['first_month_expectations', t('callBookings:label.cover_first_month_expectations', 'Set expectations for our first month')],
-  ]
 
   return (
     <>
@@ -57,12 +70,12 @@ const OnboardingCallCoverage = () => {
           size='2xs'
           variant='subtle'
           pbe='sm'
-          className='Layer__CallBooking__CoverageEyebrow'
+          className='Layer__CallBooking__CoverageHeading'
         >
           {t('callBookings:label.what_well_cover', 'What we\'ll cover')}
         </Span>
         <VStack role='list' gap='xs'>
-          {whatWeWillCoverItems.map(([key, label]) => (
+          {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, translationKey, defaultLabel }) => (
             <HStack
               key={key}
               className='Layer__CallBooking__CoverageItem'
@@ -74,7 +87,7 @@ const OnboardingCallCoverage = () => {
                 <Check size={12} strokeWidth={2.5} />
               </Span>
               <Span size='sm' className='Layer__CallBooking__CoverageText'>
-                {label}
+                {t(translationKey, defaultLabel)}
               </Span>
             </HStack>
           ))}

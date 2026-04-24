@@ -17,14 +17,14 @@ export const DateTile = ({ date }: DateTileProps) => {
 
   return (
     <VStack className='Layer__UI__DateTile'>
-      <Span nonAria className='Layer__UI__DateTile__Month'>
+      <Span className='Layer__UI__DateTile__Month'>
         {monthLabel}
       </Span>
       <VStack className='Layer__UI__DateTile__Body' align='center' justify='center' pbs='2xs' pbe='xs'>
-        <Span nonAria className='Layer__UI__DateTile__Day'>
+        <Span className='Layer__UI__DateTile__Day'>
           {dayLabel}
         </Span>
-        <Span nonAria className='Layer__UI__DateTile__Weekday'>
+        <Span className='Layer__UI__DateTile__Weekday'>
           {weekdayLabel}
         </Span>
       </VStack>
