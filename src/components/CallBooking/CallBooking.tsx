@@ -109,10 +109,10 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
     }
   })()
   const timeLabel = formatDate(callBooking.eventStartAt, DateFormat.MonthDayWithTimeReadable)
-  const whatWeWillCoverItems = [
-    t('callBookings:label.cover_business_and_books', 'Walk through your business and books'),
-    t('callBookings:label.cover_accounts_and_documents', 'Connect your accounts and documents'),
-    t('callBookings:label.cover_first_month_expectations', 'Set expectations for our first month'),
+  const whatWeWillCoverItems: Array<[string, string]> = [
+    ['business_and_books', t('callBookings:label.cover_business_and_books', 'Walk through your business and books')],
+    ['accounts_and_documents', t('callBookings:label.cover_accounts_and_documents', 'Connect your accounts and documents')],
+    ['first_month_expectations', t('callBookings:label.cover_first_month_expectations', 'Set expectations for our first month')],
   ]
 
   return (
@@ -169,9 +169,9 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
             {t('callBookings:label.what_well_cover', 'What we\'ll cover')}
           </Span>
           <VStack role='list' gap='xs'>
-            {whatWeWillCoverItems.map(item => (
+            {whatWeWillCoverItems.map(([key, label]) => (
               <HStack
-                key={item}
+                key={key}
                 className='Layer__CallBooking__CoverageItem'
                 align='start'
                 gap='sm'
@@ -181,7 +181,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
                   <Check size={12} strokeWidth={2.5} />
                 </Span>
                 <Span size='sm' className='Layer__CallBooking__CoverageText'>
-                  {item}
+                  {label}
                 </Span>
               </HStack>
             ))}
