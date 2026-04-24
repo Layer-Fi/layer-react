@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { flexRender, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
 
+import { useColumnPinningStyles } from '@hooks/utils/tables/useColumnPinningStyles'
 import {
   Cell,
   Column,
@@ -9,7 +10,6 @@ import {
   TableBody,
   TableHeader,
 } from '@ui/Table/Table'
-import { useColumnPinningStyles } from '@hooks/utils/tables/useColumnPinningStyles'
 import { Loader } from '@components/Loader/Loader'
 
 import './dataTable.scss'
