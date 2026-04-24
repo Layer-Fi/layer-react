@@ -2,11 +2,10 @@ import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
+import { TaxableIncomeCard } from '@components/TaxOverview/TaxableIncomeCard'
 import { TaxDeadlinesCard } from '@components/TaxOverview/TaxDeadlinesCard'
 
 import '@components/TaxOverview/taxOverview.scss'
-
-import { TaxableIncomeCard } from './TaxableIncomeCard'
 
 export const TaxOverview = () => {
   const [viewportWidth] = useWindowSize()
