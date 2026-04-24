@@ -70,7 +70,10 @@ export const useBookkeepingOnboardingCallBooking = () => {
 
   const shouldAutoOpenEmbed = shouldOfferOnboarding && !embedDismissed
   const showScheduledCallBooking = hasResolvedCallBooking && callBooking != null
-  const showEmptyCallBooking = bookkeepingStatus?.showEmbeddedOnboarding === true
+  const showEmptyCallBooking =
+    bookkeepingStatus?.showEmbeddedOnboarding === true
+    && hasResolvedCallBooking
+    && callBooking == null
 
   const handleBookCall = useCallback(() => {
     if (onboardingCallUrl != null) {
