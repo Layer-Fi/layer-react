@@ -78,7 +78,7 @@ export const useBookkeepingOnboardingCallBooking = () => {
     && shouldShowEmbeddedOnboarding
     && !embedDismissed
   const showScheduledCallBooking = hasResolvedCallBooking && callBooking != null
-  const showEmptyCallBooking = shouldOfferOnboarding
+  const showEmptyCallBooking = shouldOfferOnboarding && shouldShowEmbeddedOnboarding
 
   const handleBookCall = useCallback(() => {
     if (onboardingCallUrl != null) {
