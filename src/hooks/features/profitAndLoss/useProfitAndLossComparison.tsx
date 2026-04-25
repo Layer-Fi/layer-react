@@ -162,9 +162,7 @@ type Props = {
 }
 
 const isNotOnlyNoneTag = (compareOptions?: TagComparisonOption[]) => {
-  return Boolean(
-    compareOptions?.some(option => option.tagFilterConfig.tagFilters !== 'None'),
-  )
+  return !!compareOptions?.some(option => option.tagFilterConfig.tagFilters !== 'None')
 }
 
 export function useProfitAndLossComparison({

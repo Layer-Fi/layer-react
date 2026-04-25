@@ -47,7 +47,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
   })
 
   // Only use the data when accountId is available
-  const shouldFetch = Boolean(selectedAccountId)
+  const shouldFetch = !!selectedAccountId
 
   const data = useMemo(() => {
     if (!paginatedData || !shouldFetch) return undefined
@@ -58,10 +58,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     if (!shouldFetch || !paginatedData || paginatedData.length === 0) return false
 
     const lastPage = paginatedData[paginatedData.length - 1]
-    return Boolean(
-      lastPage.meta?.pagination.cursor
-      && lastPage.meta?.pagination.has_more,
-    )
+    return !!(lastPage.meta?.pagination.cursor && lastPage.meta?.pagination.has_more)
   }, [paginatedData, shouldFetch])
 
   const fetchMore = useCallback(() => {

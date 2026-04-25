@@ -122,7 +122,7 @@ export const DueStatus = ({ dueDate, paidAt, size = 'md' }: DueStatusProps) => {
         return null
       }
 
-      return dueStatusTitle(diff, Boolean(paidAt), t, formatNumber)
+      return dueStatusTitle(diff, !!paidAt, t, formatNumber)
     }
     catch (_err) {
       return null

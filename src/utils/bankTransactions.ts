@@ -32,10 +32,10 @@ export interface NumericRangeFilter {
 }
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
-  return Boolean(
+  return !!(
     (bankTransaction?.suggested_matches
       && bankTransaction?.suggested_matches?.length > 0)
-    || bankTransaction?.match,
+    || bankTransaction?.match
   )
 }
 
