@@ -34,12 +34,20 @@ export const UnifiedReportBaseHeader = () => {
 
   return (
     <VStack gap='lg'>
-      <HStack pis='lg' pbs='lg'>
+      <HStack pi='lg' pbs='lg' align='center' justify='space-between'>
         {baseReport
           ? <Span size='lg' weight='bold'>{baseReport.displayName}</Span>
           : <SkeletonLoader width='192px' height='24px' />}
+        <HStack gap='xs'>
+          <Button variant='outlined' onClick={onClickExpandOrCollapse}>
+            {shouldCollapse
+              ? t('reports:action.collapse_all', 'Collapse All')
+              : t('reports:action.expand_all', 'Expand All')}
+          </Button>
+          <UnifiedReportDownloadButton />
+        </HStack>
       </HStack>
-      <HStack fluid justify='space-between' align='end' pbe='lg' className='Layer__UnifiedReport__Header'>
+      <HStack fluid align='end' pbe='lg' className='Layer__UnifiedReport__Header'>
         <HStack pi='lg' gap='xs'>
           {hasControl(baseReport, ReportControl.DateRange) && (
             <CombinedDateRangeSelection mode={dateSelectionMode} />
@@ -50,14 +58,6 @@ export const UnifiedReportBaseHeader = () => {
           {dateSelectionMode === 'full' && hasControl(baseReport, ReportControl.GroupBy) && (
             <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />
           )}
-        </HStack>
-        <HStack pi='lg' className='Layer__UnifiedReport__Header__SecondaryActions'>
-          <Button variant='outlined' onClick={onClickExpandOrCollapse}>
-            {shouldCollapse
-              ? t('reports:action.collapse_all', 'Collapse All')
-              : t('reports:action.expand_all', 'Expand All')}
-          </Button>
-          <UnifiedReportDownloadButton />
         </HStack>
       </HStack>
     </VStack>

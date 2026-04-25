@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
-import { Text, TextSize } from '@components/Typography/Text'
+import { HStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 
 export const TasksHeader = ({
   tasksHeader,
@@ -9,8 +10,17 @@ export const TasksHeader = ({
 }) => {
   const { t } = useTranslation()
   return (
-    <div className='Layer__tasks-header'>
-      <Text size={TextSize.lg}>{tasksHeader ?? t('bookkeeping:label.bookkeeping_tasks', 'Bookkeeping Tasks')}</Text>
-    </div>
+    <HStack
+      className='Layer__tasks-header'
+      align='center'
+      justify='space-between'
+      gap='md'
+      pb='md'
+      pi='lg'
+    >
+      <Heading size='sm'>
+        {tasksHeader ?? t('bookkeeping:label.bookkeeping_tasks', 'Bookkeeping Tasks')}
+      </Heading>
+    </HStack>
   )
 }

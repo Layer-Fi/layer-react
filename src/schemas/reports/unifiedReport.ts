@@ -23,6 +23,20 @@ const TransformedAlignmentSchema = createTransformedEnumSchema(
   Alignment.Left,
 )
 
+export enum Pinning {
+  Left = 'LEFT',
+  Right = 'RIGHT',
+  Unpinned = 'UNPINNED',
+}
+
+const PinningSchema = Schema.Enums(Pinning)
+
+const TransformedPinningSchema = createTransformedEnumSchema(
+  PinningSchema,
+  Pinning,
+  Pinning.Unpinned,
+)
+
 export const DateQueryParamsSchema = Schema.Struct({
   effectiveDate: pipe(
     Schema.propertySignature(Schema.Date),
@@ -60,6 +74,7 @@ const unifiedReportColumnFields = {
   ),
   isRowHeader: Schema.optional(Schema.Boolean).pipe(Schema.fromKey('is_row_header')),
   alignment: Schema.optional(TransformedAlignmentSchema),
+  pinning: Schema.optional(TransformedPinningSchema),
 }
 
 export interface UnifiedReportColumn extends Schema.Struct.Type<typeof unifiedReportColumnFields> {

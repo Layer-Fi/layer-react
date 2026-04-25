@@ -1,37 +1,62 @@
 .Layer__CallBooking {
-  padding: var(--spacing-lg);
-
-  .Layer__CallBooking__Icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 3rem;
-    width: 3rem;
-    border-radius: 50%;
-    background-color: var(--color-base-50);
-    color: var(--color-base-900);
+  &__HeaderDetails {
+    min-width: 0;
   }
 
-  .Layer__CallBooking__DetailRow {
-    display: grid;
-    grid-template-columns: 16px 72px 1fr;
-    column-gap: var(--spacing-sm);
-    align-items: center;
-    width: 100%;
+  &__TitleRow {
+    flex-wrap: wrap;
   }
 
-  .Layer__CallBooking__Actions {
-    width: 100%;
+  &__DateTimeRow,
+  &__LocationRow,
+  &__CoverageItem {
+    min-width: 0;
+  }
 
-    > * {
-      flex: 1;
-      min-width: 0;
+  &__DateTimeRow {
+    align-self: flex-start;
+    color: var(--color-base-800);
+  }
+
+  &__LocationRow {
+    border-radius: var(--border-radius-5xl);
+    background: var(--bg-muted);
+    color: var(--fg-subtle);
+  }
+
+  &__Divider {
+    display: block;
+    height: 1px;
+    width: 100%;
+    margin-block: var(--spacing-md);
+    background: var(--bg-muted);
+  }
+
+  &__CoverageHeading {
+    display: block;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  &__CoverageBadge {
+    flex: 0 0 auto;
+    height: var(--spacing-md);
+    width: var(--spacing-md);
+    border-radius: var(--border-radius-5xl);
+    margin-top: var(--spacing-4xs);
+    background: var(--color-info-success-bg);
+    color: var(--color-info-success-fg);
+  }
+
+  @container (width <= 400px) {
+    &__HeaderRow {
+      gap: var(--spacing-lg);
     }
   }
-}
 
-@media (width <= 480px) {
-  .Layer__CallBooking {
-    padding: var(--spacing-md);
+  @container (width <= 360px) {
+    &__JoinAction {
+      flex: 1 1 100%;
+    }
   }
 }

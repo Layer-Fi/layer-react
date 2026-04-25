@@ -1,4 +1,4 @@
-import { Clock, Link as LinkIcon, Milestone, Users, Video } from 'lucide-react'
+import { Check, Clock3, Video } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
@@ -6,14 +6,33 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
+import { DateTile } from '@ui/DateTile/DateTile'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { AddToCalendar } from '@components/AddToCalendar/AddToCalendar'
 import { Container } from '@components/Container/Container'
-import { Separator } from '@components/Separator/Separator'
 
 import './callBooking.scss'
+
+import { useCallBookingCountdownLabel } from './useCallBookingCountdownLabel'
+
+const ONBOARDING_CALL_COVERAGE_ITEMS = [
+  {
+    key: 'business_and_books',
+    translationKey: 'callBookings:label.cover_business_and_books',
+    defaultLabel: 'Walk through your business and books',
+  },
+  {
+    key: 'accounts_and_documents',
+    translationKey: 'callBookings:label.cover_accounts_and_documents',
+    defaultLabel: 'Connect your accounts and documents',
+  },
+  {
+    key: 'first_month_expectations',
+    translationKey: 'callBookings:label.cover_first_month_expectations',
+    defaultLabel: 'Set expectations for our first month',
+  },
+] as const
 
 export interface CallBookingProps {
   callBooking?: CallBookingData
@@ -24,7 +43,7 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   const { t } = useTranslation()
 
   return (
-    <VStack gap='md' align='center' pb='md'>
+    <VStack gap='md' align='center' pi='lg' pb='lg'>
       <Heading size='sm' align='center'>
         {t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}
       </Heading>
@@ -38,9 +57,54 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   )
 }
 
+const OnboardingCallCoverage = () => {
+  const { t } = useTranslation()
+
+  return (
+    <>
+      <Span className='Layer__CallBooking__Divider' />
+
+      <VStack pbe='md'>
+        <Span
+          size='2xs'
+          variant='subtle'
+          weight='bold'
+          pbe='sm'
+          className='Layer__CallBooking__CoverageHeading'
+        >
+          {t('callBookings:label.what_well_cover', 'What we\'ll cover')}
+        </Span>
+        <VStack role='list' gap='xs'>
+          {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, translationKey, defaultLabel }) => (
+            <HStack
+              key={key}
+              className='Layer__CallBooking__CoverageItem'
+              align='start'
+              gap='sm'
+              role='listitem'
+            >
+              <HStack
+                className='Layer__CallBooking__CoverageBadge'
+                align='center'
+                justify='center'
+              >
+                <Check size={12} strokeWidth={2.5} />
+              </HStack>
+              <Span size='sm'>
+                {t(translationKey, defaultLabel)}
+              </Span>
+            </HStack>
+          ))}
+        </VStack>
+      </VStack>
+    </>
+  )
+}
+
 export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
+  const countdownLabel = useCallBookingCountdownLabel(callBooking?.eventStartAt)
 
   if (callBooking == null) {
     return (
@@ -50,63 +114,69 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
     )
   }
 
-  const purpose = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING
+  const isOnboardingCall = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING
+  const purpose = isOnboardingCall
     ? t('callBookings:label.onboarding_call', 'Onboarding call')
     : t('callBookings:label.ad_hoc_call', 'Ad hoc call')
+  const subtitle = t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
   const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
   const callLink = callBooking.callLink.toString()
+  const timeLabel = formatDate(callBooking.eventStartAt, DateFormat.MonthDayWithTimeReadable)
 
   return (
     <Container name='CallBooking'>
-      <VStack gap='md' align='center'>
-        <VStack gap='xs' align='center'>
-          <div className='Layer__CallBooking__Icon'>
-            <Users size={24} strokeWidth={1.5} />
-          </div>
-          <Heading size='sm'>{t('callBookings:label.upcoming_call', 'Upcoming Call')}</Heading>
-          <Span variant='subtle' size='sm'>
-            {t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')}
+      <VStack pi='lg' pb='lg'>
+        <HStack className='Layer__CallBooking__HeaderRow' align='start' gap='xl'>
+          <DateTile date={callBooking.eventStartAt} />
+          <VStack className='Layer__CallBooking__HeaderDetails' fluid pbs='3xs'>
+            <HStack className='Layer__CallBooking__TitleRow' align='baseline' gap='xs'>
+              <Heading size='sm'>
+                {purpose}
+              </Heading>
+              {countdownLabel && (
+                <Span size='xs' variant='subtle'>
+                  ·
+                  {' '}
+                  {countdownLabel}
+                </Span>
+              )}
+            </HStack>
+            <Span size='sm' variant='subtle' pbs='3xs'>
+              {subtitle}
+            </Span>
+            <VStack gap='xs' align='start' pbs='sm'>
+              <HStack
+                className='Layer__CallBooking__LocationRow'
+                align='center'
+                gap='sm'
+                pb='xs'
+                pi='sm'
+              >
+                <Video size={14} />
+                <Span size='sm' weight='bold' variant='placeholder'>
+                  {callPlatform}
+                </Span>
+              </HStack>
+            </VStack>
+          </VStack>
+        </HStack>
+
+        <HStack className='Layer__CallBooking__DateTimeRow' align='center' gap='sm' pbs='md'>
+          <Clock3 size={16} strokeWidth={2} />
+          <Span noWrap size='lg' weight='bold'>
+            {timeLabel}
           </Span>
-        </VStack>
-        <Separator mbs='2xs' mbe='2xs' />
-        <VStack align='start' gap='sm'>
-          <HStack className='Layer__CallBooking__DetailRow'>
-            <Milestone size={16} color='var(--color-base-500)' />
-            <Span variant='subtle' size='sm' noWrap>
-              {t('callBookings:label.purpose', 'Purpose')}
-            </Span>
-            <Span size='sm'>{purpose}</Span>
+        </HStack>
+
+        {isOnboardingCall && <OnboardingCallCoverage />}
+
+        <HStack align='center' gap='xs'>
+          <HStack className='Layer__CallBooking__JoinAction'>
+            <LinkButton href={callLink} external variant='solid' fullWidth>
+              <Video size={15} />
+              {t('callBookings:action.join_call', 'Join call')}
+            </LinkButton>
           </HStack>
-          <HStack className='Layer__CallBooking__DetailRow'>
-            <Video size={16} color='var(--color-base-500)' />
-            <Span variant='subtle' size='sm' noWrap>
-              {t('callBookings:label.location', 'Location')}
-            </Span>
-            <Span size='sm'>{callPlatform}</Span>
-          </HStack>
-          <HStack className='Layer__CallBooking__DetailRow'>
-            <Clock size={16} color='var(--color-base-500)' />
-            <Span variant='subtle' size='sm' noWrap>
-              {t('callBookings:label.date', 'Date')}
-            </Span>
-            <Span size='sm'>
-              {formatDate(callBooking.eventStartAt, DateFormat.DateWithTimeReadableWithTimezone)}
-            </Span>
-          </HStack>
-        </VStack>
-        <HStack gap='sm' align='center' className='Layer__CallBooking__Actions'>
-          <AddToCalendar
-            title={purpose}
-            description={callPlatform}
-            location={callLink}
-            startDate={callBooking.eventStartAt}
-            endDate={callBooking.eventEndAt}
-            organizer={{ name: callBooking.bookkeeperName, email: callBooking.bookkeeperEmail }}
-          />
-          <LinkButton href={callLink} external variant='outlined'>
-            <LinkIcon size={16} />
-            {t('callBookings:action.join_call', 'Join call')}
-          </LinkButton>
         </HStack>
       </VStack>
     </Container>

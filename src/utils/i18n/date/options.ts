@@ -32,6 +32,13 @@ const DATE_FORMAT_WITH_TIME_READABLE_WITH_TIMEZONE_OPTIONS: Intl.DateTimeFormatO
   timeZoneName: 'short',
 }
 
+const MONTH_DAY_WITH_TIME_READABLE_OPTIONS: Intl.DateTimeFormatOptions = {
+  month: 'long',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit',
+}
+
 const MONTH_DAY_FORMAT_OPTIONS: Intl.DateTimeFormatOptions = {
   month: 'short',
   day: 'numeric',
@@ -68,6 +75,14 @@ const TIME_ONLY_OPTIONS: Intl.DateTimeFormatOptions = {
   minute: '2-digit',
 }
 
+const DAY_ONLY_OPTIONS: Intl.DateTimeFormatOptions = {
+  day: 'numeric',
+}
+
+const WEEKDAY_SHORT_OPTIONS: Intl.DateTimeFormatOptions = {
+  weekday: 'short',
+}
+
 const FORMAT_OPTIONS_BY_PATTERN: Record<DateFormat, Intl.DateTimeFormatOptions> = {
   [DateFormat.Month]: MONTH_FORMAT_OPTIONS,
   [DateFormat.MonthShort]: MONTH_FORMAT_SHORT_OPTIONS,
@@ -80,8 +95,11 @@ const FORMAT_OPTIONS_BY_PATTERN: Record<DateFormat, Intl.DateTimeFormatOptions> 
   [DateFormat.DateNumericPadded]: DATE_FORMAT_SHORT_PADDED_OPTIONS,
   [DateFormat.DateWithTimeReadable]: DATE_FORMAT_WITH_TIME_READABLE_OPTIONS,
   [DateFormat.DateWithTimeReadableWithTimezone]: DATE_FORMAT_WITH_TIME_READABLE_WITH_TIMEZONE_OPTIONS,
+  [DateFormat.MonthDayWithTimeReadable]: MONTH_DAY_WITH_TIME_READABLE_OPTIONS,
   [DateFormat.Time]: TIME_ONLY_OPTIONS,
   [DateFormat.Year]: YEAR_ONLY_OPTIONS,
+  [DateFormat.Day]: DAY_ONLY_OPTIONS,
+  [DateFormat.WeekdayShort]: WEEKDAY_SHORT_OPTIONS,
 }
 
 export const getDateFormatOptions = (pattern: DateFormat = DateFormat.DateShort): Intl.DateTimeFormatOptions => {
