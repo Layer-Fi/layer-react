@@ -14,10 +14,11 @@ import './taxDeadlinesCard.scss'
 
 const LoadingState = () => {
   const { t } = useTranslation()
+  const { isDesktop } = useSizeClass()
   return (
     <Card className='Layer__TaxOverview__Card Layer__TaxOverview__Card--deadlines'>
       <VStack gap='lg'>
-        <Heading size='sm'>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
+        <Heading size={!isDesktop ? 'sm' : 'md'}>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
         <SkeletonLoader height='72px' width='100%' />
         <SkeletonLoader height='72px' width='100%' />
         <SkeletonLoader height='72px' width='100%' />
