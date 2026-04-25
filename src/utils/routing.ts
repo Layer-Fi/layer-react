@@ -1,5 +1,9 @@
 const LAYER_PATH_QUERY_PARAM = 'lrcp'
 
+export type Route = string
+export type RouteState<R extends Route> = { route: R }
+export type RouteNavigation = Record<string, () => void>
+
 function toKebabCase(input: string) {
   const segments = input
     .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g) ?? []
@@ -35,7 +39,6 @@ export function getLayerPathQueryParamParts() {
     .filter(Boolean)
 }
 
-export type Route = string
 export function getInitialLayerPathRoute<R extends Route>(block: (viewName: string, segment: string) => R) {
   const layerPathParts = getLayerPathQueryParamParts()
 

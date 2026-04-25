@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { OnboardingStatus, useTaxEstimatesOnboardingStatus } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { OnboardingStatus, useTaxEstimatesOnboardingStatus } from '@hooks/features/taxEstimates/useTaxEstimatesOnboardingStatus'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'

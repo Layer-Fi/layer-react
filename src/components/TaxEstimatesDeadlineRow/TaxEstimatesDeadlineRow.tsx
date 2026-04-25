@@ -6,8 +6,7 @@ import { formatCalendarDate } from '@utils/time/timeUtils'
 import { type TaxEstimateDeadlineRow } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxDeadlines'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import { useTaxEstimatesContext } from '@contexts/TaxEstimatesContext/TaxEstimatesContext'
+import { useTaxEstimatesRouteStoreProviderExternalHooks as useExternalHooks, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, Stack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -33,7 +32,7 @@ export const TaxEstimatesDeadlineRow = ({
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
   const { year } = useTaxEstimatesYear()
-  const { onTaxBannerReviewClick } = useTaxEstimatesContext()
+  const { onClickReviewTransactions } = useExternalHooks()
   const { isMobile } = useSizeClass()
 
   return (
@@ -78,13 +77,12 @@ export const TaxEstimatesDeadlineRow = ({
                 })}
             </Span>
           </HStack>
-          {onTaxBannerReviewClick && (
+          {onClickReviewTransactions && (
             <Button
               variant='outlined'
-              onPress={() => onTaxBannerReviewClick({
-                amount: data.uncategorizedSum,
-                count: data.uncategorizedCount,
-                type: 'UNCATEGORIZED_TRANSACTIONS',
+              onPress={() => onClickReviewTransactions({
+                uncategorizedAmount: data.uncategorizedSum,
+                uncategorizedTransactionCount: data.uncategorizedCount,
               })}
             >
               {t('taxEstimates:action.review_banner', 'Review')}
