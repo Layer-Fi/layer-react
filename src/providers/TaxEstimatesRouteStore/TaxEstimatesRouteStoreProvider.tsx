@@ -2,14 +2,15 @@ import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, 
 import { getYear } from 'date-fns'
 import { createStore, useStore } from 'zustand'
 
+import { getInitialLayerPathRoute, upsertLayerPathQueryParam } from '@utils/routing'
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export enum TaxEstimatesRoute {
-  Overview = 'Overview',
-  Estimates = 'Estimates',
-  Payments = 'Payments',
-  Profile = 'Profile',
+  Overview = 'overview',
+  Estimates = 'estimates',
+  Payments = 'payments',
+  Profile = 'profile',
 }
 
 export enum OnboardingStatus {
@@ -19,6 +20,9 @@ export enum OnboardingStatus {
   Onboarded = 'Onboarded',
   FeatureDisabled = 'FeatureDisabled',
 }
+
+const VIEW_NAME = 'te'
+const TAX_ESTIMATES_ROUTES = new Set<TaxEstimatesRoute>(Object.values(TaxEstimatesRoute))
 
 type TaxEstimatesRouteState = {
   route: TaxEstimatesRoute
@@ -99,12 +103,22 @@ export function useFullYearProjection() {
 
 export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   const { data: taxProfile, isLoading, isError } = useTaxProfile()
+
+  const initialRoute = getInitialLayerPathRoute<TaxEstimatesRoute>((viewName, segment) => {
+    if (viewName !== VIEW_NAME) return TaxEstimatesRoute.Overview
+    if (!segment) return TaxEstimatesRoute.Overview
+    if (!TAX_ESTIMATES_ROUTES.has(segment as TaxEstimatesRoute)) return TaxEstimatesRoute.Overview
+
+    return segment as TaxEstimatesRoute
+  })
+
   const [store] = useState(() =>
     createStore<TaxEstimatesRouteStoreShape>(set => ({
-      routeState: { route: TaxEstimatesRoute.Overview },
+      routeState: { route: initialRoute },
       onboardingStatus: OnboardingStatus.Loading,
       navigate: (route: TaxEstimatesRoute) => {
         set({ routeState: { route } })
+        upsertLayerPathQueryParam(VIEW_NAME, route)
       },
       year: getYear(new Date()),
       fullYearProjection: false,
@@ -118,6 +132,10 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
       },
     })),
   )
+
+  useEffect(() => {
+    upsertLayerPathQueryParam(VIEW_NAME, store.getState().routeState.route)
+  }, [store])
 
   useEffect(() => {
     if (isLoading) {
