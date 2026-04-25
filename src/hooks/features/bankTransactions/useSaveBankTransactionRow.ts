@@ -1,14 +1,14 @@
 import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { buildCategorizeBankTransactionPayloadForSplit } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { buildCategorizeBankTransactionPayloadForSplit, getCategoryPayloadTaxCode } from '@components/BankTransactions/utils'
 
 export type SaveBankTransactionRowFn = (
-  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+  selectedCategorization: BankTransactionCategorization | undefined,
   bankTransaction: BankTransaction,
 ) => Promise<void> | void
 
@@ -26,9 +26,11 @@ export const useSaveBankTransactionRow = () => {
   } = useMatchBankTransactionWithCacheUpdate()
 
   const saveBankTransactionRow = useCallback(async (
-    selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+    selectedCategorization: BankTransactionCategorization | undefined,
     bankTransaction: BankTransaction,
   ) => {
+    const selectedCategory = selectedCategorization?.category
+
     if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
       return
     }
@@ -47,6 +49,7 @@ export const useSaveBankTransactionRow = () => {
     return categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: selectedCategory.classification,
+      taxCode: getCategoryPayloadTaxCode(selectedCategory.classification, selectedCategorization?.taxCode?.value),
     })
   }, [categorizeBankTransaction, matchBankTransaction])
 
