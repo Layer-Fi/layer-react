@@ -30,9 +30,9 @@ function mapQuarterToSection(t: TFunction, quarter: TaxEstimatesBannerQuarter): 
   }
 
   return {
+    ...quarter,
     type: 'quarter',
     title: t('taxEstimates:label.quarter_taxes', '{{quarterLabel}} taxes', { quarterLabel }),
-    ...quarter,
   }
 }
 
