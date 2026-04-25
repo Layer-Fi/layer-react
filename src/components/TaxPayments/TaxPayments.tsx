@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useTaxPayments } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
@@ -37,6 +37,8 @@ const EmptyState = () => {
   )
 }
 
+const Header = () => <TaxEstimatesHeader type={TaxEstimatesHeaderType.Payments} />
+
 export const TaxPayments = () => {
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
@@ -52,12 +54,8 @@ export const TaxPayments = () => {
     },
   }), [data, isError, isLoading])
 
-  const TaxPaymentsHeader = useCallback(() => (
-    <TaxEstimatesHeader type={TaxEstimatesHeaderType.Payments} />
-  ), [])
-
   return (
-    <ResponsiveDetailView name='TaxPayments' slots={{ Header: TaxPaymentsHeader }}>
+    <ResponsiveDetailView name='TaxPayments' slots={{ Header }}>
       {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
     </ResponsiveDetailView>
   )
