@@ -27,15 +27,13 @@ export const TaxableIncomeCard = () => {
 
   const metrics = taxOverviewData?.metrics ?? []
   return (
-    <>
-      <Card className='Layer__TaxOverview__Card'>
-        {isHeaderVisible && <TaxEstimatesHeader type={TaxEstimatesHeaderType.Overview} />}
-        <VStack pi={!isDesktop ? undefined : 'md'}>
-          <VStack className={className} gap='4xs'>
-            {metrics.map((metric, index) => <TaxEstimateMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
-          </VStack>
+    <Card className='Layer__TaxOverview__Card'>
+      {isHeaderVisible && <TaxEstimatesHeader type={TaxEstimatesHeaderType.Overview} />}
+      <VStack pi={!isDesktop ? undefined : 'md'}>
+        <VStack className={className} gap='4xs'>
+          {metrics.map((metric, index) => <TaxEstimateMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
         </VStack>
-      </Card>
-    </>
+      </VStack>
+    </Card>
   )
 }
