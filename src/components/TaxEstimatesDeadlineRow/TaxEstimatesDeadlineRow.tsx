@@ -35,7 +35,6 @@ export const TaxEstimatesDeadlineRow = ({
   const { year } = useTaxEstimatesYear()
   const { onTaxBannerReviewClick } = useTaxEstimatesContext()
   const { isMobile } = useSizeClass()
-  const isAnnualWithYear = isAnnual && year !== undefined && year !== null
 
   return (
     <Card className='Layer__TaxOverview__DeadlineCard'>
@@ -65,7 +64,7 @@ export const TaxEstimatesDeadlineRow = ({
               <FileText size={ICON_SIZE} />
             </Span>
             <Span className='Layer__TaxOverview__DeadlineReviewLabel' size='sm' weight='bold'>
-              {isAnnualWithYear
+              {isAnnual
                 ? tPlural(t, 'taxEstimates:label.uncategorized_transactions_with_year', {
                   count: data.uncategorizedCount,
                   one: '{{count}} uncategorized transaction ({{year}})',
