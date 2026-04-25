@@ -1,4 +1,4 @@
-const LAYER_PATH_QUERY_PARAM = 'lrcp'
+const LAYER_PATH_QUERY_PARAM = 'lp'
 
 export type Route = string
 export type RouteState<R extends Route> = { route: R }
@@ -14,7 +14,7 @@ function toKebabCase(input: string) {
 }
 
 export function toLayerPathValue(viewName: string, ...subroutes: string[]) {
-  return [toKebabCase(viewName), ...subroutes.map(toKebabCase)].join('_')
+  return [toKebabCase(viewName), ...subroutes.map(toKebabCase)].join(':')
 }
 
 export function upsertLayerPathQueryParam(viewName: string, ...subroutes: string[]) {
@@ -39,9 +39,17 @@ export function getLayerPathQueryParamParts() {
     .filter(Boolean)
 }
 
-export function getInitialLayerPathRoute<R extends Route>(block: (viewName: string, segment: string) => R) {
+export function getInitialLayerPathRoute<R extends Route>(
+  viewName: string,
+  defaultRoute: R,
+  isValidRoute: (segment: string) => segment is R,
+) {
   const layerPathParts = getLayerPathQueryParamParts()
+  const [targetViewName, routeSegment] = layerPathParts
 
-  const [viewName, routeSegment] = layerPathParts
-  return block(viewName, routeSegment)
+  if (targetViewName !== viewName) return defaultRoute
+  if (!routeSegment) return defaultRoute
+  if (!isValidRoute(routeSegment)) return defaultRoute
+
+  return routeSegment
 }

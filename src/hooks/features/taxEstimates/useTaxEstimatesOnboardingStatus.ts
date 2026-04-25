@@ -1,5 +1,3 @@
-import { useMemo } from 'react'
-
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -11,33 +9,48 @@ export enum OnboardingStatus {
   FeatureDisabled = 'FeatureDisabled',
 }
 
-export function useTaxEstimatesOnboardingStatus() {
-  const { accountingConfiguration } = useLayerContext()
-  const { data: taxProfile, isLoading, isError } = useTaxProfile()
+type GetTaxEstimatesOnboardingStatusInput = {
+  isLoading: boolean
+  isError: boolean
+  hasAccountingConfiguration: boolean
+  isFeatureEnabled: boolean
+  hasSavedTaxProfile: boolean | undefined
+}
 
-  const isFeatureEnabled = useMemo(() => {
-    return accountingConfiguration && accountingConfiguration.enableTaxEstimates
-  }, [accountingConfiguration])
-
-  if (isLoading || !accountingConfiguration) {
+export function getTaxEstimatesOnboardingStatus(input: GetTaxEstimatesOnboardingStatusInput) {
+  if (input.isLoading || !input.hasAccountingConfiguration) {
     return OnboardingStatus.Loading
   }
 
-  if (isError) {
+  if (input.isError) {
     return OnboardingStatus.Error
   }
 
-  if (taxProfile && !taxProfile.userHasSavedTaxProfile) {
+  if (input.hasSavedTaxProfile === false) {
     return OnboardingStatus.NotOnboarded
   }
 
-  if (taxProfile && taxProfile.userHasSavedTaxProfile) {
+  if (input.hasSavedTaxProfile === true) {
     return OnboardingStatus.Onboarded
   }
 
-  if (!isFeatureEnabled) {
+  if (!input.isFeatureEnabled) {
     return OnboardingStatus.FeatureDisabled
   }
 
   return OnboardingStatus.Onboarded
+}
+
+export function useTaxEstimatesOnboardingStatus() {
+  const { accountingConfiguration } = useLayerContext()
+  const { data: taxProfile, isLoading, isError } = useTaxProfile()
+  const isFeatureEnabled = Boolean(accountingConfiguration?.enableTaxEstimates)
+
+  return getTaxEstimatesOnboardingStatus({
+    isLoading,
+    isError,
+    hasAccountingConfiguration: !!accountingConfiguration,
+    isFeatureEnabled,
+    hasSavedTaxProfile: taxProfile?.userHasSavedTaxProfile,
+  })
 }
