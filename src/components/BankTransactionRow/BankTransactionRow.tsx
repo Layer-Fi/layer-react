@@ -3,10 +3,6 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import {
-  isCredit,
-} from '@utils/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
@@ -29,6 +25,10 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
+import {
+  isCredit,
+} from '@components/BankTransactions/utils'
+import { isCategorized } from '@components/BankTransactions/utils'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { IconButton } from '@components/Button/IconButton'
