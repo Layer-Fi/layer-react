@@ -35,11 +35,6 @@
     background-color: var(--color-info-neutral-bg);
     color: var(--color-info-neutral-fg);
 
-    &--neutral {
-      background-color: var(--color-info-neutral-bg);
-      color: var(--color-info-neutral-fg);
-    }
-
     &--warning {
       background-color: var(--color-info-warning-bg);
       color: var(--color-info-warning-fg);
@@ -78,7 +73,7 @@
 }
 
 @media (width <= 500px) {
-  .Layer__TaxOverview__DeadlineReviewRow .Layer__UI__Button {
+  .Layer__TaxOverview__DeadlineReviewRow button {
     width: fit-content;
   }
 }

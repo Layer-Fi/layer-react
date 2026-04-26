@@ -37,7 +37,7 @@ export const TaxEstimatesDeadlineRow = ({
 
   return (
     <Card className='Layer__TaxOverview__DeadlineCard'>
-      <HStack className='Layer__TaxOverview__DeadlineRow' justify='space-between' align='start' gap='md' pb='md' pi='md'>
+      <HStack justify='space-between' align='start' gap='md' pb='md' pi='md'>
         <VStack className='Layer__TaxOverview__DeadlineContent' gap='3xs' fluid>
           <Heading level={HEADING_LEVEL} size='sm'>{data.title}</Heading>
           <Span size='sm' variant='subtle'>
@@ -50,7 +50,7 @@ export const TaxEstimatesDeadlineRow = ({
               <StatusIcon status={data.state} />
               <MoneySpan size='lg' weight='bold' amount={data.amountOwed} />
             </HStack>
-            <VStack className='Layer__TaxOverview__DeadlineAmountCopy' align='end' gap='3xs'>
+            <VStack align='end' gap='3xs'>
               <Span size='xs' variant='subtle'>{t('taxEstimates:label.estimated_taxes', 'Estimated taxes')}</Span>
             </VStack>
           </VStack>

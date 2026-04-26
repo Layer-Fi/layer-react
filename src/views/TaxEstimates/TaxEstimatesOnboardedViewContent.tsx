@@ -10,8 +10,6 @@ import { TaxOverview } from '@components/TaxOverview/TaxOverview'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
-import './taxEstimatesOnboardedViewContent.scss'
-
 const TAX_ESTIMATES_TAB_CONFIG = [
   { value: TaxEstimatesRoute.Overview, ...translationKey('common:label.overview', 'Overview') },
   { value: TaxEstimatesRoute.Estimates, ...translationKey('taxEstimates:label.estimates', 'Estimates') },
