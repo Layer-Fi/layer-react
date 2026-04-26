@@ -1,16 +1,22 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { OnboardingStatus, TaxEstimatesRouteStoreProvider, useTaxEstimatesOnboardingStatus } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { OnboardingStatus, useTaxEstimatesOnboardingStatus } from '@hooks/features/taxEstimates/useTaxEstimatesOnboardingStatus'
+import { TaxEstimatesRouteStoreProvider } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { TaxEstimatesContextProvider, type TaxEstimatesContextProviderProps } from '@contexts/TaxEstimatesContext/TaxEstimatesContextProvider'
 import { View } from '@components/View/View'
 import { TaxEstimatesViewContent } from '@views/TaxEstimates/TaxEstimatesViewContent'
 import { TaxEstimatesViewHeader } from '@views/TaxEstimates/TaxEstimatesViewHeader'
 
-export const TaxEstimates = () => {
+export type TaxEstimatesProps = TaxEstimatesContextProviderProps
+
+export const TaxEstimates = ({ onClickReviewTransactions: onReviewClicked }: TaxEstimatesProps) => {
   return (
-    <TaxEstimatesRouteStoreProvider>
-      <TaxEstimatesView />
-    </TaxEstimatesRouteStoreProvider>
+    <TaxEstimatesContextProvider onClickReviewTransactions={onReviewClicked}>
+      <TaxEstimatesRouteStoreProvider>
+        <TaxEstimatesView />
+      </TaxEstimatesRouteStoreProvider>
+    </TaxEstimatesContextProvider>
   )
 }
 
