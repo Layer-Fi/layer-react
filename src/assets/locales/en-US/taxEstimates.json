@@ -4,6 +4,13 @@
     "save_profile": "Save Profile",
     "update_tax_profile": "Update tax profile"
   },
+  "banner": {
+    "categorization_incomplete": {
+      "description_one": "You have {{count}} uncategorized transaction with ${{amount}} in potential deductions to review.",
+      "description_other": "You have {{count}} uncategorized transactions with ${{amount}} in potential deductions to review.",
+      "title": "Your tax estimates are incomplete"
+    }
+  },
   "disclaimer": {
     "acknowledgment": "By continuing, I certify that I understand the above.",
     "content": "The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us."

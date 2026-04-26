@@ -17,7 +17,7 @@ export const BANNER_CLASS_NAMES = {
   ACTIONS: 'Layer__UI__Banner__actions',
 }
 
-export type BannerVariant = 'default' | 'info' | 'warning' | 'error' | 'success'
+export type BannerVariant = 'default' | 'info' | 'warning' | 'error' | 'success' | 'dark'
 
 export type BannerProps = PropsWithChildren<{
   variant?: BannerVariant
@@ -44,6 +44,7 @@ function getAriaProperties(
     case 'success':
     case 'info':
       return { 'role': 'status', 'aria-atomic': true }
+    case 'dark':
     case 'default':
     default:
       return { 'role': 'region', 'aria-label': ariaLabel ?? 'Notification' }
@@ -113,7 +114,7 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
   const dataProperties = toDataProperties({ variant })
   const ariaProperties = getAriaProperties(variant, ariaLabel)
 
-  const renderedIcon = slots?.Icon ?? getDefaultIcon(variant)
+  const renderedIcon = slots?.Icon !== undefined ? slots.Icon : getDefaultIcon(variant)
 
   return (
     <HStack
@@ -125,9 +126,11 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
       {...dataProperties}
       {...ariaProperties}
     >
-      <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
-        {renderedIcon}
-      </HStack>
+      {renderedIcon && (
+        <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
+          {renderedIcon}
+        </HStack>
+      )}
       <BannerContent title={title} description={description}>
         {children}
       </BannerContent>
