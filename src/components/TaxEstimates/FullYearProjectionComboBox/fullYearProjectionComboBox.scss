@@ -2,7 +2,7 @@
   inline-size: 11rem;
   max-inline-size: 11rem;
 
-  @container (max-width: 500px) {
+  @media (width <= 500px) {
     inline-size: 100%;
     max-inline-size: 100%;
   }
