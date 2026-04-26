@@ -19,7 +19,8 @@ import {
 
 interface UseSplitsFormOptions {
   bankTransaction: BankTransaction
-  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined
+  selectedCategory?: BankTransactionCategoryComboBoxOption | null | undefined
+  selectedCategorization?: { category: BankTransactionCategoryComboBoxOption | null } | undefined
   isOpen?: boolean
 }
 
@@ -43,23 +44,25 @@ export interface UseSplitsFormReturn {
 export const useSplitsForm = ({
   bankTransaction,
   selectedCategory,
+  selectedCategorization,
   isOpen,
 }: UseSplitsFormOptions): UseSplitsFormReturn => {
   const { t } = useTranslation()
   const intl = useIntl()
+  const effectiveSelectedCategory = selectedCategorization?.category ?? selectedCategory
 
   const [localSplits, setLocalSplits] = useState<Split[]>(
-    getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory),
+    getLocalSplitStateForExpandedTransaction(bankTransaction, effectiveSelectedCategory),
   )
   const [inputValues, setInputValues] = useState<Record<number, string>>({})
   const [splitFormError, setSplitFormError] = useState<string | undefined>()
   const { setTransactionCategory } = useBankTransactionsCategoryActions()
 
   useEffect(() => {
-    setLocalSplits(getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory))
+    setLocalSplits(getLocalSplitStateForExpandedTransaction(bankTransaction, effectiveSelectedCategory))
     setSplitFormError(undefined)
     setInputValues({})
-  }, [bankTransaction, selectedCategory, isOpen])
+  }, [bankTransaction, effectiveSelectedCategory, isOpen])
 
   const saveLocalSplitsToCategoryStore = useCallback((splits: Split[]) => {
     if (!isSplitsValid(splits)) {

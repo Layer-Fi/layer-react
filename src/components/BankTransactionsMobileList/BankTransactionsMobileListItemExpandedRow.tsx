@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { hasMatch } from '@utils/bankTransactions'
 import { translationKey } from '@utils/i18n/translationKey'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
+import { hasMatch } from '@components/BankTransactions/utils'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
 
 import { Purpose } from './BankTransactionsMobileListItem'
