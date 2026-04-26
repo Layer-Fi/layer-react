@@ -46,6 +46,7 @@ export const convertApiCategorizationToCategoryOrSplitAsOption = (categorization
     const splits = categorization.entries.map(splitEntryEncoded => ({
       amount: splitEntryEncoded.amount || 0,
       category: splitEntryEncoded.category ? new ApiCategorizationAsOption(splitEntryEncoded.category) : null,
+      taxCode: splitEntryEncoded.tax_code ?? null,
       tags: splitEntryEncoded.tags?.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))) ?? [],
       customerVendor: splitEntryEncoded.customer
         ? decodeCustomerVendor({ ...splitEntryEncoded.customer, customerVendorType: 'CUSTOMER' })
