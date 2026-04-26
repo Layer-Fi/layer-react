@@ -4,6 +4,13 @@
     "save_profile": "Enregistrer le profil",
     "update_tax_profile": "Mettre à jour le profil fiscal"
   },
+  "banner": {
+    "categorization_incomplete": {
+      "description_one": "",
+      "description_other": "",
+      "title": ""
+    }
+  },
   "disclaimer": {
     "acknowledgment": "",
     "content": ""
