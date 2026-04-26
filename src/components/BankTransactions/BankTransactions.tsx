@@ -5,8 +5,7 @@ import { debounce } from 'lodash-es'
 import { DisplayState } from '@internal-types/bankTransactions'
 import type { LayerError } from '@utils/api/errorHandler'
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
-import { type BankTransactionFilters } from '@utils/bankTransactions'
-import { BankTransactionsDateFilterMode } from '@utils/bankTransactions'
+import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@utils/bankTransactions'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { usePreloadCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
@@ -16,7 +15,7 @@ import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/u
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
-import { BankTransactionsCategoryStoreProvider } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { BankTransactionsProvider } from '@providers/BankTransactionsProvider/BankTransactionsProvider'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { BulkSelectionStoreProvider } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -134,9 +133,9 @@ export const BankTransactions = ({
                   <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
                     <InAppLinkProvider renderInAppLink={renderInAppLink}>
                       <BulkSelectionStoreProvider>
-                        <BankTransactionsCategoryStoreProvider>
+                        <BankTransactionsCategorizationStoreProvider>
                           <BankTransactionsContent {...restProps} />
-                        </BankTransactionsCategoryStoreProvider>
+                        </BankTransactionsCategorizationStoreProvider>
                       </BulkSelectionStoreProvider>
                     </InAppLinkProvider>
                   </BankTransactionCustomerVendorVisibilityProvider>
