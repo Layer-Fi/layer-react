@@ -4,8 +4,6 @@ import classNames from 'classnames'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
-import { hasReceipts, isCredit } from '@utils/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -18,6 +16,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
+import { hasReceipts, isCategorized, isCredit } from '@components/BankTransactions/utils'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsMobileListItemCheckbox } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemCheckbox'
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
@@ -208,11 +207,9 @@ export const BankTransactionsMobileListItem = ({
                 )}
                 <HStack gap='2xs' align='center'>
                   <Span size='sm' ellipsis>
-                    <Span ellipsis size='sm'>
-                      {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
-                      {bankTransaction.account_name}
-                      {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
-                    </Span>
+                    {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
+                    {bankTransaction.account_name}
+                    {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
                   </Span>
                   {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
                 </HStack>
