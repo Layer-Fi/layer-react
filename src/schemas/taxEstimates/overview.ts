@@ -47,6 +47,20 @@ export const TaxOverviewApiResponseSchema = Schema.Struct({
 
 export type TaxOverviewApiResponse = typeof TaxOverviewApiResponseSchema.Type
 
+export type TaxOverviewBannerReview = {
+  amount: number
+  count: number
+  type: 'UNCATEGORIZED_TRANSACTIONS'
+}
+
+export enum TaxOverviewDeadlineStatus {
+  PastDue = 'PAST_DUE',
+  Paid = 'PAID',
+  Due = 'DUE',
+  CategorizationIncomplete = 'CATEGORIZATION_INCOMPLETE',
+  Neutral = 'NEUTRAL',
+}
+
 export type TaxOverviewCategory = {
   amount: number
   key: TaxSummarySectionType
