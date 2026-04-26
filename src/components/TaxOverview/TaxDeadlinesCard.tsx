@@ -38,7 +38,6 @@ const ErrorState = () => {
         <Heading size={!isDesktop ? 'sm' : 'md'}>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
         <Span size='md'>
           {t('taxEstimates:error.load_tax_deadlines', 'We couldn\'t load your tax deadlines')}
-          .
         </Span>
       </VStack>
     </Card>
@@ -60,9 +59,9 @@ export const TaxDeadlinesCard = () => {
             <VStack gap='lg'>
               <Heading size={!isDesktop ? 'sm' : 'md'}>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
               <VStack gap='2xs'>
-                {paymentDeadlines.map((deadline, index) => (
+                {paymentDeadlines.map(deadline => (
                   <TaxEstimatesDeadlineRow
-                    key={`${deadline.type}-${index}`}
+                    key={deadline.title}
                     data={deadline}
                   />
                 ))}

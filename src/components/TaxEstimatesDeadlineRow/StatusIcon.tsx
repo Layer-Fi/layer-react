@@ -36,7 +36,7 @@ export const StatusIcon = ({ status }: { status: TaxOverviewDeadlineStatus }) =>
           nonAria
           className={`Layer__TaxOverview__AmountIcon Layer__TaxOverview__AmountIcon--${tone}`}
         >
-          <Icon size={ICON_SIZE} strokeWidth={ICON_STROKE_WIDTH} />
+          <Icon size={ICON_SIZE} strokeWidth={ICON_STROKE_WIDTH} role='img' aria-label={label} />
         </Span>
       </TooltipTrigger>
       <TooltipContent>
