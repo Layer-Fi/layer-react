@@ -6,13 +6,13 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import type { FileMetadata } from '@internal-types/fileUpload'
 import { type Awaitable } from '@internal-types/utility/promises'
 import { get, post, postWithFormData } from '@utils/api/authenticatedHttp'
+import { hasReceipts } from '@utils/bankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { hasReceipts } from '@components/BankTransactions/utils'
 
 const listBankTransactionDocuments = get<{
   data: DocumentS3Urls
