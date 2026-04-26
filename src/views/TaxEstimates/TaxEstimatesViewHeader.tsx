@@ -50,7 +50,7 @@ export const TaxEstimatesViewHeader = () => {
         slotProps={{ Dialog: { width: 160 } }}
       >
         <MenuList>
-          <MenuItem key={TaxEstimatesRoute.Profile} onClick={() => navigate(TaxEstimatesRoute.Profile)}>
+          <MenuItem key={TaxEstimatesRoute.Profile} onClick={() => { navigate.toProfile() }}>
             <UserRoundPen size={20} strokeWidth={1.25} />
             <Span size='sm'>{t('taxEstimates:action.update_tax_profile', 'Update tax profile')}</Span>
           </MenuItem>

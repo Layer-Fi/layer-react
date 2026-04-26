@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import {
-  TaxEstimatesRoute,
   useTaxEstimatesNavigation,
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import BackArrow from '@icons/BackArrow'
@@ -17,7 +16,7 @@ export const TaxProfile = () => {
   const { data: taxProfile } = useTaxProfile()
 
   const handleGoBack = useCallback(() => {
-    navigate(TaxEstimatesRoute.Estimates)
+    navigate.toEstimates()
   }, [navigate])
 
   const TaxProfileHeader = useCallback(() => {

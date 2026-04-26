@@ -1,5 +1,4 @@
-import { useCallback, useMemo } from 'react'
-import type { Key } from 'react-aria-components'
+import { type Key, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { translationKey } from '@utils/i18n/translationKey'
@@ -10,8 +9,6 @@ import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxOverview } from '@components/TaxOverview/TaxOverview'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
-
-import './taxEstimatesOnboardedViewContent.scss'
 
 const TAX_ESTIMATES_TAB_CONFIG = [
   { value: TaxEstimatesRoute.Overview, ...translationKey('common:label.overview', 'Overview') },
@@ -33,7 +30,20 @@ export const TaxEstimatesOnboardedViewContent = () => {
   )
 
   const handleTabChange = useCallback((key: Key) => {
-    navigate(key as TaxEstimatesRoute)
+    switch (key) {
+      case TaxEstimatesRoute.Overview:
+        navigate.toOverview()
+        break
+      case TaxEstimatesRoute.Estimates:
+        navigate.toEstimates()
+        break
+      case TaxEstimatesRoute.Payments:
+        navigate.toPayments()
+        break
+      case TaxEstimatesRoute.Profile:
+        navigate.toProfile()
+        break
+    }
   }, [navigate])
 
   if (route === TaxEstimatesRoute.Profile) {
