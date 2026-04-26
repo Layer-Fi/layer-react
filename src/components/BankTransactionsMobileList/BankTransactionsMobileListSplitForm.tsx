@@ -183,7 +183,7 @@ export const BankTransactionsMobileListSplitForm = ({
                         </HStack>
                         <TaxCodeSelectDrawerWithTrigger
                           options={taxCodeOptions}
-                          value={getSelectedTaxCodeOption(split.taxCode)}
+                          value={getSelectedTaxCodeOption(split.taxCode ?? null)}
                           onChange={handleTaxCodeChange(index)}
                           isDisabled={
                             !showCategorization
