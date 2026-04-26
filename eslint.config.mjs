@@ -82,7 +82,7 @@ const layerNamingPlugin = {
                   return true
                 }
                 if (element.type === 'SpreadElement') {
-                  return false
+                  return isStaticConstantExpression(element.argument, seenVariables)
                 }
                 return isStaticConstantExpression(element, seenVariables)
               })
@@ -126,6 +126,9 @@ const layerNamingPlugin = {
               const identifierDeclaration = definition.node
               return isStaticConstantExpression(identifierDeclaration.init, new Set([...seenVariables, variable]))
             }
+            case 'TSAsExpression':
+            case 'TSSatisfiesExpression':
+              return isStaticConstantExpression(node.expression, seenVariables)
             default:
               return false
           }

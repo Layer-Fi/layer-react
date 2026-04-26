@@ -1,4 +1,4 @@
-export const variants = {
+export const VARIANTS = {
   fade: {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
