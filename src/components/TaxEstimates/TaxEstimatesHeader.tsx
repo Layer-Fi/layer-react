@@ -135,7 +135,7 @@ export const TaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps) => {
   return (
     <Stack className='Layer__TaxEstimatesHeader' direction={isMobile ? 'column' : 'row'} gap='md' justify='space-between' align='start' fluid pie='lg'>
       <ResponsiveDetailHeader title={title} description={description} />
-      <HStack justify='end' className='Layer__TaxEstimatesHeader__ComboBoxContainer'>
+      <HStack justify={isMobile ? 'start' : 'end'} className='Layer__TaxEstimatesHeader__ComboBoxContainer'>
         <FullYearProjectionComboBox />
       </HStack>
     </Stack>
