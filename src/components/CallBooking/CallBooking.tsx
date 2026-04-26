@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
 import { DateFormat } from '@utils/i18n/date/patterns'
+import { translationKey } from '@utils/i18n/translationKey'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
@@ -19,18 +20,15 @@ import { useCallBookingCountdownLabel } from './useCallBookingCountdownLabel'
 const ONBOARDING_CALL_COVERAGE_ITEMS = [
   {
     key: 'business_and_books',
-    translationKey: 'callBookings:label.cover_business_and_books',
-    defaultLabel: 'Walk through your business and books',
+    label: translationKey('callBookings:label.cover_business_and_books', 'Walk through your business and books'),
   },
   {
     key: 'accounts_and_documents',
-    translationKey: 'callBookings:label.cover_accounts_and_documents',
-    defaultLabel: 'Connect your accounts and documents',
+    label: translationKey('callBookings:label.cover_accounts_and_documents', 'Connect your accounts and documents'),
   },
   {
     key: 'first_month_expectations',
-    translationKey: 'callBookings:label.cover_first_month_expectations',
-    defaultLabel: 'Set expectations for our first month',
+    label: translationKey('callBookings:label.cover_first_month_expectations', 'Set expectations for our first month'),
   },
 ] as const
 
@@ -75,7 +73,7 @@ const OnboardingCallCoverage = () => {
           {t('callBookings:label.what_well_cover', 'What we\'ll cover')}
         </Span>
         <VStack role='list' gap='xs'>
-          {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, translationKey, defaultLabel }) => (
+          {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, label }) => (
             <HStack
               key={key}
               className='Layer__CallBooking__CoverageItem'
@@ -91,7 +89,7 @@ const OnboardingCallCoverage = () => {
                 <Check size={12} strokeWidth={2.5} />
               </HStack>
               <Span size='sm'>
-                {t(translationKey, defaultLabel)}
+                {t(label.i18nKey, label.defaultValue)}
               </Span>
             </HStack>
           ))}
