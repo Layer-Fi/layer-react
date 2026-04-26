@@ -15,10 +15,6 @@ import { type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { type CustomerVendorSchema } from '@schemas/customerVendor'
 import { type Tag } from '@schemas/tag'
-import {
-  hasMatch,
-} from '@utils/bankTransactions'
-import { getBankTransactionFirstSuggestedMatch } from '@utils/bankTransactions'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
@@ -35,6 +31,10 @@ import { BankTransactionCategoryComboBox } from '@components/BankTransactionCate
 import { useBankTransactionCustomerVendorVisibility } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import {
+  hasMatch,
+} from '@components/BankTransactions/utils'
+import { getBankTransactionFirstSuggestedMatch } from '@components/BankTransactions/utils'
 import { useBankTransactionTagVisibility } from '@components/BankTransactionTagSelector/BankTransactionTagVisibilityProvider'
 import { TextButton } from '@components/Button/TextButton'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
