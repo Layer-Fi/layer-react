@@ -2,12 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 import { DisplayState } from '@internal-types/bankTransactions'
-import { type BankTransactionFilters } from '@utils/bankTransactions'
-import { BankTransactionsDateFilterMode } from '@utils/bankTransactions'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { type BankTransactionFilters } from '@components/BankTransactions/utils'
+import { BankTransactionsDateFilterMode } from '@components/BankTransactions/utils'
 
 export type useBankTransactionsFiltersParams = {
   scope?: DisplayState

@@ -3,11 +3,6 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import {
-  hasReceipts,
-  isCredit,
-} from '@utils/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -29,6 +24,11 @@ import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
+import {
+  hasReceipts,
+  isCredit,
+} from '@components/BankTransactions/utils'
+import { isCategorized } from '@components/BankTransactions/utils'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
