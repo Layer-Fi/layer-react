@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { useTaxEstimatesDeadlines } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxDeadlines'
+import { useTaxEstimatesDeadlines } from '@hooks/features/taxEstimates/useTaxEstimatesDeadlines'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -70,7 +70,6 @@ export const TaxDeadlinesCard = () => {
                   <TaxEstimatesDeadlineRow
                     key='annual'
                     data={annualDeadline}
-                    isAnnual
                   />
                 )}
               </VStack>

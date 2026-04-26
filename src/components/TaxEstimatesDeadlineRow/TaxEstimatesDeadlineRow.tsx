@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { formatCalendarDate } from '@utils/time/timeUtils'
-import { type TaxEstimateDeadlineRow } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxDeadlines'
+import { type TaxEstimatesDeadlineRow as TaxEstimatesDeadlineRowData } from '@hooks/features/taxEstimates/useTaxEstimatesDeadlines'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
@@ -22,19 +22,18 @@ const HEADING_LEVEL = 3
 const ICON_SIZE = 12
 
 type TaxEstimatesDeadlineRowProps = {
-  data: TaxEstimateDeadlineRow
-  isAnnual?: boolean
+  data: TaxEstimatesDeadlineRowData
 }
 
 export const TaxEstimatesDeadlineRow = ({
   data,
-  isAnnual,
 }: TaxEstimatesDeadlineRowProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
   const { year } = useTaxEstimatesYear()
   const { onClickReviewTransactions } = useTaxEstimatesContext()
   const { isMobile } = useSizeClass()
+  const isAnnual = data.type === 'annual'
 
   return (
     <Card className='Layer__TaxOverview__DeadlineCard'>

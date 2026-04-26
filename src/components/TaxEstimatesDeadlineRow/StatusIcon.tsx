@@ -9,7 +9,7 @@ import { Span } from '@ui/Typography/Text'
 const ICON_SIZE = 14
 const ICON_STROKE_WIDTH = 2.25
 
-const getDeadlineAmountTone = (status?: TaxOverviewDeadlineStatus) => {
+const getDeadlineAmountTone = (status: TaxOverviewDeadlineStatus) => {
   switch (status) {
     case TaxOverviewDeadlineStatus.PastDue:
       return 'pastDue'
@@ -19,12 +19,13 @@ const getDeadlineAmountTone = (status?: TaxOverviewDeadlineStatus) => {
       return 'due'
     case TaxOverviewDeadlineStatus.CategorizationIncomplete:
       return 'warning'
+    case TaxOverviewDeadlineStatus.Neutral:
     default:
       return 'neutral'
   }
 }
 
-const getDeadlineStatusLabel = (t: TFunction, status?: TaxOverviewDeadlineStatus) => {
+const getDeadlineStatusLabel = (t: TFunction, status: TaxOverviewDeadlineStatus) => {
   switch (status) {
     case TaxOverviewDeadlineStatus.Paid:
       return t('taxEstimates:label.paid', 'Paid')
@@ -34,8 +35,9 @@ const getDeadlineStatusLabel = (t: TFunction, status?: TaxOverviewDeadlineStatus
       return t('taxEstimates:label.due', 'Due')
     case TaxOverviewDeadlineStatus.CategorizationIncomplete:
       return t('taxEstimates:label.categorization_incomplete', 'Categorization Incomplete')
+    case TaxOverviewDeadlineStatus.Neutral:
     default:
-      return t('common:state.unknown', 'Unknown')
+      return t('taxEstimates:label.estimated_taxes', 'Estimated taxes')
   }
 }
 
@@ -47,6 +49,7 @@ const getDeadlineStatusIcon = (status: TaxOverviewDeadlineStatus) => {
     case TaxOverviewDeadlineStatus.CategorizationIncomplete:
       return CircleAlert
     case TaxOverviewDeadlineStatus.Due:
+    case TaxOverviewDeadlineStatus.Neutral:
     default:
       return Clock3
   }
