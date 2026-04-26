@@ -7,12 +7,12 @@ import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
 import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 
-export type TaxEstimateDeadlineRow = {
+export type TaxEstimatesDeadlineRow = {
   type: 'quarter' | 'annual'
   title: string
 } & Omit<TaxEstimatesBannerQuarter, 'quarter' | 'isPastDue' | 'amountPaid' | 'balance'>
 
-function mapQuarterToSection(t: TFunction, quarter: TaxEstimatesBannerQuarter): TaxEstimateDeadlineRow {
+function mapQuarterToSection(t: TFunction, quarter: TaxEstimatesBannerQuarter): TaxEstimatesDeadlineRow {
   let quarterLabel
   switch (quarter.quarter) {
     case 1:
@@ -37,7 +37,7 @@ function mapQuarterToSection(t: TFunction, quarter: TaxEstimatesBannerQuarter): 
 }
 
 type TaxEstimatesDeadlines = {
-  data: TaxEstimateDeadlineRow[]
+  data: TaxEstimatesDeadlineRow[]
   isLoading: boolean
   isError: boolean
 }
@@ -56,7 +56,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
 
     const quarters = data.quarters.map(quarter => mapQuarterToSection(t, quarter))
 
-    const annual: TaxEstimateDeadlineRow = {
+    const annual: TaxEstimatesDeadlineRow = {
       type: 'annual',
       title: t('taxEstimates:label.annual_taxes', 'Annual taxes'),
       dueDate: data.taxesDueAt,
