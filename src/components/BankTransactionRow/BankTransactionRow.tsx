@@ -3,16 +3,15 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import {
-  isCredit,
-} from '@utils/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import {
+  useBankTransactionsCategorizationActions,
+  useGetBankTransactionCategorization,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import AlertCircle from '@icons/AlertCircle'
@@ -29,6 +28,10 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
+import {
+  isCategorized,
+  isCredit,
+} from '@components/BankTransactions/utils'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { IconButton } from '@components/Button/IconButton'
@@ -82,8 +85,8 @@ export const BankTransactionRow = ({
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { count: bulkSelectionCount } = useCountSelectedIds()
   const isBulkSelectionActive = bulkSelectionCount > 0
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
-  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
+  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
 
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
@@ -92,14 +95,16 @@ export const BankTransactionRow = ({
 
   const save = useCallback(async () => {
     if (open && !isExpandedRowValid) return
-    if (!selectedCategory) return
+    if (!selectedCategorization?.category) return
 
-    await saveBankTransactionRow(selectedCategory, bankTransaction)
+    await saveBankTransactionRow(selectedCategorization, bankTransaction)
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)
     setOpen(false)
-  }, [bankTransaction, deselect, isExpandedRowValid, open, saveBankTransactionRow, selectedCategory])
+  }, [bankTransaction, deselect, isExpandedRowValid, open, saveBankTransactionRow, selectedCategorization])
+
+  const selectedCategory = selectedCategorization?.category
 
   const submitButton = useMemo(() => (
     <SubmitButton
@@ -284,7 +289,7 @@ export const BankTransactionRow = ({
                     bankTransaction={bankTransaction}
                     selectedValue={selectedCategory ?? null}
                     onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                      setTransactionCategory(bankTransaction.id, selectedCategory)
+                      setTransactionCategorization(bankTransaction.id, { category: selectedCategory })
                     }}
                     isDisabled={isProcessing}
                   />
