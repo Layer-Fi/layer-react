@@ -1,77 +1,65 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import type { DateGroupBy, ReportEnum, UnifiedReportDateQueryParams } from '@schemas/reports/unifiedReport'
 import { UnifiedReportSchema } from '@schemas/reports/unifiedReport'
 import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { type QueryParams, toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { type UnifiedReportControlParams, type UnifiedReportParams, useUnifiedReportParams } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-export const UNIFIED_REPORT_TAG_KEY = '#unified-report'
+const getTag = (report: string) => `#unified-${report}-report`
 
 function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
-  report,
-  groupBy,
-  ...dateParams
+  params,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
-  report: ReportEnum
-  groupBy: DateGroupBy | null
-} & UnifiedReportDateQueryParams,
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      report,
-      groupBy,
-      tags: [UNIFIED_REPORT_TAG_KEY],
-      ...dateParams,
-    } as const
-  }
+  params: UnifiedReportParams | null
+}) {
+  if (!params || !accessToken || !apiUrl) return
+
+  return {
+    accessToken,
+    apiUrl,
+    businessId,
+    ...params,
+    tags: [getTag(params.route)],
+  } as const
 }
 
 const getUnifiedReport = get<
   { data: unknown },
-  { businessId: string, report: ReportEnum, groupBy: DateGroupBy | null } & UnifiedReportDateQueryParams
->(({ businessId, report, groupBy, ...dateParams }) => {
-  const parameters = toDefinedSearchParameters({ ...dateParams, groupBy })
+  { businessId: string, route: string } & UnifiedReportControlParams & QueryParams
+>(({ businessId, route, ...restParams }) => {
+  const parameters = toDefinedSearchParameters({ ...restParams })
 
-  return `/v1/businesses/${businessId}/reports/unified/${report}?${parameters}`
+  return `/v1/businesses/${businessId}/reports/unified/${route}?${parameters}`
 })
 
-type UseUnifiedReportParameters = {
-  report: ReportEnum
-  groupBy: DateGroupBy | null
-} & UnifiedReportDateQueryParams
-
-export function useUnifiedReport({ report, groupBy, ...dateParams }: UseUnifiedReportParameters) {
+export function useUnifiedReport() {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { apiUrl } = useEnvironment()
   const { businessId } = useLayerContext()
+  const params = useUnifiedReportParams()
 
   const swrResponse = useSWR(
     () => withLocale(buildKey({
       ...auth,
       apiUrl,
       businessId,
-      report,
-      groupBy,
-      ...dateParams,
+      params,
     })),
-    ({ accessToken, apiUrl, businessId }) => getUnifiedReport(apiUrl, accessToken, {
-      params: { businessId, report, groupBy, ...dateParams },
+    ({ accessToken, apiUrl, businessId, tags, ...restParams }) => getUnifiedReport(apiUrl, accessToken, {
+      params: { businessId, ...restParams },
     })().then(({ data }) => Schema.decodeUnknownPromise(UnifiedReportSchema)(data)),
   )
 

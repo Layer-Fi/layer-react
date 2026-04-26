@@ -1,5 +1,4 @@
 .Layer__UnifiedReport__Header {
-  height: 4.75rem;
   border-bottom: 1px solid var(--border-color);
 
   @container (width <= 768px) {
@@ -16,13 +15,5 @@
       padding-block-end: var(--spacing-md);
       border-bottom: 1px solid var(--border-color);
     }
-  }
-}
-
-.Layer__UnifiedReport__Header__SecondaryActions {
-  gap: var(--spacing-xs);
-
-  @media (width <= 500px) {
-    gap: var(--spacing-3xs);
   }
 }

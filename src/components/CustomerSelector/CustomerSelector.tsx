@@ -41,7 +41,9 @@ type CustomerSelectorBaseProps = {
   selectedCustomer: Customer | null
   onSelectedCustomerChange: (customer: Customer | null) => void
 
+  label?: string
   placeholder?: string
+  showLabel?: boolean
 
   isReadOnly?: boolean
   inline?: boolean
@@ -62,14 +64,17 @@ const formatCreateLabel = (inputValue: string, t: TFunction) =>
 export function CustomerSelector({
   selectedCustomer,
   onSelectedCustomerChange,
+  label,
   placeholder,
   isCreatable,
   onCreateCustomer,
   isReadOnly,
   inline,
   className,
+  showLabel = true,
 }: CustomerSelectorProps) {
   const { t } = useTranslation()
+  const resolvedLabel = label ?? t('customerVendor:label.customer', 'Customer')
   const combinedClassName = classNames(
     'Layer__CustomerSelector',
     inline && 'Layer__CustomerSelector--inline',
@@ -172,6 +177,7 @@ export function CustomerSelector({
     isError,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
+    ['aria-label']: showLabel ? undefined : resolvedLabel,
   }
 
   const creatableProps = isCreatable
@@ -185,7 +191,7 @@ export function CustomerSelector({
 
   return (
     <VStack className={combinedClassName}>
-      <Label htmlFor={inputId} size='sm'>{t('customerVendor:label.customer', 'Customer')}</Label>
+      {showLabel && <Label htmlFor={inputId} size='sm'>{resolvedLabel}</Label>}
       <MaybeCreatableComboBox {...sharedProps} {...creatableProps} />
     </VStack>
   )

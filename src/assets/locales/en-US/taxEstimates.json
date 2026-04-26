@@ -3,16 +3,23 @@
     "save_profile": "Save Profile",
     "update_tax_profile": "Update tax profile"
   },
+  "disclaimer": {
+    "acknowledgment": "By continuing, I certify that I understand the above.",
+    "content": "The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us."
+  },
   "empty": {
     "no_tax_payments_to_display": "There are no tax payments to display.",
     "tax_payments": "No tax payments found"
   },
   "error": {
+    "disclaimer_required": "You must acknowledge the disclaimer to continue.",
+    "feature_not_enabled": "Tax estimates are not enabled.",
     "load_tax_estimates": "We couldn't load your tax estimates",
-    "load_tax_estimates_tax": "We couldn't load your tax summary",
+    "load_tax_estimates_summary": "We couldn't load your tax summary",
     "load_tax_information": "Unable to load tax information",
     "load_tax_payments": "We couldnʼt load your tax payments",
     "retrieve_tax_profile": "We couldn’t retrieve your tax profile. Please check your connection and try again.",
+    "while_loading_tax_estimates": "An error occurred while loading your tax estimates. Please check your connection and try again.",
     "while_loading_tax_payments": "An error occurred while loading your tax payments. Please check your connection and try again.",
     "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
   },
@@ -34,6 +41,7 @@
     "enter_amount": "Enter amount",
     "enter_area": "Enter area",
     "estimates": "Estimates",
+    "federal": "Federal",
     "federal_deductions": "Federal Deductions",
     "federal_state_tax_payments": "Federal and state tax payments for the selected tax year",
     "federal_tax": "Federal Tax",
@@ -66,6 +74,7 @@
     "single": "Single",
     "social_security_tax_estimate_owed": "Social Security Tax Estimate (Owed)",
     "social_security_tax_rate": "Social Security Tax Rate",
+    "state": "State",
     "state_adjusted_gross_income": "State Adjusted Gross Income",
     "state_deductions": "State Deductions",
     "state_income_tax_estimate_owed": "State Income Tax Estimate (Owed)",
@@ -79,10 +88,15 @@
     "tax_payments": "Tax Payments",
     "tax_profile": "Tax Profile",
     "tax_profile_saved": "Tax profile saved",
+    "tax_summary": "Tax Summary",
     "taxable_amount_tax_name": "Taxable Amount for {{taxName}}",
     "taxable_business_income": "Taxable Business Income",
     "taxable_business_income_projected": "Projected Taxable Business Income",
     "taxable_income": "Taxable Income",
+    "taxable_income_estimate_to_date_for_year": "Taxable income estimate to date for year {{year}}",
+    "taxable_income_estimate_to_date_for_year_projected": "Taxable income projection for year {{year}}",
+    "taxable_income_for_year": "Taxable income for {{year}}",
+    "taxable_income_for_year_projected": "Projected taxable income for {{year}}",
     "taxable_medicare_income": "Taxable Medicare Income",
     "taxable_medicare_surtax_income": "Taxable Medicare Surtax Income",
     "taxable_social_security_income": "Taxable Social Security Income",

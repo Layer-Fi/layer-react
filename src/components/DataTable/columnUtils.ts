@@ -1,15 +1,24 @@
-import { type ColumnDef, createColumnHelper, type Row } from '@tanstack/react-table'
+import { type ColumnDef, createColumnHelper, type HeaderGroup, type Row } from '@tanstack/react-table'
+import type { CSSProperties } from 'react'
 
-export type LeafColumn<TData> = {
+import { type Alignment } from '@schemas/reports/unifiedReport'
+import type { ColumnHeaderWidths } from '@hooks/utils/tables/useColumnHeaderWidths'
+
+export type ColumnPinningSide = 'left' | 'right'
+
+type BaseColumn = {
   id: string
   header?: React.ReactNode
-  cell: (row: Row<TData>) => React.ReactNode
-  isRowHeader?: true
+  alignment?: Alignment
+  isRowHeader?: boolean
 }
 
-export type GroupColumn<TData> = {
-  id: string
-  header?: React.ReactNode
+export type LeafColumn<TData> = BaseColumn & {
+  cell: (row: Row<TData>) => React.ReactNode
+  pinning?: ColumnPinningSide
+}
+
+export type GroupColumn<TData> = BaseColumn & {
   columns: ColumnNode<TData>[]
 }
 
@@ -19,11 +28,12 @@ export const isLeafColumn = <TData>(col: ColumnNode<TData>): col is LeafColumn<T
   return 'cell' in col
 }
 
-export const isGroupColumn = <TData>(col: ColumnNode<TData>): col is GroupColumn<TData> => {
-  return 'columns' in col
-}
-
 export type NestedColumnConfig<TData> = ColumnNode<TData>[]
+
+const getColumnMeta = (col: BaseColumn) => ({
+  alignment: col.alignment,
+  isRowHeader: col.isRowHeader ?? false,
+})
 
 export const getColumnDefs = <TData>(
   columnConfig: NestedColumnConfig<TData>,
@@ -36,9 +46,7 @@ export const getColumnDefs = <TData>(
         id: col.id,
         header: () => col.header,
         cell: ({ row }) => col.cell(row),
-        meta: {
-          isRowHeader: col.isRowHeader || false,
-        },
+        meta: getColumnMeta(col),
       })
     }
 
@@ -46,6 +54,50 @@ export const getColumnDefs = <TData>(
       id: col.id,
       header: () => col.header,
       columns: getColumnDefs(col.columns),
+      meta: getColumnMeta(col),
     })
   })
+}
+
+export const computePinningStyles = <TData>(
+  headerGroups: HeaderGroup<TData>[],
+  widths: ColumnHeaderWidths,
+): ReadonlyMap<string, CSSProperties> => {
+  const leafHeaders = headerGroups.at(-1)?.headers ?? []
+  const styles = new Map<string, CSSProperties>()
+
+  const accumulate = (headersInOrder: typeof leafHeaders, side: ColumnPinningSide) => {
+    let offset = 0
+    for (const header of headersInOrder) {
+      if (header.column.getIsPinned() !== side) continue
+      styles.set(header.column.id, { position: 'sticky', [side]: `${offset}px` })
+      offset += widths[header.column.id] ?? 0
+    }
+  }
+
+  accumulate(leafHeaders, 'left')
+  accumulate([...leafHeaders].reverse(), 'right')
+
+  return styles
+}
+
+export const getColumnPinning = <TData>(
+  columnConfig: NestedColumnConfig<TData>,
+): { left: string[], right: string[] } => {
+  const left: string[] = []
+  const right: string[] = []
+
+  for (const col of columnConfig) {
+    if (isLeafColumn(col)) {
+      if (col.pinning === 'left') left.push(col.id)
+      else if (col.pinning === 'right') right.push(col.id)
+    }
+    else {
+      const nested = getColumnPinning(col.columns)
+      left.push(...nested.left)
+      right.push(...nested.right)
+    }
+  }
+
+  return { left, right }
 }

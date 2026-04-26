@@ -9,6 +9,7 @@ import {
 import { useVirtualizer } from '@tanstack/react-virtual'
 import classNames from 'classnames'
 
+import { type Alignment } from '@schemas/reports/unifiedReport'
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { getColumnDefs, type NestedColumnConfig } from '@components/DataTable/columnUtils'
@@ -20,6 +21,7 @@ declare module '@tanstack/react-table' {
   // eslint-disable-next-line unused-imports/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
     isRowHeader: boolean
+    alignment?: Alignment
   }
 }
 
@@ -138,6 +140,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
             <TableColumn
               key={header.id}
               isRowHeader={header.column.columnDef.meta?.isRowHeader}
+              alignment={header.column.columnDef.meta?.alignment}
               className={classNames(
                 `${CSS_PREFIX}__header-cell`,
                 `Layer__UI__Table-Column__${componentName}--${header.id}`,
@@ -162,6 +165,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
                 {row.getVisibleCells().map(cell => (
                   <Cell
                     key={cell.id}
+                    alignment={cell.column.columnDef.meta?.alignment}
                     className={classNames(
                       `${CSS_PREFIX}__cell`,
                       `Layer__UI__Table-Cell__${componentName}--${cell.column.id}`,

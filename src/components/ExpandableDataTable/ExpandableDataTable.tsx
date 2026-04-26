@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -9,6 +9,7 @@ import {
 import { HStack } from '@ui/Stack/Stack'
 import {
   getColumnDefs,
+  getColumnPinning,
   isLeafColumn,
   type NestedColumnConfig,
 } from '@components/DataTable/columnUtils'
@@ -33,6 +34,7 @@ const getRowIndentStyle = (
 })
 
 const EMPTY_ARRAY: never[] = []
+
 export function ExpandableDataTable<TData extends object>({
   data,
   isLoading,
@@ -41,7 +43,6 @@ export function ExpandableDataTable<TData extends object>({
   componentName,
   ariaLabel,
   slots,
-  hideHeader,
   getSubRows,
   getRowId,
 }: ExpandableDataTableProps<TData>) {
@@ -64,7 +65,7 @@ export function ExpandableDataTable<TData extends object>({
         return (
           <div style={rowIndentStyle}>
             <HStack align='center' gap='xs'>
-              <ExpandButton isExpanded={row.getIsExpanded()} onClick={row.getToggleExpandedHandler()} />
+              <ExpandButton isExpanded={row.getIsExpanded()} />
               {originalFirstCell(row)}
             </HStack>
           </div>
@@ -77,13 +78,18 @@ export function ExpandableDataTable<TData extends object>({
 
   const columnDefs = getColumnDefs<TData>(wrappedColumnConfig)
 
+  const columnPinning = useMemo(
+    () => getColumnPinning(wrappedColumnConfig),
+    [wrappedColumnConfig],
+  )
+
   const table = useReactTable<TData>({
     data: data ?? EMPTY_ARRAY,
     columns: columnDefs,
     getSubRows,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    state: { expanded },
+    state: { expanded, columnPinning },
     onExpandedChange: setExpanded,
     autoResetPageIndex: false,
     getRowId,
@@ -96,6 +102,19 @@ export function ExpandableDataTable<TData extends object>({
   const headerGroups = table.getHeaderGroups()
   const numColumns = table.getVisibleLeafColumns().length
 
+  const isRowClickable = useCallback((row: Row<TData>) => {
+    return row.getCanExpand()
+  }, [])
+
+  const onRowClick = useCallback((row: Row<TData>) => {
+    row.toggleExpanded()
+  }, [])
+
+  const withClickableRow = useMemo(() => ({
+    onRowClick,
+    isRowClickable,
+  }), [onRowClick, isRowClickable])
+
   return (
     <DataTable
       ariaLabel={ariaLabel}
@@ -105,9 +124,9 @@ export function ExpandableDataTable<TData extends object>({
       isError={isError}
       componentName={componentName}
       slots={slots}
-      hideHeader={hideHeader}
       dependencies={dependencies}
       headerGroups={headerGroups}
+      withClickableRow={withClickableRow}
     />
   )
 }

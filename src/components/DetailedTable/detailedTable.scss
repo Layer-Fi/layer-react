@@ -1,0 +1,118 @@
+.Layer__DetailedTable {
+  &__table {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th,
+      td {
+        padding: var(--spacing-2xs) var(--spacing-xs);
+        font-size: 12px;
+
+        &:first-child {
+          width: 20px;
+          padding-right: 0;
+        }
+
+        &:last-child {
+          text-align: right;
+        }
+      }
+
+      th {
+        padding-bottom: var(--spacing-sm);
+        border-bottom: 1px solid var(--color-base-300);
+        transition: color 150ms ease-out;
+      }
+    }
+
+    &--sortable table th {
+      cursor: pointer;
+
+      &:first-child {
+        cursor: default;
+      }
+    }
+
+    table tbody tr {
+      height: 2.5rem;
+    }
+  }
+
+  &__Column {
+    &--color {
+      .share-icon {
+        height: 12px;
+        width: 12px;
+        border-radius: 2px;
+      }
+    }
+
+    &--percent {
+      width: 4ch;
+      padding-left: 0;
+      text-align: right;
+
+      .share-text {
+        font-size: var(--text-sm);
+        line-height: 140%;
+      }
+    }
+  }
+
+  &__row {
+    border-radius: 2px;
+    background: transparent;
+    transition: background-color 300ms ease-out;
+
+    &.active {
+      background: var(--color-base-50);
+    }
+  }
+
+  &__SortableColumn--value,
+  &__Column--value {
+    text-align: right;
+  }
+
+  &__sortArrows {
+    position: relative;
+    top: 1px;
+
+    .Layer__SortArrows__DescArrow,
+    .Layer__SortArrows__AscArrow {
+      stroke: var(--color-base-500);
+    }
+  }
+
+  &__SortableColumn--sortdesc {
+    .Layer__DetailedTable__sortArrows {
+      .Layer__SortArrows__DescArrow {
+        stroke: var(--color-base-1000);
+      }
+    }
+  }
+
+  &__SortableColumn--sortasc {
+    .Layer__DetailedTable__sortArrows {
+      .Layer__SortArrows__AscArrow {
+        stroke: var(--color-base-1000);
+      }
+    }
+  }
+}
+
+@container (max-width: 1023px) and (min-width: 768px) {
+  .Layer__DetailedTable {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+}
+
+@container (max-width: 767px) {
+  .Layer__DetailedTable {
+    width: 100%;
+    padding-inline: var(--spacing-md);
+  }
+}

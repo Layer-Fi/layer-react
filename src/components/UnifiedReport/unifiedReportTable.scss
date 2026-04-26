@@ -4,10 +4,6 @@
   .Layer__UI__Table-Column,
   .Layer__UI__Table-Cell {
     display: table-cell;
-    text-align: end;
-
-    &__UnifiedReport--displayName {
-      text-align: start;
-    }
+    min-width: 6rem;
   }
 }

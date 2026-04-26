@@ -1,14 +1,17 @@
 import { createContext } from 'react'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
+import { SortOrder } from '@internal-types/utility/pagination'
 import { type useProfitAndLoss } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 
 export const ProfitAndLossContext = createContext<ReturnType<typeof useProfitAndLoss>>({
   data: undefined,
-  filteredDataRevenue: [],
-  filteredTotalRevenue: undefined,
-  filteredDataExpenses: [],
-  filteredTotalExpenses: undefined,
+  chartDataRevenue: [],
+  tableDataRevenue: [],
+  totalRevenue: undefined,
+  chartDataExpenses: [],
+  tableDataExpenses: [],
+  totalExpenses: undefined,
   isLoading: true,
   isValidating: false,
   isError: false,
@@ -21,8 +24,8 @@ export const ProfitAndLossContext = createContext<ReturnType<typeof useProfitAnd
   setSidebarScope: () => {},
   sortBy: () => {},
   filters: {
-    expenses: undefined,
-    revenue: undefined,
+    expenses: { sortBy: 'value', sortOrder: SortOrder.DESC },
+    revenue: { sortBy: 'value', sortOrder: SortOrder.DESC },
   },
   tagFilter: undefined,
   selectedLineItem: null,

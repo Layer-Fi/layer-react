@@ -1,6 +1,6 @@
 {
   "name": "@layerfi/components",
-  "version": "0.1.127",
+  "version": "0.1.128-alpha.1",
   "description": "Layer React Components",
   "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.mjs",
@@ -94,6 +94,7 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.8",
+    "@formatjs/intl-durationformat": "^0.10.4",
     "@internationalized/date": "^3.8.2",
     "@react-hook/resize-observer": "^2.0.2",
     "@tanstack/react-form": "^1.19.0",

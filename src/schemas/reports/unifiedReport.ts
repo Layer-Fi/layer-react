@@ -1,16 +1,41 @@
 import { pipe, Schema } from 'effect'
 
-export enum ReportEnum {
-  BalanceSheet = 'balance-sheet',
-  CashflowStatement = 'cashflow-statement',
-  ProfitAndLoss = 'profit-and-loss',
-}
+import { ReportConfigSchema } from '@schemas/reports/reportConfig'
+import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum DateGroupBy {
   AllTime = 'ALL_TIME',
   Month = 'MONTH',
   Year = 'YEAR',
 }
+
+export enum Alignment {
+  Left = 'LEFT',
+  Right = 'RIGHT',
+  Center = 'CENTER',
+}
+
+const AlignmentSchema = Schema.Enums(Alignment)
+
+const TransformedAlignmentSchema = createTransformedEnumSchema(
+  AlignmentSchema,
+  Alignment,
+  Alignment.Left,
+)
+
+export enum Pinning {
+  Left = 'LEFT',
+  Right = 'RIGHT',
+  Unpinned = 'UNPINNED',
+}
+
+const PinningSchema = Schema.Enums(Pinning)
+
+const TransformedPinningSchema = createTransformedEnumSchema(
+  PinningSchema,
+  Pinning,
+  Pinning.Unpinned,
+)
 
 export const DateQueryParamsSchema = Schema.Struct({
   effectiveDate: pipe(
@@ -47,6 +72,9 @@ const unifiedReportColumnFields = {
     Schema.propertySignature(Schema.String),
     Schema.fromKey('display_name'),
   ),
+  isRowHeader: Schema.optional(Schema.Boolean).pipe(Schema.fromKey('is_row_header')),
+  alignment: Schema.optional(TransformedAlignmentSchema),
+  pinning: Schema.optional(TransformedPinningSchema),
 }
 
 export interface UnifiedReportColumn extends Schema.Struct.Type<typeof unifiedReportColumnFields> {
@@ -74,6 +102,11 @@ const UnifiedCellValueAmountSchema = Schema.Struct({
   value: Schema.Number,
 })
 
+const UnifiedCellValueDateSchema = Schema.Struct({
+  type: Schema.Literal('Date'),
+  value: Schema.Date,
+})
+
 const UnifiedCellValueEmptySchema = Schema.Struct({
   type: Schema.Literal('Empty'),
 })
@@ -85,33 +118,47 @@ const UnifiedCellValueUnknownSchema = Schema.Struct({
 
 const UnifiedCellValueSchema = Schema.Union(
   UnifiedCellValueAmountSchema,
+  UnifiedCellValueDateSchema,
   UnifiedCellValueEmptySchema,
   UnifiedCellValueUnknownSchema,
 )
 
 export type UnifiedCellValue = typeof UnifiedCellValueSchema.Type
 export type UnifiedCellValueAmount = typeof UnifiedCellValueAmountSchema.Type
+export type UnifiedCellValueDate = typeof UnifiedCellValueDateSchema.Type
 export type UnifiedCellValueEmpty = typeof UnifiedCellValueEmptySchema.Type
 export type UnifiedCellValueUnknown = typeof UnifiedCellValueUnknownSchema.Type
 
 export const isAmountCellValue = (value: UnifiedCellValue): value is UnifiedCellValueAmount =>
   value.type === 'Amount'
 
+export const isDateCellValue = (value: UnifiedCellValue): value is UnifiedCellValueDate =>
+  value.type === 'Date'
+
 export const isEmptyCellValue = (value: UnifiedCellValue): value is UnifiedCellValueEmpty =>
   value.type === 'Empty'
 
+const UnifiedCellFormatSchema = Schema.Struct({
+  bold: Schema.optional(Schema.Boolean),
+})
+
+export type UnifiedCellFormat = typeof UnifiedCellFormatSchema.Type
+
 const UnifiedReportCellSchema = Schema.Struct({
   value: UnifiedCellValueSchema,
+  format: Schema.optional(UnifiedCellFormatSchema),
+  reportConfig: pipe(
+    Schema.propertySignature(Schema.NullishOr(ReportConfigSchema)),
+    Schema.fromKey('report_config'),
+  ),
 })
+
+export type UnifiedReportCell = typeof UnifiedReportCellSchema.Type
 
 const unifiedReportRowFields = {
   rowKey: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('row_key'),
-  ),
-  displayName: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('display_name'),
   ),
   cells: Schema.Record({
     key: Schema.String,

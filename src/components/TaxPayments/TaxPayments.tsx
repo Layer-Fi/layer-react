@@ -7,8 +7,9 @@ import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstima
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader } from '@components/TaxEstimates/TaxEstimatesHeader'
-import { TaxPaymentsMobileList } from '@components/TaxPayments/TaxPaymentsMobileList/TaxPaymentsMobileList'
-import { TaxPaymentsTable } from '@components/TaxPayments/TaxPaymentsTable/TaxPaymentsTable'
+
+import { TaxPaymentsMobileList } from './TaxPaymentsMobileList/TaxPaymentsMobileList'
+import { TaxPaymentsTable } from './TaxPaymentsTable/TaxPaymentsTable'
 
 const TaxPaymentsHeader = ({ isMobile }: { isMobile: boolean }) => {
   const { t } = useTranslation()
@@ -52,21 +53,15 @@ export const TaxPayments = () => {
   const { fullYearProjection } = useFullYearProjection()
   const { data, isLoading, isError } = useTaxPayments({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
-
-  const dataWithIds = useMemo(
-    () => data?.quarters.map(q => ({ ...q, id: `Q${q.quarter}` })),
-    [data?.quarters],
-  )
-
   const props = useMemo(() => ({
-    data: dataWithIds,
+    data,
     isLoading,
     isError,
     slots: {
       EmptyState,
       ErrorState,
     },
-  }), [dataWithIds, isError, isLoading])
+  }), [data, isError, isLoading])
 
   const Header = useCallback(() => (
     <TaxPaymentsHeader isMobile={!isDesktop} />

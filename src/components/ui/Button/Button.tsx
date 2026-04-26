@@ -31,7 +31,7 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
   )
 }
 
-export type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text' | 'branded'
+export type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'outlined-light' | 'text' | 'branded'
 export type ButtonSize = 'md'
 
 export type ButtonStyleProps = {

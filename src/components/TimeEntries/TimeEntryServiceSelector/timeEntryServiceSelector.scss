@@ -1,0 +1,23 @@
+.Layer__TimeEntryServiceSelector {
+  display: grid;
+
+  grid-template-areas:
+    'label'
+    'input';
+  gap: var(--spacing-3xs);
+
+  &--inline {
+    grid-template-areas: 'label input';
+    gap: 0;
+
+    align-items: center;
+  }
+
+  &__CreateLabel.Layer__Span {
+    display: inline-flex;
+    gap: var(--spacing-2xs);
+    align-items: center;
+
+    color: var(--color-base-900);
+  }
+}

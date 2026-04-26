@@ -15,10 +15,13 @@ import {
   type TableProps,
 } from 'react-aria-components'
 
+import { Alignment } from '@schemas/reports/unifiedReport'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './table.scss'
+
+type PinnedSide = 'left' | 'right' | false
 
 enum TableSubComponent {
   Table = 'Table',
@@ -30,8 +33,21 @@ enum TableSubComponent {
 }
 const CSS_PREFIX = 'Layer__UI__Table'
 
-const getClassName = (component: TableSubComponent, additionalClassNames?: Argument, withHidden?: boolean) =>
-  classNames(`${CSS_PREFIX}-${component}`, withHidden && `${CSS_PREFIX}-${component}--hidden`, additionalClassNames)
+const toAlignmentDataValue = (alignment: Alignment | undefined) => {
+  switch (alignment) {
+    case Alignment.Left:
+      return 'start'
+    case Alignment.Right:
+      return 'end'
+    case Alignment.Center:
+      return 'center'
+    default:
+      return undefined
+  }
+}
+
+const getClassName = (component: TableSubComponent, additionalClassNames?: Argument) =>
+  classNames(`${CSS_PREFIX}-${component}`, additionalClassNames)
 
 type TableRenderingProps = {
   nonAria?: boolean
@@ -60,12 +76,8 @@ const Table = forwardRef<HTMLTableElement, TableProps & TableRenderingProps>(
 Table.displayName = TableSubComponent.Table
 
 // TABLE HEADER
-type TableHeaderStyleProps = {
-  hideHeader?: boolean
-}
-
 const TableHeaderInner = <T extends object>(
-  { children, className, hideHeader, nonAria, ...restProps }: TableHeaderProps<T> & TableHeaderStyleProps & TableRenderingProps,
+  { children, className, nonAria, ...restProps }: TableHeaderProps<T> & TableRenderingProps,
   ref: React.Ref<HTMLTableSectionElement>,
 ) => {
   const TableHeaderComponent = nonAria
@@ -74,7 +86,7 @@ const TableHeaderInner = <T extends object>(
 
   return (
     <TableHeaderComponent
-      className={getClassName(TableSubComponent.TableHeader, className, hideHeader)}
+      className={getClassName(TableSubComponent.TableHeader, className)}
       {...restProps}
       ref={ref}
     >
@@ -84,7 +96,7 @@ const TableHeaderInner = <T extends object>(
 }
 
 const TableHeader = forwardRef(TableHeaderInner) as (<T>(
-  props: TableHeaderProps<T> & TableHeaderStyleProps & TableRenderingProps & { ref?: React.Ref<HTMLTableSectionElement> }
+  props: TableHeaderProps<T> & TableRenderingProps & { ref?: React.Ref<HTMLTableSectionElement> }
 ) => React.ReactElement) & { displayName?: string }
 
 TableHeader.displayName = TableSubComponent.TableHeader
@@ -122,7 +134,7 @@ type RowStyleProps = {
 }
 
 const RowInner = <T extends object>(
-  { children, className, depth = 0, nonAria, id, ...restProps }: RowProps<T> & RowStyleProps & TableRenderingProps,
+  { children, className, depth = 0, nonAria, id, onAction, ...restProps }: RowProps<T> & RowStyleProps & TableRenderingProps,
   ref: React.Ref<HTMLTableRowElement>,
 ) => {
   const dataProperties = toDataProperties({ depth })
@@ -131,11 +143,16 @@ const RowInner = <T extends object>(
     ? 'tr'
     : ReactAriaRow
 
+  const actionProps = nonAria
+    ? { onClick: onAction }
+    : { onAction }
+
   return (
     <RowComponent
       className={getClassName(TableSubComponent.Row, className)}
       {...restProps}
       {...dataProperties}
+      {...actionProps}
       ref={ref}
       id={id?.toString()}
     >
@@ -152,13 +169,14 @@ Row.displayName = TableSubComponent.Row
 
 // TABLE COLUMN
 type ColumnStyleProps = {
-  textAlign?: 'left' | 'center' | 'right'
+  alignment?: Alignment
   colSpan?: number
+  pinned?: PinnedSide
 }
 
 const Column = forwardRef<HTMLTableCellElement, ColumnProps & ColumnStyleProps & TableRenderingProps>(
-  ({ children, className, nonAria, id, textAlign = 'left', colSpan = 1, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ 'text-align': textAlign })
+  ({ children, className, nonAria, id, alignment = Alignment.Left, colSpan = 1, pinned, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment), pinned })
     const columnClassName = getClassName(TableSubComponent.Column, className)
 
     const ColumnComponent = nonAria
@@ -183,9 +201,15 @@ const Column = forwardRef<HTMLTableCellElement, ColumnProps & ColumnStyleProps &
 Column.displayName = TableSubComponent.Column
 
 // TABLE CELL
+type CellStyleProps = {
+  alignment?: Alignment
+  pinned?: PinnedSide
+}
 
-const Cell = forwardRef<HTMLTableCellElement, CellProps & TableRenderingProps>(
-  ({ children, className, nonAria, id, ...restProps }, ref) => {
+const Cell = forwardRef<HTMLTableCellElement, CellProps & CellStyleProps & TableRenderingProps>(
+  ({ children, className, nonAria, id, alignment, pinned, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment), pinned })
+
     const CellComponent = nonAria
       ? 'td'
       : ReactAriaCell
@@ -194,6 +218,7 @@ const Cell = forwardRef<HTMLTableCellElement, CellProps & TableRenderingProps>(
       <CellComponent
         className={getClassName(TableSubComponent.Cell, className)}
         {...restProps}
+        {...dataProperties}
         ref={ref}
         id={id?.toString()}
       >

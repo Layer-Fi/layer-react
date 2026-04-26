@@ -1,0 +1,53 @@
+.Layer__TimeEntriesTable__FilterCustomer,
+.Layer__TimeEntriesTable__FilterService {
+  flex: 0 0 12rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@container (max-width: 760px) {
+  .Layer__TimeEntriesTable {
+    .Layer__DataTableHeader__Header {
+      height: auto;
+      padding-block: var(--spacing-sm);
+    }
+
+    .Layer__DataTableHeader__Header[data-direction='row'] {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      align-items: stretch;
+    }
+
+    .Layer__DataTableHeader__Header > .Layer__Stack:first-child,
+    .Layer__DataTableHeader__Header > .Layer__Stack:last-child {
+      box-sizing: border-box;
+      inline-size: 100%;
+      padding-inline: var(--spacing-md);
+    }
+
+    .Layer__DataTableHeader__Header > .Layer__Stack:first-child {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      align-items: stretch;
+    }
+
+    .Layer__DataTableHeader__Header > .Layer__Stack:last-child {
+      justify-content: flex-start;
+    }
+
+    .Layer__DataTableHeader__Header > .Layer__Stack:last-child > .Layer__Stack {
+      flex-wrap: wrap;
+      inline-size: 100%;
+    }
+
+    .Layer__TimeEntriesTable__Filters[data-direction='row'] {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      align-items: stretch;
+    }
+
+    .Layer__TimeEntriesTable__FilterCustomer,
+    .Layer__TimeEntriesTable__FilterService {
+      flex: 1 1 auto;
+    }
+  }
+}

@@ -3,49 +3,24 @@ import { pipe, Schema } from 'effect'
 import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum ReportControl {
-  DATE_RANGE = 'date_range',
-  GROUP_BY = 'group_by',
-  UNKNOWN = 'unknown',
-}
-
-export enum ReportType {
-  PROFIT_AND_LOSS = 'profit-and-loss',
-  CASHFLOW_STATEMENT = 'cashflow-statement',
-  UNKNOWN = 'unknown',
-}
-
-export enum ReportGroupType {
-  ACCOUNTING = 'accounting',
-  UNKNOWN = 'unknown',
+  Date = 'date',
+  DateRange = 'date_range',
+  GroupBy = 'group_by',
+  Unknown = 'unknown',
 }
 
 const ReportControlSchema = Schema.Enums(ReportControl)
-const ReportTypeSchema = Schema.Enums(ReportType)
-const ReportGroupTypeSchema = Schema.Enums(ReportGroupType)
-
 const TransformedReportControlSchema = createTransformedEnumSchema(
   ReportControlSchema,
   ReportControl,
-  ReportControl.UNKNOWN,
-)
-
-const TransformedReportTypeSchema = createTransformedEnumSchema(
-  ReportTypeSchema,
-  ReportType,
-  ReportType.UNKNOWN,
-)
-
-const TransformedReportGroupTypeSchema = createTransformedEnumSchema(
-  ReportGroupTypeSchema,
-  ReportGroupType,
-  ReportGroupType.UNKNOWN,
+  ReportControl.Unknown,
 )
 
 export const ReportConfigSchema = Schema.Struct({
   key: Schema.String,
-  reportType: pipe(
-    Schema.propertySignature(TransformedReportTypeSchema),
-    Schema.fromKey('report_type'),
+  reportRoute: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('report_route'),
   ),
   displayName: pipe(
     Schema.propertySignature(Schema.String),
@@ -56,12 +31,13 @@ export const ReportConfigSchema = Schema.Struct({
     Schema.propertySignature(Schema.Record({ key: Schema.String, value: Schema.String })),
     Schema.fromKey('base_query_parameters'),
   ),
+  isDefaultReport: Schema.optional(Schema.Boolean).pipe(Schema.fromKey('is_default_report')),
 })
 export type ReportConfig = typeof ReportConfigSchema.Type
 
 export const ReportGroupSchema = Schema.Struct({
   groupType: pipe(
-    Schema.propertySignature(TransformedReportGroupTypeSchema),
+    Schema.propertySignature(Schema.String),
     Schema.fromKey('group_type'),
   ),
   displayName: pipe(

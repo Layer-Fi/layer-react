@@ -1,0 +1,26 @@
+.Layer__TimeEntryForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  max-width: 44rem;
+  padding-inline: var(--spacing-lg);
+
+  .Layer__TimeEntryForm__FormError {
+    padding-block-end: var(--spacing-xs);
+    margin-block-start: calc(-1 * var(--spacing-md));
+  }
+
+  .Layer__TimeEntryForm__Field__EntryDate,
+  .Layer__TimeEntryForm__Field__Duration,
+  .Layer__TimeEntryForm__Field__Service,
+  .Layer__TimeEntryForm__Field__Customer,
+  .Layer__TimeEntryForm__Field__Memo {
+    grid-template-columns: 10rem auto;
+    width: 100%;
+  }
+
+  .Layer__TimeEntryForm__Submit {
+    align-items: flex-end;
+    padding-block-start: 1rem;
+  }
+}
