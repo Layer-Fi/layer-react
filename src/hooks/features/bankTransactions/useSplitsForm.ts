@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIntl } from 'react-intl'
 
@@ -22,7 +22,8 @@ import {
 
 interface UseSplitsFormOptions {
   bankTransaction: BankTransaction
-  selectedCategorization: BankTransactionCategorization | undefined
+  selectedCategorization?: BankTransactionCategorization | undefined
+  selectedCategory?: BankTransactionCategoryComboBoxOption | null | undefined
   isOpen?: boolean
 }
 
@@ -46,23 +47,30 @@ export interface UseSplitsFormReturn {
 export const useSplitsForm = ({
   bankTransaction,
   selectedCategorization,
+  selectedCategory,
   isOpen,
 }: UseSplitsFormOptions): UseSplitsFormReturn => {
   const { t } = useTranslation()
   const intl = useIntl()
 
+  const effectiveSelectedCategorization = useMemo(() => selectedCategorization ?? (
+    selectedCategory === undefined
+      ? undefined
+      : { category: selectedCategory, taxCode: null }
+  ), [selectedCategorization, selectedCategory])
+
   const [localSplits, setLocalSplits] = useState<Split[]>(
-    getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategorization),
+    getLocalSplitStateForExpandedTransaction(bankTransaction, effectiveSelectedCategorization),
   )
   const [inputValues, setInputValues] = useState<Record<number, string>>({})
   const [splitFormError, setSplitFormError] = useState<string | undefined>()
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
 
   useEffect(() => {
-    setLocalSplits(getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategorization))
+    setLocalSplits(getLocalSplitStateForExpandedTransaction(bankTransaction, effectiveSelectedCategorization))
     setSplitFormError(undefined)
     setInputValues({})
-  }, [bankTransaction, selectedCategorization, isOpen])
+  }, [bankTransaction, effectiveSelectedCategorization, isOpen])
 
   const saveLocalSplitsToCategoryStore = useCallback((splits: Split[]) => {
     if (!isSplitsValid(splits)) {

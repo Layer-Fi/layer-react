@@ -366,7 +366,7 @@ export const ExpandedBankTransactionRow = ({
                                 />
                                 {showTaxCodeSelector && (
                                   <ComboBox<TaxCodeOption>
-                                    selectedValue={getSelectedTaxCodeOption(split.taxCode)}
+                                    selectedValue={getSelectedTaxCodeOption(split.taxCode ?? null)}
                                     onSelectedValueChange={(option) => {
                                       updateSplitAtIndex(index, currentSplit => ({
                                         ...currentSplit,
