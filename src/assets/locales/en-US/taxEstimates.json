@@ -6,8 +6,8 @@
   },
   "banner": {
     "categorization_incomplete": {
-      "description_one": "You have {{count}} uncategorized transaction with ${{amount}} in potential deductions to review.",
-      "description_other": "You have {{count}} uncategorized transactions with ${{amount}} in potential deductions to review.",
+      "description_one": "You have {{count}} uncategorized transaction with {{amount}} in potential deductions to review.",
+      "description_other": "You have {{count}} uncategorized transactions with {{amount}} in potential deductions to review.",
       "title": "Your tax estimates are incomplete"
     }
   },

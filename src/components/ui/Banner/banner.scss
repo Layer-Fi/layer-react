@@ -52,6 +52,20 @@
     --banner-fg: var(--color-base-0);
     --banner-fg-muted: var(--color-base-300);
     --banner-icon-color: var(--color-base-900);
+
+    --button-bg-default: var(--color-base-0);
+    --button-fg-default: var(--color-base-900);
+    --button-bg-active: var(--color-base-200);
+    --button-bg-disabled: var(--color-base-200);
+    --button-fg-disabled: var(--color-base-600);
+
+    --button-fg-ghost: var(--color-base-0);
+    --button-border-color-ghost: var(--color-base-500);
+    --button-border-color-ghost-active: var(--color-base-0);
+    --button-bg-ghost-hovered: hsl(var(--color-light-h) var(--color-light-s) var(--color-light-l) / 10%);
+    --button-bg-ghost-pressed: hsl(var(--color-light-h) var(--color-light-s) var(--color-light-l) / 16%);
+
+    --outline-default: var(--color-base-400);
   }
 }
 
@@ -84,22 +98,6 @@
   border-radius: var(--border-radius-2xs);
   border: 1px solid var(--color-base-200);
   background-color: var(--color-base-0);
-}
-
-.Layer__UI__Banner[data-variant='dark'] .Layer__UI__Button {
-  --button-bg-default: var(--color-base-0);
-  --button-fg-default: var(--color-base-900);
-  --button-bg-active: var(--color-base-200);
-  --button-bg-disabled: var(--color-base-200);
-  --button-fg-disabled: var(--color-base-600);
-
-  --button-fg-ghost: var(--color-base-0);
-  --button-border-color-ghost: var(--color-base-500);
-  --button-border-color-ghost-active: var(--color-base-0);
-  --button-bg-ghost-hovered: hsl(var(--color-light-h) var(--color-light-s) var(--color-light-l) / 10%);
-  --button-bg-ghost-pressed: hsl(var(--color-light-h) var(--color-light-s) var(--color-light-l) / 16%);
-
-  --outline-default: var(--color-base-400);
 }
 
 @container (max-width: 560px) {
