@@ -9,6 +9,189 @@ import unusedImportsPlugin from 'eslint-plugin-unused-imports'
 import pluginImport from 'eslint-plugin-import'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
+const layerNamingPlugin = {
+  rules: {
+    'constant-enum-casing': {
+      meta: {
+        type: 'suggestion',
+        docs: {
+          description: 'enforce SCREAMING_SNAKE_CASE for exported static constants and PascalCase for enum string values',
+        },
+        schema: [],
+        messages: {
+          constantCase: 'Exported static constants should use SCREAMING_SNAKE_CASE.',
+          enumMemberCase: 'Enum members should use PascalCase.',
+        },
+      },
+      create(context) {
+        const screamingSnakeCasePattern = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$/
+        const pascalCasePattern = /^[A-Z][A-Za-z0-9]*$/
+        const program = context.sourceCode.ast
+
+        function isExportedIdentifierName(identifierName) {
+          return program.body.some((statement) => {
+            if (statement.type !== 'ExportNamedDeclaration') {
+              return false
+            }
+
+            if (statement.declaration?.type === 'VariableDeclaration' && statement.declaration.kind === 'const') {
+              return statement.declaration.declarations.some(
+                declaration => declaration.id.type === 'Identifier' && declaration.id.name === identifierName,
+              )
+            }
+
+            if (statement.source) {
+              return false
+            }
+
+            return statement.specifiers.some(
+              specifier => specifier.type === 'ExportSpecifier'
+                && specifier.local.type === 'Identifier'
+                && specifier.local.name === identifierName,
+            )
+          })
+        }
+
+        function findVariableInScope(scope, variableName) {
+          let currentScope = scope
+
+          while (currentScope) {
+            const variable = currentScope.set.get(variableName)
+            if (variable) {
+              return variable
+            }
+            currentScope = currentScope.upper
+          }
+
+          return null
+        }
+
+        function isStaticConstantExpression(node, seenVariables = new Set()) {
+          if (!node) {
+            return false
+          }
+
+          switch (node.type) {
+            case 'Literal':
+              return true
+            case 'TemplateLiteral':
+              return node.expressions.length === 0
+            case 'ArrayExpression':
+              return node.elements.every((element) => {
+                if (!element) {
+                  return true
+                }
+                if (element.type === 'SpreadElement') {
+                  return isStaticConstantExpression(element.argument, seenVariables)
+                }
+                return isStaticConstantExpression(element, seenVariables)
+              })
+            case 'ObjectExpression':
+              return node.properties.every((prop) => {
+                if (prop.type !== 'Property') {
+                  if (prop.type !== 'SpreadElement') {
+                    return false
+                  }
+                  return isStaticConstantExpression(prop.argument, seenVariables)
+                }
+                if (prop.computed || prop.method) {
+                  return false
+                }
+                return isStaticConstantExpression(prop.value, seenVariables)
+              })
+            case 'UnaryExpression':
+              if (!['-', '+', '!', '~'].includes(node.operator)) {
+                return false
+              }
+              return isStaticConstantExpression(node.argument, seenVariables)
+            case 'Identifier': {
+              const scope = context.sourceCode.getScope(node)
+              const variable = findVariableInScope(scope, node.name)
+              if (!variable || seenVariables.has(variable)) {
+                return false
+              }
+
+              const definition = variable.defs.find(
+                def => def.type === 'Variable' && def.node.type === 'VariableDeclarator',
+              )
+              if (!definition) {
+                return false
+              }
+
+              const variableDeclaration = definition.parent
+              if (!variableDeclaration || variableDeclaration.type !== 'VariableDeclaration' || variableDeclaration.kind !== 'const') {
+                return false
+              }
+
+              const identifierDeclaration = definition.node
+              return isStaticConstantExpression(identifierDeclaration.init, new Set([...seenVariables, variable]))
+            }
+            case 'TSAsExpression':
+            case 'TSSatisfiesExpression':
+              return isStaticConstantExpression(node.expression, seenVariables)
+            default:
+              return false
+          }
+        }
+
+        function isExportedConst(declarator) {
+          const declaration = declarator.parent
+          if (!declaration || declaration.type !== 'VariableDeclaration' || declaration.kind !== 'const') {
+            return false
+          }
+
+          return declarator.id.type === 'Identifier' && isExportedIdentifierName(declarator.id.name)
+        }
+
+        return {
+          VariableDeclarator(node) {
+            if (node.id.type !== 'Identifier') {
+              return
+            }
+
+            if (!isExportedConst(node)) {
+              return
+            }
+
+            if (!isStaticConstantExpression(node.init)) {
+              return
+            }
+
+            if (!screamingSnakeCasePattern.test(node.id.name)) {
+              context.report({
+                node: node.id,
+                messageId: 'constantCase',
+              })
+            }
+          },
+          TSEnumMember(node) {
+            if (node.id.type !== 'Identifier') {
+              return
+            }
+
+            const enumDeclaration = node.parent
+            if (enumDeclaration?.type !== 'TSEnumDeclaration') {
+              return
+            }
+
+            // Incremental rollout: only enforce local enums first.
+            if (enumDeclaration.parent?.type === 'ExportNamedDeclaration') {
+              return
+            }
+
+            if (!pascalCasePattern.test(node.id.name)) {
+              context.report({
+                node: node.id,
+                messageId: 'enumMemberCase',
+              })
+            }
+          },
+        }
+      },
+    },
+  },
+}
+
 export default tsEslint.config(
   {
     ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**'],
@@ -85,9 +268,22 @@ export default tsEslint.config(
     },
   },
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['eslint.config.mjs'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: ['*.css'] }],
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+    },
+  },
+  {
+    files: ['src/components/**/*.{ts,tsx}', 'src/hooks/features/**/*.{ts,tsx}'],
+    plugins: {
+      layerNaming: layerNamingPlugin,
+    },
+    rules: {
+      'layerNaming/constant-enum-casing': 'error',
     },
   },
   {
@@ -118,6 +314,7 @@ export default tsEslint.config(
   {
     files: ['**/*.{ts,tsx}'],
     rules: {
+      'no-restricted-imports': ['error', { patterns: ['*.css'] }],
       '@typescript-eslint/consistent-type-imports': ['error', {
         prefer: 'type-imports',
         fixStyle: 'inline-type-imports',
