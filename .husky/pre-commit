@@ -1,4 +1,5 @@
-npm install
+npm install --no-audit --no-fund --prefer-offline --ignore-scripts
 npx i18next-cli extract
+git add 'src/assets/locales/**/*.json'
 npm run clear:react
 npx lint-staged
