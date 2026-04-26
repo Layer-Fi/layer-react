@@ -1,7 +1,7 @@
 import type { Duration } from 'date-fns'
 import type { IntlShape } from 'react-intl'
 
-import '@formatjs/intl-durationformat'
+import '@formatjs/intl-durationformat/polyfill.js'
 
 export type DurationFormatStyle = 'long' | 'short' | 'narrow' | 'digital'
 

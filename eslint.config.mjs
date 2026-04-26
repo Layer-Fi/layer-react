@@ -84,7 +84,7 @@ const layerNamingPlugin = {
                 if (element.type === 'SpreadElement') {
                   return false
                 }
-                return isStaticConstantExpression(element)
+                return isStaticConstantExpression(element, seenVariables)
               })
             case 'ObjectExpression':
               return node.properties.every((prop) => {
