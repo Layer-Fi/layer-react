@@ -25,6 +25,13 @@ export interface AccountInstitution {
   logo: string | null
 }
 
+export interface BankTransactionTaxOption {
+  code: string
+  display_name: string
+}
+
+export type BankTransactionTaxOptions = Record<string, BankTransactionTaxOption[]>
+
 // This isn't my favorite but BankTransaction contains much
 // more than we're using right now.
 export interface BankTransaction extends Record<string, unknown> {
@@ -45,6 +52,8 @@ export interface BankTransaction extends Record<string, unknown> {
   direction: Direction
   counterparty_name: string
   category: CategorizationEncoded | null
+  tax_code?: string | null
+  tax_options?: BankTransactionTaxOptions | null
   categorization_status: CategorizationStatus
   categorization_flow: Categorization | null
   categorization_method: string
@@ -86,6 +95,7 @@ export interface DocumentS3Urls {
 export type Split = {
   amount: number
   category: BankTransactionCategoryComboBoxOption | null
+  taxCode?: string | null
   tags: readonly Tag[]
   customerVendor: typeof CustomerVendorSchema.Type | null
 }
