@@ -37,7 +37,7 @@ function mapQuarterToSection(t: TFunction, quarter: TaxEstimatesBannerQuarter): 
 }
 
 type TaxEstimatesDeadlines = {
-  data: TaxEstimatesDeadlineRow[]
+  data: TaxEstimatesDeadlineRow[] | undefined
   isLoading: boolean
   isError: boolean
 }
@@ -52,7 +52,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
   })
 
   const deadlines = useMemo(() => {
-    if (!data) return []
+    if (isLoading || isError || !data) return undefined
 
     const quarters = data.quarters.map(quarter => mapQuarterToSection(t, quarter))
 
@@ -67,7 +67,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
     }
 
     return [...quarters, annual]
-  }, [data, t])
+  }, [data, isLoading, isError, t])
 
   return {
     data: deadlines,
