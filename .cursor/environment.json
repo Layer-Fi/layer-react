@@ -1,0 +1,4 @@
+{
+  "install": "npm ci --include=dev",
+  "start": "npm run lint:eslint"
+}
