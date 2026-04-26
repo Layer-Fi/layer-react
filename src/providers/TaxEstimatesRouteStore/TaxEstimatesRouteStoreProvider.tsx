@@ -11,6 +11,9 @@ export enum TaxEstimatesRoute {
   Profile = 'profile',
 }
 
+// TODO: per-view layer-path code. Must be unique across views that adopt the
+// layer-path query-param routing pattern. Consider hoisting to a central
+// registry once a second view adopts it.
 const VIEW_NAME = 'te'
 const DEFAULT_ROUTE = TaxEstimatesRoute.Overview
 const TAX_ESTIMATES_ROUTES = new Set<TaxEstimatesRoute>(Object.values(TaxEstimatesRoute))

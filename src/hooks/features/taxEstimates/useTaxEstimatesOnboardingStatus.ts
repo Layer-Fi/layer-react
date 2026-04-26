@@ -38,7 +38,7 @@ export function getTaxEstimatesOnboardingStatus(input: GetTaxEstimatesOnboarding
     return OnboardingStatus.Onboarded
   }
 
-  return OnboardingStatus.Onboarded
+  return OnboardingStatus.Loading
 }
 
 export function useTaxEstimatesOnboardingStatus() {
