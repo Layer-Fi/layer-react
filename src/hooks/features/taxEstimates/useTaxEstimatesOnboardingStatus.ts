@@ -18,12 +18,12 @@ type GetTaxEstimatesOnboardingStatusInput = {
 }
 
 export function getTaxEstimatesOnboardingStatus(input: GetTaxEstimatesOnboardingStatusInput) {
-  if (input.isLoading || !input.hasAccountingConfiguration) {
-    return OnboardingStatus.Loading
-  }
-
   if (input.isError) {
     return OnboardingStatus.Error
+  }
+
+  if (input.isLoading || !input.hasAccountingConfiguration) {
+    return OnboardingStatus.Loading
   }
 
   if (!input.isFeatureEnabled) {
