@@ -5,6 +5,7 @@ import { debounce } from 'lodash-es'
 import { DisplayState } from '@internal-types/bankTransactions'
 import type { LayerError } from '@utils/api/errorHandler'
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
+import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@utils/bankTransactions'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { usePreloadCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
@@ -34,7 +35,6 @@ import {
   type BankTransactionsHeaderStringOverrides,
 } from '@components/BankTransactions/BankTransactionsHeader'
 import { BankTransactionsTableContent, type MobileComponentType } from '@components/BankTransactions/constants'
-import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@components/BankTransactions/utils'
 import { BankTransactionsList } from '@components/BankTransactionsList/BankTransactionsList'
 import { BankTransactionsMobileList } from '@components/BankTransactionsMobileList/BankTransactionsMobileList'
 import {
