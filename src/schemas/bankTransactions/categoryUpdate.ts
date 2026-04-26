@@ -6,13 +6,13 @@ import { TagKeyValueSchema } from '@schemas/tag'
 export const SingleCategoryUpdateSchema = Schema.Struct({
   type: Schema.Literal('Category'),
   category: ClassificationSchema,
-  taxCode: Schema.propertySignature(Schema.NullOr(Schema.String)).pipe(Schema.fromKey('tax_code')),
+  taxCode: Schema.optional(Schema.NullOr(Schema.String)).pipe(Schema.fromKey('tax_code')),
 })
 
 export const SplitCategoryEntrySchema = Schema.Struct({
   category: ClassificationSchema,
   amount: Schema.Number,
-  taxCode: Schema.propertySignature(Schema.NullOr(Schema.String)).pipe(Schema.fromKey('tax_code')),
+  taxCode: Schema.optional(Schema.NullOr(Schema.String)).pipe(Schema.fromKey('tax_code')),
   tags: Schema.optional(Schema.Array(TagKeyValueSchema)),
   customerId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('customer_id')),
   vendorId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('vendor_id')),
