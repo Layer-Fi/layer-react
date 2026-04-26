@@ -23,14 +23,9 @@ export type TaxEstimatesHeaderProps = {
   type: TaxEstimatesHeaderType
 }
 
-type TaxEstimatesHeaderHookResponse = {
+type TaxEstimatesHeaderConfig = {
   title: string
   description: string
-}
-
-type TaxEstimatesHeaderConfig = {
-  title: () => string
-  description: () => string
 }
 
 const createTaxEstimatesHeaderConfig = ({
@@ -43,75 +38,69 @@ const createTaxEstimatesHeaderConfig = ({
   formattedYear: string
 }): Record<TaxEstimatesHeaderType, TaxEstimatesHeaderConfig> => ({
   [TaxEstimatesHeaderType.Overview]: {
-    title: () =>
-      tConditional(t, 'taxEstimates:label.taxable_income_for_year', {
-        condition: projectedCondition,
-        cases: {
-          default: 'Taxable income for {{year}}',
-          projected: 'Projected taxable income for {{year}}',
-        },
-        contexts: {
-          projected: 'projected',
-        },
-        year: formattedYear,
-      }),
-    description: () =>
-      tConditional(t, 'taxEstimates:label.taxable_income_estimate_to_date_for_year', {
-        condition: projectedCondition,
-        cases: {
-          default: 'Taxable income estimate to date for year {{year}}',
-          projected: 'Taxable income projection for year {{year}}',
-        },
-        contexts: {
-          projected: 'projected',
-        },
-        year: formattedYear,
-      }),
+    title: tConditional(t, 'taxEstimates:label.taxable_income_for_year', {
+      condition: projectedCondition,
+      cases: {
+        default: 'Taxable income for {{year}}',
+        projected: 'Projected taxable income for {{year}}',
+      },
+      contexts: {
+        projected: 'projected',
+      },
+      year: formattedYear,
+    }),
+    description: tConditional(t, 'taxEstimates:label.taxable_income_estimate_to_date_for_year', {
+      condition: projectedCondition,
+      cases: {
+        default: 'Taxable income estimate to date for year {{year}}',
+        projected: 'Taxable income projection for year {{year}}',
+      },
+      contexts: {
+        projected: 'projected',
+      },
+      year: formattedYear,
+    }),
   },
   [TaxEstimatesHeaderType.Estimates]: {
-    title: () =>
-      tConditional(t, 'taxEstimates:label.business_income_taxes', {
-        condition: projectedCondition,
-        cases: {
-          default: 'Business Income Taxes',
-          projected: 'Projected Business Income Taxes',
-        },
-        contexts: {
-          projected: 'projected',
-        },
-      }),
-    description: () =>
-      t('taxEstimates:label.calculated_from_categorized_transactions', 'Calculated based on your categorized transactions and tracked mileage'),
+    title: tConditional(t, 'taxEstimates:label.business_income_taxes', {
+      condition: projectedCondition,
+      cases: {
+        default: 'Business Income Taxes',
+        projected: 'Projected Business Income Taxes',
+      },
+      contexts: {
+        projected: 'projected',
+      },
+    }),
+    description: t('taxEstimates:label.calculated_from_categorized_transactions', 'Calculated based on your categorized transactions and tracked mileage'),
   },
   [TaxEstimatesHeaderType.Payments]: {
-    title: () =>
-      tConditional(t, 'taxEstimates:label.tax_payments', {
-        condition: projectedCondition,
-        cases: {
-          default: 'Tax Payments',
-          projected: 'Projected Tax Payments',
-        },
-        contexts: {
-          projected: 'projected',
-        },
-        year: formattedYear,
-      }),
-    description: () =>
-      tConditional(t, 'taxEstimates:label.federal_state_tax_payments', {
-        condition: projectedCondition,
-        cases: {
-          default: 'Federal and state tax payments for the selected tax year',
-          projected: 'Projected federal and state tax payments for the selected tax year',
-        },
-        contexts: {
-          projected: 'projected',
-        },
-        year: formattedYear,
-      }),
+    title: tConditional(t, 'taxEstimates:label.tax_payments', {
+      condition: projectedCondition,
+      cases: {
+        default: 'Tax Payments',
+        projected: 'Projected Tax Payments',
+      },
+      contexts: {
+        projected: 'projected',
+      },
+      year: formattedYear,
+    }),
+    description: tConditional(t, 'taxEstimates:label.federal_state_tax_payments', {
+      condition: projectedCondition,
+      cases: {
+        default: 'Federal and state tax payments for the selected tax year',
+        projected: 'Projected federal and state tax payments for the selected tax year',
+      },
+      contexts: {
+        projected: 'projected',
+      },
+      year: formattedYear,
+    }),
   },
 })
 
-const useTaxEstimatesHeaderHook = ({ type }: TaxEstimatesHeaderProps): TaxEstimatesHeaderHookResponse => {
+const useTaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps): TaxEstimatesHeaderConfig => {
   const { t } = useTranslation()
   const { year } = useTaxEstimatesYear()
   const { formatDate } = useIntlFormatter()
@@ -124,16 +113,15 @@ const useTaxEstimatesHeaderHook = ({ type }: TaxEstimatesHeaderProps): TaxEstima
     [t, projectedCondition, formattedYear],
   )
 
-  const config = headerConfig[type]
-  return { title: config.title(), description: config.description() }
+  return headerConfig[type]
 }
 
 export const TaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps) => {
   const { isMobile } = useSizeClass()
-  const { title, description } = useTaxEstimatesHeaderHook({ type })
+  const { title, description } = useTaxEstimatesHeader({ type })
 
   return (
-    <Stack className='Layer__TaxEstimatesHeader' direction={isMobile ? 'column' : 'row'} gap='md' justify='space-between' align='start' fluid pie='lg'>
+    <Stack className='Layer__TaxEstimatesHeader' direction={isMobile ? 'column' : 'row'} gap='md' justify='space-between' align='start' fluid pie={isMobile ? undefined : 'lg'}>
       <ResponsiveDetailHeader title={title} description={description} />
       <HStack justify={isMobile ? 'start' : 'end'} className='Layer__TaxEstimatesHeader__ComboBoxContainer'>
         <FullYearProjectionComboBox />
