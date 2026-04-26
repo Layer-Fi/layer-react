@@ -2,6 +2,7 @@ import classNames from 'classnames'
 
 import CheckIcon from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'
+import { VStack } from '@ui/Stack/Stack'
 import { Text, TextSize } from '@components/Typography/Text'
 
 import './actionableList.scss'
@@ -32,18 +33,19 @@ export const ActionableList = <T,>({
 }: ActionableListProps<T>) => {
   return (
     <ul className={classNames('Layer__actionable-list', className)}>
-      {options.map((x, idx) => (
+      {options.map(x => (
         <li
           role='button'
           onClick={() => onClick(x)}
-          key={`actionable-list-item-${idx}`}
+          key={x.id}
           className={classNames(
-            x.secondary && 'Layer__actionable-list-item--secondary',
-            x.asLink && 'Layer__actionable-list-item--as-link',
+            'Layer__actionable-list__item',
+            x.secondary && 'Layer__actionable-list__item--secondary',
+            x.asLink && 'Layer__actionable-list__item--as-link',
             selectedId === x.id && 'Layer__actionable-list__item--selected',
           )}
         >
-          <div className='Layer__actionable-list__content'>
+          <VStack gap='2xs' align='start' className='Layer__actionable-list__content'>
             <Text size={TextSize.sm}>{x.label}</Text>
             {
               showDescriptions
@@ -57,13 +59,12 @@ export const ActionableList = <T,>({
                 </Text>
               )
             }
-          </div>
+          </VStack>
           {!x.asLink && selectedId && selectedId === x.id
             ? (
               <span className='Layer__actionable-list__select Layer__actionable-list__select--selected'>
                 <CheckIcon
                   size={14}
-                  className='Layer__actionable-list__selected-icon'
                 />
               </span>
             )
@@ -76,7 +77,6 @@ export const ActionableList = <T,>({
           {x.asLink && (
             <ChevronRight
               size={16}
-              className='Layer__actionable-list__link-icon'
             />
           )}
         </li>
