@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Drawer } from '@ui/Modal/Modal'
@@ -32,22 +32,28 @@ export const TaxCodeSelectDrawer = ({
   const { t } = useTranslation()
   const [query, setQuery] = useState('')
 
-  const listOptions: ActionableListOption<TaxCodeSelectOption | null>[] = options.map(option => ({
-    id: option.value,
-    label: option.label,
-    value: option,
-  }))
-
-  listOptions.push({
-    id: NO_TAX_CODE,
-    label: t('bankTransactions:action.no_tax_code', 'No tax code'),
-    value: null,
-  })
+  const listOptions: ActionableListOption<TaxCodeSelectOption | null>[] = useMemo(() => {
+    return [
+      ...options.map(option => ({
+        id: option.value,
+        label: option.label,
+        value: option,
+      })),
+      {
+        id: NO_TAX_CODE,
+        label: t('bankTransactions:action.no_tax_code', 'No tax code'),
+        value: null,
+      },
+    ]
+  }, [options, t])
 
   const queryTrimmed = query.trim().toLowerCase()
-  const filteredListOptions = queryTrimmed
-    ? listOptions.filter(opt => opt.label.toLowerCase().includes(queryTrimmed))
-    : listOptions
+  const filteredListOptions = useMemo(
+    () => queryTrimmed
+      ? listOptions.filter(opt => opt.label.toLowerCase().includes(queryTrimmed))
+      : listOptions,
+    [listOptions, queryTrimmed],
+  )
 
   const handleOpenChange = useCallback((nextIsOpen: boolean) => {
     if (!nextIsOpen) {
