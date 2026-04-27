@@ -5,6 +5,7 @@ import ChevronDown from '@icons/ChevronDown'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { NO_TAX_CODE } from '@components/TaxCodeSelect/constants'
 import { TaxCodeSelectDrawer, type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
 
 type Props = {
@@ -54,7 +55,7 @@ export const TaxCodeSelectDrawerWithTrigger = ({
       <TaxCodeSelectDrawer
         options={options}
         onSelect={onChange}
-        selectedId={value?.value}
+        selectedId={value?.value ?? (hasSelection ? NO_TAX_CODE : undefined)}
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
       />
