@@ -1,33 +1,21 @@
-import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { getYear } from 'date-fns'
 import { createStore, useStore } from 'zustand'
 
-import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { type RouteNavigation, type RouteState } from '@utils/routing'
 
 export enum TaxEstimatesRoute {
-  Overview = 'Overview',
-  Estimates = 'Estimates',
-  Payments = 'Payments',
-  Profile = 'Profile',
+  Overview = 'overview',
+  Estimates = 'estimates',
+  Payments = 'payments',
+  Profile = 'profile',
 }
 
-export enum OnboardingStatus {
-  Loading = 'Loading',
-  Error = 'Error',
-  NotOnboarded = 'NotOnboarded',
-  Onboarded = 'Onboarded',
-  FeatureDisabled = 'FeatureDisabled',
-}
-
-type TaxEstimatesRouteState = {
-  route: TaxEstimatesRoute
-}
+const DEFAULT_ROUTE = TaxEstimatesRoute.Overview
 
 type TaxEstimatesRouteStoreShape = {
-  routeState: TaxEstimatesRouteState
-  onboardingStatus: OnboardingStatus
-  navigate: (route: TaxEstimatesRoute) => void
+  routeState: RouteState<TaxEstimatesRoute>
+  navigate: RouteNavigation
   year: number
   fullYearProjection: boolean
   actions: {
@@ -37,10 +25,14 @@ type TaxEstimatesRouteStoreShape = {
 }
 
 const TaxEstimatesRouteStoreContext = createContext(
-  createStore<TaxEstimatesRouteStoreShape>(() => ({
-    routeState: { route: TaxEstimatesRoute.Overview },
-    onboardingStatus: OnboardingStatus.Loading,
-    navigate: () => {},
+  createStore<TaxEstimatesRouteStoreShape>(set => ({
+    routeState: { route: DEFAULT_ROUTE },
+    navigate: {
+      toOverview: () => set(() => ({ routeState: { route: DEFAULT_ROUTE } })),
+      toEstimates: () => set(() => ({ routeState: { route: TaxEstimatesRoute.Estimates } })),
+      toPayments: () => set(() => ({ routeState: { route: TaxEstimatesRoute.Payments } })),
+      toProfile: () => set(() => ({ routeState: { route: TaxEstimatesRoute.Profile } })),
+    },
     year: getYear(new Date()),
     fullYearProjection: false,
     actions: {
@@ -50,6 +42,43 @@ const TaxEstimatesRouteStoreContext = createContext(
   })),
 )
 
+export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
+  const [store] = useState(() =>
+    createStore<TaxEstimatesRouteStoreShape>((set) => {
+      const initialRoute = DEFAULT_ROUTE
+      const navigateToRoute = (route: TaxEstimatesRoute) => {
+        set(() => ({ routeState: { route } }))
+      }
+
+      return {
+        routeState: { route: initialRoute },
+        navigate: {
+          toOverview: () => navigateToRoute(DEFAULT_ROUTE),
+          toEstimates: () => navigateToRoute(TaxEstimatesRoute.Estimates),
+          toPayments: () => navigateToRoute(TaxEstimatesRoute.Payments),
+          toProfile: () => navigateToRoute(TaxEstimatesRoute.Profile),
+        },
+        year: getYear(new Date()),
+        fullYearProjection: false,
+        actions: {
+          setYear: (year: number) => {
+            set({ year })
+          },
+          setFullYearProjection: (fullYearProjection: boolean) => {
+            set({ fullYearProjection })
+          },
+        },
+      }
+    }),
+  )
+
+  return (
+    <TaxEstimatesRouteStoreContext.Provider value={store}>
+      {props.children}
+    </TaxEstimatesRouteStoreContext.Provider>
+  )
+}
+
 export function useTaxEstimatesRouteState() {
   const store = useContext(TaxEstimatesRouteStoreContext)
   return useStore(store, state => state.routeState)
@@ -58,23 +87,6 @@ export function useTaxEstimatesRouteState() {
 export function useTaxEstimatesNavigation() {
   const store = useContext(TaxEstimatesRouteStoreContext)
   return useStore(store, state => state.navigate)
-}
-
-export function useTaxEstimatesOnboardingStatus() {
-  const { accountingConfiguration } = useLayerContext()
-
-  const isFeatureEnabled = useMemo(() => {
-    return accountingConfiguration && accountingConfiguration.enableTaxEstimates
-  }, [accountingConfiguration])
-
-  const store = useContext(TaxEstimatesRouteStoreContext)
-  return useStore(store, (state) => {
-    if (accountingConfiguration && !isFeatureEnabled) {
-      return OnboardingStatus.FeatureDisabled
-    }
-
-    return state.onboardingStatus
-  })
 }
 
 export function useTaxEstimatesYear() {
@@ -95,55 +107,4 @@ export function useFullYearProjection() {
   const setFullYearProjection = useStore(store, state => state.actions.setFullYearProjection)
 
   return useMemo(() => ({ fullYearProjection, setFullYearProjection }), [fullYearProjection, setFullYearProjection])
-}
-
-export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
-  const { data: taxProfile, isLoading, isError } = useTaxProfile()
-  const [store] = useState(() =>
-    createStore<TaxEstimatesRouteStoreShape>(set => ({
-      routeState: { route: TaxEstimatesRoute.Overview },
-      onboardingStatus: OnboardingStatus.Loading,
-      navigate: (route: TaxEstimatesRoute) => {
-        set({ routeState: { route } })
-      },
-      year: getYear(new Date()),
-      fullYearProjection: false,
-      actions: {
-        setYear: (year: number) => {
-          set({ year })
-        },
-        setFullYearProjection: (fullYearProjection: boolean) => {
-          set({ fullYearProjection })
-        },
-      },
-    })),
-  )
-
-  useEffect(() => {
-    if (isLoading) {
-      store.setState({ onboardingStatus: OnboardingStatus.Loading })
-      return
-    }
-
-    if (isError) {
-      store.setState({ onboardingStatus: OnboardingStatus.Error })
-      return
-    }
-
-    if (taxProfile && !taxProfile.userHasSavedTaxProfile) {
-      store.setState({ onboardingStatus: OnboardingStatus.NotOnboarded })
-      return
-    }
-
-    if (taxProfile && taxProfile.userHasSavedTaxProfile) {
-      store.setState({ onboardingStatus: OnboardingStatus.Onboarded })
-      return
-    }
-  }, [store, taxProfile, isLoading, isError])
-
-  return (
-    <TaxEstimatesRouteStoreContext.Provider value={store}>
-      {props.children}
-    </TaxEstimatesRouteStoreContext.Provider>
-  )
 }
