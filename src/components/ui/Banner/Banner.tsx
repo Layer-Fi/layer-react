@@ -20,17 +20,13 @@ export const BANNER_CLASS_NAMES = {
 
 export type BannerVariant = 'default' | 'info' | 'warning' | 'error' | 'success'
 
-export type BannerSlots = { Icon?: ReactNode, Button?: ReactNode }
-
-export type BaseBannerProps = PropsWithChildren<{
+export type BannerProps = PropsWithChildren<{
   variant?: BannerVariant
   title: string
   description?: string
-  slots?: BannerSlots
+  slots?: { Icon?: ReactNode, Button?: ReactNode }
   ariaLabel?: string
 }>
-
-export type BannerProps = BaseBannerProps
 
 type AriaProperties = {
   'role': 'alert' | 'status' | 'region'
@@ -104,7 +100,7 @@ function BannerContent({
   )
 }
 
-const BaseBanner = forwardRef<HTMLDivElement, BaseBannerProps>((
+const Banner = forwardRef<HTMLDivElement, BannerProps>((
   {
     variant = 'info',
     title,
@@ -118,6 +114,8 @@ const BaseBanner = forwardRef<HTMLDivElement, BaseBannerProps>((
   const dataProperties = toDataProperties({ variant })
   const ariaProperties = getAriaProperties(variant, ariaLabel)
 
+  const renderedIcon = slots?.Icon ?? getDefaultIcon(variant)
+
   return (
     <HStack
       ref={ref}
@@ -128,11 +126,9 @@ const BaseBanner = forwardRef<HTMLDivElement, BaseBannerProps>((
       {...dataProperties}
       {...ariaProperties}
     >
-      {slots?.Icon && (
-        <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
-          {slots.Icon}
-        </HStack>
-      )}
+      <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
+        {renderedIcon}
+      </HStack>
       <BannerContent title={title} description={description}>
         {children}
       </BannerContent>
@@ -142,20 +138,6 @@ const BaseBanner = forwardRef<HTMLDivElement, BaseBannerProps>((
         </HStack>
       )}
     </HStack>
-  )
-})
-BaseBanner.displayName = 'BaseBanner'
-
-const Banner = forwardRef<HTMLDivElement, BannerProps>((props, ref) => {
-  const variant = props.variant ?? 'info'
-  const Icon = props.slots?.Icon !== undefined ? props.slots.Icon : getDefaultIcon(variant)
-
-  return (
-    <BaseBanner
-      ref={ref}
-      {...props}
-      slots={{ ...props.slots, Icon }}
-    />
   )
 })
 Banner.displayName = 'Banner'
@@ -168,4 +150,4 @@ export const BannerButton = ({ variant = 'outlined-light', ...rest }: BannerButt
   <Button variant={variant} {...rest} />
 )
 
-export { Banner, BaseBanner }
+export { Banner }
