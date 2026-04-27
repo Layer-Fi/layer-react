@@ -6,54 +6,43 @@
   border: 1px solid var(--banner-border-color);
   background-color: var(--banner-bg);
 
+  --banner-fg: var(--color-base-900);
+  --banner-fg-muted: var(--color-base-800);
+  --banner-icon-border: transparent;
+
   &[data-variant='default'] {
     --banner-bg: var(--color-base-50);
     --banner-border-color: var(--color-base-300);
-    --banner-fg: var(--color-base-900);
-    --banner-fg-muted: var(--color-base-800);
     --banner-icon-color: var(--color-base-900);
     --banner-icon-bg: var(--color-base-200);
-    --banner-icon-border: transparent;
   }
 
   &[data-variant='info'] {
     --banner-bg: color-mix(in srgb, var(--color-info-bg) 35%, --color-base-0);
     --banner-border-color: color-mix(in srgb, var(--color-info) 30%, --color-base-0);
-    --banner-fg: var(--color-base-900);
-    --banner-fg-muted: var(--color-base-800);
     --banner-icon-color: var(--color-info-fg);
     --banner-icon-bg: var(--color-info-bg);
-    --banner-icon-border: transparent;
   }
 
   &[data-variant='warning'] {
     --banner-bg: color-mix(in srgb, var(--color-info-warning-bg) 50%, --color-base-0);
     --banner-border-color: color-mix(in srgb, var(--color-info-warning) 50%, --color-base-0);
-    --banner-fg: var(--color-base-900);
-    --banner-fg-muted: var(--color-base-800);
     --banner-icon-color: var(--color-info-warning-fg);
     --banner-icon-bg: var(--color-info-warning-bg);
-    --banner-icon-border: transparent;
   }
 
   &[data-variant='error'] {
     --banner-bg: color-mix(in srgb, var(--color-info-error-bg) 25%, --color-base-0);
     --banner-border-color: color-mix(in srgb, var(--color-info-error) 30%, --color-base-0);
-    --banner-fg: var(--color-base-900);
-    --banner-fg-muted: var(--color-base-800);
     --banner-icon-color: var(--color-info-error-fg);
     --banner-icon-bg: var(--color-info-error-bg);
-    --banner-icon-border: transparent;
   }
 
   &[data-variant='success'] {
     --banner-bg: color-mix(in srgb, var(--color-info-success-bg) 35%, --color-base-0);
     --banner-border-color: color-mix(in srgb, var(--color-info-success) 50%, --color-base-0);
-    --banner-fg: var(--color-base-900);
-    --banner-fg-muted: var(--color-base-800);
     --banner-icon-color: var(--color-info-success-fg);
     --banner-icon-bg: var(--color-info-success-bg);
-    --banner-icon-border: transparent;
   }
 }
 
