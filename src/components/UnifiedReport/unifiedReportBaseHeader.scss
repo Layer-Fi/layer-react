@@ -17,11 +17,3 @@
     }
   }
 }
-
-.Layer__UnifiedReport__Header__SecondaryActions {
-  gap: var(--spacing-xs);
-
-  @media (width <= 500px) {
-    gap: var(--spacing-3xs);
-  }
-}

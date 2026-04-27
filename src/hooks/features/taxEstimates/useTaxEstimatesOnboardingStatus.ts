@@ -1,3 +1,5 @@
+import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
+import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -12,29 +14,30 @@ export enum OnboardingStatus {
 type GetTaxEstimatesOnboardingStatusInput = {
   isLoading: boolean
   isError: boolean
-  hasAccountingConfiguration: boolean
-  isFeatureEnabled: boolean
-  hasSavedTaxProfile: boolean | undefined
+  accountingConfiguration: AccountingConfigurationSchemaType | undefined
+  taxProfile: TaxProfile | undefined
 }
 
 export function getTaxEstimatesOnboardingStatus(input: GetTaxEstimatesOnboardingStatusInput) {
+  const isFeatureEnabled = !!input.accountingConfiguration?.enableTaxEstimates
+  const hasSavedTaxProfile = input.taxProfile?.userHasSavedTaxProfile
   if (input.isError) {
     return OnboardingStatus.Error
   }
 
-  if (input.isLoading || !input.hasAccountingConfiguration) {
+  if (input.isLoading || !input.accountingConfiguration) {
     return OnboardingStatus.Loading
   }
 
-  if (!input.isFeatureEnabled) {
+  if (!isFeatureEnabled) {
     return OnboardingStatus.FeatureDisabled
   }
 
-  if (input.hasSavedTaxProfile === false) {
+  if (hasSavedTaxProfile === false) {
     return OnboardingStatus.NotOnboarded
   }
 
-  if (input.hasSavedTaxProfile === true) {
+  if (hasSavedTaxProfile === true) {
     return OnboardingStatus.Onboarded
   }
 
@@ -44,13 +47,11 @@ export function getTaxEstimatesOnboardingStatus(input: GetTaxEstimatesOnboarding
 export function useTaxEstimatesOnboardingStatus() {
   const { accountingConfiguration } = useLayerContext()
   const { data: taxProfile, isLoading, isError } = useTaxProfile()
-  const isFeatureEnabled = !!accountingConfiguration?.enableTaxEstimates
 
   return getTaxEstimatesOnboardingStatus({
     isLoading,
     isError,
-    hasAccountingConfiguration: !!accountingConfiguration,
-    isFeatureEnabled,
-    hasSavedTaxProfile: taxProfile?.userHasSavedTaxProfile,
+    accountingConfiguration,
+    taxProfile,
   })
 }
