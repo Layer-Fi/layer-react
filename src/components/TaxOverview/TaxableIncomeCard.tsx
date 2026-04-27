@@ -42,23 +42,23 @@ export const TaxableIncomeCard = () => {
   })
 
   return (
-    <ConditionalBlock
-      data={taxOverviewData}
-      isLoading={isLoading}
-      isError={isError}
-      Loading={<LoadingState />}
-      Error={<ErrorState />}
-    >
-      {({ data }) => {
-        return (
-          <Card className='Layer__TaxOverview__Card'>
-            {isHeaderVisible && <TaxEstimatesHeader type={TaxEstimatesHeaderType.Overview} />}
+    <Card className='Layer__TaxOverview__Card'>
+      {isHeaderVisible && <TaxEstimatesHeader type={TaxEstimatesHeaderType.Overview} />}
+      <ConditionalBlock
+        data={taxOverviewData}
+        isLoading={isLoading}
+        isError={isError}
+        Loading={<LoadingState />}
+        Error={<ErrorState />}
+      >
+        {({ data }) => (
+          <VStack pi={isDesktop ? 'md' : undefined}>
             <VStack className={className} gap='4xs'>
               {data.metrics.map((metric, index) => <TaxEstimateMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
             </VStack>
-          </Card>
-        )
-      }}
-    </ConditionalBlock>
+          </VStack>
+        )}
+      </ConditionalBlock>
+    </Card>
   )
 }

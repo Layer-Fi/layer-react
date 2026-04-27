@@ -18,7 +18,7 @@ const BorderedMetricRow = ({ amount, slotProps }: MetricRowBaseProps) => {
   return (
     <>
       <HStack className='Layer__MetricCard__Meter' align='start' justify='space-between'>
-        <Span size='md' className='Layer__MetricRow__Label'>{slotProps.Meter.label}</Span>
+        <Span size='md' className='Layer__MetricCard__Label'>{slotProps.Meter.label}</Span>
         <MoneySpan size='md' amount={amount} />
       </HStack>
       <Meter {...slotProps.Meter} meterOnly />
