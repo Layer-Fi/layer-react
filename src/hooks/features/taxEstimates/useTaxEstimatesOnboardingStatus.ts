@@ -20,7 +20,7 @@ type GetTaxEstimatesOnboardingStatusInput = {
 
 export function getTaxEstimatesOnboardingStatus(input: GetTaxEstimatesOnboardingStatusInput) {
   const isFeatureEnabled = !!input.accountingConfiguration?.enableTaxEstimates
-  const hasSavedTaxProfile = !!input.taxProfile?.userHasSavedTaxProfile
+  const hasSavedTaxProfile = input.taxProfile?.userHasSavedTaxProfile
   if (input.isError) {
     return OnboardingStatus.Error
   }
