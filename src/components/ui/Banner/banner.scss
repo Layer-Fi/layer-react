@@ -17,8 +17,8 @@
   }
 
   &[data-variant='info'] {
-    --banner-bg: color-mix(in srgb, var(--color-info-bg) 35%, #fff);
-    --banner-border-color: color-mix(in srgb, var(--color-info) 30%, #fff);
+    --banner-bg: color-mix(in srgb, var(--color-info-bg) 35%, --color-base-0);
+    --banner-border-color: color-mix(in srgb, var(--color-info) 30%, --color-base-0);
     --banner-fg: var(--color-base-900);
     --banner-fg-muted: var(--color-base-800);
     --banner-icon-color: var(--color-info-fg);
@@ -27,8 +27,8 @@
   }
 
   &[data-variant='warning'] {
-    --banner-bg: color-mix(in srgb, var(--color-info-warning-bg) 50%, #fff);
-    --banner-border-color: color-mix(in srgb, var(--color-info-warning) 50%, #fff);
+    --banner-bg: color-mix(in srgb, var(--color-info-warning-bg) 50%, --color-base-0);
+    --banner-border-color: color-mix(in srgb, var(--color-info-warning) 50%, --color-base-0);
     --banner-fg: var(--color-base-900);
     --banner-fg-muted: var(--color-base-800);
     --banner-icon-color: var(--color-info-warning-fg);
@@ -37,8 +37,8 @@
   }
 
   &[data-variant='error'] {
-    --banner-bg: color-mix(in srgb, var(--color-info-error-bg) 25%, #fff);
-    --banner-border-color: color-mix(in srgb, var(--color-info-error) 30%, #fff);
+    --banner-bg: color-mix(in srgb, var(--color-info-error-bg) 25%, --color-base-0);
+    --banner-border-color: color-mix(in srgb, var(--color-info-error) 30%, --color-base-0);
     --banner-fg: var(--color-base-900);
     --banner-fg-muted: var(--color-base-800);
     --banner-icon-color: var(--color-info-error-fg);
@@ -47,8 +47,8 @@
   }
 
   &[data-variant='success'] {
-    --banner-bg: color-mix(in srgb, var(--color-info-success-bg) 35%, #fff);
-    --banner-border-color: color-mix(in srgb, var(--color-info-success) 50%, #fff);
+    --banner-bg: color-mix(in srgb, var(--color-info-success-bg) 35%, --color-base-0);
+    --banner-border-color: color-mix(in srgb, var(--color-info-success) 50%, --color-base-0);
     --banner-fg: var(--color-base-900);
     --banner-fg-muted: var(--color-base-800);
     --banner-icon-color: var(--color-info-success-fg);
