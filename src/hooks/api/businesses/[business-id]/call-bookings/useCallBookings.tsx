@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
@@ -16,6 +17,7 @@ import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -106,3 +108,14 @@ export function useCallBookings({ limit }: { limit?: number } = {}) {
 }
 
 export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'
+
+export function useCallBookingsGlobalCacheActions() {
+  const { forceReload } = useGlobalCacheActions()
+
+  const forceReloadCallBookings = useCallback(
+    () => forceReload(({ tags }) => tags.includes(CALL_BOOKINGS_TAG_KEY)),
+    [forceReload],
+  )
+
+  return { forceReloadCallBookings }
+}

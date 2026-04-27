@@ -17,6 +17,7 @@ type FormBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTe
   mode?: 'percent' | 'currency' | 'decimal'
   slots?: { badge?: ReactNode }
   placeholder?: string
+  allowEmpty?: boolean
 }
 
 const DEFAULT_MAX_VALUE = BD.fromBigInt(BigInt(10_000_000))
@@ -31,9 +32,10 @@ export function FormBigDecimalField({
   maxDecimalPlaces = mode === 'currency' ? 2 : DEFAULT_MAX_DECIMAL_PLACES,
   slots,
   placeholder,
+  allowEmpty,
   ...restProps
 }: FormBigDecimalFieldProps) {
-  const field = useFieldContext<BD.BigDecimal>()
+  const field = useFieldContext<BD.BigDecimal | null>()
   const { name, state, handleChange, handleBlur } = field
   const { value } = state
 
@@ -46,6 +48,7 @@ export function FormBigDecimalField({
     maxDecimalPlaces,
     minDecimalPlaces,
     allowNegative,
+    allowEmpty,
   })
 
   return (

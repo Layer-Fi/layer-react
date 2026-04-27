@@ -107,11 +107,11 @@ export const TimeEntryDrawer = () => {
               {hasEntry && isReadOnly && !isLocked && (
                 <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
                   <Button variant='outlined' onPress={handleDeleteEntry}>
-                    <Trash2 size={16} />
+                    <Trash2 size={16} strokeWidth={1.25} />
                     {t('timeTracking:action.delete_entry', 'Delete Entry')}
                   </Button>
                   <Button onPress={() => setIsEditMode(true)}>
-                    <Edit size={16} />
+                    <Edit size={16} strokeWidth={1.25} />
                     {t('timeTracking:action.edit_entry', 'Edit Entry')}
                   </Button>
                 </HStack>

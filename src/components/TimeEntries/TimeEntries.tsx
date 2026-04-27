@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { Clock } from 'lucide-react'
+import { Clock, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type ListTimeEntriesFilterParams, useListTimeEntries } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
@@ -18,6 +18,21 @@ interface TimeEntriesProps {
 
 const TimeEntriesEmptyState = () => {
   const { t } = useTranslation()
+  const { selectedCustomer, selectedServiceId } = useTimeEntriesFilters()
+  const isFiltered = !!(selectedCustomer || selectedServiceId)
+
+  if (isFiltered) {
+    return (
+      <DataState
+        status={DataStateStatus.info}
+        title={t('timeTracking:empty.no_matching_entries', 'No time entries found')}
+        description={t('timeTracking:empty.try_adjusting_filters', 'Try adjusting your filters.')}
+        icon={<SearchX />}
+        spacing
+      />
+    )
+  }
+
   return (
     <DataState
       status={DataStateStatus.allDone}
@@ -25,7 +40,6 @@ const TimeEntriesEmptyState = () => {
       description={t('timeTracking:empty.add_first_entry', 'Add your first time entry to start tracking.')}
       icon={<Clock />}
       spacing
-      className='Layer__TimeEntries__EmptyState'
     />
   )
 }
