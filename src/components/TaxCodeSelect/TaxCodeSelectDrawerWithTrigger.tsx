@@ -7,6 +7,8 @@ import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { TaxCodeSelectDrawer, type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
 
+import { NO_TAX_CODE } from './constants'
+
 type Props = {
   options: TaxCodeSelectOption[]
   value: TaxCodeSelectOption | null
@@ -54,7 +56,7 @@ export const TaxCodeSelectDrawerWithTrigger = ({
       <TaxCodeSelectDrawer
         options={options}
         onSelect={onChange}
-        selectedId={value?.value}
+        selectedId={value?.value ?? (hasSelection ? NO_TAX_CODE : undefined)}
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
       />
