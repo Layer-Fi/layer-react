@@ -18,19 +18,19 @@ import { useCallBookingCountdownLabel } from './useCallBookingCountdownLabel'
 
 const ONBOARDING_CALL_COVERAGE_ITEMS = [
   {
-    key: 'business_and_books',
-    translationKey: 'callBookings:label.cover_business_and_books',
-    defaultLabel: 'Walk through your business and books',
+    key: 'introduce_bookkeeper',
+    translationKey: 'callBookings:label.onboarding_cover_introduce_bookkeeper',
+    defaultLabel: 'Introduce your bookkeeper',
   },
   {
-    key: 'accounts_and_documents',
-    translationKey: 'callBookings:label.cover_accounts_and_documents',
-    defaultLabel: 'Connect your accounts and documents',
+    key: 'bookkeeping_process',
+    translationKey: 'callBookings:label.onboarding_cover_bookkeeping_process',
+    defaultLabel: 'Walk through our bookkeeping process',
   },
   {
-    key: 'first_month_expectations',
-    translationKey: 'callBookings:label.cover_first_month_expectations',
-    defaultLabel: 'Set expectations for our first month',
+    key: 'connect_bank_and_cards',
+    translationKey: 'callBookings:label.onboarding_cover_connect_bank_and_cards',
+    defaultLabel: 'Connect your business bank accounts and credit cards',
   },
 ] as const
 
@@ -72,7 +72,7 @@ const OnboardingCallCoverage = () => {
           pbe='sm'
           className='Layer__CallBooking__CoverageHeading'
         >
-          {t('callBookings:label.what_well_cover', 'What we\'ll cover')}
+          {t('callBookings:label.on_this_call_well', 'On this call, we\'ll')}
         </Span>
         <VStack role='list' gap='xs'>
           {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, translationKey, defaultLabel }) => (

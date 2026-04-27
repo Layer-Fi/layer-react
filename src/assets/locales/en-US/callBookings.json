@@ -8,9 +8,10 @@
   "label": {
     "ad_hoc_call": "Ad hoc call",
     "book_call_with_bookkeeper": "Book a call with your bookkeeper",
-    "cover_accounts_and_documents": "Connect your accounts and documents",
-    "cover_business_and_books": "Walk through your business and books",
-    "cover_first_month_expectations": "Set expectations for our first month",
+    "on_this_call_well": "On this call, we'll",
+    "onboarding_cover_bookkeeping_process": "Walk through our bookkeeping process",
+    "onboarding_cover_connect_bank_and_cards": "Connect your business bank accounts and credit cards",
+    "onboarding_cover_introduce_bookkeeper": "Introduce your bookkeeper",
     "date": "Date",
     "date_colon": "Date:",
     "google_calendar": "Google Calendar",
@@ -22,7 +23,6 @@
     "purpose": "Purpose",
     "purpose_colon": "Purpose:",
     "upcoming_call": "Upcoming Call",
-    "what_well_cover": "What we'll cover",
     "yahoo_calendar": "Yahoo Calendar"
   },
   "prompt": {
