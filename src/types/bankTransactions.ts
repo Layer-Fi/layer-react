@@ -50,7 +50,7 @@ export interface BankTransaction extends Record<string, unknown> {
   direction: Direction
   counterparty_name: string
   category: CategorizationEncoded | null
-  tax_code?: string | null
+  tax_code: string | null
   tax_options?: BankTransactionTaxOptions | null
   categorization_status: CategorizationStatus
   categorization_flow: Categorization | null
@@ -93,7 +93,7 @@ export interface DocumentS3Urls {
 export type Split = {
   amount: number
   category: BankTransactionCategoryComboBoxOption | null
-  taxCode?: string | null
+  taxCode: string | null
   tags: readonly Tag[]
   customerVendor: typeof CustomerVendorSchema.Type | null
 }
