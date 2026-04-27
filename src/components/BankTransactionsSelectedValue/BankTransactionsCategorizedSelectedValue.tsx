@@ -1,7 +1,7 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { type CategorizationEncoded, isSplitCategorizationEncoded } from '@schemas/categorization'
-import { isTransferMatch } from '@components/BankTransactions/bankTransactions'
+import { isTransferMatch } from '@hooks/utils/bankTransactions/shared'
 import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 
 type BankTransactionsCategorizedSelectedValueProps = {

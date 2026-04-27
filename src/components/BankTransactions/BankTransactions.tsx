@@ -12,6 +12,8 @@ import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/custome
 import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { type BankTransactionFilters } from '@hooks/utils/bankTransactions/shared'
+import { BankTransactionsDateFilterMode } from '@hooks/utils/bankTransactions/shared'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { BankTransactionsCategoryStoreProvider } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
@@ -29,8 +31,6 @@ import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkCont
 import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
 import { HStack } from '@ui/Stack/Stack'
 import { BankTransactionCustomerVendorVisibilityProvider } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
-import { type BankTransactionFilters } from '@components/BankTransactions/bankTransactions'
-import { BankTransactionsDateFilterMode } from '@components/BankTransactions/bankTransactions'
 import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,

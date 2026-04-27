@@ -10,9 +10,9 @@ import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationR
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { type BankTransactionFilters, filterVisibility, type NumericRangeFilter } from '@hooks/utils/bankTransactions/shared'
 import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type BankTransactionFilters, filterVisibility, type NumericRangeFilter } from '@components/BankTransactions/bankTransactions'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000

@@ -3,9 +3,9 @@ import { useCallback, useMemo } from 'react'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
+import { buildCategorizeBankTransactionPayloadForSplit } from '@hooks/utils/bankTransactions/shared'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { buildCategorizeBankTransactionPayloadForSplit } from '@components/BankTransactions/bankTransactions'
 
 export type SaveBankTransactionRowFn = (
   selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,

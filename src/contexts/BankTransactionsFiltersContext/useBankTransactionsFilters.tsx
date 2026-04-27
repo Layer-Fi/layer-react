@@ -3,11 +3,11 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
+import { type BankTransactionFilters } from '@hooks/utils/bankTransactions/shared'
+import { BankTransactionsDateFilterMode } from '@hooks/utils/bankTransactions/shared'
 import { useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { type BankTransactionFilters } from '@components/BankTransactions/bankTransactions'
-import { BankTransactionsDateFilterMode } from '@components/BankTransactions/bankTransactions'
 
 export type useBankTransactionsFiltersParams = {
   scope?: DisplayState
