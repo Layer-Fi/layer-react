@@ -2,6 +2,7 @@ import { forwardRef, type PropsWithChildren, type ReactNode } from 'react'
 import { AlertTriangle, CheckCircle, Info, XCircle } from 'lucide-react'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { Button, type ButtonProps } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
@@ -17,15 +18,19 @@ export const BANNER_CLASS_NAMES = {
   ACTIONS: 'Layer__UI__Banner__actions',
 }
 
-export type BannerVariant = 'default' | 'info' | 'warning' | 'error' | 'success' | 'dark'
+export type BannerVariant = 'default' | 'info' | 'warning' | 'error' | 'success'
 
-export type BannerProps = PropsWithChildren<{
+export type BannerSlots = { Icon?: ReactNode, Button?: ReactNode }
+
+export type BaseBannerProps = PropsWithChildren<{
   variant?: BannerVariant
   title: string
   description?: string
-  slots?: { Icon?: ReactNode, Button?: ReactNode }
+  slots?: BannerSlots
   ariaLabel?: string
 }>
+
+export type BannerProps = BaseBannerProps
 
 type AriaProperties = {
   'role': 'alert' | 'status' | 'region'
@@ -44,7 +49,6 @@ function getAriaProperties(
     case 'success':
     case 'info':
       return { 'role': 'status', 'aria-atomic': true }
-    case 'dark':
     case 'default':
     default:
       return { 'role': 'region', 'aria-label': ariaLabel ?? 'Notification' }
@@ -100,7 +104,7 @@ function BannerContent({
   )
 }
 
-const Banner = forwardRef<HTMLDivElement, BannerProps>((
+const BaseBanner = forwardRef<HTMLDivElement, BaseBannerProps>((
   {
     variant = 'info',
     title,
@@ -114,8 +118,6 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
   const dataProperties = toDataProperties({ variant })
   const ariaProperties = getAriaProperties(variant, ariaLabel)
 
-  const renderedIcon = slots?.Icon !== undefined ? slots.Icon : getDefaultIcon(variant)
-
   return (
     <HStack
       ref={ref}
@@ -126,9 +128,9 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
       {...dataProperties}
       {...ariaProperties}
     >
-      {renderedIcon && (
+      {slots?.Icon && (
         <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
-          {renderedIcon}
+          {slots.Icon}
         </HStack>
       )}
       <BannerContent title={title} description={description}>
@@ -142,6 +144,28 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
     </HStack>
   )
 })
+BaseBanner.displayName = 'BaseBanner'
+
+const Banner = forwardRef<HTMLDivElement, BannerProps>((props, ref) => {
+  const variant = props.variant ?? 'info'
+  const Icon = props.slots?.Icon !== undefined ? props.slots.Icon : getDefaultIcon(variant)
+
+  return (
+    <BaseBanner
+      ref={ref}
+      {...props}
+      slots={{ ...props.slots, Icon }}
+    />
+  )
+})
 Banner.displayName = 'Banner'
 
-export { Banner }
+export type BannerButtonProps = Omit<ButtonProps, 'variant'> & {
+  variant?: ButtonProps['variant']
+}
+
+export const BannerButton = ({ variant = 'outlined-light', ...rest }: BannerButtonProps) => (
+  <Button variant={variant} {...rest} />
+)
+
+export { Banner, BaseBanner }

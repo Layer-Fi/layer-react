@@ -5,8 +5,7 @@ import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesContext } from '@contexts/TaxEstimatesContext/TaxEstimatesContextProvider'
-import { Banner } from '@ui/Banner/Banner'
-import { Button } from '@ui/Button/Button'
+import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { VStack } from '@ui/Stack/Stack'
 
 import './taxBanner.scss'
@@ -26,22 +25,21 @@ export const TaxBanner = ({ uncategorizedCount, uncategorizedAmount }: TaxBanner
 
   const ReviewButton = onClickReviewTransactions
     ? (
-      <Button
-        variant='solid'
+      <BannerButton
         onPress={() => onClickReviewTransactions({
           uncategorizedAmount,
           uncategorizedTransactionCount: uncategorizedCount,
         })}
       >
         {t('taxEstimates:action.review_banner', 'Review')}
-      </Button>
+      </BannerButton>
     )
     : undefined
 
   return (
-    <VStack className='Layer__TaxBanner'>
+    <VStack className='Layer__TaxBanner' gap='md'>
       <Banner
-        variant='dark'
+        variant='warning'
         ariaLabel={title}
         title={title}
         description={tPlural(t, 'taxEstimates:banner.categorization_incomplete.description', {
