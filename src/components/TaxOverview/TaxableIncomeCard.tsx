@@ -6,8 +6,8 @@ import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstima
 import { VStack } from '@ui/Stack/Stack'
 import { Card } from '@components/Card/Card'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@components/TaxOverview/constants'
 import { TaxEstimateMetricRow } from '@components/TaxOverview/TaxEstimateMetricRow'
-import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@components/TaxOverview/TaxOverview'
 
 import './taxableIncomeCard.scss'
 

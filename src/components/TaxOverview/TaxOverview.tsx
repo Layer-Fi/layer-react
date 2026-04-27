@@ -2,12 +2,11 @@ import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
+import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@components/TaxOverview/constants'
 import { TaxableIncomeCard } from '@components/TaxOverview/TaxableIncomeCard'
 import { TaxDeadlinesCard } from '@components/TaxOverview/TaxDeadlinesCard'
 
 import '@components/TaxOverview/taxOverview.scss'
-
-export const TAX_OVERVIEW_MOBILE_BREAKPOINT = 1200
 
 export const TaxOverview = () => {
   const [viewportWidth] = useWindowSize()
