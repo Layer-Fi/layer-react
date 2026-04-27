@@ -7,7 +7,7 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { translationKey } from '@utils/i18n/translationKey'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
-import { hasMatch } from '@components/BankTransactions/utils'
+import { hasMatch } from '@utils/bankTransactions/shared'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
 
 import { Purpose } from './BankTransactionsMobileListItem'

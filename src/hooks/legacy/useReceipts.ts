@@ -12,7 +12,7 @@ import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { hasReceipts } from '@components/BankTransactions/utils'
+import { hasReceipts } from '@utils/bankTransactions/shared'
 
 const listBankTransactionDocuments = get<{
   data: DocumentS3Urls

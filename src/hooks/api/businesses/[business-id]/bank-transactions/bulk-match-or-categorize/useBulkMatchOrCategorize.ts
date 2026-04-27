@@ -12,6 +12,7 @@ import { type BankTransactionCategorization, useGetAllBankTransactionsCategoriza
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { getCategoryPayloadTaxCode } from '@utils/bankTransactions/shared'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
@@ -24,7 +25,8 @@ const buildBulkMatchOrCategorizePayload = (
   const transactions: Record<string, MatchOrCategorizeTransaction> = {}
 
   for (const transactionId of selectedIds) {
-    const transactionCategory = categorizations.get(transactionId)?.category ?? null
+    const selectedCategorization = categorizations.get(transactionId)
+    const transactionCategory = selectedCategorization?.category ?? null
 
     if (!transactionCategory || isPlaceholderAsOption(transactionCategory)) {
       continue

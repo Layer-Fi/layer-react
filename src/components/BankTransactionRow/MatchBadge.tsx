@@ -5,7 +5,7 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import MinimizeTwo from '@icons/MinimizeTwo'
 import { Badge } from '@components/Badge/Badge'
-import { isTransferMatch } from '@components/BankTransactions/utils'
+import { isTransferMatch } from '@utils/bankTransactions/shared'
 
 import './matchBadge.scss'
 

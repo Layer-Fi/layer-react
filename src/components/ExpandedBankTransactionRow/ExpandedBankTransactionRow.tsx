@@ -41,7 +41,7 @@ import {
   getBankTransactionFirstSuggestedMatch,
   getBankTransactionTaxCodeOptions,
   hasMatch,
-} from '@components/BankTransactions/utils'
+} from '@utils/bankTransactions/shared'
 import { useBankTransactionTagVisibility } from '@components/BankTransactionTagSelector/BankTransactionTagVisibilityProvider'
 import { TextButton } from '@components/Button/TextButton'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'

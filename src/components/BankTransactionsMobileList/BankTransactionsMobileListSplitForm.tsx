@@ -18,7 +18,7 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { buildCategorizeBankTransactionPayloadForSplit, getBankTransactionTaxCodeOptions, hasReceipts, isCategorized } from '@components/BankTransactions/utils'
+import { buildCategorizeBankTransactionPayloadForSplit, getBankTransactionTaxCodeOptions, hasReceipts, isCategorized } from '@utils/bankTransactions/shared'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'

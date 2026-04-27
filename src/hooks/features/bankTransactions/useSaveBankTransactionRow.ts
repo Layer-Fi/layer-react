@@ -5,7 +5,7 @@ import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/ban
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { buildCategorizeBankTransactionPayloadForSplit, getCategoryPayloadTaxCode } from '@components/BankTransactions/utils'
+import { buildCategorizeBankTransactionPayloadForSplit, getCategoryPayloadTaxCode } from '@utils/bankTransactions/shared'
 
 export type SaveBankTransactionRowFn = (
   selectedCategorization: BankTransactionCategorization | undefined,

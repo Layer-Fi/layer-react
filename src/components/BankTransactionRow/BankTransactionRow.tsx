@@ -31,7 +31,7 @@ import {
 import {
   isCategorized,
   isCredit,
-} from '@components/BankTransactions/utils'
+} from '@utils/bankTransactions/shared'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { IconButton } from '@components/Button/IconButton'

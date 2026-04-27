@@ -31,7 +31,7 @@ import {
   hasReceipts,
   isCategorized,
   isCredit,
-} from '@components/BankTransactions/utils'
+} from '@utils/bankTransactions/shared'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
