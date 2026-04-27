@@ -1,30 +1,28 @@
 import { useCallback } from 'react'
 import { GridList } from 'react-aria-components'
-import { useTranslation } from 'react-i18next'
-
-import { VStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
 
 import './businessFormMobile.scss'
 
-import { BusinessFormMobileItem, type BusinessFormMobileItemOption } from './BusinessFormMobileItem'
+import { BusinessFormMobileItem, type BusinessFormMobileItemOption, type BusinessFormOptionValue } from './BusinessFormMobileItem'
 
-interface BusinessFormMobileProps {
-  options: BusinessFormMobileItemOption[]
+interface BusinessFormMobileProps<T extends BusinessFormOptionValue> {
+  options: BusinessFormMobileItemOption<T>[]
   selectedId?: string
   showDescriptions?: boolean
-  onSelect: (option: BusinessFormMobileItemOption) => void
+  onSelect: (option: BusinessFormMobileItemOption<T>) => void
   readOnly?: boolean
+  ariaLabel: string
 }
 
-export const BusinessFormMobile = ({
+export const BusinessFormMobile = <T extends BusinessFormOptionValue,>({
   options,
   selectedId,
   onSelect,
   readOnly,
-}: BusinessFormMobileProps) => {
-  const { t } = useTranslation()
+  ariaLabel,
+}: BusinessFormMobileProps<T>) => {
   const handleSelectionChange = useCallback((keys: Set<string | number> | 'all') => {
+    if (keys === 'all') return
     if (readOnly) return
 
     const selectedKey = [...keys][0]
@@ -35,24 +33,19 @@ export const BusinessFormMobile = ({
   }, [options, onSelect, readOnly])
 
   return (
-    <VStack gap='sm'>
-      <Span size='sm' weight='bold'>
-        {t('bankTransactions:action.select_category', 'Select category')}
-      </Span>
-      <GridList
-        aria-label={t('bankTransactions:action.select_a_category', 'Select a category')}
-        selectionMode='single'
-        selectedKeys={selectedId ? new Set([selectedId]) : new Set()}
-        onSelectionChange={handleSelectionChange}
-        className='Layer__BusinessFormMobile'
-      >
-        {options.map(option => (
-          <BusinessFormMobileItem
-            key={option.value.value}
-            option={option}
-          />
-        ))}
-      </GridList>
-    </VStack>
+    <GridList
+      aria-label={ariaLabel}
+      selectionMode='single'
+      selectedKeys={selectedId ? new Set([selectedId]) : new Set()}
+      onSelectionChange={handleSelectionChange}
+      className='Layer__BusinessFormMobile'
+    >
+      {options.map(option => (
+        <BusinessFormMobileItem<T>
+          key={option.value.value}
+          option={option}
+        />
+      ))}
+    </GridList>
   )
 }
