@@ -10,7 +10,7 @@ const LINK_CLASS_NAME = 'Layer__UI__Link'
 
 type LinkSize = 'xs' | 'sm' | 'md' | 'lg'
 
-type LinkProps = Omit<ReactAriaLinkProps, 'className'> & PropsWithChildren<{
+export type LinkProps = Omit<ReactAriaLinkProps, 'className'> & PropsWithChildren<{
   size?: LinkSize
   ellipsis?: true
   external?: true

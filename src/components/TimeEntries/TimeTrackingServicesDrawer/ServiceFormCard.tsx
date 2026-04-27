@@ -1,18 +1,22 @@
 import { type FormEvent, useCallback } from 'react'
-import { Archive } from 'lucide-react'
+import { AlertTriangle, Archive } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
+import { flattenValidationErrors } from '@utils/form'
 import { useServiceForm } from '@hooks/features/timeTracking/useServiceForm'
 import { Button } from '@ui/Button/Button'
-import { FieldError, Form } from '@ui/Form/Form'
+import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 type AddServiceFormCardProps = {
   mode: 'create'
+  initialName?: string
   onCancel: () => void
   onSuccess: () => void
+  showCancel?: boolean
 }
 
 type EditServiceFormCardProps = {
@@ -36,34 +40,6 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
     void form.handleSubmit()
   }, [form])
 
-  let actionButtons
-
-  if (mode === 'edit') {
-    actionButtons = (
-      <HStack gap='sm' align='center' justify='space-between'>
-        <Button variant='outlined' onPress={props.onArchive}>
-          <Archive size={16} />
-          {t('timeTracking:services.archive', 'Archive')}
-        </Button>
-        <Button onPress={() => { void form.handleSubmit() }} isDisabled={isSubmitting} isPending={isSubmitting}>
-          {t('timeTracking:services.save', 'Save')}
-        </Button>
-      </HStack>
-    )
-  }
-  else {
-    actionButtons = (
-      <HStack gap='sm' justify='end' align='center'>
-        <Button variant='outlined' onPress={props.onCancel}>
-          {t('timeTracking:services.cancel', 'Cancel')}
-        </Button>
-        <Button onPress={() => { void form.handleSubmit() }} isDisabled={isSubmitting} isPending={isSubmitting}>
-          {t('timeTracking:services.save', 'Save')}
-        </Button>
-      </HStack>
-    )
-  }
-
   return (
     <Form
       className={
@@ -74,6 +50,28 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
       onSubmit={onSubmit}
     >
       <VStack gap='md' pb='md' pi='md'>
+        <form.Subscribe selector={state => state.errorMap}>
+          {(errorMap) => {
+            const validationErrors = flattenValidationErrors(errorMap)
+            const formError = validationErrors[0] || submitError
+
+            if (!formError) {
+              return null
+            }
+
+            return (
+              <HStack pbe='xs'>
+                <DataState
+                  icon={<AlertTriangle size={16} />}
+                  status={DataStateStatus.failed}
+                  title={formError}
+                  inline
+                />
+              </HStack>
+            )
+          }}
+        </form.Subscribe>
+
         {mode === 'create' && (
           <Span size='sm' weight='bold'>
             {t('timeTracking:services.add_service', 'Add service')}
@@ -95,12 +93,32 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
               label={t('timeTracking:services.hourly_rate_optional', 'Default hourly rate (optional)')}
               mode='currency'
               className='Layer__TimeTrackingServicesDrawer__rateField'
+              allowEmpty
             />
           )}
         </form.AppField>
 
-        {submitError && <FieldError>{submitError}</FieldError>}
-        {actionButtons}
+        <HStack gap='sm' align='center' justify={mode === 'edit' ? 'space-between' : 'end'}>
+          {mode === 'edit'
+            ? (
+              <Button variant='outlined' onPress={props.onArchive}>
+                <Archive size={16} />
+                {t('timeTracking:services.archive', 'Archive')}
+              </Button>
+            )
+            : (
+              props.showCancel && (
+                <Button variant='outlined' onPress={props.onCancel}>
+                  {t('timeTracking:services.cancel', 'Cancel')}
+                </Button>
+              )
+            )}
+          <Button onPress={() => { void form.handleSubmit() }} isDisabled={isSubmitting} isPending={isSubmitting}>
+            {mode === 'edit'
+              ? t('timeTracking:services.save', 'Save')
+              : t('timeTracking:services.add', 'Add')}
+          </Button>
+        </HStack>
       </VStack>
     </Form>
   )

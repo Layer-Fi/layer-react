@@ -7,11 +7,9 @@ import { type CatalogService } from '@schemas/catalogService'
 import {
   fromNonRecursiveBigDecimal,
   type NonRecursiveBigDecimal,
-  NRBD_ZERO,
   toNonRecursiveBigDecimal,
 } from '@schemas/nonRecursiveBigDecimal'
 import {
-  BIG_DECIMAL_ZERO,
   convertBigDecimalToCents,
   convertCentsToBigDecimal,
 } from '@utils/bigDecimalUtils'
@@ -21,6 +19,7 @@ import { useAppForm } from '@hooks/features/forms/useForm'
 
 type CreateServiceFormProps = {
   mode: 'create'
+  initialName?: string
   onSuccess: () => void
 }
 
@@ -34,35 +33,44 @@ export type ServiceFormProps = CreateServiceFormProps | EditServiceFormProps
 
 type ServiceFormValues = {
   name: string
-  hourlyRate: NonRecursiveBigDecimal
+  hourlyRate: NonRecursiveBigDecimal | null
 }
 
-const getServiceFormDefaultValues = (service?: CatalogService): ServiceFormValues => ({
-  name: service?.name ?? '',
+const getServiceFormDefaultValues = ({
+  service,
+  initialName,
+}: {
+  service?: CatalogService
+  initialName?: string
+}): ServiceFormValues => ({
+  name: service?.name ?? initialName ?? '',
   hourlyRate: service?.billableRatePerHourAmount != null && !Number.isNaN(service.billableRatePerHourAmount)
     ? toNonRecursiveBigDecimal(convertCentsToBigDecimal(service.billableRatePerHourAmount))
-    : NRBD_ZERO,
+    : null,
 })
 
 export function useServiceForm(props: ServiceFormProps) {
   const { t } = useTranslation()
   const { mode, onSuccess } = props
   const service = props.mode === 'edit' ? props.service : undefined
+  const initialName = props.mode === 'create' ? props.initialName : undefined
   const serviceId = service?.id ?? ''
   const [submitError, setSubmitError] = useState<string | null>(null)
   const { trigger: createService } = useCreateCatalogService()
   const { trigger: updateService } = useUpdateCatalogService({ serviceId })
 
-  const formDefaults = useMemo(() => getServiceFormDefaultValues(service), [service])
+  const formDefaults = useMemo(
+    () => getServiceFormDefaultValues({ service, initialName }),
+    [service, initialName],
+  )
   const defaultValuesRef = useRef<ServiceFormValues>(formDefaults)
   const defaultValues = defaultValuesRef.current
 
   const onSubmit = useCallback(async ({ value }: { value: ServiceFormValues }) => {
     const trimmedName = value.name.trim()
-    const hourlyRateBd = fromNonRecursiveBigDecimal(value.hourlyRate)
-    const billableRatePerHourAmount = BD.equals(hourlyRateBd, BIG_DECIMAL_ZERO)
+    const billableRatePerHourAmount = value.hourlyRate === null
       ? undefined
-      : convertBigDecimalToCents(hourlyRateBd)
+      : convertBigDecimalToCents(fromNonRecursiveBigDecimal(value.hourlyRate))
 
     setSubmitError(null)
 
@@ -92,11 +100,23 @@ export function useServiceForm(props: ServiceFormProps) {
   }, [createService, mode, onSuccess, t, updateService])
 
   const onDynamic = useCallback(({ value }: { value: ServiceFormValues }) => {
+    const errors: { [field: string]: string }[] = []
+
     if (value.name.trim() === '') {
-      return [{ name: t('timeTracking:validation.service_name_required', 'Service name is a required field.') }]
+      errors.push({ name: t('timeTracking:validation.service_name_required', 'Service name is a required field.') })
     }
 
-    return null
+    if (value.hourlyRate !== null
+      && !BD.isPositive(fromNonRecursiveBigDecimal(value.hourlyRate))) {
+      errors.push({
+        hourlyRate: t(
+          'timeTracking:validation.hourly_rate_positive',
+          'Default hourly rate must be greater than zero.',
+        ),
+      })
+    }
+
+    return errors.length > 0 ? errors : null
   }, [t])
 
   const validators = useMemo(() => ({ onDynamic }), [onDynamic])

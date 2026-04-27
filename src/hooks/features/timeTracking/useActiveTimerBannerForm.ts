@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { getLocalTimeZone, today } from '@internationalized/date'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type TimeEntry } from '@schemas/timeTracking'
+import { ApiEnumErrorType, APIError } from '@utils/api/apiError'
 import { type ActiveTimerDraft, type ActiveTimerDraftWithService, getDraftFromEntry, hasDraftChanges, toUpdatePayload } from '@utils/timeTracking/activeTimerDraft'
 import { useDeleteTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/useDeleteTimeEntry'
 import { UpsertTimeEntryMode, useUpsertTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useUpsertTimeEntry'
@@ -13,6 +15,14 @@ import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 
 type UseActiveTimerBannerFormProps = {
   activeEntry: TimeEntry
+}
+
+const isNoActiveTimerResponse = (error: unknown) => {
+  if (!(error instanceof APIError)) return false
+  if (error.code === 404) return true
+  return error.messages?.some(
+    m => m.error_enum === ApiEnumErrorType.SpecifiedIdNotFound,
+  ) === true
 }
 
 export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFormProps) => {
@@ -45,10 +55,20 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
     }
 
     try {
-      await stopTimeTracker()
+      await stopTimeTracker({ date: today(getLocalTimeZone()).toString() })
     }
-    catch {
-      setActionError(t('timeTracking:error.complete_timer', 'Failed to complete timer. Please try again.'))
+    catch (error) {
+      if (isNoActiveTimerResponse(error)) {
+        setActionError(
+          t(
+            'timeTracking:error.complete_timer_stale',
+            'This timer was already completed or cancelled. Reload the page.',
+          ),
+        )
+      }
+      else {
+        setActionError(t('timeTracking:error.complete_timer', 'Failed to complete timer. Please try again.'))
+      }
     }
   }, [activeEntry, stopTimeTracker, t, updateTimeEntry])
 

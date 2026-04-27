@@ -1,4 +1,4 @@
-import { forwardRef, type PropsWithChildren } from 'react'
+import { type AriaRole, forwardRef, type PropsWithChildren } from 'react'
 import classNames from 'classnames'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
@@ -20,6 +20,7 @@ export type StackProps = PropsWithChildren<{
   fluid?: boolean
   slot?: string
   className?: string
+  role?: AriaRole
 }>
 
 type InternalStackProps = StackProps & {

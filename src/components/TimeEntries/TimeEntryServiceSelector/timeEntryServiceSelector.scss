@@ -12,4 +12,12 @@
 
     align-items: center;
   }
+
+  &__CreateLabel.Layer__Span {
+    display: inline-flex;
+    gap: var(--spacing-2xs);
+    align-items: center;
+
+    color: var(--color-base-900);
+  }
 }

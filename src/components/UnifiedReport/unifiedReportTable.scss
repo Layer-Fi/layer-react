@@ -4,5 +4,6 @@
   .Layer__UI__Table-Column,
   .Layer__UI__Table-Cell {
     display: table-cell;
+    min-width: 6rem;
   }
 }

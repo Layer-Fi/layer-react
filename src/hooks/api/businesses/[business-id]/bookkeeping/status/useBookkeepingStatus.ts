@@ -1,46 +1,25 @@
+import { useCallback } from 'react'
+import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
+import { BookkeepingStatus, BookkeepingStatusResponseSchema } from '@schemas/bookkeepingStatus'
 import { get } from '@utils/api/authenticatedHttp'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-export enum BookkeepingStatus {
-  NOT_PURCHASED = 'NOT_PURCHASED',
-  ACTIVE = 'ACTIVE',
-  ONBOARDING = 'ONBOARDING',
-  BOOKKEEPING_PAUSED = 'BOOKKEEPING_PAUSED',
-}
-const BOOKKEEPING_STATUSES: string[] = Object.values(BookkeepingStatus)
-
-type RawBookkeepingStatus = EnumWithUnknownValues<BookkeepingStatus>
-
-function isBookkeepingStatus(status: RawBookkeepingStatus): status is BookkeepingStatus {
-  return BOOKKEEPING_STATUSES.includes(status)
-}
-
-function constrainToKnownBookkeepingStatus(status: RawBookkeepingStatus): BookkeepingStatus {
-  if (isBookkeepingStatus(status)) {
-    return status
-  }
-
-  return BookkeepingStatus.NOT_PURCHASED
-}
+export { BookkeepingStatus }
 
 const getBookkeepingStatus = get<
-  {
-    data: {
-      status: RawBookkeepingStatus
-    }
-  },
+  Record<string, unknown>,
   { businessId: string }
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/bookkeeping/status`
 })
 
 export const BOOKKEEPING_TAG_KEY = '#bookkeeping'
-const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
+export const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
 
 function buildKey({
   access_token: accessToken,
@@ -75,11 +54,20 @@ export function useBookkeepingStatus() {
       accessToken,
       { params: { businessId } },
     )()
-      .then(({ data }) => ({
-        ...data,
-        status: constrainToKnownBookkeepingStatus(data.status),
-      })),
+      .then(Schema.decodeUnknownPromise(BookkeepingStatusResponseSchema))
+      .then(({ data }) => data),
   )
+}
+
+export function useBookkeepingStatusGlobalCacheActions() {
+  const { forceReload } = useGlobalCacheActions()
+
+  const forceReloadBookkeepingStatus = useCallback(
+    () => forceReload(({ tags }) => tags.includes(BOOKKEEPING_STATUS_TAG_KEY)),
+    [forceReload],
+  )
+
+  return { forceReloadBookkeepingStatus }
 }
 
 export function useEffectiveBookkeepingStatus(): BookkeepingStatus {

@@ -145,6 +145,11 @@ const CreateCallBookingBodySchemaDefinition = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
 
+  inviteeId: pipe(
+    Schema.optional(Schema.String),
+    Schema.fromKey('invitee_id'),
+  ),
+
   purpose: CallBookingPurposeSchema,
 
   callType: pipe(
