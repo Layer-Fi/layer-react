@@ -27,8 +27,8 @@ import {
 } from '@components/BankTransactions/BankTransactions'
 import {
   isCredit,
-} from '@components/BankTransactions/utils'
-import { isCategorized } from '@components/BankTransactions/utils'
+} from '@components/BankTransactions/bankTransactions'
+import { isCategorized } from '@components/BankTransactions/bankTransactions'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { IconButton } from '@components/Button/IconButton'

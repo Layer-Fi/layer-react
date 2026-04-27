@@ -33,8 +33,8 @@ import { BankTransactionFormFields } from '@components/BankTransactionFormFields
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import {
   hasMatch,
-} from '@components/BankTransactions/utils'
-import { getBankTransactionFirstSuggestedMatch } from '@components/BankTransactions/utils'
+} from '@components/BankTransactions/bankTransactions'
+import { getBankTransactionFirstSuggestedMatch } from '@components/BankTransactions/bankTransactions'
 import { useBankTransactionTagVisibility } from '@components/BankTransactionTagSelector/BankTransactionTagVisibilityProvider'
 import { TextButton } from '@components/Button/TextButton'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'

@@ -34,8 +34,8 @@ import {
   type BankTransactionsHeaderStringOverrides,
 } from '@components/BankTransactions/BankTransactionsHeader'
 import { BankTransactionsTableContent, type MobileComponentType } from '@components/BankTransactions/constants'
-import { type BankTransactionFilters } from '@components/BankTransactions/utils'
-import { BankTransactionsDateFilterMode } from '@components/BankTransactions/utils'
+import { type BankTransactionFilters } from '@components/BankTransactions/bankTransactions'
+import { BankTransactionsDateFilterMode } from '@components/BankTransactions/bankTransactions'
 import { BankTransactionsList } from '@components/BankTransactionsList/BankTransactionsList'
 import { BankTransactionsMobileList } from '@components/BankTransactionsMobileList/BankTransactionsMobileList'
 import {

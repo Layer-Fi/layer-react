@@ -14,7 +14,7 @@ import { type BankTransactionReceiptsHandle } from '@components/BankTransactionR
 import {
   getBankTransactionFirstSuggestedMatch,
   getBankTransactionMatchAsSuggestedMatch,
-} from '@components/BankTransactions/utils'
+} from '@components/BankTransactions/bankTransactions'
 import { FileInput } from '@components/Input/FileInput'
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
 import { ErrorText } from '@components/Typography/ErrorText'

@@ -5,7 +5,7 @@ import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
-import { isCredit } from '@components/BankTransactions/utils'
+import { isCredit } from '@components/BankTransactions/bankTransactions'
 
 import './matchFormMobileItem.scss'
 

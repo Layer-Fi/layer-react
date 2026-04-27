@@ -5,7 +5,7 @@ import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/ban
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { buildCategorizeBankTransactionPayloadForSplit } from '@components/BankTransactions/utils'
+import { buildCategorizeBankTransactionPayloadForSplit } from '@components/BankTransactions/bankTransactions'
 
 export type SaveBankTransactionRowFn = (
   selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,

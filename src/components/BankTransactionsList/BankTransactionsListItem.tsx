@@ -27,8 +27,8 @@ import { BankTransactionsListItemCategory } from '@components/BankTransactions/B
 import {
   hasReceipts,
   isCredit,
-} from '@components/BankTransactions/utils'
-import { isCategorized } from '@components/BankTransactions/utils'
+} from '@components/BankTransactions/bankTransactions'
+import { isCategorized } from '@components/BankTransactions/bankTransactions'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'

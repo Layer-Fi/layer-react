@@ -6,8 +6,8 @@ import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/api/bus
 import { useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { type BankTransactionFilters } from '@components/BankTransactions/utils'
-import { BankTransactionsDateFilterMode } from '@components/BankTransactions/utils'
+import { type BankTransactionFilters } from '@components/BankTransactions/bankTransactions'
+import { BankTransactionsDateFilterMode } from '@components/BankTransactions/bankTransactions'
 
 export type useBankTransactionsFiltersParams = {
   scope?: DisplayState

@@ -12,7 +12,7 @@ import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/api
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type BankTransactionFilters, filterVisibility, type NumericRangeFilter } from '@components/BankTransactions/utils'
+import { type BankTransactionFilters, filterVisibility, type NumericRangeFilter } from '@components/BankTransactions/bankTransactions'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
