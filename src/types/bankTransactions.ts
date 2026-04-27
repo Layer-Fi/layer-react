@@ -1,7 +1,6 @@
 import { type Categorization } from '@internal-types/categories'
 import { type Direction, type S3PresignedUrl } from '@internal-types/general'
 import {
-  type BankTransactionTaxOptionSchema,
   type BankTransactionTaxOptionsSchema,
   type CategorizationStatus,
 } from '@schemas/bankTransactions/bankTransaction'
@@ -29,7 +28,6 @@ export interface AccountInstitution {
   logo: string | null
 }
 
-export type BankTransactionTaxOption = typeof BankTransactionTaxOptionSchema.Encoded
 export type BankTransactionTaxOptions = typeof BankTransactionTaxOptionsSchema.Encoded
 
 // This isn't my favorite but BankTransaction contains much
