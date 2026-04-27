@@ -1,8 +1,12 @@
+import classNames from 'classnames'
+
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Card } from '@components/Card/Card'
+import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@components/TaxOverview/constants'
 import { TaxEstimateMetricRow } from '@components/TaxOverview/TaxEstimateMetricRow'
 
 import './taxableIncomeCard.scss'
@@ -10,7 +14,11 @@ import './taxableIncomeCard.scss'
 export const TaxableIncomeCard = () => {
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
+  const [viewportWidth] = useWindowSize()
   const { isDesktop } = useSizeClass()
+  const className = classNames({ 'Layer__TaxOverview__Card__MetricRow--mobile': !isDesktop })
+  const isHeaderVisible = viewportWidth >= TAX_OVERVIEW_MOBILE_BREAKPOINT
+
   const { data: taxOverviewData } = useTaxOverview({
     year,
     fullYearProjection,
@@ -18,20 +26,14 @@ export const TaxableIncomeCard = () => {
   })
 
   const metrics = taxOverviewData?.metrics ?? []
-
   return (
-    <VStack className='Layer__TaxOverview__Card' pi={!isDesktop ? undefined : 'md'}>
-      {isDesktop
-        ? (
-          <VStack gap='sm'>
-            {metrics.map((metric, index) => <TaxEstimateMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
-          </VStack>
-        )
-        : (
-          <Card className='Layer__TaxOverview__Card__MetricRow--mobile'>
-            {metrics.map((metric, index) => <TaxEstimateMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
-          </Card>
-        )}
-    </VStack>
+    <Card className='Layer__TaxOverview__Card'>
+      {isHeaderVisible && <TaxEstimatesHeader type={TaxEstimatesHeaderType.Overview} />}
+      <VStack pi={!isDesktop ? undefined : 'md'}>
+        <VStack className={className} gap='4xs'>
+          {metrics.map((metric, index) => <TaxEstimateMetricRow key={`${metric.metricType}-${metric.label}-${index}`} metric={metric} />)}
+        </VStack>
+      </VStack>
+    </Card>
   )
 }

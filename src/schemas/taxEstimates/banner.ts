@@ -1,9 +1,19 @@
 import { pipe, Schema } from 'effect'
 
+import { CalendarDateSchema } from '@schemas/common/calendarDateFromSelf'
+import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
+import { createTransformedEnumSchema } from '@schemas/utils'
+
+const TransformedTaxOverviewDeadlineStatusSchema = createTransformedEnumSchema(
+  Schema.Enums(TaxOverviewDeadlineStatus),
+  TaxOverviewDeadlineStatus,
+  TaxOverviewDeadlineStatus.Neutral,
+)
+
 const TaxEstimatesBannerQuarterSchema = Schema.Struct({
   quarter: Schema.Number,
   dueDate: pipe(
-    Schema.propertySignature(Schema.Date),
+    Schema.propertySignature(CalendarDateSchema),
     Schema.fromKey('due_date'),
   ),
   isPastDue: pipe(
@@ -13,6 +23,10 @@ const TaxEstimatesBannerQuarterSchema = Schema.Struct({
   amountOwed: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('amount_owed'),
+  ),
+  state: pipe(
+    Schema.propertySignature(TransformedTaxOverviewDeadlineStatusSchema),
+    Schema.fromKey('state'),
   ),
   amountPaid: pipe(
     Schema.propertySignature(Schema.Number),
@@ -33,6 +47,14 @@ export type TaxEstimatesBannerQuarter = typeof TaxEstimatesBannerQuarterSchema.T
 
 const TaxEstimatesBannerSchema = Schema.Struct({
   year: Schema.Number,
+  taxesDueAt: pipe(
+    Schema.propertySignature(CalendarDateSchema),
+    Schema.fromKey('taxes_due_at'),
+  ),
+  totalTaxesOwed: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('total_taxes_owed'),
+  ),
   totalUncategorizedCount: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('total_uncategorized_count'),
