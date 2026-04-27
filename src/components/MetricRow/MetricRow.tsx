@@ -1,11 +1,42 @@
 import classNames from 'classnames'
 
 import { Meter, type MeterProps } from '@ui/Meter/Meter'
-import { HStack } from '@ui/Stack/Stack'
+import { HStack, Stack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
 import './metricRow.scss'
+
+type MetricRowBaseProps = {
+  amount: number
+  slotProps: {
+    Meter: MeterProps
+  }
+}
+
+const BorderedMetricRow = ({ amount, slotProps }: MetricRowBaseProps) => {
+  return (
+    <>
+      <HStack className='Layer__MetricCard__Meter' align='start' justify='space-between'>
+        <Span size='md' className='Layer__MetricRow__Label'>{slotProps.Meter.label}</Span>
+        <MoneySpan size='md' amount={amount} />
+      </HStack>
+      <Meter {...slotProps.Meter} meterOnly />
+    </>
+  )
+}
+
+const StandardMetricRow = ({ amount, slotProps }: MetricRowBaseProps) => {
+  return (
+    <>
+      <Span size='md' className='Layer__MetricRow__Label'>{slotProps.Meter.label}</Span>
+      <HStack className='Layer__MetricRow__Value' align='center' gap='md'>
+        <MoneySpan size='md' weight='bold' amount={amount} />
+        <Meter {...slotProps.Meter} meterOnly />
+      </HStack>
+    </>
+  )
+}
 
 type MetricRowProps = {
   amount: number
@@ -27,41 +58,15 @@ export const MetricRow = ({
       Layer__MetricCard: showBorder,
       Layer__MetricRow: !showBorder,
     }),
+    align: !showBorder ? 'center' as const : undefined,
+    direction: showBorder ? 'column' as const : 'row' as const,
     ...(!showBorder && { justify: 'space-between' as const }),
   }
 
-  const labelProps = {
-    className: classNames({
-      Layer__MetricCard__Label: showBorder,
-      Layer__MetricRow__Label: !showBorder,
-    }),
-  }
-
-  const meterContainerProps = {
-    className: classNames({
-      Layer__MetricCard__Meter: showBorder,
-      Layer__MetricRow__Value: !showBorder,
-    }),
-    gap: 'md' as const,
-  }
-
   return (
-    <HStack {...stackProps} align='center' gap='md'>
-      <Span size='md' {...labelProps}>{slotProps.Meter.label}</Span>
-      {showBorder && (
-        <>
-          <HStack {...meterContainerProps} align='center'>
-            <Meter {...slotProps.Meter} meterOnly />
-          </HStack>
-          <MoneySpan size='md' weight='bold' amount={amount} />
-        </>
-      )}
-      {!showBorder && (
-        <HStack {...meterContainerProps} align='center'>
-          <MoneySpan size='md' weight='bold' amount={amount} />
-          <Meter {...slotProps.Meter} meterOnly />
-        </HStack>
-      )}
-    </HStack>
+    <Stack {...stackProps} gap='md'>
+      {showBorder && <BorderedMetricRow amount={amount} slotProps={slotProps} />}
+      {!showBorder && <StandardMetricRow amount={amount} slotProps={slotProps} />}
+    </Stack>
   )
 }
