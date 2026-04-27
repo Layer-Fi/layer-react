@@ -13,7 +13,7 @@ import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useS
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBankTransactionsCategorizationActions, useGetBankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
@@ -78,8 +78,9 @@ export const BankTransactionsListItem = ({
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
-  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
+  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const selectedCategory = selectedCategorization?.category
 
   const save = useCallback(async () => {
     if (openExpandedRow && !isExpandedRowValid) return
@@ -198,7 +199,7 @@ export const BankTransactionsListItem = ({
                 bankTransaction={bankTransaction}
                 selectedValue={selectedCategory ?? null}
                 onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                  setTransactionCategory(bankTransaction.id, selectedCategory)
+                  setTransactionCategorization(bankTransaction.id, { category: selectedCategory })
                 }}
                 isDisabled={isProcessing}
               />

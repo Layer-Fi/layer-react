@@ -12,7 +12,7 @@ import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransaction
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBankTransactionsCategorizationActions, useGetBankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import AlertCircle from '@icons/AlertCircle'
@@ -82,8 +82,9 @@ export const BankTransactionRow = ({
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { count: bulkSelectionCount } = useCountSelectedIds()
   const isBulkSelectionActive = bulkSelectionCount > 0
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
-  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
+  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const selectedCategory = selectedCategorization?.category
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
 
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
@@ -284,7 +285,7 @@ export const BankTransactionRow = ({
                     bankTransaction={bankTransaction}
                     selectedValue={selectedCategory ?? null}
                     onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                      setTransactionCategory(bankTransaction.id, selectedCategory)
+                      setTransactionCategorization(bankTransaction.id, { category: selectedCategory })
                     }}
                     isDisabled={isProcessing}
                   />
