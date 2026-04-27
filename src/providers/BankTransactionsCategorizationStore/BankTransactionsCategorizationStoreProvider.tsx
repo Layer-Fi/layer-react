@@ -23,21 +23,21 @@ export type BankTransactionsCategorizationState = {
 }
 
 type BankTransactionsCategorizationActions = {
-  actions: {
-    setTransactionCategorization: (
-      id: string,
-      categorization: BankTransactionCategorizationUpdate,
-    ) => void
-    setOnlyNewTransactionCategorizations: (
-      categorizations: Map<string, BankTransactionCategorization>
-    ) => void
-    clearTransactionCategorizations: (ids: string[]) => void
-    clearAllTransactionTaxCodes: () => void
-    clearAllTransactionCategorizations: () => void
-  }
+  setTransactionCategorization: (
+    id: string,
+    categorization: BankTransactionCategorizationUpdate,
+  ) => void
+  setOnlyNewTransactionCategorizations: (
+    categorizations: Map<string, BankTransactionCategorization>
+  ) => void
+  clearTransactionCategorizations: (ids: string[]) => void
+  clearAllTransactionTaxCodes: () => void
+  clearAllTransactionCategorizations: () => void
 }
 
-type BankTransactionsCategorizationStore = BankTransactionsCategorizationState & BankTransactionsCategorizationActions
+type BankTransactionsCategorizationStore = BankTransactionsCategorizationState & {
+  actions: BankTransactionsCategorizationActions
+}
 
 function normalizeCategorization(
   currentCategorization: BankTransactionCategorization | undefined,
@@ -142,7 +142,7 @@ function useBankTransactionsCategorizationStore(): ReturnType<typeof buildStore>
   return store
 }
 
-export function useBankTransactionsCategorizationActions(): BankTransactionsCategorizationActions['actions'] {
+export function useBankTransactionsCategorizationActions(): BankTransactionsCategorizationActions {
   const store = useBankTransactionsCategorizationStore()
 
   return useStore(store, state => state.actions)
