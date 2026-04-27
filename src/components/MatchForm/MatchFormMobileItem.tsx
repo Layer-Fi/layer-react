@@ -4,8 +4,8 @@ import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankT
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 import { isCredit } from '@components/BankTransactions/bankTransactions'
+import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 
 import './matchFormMobileItem.scss'
 

@@ -29,13 +29,13 @@ import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkCont
 import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
 import { HStack } from '@ui/Stack/Stack'
 import { BankTransactionCustomerVendorVisibilityProvider } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
+import { type BankTransactionFilters } from '@components/BankTransactions/bankTransactions'
+import { BankTransactionsDateFilterMode } from '@components/BankTransactions/bankTransactions'
 import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,
 } from '@components/BankTransactions/BankTransactionsHeader'
 import { BankTransactionsTableContent, type MobileComponentType } from '@components/BankTransactions/constants'
-import { type BankTransactionFilters } from '@components/BankTransactions/bankTransactions'
-import { BankTransactionsDateFilterMode } from '@components/BankTransactions/bankTransactions'
 import { BankTransactionsList } from '@components/BankTransactionsList/BankTransactionsList'
 import { BankTransactionsMobileList } from '@components/BankTransactionsMobileList/BankTransactionsMobileList'
 import {
