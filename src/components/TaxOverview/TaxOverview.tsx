@@ -12,28 +12,27 @@ export const TaxOverview = () => {
   const [viewportWidth] = useWindowSize()
   const isMobile = viewportWidth < BREAKPOINTS.DESKTOP
 
-  if (!isMobile) {
+  if (isMobile) {
     return (
       <VStack className='Layer__TaxOverview' gap='md'>
-        <HStack gap='md' align='start'>
-          <VStack className='Layer__TaxOverview__PrimaryColumn' gap='md'>
-            <TaxableIncomeCard />
-            <TaxEstimatesSummaryCard />
-          </VStack>
-          <VStack className='Layer__TaxOverview__SecondaryColumn'>
-            <TaxDeadlinesCard />
-          </VStack>
-        </HStack>
+        <TaxEstimatesHeader type={TaxEstimatesHeaderType.Overview} />
+        <TaxableIncomeCard />
+        <TaxEstimatesSummaryCard />
+        <TaxDeadlinesCard />
       </VStack>
     )
   }
-
   return (
     <VStack className='Layer__TaxOverview' gap='md'>
-      <TaxEstimatesHeader type={TaxEstimatesHeaderType.Overview} />
-      <TaxableIncomeCard />
-      <TaxEstimatesSummaryCard />
-      <TaxDeadlinesCard />
+      <HStack gap='md' align='start'>
+        <VStack className='Layer__TaxOverview__PrimaryColumn' gap='md'>
+          <TaxableIncomeCard />
+          <TaxEstimatesSummaryCard />
+        </VStack>
+        <VStack className='Layer__TaxOverview__SecondaryColumn'>
+          <TaxDeadlinesCard />
+        </VStack>
+      </HStack>
     </VStack>
   )
 }
