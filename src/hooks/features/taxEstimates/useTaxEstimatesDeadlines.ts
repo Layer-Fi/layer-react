@@ -52,7 +52,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
   })
 
   const deadlines = useMemo(() => {
-    if (isLoading || isError || !data) return undefined
+    if (!data) return undefined
 
     const quarters = data.quarters.map(quarter => mapQuarterToSection(t, quarter))
 
@@ -67,7 +67,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
     }
 
     return [...quarters, annual]
-  }, [data, isLoading, isError, t])
+  }, [data, t])
 
   return {
     data: deadlines,

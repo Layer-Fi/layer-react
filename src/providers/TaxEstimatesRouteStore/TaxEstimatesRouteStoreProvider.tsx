@@ -1,8 +1,8 @@
-import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { getYear } from 'date-fns'
 import { createStore, useStore } from 'zustand'
 
-import { getInitialLayerPathRoute, type RouteNavigation, type RouteState, upsertLayerPathQueryParam } from '@utils/routing'
+import { type RouteNavigation, type RouteState } from '@utils/routing'
 
 export enum TaxEstimatesRoute {
   Overview = 'overview',
@@ -11,16 +11,7 @@ export enum TaxEstimatesRoute {
   Profile = 'profile',
 }
 
-// TODO: per-view layer-path code. Must be unique across views that adopt the
-// layer-path query-param routing pattern. Consider hoisting to a central
-// registry once a second view adopts it.
-const VIEW_NAME = 'te'
 const DEFAULT_ROUTE = TaxEstimatesRoute.Overview
-const TAX_ESTIMATES_ROUTES = new Set<TaxEstimatesRoute>(Object.values(TaxEstimatesRoute))
-
-function isTaxEstimatesRoute(route: string): route is TaxEstimatesRoute {
-  return TAX_ESTIMATES_ROUTES.has(route as TaxEstimatesRoute)
-}
 
 type TaxEstimatesRouteStoreShape = {
   routeState: RouteState<TaxEstimatesRoute>
@@ -54,10 +45,9 @@ const TaxEstimatesRouteStoreContext = createContext(
 export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<TaxEstimatesRouteStoreShape>((set) => {
-      const initialRoute = getInitialLayerPathRoute<TaxEstimatesRoute>(VIEW_NAME, DEFAULT_ROUTE, isTaxEstimatesRoute)
+      const initialRoute = DEFAULT_ROUTE
       const navigateToRoute = (route: TaxEstimatesRoute) => {
         set(() => ({ routeState: { route } }))
-        upsertLayerPathQueryParam(VIEW_NAME, route)
       }
 
       return {
@@ -81,10 +71,6 @@ export function TaxEstimatesRouteStoreProvider(props: PropsWithChildren) {
       }
     }),
   )
-
-  useEffect(() => {
-    upsertLayerPathQueryParam(VIEW_NAME, store.getState().routeState.route)
-  }, [store])
 
   return (
     <TaxEstimatesRouteStoreContext.Provider value={store}>

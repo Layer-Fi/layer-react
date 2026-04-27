@@ -1,5 +1,6 @@
 .Layer__UI__Table-Table {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .Layer__UI__Table-TableHeader {
@@ -11,10 +12,6 @@
 
   > tr {
     height: inherit;
-  }
-
-  &--hidden {
-    display: none;
   }
 }
 
@@ -91,4 +88,20 @@
       text-align: $alignment;
     }
   }
+}
+
+.Layer__UI__Table-ScrollContainer {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.Layer__UI__Table-Column[data-pinned],
+.Layer__UI__Table-Cell[data-pinned] {
+  z-index: 1;
+  background-color: inherit;
+}
+
+.Layer__UI__Table-TableHeader .Layer__UI__Table-Column[data-pinned] {
+  z-index: 2;
+  background-color: var(--color-base-0);
 }

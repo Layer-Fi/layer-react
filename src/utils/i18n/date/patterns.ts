@@ -19,9 +19,18 @@ export enum DatePattern {
   DateNumericPadded = 'dateNumericPadded', // 01/05/2026
 }
 
+export enum DayPattern {
+  Day = 'day', // 5
+}
+
+export enum WeekdayPattern {
+  WeekdayShort = 'weekdayShort', // Mon
+}
+
 export enum DateWithTimePattern {
   DateWithTimeReadable = 'dateWithTimeReadable', // January 5, 2026 at 3:30 PM
   DateWithTimeReadableWithTimezone = 'dateWithTimeReadableWithTimezone', // January 5, 2026, 3:30 PM PST
+  MonthDayWithTimeReadable = 'monthDayWithTimeReadable', // January 5 at 3:30 PM
 }
 
 export enum TimePattern {
@@ -37,6 +46,8 @@ export const DateFormat = {
   ...MonthDayPattern,
   ...MonthYearPattern,
   ...DatePattern,
+  ...DayPattern,
+  ...WeekdayPattern,
   ...DateWithTimePattern,
   ...TimePattern,
   ...YearPattern,

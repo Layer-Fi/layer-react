@@ -1,11 +1,10 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 import { useSWRConfig } from 'swr'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import useSWRMutation from 'swr/mutation'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { type CategoryUpdate, type CategoryUpdateEncoded, CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
+import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { put } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
@@ -89,7 +88,7 @@ export function useCategorizeBankTransaction() {
           businessId,
           bankTransactionId,
         },
-        body: Schema.encodeSync(CategoryUpdateSchema)(rest),
+        body: encodeCategoryUpdate(rest),
       },
     ).then(({ data }) => data),
     {

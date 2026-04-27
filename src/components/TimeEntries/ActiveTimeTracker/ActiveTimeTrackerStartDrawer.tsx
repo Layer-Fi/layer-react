@@ -1,9 +1,10 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { Play } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useStartTimerForm } from '@hooks/features/timeTracking/useStartTimerForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
@@ -27,12 +28,13 @@ const ActiveTimeTrackerDrawerHeader = ({ title, close, isMobile }: { title: stri
   />
 )
 
-const ActiveTimerDurationDisplay = ({ duration }: { duration: string }) => {
+const ActiveTimerDurationDisplay = () => {
   const { t } = useTranslation()
+  const { formatSecondsAsDuration } = useIntlFormatter()
 
   return (
     <VStack align='center' gap='2xs' pb='md'>
-      <Span className='Layer__ActiveTimeTracker__DurationValue'>{duration}</Span>
+      <Span className='Layer__ActiveTimeTracker__DurationValue'>{formatSecondsAsDuration(0)}</Span>
       <Span className='Layer__ActiveTimeTracker__DurationLabel' size='xs' weight='bold'>
         {t('timeTracking:label.duration', 'Duration')}
       </Span>
@@ -46,7 +48,7 @@ export const ActiveTimeTrackerStartDrawer = ({
   isMobile,
 }: ActiveTimeTrackerStartDrawerProps) => {
   const { t } = useTranslation()
-  const { formatSecondsAsDuration } = useIntlFormatter()
+  const { openServicesDrawer } = useTimeTrackingServicesDrawer()
 
   const onStarted = useCallback(() => {
     onOpenChange(false)
@@ -61,7 +63,9 @@ export const ActiveTimeTrackerStartDrawer = ({
     onOpenChange(nextIsOpen)
   }, [clearActionError, onOpenChange])
 
-  const duration = useMemo(() => formatSecondsAsDuration(0), [formatSecondsAsDuration])
+  const handleCreateService = useCallback((name: string) => {
+    openServicesDrawer({ startInCreateMode: true, initialName: name })
+  }, [openServicesDrawer])
 
   return (
     <Drawer
@@ -90,7 +94,7 @@ export const ActiveTimeTrackerStartDrawer = ({
           />
         )}
 
-        <ActiveTimerDurationDisplay duration={duration} />
+        <ActiveTimerDurationDisplay />
 
         <VStack gap='md'>
           <form.Field name='selectedServiceId'>
@@ -100,6 +104,8 @@ export const ActiveTimeTrackerStartDrawer = ({
                 onSelectedServiceIdChange={field.handleChange}
                 inline
                 className='Layer__ActiveTimeTracker__Field__Service'
+                isCreatable
+                onCreateService={handleCreateService}
               />
             )}
           </form.Field>
@@ -110,7 +116,8 @@ export const ActiveTimeTrackerStartDrawer = ({
                 selectedCustomer={field.state.value}
                 onSelectedCustomerChange={field.handleChange}
                 inline
-                placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
+                label={t('timeTracking:label.customer_optional', 'Customer (optional)')}
+                placeholder={t('timeTracking:label.select_customer_short', 'Select a customer')}
                 className='Layer__ActiveTimeTracker__Field__Customer'
               />
             )}
@@ -129,7 +136,7 @@ export const ActiveTimeTrackerStartDrawer = ({
 
           <form.Subscribe selector={s => s.values.selectedServiceId}>
             {selectedServiceId => (
-              <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
+              <HStack gap='xs' justify='end'>
                 <Button
                   onPress={() => { void form.handleSubmit() }}
                   isPending={state.isStarting}
