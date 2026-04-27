@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
 import { DateFormat } from '@utils/i18n/date/patterns'
+import { translationKey } from '@utils/i18n/translationKey'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
@@ -19,18 +20,15 @@ import { useCallBookingCountdownLabel } from './useCallBookingCountdownLabel'
 const ONBOARDING_CALL_COVERAGE_ITEMS = [
   {
     key: 'introduce_bookkeeper',
-    translationKey: 'callBookings:label.onboarding_cover_introduce_bookkeeper',
-    defaultLabel: 'Introduce your bookkeeper',
+    ...translationKey('callBookings:label.onboarding_cover_introduce_bookkeeper', 'Introduce your bookkeeper'),
   },
   {
     key: 'bookkeeping_process',
-    translationKey: 'callBookings:label.onboarding_cover_bookkeeping_process',
-    defaultLabel: 'Walk through our bookkeeping process',
+    ...translationKey('callBookings:label.onboarding_cover_bookkeeping_process', 'Walk through our bookkeeping process'),
   },
   {
     key: 'connect_bank_and_cards',
-    translationKey: 'callBookings:label.onboarding_cover_connect_bank_and_cards',
-    defaultLabel: 'Connect your business bank accounts and credit cards',
+    ...translationKey('callBookings:label.onboarding_cover_connect_bank_and_cards', 'Connect your business bank accounts and credit cards'),
   },
 ] as const
 
@@ -75,7 +73,7 @@ const OnboardingCallCoverage = () => {
           {t('callBookings:label.on_this_call_well', 'On this call, we\'ll')}
         </Span>
         <VStack role='list' gap='xs'>
-          {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, translationKey, defaultLabel }) => (
+          {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, i18nKey, defaultValue }) => (
             <HStack
               key={key}
               className='Layer__CallBooking__CoverageItem'
@@ -91,7 +89,7 @@ const OnboardingCallCoverage = () => {
                 <Check size={12} strokeWidth={2.5} />
               </HStack>
               <Span size='sm'>
-                {t(translationKey, defaultLabel)}
+                {t(i18nKey, defaultValue)}
               </Span>
             </HStack>
           ))}
