@@ -340,7 +340,7 @@ export const ExpandedBankTransactionRow = ({
                             >
                               {asListItem && effectiveSplits.length > 1 && (
                                 <Span>
-                                  {`${t('bankTransactions:action.split_label', 'Split')} #${index + 1}`}
+                                  {t('bankTransactions:action.split_number_label', 'Split #{{number}}', { number: index + 1 })}
                                 </Span>
                               )}
                               <div className={`${className}__table-cell--split-entry`}>
