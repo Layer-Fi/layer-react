@@ -2,6 +2,10 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
+import {
+  getBankTransactionFirstSuggestedMatch,
+  getBankTransactionMatchAsSuggestedMatch,
+} from '@utils/bankTransactions/shared'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import PaperclipIcon from '@icons/Paperclip'
@@ -11,10 +15,6 @@ import { Span } from '@ui/Typography/Text'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import {
-  getBankTransactionFirstSuggestedMatch,
-  getBankTransactionMatchAsSuggestedMatch,
-} from '@utils/bankTransactions/shared'
 import { FileInput } from '@components/Input/FileInput'
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
 import { ErrorText } from '@components/Typography/ErrorText'
